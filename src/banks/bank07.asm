@@ -1770,7 +1770,7 @@ Func_007_510D:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank07 (E-0114)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_SetBattleKindAndSync_ShowStringHL_Bank07, RunLinkSession4ScreenState_EditRules_ToShowStringHL_Bank07AndStep, RunLinkSession4ScreenState_StartWithPresetRules_Case03, RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_SetBattleKindAndSync_ShowStringHL_Bank07, RunLinkSession4ScreenState_EditRules_ToShowStringHL_Bank07AndStep, RunLinkSession4ScreenState_StartWithPresetRules_CheckLinkMessage, RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank07::
 Func_007_512B:: ; address name
@@ -3003,7 +3003,7 @@ Jump_007_5EFF:: ; address name
     rst $00
     dw GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_ScreenWithMusic_QueueMusic
-    dw GameMode5_Update_LoadScreens_ScreenWithMusic_Case02
+    dw GameMode5_Update_LoadScreens_ScreenWithMusic_CheckJoypadPressed
 
 ; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_ScreenWithMusic
 ; no direct call (reached through a table, a jump or a vector)
@@ -3090,7 +3090,7 @@ Jump_007_5F89:: ; address name
 ; reads: wJoypadPressed, wSoundChannel2, wWorkBuf
 ; writes: wWorkBuf, wLinkScreenSubState, wLinkScreenState, wModeState, wGameMode2State, wGameMode2Arg
 ; points at: wSoundChannel3, wSoundChannel4, wSoundChannel5, wModeChangeRequest
-GameMode5_Update_LoadScreens_ScreenWithMusic_Case02::
+GameMode5_Update_LoadScreens_ScreenWithMusic_CheckJoypadPressed::
 Jump_007_5F9D:: ; address name
     ld a, [wJoypadPressed]
     and a, $0B
@@ -4772,13 +4772,13 @@ Func_007_6975:: ; address name
     ld h, a
     ld [hl], $00
     ld hl, sRecords + $8E
-    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_WriteUnknownName
     ld hl, sRecords + $99
-    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_WriteUnknownName
     ld hl, sRecords + $1E
-    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_WriteUnknownName
     ld hl, sRecords + $29
-    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_WriteUnknownName
     farcall SetSpeciesFlag
     ret
 
@@ -4802,9 +4802,9 @@ Func_007_6AD5:: ; address name
     jr nz, CopyBBytesDEToHL_Bank07
     ret
 
-; only called from GameMode5_Update_NewPlayerSetup_Case06_Sub01 (E-0047)
+; writes three $98 placeholder glyphs and seven $F0 bytes at HL
 ; 4 call sites from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord)
-GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01::
+GameMode5_Update_NewPlayerSetup_WriteUnknownName::
 Func_007_6ADC:: ; address name
     ld a, $98
     ld [hl+], a
@@ -5264,7 +5264,7 @@ Jump_007_6CCD:: ; address name
     ret
 
 ; stores 0, 0, 0, $63, $29, $01, 0, 0, $63, $80 at wD043-wD04C (E-0120)
-; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_Case00, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
+; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
 ; points at: wLinkRules
 InitLinkRulesPresetA::
 Func_007_6DA9:: ; address name
@@ -5288,7 +5288,7 @@ Func_007_6DA9:: ; address name
     ret
 
 ; stores $01, $81, $01, $63, $29, $01, $80, $01, $9E, $00 at wD043-wD04C (E-0120)
-; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_Case00, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
+; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
 ; points at: wLinkRules
 InitLinkRulesPresetB::
 Func_007_6DC2:: ; address name
@@ -5357,7 +5357,7 @@ RunLinkSession4ScreenState_SetBattleKindAndSync::
 Jump_007_6E16:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw RunLinkSession4ScreenState_SetBattleKindAndSync_Case00
+    dw RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage
     dw RunLinkSession4ScreenState_SetBattleKindAndSync_SetLinkScreenSubState
     dw RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage
     dw RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage_Case03
@@ -5371,7 +5371,7 @@ Jump_007_6E16:: ; address name
 ; reads: wLinkMessage, wLinkRole
 ; writes: wBattleKind, wLinkScreenState, wLinkSendByte, wLinkSetupMode
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_SetBattleKindAndSync_Case00::
+RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage::
 Jump_007_6E2A:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -5577,7 +5577,7 @@ Jump_007_6F34:: ; address name
     dw RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep
     dw RunLinkSession4ScreenState_EditRules_ToShowStringHL_Bank07AndStep
     dw RunLinkSession4ScreenState_EditRules_WaitTextFlags
-    dw RunLinkSession4ScreenState_EditRules_Case0A
+    dw RunLinkSession4ScreenState_EditRules_CheckLinkMessage
     dw RunLinkSession4ScreenState_EditRules_WriteWorkBufAndLinkScreenSubStateEtc_Case0B
     dw RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07
     dw RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_Case0D
@@ -5915,7 +5915,7 @@ Jump_007_715E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkScreenState, wLinkScreenSubState, wLinkScreenFlag, wLinkSendByte
-RunLinkSession4ScreenState_EditRules_Case0A::
+RunLinkSession4ScreenState_EditRules_CheckLinkMessage::
 Jump_007_7168:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -6693,7 +6693,7 @@ Jump_007_7615:: ; address name
     ld de, wScreenTileBuffer + $62
     ld bc, $0F0B
     call CopyRect32StrideToVRAM_Bank07
-    call RunLinkSession4ScreenState_EditRules_Case19_Sub01
+    call RunLinkSession4ScreenState_EditRules_Case19_CallDrawRuleMark
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
@@ -6733,7 +6733,7 @@ Jump_007_762F:: ; address name
     call QueueSoundEffect
     call RunLinkSession4ScreenState_EditRules_Case1A_ReadMenuCursor
     ld a, [wMenuCursor]
-    call RunLinkSession4ScreenState_EditRules_Shared04
+    call RunLinkSession4ScreenState_EditRules_DrawRuleMark
     ret
 
 ; only called from RunLinkSession4ScreenState_EditRules_Case1A (E-0047)
@@ -6855,23 +6855,23 @@ Func_007_7690:: ; address name
 
 ; only called from RunLinkSession4ScreenState_EditRules_Case19 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_Case19)
-RunLinkSession4ScreenState_EditRules_Case19_Sub01::
+RunLinkSession4ScreenState_EditRules_Case19_CallDrawRuleMark::
 Func_007_7716:: ; address name
     ld bc, $0B00
 
 .loop:
     push bc
     ld a, c
-    call RunLinkSession4ScreenState_EditRules_Shared04
+    call RunLinkSession4ScreenState_EditRules_DrawRuleMark
     pop bc
     inc c
     dec b
     jr nz, .loop
     ret
 
-; only called from routines of RunLinkSession4ScreenState_EditRules (E-0098)
-; 2 call sites from 2 routines (e.g. RunLinkSession4ScreenState_EditRules_QueueSoundEffect, RunLinkSession4ScreenState_EditRules_Case19_Sub01)
-RunLinkSession4ScreenState_EditRules_Shared04::
+; tests the wLinkRules + 6 bit for rule A (mask table) and writes the rule's tile or the blank $C3 into the BG map
+; 2 call sites from 2 routines (e.g. RunLinkSession4ScreenState_EditRules_QueueSoundEffect, RunLinkSession4ScreenState_EditRules_Case19_CallDrawRuleMark)
+RunLinkSession4ScreenState_EditRules_DrawRuleMark::
 Func_007_7724:: ; address name
     ld c, a
     ld hl, $774D
@@ -7078,7 +7078,7 @@ Jump_007_7864:: ; address name
     dw RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA
     dw RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep
     dw RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags
-    dw RunLinkSession4ScreenState_StartWithPresetRules_Case03
+    dw RunLinkSession4ScreenState_StartWithPresetRules_CheckLinkMessage
     dw RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_Case04
     dw RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage
     dw RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_Case06
@@ -7174,7 +7174,7 @@ Jump_007_78E8:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkScreenState, wLinkScreenSubState, wLinkScreenFlag, wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_StartWithPresetRules_Case03::
+RunLinkSession4ScreenState_StartWithPresetRules_CheckLinkMessage::
 Jump_007_78F2:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -7812,7 +7812,7 @@ Jump_007_7C7E:: ; address name
     rst $00
     dw RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD
     dw RunLinkSession4ScreenState_ResetAndSignal_QueueSoundEffect
-    dw RunLinkSession4ScreenState_ResetAndSignal_Case02
+    dw RunLinkSession4ScreenState_ResetAndSignal_CheckLinkMessage
     dw RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte
     dw RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04
 
@@ -7886,7 +7886,7 @@ Jump_007_7CB7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkScreenState, wLinkScreenSubState, wLinkScreenFlag, wLinkSendByte
-RunLinkSession4ScreenState_ResetAndSignal_Case02::
+RunLinkSession4ScreenState_ResetAndSignal_CheckLinkMessage::
 Jump_007_7CF8:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -8113,4 +8113,371 @@ Func_007_7DE5:: ; address name
     or a, c
     jr nz, .loop4
     ret
-    ds $16C, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank07:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_007_7E94:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

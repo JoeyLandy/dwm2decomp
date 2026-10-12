@@ -2851,7 +2851,7 @@ Jump_037_57D0:: ; address name
     dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
     dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
     dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_ResetListAndShowString_Case08
+    dw RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37
     dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_Case09
 
 ; entry 0 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
@@ -2902,7 +2902,7 @@ Jump_037_580D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-RunLinkSession5Exchange_ResetListAndShowString_Case08::
+RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37::
 Jump_037_5821:: ; address name
     ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $E7
@@ -3374,7 +3374,7 @@ Func_037_5AD3:: ; address name
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_ResetListAndShowString_Case08, RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectToScreenBufferAndClearAttributes_37::
@@ -3799,7 +3799,7 @@ Func_037_5D08:: ; address name
 
 ; only called from ConvertEightBytesAndPadF0 (E-0047)
 ; 1 call site from 1 routine (e.g. ConvertEightBytesAndPadF0)
-ConvertEightBytesAndPadF0_Sub01::
+ConvertEightBytesAndPadF0_Cp5C::
 Func_037_5D0F:: ; address name
     cp a, $5C
     jr z, .skip
@@ -4172,7 +4172,7 @@ Func_037_5EC0:: ; address name
 
 .loop:
     ld a, [de]
-    call ConvertEightBytesAndPadF0_Sub01
+    call ConvertEightBytesAndPadF0_Cp5C
     ld [hl+], a
     inc de
     dec b

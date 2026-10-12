@@ -3011,7 +3011,7 @@ Jump_00D_56A9:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, .loop
-    call KeyAppraisalMenu_Case02_Sub01
+    call KeyAppraisalMenu_HasAnyKey
     cp a, $FF
     jr nz, .clear_two_choice_cursor
     ld a, $01
@@ -3036,9 +3036,9 @@ Jump_00D_56A9:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; only called from KeyAppraisalMenu_Case02 (E-0047)
+; A = 0 when one of the 32 key entries is not $FF, else $FF
 ; 1 call site from 1 routine (e.g. KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D)
-KeyAppraisalMenu_Case02_Sub01::
+KeyAppraisalMenu_HasAnyKey::
 Func_00D_5702:: ; address name
     ld c, $00
 
@@ -3092,7 +3092,7 @@ Jump_00D_5722:: ; address name
     dw KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_7347
     dw KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw
     dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10
-    dw KeyAppraisalMenu_ChooseKey_WriteTwoChoiceCursorAndScreenStateEtc
+    dw KeyAppraisalMenu_ChooseKey_CountKeys_Case11
     dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics
 
 ; entry 18 of the `rst $00` table in KeyAppraisalMenu_ChooseKey
@@ -3774,9 +3774,9 @@ Jump_00D_5BDF:: ; address name
 ; entry 17 of the `rst $00` table in KeyAppraisalMenu_ChooseKey
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScreenState, wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest
-KeyAppraisalMenu_ChooseKey_WriteTwoChoiceCursorAndScreenStateEtc::
+KeyAppraisalMenu_ChooseKey_CountKeys_Case11::
 Jump_00D_5C17:: ; address name
-    call KeyAppraisalMenu_ChooseKey_Case11_Sub01
+    call KeyAppraisalMenu_ChooseKey_CountKeys
     cp a, $FF
     jr nz, .set_two_choice_cursor_to_01
     xor a, a
@@ -3818,10 +3818,10 @@ Func_00D_5C47:: ; address name
     call DrawScreenBufferRect_Bank0D
     ret
 
-; only called from KeyAppraisalMenu_ChooseKey_Case11 (E-0047)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_WriteTwoChoiceCursorAndScreenStateEtc)
+; counts the wKeyList entries that are not $FF, up to a $FE end (A = $FF at the end)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_CountKeys_Case11)
 ; points at: wKeyList
-KeyAppraisalMenu_ChooseKey_Case11_Sub01::
+KeyAppraisalMenu_ChooseKey_CountKeys::
 Func_00D_5C60:: ; address name
     ld hl, wKeyList
     ld c, $00
@@ -4797,7 +4797,7 @@ Func_00D_6310:: ; address name
     ld a, [wScreenState]
     rst $00
     dw MedalPrizeMenu_CopyBytesDEToHL_Bank0D
-    dw MedalPrizeMenu_WriteTwoChoiceCursorAndScreenStateEtc
+    dw MedalPrizeMenu_CountItem2C_Case01
     dw MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc
     dw MedalPrizeMenu_DrawCountBox
     dw MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D
@@ -4874,9 +4874,9 @@ Jump_00D_6320:: ; address name
 ; reads: wArenaWinsLo, wArenaWinsHi, wScreenState
 ; writes: wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest, wArenaWinsHi, wArenaWinsLo
 ; points at: wInventory
-MedalPrizeMenu_WriteTwoChoiceCursorAndScreenStateEtc::
+MedalPrizeMenu_CountItem2C_Case01::
 Jump_00D_6384:: ; address name
-    call MedalPrizeMenu_Shared01
+    call MedalPrizeMenu_CountItem2C
     push af
     ld a, [wArenaWinsLo]
     ld l, a
@@ -4914,7 +4914,7 @@ Jump_00D_6384:: ; address name
     jr z, .set_arena_wins_hi_to_03
     ld hl, wInventory
     ld c, $00
-    call MedalPrizeMenu_Case01_Sub01
+    call MedalPrizeMenu_RemoveItem2C
 
 .set_arena_wins_hi_to_03:
     ld a, $03
@@ -4935,7 +4935,7 @@ Jump_00D_6384:: ; address name
     ld [wArenaWinsHi], a
     ld hl, wInventory
     ld c, $00
-    call MedalPrizeMenu_Case01_Sub01
+    call MedalPrizeMenu_RemoveItem2C
     xor a, a
 
 .set_two_choice_cursor:
@@ -4949,10 +4949,10 @@ Jump_00D_6384:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; only called from MedalPrizeMenu_Case01 (E-0047)
-; 2 call sites from 1 routine (e.g. MedalPrizeMenu_WriteTwoChoiceCursorAndScreenStateEtc)
+; clears B inventory slots that hold item $2C, then compacts the inventory
+; 2 call sites from 1 routine (e.g. MedalPrizeMenu_CountItem2C_Case01)
 ; points at: wInventory
-MedalPrizeMenu_Case01_Sub01::
+MedalPrizeMenu_RemoveItem2C::
 Func_00D_63F6:: ; address name
     push hl
     push bc
@@ -4981,7 +4981,7 @@ Func_00D_63F6:: ; address name
     inc c
     ld a, c
     cp a, $18
-    jr c, MedalPrizeMenu_Case01_Sub01
+    jr c, MedalPrizeMenu_RemoveItem2C
 
 .skip:
     ld hl, wInventory
@@ -5052,7 +5052,7 @@ Jump_00D_643A:: ; address name
     ld a, $70
     ldh [hSpriteHideTile], a
     xor a, a
-    call MedalPrizeMenu_Shared01
+    call MedalPrizeMenu_CountItem2C
     cp a, $FF
     jr z, .set_two_choice_cursor_to_01
     xor a, a
@@ -5914,7 +5914,7 @@ Jump_00D_6A1F:: ; address name
     ld l, a
     ld a, [hl]
     and a, a
-    jr z, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_Shared03
+    jr z, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
     cp a, $FF
     jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop
@@ -5942,9 +5942,9 @@ Jump_00D_6A4E:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_Shared03::
+MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
 Jump_00D_6A63:: ; address name
-    call MedalPrizeMenu_ChoosePrize_Shared03
+    call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp a, $FF
     jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop
     ld a, $01
@@ -6046,13 +6046,13 @@ Jump_00D_6AEC:: ; address name
     ld a, [hl]
     push af
     and a, a
-    jr z, .call_medal_prize_menu_choose_prize_shared03
+    jr z, .call_medal_prize_menu_choose_prize_inventory
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
     call MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4
     jr .restore
 
-.call_medal_prize_menu_choose_prize_shared03:
-    call MedalPrizeMenu_ChoosePrize_Shared03
+.call_medal_prize_menu_choose_prize_inventory:
+    call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     ld a, $1E
     ld [hl], a
     jr .restore
@@ -6061,7 +6061,7 @@ Jump_00D_6AEC:: ; address name
 .restore:
     pop af
     and a, a
-    jr z, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_CallMedalPrizeMenu_ChoosePrize_Shared03
+    jr z, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
     call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
     cp a, $FF
     jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_Loop
@@ -6084,9 +6084,9 @@ Jump_00D_6B25:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_CallMedalPrizeMenu_ChoosePrize_Shared03::
+MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
 Jump_00D_6B3A:: ; address name
-    call MedalPrizeMenu_ChoosePrize_Shared03
+    call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp a, $FF
     jr nz, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E_Loop
     ld a, $01
@@ -6398,10 +6398,10 @@ MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Data:: ; heuristic: pointer load in
 Data_00D_6D06:: ; address name
     db $0A, $14, $1E
 
-; only called from routines of MedalPrizeMenu_ChoosePrize (E-0098)
+; A = 0 when one of the 24 inventory slots is empty, else $FF
 ; 3 call sites from 2 routines (e.g. MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E, MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4)
 ; points at: wInventory
-MedalPrizeMenu_ChoosePrize_Shared03::
+MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot::
 Func_00D_6D09:: ; address name
     ld hl, wInventory
     ld c, $00
@@ -6562,10 +6562,10 @@ WriteTileBAtCursorListCursor_Data:: ; heuristic: pointer load in the same bank (
 Data_00D_6DC8:: ; address name
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
-; only called from routines of MedalPrizeMenu (E-0098)
-; 2 call sites from 2 routines (e.g. MedalPrizeMenu_WriteTwoChoiceCursorAndScreenStateEtc, MedalPrizeMenu_CopyBytesDEToHL_Bank0D)
+; counts inventory slots holding item $2C; $FF when there are none
+; 2 call sites from 2 routines (e.g. MedalPrizeMenu_CountItem2C_Case01, MedalPrizeMenu_CopyBytesDEToHL_Bank0D)
 ; points at: wInventory
-MedalPrizeMenu_Shared01::
+MedalPrizeMenu_CountItem2C::
 Func_00D_6DD0:: ; address name
     ld hl, wInventory
     ld c, $00

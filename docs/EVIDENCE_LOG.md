@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0305 — No structural label left: a shape fallback and 70 helpers named by reading
+
+- Kind: TOOL + STATIC (C1/C2 per name).
+- **The fallback pass.** name_structural_by_shape runs after the other naming passes. A step that still has only a structural name (Parent_CaseNN / _SubNN / _SharedNN) and is not a dispatcher gets Parent_<Shape>:
+  - The shape comes from its first instructions, by the branch-target rules (_target_shape): CallX, SetX, CheckX, ReadX, ClearX, ReturnNN, CpNN, ...
+  - When that gives only Skip, Done, Next or Restore, the name comes from the first named routine the step calls; otherwise it becomes ReturnAfterSetup, StepCounter or RestoreRegisters.
+  - A callee name loses the parts it shares with the parent and any structural tail. It is not cut at a fixed length.
+  - Examples: RunLinkSession4ScreenState_EditRules_CheckLinkMessage, BattleEnd_Step3_Sub02_CallShared01, PauseMenu_State3_PagedMenu_Shared01_CpFF.
+
+  The generator also writes the list behind its "structural labels left" count to build/structural_left.txt for review. That file is not a build input and is not tracked.
+- **Helpers named by reading (70).** These are the helpers the fallback could not describe, mostly loops and arithmetic. Examples:
+  - Multiply8_AddFourBits.
+  - Several WriteUnknownName routines: three or nine $98 placeholder glyphs, then $F0.
+  - Name entry: RunNameEntryStateWhenNotFading_ClearNameEntryText, _ApplyChosenCharacter, _FinishNameEntry, RunGameMode2State_CenterName.
+  - Medals and keys: MedalPrizeMenu_CountItem2C and _RemoveItem2C, KeyAppraisalMenu_HasAnyKey and _CountKeys.
+  - BuildWCB0CCandidateList_RemoveDuplicateSkills, BattleEnd_Step3_RecordKnowsSkill, ChooseTarget_MouthShut_CountMouthSkills.
+  - RunLinkSession4ScreenState_EditRules_DrawRuleMark, GreatLogTalkEvents_ClearArenaData, PauseMenu_State3_RecordJourney_RestartGame.
+  - RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep, KeyWorldDoorItem_ModuloBPlusOne.
+- **Counts.** Structural labels left unnamed: 112 → 0, measured after the fallback. Routines with only an address name: 0.
+- **Why there is no test for the count.** A source-only test cannot tell a rule-made descriptive name that carries a uniqueness number (PlayMapMusic_ReadCurrentMusic_Case21) from a purely structural one. Only the generator's shape_named set records that, so the generator's count is the measure.
+- Binary verification: build/run422 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0304 — The last 27 dispatchers named
 
 - Kind: STATIC (C1, from the RAM and calls each dispatcher's steps use).

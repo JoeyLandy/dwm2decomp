@@ -4826,7 +4826,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
-    dw GreatLogTalkEvents_GenerateNewKeyEntry
+    dw GreatLogTalkEvents_ClearArenaData_Case65
     dw GreatLogTalkEvents_SaveScreenBufferToBGMap1
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
@@ -7853,13 +7853,13 @@ Jump_013_6D52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wTalkEventByte92, hTemp0
 ; writes: wDataBank, wScreenTableIndex, wTalkEventByte92
-GreatLogTalkEvents_GenerateNewKeyEntry::
+GreatLogTalkEvents_ClearArenaData_Case65::
 Jump_013_6D68:: ; address name
     ld a, $0C
     ld [wDataBank], a
     xor a, a
     ld [wScreenTableIndex], a
-    farcall GreatLogTalkEvents_Case65_Sub01
+    farcall GreatLogTalkEvents_ClearArenaData
     ld a, [wArenaRank]
     or a, a
     jr z, .call_start_script_at_hl_b132

@@ -924,7 +924,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_Case06
+    dw SceneDarckDefeated_MoveSprite0Down
     dw SceneDarckDefeated_Msg055A_AVoiceEchoedFrom
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneDarckDefeated_Msg055B_WaheyCanYouHear
@@ -2822,10 +2822,10 @@ Jump_00F_5113:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in SceneDarckDefeated
+; increments the Y byte of sprite slot 0 (wSpriteSlots + $C)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneDarckDefeated_Case06::
+SceneDarckDefeated_MoveSprite0Down::
 Jump_00F_511E:: ; address name
     ld hl, wSpriteSlots + $C
     inc [hl]
@@ -10426,4 +10426,105 @@ Jump_00F_7F93:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
-    ds $62, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank0F:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_00F_7F9E:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

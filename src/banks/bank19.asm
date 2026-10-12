@@ -155,24 +155,24 @@ Func_019_4079:: ; address name
     ld [wBattleKindFlags], a
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, .call_game_mode4_init_sub01_sub01_sub01
+    jr nz, .call_game_mode4_init_count_battler_records
     ld hl, wBattlerRecords + BATTLER_LEVEL
-    call GameMode4_Init_Sub01_Sub01_Sub01
+    call GameMode4_Init_CountBattlerRecords
     ld [wBattlePartyCount], a
     ld [wSide0Flag], a
     ld hl, wBattlerRecordSlot4 + BATTLER_LEVEL
-    call GameMode4_Init_Sub01_Sub01_Sub01
+    call GameMode4_Init_CountBattlerRecords
     ld [wBattleFoeCount], a
     ld [wSide1Flag], a
     jr .clear_link_rule_work57
 
-.call_game_mode4_init_sub01_sub01_sub01:
+.call_game_mode4_init_count_battler_records:
     ld hl, wBattlerRecords + BATTLER_LEVEL
-    call GameMode4_Init_Sub01_Sub01_Sub01
+    call GameMode4_Init_CountBattlerRecords
     ld [wBattleFoeCount], a
     ld [wSide0Flag], a
     ld hl, wBattlerRecordSlot4 + BATTLER_LEVEL
-    call GameMode4_Init_Sub01_Sub01_Sub01
+    call GameMode4_Init_CountBattlerRecords
     ld [wBattlePartyCount], a
     ld [wSide1Flag], a
 
@@ -182,9 +182,9 @@ Func_019_4079:: ; address name
     ld [wBattleInitByte58], a
     ret
 
-; only called from GameMode4_Init_Sub01_Sub01 (E-0047)
+; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use
 ; 4 call sites from 1 routine (e.g. GameMode4_Init_Sub01_FillBytes)
-GameMode4_Init_Sub01_Sub01_Sub01::
+GameMode4_Init_CountBattlerRecords::
 Func_019_4186:: ; address name
     ld de, $004E
     ld c, $01
@@ -1194,11 +1194,11 @@ Data_019_4641:: ; address name
     db $FF, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; only called from BattleEnd_Step3_Sub06_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01)
+; only called from BattleEnd_Step3_Sub04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01)
 ; reads: wDisplaySlot
 ; points at: wBattlerRecordSlot5, wBattlerRecordSlot4
-BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC::
+BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC::
 Func_019_46B1:: ; address name
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1274,7 +1274,7 @@ Func_019_46DD:: ; address name
     ret
 
 ; loads monster wCFDD[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC, BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC, BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC)
 ; reads: wRecordBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wEncounterMonsters

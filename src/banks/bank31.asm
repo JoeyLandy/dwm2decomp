@@ -713,7 +713,7 @@ BattleEnd_Step1::
 Jump_031_440E:: ; address name
     ld a, $01
     ld [wBattleKindFlags], a
-    call BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc
+    call BattleEnd_Step1_CountSlots_Sub02
     ld a, [wBattleScene]
     and a, $01
     jr z, .call_battle_end_step1_write_battle_arg0
@@ -812,7 +812,7 @@ Func_031_4493:: ; address name
 ; points at: wBattleStep, wRecordBufA, wPlayerName
 BattleEnd_Step3::
 Jump_031_449C:: ; address name
-    call BattleEnd_Step3_SRAMRecordAddressMapped
+    call BattleEnd_Step3_SubtractBattleMP_Sub05
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -885,14 +885,14 @@ Jump_031_449C:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call BattleEnd_Step3_Sub04
+    call BattleEnd_Step3_WriteUnknownName
     ld a, $FF
     ld [hl+], a
-    call BattleEnd_Step3_Sub04
+    call BattleEnd_Step3_WriteUnknownName
     ld a, $FF
     ld [hl+], a
     ld b, $08
-    call BattleEnd_Step3_Sub03
+    call BattleEnd_Step3_CopySkillsSkippingC8
     ld a, $FF
     ld b, $19
 
@@ -914,10 +914,10 @@ Jump_031_449C:: ; address name
     ld [hl+], a
     ld b, $1F
     call CopyBBytesDEToHL_Bank31
-    call BattleEnd_Step3_Sub04
+    call BattleEnd_Step3_WriteUnknownName
     ld a, $00
     ld [hl+], a
-    call BattleEnd_Step3_Sub04
+    call BattleEnd_Step3_WriteUnknownName
     ld a, $00
     ld [hl+], a
     ld a, [de]
@@ -938,9 +938,9 @@ Func_031_4566:: ; address name
     jr nz, CopyBBytesDEToHL_Bank31
     ret
 
-; only called from BattleEnd_Step3 (E-0047)
+; fills 8 bytes at HL with $FF, then copies B bytes from DE, skipping $C8
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-BattleEnd_Step3_Sub03::
+BattleEnd_Step3_CopySkillsSkippingC8::
 Func_031_456D:: ; address name
     push hl
     ld a, $FF
@@ -974,9 +974,9 @@ Func_031_456D:: ; address name
     ld h, a
     ret
 
-; only called from BattleEnd_Step3 (E-0047)
+; writes three $98 placeholder glyphs and seven $F0 bytes at HL
 ; 4 call sites from 1 routine (e.g. BattleEnd_Step3)
-BattleEnd_Step3_Sub04::
+BattleEnd_Step3_WriteUnknownName::
 Func_031_458E:: ; address name
     ld a, $98
     ld [hl+], a
@@ -1093,19 +1093,19 @@ Func_031_45F2:: ; address name
     jr nz, .cp_01
     ld a, l
     cp a, $07
-    jr z, .call_battle_end_step3_sub06_sub01_load
+    jr z, .call_battle_end_step3_sub04_sub01_load
     cp a, $1A
-    jr z, .call_battle_end_step3_sub06_sub01_load2
+    jr z, .call_battle_end_step3_sub04_sub01_load2
     jr .return
 
-.call_battle_end_step3_sub06_sub01_load:
+.call_battle_end_step3_sub04_sub01_load:
     ld hl, $0008
-    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
+    call BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr .return
 
-.call_battle_end_step3_sub06_sub01_load2:
+.call_battle_end_step3_sub04_sub01_load2:
     ld hl, $001B
-    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
+    call BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr .return
 
 .cp_01:
@@ -1113,37 +1113,37 @@ Func_031_45F2:: ; address name
     jr nz, .return
     ld a, l
     cp a, $82
-    jr z, .call_battle_end_step3_sub06_sub01_load3
+    jr z, .call_battle_end_step3_sub04_sub01_load3
     cp a, $AB
     jr z, .set_screen_saved_flag_to_02
     cp a, $90
-    jr z, .call_battle_end_step3_sub06_sub01_load4
+    jr z, .call_battle_end_step3_sub04_sub01_load4
     jr .return
 
-.call_battle_end_step3_sub06_sub01_load3:
+.call_battle_end_step3_sub04_sub01_load3:
     ld hl, $0183
-    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
+    call BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr .return
 
 .set_screen_saved_flag_to_02:
     ld a, $02
     ld [wScreenSavedFlag], a
     ld hl, $01AC
-    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
+    call BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr .return
 
-.call_battle_end_step3_sub06_sub01_load4:
+.call_battle_end_step3_sub04_sub01_load4:
     ld hl, $01AF
-    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
+    call BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr .return
 
 .return:
     ret
 
-; only called from BattleEnd_Step3_Sub06 (E-0047)
+; only called from BattleEnd_Step3_Sub04 (E-0047)
 ; 5 call sites from 1 routine (e.g. BattleEnd_Step3_WaitBattleKind)
 ; reads: hTemp0, hTemp1
-BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01::
+BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01::
 Func_031_4681:: ; address name
     ldh a, [hTemp0]
     ld e, a
@@ -1154,7 +1154,7 @@ Func_031_4681:: ; address name
     inc de
     ld a, h
     ld [de], a
-    farcall BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC
+    farcall BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC
     ret
 
 ; wBattlePhase 2, wBattleStep 4 (E-0044)
@@ -2554,16 +2554,16 @@ Func_031_4E54:: ; address name
     add a, a
     add_a_to_hl
     ld de, wSlotPersonalityHi
-    call RunBattleSetup_FleeCommand_Case09_Sub02_Sub01
+    call RunBattleSetup_FleeCommand_SubtractFloor0
     inc hl
     ld de, wSlotPersonalityMid
-    call RunBattleSetup_FleeCommand_Case09_Sub02_Sub01
+    call RunBattleSetup_FleeCommand_SubtractFloor0
     inc hl
     ld de, wSlotPersonalityLo
-    call RunBattleSetup_FleeCommand_Case09_Sub02_Sub01
+    call RunBattleSetup_FleeCommand_SubtractFloor0
     inc hl
     ld de, wSlotTrait
-    call RunBattleSetup_FleeCommand_Case09_Sub02_Sub01
+    call RunBattleSetup_FleeCommand_SubtractFloor0
 
 .next:
     inc c
@@ -2571,9 +2571,9 @@ Func_031_4E54:: ; address name
     jr nz, .loop
     ret
 
-; only called from RunBattleSetup_FleeCommand_Case09_Sub02 (E-0047)
+; the byte at DE + C -= the byte at HL, not below 0
 ; 4 call sites from 1 routine (e.g. RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty)
-RunBattleSetup_FleeCommand_Case09_Sub02_Sub01::
+RunBattleSetup_FleeCommand_SubtractFloor0::
 Func_031_4EB9:: ; address name
     ld a, c
     add a, e
@@ -6418,7 +6418,7 @@ Func_031_6564:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wDataBankSave, wBattleKind, wBattleScene, wLinkRole
 ; writes: wDataBank, wDataBankSave, wBattleScene
-BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc::
+BattleEnd_Step1_CountSlots_Sub02::
 Func_031_656B:: ; address name
     ld a, [wDataBankSave]
     ld [wDataBank], a
@@ -6433,7 +6433,7 @@ Func_031_656B:: ; address name
     jr c, .skip2
     ld bc, $0304
     ld de, $0000
-    call BattleEnd_Step1_Sub02_Sub02
+    call BattleEnd_Step1_CountSlots
     jr nc, .skip2
     ld a, d
     or a, a
@@ -6507,7 +6507,7 @@ Func_031_656B:: ; address name
     ret
 
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 7 call sites from 1 routine (e.g. BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc)
+; 7 call sites from 1 routine (e.g. BattleEnd_Step1_CountSlots_Sub02)
 ; points at: wBattleSlotOut, wBattleStatus
 BattleEnd_Step1_Sub02_AddAx9ToHL::
 Func_031_65FF:: ; address name
@@ -6532,10 +6532,10 @@ Func_031_65FF:: ; address name
     cp a, $01
     ret
 
-; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc)
+; over B slots from C counts present (wBattleSlotOut 0) in E and out in D; Z when exactly one is present
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_CountSlots_Sub02)
 ; points at: wBattleSlotOut
-BattleEnd_Step1_Sub02_Sub02::
+BattleEnd_Step1_CountSlots::
 Func_031_6620:: ; address name
     ld a, c
     ld hl, wBattleSlotOut
@@ -6554,7 +6554,7 @@ Func_031_6620:: ; address name
 .next2:
     inc c
     dec b
-    jr nz, BattleEnd_Step1_Sub02_Sub02
+    jr nz, BattleEnd_Step1_CountSlots
     ld a, e
     cp a, $01
     ret
@@ -6563,7 +6563,7 @@ Func_031_6620:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wLinkMode, wBattlePartyCount
 ; writes: rRAMG, rRAMB
-BattleEnd_Step3_SRAMRecordAddressMapped::
+BattleEnd_Step3_SubtractBattleMP_Sub05::
 Func_031_663D:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -6578,17 +6578,17 @@ Func_031_663D:: ; address name
 
 .loop:
     push bc
-    call BattleEnd_Step3_Sub07_WriteBattleResultByte
+    call BattleEnd_Step3_Sub05_WriteBattleResultByte
     ld a, c
     push bc
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
     pop bc
-    call BattleEnd_Step3_Sub07_AddAx9ToHL
-    call BattleEnd_Step3_Sub07_WriteBattleArg0
-    call BattleEnd_Step3_Sub07_Sub04
-    call BattleEnd_Step3_Sub07_ReadBattleArg0
-    call BattleEnd_Step3_Sub07_ReadBattleArg0_Sub06
+    call BattleEnd_Step3_Sub05_AddAx9ToHL
+    call BattleEnd_Step3_Sub05_WriteBattleArg0
+    call BattleEnd_Step3_SubtractBattleMP
+    call BattleEnd_Step3_Sub05_ReadBattleArg0
+    call BattleEnd_Step3_Sub05_ReadBattleArg0_Sub05
     pop bc
     inc c
     dec b
@@ -6599,12 +6599,12 @@ Func_031_663D:: ; address name
 .return:
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; only called from BattleEnd_Step3_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; reads: wMenuState
 ; writes: wBattleResultByte
 ; points at: wSlotTactic, wSlotLastTactic
-BattleEnd_Step3_Sub07_WriteBattleResultByte::
+BattleEnd_Step3_Sub05_WriteBattleResultByte::
 Func_031_6678:: ; address name
     push bc
     ld a, c
@@ -6637,11 +6637,11 @@ Func_031_6678:: ; address name
     pop bc
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; only called from BattleEnd_Step3_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; reads: wBattleKind
 ; points at: wBattleSlotOut, wBattleStatus
-BattleEnd_Step3_Sub07_AddAx9ToHL::
+BattleEnd_Step3_Sub05_AddAx9ToHL::
 Func_031_66AE:: ; address name
     ld [hl], $00
     ld a, c
@@ -6665,34 +6665,34 @@ Func_031_66AE:: ; address name
     ld a, [hl]
     pop hl
     bit 5, a
-    call nz, BattleEnd_Step3_Sub07_Sub02_Sub01
+    call nz, BattleEnd_Step3_Sub05_Sub02_ReturnAfterSetup
     and a, $03
-    call nz, BattleEnd_Step3_Sub07_Sub02_Sub02
+    call nz, BattleEnd_Step3_Sub05_Sub02_ReturnAfterSetup_Sub02
     ret
 
 .done:
     set 7, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_AddAx9ToHL)
-BattleEnd_Step3_Sub07_Sub02_Sub01::
+; only called from BattleEnd_Step3_Sub05_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub05_AddAx9ToHL)
+BattleEnd_Step3_Sub05_Sub02_ReturnAfterSetup::
 Func_031_66DC:: ; address name
     set 0, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_AddAx9ToHL)
-BattleEnd_Step3_Sub07_Sub02_Sub02::
+; only called from BattleEnd_Step3_Sub05_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub05_AddAx9ToHL)
+BattleEnd_Step3_Sub05_Sub02_ReturnAfterSetup_Sub02::
 Func_031_66DF:: ; address name
     set 2, [hl]
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; only called from BattleEnd_Step3_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; writes: wBattleArg0
 ; points at: wBattleHP
-BattleEnd_Step3_Sub07_WriteBattleArg0::
+BattleEnd_Step3_Sub05_WriteBattleArg0::
 Func_031_66E2:: ; address name
     ld a, [hl]
     ld [wBattleArg0], a
@@ -6747,10 +6747,10 @@ Func_031_66E2:: ; address name
     inc hl
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; the record word - the slot's wBattleMP word, keeping the word when the result would be negative
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; points at: wBattleMP
-BattleEnd_Step3_Sub07_Sub04::
+BattleEnd_Step3_SubtractBattleMP::
 Func_031_6723:: ; address name
     push hl
     inc hl
@@ -6795,11 +6795,11 @@ Func_031_6723:: ; address name
     ld h, a
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; only called from BattleEnd_Step3_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; reads: wBattleArg0
 ; points at: wBattleWordArray3F
-BattleEnd_Step3_Sub07_ReadBattleArg0::
+BattleEnd_Step3_Sub05_ReadBattleArg0::
 Func_031_6757:: ; address name
     ld a, [wBattleArg0]
     bit 7, a
@@ -6828,11 +6828,11 @@ Func_031_6757:: ; address name
     ld h, a
     ret
 
-; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
+; only called from BattleEnd_Step3_Sub05 (E-0047)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SubtractBattleMP_Sub05)
 ; reads: wBattleArg0
 ; points at: wSlotPersonalityHi, wSlotPersonalityLo, wSlotTrait, wSlotPersonalityMid
-BattleEnd_Step3_Sub07_ReadBattleArg0_Sub06::
+BattleEnd_Step3_Sub05_ReadBattleArg0_Sub05::
 Func_031_6776:: ; address name
     ld a, [wBattleArg0]
     bit 7, a
@@ -8833,29 +8833,29 @@ Func_031_72CC:: ; address name
     ld hl, LayoutTileBlocksForBattleFoeCount_Data_7317
     add a, a
     add_a_to_hl
-    call LayoutTileBlocksForBattleFoeCount_Sub01
+    call LayoutTileBlocksForBattleFoeCount_DerefHL
     ld a, [wBattleFoeCount]
     cp a, $01
-    jr z, LayoutTileBlocksForBattleFoeCount_Sub01_Return
+    jr z, LayoutTileBlocksForBattleFoeCount_DerefHL_Return
     dec a
     dec a
     ld hl, LayoutTileBlocksForBattleFoeCount_Data_731D
     add a, a
     add_a_to_hl
-    call LayoutTileBlocksForBattleFoeCount_Sub01
+    call LayoutTileBlocksForBattleFoeCount_DerefHL
     ld a, [wBattleFoeCount]
     cp a, $03
-    jr nz, LayoutTileBlocksForBattleFoeCount_Sub01_Return
+    jr nz, LayoutTileBlocksForBattleFoeCount_DerefHL_Return
     ld hl, wScreenTileBuffer + $ED
-    jr LayoutTileBlocksForBattleFoeCount_Sub01_Skip
+    jr LayoutTileBlocksForBattleFoeCount_DerefHL_Skip
 
-; only called from LayoutTileBlocksForBattleFoeCount (E-0047)
+; HL = the word at HL (deref_hl), falling into the next code
 ; 2 call sites from 1 routine (e.g. LayoutTileBlocksForBattleFoeCount)
-LayoutTileBlocksForBattleFoeCount_Sub01::
+LayoutTileBlocksForBattleFoeCount_DerefHL::
 Func_031_72FF:: ; address name
     deref_hl
 
-LayoutTileBlocksForBattleFoeCount_Sub01_Skip::
+LayoutTileBlocksForBattleFoeCount_DerefHL_Skip::
 Jump_031_7302:: ; address name
     ld bc, $0606
 
@@ -8876,7 +8876,7 @@ Jump_031_7302:: ; address name
     dec c
     jr nz, .loop
 
-LayoutTileBlocksForBattleFoeCount_Sub01_Return::
+LayoutTileBlocksForBattleFoeCount_DerefHL_Return::
 Jump_031_7316:: ; address name
     ret
 

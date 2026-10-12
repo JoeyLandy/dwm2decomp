@@ -3133,7 +3133,7 @@ Func_0A1_50BF:: ; address name
     ld de, wNameGlyphBuf
     ld a, [wCurrentKeyIndex]
     call WriteKeyNameToDE
-    call RunGameMode2State_Shared01
+    call RunGameMode2State_CenterName
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -3202,10 +3202,10 @@ Func_0A1_5242:: ; address name
     pop af
     ret
 
-; only called from routines of RunGameMode2State (E-0098)
+; counts the characters of wNameGlyphBuf (not the dakuten marks) and shifts it to center it in 13 tiles
 ; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01)
 ; points at: wNameGlyphBuf
-RunGameMode2State_Shared01::
+RunGameMode2State_CenterName::
 Func_0A1_528B:: ; address name
     push hl
     push de
@@ -3314,7 +3314,7 @@ Func_0A1_52D4:: ; address name
     ld a, d
     ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
-    call RunGameMode2State_Shared01
+    call RunGameMode2State_CenterName
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80

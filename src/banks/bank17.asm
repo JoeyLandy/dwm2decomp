@@ -235,30 +235,30 @@ Func_017_421A:: ; address name
     ld a, [wSGBPaletteNum0Hi]
     ld h, a
     ld de, wOBJPaletteBuffer
-    call LoadSGBObjectPalettesFromPointers_Sub01
+    call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ld de, wOBJPaletteBuffer + $8
     ld a, [wSGBPaletteNum1Lo]
     ld l, a
     ld a, [wSGBPaletteNum1Hi]
     ld h, a
-    call LoadSGBObjectPalettesFromPointers_Sub01
+    call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ld de, wOBJPaletteBuffer + $10
     ld a, [wSGBPaletteNum2Lo]
     ld l, a
     ld a, [wSGBPaletteNum2Hi]
     ld h, a
-    call LoadSGBObjectPalettesFromPointers_Sub01
+    call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ld de, wOBJPaletteBuffer + $18
     ld a, [wSGBPaletteNum3Lo]
     ld l, a
     ld a, [wSGBPaletteNum3Hi]
     ld h, a
-    call LoadSGBObjectPalettesFromPointers_Sub01
+    call LoadSGBObjectPalettesFromPointers_CopyPaletteEntry
     ret
 
-; only called from LoadSGBObjectPalettesFromPointers (E-0047)
+; copies the 8 bytes at $446C + 8 * HL to DE
 ; 4 call sites from 1 routine (e.g. LoadSGBObjectPalettesFromPointers)
-LoadSGBObjectPalettesFromPointers_Sub01::
+LoadSGBObjectPalettesFromPointers_CopyPaletteEntry::
 Func_017_4258:: ; address name
     add hl, hl
     add hl, hl

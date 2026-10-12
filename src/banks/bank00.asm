@@ -3940,11 +3940,11 @@ Func_000_1682:: ; address name
     ld b, $00
     ld h, b
     ld l, b
-    call Multiply8_Sub01
+    call Multiply8_AddFourBits
 
-; only called from Multiply8 (E-0047)
+; for four bits of A (rrca): adds BC to HL when the bit is set, doubling BC each time
 ; 1 call site from 1 routine (e.g. Multiply8)
-Multiply8_Sub01::
+Multiply8_AddFourBits::
 Func_000_1689:: ; address name
     rrca
     jr nc, .skip
@@ -5654,7 +5654,7 @@ Func_000_1F6F:: ; address name
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
+; 103 call sites from 79 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
 ; writes: hTemp0
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -6029,10 +6029,10 @@ Func_000_2123:: ; address name
     pop hl
     ret
 
-; only called from WithSRAMDraw4ACEAnd4BE8_Sub01 (E-0047)
+; writes the nibbles at hTemp3 downward as digit tiles ($E0 + n), a leading zero as the blank tile $C3
 ; 2 call sites from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03)
 ; points at: hTemp3
-WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01::
+WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros::
 Func_000_214F:: ; address name
     push hl
     ld c, $00

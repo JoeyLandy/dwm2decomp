@@ -5221,7 +5221,7 @@ Func_036_5F25:: ; address name
     ld de, wTemp0
     ld bc, $0004
     call CopyBytes
-    call ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc
+    call ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry
     ld a, [wBattleActor]
     ld hl, wSlotDamageFlags
     add_a_to_hl
@@ -5237,7 +5237,7 @@ Func_036_5F25:: ; address name
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wTemp0, wBattleSkills
-ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc::
+ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry::
 Func_036_6018:: ; address name
     ld hl, wTemp0
     ld b, $04
@@ -5253,7 +5253,7 @@ Func_036_6018:: ; address name
     ld a, [hl]
     cp a, $FF
     jr nz, .skip
-    call ActionEffect_BeDragon_Sub02_Sub01_Sub01
+    call ActionEffect_BeDragon_ClearEntry
     jr .next
 
 .skip:
@@ -5291,13 +5291,13 @@ Func_036_6018:: ; address name
     inc hl
     dec b
     jr nz, .loop
-    call ActionEffect_BeDragon_Sub02_Sub01_Sub01
-    call ActionEffect_BeDragon_Sub02_Sub01_Sub01
-    call ActionEffect_BeDragon_Sub02_Sub01_Sub01
+    call ActionEffect_BeDragon_ClearEntry
+    call ActionEffect_BeDragon_ClearEntry
+    call ActionEffect_BeDragon_ClearEntry
 
-; only called from ActionEffect_BeDragon_Sub02_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc)
-ActionEffect_BeDragon_Sub02_Sub01_Sub01::
+; writes $FF at DE and 0 before it, then DE += 3
+; 4 call sites from 1 routine (e.g. ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry)
+ActionEffect_BeDragon_ClearEntry::
 Func_036_6077:: ; address name
     ld a, $FF
     ld [de], a
@@ -11178,4 +11178,155 @@ Func_036_7F5B:: ; address name
 .done:
     pop hl
     ret
-    ds $94, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank36:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_036_7F6C:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

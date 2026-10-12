@@ -4548,7 +4548,7 @@ Jump_024_6269:: ; address name
     ld hl, wWindowTileBuffer + $DC
     ld bc, $0B07
     call CopyRectTo20ByteRows_Bank24
-    call PriestMenu_PayForService_Case02_LoadSRAMRecordByte
+    call PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
     ld de, $01CC
@@ -5631,7 +5631,7 @@ Func_024_6903:: ; address name
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
-PriestMenu_PayForService_Case02_LoadSRAMRecordByte::
+PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0::
 Func_024_6944:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5653,13 +5653,13 @@ Func_024_6944:: ; address name
     push de
     ldh a, [hTemp0]
     bit 0, a
-    call nz, PriestMenu_PayForService_Case02_Sub01_Sub01
+    call nz, PriestMenu_PayForService_WriteMarkC0
     ldh a, [hTemp0]
     bit 2, a
-    call nz, PriestMenu_PayForService_Case02_Sub01_Sub02
+    call nz, PriestMenu_PayForService_WriteMarkC1
     ldh a, [hTemp0]
     bit 7, a
-    call nz, PriestMenu_PayForService_Case02_Sub01_Sub03
+    call nz, PriestMenu_PayForService_WriteMarkC2
     pop de
     pop bc
     pop hl
@@ -5673,14 +5673,14 @@ Func_024_6944:: ; address name
     ld [rRAMB], a
     ret
 
-; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
-PriestMenu_PayForService_Case02_Sub01_Sub01::
+; writes tile $C0 at the table address for entry E
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0)
+PriestMenu_PayForService_WriteMarkC0::
 Func_024_6987:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub01_Data
+    ld hl, PriestMenu_PayForService_WriteMarkC0_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5690,14 +5690,14 @@ Func_024_6987:: ; address name
     pop de
     ret
 
-; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
-PriestMenu_PayForService_Case02_Sub01_Sub02::
+; writes tile $C1 at the table address for entry E
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0)
+PriestMenu_PayForService_WriteMarkC1::
 Func_024_699A:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub02_Data
+    ld hl, PriestMenu_PayForService_WriteMarkC1_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5707,14 +5707,14 @@ Func_024_699A:: ; address name
     pop de
     ret
 
-; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
-PriestMenu_PayForService_Case02_Sub01_Sub03::
+; writes tile $C2 at the table address for entry E
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0)
+PriestMenu_PayForService_WriteMarkC2::
 Func_024_69AD:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub03_Data
+    ld hl, PriestMenu_PayForService_WriteMarkC2_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5724,18 +5724,18 @@ Func_024_69AD:: ; address name
     pop de
     ret
 
-; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub01
-PriestMenu_PayForService_Case02_Sub01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_WriteMarkC0
+PriestMenu_PayForService_WriteMarkC0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69C0:: ; address name
     db $F7, $C3, $1F, $C4, $47, $C4
 
-; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub02
-PriestMenu_PayForService_Case02_Sub01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_WriteMarkC1
+PriestMenu_PayForService_WriteMarkC1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69C6:: ; address name
     db $F8, $C3, $20, $C4, $48, $C4
 
-; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub03
-PriestMenu_PayForService_Case02_Sub01_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_WriteMarkC2
+PriestMenu_PayForService_WriteMarkC2_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69CC:: ; address name
     db $F9, $C3, $21, $C4, $49, $C4
 

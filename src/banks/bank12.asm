@@ -6723,7 +6723,7 @@ Func_012_6893:: ; address name
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
-; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, GreatLogTalkEvents_GenerateNewKeyEntry, ...)
+; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, GreatLogTalkEvents_ClearArenaData_Case65, ...)
 ; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
 ; points at: wKeySeeds
@@ -10725,4 +10725,150 @@ Func_012_7F1C:: ; address name
     sbc a, $00
     ld [wGoldHi], a
     ret
-    ds $8F, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank12:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_012_7F71:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

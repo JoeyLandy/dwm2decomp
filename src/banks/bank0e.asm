@@ -2,7 +2,7 @@ SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
 ; only called from DebugMessageTest_Update_Case1C (E-0047)
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_CallUpdate_Case1C_Sub01_BeginStringDisplay)
 ; reads: wStringIndex
 DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01::
 Func_00E_4001:: ; address name
@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_ResetListAndShowString_Case08, RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed, RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37, RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed, RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -1772,9 +1772,9 @@ Func_00E_5AA4:: ; address name
     ld de, wRecordBufB + MON_SKILLS
     call CopyEightBytesDEToHL
     call MapWCB0CEntriesThroughTable5B03
-    call BuildWCB0CCandidateList_Sub01
+    call BuildWCB0CCandidateList_RemoveDuplicateSkills
     call CompactWCB0CRemovingFF
-    call BuildWCB0CCandidateList_Sub01
+    call BuildWCB0CCandidateList_RemoveDuplicateSkills
     ret
 
 ; replaces each of the $19 bytes at wCB0C (other than $FF) by Data_00E_5B03[byte] (E-0124)
@@ -1845,9 +1845,9 @@ Func_00E_5BB3:: ; address name
     jr nz, .loop
     ret
 
-; only called from BuildWCB0CCandidateList (E-0047)
+; in the child's skill list (wChildRecord + MON_SKILL_LIST, 25 entries) turns zeros and repeated skills into $FF
 ; 2 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
-BuildWCB0CCandidateList_Sub01::
+BuildWCB0CCandidateList_RemoveDuplicateSkills::
 Func_00E_5BCC:: ; address name
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $00
@@ -2227,12 +2227,12 @@ Func_00E_5D77:: ; address name
 SumFunc5DCDOfWC9F9AndWCA9E::
 Func_00E_5DAF:: ; address name
     ld hl, wRecordBufA + MON_RESISTANCES
-    call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
+    call SumFunc5DCDOfWC9F9AndWCA9E_TestEntry
     cp a, $FF
     jr z, .done
     ld e, a
     ld hl, wRecordBufB + MON_RESISTANCES
-    call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
+    call SumFunc5DCDOfWC9F9AndWCA9E_TestEntry
     cp a, $FF
     jr z, .done
     add a, e
@@ -2245,9 +2245,9 @@ Func_00E_5DAF:: ; address name
     ld b, $FF
     ret
 
-; only called from SumFunc5DCDOfWC9F9AndWCA9E (E-0047)
+; for entry C: when it is 2 and the byte $31 later is 1-$1B and its table byte equals C, returns $FF
 ; 2 call sites from 1 routine (e.g. SumFunc5DCDOfWC9F9AndWCA9E)
-SumFunc5DCDOfWC9F9AndWCA9E_Sub01::
+SumFunc5DCDOfWC9F9AndWCA9E_TestEntry::
 Func_00E_5DCD:: ; address name
     push hl
     ld a, c
@@ -2272,7 +2272,7 @@ Func_00E_5DCD:: ; address name
     cp a, $1C
     jr nc, .restore2
     dec a
-    ld hl, SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data
+    ld hl, SumFunc5DCDOfWC9F9AndWCA9E_TestEntry_Data
     add_a_to_hl
     ld a, [hl]
     cp a, c
@@ -2286,8 +2286,8 @@ Func_00E_5DCD:: ; address name
     pop af
     jr .done
 
-; address loaded by SumFunc5DCDOfWC9F9AndWCA9E_Sub01
-SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by SumFunc5DCDOfWC9F9AndWCA9E_TestEntry
+SumFunc5DCDOfWC9F9AndWCA9E_TestEntry_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_5E02:: ; address name
     db $00, $01, $02, $03, $04, $05, $06, $0E, $0F, $07, $10, $11, $12, $13, $14, $08
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D

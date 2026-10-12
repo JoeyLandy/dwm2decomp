@@ -371,7 +371,7 @@ SkillRequirementTable::
 Data_01A_4FF8:: ; address name
     db $00 ; id 0
     dw 0, 0, 0, 0, 0, 0
-BattleEnd_Step3_Sub02_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step3_FindSkillInTable_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01A_5005:: ; address name
     db $FF, $FF, $FF, $FF, $FF
     db $01 ; id 1
@@ -2236,9 +2236,9 @@ Func_01A_624B:: ; address name
 .loop:
     ld a, [de]
     inc de
-    call BattleEnd_Step3_Sub02_Sub01
+    call BattleEnd_Step3_Sub02_BattleEnd_Step3_RecordKnowsSkill
     jr z, .skip
-    call BattleEnd_Step3_Sub02_Sub02
+    call BattleEnd_Step3_FindSkillInTable
 
 .skip:
     ld [hl+], a
@@ -2270,14 +2270,14 @@ Func_01A_624B:: ; address name
 
 ; only called from BattleEnd_Step3_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_LoadSpeciesRecord)
-BattleEnd_Step3_Sub02_Sub01::
+BattleEnd_Step3_Sub02_BattleEnd_Step3_RecordKnowsSkill::
 Func_01A_62A0:: ; address name
     push hl
     push bc
     cp a, $C8
     jr z, .skip3
     ld c, a
-    call BattleEnd_Step3_Shared01
+    call BattleEnd_Step3_RecordKnowsSkill
     jr nz, .done
     push bc
     ld b, $00
@@ -2292,7 +2292,7 @@ Func_01A_62A0:: ; address name
     cp a, $FF
     jr z, .skip2
     push hl
-    call BattleEnd_Step3_Shared01
+    call BattleEnd_Step3_RecordKnowsSkill
     pop hl
     jr nz, .done
     jr .skip
@@ -2311,33 +2311,33 @@ Func_01A_62A0:: ; address name
     pop hl
     ret
 
-; only called from BattleEnd_Step3_Sub02 (E-0047)
+; searches 170 18-byte records of its table for A among their first five bytes; on a match checks the record's skills (BattleEnd_Step3_RecordKnowsSkill)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_LoadSpeciesRecord)
-BattleEnd_Step3_Sub02_Sub02::
+BattleEnd_Step3_FindSkillInTable::
 Func_01A_62D0:: ; address name
     push hl
     push de
     push bc
-    ld hl, BattleEnd_Step3_Sub02_Sub02_Data
+    ld hl, BattleEnd_Step3_FindSkillInTable_Data
     ld b, $AA
     ld c, $00
 
 .loop:
     push hl
     cp a, [hl]
-    jr z, .call_battle_end_step3_shared01
+    jr z, .call_battle_end_step3_record_knows_skill
     inc hl
     cp a, [hl]
-    jr z, .call_battle_end_step3_shared01
+    jr z, .call_battle_end_step3_record_knows_skill
     inc hl
     cp a, [hl]
-    jr z, .call_battle_end_step3_shared01
+    jr z, .call_battle_end_step3_record_knows_skill
     inc hl
     cp a, [hl]
-    jr z, .call_battle_end_step3_shared01
+    jr z, .call_battle_end_step3_record_knows_skill
     inc hl
     cp a, [hl]
-    jr z, .call_battle_end_step3_shared01
+    jr z, .call_battle_end_step3_record_knows_skill
 
 .loop2:
     pop hl
@@ -2353,18 +2353,18 @@ Func_01A_62D0:: ; address name
     pop hl
     ret
 
-.call_battle_end_step3_shared01:
+.call_battle_end_step3_record_knows_skill:
     ld e, a
     ld a, c
-    call BattleEnd_Step3_Shared01
+    call BattleEnd_Step3_RecordKnowsSkill
     ld a, e
     jr z, .loop2
     pop hl
     jr .restore
 
-; only called from routines of BattleEnd_Step3 (E-0098)
-; 3 call sites from 2 routines (e.g. BattleEnd_Step3_Sub02_Sub02, BattleEnd_Step3_Sub02_Sub01)
-BattleEnd_Step3_Shared01::
+; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS)
+; 3 call sites from 2 routines (e.g. BattleEnd_Step3_FindSkillInTable, BattleEnd_Step3_Sub02_BattleEnd_Step3_RecordKnowsSkill)
+BattleEnd_Step3_RecordKnowsSkill::
 Func_01A_6306:: ; address name
     push bc
     ld hl, wRecordBufA + MON_SKILLS

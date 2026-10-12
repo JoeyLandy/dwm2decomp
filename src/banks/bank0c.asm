@@ -1236,12 +1236,12 @@ Jump_00C_4778:: ; address name
     ld hl, wWindowTileBuffer + $3D
     ld bc, $1201
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_ShowMonsterEntry_Case01_Sub01
+    call LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $108
     ld bc, $0201
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_ShowMonsterEntry_Case01_Sub02
+    call LibraryMenu_ShowMonsterEntry_LoadClassBlock
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $130
     ld bc, $0401
@@ -2996,13 +2996,13 @@ Func_00C_530A:: ; address name
 ; only called from LibraryMenu_ShowMonsterEntry_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01)
 ; points at: wScreenBlock9C
-LibraryMenu_ShowMonsterEntry_Case01_Sub01::
+LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
 Func_00C_534A:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterIconKindTable_536A
     add hl, de
     ld a, [hl]
-    ld hl, LibraryMenu_ShowMonsterEntry_Case01_Sub01_Data
+    ld hl, LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -3397,23 +3397,23 @@ Data_00C_536A:: ; address name
     db $03 ; id 371 Orgodemir
     db $02 ; id 372 Darck
 
-; address loaded by LibraryMenu_ShowMonsterEntry_Case01_Sub01
-LibraryMenu_ShowMonsterEntry_Case01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX
+LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_54DF:: ; address name
     db $E9, $54, $EB, $54, $ED, $54, $EF, $54, $F1, $54, $7C, $80, $7D, $80, $7E, $80
     db $7E, $7E, $7F, $80
 
-; only called from LibraryMenu_ShowMonsterEntry_Case01 (E-0047)
+; takes the class byte of the grid cell (MonsterClassByteTable_5562) and copies its four bytes to wScreenBlock9C
 ; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01)
 ; points at: wScreenBlock9C
-LibraryMenu_ShowMonsterEntry_Case01_Sub02::
+LibraryMenu_ShowMonsterEntry_LoadClassBlock::
 Func_00C_54F3:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterClassByteTable_5562
     add hl, de
     ld a, [hl]
     add a, a
-    ld hl, LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data
+    ld hl, LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3429,47 +3429,47 @@ Func_00C_54F3:: ; address name
     jr nz, .loop
     ret
 
-; address loaded by LibraryMenu_ShowMonsterEntry_Case01_Sub02
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by LibraryMenu_ShowMonsterEntry_LoadClassBlock
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_5513:: ; address name
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry00
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry01
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry02
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry03
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry04
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry05
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry06
-    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry07
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry00
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry01
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry02
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry03
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry04
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry05
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry06
+    dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5523:: ; address name
     db $81, $80, $80, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5527:: ; address name
     db $82, $80, $80, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_552B:: ; address name
     db $82, $81, $80, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_552F:: ; address name
     db $82, $82, $80, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5533:: ; address name
     db $82, $82, $81, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5537:: ; address name
     db $82, $82, $82, $80
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_553B:: ; address name
     db $82, $82, $82, $81
 
-LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_553F:: ; address name
     db $82, $82, $82, $82
 
@@ -5609,7 +5609,7 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_SubtractArg1AmountFromGold
     dw ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_Case0A
+    dw ArenaMenu_CallArenaMenu_DispatchTalkEvent
     dw ArenaMenu_ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C
     dw ArenaMenu_AdvanceScreenState_Case0D
@@ -6370,7 +6370,7 @@ Jump_00C_6A6A:: ; address name
 
 ; entry 10 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ArenaMenu_Case0A::
+ArenaMenu_CallArenaMenu_DispatchTalkEvent::
 Jump_00C_6AC4:: ; address name
     call ArenaMenu_DispatchTalkEvent_Shared04
     ret
@@ -8016,7 +8016,7 @@ Func_00C_744D:: ; address name
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaMenu_Case0A, ArenaMenu_SubtractArg1AmountFromGold)
+; 2 call sites from 2 routines (e.g. ArenaMenu_CallArenaMenu_DispatchTalkEvent, ArenaMenu_SubtractArg1AmountFromGold)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wGridCursorX, wScreenCountPlusOne
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wEncounterMonsters

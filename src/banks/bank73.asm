@@ -216,7 +216,7 @@ Jump_073_411F:: ; address name
     dw GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1
     dw GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0
     dw GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_Case07
     dw GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
@@ -395,7 +395,7 @@ Jump_073_4139:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wMenuCursor
 ; points at: wMenuState, wScriptStep, wMenuSubState, wMenuSelectedMember
-GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor::
+GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_Case07::
 Jump_073_4269:: ; address name
     call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
@@ -405,7 +405,7 @@ Jump_073_4269:: ; address name
     dec a
     jr nz, .skip
     ld hl, wMenuState
-    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
     or a, a
     jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
@@ -416,7 +416,7 @@ Jump_073_4269:: ; address name
     dec a
     jr nz, .call_great_log_field_events_go_help_your
     ld hl, wMenuSubState
-    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
     or a, a
     jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
@@ -425,7 +425,7 @@ Jump_073_4269:: ; address name
 
 .call_great_log_field_events_go_help_your:
     ld hl, wMenuSelectedMember
-    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
     or a, a
     jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
@@ -435,9 +435,9 @@ Jump_073_4269:: ; address name
     call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
     ret
 
-; only called from GreatLogFieldEvents_GoHelpYourMotherScene_Case07 (E-0047)
-; 3 call sites from 1 routine (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor)
-GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01::
+; returns 1 when the low nibble at HL is 0; otherwise counts the high nibble up and wraps it at 10, returning 0
+; 3 call sites from 1 routine (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_Case07)
+GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter::
 Func_073_42AB:: ; address name
     ld a, [hl]
     and a, $0F
@@ -627,7 +627,7 @@ Jump_073_43B3:: ; address name
     ret
 
 ; only called from routines of GreatLogFieldEvents_GoHelpYourMotherScene (E-0098)
-; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0)
+; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_Case07, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0)
 ; reads: wFrameCounterLo, wMenuCursor, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember
 GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo::
@@ -682,7 +682,7 @@ Func_073_43BE:: ; address name
     ret
 
 ; only called from routines of GreatLogFieldEvents_GoHelpYourMotherScene (E-0098)
-; 4 call sites from 4 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0, GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1)
+; 4 call sites from 4 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_Case07, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0, GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1)
 ; reads: wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: hTemp0, hTemp1
 GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
@@ -4788,37 +4788,37 @@ Func_073_5C5F:: ; address name
     jr nz, .check_player_y
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, .call_scene_justice_write_svbk
+    jr nz, .call_scene_justice_step_wrap_position_sub01
     ld hl, wScreenTileBuffer + $52
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     jr .check_screen_tile_buffer
 
-.call_scene_justice_write_svbk:
+.call_scene_justice_step_wrap_position_sub01:
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     jr .check_screen_tile_buffer
 
 .check_player_y:
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, .call_scene_justice_write_svbk2
+    jr nz, .call_scene_justice_step_wrap_position_sub012
     ld hl, wScreenTileBuffer + $60
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     jr .check_screen_tile_buffer
 
-.call_scene_justice_write_svbk2:
+.call_scene_justice_step_wrap_position_sub012:
     ld hl, wScreenTileBuffer + $60
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_WriteSVBK
+    call SceneJustice_StepWrapPosition_Sub01
 
 .check_screen_tile_buffer:
     ld a, [wScreenTileBuffer + $52]
@@ -4869,13 +4869,13 @@ Func_073_5C5F:: ; address name
 ; 9 call sites from 1 routine (e.g. SceneJustice)
 ; reads: wIsCGB
 ; writes: rSVBK
-SceneJustice_WriteSVBK::
+SceneJustice_StepWrapPosition_Sub01::
 Func_073_5D09:: ; address name
     push hl
-    call SceneJustice_Sub01_Sub01
-    call SceneJustice_Sub01_Sub01
-    call SceneJustice_Sub01_Sub01
-    call SceneJustice_Sub01_Sub01
+    call SceneJustice_StepWrapPosition
+    call SceneJustice_StepWrapPosition
+    call SceneJustice_StepWrapPosition
+    call SceneJustice_StepWrapPosition
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -4898,17 +4898,17 @@ Func_073_5D09:: ; address name
     ld h, a
     ld a, $02
     ldh [rSVBK], a
-    call SceneJustice_Sub01_Sub02
-    call SceneJustice_Sub01_Sub02
-    call SceneJustice_Sub01_Sub02
-    call SceneJustice_Sub01_Sub02
+    call SceneJustice_SetPosition
+    call SceneJustice_SetPosition
+    call SceneJustice_SetPosition
+    call SceneJustice_SetPosition
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; only called from SceneJustice_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. SceneJustice_WriteSVBK)
-SceneJustice_Sub01_Sub01::
+; adds 8 to two position bytes, wrapping each below $28, and reads the byte $14 on
+; 4 call sites from 1 routine (e.g. SceneJustice_StepWrapPosition_Sub01)
+SceneJustice_StepWrapPosition::
 Func_073_5D48:: ; address name
     ld a, [hl]
     add a, $08
@@ -4931,9 +4931,9 @@ Func_073_5D48:: ; address name
     ld a, [hl]
     ret
 
-; only called from SceneJustice_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. SceneJustice_WriteSVBK)
-SceneJustice_Sub01_Sub02::
+; stores C to two position bytes and reads the byte $14 on
+; 4 call sites from 1 routine (e.g. SceneJustice_StepWrapPosition_Sub01)
+SceneJustice_SetPosition::
 Func_073_5D65:: ; address name
     ld a, c
     ld [hl+], a
@@ -6151,15 +6151,15 @@ Jump_073_6441:: ; address name
     inc hl
     ld a, [hl]
     cp a, $50
-    jr nz, .call_reward_item_or_key_shared03
+    jr nz, .call_reward_item_or_key_dec_and_face3
     ld a, $50
     ld [wObject1 + OBJ_X], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-.call_reward_item_or_key_shared03:
-    call RewardItemOrKey_Shared03
+.call_reward_item_or_key_dec_and_face3:
+    call RewardItemOrKey_DecAndFace3
     ret
 
 ; entry 8 of the `rst $00` table in RewardItemOrKey
@@ -6177,15 +6177,15 @@ Jump_073_645D:: ; address name
     inc hl
     ld a, [hl]
     cp a, $20
-    jr nz, .call_reward_item_or_key_shared02
+    jr nz, .call_reward_item_or_key_dec_and_face2
     ld a, $20
     ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-.call_reward_item_or_key_shared02:
-    call RewardItemOrKey_Shared02
+.call_reward_item_or_key_dec_and_face2:
+    call RewardItemOrKey_DecAndFace2
     ret
 
 ; entry 6 of the `rst $00` table in RewardItemOrKey
@@ -6210,12 +6210,12 @@ Jump_073_647A:: ; address name
     ret
 
 .skip:
-    jr nc, .call_reward_item_or_key_shared02
-    call RewardItemOrKey_Shared01
+    jr nc, .call_reward_item_or_key_dec_and_face2
+    call RewardItemOrKey_IncAndFace0
     ret
 
-.call_reward_item_or_key_shared02:
-    call RewardItemOrKey_Shared02
+.call_reward_item_or_key_dec_and_face2:
+    call RewardItemOrKey_DecAndFace2
     ret
 
 ; entry 5 of the `rst $00` table in RewardItemOrKey
@@ -6232,15 +6232,15 @@ Jump_073_649E:: ; address name
     inc hl
     ld a, [hl]
     cp a, $70
-    jr nz, .call_reward_item_or_key_shared04
+    jr nz, .call_reward_item_or_key_inc_and_face1
     ld a, $70
     ld [wObject1 + OBJ_X], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-.call_reward_item_or_key_shared04:
-    call RewardItemOrKey_Shared04
+.call_reward_item_or_key_inc_and_face1:
+    call RewardItemOrKey_IncAndFace1
     ret
 
 ; entry 4 of the `rst $00` table in RewardItemOrKey
@@ -6267,12 +6267,12 @@ Jump_073_64BA:: ; address name
 .cp_40:
     cp a, $40
     jr z, .loop
-    jr nc, .call_reward_item_or_key_shared02
-    call RewardItemOrKey_Shared01
+    jr nc, .call_reward_item_or_key_dec_and_face2
+    call RewardItemOrKey_IncAndFace0
     ret
 
-.call_reward_item_or_key_shared02:
-    call RewardItemOrKey_Shared02
+.call_reward_item_or_key_dec_and_face2:
+    call RewardItemOrKey_DecAndFace2
     ret
 
 ; entry 3 of the `rst $00` table in RewardItemOrKey
@@ -6296,12 +6296,12 @@ Jump_073_64DC:: ; address name
     ret
 
 .skip:
-    jr nc, .call_reward_item_or_key_shared03
-    call RewardItemOrKey_Shared04
+    jr nc, .call_reward_item_or_key_dec_and_face3
+    call RewardItemOrKey_IncAndFace1
     ret
 
-.call_reward_item_or_key_shared03:
-    call RewardItemOrKey_Shared03
+.call_reward_item_or_key_dec_and_face3:
+    call RewardItemOrKey_DecAndFace3
     ret
 
 ; entry 2 of the `rst $00` table in RewardItemOrKey
@@ -6319,15 +6319,15 @@ Jump_073_64FF:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, .call_reward_item_or_key_shared01
+    jr nz, .call_reward_item_or_key_inc_and_face0
     ld a, $40
     ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-.call_reward_item_or_key_shared01:
-    call RewardItemOrKey_Shared01
+.call_reward_item_or_key_inc_and_face0:
+    call RewardItemOrKey_IncAndFace0
     ret
 
 ; entry 1 of the `rst $00` table in RewardItemOrKey
@@ -6353,12 +6353,12 @@ Jump_073_651C:: ; address name
 .cp_50:
     cp a, $50
     jr z, .loop
-    jr nc, .call_reward_item_or_key_shared03
-    call RewardItemOrKey_Shared04
+    jr nc, .call_reward_item_or_key_dec_and_face3
+    call RewardItemOrKey_IncAndFace1
     ret
 
-.call_reward_item_or_key_shared03:
-    call RewardItemOrKey_Shared03
+.call_reward_item_or_key_dec_and_face3:
+    call RewardItemOrKey_DecAndFace3
     ret
 
 ; entry 0 of the `rst $00` table in RewardItemOrKey
@@ -6419,9 +6419,9 @@ Jump_073_653D:: ; address name
     ld [wScriptStep], a
     ret
 
-; only called from routines of RewardItemOrKey (E-0098)
+; increments the position byte and sets the facing two bytes back to 0
 ; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1AndScriptStep_Case06, RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04, RewardItemOrKey_WriteObject1)
-RewardItemOrKey_Shared01::
+RewardItemOrKey_IncAndFace0::
 Func_073_6596:: ; address name
     inc a
     ld [hl], a
@@ -6430,9 +6430,9 @@ Func_073_6596:: ; address name
     ld [hl], $00
     ret
 
-; only called from routines of RewardItemOrKey (E-0098)
+; decrements the position byte and sets the facing two bytes back to 2
 ; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case08, RewardItemOrKey_WriteObject1AndScriptStep_Case06, RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04)
-RewardItemOrKey_Shared02::
+RewardItemOrKey_DecAndFace2::
 Func_073_659D:: ; address name
     dec a
     ld [hl], a
@@ -6441,9 +6441,9 @@ Func_073_659D:: ; address name
     ld [hl], $02
     ret
 
-; only called from routines of RewardItemOrKey (E-0098)
+; decrements the position byte and sets the facing one byte back to 3
 ; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case0B, RewardItemOrKey_WriteObject1AndScriptStep, RewardItemOrKey_ReadMessageIndexAndMessageGroup)
-RewardItemOrKey_Shared03::
+RewardItemOrKey_DecAndFace3::
 Func_073_65A4:: ; address name
     dec a
     ld [hl], a
@@ -6451,9 +6451,9 @@ Func_073_65A4:: ; address name
     ld [hl], $03
     ret
 
-; only called from routines of RewardItemOrKey (E-0098)
+; increments the position byte and sets the facing one byte back to 1
 ; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case05, RewardItemOrKey_WriteObject1AndScriptStep, RewardItemOrKey_ReadMessageIndexAndMessageGroup)
-RewardItemOrKey_Shared04::
+RewardItemOrKey_IncAndFace1::
 Func_073_65AA:: ; address name
     inc a
     ld [hl], a
@@ -10099,4 +10099,1324 @@ Jump_073_7AD0:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
-    ds $525, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank73:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_073_7ADB:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

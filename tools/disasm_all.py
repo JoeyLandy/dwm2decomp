@@ -1614,6 +1614,91 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def name_structural_by_shape(self) -> None:
+        """E-0305: a structural step (Parent_CaseNN / _SubNN / _SharedNN with nothing descriptive) that no rule
+        named is named Parent_<Shape> from its first instructions, by the rules that name branch targets
+        (_target_shape: CallX, SetX, CheckX, ReadX, ClearX, ReturnNN, CpNN, Next, ...); when that gives only
+        "Skip", by the first named routine it calls or jumps to. Dispatchers keep their names (their cases
+        carry them). The parent keeps its own name; only the structural suffix is replaced."""
+        pat = re.compile(r"^(\w+?)_(?:Case|Sub|Shared)[0-9A-F]{2}$")
+        live = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+        used = set(live)
+        named = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in sorted(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or lab in getattr(self, "shape_named", set()) or (b, a) in self.config_name_keys:
+                    continue
+                root = re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab)
+                if root != re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab) and root not in live:
+                    continue  # a descriptive name numbered for uniqueness
+                v0 = ins.get(a)
+                if not v0 or v0[0] == "dw":
+                    continue
+                v1 = ins.get(a + v0[0])
+                if v1 and v1[0] != "dw" and v1[1] == "rst $00":
+                    continue  # a dispatcher
+                body, pc, callee = [], a, None
+                for _ in range(24):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b] and not self.labels[b][pc].startswith("Jump_")):
+                        break
+                    t = self.symbolize(v[1], (), (b, pc))
+                    if v[2] in ("call", "jp") and v[3] is not None:
+                        r = self.resolve(b, v[3])
+                        nm = self.labels[r[0]].get(r[1]) if r and 0 <= r[0] < self.nbanks else None
+                        if nm:
+                            t = f"{v[1].split()[0]} {nm}"
+                            if callee is None and not nm.startswith(("Func_", "Jump_")) and not nm.startswith(m.group(1)):
+                                callee = nm
+                    elif v[1] == "rst $10" and len(body) >= 2:
+                        hl = re.search(r"ld hl, \$([0-9A-F]{4})", " ".join(body[-2:]))
+                        bb = re.search(r"ld b, \$([0-9A-F]{2})", " ".join(body[-2:]))
+                        if hl and bb and int(bb.group(1), 16) < self.nbanks:
+                            nm = self.labels[int(bb.group(1), 16)].get(int(hl.group(1), 16))
+                            if nm and callee is None and not nm.startswith(("Func_", "Jump_")):
+                                callee = nm
+                                body = body[:-2]
+                                t = f"farcall {nm}"
+                    body.append(t)
+                    if v[2] in ("ret", "jp") and "," not in v[1]:
+                        break
+                    pc += v[0]
+                parent = m.group(1)
+
+                def clean(nm: str) -> str:  # the callee without the parent's leading parts or a structural tail
+                    pp, cc = parent.split("_"), nm.split("_")
+                    k = 0
+                    while k < min(len(pp), len(cc)) - 1 and pp[k] == cc[k]:
+                        k += 1
+                    tail = "_".join(cc[k:])
+                    return re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", tail) or tail
+
+                shape = _target_shape(body[:4], False)[1] if body else "Skip"
+                if shape.startswith("Call"):
+                    first = next((mm.group(1) for t in body[:3] if (mm := re.match(r"(?:far)?call (\w+)$", t))), None)
+                    if first:
+                        shape = "Call" + clean(first)
+                if shape in ("Skip", "Done", "Next", "Restore") and callee:
+                    shape = "Call" + clean(callee)
+                if shape in ("Skip", "Done", "Next", "Restore"):
+                    shape = {"Done": "ReturnAfterSetup", "Next": "StepCounter", "Restore": "RestoreRegisters"}.get(shape)
+                if not shape:
+                    continue
+                new = f"{m.group(1)}_{shape}"
+                if new in used:
+                    new = f"{new}_{lab[len(m.group(1)) + 1:]}"
+                    if new in used or len(new) > 90:
+                        continue
+                used.add(new)
+                self.alias.setdefault((b, a), lab) if lab.startswith(("Func_", "Jump_")) else None
+                self.labels[b][a] = new
+                if hasattr(self, "shape_named"):
+                    self.shape_named.add(new)
+                named += 1
+        log(f"structural steps named by the shape of their first instructions: {named}")
+
     def name_data_by_reader(self) -> None:
         """E-0285: a data label that still has only an address name and that code loads (`ld rr, n`) is
         named after the routine whose instructions load it: <Reader>_Data, or <Reader>_Data_AAAA when the
@@ -2135,6 +2220,8 @@ class Rom:
                    if lab in set(left) and (v := self.insn[bb].get(aa)) and v[0] != "dw"
                    and (w := self.insn[bb].get(aa + v[0])) and w[1] == "rst $00")
         log(f"structural labels left unnamed: {len(left)} ({disp} dispatchers)")
+        if (ROOT / "build").is_dir():  # the list behind the count, for review (not a build input)
+            (ROOT / "build/structural_left.txt").write_text("\n".join(sorted(left)) + "\n", encoding="utf-8")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0
@@ -4860,6 +4947,7 @@ class Rom:
         self.rename_address_prefixed_children()
         self.name_trampoline_cases()
         self.name_trampoline_cases()  # E-0283: a second pass sees the targets the first pass named
+        self.name_structural_by_shape()
         self.name_data_by_reader()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")

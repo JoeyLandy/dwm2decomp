@@ -2,7 +2,7 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: wKeyWorldAreaCount, hTemp8, hTemp9
 ; writes: wKeyWorldByte46, hTemp8, hTemp9, hTemp0
 ; points at: wKeyWorldFloorState
@@ -74,7 +74,7 @@ Func_084_405C:: ; address name
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
-    dw RunDebugAutomapCaseTemp0_Case06
+    dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
 ; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
@@ -84,7 +84,7 @@ Jump_084_406D:: ; address name
 
 ; entry 6 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugAutomapCaseTemp0_Case06::
+RunDebugAutomapCaseTemp0_ReturnAfterSetup::
 Jump_084_406E:: ; address name
     ld a, $54
     ld [de], a

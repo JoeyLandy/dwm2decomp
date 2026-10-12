@@ -4130,7 +4130,7 @@ Func_016_5889:: ; address name
     ld c, MON_WLD
     call SRAMRecordAddress
     pop de
-    call ApplyMeatToRecordField6B_Sub01
+    call ApplyMeatToRecordField6B_SubtractDEFloor0
     ret
 
 ; field C of record A: adds E, capped at the limit passed in DE's partner (Func_016_58B8) (E-0122)
@@ -4228,9 +4228,9 @@ Func_016_58CC:: ; address name
     ld [hl], b
     ret
 
-; only called from ApplyMeatToRecordField6B (E-0047)
+; the word at HL -= DE, not below 0 (field $6B is MON_WLD, E-0296)
 ; 1 call site from 1 routine (e.g. ApplyMeatToRecordField6B)
-ApplyMeatToRecordField6B_Sub01::
+ApplyMeatToRecordField6B_SubtractDEFloor0::
 Func_016_58E0:: ; address name
     push hl
     deref_hl
@@ -9254,7 +9254,7 @@ Func_016_76BD:: ; address name
     ld a, [wWorkBuf + $4]
     adc a, $00
     ld h, a
-    call BuildRecordSummaryForWorkBuf_Sub01
+    call BuildRecordSummaryForWorkBuf_ClearAndCopy
     ld a, [wWorkBuf + $3]
     add a, $62
     ld l, a
@@ -9272,9 +9272,9 @@ Func_016_76BD:: ; address name
     ld [de], a
     ret
 
-; only called from BuildRecordSummaryForWorkBuf (E-0047)
+; fills ten bytes at DE with $F0, then copies bytes from HL by the flags in B
 ; 1 call site from 1 routine (e.g. BuildRecordSummaryForWorkBuf)
-BuildRecordSummaryForWorkBuf_Sub01::
+BuildRecordSummaryForWorkBuf_ClearAndCopy::
 Func_016_7720:: ; address name
     push de
     ld a, $F0

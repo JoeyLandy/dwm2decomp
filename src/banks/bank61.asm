@@ -2259,25 +2259,25 @@ Func_061_5764:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw CheckWarpAtPlayer_Sub01_Case00
-    dw CheckWarpAtPlayer_Sub01_Case01
+    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
+    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01
     dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
     dw CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable
     dw CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83
     dw CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14
-    dw CheckWarpAtPlayer_Sub01_Case00
+    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
     dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
 
 ; entry 0 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case00::
+CheckWarpAtPlayer_Sub01_ReturnAfterSetup::
 Jump_061_577A:: ; address name
     ld c, $00
     ret
 
 ; entry 1 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case01::
+CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01::
 Jump_061_577D:: ; address name
     ld c, $00
     ret

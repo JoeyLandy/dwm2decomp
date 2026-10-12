@@ -8521,16 +8521,16 @@ Func_0F0_7D0A:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call KeyWorldDoorItem_Case04_Sub01_Sub02
+    call KeyWorldDoorItem_WriteUnknownName
     ld c, $06
     ld b, $F0
-    call KeyWorldDoorItem_Case04_Sub01_Sub01
+    call KeyWorldDoorItem_FillCBytesWithB
     ld a, $F0
     ld [hl+], a
-    call KeyWorldDoorItem_Case04_Sub01_Sub02
+    call KeyWorldDoorItem_WriteUnknownName
     ld c, $06
     ld b, $F0
-    call KeyWorldDoorItem_Case04_Sub01_Sub01
+    call KeyWorldDoorItem_FillCBytesWithB
     ld a, $F0
     ld [hl+], a
     ld c, $21
@@ -8554,7 +8554,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8568,7 +8568,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8582,7 +8582,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8592,7 +8592,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8602,7 +8602,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8612,7 +8612,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8629,7 +8629,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8637,7 +8637,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8645,7 +8645,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8653,7 +8653,7 @@ Func_0F0_7D0A:: ; address name
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call KeyWorldDoorItem_Case04_Sub01_Sub03
+    call KeyWorldDoorItem_ModuloBPlusOne
     pop hl
     ld a, e
     ld [hl+], a
@@ -8686,19 +8686,19 @@ Func_0F0_7D0A:: ; address name
     ld [hl+], a
     ret
 
-; only called from KeyWorldDoorItem_Case04_Sub01 (E-0047)
+; fills C bytes at HL with B
 ; 2 call sites from 1 routine (e.g. KeyWorldDoorItem_Case04_RandomModulo29_BankF0)
-KeyWorldDoorItem_Case04_Sub01_Sub01::
+KeyWorldDoorItem_FillCBytesWithB::
 Func_0F0_7E4A:: ; address name
     ld a, b
     ld [hl+], a
     dec c
-    jr nz, KeyWorldDoorItem_Case04_Sub01_Sub01
+    jr nz, KeyWorldDoorItem_FillCBytesWithB
     ret
 
-; only called from KeyWorldDoorItem_Case04_Sub01 (E-0047)
+; writes three $98 placeholder glyphs and $F0 at HL
 ; 2 call sites from 1 routine (e.g. KeyWorldDoorItem_Case04_RandomModulo29_BankF0)
-KeyWorldDoorItem_Case04_Sub01_Sub02::
+KeyWorldDoorItem_WriteUnknownName::
 Func_0F0_7E50:: ; address name
     ld a, $98
     ld [hl+], a
@@ -8710,9 +8710,9 @@ Func_0F0_7E50:: ; address name
     ld [hl+], a
     ret
 
-; only called from KeyWorldDoorItem_Case04_Sub01 (E-0047)
+; DE = (L mod B) + 1
 ; 10 call sites from 1 routine (e.g. KeyWorldDoorItem_Case04_RandomModulo29_BankF0)
-KeyWorldDoorItem_Case04_Sub01_Sub03::
+KeyWorldDoorItem_ModuloBPlusOne::
 Func_0F0_7E5D:: ; address name
     ld a, l
 
@@ -8763,4 +8763,375 @@ Func_0F0_7E69:: ; address name
     jr nc, .loop
     ld a, $01
     ret
-    ds $170, $00
+
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_BankF0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_0F0_7E90:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop

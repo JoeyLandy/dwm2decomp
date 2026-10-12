@@ -2975,7 +2975,7 @@ Jump_00A_5309:: ; address name
     ret
 
 ; writes tile $C4 at the BG map address from Func_00A_5328 and, on CGB, attribute 0 in VRAM bank 1 (E-0122)
-; 10 call sites from 3 routines (e.g. RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01, RunBattleTransitionStep_Case01_SetCounts_Case00)
+; 10 call sites from 3 routines (e.g. RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage)
 ; reads: wIsCGB
 ; writes: rVBK
 WriteTileC4AtTransitionBGPtrLoAndClearAttr::
@@ -3282,8 +3282,8 @@ RunBattleTransitionStep_Case01_SetCounts::
 Jump_00A_54AF:: ; address name
     ld a, [wTransitionCounter]
     rst $00
-    dw RunBattleTransitionStep_Case01_SetCounts_Case00
-    dw RunBattleTransitionStep_Case01_SetCounts_Case01
+    dw RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
+    dw RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup
     dw RunBattleTransitionStep_Case01_SetCounts_AdvanceBattleTransitionStep
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_SetCounts
@@ -3291,7 +3291,7 @@ Jump_00A_54AF:: ; address name
 ; reads: wTransitionStage, wTransitionCountA, wTransitionCountB
 ; writes: wTransitionCountA, wTransitionCountB
 ; points at: wTransitionStage, wTransitionCounter
-RunBattleTransitionStep_Case01_SetCounts_Case00::
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
 Jump_00A_54B9:: ; address name
     ld a, [wTransitionStage]
     or a, a
@@ -3303,7 +3303,7 @@ Jump_00A_54B9:: ; address name
     ld [wTransitionCountB], a
 
 .read_transition_stage:
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_Case00_Data_55FA
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3326,7 +3326,7 @@ Jump_00A_54B9:: ; address name
     inc hl
     dec b
     jr nz, .loop
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_Case00_Data_55FA
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3345,7 +3345,7 @@ Jump_00A_54B9:: ; address name
     dec b
     jr nz, .loop2
     push hl
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_Case00_Data_5603
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3366,7 +3366,7 @@ Jump_00A_54B9:: ; address name
     ld h, a
     dec b
     jr nz, .loop3
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_Case00_Data_5603
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3417,7 +3417,7 @@ Jump_00A_54B9:: ; address name
 ; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01_SetCounts
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTransitionCounter
-RunBattleTransitionStep_Case01_SetCounts_Case01::
+RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup::
 Jump_00A_5589:: ; address name
     ld hl, wTransitionCounter
     dec [hl]
@@ -3433,7 +3433,7 @@ Jump_00A_558E:: ; address name
     ret
 
 ; HL = the word at HL, then jp hl (E-0114)
-; 1 call site from 1 routine (e.g. RunBattleTransitionStep_Case01_SetCounts_Case00)
+; 1 call site from 1 routine (e.g. RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage)
 JumpToWordAtHL_Bank0A::
 Func_00A_5593:: ; address name
     deref_hl
@@ -3565,13 +3565,13 @@ Func_00A_55EF:: ; address name
     ld h, d
     ret
 
-; address loaded by RunBattleTransitionStep_Case01_SetCounts_Case00
-RunBattleTransitionStep_Case01_SetCounts_Case00_Data_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00A_55FA:: ; address name
     db $14, $12, $10, $0E, $0C, $0A, $08, $06, $04
 
-; address loaded by RunBattleTransitionStep_Case01_SetCounts_Case00
-RunBattleTransitionStep_Case01_SetCounts_Case00_Data_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00A_5603:: ; address name
     db $12, $10, $0E, $0C, $0A, $08, $06, $04, $02
 

@@ -2220,7 +2220,7 @@ Func_003_4BE8:: ; address name
     push de
     call Number24ToPackedBCD
     ld de, wWindowTileBuffer + $24
-    call WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01
+    call WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros
     ld c, $0B
     ld a, [wMenuSelectedMember]
     and a, $0F
@@ -2268,7 +2268,7 @@ Func_003_4BE8:: ; address name
 .call_number24_to_packed_bcd:
     call Number24ToPackedBCD
     ld de, wWindowTileBuffer + $A4
-    call WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01
+    call WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros
     ret
 
 ; for SRAM record wC46D & $0F: shows the species category $0D string at vTiles2 + $2C0 and the eight skills of field $34 in slots 0-7 (E-0121)
@@ -5927,7 +5927,7 @@ Func_003_649C:: ; address name
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, TileRectTable_03_6921
+    ld hl, $6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -5979,7 +5979,7 @@ Func_003_6526:: ; address name
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, TileRectTable_03_6921
+    ld hl, $6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -6349,40 +6349,237 @@ Func_003_67B0:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ret
-    ds $1B, $00
-    db $01, $01, $01
-    ds $B2, $00
 
-; E-0221 (derived: a word table of tile-rectangle records; the code derefs one entry into HL for a record copier)
-; record: rectangle record
-TileRectTable_03_6921::
-Data_003_6921:: ; address name
-    dw TileRect_03_6925 ; id 0
-    dw TileRect_03_6956 ; id 1
+; no direct call (reached through a table, a jump or a vector)
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank03:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_003_6851:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld bc, $0101
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    dec h
+    ld l, c
+    ld d, [hl]
+    ld l, c
+    jr nz, .next
+    add hl, bc
 
-; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
-; record: offset $0120 (row 9, column 0); 9 x 5 tiles
-TileRect_03_6925::
-Data_003_6925:: ; address name
-    dw $0120 ; entry 0: offset into wScreenTileBuffer
-    db $09, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
-
-; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
-; record: offset $0120 (row 9, column 0); 9 x 5 tiles
-TileRect_03_6956::
-Data_003_6956:: ; address name
-    dw $0120 ; entry 0: offset into wScreenTileBuffer
-    db $09, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $F5, $F6, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+.next:
+    dec b
+    or a, b
+    or a, c
+    or a, c
+    or a, c
+    or a, c
+    or a, c
+    or a, c
+    or a, c
+    or a, d
+    or a, [hl]
+    di
+    INCBIN "dwm2-cobi-us.gbc", $00E934, $53
 
 ; address loaded by PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37
 PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6722,10 +6919,10 @@ Jump_003_6B67:: ; address name
     dw PauseMenu_State3_ChooseListEntry_UpdateMenuCursor
     dw PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24
     dw PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03
-    dw PauseMenu_State3_ChooseListEntry_Case04
+    dw PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24
     dw PauseMenu_State3_ChooseListEntry_TestListEntryBit7
     dw PauseMenu_State3_ChooseListEntry_ExitPauseMenuToField
-    dw PauseMenu_State3_ChooseListEntry_Case07
+    dw PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_Case07
     dw PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep
     dw PauseMenu_State3_ChooseListEntry_WaitTextFlags
     dw PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount
@@ -6989,7 +7186,7 @@ Jump_003_6C90:: ; address name
 ; entry 4 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_ChooseListEntry_Case04::
+PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24::
 Jump_003_6D31:: ; address name
     call PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01
     ld hl, wTemp1
@@ -7075,7 +7272,7 @@ Jump_003_6D90:: ; address name
 ; entry 7 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_ChooseListEntry_Case07::
+PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_Case07::
 Jump_003_6DA3:: ; address name
     call PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01
     ld hl, wTemp1
@@ -7842,25 +8039,25 @@ Func_003_7202:: ; address name
     ld [wMenuRowCount], a
     ld de, wScreenTileBuffer + $63
     ld a, [wWorkBuf + $3]
-    call PauseMenu_State3_PagedMenu_Shared01_Sub01
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF
     ld de, wScreenTileBuffer + $A3
     ld a, [wWorkBuf + $4]
-    call PauseMenu_State3_PagedMenu_Shared01_Sub01
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF
     ld de, wScreenTileBuffer + $E3
     ld a, [wWorkBuf + $5]
-    call PauseMenu_State3_PagedMenu_Shared01_Sub01
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF
     ld de, wScreenTileBuffer + $6C
     ld a, [wWorkBuf + $6]
     ld b, $E1
-    call PauseMenu_State3_PagedMenu_Shared01_Sub02
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF_Sub02
     ld de, wScreenTileBuffer + $AC
     ld a, [wWorkBuf + $7]
     ld b, $E2
-    call PauseMenu_State3_PagedMenu_Shared01_Sub02
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF_Sub02
     ld de, wScreenTileBuffer + $EC
     ld a, [wWorkBuf + $8]
     ld b, $E3
-    call PauseMenu_State3_PagedMenu_Shared01_Sub02
+    call PauseMenu_State3_PagedMenu_Shared01_CpFF_Sub02
     ld de, wScreenTileBuffer + $63
     ld hl, vBGMap0 + $63
     ld bc, $1005
@@ -7872,11 +8069,11 @@ Jump_003_7255:: ; address name
     inc de
     inc de
 
-; only called from PauseMenu_State3_PagedMenu_Shared02 (E-0047)
+; writes five consecutive tile numbers, starting at the table byte for A, at DE
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03)
-PauseMenu_State3_PagedMenu_Shared02_Sub01::
+PauseMenu_State3_PagedMenu_WriteFiveTileRun::
 Func_003_7257:: ; address name
-    ld hl, PauseMenu_State3_PagedMenu_Shared02_Sub01_Data
+    ld hl, PauseMenu_State3_PagedMenu_WriteFiveTileRun_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -7896,7 +8093,7 @@ Func_003_7257:: ; address name
 
 ; only called from PauseMenu_State3_PagedMenu_Shared01 (E-0047)
 ; 3 call sites from 1 routine (e.g. PauseMenu_State3_PagedMenu_LoadScreenBlock28)
-PauseMenu_State3_PagedMenu_Shared01_Sub01::
+PauseMenu_State3_PagedMenu_Shared01_CpFF::
 Func_003_726E:: ; address name
     cp a, $FF
     ret z
@@ -7908,7 +8105,7 @@ Func_003_726E:: ; address name
 
 ; only called from PauseMenu_State3_PagedMenu_Shared01 (E-0047)
 ; 3 call sites from 1 routine (e.g. PauseMenu_State3_PagedMenu_LoadScreenBlock28)
-PauseMenu_State3_PagedMenu_Shared01_Sub02::
+PauseMenu_State3_PagedMenu_Shared01_CpFF_Sub02::
 Func_003_7278:: ; address name
     cp a, $FF
     ret z
@@ -8008,7 +8205,7 @@ Func_003_7281:: ; address name
     ld [wWindowTileBuffer + $21], a
     pop af
     ld de, wScreenTileBuffer + $149
-    call PauseMenu_State3_PagedMenu_Shared02_Sub01
+    call PauseMenu_State3_PagedMenu_WriteFiveTileRun
     ld a, $00
     ld [rRAMG], a
     ld hl, vBGMap0 + $149
@@ -8084,8 +8281,8 @@ Func_003_7335:: ; address name
 .return:
     ret
 
-; address loaded by PauseMenu_State3_PagedMenu_Shared02_Sub01
-PauseMenu_State3_PagedMenu_Shared02_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_PagedMenu_WriteFiveTileRun
+PauseMenu_State3_PagedMenu_WriteFiveTileRun_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_7395:: ; address name
     db $D0, $D5, $DA
 
@@ -8283,7 +8480,7 @@ Jump_003_74EF:: ; address name
     dw PauseMenu_State3_RecordJourney_RunPauseMenuScreen
     dw PauseMenu_State3_RecordJourney_ShowYourProgressHasBeen
     dw PauseMenu_State3_RecordJourney_WriteTemp0AndTemp1
-    dw PauseMenu_State3_RecordJourney_Case06
+    dw PauseMenu_State3_RecordJourney_RestartGame
 
 ; entry 0 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
@@ -8405,7 +8602,7 @@ Jump_003_75A4:: ; address name
 .loop:
     ld a, [wModeState]
     bit 3, a
-    jr nz, PauseMenu_State3_RecordJourney_Case06_Skip
+    jr nz, PauseMenu_State3_RecordJourney_RestartGame_Skip
     xor a, a
     ld [wTemp0], a
     ld [wTemp1], a
@@ -8464,19 +8661,19 @@ Jump_003_7617:: ; address name
 .check_mode_state:
     ld a, [wModeState]
     bit 3, a
-    jr nz, PauseMenu_State3_RecordJourney_Case06_Skip
+    jr nz, PauseMenu_State3_RecordJourney_RestartGame_Skip
     xor a, a
     ld [wTemp0], a
     ld [wTemp1], a
     ret
 
-; entry 6 of the `rst $00` table in PauseMenu_State3_RecordJourney
+; jumps to BootAndMainLoop (restarts the game)
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_State3_RecordJourney_Case06::
+PauseMenu_State3_RecordJourney_RestartGame::
 Jump_003_7630:: ; address name
     jp BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts
 
-PauseMenu_State3_RecordJourney_Case06_Skip::
+PauseMenu_State3_RecordJourney_RestartGame_Skip::
 Jump_003_7633:: ; address name
     ld bc, $0240
     ld hl, wScreenTileBuffer
@@ -8580,7 +8777,7 @@ Func_003_76C9:: ; address name
     ret
 
 ; only called from routines of PauseMenu_State3_ChooseListEntry (E-0098)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_ChooseListEntry_Case07, PauseMenu_State3_ChooseListEntry_Case04)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_Case07, PauseMenu_State3_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24)
 ; reads: wSubMenuCursor
 PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01::
 Func_003_76D5:: ; address name
@@ -8625,7 +8822,7 @@ Func_003_7726:: ; address name
     call LoadScreenBlock21WithCursor
     ld hl, TileCopyDestList_03_7B9F
     ld de, TileCopySrcList_03_7BAF
-    call PauseMenu_State3_TileBufferMenu_Case00_Sub01_Sub01
+    call PauseMenu_State3_TileBufferMenu_CopyTileListFromBank1F
     ld e, $26
     farcall CopyBlockToTileBuffer
     ld e, $27
@@ -8744,7 +8941,7 @@ Func_003_779A:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ld a, [de]
-    call PauseMenu_State3_ChooseListEntry_Shared02_Sub01
+    call PauseMenu_State3_ChooseListEntry_DrawKeyEntryMark
     cp a, $FF
     jr z, .set_string_category_to_06
     and a, $3F
@@ -8822,9 +9019,9 @@ Func_003_779A:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from PauseMenu_State3_ChooseListEntry_Shared02 (E-0047)
+; reads the key entry byte for A (bit flags) and writes a mark tile for list row C
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc)
-PauseMenu_State3_ChooseListEntry_Shared02_Sub01::
+PauseMenu_State3_ChooseListEntry_DrawKeyEntryMark::
 Func_003_7880:: ; address name
     push af
     cp a, $FF
@@ -8847,7 +9044,7 @@ Func_003_7880:: ; address name
 .skip:
     push af
     ld a, c
-    ld hl, PauseMenu_State3_ChooseListEntry_Shared02_Sub01_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_DrawKeyEntryMark_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8871,8 +9068,8 @@ PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data::
 Data_003_78B9:: ; address name
     db $40, $94, $00, $95, $C0, $95, $80, $96, $40, $97
 
-; address loaded by PauseMenu_State3_ChooseListEntry_Shared02_Sub01
-PauseMenu_State3_ChooseListEntry_Shared02_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_DrawKeyEntryMark
+PauseMenu_State3_ChooseListEntry_DrawKeyEntryMark_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_78C3:: ; address name
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 
@@ -9379,9 +9576,9 @@ TileCopySrcList_03_7BAF::
 Data_003_7BAF:: ; address name
     dw $40E0, $4370, $42B0, $42D0, $4310, $42C0, $43B0, $FFFF ; entry 0
 
-; only called from PauseMenu_State3_TileBufferMenu_Case00_Sub01 (E-0047)
+; copies $10-byte tiles from bank $1F by a list of source and destination words until $FF
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_TileBufferMenu_Case00_LoadScreenBlock21WithCursor)
-PauseMenu_State3_TileBufferMenu_Case00_Sub01_Sub01::
+PauseMenu_State3_TileBufferMenu_CopyTileListFromBank1F::
 Func_003_7BBF:: ; address name
     ld b, $00
 

@@ -2029,7 +2029,7 @@ Jump_03A_4E35:: ; address name
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
 ; no direct call (reached through a table, a jump or a vector)
@@ -2047,7 +2047,7 @@ Jump_03A_4E47:: ; address name
     ret
 
 ; wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)
-; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06)
+; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
 SetDMGPaletteBGPPatternAndIncEffectSpriteX::
 Func_03A_4E57:: ; address name
@@ -2064,7 +2064,7 @@ Func_03A_4E57:: ; address name
 ; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06::
+RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX::
 Jump_03A_4E67:: ; address name
     call SetDMGPaletteBGPPatternAndIncEffectSpriteX
     ld a, $FF
@@ -2092,7 +2092,7 @@ Jump_03A_4E74:: ; address name
 ; points at: wEffectSpriteX
 RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter::
 Jump_03A_4E80:: ; address name
-    call RunEffectRoutineEffectEvery5Frames_Shared01
+    call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
     ld a, [wEffectCounter]
     cp a, $04
     ret c
@@ -2148,10 +2148,10 @@ Jump_03A_4EB9:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; only called from routines of RunEffectRoutineEffectEvery5Frames (E-0098)
+; increments wEffectCounter and raises each 2-bit shade of wDMGPaletteBGP by one, up to 3
 ; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter, RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter)
 ; points at: wEffectCounter, wDMGPaletteBGP
-RunEffectRoutineEffectEvery5Frames_Shared01::
+RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep::
 Func_03A_4EC3:: ; address name
     ld hl, wEffectCounter
     inc [hl]
@@ -2211,24 +2211,24 @@ RunEffectRoutineEffectEvery5Frames_Delay::
 Jump_03A_4F06:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
+    dw RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes
     dw RunEffectRoutineEffectEvery5Frames_Delay_SetEffectId
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Delay
+; inverts the three DMG palette bytes and moves the effect sprite right
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Delay_Case00::
+RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes::
 Jump_03A_4F24:: ; address name
     ld hl, wDMGPaletteBGP
     ld a, [hl]
@@ -2277,7 +2277,7 @@ Jump_03A_4F42:: ; address name
 ; points at: wEffectSpriteX
 RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter::
 Jump_03A_4F54:: ; address name
-    call RunEffectRoutineEffectEvery5Frames_Shared01
+    call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
     ld a, [wEffectCounter]
     cp a, $04
     ret c
@@ -2678,7 +2678,7 @@ Jump_03A_5114:: ; address name
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
 
 ; a sequence of steps that only write hScrollX/hScrollY: a screen shake
 ; no direct call (reached through a table, a jump or a vector)
@@ -6957,13 +6957,13 @@ Jump_03A_6BF8:: ; address name
     ld [wDefeatFlagsBA], a
     ld a, [wBattleActor]
     ld de, wBattleActionChoice
-    call RunActionResolveStep_Case06_Sub01
+    call RunActionResolveStep_StoreWordAtIndex
     ld a, [wBattleTarget]
     ld de, wBattleActionChoice
 
-; only called from RunActionResolveStep_Case06 (E-0047)
+; copies the word at HL to DE + 2 * A
 ; 1 call site from 1 routine (e.g. RunActionResolveStep_AddDoubleAToHL_Bank3A)
-RunActionResolveStep_Case06_Sub01::
+RunActionResolveStep_StoreWordAtIndex::
 Func_03A_6C46:: ; address name
     add a, a
     add a, e

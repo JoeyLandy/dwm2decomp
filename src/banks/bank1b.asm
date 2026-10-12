@@ -5419,7 +5419,7 @@ Func_01B_67A5:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_Case04, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearAndDrawListEntriesCell5NameAtTiles1780::
@@ -6654,7 +6654,7 @@ Jump_01B_6FC4:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_Case04
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
@@ -6703,7 +6703,7 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_Case04
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
@@ -6774,7 +6774,7 @@ Jump_01B_708F:: ; address name
 
 ; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_ListAvailableRecords_Case04::
+EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780::
 Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret

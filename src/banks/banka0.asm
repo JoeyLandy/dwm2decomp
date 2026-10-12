@@ -422,10 +422,10 @@ Func_0A0_4265:: ; address name
     ld [hl], $AE
     ret
 
-; only called from routines of RunA04410Or456FBySlotC (E-0098)
+; sets wBattleSlotOut for slot C from bit 7 of the record byte and the slot's wBattleStatus bits from its other flags
 ; 2 call sites from 2 routines (e.g. RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
 ; points at: wBattleSlotOut, wBattleStatus
-RunA04410Or456FBySlotC_Shared01::
+RunA04410Or456FBySlotC_SetSlotOutAndStatus::
 Func_0A0_4268:: ; address name
     push hl
     ld a, c
@@ -858,7 +858,7 @@ Func_0A0_4410:: ; address name
     ld h, a
     ld a, [wLoadSlot]
     or a, a
-    call z, RunA04410Or456FBySlotC_Shared01
+    call z, RunA04410Or456FBySlotC_SetSlotOutAndStatus
     inc hl
     ld de, wBattleLevel
     call StoreByteAtDEPlusC_BankA0
@@ -1031,7 +1031,7 @@ Func_0A0_456F:: ; address name
     ld h, a
     ld a, [wLoadSlot]
     or a, a
-    call z, RunA04410Or456FBySlotC_Shared01
+    call z, RunA04410Or456FBySlotC_SetSlotOutAndStatus
     inc hl
     ld de, wBattleLevel
     call StoreByteAtDEPlusC_BankA0
@@ -2490,7 +2490,7 @@ Jump_0A0_4F9F:: ; address name
     rst $00
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitFadeState
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case02
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case05
@@ -2545,7 +2545,7 @@ Jump_0A0_4FD8:: ; address name
 ; reads: wRandomLo, wRandomHi
 ; writes: wLinkRecvBuffer, wBattleSetupByte98, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkSendByte, ...
 ; points at: wBattleStep, wLinkRecvBuffer, wLinkPartnerName
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case02::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo::
 Jump_0A0_4FE7:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -3362,7 +3362,7 @@ Jump_0A0_547E:: ; address name
     ret
 
 ; for each party member with a battle entry in wBattleBuffer72, writes two words to SRAM record offsets $5B and $5F and one byte to $55, then ClampPartyHpAndMpToMax
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01)
 ; reads: wPartyCount
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
@@ -3428,7 +3428,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
 Jump_0A0_54DD:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
@@ -3445,7 +3445,7 @@ Jump_0A0_54DD:: ; address name
 ; reads: wBattleResultStep, wBattleResultCounter, wLinkRole, wBattleResultDelay
 ; writes: wBattleKindFlags, wBattleResultByte9B, wBattleResultByte9C, wBattleResultStep, wBattleResultCounter, wSaveStep, wSaveRecordIndex
 ; points at: wBattleSlotOut, wBattleStatus, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01::
 Jump_0A0_54F7:: ; address name
     ld a, $01
     ld [wBattleKindFlags], a
@@ -4305,7 +4305,7 @@ Data_0A0_5A4A:: ; address name
     db $1D, $F0
 
 ; counts the result (wKeyNameBuf[wBattleResultStep] += 1, capped at 99); scores the counts and rewards into a band (wWorkBuf, wWildBand) by BattleResultBandThresholds; adds the signed BattleResultTurnLimitAdjust and BattleResultBandAdjust entries to wWildLevel and clamps it to 0-99; the rank (wWorkBuf+1, wWildByteE5) is the number of BattleResultRankThresholds at or below it, 0-7, which the results screen shows as one of 'GFEDCBAS'
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01)
 ; reads: wBattleResultStep, wLinkRuleTurnLimit, wBattleRewardByte97, wBattleRewardByte98, wWildLevel
 ; writes: wWorkBuf, wWildBand, wWildByteE5
 ; points at: wKeyNameBuf
@@ -4463,7 +4463,7 @@ Data_0A0_5B3F:: ; address name
     db $14, $28, $32, $3C, $46, $50, $5A, $FF
 
 ; by wBattleResultStep: results 0 and 1 raise the lowest of five record words by BattleResultStatBonusByRank[rank] (capped at 999) and take a word from BattleResultGoldByRank; result 2 lowers the highest by BattleResultStatPenaltyByRank[rank]; others lower all five; the word (or 1000) goes to wWorkBuf+$10
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01)
 ; reads: wLinkReceivedByte, wBattleResultStep, wWorkBuf, wGoldLo, wGoldMid, wGoldHi
 ; writes: wWorkBuf, rRAMG, rRAMB, wGoldLo, wGoldMid, wGoldHi
 ApplyBattleResultStatChanges::

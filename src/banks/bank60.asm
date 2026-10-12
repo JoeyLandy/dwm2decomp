@@ -40,17 +40,17 @@ Func_060_4001:: ; address name
 ; only called from DebugAutomap_Update_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0)
 ; reads: wCurrentKeyIndex
-DebugAutomap_Update_Sub01_Sub01_Return_Sub01::
+DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas::
 Func_060_4035:: ; address name
     call DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc
     call DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase
     call DebugAutomap_Update_Sub01_Sub01_NextRandomSeed
-    call DebugAutomap_Update_Sub01_Sub01_Sub04
+    call DebugAutomap_Update_MergeKeyWorldAreas
     call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc
     call DebugAutomap_Update_Sub01_Sub01_Return
-    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub09
+    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08
     or a, a
-    jr nz, DebugAutomap_Update_Sub01_Sub01_Return_Sub01
+    jr nz, DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas
     farcall DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc
     call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
     call DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
@@ -74,7 +74,7 @@ Func_060_4035:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength::
 Func_060_4076:: ; address name
     call LoadKeyWorldLevelBaseTripleForPartyStrength
@@ -1195,7 +1195,7 @@ Data_060_47C5:: ; address name
     db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: wPartyStrength, wKeyRandomHi, wKeyWorldWidth, wKeyWorldHeight, hTemp8, hTemp9
 ; writes: wKeyWorldFlags, wKeyWorldWidth, wMapWidthScreens, wKeyWorldHeight, wMapHeightScreens, hTemp8, hTemp9, wKeyWorldAreaCount
 ; points at: wVisitedScreens, wKeyWorldAreas
@@ -1499,7 +1499,7 @@ Data_060_4CC1:: ; address name
     db $03, $03, $03, $03 ; id 55
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp6
 ; writes: hTemp0, hTemp1, hTemp5, hTemp6, hTemp7
 ; points at: wKeyWorldAreas, hTemp7
@@ -1563,10 +1563,10 @@ Func_060_4DA1:: ; address name
     jr nz, .loop
     ret
 
-; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; ORs the low nibbles of the four wKeyWorldAreas bytes into wKeyWorldAreaInfo
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; points at: wKeyWorldAreas, wKeyWorldAreaInfo
-DebugAutomap_Update_Sub01_Sub01_Sub04::
+DebugAutomap_Update_MergeKeyWorldAreas::
 Func_060_4DF6:: ; address name
     ld b, $04
     ld hl, wKeyWorldAreas
@@ -1585,7 +1585,7 @@ Func_060_4DF6:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: hTemp7, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldAreas, wKeyWorldAreaInfo
@@ -1867,7 +1867,7 @@ Func_060_4F5C:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: hTemp7, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wKeyWorldAreaExits, wKeyWorldAreas
@@ -2131,13 +2131,13 @@ Func_060_5075:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 DebugAutomap_Update_Sub01_Sub01_Return::
 Func_060_50E4:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, wKeyRandomLo
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldByte8B
@@ -2250,11 +2250,11 @@ Data_060_5177:: ; address name
     db $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: hTemp7, hTemp0, hTemp1, wKeyWorldAreaCount, wKeyWorldHeight, wKeyWorldWidth, hTemp5, hTemp2, ...
 ; writes: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, hTemp8, hTemp9
 ; points at: wKeyWorldAreas, wKeyWorldFloorInfo
-DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub09::
+DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08::
 Func_060_51B7:: ; address name
     ldh a, [hTemp7]
     cp a, $01
@@ -2411,7 +2411,7 @@ Func_060_51B7:: ; address name
     ret
 
 ; finds area C in wCD70 and picks a random free cell inside it for the object (avoiding wCD7B and wCD8B entries) (E-0131)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub09)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08)
 ; reads: hTemp3, wKeyRandomHi, hTemp4, hTempA, hTemp8, hTemp9, wKeyWorldAreaCount, hTemp6
 ; writes: hTempA, hTemp6, hTemp4, hTemp3, hTemp8, hTemp9
 ; points at: wKeyWorldAreas, wKeyWorldObjects
@@ -2581,7 +2581,7 @@ Func_060_528B:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: wPartyStrength, wMapObjectCount
 ; writes: wKeyWorldBand, wMapObjectCount, hTemp0
 ; points at: wMapObjects
@@ -2868,7 +2868,7 @@ Func_060_54BB:: ; address name
     jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, RollKeyWorldObjectKind_Data
+    ld hl, RunBattleActions_StatusChecks_CheckAction_NopRun_Bank60
     add_a_to_hl
     xor a, a
     ld [de], a
@@ -2927,74 +2927,1028 @@ Func_060_54BB:: ; address name
     ld [de], a
     ret
 
-; address loaded by RollKeyWorldObjectKind
-RollKeyWorldObjectKind_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_060_555F:: ; address name
-    ds $13, $00
-    db $5E
-    ds $21, $00
-    db $5F, $00, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $45, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $46, $47, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5E, $00, $00, $00
-    db $00, $00, $00, $00, $00, $5F, $00, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $45, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $46, $47, $00, $00, $00, $00, $00, $00, $00, $00, $56, $5B, $5E, $00, $00
-    db $00, $00, $00, $00, $00, $5F, $00, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $39, $3D, $00, $00, $00, $3E, $3F, $40, $41, $42, $00, $43, $44
-    db $45, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $4A, $54, $5C, $00, $00
-    db $00, $00, $00, $00, $00, $5F, $00, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $2F, $39, $00, $3D, $00, $3E, $3F, $40, $41, $42, $00, $43, $44
-    db $45, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $4A, $54, $5C, $00, $00
-    db $00, $00, $00, $00, $00, $5F, $00, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $25, $34, $00, $3D, $00, $3E, $3F, $40, $41, $42, $00, $43, $00
-    db $00, $00, $00, $44, $45, $00, $00, $00, $00, $00, $00, $46, $4E, $58, $59, $5A
-    db $00, $00, $00, $00, $5B, $5E, $5F, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $1B, $2F, $00, $3D, $00, $3E, $3F, $40, $41, $42, $00, $43, $00
-    db $00, $00, $00, $44, $45, $00, $00, $00, $00, $00, $00, $00, $4A, $58, $59, $5A
-    db $00, $00, $00, $00, $5B, $5E, $5F, $00, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $14, $00, $00, $16, $2F, $00, $39, $3D, $3E, $3F, $40, $41, $42, $00, $43, $44
-    db $45, $46, $47, $48, $49, $00, $00, $00, $00, $00, $00, $00, $00, $57, $58, $59
-    db $00, $00, $00, $00, $5A, $5D, $5E, $5F, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $38, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $5E, $5F, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $5E, $5F, $00, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $5F, $60, $00, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
-    ds $11, $00
-    db $13, $00, $00, $00, $29, $2E, $32, $3C, $3D, $3E, $3F, $40, $41, $00, $42, $43
-    db $44, $45, $46, $47, $48, $00, $00, $00, $00, $00, $00, $00, $00, $52, $57, $58
-    db $00, $00, $59, $00, $5A, $5D, $00, $00, $5E, $5F, $61, $62, $63, $00, $64
-    ds $11, $00
+; no direct call (reached through a table, a jump or a vector)
+; reads: wKeyWorldBand, wKeyRandomHi
+RunBattleActions_StatusChecks_CheckAction_NopRun_Bank60:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_060_555F:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, [hl]
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, a
+    nop
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld b, a
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, [hl]
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, a
+    nop
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld b, a
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld e, e
+    ld e, [hl]
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, a
+    nop
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    add hl, sp
+    dec a
+    nop
+    nop
+    nop
+    ld a, $3F
+    ld b, b
+    ld b, c
+    ld b, d
+    nop
+    ld b, e
+    ld b, h
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld c, d
+    ld d, h
+    ld e, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, a
+    nop
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    cpl
+    add hl, sp
+    nop
+    dec a
+    nop
+    ld a, $3F
+    ld b, b
+    ld b, c
+    ld b, d
+    nop
+    ld b, e
+    ld b, h
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld c, d
+    ld d, h
+    ld e, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, a
+    nop
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    dec h
+    inc [hl]
+    nop
+    dec a
+    nop
+    ld a, $3F
+    ld b, b
+    ld b, c
+    ld b, d
+    nop
+    ld b, e
+    nop
+    nop
+    nop
+    nop
+    ld b, h
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld c, [hl]
+    ld e, b
+    ld e, c
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, [hl]
+    ld e, a
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    dec de
+    cpl
+    nop
+    dec a
+    nop
+    ld a, $3F
+    ld b, b
+    ld b, c
+    ld b, d
+    nop
+    ld b, e
+    nop
+    nop
+    nop
+    nop
+    ld b, h
+    ld b, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld c, d
+    ld e, b
+    ld e, c
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, [hl]
+    ld e, a
+    nop
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    nop
+    nop
+    ld d, $2F
+    nop
+    add hl, sp
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    ld b, d
+    nop
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    ld c, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, a
+    ld e, b
+    ld e, c
+    nop
+    nop
+    nop
+    nop
+    ld e, d
+    ld e, l
+    ld e, [hl]
+    ld e, a
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $38
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    ld e, [hl]
+    ld e, a
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    ld e, [hl]
+    ld e, a
+    nop
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    ld e, a
+    ld h, b
+    nop
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    nop
+    ld e, [hl]
+    ld e, a
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    nop
+    ld e, [hl]
+    ld e, a
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    nop
+    ld e, [hl]
+    ld e, a
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    nop
+    ld e, [hl]
+    ld e, a
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc de
+    nop
+    nop
+    nop
+    add hl, hl
+    ld l, $32
+    inc a
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    ld b, d
+    ld b, e
+    ld b, h
+    ld b, l
+    ld b, [hl]
+    ld b, a
+    ld c, b
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, d
+    ld d, a
+    ld e, b
+    nop
+    nop
+    ld e, c
+    nop
+    ld e, d
+    ld e, l
+    nop
+    nop
+    ld e, [hl]
+    ld e, a
+    ld h, c
+    ld h, d
+    ld h, e
+    nop
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc)
@@ -3060,7 +4014,7 @@ Func_060_596F:: ; address name
     jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, FieldModeStateDispatch_NextRandomSeed_Data
+    ld hl, RunBattleActions_StatusChecks_CheckAction_NopRun_60_5A19
     add_a_to_hl
     ld a, [hl]
     cp a, c
@@ -3126,81 +4080,1052 @@ Func_060_596F:: ; address name
     ld [de], a
     ret
 
-; address loaded by FieldModeStateDispatch_NextRandomSeed
-FieldModeStateDispatch_NextRandomSeed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_060_5A19:: ; address name
-    ds $13, $00
-    db $55
-    ds $26, $00
-    db $56, $57, $64
-    ds $13, $00
-    db $14, $19, $00, $41
-    ds $17, $00
-    db $50, $55, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56
-    db $57, $64
-    ds $13, $00
-    db $14, $19, $00, $41
-    ds $17, $00
-    db $4B, $50, $55, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56
-    db $57, $64
-    ds $13, $00
-    db $14, $19, $00, $37, $3C, $00, $00, $00, $3D, $3E, $3F, $40, $41, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $46, $50, $55, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $64
-    ds $13, $00
-    db $14, $19, $00, $2D, $37, $00, $3C, $00, $3D, $3E, $3F, $40, $41, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $46, $4B, $55, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $64
-    ds $13, $00
-    db $14, $19, $00, $23, $32, $00, $3C, $00, $3D, $3E, $3F, $40, $41, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $46, $50, $00, $55
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $64
-    ds $13, $00
-    db $14, $19, $00, $23, $32, $00, $3C, $00, $3D, $3E, $3F, $40, $41, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $46, $50, $00, $55
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $64
-    ds $13, $00
-    db $14, $19, $00, $23, $32, $00, $3C, $00, $3D, $3E, $3F, $40, $41, $00, $00, $00
-    db $00, $49, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $50, $00, $55
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $56, $57, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $0F, $19, $00, $1E, $2D, $32, $3C, $00, $3D, $3E, $3F, $40, $41
-    ds $10, $00
-    db $50, $55, $5A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $5B, $5C, $64
-    ds $13, $00
-    db $06, $08, $0E, $34, $1E, $00, $F5, $CD, $80, $1F, $F0, $C6, $FE, $FF, $28, $07
-    db $F1, $0C, $1C, $05, $20, $F0, $C9, $F1, $C9
+; no direct call (reached through a table, a jump or a vector)
+; reads: hTemp0
+RunBattleActions_StatusChecks_CheckAction_NopRun_60_5A19:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
+Func_060_5A19:: ; address name
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld c, e
+    ld d, b
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    scf
+    inc a
+    nop
+    nop
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld d, b
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    dec l
+    scf
+    nop
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld c, e
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    inc hl
+    ld [hl-], a
+    nop
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld d, b
+    nop
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    inc hl
+    ld [hl-], a
+    nop
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, [hl]
+    ld d, b
+    nop
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    inc d
+    add hl, de
+    nop
+    inc hl
+    ld [hl-], a
+    nop
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    ld c, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    nop
+    ld d, l
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, [hl]
+    ld d, a
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    rrca
+    add hl, de
+    nop
+    ld e, $2D
+    ld [hl-], a
+    inc a
+    nop
+    dec a
+    ld a, $3F
+    ld b, b
+    ld b, c
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld d, b
+    ld d, l
+    ld e, d
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld e, e
+    ld e, h
+    ld h, h
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ld b, $08
+    ld c, $34
+    ld e, $00
+
+.loop:
+    push af
+    call LoadSRAMRecordByte
+    ldh a, [hTemp0]
+    cp a, $FF
+    jr z, .done
+    pop af
+    inc c
+    inc e
+    dec b
+    jr nz, .loop
+    ret
+
+.done:
+    pop af
+    ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
 ; reads: wKeyWorldFloorInfo, hTemp4, hTemp3
 ; writes: wKeyWorldGoalScreen, hTemp3, hTemp4, wKeyWorldGoalPos, wKeyWorldGoalPos2
 DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc::
