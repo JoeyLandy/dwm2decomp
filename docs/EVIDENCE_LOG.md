@@ -2431,6 +2431,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0313 — Species byte $0B is the field ability
+
+- Kind: STATIC (C2).
+- **The redirect.** BeginStringDisplay_Bank08 and CopyStringToBuffer_Bank08 send categories 9 and up to bank $95: BeginStringDisplay_Bank08_BeginStringDisplay subtracts 9 and uses StringCategories_95_4675. Category $0D is therefore bank $95's category 4, at 95:$4839.
+- **The table.** Its strings are 'None', 'Call ship', 'Call cloud', 'Smash rock', 'Burn', 'Cut', 'Open door': the monsters' field abilities.
+- **Names given.** Species byte $0B is SPECIES_FIELD_ABILITY, and the list is StringTable_FieldAbilities (was StringTable95_Cat0D). Three readers show it: ShowRecordSpeciesAndSkillNames, ShowSpeciesCategory13StringOfListEntriesCell5Record, ShowSpeciesCategory13StringAtTiles2680.
+- **Result.** Every byte of the 47-byte species record is now named or shown to be unread. Species byte 5 is the only one no code reads (E-0311).
+- Binary verification: build/run432 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0312 — Gifts go to an Egg: $CECE is that egg's monster record (wGiftRecord)
 
 - Kind: STATIC (C2 for the layout and the recipient).

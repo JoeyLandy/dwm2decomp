@@ -19764,7 +19764,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "byte 11: string index, category $0D"
+          "name": "field ability (StringTable_FieldAbilities index; C2, E-0313)"
         },
         {
           "type": "db",

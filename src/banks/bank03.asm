@@ -2286,7 +2286,7 @@ Func_003_4D57:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $B]
+    ld a, [wSpeciesRecord + SPECIES_FIELD_ABILITY]
     ld [wStringIndex], a
     ld a, $0D
     ld [wStringCategory], a

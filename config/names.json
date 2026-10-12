@@ -1078,12 +1078,7 @@
     "note": "string table of category $0C (the string database extension in bank $95, selected when wStringCategory is 9 or more): short two-line phrases such as 'Call ship', 'Call cloud', 'Smash rock', 'Burn', 'Cut', 'Open door' (E-0033)",
     "evidence": "reading + execution (E-0033)"
   },
-  "95:4839": {
-    "name": "StringTable95_Cat0D",
-    "data": true,
-    "note": "string table of category $0D (the string database extension in bank $95, selected when wStringCategory is 9 or more): the same phrases as category $0C without the blank first entry (E-0033)",
-    "evidence": "reading + execution (E-0033)"
-  },
+  "95:4839": {"name": "StringTable_FieldAbilities", "note": "string category $0D (bank $95 category 4): the field abilities indexed by species byte $0B (SPECIES_FIELD_ABILITY): None, Call ship, Call cloud, Smash rock, Burn, Cut, Open door", "evidence": "E-0313 (C2)", "data": true},
   "95:4847": {
     "name": "StringTable95_Cat0E_Tactics",
     "data": true,

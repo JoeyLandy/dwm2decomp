@@ -372,7 +372,7 @@ Data_095_4837:: ; address name
 ; E-0217 (derived: category list of StringCategories_95_4675; one pointer per wStringIndex)
 ; record: string
 StringList_95_4839::
-StringTable95_Cat0D:: ; heuristic: string list; C0
+StringTable_FieldAbilities:: ; heuristic: string list; C0
 Data_095_4839:: ; address name
     dw String_95_04_00 ; id 0
     dw String_95_04_01 ; id 1

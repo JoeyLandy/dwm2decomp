@@ -66,6 +66,7 @@ DEF SPECIES_UNUSED_05 EQU $05 ; values 0-3 in the 324 records but never read: ev
 DEF SPECIES_MAX_LEVEL EQU $06 ; base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it (E-0299)
 DEF SPECIES_EXP_CURVE EQU $07 ; the ExpTable row (EXP curve) (E-0148)
 DEF SPECIES_SKILLS EQU $08 ; three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF (E-0299)
+DEF SPECIES_FIELD_ABILITY EQU $0B ; field ability: string index in category $0D, which BeginStringDisplay_Bank08 redirects to bank $95's category 4, StringTable_FieldAbilities: None, Call ship, Call cloud, Smash rock, Burn, Cut, Open door; shown by ShowRecordSpeciesAndSkillNames and the record screens (E-0313)
 DEF SPECIES_GROWTH EQU $0C ; six stat growth rows, one per stat in the order of wLevelUpGains (bytes $0C-$11; C1: HP, MP, ATK, DEF, AGL, INT): ComputeLevelUpStatGainsForBattleArg1 passes each to ReadStatGrowthGain, and new and wild monsters pass each to StatFromGrowthRow (E-0299, E-0309)
 DEF SPECIES_RESISTANCES EQU $12 ; 27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one (E-0299)
 DEF SPECIES_EXP EQU $2D ; base EXP word: GameMode4_Init_Sub01_Sub07 writes it as the low word of a new battler's 24-bit EXP (battler $18-$19), as MonsterTable bytes 6-7 do for wild monsters (E-0310)

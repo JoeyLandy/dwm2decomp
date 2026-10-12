@@ -1229,7 +1229,7 @@ Func_0F2_4BFC:: ; address name
     ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $B]
+    ld a, [wSpeciesRecord + SPECIES_FIELD_ABILITY]
     ld [wStringIndex], a
     ld a, $0D
     ld [wStringCategory], a

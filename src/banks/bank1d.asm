@@ -4395,7 +4395,7 @@ Func_01D_5DF9:: ; address name
     ldh a, [hTemp1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $B]
+    ld a, [wSpeciesRecord + SPECIES_FIELD_ABILITY]
     ld [wStringIndex], a
     ld a, $0D
     ld [wStringCategory], a
