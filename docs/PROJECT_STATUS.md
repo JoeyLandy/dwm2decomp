@@ -55,15 +55,15 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-12, after E-0267)
+## Readability state (2026-10-12, after E-0276)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run348; 160 tests, 3 skipped). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run357; 160 tests, 3 skipped). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
 | Routines with only an address name (`tools/rank_unnamed.py`) | 0 |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 |
-| Code labels | 9,450: 5,495 structural; dispatchers named by caller rather than address (RunLinkSession and its eight exchanges, E-0259/E-0260); (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), all prefixed by a named parent (E-0245: no `Func_BBB_AAAA_CaseNN` left); 151 still spelling a RAM address (E-0155) |
+| Code labels | 9,450: about 4,270 still structural (from 5,495). Named by rule from their instructions: 450 talk cases from their message (TalkMsgWWWW_..., E-0268), 138 one-time treasures (ChestItem_/VaseItem_/BarrelItem_..., E-0269, correcting E-0081), 94 script starters (TalkScriptXXXX_..., E-0271), about 550 single-purpose steps (Parent_To<Target>[AndStep], _Set<V>To<n>, _Advance<V>, _Return, _MsgWWWW_..., E-0270 to E-0273), 231 steps after the string they show (Parent_Show..., E-0274); shop, Vault and inn states named by reading (E-0276); dispatchers named by caller rather than address (RunLinkSession and its eight exchanges, E-0259/E-0260); (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), all prefixed by a named parent (E-0245: no `Func_BBB_AAAA_CaseNN` left); 151 still spelling a RAM address (E-0155) |
 | `INCBIN` without an asset comment | 0 (build/measure2.py, E-0240/E-0241) |
 | Data labels with only an address name | 1,029 (from 12,533 before E-0249). Labelled by identity: 6,175 strings (`Message_GG_II` = message word $GGII, `MessageBank0E_II`, `String_BB_CC_II`); 2,352 map screen streams and 732 key-world chunk screens by position; key-world rooms; 218 sound tracks; species records, item descriptions and default names by monster, item and family; skill prerequisite lists by skill; SGB packets by command; RAM init blocks, streams and bank-copy sources by destination (E-0249 to E-0267). Most of the rest are same-bank loads whose comment names their readers |
 | Event scripts | 3,580 script lines. Every opcode with inline bytes has a named macro (E-0242). All 176 command types used are named constants: menus (`SCRIPT_SHOP`, `SCRIPT_BREED`, ...), actions (`SCRIPT_GIVE_MONSTER`, `SCRIPT_TAKE_ITEM`, ...), cutscene steps `SCRIPT_SCENE_*` named after their scene, and key-world talk events `SCRIPT_TALKGG_CC` (E-0244 to E-0246) |
