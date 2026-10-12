@@ -364,7 +364,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "byte 5"
+          "name": "byte 5 (never read)"
         },
         {
           "type": "db",
@@ -18157,7 +18157,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$0E: bit 0 = sex (C1, E-0291)"
+          "name": "$0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)"
         },
         {
           "type": "text",
@@ -18183,7 +18183,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$28"
+          "name": "$28 (unused)"
         },
         {
           "type": "db",
@@ -18194,7 +18194,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$33"
+          "name": "$33 (unused)"
         },
         {
           "type": "db",
@@ -18242,7 +18242,7 @@
           "type": "db",
           "size": 4,
           "line": true,
-          "name": "$6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)"
+          "name": "$6B WLD word, $6D plus value, $6E egg state 0/1/2 (E-0296, E-0311)"
         },
         {
           "type": "db",
@@ -18930,7 +18930,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$0E: bit 0 = sex (C1, E-0291)"
+          "name": "$0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)"
         },
         {
           "type": "text",
@@ -18956,7 +18956,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$28"
+          "name": "$28 (unused)"
         },
         {
           "type": "db",
@@ -18967,7 +18967,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$33"
+          "name": "$33 (unused)"
         },
         {
           "type": "db",
@@ -19015,7 +19015,7 @@
           "type": "db",
           "size": 4,
           "line": true,
-          "name": "$6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)"
+          "name": "$6B WLD word, $6D plus value, $6E egg state 0/1/2 (E-0296, E-0311)"
         },
         {
           "type": "db",
@@ -19728,8 +19728,13 @@
         },
         {
           "type": "db",
-          "size": 2,
-          "name": "bytes 2-3"
+          "size": 1,
+          "name": "cannot be tripped, bit 0 (C1, E-0310)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "metal body, bit 0 (C1, E-0310)"
         },
         {
           "type": "db",
@@ -19739,7 +19744,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "byte 5"
+          "name": "byte 5 (never read)"
         },
         {
           "type": "db",
@@ -19773,9 +19778,9 @@
           "name": "27 base resistance levels (C1, E-0299)"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "bytes 45-46"
+          "name": "base EXP (C1, E-0310)"
         }
       ],
       "record": "family; bytes 1-5; base level cap; EXP curve; natural skills; bytes 11-15; growth row; byte 17; resistances; bytes 45-46",

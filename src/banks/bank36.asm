@@ -1983,7 +1983,7 @@ Func_036_4D0C:: ; address name
     cp a, $03
     ret z
     ld a, b
-    ld e, $31
+    ld e, BATTLER_RESISTANCES
     call BattlerRecordFieldAddress
     ld a, l
     ld [wBattleArg0], a
@@ -3595,12 +3595,12 @@ Func_036_55C9:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_MetalCut)
 ; reads: wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 AttackDamageTimes1_5IfSlotDamageFlagsBit0:: ; code pointer of the table EffectHandlerTable; C0
 Func_036_55D4:: ; address name
     call ComputeAttackDamage
     ld a, [wBattleTarget]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 0, [hl]
     jr z, .return
@@ -3830,13 +3830,13 @@ Func_036_56E0:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform)
 ; reads: wBattleTarget, wBattleActor, wLinkMode, wRecordBufferData
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBuffer
-; points at: wSlotDamageFlags, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleATK, wBattleDEF, wBattleAGL, ...
+; points at: wSlotBodyFlags, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleATK, wBattleDEF, wBattleAGL, ...
 ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
 Func_036_5703:: ; address name
     ld a, [wBattleTarget]
     call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     ld [hl], c
     ld a, [wBattleTarget]
@@ -4718,7 +4718,7 @@ Func_036_5BC4:: ; address name
     ld hl, wSlotTrait
     call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld c, $00
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld c, $00
     ld hl, wSlotNameSuffix
@@ -4846,11 +4846,11 @@ Func_036_5D84:: ; address name
 ; only called from ActionEffect_LegSweep (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_LegSweep)
 ; reads: wBattleTarget
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 ActionEffect_LegSweep_RollChanceVsTargetSlotResistancesByte5Bits23::
 Func_036_5D91:: ; address name
     ld a, [wBattleTarget]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 4, [hl]
     ret nz
@@ -5223,7 +5223,7 @@ Func_036_5F25:: ; address name
     call CopyBytes
     call ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry
     ld a, [wBattleActor]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     ld [hl], $00
     ld a, [wBattleActor]
@@ -6687,7 +6687,7 @@ Func_036_6658:: ; address name
     cp a, $03
     jr z, .skip
     ld a, b
-    ld e, $31
+    ld e, BATTLER_RESISTANCES
     call BattlerRecordFieldAddress
     jr .return
 
@@ -9535,7 +9535,7 @@ Func_036_7645:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wDefeatByteD1, wBattleActor, wFollowUpAction
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget, wBattleTarget, wDefeatByteD1, ...
-; points at: wSlotDamageFlags, wBattleTargetChoice
+; points at: wSlotBodyFlags, wBattleTargetChoice
 ActionEffect_LegSweep:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7697:: ; address name
     call TargetStatus3Address
@@ -9552,7 +9552,7 @@ Func_036_7697:: ; address name
 
 .read_battle_target:
     ld a, [wBattleTarget]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 4, [hl]
     ld h, $70

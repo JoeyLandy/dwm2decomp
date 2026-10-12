@@ -783,7 +783,7 @@ DEF wFoeJoinClass3 EQU $D8A3 ; the join-chance class (battler byte $4D, MonsterT
 DEF wBattleActor EQU $D8A4 ; slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code (reading (E-0043))
 DEF wBattleTarget EQU $D8A5 ; slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget) (reading (E-0043))
 DEF wBattleActionId EQU $D8A6 ; id of the action being resolved; the resolve steps compare it with fixed values ($13-$15, $79, $91, $D6, $D7, $DC), some above the SkillTable range of 175, so it is an action number rather than a skill index (reading (E-0045))
-DEF wSlotDamageFlags EQU $D8A7 ; per-slot flags: bit 0 multiplies some damage (MultiplyDamageBy50IfSlotDamageFlagsBit0, AttackDamageTimes1_5IfSlotDamageFlagsBit0) (E-0137)
+DEF wSlotBodyFlags EQU $D8A7 ; per-slot body flags from the species record at battle start (low nibble = species byte 3, high nibble = species byte 2): bit 0 metal (MetalCut x50, AttackDamageTimes1_5IfSlotDamageFlagsBit0), bit 4 cannot be tripped (LegSweep, BigTrip) (C1; was wSlotDamageFlags) (E-0137, E-0310)
 DEF wSlotNameSuffix EQU $D8AF ; per-slot byte: bit 0 picks the letter appended to a repeated monster name (CopyBattleMonsterNameWithLetterSuffix) (E-0137)
 DEF wBattleLevel EQU $D8B7 ; level of each battle slot (DrawSlotLevel_BankA0, DrainTargetMPAmount) (E-0137)
 DEF wBattleHP EQU $D8BF ; current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator (execution (E-0042))

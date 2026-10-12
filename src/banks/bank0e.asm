@@ -2887,7 +2887,7 @@ Func_00E_615A:: ; address name
     ld [wArg5], a
     ret
 
-; loads the child's species record; when species byte 1 (SPECIES_SEX_RATIO) is non-zero, sets the child's MON_SEX to 1 when a random value is not above SexChanceByClass[byte & 3] (0, 10, 50, 90), else 0; byte 1 = 0 gives 0
+; loads the child's species record; when species byte 1 (SPECIES_SEX_RATIO) is non-zero, sets the child's MON_SEX to 1 (female) when a random value is not above SexChanceByClass[byte & 3] (0, 10, 50, 90), else 0 (male); byte 1 = 0 gives male (E-0311)
 ; 2 call sites from 2 routines (e.g. ComputeBreedingChild, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4)
 ; reads: wChildRecord, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
@@ -2925,7 +2925,7 @@ Func_00E_61C1:: ; address name
     ld [hl], a
     ret
 
-; chance (of about 100) that RollChildSexFromSpecies sets MON_SEX to 1, per sex-ratio class 0-3: 0, 10, 50, 90
+; chance (of about 100) of a female child (RollChildSexFromSpecies sets MON_SEX to 1), per sex-ratio class 0-3: 0, 10, 50, 90 (E-0311)
 ; address loaded by RollChildSexFromSpecies
 SexChanceByClass:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_61FC:: ; address name

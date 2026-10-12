@@ -283,7 +283,7 @@ Func_019_4219:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattlePartyCount, wLinkRole, wBattleFoeCount, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
+; points at: wSlotBodyFlags, wBattleSlotOut, wBattleMonsterId
 GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi::
 Func_019_4224:: ; address name
     ld a, [wBattlePartyCount]
@@ -315,7 +315,7 @@ Func_019_4224:: ; address name
     dec b
     jr nz, .loop2
     call AdjustSkillsForBattleStart
-    ld de, wSlotDamageFlags
+    ld de, wSlotBodyFlags
     ld bc, $0800
 
 .loop3:
@@ -337,9 +337,9 @@ Func_019_4224:: ; address name
     push de
     farcall LoadSpeciesRecord
     pop de
-    ld a, [wSpeciesRecord + $3]
+    ld a, [wSpeciesRecord + SPECIES_METAL]
     ld h, a
-    ld a, [wSpeciesRecord + $2]
+    ld a, [wSpeciesRecord + SPECIES_UNTRIPPABLE]
     swap a
     or a, h
     ld [de], a
@@ -1378,9 +1378,9 @@ Func_019_4752:: ; address name
     ld [hl+], a
     ldh a, [hTemp1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $2D]
+    ld a, [wSpeciesRecord + SPECIES_EXP]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $2E]
+    ld a, [wSpeciesRecord + SPECIES_EXP + 1]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -1566,7 +1566,7 @@ Func_019_48B1:: ; address name
     ld a, [wBattleKind]
     cp a, $03
     jr nz, .skip2
-    ld a, [wSpeciesRecord + $3]
+    ld a, [wSpeciesRecord + SPECIES_METAL]
     or a, a
     jr z, .skip2
     ld bc, $03E7

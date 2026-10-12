@@ -3407,7 +3407,7 @@ Jump_032_5474:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wBattleResolveStep
-; points at: wBattleResolveStep, wBattleStatus3, wBattleStatus, wSlotDamageFlags, wBattleSubPhase, wSlotFlags854
+; points at: wBattleResolveStep, wBattleStatus3, wBattleStatus, wSlotBodyFlags, wBattleSubPhase, wSlotFlags854
 RunBattleActions_StatusChecks_AddAx9ToHL::
 Jump_032_54AF:: ; address name
     ld hl, wBattleResolveStep
@@ -3425,7 +3425,7 @@ Jump_032_54AF:: ; address name
     bit 6, [hl]
     jr nz, .skip2
     ld a, [wBattleActor]
-    ld de, wSlotDamageFlags
+    ld de, wSlotBodyFlags
     add a, e
     ld e, a
     jr nc, .skip
@@ -4803,7 +4803,7 @@ Func_032_5C3F:: ; address name
     ld c, a
     farcall SlotSpeciesNibblesD00AD00B
     ld a, [wBattleTarget]
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     ld [hl], c
     ld a, [wBattleTarget]
@@ -4812,7 +4812,7 @@ Func_032_5C3F:: ; address name
     cp a, $03
     ret z
     ld a, b
-    ld e, $31
+    ld e, BATTLER_RESISTANCES
     call BattlerRecordFieldAddress
     ld a, l
     ld [wBattleArg0], a

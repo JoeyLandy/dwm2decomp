@@ -3002,7 +3002,7 @@ Jump_039_551C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp0, hTemp1, hTemp2, wBattleArg3, wNameSlot, wBattleArg0, wBattleTemp7D, ...
 ; writes: wBattleArg0, wBattleArg3, wNameSlot, hTemp0, hTemp1, hTemp2, wBattleTemp7D, wBattleTemp7E, ...
-; points at: hTemp0, wBattleArg0, wSlotDamageFlags, wBattleMaxHP, wBattleTargetChoice, wBattleTemp7D, wTargetEstimates, wBattleHP
+; points at: hTemp0, wBattleArg0, wSlotBodyFlags, wBattleMaxHP, wBattleTargetChoice, wBattleTemp7D, wTargetEstimates, wBattleHP
 ChooseTarget_Heal_5593:: ; code pointer of the table ActionTargetRoutines8; C0
 Func_039_5593:: ; address name
     ld a, [wBattleActor]
@@ -3032,7 +3032,7 @@ Func_039_5593:: ; address name
     ld a, c
     call GetBattleMaxHP_Bank39
     ld a, c
-    ld de, wSlotDamageFlags
+    ld de, wSlotBodyFlags
     add a, e
     ld e, a
     jr nc, .skip
@@ -3978,7 +3978,7 @@ Func_039_5ADB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
-; points at: wSlotDamageFlags, wBattleStatus
+; points at: wSlotBodyFlags, wBattleStatus
 ChooseTarget_LegSweep:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5B40:: ; address name
     ld a, [wBattleActor]
@@ -3999,7 +3999,7 @@ Func_039_5B40:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
     ldh [hTemp2], a
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 4, [hl]
     jr nz, .next
@@ -4155,7 +4155,7 @@ Func_039_5BF9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 ChooseTarget_MetalCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5C43:: ; address name
     ld a, [wBattleActor]
@@ -4176,7 +4176,7 @@ Func_039_5C43:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .restore
     ldh [hTemp3], a
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 0, [hl]
     jr z, .restore
@@ -6478,7 +6478,7 @@ Func_039_69B6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
-; points at: wSlotDamageFlags, wBattleStatus
+; points at: wSlotBodyFlags, wBattleStatus
 ChooseTarget_LegSweep_69B9:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69B9:: ; address name
     jp ChooseTarget_LegSweep
@@ -6504,7 +6504,7 @@ Func_039_69BF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 ChooseTarget_MetalCut_69C2:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69C2:: ; address name
     jp ChooseTarget_MetalCut
@@ -7526,11 +7526,11 @@ Func_039_6E27:: ; address name
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 MultiplyDamageBy50IfSlotDamageFlagsBit0::
 Func_039_6E61:: ; address name
     ld a, c
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 0, [hl]
     ret z

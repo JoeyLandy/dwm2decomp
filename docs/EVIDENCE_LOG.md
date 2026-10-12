@@ -2431,6 +2431,35 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0311 — Sex 0 = male, 1 = female; egg states; the bytes no code reads
+
+- Kind: STATIC (C2).
+- **Which sex is which.** The egg appraiser's script (bank $96, Script_96_6FA6) is `script_command SCRIPT_EGG_SERVICE` then `script_choice_jump`, and opcode $E4 jumps by wTwoChoiceCursor (E-0242).
+  - Choice 0 shows 'No doubt at all-it's male.' and choice 1 shows '...it's female.'
+  - The service step that precedes it (EggServiceMenu_ChooseAndPay_CheckAndPay, step 5) sets wTwoChoiceCursor = MON_SEX & 1.
+  - So bit 0 = 0 is male and 1 is female. SexChanceByClass (0, 10, 50, 90) is therefore the chance of a female child, and sex-ratio class 0 is always male.
+- **Egg states (MON_EGG, $6E).**
+  - 0: not an egg.
+  - 1: an egg not yet appraised. The creation code sets it.
+  - 2: an appraised egg. EggServiceMenu_ChooseAndPay_CheckAndPay sets it after charging the 20-gold fee, and DrawRecordListPageMarks shows the sex mark only for 2.
+- **Bytes no code reads.**
+  - Record bytes $28 and $33 sit after the two parent master names. The presets hold 0, and only the unknown-parents placeholder writes them ($FF). Named MON_UNUSED_28 and MON_UNUSED_33.
+  - Species byte 5 (values 0-3) is never read: all species reads go through wSpeciesRecord, LoadSpeciesRecord copies the 47 bytes, and the only code that touches the whole buffer clears it. Named SPECIES_UNUSED_05.
+- **Result.** No species, monster-record or battler byte up to these ranges is left unexplained. Species byte $0B is still only "a category-$0D string index".
+- Binary verification: build/run429 PASS, 0 differing bytes; tests OK (skipped=3).
+
+### E-0310 — Species body flags, base EXP; battler family and resistances
+
+- Kind: STATIC (C1).
+- **Body flags.** At battle start GameMode4_Init_Sub01 stores (species byte 2 << 4) | species byte 3 into each slot's wSlotBodyFlags (was wSlotDamageFlags).
+  - Bit 0, from species byte 3: MetalCut multiplies damage by 50 against it (MultiplyDamageBy50IfSlotDamageFlagsBit0), and ChooseTarget_MetalCut picks such slots. A non-zero byte 3 also raises a stat cap from 700 to 999 in battle kind 3. So byte 3 is SPECIES_METAL.
+  - Bit 4, from species byte 2: ChooseTarget_LegSweep skips such slots, and ActionEffect_LegSweep (LegSweep, BigTrip) treats them differently. So byte 2 is SPECIES_UNTRIPPABLE.
+- **Species bytes $2D-$2E = base EXP word.** GameMode4_Init_Sub01_Sub07 builds a battler record and writes them as the low word of its 24-bit EXP, at battler $18-$19. MonsterTable bytes 6-7 do the same for wild monsters (E-0298). Named SPECIES_EXP.
+- **Battler fields.**
+  - $0C is the family (BATTLER_FAMILY).
+  - $31 holds 27 resistance levels (BATTLER_RESISTANCES). RecomputeTargetStatsFromRecord packs them into the slot's 7-byte wSlotResistances record (LoadBattleArg0PointersThenRunPackResistanceFieldsToDE).
+- Binary verification: build/run428 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0309 — Species bytes $0C-$11 are six stat growth rows (correction to E-0299)
 
 - Kind: STATIC (C1 for the stat order).

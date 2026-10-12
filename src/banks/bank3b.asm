@@ -472,10 +472,10 @@ Func_03B_42BB:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $2]
+    ld a, [wSpeciesRecord + SPECIES_UNTRIPPABLE]
     swap a
     ld c, a
-    ld a, [wSpeciesRecord + $3]
+    ld a, [wSpeciesRecord + SPECIES_METAL]
     or a, c
     ld c, a
     jr .return

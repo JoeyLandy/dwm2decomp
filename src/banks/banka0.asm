@@ -240,7 +240,7 @@ Func_0A0_4181:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
+; points at: wSlotBodyFlags, wBattleSlotOut, wBattleMonsterId
 PrepareTwoFoeSlots::
 Func_0A0_418E:: ; address name
     ld bc, $0204
@@ -250,7 +250,7 @@ Func_0A0_418E:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
+; points at: wSlotBodyFlags, wBattleSlotOut, wBattleMonsterId
 PrepareThreeFoeSlots::
 Func_0A0_4193:: ; address name
     ld bc, $0304
@@ -264,7 +264,7 @@ Jump_0A0_4196:: ; address name
     dec b
     jr nz, PrepareThreeFoeSlots_Loop
     call AdjustSkillsForBattleStart_A0
-    ld de, wSlotDamageFlags
+    ld de, wSlotBodyFlags
     ld bc, $0800
 
 .loop:
@@ -286,9 +286,9 @@ Jump_0A0_4196:: ; address name
     push de
     farcall LoadSpeciesRecord
     pop de
-    ld a, [wSpeciesRecord + $3]
+    ld a, [wSpeciesRecord + SPECIES_METAL]
     ld h, a
-    ld a, [wSpeciesRecord + $2]
+    ld a, [wSpeciesRecord + SPECIES_UNTRIPPABLE]
     swap a
     or a, h
     ld [de], a
@@ -3934,11 +3934,11 @@ Jump_0A0_57C8:: ; address name
     ld hl, wRecordBufB + MON_PARENT1_MASTER
     call WriteUnknownNamePlaceholder
     ld a, $FF
-    ld [wRecordBufB + $28], a
+    ld [wRecordBufB + MON_UNUSED_28], a
     ld hl, wRecordBufB + MON_PARENT2_MASTER
     call WriteUnknownNamePlaceholder
     ld a, $FF
-    ld [wRecordBufB + $33], a
+    ld [wRecordBufB + MON_UNUSED_33], a
     call AppendMappedSkillsToWCA67
     xor a, a
     ld [wRecordBufB + MON_STATUS], a

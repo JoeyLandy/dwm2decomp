@@ -1292,7 +1292,7 @@ Func_005_4605:: ; address name
 ; only called from AIScore_LegSweep_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_LegSweep_Conditions)
 ; reads: wBattleActor
-; points at: wSlotDamageFlags, wBattleStatus3
+; points at: wSlotBodyFlags, wBattleStatus3
 AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_461F:: ; address name
     ld a, [wBattleActor]
@@ -1300,7 +1300,7 @@ Func_005_461F:: ; address name
     xor a, $04
     ld c, a
     ld b, $03
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add a, l
     ld l, a
     jr nc, .loop
@@ -1811,7 +1811,7 @@ Func_005_4852:: ; address name
 ; only called from AIScore_MetalCut_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MetalCut_Conditions)
 ; reads: wBattleActor
-; points at: wSlotDamageFlags
+; points at: wSlotBodyFlags
 AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4858:: ; address name
     ld a, [wBattleActor]
@@ -1824,7 +1824,7 @@ Func_005_4858:: ; address name
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    ld hl, wSlotDamageFlags
+    ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 0, [hl]
     jr nz, .done
