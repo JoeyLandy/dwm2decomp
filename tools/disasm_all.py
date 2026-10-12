@@ -1146,6 +1146,15 @@ class Rom:
                         chain.append((q, w))
                         prev = w
                         q += stride
+                    # E-0301: a run ends before a position an earlier entry points at (that target is the
+                    # data the table indexes, as the SGB packet sets after 17:$4055; a sub-list there is
+                    # found as a chain of its own when the scan resumes)
+                    seen_t: set[int] = set()
+                    for k, (qq, ww) in enumerate(chain):
+                        if qq in seen_t:
+                            chain = chain[:k]
+                            break
+                        seen_t.add(ww)
                     if len(chain) > len(best):
                         best = chain
                 if (len(best) >= 8 and best[0][1] >= best[0][0]

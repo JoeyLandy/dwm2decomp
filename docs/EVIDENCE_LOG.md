@@ -2431,6 +2431,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0301 — 17:5D79 was a false pointer target; pointer runs stop at their own targets (correction to E-0289)
+
+- Kind: TOOL and a correction.
+- **What was wrong.** E-0289 named the 359-byte slice at 17:5D79 "SGBPacketSet18": the target of SGB packet-set table entry $18, with its first 64 bytes read as packets. That reading was wrong in two ways.
+  - The word that pointed at 5D79 is at 17:407F, which is table entry $15, not $18; I had counted `dw` lines.
+  - 407F is not a table entry at all. The table at 17:4055 indexes the packets that follow it, so it has (407F - 4055) / 2 = $15 entries. 407F is the first packet: `79 5D 08 00 0B 8C D0 F4 60 ...`, a DATA_SND packet (command $0F, one packet). Its first two bytes had been taken for the pointer $5D79.
+- **What 5D79 really is.** It lies inside SGBBorder0MapAndPalettes, the LZSS stream that starts at 17:5B03 and runs for 989 bytes to $5EE0, where SGBBorder1MapAndPalettes starts. The tile/attribute pairs at its start ($8E $14, $8F $14, ...) are literals in that stream.
+- **Tool fix.** structure_data now ends a monotone pointer run before any position that an earlier entry of the same run points to. Such a position is the data the table indexes; a sub-list there is found as a chain of its own when the scan resumes. The only change in the generated source is in bank $17:
+  - packet 0 is plain `db` bytes;
+  - the border-0 stream is one `INCBIN` of $3DD bytes;
+  - the false label and its names.json entry are removed.
+- **Counts.** INCBIN slices without an asset comment: 0 (build/measure2.py). Data labels with only an address name: 0.
+- Binary verification: build/run415 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0300 — Field object slots and the script meta-sprite object (OBJ_*, SCRIPTOBJ_*)
 
 - Kind: STATIC (C1).
@@ -2700,7 +2714,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Result 2 lowers the highest word by BattleResultStatPenaltyByRank[rank]. Any other result lowers all five.
   - A word from BattleResultGoldByRank, or 1000, goes to wWorkBuf+$10.
 - **Helpers.** Eight routines had lost the helper names derived from their old parents when E-0288 renamed those parents: RunBackupAndSaveSteps, InitBattleSlotsForFoeCount, PrepareTwoFoeSlots, PrepareThreeFoeSlots, ComputeWildLevelAndScaleStats, StoreBattleStateToPartyRecords, WriteThreeTwoDigitRows, ApplyBattleResultStatChanges.
-- **SGBPacketSet18 (17:5D79).** The target of entry $18 of the SGB packet-set table. Its first byte, $14, gives 4 packets (64 bytes). The other 295 bytes of the 359-byte slice are not identified and are not a valid LZSS stream. build/measure2.py still counts this slice as unidentified (359 bytes).
+- **SGBPacketSet18 (17:5D79)** (superseded by E-0301: a false pointer target inside the SGBBorder0MapAndPalettes stream). The target of entry $18 of the SGB packet-set table. Its first byte, $14, gives 4 packets (64 bytes). The other 295 bytes of the 359-byte slice are not identified and are not a valid LZSS stream. build/measure2.py still counts this slice as unidentified (359 bytes).
 - **Counts.** Data labels with only an address name: 18 → 0. Code labels with only an address name (primary `Func_`/`Jump_`): 0. tools/rank_unnamed.py reports 0.
 - Binary verification: build/run389 PASS, 0 differing bytes; tests OK (skipped=3).
 
