@@ -4612,7 +4612,7 @@ Func_0A0_5B47:: ; address name
     ld a, e
     ld [wGoldHi], a
     ld a, [wLinkReceivedByte]
-    ld c, $5E
+    ld c, MON_MAX_HP + 1
     call SRAMRecordAddress
     ld a, [hl-]
     ld b, a
@@ -4631,7 +4631,7 @@ Func_0A0_5B47:: ; address name
 
 .read_link_received_byte:
     ld a, [wLinkReceivedByte]
-    ld c, $62
+    ld c, MON_MAX_MP + 1
     call SRAMRecordAddress
     ld a, [hl-]
     ld b, a

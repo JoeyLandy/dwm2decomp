@@ -2487,7 +2487,7 @@ Jump_015_5030:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6E
+    ld c, MON_EGG
     call SRAMRecordAddress
     xor a, a
     ld [hl], a
@@ -2745,7 +2745,7 @@ Jump_015_520D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -3140,7 +3140,7 @@ Jump_015_5504:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -3205,7 +3205,7 @@ Jump_015_556A:: ; address name
     ld [hl], a
     pop hl
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -4497,7 +4497,7 @@ Jump_015_5E62:: ; address name
     ld [wChildRecord + $C], a
     pop hl
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld [wChildRecord + $6D], a
@@ -4896,7 +4896,7 @@ Jump_015_6101:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a

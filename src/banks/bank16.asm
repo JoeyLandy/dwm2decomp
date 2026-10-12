@@ -710,7 +710,7 @@ Jump_016_43EB:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
@@ -728,7 +728,7 @@ Jump_016_4401:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
@@ -746,7 +746,7 @@ Jump_016_4416:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
@@ -764,7 +764,7 @@ Jump_016_442C:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
@@ -4086,7 +4086,7 @@ Func_016_5852:: ; address name
 ItemApply_BeNice_MapIndexViaPartyListKeepHL::
 Func_016_585D:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     ld e, $FF
     call AddToRecordFieldByteCapped
     ret
@@ -4096,7 +4096,7 @@ Func_016_585D:: ; address name
 ItemApply_Cheater_MapIndexViaPartyListKeepHL::
 Func_016_5868:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     ld e, $00
     call SubtractFromRecordFieldByteFloored
     ret
@@ -4106,7 +4106,7 @@ Func_016_5868:: ; address name
 ItemApply_Smart_MapIndexViaPartyListKeepHL::
 Func_016_5873:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     ld e, $FF
     call AddToRecordFieldByteCapped
     ret
@@ -4116,7 +4116,7 @@ Func_016_5873:: ; address name
 ItemApply_Comedy_MapIndexViaPartyListKeepHL::
 Func_016_587E:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     ld e, $00
     call SubtractFromRecordFieldByteFloored
     ret
@@ -4127,7 +4127,7 @@ ApplyMeatToRecordField6B::
 Func_016_5889:: ; address name
     call MapIndexViaPartyListKeepHL
     push hl
-    ld c, $6B
+    ld c, MON_WLD
     call SRAMRecordAddress
     pop de
     call ApplyMeatToRecordField6B_Sub01
@@ -6776,7 +6776,7 @@ Func_016_6891:: ; address name
     pop hl
     ld a, [hl]
     push hl
-    ld c, $6E
+    ld c, MON_EGG
     call SRAMRecordAddress
     ld a, [hl]
     cp a, $02

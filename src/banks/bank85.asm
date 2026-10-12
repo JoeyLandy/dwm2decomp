@@ -2717,7 +2717,7 @@ Jump_085_5086:: ; address name
     ldh a, [hTemp0]
     ld e, a
     pop af
-    ld c, $57
+    ld c, MON_MAX_LEVEL
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG], a
@@ -4115,7 +4115,7 @@ Func_085_5840:: ; address name
     jr nz, .next
     push bc
     ld a, [hl]
-    ld c, $6B
+    ld c, MON_WLD
     call LoadSRAMRecordWord
     pop bc
     ldh a, [hTemp0]

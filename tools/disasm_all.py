@@ -512,19 +512,28 @@ def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[
     call = re.compile(r"^\s+(?:call|farcall|jp) (\w+)\s*(?:;.*)?$")
     keeps_c = re.compile(r"^\s+(?:ldh? a, .*|ld (?:hl|de|b|d|e|h|l), .*|push \w+|xor a, a|ld a, \w+|add_a_to_hl|"
                          r"inc (?:a|hl|de)|dec (?:a|hl|de))\s*(?:;.*)?$")
+
+    def field_expr(off: int) -> str | None:  # E-0296: MON_X, or MON_X + n inside a field with a "size"
+        if off in fields:
+            return fields[off]["const"]
+        for start, f in fields.items():
+            if start < off < start + f.get("size", 1):
+                return f"{f['const']} + {off - start}"
+        return None
+
     n = 0
     out = []
     for text in texts:
         ls = text.split("\n")
         for i, ln in enumerate(ls):
             m = load.match(ln)
-            if not m or int(m.group(2), 16) not in fields:
+            if not m or field_expr(int(m.group(2), 16)) is None:
                 continue
             for j in range(i + 1, min(i + 5, len(ls))):
                 mc = call.match(ls[j])
                 if mc:
                     if mc.group(1) in callees:
-                        ls[i] = m.group(1) + fields[int(m.group(2), 16)]["const"] + m.group(3)
+                        ls[i] = m.group(1) + field_expr(int(m.group(2), 16)) + m.group(3)
                         n += 1
                     break
                 if not keeps_c.match(ls[j]):

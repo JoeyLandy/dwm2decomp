@@ -6387,7 +6387,7 @@ Func_001_6E46:: ; address name
 
 .read_battle_arg0:
     ld a, [wBattleArg0]
-    ld c, $6E
+    ld c, MON_EGG
     call SRAMRecordAddress
     ld [hl], $01
 

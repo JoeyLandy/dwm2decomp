@@ -2431,6 +2431,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0296 — Record bytes $57, $6B, $6D, $6E read; offsets inside fields named
+
+- Kind: STATIC (C1) and TOOL.
+- **$57 = level cap.** DrawRecordLevelAndStatusRow_1E loads $56-$57 as a pair (level, then this byte) and draws the cap mark $6F instead of $C3 when the level is at least this byte. This fits the category-5 string 'It has reached the limit for growth.'
+- **$6B = WLD (wildness) word.** It is the fifth word of the stats column (F2:509F: $63, $65, $67, $69, $6B), after ATK, DEF, AGL and INT. That matches the INFO panel's order 'ATK, DEF, AGL, INT, WLD' observed in E-0046. The pause menu draws it through the same stat path as $63-$67.
+- **$6D = breeding plus value.** When it is non-zero, the monster info screen draws glyph $FC and the value in one or two digits after the member number. BreedMenu_CopyToChildThenTalkEvent16 copies it to the child record. The glyph $FC is not verified as '+'.
+- **$6E = egg flag.**
+  - When CountRecordsByField6E counts no record with it set, the battle-end flow shows 'You have no eggs.'
+  - The egg lists ('Switch which egg?', ListRecordsInUseWithByte6ESet) take the records that have it set.
+  - CreateMonsterRecordOfKindTemp1 sets it to 1 for kinds 1 and 2.
+  - DrawRecordListPageMarks shows the sex mark only when it is 2. What 1 versus 2 means is not established.
+- **New constants.** MON_MAX_LEVEL, MON_WLD, MON_PLUS and MON_EGG are added to config/record_fields.json, and the table layouts name these bytes.
+- **Offsets inside fields.** Fields now carry a "size". An offset inside a field is written `MON_FIELD + n`: MON_PERSONALITY + 1/+3 (12 loads), MON_MAX_HP + 1, MON_MAX_MP + 1. Record loads through the record-access routines: 416 → 445. None is left numeric. A new test covers the case.
+- **Record bytes still unread:** $19-$33 and $73-$A3.
+- Binary verification: build/run405 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0295 — The largest dispatcher is the per-item gift effect; 16 link and gift states named
 
 - Kind: STATIC (C1).

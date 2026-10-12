@@ -1074,7 +1074,7 @@ EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case03::
 Jump_00D_4A3F:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
-    ld c, $57
+    ld c, MON_MAX_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $29
@@ -1119,7 +1119,7 @@ Jump_00D_4A69:: ; address name
     push de
     push bc
     ld a, [hl]
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, e
@@ -1144,7 +1144,7 @@ Jump_00D_4A69:: ; address name
     push de
     push bc
     ld a, [hl]
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, e
@@ -1208,7 +1208,7 @@ Jump_00D_4ACF:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6E
+    ld c, MON_EGG
     call SRAMRecordAddress
     ld a, $02
     ld [hl], a
@@ -1549,7 +1549,7 @@ Func_00D_4CF4:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $6D
+    ld c, MON_PLUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -7940,11 +7940,11 @@ Data_00D_78F6:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $12 ; $56: level (E-0122)
-    db $23 ; $57
+    db $23 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0058, $0058, $005C, $005C ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $007F, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -7964,11 +7964,11 @@ Data_00D_799B:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2A ; $56: level (E-0122)
-    db $2A ; $57
+    db $2A ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $00E6, $00E6, $00E0, $00E0 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $00E2, $0110, $0132, $02F1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $0A, $C8, $B4, $DC ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00 ; $73-$82
     db $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -7988,11 +7988,11 @@ Data_00D_7A40:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $1C ; $56: level (E-0122)
-    db $23 ; $57
+    db $23 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $007B, $007B, $00AD, $00AD ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $0077, $00A6, $00B4, $0165 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $46, $64, $AA, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00 ; $73-$82
     db $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8012,11 +8012,11 @@ Data_00D_7AE5:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $25 ; $56: level (E-0122)
-    db $25 ; $57
+    db $25 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $00A6, $00A6, $009F, $009F ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $00D6, $00D4, $009B, $02EB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $D2, $28, $96, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8036,11 +8036,11 @@ Data_00D_7B8A:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $20 ; $56: level (E-0122)
-    db $23 ; $57
+    db $23 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0090, $0090, $0040, $0040 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $00C6, $004F, $0098, $01C5 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $96, $96, $1E ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8060,11 +8060,11 @@ Data_00D_7C2F:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2E ; $56: level (E-0122)
-    db $32 ; $57
+    db $32 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0174, $0174, $015F, $015F ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $0169, $0147, $01CB, $01B1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $64, $96, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00 ; $73-$82
     db $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8084,11 +8084,11 @@ Data_00D_7CD4:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $35 ; $56: level (E-0122)
-    db $35 ; $57
+    db $35 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0173, $0173, $0246, $0246 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $00F8, $01A1, $01CA, $01F4 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $14, $C8, $64, $B4 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00 ; $73-$82
     db $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8108,11 +8108,11 @@ Data_00D_7D79:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $3B ; $56: level (E-0122)
-    db $3B ; $57
+    db $3B ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $01F6, $01F6, $0147, $0147 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $01AD, $01BF, $01E9, $01AB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $B4, $8C, $64, $8C ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00 ; $73-$82
     db $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8132,11 +8132,11 @@ Data_00D_7E1E:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2B ; $56: level (E-0122)
-    db $37 ; $57
+    db $37 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0155, $0155, $0135, $0135 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $015D, $013D, $010B, $0191 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $82, $64, $5A ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00 ; $73-$82
     db $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8156,11 +8156,11 @@ Data_00D_7EC3:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $36 ; $56: level (E-0122)
-    db $36 ; $57
+    db $36 ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $01D3, $01D3, $01BA, $01BA ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $01AC, $0178, $014B, $01E0 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $64, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00 ; $73-$82
     db $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02, $98, $98, $98, $F0, $F0 ; $83-$92

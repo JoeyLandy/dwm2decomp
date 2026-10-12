@@ -18201,7 +18201,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$57"
+          "name": "$57: level cap (C1, E-0296)"
         },
         {
           "type": "db",
@@ -18222,7 +18222,7 @@
           "type": "db",
           "size": 4,
           "line": true,
-          "name": "$6B-$6E"
+          "name": "$6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)"
         },
         {
           "type": "db",
@@ -18944,7 +18944,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$57"
+          "name": "$57: level cap (C1, E-0296)"
         },
         {
           "type": "db",
@@ -18965,7 +18965,7 @@
           "type": "db",
           "size": 4,
           "line": true,
-          "name": "$6B-$6E"
+          "name": "$6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)"
         },
         {
           "type": "db",

@@ -3027,11 +3027,11 @@ Data_024_52ED:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $12 ; $56: level (E-0122)
-    db $2D ; $57
+    db $2D ; $57: level cap (C1, E-0296)
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0083, $0083, $0028, $0028 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
     dw $008A, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
-    db $00, $00, $00, $00 ; $6B-$6E
+    db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00 ; $73-$82
     db $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92

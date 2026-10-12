@@ -6473,7 +6473,7 @@ Func_000_2391:: ; address name
     call Multiply8
     ld b, l
     ldh a, [hTemp6]
-    ld c, $72
+    ld c, MON_PERSONALITY + 3
     call LoadSRAMRecordByte
     call GradeTemp0
     ld a, c
@@ -6482,7 +6482,7 @@ Func_000_2391:: ; address name
     add a, b
     ld b, a
     ldh a, [hTemp6]
-    ld c, $70
+    ld c, MON_PERSONALITY + 1
     call LoadSRAMRecordByte
     call GradeTemp0
     ld a, c

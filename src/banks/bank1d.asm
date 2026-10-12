@@ -5323,7 +5323,7 @@ Func_01D_6320:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $6E
+    ld c, MON_EGG
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $02

@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import disasm_all  # noqa: E402
 
-FIELDS = {0x5B: {"const": "MON_HP"}, 0x56: {"const": "MON_LEVEL"}}
+FIELDS = {0x5B: {"const": "MON_HP", "size": 2}, 0x56: {"const": "MON_LEVEL"}}
 CALLEES = {"SRAMRecordAddress", "LoadSRAMRecordByte"}
 
 
@@ -30,6 +30,14 @@ class RecordFields(unittest.TestCase):
     def test_an_instruction_that_changes_c_blocks_it(self):
         text = "    ld c, $5B\n    inc c\n    call SRAMRecordAddress\n"
         self.assertEqual(run(text), (text, 0))
+
+    def test_an_offset_inside_a_sized_field_is_field_plus_n(self):
+        out, n = run("    ld c, $5C
+    call SRAMRecordAddress
+")
+        self.assertEqual((out, n), ("    ld c, MON_HP + 1
+    call SRAMRecordAddress
+", 1))
 
     def test_other_callees_and_unknown_offsets_stay_numeric(self):
         for text in ("    ld c, $5B\n    call Multiply8\n", "    ld c, $57\n    call SRAMRecordAddress\n"):
