@@ -2443,6 +2443,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - tokens that are numbers, not addresses (GoldAtLeast10000, message and talk-event ids);
   - matches running across a word boundary ("4D1A" in "...74D1And");
   - a name whose address is in another bank ("Func4001InBank81").
+- A second pass, with stricter token boundaries (a token may not start inside a hex run, and a following capital must begin a word) and names that say InBankXX skipped, kept five more: LoadExpTableEntryToTemp2, AppendSpeciesToLinkCodeByteForWordAtDE, AddSignedEToByteAtHLClampedForActorEntryOfHL, OrDIntoTestBitDEOfBitArrayHLByte, StartArenaRankMessage (build/run336 PASS).
 - Binary verification: build/run335 PASS, 0 differing bytes; tests OK.
 
 ### E-0259 — Dispatchers named by caller instead of address

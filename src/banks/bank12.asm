@@ -726,7 +726,7 @@ Func_012_43DA:: ; address name
 ArenaRounds_Case15::
 Jump_012_4412:: ; address name
     ld a, $07
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -746,14 +746,14 @@ Jump_012_4420:: ; address name
     cp a, $02
     jr nz, Jump_012_4437
     ld a, $07
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_4440
 
 Jump_012_4437::
     ld a, $05
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
 
@@ -775,14 +775,14 @@ Jump_012_444D:: ; address name
     cp a, $02
     jr nz, Jump_012_4464
     ld a, $07
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_446D
 
 Jump_012_4464::
     ld a, $03
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
 
@@ -847,7 +847,7 @@ Jump_012_44AF:: ; address name
     ld [wArenaFlags], a
     ret
 
-; implements script command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable (StartMessageFromTable48B9ByArenaRank) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02); reached through ScriptCommand95 in bank $10 (E-0038, E-0246)
+; implements script command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable (StartArenaRankMessage) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02); reached through ScriptCommand95 in bank $10 (E-0038, E-0246)
 ; 1 call site from 1 routine (e.g. ScriptCommand95)
 ; reads: wScriptStep
 ArenaGridBattle::
@@ -959,7 +959,7 @@ Jump_012_457B::
 ArenaGridBattle_Case16::
 Jump_012_4587:: ; address name
     ld a, $07
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -972,7 +972,7 @@ Jump_012_4587:: ; address name
 ArenaRounds_Case12::
 Jump_012_4595:: ; address name
     ld a, $06
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -984,7 +984,7 @@ Jump_012_4595:: ; address name
 ArenaGridBattle_Case0E::
 Jump_012_459F:: ; address name
     ld a, $05
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -1007,7 +1007,7 @@ Jump_012_45BF::
 ArenaRounds_Case0A::
 Jump_012_45CC:: ; address name
     ld a, $04
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1188,7 +1188,7 @@ Jump_012_469E:: ; address name
 ArenaGridBattle_Case06::
 Jump_012_46D8:: ; address name
     ld a, $03
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -1364,7 +1364,7 @@ Jump_012_47D8::
     ld [wFollowerRecords + $5], a
     ld [wFollowerRecords + $A], a
     ld a, $02
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld a, [wScriptParam1]
     ld [wFieldEventKind], a
     ld a, $00
@@ -1421,7 +1421,7 @@ Jump_012_4850:: ; address name
     call RunMessageBoxThenContinue_684A
     ret nc
     ld a, $01
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     ld a, $0E
     ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
@@ -1446,7 +1446,7 @@ Jump_012_4863:: ; address name
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
     ld a, $00
-    call StartMessageFromTable48B9ByArenaRank
+    call StartArenaRankMessage
     xor a, a
     ld [wArenaFlags], a
     ret
@@ -1454,7 +1454,7 @@ Jump_012_4863:: ; address name
 ; starts the message at Data_012_48B9 + 2 * A + 16 * wC82C (16 * 5 when bit 7 of wC94A is set) (E-0125)
 ; 13 call sites from 11 routines (e.g. ArenaRounds_Case15, ArenaRounds_Case0D, ArenaRounds_Case05, ArenaGridBattle_Case16, ...)
 ; reads: wArenaFlags, wArenaRank
-StartMessageFromTable48B9ByArenaRank::
+StartArenaRankMessage::
 Func_012_488B:: ; address name
     ld de, ArenaRankMessageTable
     sla a
@@ -1492,7 +1492,7 @@ Jump_012_48B4::
     call StartMessageA
     ret
 
-; E-0237 (C1: StartMessageFromTable48B9ByArenaRank reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words).
+; E-0237 (C1: StartArenaRankMessage reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words).
 ; record: one row per arena rank
 ArenaRankMessageTable::
 Data_012_48B9:: ; address name
@@ -6591,7 +6591,7 @@ Func_012_6813:: ; address name
     ret
 
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that string of the group already in wMessageGroup (E-0063, E-0079)
-; 35 call sites from 15 routines (e.g. Talk00Event0A_Case00, Talk00Event1E_Case00, Talk00Event1D_Case00, StartMessageFromTable48B9ByArenaRank, ...)
+; 35 call sites from 15 routines (e.g. Talk00Event0A_Case00, Talk00Event1E_Case00, Talk00Event1D_Case00, StartArenaRankMessage, ...)
 ; writes: wMessageIndex, wMessageState
 StartMessageA::
 Func_012_6820:: ; address name

@@ -13483,7 +13483,7 @@
           "name": "link code for this species (0 = none)"
         }
       ],
-      "note": "E-0217 (C1: AppendTable6175ByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range end)."
+      "note": "E-0217 (C1: AppendSpeciesToLinkCodeByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range end)."
     },
     {
       "bank": "37",
@@ -18388,7 +18388,7 @@
         }
       ],
       "record": "one row per arena rank",
-      "note": "E-0237 (C1: StartMessageFromTable48B9ByArenaRank reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words)."
+      "note": "E-0237 (C1: StartArenaRankMessage reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words)."
     },
     {
       "bank": "F2",

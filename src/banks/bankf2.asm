@@ -1119,7 +1119,7 @@ Func_0F2_4B05:: ; address name
     pop bc
     ld a, b
     ldh [hTemp1], a
-    farcall LoadTable4E60EntryToTemp2
+    farcall LoadExpTableEntryToTemp2
     ld de, hTemp2
     ld a, [de]
     ld c, a

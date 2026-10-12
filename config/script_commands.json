@@ -766,7 +766,7 @@
     "95": {
       "const": "SCRIPT_ARENA_GRID_BATTLE",
       "routine": "ArenaGridBattle",
-      "note": "an arena battle: messages from ArenaRankMessageTable (StartMessageFromTable48B9ByArenaRank) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02)",
+      "note": "an arena battle: messages from ArenaRankMessageTable (StartArenaRankMessage) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02)",
       "evidence": "E-0246"
     },
     "96": {

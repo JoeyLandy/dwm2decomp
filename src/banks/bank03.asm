@@ -2227,7 +2227,7 @@ Jump_003_4CB8::
     call SRAMRecordAddressMapped
     ld a, [hl]
     ldh [hTemp1], a
-    farcall LoadTable4E60EntryToTemp2
+    farcall LoadExpTableEntryToTemp2
     ld c, $56
     ld a, [wMenuSelectedMember]
     and a, $0F

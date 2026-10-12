@@ -6623,7 +6623,7 @@ Jump_0F0_7256::
     ld hl, wFamilyBits
     ld e, a
     ld d, $00
-    call OrDIntoFunc7CD4Byte
+    call OrDIntoTestBitDEOfBitArrayHLByte
     ld a, [wFamilyBitCount]
     cp a, $FF
     jr nc, Jump_0F0_727E
@@ -8383,7 +8383,7 @@ Jump_0F0_7CD0::
     ret
 
 ; A = $FF when bit DE of the bit array at HL is set (mask Data_0F0_7CFB), else 0; HL is left at the byte (E-0124)
-; 2 call sites from 2 routines (e.g. MarkBitBInFamilyBitsAndCount, OrDIntoFunc7CD4Byte)
+; 2 call sites from 2 routines (e.g. MarkBitBInFamilyBitsAndCount, OrDIntoTestBitDEOfBitArrayHLByte)
 TestBitDEOfBitArrayHL::
 Func_0F0_7CD4:: ; address name
     push de
@@ -8419,7 +8419,7 @@ Data_0F0_7CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; [HL from Func_0F0_7CD4] |= D (E-0122)
 ; 1 call site from 1 routine (e.g. MarkBitBInFamilyBitsAndCount)
-OrDIntoFunc7CD4Byte::
+OrDIntoTestBitDEOfBitArrayHLByte::
 Func_0F0_7D03:: ; address name
     call TestBitDEOfBitArrayHL
     ld a, [hl]

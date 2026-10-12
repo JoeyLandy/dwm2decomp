@@ -7881,7 +7881,7 @@ Func_031_6D28:: ; address name
     farcall LoadSpeciesRecord
     ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
-    farcall LoadTable4E60EntryToTemp2
+    farcall LoadExpTableEntryToTemp2
     pop hl
     ldh a, [hTemp2]
     sub a, [hl]

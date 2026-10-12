@@ -3554,7 +3554,7 @@ Func_037_5BC6:: ; address name
     ld [hl+], a
     inc de
     call ConvertNameBytesFromLinkFormat
-    call AppendTable6175ByteForWordAtDE
+    call AppendSpeciesToLinkCodeByteForWordAtDE
     call FamilyNibbleOrSpeciesFamily
     ld a, [de]
     and a, $01
@@ -3577,8 +3577,8 @@ Func_037_5BC6:: ; address name
     jr Jump_037_5C07
 
 Jump_037_5BF5::
-    call AppendTable6175ByteForWordAtDE
-    call AppendTable6175ByteForWordAtDE
+    call AppendSpeciesToLinkCodeByteForWordAtDE
+    call AppendSpeciesToLinkCodeByteForWordAtDE
     call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl+], a
@@ -3923,7 +3923,7 @@ Jump_037_5DA1::
 
 ; reads a word index at DE (DE += 2) and appends the byte at $6175 + index to [HL+] (E-0121)
 ; 3 call sites from 1 routine (e.g. UnpackLinkRecordToWorkBuf)
-AppendTable6175ByteForWordAtDE::
+AppendSpeciesToLinkCodeByteForWordAtDE::
 Func_037_5DA9:: ; address name
     push hl
     ld a, [de]
@@ -4629,7 +4629,7 @@ Data_037_5FC7:: ; address name
     dw $0170 ; id 213 DeathMore
     dw $0171 ; id 214 Darkdrium
 
-; E-0217 (C1: AppendTable6175ByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range end).
+; E-0217 (C1: AppendSpeciesToLinkCodeByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range end).
 ; record: link code for this species (0 = none)
 SpeciesToLinkCodeTable::
 Data_037_6175:: ; address name

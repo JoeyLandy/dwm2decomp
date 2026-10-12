@@ -3298,15 +3298,15 @@ Jump_030_5357::
     ldh a, [hTemp0]
     ld e, a
     ld hl, wSlotPersonalityHi
-    call Func5428ForActorEntryOfHL
+    call AddSignedEToByteAtHLClampedForActorEntryOfHL
     ldh a, [hTemp1]
     ld e, a
     ld hl, wSlotPersonalityMid
-    call Func5428ForActorEntryOfHL
+    call AddSignedEToByteAtHLClampedForActorEntryOfHL
     ldh a, [hTemp2]
     ld e, a
     ld hl, wSlotPersonalityLo
-    call Func5428ForActorEntryOfHL
+    call AddSignedEToByteAtHLClampedForActorEntryOfHL
     ldh a, [hTemp3]
     ld e, a
     ld hl, wSlotTrait
@@ -3314,7 +3314,7 @@ Jump_030_5357::
 ; HL += actor, then Func_030_5428 (E-0122)
 ; 3 call sites from 1 routine (e.g. RunCommandEntryResolveStep_Case01_Sub04_Sub01)
 ; reads: wBattleActor
-Func5428ForActorEntryOfHL::
+AddSignedEToByteAtHLClampedForActorEntryOfHL::
 Func_030_5378:: ; address name
     ld a, [wBattleActor]
     add_a_to_hl

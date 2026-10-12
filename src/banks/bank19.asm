@@ -2905,7 +2905,7 @@ Data_019_4E60:: ; address name
 ; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, SwapMonstersMenu_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
-LoadTable4E60EntryToTemp2::
+LoadExpTableEntryToTemp2::
 Func_019_7380:: ; address name
     ld bc, $0129
     ldh a, [hTemp0]
