@@ -4227,7 +4227,7 @@ Jump_01B_607D::
     ld a, h
     ld [wTextWindowWidth], a
     ld a, $27
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0'
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_Bank1B_481A
@@ -5622,7 +5622,7 @@ Jump_01B_6940:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $1E
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
     ld a, $6C
     call QueueSoundEffect
@@ -6339,7 +6339,7 @@ Jump_01B_6DB3:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $1F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B_481A
     ld a, $6C
     call QueueSoundEffect
@@ -6662,7 +6662,7 @@ Jump_01B_6FD8:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $1F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B_481A
     ld de, TileRect_1B_78E9
     ld hl, wWindowTileBuffer + $E7
@@ -6789,7 +6789,7 @@ Jump_01B_709B:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $1E
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
     call CopyListEntriesCell5NameToTextBuf0
     ld hl, vTiles1

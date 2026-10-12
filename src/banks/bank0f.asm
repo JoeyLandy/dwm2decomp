@@ -298,7 +298,7 @@ Jump_00F_418E:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $FB
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'THE END'
     farcall ShowString_Bank28
     ld hl, wScreenTileBuffer
     ld a, $C3

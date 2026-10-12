@@ -48,7 +48,7 @@ Jump_0F1_4013:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     ld a, $1B
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'GiftExit'
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_BankF0

@@ -264,7 +264,7 @@ Jump_0F2_4185:: ; address name
     ld c, $10
     call GameMode8_Update_Case0C_Sub01
     ld a, $0E
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 received G s egg. Please'
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_48A0

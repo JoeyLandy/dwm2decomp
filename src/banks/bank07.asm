@@ -754,7 +754,7 @@ Jump_007_49B3::
     ld a, $00
     ld [wStringCategory], a
     ld a, $02
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'CONTINUE NEW GAME BREEDING KEY TRADEVS'
     farcall ShowString_Bank07
     ld hl, vTiles2 + $700
     ld de, $0907
@@ -762,7 +762,7 @@ Jump_007_49B3::
     ld a, $00
     ld [wStringCategory], a
     ld a, $06
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'DREAM EGG'
     farcall ShowString_Bank07
     ld a, [wIsCGB]
     or a, a
@@ -3401,7 +3401,7 @@ Jump_007_6187::
     ld a, $00
     ld [wStringCategory], a
     ld a, $07
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Game Link cannot be used with'
     farcall BeginStringDisplay_Bank07
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
@@ -3533,7 +3533,7 @@ Jump_007_6262:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $04
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Master'
     farcall ShowString_Bank07
     ld hl, vTiles1
     ld a, l
@@ -4074,7 +4074,7 @@ Jump_007_6606:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $03
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Saved data has been lost.'
     farcall BeginStringDisplay_Bank07
     ld a, $52
     call QueueMusic
@@ -4234,7 +4234,7 @@ Jump_007_66E0:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $07
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Game Link cannot be used with'
     farcall BeginStringDisplay_Bank07
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
@@ -4292,7 +4292,7 @@ Jump_007_6759:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $08
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'DuoOwnWL'
     farcall BeginStringDisplay_Bank07
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
@@ -4323,7 +4323,7 @@ Jump_007_67DB:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $05
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Game Link is not ready. Please'
     farcall BeginStringDisplay_Bank07
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07

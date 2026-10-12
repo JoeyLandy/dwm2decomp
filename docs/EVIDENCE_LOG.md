@@ -2430,6 +2430,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0257 — String displays quoted in code
+
+- Kind: TOOL (C1 quotes).
+- An `ld [wStringIndex], a` right after `ld a, n` now ends with the quoted string when the string can be resolved:
+  - the category is a constant stored within a few instructions (`ld a, n` or `xor a`, then `ld [wStringCategory], a`);
+  - the next call or far call goes to a BeginStringDisplay/ShowString/CopyStringToBuffer routine;
+  - that routine either loads its table (`ld de, table`) directly or after one `call` (the ShowString_* entries), or is a message bank's entry.
+  - Example: `ld [wStringIndex], a ; 'Pick the monster to rename.'` in RenameMenu.
+- 72 sites are quoted. The rest set the category elsewhere or compute the index, so they stay unquoted.
+- Binary verification: build/run331 PASS, 0 differing bytes; tests OK.
+
 ### E-0256 — Species lists by family and band (banks $F0, $60, $A0)
 
 - Kind: OBSERVATION (reading; C1).

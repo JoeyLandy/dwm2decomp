@@ -2708,7 +2708,7 @@ Jump_0A0_50C8:: ; address name
     ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $03
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'The first monster is 0!'
     ld a, $06
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank07
@@ -2803,7 +2803,7 @@ Jump_0A0_5158:: ; address name
     ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $04
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'The second monster is 0!'
     ld a, $06
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank07
@@ -2891,7 +2891,7 @@ Jump_0A0_51DD:: ; address name
     ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $05
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'The third monster is 0!'
     ld a, $06
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank07
@@ -2959,7 +2959,7 @@ Jump_0A0_5246:: ; address name
     ld a, $05
     ld [wStringCategory], a
     ld a, $0C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Please wait.'
     farcall ShowString_Bank07
     ld a, $01
     ld [wLinkSendByte], a
@@ -3242,7 +3242,7 @@ Jump_0A0_5391:: ; address name
     ld a, $05
     ld [wStringCategory], a
     ld a, $0C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Please wait.'
     farcall BeginStringDisplay_Bank07
     xor a, a
     ld [wLinkSendByte], a
@@ -3591,7 +3591,7 @@ Jump_0A0_55D1:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $03
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'RESULTSDuoW LevelTurnsWin RankOwnWDuoLOwnL'
     farcall ShowString_Bank07
     ld hl, vTiles2 + $200
     ld a, l
@@ -3606,7 +3606,7 @@ Jump_0A0_55D1:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $05
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'GFEDCBAS'
     farcall ShowString_Bank07
     ld hl, wBattleStep
     inc [hl]
@@ -3793,7 +3793,7 @@ Jump_0A0_5704::
     ld a, $15
 
 Jump_0A0_571B::
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0's G fell by W.'
     ld a, $05
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank07
@@ -3826,7 +3826,7 @@ Jump_0A0_5737::
     ld a, $05
     ld [wStringCategory], a
     ld a, $15
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0's G fell by W.'
     farcall BeginStringDisplay_Bank07
     ld a, [wBattleSubPhase]
     inc a
@@ -3860,7 +3860,7 @@ Jump_0A0_5772:: ; address name
     ld a, $05
     ld [wStringCategory], a
     ld a, $16
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'received WG.'
     farcall BeginStringDisplay_Bank07
     xor a, a
     ld [wBattleSubPhase], a
@@ -5536,7 +5536,7 @@ Jump_0A0_61FA:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $29
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'It has no usable battle skills!'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5552,7 +5552,7 @@ Jump_0A0_6212:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $7F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But there is no one to'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5892,7 +5892,7 @@ Jump_0A0_6424:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $22
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Selecting 0's move'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleSubPhase
     inc [hl]

@@ -6701,7 +6701,7 @@ Func_015_6B00:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $28
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Unused.'
     farcall ShowString_Bank1B_4C94
     ld hl, wTextWindowTileLo
     xor a, a

@@ -3698,7 +3698,7 @@ Jump_032_5658::
     ld a, $64
 
 Jump_032_565F::
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Your opponent broke a rule! You'
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F

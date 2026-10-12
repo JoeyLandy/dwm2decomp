@@ -2582,7 +2582,7 @@ Jump_00D_53A4:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $23
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Pick the monster to rename.'
     farcall ShowString_BankF2
     ld a, [wScreenStep]
     inc a

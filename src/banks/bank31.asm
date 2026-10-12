@@ -349,7 +349,7 @@ Jump_031_4226::
     ld a, $05
 
 Jump_031_4228::
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Monsters appear!'
     ld a, $00
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -1403,7 +1403,7 @@ Func_031_47DD:: ; address name
     ld a, $02
     ld [wStringCategory], a
     ld a, $05
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKMonsterEgg'
     farcall ShowString_Bank09
     ld hl, vTiles1
     ld a, l
@@ -2358,7 +2358,7 @@ Jump_031_4D73::
     ld a, $01
     ld [wStringCategory], a
     ld a, $D8
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 fled!'
     farcall BeginStringDisplay_Bank2F
     ld a, $82
     call QueueSoundEffect
@@ -2446,7 +2446,7 @@ Jump_031_4DF9::
     ld a, $00
     ld [wStringCategory], a
     ld a, $2C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But the escape route was cut'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2632,7 +2632,7 @@ Jump_031_4F0F:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $27
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Retire now?'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2698,7 +2698,7 @@ Jump_031_4F8F::
     ld a, $00
     ld [wStringCategory], a
     ld a, $60
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'You threw in the towel!'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2743,7 +2743,7 @@ Jump_031_4FCE:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $20
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'No fleeing from this battle!'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3195,7 +3195,7 @@ Jump_031_52CF:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $29
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'It has no usable battle skills!'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4807,7 +4807,7 @@ Jump_031_5CB5:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $22
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Selecting 0's move'
     farcall BeginStringDisplay_Bank2F
     xor a, a
     ld [wLinkSendByte], a
@@ -7350,7 +7350,7 @@ Func_031_6A92:: ; address name
     cp a, [hl]
     ret c
     ld a, $0A
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'It has reached the limit for'
     ld a, $05
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -7814,7 +7814,7 @@ Jump_031_6CF8::
     ld a, $05
     ld [wStringCategory], a
     ld a, $1F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 learned G!'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]

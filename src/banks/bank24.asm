@@ -270,7 +270,7 @@ Jump_024_41C0::
     ld a, $05
     ld [wStringCategory], a
     ld a, $13
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'obtained an egg of 0.'
     farcall BeginStringDisplay_Bank07
     ret
 
@@ -1406,7 +1406,7 @@ Jump_024_48EA:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $0D
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank33_7045
     ld a, $6C
     call QueueSoundEffect
@@ -1659,7 +1659,7 @@ Jump_024_4AA4:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $0D
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank33_7045
     call GameMode6_Update_Shared05
     ld a, [wBattleScene]
@@ -1772,7 +1772,7 @@ Jump_024_4B77:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $09
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Switch which egg?'
     farcall ShowString_Bank33_7045
     ld a, [wScreenStep]
     inc a
@@ -1868,7 +1868,7 @@ Jump_024_4C2C:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $0D
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank33_7045
     call GameMode6_Update_Case0F_Case00_Sub01
     ld a, [wBattleScene]
@@ -1975,7 +1975,7 @@ Jump_024_4CF2:: ; address name
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld a, $08
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Switch with which?'
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_Bank33_7045
@@ -2053,7 +2053,7 @@ Func_024_4D65:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $0C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'YesNo'
     farcall ShowString_Bank33_7045
     xor a, a
     ld [wTextFlags], a
@@ -2088,7 +2088,7 @@ Func_024_4DA8:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $0B
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'MonsterE?g'
     farcall ShowString_Bank33_7045
     xor a, a
     ld [wTextFlags], a
@@ -4298,7 +4298,7 @@ Jump_024_60FB:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $15
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'RviD-oxUncurt'
     farcall ShowString_Bank24
     ld hl, wTextWindowTileLo
     xor a, a

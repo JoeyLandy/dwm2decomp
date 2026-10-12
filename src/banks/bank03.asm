@@ -3547,7 +3547,7 @@ Jump_003_5512:: ; address name
 
 Jump_003_5532::
     ld a, $02
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But nothing happened!'
     ld a, $00
     ld [wStringCategory], a
 
@@ -3648,7 +3648,7 @@ Jump_003_5591:: ; address name
 PauseMenu_Items_Case02_Case17::
 Jump_003_55C9:: ; address name
     ld a, $02
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But nothing happened!'
     ld a, $00
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank37
@@ -3724,7 +3724,7 @@ Jump_003_5622:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $14
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But it couldn't be used here.'
     ld hl, wTemp1
     inc [hl]
     inc [hl]
@@ -3848,7 +3848,7 @@ Jump_003_56E4:: ; address name
 PauseMenu_Items_Case02_Case20::
 Jump_003_56EB:: ; address name
     ld a, $26
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Your progress has been recorded.'
     ld a, $00
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank37
@@ -4376,7 +4376,7 @@ Func_003_5A07:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $00
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'WHATUsoePersoHPMPATKDEFAGLINTWLDnality'
     farcall ShowString_Bank09
     pop hl
     ld a, l
@@ -5049,7 +5049,7 @@ Jump_003_5F90:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $1A
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'A dead monster can't use a'
     farcall BeginStringDisplay_Bank37
     ld hl, wTemp1
     inc [hl]
@@ -5697,7 +5697,7 @@ Jump_003_6387:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $0C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 There are m around.'
     farcall BeginStringDisplay_Bank37
     ld hl, wWorkBuf + $1
     ld a, [hl]
@@ -5727,12 +5727,12 @@ Jump_003_63D0:: ; address name
     cp a, $FF
     jr z, Jump_003_63E3
     ld a, $0F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 returned with an item. obtained'
     jr Jump_003_63E8
 
 Jump_003_63E3::
     ld a, $10
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 came back with nothing'
 
 Jump_003_63E8::
     ld a, $01
@@ -5993,7 +5993,7 @@ Func_003_6595:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $01
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'TOWHOHPMP'
     farcall ShowString_Bank09
     pop hl
     ld a, l
@@ -8272,7 +8272,7 @@ Jump_003_7501:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $04
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Master'
     farcall ShowString_Bank07
     pop hl
     ld a, l
@@ -8290,7 +8290,7 @@ Jump_003_7501:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $25
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Want to record your journey?'
     farcall BeginStringDisplay_Bank37
     call PauseMenu_State3_Shared03
     ld hl, wTemp1
@@ -8396,7 +8396,7 @@ Jump_003_75FF:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $26
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Your progress has been recorded.'
     farcall BeginStringDisplay_Bank37
     ld hl, wTemp1
     inc [hl]
@@ -9218,7 +9218,7 @@ Func_003_7AE8:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $02
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'RJadlnoprtuxy-fWATUCHPMDcgimhw Dcgimh'
     farcall ShowString_Bank09
     ld hl, vTiles1
     ld a, l

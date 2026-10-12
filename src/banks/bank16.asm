@@ -9052,7 +9052,7 @@ Jump_016_7577::
     ld a, $02
     ld [wStringCategory], a
     ld a, $06
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Skill On Off Orb ID Odds'
     farcall ShowString_Bank09
     ld hl, vTiles1 + $750
     ld a, l

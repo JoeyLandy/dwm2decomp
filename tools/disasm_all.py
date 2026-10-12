@@ -4255,9 +4255,83 @@ class Rom:
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
-                out.append(f"    {text}" + self.message_word_note(bank, pc + n, text))
+                out.append(f"    {text}" + self.message_word_note(bank, pc + n, text)
+                           + self.string_index_note(bank, pc, text))
             pc += n
         return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
+
+    STRING_CALLEE = re.compile(r"^(BeginStringDisplay|ShowString|CopyStringToBuffer)")
+
+    def string_index_note(self, bank: int, pc: int, text: str) -> str:
+        """E-0257: `ld [wStringIndex], a` after `ld a, n`, with a constant wStringCategory stored within a
+        few instructions and a call (or far call) to a string displayer whose first instruction loads
+        its table (`ld de, table`) or that is a message bank's entry, quotes the string."""
+        if text != "ld [wStringIndex], a":
+            return ""
+        ins = self.insn[bank]
+        order = getattr(self, "_order", {}).get(bank)
+        if order is None:
+            self._order = getattr(self, "_order", {})
+            order = self._order[bank] = sorted(a for a, v in ins.items() if v[0] != "dw")
+        k = bisect.bisect_left(order, pc)
+        win = order[max(0, k - 6):k + 9]
+        texts = [ins[a][1] for a in win]
+        j = win.index(pc)
+        m = re.match(r"ld a, \$([0-9A-F]{2})$", texts[j - 1]) if j else None
+        if not m:
+            return ""
+        idx = int(m.group(1), 16)
+        cat = None
+        for t0, t1 in zip(texts, texts[1:]):
+            if t1 == "ld [$C528], a" or t1 == "ld [wStringCategory], a":
+                mc = re.match(r"ld a, \$([0-9A-F]{2})$", t0)
+                cat = int(mc.group(1), 16) if mc else (0 if t0 == "xor a, a" else cat)
+        target = None
+        for q in range(j + 1, len(win)):
+            v = ins[win[q]]
+            if v[2] in ("call", "jp") and v[3] is not None:
+                target = self.resolve(bank, v[3])
+                break
+            if v[1] == "rst $10" and q >= 2:  # far call: ld hl, n / ld b, n (either order) / rst $10
+                hl = re.search(r"ld hl, \$([0-9A-F]{4})", " ".join(texts[q - 2:q]))
+                bb = re.search(r"ld b, \$([0-9A-F]{2})", " ".join(texts[q - 2:q]))
+                if hl and bb:
+                    target = (int(bb.group(1), 16), int(hl.group(1), 16))
+                break
+        if not target or not (0 <= target[0] < self.nbanks):
+            return ""
+        tb, ta = target
+        name = self.labels[tb].get(ta, "")
+        if not self.STRING_CALLEE.search(name):
+            return ""
+        r = tb * BANK - self.base(tb) + ta
+        if self.data[r] == 0xCD:  # ShowString_*: `call` the bank's displayer first
+            ta2 = self.data[r + 1] | self.data[r + 2] << 8
+            if 0x4000 <= ta2 < 0x8000 or tb == 0:
+                r = tb * BANK - self.base(tb) + ta2 if ta2 >= 0x4000 else ta2
+        if self.data[r:r + 3] == bytes([0xFA, 0x29, 0xC5]) and self.data[r + 3] == 0xFE:  # a message bank
+            quote = self.message_preview(idx, tb) if cat in (0, None) else None
+        elif self.data[r] == 0x11 and cat is not None:
+            table = self.data[r + 1] | self.data[r + 2] << 8
+            quote = self.category_string(tb, table, cat, idx)
+        else:
+            quote = None
+        return f" ; '{quote}'" if quote else ""
+
+    def category_string(self, bank: int, table: int, cat: int, idx: int) -> str | None:
+        """First words of string idx of category cat in the LookupString table at bank:table."""
+        lst = self._u16(bank, table + 2 * cat)
+        if not 0x4000 <= lst < 0x8000:
+            return None
+        q = self._u16(bank, lst + 2 * idx)
+        if not 0x4000 <= q < 0x8000:
+            return None
+        chars, q = [], bank * BANK - self.base(bank) + q
+        while len(chars) < 80 and self.data[q] != 0xF0:
+            chars.append(gb_text.BYTE_TO_TEXT.get(self.data[q], " "))
+            q += 1
+        words = "".join(chars).split()
+        return " ".join(words[:6]) if words else None
 
     MESSAGE_HL_CALLEE = re.compile(r"MessageHL|MessageCommand09HL")
 

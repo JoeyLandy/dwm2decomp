@@ -291,7 +291,7 @@ Jump_001_4472:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $27
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'RESULTS DISPLAY Species Gender'
     farcall ShowString_Bank1B_4C94
     ld hl, vBGMap0 + $60
     ld bc, $1001
