@@ -32,12 +32,8 @@ class RecordFields(unittest.TestCase):
         self.assertEqual(run(text), (text, 0))
 
     def test_an_offset_inside_a_sized_field_is_field_plus_n(self):
-        out, n = run("    ld c, $5C
-    call SRAMRecordAddress
-")
-        self.assertEqual((out, n), ("    ld c, MON_HP + 1
-    call SRAMRecordAddress
-", 1))
+        out, n = run("    ld c, $5C\n    call SRAMRecordAddress\n")
+        self.assertEqual((out, n), ("    ld c, MON_HP + 1\n    call SRAMRecordAddress\n", 1))
 
     def test_other_callees_and_unknown_offsets_stay_numeric(self):
         for text in ("    ld c, $5B\n    call Multiply8\n", "    ld c, $57\n    call SRAMRecordAddress\n"):
