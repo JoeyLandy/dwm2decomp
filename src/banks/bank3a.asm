@@ -5133,7 +5133,7 @@ Jump_03A_6172::
     dw RunBattleActions_Case02
     dw RunBattleActions_Case03
     dw RunActionSpecificPostStep
-    dw RunBattleActions_Case05
+    dw RunBattleActions_ShowHeroBlewBackG
     dw RunBattleActions_Case06
     dw RunBattleActions_Case07
     dw RunBattleActions_Case08
@@ -5289,7 +5289,7 @@ Jump_03A_6264::
 ; reads: wResolveFlagB2, wBattleTarget, wBattleActor, wRecordBufferData, wActionQueuePos
 ; writes: wResolveFlagB2, wActionRepeatFlag, wBattleSubPhase, wBattleResolveStep, wFollowUpAction, wDefeatStep, wBattleScreenFlags, wBattleStep, ...
 ; points at: wBattleStatus6, wBattleStep, wBattleSubPhase, wBattleStatus4, wBattlePhase, wActionQueue, wSlotMarks, wBattleActionChoice
-RunBattleActions_Case05::
+RunBattleActions_ShowHeroBlewBackG::
 Jump_03A_6269:: ; address name
     ld a, [wResolveFlagB2]
     or a, a
@@ -5459,7 +5459,7 @@ Jump_03A_6390::
     ret
 
 ; returns A = 0 for action $BD while wDABA & $7F is non-zero; otherwise runs Func_03A_63B2 and, without carry, Func_03A_63D2 (E-0122)
-; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, RunBattleActions_Case09_Case03, RunActionResolveStep_Case08, ...)
+; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, RunBattleActions_Case09_ShowHeroDroppedDead, RunActionResolveStep_Case08, ...)
 ; reads: wBattleActionId, wDefeatFlagsBA
 CheckActionBDOrRun63B2And63D2::
 Func_03A_639A:: ; address name
@@ -5561,9 +5561,9 @@ Jump_03A_640F:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw RunBattleActions_Case09_Case00
-    dw RunBattleActions_Case09_Case01
+    dw RunBattleActions_Case09_ShowHeroSIronizeWore
     dw RunBattleActions_Case09_Case02
-    dw RunBattleActions_Case09_Case03
+    dw RunBattleActions_Case09_ShowHeroDroppedDead
     dw RunBattleActions_Case09_Case04
     dw RunBattleActions_Case09_Case05
     dw RunBattleActions_Case09_Case06
@@ -5650,7 +5650,7 @@ Jump_03A_646E::
 ; reads: wBattleActor
 ; writes: wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleStatus5
-RunBattleActions_Case09_Case01::
+RunBattleActions_Case09_ShowHeroSIronizeWore::
 Jump_03A_6480:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5837,7 +5837,7 @@ Jump_03A_657D::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep
-RunBattleActions_Case09_Case03::
+RunBattleActions_Case09_ShowHeroDroppedDead::
 Jump_03A_6584:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -7043,7 +7043,7 @@ Func_03A_6C93:: ; address name
     dw RunDefeatStepMinus1Step_Return
     dw RunDefeatStepMinus1Step_Return
     dw RunDefeatStepMinus1Step_Return
-    dw RunDefeatStepMinus1Step_Case08
+    dw RunDefeatStepMinus1Step_ShowHeroWentAway
     dw RunDefeatStepMinus1Step_Return
 
 ; entry 0 of the `rst $00` table in RunDefeatStepMinus1Step
@@ -7085,7 +7085,7 @@ Jump_03A_6CC6:: ; address name
 ; entry 8 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDefeatStep
-RunDefeatStepMinus1Step_Case08::
+RunDefeatStepMinus1Step_ShowHeroWentAway::
 Jump_03A_6CC7:: ; address name
     ld d, $7F ; battle text '0 went away!'
 
@@ -8039,7 +8039,7 @@ Func_03A_7183:: ; address name
     ret
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
-; 66 call sites from 56 routines (e.g. RunBattleActions_Case00_Sub01_Case01_Case09, RunBattleActions_Case00_Sub01_Case06_Case01, RunBattleActions_Case00_Sub01_Case06_Case02, RunBattleActions_Case00_Sub01_Case09_Case00, ...)
+; 66 call sites from 56 routines (e.g. RunBattleActions_Case00_Sub01_Case01_Case09, RunBattleActions_Case00_Sub01_Case06_ShowGWasShattered, RunBattleActions_Case00_Sub01_Case06_ShowSealPrayWasBroken, RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleText::
 Func_03A_7193:: ; address name
@@ -10057,7 +10057,7 @@ Jump_03A_7D65::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, RunActionResolveStep_Case09_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleActions_ShowHeroBlewBackG, RunActionResolveStep_Case09_Sub01)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank3A::
 Func_03A_7D6A:: ; address name

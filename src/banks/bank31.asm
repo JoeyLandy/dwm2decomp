@@ -1942,7 +1942,7 @@ Func_031_4B10:: ; address name
     dw RunBattleSetup_Case01
     dw RunBattleSetup_Case02
     dw RunBattleSetup_Case03
-    dw RunBattleSetup_Case04
+    dw RunBattleSetup_ShowSelectingHeroSMove
     dw RunBattleSetup_Case05
     dw RunBattleSetup_Case06
     dw RunBattleSetup_Case07
@@ -1970,11 +1970,11 @@ Jump_031_4B2E:: ; address name
     dw RunBattleSetup_Case00_Case08
     dw RunBattleSetup_Case00_Case09
     dw RunBattleSetup_Case00_Case0A
-    dw RunBattleSetup_Case00_Case0B
+    dw RunBattleSetup_Case00_ShowRetireNow
     dw RunBattleSetup_Case00_Case0C
     dw RunBattleSetup_Case00_Case0D
     dw RunBattleSetup_Case00_Case0E
-    dw RunBattleSetup_Case00_Case0F
+    dw RunBattleSetup_Case00_ShowNoFleeingFromThis
     dw RunBattleSetup_Case00_Case10
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case00
@@ -2625,7 +2625,7 @@ Jump_031_4F00::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_Case00_Case0B::
+RunBattleSetup_Case00_ShowRetireNow::
 Jump_031_4F0F:: ; address name
     call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
@@ -2736,7 +2736,7 @@ Jump_031_4FA8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_Case00_Case0F::
+RunBattleSetup_Case00_ShowNoFleeingFromThis::
 Jump_031_4FCE:: ; address name
     call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
@@ -2778,7 +2778,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_Case06
     dw RunBattleSetup_Case01_Case07
     dw RunBattleSetup_Case01_Case08
-    dw RunBattleSetup_Case01_Case09
+    dw RunBattleSetup_Case01_ShowItHasNoUsable
     dw RunBattleSetup_Case01_Case0A
     dw RunBattleSetup_Case01_Case0B
     dw RunBattleSetup_Case01_Case0C
@@ -3189,7 +3189,7 @@ Jump_031_52C4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case09::
+RunBattleSetup_Case01_ShowItHasNoUsable::
 Jump_031_52CF:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld a, $00
@@ -4796,7 +4796,7 @@ Jump_031_5C98::
 ; reads: wLinkMode
 ; writes: wStringCategory, wStringIndex, wLinkSendByte
 ; points at: wBattleByte58, wTextBuf0, wBattleSubPhase
-RunBattleSetup_Case04::
+RunBattleSetup_ShowSelectingHeroSMove::
 Jump_031_5CB5:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -9106,7 +9106,7 @@ Func_031_746F:: ; address name
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
-; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_Case0F, RunBattleSetup_Case00_Case0B, RunBattleSetup_Case00_Case08, RunBattleSetup_Case00_Case07, ...)
+; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_Case08, RunBattleSetup_Case00_Case07, ...)
 DrawWC338RowsToBGMapRow13::
 Func_031_7479:: ; address name
     ld de, wWindowTileBuffer + $38

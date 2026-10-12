@@ -482,7 +482,7 @@ GameMode6_Update_Case02_Case04::
 Jump_024_4326:: ; address name
     ld a, $6C
     call QueueSoundEffect
-    call GameMode6_Update_Shared02
+    call GameMode6_Update_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
@@ -527,7 +527,7 @@ Jump_024_4369::
     ret
 
 Jump_024_437D::
-    call GameMode6_Update_Shared02
+    call GameMode6_Update_ShowYesNo
     call CopyWCA2CNameToTextBuf0
     ld a, $06
     call ShowStringAInDefaultWindow_Bank24
@@ -551,7 +551,7 @@ GameMode6_Update_Case02_Case07::
 Jump_024_4394:: ; address name
     ld a, $6C
     call QueueSoundEffect
-    call GameMode6_Update_Shared03
+    call GameMode6_Update_ShowMonsterEg
     ld de, TileRect_24_5A50
     ld hl, wWindowTileBuffer + $10E
     ld bc, $0A05
@@ -601,7 +601,7 @@ Jump_024_43E8::
     ret
 
 Jump_024_43F1::
-    call GameMode6_Update_Shared02
+    call GameMode6_Update_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
@@ -1129,7 +1129,7 @@ Jump_024_4724:: ; address name
     ld b, $BC
     ld hl, Data_024_5AAA
     call StoreBAtWordTableEntry_Bank24_52CE
-    call GameMode6_Update_Shared03
+    call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -1219,7 +1219,7 @@ Jump_024_47CF:: ; address name
     dw GameMode6_Update_Case05_Case04
     dw GameMode6_Update_Case05_Case05
     dw GameMode6_Update_Case05_Case06
-    dw GameMode6_Update_Case05_Case07
+    dw GameMode6_Update_Case05_ShowInfoOKYesN
     dw GameMode6_Update_Case05_Case08
     dw GameMode6_Update_Case05_Case09
     dw GameMode6_Update_Case05_Case0A
@@ -1391,7 +1391,7 @@ Jump_024_48C8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-GameMode6_Update_Case05_Case07::
+GameMode6_Update_Case05_ShowInfoOKYesN::
 Jump_024_48EA:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -1503,7 +1503,7 @@ Jump_024_49AF:: ; address name
     ld b, $BC
     ld hl, Data_024_5AAA
     call StoreBAtWordTableEntry_Bank24_52CE
-    call GameMode6_Update_Shared03
+    call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
@@ -1629,18 +1629,18 @@ GameMode6_Update_Case0E::
 Jump_024_4A94:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case0E_Case00
+    dw GameMode6_Update_Case0E_ShowInfoOKYesN
     dw GameMode6_Update_Case0E_Case01
     dw GameMode6_Update_Case0E_Case02
     dw GameMode6_Update_Case0E_Case03
-    dw GameMode6_Update_Case0E_Case04
+    dw GameMode6_Update_Case0E_ShowSwitchWhichEgg
     dw GameMode6_Update_Case0E_Case05
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wListCursor, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenStep
-GameMode6_Update_Case0E_Case00::
+GameMode6_Update_Case0E_ShowInfoOKYesN::
 Jump_024_4AA4:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -1753,7 +1753,7 @@ Jump_024_4B52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenStep
-GameMode6_Update_Case0E_Case04::
+GameMode6_Update_Case0E_ShowSwitchWhichEgg::
 Jump_024_4B77:: ; address name
     ld de, TileRect_24_5B85
     ld hl, wWindowTileBuffer + $110
@@ -1836,20 +1836,20 @@ GameMode6_Update_Case0F::
 Jump_024_4C18:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case0F_Case00
+    dw GameMode6_Update_Case0F_ShowInfoOKYesN
     dw GameMode6_Update_Case0F_Case01
     dw GameMode6_Update_Case0F_Case02
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_AdvanceScreenStep
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case0F_Case07
+    dw GameMode6_Update_Case0F_ShowSwitchWithWhich
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wListCursor, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenStep
-GameMode6_Update_Case0F_Case00::
+GameMode6_Update_Case0F_ShowInfoOKYesN::
 Jump_024_4C2C:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -1961,7 +1961,7 @@ Jump_024_4CEA:: ; address name
 ; entry 7 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
-GameMode6_Update_Case0F_Case07::
+GameMode6_Update_Case0F_ShowSwitchWithWhich::
 Jump_024_4CF2:: ; address name
     ld hl, vTiles1
     ld a, l
@@ -1983,7 +1983,7 @@ Jump_024_4CF2:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case0B, GameMode6_Update_Case0E_Case00, GameMode6_Update_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case0B, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0F_ShowInfoOKYesN)
 ; reads: wLinkByteEB
 GameMode6_Update_Shared01::
 Func_024_4D21:: ; address name
@@ -2038,7 +2038,7 @@ Jump_024_4D5E::
 ; only called from routines of GameMode6_Update (E-0098)
 ; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case08, GameMode6_Update_Case02_Case05, GameMode6_Update_Case02_Case04)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextFlags, wTextControl
-GameMode6_Update_Shared02::
+GameMode6_Update_ShowYesNo::
 Func_024_4D65:: ; address name
     ld hl, vTiles2 + $6D0
     ld a, l
@@ -2073,7 +2073,7 @@ Func_024_4D65:: ; address name
 ; only called from routines of GameMode6_Update (E-0098)
 ; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_Case07, GameMode6_Update_Case04_Case0B, GameMode6_Update_Case05_Case09)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextFlags, wTextControl
-GameMode6_Update_Shared03::
+GameMode6_Update_ShowMonsterEg::
 Func_024_4DA8:: ; address name
     ld hl, vTiles2 + $760
     ld a, l
@@ -2504,7 +2504,7 @@ Jump_024_4FD5::
     ret
 
 ; only called from GameMode6_Update_Case0F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_Case00)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_ShowInfoOKYesN)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 GameMode6_Update_Case0F_Case00_Sub01::
 Func_024_4FD9:: ; address name
@@ -2909,7 +2909,7 @@ Jump_024_526D::
     ret
 
 ; only called from GameMode6_Update_Case0F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_Case00)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_ShowInfoOKYesN)
 ; reads: wListPageIndex, wListCursor, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
@@ -3048,7 +3048,7 @@ Func_024_5392:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep, GameMode6_Update_Case0E_Case00)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep, GameMode6_Update_Case0E_ShowInfoOKYesN)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 GameMode6_Update_Shared05::
 Func_024_53A0:: ; address name
@@ -3750,7 +3750,7 @@ Data_024_5814:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 11
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
-; address loaded by GameMode6_Update_Case01, GameMode6_Update_Case02_Case0B, GameMode6_Update_Case04_Case08_Case01, GameMode6_Update_Case0E_Case00 and 1 more
+; address loaded by GameMode6_Update_Case01, GameMode6_Update_Case02_Case0B, GameMode6_Update_Case04_Case08_Case01, GameMode6_Update_Case0E_ShowInfoOKYesN and 1 more
 Data_024_58CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $78, $C3
 
@@ -4076,7 +4076,7 @@ Func_024_5D10:: ; address name
     db $11, $25, $5D, $CD, $FE, $25, $C9
 
 ; Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 1 call site from 1 routine (e.g. PriestMenu_Case01_Case00)
+; 1 call site from 1 routine (e.g. PriestMenu_Case01_ShowRviDoxUncurt)
 ShowString_Bank24::
 Func_024_5D1E:: ; address name
     call BeginStringDisplay_Bank24
@@ -4290,7 +4290,7 @@ PriestMenu_Case01::
 Jump_024_60F1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw PriestMenu_Case01_Case00
+    dw PriestMenu_Case01_ShowRviDoxUncurt
     dw PriestMenu_Case01_Case01
     dw PriestMenu_Case01_Case02
 
@@ -4299,7 +4299,7 @@ Jump_024_60F1:: ; address name
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wScreenStep
 ; points at: wTextWindowTileLo
-PriestMenu_Case01_Case00::
+PriestMenu_Case01_ShowRviDoxUncurt::
 Jump_024_60FB:: ; address name
     ld hl, wTextWindowTileLo
     xor a, a

@@ -3290,16 +3290,16 @@ Jump_003_538D:: ; address name
     dw PauseMenu_Items_Case02_Case01
     dw PauseMenu_Items_Case02_Case07
     dw PauseMenu_Items_Case02_Case16
-    dw PauseMenu_Items_Case02_Case17
+    dw PauseMenu_Items_Case02_ShowButNothingHappened
     dw PauseMenu_Items_Case02_Case18
     dw PauseMenu_Items_Case02_Case19
     dw PauseMenu_Items_Case02_Case1A
-    dw PauseMenu_Items_Case02_Case1B
+    dw PauseMenu_Items_Case02_ShowButItCouldntBe
     dw PauseMenu_Items_Case02_Case1C
     dw PauseMenu_Items_Case02_Case1D
     dw PauseMenu_Items_Case02_Case1E
     dw PauseMenu_Items_Case02_Case1F
-    dw PauseMenu_Items_Case02_Case20
+    dw PauseMenu_Items_Case02_ShowYourProgressHasBeen
     dw PauseMenu_Items_Case02_Case21
 
 ; entry 0 of the `rst $00` table in PauseMenu_Items_Case02
@@ -3645,7 +3645,7 @@ Jump_003_5591:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
-PauseMenu_Items_Case02_Case17::
+PauseMenu_Items_Case02_ShowButNothingHappened::
 Jump_003_55C9:: ; address name
     ld a, $02
     ld [wStringIndex], a ; 'But nothing happened!'
@@ -3713,7 +3713,7 @@ Jump_003_5619:: ; address name
 ; reads: wItemId
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_Items_Case02_Case1B::
+PauseMenu_Items_Case02_ShowButItCouldntBe::
 Jump_003_5622:: ; address name
     farcall CheckItemUsable
     ld hl, wTemp1
@@ -3845,7 +3845,7 @@ Jump_003_56E4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
-PauseMenu_Items_Case02_Case20::
+PauseMenu_Items_Case02_ShowYourProgressHasBeen::
 Jump_003_56EB:: ; address name
     ld a, $26
     ld [wStringIndex], a ; 'Your progress has been recorded.'
@@ -4905,7 +4905,7 @@ Jump_003_5E95:: ; address name
     dw PauseMenu_Skills_Case00_Case00
     dw PauseMenu_Skills_Case00_Case01
     dw PauseMenu_Skills_Case00_Case02
-    dw PauseMenu_Skills_Case00_Case03
+    dw PauseMenu_Skills_Case00_ShowADeadMonsterCant
     dw PauseMenu_Skills_Case00_Case04
 
 ; entry 0 of the `rst $00` table in PauseMenu_Skills_Case00
@@ -5044,7 +5044,7 @@ Jump_003_5F7C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_Skills_Case00_Case03::
+PauseMenu_Skills_Case00_ShowADeadMonsterCant::
 Jump_003_5F90:: ; address name
     ld a, $01
     ld [wStringCategory], a
@@ -5409,7 +5409,7 @@ Jump_003_61CE:: ; address name
     dw PauseMenu_Skills_Case03_Case07
     dw PauseMenu_Skills_Case03_Case08
     dw PauseMenu_Skills_Case03_Case09
-    dw PauseMenu_Skills_Case03_Case0A
+    dw PauseMenu_Skills_Case03_ShowHeroReturnedWithAn
     dw PauseMenu_Skills_Case03_Case0B
 
 ; entry 0 of the `rst $00` table in PauseMenu_Skills_Case03
@@ -5718,7 +5718,7 @@ Jump_003_63CA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wItemId
 ; writes: wStringIndex, wStringCategory, wTemp1
-PauseMenu_Skills_Case03_Case0A::
+PauseMenu_Skills_Case03_ShowHeroReturnedWithAn::
 Jump_003_63D0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8231,11 +8231,11 @@ PauseMenu_State3_Case06::
 Jump_003_74EF:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State3_Case06_Case00
+    dw PauseMenu_State3_Case06_ShowMaster
     dw PauseMenu_State3_Case06_Case01
     dw PauseMenu_State3_Case06_Case02
     dw PauseMenu_State3_Case06_Case03
-    dw PauseMenu_State3_Case06_Case04
+    dw PauseMenu_State3_Case06_ShowYourProgressHasBeen
     dw PauseMenu_State3_Case06_Case05
     dw PauseMenu_State3_Case06_Case06
 
@@ -8244,7 +8244,7 @@ Jump_003_74EF:: ; address name
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: hSpriteWindowClipMode, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenTileBuffer
 ; points at: wTemp1
-PauseMenu_State3_Case06_Case00::
+PauseMenu_State3_Case06_ShowMaster::
 Jump_003_7501:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -8390,7 +8390,7 @@ Jump_003_75EE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_State3_Case06_Case04::
+PauseMenu_State3_Case06_ShowYourProgressHasBeen::
 Jump_003_75FF:: ; address name
     call PauseMenu_State3_Shared03
     ld a, $00
@@ -8441,7 +8441,7 @@ Jump_003_7633::
     ret
 
 ; only called from routines of PauseMenu_State3 (E-0098)
-; 7 call sites from 6 routines (e.g. PauseMenu_State3_Case06_Case05, PauseMenu_State3_Case06_Case04, PauseMenu_State3_Case06_Case03, PauseMenu_State3_Case06_Case02, ...)
+; 7 call sites from 6 routines (e.g. PauseMenu_State3_Case06_Case05, PauseMenu_State3_Case06_ShowYourProgressHasBeen, PauseMenu_State3_Case06_Case03, PauseMenu_State3_Case06_Case02, ...)
 ; reads: wBattlerRecords, wTitleByte0A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 PauseMenu_State3_Shared03::
@@ -8619,7 +8619,7 @@ Func_003_7763:: ; address name
     ret
 
 ; only called from PauseMenu_State3_Case06_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_State3_Case06_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State3_Case06_ShowMaster)
 ; reads: wMenuSelectedMember
 PauseMenu_State3_Case06_Case00_Sub01::
 Func_003_776C:: ; address name

@@ -34,7 +34,7 @@ Jump_028_4024::
     ret
 
 ; Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 1 call site from 1 routine (e.g. SceneHomecoming_Case29)
+; 1 call site from 1 routine (e.g. SceneHomecoming_ShowTHEEND)
 ShowString_Bank28::
 Func_028_402B:: ; address name
     call BeginStringDisplay_Bank28

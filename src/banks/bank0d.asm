@@ -2481,7 +2481,7 @@ Jump_00D_530F:: ; address name
     dw RenameMenu_Case06_Case00
     dw RenameMenu_Case06_Case01
     dw RenameMenu_Case06_Case02
-    dw RenameMenu_Case06_Case03
+    dw RenameMenu_Case06_ShowPickTheMonsterTo
     dw RenameMenu_Case06_Case04
 
 ; entry 0 of the `rst $00` table in RenameMenu_Case06
@@ -2577,7 +2577,7 @@ Jump_00D_537F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wScreenStep
-RenameMenu_Case06_Case03::
+RenameMenu_Case06_ShowPickTheMonsterTo::
 Jump_00D_53A4:: ; address name
     xor a, a
     ld [wStringCategory], a

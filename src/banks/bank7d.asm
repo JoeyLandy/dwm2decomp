@@ -23,7 +23,7 @@ Data_07D_41E1:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F41E1, $DC
 
 ; compressed sprite graphics number $03 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by SceneMermaidKingdom_Case22, DebugStaffRoll_Update_Sub01_Case02_Case00, DebugStaffRoll_Update_Sub01_Case03_Case00, DebugStaffRoll_Update_Sub01_Case04_Case00
+; address loaded by SceneMermaidKingdom_ShowKamehaIWasStupid, DebugStaffRoll_Update_Sub01_Case02_Case00, DebugStaffRoll_Update_Sub01_Case03_Case00, DebugStaffRoll_Update_Sub01_Case04_Case00
 ; LZSS-compressed asset: 209 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx03:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07D_42BD:: ; address name
@@ -97,7 +97,7 @@ Data_07D_4B4A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F4B4A, $D7
 
 ; compressed sprite graphics number $0F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by SceneShieldGuardian_Case0A
+; address loaded by SceneShieldGuardian_ShowThatWasALovely
 ; LZSS-compressed asset: 225 bytes expand to 240 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx0F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07D_4C21:: ; address name

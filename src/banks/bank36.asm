@@ -155,7 +155,7 @@ Jump_036_4102::
     jr Jump_036_411C
 
 Jump_036_4109::
-    call ResolveStepTargetAndSubEffects_Case00_Sub02
+    call ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero
     jr c, Jump_036_411E
     jr Jump_036_411C
 
@@ -165,7 +165,7 @@ Jump_036_4110::
     jr Jump_036_411C
 
 Jump_036_4117::
-    call ResolveStepTargetAndSubEffects_Case00_Sub04
+    call ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo
     jr c, Jump_036_411E
 
 Jump_036_411C::
@@ -323,7 +323,7 @@ Jump_036_421B::
 ; reads: wBattleTarget, wBattleActor
 ; writes: wDefeatStep, wResolveByte81
 ; points at: wBattleStatus2
-ResolveStepTargetAndSubEffects_Case00_Sub02::
+ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero::
 Func_036_421D:: ; address name
     call ResolveStepTargetAndSubEffects_Shared01
     jp nc, Jump_036_4317
@@ -410,7 +410,7 @@ Jump_036_42A5::
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
 ; reads: wBattleTarget, wRecordBufferData
-ResolveStepTargetAndSubEffects_Case00_Sub04::
+ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo::
 Func_036_42AA:: ; address name
     ld a, [wBattleTarget]
     call SlotHasStatus3Or4Bits_Bank36
@@ -433,7 +433,7 @@ Jump_036_42CB::
     ret
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
-; 4 call sites from 4 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub04, ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_Sub02, ResolveStepTargetAndSubEffects_Case00_Sub01)
+; 4 call sites from 4 routines (e.g. ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo, ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero, ResolveStepTargetAndSubEffects_Case00_Sub01)
 ; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDefeatByteD1, wBattleTarget, wResolveByte81
 ; points at: wBattleStatus6, wBattleTargetChoice, wDefeatByteBF
@@ -670,7 +670,7 @@ Jump_036_4469::
     add_a_to_hl
     bit 2, [hl]
     jr nz, Jump_036_447F
-    call ResolveStepEffectChecks_Sub03
+    call ResolveStepEffectChecks_ShowMissHeroAvoidedDamage
     jp Jump_036_4543
 
 Jump_036_447F::
@@ -1745,10 +1745,10 @@ Jump_036_4B0A::
 Jump_036_4B16::
     ld a, [wBattleSubStep]
     rst $00
-    dw ResolveStepDamageMessage_Sub04_Case00
-    dw ResolveStepDamageMessage_Sub04_Case01
+    dw ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero
+    dw ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo
     dw ResolveStepDamageMessage_Sub04_Case02
-    dw ResolveStepDamageMessage_Sub04_Case03
+    dw ResolveStepDamageMessage_Sub04_ShowHeroWentAway
     dw ResolveStepDamageMessage_Sub04_Case04
     dw ResolveStepDamageMessage_Sub04_Case05
 
@@ -1756,7 +1756,7 @@ Jump_036_4B16::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleSubStep, wBattleStatus2
-ResolveStepDamageMessage_Sub04_Case00::
+ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero::
 Jump_036_4B26:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -1775,7 +1775,7 @@ Jump_036_4B26:: ; address name
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wBattleArg0
 ; points at: wBattleSubStep, wBattleStatus1, wSideControl, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, ...
-ResolveStepDamageMessage_Sub04_Case01::
+ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo::
 Jump_036_4B41:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -1968,7 +1968,7 @@ Jump_036_4CCF::
     ret
 
 ; for a target other than slot 3/7: wD868 = its record field $31 address, wD86A = its wDA72 record, then far-calls Func_019_44B9 (E-0124)
-; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_Case01)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wBattleTarget
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wSlotResistances
@@ -2047,7 +2047,7 @@ Jump_036_4D53::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleSubStep, wBattleSlotOut, wSlotMarks, wBattleStatus, wSideFlags0
-ResolveStepDamageMessage_Sub04_Case03::
+ResolveStepDamageMessage_Sub04_ShowHeroWentAway::
 Jump_036_4D7F:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -2236,7 +2236,7 @@ Jump_036_4EB0::
     ret
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
-; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_Sub02)
+; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero)
 ; reads: wBattleActor, wBattleTarget, wDefeatFlagsBA, wFollowUpAction
 ; writes: wBattleActor, wBattleTarget, wFollowUpAction
 ; points at: wSavedActorTarget, wBattleActionChoice
@@ -2426,7 +2426,7 @@ Jump_036_4FBA::
 
 ; only called from ResolveStepEffectChecks (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
-ResolveStepEffectChecks_Sub03::
+ResolveStepEffectChecks_ShowMissHeroAvoidedDamage::
 Func_036_4FBC:: ; address name
     ld a, $84
     call QueueSoundEffect
@@ -2440,7 +2440,7 @@ Jump_036_4FCA::
     ret
 
 ; for action $CC clears bits 0-1 of the actor's wD810 byte when bits 2-3 equal 4; for an action in $D0-$E3 it farcalls Func_0A3_413F first. Then it sets wBattleSubPhase to 2 and clears wBattleResolveStep (E-0055)
-; 8 call sites from 7 routines (e.g. ResolveStepEffectChecks, ResolveStepFlagBit7Effect, ResolveStepTargetAndSubEffects_Case01, ResolveStepTargetAndSubEffects_Case00_Sub04, ...)
+; 8 call sites from 7 routines (e.g. ResolveStepEffectChecks, ResolveStepFlagBit7Effect, ResolveStepTargetAndSubEffects_Case01, ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo, ...)
 ; reads: wBattleActionId, wBattleActor
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleStatus4
@@ -10906,7 +10906,7 @@ Func_036_7E42:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleMP (Func_036_7E5B)
-; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_Sub01, ResolveStepDamageMessage_Sub04_Case01)
+; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_Sub01, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; points at: wBattleMP
 GetBattleMP::
 Func_036_7E47:: ; address name
@@ -10932,7 +10932,7 @@ Func_036_7E65:: ; address name
     ret
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, ResolveStepEffectChecks_Sub03)
+; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, ResolveStepEffectChecks_ShowMissHeroAvoidedDamage)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank36::
 Func_036_7E6C:: ; address name
@@ -10991,7 +10991,7 @@ Func_036_7EA2:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage_Sub04_Case01)
+; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank36::
 Func_036_7EBE:: ; address name
@@ -11003,7 +11003,7 @@ Func_036_7EBE:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_Case01)
+; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank36::
 Func_036_7ECB:: ; address name
@@ -11116,7 +11116,7 @@ Jump_036_7F57::
     ret
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub04, ResolveStepTargetAndSubEffects_Case00_Sub01)
+; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo, ResolveStepTargetAndSubEffects_Case00_Sub01)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank36::
 Func_036_7F5B:: ; address name

@@ -6499,7 +6499,7 @@ Func_000_23BD:: ; address name
     ret
 
 ; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
-; 10 call sites from 8 routines (e.g. Talk00Event02_Case06, Talk00Event0F_Case00, AddRewardToCounterCappedAt999, Talk08Event_Case01_Case00, ...)
+; 10 call sites from 8 routines (e.g. Talk00Event02_Case06, Talk00Event0F_Case00, AddRewardToCounterCappedAt999, Talk08Event_Case01_ShowTaraThereYouAre, ...)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp2
 WritePackedBCDNoLeadingZeros::
@@ -8524,7 +8524,7 @@ Jump_000_2EC7::
     ret
 
 ; writes the 24-bit number in hFFC6-hFFC8 as decimal digits from the millions down (dividing by 1,000,000, 100,000 and 10,000), then the 16-bit remainder through the shared writer (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case00, RunBattlePhaseWhenTextIdle_A0_Case03_Case08)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case00, RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp6
 WriteNumber24AsDecimalString::

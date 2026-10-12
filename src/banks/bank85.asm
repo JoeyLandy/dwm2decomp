@@ -67,23 +67,23 @@ SceneWatchOut::
 Func_085_4047:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneWatchOut_Case00
+    dw SceneWatchOut_ShowHmYouAreQuite
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_Case02
+    dw SceneWatchOut_ShowTheFarmHasNo
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Case07
     dw SceneWatchOut_Case08
-    dw SceneWatchOut_Case09
+    dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0D
     dw SceneWatchOut_Case0E
     dw SceneWatchOut_Case0F
-    dw SceneWatchOut_Case10
+    dw SceneWatchOut_ShowNHeadedOffTo
     dw SceneWatchOut_Case11
     dw SceneWatchOut_Case12
 
@@ -92,7 +92,7 @@ Func_085_4047:: ; address name
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
 ; points at: wSpriteSlotCount, wScriptStep
-SceneWatchOut_Case10::
+SceneWatchOut_ShowNHeadedOffTo::
 Jump_085_4071:: ; address name
     ld a, $05
     ldh [hTemp1], a
@@ -232,7 +232,7 @@ Jump_085_4159:: ; address name
 ; reads: wTextYesNoResult, wArg5, wPartyCount
 ; writes: wScriptMsgSelect, wScriptStep
 ; points at: wScriptStep
-SceneWatchOut_Case02::
+SceneWatchOut_ShowTheFarmHasNo::
 Jump_085_4174:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -281,7 +281,7 @@ Jump_085_41C1::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wNameGlyphBuf, wTextBuf1
 ; points at: wScriptStep
-SceneWatchOut_Case00::
+SceneWatchOut_ShowHmYouAreQuite::
 Jump_085_41CC:: ; address name
     ld a, $1C
     ld [wNameGlyphBuf], a
@@ -314,23 +314,23 @@ SceneWaterReward::
 Func_085_4207:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneWaterReward_Case00
+    dw SceneWaterReward_ShowCoohIHeardFrom
     dw SceneWatchOut_Case01
-    dw SceneWaterReward_Case02
+    dw SceneWaterReward_ShowWaitTheFarmIs
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
     dw SceneWaterReward_Case07
     dw SceneWatchOut_Case08
-    dw SceneWatchOut_Case09
+    dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
     dw SceneWaterReward_Case0D
     dw SceneWaterReward_Case0E
     dw SceneWaterReward_Case0F
-    dw SceneWaterReward_Case10
+    dw SceneWaterReward_ShowNHeadedOffTo
     dw SceneWatchOut_Case11
     dw SceneWatchOut_Case12
 
@@ -364,7 +364,7 @@ Jump_085_423C:: ; address name
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
 ; points at: wSpriteSlotCount, wScriptStep
-SceneWaterReward_Case10::
+SceneWaterReward_ShowNHeadedOffTo::
 Jump_085_4249:: ; address name
     ld a, $00
     ldh [hTemp1], a
@@ -556,7 +556,7 @@ Jump_085_4389::
 ; entry 9 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
-SceneWatchOut_Case09::
+SceneWatchOut_ShowLetMeJoinYour::
 Jump_085_4390:: ; address name
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -607,7 +607,7 @@ Jump_085_43CA:: ; address name
 ; reads: wTextYesNoResult, wArg5, wPartyCount
 ; writes: wScriptMsgSelect, wScriptStep
 ; points at: wScriptStep
-SceneWaterReward_Case02::
+SceneWaterReward_ShowWaitTheFarmIs::
 Jump_085_43D5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -656,7 +656,7 @@ Jump_085_4422::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wNameGlyphBuf, wTextBuf1
 ; points at: wScriptStep
-SceneWaterReward_Case00::
+SceneWaterReward_ShowCoohIHeardFrom::
 Jump_085_442D:: ; address name
     ld a, $0B
     ld [wNameGlyphBuf], a
@@ -842,7 +842,7 @@ Jump_085_454C::
     ret
 
 ; draws the screen buffer at the BG map address of the scroll position (Func_000_1EA5) (E-0125)
-; 4 call sites from 4 routines (e.g. SceneWaterReward_Case0D, ShowBoxFromTable4583, SceneWatchOut_Case0D, SceneWatchOut_Case09)
+; 4 call sites from 4 routines (e.g. SceneWaterReward_Case0D, ShowBoxFromTable4583, SceneWatchOut_Case0D, SceneWatchOut_ShowLetMeJoinYour)
 ; reads: hScrollY, hScrollX
 DrawScreenBufferAtScrollOrigin::
 Func_085_4555:: ; address name
@@ -1380,14 +1380,14 @@ Func_085_48A0:: ; address name
     dw SceneKamehaKeyBattle2_Case00
     dw SceneKamehaKeyBattle2_Case01
     dw SceneWatchOut_Case01
-    dw SceneKamehaKeyBattle2_Case03
+    dw SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic
     dw SceneWatchOut_Case03
 
 ; entry 3 of the `rst $00` table in SceneKamehaKeyBattle2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; points at: wScriptStep
-SceneKamehaKeyBattle2_Case03::
+SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
 Jump_085_48AE:: ; address name
     ld hl, $0B9D
     ld a, [wScriptParam0]
@@ -1493,14 +1493,14 @@ Func_085_494D:: ; address name
     dw SceneKamehaKeyBattle_Case00
     dw SceneKamehaKeyBattle_Case01
     dw SceneWatchOut_Case01
-    dw SceneKamehaKeyBattle_Case03
+    dw SceneKamehaKeyBattle_ShowHeroReceivedTheMagic
     dw SceneWatchOut_Case03
 
 ; entry 3 of the `rst $00` table in SceneKamehaKeyBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; points at: wScriptStep
-SceneKamehaKeyBattle_Case03::
+SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
 Jump_085_495B:: ; address name
     ld hl, $0B93
     ld a, [wScriptParam0]
@@ -1604,14 +1604,14 @@ Func_085_49FA:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneArenaChallenge_Case00
-    dw SceneArenaChallenge_Case01
+    dw SceneArenaChallenge_ShowAwwILoseYou
     dw SceneWatchOut_Case03
 
 ; entry 1 of the `rst $00` table in SceneArenaChallenge
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-SceneArenaChallenge_Case01::
+SceneArenaChallenge_ShowAwwILoseYou::
 Jump_085_4A04:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1648,7 +1648,7 @@ Func_085_4A2B:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneTerryBattle_Case00
-    dw SceneTerryBattle_Case01
+    dw SceneTerryBattle_ShowTerryWellThisProves
     dw SceneWatchOut_Case03
 
 ; entry 1 of the `rst $00` table in SceneTerryBattle
@@ -1656,7 +1656,7 @@ Func_085_4A2B:: ; address name
 ; reads: wBattleScene
 ; writes: wLinkByte94
 ; points at: wScriptStep
-SceneTerryBattle_Case01::
+SceneTerryBattle_ShowTerryWellThisProves::
 Jump_085_4A35:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1791,10 +1791,10 @@ SceneLimboMonster2::
 Func_085_4B0F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneLimboMonster2_Case00
+    dw SceneLimboMonster2_ShowWarubouWaheyIWas
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster2_Case03
+    dw SceneLimboMonster2_ShowWarubouWaheyGoodGood
     dw SceneWatchOut_Case01
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
@@ -1903,7 +1903,7 @@ Jump_085_4BBD:: ; address name
 ; reads: wTextYesNoResult, wObject1
 ; writes: wObject2, wScriptStep
 ; points at: wScriptStep
-SceneLimboMonster2_Case03::
+SceneLimboMonster2_ShowWarubouWaheyGoodGood::
 Jump_085_4BC7:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1935,7 +1935,7 @@ Jump_085_4BEC::
 ; reads: wArg5
 ; writes: wScriptStep
 ; points at: wScriptStep
-SceneLimboMonster2_Case00::
+SceneLimboMonster2_ShowWarubouWaheyIWas::
 Jump_085_4C00:: ; address name
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -1961,10 +1961,10 @@ SceneLimboMonster::
 Func_085_4C24:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneLimboMonster_Case00
+    dw SceneLimboMonster_ShowWarubouWaheyIHave
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster_Case03
+    dw SceneLimboMonster_ShowWarubouWaheyGoodGood
     dw SceneWatchOut_Case01
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
@@ -2117,7 +2117,7 @@ Jump_085_4D29:: ; address name
 ; reads: wTextYesNoResult, wObject1
 ; writes: wObject2, wScriptStep
 ; points at: wScriptStep
-SceneLimboMonster_Case03::
+SceneLimboMonster_ShowWarubouWaheyGoodGood::
 Jump_085_4D30:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -2149,7 +2149,7 @@ Jump_085_4D55::
 ; reads: wArg5
 ; writes: wScriptStep
 ; points at: wScriptStep
-SceneLimboMonster_Case00::
+SceneLimboMonster_ShowWarubouWaheyIHave::
 Jump_085_4D69:: ; address name
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -2412,7 +2412,7 @@ Func_085_4F14:: ; address name
     dw SceneGiveBackCyal_Case00
     dw SceneGiveBackCyal_Case00
     dw SceneGiveBackCyal_Case00
-    dw SceneGiveBackCyal_Case05
+    dw SceneGiveBackCyal_ShowHumphHowBoring
     dw SceneWatchOut_Case01
     dw SceneGiveBackCyal_Case07
     dw SceneGiveBackCyal_Case08
@@ -2497,7 +2497,7 @@ Jump_085_4F52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneGiveBackCyal_Case05::
+SceneGiveBackCyal_ShowHumphHowBoring::
 Jump_085_4F8E:: ; address name
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2763,14 +2763,14 @@ Func_085_50F2:: ; address name
     dw SceneBarrel_Case05
     dw SceneWatchOut_Case01
     dw SceneBarrel_Case07
-    dw SceneBarrel_Case08
+    dw SceneBarrel_ShowRobosterStoppedMoving
     dw SceneWatchOut_Case03
 
 ; entry 8 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots, wObject1, wScriptParam0
 ; points at: wScriptStep
-SceneBarrel_Case08::
+SceneBarrel_ShowRobosterStoppedMoving::
 Jump_085_510A:: ; address name
     ld a, $E0
     ld [wSpriteSlots + $C], a
@@ -3408,13 +3408,13 @@ SceneTreasureTheft::
 Func_085_546F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneTreasureTheft_Case00
+    dw SceneTreasureTheft_ShowKingTheHideoutOf
     dw SceneTreasureTheft_Case01
     dw SceneWatchOut_Case01
     dw SceneTreasureTheft_Case03
     dw SceneTreasureTheft_Case04
     dw SceneTreasureTheft_Case05
-    dw SceneTreasureTheft_Case06
+    dw SceneTreasureTheft_ShowKingGoodYourValor
     dw SceneWatchOut_Case01
     dw SceneTreasureTheft_Case08
 
@@ -3501,7 +3501,7 @@ Jump_085_54F1::
 ; reads: wStepArrived
 ; writes: wStepTarget, wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
-SceneTreasureTheft_Case06::
+SceneTreasureTheft_ShowKingGoodYourValor::
 Jump_085_5514:: ; address name
     ld a, $02
     ld [wStepTarget], a
@@ -3621,7 +3621,7 @@ Jump_085_55C7:: ; address name
 ; entry 0 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-SceneTreasureTheft_Case00::
+SceneTreasureTheft_ShowKingTheHideoutOf::
 Jump_085_55D0:: ; address name
     ld a, $26
     ldh [hMapId], a
@@ -3750,9 +3750,9 @@ SceneGreatlogKey::
 Func_085_567B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneGreatlogKey_Case00
+    dw SceneGreatlogKey_ShowWarubouWaheyForgotSomething
     dw SceneWatchOut_Case01
-    dw SceneGreatlogKey_Case02
+    dw SceneGreatlogKey_ShowWarubouThisYouUse
     dw SceneWatchOut_Case01
     dw SceneGreatlogKey_Case04
 
@@ -3812,7 +3812,7 @@ Jump_085_56B3::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneGreatlogKey_Case02::
+SceneGreatlogKey_ShowWarubouThisYouUse::
 Jump_085_56FF:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -3832,7 +3832,7 @@ Jump_085_56FF:: ; address name
 ; reads: hPlayerX
 ; writes: hTemp0, wObject5, hPlayerFacing, wFollowerRecords, wSpriteSlots, wScriptParam1
 ; points at: wScriptStep
-SceneGreatlogKey_Case00::
+SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
 Jump_085_571A:: ; address name
     ld a, $02
     ldh [hTemp0], a
@@ -3970,7 +3970,7 @@ Func_085_57A2:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 56 call sites from 37 routines (e.g. SceneYouDidIt_Case00, SceneBarrel_Case08, SceneBarrel_Case04, SceneBarrel_Case01, ...)
+; 56 call sites from 37 routines (e.g. SceneYouDidIt_Case00, SceneBarrel_ShowRobosterStoppedMoving, SceneBarrel_Case04, SceneBarrel_Case01, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B85::
 Func_085_57C8:: ; address name
@@ -4080,7 +4080,7 @@ Jump_085_5837::
     ret
 
 ; only called from DispatchTalkEvent_Case05_Case0F (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case0F)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_ShowBeGoneIfYour)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList
@@ -4269,7 +4269,7 @@ Data_085_5912:: ; address name
     dw $012A, $012F, $0130, $0135, $0137, $0000
 
 ; only called from DispatchTalkEvent_Case05_Case47 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case47)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_ShowHeroCheckedTheSmall)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hTemp0
 DispatchTalkEvent_Case05_Case47_Sub01::
@@ -4492,7 +4492,7 @@ Jump_085_5B12::
     ret
 
 ; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
-; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_CaseDB, SceneKamehaKeyBattle2_Case01, SceneKamehaKeyBattle_Case01)
+; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_Case01, SceneKamehaKeyBattle_Case01)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList

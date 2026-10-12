@@ -107,7 +107,7 @@ Jump_0F2_40B0::
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case0B
-    dw GameMode8_Update_Case0C
+    dw GameMode8_Update_ShowHeroReceivedGS
     dw GameMode8_Update_Case0D
 
 ; entry 0 of the `rst $00` table in GameMode8_Update
@@ -246,7 +246,7 @@ Jump_0F2_415F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
 ; points at: wPlayerName, wTextBuf0, wNameGlyphBuf, wTextBuf1, wScreenSubStep
-GameMode8_Update_Case0C::
+GameMode8_Update_ShowHeroReceivedGS::
 Jump_0F2_4185:: ; address name
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -273,7 +273,7 @@ Jump_0F2_4185:: ; address name
     ret
 
 ; only called from GameMode8_Update_Case0C (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode8_Update_Case0C)
+; 2 call sites from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGS)
 GameMode8_Update_Case0C_Sub01::
 Func_0F2_41BA:: ; address name
     ld a, [hl+]
@@ -297,7 +297,7 @@ Jump_0F2_41C8:: ; address name
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. GameMode8_Update_Case0C)
+; 1 call site from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGS)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wNameGlyphBuf
@@ -614,7 +614,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Case0F_Case07, RenameMenu_Case06_Case03)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Case0F_Case07, RenameMenu_Case06_ShowPickTheMonsterTo)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2

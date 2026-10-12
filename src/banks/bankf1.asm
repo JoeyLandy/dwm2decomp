@@ -19,7 +19,7 @@ PauseMenu_State4_Sub02_Case00::
 Jump_0F1_400B:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State4_Sub02_Case00_Case00
+    dw PauseMenu_State4_Sub02_Case00_ShowGiftExit
     dw PauseMenu_State4_Sub02_Case00_Case01
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case00
@@ -27,7 +27,7 @@ Jump_0F1_400B:: ; address name
 ; reads: wLevelUpGains
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCounterPtr0Lo
 ; points at: wTemp1
-PauseMenu_State4_Sub02_Case00_Case00::
+PauseMenu_State4_Sub02_Case00_ShowGiftExit::
 Jump_0F1_4013:: ; address name
     ld a, [wLevelUpGains]
     or a, a
@@ -325,7 +325,7 @@ Jump_0F1_41E0:: ; address name
     ret
 
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
-; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case00, BuildScreenBlock32WithCursor_BankF1)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_ShowGiftExit, BuildScreenBlock32WithCursor_BankF1)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase_BankF1::
 Func_0F1_41EE:: ; address name
@@ -452,7 +452,7 @@ Func_0F1_42B6:: ; address name
     ret
 
 ; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_Case00)
+; 4 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_ShowGiftExit)
 ; reads: wMenuPage, wMenuCursor
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
@@ -597,7 +597,7 @@ Jump_0F1_43B3::
     ret
 
 ; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_ShowGiftExit)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
 ; points at: wMenuPage
@@ -631,7 +631,7 @@ Jump_0F1_43DA::
     ret
 
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_ShowGiftExit)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
@@ -1097,7 +1097,7 @@ Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $C9
 
 ; the same 57 bytes as CopyTileBufferToBGMap (03:42DA)
-; 3 call sites from 3 routines (e.g. PauseMenu_State4_Sub02_Case00_Case00, PauseMenu_State4_Sub02_Case01_Case00, PauseMenu_State4_Sub02_Case02_Case01)
+; 3 call sites from 3 routines (e.g. PauseMenu_State4_Sub02_Case00_ShowGiftExit, PauseMenu_State4_Sub02_Case01_Case00, PauseMenu_State4_Sub02_Case02_Case01)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap_BankF1::
 Func_0F1_4811:: ; address name
@@ -1175,7 +1175,7 @@ Jump_0F1_484C::
     ret
 
 ; far-calls Func_002_5E82 and reloads the record list name tiles (E-0122)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_ShowGiftExit)
 RefreshRecordListAndNameTiles_BankF1::
 Func_0F1_4866:: ; address name
     farcall RunMoveIncapacitatedPartyMembersBackTwice

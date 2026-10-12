@@ -11,7 +11,7 @@ Func_007_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 11 call sites from 9 routines (e.g. PauseMenu_State3_Case06_Case00, GameMode5_Init_Case01, GameMode5_Init_Case04_Sub02, RunGameMode5Case01SubStates_Case02_Case00_Case00, ...)
+; 11 call sites from 9 routines (e.g. PauseMenu_State3_Case06_ShowMaster, GameMode5_Init_Case01, GameMode5_Init_Case04_Sub02, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster, ...)
 ShowString_Bank07::
 Func_007_400F:: ; address name
     call BeginStringDisplay_Bank07
@@ -858,7 +858,7 @@ Jump_007_4AEB::
     ret
 
 ; the same effect as CopyRecordRectToScreenBuffer with the copy loop's instructions in a different order: HL = header (word offset, width, rows) followed by tile bytes, copied into wScreenTileBuffer + offset with rows 32 bytes apart (E-0071)
-; 19 call sites from 19 routines (e.g. GameMode5_Init_Case04, GameMode5_Init_Case01, GameMode5_Update_Case01_Case08, GameMode5_Update_Case01_Case07, ...)
+; 19 call sites from 19 routines (e.g. GameMode5_Init_Case04, GameMode5_Init_Case01, GameMode5_Update_Case01_Case08, GameMode5_Update_Case01_ShowGameLinkCannotBe, ...)
 ; points at: wScreenTileBuffer
 CopyRecordRectToScreenBuffer_Bank07::
 Func_007_4AFE:: ; address name
@@ -903,7 +903,7 @@ Func_007_4B1E:: ; address name
     ld bc, $1412
 
 ; the same instructions as CopyRect32StrideToVRAM_Bank16: B = width, C = rows, DE = source and HL = VRAM, both with rows 32 bytes apart; copies with WriteVRAMByteInc; B kept, C = 0 (E-0073)
-; 10 call sites from 10 routines (e.g. GameMode5_Update_Case01_Case08, GameMode5_Update_Case01_Case07, GameMode5_Update_Case01_Case04, RunGameMode5Case01SubStates_Case01, ...)
+; 10 call sites from 10 routines (e.g. GameMode5_Update_Case01_Case08, GameMode5_Update_Case01_ShowGameLinkCannotBe, GameMode5_Update_Case01_ShowGameLinkIsNot, RunGameMode5Case01SubStates_Case01, ...)
 CopyRect32StrideToVRAM_Bank07::
 Func_007_4B27:: ; address name
     push bc
@@ -3243,10 +3243,10 @@ Jump_007_6090:: ; address name
     dw GameMode5_Update_Case01_Case01
     dw GameMode5_Update_Case01_Case02
     dw GameMode5_Update_Case01_Case03
-    dw GameMode5_Update_Case01_Case04
+    dw GameMode5_Update_Case01_ShowGameLinkIsNot
     dw GameMode5_Update_Case01_Case05
     dw GameMode5_Update_Case01_Case06
-    dw GameMode5_Update_Case01_Case07
+    dw GameMode5_Update_Case01_ShowGameLinkCannotBe
     dw GameMode5_Update_Case01_Case08
 
 ; entry 0 of the `rst $00` table in GameMode5_Update_Case01
@@ -3515,7 +3515,7 @@ Jump_007_6247:: ; address name
     ld [wScreenStep], a
     ld a, [wLinkScreenFlag]
     rst $00
-    dw RunGameMode5Case01SubStates_Case02_Case00_Case00
+    dw RunGameMode5Case01SubStates_Case02_Case00_ShowMaster
     dw RunGameMode5Case01SubStates_Case02_Case00_Case01
     dw RunGameMode5Case01SubStates_Case02_Case00_Case02
 
@@ -3523,7 +3523,7 @@ Jump_007_6247:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenTileBuffer
 ; points at: wLinkScreenFlag
-RunGameMode5Case01SubStates_Case02_Case00_Case00::
+RunGameMode5Case01SubStates_Case02_Case00_ShowMaster::
 Jump_007_6262:: ; address name
     ld hl, vTiles2 + $680
     ld a, l
@@ -3644,7 +3644,7 @@ Jump_007_6319::
     ret
 
 ; only called from routines of RunGameMode5Case01SubStates (E-0098)
-; 3 call sites from 3 routines (e.g. RunGameMode5Case01SubStates_Case02_Case00_Case02, RunGameMode5Case01SubStates_Case02_Case00_Case01, RunGameMode5Case01SubStates_Case02_Case00_Case00)
+; 3 call sites from 3 routines (e.g. RunGameMode5Case01SubStates_Case02_Case00_Case02, RunGameMode5Case01SubStates_Case02_Case00_Case01, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
 ; reads: wBattlerRecords, wTitleByte0A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 RunGameMode5Case01SubStates_Shared01::
@@ -4062,7 +4062,7 @@ GameMode5_Update_Case01_Case02::
 Jump_007_65FC:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw GameMode5_Update_Case01_Case02_Case00
+    dw GameMode5_Update_Case01_Case02_ShowSavedDataHasBeen
     dw GameMode5_Update_Case01_Case02_Case01
     dw GameMode5_Update_Case01_Case02_Case02
 
@@ -4071,7 +4071,7 @@ Jump_007_65FC:: ; address name
 ; reads: wFadeState
 ; writes: wStringCategory, wStringIndex
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case02_Case00::
+GameMode5_Update_Case01_Case02_ShowSavedDataHasBeen::
 Jump_007_6606:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -4200,7 +4200,7 @@ Jump_007_66D2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkTimerLo, wGridCursorY, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wTextBuf0, wStringCategory, wStringIndex, wLinkScreenState
-GameMode5_Update_Case01_Case07::
+GameMode5_Update_Case01_ShowGameLinkCannotBe::
 Jump_007_66E0:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -4313,7 +4313,7 @@ Jump_007_6759:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep, wStringCategory, wStringIndex
 ; points at: wLinkScreenState
-GameMode5_Update_Case01_Case04::
+GameMode5_Update_Case01_ShowGameLinkIsNot::
 Jump_007_67DB:: ; address name
     xor a, a
     ld [wScreenStep], a

@@ -1036,7 +1036,7 @@ Jump_0A3_49EE::
     ret
 
 ; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)
-; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_Case01)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wBattleTarget
 ; points at: wBattleActionChoice, wSlotMarks
 CancelTargetActionUnlessSpecial::

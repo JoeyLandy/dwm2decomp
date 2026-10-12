@@ -1408,6 +1408,51 @@ class Rom:
                 self.labels[b][a] = new
                 renamed += 1
         log(f"single-purpose structural routines named from their shape: {renamed}")
+        # E-0274: a structural step whose body (up to the next label) shows exactly one quoted string -
+        # a message word, a constant string display or battle text, as the E-0248/E-0257/E-0258 notes
+        # quote it - is named Parent_Show<first words>
+        shown = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            k_of = {a: k for k, a in enumerate(order)}
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys or a not in k_of:
+                    continue
+                quotes, k = [], k_of[a]
+                while k < len(order) and k - k_of[a] < 40:
+                    pc = order[k]
+                    if pc != a and pc in self.labels[b]:
+                        break
+                    v = ins[pc]
+                    text = v[1]
+                    sym = self.symbolize(text, (), (b, pc)) if "[$C529]" in text else text
+                    note = self.message_word_note(b, pc + v[0], text) or self.string_index_note(b, pc, sym) \
+                        or self.battle_text_note(b, pc + v[0], text)
+                    if note:
+                        quotes.append(note)
+                    k += 1
+                    if v[2] in ("ret", "jp") and "," not in v[1]:
+                        break
+                if len(quotes) != 1:
+                    continue
+                qm = re.search(r"'(.*)'", quotes[0])
+                if not qm:
+                    continue
+                tag = "".join(w[:1].upper() + w[1:] for w in re.sub(
+                    r"[^A-Za-z0-9 ]", "", qm.group(1).replace("0", "Hero ")).split()[:4])
+                if not tag:
+                    continue
+                new = f"{m.group(1)}_Show{tag}"
+                if new in used:
+                    new = f"{new}_{lab[len(m.group(1)) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+                shown += 1
+        log(f"structural steps named after the string they show: {shown}")
 
     def rename_address_prefixed_children(self) -> None:
         """E-0245: structural names (`_CaseNN`, `_SubNN`, `_SharedNN`) are derived before

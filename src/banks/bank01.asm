@@ -6321,7 +6321,7 @@ Jump_001_6E3E::
     ret
 
 ; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
-; 11 call sites from 11 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
+; 11 call sites from 11 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
 ; reads: hTemp1, hTemp2, wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2
 CreateMonsterRecordOfKindTemp1::

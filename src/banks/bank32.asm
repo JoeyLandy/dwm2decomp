@@ -3506,8 +3506,8 @@ Jump_032_5541:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw RunBattleActions_Case00_Sub01_Case06_Case00
-    dw RunBattleActions_Case00_Sub01_Case06_Case01
-    dw RunBattleActions_Case00_Sub01_Case06_Case02
+    dw RunBattleActions_Case00_Sub01_Case06_ShowGWasShattered
+    dw RunBattleActions_Case00_Sub01_Case06_ShowSealPrayWasBroken
     dw RunBattleActions_Case00_Sub01_Case06_Case03
 
 ; entry 0 of the `rst $00` table in Func_032_4ADC_Case06
@@ -3589,7 +3589,7 @@ Jump_032_55B2::
 ; entry 1 of the `rst $00` table in Func_032_4ADC_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-RunBattleActions_Case00_Sub01_Case06_Case01::
+RunBattleActions_Case00_Sub01_Case06_ShowGWasShattered::
 Jump_032_55C2:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -3602,7 +3602,7 @@ Jump_032_55C2:: ; address name
 ; reads: wBattleByteAD
 ; writes: wBattleByteAD
 ; points at: wBattleSubStep
-RunBattleActions_Case00_Sub01_Case06_Case02::
+RunBattleActions_Case00_Sub01_Case06_ShowSealPrayWasBroken::
 Jump_032_55CF:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -3756,7 +3756,7 @@ RunBattleActions_Case00_Sub01_Case09::
 Jump_032_578B:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleActions_Case00_Sub01_Case09_Case00
+    dw RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead
     dw RunBattleActions_Case00_Sub01_Case09_Case01
 
 ; entry 0 of the `rst $00` table in Func_032_4ADC_Case09
@@ -3764,7 +3764,7 @@ Jump_032_578B:: ; address name
 ; reads: wTextFlags, wBattleActor
 ; writes: wBattleTarget
 ; points at: wBattleSubStep
-RunBattleActions_Case00_Sub01_Case09_Case00::
+RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead::
 Jump_032_5793:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3822,7 +3822,7 @@ Jump_032_57E3::
     ret
 
 ; A = wBattleActor (E-0115)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_Case09_Case01, RunBattleActions_Case00_Sub01_Case09_Case00)
+; 2 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_Case09_Case01, RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead)
 ; reads: wBattleActor
 LoadBattleActor::
 Func_032_57E4:: ; address name
@@ -4044,8 +4044,8 @@ Jump_032_5915:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw RunBattleStep4_Case00_Sub01_Case04_Case00
-    dw RunBattleStep4_Case00_Sub01_Case04_Case01
-    dw RunBattleStep4_Case00_Sub01_Case04_Case02
+    dw RunBattleStep4_Case00_Sub01_Case04_ShowGWasShattered
+    dw RunBattleStep4_Case00_Sub01_Case04_ShowSealPrayWasBroken
     dw RunBattleStep4_Case00_Sub01_Case04_Case03
 
 ; entry 0 of the `rst $00` table in Func_032_5820_Case04
@@ -4126,7 +4126,7 @@ Jump_032_5983::
 ; entry 1 of the `rst $00` table in Func_032_5820_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04_Case01::
+RunBattleStep4_Case00_Sub01_Case04_ShowGWasShattered::
 Jump_032_5993:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -4139,7 +4139,7 @@ Jump_032_5993:: ; address name
 ; reads: wBattleByteAD
 ; writes: wBattleByteAD
 ; points at: wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04_Case02::
+RunBattleStep4_Case00_Sub01_Case04_ShowSealPrayWasBroken::
 Jump_032_59A0:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -4362,7 +4362,7 @@ Jump_032_5AA9::
     ret
 
 ; for the target's picture slot fills $24 tiles at vTiles2 + $140, $380 or $5C0 with the pattern $FF, $00 (E-0127)
-; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep, RunBattleActions_Case00_Sub01_Case09_Case00, RunDefeatSequence_ToBlankTargetMonsterPictureAndStep, RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep, ...)
+; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep, RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead, RunDefeatSequence_ToBlankTargetMonsterPictureAndStep, RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep, ...)
 ; reads: wLinkMode, wLinkRole, wBattleTarget, rSTAT
 BlankTargetMonsterPicture::
 Func_032_5AB3:: ; address name
@@ -4433,7 +4433,7 @@ Jump_032_5AFE::
     ret
 
 ; target slot wBattleTarget: re-derives its stats (Func_032_5C3F, Func_032_5B94, Func_032_5BE8 clear 'buff' bits), sets wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record (wD80C + 9 * slot)
-; 9 call sites from 9 routines (e.g. RunBattleSubStep2_6764_Case00, RunBattleActions_Case00_Sub01_Case09_Case00, RunDefeatSequence_Case00, RunBattleSubStep2_66F1_Case00, ...)
+; 9 call sites from 9 routines (e.g. RunBattleSubStep2_6764_Case00, RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead, RunDefeatSequence_Case00, RunBattleSubStep2_66F1_Case00, ...)
 ; reads: wBattleTarget, wLinkMode
 ; writes: wDisplaySlot, wDefeatStep
 ; points at: wBattleStatus6, wBattleSlotOut, wBattleHP, wBattleStatus, wSideFlags0
@@ -5775,7 +5775,7 @@ Func_032_63C2:: ; address name
     rst $00
     dw RunEffectSubStep_63C2_Case00
     dw RunEffectSubStep_63C2_ToBlankTargetMonsterPictureAndStep
-    dw RunEffectSubStep_63C2_Case02
+    dw RunEffectSubStep_63C2_ShowHeroDroppedDead
 
 ; entry 0 of the `rst $00` table in RunEffectSubStep_63C2
 ; no direct call (reached through a table, a jump or a vector)
@@ -5806,7 +5806,7 @@ Jump_032_63E1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wSavedActorByte, wSavedActorSlot
 ; writes: wEffectSubStep, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wSavedActorByte
-RunEffectSubStep_63C2_Case02::
+RunEffectSubStep_63C2_ShowHeroDroppedDead::
 Jump_032_63E9:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32

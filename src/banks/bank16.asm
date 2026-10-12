@@ -30,7 +30,7 @@ Jump_016_401E::
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_Case08, PauseMenu_Items_Case02_Case16, PauseMenu_Items_Case02_Case1B)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_Case08, PauseMenu_Items_Case02_Case16, PauseMenu_Items_Case02_ShowButItCouldntBe)
 ; reads: wItemId
 CheckItemUsable::
 Func_016_4025:: ; address name
@@ -9349,7 +9349,7 @@ Jump_016_777A::
     ret
 
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at Jump_016_77A6 (E-0127)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunGameMode5Case01SubStates_Case02_Case00_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
 ; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wTitlePlayerName, wTitlePartySummary

@@ -1292,7 +1292,7 @@ Func_01B_480C:: ; address name
     db $11, $21, $48, $CD, $FE, $25, $C9
 
 ; Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 12 call sites from 10 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case00, RunScreenStateWhenNotFading_1B_Case01_Case12_Sub01, EggServiceMenu_Bank1B_Case04_Case09, EggServiceMenu_Bank1B_Case05_Case06, ...)
+; 12 call sites from 10 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case00, RunScreenStateWhenNotFading_1B_Case01_Case12_Sub01, EggServiceMenu_Bank1B_Case04_ShowInfoOKYesN, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, ...)
 ShowString_Bank1B_481A::
 Func_01B_481A:: ; address name
     call BeginStringDisplay_Bank1B_480C
@@ -5116,7 +5116,7 @@ Jump_01B_6650::
     ret
 
 ; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_Case07)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ShowSwitchWithWhich)
 ; reads: wScreenState
 EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
@@ -5303,7 +5303,7 @@ Jump_01B_6727:: ; address name
     dw DrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_Case04_Case07
     dw EggServiceMenu_Bank1B_Case04_Case08
-    dw EggServiceMenu_Bank1B_Case04_Case09
+    dw EggServiceMenu_Bank1B_Case04_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_Case04_Case0A
     dw EggServiceMenu_Bank1B_Case04_Case0B
     dw EggServiceMenu_Bank1B_Case04_Case0C
@@ -5604,7 +5604,7 @@ Jump_01B_693A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case04_Case09::
+EggServiceMenu_Bank1B_Case04_ShowInfoOKYesN::
 Jump_01B_6940:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6087,7 +6087,7 @@ Jump_01B_6C61:: ; address name
     dw EggServiceMenu_Bank1B_Case05_Case03
     dw EggServiceMenu_Bank1B_Case05_Case04
     dw EggServiceMenu_Bank1B_Case05_Case05
-    dw EggServiceMenu_Bank1B_Case05_Case06
+    dw EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_Case05_Case07
     dw EggServiceMenu_Bank1B_Case05_Case08
     dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep
@@ -6321,7 +6321,7 @@ Jump_01B_6D96:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case05_Case06::
+EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit::
 Jump_01B_6DB3:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6640,14 +6640,14 @@ Jump_01B_6FC4:: ; address name
     dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
     dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
-    dw EggServiceMenu_Bank1B_Case0E_Case06
+    dw EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_Case0E_Case07
 
 ; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case0E_Case06::
+EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit::
 Jump_01B_6FD8:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
@@ -6689,7 +6689,7 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
     dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
-    dw EggServiceMenu_Bank1B_Case0F_Case06
+    dw EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_Case0E_Case07
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
@@ -6774,7 +6774,7 @@ Jump_01B_7097:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPickCount, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case0F_Case06::
+EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN::
 Jump_01B_709B:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -7396,7 +7396,7 @@ Func_01B_7439:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_Case04_Case07, EggServiceMenu_Bank1B_Case05_Case06, EggServiceMenu_Bank1B_Case0E_Case06)
+; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_Case04_Case07, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank1B::
 Func_01B_7449:: ; address name
@@ -7834,7 +7834,7 @@ Jump_01B_76E0::
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_Case04_Case08, EggServiceMenu_Bank1B_Case0F_Case06, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case05_Case05)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_Case04_Case08, EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case05_Case05)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wNameGlyphBuf, wTextBuf0

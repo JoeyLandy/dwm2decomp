@@ -871,7 +871,7 @@ Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
-; 20 call sites from 19 routines (e.g. SceneDarckDefeated_Case00, SceneGrave_Case04, SceneShield_Case08, SceneShieldGuardian_Case08, ...)
+; 20 call sites from 19 routines (e.g. SceneDarckDefeated_Case00, SceneGrave_Case04, SceneShield_ShowABeautifulVoiceEchoed, SceneShieldGuardian_ShowOhMyGoodnessThank, ...)
 ; reads: wScriptParam0, hTemp0, hTemp1
 ; writes: wScriptParam0, hTemp0
 ScriptStepBlinkObjectTemp0::
@@ -934,7 +934,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_Shared01, SceneDarckDefeated_Case0B, SceneThreeItems_Case1E, ...)
+; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_Shared01, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -995,7 +995,7 @@ Jump_05F_6C9B::
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_Case6F, Talk08Event_Shared05)
+; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1143,7 +1143,7 @@ Func_05F_6D3F:: ; address name
     ret
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
-; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
+; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
 ; reads: wArg5, wFarmLevel
 ; writes: wArg1, wArg2, wArg5
 ClearArg5IfAtOrAboveLimitForFarmLevel::
@@ -1174,7 +1174,7 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
-; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_Case93, SceneThreeItems_Case2B, SceneShield2_Case16, ...)
+; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_Case2B, SceneShield2_Case16, ...)
 ; reads: hTemp0
 ; points at: wKeyList
 MarkKeyEntryKindTemp0Bit6::
@@ -1223,7 +1223,7 @@ Jump_05F_6DD6::
     ret
 
 ; HL = the BG map entry at the scroll origin ((hScrollY & $F8) * 4 + $9800, rows wrapped by & $9B, + hScrollX / 8), then DrawFullScreenBufferToBGMap (E-0093)
-; 23 call sites from 23 routines (e.g. SceneHomecoming_Case29, SceneDarckDefeated_Case02, SceneWallExit_Case0A, SceneReportToKing_Case08, ...)
+; 23 call sites from 23 routines (e.g. SceneHomecoming_ShowTHEEND, SceneDarckDefeated_Case02, SceneWallExit_ShowKamehaHeroThatWasnt, SceneReportToKing_Case08, ...)
 ; reads: hScrollY, hScrollX
 DrawFullScreenBufferAtScroll::
 Func_05F_6DDB:: ; address name

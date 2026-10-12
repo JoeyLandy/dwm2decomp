@@ -353,7 +353,7 @@ Jump_019_4291::
     ret
 
 ; wDA53[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
-; 8 call sites from 8 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01, ...)
+; 8 call sites from 8 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
 ; points at: wSlotAIMode, wBattleINT
 SetSlotAIModeFromINT::
 Func_019_4298:: ; address name
@@ -512,7 +512,7 @@ Func_019_4349:: ; address name
     ld c, a
 
 ; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wD868 = 3) (E-0130)
-; 6 call sites from 6 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01, ...)
+; 6 call sites from 6 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills

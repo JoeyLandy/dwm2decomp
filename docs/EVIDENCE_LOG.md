@@ -2431,6 +2431,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0274 — Steps named after the string they show
+
+- Kind: TOOL (C1 names from the E-0243, E-0248, E-0257 and E-0258 quotes).
+- A structural step whose body, up to the next label, quotes exactly one string is named Parent_Show<first four words>. The quote can be a message word, a constant string display or battle text. Examples: PauseMenu_Items_Case02_ShowButNothingHappened, PauseMenu_Skills_Case00_ShowADeadMonsterCant.
+- When a name repeats in a family, the case number is kept. 231 steps are renamed, and structural labels go from 4,539 to 4,297.
+- The quotes follow the normal ShowMessageHL path, so a step in a key world or a menu with its own message mode can show different text.
+- Binary verification: build/run355 PASS, 0 differing bytes; tests OK.
+
 ### E-0273 — Scene steps named after the message they show
 
 - Kind: TOOL (C1 names from the E-0243 lookup).

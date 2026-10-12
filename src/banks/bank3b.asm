@@ -2,7 +2,7 @@ SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
     db $3B
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01, ActionEffect_Transform_Sub01_Sub01)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ActionEffect_Transform_Sub01_Sub01)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -45,7 +45,7 @@ Jump_03B_403C::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01, ActionEffect_Transform_Sub01_Sub02)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ActionEffect_Transform_Sub01_Sub02)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -88,7 +88,7 @@ Jump_03B_4080::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01, GetBaseATKOfSlotA)
+; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, GetBaseATKOfSlotA)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -217,7 +217,7 @@ Jump_03B_414C::
     ret
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wScreenAttrBuffer, wRecordBufferData
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -260,7 +260,7 @@ Jump_03B_4190::
     ret
 
 ; slot C: the byte at battler record field $17, or for slot 3/7 byte wCFF5 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -299,7 +299,7 @@ Jump_03B_41CE::
     ret
 
 ; slot C: the byte at battler record field $2D, or for slot 3/7 byte wD002 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -338,7 +338,7 @@ Jump_03B_4208::
     ret
 
 ; slot C: the byte at battler record field $30, or for slot 3/7 byte wD004 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -377,7 +377,7 @@ Jump_03B_4242::
     ret
 
 ; slot C: the byte at battler record field $2E, or for slot 3/7 byte wD003 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -416,7 +416,7 @@ Jump_03B_427C::
     ret
 
 ; slot C: the byte at battler record field $2F, or for slot 3/7 byte wD005 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_Case01)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wRecordBufferData
 ; writes: wBattleStatResultLo, wMonsterId
 ; points at: wSpecialSlotMonsters
@@ -514,7 +514,7 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_Case00
     dw RunBattleActions_Case08_Sub01_Case01
     dw RunBattleActions_Case08_Sub01_Case02
-    dw RunBattleActions_Case08_Sub01_Case03
+    dw RunBattleActions_Case08_Sub01_ShowHeroIsAHunk
     dw RunBattleActions_Case08_Sub01_Case04
     dw RunBattleActions_Case08_Sub01_Case05
     dw RunBattleActions_Case08_Sub01_Case06
@@ -524,7 +524,7 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_Case0A
     dw RunBattleActions_Case08_Sub01_Case0B
     dw RunBattleActions_Case08_Sub01_Case0C
-    dw RunBattleActions_Case08_Sub01_Case0D
+    dw RunBattleActions_Case08_Sub01_ShowButNothingHappened
 
 ; entry 0 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
@@ -728,7 +728,7 @@ Func_03B_444A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleResolveStep, wBattleStatus5
-RunBattleActions_Case08_Sub01_Case03::
+RunBattleActions_Case08_Sub01_ShowHeroIsAHunk::
 Jump_03B_4456:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1195,7 +1195,7 @@ Jump_03B_46EF:: ; address name
 ; entry 13 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleActions_Case08_Sub01_Case0D::
+RunBattleActions_Case08_Sub01_ShowButNothingHappened::
 Jump_03B_46FD:: ; address name
     ld d, $CC ; battle text 'But nothing happened!'
     farcall ShowBattleText
@@ -1204,7 +1204,7 @@ Jump_03B_46FD:: ; address name
     ret
 
 ; wBattleResolveStep = $0A (the damage-message step, ResolveStepDamageMessage) (E-0116)
-; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessResolveMsgFlagsBit4, RunBattleActions_Case08_Sub01_Case03)
+; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessResolveMsgFlagsBit4, RunBattleActions_Case08_Sub01_ShowHeroIsAHunk)
 ; writes: wBattleResolveStep
 SetResolveStep0A::
 Func_03B_470B:: ; address name

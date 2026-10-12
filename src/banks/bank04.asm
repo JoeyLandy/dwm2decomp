@@ -3933,7 +3933,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg0834_WhenThatOldManGetsGrogged
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
-    dw DispatchTalkEvent_Case03_Sub01_Case33
+    dw DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz
     dw DispatchTalkEvent_Case03_Sub01_Case34
     dw ChestItem_Rib
     dw ChestItem_LoveWater
@@ -3944,7 +3944,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg0843_ISawAChildCrossThe
     dw TalkMsg0844_WatchMeDanceAndYoullWant
     dw DispatchTalkEvent_Case03_Sub01_Case3D
-    dw DispatchTalkEvent_Case03_Sub01_Case3E
+    dw DispatchTalkEvent_Case03_Sub01_ShowThisIsTheMermaid
     dw TalkMsg084F_IKnowNotAllHumansAre
     dw TalkMsg0850_ThePiratesCaughtUsInNets
     dw TalkMsg0851_TheHarMirrorWasExquisite
@@ -3957,11 +3957,11 @@ Func_004_58C2:: ; address name
     dw TalkScript5C94_TheTreasuresAreOursNoOne
     dw TalkScript5C9E_ItNagsAndNagsThatWe
     dw DispatchTalkEvent_Case03_Sub01_Case4A
-    dw DispatchTalkEvent_Case03_Sub01_Case4B
+    dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure
     dw DispatchTalkEvent_Case03_Sub01_Case4C
     dw DispatchTalkEvent_Case03_Sub01_Case4D
     dw ChestItem_LogTwig
-    dw DispatchTalkEvent_Case03_Sub01_Case4F
+    dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal
     dw DispatchTalkEvent_Case03_Sub01_Case50
     dw TalkScript5CDD_KamehaUrkHowYouCatchUp
     dw TalkScript5D1C_KamehaArrrrhClearTheWayIm
@@ -4638,7 +4638,7 @@ Jump_004_5CB7:: ; address name
 ; entry 51 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject3
-DispatchTalkEvent_Case03_Sub01_Case33::
+DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz::
 Jump_004_5CBE:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4687,7 +4687,7 @@ Jump_004_5D0D::
     ret
 
 ; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
-; 2 call sites from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_Case33)
+; 2 call sites from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG
 ; points at: wPartyList
@@ -4860,7 +4860,7 @@ Jump_004_5DE3:: ; address name
 
 ; entry 62 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case03_Sub01_Case3E::
+DispatchTalkEvent_Case03_Sub01_ShowThisIsTheMermaid::
 Jump_004_5DF1:: ; address name
     ld de, $00F1
     call TestFlagBit
@@ -5060,7 +5060,7 @@ Jump_004_5EEE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case03_Sub01_Case4B::
+DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure::
 Jump_004_5EF5:: ; address name
     call InventoryHasFreeSlotCheck
     jr c, Jump_004_5F01
@@ -5114,7 +5114,7 @@ Jump_004_5F24:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case03_Sub01_Case4F::
+DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal::
 Jump_004_5F35:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -7249,7 +7249,7 @@ Func_004_6A35:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case07_Sub01_Case00
-    dw DispatchTalkEvent_Case07_Sub01_Case01
+    dw DispatchTalkEvent_Case07_Sub01_ShowYoureAHumanHow
     dw DispatchTalkEvent_Case07_Sub01_Case02
     dw TalkMsg0708_HelloMunchkinEnjoyYourStay
     dw TalkMsg0709_AHumanHereItsBeenSeveral
@@ -7259,7 +7259,7 @@ Func_004_6A35:: ; address name
     dw TalkMsg070D_ThisIsElvenVillageYoureA
     dw TalkMsg0752_IEHeardThatHumansAre
     dw DispatchTalkEvent_Case07_Sub01_Case0A
-    dw DispatchTalkEvent_Case07_Sub01_Case0B
+    dw DispatchTalkEvent_Case07_Sub01_ShowWellWellItIs
     dw DispatchTalkEvent_Case07_Sub01_Case0C
     dw TalkMsg0723_TchWeHaveToEatThe
     dw DispatchTalkEvent_Case07_Sub01_Case0E
@@ -7346,7 +7346,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C03_TheTowersManyTreasuresAre
     dw TalkMsg0C02_OnlyAHandfulOfMastersHave
-    dw DispatchTalkEvent_Case07_Sub01_Case62
+    dw DispatchTalkEvent_Case07_Sub01_ShowThisIsThePower
     dw TalkScript659C
     dw TalkScript659C
     dw TalkScript659C
@@ -7378,7 +7378,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C1B_ItsNotThatEasyToWin
     dw TalkMsg0C1A_InThisTowerYourOpponents
-    dw DispatchTalkEvent_Case07_Sub01_Case82
+    dw DispatchTalkEvent_Case07_Sub01_ShowThisIsTheBaffle
     dw TalkScript659C_0478A5
     dw TalkScript659C_0478A5
     dw TalkScript659C_0478A5
@@ -7410,7 +7410,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C33_ItsBrutalUpAheadIWouldnt
     dw TalkMsg0C32_TheMonstersHereAreAwfulIm
-    dw DispatchTalkEvent_Case07_Sub01_CaseA2
+    dw DispatchTalkEvent_Case07_Sub01_ShowIfYouEMade
     dw TalkScript659C_0479FC
     dw TalkScript659C_0479FC
     dw TalkScript659C_0479FC
@@ -7459,7 +7459,7 @@ Jump_004_6BC8::
 
 ; entry 1 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_Case01::
+DispatchTalkEvent_Case07_Sub01_ShowYoureAHumanHow::
 Jump_004_6BDD:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7768,7 +7768,7 @@ Jump_004_6DC9:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_Case0B::
+DispatchTalkEvent_Case07_Sub01_ShowWellWellItIs::
 Jump_004_6DDA:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -9331,7 +9331,7 @@ Jump_004_7724:: ; address name
 
 ; entry 98 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_Case62::
+DispatchTalkEvent_Case07_Sub01_ShowThisIsThePower::
 Jump_004_772B:: ; address name
     ld de, $01D3
     call TestFlagBit
@@ -9608,7 +9608,7 @@ Jump_004_7882:: ; address name
 
 ; entry 130 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_Case82::
+DispatchTalkEvent_Case07_Sub01_ShowThisIsTheBaffle::
 Jump_004_7889:: ; address name
     ld de, $0173
     call TestFlagBit
@@ -9876,7 +9876,7 @@ Jump_004_79D9:: ; address name
 
 ; entry 162 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_CaseA2::
+DispatchTalkEvent_Case07_Sub01_ShowIfYouEMade::
 Jump_004_79E0:: ; address name
     ld de, $00DE
     call TestFlagBit
@@ -10139,7 +10139,7 @@ Func_004_7B29:: ; address name
     dw TalkScript5135
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
-    dw DispatchTalkEvent_Case09_Sub01_Case06
+    dw DispatchTalkEvent_Case09_Sub01_ShowWarubouUseAMagic
     dw TalkScript65AA_WarubouWaheyYouDidItHero
     dw TalkScript65B8_WarubouWaheySoThisIsIt
 
@@ -10308,7 +10308,7 @@ Jump_004_7C05:: ; address name
 ; entry 6 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind
-DispatchTalkEvent_Case09_Sub01_Case06::
+DispatchTalkEvent_Case09_Sub01_ShowWarubouUseAMagic::
 Jump_004_7C0C:: ; address name
     ld a, [wKeyWorldGoalKind]
     cp a, $05

@@ -4858,7 +4858,7 @@ Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 23 call sites from 12 routines (e.g. InitFieldScreen, RunMoveIncapacitatedPartyMembersBackTwice, SceneThreeItems_Case22, Talk00Event1A_Case05, ...)
+; 23 call sites from 12 routines (e.g. InitFieldScreen, RunMoveIncapacitatedPartyMembersBackTwice, SceneThreeItems_ShowWarubouThereAllHealed, Talk00Event1A_Case05, ...)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 MoveIncapacitatedPartyMembersBack::
@@ -5157,7 +5157,7 @@ Func_002_604B:: ; address name
     ld [wCurrentMusic], a
 
 ; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
-; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunFieldReturnPhase_Case02, SceneThreeItems_Case28, SceneCheerYuna_Case0A, ...)
+; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunFieldReturnPhase_Case02, SceneThreeItems_ShowWarubouWaheyThereIs, SceneCheerYuna_Case0A, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 PlayMapMusic::
 Func_002_6050:: ; address name

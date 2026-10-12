@@ -168,30 +168,30 @@ Func_00F_40E9:: ; address name
     rst $00
     dw SceneHomecoming_Case00
     dw SceneHomecoming_Case01
-    dw SceneHomecoming_Case02
+    dw SceneHomecoming_ShowWarubouWaheyInsteadOf
     dw SceneHomecoming_Case03
-    dw SceneHomecoming_Case04
+    dw SceneHomecoming_ShowWarubouNoOneKnows
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case06
     dw SceneHomecoming_Case07
     dw SceneHomecoming_Case08
     dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
-    dw SceneHomecoming_Case0A
-    dw SceneHomecoming_Case0A
+    dw SceneHomecoming_ShowWarubouWaheyIWas
+    dw SceneHomecoming_ShowWarubouWaheyIWas
     dw SceneHomecoming_Case03
-    dw SceneHomecoming_Case0D
-    dw SceneHomecoming_Case0D
+    dw SceneHomecoming_ShowKamehaIWentAnd
+    dw SceneHomecoming_ShowKamehaIWentAnd
     dw SceneHomecoming_Case03
-    dw SceneHomecoming_Case10
+    dw SceneHomecoming_ShowWarubouWAHEYSomePrince
     dw SceneHomecoming_Case03
-    dw SceneHomecoming_Case12
+    dw SceneHomecoming_ShowKamehaYoureAGlutton
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case14
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case16
     dw SceneHomecoming_Case17
     dw SceneHomecoming_Case03
-    dw SceneHomecoming_Case19
+    dw SceneHomecoming_ShowKamehaNoOnesTaking
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case1B
     dw SceneHomecoming_Case1C
@@ -207,7 +207,7 @@ Func_00F_40E9:: ; address name
     dw SceneHomecoming_Case26
     dw SceneHomecoming_ToStartPaletteFadeAndStep
     dw SceneHomecoming_Case28
-    dw SceneHomecoming_Case29
+    dw SceneHomecoming_ShowTHEEND
     dw SceneHomecoming_Case2A
     dw SceneHomecoming_Case2B
     dw SceneHomecoming_SetScriptStartRequestTo80
@@ -276,7 +276,7 @@ Jump_00F_4171:: ; address name
 ; reads: wIsCGB, wSGBActive, wSGBPaletteSet
 ; writes: wSpriteSlotCount, wObject5, hPlayerX, wFollowerRecords, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wScriptStep
-SceneHomecoming_Case29::
+SceneHomecoming_ShowTHEEND::
 Jump_00F_418E:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
@@ -575,7 +575,7 @@ Jump_00F_4376::
 ; entry 25 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_Case19::
+SceneHomecoming_ShowKamehaNoOnesTaking::
 Jump_00F_438B:: ; address name
     ld de, wObject2 + $C
     call ScriptApplyStepDeltaAtDE
@@ -684,7 +684,7 @@ Jump_00F_4419:: ; address name
 ; entry 18 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_Case12::
+SceneHomecoming_ShowKamehaYoureAGlutton::
 Jump_00F_4444:: ; address name
     ld de, wObject2 + $C
     call ScriptApplyStepDeltaAtDE
@@ -698,7 +698,7 @@ Jump_00F_4444:: ; address name
 ; entry 16 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_Case10::
+SceneHomecoming_ShowWarubouWAHEYSomePrince::
 Jump_00F_4456:: ; address name
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE
@@ -712,7 +712,7 @@ Jump_00F_4456:: ; address name
 ; entry 13 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_Case0D::
+SceneHomecoming_ShowKamehaIWentAnd::
 Jump_00F_4468:: ; address name
     ld de, wObject2 + $C
     call ScriptApplyStepDeltaAtDE
@@ -726,7 +726,7 @@ Jump_00F_4468:: ; address name
 ; entry 10 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_Case0A::
+SceneHomecoming_ShowWarubouWaheyIWas::
 Jump_00F_447A:: ; address name
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE
@@ -800,7 +800,7 @@ Jump_00F_44C9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneHomecoming_Case04::
+SceneHomecoming_ShowWarubouNoOneKnows::
 Jump_00F_44D8:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -820,7 +820,7 @@ Jump_00F_44D8:: ; address name
 ; reads: wScriptParam0
 ; writes: hPlayerFacing, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-SceneHomecoming_Case02::
+SceneHomecoming_ShowWarubouWaheyInsteadOf::
 Jump_00F_44F3:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
@@ -928,18 +928,18 @@ Func_00F_4595:: ; address name
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Msg055B_WaheyCanYouHear
     dw SceneHomecoming_Case03
-    dw SceneDarckDefeated_Case0B
+    dw SceneDarckDefeated_ShowWarubouWaheyYouDid
     dw SceneDarckDefeated_ToRunSceneScriptSubStep
     dw SceneDarckDefeated_Case0D
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_ToScriptStepShakeScreen
-    dw SceneDarckDefeated_Case10
+    dw SceneDarckDefeated_ShowWarubouWaheyFeelThat
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case13
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case16
+    dw SceneDarckDefeated_ShowWarubouWawaheyWeWere
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case18
     dw SceneDarckDefeated_Case19
@@ -950,15 +950,15 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case1A
     dw SceneDarckDefeated_Case1B
     dw SceneDarckDefeated_Case1A
-    dw SceneDarckDefeated_Case21
+    dw SceneDarckDefeated_ShowWarubouWaheyThatsIt
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case23
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case25
+    dw SceneDarckDefeated_ShowWarubouWaheyGetGoing
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case28
-    dw SceneDarckDefeated_Case29
+    dw SceneDarckDefeated_ShowWarubouWaheyGreatLogsLife
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case28
     dw SceneDarckDefeated_Case2C
@@ -1064,14 +1064,14 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Msg053B_KingIThankYou
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case92
-    dw SceneDarckDefeated_Case93
+    dw SceneDarckDefeated_ShowKingEvenThoughThe
     dw PersonalityMessage_Case01
 
 ; entry 147 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneDarckDefeated_Case93::
+SceneDarckDefeated_ShowKingEvenThoughThe::
 Jump_00F_46C3:: ; address name
     ld hl, $053C ; 'King Even though the island's crisis'
     call StartMessageHL_B0F
@@ -2552,7 +2552,7 @@ Func_00F_4FA1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg, wObject5
 ; points at: wScriptStep
-SceneDarckDefeated_Case29::
+SceneDarckDefeated_ShowWarubouWaheyGreatLogsLife::
 Jump_00F_4FBB:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
@@ -2568,7 +2568,7 @@ Jump_00F_4FBB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg, hTemp0, wObject5, wScriptSubStep
 ; points at: wScriptStep
-SceneDarckDefeated_Case25::
+SceneDarckDefeated_ShowWarubouWaheyGetGoing::
 Jump_00F_4FCF:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
@@ -2620,7 +2620,7 @@ Jump_00F_5007::
 ; reads: wScriptTemp4
 ; writes: wSpriteSlots, wFieldEventArg, wPartyCount, hFieldDrawFlags
 ; points at: wScriptStep
-SceneDarckDefeated_Case21::
+SceneDarckDefeated_ShowWarubouWaheyThatsIt::
 Jump_00F_5020:: ; address name
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -2694,7 +2694,7 @@ Jump_00F_507C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg
 ; points at: wScriptStep
-SceneDarckDefeated_Case16::
+SceneDarckDefeated_ShowWarubouWawaheyWeWere::
 Jump_00F_5087:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
@@ -2731,7 +2731,7 @@ Jump_00F_50A0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg
 ; points at: wScriptStep
-SceneDarckDefeated_Case10::
+SceneDarckDefeated_ShowWarubouWaheyFeelThat::
 Jump_00F_50A9:: ; address name
     xor a, a
     ld [wFieldEventArg], a
@@ -2774,7 +2774,7 @@ Jump_00F_50D2:: ; address name
 ; entry 11 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
-SceneDarckDefeated_Case0B::
+SceneDarckDefeated_ShowWarubouWaheyYouDid::
 Jump_00F_50D9:: ; address name
     ld a, $05
     ldh [hMapId], a
@@ -3127,7 +3127,7 @@ Func_00F_5404:: ; address name
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Msg4487_DarckWellForMe
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_Case0C
+    dw SceneThreeItems_ShowDarckIImagineThat
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case0E
     dw SceneHomecoming_Case03
@@ -3145,17 +3145,17 @@ Func_00F_5404:: ; address name
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Msg0491_WaheyCanYouHear
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_Case1E
+    dw SceneThreeItems_ShowWarubouWaheyHeroAnd
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case20
     dw SceneThreeItems_ToScriptStepFlashScreenNegative
-    dw SceneThreeItems_Case22
+    dw SceneThreeItems_ShowWarubouThereAllHealed
     dw SceneHomecoming_Case03
     dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
     dw SceneThreeItems_ToScriptStepShakeScreen
     dw SceneThreeItems_Msg0A7C_KamehaIIHave
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_Case28
+    dw SceneThreeItems_ShowWarubouWaheyThereIs
     dw SceneHomecoming_Case03
     dw SceneThreeItems_ToScriptStepDeltaThenMessage_Case2A
     dw SceneThreeItems_Case2B
@@ -3201,7 +3201,7 @@ Jump_00F_5495:: ; address name
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlotCount
 ; points at: wScriptStep
-SceneThreeItems_Case28::
+SceneThreeItems_ShowWarubouWaheyThereIs::
 Jump_00F_549F:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -3239,7 +3239,7 @@ Jump_00F_54D5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest
 ; points at: wScriptStep
-SceneThreeItems_Case22::
+SceneThreeItems_ShowWarubouThereAllHealed::
 Jump_00F_54E0:: ; address name
     farcall FullyHealParty
     farcall MoveIncapacitatedPartyMembersBack
@@ -3257,7 +3257,7 @@ Jump_00F_54E0:: ; address name
 ; entry 30 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-SceneThreeItems_Case1E::
+SceneThreeItems_ShowWarubouWaheyHeroAnd::
 Jump_00F_550B:: ; address name
     ld a, $05
     ldh [hMapId], a
@@ -3465,7 +3465,7 @@ Jump_00F_55F7::
 ; reads: wTextYesNoResult, hPlayerX
 ; writes: hTemp0, wObject5
 ; points at: wScriptStep
-SceneThreeItems_Case0C::
+SceneThreeItems_ShowDarckIImagineThat::
 Jump_00F_5612:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -3615,7 +3615,7 @@ Func_00F_56CD:: ; address name
     rst $00
     dw SceneGrave_Case00
     dw SceneHomecoming_Case03
-    dw SceneGrave_Case02
+    dw SceneGrave_ShowAhYoullDoIt
     dw SceneHomecoming_Case03
     dw SceneGrave_Case04
 
@@ -3641,7 +3641,7 @@ Jump_00F_56DB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; points at: wScriptStep
-SceneGrave_Case02::
+SceneGrave_ShowAhYoullDoIt::
 Jump_00F_56F3:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3792,7 +3792,7 @@ Func_00F_57EA:: ; address name
     dw SceneShield2_Case00
     dw SceneShield2_Case01
     dw SceneShield2_Case02
-    dw SceneShield2_Case03
+    dw SceneShield2_ShowLetMeShowYou
     dw SceneHomecoming_Case03
     dw SceneShield2_Case02
     dw SceneShield2_Case06
@@ -3802,14 +3802,14 @@ Func_00F_57EA:: ; address name
     dw SceneShield2_Case0A
     dw SceneShield2_Case0B
     dw SceneHomecoming_Case03
-    dw SceneShield2_Case0D
-    dw SceneShield2_Case0E
-    dw SceneShield2_Case0F
+    dw SceneShield2_ShowHeroReceivedTheSky
+    dw SceneShield2_ShowAVoiceEchoedFrom
+    dw SceneShield2_ShowWaheyHeroCanYou
     dw SceneHomecoming_Case03
-    dw SceneShield2_Case11
+    dw SceneShield2_ShowWarubouWaheyYouDid
     dw SceneShield2_ToRunSceneScriptSubStep
     dw SceneShield2_Case13
-    dw SceneShield2_Case14
+    dw SceneShield2_ShowWarubouWaheyYouCan
     dw SceneHomecoming_Case03
     dw SceneShield2_Case16
 
@@ -3836,7 +3836,7 @@ Jump_00F_581C:: ; address name
 ; reads: hPlayerY, wObject5
 ; writes: wObject5
 ; points at: wScriptStep
-SceneShield2_Case14::
+SceneShield2_ShowWarubouWaheyYouCan::
 Jump_00F_583A:: ; address name
     ldh a, [hPlayerY]
     ld c, a
@@ -3894,7 +3894,7 @@ Jump_00F_5889:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
 ; points at: hPlayerStateFlags
-SceneShield2_Case11::
+SceneShield2_ShowWarubouWaheyYouDid::
 Jump_00F_5890:: ; address name
     ld a, $05
     ldh [hMapId], a
@@ -3922,7 +3922,7 @@ Jump_00F_5890:: ; address name
 ; entry 15 of the `rst $00` table in SceneShield2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneShield2_Case0F::
+SceneShield2_ShowWaheyHeroCanYou::
 Jump_00F_58C5:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -3936,7 +3936,7 @@ Jump_00F_58C5:: ; address name
 ; entry 14 of the `rst $00` table in SceneShield2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneShield2_Case0E::
+SceneShield2_ShowAVoiceEchoedFrom::
 Jump_00F_58D5:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -3951,7 +3951,7 @@ Jump_00F_58D5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneShield2_Case0D::
+SceneShield2_ShowHeroReceivedTheSky::
 Jump_00F_58E5:: ; address name
     ld hl, wSpriteSlots + $C
     inc [hl]
@@ -4070,7 +4070,7 @@ Jump_00F_5971:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneShield2_Case03::
+SceneShield2_ShowLetMeShowYou::
 Jump_00F_5993:: ; address name
     ld hl, wObject5 + $5
     dec [hl]
@@ -4138,23 +4138,23 @@ SceneShield::
 Func_00F_59E6:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneShield_Case00
+    dw SceneShield_ShowTchObstinateAndFoolish
     dw SceneShield_ToScriptStepFlashScreenNegative
     dw SceneShield_Case02
     dw SceneHomecoming_Case03
-    dw SceneShield_Case04
+    dw SceneShield_ShowImpetuousFoolIllShow
     dw SceneShield_Case05
-    dw SceneShield_Case06
+    dw SceneShield_ShowWhaNoMyMonsters
     dw SceneHomecoming_Case03
-    dw SceneShield_Case08
+    dw SceneShield_ShowABeautifulVoiceEchoed
     dw SceneHomecoming_Case03
-    dw SceneShield_Case0A
+    dw SceneShield_ShowIBoreWitnessTo
     dw PersonalityMessage_Case01
 
 ; entry 10 of the `rst $00` table in SceneShield
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneShield_Case0A::
+SceneShield_ShowIBoreWitnessTo::
 Jump_00F_5A02:: ; address name
     ld hl, $0A05 ; 'I bore witness to it all'
     call StartMessageHL_B0F
@@ -4169,7 +4169,7 @@ Jump_00F_5A02:: ; address name
 ; reads: wScriptParam1, hTemp0
 ; writes: hTemp1, hTemp0
 ; points at: wScriptStep
-SceneShield_Case08::
+SceneShield_ShowABeautifulVoiceEchoed::
 Jump_00F_5A13:: ; address name
     ld a, [wScriptParam1]
     ldh [hTemp1], a
@@ -4190,7 +4190,7 @@ Jump_00F_5A13:: ; address name
 ; reads: wObject1
 ; writes: wScriptParam1
 ; points at: wScriptStep
-SceneShield_Case06::
+SceneShield_ShowWhaNoMyMonsters::
 Jump_00F_5A31:: ; address name
     ld hl, $0A04 ; 'Wha No! My monsters! It won't'
     call StartMessageHL_B0F
@@ -4221,7 +4221,7 @@ Jump_00F_5A42:: ; address name
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-SceneShield_Case04::
+SceneShield_ShowImpetuousFoolIllShow::
 Jump_00F_5A56:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -4298,7 +4298,7 @@ Jump_00F_5AB2:: ; address name
 ; reads: wIsCGB
 ; writes: wScriptParam1, wScriptStep
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-SceneShield_Case00::
+SceneShield_ShowTchObstinateAndFoolish::
 Jump_00F_5AB9:: ; address name
     ld de, $01E3
     call TestFlagBit
@@ -4336,28 +4336,28 @@ SceneShieldGuardian::
 Func_00F_5AF3:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneShieldGuardian_Case00
+    dw SceneShieldGuardian_ShowIWishYouWouldnt
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_Case02
     dw SceneHomecoming_Case03
-    dw SceneShieldGuardian_Case04
+    dw SceneShieldGuardian_ShowISeeButI
     dw SceneShieldGuardian_Case05
     dw SceneShieldGuardian_Msg0AF0_WhatLoseToA
     dw SceneHomecoming_Case03
-    dw SceneShieldGuardian_Case08
+    dw SceneShieldGuardian_ShowOhMyGoodnessThank
     dw SceneHomecoming_Case03
-    dw SceneShieldGuardian_Case0A
+    dw SceneShieldGuardian_ShowThatWasALovely
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_Case0C
     dw SceneHomecoming_Case03
-    dw SceneShieldGuardian_Case0E
+    dw SceneShieldGuardian_ShowHelenIPutYou
     dw PersonalityMessage_Case01
 
 ; entry 14 of the `rst $00` table in SceneShieldGuardian
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneShieldGuardian_Case0E::
+SceneShieldGuardian_ShowHelenIPutYou::
 Jump_00F_5B17:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -4385,7 +4385,7 @@ Jump_00F_5B2C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneShieldGuardian_Case0A::
+SceneShieldGuardian_ShowThatWasALovely::
 Jump_00F_5B3B:: ; address name
     ld de, FieldSpriteGfx0F
     ld b, $7D
@@ -4408,7 +4408,7 @@ Jump_00F_5B3B:: ; address name
 ; reads: hTemp0
 ; writes: hTemp0, hTemp1, wSpriteSlotCount, wObject1
 ; points at: wScriptStep
-SceneShieldGuardian_Case08::
+SceneShieldGuardian_ShowOhMyGoodnessThank::
 Jump_00F_5B5F:: ; address name
     ld a, $02
     ldh [hTemp0], a
@@ -4460,7 +4460,7 @@ Jump_00F_5B91:: ; address name
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-SceneShieldGuardian_Case04::
+SceneShieldGuardian_ShowISeeButI::
 Jump_00F_5BA5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -4531,7 +4531,7 @@ Jump_00F_5BF0::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0, wScriptStep
 ; points at: wScriptStep
-SceneShieldGuardian_Case00::
+SceneShieldGuardian_ShowIWishYouWouldnt::
 Jump_00F_5C06:: ; address name
     ld de, $01E1
     call TestFlagBit
@@ -4760,15 +4760,15 @@ Func_00F_5D9D:: ; address name
     dw ScenePrincessMedicine_Case06
     dw ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS
     dw SceneHomecoming_Case03
-    dw ScenePrincessMedicine_Case09
+    dw ScenePrincessMedicine_ShowYunasSoulFilledHer
     dw SceneHomecoming_Case03
-    dw ScenePrincessMedicine_Case0B
+    dw ScenePrincessMedicine_ShowIEFinallyRemembered
     dw PersonalityMessage_Case01
 
 ; entry 11 of the `rst $00` table in ScenePrincessMedicine
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScenePrincessMedicine_Case0B::
+ScenePrincessMedicine_ShowIEFinallyRemembered::
 Jump_00F_5DBB:: ; address name
     ld hl, $0AD5 ; 'I e finally remembered. I'm Yuna,'
     call StartMessageHL_B0F
@@ -4783,7 +4783,7 @@ Jump_00F_5DBB:: ; address name
 ; reads: hTemp0
 ; writes: hTemp0, hTemp1
 ; points at: wSpriteSlotCount, wScriptStep
-ScenePrincessMedicine_Case09::
+ScenePrincessMedicine_ShowYunasSoulFilledHer::
 Jump_00F_5DCC:: ; address name
     ld a, $02
     ldh [hTemp0], a
@@ -4998,12 +4998,12 @@ Func_00F_5F06:: ; address name
     dw SceneCheerYuna_Case04
     dw SceneCheerYuna_Case03
     dw SceneCheerYuna_Case04
-    dw SceneCheerYuna_Case07
+    dw SceneCheerYuna_ShowEnoughEnoughOfThat
     dw SceneHomecoming_Case03
     dw SceneCheerYuna_ToScriptStepDeltaThenNextStep
     dw SceneCheerYuna_Case0A
     dw SceneCheerYuna_Case0B
-    dw SceneCheerYuna_Case0C
+    dw SceneCheerYuna_ShowIAmTheKing
     dw SceneHomecoming_Case03
     dw SceneCheerYuna_Case0E
     dw SceneCheerYuna_ToRunScriptSubStep
@@ -5046,7 +5046,7 @@ Jump_00F_5F3D:: ; address name
 ; reads: wStepArrived
 ; writes: wStepPtrLo
 ; points at: wScriptStep
-SceneCheerYuna_Case0C::
+SceneCheerYuna_ShowIAmTheKing::
 Jump_00F_5F4A:: ; address name
     ld a, $40
     ld [wStepPtrLo], a
@@ -5129,7 +5129,7 @@ Jump_00F_5FB9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject2
 ; points at: wScriptStep
-SceneCheerYuna_Case07::
+SceneCheerYuna_ShowEnoughEnoughOfThat::
 Jump_00F_5FC0:: ; address name
     ld a, $02
     ld [wObject2 + $7], a
@@ -5680,7 +5680,7 @@ Func_00F_631F:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneWallExit_Case00
-    dw SceneWallExit_Case01
+    dw SceneWallExit_ShowKamehaSoThatsWhere
     dw SceneHomecoming_Case03
     dw SceneWallExit_Case03
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
@@ -5689,7 +5689,7 @@ Func_00F_631F:: ; address name
     dw SceneWallExit_Case07
     dw SceneWallExit_Case08
     dw SceneWallExit_Case09
-    dw SceneWallExit_Case0A
+    dw SceneWallExit_ShowKamehaHeroThatWasnt
     dw SceneHomecoming_Case03
     dw SceneWallExit_Case0C
 
@@ -5738,7 +5738,7 @@ Jump_00F_6372::
 ; reads: wScriptParam0, wScriptParam1, wStoryFlags
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, wStoryFlags, wScreenTileBuffer, wScriptStartRequest
 ; points at: wScriptStep
-SceneWallExit_Case0A::
+SceneWallExit_ShowKamehaHeroThatWasnt::
 Jump_00F_6383:: ; address name
     ld hl, wObject1 + $C
     inc [hl]
@@ -5927,7 +5927,7 @@ Jump_00F_6499::
 ; reads: hPlayerX
 ; writes: wObject5, wScriptParam1
 ; points at: wScriptStep
-SceneWallExit_Case01::
+SceneWallExit_ShowKamehaSoThatsWhere::
 Jump_00F_64BA:: ; address name
     ld b, $3C
     call StepScriptParam0Counter_Bank0F
@@ -6422,7 +6422,7 @@ Func_00F_67BA:: ; address name
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneMermaidKingdom_Case04
+    dw SceneMermaidKingdom_ShowKamehaGaspHackI
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case06
     dw SceneMermaidKingdom_Case07
@@ -6430,7 +6430,7 @@ Func_00F_67BA:: ; address name
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case0B
-    dw SceneMermaidKingdom_Case0C
+    dw SceneMermaidKingdom_ShowKahahaha
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case0E
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case0F
@@ -6452,20 +6452,20 @@ Func_00F_67BA:: ; address name
     dw SceneMermaidKingdom_Case1F
     dw SceneMermaidKingdom_Case20
     dw SceneMermaidKingdom_Case21
-    dw SceneMermaidKingdom_Case22
+    dw SceneMermaidKingdom_ShowKamehaIWasStupid
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case24
     dw SceneMermaidKingdom_Case25
     dw SceneMermaidKingdom_Case26
     dw SceneMermaidKingdom_Case27
-    dw SceneMermaidKingdom_Case28
+    dw SceneMermaidKingdom_ShowAVoiceEchoedFrom
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
     dw SceneHomecoming_Case03
-    dw SceneMermaidKingdom_Case2C
+    dw SceneMermaidKingdom_ShowWarubouWaheyYouDid
     dw SceneMermaidKingdom_ToRunSceneScriptSubStep
     dw SceneMermaidKingdom_Case2E
-    dw SceneMermaidKingdom_Case2F
+    dw SceneMermaidKingdom_ShowWarubouWaheyYouCan
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case31
 
@@ -6494,7 +6494,7 @@ Jump_00F_6822:: ; address name
 ; reads: hPlayerY, wObject5
 ; writes: wObject5
 ; points at: wScriptStep
-SceneMermaidKingdom_Case2F::
+SceneMermaidKingdom_ShowWarubouWaheyYouCan::
 Jump_00F_6845:: ; address name
     ldh a, [hPlayerY]
     ld c, a
@@ -6553,7 +6553,7 @@ Jump_00F_6894:: ; address name
 ; reads: hPlayerStateFlags
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wObject5, ...
 ; points at: hPlayerStateFlags
-SceneMermaidKingdom_Case2C::
+SceneMermaidKingdom_ShowWarubouWaheyYouDid::
 Jump_00F_689B:: ; address name
     ld a, $05
     ldh [hMapId], a
@@ -6600,7 +6600,7 @@ Jump_00F_68E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneMermaidKingdom_Case28::
+SceneMermaidKingdom_ShowAVoiceEchoedFrom::
 Jump_00F_68EB:: ; address name
     ld hl, wObject5 + $5
     inc [hl]
@@ -6728,7 +6728,7 @@ Jump_00F_6979::
 ; reads: wScriptParam0
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneMermaidKingdom_Case22::
+SceneMermaidKingdom_ShowKamehaIWasStupid::
 Jump_00F_69A6:: ; address name
     ld a, [wScriptParam0]
     srl a
@@ -6989,7 +6989,7 @@ Jump_00F_6ADD:: ; address name
 ; reads: wObject5
 ; writes: wObject5
 ; points at: wScriptStep
-SceneMermaidKingdom_Case0C::
+SceneMermaidKingdom_ShowKahahaha::
 Jump_00F_6B31:: ; address name
     ld a, [wObject5 + $5]
     dec a
@@ -7227,7 +7227,7 @@ Jump_00F_6C77::
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-SceneMermaidKingdom_Case04::
+SceneMermaidKingdom_ShowKamehaGaspHackI::
 Jump_00F_6CAB:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -7903,10 +7903,10 @@ Func_00F_70EC:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneWhoAreYou_Case00
-    dw SceneWhoAreYou_Case01
+    dw SceneWhoAreYou_ShowTchMadeMeWaste
     dw SceneHomecoming_Case03
     dw SceneWhoAreYou_ToScriptStepDeltaThenNextStep
-    dw SceneWhoAreYou_Case04
+    dw SceneWhoAreYou_ShowKamehaHeyYoureHero
     dw SceneHomecoming_Case03
     dw SceneWhoAreYou_Case06
     dw SceneWhoAreYou_Case07
@@ -8051,7 +8051,7 @@ Jump_00F_71B5::
 ; reads: wStepArrived
 ; writes: wObject1, wObject2, wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-SceneWhoAreYou_Case04::
+SceneWhoAreYou_ShowKamehaHeyYoureHero::
 Jump_00F_71DD:: ; address name
     xor a, a
     ld [wObject1 + $7], a
@@ -8084,7 +8084,7 @@ Jump_00F_7209:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
 ; points at: wScriptStep
-SceneWhoAreYou_Case01::
+SceneWhoAreYou_ShowTchMadeMeWaste::
 Jump_00F_7210:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -8191,7 +8191,7 @@ Func_00F_729C:: ; address name
     ld b, a
 
 ; shakes hScrollX left and right with the frame counter until the wC921 counter expires, then resets the scroll and advances wScriptStep (E-0125)
-; 7 call sites from 7 routines (e.g. SceneDarckDefeated_ToScriptStepShakeScreen, SceneThreeItems_ToScriptStepShakeScreen, SceneWallExit_Case0A, SceneExplosion_ToScriptStepShakeScreen, ...)
+; 7 call sites from 7 routines (e.g. SceneDarckDefeated_ToScriptStepShakeScreen, SceneThreeItems_ToScriptStepShakeScreen, SceneWallExit_ShowKamehaHeroThatWasnt, SceneExplosion_ToScriptStepShakeScreen, ...)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
 ; points at: wScriptStep
@@ -8243,13 +8243,13 @@ Func_00F_72D9:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneRivalDefeated_Case00
-    dw SceneRivalDefeated_Case01
+    dw SceneRivalDefeated_ShowKingYouThievesTheres
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case03
     dw SceneKamehaFlees_Case00
     dw SceneKamehaFlees_Case00
     dw SceneKamehaFlees_Case00
-    dw SceneRivalDefeated_Case07
+    dw SceneRivalDefeated_ShowKingSurrenderAndLive
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case09
     dw SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss
@@ -8259,23 +8259,23 @@ Func_00F_72D9:: ; address name
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case0F
     dw SceneRivalDefeated_Case10
-    dw SceneRivalDefeated_Case11
+    dw SceneRivalDefeated_ShowKingWahahWeE
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case13
-    dw SceneRivalDefeated_Case14
+    dw SceneRivalDefeated_ShowKingThisIsThe
     dw SceneHomecoming_Case03
-    dw SceneRivalDefeated_Case16
+    dw SceneRivalDefeated_ShowHeroObtainedTheTidalBell
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Msg01A0_KingIEBeen
     dw SceneHomecoming_Case03
-    dw SceneRivalDefeated_Case1A
+    dw SceneRivalDefeated_ShowAVoiceEchoedFrom
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Msg01A2_WaheyCanYouHear
     dw SceneHomecoming_Case03
-    dw SceneRivalDefeated_Case1E
+    dw SceneRivalDefeated_ShowWarubouWaheyYouDid
     dw SceneRivalDefeated_ToRunSceneScriptSubStep
     dw SceneRivalDefeated_Case20
-    dw SceneRivalDefeated_Case21
+    dw SceneRivalDefeated_ShowWarubouWaheyTheAbility
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case23
 
@@ -8304,7 +8304,7 @@ Jump_00F_7325:: ; address name
 ; reads: hPlayerY, wObject5
 ; writes: wObject5
 ; points at: wScriptStep
-SceneRivalDefeated_Case21::
+SceneRivalDefeated_ShowWarubouWaheyTheAbility::
 Jump_00F_7348:: ; address name
     ldh a, [hPlayerY]
     ld c, a
@@ -8361,7 +8361,7 @@ Jump_00F_7397:: ; address name
 ; entry 30 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
-SceneRivalDefeated_Case1E::
+SceneRivalDefeated_ShowWarubouWaheyYouDid::
 Jump_00F_739E:: ; address name
     ld a, $05
     ldh [hMapId], a
@@ -8400,7 +8400,7 @@ Jump_00F_73CD:: ; address name
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlotCount
 ; points at: wScriptStep
-SceneRivalDefeated_Case1A::
+SceneRivalDefeated_ShowAVoiceEchoedFrom::
 Jump_00F_73D8:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -8436,7 +8436,7 @@ Jump_00F_7401:: ; address name
 ; reads: wScriptTemp4
 ; writes: wObject5, wPartyCount
 ; points at: wScriptStep
-SceneRivalDefeated_Case16::
+SceneRivalDefeated_ShowHeroObtainedTheTidalBell::
 Jump_00F_740C:: ; address name
     ld hl, wObject5 + $4
     dec [hl]
@@ -8462,7 +8462,7 @@ Jump_00F_740C:: ; address name
 ; entry 20 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_Case14::
+SceneRivalDefeated_ShowKingThisIsThe::
 Jump_00F_743A:: ; address name
     ld hl, wObject5 + $5
     dec [hl]
@@ -8505,7 +8505,7 @@ Jump_00F_746E::
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlots
 ; points at: wScriptStep
-SceneRivalDefeated_Case11::
+SceneRivalDefeated_ShowKingWahahWeE::
 Jump_00F_7473:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -8654,7 +8654,7 @@ Jump_00F_755C::
 ; reads: wStepArrived
 ; writes: wStepTarget, wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
-SceneRivalDefeated_Case07::
+SceneRivalDefeated_ShowKingSurrenderAndLive::
 Jump_00F_756F:: ; address name
     ld a, $02
     ld [wStepTarget], a
@@ -8702,7 +8702,7 @@ Jump_00F_75AA:: ; address name
 ; reads: wStepArrived
 ; writes: wStepTarget, wStepPtrLo, wStepPtrHi, hPlayerFacing
 ; points at: wScriptStep
-SceneRivalDefeated_Case01::
+SceneRivalDefeated_ShowKingYouThievesTheres::
 Jump_00F_75C3:: ; address name
     ld a, $02
     ld [wStepTarget], a
@@ -8917,9 +8917,9 @@ SceneMonsterInspection::
 Func_00F_772E:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneMonsterInspection_Case00
+    dw SceneMonsterInspection_ShowAndThatWasThe
     dw SceneMonsterInspection_Case01
-    dw SceneMonsterInspection_Case02
+    dw SceneMonsterInspection_ShowNextMonstersWillPerform
     dw SceneHomecoming_Case03
     dw SceneMonsterInspection_Case04
     dw SceneMonsterInspection_Case05
@@ -8931,7 +8931,7 @@ Func_00F_772E:: ; address name
 ; entry 0 of the `rst $00` table in SceneMonsterInspection
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-SceneMonsterInspection_Case00::
+SceneMonsterInspection_ShowAndThatWasThe::
 Jump_00F_7746:: ; address name
     ld a, $25
     ldh [hMapId], a
@@ -8969,7 +8969,7 @@ Jump_00F_776B:: ; address name
 ; entry 2 of the `rst $00` table in SceneMonsterInspection
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneMonsterInspection_Case02::
+SceneMonsterInspection_ShowNextMonstersWillPerform::
 Jump_00F_777E:: ; address name
     ld b, $B4
     call StepScriptParam0Counter_Bank0F
@@ -9125,12 +9125,12 @@ Func_00F_786F:: ; address name
     dw SceneLongFaces_Case02
     dw SceneHomecoming_Case03
     dw SceneLongFaces_Case04
-    dw SceneLongFaces_Case05
+    dw SceneLongFaces_ShowSlashDontWorryIm
     dw SceneHomecoming_Case03
-    dw SceneLongFaces_Case07
-    dw SceneLongFaces_Case08
+    dw SceneLongFaces_ShowSlashAndHeroHas
+    dw SceneLongFaces_ShowTaraThenItsYour
     dw SceneLongFaces_Case09
-    dw SceneLongFaces_Case0A
+    dw SceneLongFaces_ShowSlashThatsSettledThen
     dw SceneLongFaces_Case0B
     dw SceneLongFaces_Case0C
 
@@ -9168,7 +9168,7 @@ Jump_00F_789B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-SceneLongFaces_Case0A::
+SceneLongFaces_ShowSlashThatsSettledThen::
 Jump_00F_78B7:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -9207,7 +9207,7 @@ Jump_00F_78CB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-SceneLongFaces_Case08::
+SceneLongFaces_ShowTaraThenItsYour::
 Jump_00F_78E7:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -9233,7 +9233,7 @@ Jump_00F_7903::
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlots, wScriptParam0
 ; points at: wScriptStep
-SceneLongFaces_Case07::
+SceneLongFaces_ShowSlashAndHeroHas::
 Jump_00F_790A:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -9260,7 +9260,7 @@ Jump_00F_790A:: ; address name
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, hPlayerFacing, wFollowerRecords
 ; points at: wScriptStep
-SceneLongFaces_Case05::
+SceneLongFaces_ShowSlashDontWorryIm::
 Jump_00F_7937:: ; address name
     ld de, wSpriteSlots + $C
     ld a, e
@@ -9415,7 +9415,7 @@ Func_00F_7A2D:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneWarubouWarning_Case00
-    dw SceneWarubouWarning_Case01
+    dw SceneWarubouWarning_ShowTaraIfWeDont
     dw SceneHomecoming_Case03
     dw SceneWarubouWarning_Case03
     dw PersonalityMessage_Case01
@@ -9466,7 +9466,7 @@ Jump_00F_7A5A::
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords, hPlayerFacing
 ; points at: wScriptStep
-SceneWarubouWarning_Case01::
+SceneWarubouWarning_ShowTaraIfWeDont::
 Jump_00F_7A70:: ; address name
     ld a, $01
     ld [wFollowerRecords], a
@@ -9533,7 +9533,7 @@ Func_00F_7AC6:: ; address name
     dw SceneLandHo_Case03
     dw SceneLandHo_Case09
     dw SceneLandHo_Case0A
-    dw SceneLandHo_Case0B
+    dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_Case03
     dw SceneLandHo_Case0D
     dw SceneLandHo_Case0E
@@ -9579,7 +9579,7 @@ Jump_00F_7AF9:: ; address name
 ; entry 11 of the `rst $00` table in SceneLandHo
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneLandHo_Case0B::
+SceneLandHo_ShowThisIsATale::
 Jump_00F_7B2A:: ; address name
     ld b, $78
     call StepScriptParam0Counter_Bank0F
@@ -9855,8 +9855,8 @@ ScriptCommand76_Run::
 Func_00F_7CA5:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand76_Run_Case00
-    dw ScriptCommand76_Run_Case00
+    dw ScriptCommand76_Run_ShowTheIslandIsSinking
+    dw ScriptCommand76_Run_ShowTheIslandIsSinking
     dw SceneHomecoming_Case03
     dw ScriptCommand76_Run_Case03
 
@@ -9885,7 +9885,7 @@ Jump_00F_7CB1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand76_Run_Case00::
+ScriptCommand76_Run_ShowTheIslandIsSinking::
 Jump_00F_7CD6:: ; address name
     ld de, wObject3 + $C
     call ScriptApplyStepDeltaAtDE
@@ -9995,13 +9995,13 @@ Func_00F_7D62:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneVaultSettled_Case00
-    dw SceneVaultSettled_Case01
+    dw SceneVaultSettled_ShowTaraWellBeOK
     dw PersonalityMessage_Case01
 
 ; entry 1 of the `rst $00` table in SceneVaultSettled
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneVaultSettled_Case01::
+SceneVaultSettled_ShowTaraWellBeOK::
 Jump_00F_7D6C:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -10206,7 +10206,7 @@ Jump_00F_7EAE::
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 34 call sites from 34 routines (e.g. SceneLandHo_Case0B, SceneLandHo_Case01, SceneAtSea_Case01, ScriptStepDeltaThenMessage, ...)
+; 34 call sites from 34 routines (e.g. SceneLandHo_ShowThisIsATale, SceneLandHo_Case01, SceneAtSea_Case01, ScriptStepDeltaThenMessage, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 StepScriptParam0Counter_Bank0F::
@@ -10253,7 +10253,7 @@ Func_00F_7ECE:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 24 call sites from 15 routines (e.g. SceneHorsingAround_Case03, SceneHomecoming_Case14, SceneShield2_Case11, SceneCheerYuna_Case07, ...)
+; 24 call sites from 15 routines (e.g. SceneHorsingAround_Case03, SceneHomecoming_Case14, SceneShield2_ShowWarubouWaheyYouDid, SceneCheerYuna_ShowEnoughEnoughOfThat, ...)
 ClearBit2AtHL_Bank0F::
 Func_00F_7ED3:: ; address name
     ld a, [hl]
@@ -10274,7 +10274,7 @@ Jump_00F_7EE2::
     ret
 
 ; DE = address of a byte: adds the step delta for wScriptParam0 (AddStepDeltaToPointedByte), then wScriptParam0 += 2; when it reaches $20 it is reset to 0 and carry is set, otherwise A = 0 and carry is clear (16 calls per move) (E-0062)
-; 38 call sites from 38 routines (e.g. ScriptCommand76_Run_Case00, SceneAtSea_Case03, SceneVaultSettled_Case00, SceneHorsingAround_Case03, ...)
+; 38 call sites from 38 routines (e.g. ScriptCommand76_Run_ShowTheIslandIsSinking, SceneAtSea_Case03, SceneVaultSettled_Case00, SceneHorsingAround_Case03, ...)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ScriptApplyStepDeltaAtDE::
@@ -10370,7 +10370,7 @@ Func_00F_7F5C:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 127 call sites from 108 routines (e.g. SceneLandHo_Case0B, ScriptCommand76_Run_Case00, SceneVaultSettled_Case01, SceneShieldGuardian_Case0E, ...)
+; 127 call sites from 108 routines (e.g. SceneLandHo_ShowThisIsATale, ScriptCommand76_Run_ShowTheIslandIsSinking, SceneVaultSettled_ShowTaraWellBeOK, SceneShieldGuardian_ShowHelenIPutYou, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B0F::
 Func_00F_7F68:: ; address name
@@ -10383,7 +10383,7 @@ Func_00F_7F68:: ; address name
     ret
 
 ; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
-; 15 call sites from 15 routines (e.g. SceneShieldGuardian_Case05, SceneThreeItems_Case2B, SceneShield2_Case0F, SceneShield2_Case0E, ...)
+; 15 call sites from 15 routines (e.g. SceneShieldGuardian_Case05, SceneThreeItems_Case2B, SceneShield2_ShowWaheyHeroCanYou, SceneShield2_ShowAVoiceEchoedFrom, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
 RunMessageBoxFar_Bank0F::

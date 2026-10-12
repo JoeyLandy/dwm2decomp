@@ -3837,7 +3837,7 @@ Func_012_5854:: ; address name
     dw Talk09Event00_Case01
     dw Talk09Event00_Case02
     dw Talk09Event00_ToScriptStepFlashScreenNegative
-    dw Talk09Event00_Case04
+    dw Talk09Event00_ShowWarubouWaheyNoGood
     dw Talk09Event00_Case05
     dw Talk09Event00_Case06
     dw Talk09Event00_Case07
@@ -3943,7 +3943,7 @@ Jump_012_58D6:: ; address name
 ; entry 4 of the `rst $00` table in Talk09Event00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk09Event00_Case04::
+Talk09Event00_ShowWarubouWaheyNoGood::
 Jump_012_58E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -4075,7 +4075,7 @@ Func_012_59AC:: ; address name
     rst $00
     dw Talk09Event03_Case00
     dw Talk09Event03_Case01
-    dw Talk09Event03_Case02
+    dw Talk09Event03_ShowWarubouWaheyThatWas
     dw Talk09Event00_Case05
     dw Talk09Event00_Case06
     dw Talk09Event03_Case05
@@ -4100,7 +4100,7 @@ Jump_012_59BC:: ; address name
 ; entry 2 of the `rst $00` table in Talk09Event03
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk09Event03_Case02::
+Talk09Event03_ShowWarubouWaheyThatWas::
 Jump_012_59D3:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -6594,7 +6594,7 @@ Jump_012_680E::
     ret
 
 ; the same 13 bytes as StartMessageHL_B0F (0F:7F68)
-; 4 call sites from 4 routines (e.g. Talk09Event03_Case02, Talk09Event03_Case00, Talk09Event00_Case04, Talk09Event00_Case00)
+; 4 call sites from 4 routines (e.g. Talk09Event03_ShowWarubouWaheyThatWas, Talk09Event03_Case00, Talk09Event00_ShowWarubouWaheyNoGood, Talk09Event00_Case00)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B0F_Bank12::
 Func_012_6813:: ; address name
@@ -10385,7 +10385,7 @@ Jump_012_7DC3::
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
-; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, DispatchTalkEvent_Case03_Sub01_Case4F, DispatchTalkEvent_Case03_Sub01_Case6A, DispatchTalkEvent_Case02_Sub01_Case38, ...)
+; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal, DispatchTalkEvent_Case03_Sub01_Case6A, DispatchTalkEvent_Case02_Sub01_Case38, ...)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wInventory
@@ -10541,7 +10541,7 @@ Func_012_7E80:: ; address name
     ret
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
-; 5 call sites from 5 routines (e.g. Talk08Event_Case0A_Case02, Talk08Event_Case08_Case02, Talk08Event_Case03_Case02, Talk08Event_Case02_Case05, ...)
+; 5 call sites from 5 routines (e.g. Talk08Event_Case0A_ShowIfSomeMonsterMasters, Talk08Event_Case08_ShowHeroCheckedTheBookshelf, Talk08Event_Case03_ShowIsThatSoToo, Talk08Event_Case02_ShowTheresASpiritIn, ...)
 ; reads: hTemp0, hTemp1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 SubtractGoldFloorZero::

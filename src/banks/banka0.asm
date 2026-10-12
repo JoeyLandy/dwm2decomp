@@ -2167,7 +2167,7 @@ Func_0A0_4C6A:: ; address name
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWC338RowsToBGMapRow13 does in bank $31 (E-0076)
-; 7 call sites from 7 routines (e.g. RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case00_Case05, RunBattleSetup_BankA0_Case01_Case16, RunBattleSetup_BankA0_Case01_Case13, ...)
+; 7 call sites from 7 routines (e.g. RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case00_Case05, RunBattleSetup_BankA0_Case01_ShowButThereIsNo, RunBattleSetup_BankA0_Case01_Case13, ...)
 DrawWC338RowsToBGMapRow13_BankA0::
 Func_0A0_4C74:: ; address name
     ld de, wWindowTileBuffer + $38
@@ -2493,16 +2493,16 @@ Jump_0A0_4F9F:: ; address name
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case05
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case06
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case07
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case08
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheFirstMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case09
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0A
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0B
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheSecondMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0C
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0D
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0E
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheThirdMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case0F
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case10
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case11
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowPleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case12
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
@@ -2695,7 +2695,7 @@ Jump_0A0_50AD:: ; address name
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case08::
+RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheFirstMonsterIs::
 Jump_0A0_50C8:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2790,7 +2790,7 @@ Jump_0A0_5153::
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case0B::
+RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheSecondMonsterIs::
 Jump_0A0_5158:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2878,7 +2878,7 @@ Jump_0A0_51D8::
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case0E::
+RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheThirdMonsterIs::
 Jump_0A0_51DD:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2951,7 +2951,7 @@ Jump_0A0_5241::
 ; reads: wTextFlags
 ; writes: wStringCategory, wStringIndex, wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case11::
+RunBattlePhaseWhenTextIdle_A0_Case00_ShowPleaseWait::
 Jump_0A0_5246:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3433,7 +3433,7 @@ Jump_0A0_54DD:: ; address name
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case05
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case06
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case07
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case08
+    dw RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A
 
@@ -3844,7 +3844,7 @@ Jump_0A0_5737::
 ; reads: wTextFlags, wWorkBuf, wBattleResultStep
 ; writes: hTemp0, hTemp1, hTemp2, wStringCategory, wStringIndex, wBattleSubPhase, wLinkSendByte
 ; points at: wTextBuf2, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_Case08::
+RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG::
 Jump_0A0_5772:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4928,7 +4928,7 @@ Func_0A0_5E07:: ; address name
     dw RunBattleSetup_BankA0_Case01
     dw RunBattleSetup_BankA0_Return
     dw RunBattleSetup_BankA0_Case03
-    dw RunBattleSetup_BankA0_Case04
+    dw RunBattleSetup_BankA0_ShowSelectingHeroSMove
     dw RunBattleSetup_BankA0_Case05
     dw RunBattleSetup_BankA0_Case06
     dw RunBattleSetup_BankA0_Case07
@@ -5179,7 +5179,7 @@ Jump_0A0_5F76:: ; address name
     dw RunBattleSetup_BankA0_Case01_Case06
     dw RunBattleSetup_BankA0_Case01_Case07
     dw RunBattleSetup_BankA0_Case01_Case08
-    dw RunBattleSetup_BankA0_Case01_Case09
+    dw RunBattleSetup_BankA0_Case01_ShowItHasNoUsable
     dw RunBattleSetup_BankA0_Case01_Case0A
     dw RunBattleSetup_BankA0_Case01_Case0B
     dw RunBattleSetup_BankA0_Case01_Case0C
@@ -5192,7 +5192,7 @@ Jump_0A0_5F76:: ; address name
     dw RunBattleSetup_BankA0_Case01_Case13
     dw RunBattleSetup_BankA0_Case01_Case14
     dw RunBattleSetup_BankA0_Case01_Case08
-    dw RunBattleSetup_BankA0_Case01_Case16
+    dw RunBattleSetup_BankA0_Case01_ShowButThereIsNo
     dw RunBattleSetup_BankA0_Case01_Case0A
     dw RunBattleSetup_BankA0_Case01_Case0B
 
@@ -5530,7 +5530,7 @@ Jump_0A0_61E9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_BankA0_Case01_Case09::
+RunBattleSetup_BankA0_Case01_ShowItHasNoUsable::
 Jump_0A0_61FA:: ; address name
     call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $00
@@ -5546,7 +5546,7 @@ Jump_0A0_61FA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_BankA0_Case01_Case16::
+RunBattleSetup_BankA0_Case01_ShowButThereIsNo::
 Jump_0A0_6212:: ; address name
     call DrawWC338RowsToBGMapRow13_BankA0
     ld a, $00
@@ -5884,7 +5884,7 @@ Jump_0A0_63FE::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wLinkSeedCopy, wTextBuf0, wBattleSubPhase
-RunBattleSetup_BankA0_Case04::
+RunBattleSetup_BankA0_ShowSelectingHeroSMove::
 Jump_0A0_6424:: ; address name
     ld de, wLinkSeedCopy
     ld hl, wTextBuf0
