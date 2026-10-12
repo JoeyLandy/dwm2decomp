@@ -2430,6 +2430,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0230 — Streams found by tiling the gap after another stream
+
+- Kind: TOOL (C1).
+- **Rule.** After any stream other than a 360-byte screen (those are E-0222), the bytes up to the next label, stream, layout or code are tiled with streams that decompress cleanly to whole tiles (a multiple of 16 bytes). At most one repeated fill byte may follow the last stream.
+- **Result.** Deliberately strict, it adds one stream: 16:$7D12 (67 bytes expanding to 64), after DecompressMenuTilesTo16E0's stream and before zero padding. No reference to it was found.
+- Binary verification: build/run282 PASS, 0 differing bytes.
+
+### E-0229 — Map item-use flags, family icon tiles, inventory sort keys (bank $16)
+
+- Kind: OBSERVATION (reading; C1).
+- **MapItemUseFlags ($51C9, 256 bytes, one per map).** ItemUsable_WarpWing tests bit 6, the ExitBell check (Func_016_44D0) bit 5, and Func_016_4645 bit 4. A clear bit refuses the item.
+- **FamilyIconTiles ($7ACD).** 11 tiles of 16 bytes, read by LoadFamilyIconTileForWorkBuf at $7ACD + 16 * family.
+- **InventorySortKeysA / B ($599E, $5A0E).** 112 bytes each: SortInventory sorts the 24 inventory slots by the key of each item id, in either of two orders.
+- Binary verification: build/run281 PASS, 0 differing bytes.
+
 ### E-0228 — Two more unreferenced AI routines (bank $05)
 
 - Kind: OBSERVATION (reading; C1).

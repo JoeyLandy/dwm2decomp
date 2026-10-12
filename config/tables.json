@@ -14408,6 +14408,67 @@
         }
       ],
       "note": "E-0228 (C1: FailIfAllyLacksMPForSkillList5AF8 compares an ally's MP (GetBattleMP_Bank05) with the byte at $5AF8 + E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6 bytes, then code)."
+    },
+    {
+      "bank": "16",
+      "addr": "51C9",
+      "label": "MapItemUseFlags",
+      "count": 256,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "flag bits for this map (bit 6: WarpWing, bit 5: ExitBell, bit 4: Func_016_4645)"
+        }
+      ],
+      "note": "E-0229 (C1: ItemUsable_WarpWing tests bit 6, the ExitBell check (Func_016_44D0, E-0085) bit 5 and Func_016_4645 bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId = $FF) or gives C = 0; 256 bytes, one per map number, end at Func_016_52C9)."
+    },
+    {
+      "bank": "16",
+      "addr": "7ACD",
+      "label": "FamilyIconTiles",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "one 2bpp tile"
+        }
+      ],
+      "record": "the 16-byte icon tile of one family",
+      "note": "E-0229 (C1: LoadFamilyIconTileForWorkBuf copies the 16 bytes at $7ACD + 16 * family (wWorkBuf) to VRAM; 11 families)."
+    },
+    {
+      "bank": "16",
+      "addr": "599E",
+      "label": "InventorySortKeysA",
+      "count": 112,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "sort key for this item id"
+        }
+      ],
+      "note": "E-0229 (C1: SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of wGameFlags836); 112 bytes end at InventorySortKeysB)."
+    },
+    {
+      "bank": "16",
+      "addr": "5A0E",
+      "label": "InventorySortKeysB",
+      "count": 112,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "sort key for this item id"
+        }
+      ],
+      "note": "E-0229 (C1: the key table of the other sort order of SortInventory; 112 bytes)."
     }
   ]
 }

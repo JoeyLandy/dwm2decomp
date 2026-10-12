@@ -2227,6 +2227,52 @@ class Rom:
                 made += 1
         log(f"tile copy lists derived: {made} ({len(copiers)} copiers)")
 
+    def tile_stream_gaps(self) -> None:
+        """E-0230: after any other stream, the bytes up to the next known layout that tile as
+        streams decompressing cleanly to whole tiles (a multiple of 16 bytes), with at most a
+        run of one fill byte at the end, are further streams of the same pack."""
+        from lzss_gfx import decompress as lz
+        spans = sorted([(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas])
+
+        def tiles(b: int, a: int):
+            try:
+                out, used, ev = lz(self.data, b, a)
+            except IndexError:
+                return None
+            ok = out and len(out) % 16 == 0 and not ev["unwritten_reads"] and a - 0x4000 + used <= BANK
+            return (len(out), used) if ok else None
+
+        added = gaps = 0
+        for (b, a), (size, used) in sorted(self.streams.items()):
+            if size == 360:
+                continue
+            lo = a + used
+            marks = [x for x in self.dlabels[b] if x >= lo] + [x for (bb, x) in self.streams if bb == b and x >= lo] + \
+                    [s for bb, s, e in spans if bb == b and s >= lo] + [0x8000]
+            hi = min(marks)
+            if hi - lo < 16 or hi - lo > 0x2000 or any(x in self.covered[b] for x in range(lo, hi)):
+                continue
+            base = b * BANK - self.base(b)
+            pc, plan = lo, []
+            while pc < hi:
+                if len(set(self.data[base + pc:base + hi])) == 1 and plan:
+                    pc = hi  # trailing fill
+                    break
+                r = tiles(b, pc)
+                if not r or pc + r[1] > hi:
+                    break
+                plan.append((pc, r)); pc += r[1]
+            if pc < hi or not plan:
+                continue
+            gaps += 1
+            for s, r in plan:
+                self.streams[(b, s)] = r
+                self.dlabels[b].setdefault(s, f"Data_{b:03X}_{s:04X}")
+                self.dreason.setdefault((b, s), "stream found by tiling the gap after another stream")
+                added += 1
+        log(f"stream gaps tiled: {gaps} ({added} streams)")
+
     def add_string_table_schemas(self) -> None:
         """E-0217: string tables passed in DE to BeginStringDisplay / CopyStringToBuffer.
 
@@ -3224,6 +3270,7 @@ class Rom:
         self.structure_data()
         self.find_compressed_assets()
         self.tile_keyworld_screen_gaps()
+        self.tile_stream_gaps()
         self.label_data_refs()
         self.add_string_table_schemas()
         self.add_tile_copy_lists()

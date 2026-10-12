@@ -882,7 +882,7 @@ Func_016_44AD:: ; address name
 
 Jump_016_44BD::
     ldh a, [hMapId]
-    ld hl, Data_016_51C9
+    ld hl, MapItemUseFlags
     add_a_to_hl
     bit 6, [hl]
     ret nz
@@ -911,7 +911,7 @@ Func_016_44D0:: ; address name
 
 Jump_016_44E6::
     ldh a, [hMapId]
-    ld hl, Data_016_51C9
+    ld hl, MapItemUseFlags
     add_a_to_hl
     bit 5, [hl]
     ret nz
@@ -1206,7 +1206,7 @@ Func_016_4645:: ; address name
 
 Jump_016_4655::
     ldh a, [hMapId]
-    ld hl, Data_016_51C9
+    ld hl, MapItemUseFlags
     add_a_to_hl
     bit 4, [hl]
     jr z, Jump_016_4667
@@ -2739,11 +2739,266 @@ Data_016_4CC2:: ; address name
     db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 97
     db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 98
 
-; address loaded by ItemUsable_WarpWing, ItemUsable_ExitBell, Bank16Func4645ResultTest_Sub01
-Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $20, $10
-    INCBIN "dwm2-cobi-us.gbc", $0591E9, $C3
-    ds $1D, $00
+; E-0229 (C1: ItemUsable_WarpWing tests bit 6, the ExitBell check (Func_016_44D0, E-0085) bit 5 and Func_016_4645 bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId = $FF) or gives C = 0; 256 bytes, one per map number, end at Func_016_52C9).
+; record: flag bits for this map (bit 6: WarpWing, bit 5: ExitBell, bit 4: Func_016_4645)
+MapItemUseFlags::
+Data_016_51C9:: ; address name
+    db $10 ; id 0
+    db $10 ; id 1
+    db $10 ; id 2
+    db $10 ; id 3
+    db $10 ; id 4
+    db $10 ; id 5
+    db $10 ; id 6
+    db $10 ; id 7
+    db $10 ; id 8
+    db $10 ; id 9
+    db $10 ; id 10
+    db $10 ; id 11
+    db $10 ; id 12
+    db $10 ; id 13
+    db $10 ; id 14
+    db $10 ; id 15
+    db $10 ; id 16
+    db $10 ; id 17
+    db $10 ; id 18
+    db $10 ; id 19
+    db $10 ; id 20
+    db $10 ; id 21
+    db $10 ; id 22
+    db $10 ; id 23
+    db $10 ; id 24
+    db $10 ; id 25
+    db $10 ; id 26
+    db $10 ; id 27
+    db $10 ; id 28
+    db $10 ; id 29
+    db $10 ; id 30
+    db $10 ; id 31
+    db $C0 ; id 32
+    db $10 ; id 33
+    db $10 ; id 34
+    db $10 ; id 35
+    db $10 ; id 36
+    db $10 ; id 37
+    db $10 ; id 38
+    db $00 ; id 39
+    db $00 ; id 40
+    db $10 ; id 41
+    db $10 ; id 42
+    db $A0 ; id 43
+    db $00 ; id 44
+    db $10 ; id 45
+    db $10 ; id 46
+    db $40 ; id 47
+    db $C0 ; id 48
+    db $10 ; id 49
+    db $10 ; id 50
+    db $10 ; id 51
+    db $10 ; id 52
+    db $A0 ; id 53
+    db $00 ; id 54
+    db $80 ; id 55
+    db $A0 ; id 56
+    db $A0 ; id 57
+    db $A0 ; id 58
+    db $20 ; id 59
+    db $10 ; id 60
+    db $10 ; id 61
+    db $A0 ; id 62
+    db $A0 ; id 63
+    db $20 ; id 64
+    db $10 ; id 65
+    db $80 ; id 66
+    db $C0 ; id 67
+    db $00 ; id 68
+    db $10 ; id 69
+    db $00 ; id 70
+    db $00 ; id 71
+    db $C0 ; id 72
+    db $40 ; id 73
+    db $10 ; id 74
+    db $10 ; id 75
+    db $10 ; id 76
+    db $10 ; id 77
+    db $10 ; id 78
+    db $10 ; id 79
+    db $10 ; id 80
+    db $10 ; id 81
+    db $10 ; id 82
+    db $A0 ; id 83
+    db $A0 ; id 84
+    db $A0 ; id 85
+    db $A0 ; id 86
+    db $20 ; id 87
+    db $10 ; id 88
+    db $10 ; id 89
+    db $10 ; id 90
+    db $10 ; id 91
+    db $10 ; id 92
+    db $A0 ; id 93
+    db $10 ; id 94
+    db $10 ; id 95
+    db $10 ; id 96
+    db $10 ; id 97
+    db $A0 ; id 98
+    db $A0 ; id 99
+    db $A0 ; id 100
+    db $A0 ; id 101
+    db $A0 ; id 102
+    db $A0 ; id 103
+    db $10 ; id 104
+    db $00 ; id 105
+    db $00 ; id 106
+    db $00 ; id 107
+    db $00 ; id 108
+    db $00 ; id 109
+    db $00 ; id 110
+    db $00 ; id 111
+    db $C0 ; id 112
+    db $10 ; id 113
+    db $10 ; id 114
+    db $A0 ; id 115
+    db $A0 ; id 116
+    db $A0 ; id 117
+    db $A0 ; id 118
+    db $10 ; id 119
+    db $10 ; id 120
+    db $10 ; id 121
+    db $40 ; id 122
+    db $10 ; id 123
+    db $10 ; id 124
+    db $10 ; id 125
+    db $10 ; id 126
+    db $10 ; id 127
+    db $10 ; id 128
+    db $A0 ; id 129
+    db $A0 ; id 130
+    db $A0 ; id 131
+    db $20 ; id 132
+    db $A0 ; id 133
+    db $A0 ; id 134
+    db $A0 ; id 135
+    db $A0 ; id 136
+    db $10 ; id 137
+    db $20 ; id 138
+    db $A0 ; id 139
+    db $A0 ; id 140
+    db $20 ; id 141
+    db $A0 ; id 142
+    db $20 ; id 143
+    db $A0 ; id 144
+    db $20 ; id 145
+    db $10 ; id 146
+    db $20 ; id 147
+    db $20 ; id 148
+    db $20 ; id 149
+    db $20 ; id 150
+    db $20 ; id 151
+    db $20 ; id 152
+    db $20 ; id 153
+    db $20 ; id 154
+    db $20 ; id 155
+    db $00 ; id 156
+    db $10 ; id 157
+    db $00 ; id 158
+    db $00 ; id 159
+    db $C0 ; id 160
+    db $20 ; id 161
+    db $20 ; id 162
+    db $20 ; id 163
+    db $10 ; id 164
+    db $00 ; id 165
+    db $00 ; id 166
+    db $00 ; id 167
+    db $C0 ; id 168
+    db $10 ; id 169
+    db $40 ; id 170
+    db $10 ; id 171
+    db $20 ; id 172
+    db $A0 ; id 173
+    db $A0 ; id 174
+    db $10 ; id 175
+    db $C0 ; id 176
+    db $10 ; id 177
+    db $10 ; id 178
+    db $A0 ; id 179
+    db $A0 ; id 180
+    db $A0 ; id 181
+    db $20 ; id 182
+    db $00 ; id 183
+    db $C0 ; id 184
+    db $10 ; id 185
+    db $10 ; id 186
+    db $20 ; id 187
+    db $10 ; id 188
+    db $20 ; id 189
+    db $A0 ; id 190
+    db $A0 ; id 191
+    db $A0 ; id 192
+    db $A0 ; id 193
+    db $A0 ; id 194
+    db $A0 ; id 195
+    db $A0 ; id 196
+    db $10 ; id 197
+    db $00 ; id 198
+    db $00 ; id 199
+    db $40 ; id 200
+    db $20 ; id 201
+    db $20 ; id 202
+    db $20 ; id 203
+    db $20 ; id 204
+    db $20 ; id 205
+    db $20 ; id 206
+    db $00 ; id 207
+    db $10 ; id 208
+    db $40 ; id 209
+    db $20 ; id 210
+    db $20 ; id 211
+    db $20 ; id 212
+    db $20 ; id 213
+    db $20 ; id 214
+    db $20 ; id 215
+    db $00 ; id 216
+    db $10 ; id 217
+    db $40 ; id 218
+    db $20 ; id 219
+    db $20 ; id 220
+    db $20 ; id 221
+    db $20 ; id 222
+    db $20 ; id 223
+    db $20 ; id 224
+    db $00 ; id 225
+    db $10 ; id 226
+    db $00 ; id 227
+    db $00 ; id 228
+    db $00 ; id 229
+    db $00 ; id 230
+    db $00 ; id 231
+    db $00 ; id 232
+    db $00 ; id 233
+    db $00 ; id 234
+    db $00 ; id 235
+    db $00 ; id 236
+    db $00 ; id 237
+    db $00 ; id 238
+    db $00 ; id 239
+    db $00 ; id 240
+    db $00 ; id 241
+    db $00 ; id 242
+    db $00 ; id 243
+    db $00 ; id 244
+    db $00 ; id 245
+    db $00 ; id 246
+    db $00 ; id 247
+    db $00 ; id 248
+    db $00 ; id 249
+    db $00 ; id 250
+    db $00 ; id 251
+    db $00 ; id 252
+    db $00 ; id 253
+    db $00 ; id 254
+    db $00 ; id 255
 
 ; only called from PauseMenu_Skills_Case03_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02)
@@ -4051,10 +4306,10 @@ Func_016_590C:: ; address name
 Jump_016_5928::
     res 7, a
     ld [wGameFlags836], a
-    ld de, Data_016_599E
+    ld de, InventorySortKeysA
     bit 0, a
     jr z, Jump_016_5937
-    ld de, Data_016_5A0E
+    ld de, InventorySortKeysB
 
 Jump_016_5937::
     ld hl, wInventory
@@ -4138,13 +4393,239 @@ Func_016_598C:: ; address name
     pop hl
     ret
 
-; address loaded by SortInventory
-Data_016_599E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05999E, $70
+; E-0229 (C1: SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of wGameFlags836); 112 bytes end at InventorySortKeysB).
+; record: sort key for this item id
+InventorySortKeysA::
+Data_016_599E:: ; address name
+    db $FF ; id 0
+    db $08 ; id 1
+    db $09 ; id 2
+    db $0A ; id 3
+    db $0B ; id 4
+    db $0C ; id 5
+    db $0D ; id 6
+    db $0E ; id 7
+    db $0F ; id 8
+    db $10 ; id 9
+    db $11 ; id 10
+    db $12 ; id 11
+    db $13 ; id 12
+    db $20 ; id 13
+    db $21 ; id 14
+    db $22 ; id 15
+    db $23 ; id 16
+    db $24 ; id 17
+    db $25 ; id 18
+    db $1A ; id 19
+    db $1B ; id 20
+    db $1C ; id 21
+    db $1D ; id 22
+    db $1E ; id 23
+    db $1F ; id 24
+    db $14 ; id 25
+    db $15 ; id 26
+    db $16 ; id 27
+    db $17 ; id 28
+    db $18 ; id 29
+    db $19 ; id 30
+    db $05 ; id 31
+    db $06 ; id 32
+    db $00 ; id 33
+    db $4B ; id 34
+    db $4C ; id 35
+    db $4D ; id 36
+    db $4E ; id 37
+    db $4F ; id 38
+    db $50 ; id 39
+    db $01 ; id 40
+    db $02 ; id 41
+    db $03 ; id 42
+    db $06 ; id 43
+    db $25 ; id 44
+    db $26 ; id 45
+    db $04 ; id 46
+    db $FF ; id 47
+    db $51 ; id 48
+    db $52 ; id 49
+    db $53 ; id 50
+    db $54 ; id 51
+    db $55 ; id 52
+    db $56 ; id 53
+    db $57 ; id 54
+    db $58 ; id 55
+    db $59 ; id 56
+    db $5A ; id 57
+    db $5B ; id 58
+    db $5C ; id 59
+    db $5D ; id 60
+    db $5E ; id 61
+    db $FF ; id 62
+    db $FF ; id 63
+    db $27 ; id 64
+    db $28 ; id 65
+    db $29 ; id 66
+    db $2A ; id 67
+    db $2B ; id 68
+    db $2C ; id 69
+    db $2D ; id 70
+    db $2E ; id 71
+    db $2F ; id 72
+    db $30 ; id 73
+    db $31 ; id 74
+    db $32 ; id 75
+    db $33 ; id 76
+    db $34 ; id 77
+    db $35 ; id 78
+    db $36 ; id 79
+    db $37 ; id 80
+    db $38 ; id 81
+    db $39 ; id 82
+    db $3A ; id 83
+    db $3B ; id 84
+    db $3C ; id 85
+    db $3D ; id 86
+    db $3E ; id 87
+    db $3F ; id 88
+    db $40 ; id 89
+    db $41 ; id 90
+    db $42 ; id 91
+    db $43 ; id 92
+    db $44 ; id 93
+    db $45 ; id 94
+    db $46 ; id 95
+    db $47 ; id 96
+    db $48 ; id 97
+    db $49 ; id 98
+    db $FF ; id 99
+    db $FF ; id 100
+    db $FF ; id 101
+    db $FF ; id 102
+    db $FF ; id 103
+    db $FF ; id 104
+    db $FF ; id 105
+    db $FF ; id 106
+    db $FF ; id 107
+    db $FF ; id 108
+    db $FF ; id 109
+    db $FF ; id 110
+    db $FF ; id 111
 
-; address loaded by SortInventory
-Data_016_5A0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $059A0E, $70
+; E-0229 (C1: the key table of the other sort order of SortInventory; 112 bytes).
+; record: sort key for this item id
+InventorySortKeysB::
+Data_016_5A0E:: ; address name
+    db $FF ; id 0
+    db $00 ; id 1
+    db $01 ; id 2
+    db $02 ; id 3
+    db $03 ; id 4
+    db $04 ; id 5
+    db $05 ; id 6
+    db $06 ; id 7
+    db $07 ; id 8
+    db $08 ; id 9
+    db $09 ; id 10
+    db $0A ; id 11
+    db $0B ; id 12
+    db $1E ; id 13
+    db $1F ; id 14
+    db $20 ; id 15
+    db $21 ; id 16
+    db $22 ; id 17
+    db $23 ; id 18
+    db $18 ; id 19
+    db $19 ; id 20
+    db $1A ; id 21
+    db $1B ; id 22
+    db $1C ; id 23
+    db $1D ; id 24
+    db $12 ; id 25
+    db $13 ; id 26
+    db $14 ; id 27
+    db $15 ; id 28
+    db $16 ; id 29
+    db $17 ; id 30
+    db $4E ; id 31
+    db $4F ; id 32
+    db $49 ; id 33
+    db $0C ; id 34
+    db $0D ; id 35
+    db $0E ; id 36
+    db $0F ; id 37
+    db $10 ; id 38
+    db $11 ; id 39
+    db $4A ; id 40
+    db $4B ; id 41
+    db $4C ; id 42
+    db $50 ; id 43
+    db $24 ; id 44
+    db $25 ; id 45
+    db $4D ; id 46
+    db $FF ; id 47
+    db $51 ; id 48
+    db $52 ; id 49
+    db $53 ; id 50
+    db $54 ; id 51
+    db $55 ; id 52
+    db $56 ; id 53
+    db $57 ; id 54
+    db $58 ; id 55
+    db $59 ; id 56
+    db $5A ; id 57
+    db $5B ; id 58
+    db $5C ; id 59
+    db $5D ; id 60
+    db $5E ; id 61
+    db $FF ; id 62
+    db $FF ; id 63
+    db $26 ; id 64
+    db $27 ; id 65
+    db $28 ; id 66
+    db $29 ; id 67
+    db $2A ; id 68
+    db $2B ; id 69
+    db $2C ; id 70
+    db $2D ; id 71
+    db $2E ; id 72
+    db $2F ; id 73
+    db $30 ; id 74
+    db $31 ; id 75
+    db $32 ; id 76
+    db $33 ; id 77
+    db $34 ; id 78
+    db $35 ; id 79
+    db $36 ; id 80
+    db $37 ; id 81
+    db $38 ; id 82
+    db $39 ; id 83
+    db $3A ; id 84
+    db $3B ; id 85
+    db $3C ; id 86
+    db $3D ; id 87
+    db $3E ; id 88
+    db $3F ; id 89
+    db $40 ; id 90
+    db $41 ; id 91
+    db $42 ; id 92
+    db $43 ; id 93
+    db $44 ; id 94
+    db $45 ; id 95
+    db $46 ; id 96
+    db $47 ; id 97
+    db $48 ; id 98
+    db $FF ; id 99
+    db $FF ; id 100
+    db $FF ; id 101
+    db $FF ; id 102
+    db $FF ; id 103
+    db $FF ; id 104
+    db $FF ; id 105
+    db $FF ; id 106
+    db $FF ; id 107
+    db $FF ; id 108
+    db $FF ; id 109
+    db $FF ; id 110
+    db $FF ; id 111
 
 ; monster id = wSpeciesIdLo/Hi: HL = wSpeciesFlags + id / 8, B = the mask 1 << (id & 7) (Data_016_5AA7); C = A = [HL] & B, so Z is set when the species' bit is clear (E-0070)
 ; 12 call sites from 12 routines (e.g. SetSpeciesFlag, CountSpeciesPerFamilyFlaggedOrListed, BattleEnd_Step3_Sub01_Sub01, BattleEnd_Step5_Case00_Sub01, ...)
@@ -9317,7 +9798,7 @@ LoadFamilyIconTileForWorkBuf::
 Func_016_7A48:: ; address name
     ld a, [wWorkBuf]
     swap a
-    ld de, Data_016_7ACD
+    ld de, FamilyIconTiles
     add a, e
     ld e, a
     jr nc, Jump_016_7A55
@@ -9332,7 +9813,7 @@ Jump_016_7A55::
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case00, GameMode5_Init_Case04)
 LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
-    ld de, Data_016_7ACD
+    ld de, FamilyIconTiles
     ld b, $B0
     call WriteBytesToVRAMTileWD09E
     ret
@@ -9378,7 +9859,7 @@ Func_016_7A97:: ; address name
     ld a, [hl]
     and a, $0F
     swap a
-    ld de, Data_016_7ACD
+    ld de, FamilyIconTiles
     add a, e
     ld e, a
     jr nc, Jump_016_7AAA
@@ -9417,12 +9898,28 @@ Jump_016_7AC4::
     jr nz, Jump_016_7AC4
     ret
 
-; address loaded by LoadFamilyIconTileForWorkBuf, LoadAllFamilyIconTiles, LoadTileForRecordByte0D
-Data_016_7ACD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05BACD, $B0
+; E-0229 (C1: LoadFamilyIconTileForWorkBuf copies the 16 bytes at $7ACD + 16 * family (wWorkBuf) to VRAM; 11 families).
+; record: the 16-byte icon tile of one family
+FamilyIconTiles::
+Data_016_7ACD:: ; address name
+    db $FF, $10, $FF, $10, $EF, $38, $EF, $54, $FF, $AA, $AB, $D6, $83, $FE, $FF, $7C ; id 0
+    db $F7, $0E, $FF, $0C, $FF, $1E, $F7, $EC, $FF, $FE, $FF, $AE, $FF, $1C, $EF, $70 ; id 1
+    db $FF, $00, $FF, $18, $FF, $DB, $FF, $C3, $FF, $3C, $FF, $7E, $FF, $7E, $FF, $3C ; id 2
+    db $FF, $06, $FD, $0B, $FF, $16, $FD, $23, $E7, $56, $BB, $C6, $F3, $B0, $FF, $C0 ; id 3
+    db $FF, $18, $E7, $24, $E7, $24, $C3, $42, $D3, $52, $F7, $76, $FF, $18, $DB, $18 ; id 4
+    db $BB, $82, $FF, $44, $FF, $28, $FF, $7C, $BB, $FE, $D7, $92, $FF, $FE, $FF, $7C ; id 5
+    db $FF, $18, $FF, $36, $EB, $2A, $F7, $15, $EB, $2B, $DF, $56, $BF, $A0, $FF, $C0 ; id 6
+    db $FF, $00, $FF, $7C, $FF, $FE, $FF, $92, $FF, $EE, $FF, $FE, $FF, $54, $FF, $38 ; id 7
+    db $FF, $00, $FF, $7C, $C7, $C6, $EF, $AA, $AB, $82, $D7, $D6, $AB, $AA, $FF, $7C ; id 8
+    db $FF, $10, $FF, $10, $E7, $30, $DB, $60, $9B, $E6, $83, $FE, $C7, $7C, $FF, $38 ; id 9
+    db $BB, $7C, $7D, $C6, $FF, $BA, $7D, $F6, $BB, $6C, $D7, $38, $FF, $28, $D7, $38 ; id 10
 
 ; address loaded by DecompressMenuTilesTo16E0
 ; LZSS-compressed asset: 405 bytes expand to 624 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_016_7B7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-    INCBIN "dwm2-cobi-us.gbc", $05BB7D, $1D7
+    INCBIN "dwm2-cobi-us.gbc", $05BB7D, $195
+
+; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_016_7D12:: ; heuristic: stream found by tiling the gap after another stream; C0
+    INCBIN "dwm2-cobi-us.gbc", $05BD12, $42
     ds $2AC, $00
