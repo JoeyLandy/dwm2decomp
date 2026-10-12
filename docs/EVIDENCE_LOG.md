@@ -2442,9 +2442,9 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The first commit, cf2c93c, cut the run at the first such position instead. That broke tests/test_structure_data.py's self-pointing-index test, which I committed while it was failing.
   - The narrowed rule produces the same generated source, passes that test, and adds a test of its own.
   - The only change in the generated source is in bank $17:
-  - packet 0 is plain `db` bytes;
-  - the border-0 stream is one `INCBIN` of $3DD bytes;
-  - the false label and its names.json entry are removed.
+    - packet 0 is plain `db` bytes;
+    - the border-0 stream is one `INCBIN` of $3DD bytes;
+    - the false label and its names.json entry are removed.
 - **Counts.** INCBIN slices without an asset comment: 0 (build/measure2.py). Data labels with only an address name: 0.
 - Binary verification: build/run416 PASS, 0 differing bytes; tests OK (skipped=3) after the narrowing.
 
