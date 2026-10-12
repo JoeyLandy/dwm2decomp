@@ -57,7 +57,7 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 
 ## Readability state (2026-10-12, after E-0308)
 
-Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run435). Tests: 186 run, 3 skipped. The figures below are measured from the generated `src/`:
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run440). Tests: 189 run, 3 skipped. The figures below are measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -72,7 +72,15 @@ Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/ru
 | String quotes | Message words, string displays (including through category and index wrappers, E-0292 and E-0294) and battle text are quoted at their call sites. |
 | `INCBIN` without an asset comment | 0 (E-0301 corrected E-0289's reading of 17:5D79) |
 
-Most names are C1 readings of what the code does, and many describe mechanics rather than confirmed game meaning. Open questions:
+How far the names can be trusted (E-0316):
+
+| Kind of name | Count | Confidence |
+| --- | --- | --- |
+| Rule-made names that describe their instructions: branch targets (`.loop`, `.set_x`, `.call_x`, ...) and steps (`Parent_To<X>`, `_Set<V>To<NN>`, `_Write<V>`, `_Wait<V>`, ...) | 12,814 | C2: tests/test_name_claims.py checks every claim against the code |
+| Strings, messages, streams, screens and table records, named by what sits at the address | about 9,500 | C2: named from the bytes themselves (E-0249 to E-0267) |
+| Names given by reading (config/names.json): game meaning of routines and data | 5,520 | C1 or C2 as each entry's evidence states; 10 readings also executed in tools/sm83.py (E-0314, E-0315) |
+
+Open questions:
 - Answered since E-0308: MON_SEX bit 0 is 0 male, 1 female (E-0311); MON_EGG is 0 none, 1 unappraised egg, 2 appraised egg (E-0311); gifts go to an Egg whose record is wGiftRecord: they raise its max HP and shift its family scores, which pick its species (E-0312).
 - Confirming the C1 readings in play. tests/test_readings_behaviour.py and tests/test_helpers_behaviour.py execute ten of them in tools/sm83.py (E-0314, E-0315). Execution corrected the battle result counters and found two palette-step quirks; most other names remain C1.
 
