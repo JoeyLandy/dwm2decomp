@@ -2435,8 +2435,8 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 
 - Kind: STATIC (C1).
 - **$0E bit 0 = sex.** Two readings support this.
-  - In BreedMenu (15:$4370 area), after the first parent is picked, the code loads bit 0 of that record's byte $0E. It then compares it with bit 0 of every listed record. When none differs, the menu steps back (wScreenStep -= 2, wTwoChoiceCursor = 3). Breeding therefore needs a partner whose bit 0 is different.
-  - The record list (1D:$5326 area) draws mark tile $CC + (byte $0E & 1) when byte $6E is 2, and tile $CE otherwise.
+  - In BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case11 (bank $15), after the first parent is picked, the code loads bit 0 of that record's byte $0E. It then compares it with bit 0 of every listed record. When none differs, the menu steps back (wScreenStep -= 2, wTwoChoiceCursor = 3). Breeding therefore needs a partner whose bit 0 is different.
+  - DrawRecordListPageMarks (1D:$6320) draws mark tile $CC + (byte $0E & 1) when byte $6E is 2, and tile $CE otherwise.
   - Which value means which sex is not established. The glyphs $CC/$CD have no charmap entry.
   - The table layouts (PresetMonsterRecords, DefaultMonsterRecord) now name the field.
 - **Constant.** MON_SEX ($0E) is added to config/record_fields.json. Record field loads named: 398 → 416.
