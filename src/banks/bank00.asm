@@ -5885,7 +5885,7 @@ Func_000_2038:: ; address name
     ret
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
-; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, SwapMonstersMenu_Case0D_DrawRect6x6From651BAtScroll41, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E, ...)
+; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, SwapMonstersMenu_ShowParents2_DrawRect6x6From651BAtScroll41, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E, ...)
 ; reads: hTemp0
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::

@@ -7892,7 +7892,7 @@ Script_15_77A0:: ; heuristic: event script entry or jump target; C0
     script_jump Script_15_764C
 
 ; only called from routines of HibernateMenu (E-0098)
-; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc, HibernateMenu_Case04_WriteListCursorAndListPageIndexEtc)
+; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc, HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc)
 ; writes: wListCount, rRAMG2, rRAMB
 ; points at: wListEntries, sCompactRecords, sRecords
 HibernateMenu_WriteListCountAndRAMG2Etc::

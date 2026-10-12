@@ -4411,7 +4411,7 @@ Func_01D_5DF9:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280, HibernateMenu_ChooseToHibernate_RunFunc5925At0280, ...)
 ; reads: wRecordsInUse
 ; writes: wRecordsInUse, rRAMG2, rRAMB
 ; points at: sRecords
@@ -4860,7 +4860,7 @@ Func_01D_6026:: ; address name
     ret
 
 ; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
-; 8 call sites from 8 routines (e.g. EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames, BreedMenu_Case05_DrawRecordListPageSpeciesNames, BreedMenu_Case0F_DrawRecordListPageSpeciesNames, SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames, ...)
+; 8 call sites from 8 routines (e.g. EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames, BreedMenu_Case05_DrawRecordListPageSpeciesNames, BreedMenu_Case0F_DrawRecordListPageSpeciesNames, SwapMonstersMenu_ChooseToView_DrawRecordListPageSpeciesNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, hTemp1, wDataBank, wListPages
 ; writes: rRAMG2, rRAMB, wDataBank, wNameGlyphBuf
 ; points at: wListEntries, wNameGlyphBuf
@@ -5467,11 +5467,11 @@ DrawRecordListPageMarks_Data_6422:: ; heuristic: pointer load in the same bank (
 Data_01D_6422:: ; address name
     db $83, $C3, $AB, $C3, $D3, $C3, $FB, $C3
 
-; only called from routines of SwapMonstersMenu (E-0098)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E, SwapMonstersMenu_Case07_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
+; only called from routines of SwapMonstersMenu_ChooseToView (E-0098)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E_Case02, SwapMonstersMenu_ChooseToView2_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wChoiceCursorF0
 ; writes: wMenuInputResult, wChoiceCursorF0
-SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E::
+SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E::
 Func_01D_642A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5491,7 +5491,7 @@ Func_01D_642A:: ; address name
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5535,7 +5535,7 @@ Func_01D_642A:: ; address name
     ret
 
 ; cycles wD7B8 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wJoypadRepeatTimer, wCursorBlinkB8, wChoiceCursorF0
 ; writes: wCursorBlinkB8
 BlinkCursorBlinkB8_Bank1D_648E::
@@ -5554,33 +5554,33 @@ Func_01D_648E:: ; address name
     ld [wCursorBlinkB8], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
 DrawCursorTileBB_64A8_Bank1D::
 Func_01D_64A8:: ; address name
     ld b, $BB
-    jr SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
+    jr SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 3 call sites from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
+; 3 call sites from 1 routine (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
 DrawBlankTileC3_64AC_Bank1D::
 Func_01D_64AC:: ; address name
     ld b, $C3
-    jr SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
+    jr SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
 
-; only called from SwapMonstersMenu_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
+; only called from SwapMonstersMenu_ChooseToView_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
-SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap::
+SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap::
 Func_01D_64B0:: ; address name
     ld b, $BC
 
-SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0::
+SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0::
 Jump_01D_64B2:: ; address name
     ld a, [wChoiceCursorF0]
     add a, a
-    ld hl, SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5597,13 +5597,13 @@ Jump_01D_64B2:: ; address name
     ei
     ret
 
-; address loaded by SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap
-SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap
+SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01D_64D2:: ; address name
     db $28, $01, $68, $01
 
 ; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_HandleListCursorInput_1D, RunLinkSession8Case03Steps_HandleListCursorInput_1D)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, RunLinkSession8Case03Steps_HandleListCursorInput_1D)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wListPageIndex, wMenuInputResult, wListCursor
 HandleListCursorInput_1D::
@@ -5818,7 +5818,7 @@ Data_01D_65F2:: ; address name
     db $2F, $01, $6F, $01
 
 ; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
-; 7 call sites from 7 routines (e.g. SwapMonstersMenu_MoveRecords_UpdateListCursorListCursor, SwapMonstersMenu_Case05_UpdateListCursorListCursor, SwapMonstersMenu_Case08_UpdateListCursorListCursor, SwapMonstersMenu_Case08_GetListEntriesCell5Address, ...)
+; 7 call sites from 7 routines (e.g. SwapMonstersMenu_MoveRecords_UpdateListCursorListCursor, SwapMonstersMenu_ChooseFromFarm_UpdateListCursorListCursor, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wMenuInputResult, wListCursor, wListCursorAux
 UpdateListCursorListCursor::
@@ -6183,7 +6183,7 @@ Data_01D_67EE:: ; address name
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wArg3
@@ -6272,7 +6272,7 @@ Data_01D_6890:: ; address name
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
-; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_UpdateMenuCursor, SwapMonstersMenu_Case0D_HandleListCursorInput_1D, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case20, ...)
+; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_UpdateMenuCursor, SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case20, ...)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 DrawPartySpeciesSprites::
@@ -6573,7 +6573,7 @@ Func_01D_6A36:: ; address name
     jr DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 
 ; C = 0, then falls into the sprite part draw (Func_01D_6A36 body) (E-0122)
-; 6 call sites from 6 routines (e.g. PauseMenu_Main_Case01_DrawMetaSpritePartC0, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, SwapMonstersMenu_Case08_GetListEntriesCell5Address, DrawWCA36SpritePart, ...)
+; 6 call sites from 6 routines (e.g. PauseMenu_Main_Case01_DrawMetaSpritePartC0, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, DrawWCA36SpritePart, ...)
 ; reads: wArg6, wFrameCounterLo, wArg3, wArg4, hScrollX, hScrollXHi, wArg5, hScrollY, ...
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
 DrawMetaSpritePartC0::
@@ -6644,7 +6644,7 @@ Jump_01D_6A59:: ; address name
     ret
 
 ; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
-; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames, SwapMonstersMenu_Case06_LoadFamilyIconTileForRecordB_Bank1E, ...)
+; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames, SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E, ...)
 ; reads: wListPageIndex, wListLastRow, wPartyCount, wArg1
 ; writes: rRAMG2, rRAMB
 ; points at: wPartyList, wListEntries
@@ -6979,7 +6979,7 @@ Func_01D_6C8A:: ; address name
     jr LoadTileList6DC4SixPerFrame_Loop
 
 ; copies tiles listed in Data_01D_6DC4 to vBGMap1 + $200 onward six per call; at the $FF end resets the counters and wD781 += 1 (E-0127)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame, RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ChooseToView_ToLoadTileList6DC4SixPerFrame, RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
@@ -7050,7 +7050,7 @@ Jump_01D_6CB2:: ; address name
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_ShowMonsterDetails_Case1B_UpdatePagedListCursor, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_ShowMonsterDetails_Case1B_UpdatePagedListCursor, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Tiles_1D_6D20
@@ -7168,7 +7168,7 @@ Func_01D_6DF8:: ; address name
     ret
 
 ; packs SRAM record wD7F1's family, state, mark and other fields into the compact form in SRAM bank wD7F2 (wD7E0 workspace) (E-0131)
-; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
+; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wPackByteE1, wPackByteE6
 ; writes: rRAMB, rRAMG2, wPackByteE1, wPackFields, wPackWork, wArg5
 ; points at: wPackWork, wPackFields
@@ -8216,7 +8216,7 @@ Jump_01D_7121:: ; address name
     ret
 
 ; unpacks the compact record in SRAM bank wD7F2 back into the record fields (family, state, mark ...) (E-0131)
-; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
+; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wArg5, wArg6, wArg7, wArg8
 ; writes: rRAMB, rRAMG2, wPackWork, wArg5
 ; points at: wNameGlyphBuf

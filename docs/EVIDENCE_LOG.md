@@ -2431,6 +2431,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0302 — SwapMonstersMenu and HibernateMenu screen states named from their option handlers
+
+- Kind: STATIC (C1).
+- **SwapMonstersMenu (script command $E8).** Screen state 2 is a five-option menu: wGridCursorX 0-3, and 4 cancels. State 3's handler (SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries, bank $1D) picks the next state from the option:
+  - option 0 lists the party and goes to state 4 (SwapMonstersMenu_MoveRecords);
+  - option 1 lists the farm records that are not eggs and goes to state 5, or returns when there are none;
+  - options 2 and 3 go to states 6 and 7.
+
+  Names given:
+  - SwapMonstersMenu_ChooseFromFarm (state 5).
+  - SwapMonstersMenu_ChooseToView and _ChooseToView2 (states 6 and 7, which lead to the detail and parents screens).
+  - SwapMonstersMenu_ShowPartyMemberDetails ($08), _ShowFarmMonsterDetails ($0A), _ShowMonsterDetails2 and 3 ($0C, $0E): the detail screens, by the list each uses.
+  - SwapMonstersMenu_ShowParents and _ShowParents2 ($0B, $0D): these call DrawRecordParentNames.
+- **HibernateMenu (script command $EB).** In state 3, option 0 lists the farm records that are not eggs, checks capacity and goes to state 4: HibernateMenu_ChooseToHibernate. The script asks 'Which monster will hibernate?'. Option 1 leads to state 5 (HibernateMenu_ChooseRecords, which unpacks records from SRAM bank 1, so it wakes a monster); option 2 leads to state 7.
+- **Test.** The floor on remaining `_CaseNN` labels in tests/test_routine_behaviour.py drops from 1000 to 500, because cases keep getting descriptive names.
+- **Counts.** Bare dispatchers: 71 → 61. Labels under them: 450 → 349.
+- Binary verification: build/run417 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0301 — 17:5D79 was a false pointer target; pointer runs stop at their own targets (correction to E-0289)
 
 - Kind: TOOL and a correction.
