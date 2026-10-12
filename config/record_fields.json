@@ -29,6 +29,7 @@
     "6D": {"const": "MON_PLUS", "note": "the breeding plus value (C1): when non-zero, the monster's info screen (WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03) draws glyph $FC and the value in one or two digits after the member number; BreedMenu_CopyToChildThenTalkEvent16 copies it to the child record", "evidence": "E-0296"},
     "6E": {"const": "MON_EGG", "note": "non-zero marks an egg (C1): when CountRecordsByField6E counts none the battle-end flow shows 'You have no eggs.', the egg lists (ListRecordsInUseWithByte6ESet, 'Switch which egg?') take records with it set, CreateMonsterRecordOfKindTemp1 sets it to 1 for kinds 1 and 2, and DrawRecordListPageMarks shows the sex mark only when it is 2", "evidence": "E-0296"},
     "6F": {"size": 4, "const": "MON_PERSONALITY", "note": "four personality axes, $6F-$72, from MonsterTable bytes 22-25", "evidence": "E-0034"},
+    "73": {"size": 27, "const": "MON_RESISTANCES", "note": "27 resistance levels: copied from species bytes $12-$2C when a record is created (CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord), rolled for a child by RollChildResistancesToWCB43 and refreshed by RefreshRecordResistancesFromSpecies (E-0114, E-0127)", "evidence": "E-0299"},
     "8E": {"size": 10, "text": true, "const": "MON_PARENT1_NAME", "note": "name of the first parent (from its $01; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
     "98": {"const": "MON_PARENT1_PLUS", "note": "plus value of the first parent (from its $6D)", "evidence": "E-0297"},
     "99": {"size": 10, "text": true, "const": "MON_PARENT2_NAME", "note": "name of the second parent", "evidence": "E-0297"},
@@ -60,6 +61,18 @@
       "27": {"size": 2, "const": "BATTLER_AGL", "note": "AGL word (GetBaseAGL)", "evidence": "E-0124"},
       "29": {"size": 2, "const": "BATTLER_INT", "note": "INT word (GetBaseINT)", "evidence": "E-0124"},
       "2D": {"size": 4, "const": "BATTLER_PERSONALITY", "note": "personality bytes (MonsterTable bytes 22, 23, 25, 24 in that order)", "evidence": "E-0298"}
+    }
+  },
+  "species": {
+    "callees": [],
+    "buffers": ["wSpeciesRecord"],
+    "fields": {
+      "00": {"const": "SPECIES_FAMILY", "note": "family (StringTable_MonsterFamilies index)", "evidence": "E-0069"},
+      "06": {"const": "SPECIES_MAX_LEVEL", "note": "base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it", "evidence": "E-0299"},
+      "07": {"const": "SPECIES_EXP_CURVE", "note": "the ExpTable row (EXP curve)", "evidence": "E-0148"},
+      "08": {"size": 3, "const": "SPECIES_SKILLS", "note": "three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF", "evidence": "E-0299"},
+      "10": {"const": "SPECIES_GROWTH", "note": "stat growth row: passed to StatFromGrowthRow and ReadStatGrowthGain (level-up gains)", "evidence": "E-0299"},
+      "12": {"size": 27, "const": "SPECIES_RESISTANCES", "note": "27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one", "evidence": "E-0299"}
     }
   }
 }

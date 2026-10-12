@@ -8777,7 +8777,7 @@ Func_016_7364:: ; address name
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $6]
+    ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld c, a
     ld a, [wRecordBufA + MON_LEVEL]
     cp a, c

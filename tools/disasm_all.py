@@ -5589,6 +5589,10 @@ def main() -> int:
     bat_fields = {int(k, 16): v for k, v in bat_cfg["fields"].items()}
     texts, nbat = name_record_offsets(texts, bat_fields, set(bat_cfg["callees"]), "e", tuple(bat_cfg["buffers"]))
     log(f"battler field offsets named: {nbat}")
+    sp_cfg = rec_cfg.get("species", {"fields": {}, "callees": [], "buffers": []})
+    sp_fields = {int(k, 16): v for k, v in sp_cfg["fields"].items()}
+    texts, nsp = name_record_offsets(texts, sp_fields, set(sp_cfg["callees"]), "c", tuple(sp_cfg["buffers"]))
+    log(f"species field offsets named: {nsp}")
     out = ROOT / "src/banks"
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files and src/main.asm")
@@ -5610,7 +5614,9 @@ def main() -> int:
         "; Offsets into the $A5-byte SRAM monster record that have evidence (config/record_fields.json, E-0290).\n"
         + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(rec_fields.items()))
         + "\n; Offsets into the $4E-byte battler record (wBattlerRecords; config/record_fields.json \"battler\", E-0298).\n"
-        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(bat_fields.items())),
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(bat_fields.items()))
+        + "\n; Offsets into the 47-byte species record (wSpeciesRecord; config/record_fields.json \"species\", E-0299).\n"
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(sp_fields.items())),
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")

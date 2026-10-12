@@ -1538,7 +1538,7 @@ Func_00E_5688:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $6]
+    ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld b, a
     push bc
     ld hl, wChildRecord + MON_PLUS
@@ -1937,11 +1937,11 @@ Func_00E_5C11:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld b, a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld c, a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ret
 
 ; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
@@ -1955,11 +1955,11 @@ Func_00E_5C2B:: ; address name
     ld a, [wArg2]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [wArg5], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [wArg6], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [wArg7], a
     ret
 
@@ -2073,7 +2073,7 @@ Func_00E_5CB2:: ; address name
 
 .restore:
     pop bc
-    ld de, wChildRecord + $73
+    ld de, wChildRecord + MON_RESISTANCES
     ld a, c
     add a, e
     ld e, a
@@ -2226,12 +2226,12 @@ Func_00E_5D77:: ; address name
 ; 2 call sites from 1 routine (e.g. RollChildResistancesToWCB43)
 SumFunc5DCDOfWC9F9AndWCA9E::
 Func_00E_5DAF:: ; address name
-    ld hl, wRecordBufA + $73
+    ld hl, wRecordBufA + MON_RESISTANCES
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, .done
     ld e, a
-    ld hl, wRecordBufB + $73
+    ld hl, wRecordBufB + MON_RESISTANCES
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, .done
@@ -2298,7 +2298,7 @@ Data_00E_5E02:: ; address name
 ; writes: wArg5
 LoadWD01AByteArg4::
 Func_00E_5E1D:: ; address name
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, [wArg4]
     add_a_to_hl
     ld a, [hl]

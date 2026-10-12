@@ -4735,7 +4735,7 @@ Func_036_5BC4:: ; address name
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, l
     ld [wBattleArg0], a
     ld a, h
@@ -5194,7 +5194,7 @@ Func_036_5F25:: ; address name
     ld a, [wBattleActor]
     ld c, a
     farcall SetSlotAIModeFromINT
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, l
     ld [wBattleArg0], a
     ld a, h
@@ -6710,7 +6710,7 @@ Func_036_6658:: ; address name
     ld a, [wRecordBuffer + $1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
 
 .return:
     ret

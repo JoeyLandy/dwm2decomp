@@ -18253,7 +18253,7 @@
           "type": "db",
           "size": 27,
           "line": true,
-          "name": "$73-$8D"
+          "name": "$73-$8D: 27 resistance levels (C1, E-0299)"
         },
         {
           "type": "db",
@@ -19026,7 +19026,7 @@
           "type": "db",
           "size": 27,
           "line": true,
-          "name": "$73-$8D"
+          "name": "$73-$8D: 27 resistance levels (C1, E-0299)"
         },
         {
           "type": "db",
@@ -19723,8 +19723,13 @@
         },
         {
           "type": "db",
-          "size": 6,
-          "name": "bytes 1-6"
+          "size": 5,
+          "name": "bytes 1-5"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "base level cap (C1, E-0299)"
         },
         {
           "type": "db",
@@ -19733,24 +19738,37 @@
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 8-23"
+          "size": 3,
+          "name": "natural skills (C1, E-0299)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 24-39"
+          "size": 5,
+          "name": "bytes 11-15"
         },
         {
           "type": "db",
-          "size": 7,
+          "size": 1,
+          "name": "stat growth row (C1, E-0299)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 17"
+        },
+        {
+          "type": "db",
+          "size": 27,
           "line": true,
-          "name": "bytes 40-46"
+          "name": "27 base resistance levels (C1, E-0299)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "bytes 45-46"
         }
       ],
-      "record": "family; bytes 1-6; EXP curve; bytes 8-46",
+      "record": "family; bytes 1-5; base level cap; EXP curve; natural skills; bytes 11-15; growth row; byte 17; resistances; bytes 45-46",
       "note": "E-0253 (C1: the 324 records SpeciesRecordPointers points at, 47 bytes each and contiguous up to $7EB7; each is labelled SpeciesRecord_<monster> after the first id that uses it; byte 0 is the family (E-0069) and byte 7 the EXP curve (E-0148); the other bytes are not read here).",
       "field_comments": true
     },

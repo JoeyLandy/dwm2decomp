@@ -2431,6 +2431,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0299 — Species record fields; record $73-$8D are the resistances
+
+- Kind: STATIC (C2 for the copies, C1 for the meanings).
+- **The new-record copy.** CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord copies parts of the species record (wSpeciesRecord, $D008) into a new SRAM record. It starts with HL at the record's $0D (family), and GameMode5_Update_NewPlayerSetup and MedalPrizeMenu_ChoosePrize do the same. The copies:
+
+  | Species bytes | Record bytes |
+  | --- | --- |
+  | 8-10 | $3C-$3E, the first three entries of the skill list (MON_SKILL_LIST); $FF fills the rest up to $54 |
+  | 6 | $57 (MON_MAX_LEVEL) |
+  | $12-$2C (27 bytes) | $73-$8D |
+- **Species byte 6 = base level cap.** BattleEnd_Step3 compares MON_LEVEL with it, and ComputeBreedingChild starts the child's cap from it.
+- **Species bytes 8-10 = the three natural skills.** LoadSpeciesBytes8To10FromHL and LoadSpeciesBytes8To10ToArg5 also read them as a group.
+- **Species byte $10 = stat growth row.** StatFromGrowthRow (new records) and ReadStatGrowthGain (ComputeLevelUpStatGainsForBattleArg1) take it.
+- **Species bytes $12-$2C = 27 base resistance levels.** Record $73-$8D receives them. RefreshRecordResistancesFromSpecies works on "the 27 resistances of species wCADB" (E-0127), and RollChildResistancesToWCB43 writes the child's to wCB43 = wChildRecord + $73. LoadWD01AByteArg4 reads one of them.
+- **Generator.** config/record_fields.json gains:
+  - MON_RESISTANCES ($73, 27 bytes);
+  - a "species" section: SPECIES_FAMILY, SPECIES_MAX_LEVEL, SPECIES_EXP_CURVE, SPECIES_SKILLS, SPECIES_GROWTH, SPECIES_RESISTANCES.
+
+  Operands inside wSpeciesRecord are named: 45. The SpeciesRecords and monster-record layouts are split to match.
+- **Still unread.**
+  - Species bytes 1-5: byte 1 has flags (RollWCADEFromSpeciesFlag reads `and $03`); bytes 2-3 are packed into one byte; byte 4 = 7 stops the battle-end join.
+  - Species byte $0B: a string index in category $0D, which lies outside the bank-8 database's nine categories.
+  - Species bytes $0C-$0F, $11, $2D-$2E.
+  - Record bytes $19, $28 and $33.
+- Binary verification: build/run411 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0298 — MonsterTable bytes 6-9; the battler record fields (BATTLER_*)
 
 - Kind: STATIC (C1) and TOOL.

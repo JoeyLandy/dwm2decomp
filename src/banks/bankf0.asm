@@ -5396,13 +5396,13 @@ Func_0F0_6BA1:: ; address name
     ld a, [wTopSpeciesHi]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [wTopSpeciesGrowth], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [wTopSpeciesGrowth + $1], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [wTopSpeciesGrowth + $2], a
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld de, wResistanceLevels
     ld c, $1B
 

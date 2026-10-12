@@ -1362,11 +1362,11 @@ Func_019_4752:: ; address name
     ld [hl+], a
     ld a, [wSpeciesRecord + $1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [hl+], a
     ld a, $FF
     ld [hl+], a
@@ -1420,7 +1420,7 @@ Func_019_4752:: ; address name
     call ScaleStatAndCapByBattleKind
     ld a, $00
     ld [wBattleArg0], a
-    ld a, [wSpeciesRecord + $10]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
@@ -1645,7 +1645,7 @@ Func_019_495C:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 CopyWD01ARecordToHL_Bank19::
 Func_019_4963:: ; address name
-    ld de, wSpeciesRecord + $12
+    ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1B
 
 .loop:
@@ -2083,7 +2083,7 @@ Func_019_4B37:: ; address name
 
 .skip5:
     ld b, $1B
-    ld hl, wSpeciesRecord + $12
+    ld hl, wSpeciesRecord + SPECIES_RESISTANCES
 
 .loop:
     ld a, [hl+]

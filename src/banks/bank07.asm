@@ -4734,11 +4734,11 @@ Func_007_6975:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [hl+], a
     ld b, $16
     ld a, $FF
@@ -4749,7 +4749,7 @@ Func_007_6975:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSpeciesRecord + $6]
+    ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld [hl+], a
     xor a, a
     ld [hl+], a
@@ -4761,7 +4761,7 @@ Func_007_6975:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld de, wSpeciesRecord + $12
+    ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1B
     call CopyBBytesDEToHL_Bank07
     ld a, l

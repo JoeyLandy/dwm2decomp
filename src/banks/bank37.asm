@@ -4391,7 +4391,7 @@ Copy26BytesThenWD034::
 Func_037_5FAD:: ; address name
     ld b, $1A
     call CopyBBytesHLToDE_Bank37
-    ld a, [wSpeciesRecord + $2C]
+    ld a, [wSpeciesRecord + SPECIES_RESISTANCES + 26]
     ld [hl+], a
     inc de
     ret

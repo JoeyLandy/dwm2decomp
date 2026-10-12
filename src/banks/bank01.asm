@@ -2711,7 +2711,7 @@ Jump_001_5564:: ; address name
     ld de, vBGMap0 + $42
     call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
-    ld hl, wChildRecord + $73
+    ld hl, wChildRecord + MON_RESISTANCES
     ld de, vBGMap0 + $6
     ld c, $00
 
@@ -3352,7 +3352,7 @@ Jump_001_59DC:: ; address name
     ld a, [wGridCursorX]
     ld [hl], a
     ld hl, wGridCursorY
-    ld de, wRecordBufA + $73
+    ld de, wRecordBufA + MON_RESISTANCES
     ld b, $1B
 
 .loop2:
@@ -3363,7 +3363,7 @@ Jump_001_59DC:: ; address name
     dec b
     jr nz, .loop2
     ld hl, wDebugResultsBuf
-    ld de, wRecordBufB + $73
+    ld de, wRecordBufB + MON_RESISTANCES
     ld b, $1B
 
 .loop3:
@@ -6228,11 +6228,11 @@ Func_001_6C48:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [hl+], a
     ld b, $16
     ld a, $FF
@@ -6243,7 +6243,7 @@ Func_001_6C48:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wSpeciesRecord + $6]
+    ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld [hl], a
     ld a, l
     add a, $1C
@@ -6251,7 +6251,7 @@ Func_001_6C48:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld de, wSpeciesRecord + $12
+    ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1B
     call CopyBBytesDEToHL_Bank01
     call WriteUnknownNamePlaceholder_Bank01

@@ -6221,11 +6221,11 @@ Func_00D_6B55:: ; address name
     dec b
     jr nz, .loop5
     pop hl
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [hl+], a
     ld a, $16
     add_a_to_hl
@@ -6233,7 +6233,7 @@ Func_00D_6B55:: ; address name
     ld [hl+], a
     ld a, $01
     ld [hl+], a
-    ld a, [wSpeciesRecord + $6]
+    ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld [hl+], a
     xor a, a
     ld [hl+], a
@@ -6286,7 +6286,7 @@ Func_00D_6B55:: ; address name
     ld [hl+], a
     ld a, [wRecordBufferData + $16]
     ld [hl+], a
-    ld de, wSpeciesRecord + $12
+    ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1B
 
 .loop6:
@@ -7950,7 +7950,7 @@ Data_00D_78F6:: ; address name
     dw $007F, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D
+    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -7980,7 +7980,7 @@ Data_00D_799B:: ; address name
     dw $00E2, $0110, $0132, $02F1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $0A, $C8, $B4, $DC ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; $73-$8D
+    db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8010,7 +8010,7 @@ Data_00D_7A40:: ; address name
     dw $0077, $00A6, $00B4, $0165 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $46, $64, $AA, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; $73-$8D
+    db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8040,7 +8040,7 @@ Data_00D_7AE5:: ; address name
     dw $00D6, $00D4, $009B, $02EB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $D2, $28, $96, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; $73-$8D
+    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8070,7 +8070,7 @@ Data_00D_7B8A:: ; address name
     dw $00C6, $004F, $0098, $01C5 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $96, $96, $1E ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; $73-$8D
+    db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8100,7 +8100,7 @@ Data_00D_7C2F:: ; address name
     dw $0169, $0147, $01CB, $01B1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $64, $96, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D
+    db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8130,7 +8130,7 @@ Data_00D_7CD4:: ; address name
     dw $00F8, $01A1, $01CA, $01F4 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $14, $C8, $64, $B4 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01 ; $73-$8D
+    db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8160,7 +8160,7 @@ Data_00D_7D79:: ; address name
     dw $01AD, $01BF, $01E9, $01AB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $B4, $8C, $64, $8C ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01 ; $73-$8D
+    db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8190,7 +8190,7 @@ Data_00D_7E1E:: ; address name
     dw $015D, $013D, $010B, $0191 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $82, $64, $5A ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; $73-$8D
+    db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
@@ -8220,7 +8220,7 @@ Data_00D_7EC3:: ; address name
     dw $01AC, $0178, $014B, $01E0 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $64, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02 ; $73-$8D
+    db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02 ; $73-$8D: 27 resistance levels (C1, E-0299)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)

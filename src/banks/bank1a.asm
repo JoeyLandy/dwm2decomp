@@ -2230,7 +2230,7 @@ Func_01A_624B:: ; address name
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld hl, wWorkBuf
-    ld de, wSpeciesRecord + $8
+    ld de, wSpeciesRecord + SPECIES_SKILLS
     ld b, $03
 
 .loop:
@@ -2700,7 +2700,7 @@ Func_01A_6418:: ; address name
     ld b, $03
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $3], a
-    ld a, [wSpeciesRecord + $10]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH]
     call ReadStatGrowthGain
     ld b, $04
     call AddGrowthTemp1IfGrowthTemp0MatchesB

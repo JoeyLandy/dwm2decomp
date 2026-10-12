@@ -1671,11 +1671,11 @@ Func_0A0_494F:: ; address name
     ld [hl+], a
     ld a, [wSpeciesRecord + $1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $8]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $9]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $A]
+    ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
     ld [hl+], a
     ld a, $FF
     ld [hl+], a
@@ -1721,7 +1721,7 @@ Func_0A0_494F:: ; address name
     farcall StatFromGrowthRow
     pop hl
     call ScaleStatByWildLevelCapped999
-    ld a, [wSpeciesRecord + $10]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
@@ -1842,7 +1842,7 @@ Func_0A0_4A97:: ; address name
 ; 1 call site from 1 routine (e.g. ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
 CopyWD01ARecordToHL_BankA0::
 Func_0A0_4A9E:: ; address name
-    ld de, wSpeciesRecord + $12
+    ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1B
 
 .loop:
