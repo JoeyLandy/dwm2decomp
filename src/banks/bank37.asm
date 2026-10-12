@@ -2191,7 +2191,7 @@ Jump_037_53C0:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_AdvanceScreenStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawTileRectAtHLFromDE_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep
@@ -2216,7 +2216,7 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ClearTilesAndDrawRects6C5FAnd6D37
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ShowRecordBufBSkillNamesOrNone
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep_Case1A
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_UpdatePagedListCursor_Case1B
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawRects5E13And66DF
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81_Case1D
@@ -2246,7 +2246,7 @@ Jump_037_5407:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep::
 Jump_037_5415:: ; address name
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     farcall LoadSixteenGlyphTilesFromTable73BC
@@ -2264,7 +2264,7 @@ Jump_037_5424:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $500 and draws the name at wCA2C there (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DrawWCA2CNameAtTiles1500::
 Func_037_542C:: ; address name
@@ -2642,7 +2642,7 @@ Jump_037_5676:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep_Case1A::
 Jump_037_5683:: ; address name
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]

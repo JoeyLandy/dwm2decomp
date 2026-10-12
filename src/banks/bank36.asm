@@ -160,7 +160,7 @@ Jump_036_4109::
     jr Jump_036_411C
 
 Jump_036_4110::
-    call ResolveStepTargetAndSubEffects_Case00_Sub03
+    call ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81
     jr c, Jump_036_411E
     jr Jump_036_411C
 
@@ -361,7 +361,7 @@ Jump_036_4255::
 ; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDefeatStep, wResolveByte81
 ; points at: wBattleStatus2
-ResolveStepTargetAndSubEffects_Case00_Sub03::
+ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81::
 Func_036_425A:: ; address name
     call ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36
     jp nc, Jump_036_4317
@@ -433,7 +433,7 @@ Jump_036_42CB::
     ret
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
-; 4 call sites from 4 routines (e.g. ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo, ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero, ResolveStepTargetAndSubEffects_Case00_SlotHasStatus3Or4Bits_Bank36)
+; 4 call sites from 4 routines (e.g. ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo, ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero, ResolveStepTargetAndSubEffects_Case00_SlotHasStatus3Or4Bits_Bank36)
 ; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDefeatByteD1, wBattleTarget, wResolveByte81
 ; points at: wBattleStatus6, wBattleTargetChoice, wDefeatByteBF
@@ -567,7 +567,7 @@ Jump_036_438A:: ; address name
 Jump_036_439B::
     ld hl, wBattleResolveStep
     inc [hl]
-    call ResolveStepEffectChecks_WaitBattleActionId_Sub02
+    call ResolveStepEffectChecks_WaitBattleActionId_ReadBattleActionId
     ret z
     ld a, [wRecordBufferData + $6]
     bit 1, a
@@ -834,7 +834,7 @@ Func_036_454F:: ; address name
 ; only called from ResolveStepEffectChecks (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-ResolveStepEffectChecks_WaitBattleActionId_Sub02::
+ResolveStepEffectChecks_WaitBattleActionId_ReadBattleActionId::
 Func_036_4582:: ; address name
     ld a, [wBattleActionId]
     cp a, $6A
@@ -1403,7 +1403,7 @@ RollRandomLoBelowChance::
 Func_036_4918:: ; address name
     push bc
     push hl
-    farcall RollRandomLoBelowChance_Sub01
+    farcall RollRandomLoBelowChance_WriteTemp0
     pop hl
     pop bc
     ldh a, [hTemp0]
@@ -2236,7 +2236,7 @@ Jump_036_4EB0::
     ret
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
-; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero)
+; 2 call sites from 2 routines (e.g. ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81, ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero)
 ; reads: wBattleActor, wBattleTarget, wDefeatFlagsBA, wFollowUpAction
 ; writes: wBattleActor, wBattleTarget, wFollowUpAction
 ; points at: wSavedActorTarget, wBattleActionChoice
@@ -4030,7 +4030,7 @@ Jump_036_585B::
 ; reads: wAllMPSpentLo, wAllMPSpentHi, wBattleActor, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleLevel
-ActionEffect_MegaMagic_Sub01::
+ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
 Func_036_585C:: ; address name
     ld a, [wAllMPSpentLo]
     ld l, a
@@ -4561,7 +4561,7 @@ Jump_036_5B8A::
 ; 1 call site from 1 routine (e.g. ActionEffect_UltraDown)
 ; reads: wBattleTarget
 ; points at: wBattleDEF, wBattleAGL, wBattleStatus1
-ActionEffect_UltraDown_Sub01::
+ActionEffect_UltraDown_ReadBattleTarget::
 Func_036_5B8B:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleDEF
@@ -4643,7 +4643,7 @@ Func_036_5BC4:: ; address name
     ld a, [wRecordBufferData + $7]
     ld c, a
     ld hl, wBattleLevel
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld a, [wRecordBufferData + $8]
     ld c, a
     ld a, [wRecordBufferData + $9]
@@ -4698,25 +4698,25 @@ Func_036_5BC4:: ; address name
     ld a, [wRecordBufferData + $14]
     ld c, a
     ld hl, wSlotPersonalityHi
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld a, [wRecordBufferData + $15]
     ld c, a
     ld hl, wSlotPersonalityLo
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld a, [wRecordBufferData + $16]
     ld c, a
     ld hl, wSlotPersonalityMid
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld a, [wRecordBufferData + $17]
     ld c, a
     ld hl, wSlotTrait
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld c, $00
     ld hl, wSlotDamageFlags
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld c, $00
     ld hl, wSlotNameSuffix
-    call ActionEffect_TatsuCall_Sub01_Sub02
+    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
     ld a, [wLoadSlot]
     ld c, a
     farcall SetSlotAIModeFromINT
@@ -4817,7 +4817,7 @@ Jump_036_5D3B::
 ; only called from ActionEffect_TatsuCall_Sub01 (E-0047)
 ; 7 call sites from 1 routine (e.g. ActionEffect_TatsuCall_AddAx9ToHL)
 ; reads: wLoadSlot
-ActionEffect_TatsuCall_Sub01_Sub02::
+ActionEffect_TatsuCall_Sub01_ReadLoadSlot::
 Func_036_5D7A:: ; address name
     ld a, [wLoadSlot]
     add_a_to_hl
@@ -4892,7 +4892,7 @@ Jump_036_5DCB::
 ; reads: wBattleActor, wLinkMode
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleLevel
-ActionEffect_CallHelp_Sub01:: ; code pointer of the table EffectHandlerTable; C0
+ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi:: ; code pointer of the table EffectHandlerTable; C0
 Func_036_5DCF:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleLevel
@@ -5584,7 +5584,7 @@ Func_036_61B5:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 4 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA76 + 7 * target); DE points at it (E-0095)
-; 4 call sites from 4 routines (e.g. ActionEffect_MegaMagic_Sub01, RollTargetSlotResistancesByte4Bits01ChanceToE, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ActionEffect_FireAir_RollSkillDamageFromRecord)
+; 4 call sites from 4 routines (e.g. ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi, RollTargetSlotResistancesByte4Bits01ChanceToE, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ActionEffect_FireAir_RollSkillDamageFromRecord)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte4::
 Func_036_61BA:: ; address name
@@ -5600,7 +5600,7 @@ Func_036_61BF:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 6 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA78 + 7 * target); DE points at it (E-0095)
-; 4 call sites from 4 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_RockThrow_RollSkillDamageFromRecord, ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36)
+; 4 call sites from 4 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi, ActionEffect_RockThrow_RollSkillDamageFromRecord, ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte6::
 Func_036_61C4:: ; address name
@@ -5695,7 +5695,7 @@ Jump_036_621B::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_075_04_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_085_05_0 (A = level) (E-0095)
-; 12 call sites from 12 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_Watershot_RollSkillDamageFromRecord, ActionEffect_RockThrow_RollSkillDamageFromRecord, ...)
+; 12 call sites from 12 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi, ActionEffect_Watershot_RollSkillDamageFromRecord, ActionEffect_RockThrow_RollSkillDamageFromRecord, ...)
 ScaleDamageByFlagsAtHL::
 Func_036_621C:: ; address name
     bit 6, [hl]
@@ -5716,7 +5716,7 @@ Jump_036_6231::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_075_05_025_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_075_04_0 (A = level) (E-0096)
-; 6 call sites from 6 routines (e.g. ActionEffect_Watershot_RollSkillDamageFromRecord, ActionEffect_MegaMagic_Sub01, ActionEffect_MultiCut_LoadSkillRecord, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ...)
+; 6 call sites from 6 routines (e.g. ActionEffect_Watershot_RollSkillDamageFromRecord, ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi, ActionEffect_MultiCut_LoadSkillRecord, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ...)
 ScaleDamageByFlagsAtHLAlt::
 Func_036_6232:: ; address name
     bit 6, [hl]
@@ -6307,7 +6307,7 @@ Func_036_64BE:: ; address name
     ret
 
 ; HL = (HL * 8 / 10) / 2 (E-0095)
-; 5 call sites from 5 routines (e.g. ScaleDamageTo40Percent, ActionEffect_Lightning_ShiftBCRight1, ActionEffect_Vacuum_ShiftBCRight1, ActionEffect_MegaMagic_Sub01, ...)
+; 5 call sites from 5 routines (e.g. ScaleDamageTo40Percent, ActionEffect_Lightning_ShiftBCRight1, ActionEffect_Vacuum_ShiftBCRight1, ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi, ...)
 ScaleHLTo40Percent::
 Func_036_64CD:: ; address name
     call ScaleHLTo80Percent_Bank36
@@ -6390,7 +6390,7 @@ Func_036_6510:: ; address name
     rr l
 
 ; HL >>= 2 (unsigned): one shift, then falls through ShiftHLRight1 (E-0064)
-; 4 call sites from 4 routines (e.g. ScaleDamageTo40Percent, ActionEffect_Lightning_ShiftBCRight1, ActionEffect_Vacuum_ShiftBCRight1, ActionEffect_MegaMagic_Sub01)
+; 4 call sites from 4 routines (e.g. ScaleDamageTo40Percent, ActionEffect_Lightning_ShiftBCRight1, ActionEffect_Vacuum_ShiftBCRight1, ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi)
 ShiftHLRight2::
 Func_036_6518:: ; address name
     srl h
@@ -8293,7 +8293,7 @@ Jump_036_7025::
     inc c
     dec b
     jr nz, Jump_036_701B
-    farcall ActionEffect_Ironize_Sub01
+    farcall ActionEffect_Ironize_ReadLinkModeAndBattleTarget
     ld l, d
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8470,7 +8470,7 @@ Func_036_710F:: ; address name
     res 5, [hl]
     ld a, [wBattleActor]
     ld c, a
-    farcall ActionEffect_BeDragon_Sub01
+    farcall ActionEffect_BeDragon_ReadLinkMode
     ld a, [wBattleActionId]
     cp a, $DC
     jr z, Jump_036_7147
@@ -8529,7 +8529,7 @@ Func_036_7196:: ; address name
     ld a, l
     or a, h
     jp z, Jump_036_7CB7
-    call ActionEffect_MegaMagic_Sub01
+    call ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 62 BigBang; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -8631,7 +8631,7 @@ Jump_036_720C::
     jp Jump_036_7CBC
 
 Jump_036_7214::
-    call ActionEffect_CallHelp_Sub01
+    call ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 80 FireSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
@@ -9326,7 +9326,7 @@ ActionEffect_UltraDown:: ; code pointer of the table ActionEffectTable; C0
 Func_036_757F:: ; address name
     call RollTargetSlotResistancesByte2Bits45Chance
     jr nc, Jump_036_7591
-    call ActionEffect_UltraDown_Sub01
+    call ActionEffect_UltraDown_ReadBattleTarget
     jr nc, Jump_036_7591
     call ActionEffect_UltraDown_SetSlotStatus6Bit7
     xor a, a
@@ -10831,8 +10831,8 @@ Data_036_7DDE:: ; address name
     dw ActionEffect_RockThrow_RollSkillDamageFromRecord ; entry 4
     dw ActionEffect_Watershot_RollSkillDamageFromRecord ; entry 5
     dw ActionEffect_Watershot_RollSkillDamageFromRecord ; entry 6
-    dw ActionEffect_CallHelp_Sub01 ; entry 7
-    dw ActionEffect_CallHelp_Sub01 ; entry 8
+    dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 7
+    dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 8
     dw AttackDamageScaledBySlotResistancesByte0Bits54 ; entry 9
     dw AttackDamageScaledBySlotResistancesByte1Bits76 ; entry 10
     dw AttackDamageScaledBySlotResistancesByte1Bits54 ; entry 11

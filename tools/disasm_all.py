@@ -1620,6 +1620,41 @@ class Rom:
                 used.add(new)
                 self.labels[b][a] = new
         log(f"wait/guard steps: {guards}; constant-store steps: {stores}")
+        # E-0282: a structural routine still without a descriptive name, by the RAM it touches (build_xrefs):
+        # Parent_Write<V>[And<W>] when it writes one or two symbols, else Parent_Read<V>[And<W>] for one or two reads
+        def sym_stem(nm: str) -> str:
+            nm = re.sub(r"[^A-Za-z0-9]", "", nm.replace(" + $", "Plus"))
+            return nm[1:] if nm[:1] in "whr" and nm[1:2].isupper() else nm
+        by_ram = 0
+        for b in range(self.nbanks):
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys:
+                    continue
+                core = re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab)
+                if core != re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab):
+                    continue  # already descriptive, only numbered for uniqueness
+                v0 = self.insn[b].get(a)
+                v1 = self.insn[b].get(a + v0[0]) if v0 and v0[0] != "dw" else None
+                if v1 and v1[1] == "rst $00":
+                    continue  # a dispatcher: its cases carry its name
+                r, w, _p = self.ram_use.get((b, a), ([], [], []))
+                if 1 <= len(w) <= 2:
+                    new = f"{m.group(1)}_Write" + "And".join(sym_stem(x) for x in w)
+                elif not w and 1 <= len(r) <= 2:
+                    new = f"{m.group(1)}_Read" + "And".join(sym_stem(x) for x in r)
+                else:
+                    continue
+                if len(new) > 80:
+                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(m.group(1)) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+                by_ram += 1
+        log(f"structural routines named by the RAM they touch: {by_ram}")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0

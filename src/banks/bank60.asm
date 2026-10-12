@@ -52,7 +52,7 @@ Func_060_4035:: ; address name
     or a, a
     jr nz, DebugAutomap_Update_Sub01_Sub01_Return_Sub01
     farcall DebugAutomap_Update_Sub01_Sub01_Sub0C
-    call DebugAutomap_Update_Sub01_Sub01_Sub08
+    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
     call DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
     call DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength
     call DebugAutomap_Update_Sub01_Sub01_Sub0B
@@ -2140,7 +2140,7 @@ Func_060_50E4:: ; address name
 ; reads: hTemp0, hTemp1, wKeyRandomHi, wKeyRandomLo
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldByte8B
-DebugAutomap_Update_Sub01_Sub01_Sub08::
+DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1::
 Func_060_50E5:: ; address name
     ld hl, wKeyWorldByte8B
     ld a, l
@@ -2240,7 +2240,7 @@ Jump_060_5159::
 Jump_060_5174::
     jp Jump_060_50F4
 
-; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub08
+; address loaded by DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
 Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F
     db $50, $51, $52, $53, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43
@@ -2633,7 +2633,7 @@ Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
-; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
+; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; writes: wKeyWorldBand
 SetKeyWorldBandForA::
 Func_060_53C3:: ; address name
@@ -2993,7 +2993,7 @@ Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $11, $00
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01, FieldModeStateDispatch_Case04_Sub02)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending, FieldModeStateDispatch_Case04_Sub02)
 ; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 FieldModeStateDispatch_NextRandomSeed::
@@ -3299,28 +3299,28 @@ Func_060_5EE1:: ; address name
     and a, $0F
     rst $00
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_Case01
-    dw RunRandomPatternCase_Case02
-    dw RunRandomPatternCase_Case03
-    dw RunRandomPatternCase_Case02
-    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_WriteTempA
+    dw RunRandomPatternCase_WriteTempA_Case02
+    dw RunRandomPatternCase_WriteTempA_Case03
+    dw RunRandomPatternCase_WriteTempA_Case02
+    dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_Case01
-    dw RunRandomPatternCase_Case02
-    dw RunRandomPatternCase_Case03
-    dw RunRandomPatternCase_Case02
-    dw RunRandomPatternCase_Case01
+    dw RunRandomPatternCase_WriteTempA
+    dw RunRandomPatternCase_WriteTempA_Case02
+    dw RunRandomPatternCase_WriteTempA_Case03
+    dw RunRandomPatternCase_WriteTempA_Case02
+    dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_Case01
-    dw RunRandomPatternCase_Case02
-    dw RunRandomPatternCase_Case03
+    dw RunRandomPatternCase_WriteTempA
+    dw RunRandomPatternCase_WriteTempA_Case02
+    dw RunRandomPatternCase_WriteTempA_Case03
     db $C9, $C9
 
 ; entry 3 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
-RunRandomPatternCase_Case03::
+RunRandomPatternCase_WriteTempA_Case03::
 Jump_060_5F0C:: ; address name
     ld a, b
     and a, $01
@@ -3437,7 +3437,7 @@ Jump_060_5F5E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
-RunRandomPatternCase_Case02::
+RunRandomPatternCase_WriteTempA_Case02::
 Jump_060_5FBF:: ; address name
     ld a, b
     and a, $01
@@ -3515,7 +3515,7 @@ Jump_060_5FF2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
-RunRandomPatternCase_Case01::
+RunRandomPatternCase_WriteTempA::
 Jump_060_6031:: ; address name
     ld a, b
     cp a, $02
@@ -3636,7 +3636,7 @@ Jump_060_60B2::
     ret
 
 ; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
-; 4 call sites from 4 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01, RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer)
+; 4 call sites from 4 routines (e.g. RunRandomPatternCase_WriteTempA_Case03, RunRandomPatternCase_WriteTempA_Case02, RunRandomPatternCase_WriteTempA, RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
 StoreThreeBytesBeforeTemp0Pointer::
@@ -3662,7 +3662,7 @@ Func_060_60E0:: ; address name
     ret
 
 ; HL += the word hFFC6/hFFC7, then stores hFFC8, hFFC9, hFFCA at HL - 3 onward (E-0119)
-; 5 call sites from 3 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01)
+; 5 call sites from 3 routines (e.g. RunRandomPatternCase_WriteTempA_Case03, RunRandomPatternCase_WriteTempA_Case02, RunRandomPatternCase_WriteTempA)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 StoreTemp2To3BytesBeforeHLPlusTemp0::
 Func_060_60F8:: ; address name
@@ -4315,7 +4315,7 @@ Func_060_65AA:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_060_65B5
-    call FieldModeStateDispatch_Case04_Sub02_Sub01
+    call FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending
     ret
 
 Jump_060_65B5::
@@ -4490,7 +4490,7 @@ Data_060_669C:: ; address name
 ; reads: wMapType, wKeyWorldArea, wKeyWorldFloor, wWarpPending, wCurrentKeyIndex, wScreenTriggers
 ; writes: wScreenTriggerCount, wWarpPending
 ; points at: wScreenTriggers
-FieldModeStateDispatch_Case04_Sub02_Sub01::
+FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending::
 Func_060_686C:: ; address name
     ld a, [wMapType]
     and a, $07
@@ -4572,7 +4572,7 @@ Jump_060_68C2::
     ret
 
 ; DE += 2; advances the random seed; hFFC6 = wCD04 & 7; writes Data_060_690E[hFFC6] at DE, calls Func_061_4706, then writes hFFC6 at the next byte (E-0121)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending)
 ; reads: wKeyRandomHi, hTemp0
 ; writes: hTemp0
 WriteRandomEntryFromTable690E::

@@ -2431,6 +2431,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0282 — Remaining helpers named by the RAM they touch
+
+- Kind: TOOL (from build_xrefs' RAM use, which follows a routine's own branches to its returns but not into callees; C2 for the listed accesses).
+- A bare structural routine (a root followed only by CaseNN/SubNN/SharedNN parts) that is not a dispatcher is named Parent_Write<V>[And<W>] when it writes one or two RAM symbols. Otherwise, when it reads one or two, it is named Parent_Read<V>[And<W>]. Examples: SoundNextEvent_WriteNR32, LibraryMenu_ReadScreenStep.
+- The name records the RAM a routine touches, not what it computes.
+- Dispatchers keep their numbers, since their cases carry their name.
+- Binary verification: build/run364 PASS, 0 differing bytes; tests OK.
+
 ### E-0281 — Wait steps and constant-store steps
 
 - Kind: TOOL (structural naming from the instructions; C2).

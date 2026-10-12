@@ -1719,7 +1719,7 @@ Jump_005_480F::
 ; only called from AIScore_SuckAir_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SuckAir_Conditions)
 ; reads: wBattleActor
-AIScore_SuckAir_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_SuckAir_Conditions_ReadBattleActor:: ; heuristic: follows a terminator; C0
 Func_005_4812:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2414,7 +2414,7 @@ Jump_005_4B5C::
 ; 1 call site from 1 routine (e.g. AIScore_TatsuCall_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleSlotOut
-AIScore_TatsuCall_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_TatsuCall_Conditions_ReadBattleActor:: ; heuristic: follows a terminator; C0
 Func_005_4B5F:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3000,7 +3000,7 @@ Jump_005_4E1D::
 ; only called from AIScore_SealPray (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SealPray)
 ; reads: wQueuedActionId
-AIScore_SealPray_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_SealPray_ReadQueuedActionId:: ; heuristic: follows a terminator; C0
 Func_005_4E20:: ; address name
     ld a, [wQueuedActionId]
     and a, a
@@ -4624,7 +4624,7 @@ Jump_005_56F9::
 ; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
-AIScore_MegaMagic_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_ReadLinkModeAndBattleActor:: ; heuristic: follows a terminator; C0
 Func_005_56FC:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5774,7 +5774,7 @@ Jump_005_5CDE::
 ; only called from AIScore_MegaMagic (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wLinkMode
-AIScore_MegaMagic_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_ReadLinkMode:: ; heuristic: follows a terminator; C0
 Func_005_5CE1:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -6387,7 +6387,7 @@ Jump_005_5FB3::
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
 ; reads: wBattleActor, wAIFlag
 ; points at: wSlotMarks
-AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag::
 Func_005_5FC7:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6437,7 +6437,7 @@ Jump_005_600B::
     ret
 
 ; carry when slot C has under 3 MP; otherwise Z when skill $6B is among its eight skills (E-0124)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag)
 ; points at: wBattleMP, wBattleSkills
 SlotCHasMP3AndSkill6B::
 Func_005_600E:: ; address name
@@ -6471,7 +6471,7 @@ Jump_005_6037::
     ret
 
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag)
 WDA77EntryHasBits2And3_Bank05::
 Func_005_6039:: ; address name
     ld a, c
@@ -11749,7 +11749,7 @@ Func_005_7A91:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7AA0
-    call AIScore_TatsuCall_Conditions_Sub01
+    call AIScore_TatsuCall_Conditions_ReadBattleActor
     ld a, c
     and a, a
     jr z, Jump_005_7AA0
@@ -11771,7 +11771,7 @@ Func_005_7AA4:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call AIScore_SuckAir_Conditions_Sub01
+    call AIScore_SuckAir_Conditions_ReadBattleActor
     ld a, c
     and a, a
     jr z, Jump_005_7AC8

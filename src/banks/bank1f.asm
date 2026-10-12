@@ -2141,7 +2141,7 @@ Data_01F_720D:: ; address name
     db $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6A, $6B, $C3 ; row 5
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault)
 LoadSixteenGlyphTilesFromTable73BC::
 Func_01F_7375:: ; address name
     ld c, $00

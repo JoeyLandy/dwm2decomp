@@ -95,18 +95,18 @@ Jump_0F2_40B0::
     ret nz
     ld a, [wScreenSubStep]
     rst $00
-    dw GameMode8_Update_Case00
-    dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case02
-    dw GameMode8_Update_Case01
+    dw GameMode8_Update_WriteScreenSubStep
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_WriteObject1AndScreenSubStep
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_SetObject5
-    dw GameMode8_Update_Case05
-    dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case01
+    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_SetObject5_Case08
-    dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case0B
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B
     dw GameMode8_Update_ShowHeroReceivedGS
     dw GameMode8_Update_Case0D
 
@@ -114,7 +114,7 @@ Jump_0F2_40B0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-GameMode8_Update_Case00::
+GameMode8_Update_WriteScreenSubStep::
 Jump_0F2_40D5:: ; address name
     call GameMode8_Update_Case00_TestFlagBit
     ld a, [wScreenSubStep]
@@ -126,7 +126,7 @@ Jump_0F2_40D5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
-GameMode8_Update_Case01::
+GameMode8_Update_WriteScreenCounterAndScreenSubStep::
 Jump_0F2_40E0:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -144,7 +144,7 @@ Jump_0F2_40E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-GameMode8_Update_Case02::
+GameMode8_Update_WriteObject1AndScreenSubStep::
 Jump_0F2_40F6:: ; address name
     ld a, [wObject1 + $9]
     and a, $03
@@ -184,7 +184,7 @@ Jump_0F2_411C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-GameMode8_Update_Case05::
+GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
 Jump_0F2_412E:: ; address name
     ld a, [wSpriteSlots + $9]
     and a, $03
@@ -221,7 +221,7 @@ Jump_0F2_414F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-GameMode8_Update_Case0B::
+GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B::
 Jump_0F2_415F:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -382,7 +382,7 @@ Jump_0F2_422D::
     ret
 
 ; only called from GameMode8_Update_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update_Case00)
+; 1 call site from 1 routine (e.g. GameMode8_Update_WriteScreenSubStep)
 ; reads: wBankF0BlockC7, wIsCGB
 ; writes: hTemp0, wObject5, wSpriteSlotCount, wOBJPaletteUploadRequest
 ; points at: wSpriteSlots, wObject1, hTemp0
@@ -908,7 +908,7 @@ Data_0F2_48D1:: ; address name
     db $F0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault, RunScreenStateWhenNotFading_F1_Case0D_DrawRects5E13And66DF)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault, RunScreenStateWhenNotFading_F1_Case0D_DrawRects5E13And66DF)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
@@ -1213,7 +1213,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_ShowSpeciesCategory13StringAtTiles2680)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep_Case1A, RunScreenStateWhenNotFading_F1_Case0D_ShowSpeciesCategory13StringAtTiles2680)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
@@ -3866,7 +3866,7 @@ Func_0F2_6333:: ; address name
 ; writes: wScreenStep
 KeyAppraisalMenu_Case03_Case05_CopyWD09EToKeyList::
 Func_0F2_633B:: ; address name
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf
     call CopyWD09EToKeyList
     xor a, a
     ld [wScreenStep], a
@@ -3894,7 +3894,7 @@ Jump_0F2_634E::
 ; reads: wWorkBuf
 ; writes: wKeyGenCount, wWorkBuf
 ; points at: wKeyList
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01::
+KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
 Func_0F2_6355:: ; address name
     ld hl, wWorkBuf + $1
     ld c, $C0
@@ -3913,9 +3913,9 @@ Jump_0F2_635A::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount
     ld hl, wKeyList
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
     ret
 
 Jump_0F2_637F::
@@ -3923,17 +3923,17 @@ Jump_0F2_637F::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
     ld hl, wKeyList
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount
     ret
 
 ; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_Sub01)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01::
+KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01::
 Func_0F2_6393:: ; address name
     ld b, $00
     ld c, $20
@@ -4008,11 +4008,11 @@ Jump_0F2_63E3::
     ret
 
 ; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_Sub01)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02::
+KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount::
 Func_0F2_63EF:: ; address name
     ld b, $00
     ld c, $20
@@ -4091,14 +4091,14 @@ Func_0F2_6449:: ; address name
     ld a, [wScreenState]
     cp a, $03
     jr z, Jump_0F2_6470
-    call Run64C7UnlessScreenStateIs3_Sub01
+    call Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo
     ret
 
 ; only called from VaultMenu_Store_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ReadScreenState)
 ; reads: wCounterPtr0Lo
 ; points at: wWorkBuf
-VaultMenu_Store_Case0E_Sub03::
+VaultMenu_Store_Case0E_ReadCounterPtr0Lo::
 Func_0F2_6454:: ; address name
     ld hl, wWorkBuf
     ld b, $18
@@ -4145,7 +4145,7 @@ Jump_0F2_648B::
     ld [wCounterPtr0Lo], a
 
 ; only called from VaultMenu_Store_Case0E_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E_Sub03)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E_ReadCounterPtr0Lo)
 ; points at: wInventory, wWorkBuf, wItemGrid
 VaultMenu_Store_Case0E_Sub03_Sub01::
 Func_0F2_648E:: ; address name
@@ -4205,7 +4205,7 @@ Jump_0F2_64C0::
 ; reads: wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
 ; points at: wWorkBuf, wItemStorage
-Run64C7UnlessScreenStateIs3_Sub01::
+Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo::
 Func_0F2_64C7:: ; address name
     ld hl, wWorkBuf
     ld b, $C8

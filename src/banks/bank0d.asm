@@ -2646,11 +2646,11 @@ Func_00D_5412:: ; address name
     jp nz, Jump_00D_5479
     bit 1, a
     jp nz, Jump_00D_54A6
-    call RenameMenu_Case04_Sub01_Sub01
+    call RenameMenu_Case04_Sub01_WriteGridCursorY
     ret
 
 Jump_00D_542E::
-    call RenameMenu_Case04_Sub01_Sub03
+    call RenameMenu_Case04_Sub01_ReadGridCursorX_Sub03
     ld a, [wPartyCount]
     cp a, $02
     jr c, Jump_00D_543E
@@ -2662,7 +2662,7 @@ Jump_00D_543E::
     ld a, [wPartyCount]
     dec a
     ld [wGridCursorX], a
-    call RenameMenu_Case04_Sub01_Sub01
+    call RenameMenu_Case04_Sub01_WriteGridCursorY
     ret
 
 Jump_00D_5449::
@@ -2674,13 +2674,13 @@ Jump_00D_544A::
     ld [wListCursor], a
     ld [wChoiceCursor], a
     ld [wListPageIndex], a
-    call RenameMenu_Case04_Sub01_Sub02
+    call RenameMenu_Case04_Sub01_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00D_5460::
-    call RenameMenu_Case04_Sub01_Sub03
+    call RenameMenu_Case04_Sub01_ReadGridCursorX_Sub03
     ld a, [wPartyCount]
     dec a
     ld b, a
@@ -2689,7 +2689,7 @@ Jump_00D_5460::
     jr c, Jump_00D_5476
     xor a, a
     ld [wGridCursorX], a
-    call RenameMenu_Case04_Sub01_Sub01
+    call RenameMenu_Case04_Sub01_WriteGridCursorY
     ret
 
 Jump_00D_5476::
@@ -2734,25 +2734,25 @@ Jump_00D_54A6::
 ; 3 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-RenameMenu_Case04_Sub01_Sub01::
+RenameMenu_Case04_Sub01_WriteGridCursorY::
 Func_00D_54C1:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, RenameMenu_Case04_Sub01_Sub02
+    jr c, RenameMenu_Case04_Sub01_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, RenameMenu_Case04_Sub01_Sub02
+    jr c, RenameMenu_Case04_Sub01_ReadGridCursorX
     cp a, $18
-    jr c, RenameMenu_Case04_Sub01_Sub03
+    jr c, RenameMenu_Case04_Sub01_ReadGridCursorX_Sub03
     xor a, a
     ld [wGridCursorY], a
 
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RenameMenu_Case04_Sub01)
 ; reads: wGridCursorX
-RenameMenu_Case04_Sub01_Sub02::
+RenameMenu_Case04_Sub01_ReadGridCursorX::
 Func_00D_54DB:: ; address name
     ld b, $BB
     jr Jump_00D_54E5
@@ -2760,7 +2760,7 @@ Func_00D_54DB:: ; address name
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01)
 ; reads: wGridCursorX
-RenameMenu_Case04_Sub01_Sub03::
+RenameMenu_Case04_Sub01_ReadGridCursorX_Sub03::
 Func_00D_54DF:: ; address name
     ld b, $C3
     jr Jump_00D_54E5
@@ -3352,7 +3352,7 @@ Jump_00D_591E::
     call StoreBAtWordTableEntry_Bank0D
     ld de, wTextBuf0
     ld a, $01
-    call KeyAppraisalMenu_Shared01
+    call KeyAppraisalMenu_WriteDigits
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3418,7 +3418,7 @@ Jump_00D_599F::
     cp a, $01
     jr z, Jump_00D_5970
     xor a, a
-    call KeyAppraisalMenu_Shared01
+    call KeyAppraisalMenu_WriteDigits
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -3524,7 +3524,7 @@ Jump_00D_5A4A:: ; address name
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenSubStep, wScreenStep, wScriptCommandType, wScriptStartRequest, ...
 KeyAppraisalMenu_Case03_DrawBottomBoxForLinkAndSetScreenSubStep::
 Jump_00D_5A5C:: ; address name
-    call KeyAppraisalMenu_Shared02
+    call KeyAppraisalMenu_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
     cp a, $02
     jr z, Jump_00D_5A87
@@ -3573,7 +3573,7 @@ Jump_00D_5A9A::
 ; writes: wTwoChoiceCursor, wScreenSubStep, wScreenStep
 KeyAppraisalMenu_Case03_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_5AB4:: ; address name
-    call KeyAppraisalMenu_Shared02
+    call KeyAppraisalMenu_WriteRAMG2AndRAMB
     ld de, TileRect_0D_6189
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
@@ -3624,7 +3624,7 @@ Jump_00D_5B06:: ; address name
     jr z, Jump_00D_5B1B
     cp a, $FF
     jr z, Jump_00D_5B27
-    call KeyAppraisalMenu_Shared02
+    call KeyAppraisalMenu_WriteRAMG2AndRAMB
     ret
 
 Jump_00D_5B1B::
@@ -3638,7 +3638,7 @@ Jump_00D_5B27::
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_00D_5B1B
-    call KeyAppraisalMenu_Shared02
+    call KeyAppraisalMenu_WriteRAMG2AndRAMB
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3658,7 +3658,7 @@ Jump_00D_5B27::
 ; writes: wTwoChoiceCursor, wScreenSubStep, wScreenStep, wScriptCommandType, wScriptByte68, wScriptStartRequest, wSaveStep, wSaveRecordIndex, ...
 KeyAppraisalMenu_Case03_RunSaveGameSteps_7347::
 Jump_00D_5B4A:: ; address name
-    call KeyAppraisalMenu_Shared02
+    call KeyAppraisalMenu_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
     and a, a
     jr z, Jump_00D_5B7C
@@ -3703,7 +3703,7 @@ Jump_00D_5B7C::
     xor a, a
     ld [hl], a
     xor a, a
-    call KeyAppraisalMenu_Shared01
+    call KeyAppraisalMenu_WriteDigits
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -4289,7 +4289,7 @@ Jump_00D_5EE0::
     cp a, $8E
     jr z, Jump_00D_5F01
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
+    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart
     call CopyFromBankWaitVRAM
     pop bc
     jr Jump_00D_5F12
@@ -4301,7 +4301,7 @@ Jump_00D_5F01::
     ld [wGlyphListStart], a
     pop af
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
+    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart
     call OrFromBankWaitVRAM
     pop bc
 
@@ -4325,7 +4325,7 @@ Jump_00D_5F23::
 ; only called from DrawNameGlyphBufGlyphsOverlaying8DAnd8E (E-0047)
 ; 2 call sites from 1 routine (e.g. DrawNameGlyphBufGlyphsOverlaying8DAnd8E)
 ; reads: wArg5, wGlyphListStart
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01::
+DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart::
 Func_00D_5F2C:: ; address name
     ld e, a
     ld d, $00
@@ -4561,10 +4561,10 @@ Jump_00D_60EA::
     ret
 
 ; only called from KeyAppraisalMenu_Shared01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Shared01)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_WriteDigits)
 ; reads: wListPageIndex, wListCursor
 ; points at: wListEntries, wKeyList
-KeyAppraisalMenu_Shared01_Sub01::
+KeyAppraisalMenu_Shared01_ReadListPageIndexAndListCursor::
 Func_00D_60F5:: ; address name
     ld hl, wListEntries
     ld a, [wListPageIndex]
@@ -4591,15 +4591,15 @@ Func_00D_60F5:: ; address name
 ; 3 call sites from 3 routines (e.g. KeyAppraisalMenu_Case03_RunSaveGameSteps_7347, KeyAppraisalMenu_Case03_UpdateTwoChoiceCursor_Bank1D, KeyAppraisalMenu_Case03_UpdatePagedListCursor)
 ; writes: wDigits
 ; points at: wArg1
-KeyAppraisalMenu_Shared01::
+KeyAppraisalMenu_WriteDigits::
 Func_00D_6120:: ; address name
     and a, a
     jr nz, Jump_00D_6127
-    call KeyAppraisalMenu_Shared01_Sub01
+    call KeyAppraisalMenu_Shared01_ReadListPageIndexAndListCursor
     ret
 
 Jump_00D_6127::
-    call KeyAppraisalMenu_Shared01_Sub01
+    call KeyAppraisalMenu_Shared01_ReadListPageIndexAndListCursor
     push de
     ld a, l
     ld [wDigits], a
@@ -4642,7 +4642,7 @@ Jump_00D_615A::
 ; reads: wScreenStep
 ; writes: rRAMG2, rRAMB
 ; points at: sSavedPlayerName
-KeyAppraisalMenu_Shared02::
+KeyAppraisalMenu_WriteRAMG2AndRAMB::
 Func_00D_615E:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -5243,7 +5243,7 @@ Jump_00D_65D0:: ; address name
     dw MedalPrizeMenu_Case05_CopyRectTo20ByteRows_Bank0D
     dw MedalPrizeMenu_Case05_FillTilesFromRequest
     dw MedalPrizeMenu_Case05_ClampKeyListPageCursor
-    dw MedalPrizeMenu_Case05_Case03
+    dw MedalPrizeMenu_Case05_WriteArg5AndScreenStep
     dw MedalPrizeMenu_Case05_BGMapAddressAtScroll_Bank0D
     dw MedalPrizeMenu_Case05_WriteTileBAtCursorListCursor
     dw MedalPrizeMenu_Case05_WriteTileBAtCursorListCursor_Case06
@@ -5266,7 +5266,7 @@ Jump_00D_65F2:: ; address name
     ld hl, wWindowTileBuffer + $B7
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0D
-    call MedalPrizeMenu_Case05_Case00_Sub01
+    call MedalPrizeMenu_Case05_Case00_WriteListCount
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -5372,7 +5372,7 @@ Jump_00D_669C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-MedalPrizeMenu_Case05_Case03::
+MedalPrizeMenu_Case05_WriteArg5AndScreenStep::
 Jump_00D_66BB:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -5902,7 +5902,7 @@ Jump_00D_6A1F:: ; address name
     ld a, [hl]
     and a, a
     jr z, Jump_00D_6A63
-    call MedalPrizeMenu_Shared02
+    call MedalPrizeMenu_WriteRAMG2AndRAMB
     cp a, $FF
     jr nz, Jump_00D_6A4E
     ld a, $03
@@ -6032,7 +6032,7 @@ Jump_00D_6AEC:: ; address name
     push af
     and a, a
     jr z, Jump_00D_6B07
-    call MedalPrizeMenu_Shared02
+    call MedalPrizeMenu_WriteRAMG2AndRAMB
     call MedalPrizeMenu_Case05_Case0E_SetArg5ToListEntriesCell4
     jr Jump_00D_6B15
 
@@ -6047,7 +6047,7 @@ Jump_00D_6B15::
     pop af
     and a, a
     jr z, Jump_00D_6B3A
-    call MedalPrizeMenu_Shared02
+    call MedalPrizeMenu_WriteRAMG2AndRAMB
     cp a, $FF
     jr nz, Jump_00D_6B24
     ld a, $03
@@ -6332,7 +6332,7 @@ Jump_00D_6CC5::
 ; reads: wFarmLevel
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords
-MedalPrizeMenu_Shared02::
+MedalPrizeMenu_WriteRAMG2AndRAMB::
 Func_00D_6CCC:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -6374,7 +6374,7 @@ Jump_00D_6D00::
     ld [rRAMG2], a
     ret
 
-; address loaded by MedalPrizeMenu_Shared02
+; address loaded by MedalPrizeMenu_WriteRAMG2AndRAMB
 Data_00D_6D06:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
@@ -6430,7 +6430,7 @@ Jump_00D_6D3C::
     ret
 
 ; only called from routines of MedalPrizeMenu (E-0098)
-; 2 call sites from 2 routines (e.g. MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D, MedalPrizeMenu_Case05_Case03)
+; 2 call sites from 2 routines (e.g. MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D, MedalPrizeMenu_Case05_WriteArg5AndScreenStep)
 ; reads: wListPageIndex, wArenaByte37, wDigits
 MedalPrizeMenu_Shared05::
 Func_00D_6D3E:: ; address name
@@ -6581,7 +6581,7 @@ Jump_00D_6DEF::
 ; reads: wArenaByte37
 ; writes: wListCount
 ; points at: wListEntries
-MedalPrizeMenu_Case05_Case00_Sub01::
+MedalPrizeMenu_Case05_Case00_WriteListCount::
 Func_00D_6DF2:: ; address name
     ld a, [wArenaByte37]
     and a, a
@@ -6607,7 +6607,7 @@ Jump_00D_6E03::
     ret
 
 ; only called from MedalPrizeMenu_Case05_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. MedalPrizeMenu_Case05_Case03)
+; 1 call site from 1 routine (e.g. MedalPrizeMenu_Case05_WriteArg5AndScreenStep)
 ; reads: wListPageIndex, wListLastRow, wListCount, wListPages
 ; points at: wListEntries, wNameGlyphBuf
 MedalPrizeMenu_Case05_Case03_Sub01::
@@ -6879,7 +6879,7 @@ Jump_00D_7159:: ; address name
     dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_SetArg5ToListEntriesCell5_Case11
     dw NpcBreedMenu_Case04_PrepareWCF8BCountersAndRequestScript
-    dw NpcBreedMenu_Case04_Case13
+    dw NpcBreedMenu_Case04_WriteScreenStep
     dw NpcBreedMenu_Case04_ComputeBreedingChild
     dw NpcBreedMenu_Case04_QueueSoundEffect
     dw NpcBreedMenu_Case04_UpdateTwoChoiceCursor_Bank1D
@@ -7095,7 +7095,7 @@ Jump_00D_72E0::
 ; reads: wScreenTableIndex, wScreenStep
 ; writes: wScreenStep
 ; points at: wRecordBufB
-NpcBreedMenu_Case04_Case13::
+NpcBreedMenu_Case04_WriteScreenStep::
 Jump_00D_72F4:: ; address name
     call NpcBreedMenu_Multiply8
     ld a, [wScreenTableIndex]
@@ -7812,7 +7812,7 @@ Func_00D_7812:: ; address name
     ret
 
 ; only called from routines of NpcBreedMenu (E-0098)
-; 2 call sites from 2 routines (e.g. NpcBreedMenu_Case04_Case13, NpcBreedMenu_Case04_PrepareWCF8BCountersAndRequestScript)
+; 2 call sites from 2 routines (e.g. NpcBreedMenu_Case04_WriteScreenStep, NpcBreedMenu_Case04_PrepareWCF8BCountersAndRequestScript)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wRecordBufA

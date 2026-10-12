@@ -975,10 +975,10 @@ Func_00A_465D:: ; address name
     ld a, [wBattleIntroKind]
     and a, $07
     rst $00
-    dw RunBattleIntroKindCase_Case00
+    dw RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags
     dw RunBattleIntroKindCase_NextTableByte
     dw RunBattleIntroKindCase_SetBattleKindTo02
-    dw RunBattleIntroKindCase_Case03
+    dw RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind
     dw RunBattleIntroKindCase_SetBattleKindTo04
     dw RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength
     dw RunBattleIntroKindCase_ComputePartyStrengthForKey
@@ -1437,7 +1437,7 @@ Data_00A_481C:: ; address name
 ; entry 0 of the `rst $00` table in RunBattleIntroKindCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hPlayerStateFlags
-RunBattleIntroKindCase_Case00::
+RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
 Jump_00A_49B4:: ; address name
     ldh a, [hMapId]
     cp a, $20
@@ -1880,7 +1880,7 @@ Jump_00A_4CB1::
     ret
 
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
-; 48 call sites from 1 routine (e.g. RunBattleIntroKindCase_Case00)
+; 48 call sites from 1 routine (e.g. RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags)
 ; reads: hMapScreenY, hMapScreenX, wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
 ; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
 ; points at: wEncounterMonsters
@@ -1902,7 +1902,7 @@ Func_00A_4CBA:: ; address name
     ld d, a
 
 ; only called from RunBattleIntroKindCase_Case00 (E-0047)
-; 5 call sites from 1 routine (e.g. RunBattleIntroKindCase_Case00)
+; 5 call sites from 1 routine (e.g. RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags)
 ; reads: wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wEncounterKind
 ; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
 ; points at: wEncounterMonsters
@@ -2010,7 +2010,7 @@ Jump_00A_4D4C::
 ; only called from CollectUniqueEncounterIdsToWD09F (E-0047)
 ; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
 ; reads: hMapId, hPlayerStateFlags
-CollectUniqueEncounterIdsToWD09F_Sub01::
+CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags::
 Func_00A_4D5E:: ; address name
     ldh a, [hMapId]
     cp a, $20
@@ -2445,7 +2445,7 @@ Jump_00A_504E::
     ret
 
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
-; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
+; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags)
 ; reads: hMapScreenY, hMapScreenX, wWorkBuf, hTemp0, hTemp1
 ; writes: wWorkBuf, wMonsterId, hTemp0
 ; points at: hTemp0
@@ -2467,7 +2467,7 @@ Func_00A_5057:: ; address name
     ld d, a
 
 ; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
-; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
+; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags)
 ; reads: wWorkBuf, hTemp0, hTemp1
 ; writes: wWorkBuf, wMonsterId, hTemp0
 ; points at: hTemp0
@@ -2734,7 +2734,7 @@ Jump_00A_51A4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType
 ; writes: wBattleIntroFlag, wBattleKind
-RunBattleIntroKindCase_Case03::
+RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind::
 Jump_00A_51DF:: ; address name
     ld a, [wMapType]
     cp a, $82
@@ -2886,7 +2886,7 @@ Jump_00A_52A4:: ; address name
     ld a, [wBattleTransitionSubStep]
     rst $00
     dw RunBattleTransitionStep_Case01_Case00
-    dw RunBattleTransitionStep_Case01_Case01
+    dw RunBattleTransitionStep_Case01_ReadTransitionCounter
     dw RunBattleTransitionStep_Case01_Case02
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01
@@ -2896,14 +2896,14 @@ RunBattleTransitionStep_Case01_Case00::
 Jump_00A_52AE:: ; address name
     ld a, [wTransitionCounter]
     rst $00
-    dw RunBattleTransitionStep_Case01_Case00_Case00
+    dw RunBattleTransitionStep_Case01_Case00_ReadTransitionStage
     dw RunBattleTransitionStep_Case01_Case00_AdvanceBattleTransitionStep
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTransitionStage
 ; points at: wTransitionCounter, wTransitionStage
-RunBattleTransitionStep_Case01_Case00_Case00::
+RunBattleTransitionStep_Case01_Case00_ReadTransitionStage::
 Jump_00A_52B6:: ; address name
     ld a, [wTransitionStage]
     cp a, $14
@@ -2968,7 +2968,7 @@ Jump_00A_5309:: ; address name
     ret
 
 ; writes tile $C4 at the BG map address from Func_00A_5328 and, on CGB, attribute 0 in VRAM bank 1 (E-0122)
-; 10 call sites from 3 routines (e.g. RunBattleTransitionStep_Case01_Case00_Case00, AddHLToTransitionBGPtrLoInBGMap_Case01, RunBattleTransitionStep_Case01_Case02_Case00)
+; 10 call sites from 3 routines (e.g. RunBattleTransitionStep_Case01_Case00_ReadTransitionStage, AddHLToTransitionBGPtrLoInBGMap_Case01, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB)
 ; reads: wIsCGB
 ; writes: rVBK
 WriteTileC4AtTransitionBGPtrLoAndClearAttr::
@@ -3050,7 +3050,7 @@ Func_00A_534E:: ; address name
 ; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTransitionCounter
-RunBattleTransitionStep_Case01_Case01::
+RunBattleTransitionStep_Case01_ReadTransitionCounter::
 Jump_00A_5362:: ; address name
     ld b, $06
 
@@ -3269,7 +3269,7 @@ RunBattleTransitionStep_Case01_Case02::
 Jump_00A_54AF:: ; address name
     ld a, [wTransitionCounter]
     rst $00
-    dw RunBattleTransitionStep_Case01_Case02_Case00
+    dw RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB
     dw RunBattleTransitionStep_Case01_Case02_Case01
     dw RunBattleTransitionStep_Case01_Case02_AdvanceBattleTransitionStep
 
@@ -3278,7 +3278,7 @@ Jump_00A_54AF:: ; address name
 ; reads: wTransitionStage, wTransitionCountA, wTransitionCountB
 ; writes: wTransitionCountA, wTransitionCountB
 ; points at: wTransitionStage, wTransitionCounter
-RunBattleTransitionStep_Case01_Case02_Case00::
+RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB::
 Jump_00A_54B9:: ; address name
     ld a, [wTransitionStage]
     or a, a
@@ -3420,7 +3420,7 @@ Jump_00A_558E:: ; address name
     ret
 
 ; HL = the word at HL, then jp hl (E-0114)
-; 1 call site from 1 routine (e.g. RunBattleTransitionStep_Case01_Case02_Case00)
+; 1 call site from 1 routine (e.g. RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB)
 JumpToWordAtHL_Bank0A::
 Func_00A_5593:: ; address name
     deref_hl
@@ -3552,11 +3552,11 @@ Func_00A_55EF:: ; address name
     ld h, d
     ret
 
-; address loaded by RunBattleTransitionStep_Case01_Case02_Case00
+; address loaded by RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB
 Data_00A_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $12, $10, $0E, $0C, $0A, $08, $06, $04
 
-; address loaded by RunBattleTransitionStep_Case01_Case02_Case00
+; address loaded by RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB
 Data_00A_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $10, $0E, $0C, $0A, $08, $06, $04, $02
 

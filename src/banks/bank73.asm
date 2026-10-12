@@ -214,9 +214,9 @@ Jump_073_411F:: ; address name
     dw Talk08Event_Case0A_ShowIfSomeMonsterMasters
     dw Talk08Event_Case0C_RunMessageBoxCarryWhenIdle_Bank73
     dw Talk08Event_Case0A_SaveScreenBufferToBGMap1
-    dw Talk08Event_Case0A_Case05
-    dw Talk08Event_Case0A_Case06
-    dw Talk08Event_Case0A_Case07
+    dw Talk08Event_Case0A_WriteScriptParam0
+    dw Talk08Event_Case0A_ReadJoypadPressed
+    dw Talk08Event_Case0A_ReadFrameCounterLoAndMenuCursor
     dw Talk08Event_Case0A_RestoreScreenBufferFromBGMap1
     dw Talk08Event_Case0C_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
@@ -395,7 +395,7 @@ Jump_073_4250::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wMenuCursor
 ; points at: wMenuState, wScriptStep, wMenuSubState, wMenuSelectedMember
-Talk08Event_Case0A_Case07::
+Talk08Event_Case0A_ReadFrameCounterLoAndMenuCursor::
 Jump_073_4269:: ; address name
     call Talk08Event_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
@@ -432,11 +432,11 @@ Jump_073_429A::
     inc [hl]
 
 Jump_073_42A7::
-    call Talk08Event_Shared02
+    call Talk08Event_WriteTemp0AndTemp1
     ret
 
 ; only called from Talk08Event_Case0A_Case07 (E-0047)
-; 3 call sites from 1 routine (e.g. Talk08Event_Case0A_Case07)
+; 3 call sites from 1 routine (e.g. Talk08Event_Case0A_ReadFrameCounterLoAndMenuCursor)
 Talk08Event_Case0A_Case07_Sub01::
 Func_073_42AB:: ; address name
     ld a, [hl]
@@ -464,7 +464,7 @@ Jump_073_42BF::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wMenuCursor, wScriptStep
-Talk08Event_Case0A_Case06::
+Talk08Event_Case0A_ReadJoypadPressed::
 Jump_073_42C2:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
@@ -476,7 +476,7 @@ Jump_073_42C2:: ; address name
 
 Jump_073_42D1::
     call Talk08Event_WaitFrameCounterLo
-    call Talk08Event_Shared02
+    call Talk08Event_WriteTemp0AndTemp1
     ret
 
 ; entry 5 of the `rst $00` table in Talk08Event_Case0A
@@ -484,10 +484,10 @@ Jump_073_42D1::
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep
-Talk08Event_Case0A_Case05::
+Talk08Event_Case0A_WriteScriptParam0::
 Jump_073_42D8:: ; address name
     call Talk08Event_WaitFrameCounterLo
-    call Talk08Event_Shared02
+    call Talk08Event_WriteTemp0AndTemp1
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -524,7 +524,7 @@ Jump_073_42F1:: ; address name
     ld [wMenuSelectedMember], a
     xor a, a
     ld [wMenuCursor], a
-    call Talk08Event_Shared02
+    call Talk08Event_WriteTemp0AndTemp1
     ld de, $4378
     ld hl, wScreenTileBuffer
     ld b, $03
@@ -627,7 +627,7 @@ Jump_073_43B3:: ; address name
     ret
 
 ; only called from routines of Talk08Event (E-0098)
-; 3 call sites from 3 routines (e.g. Talk08Event_Case0A_Case07, Talk08Event_Case0A_Case06, Talk08Event_Case0A_Case05)
+; 3 call sites from 3 routines (e.g. Talk08Event_Case0A_ReadFrameCounterLoAndMenuCursor, Talk08Event_Case0A_ReadJoypadPressed, Talk08Event_Case0A_WriteScriptParam0)
 ; reads: wFrameCounterLo, wMenuCursor, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember
 Talk08Event_WaitFrameCounterLo::
@@ -682,10 +682,10 @@ Jump_073_441C::
     ret
 
 ; only called from routines of Talk08Event (E-0098)
-; 4 call sites from 4 routines (e.g. Talk08Event_Case0A_Case07, Talk08Event_Case0A_Case06, Talk08Event_Case0A_Case05, Talk08Event_Case0A_SaveScreenBufferToBGMap1)
+; 4 call sites from 4 routines (e.g. Talk08Event_Case0A_ReadFrameCounterLoAndMenuCursor, Talk08Event_Case0A_ReadJoypadPressed, Talk08Event_Case0A_WriteScriptParam0, Talk08Event_Case0A_SaveScreenBufferToBGMap1)
 ; reads: wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: hTemp0, hTemp1
-Talk08Event_Shared02::
+Talk08Event_WriteTemp0AndTemp1::
 Func_073_441D:: ; address name
     ld hl, vTiles1 + $240
     ld a, [wMenuState]
@@ -784,7 +784,7 @@ Jump_073_449B::
     ret
 
 ; only called from Talk08Event_Shared02 (E-0047)
-; 3 call sites from 1 routine (e.g. Talk08Event_Shared02)
+; 3 call sites from 1 routine (e.g. Talk08Event_WriteTemp0AndTemp1)
 ; reads: hTemp1, hTemp2, hTemp0
 ; writes: hTemp2
 Talk08Event_Shared02_WriteVRAMByteInc::
@@ -1532,27 +1532,27 @@ Func_073_4956:: ; address name
     ld a, [hl]
     ld c, $61
     call LoadSRAMRecordWord
-    call ProcessRecordFields5DTo69ThenItemString_Sub01
+    call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $02
     ld a, [hl]
     ld c, $63
     call LoadSRAMRecordWord
-    call ProcessRecordFields5DTo69ThenItemString_Sub01
+    call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $03
     ld a, [hl]
     ld c, $65
     call LoadSRAMRecordWord
-    call ProcessRecordFields5DTo69ThenItemString_Sub01
+    call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $04
     ld a, [hl]
     ld c, $67
     call LoadSRAMRecordWord
-    call ProcessRecordFields5DTo69ThenItemString_Sub01
+    call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $05
     ld a, [hl]
     ld c, $69
     call LoadSRAMRecordWord
-    call ProcessRecordFields5DTo69ThenItemString_Sub01
+    call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     xor a, a
     ld [rRAMG], a
     call CopyItemStringToWC152
@@ -1562,7 +1562,7 @@ Func_073_4956:: ; address name
 ; 5 call sites from 1 routine (e.g. ProcessRecordFields5DTo69ThenItemString)
 ; reads: hTemp1, hTemp0
 ; writes: hTemp2
-ProcessRecordFields5DTo69ThenItemString_Sub01::
+ProcessRecordFields5DTo69ThenItemString_WriteTemp2::
 Func_073_49B1:: ; address name
     ldh a, [hTemp1]
     cp a, d
@@ -2493,7 +2493,7 @@ Jump_073_4EEF::
     dw RunMessageBox_Bank73_SetBit1OfPlayerAndObjectFlags
     dw RunMessageBox_Bank73_BeginStringDisplay_Bank09
     dw RunMessageBox_Bank73_Case02
-    dw RunMessageBox_Bank73_Case03
+    dw RunMessageBox_Bank73_WriteMessageState
 
 ; entry 0 of the `rst $00` table in RunMessageBox_Bank73
 ; no direct call (reached through a table, a jump or a vector)
@@ -2598,7 +2598,7 @@ Jump_073_4F8B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wMessageState
-RunMessageBox_Bank73_Case03::
+RunMessageBox_Bank73_WriteMessageState::
 Jump_073_4F90:: ; address name
     ld a, [wTextWindowState]
     and a, $03
@@ -2996,7 +2996,7 @@ Func_073_51BD:: ; address name
     dw SceneChestBattle_StartScriptedEncounterTemp0
     dw SceneChestBattle_Case03
     dw SceneChestBattle_RunMessageBoxFar_Bank73
-    dw SceneChestBattle_Case05
+    dw SceneChestBattle_WriteTemp0AndScriptStep
     dw SceneChestBattle_ScriptStepBlinkObjectTemp0
     dw SceneChestBattle_SetFlagBit
     dw SceneChestBattle_SetBit2AtHL_B73
@@ -3078,7 +3078,7 @@ Jump_073_524B:: ; address name
 ; reads: hMapId
 ; writes: hTemp0, wScriptStep
 ; points at: wScriptStep
-SceneChestBattle_Case05::
+SceneChestBattle_WriteTemp0AndScriptStep::
 Jump_073_5265:: ; address name
     ldh a, [hMapId]
     cp a, $CE
@@ -3393,7 +3393,7 @@ SceneWizstone::
 Func_073_5449:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneWizstone_Case00
+    dw SceneWizstone_WriteSpriteSlotsAndScriptStep
     dw SceneWizstone_StepObjectTowardCoord
     dw SceneWizstone_Msg0780_ProfessorKiralUsedThe
     dw SceneChestBattle_RunMessageBoxFar_Bank73
@@ -3526,7 +3526,7 @@ Jump_073_54E6::
 ; reads: hPlayerX, hPlayerY, wPartyCount
 ; writes: wSpriteSlots, wScriptStep
 ; points at: wScriptStep
-SceneWizstone_Case00::
+SceneWizstone_WriteSpriteSlotsAndScriptStep::
 Jump_073_5509:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -3795,8 +3795,8 @@ Func_073_568E:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneRoltElder_SetBit2AtHL_B73
-    dw SceneRoltElder_Case01
-    dw SceneRoltElder_Case02
+    dw SceneRoltElder_WriteObject1AndObject2
+    dw SceneRoltElder_WriteObject2AndObject1
     dw SceneRoltElder_ClearBit2AtHL_Bank73
 
 ; entry 3 of the `rst $00` table in SceneRoltElder
@@ -3826,7 +3826,7 @@ Jump_073_569A:: ; address name
 ; reads: wObject2, wObject1
 ; writes: wObject2, wObject1
 ; points at: wScriptStep
-SceneRoltElder_Case02::
+SceneRoltElder_WriteObject2AndObject1::
 Jump_073_56BD:: ; address name
     ld a, [wObject2 + $B]
     inc a
@@ -3848,7 +3848,7 @@ Jump_073_56BD:: ; address name
 ; reads: wObject1, wObject2
 ; writes: wObject1, wObject2
 ; points at: wScriptStep
-SceneRoltElder_Case01::
+SceneRoltElder_WriteObject1AndObject2::
 Jump_073_56DB:: ; address name
     ld a, [wObject1 + $B]
     inc a
@@ -3951,9 +3951,9 @@ Func_073_5761:: ; address name
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
-    dw SceneKamehaStole_Case03
-    dw SceneKamehaStole_Case04
-    dw SceneKamehaStole_Case05
+    dw SceneKamehaStole_WriteFollowerRecordsAndScriptStep
+    dw SceneKamehaStole_WriteFollowerRecordsAndScriptStep_Case04
+    dw SceneKamehaStole_WriteFollowerRecords
     dw SceneKamehaStole_Case06
 
 ; entry 6 of the `rst $00` table in SceneKamehaStole
@@ -4009,7 +4009,7 @@ Jump_073_57B0::
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
 ; points at: wScriptStep
-SceneKamehaStole_Case05::
+SceneKamehaStole_WriteFollowerRecords::
 Jump_073_57C5:: ; address name
     ld a, [wFollowerRecords + $C]
     cp a, $60
@@ -4037,7 +4037,7 @@ Jump_073_57D1::
 ; reads: wFollowerRecords, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
 ; points at: wScriptStep
-SceneKamehaStole_Case04::
+SceneKamehaStole_WriteFollowerRecordsAndScriptStep_Case04::
 Jump_073_57EA:: ; address name
     ld a, [wFollowerRecords + $6]
     cp a, $30
@@ -4075,7 +4075,7 @@ Jump_073_57FC::
 ; reads: wFollowerRecords, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
 ; points at: wScriptStep
-SceneKamehaStole_Case03::
+SceneKamehaStole_WriteFollowerRecordsAndScriptStep::
 Jump_073_5825:: ; address name
     ld a, [wFollowerRecords + $2]
     cp a, $40
@@ -4542,7 +4542,7 @@ Func_073_5AE4:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneGravestone_SetBit2AtHL_B73
-    dw SceneGravestone_Case01
+    dw SceneGravestone_WriteScriptStartRequest
     dw ScriptStepMoveObjectCB8AByDirection
     dw SceneGravestone_StepObjectTowardCoord
     dw SceneGravestone_ScriptStepBlinkObjectTemp0
@@ -4615,7 +4615,7 @@ Jump_073_5B47:: ; address name
     ret
 
 ; moves wCB8A/wCB8B one pixel in direction wScriptParam1 for 16 frames; at ($80, $30) advances wScriptStep, otherwise repeats the step (E-0125)
-; 1 call site from 1 routine (e.g. SceneGravestone_Case01)
+; 1 call site from 1 routine (e.g. SceneGravestone_WriteScriptStartRequest)
 ; reads: wScriptParam1, wScriptParam0, wSpriteSlots
 ; writes: wScriptParam0
 ; points at: wScriptStep
@@ -4674,7 +4674,7 @@ Jump_073_5BA9::
 ; reads: wMessageIndex, wSpriteSlots, wMessageGroup, wMaxBlockingTile
 ; writes: wScriptStartRequest
 ; points at: wScreenTileBuffer, wTilesUnderPoint, wScriptStep
-SceneGravestone_Case01::
+SceneGravestone_WriteScriptStartRequest::
 Jump_073_5BAE:: ; address name
     ld a, [wMessageIndex]
     ld d, a
@@ -4790,18 +4790,18 @@ Func_073_5C5F:: ; address name
     cp a, $30
     jr nz, Jump_073_5C7F
     ld hl, wScreenTileBuffer + $52
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     jr Jump_073_5CAD
 
 Jump_073_5C7F::
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     jr Jump_073_5CAD
 
 Jump_073_5C8D::
@@ -4809,16 +4809,16 @@ Jump_073_5C8D::
     cp a, $30
     jr nz, Jump_073_5CA1
     ld hl, wScreenTileBuffer + $60
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $F2
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     jr Jump_073_5CAD
 
 Jump_073_5CA1::
     ld hl, wScreenTileBuffer + $60
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
-    call SceneJustice_Sub01
+    call SceneJustice_WriteSVBK
 
 Jump_073_5CAD::
     ld a, [wScreenTileBuffer + $52]
@@ -4869,7 +4869,7 @@ Jump_073_5CFD::
 ; 9 call sites from 1 routine (e.g. SceneJustice)
 ; reads: wIsCGB
 ; writes: rSVBK
-SceneJustice_Sub01::
+SceneJustice_WriteSVBK::
 Func_073_5D09:: ; address name
     push hl
     call SceneJustice_Sub01_Sub01
@@ -4907,7 +4907,7 @@ Func_073_5D09:: ; address name
     ret
 
 ; only called from SceneJustice_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. SceneJustice_Sub01)
+; 4 call sites from 1 routine (e.g. SceneJustice_WriteSVBK)
 SceneJustice_Sub01_Sub01::
 Func_073_5D48:: ; address name
     ld a, [hl]
@@ -4932,7 +4932,7 @@ Jump_073_5D5B::
     ret
 
 ; only called from SceneJustice_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. SceneJustice_Sub01)
+; 4 call sites from 1 routine (e.g. SceneJustice_WriteSVBK)
 SceneJustice_Sub01_Sub02::
 Func_073_5D65:: ; address name
     ld a, c
@@ -5022,7 +5022,7 @@ Func_073_5DDD:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMadcondorCry_StepScriptParam0Counter_Bank73
-    dw SceneMadcondorCry_Case01
+    dw SceneMadcondorCry_WriteScriptParam0
     dw SceneMadcondorCry_Case02
     dw SceneMadcondorCry_ScriptStartFadeAndAdvanceStep
     dw SceneMadcondorCry_Msg0433_Kweeeeeh
@@ -5098,7 +5098,7 @@ Jump_073_5E20::
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
-SceneMadcondorCry_Case01::
+SceneMadcondorCry_WriteScriptParam0::
 Jump_073_5E51:: ; address name
     ld hl, wSpriteSlots + $B
     inc [hl]
@@ -5121,7 +5121,7 @@ Jump_073_5E60::
     ret
 
 ; only called from routines of SceneMadcondorCry (E-0098)
-; 2 call sites from 2 routines (e.g. SceneMadcondorCry_Case02, SceneMadcondorCry_Case01)
+; 2 call sites from 2 routines (e.g. SceneMadcondorCry_Case02, SceneMadcondorCry_WriteScriptParam0)
 ; reads: wMessageIndex, wMessageGroup, wSpriteSlots
 ; writes: wMessageIndex, wMessageGroup, wSpriteSlots
 SceneMadcondorCry_Shared01::
@@ -5175,15 +5175,15 @@ Func_073_5EB3:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMadcondor_StepScriptParam0Counter_Bank73
-    dw SceneMadcondor_Case01
-    dw SceneMadcondor_Case02
+    dw SceneMadcondor_WriteScriptParam0
+    dw SceneMadcondor_WriteObject1AndScriptStartRequest
 
 ; entry 2 of the `rst $00` table in SceneMadcondor
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wObject1, wScriptStartRequest
 ; points at: wScriptParam0
-SceneMadcondor_Case02::
+SceneMadcondor_WriteObject1AndScriptStartRequest::
 Jump_073_5EBD:: ; address name
     ld hl, wSpriteSlots + $B
     dec [hl]
@@ -5206,7 +5206,7 @@ Jump_073_5EBD:: ; address name
 ; reads: wSpriteSlots
 ; writes: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
-SceneMadcondor_Case01::
+SceneMadcondor_WriteScriptParam0::
 Jump_073_5EDF:: ; address name
     ld hl, wSpriteSlots + $B
     dec [hl]
@@ -5223,7 +5223,7 @@ Jump_073_5EDF:: ; address name
     ret
 
 ; only called from routines of SceneMadcondor (E-0098)
-; 2 call sites from 2 routines (e.g. SceneMadcondor_Case02, SceneMadcondor_Case01)
+; 2 call sites from 2 routines (e.g. SceneMadcondor_WriteObject1AndScriptStartRequest, SceneMadcondor_WriteScriptParam0)
 ; reads: wMessageIndex, wMessageGroup, wSpriteSlots
 ; writes: wMessageIndex, wMessageGroup, wSpriteSlots
 SceneMadcondor_Shared01::
@@ -5690,8 +5690,8 @@ Func_073_61A7:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw RewardItemOrKey2_FindPartyIndexOfSpeciesTemp0
-    dw RewardItemOrKey2_Case01
-    dw RewardItemOrKey2_Case02
+    dw RewardItemOrKey2_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey2_WriteObject3
     dw RewardItemOrKey2_LoadListedRecordNameTilesForTemp0
     dw RewardItemOrKey2_StepScriptParam0Counter_Bank73
     dw RewardItemOrKey2_ShowHuhThereIsSomething
@@ -5840,7 +5840,7 @@ Jump_073_625D:: ; address name
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject3
 ; points at: wScriptStep
-RewardItemOrKey2_Case02::
+RewardItemOrKey2_WriteObject3::
 Jump_073_628C:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -5872,7 +5872,7 @@ Jump_073_62A2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-RewardItemOrKey2_Case01::
+RewardItemOrKey2_ReadMessageIndexAndMessageGroup::
 Jump_073_62B0:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -5948,18 +5948,18 @@ Func_073_630F:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw RewardItemOrKey_FindPartyIndexOfSpeciesTemp0
-    dw RewardItemOrKey_Case01
-    dw RewardItemOrKey_Case02
-    dw RewardItemOrKey_Case03
-    dw RewardItemOrKey_Case04
-    dw RewardItemOrKey_Case05
-    dw RewardItemOrKey_Case06
-    dw RewardItemOrKey_Case01
-    dw RewardItemOrKey_Case08
-    dw RewardItemOrKey_Case03
-    dw RewardItemOrKey_Case04
-    dw RewardItemOrKey_Case0B
-    dw RewardItemOrKey_Case06
+    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey_WriteObject1
+    dw RewardItemOrKey_WriteObject1AndScriptStep
+    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04
+    dw RewardItemOrKey_WriteObject1_Case05
+    dw RewardItemOrKey_WriteObject1AndScriptStep_Case06
+    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey_WriteObject1_Case08
+    dw RewardItemOrKey_WriteObject1AndScriptStep
+    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04
+    dw RewardItemOrKey_WriteObject1_Case0B
+    dw RewardItemOrKey_WriteObject1AndScriptStep_Case06
     dw RewardItemOrKey_LoadListedRecordNameTilesForTemp0
     dw RewardItemOrKey_StepScriptParam0Counter_Bank73
     dw RewardItemOrKey_ShowOKLetMeDig
@@ -6142,7 +6142,7 @@ Jump_073_640A:: ; address name
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1
 ; points at: wScriptStep
-RewardItemOrKey_Case0B::
+RewardItemOrKey_WriteObject1_Case0B::
 Jump_073_6441:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6167,7 +6167,7 @@ Jump_073_6459::
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1
 ; points at: wScriptStep
-RewardItemOrKey_Case08::
+RewardItemOrKey_WriteObject1_Case08::
 Jump_073_645D:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6192,7 +6192,7 @@ Jump_073_6476::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1, wScriptStep
-RewardItemOrKey_Case06::
+RewardItemOrKey_WriteObject1AndScriptStep_Case06::
 Jump_073_647A:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6223,7 +6223,7 @@ Jump_073_649A::
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1
 ; points at: wScriptStep
-RewardItemOrKey_Case05::
+RewardItemOrKey_WriteObject1_Case05::
 Jump_073_649E:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6247,7 +6247,7 @@ Jump_073_64B6::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-RewardItemOrKey_Case04::
+RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04::
 Jump_073_64BA:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6279,7 +6279,7 @@ Jump_073_64D8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1, wScriptStep
-RewardItemOrKey_Case03::
+RewardItemOrKey_WriteObject1AndScriptStep::
 Jump_073_64DC:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6309,7 +6309,7 @@ Jump_073_64FB::
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1
 ; points at: wScriptStep
-RewardItemOrKey_Case02::
+RewardItemOrKey_WriteObject1::
 Jump_073_64FF:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6334,7 +6334,7 @@ Jump_073_6518::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-RewardItemOrKey_Case01::
+RewardItemOrKey_ReadMessageIndexAndMessageGroup::
 Jump_073_651C:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6420,7 +6420,7 @@ Jump_073_6590::
     ret
 
 ; only called from routines of RewardItemOrKey (E-0098)
-; 3 call sites from 3 routines (e.g. RewardItemOrKey_Case06, RewardItemOrKey_Case04, RewardItemOrKey_Case02)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1AndScriptStep_Case06, RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04, RewardItemOrKey_WriteObject1)
 RewardItemOrKey_Shared01::
 Func_073_6596:: ; address name
     inc a
@@ -6431,7 +6431,7 @@ Func_073_6596:: ; address name
     ret
 
 ; only called from routines of RewardItemOrKey (E-0098)
-; 3 call sites from 3 routines (e.g. RewardItemOrKey_Case08, RewardItemOrKey_Case06, RewardItemOrKey_Case04)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case08, RewardItemOrKey_WriteObject1AndScriptStep_Case06, RewardItemOrKey_ReadMessageIndexAndMessageGroup_Case04)
 RewardItemOrKey_Shared02::
 Func_073_659D:: ; address name
     dec a
@@ -6442,7 +6442,7 @@ Func_073_659D:: ; address name
     ret
 
 ; only called from routines of RewardItemOrKey (E-0098)
-; 3 call sites from 3 routines (e.g. RewardItemOrKey_Case0B, RewardItemOrKey_Case03, RewardItemOrKey_Case01)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case0B, RewardItemOrKey_WriteObject1AndScriptStep, RewardItemOrKey_ReadMessageIndexAndMessageGroup)
 RewardItemOrKey_Shared03::
 Func_073_65A4:: ; address name
     dec a
@@ -6452,7 +6452,7 @@ Func_073_65A4:: ; address name
     ret
 
 ; only called from routines of RewardItemOrKey (E-0098)
-; 3 call sites from 3 routines (e.g. RewardItemOrKey_Case05, RewardItemOrKey_Case03, RewardItemOrKey_Case01)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey_WriteObject1_Case05, RewardItemOrKey_WriteObject1AndScriptStep, RewardItemOrKey_ReadMessageIndexAndMessageGroup)
 RewardItemOrKey_Shared04::
 Func_073_65AA:: ; address name
     inc a
@@ -6469,15 +6469,15 @@ Func_073_65B0:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMasterThanks_FindPartyIndexOfSpeciesTemp0
-    dw SceneMasterThanks_Case01
-    dw SceneMasterThanks_Case02
-    dw SceneMasterThanks_Case03
-    dw SceneMasterThanks_Case04
+    dw SceneMasterThanks_WriteScriptStep
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case03
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case04
     dw SceneMasterThanks_Case05
-    dw SceneMasterThanks_Case06
-    dw SceneMasterThanks_Case03
-    dw SceneMasterThanks_Case08
-    dw SceneMasterThanks_Case09
+    dw SceneMasterThanks_WriteScriptStep_Case06
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case03
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case08
+    dw SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags
     dw SceneMasterThanks_LoadListedRecordNameTilesForTemp0
     dw SceneMasterThanks_AddStepDeltaToPointedByte
 
@@ -6536,7 +6536,7 @@ Jump_073_65ED:: ; address name
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wSpriteSlots, hFieldDrawFlags
 ; points at: wScriptStep
-SceneMasterThanks_Case09::
+SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags::
 Jump_073_6618:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6579,7 +6579,7 @@ Jump_073_6649::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-SceneMasterThanks_Case08::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case08::
 Jump_073_664F:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6606,7 +6606,7 @@ Jump_073_6663::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wScriptStep
-SceneMasterThanks_Case06::
+SceneMasterThanks_WriteScriptStep_Case06::
 Jump_073_666A:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6672,7 +6672,7 @@ Jump_073_66B0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-SceneMasterThanks_Case04::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case04::
 Jump_073_66B6:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6699,7 +6699,7 @@ Jump_073_66CA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-SceneMasterThanks_Case03::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup_Case03::
 Jump_073_66D1:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6724,7 +6724,7 @@ Jump_073_66E4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-SceneMasterThanks_Case02::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup::
 Jump_073_66EA:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6751,7 +6751,7 @@ Jump_073_66FE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wScriptStep
-SceneMasterThanks_Case01::
+SceneMasterThanks_WriteScriptStep::
 Jump_073_6705:: ; address name
     ld a, [wMessageIndex]
     ld l, a
@@ -6868,22 +6868,22 @@ Func_073_679F:: ; address name
     rst $00
     dw SceneKamehaEscape_QueueMusic
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
-    dw SceneKamehaEscape_Case02
+    dw SceneKamehaEscape_WriteStepPtrLo
     dw SceneKamehaEscape_Case03_DecompressToVRAM_Case03
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_ScriptStartFadeAndAdvanceStep
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
-    dw SceneKamehaEscape_Case02
-    dw SceneKamehaEscape_Case0A
+    dw SceneKamehaEscape_WriteStepPtrLo
+    dw SceneKamehaEscape_WriteScriptParam0
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_Case0D
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
-    dw SceneKamehaEscape_Case02
-    dw SceneKamehaEscape_Case11
+    dw SceneKamehaEscape_WriteStepPtrLo
+    dw SceneKamehaEscape_WriteScriptParam0_Case11
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_StepScriptParam0Counter_Bank73
     dw SceneKamehaEscape_ScriptStartFadeAndAdvanceStep_Case14
@@ -6926,7 +6926,7 @@ Jump_073_67D5:: ; address name
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep, wScreenTileBuffer
-SceneKamehaEscape_Case11::
+SceneKamehaEscape_WriteScriptParam0_Case11::
 Jump_073_67FC:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -6974,7 +6974,7 @@ Jump_073_6835:: ; address name
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep, wScreenTileBuffer
-SceneKamehaEscape_Case0A::
+SceneKamehaEscape_WriteScriptParam0::
 Jump_073_683F:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -7015,7 +7015,7 @@ Func_073_6875:: ; address name
     ret
 
 ; only called from routines of SceneKamehaEscape (E-0098)
-; 5 call sites from 3 routines (e.g. SceneKamehaEscape_Case11, SceneKamehaEscape_Case0A, SceneKamehaEscape_Case03_DecompressToVRAM_Case03)
+; 5 call sites from 3 routines (e.g. SceneKamehaEscape_WriteScriptParam0_Case11, SceneKamehaEscape_WriteScriptParam0, SceneKamehaEscape_Case03_DecompressToVRAM_Case03)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenAttrBuffer
@@ -7101,11 +7101,11 @@ Jump_073_68B8:: ; address name
 ; entry 2 of the `rst $00` table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepPtrLo
-SceneKamehaEscape_Case02::
+SceneKamehaEscape_WriteStepPtrLo::
 Jump_073_6910:: ; address name
     ld a, $B4
     ld [wStepPtrLo], a
-    farcall SceneKamehaEscape_Case02_Sub01
+    farcall SceneKamehaEscape_Case02_WriteScrollXAndScrollXHi
     ret
 
 ; entry 1 of the `rst $00` table in SceneKamehaEscape
@@ -7177,10 +7177,10 @@ Func_073_6969:: ; address name
     dw SceneCrate_Case01
     dw SceneCrate_UpdatePlayerMovement
     dw SceneCrate_Case03
-    dw SceneCrate_Case04
-    dw SceneCrate_Case05
-    dw SceneCrate_Case06
-    dw SceneCrate_Case07
+    dw SceneCrate_WritePlayerYAndFollowerRecords
+    dw SceneCrate_WriteFollowerRecords
+    dw SceneCrate_WriteFollowerRecords_Case06
+    dw SceneCrate_WriteFollowerRecords_Case07
     dw ScriptStepBlinkSpritesThenEnd
 
 ; entry 7 of the `rst $00` table in SceneCrate
@@ -7188,7 +7188,7 @@ Func_073_6969:: ; address name
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
 ; points at: wScriptStep
-SceneCrate_Case07::
+SceneCrate_WriteFollowerRecords_Case07::
 Jump_073_697F:: ; address name
     ld a, [wFollowerRecords + $C]
     inc a
@@ -7204,7 +7204,7 @@ Jump_073_697F:: ; address name
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
 ; points at: wScriptStep
-SceneCrate_Case06::
+SceneCrate_WriteFollowerRecords_Case06::
 Jump_073_698E:: ; address name
     ld a, [wFollowerRecords + $7]
     inc a
@@ -7226,7 +7226,7 @@ Jump_073_698E:: ; address name
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
 ; points at: wScriptStep
-SceneCrate_Case05::
+SceneCrate_WriteFollowerRecords::
 Jump_073_69AB:: ; address name
     ld a, [wFollowerRecords + $2]
     inc a
@@ -7248,7 +7248,7 @@ Jump_073_69AB:: ; address name
 ; reads: hPlayerY
 ; writes: hPlayerY, wFollowerRecords
 ; points at: wScriptStep
-SceneCrate_Case04::
+SceneCrate_WritePlayerYAndFollowerRecords::
 Jump_073_69C8:: ; address name
     ldh a, [hPlayerY]
     inc a
@@ -8235,9 +8235,9 @@ ScriptCommand20_Run::
 Func_073_6F7C:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand20_Run_Case00
-    dw ScriptCommand20_Run_Case01
-    dw ScriptCommand20_Run_Case02
+    dw ScriptCommand20_Run_WriteScriptParam0
+    dw ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords
+    dw ScriptCommand20_Run_WriteFollowerRecords
     dw ScriptCommand20_Run_SetFlagBit
 
 ; entry 3 of the `rst $00` table in ScriptCommand20_Run
@@ -8271,7 +8271,7 @@ Jump_073_6F88:: ; address name
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
 ; points at: wScriptStep
-ScriptCommand20_Run_Case02::
+ScriptCommand20_Run_WriteFollowerRecords::
 Jump_073_6FB1:: ; address name
     ld a, $01
     ld [wFollowerRecords + $5], a
@@ -8289,7 +8289,7 @@ Jump_073_6FB1:: ; address name
 ; reads: wScriptParam0, wFollowerRecords
 ; writes: wScriptParam0, wFollowerRecords
 ; points at: wScriptStep
-ScriptCommand20_Run_Case01::
+ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords::
 Jump_073_6FC5:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -8338,7 +8338,7 @@ Jump_073_6FFD::
 ; reads: wFollowerRecords
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand20_Run_Case00::
+ScriptCommand20_Run_WriteScriptParam0::
 Jump_073_7007:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -8383,7 +8383,7 @@ Func_073_7024:: ; address name
     dw SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73
     dw SceneWarubouFood2_CycleSpriteFloatYDown
     dw SceneWarubouFood2_RunMessageBoxFar_Bank73
-    dw SceneWarubouFood2_CycleSpriteFloatYDown_Case13
+    dw SceneWarubouFood2_CycleSpriteFloatYDown_WriteTemp0
     dw SceneWarubouFood2_RunMessageBoxFar_Bank73
     dw SceneWarubouFood2_CycleSpriteFloatYDown_Case15
     dw SceneWarubouFood2_ShowWarubouWaheyItsThe
@@ -8391,7 +8391,7 @@ Func_073_7024:: ; address name
     dw SceneWarubouFood2_ShowWarubouWaroohWillIt
     dw SceneChestBattle_RunMessageBoxFar_Bank73
     dw SceneWarubouFood2_StepPlayerLeftTowardWC928
-    dw SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73_Case1B
+    dw SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73_WriteObject5
     dw SceneWarubouFood2_Case1C
 
 ; entry 28 of the `rst $00` table in SceneWarubouFood2
@@ -8429,7 +8429,7 @@ Jump_073_706E::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73_Case1B::
+SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73_WriteObject5::
 Jump_073_7095:: ; address name
     ld hl, wObject5 + $5
     inc [hl]
@@ -8604,7 +8604,7 @@ Jump_073_7180:: ; address name
 ; entry 19 of the `rst $00` table in SceneWarubouFood2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-SceneWarubouFood2_CycleSpriteFloatYDown_Case13::
+SceneWarubouFood2_CycleSpriteFloatYDown_WriteTemp0::
 Jump_073_71BC:: ; address name
     farcall CycleSpriteFloatYDown
     xor a, a
@@ -9192,7 +9192,7 @@ SceneWarubouSmells::
 Func_073_75DD:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneWarubouSmells_Case00
+    dw SceneWarubouSmells_WriteObject2
     dw SceneWarubouSmells_QueueSoundEffect
     dw SceneWarubouSmells_AddStepDeltaToPointedByte
     dw SceneWarubouSmells_StepScriptParam0Counter_Bank73
@@ -9275,7 +9275,7 @@ Jump_073_7639:: ; address name
 ; reads: wObject2
 ; writes: wObject2
 ; points at: wScriptStep
-SceneWarubouSmells_Case00::
+SceneWarubouSmells_WriteObject2::
 Jump_073_764E:: ; address name
     ld a, [wObject2 + $B]
     inc a
@@ -9537,18 +9537,18 @@ Func_073_77CC:: ; address name
     rst $00
     dw SceneLearnQuick_SetMessageIndex
     dw SceneLearnQuick_StepScriptParam0Counter_Bank73
-    dw SceneLearnQuick_StepScriptParam0Counter_Bank73_Case02
+    dw SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteScriptParam1AndMessageIndex
     dw SceneLearnQuick_StepObjectTowardCoord
     dw SceneLearnQuick_StepObjectTowardCoord_Case04
-    dw SceneLearnQuick_Case05
+    dw SceneLearnQuick_WriteScriptStartRequest
 
 ; entry 5 of the `rst $00` table in SceneLearnQuick
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: wScriptStartRequest
-SceneLearnQuick_Case05::
+SceneLearnQuick_WriteScriptStartRequest::
 Jump_073_77DC:: ; address name
-    call SceneLearnQuick_Shared03
+    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
     ld a, [wScriptParam1]
     or a, a
     ret nz
@@ -9563,7 +9563,7 @@ Jump_073_77DC:: ; address name
 ; points at: wScriptStep
 SceneLearnQuick_StepObjectTowardCoord_Case04::
 Jump_073_77EA:: ; address name
-    call SceneLearnQuick_Shared03
+    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
     ld a, [wObject1 + $C]
     cp a, $30
     jr z, Jump_073_7800
@@ -9637,7 +9637,7 @@ Jump_073_7858::
 ; points at: wScriptStep
 SceneLearnQuick_StepObjectTowardCoord::
 Jump_073_787B:: ; address name
-    call SceneLearnQuick_Shared03
+    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $83
@@ -9663,10 +9663,10 @@ Jump_073_787B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam1, wMessageIndex
 ; points at: wScriptStep
-SceneLearnQuick_StepScriptParam0Counter_Bank73_Case02::
+SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteScriptParam1AndMessageIndex::
 Jump_073_78B2:: ; address name
     call SceneLearnQuick_Shared01
-    call SceneLearnQuick_Shared02
+    call SceneLearnQuick_WriteSpriteSlots
     ld b, $A0
     call StepScriptParam0Counter_Bank73
     ret nc
@@ -9685,7 +9685,7 @@ Jump_073_78B2:: ; address name
 SceneLearnQuick_StepScriptParam0Counter_Bank73::
 Jump_073_78CC:: ; address name
     call SceneLearnQuick_Shared01
-    call SceneLearnQuick_Shared02
+    call SceneLearnQuick_WriteSpriteSlots
     ld b, $80
     call StepScriptParam0Counter_Bank73
     ret nc
@@ -9712,7 +9712,7 @@ Jump_073_78E7:: ; address name
     ret
 
 ; only called from routines of SceneLearnQuick (E-0098)
-; 2 call sites from 2 routines (e.g. SceneLearnQuick_StepScriptParam0Counter_Bank73_Case02, SceneLearnQuick_StepScriptParam0Counter_Bank73)
+; 2 call sites from 2 routines (e.g. SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteScriptParam1AndMessageIndex, SceneLearnQuick_StepScriptParam0Counter_Bank73)
 ; reads: wMessageIndex, wStepArrived, wMessageGroup
 ; writes: wStepTarget, wStepPtrLo, wStepPtrHi, wMessageIndex, wMessageGroup
 SceneLearnQuick_Shared01::
@@ -9832,10 +9832,10 @@ Jump_073_79B7::
     ret
 
 ; only called from routines of SceneLearnQuick (E-0098)
-; 2 call sites from 2 routines (e.g. SceneLearnQuick_StepScriptParam0Counter_Bank73_Case02, SceneLearnQuick_StepScriptParam0Counter_Bank73)
+; 2 call sites from 2 routines (e.g. SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteScriptParam1AndMessageIndex, SceneLearnQuick_StepScriptParam0Counter_Bank73)
 ; reads: wMessageGroup
 ; writes: wSpriteSlots
-SceneLearnQuick_Shared02::
+SceneLearnQuick_WriteSpriteSlots::
 Func_073_79B8:: ; address name
     ld a, [wMessageGroup]
     and a, $03
@@ -9847,11 +9847,11 @@ Func_073_79B8:: ; address name
     db $01, $00, $03, $02
 
 ; only called from routines of SceneLearnQuick (E-0098)
-; 3 call sites from 3 routines (e.g. SceneLearnQuick_Case05, SceneLearnQuick_StepObjectTowardCoord_Case04, SceneLearnQuick_StepObjectTowardCoord)
+; 3 call sites from 3 routines (e.g. SceneLearnQuick_WriteScriptStartRequest, SceneLearnQuick_StepObjectTowardCoord_Case04, SceneLearnQuick_StepObjectTowardCoord)
 ; reads: wFrameCounterLo, wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wSpriteSlots
 ; points at: wScriptParam1
-SceneLearnQuick_Shared03::
+SceneLearnQuick_WriteScriptParam0AndSpriteSlots::
 Func_073_79CE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $08
@@ -9977,7 +9977,7 @@ Func_073_7A4C:: ; address name
     ret
 
 ; when wScriptParam0 & $1F = 0: [DE] = ([DE] + 1) & 3, the next of four directions; otherwise returns with A = wScriptParam0 & $1F (E-0064) (the same 12 bytes appear in 3 banks)
-; 4 call sites from 4 routines (e.g. SceneWarubouFood2_ShowWarubouWaheyItsThe, SceneWarubouFood2_CycleSpriteFloatYDown_Case15, SceneWarubouFood2_CycleSpriteFloatYDown_Case13, SceneWarubouFood2_RunMessageBoxFar_Bank73)
+; 4 call sites from 4 routines (e.g. SceneWarubouFood2_ShowWarubouWaheyItsThe, SceneWarubouFood2_CycleSpriteFloatYDown_Case15, SceneWarubouFood2_CycleSpriteFloatYDown_WriteTemp0, SceneWarubouFood2_RunMessageBoxFar_Bank73)
 ; reads: wScriptParam0
 RotateDirectionAtDEEvery32_Bank73::
 Func_073_7A51:: ; address name
@@ -10017,7 +10017,7 @@ Jump_073_7A79::
     ret
 
 ; stores DE in wC928/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
-; 3 call sites from 3 routines (e.g. SceneWarubouFood2_CycleSpriteFloatYDown_Case13, SceneWarubouFood2_CycleSpriteFloatYDown, SceneSpinning_ToScriptStepAdjust32TimesThenMessage_Bank73)
+; 3 call sites from 3 routines (e.g. SceneWarubouFood2_CycleSpriteFloatYDown_WriteTemp0, SceneWarubouFood2_CycleSpriteFloatYDown, SceneSpinning_ToScriptStepAdjust32TimesThenMessage_Bank73)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptStep

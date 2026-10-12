@@ -72,8 +72,8 @@ Func_084_405C:: ; address name
     dw RunDebugAutomapCaseTemp0_Case01
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05
     dw RunDebugAutomapCaseTemp0_Case06
 
 ; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -197,7 +197,7 @@ Jump_084_40EC::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyWorldGoalKind, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case04::
+RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0::
 Jump_084_40F3:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -266,7 +266,7 @@ Jump_084_4150::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05::
+RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05::
 Jump_084_4156:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -335,18 +335,18 @@ Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_084_41B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05
 Data_084_41C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $06, $07, $08, $09, $05, $07, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0
 Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0B, $00, $0B, $00, $02, $00, $02, $02, $03, $0B, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
 ; only called from routines of RunDebugAutomapCaseTemp0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_Case05, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04)
+; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05, RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0)
 ; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
 ; writes: hTemp2, hTemp3, wKeyWorldByte46
 ; points at: wKeyWorldRoomTable
@@ -649,7 +649,7 @@ Jump_084_43C3::
     jr nc, Jump_084_43E8
     pop hl
     push hl
-    call ApplyMapScreenFlagEvents_Sub01
+    call ApplyMapScreenFlagEvents_WriteSVBK
 
 Jump_084_43E8::
     pop hl
@@ -661,7 +661,7 @@ Jump_084_43E8::
 ; 1 call site from 1 routine (e.g. ApplyMapScreenFlagEvents)
 ; reads: hTemp0, wIsCGB
 ; writes: rSVBK
-ApplyMapScreenFlagEvents_Sub01::
+ApplyMapScreenFlagEvents_WriteSVBK::
 Func_084_43F2:: ; address name
     ldh a, [hTemp0]
     cp a, $FF
@@ -1516,7 +1516,7 @@ Jump_084_4AA5::
     jp nz, Jump_084_4B46
     ld a, [wSnapshotByte3C]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr Jump_084_4B46
 
 Jump_084_4ACE::
@@ -1528,7 +1528,7 @@ Jump_084_4ACE::
     dec hl
     ld a, [hl]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr Jump_084_4B46
 
 ; address loaded by RunFieldReturnPhase_Case01_Sub02
@@ -1560,7 +1560,7 @@ Jump_084_4AFE::
     jr nz, Jump_084_4B46
     ld a, [wSnapshotByte3C]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr Jump_084_4B46
 
 Jump_084_4B2C::
@@ -1575,7 +1575,7 @@ Jump_084_4B2C::
     swap a
     or a, c
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr Jump_084_4B46
 
 Jump_084_4B46::
@@ -1696,7 +1696,7 @@ Jump_084_4BFE::
 ; 4 call sites from 1 routine (e.g. RunFieldReturnPhase_Case01_Sub02)
 ; reads: wIsCGB, wMapType
 ; writes: rSVBK
-RunFieldReturnPhase_Case01_Sub02_Sub01::
+RunFieldReturnPhase_Case01_Sub02_WriteSVBK::
 Func_084_4C04:: ; address name
     ld a, c
     and a, $0F
@@ -1775,7 +1775,7 @@ Jump_084_4C61::
     ldh [rSVBK], a
     ret
 
-; address loaded by RunFieldReturnPhase_Case01_Sub02_Sub01
+; address loaded by RunFieldReturnPhase_Case01_Sub02_WriteSVBK
 Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $03, $02, $02
 

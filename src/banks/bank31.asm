@@ -712,7 +712,7 @@ Jump_031_440E:: ; address name
     jr Jump_031_4448
 
 Jump_031_4421::
-    call BattleEnd_Step1_Sub01
+    call BattleEnd_Step1_WriteBattleArg0
     ld a, [wBattleScene]
     cp a, $02
     jr z, Jump_031_4443
@@ -774,7 +774,7 @@ Jump_031_445B:: ; address name
     inc hl
     and a, [hl]
     cp a, $FF
-    call z, BattleEnd_Step2_Sub01
+    call z, BattleEnd_Step2_WriteBattleEndTimer
     ld a, [wTextFlags]
     or a, a
     ret nz
@@ -788,7 +788,7 @@ Jump_031_445B:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step2)
 ; reads: wBattleEndTimer
 ; writes: wBattleEndTimer
-BattleEnd_Step2_Sub01::
+BattleEnd_Step2_WriteBattleEndTimer::
 Func_031_4493:: ; address name
     ld a, [wBattleEndTimer]
     dec a
@@ -845,7 +845,7 @@ Jump_031_44D1::
     ret nc
     ld a, [wLinkMode]
     or a, a
-    call z, BattleEnd_Step3_Sub05
+    call z, BattleEnd_Step3_WriteBattleExpAward
     call BattleEnd_Step3_WaitBattleKind
     ld a, [wDisplaySlot]
     dec a
@@ -991,7 +991,7 @@ Jump_031_459E::
 ; reads: wBattleFoeCount, wBattleExpAward
 ; writes: wBattleExpAward
 ; points at: wBattleSlotOut
-BattleEnd_Step3_Sub05::
+BattleEnd_Step3_WriteBattleExpAward::
 Func_031_45A3:: ; address name
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1032,7 +1032,7 @@ Jump_031_45E7::
     jr nz, Jump_031_45B3
     ret
 
-; address loaded by BattleEnd_Step3_Sub05
+; address loaded by BattleEnd_Step3_WriteBattleExpAward
 Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D7, $D1, $25, $D2, $73, $D2
 
@@ -1177,7 +1177,7 @@ Jump_031_4693:: ; address name
     inc hl
     and a, [hl]
     cp a, $FF
-    call z, BattleEnd_Step4_Sub01
+    call z, BattleEnd_Step4_WriteBattleEndTimer
     call BattleEnd_Step4_Sub02
     ret
 
@@ -1185,7 +1185,7 @@ Jump_031_4693:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step4)
 ; reads: wBattleEndTimer
 ; writes: wBattleEndTimer
-BattleEnd_Step4_Sub01::
+BattleEnd_Step4_WriteBattleEndTimer::
 Func_031_46C1:: ; address name
     ld a, [wBattleEndTimer]
     dec a
@@ -1538,7 +1538,7 @@ BattleEnd_Step7::
 Jump_031_48E5:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw BattleEnd_Step7_Case00
+    dw BattleEnd_Step7_WriteLinkSendByte
     dw BattleEnd_Step7_WaitLinkMessage
     dw BattleEnd_Step7_StartPaletteFade
 
@@ -1547,7 +1547,7 @@ Jump_031_48E5:: ; address name
 ; reads: wSoundChannelSlots, wTextFlags
 ; writes: wLinkSendByte
 ; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5, wBattleSubPhase
-BattleEnd_Step7_Case00::
+BattleEnd_Step7_WriteLinkSendByte::
 Jump_031_48EF:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
@@ -1659,7 +1659,7 @@ Jump_031_4988::
 ; reads: wLinkMode, wBattleFoeCount
 ; writes: wBattleArg0
 ; points at: wBattlePictureIds, wTextBuf0, wBattleByte58
-BattleEnd_Step1_Sub01::
+BattleEnd_Step1_WriteBattleArg0::
 Func_031_498E:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -1709,7 +1709,7 @@ Jump_031_49C8::
     jr Jump_031_4A22
 
 ; only called from BattleEnd_Step1_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_WriteBattleArg0)
 ; points at: wTextBuf0
 BattleEnd_Step1_Sub01_CopyStringHLToDE::
 Func_031_49D8:: ; address name
@@ -1943,13 +1943,13 @@ Func_031_4B10:: ; address name
     dw RunBattleSetup_Case02
     dw RunBattleSetup_FillWC278WithC3_Bank31
     dw RunBattleSetup_ShowSelectingHeroSMove
-    dw RunBattleSetup_Case05
+    dw RunBattleSetup_WriteLinkSendByte
     dw RunBattleSetup_Case06
-    dw RunBattleSetup_Case07
+    dw RunBattleSetup_WriteLinkSendByteAndLinkReady
     dw RunBattleSetup_Case08
-    dw RunBattleSetup_Case09
-    dw RunBattleSetup_Case0A
-    dw RunBattleSetup_Case0B
+    dw RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo
+    dw RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte
+    dw RunBattleSetup_WriteBattleSubPhase
     dw RunBattleSetup_FillTilesFromRequest
 
 ; entry 0 of the `rst $00` table in RunBattleSetup
@@ -1959,7 +1959,7 @@ RunBattleSetup_Case00::
 Jump_031_4B2E:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleSetup_Case00_Case00
+    dw RunBattleSetup_Case00_ReadLinkModeAndLinkRole
     dw RunBattleSetup_Case00_FillWC278WithC3_Bank31
     dw RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM
     dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink
@@ -1981,7 +1981,7 @@ Jump_031_4B2E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleSetupF2, wSlotTactic, wBattleResolveStep
-RunBattleSetup_Case00_Case00::
+RunBattleSetup_Case00_ReadLinkModeAndLinkRole::
 Jump_031_4B54:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -2135,8 +2135,8 @@ Jump_031_4C21:: ; address name
     jp Jump_031_4CBC
 
 Jump_031_4C37::
-    call RunBattleSetup_Case00_Case05_Sub01
-    call RunBattleSetup_Case00_Case05_Sub02
+    call RunBattleSetup_Case00_Case05_ReadLinkRole
+    call RunBattleSetup_Case00_Case05_ReadLinkModeAndLinkRole
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -2186,7 +2186,7 @@ Jump_031_4C83::
     jr z, Jump_031_4CA2
     cp a, $05
     jr z, Jump_031_4CA2
-    call RunBattleSetup_Case00_Case05_Sub01
+    call RunBattleSetup_Case00_Case05_ReadLinkRole
     call RunBattleSetup_Case00_Case05_Sub03
     ld a, e
     or a, a
@@ -2220,7 +2220,7 @@ Jump_031_4CBC::
     jr Jump_031_4CA4
 
 Jump_031_4CC6::
-    call RunBattleSetup_Case00_Case05_Sub01
+    call RunBattleSetup_Case00_Case05_ReadLinkRole
     ld hl, wBattleResolveStep
     ld [hl], $08
     ld a, [wBattleKind]
@@ -2246,7 +2246,7 @@ Jump_031_4CED::
 ; 3 call sites from 1 routine (e.g. RunBattleSetup_Case00_Case05)
 ; reads: wLinkRole
 ; points at: wBattleActionChoice
-RunBattleSetup_Case00_Case05_Sub01::
+RunBattleSetup_Case00_Case05_ReadLinkRole::
 Func_031_4CEE:: ; address name
     ld a, [wLinkRole]
     and a, $02
@@ -2267,7 +2267,7 @@ Func_031_4CEE:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleSetupF2, wSlotTactic
-RunBattleSetup_Case00_Case05_Sub02::
+RunBattleSetup_Case00_Case05_ReadLinkModeAndLinkRole::
 Func_031_4D06:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -4822,7 +4822,7 @@ Jump_031_5CD8::
 ; reads: wLinkMode
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattleSetup_Case05::
+RunBattleSetup_WriteLinkSendByte::
 Jump_031_5CDD:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -4953,7 +4953,7 @@ Jump_031_5D8D::
 ; reads: wLinkMode
 ; writes: wLinkSendByte, wLinkReady
 ; points at: wBattleSubPhase
-RunBattleSetup_Case07::
+RunBattleSetup_WriteLinkSendByteAndLinkReady::
 Jump_031_5D92:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5113,7 +5113,7 @@ Jump_031_5E78::
 ; reads: wLinkMode, wRandomLo, wRandomSeed2Lo, wRandomHi, wRandomSeed2Hi
 ; writes: wLinkSendByte, wCounterPtr0Lo
 ; points at: wBattleSubPhase, wBattleSetupFlagsLo
-RunBattleSetup_Case09::
+RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo::
 Jump_031_5E7D:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5156,7 +5156,7 @@ Jump_031_5EB2::
 ; reads: wLinkMode, wLinkMessage
 ; writes: wCounterPtr0Hi, wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattleSetup_Case0A::
+RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte::
 Jump_031_5EB7:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5183,7 +5183,7 @@ Jump_031_5ED0::
 ; reads: wLinkMode, wCounterPtr0Lo, wCounterPtr0Hi
 ; writes: wBattleSubPhase
 ; points at: wBattleSubPhase
-RunBattleSetup_Case0B::
+RunBattleSetup_WriteBattleSubPhase::
 Jump_031_5ED5:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5796,7 +5796,7 @@ Jump_031_6229::
     or a, a
     jr z, Jump_031_623D
     and a, $03
-    call z, RunBattleSetup_Case00_Case05_Sub03_Sub01
+    call z, RunBattleSetup_Case00_Case05_Sub03_WriteCommandPageCount
     dec a
     and a, $03
 
@@ -5810,7 +5810,7 @@ Jump_031_623D::
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05_Sub03)
 ; reads: wCommandPageCount
 ; writes: wCommandPageCount
-RunBattleSetup_Case00_Case05_Sub03_Sub01::
+RunBattleSetup_Case00_Case05_Sub03_WriteCommandPageCount::
 Func_031_6245:: ; address name
     push af
     ld a, [wCommandPageCount]
@@ -6552,17 +6552,17 @@ Func_031_663D:: ; address name
 
 Jump_031_6653::
     push bc
-    call BattleEnd_Step3_Sub07_Sub01
+    call BattleEnd_Step3_Sub07_WriteBattleResultByte
     ld a, c
     push bc
     ld c, $55
     call SRAMRecordAddressMapped
     pop bc
     call BattleEnd_Step3_Sub07_AddAx9ToHL
-    call BattleEnd_Step3_Sub07_Sub03
+    call BattleEnd_Step3_Sub07_WriteBattleArg0
     call BattleEnd_Step3_Sub07_Sub04
-    call BattleEnd_Step3_Sub07_Sub05
-    call BattleEnd_Step3_Sub07_Sub06
+    call BattleEnd_Step3_Sub07_ReadBattleArg0
+    call BattleEnd_Step3_Sub07_ReadBattleArg0_Sub06
     pop bc
     inc c
     dec b
@@ -6578,7 +6578,7 @@ Jump_031_6677::
 ; reads: wMenuState
 ; writes: wBattleResultByte
 ; points at: wSlotTactic, wSlotLastTactic
-BattleEnd_Step3_Sub07_Sub01::
+BattleEnd_Step3_Sub07_WriteBattleResultByte::
 Func_031_6678:: ; address name
     push bc
     ld a, c
@@ -6666,7 +6666,7 @@ Func_031_66DF:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; writes: wBattleArg0
 ; points at: wBattleHP
-BattleEnd_Step3_Sub07_Sub03::
+BattleEnd_Step3_Sub07_WriteBattleArg0::
 Func_031_66E2:: ; address name
     ld a, [hl]
     ld [wBattleArg0], a
@@ -6773,7 +6773,7 @@ Jump_031_6749::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wBattleArg0
 ; points at: wBattleWordArray3F
-BattleEnd_Step3_Sub07_Sub05::
+BattleEnd_Step3_Sub07_ReadBattleArg0::
 Func_031_6757:: ; address name
     ld a, [wBattleArg0]
     bit 7, a
@@ -6806,7 +6806,7 @@ Jump_031_676D::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wBattleArg0
 ; points at: wSlotPersonalityHi, wSlotPersonalityLo, wSlotTrait, wSlotPersonalityMid
-BattleEnd_Step3_Sub07_Sub06::
+BattleEnd_Step3_Sub07_ReadBattleArg0_Sub06::
 Func_031_6776:: ; address name
     ld a, [wBattleArg0]
     bit 7, a

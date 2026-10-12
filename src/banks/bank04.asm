@@ -864,10 +864,10 @@ Jump_004_4574::
     rst $00
     dw UpdateSpriteSlots_Case00
     dw UpdateSpriteSlots_Return
-    dw UpdateSpriteSlots_Case02
-    dw UpdateSpriteSlots_Case03
-    dw UpdateSpriteSlots_Case04
-    dw UpdateSpriteSlots_Case05
+    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
+    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03
+    dw UpdateSpriteSlots_WriteTemp0AndTemp1
+    dw UpdateSpriteSlots_WriteTemp0AndTemp1_Case05
 
 Jump_004_4585::
     pop hl
@@ -967,7 +967,7 @@ Jump_004_45EC::
 ; entry 2 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wRandomLo
-UpdateSpriteSlots_Case02::
+UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
 Jump_004_4606:: ; address name
     pop hl
     push hl
@@ -1083,7 +1083,7 @@ Jump_004_465C::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1125,7 +1125,7 @@ Jump_004_46B9::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1158,7 +1158,7 @@ Jump_004_4704:: ; address name
 ; entry 3 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wRandomLo
-UpdateSpriteSlots_Case03::
+UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03::
 Jump_004_4705:: ; address name
     pop hl
     push hl
@@ -1294,7 +1294,7 @@ Jump_004_4784::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jp z, Jump_004_4845
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jp nz, Jump_004_4845
     pop hl
@@ -1322,7 +1322,7 @@ Jump_004_47CD::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1352,7 +1352,7 @@ Jump_004_47F4::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1382,7 +1382,7 @@ Jump_004_481C::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1407,7 +1407,7 @@ Jump_004_4846::
     jp Jump_004_45A7
 
 ; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
-; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_Case03)
+; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03)
 ; reads: wPendingFieldEvent
 RunPendingFieldEventType0AOrOther::
 Func_004_4852:: ; address name
@@ -1419,14 +1419,14 @@ Func_004_4852:: ; address name
     ret
 
 Jump_004_485F::
-    call RunPendingFieldEventType0AOrOther_Sub01
+    call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
     ret
 
 ; entry 4 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_Case04::
+UpdateSpriteSlots_WriteTemp0AndTemp1::
 Jump_004_4863:: ; address name
     ld hl, $48D6
     ld a, l
@@ -1439,7 +1439,7 @@ Jump_004_4863:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_Case05::
+UpdateSpriteSlots_WriteTemp0AndTemp1_Case05::
 Jump_004_486E:: ; address name
     ld hl, $48FA
     ld a, l
@@ -1530,7 +1530,7 @@ Jump_004_48CD::
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
 ; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wC910-wC913; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
-; 3 call sites from 2 routines (e.g. RunPendingFieldEventType0AOrOther, UpdateSpriteSlots_Case02)
+; 3 call sites from 2 routines (e.g. RunPendingFieldEventType0AOrOther, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wTilesUnderPoint
 IsTileUnderCellBlocking::
@@ -1601,7 +1601,7 @@ Jump_004_4955::
 ; 1 call site from 1 routine (e.g. RunPendingFieldEventType0AOrOther)
 ; reads: wMapTallTileMin
 ; points at: wScreenTileBuffer, wTilesUnderPoint
-RunPendingFieldEventType0AOrOther_Sub01::
+RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
 Func_004_495A:: ; address name
     push bc
     push de
@@ -1666,10 +1666,10 @@ Jump_004_49AC::
     ret
 
 ; only called from routines of UpdateSpriteSlots (E-0098)
-; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_Case03, UpdateSpriteSlots_Case02)
+; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
 ; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wPartyCount
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_Shared01::
+UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01::
 Func_004_49B0:: ; address name
     push bc
     ld a, c
@@ -5522,7 +5522,7 @@ Func_004_612B:: ; address name
     dw TalkMsg0137_HeroCheckedTheOvenASharp
     dw VaseItem_Herb
     dw TalkMsg0138_TheUndergroundCanalIsAhead
-    dw DispatchTalkEvent_Case02_Sub01_Case0A
+    dw DispatchTalkEvent_Case02_Sub01_WriteSpriteSlotsAndDataBank
     dw TalkMsg0139_TheKingCalledACircusTroupe
     dw TalkMsg013A_ThisIsAsiyaTheDesertFlower
     dw TalkMsg013B_OurKingCameIntoAnEnormous
@@ -5736,7 +5736,7 @@ Jump_004_627C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wSpriteSlots, wDataBank
-DispatchTalkEvent_Case02_Sub01_Case0A::
+DispatchTalkEvent_Case02_Sub01_WriteSpriteSlotsAndDataBank::
 Jump_004_6283:: ; address name
     ldh a, [hPlayerX]
     cp a, $30

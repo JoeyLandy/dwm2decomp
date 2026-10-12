@@ -1006,7 +1006,7 @@ Jump_0A3_49D0::
 ; reads: wLinkMode, wBattleActor
 ; writes: hTemp0
 ; points at: wBattleMonsterId
-RollRandomLoBelowChance_Sub01::
+RollRandomLoBelowChance_WriteTemp0::
 Func_0A3_49D5:: ; address name
     ld a, [wLinkMode]
     or a, a

@@ -411,8 +411,8 @@ Jump_015_422B:: ; address name
     dw DrawRect70C5IfLinkModeAndStep
     dw BreedMenu_Case04_ShowSaveFileInfoWindow
     dw BreedMenu_Case04_DrawBottomBoxForLinkAndSetScreenSubStep
-    dw BreedMenu_Case04_Case2D
-    dw BreedMenu_Case04_Case2E
+    dw BreedMenu_Case04_WriteScreenStep
+    dw BreedMenu_Case04_WriteScreenStepAndTwoChoiceCursor
     dw BreedMenu_Case04_UpdateTwoChoiceCursor_Bank1D
     dw BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep
     dw BreedMenu_Case04_BGMapAddressAtScroll_Bank15
@@ -3376,12 +3376,12 @@ Jump_015_56B0:: ; address name
     dw BreedMenu_ReturnToMap_BlankWordTableTargets
     dw BreedMenu_ReturnToMap_SRAMRecordAddress
     dw BreedMenu_ReturnToMap_CopyRectTo20ByteRows_Bank15
-    dw BreedMenu_ReturnToMap_FillTilesBxC_Case0C
+    dw BreedMenu_ReturnToMap_FillTilesBxC_WriteScreenStep
     dw BreedMenu_ReturnToMap_ClampRecordListPageCursor5
     dw BreedMenu_ReturnToMap_ToDrawRecordListPageNames
     dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5
     dw BreedMenu_ReturnToMap_FillTilesBxC
-    dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11
+    dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_WriteArg1AndScreenStep
     dw BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15
     dw BreedMenu_ReturnToMap_UpdatePagedListCursor
     dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case14
@@ -3566,7 +3566,7 @@ Jump_015_57CB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-BreedMenu_Case04_Case2E::
+BreedMenu_Case04_WriteScreenStepAndTwoChoiceCursor::
 Jump_015_5811:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -3595,7 +3595,7 @@ Jump_015_5823:: ; address name
     ret
 
 Jump_015_5837::
-    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01
+    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_ReadIsCGB
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3625,7 +3625,7 @@ Jump_015_5850::
 ; only called from routines of BreedMenu_ReturnToMap (E-0098)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_SRAMRecordAddress, BreedMenu_ReturnToMap_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wIsCGB
-BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01::
+BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_ReadIsCGB::
 Func_015_586D:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $AE
@@ -3647,7 +3647,7 @@ Jump_015_5889::
     ret
 
 ; only called from BreedMenu_ReturnToMap_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_ReadIsCGB)
 BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15::
 Func_015_5896:: ; address name
     push hl
@@ -3672,7 +3672,7 @@ Jump_015_58B0::
     ret
 
 ; only called from BreedMenu_ReturnToMap_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_ReadIsCGB)
 BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15::
 Func_015_58B4:: ; address name
     push hl
@@ -3789,7 +3789,7 @@ Jump_015_593E:: ; address name
     ld a, [wScreenStep]
     sub a, $03
     ld [wScreenStep], a
-    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01
+    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_ReadIsCGB
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3916,7 +3916,7 @@ Data_015_5A77:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-BreedMenu_ReturnToMap_FillTilesBxC_Case0C::
+BreedMenu_ReturnToMap_FillTilesBxC_WriteScreenStep::
 Jump_015_5A97:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0F01
@@ -4032,7 +4032,7 @@ Jump_015_5B33:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11::
+BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_WriteArg1AndScreenStep::
 Jump_015_5B62:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -4974,7 +4974,7 @@ Jump_015_61B6:: ; address name
     dw BreedMenu_ReturnToMap_ToDrawRecordListPageNames
     dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5
     dw BreedMenu_ReturnToMap_FillTilesBxC
-    dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11
+    dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_WriteArg1AndScreenStep
     dw BreedMenu_Case04_CopyFromBankWaitVRAM
     dw BreedMenu_Case10_BlankWordTableTargets
     dw BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
@@ -5009,7 +5009,7 @@ Jump_015_61CE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case2D::
+BreedMenu_Case04_WriteScreenStep::
 Jump_015_61F5:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5353,7 +5353,7 @@ Jump_015_63F5::
     jr nc, Jump_015_63ED
 
 ; with SRAM disabled draws sprite part $0090 at ($88, $28) (Func_01D_6A3F, C = 1) (E-0124)
-; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_Shared02, GameMode5_Update_Case07_Sub01_WaitPickCount)
+; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_WriteRAMG2AndRAMB, GameMode5_Update_Case07_Sub01_WaitPickCount)
 ; writes: rRAMB, rRAMG2, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawSpritePart9000At88_28::
 Func_015_6403:: ; address name
@@ -7208,14 +7208,14 @@ Func_015_6EA5:: ; address name
     ld de, wCounterPtr0Lo
     ld a, [wRecordBufA + $A4]
     and a, a
-    call nz, PrepareWCF8BCountersAndRequestScript_Sub01
+    call nz, PrepareWCF8BCountersAndRequestScript_WriteTemp0AndArg1
     ld a, [wLinkMode]
     and a, a
     jr nz, Jump_015_6EDF
     ld de, wCounterPtr1Lo
     ld a, [wRecordBufB + $A4]
     and a, a
-    call nz, PrepareWCF8BCountersAndRequestScript_Sub01
+    call nz, PrepareWCF8BCountersAndRequestScript_WriteTemp0AndArg1
 
 Jump_015_6EDF::
     xor a, a
@@ -7237,7 +7237,7 @@ Jump_015_6EDF::
 ; reads: wArg1, hTemp0, wCounterArg0, wCounterPtr0Lo, wCounterPtr0Hi
 ; writes: hTemp0, wArg1
 ; points at: wItemStorage, wCounterPtr0Lo
-PrepareWCF8BCountersAndRequestScript_Sub01::
+PrepareWCF8BCountersAndRequestScript_WriteTemp0AndArg1::
 Func_015_6EFD:: ; address name
     add a, $3F
     ldh [hTemp0], a

@@ -87,7 +87,7 @@ Tiles2Gfx_E1_4E67:: ; heuristic: stream decompressed by a call to DecompressTo*;
 Data_0E1_4E67:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384E67, $59E
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WriteSVBKAndWorkBuf
 ; LZSS-compressed asset: 887 bytes expand to 1152 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_5405:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5405:: ; address name
@@ -111,13 +111,13 @@ ScreenAttrBufferGfx_E1_58C3:: ; heuristic: stream decompressed by a call to Deco
 Data_0E1_58C3:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3858C3, $4C
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WriteSVBKAndWorkBuf
 ; LZSS-compressed asset: 101 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_590F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_590F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $38590F, $65
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WriteSVBKAndWorkBuf
 ; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_5974:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5974:: ; address name
@@ -146,7 +146,7 @@ Data_0E1_5A27:: ; address name
     db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
     db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WriteSVBKAndWorkBuf
 BGPaletteBufferData_E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5A67:: ; address name
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09

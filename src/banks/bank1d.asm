@@ -10,7 +10,7 @@ Func_01D_4001:: ; address name
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
 Data_01D_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $CD, $11, $26, $C9
 
@@ -1127,7 +1127,7 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_CountNonZeroItemGridBytes, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes, VaultMenu_Setup_Case02)
+; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_CountNonZeroItemGridBytes, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes, VaultMenu_Setup_WriteScreenStep)
 ; writes: wSavedSpriteClipMode, wListPages
 ; points at: wItemStorage, wInventory
 Func_01D_4A62::
@@ -1186,7 +1186,7 @@ Func_01D_4A9A:: ; address name
     cp a, $10
     jr c, Jump_01D_4AAD
     cp a, $18
-    jr c, VaultMenu_Store_Shared03_Sub01
+    jr c, VaultMenu_Store_Shared03_ReadItemGridX
     xor a, a
     ld [wSelectedRecord], a
 
@@ -1197,7 +1197,7 @@ Jump_01D_4AAD::
 ; only called from VaultMenu_Store_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_CountNonZeroItemGridBytes)
 ; reads: wItemGridX
-VaultMenu_Store_Shared03_Sub01::
+VaultMenu_Store_Shared03_ReadItemGridX::
 Func_01D_4AB1:: ; address name
     ld b, $C3
     jr Jump_01D_4AB7
@@ -1222,7 +1222,7 @@ Jump_01D_4AB7::
     ei
     ret
 
-; address loaded by VaultMenu_Store_Shared03_Sub01
+; address loaded by VaultMenu_Store_Shared03_ReadItemGridX
 Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
@@ -1539,7 +1539,7 @@ Jump_01D_4CD3::
     ld a, [wScreenState]
     cp a, $04
     jr z, Jump_01D_4D0A
-    call VaultMenu_Store_Case0B_Sub01_Sub02
+    call VaultMenu_Store_Case0B_Sub01_ReadItemGridYAndItemGridX
     and a, a
     jr z, Jump_01D_4D0A
     cp a, $FE
@@ -1659,7 +1659,7 @@ Data_01D_4D82:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridY, wItemGridX
 ; points at: wItemGrid, wItemStorage
-VaultMenu_Store_Case0B_Sub01_Sub02::
+VaultMenu_Store_Case0B_Sub01_ReadItemGridYAndItemGridX::
 Func_01D_4D8A:: ; address name
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -1967,7 +1967,7 @@ Jump_01D_4F5B::
     jr Jump_01D_4F75
 
 Jump_01D_4F6F::
-    call VaultMenu_Store_Case0D_Sub01_Sub02
+    call VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3
     and a, a
     jr z, Jump_01D_4F84
 
@@ -2108,7 +2108,7 @@ Jump_01D_5022::
 ; reads: wItemGridY, wItemGridX, wTextCounter1
 ; writes: wTextCounter1, wTextCounter3
 ; points at: wItemGrid, wItemStorage
-VaultMenu_Store_Case0D_Sub01_Sub02::
+VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3::
 Func_01D_5024:: ; address name
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -2176,7 +2176,7 @@ Jump_01D_5083::
     ret
 
 ; only called from VaultMenu_Store_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ReadScreenState)
 ; reads: wItemGridY, wItemGridX, wListPages, wCounterPtr0Lo, wScreenStep, wSavedSpriteClipMode
 ; writes: wTwoChoiceCursor, wTextCounter1, wTextCounter3, wCounterPtr0Lo, wScreenStep
 ; points at: wItemStorage, wInventory
@@ -2263,7 +2263,7 @@ Jump_01D_50F9::
     jp Jump_01D_5168
 
 ; only called from VaultMenu_Store_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ReadScreenState)
 ; reads: wCounterPtr0Lo, wScreenStep, wTextCounter3
 ; writes: wTwoChoiceCursor, wTextCounter1, wTextCounter3, wCounterPtr0Lo, wScreenStep
 ; points at: wInventory, wItemStorage
@@ -3744,7 +3744,7 @@ Jump_01D_5A7F::
     ret
 
 ; HL = 10 * wD7CA + wD7CB (E-0120)
-; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_Sub02, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes)
+; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes)
 ; reads: wNumberTens, wNumberOnes
 TenTimesNumberTensPlusNumberOnes::
 Func_01D_5A80:: ; address name
@@ -3865,7 +3865,7 @@ Jump_01D_5B25::
     ld a, [wArg1]
     and a, a
     jr nz, Jump_01D_5B3E
-    call VaultMenu_Store_Shared03_Sub01
+    call VaultMenu_Store_Shared03_ReadItemGridX
 
 Jump_01D_5B3E::
     pop hl
@@ -4152,7 +4152,7 @@ Jump_01D_5CD3::
     ret
 
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
-; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23, BreedMenu_Case04_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
+; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23, BreedMenu_Case04_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_WriteArg1AndScreenStep, ...)
 ; reads: wArg1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
 ; points at: wNameGlyphBuf
@@ -4954,7 +4954,7 @@ Jump_01D_6133::
     cp a, $8E
     jr z, Jump_01D_6154
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
+    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
     call CopyFromBankWaitVRAM
     pop bc
     jr Jump_01D_6165
@@ -4966,7 +4966,7 @@ Jump_01D_6154::
     ld [wGlyphListStart], a
     pop af
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
+    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
     call OrFromBankWaitVRAM
     pop bc
 
@@ -4990,7 +4990,7 @@ Jump_01D_6176::
 ; only called from DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D (E-0047)
 ; 2 call sites from 1 routine (e.g. DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D)
 ; reads: wArg5, wGlyphListStart
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01::
+DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
 Func_01D_617F:: ; address name
     swap a
     ld d, a
@@ -5792,13 +5792,13 @@ Func_01D_65F6:: ; address name
     jr nz, Jump_01D_6656
     bit 1, a
     jr nz, Jump_01D_6664
-    call UpdateListCursorListCursor_Sub01
+    call UpdateListCursorListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
 
 Jump_01D_6614::
-    call UpdateListCursorListCursor_Sub03
+    call UpdateListCursorListCursor_ReadListCursor_Sub03
     ld a, [wListCursor]
     and a, a
     jr nz, Jump_01D_6626
@@ -5813,7 +5813,7 @@ Jump_01D_6626::
     jr Jump_01D_6644
 
 Jump_01D_662C::
-    call UpdateListCursorListCursor_Sub03
+    call UpdateListCursorListCursor_ReadListCursor_Sub03
     ld a, [wListCount]
     dec a
     ld b, a
@@ -5831,7 +5831,7 @@ Jump_01D_6640::
 Jump_01D_6644::
     xor a, a
     ld [wListCursorAux], a
-    call UpdateListCursorListCursor_Sub02
+    call UpdateListCursorListCursor_ReadListCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5855,25 +5855,25 @@ Jump_01D_6664::
 ; 1 call site from 1 routine (e.g. UpdateListCursorListCursor)
 ; reads: wJoypadRepeatTimer, wListCursorAux, wListCursor
 ; writes: wListCursorAux
-UpdateListCursorListCursor_Sub01::
+UpdateListCursorListCursor_WriteListCursorAux::
 Func_01D_666A:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, UpdateListCursorListCursor_Sub02
+    jr c, UpdateListCursorListCursor_ReadListCursor
     ld a, [wListCursorAux]
     inc a
     ld [wListCursorAux], a
     cp a, $10
-    jr c, UpdateListCursorListCursor_Sub02
+    jr c, UpdateListCursorListCursor_ReadListCursor
     cp a, $18
-    jr c, UpdateListCursorListCursor_Sub03
+    jr c, UpdateListCursorListCursor_ReadListCursor_Sub03
     xor a, a
     ld [wListCursorAux], a
 
 ; only called from UpdateListCursorListCursor (E-0047)
 ; 1 call site from 1 routine (e.g. UpdateListCursorListCursor)
 ; reads: wListCursor
-UpdateListCursorListCursor_Sub02::
+UpdateListCursorListCursor_ReadListCursor::
 Func_01D_6684:: ; address name
     ld b, $BB
     jr Jump_01D_668E
@@ -5881,7 +5881,7 @@ Func_01D_6684:: ; address name
 ; only called from UpdateListCursorListCursor (E-0047)
 ; 2 call sites from 1 routine (e.g. UpdateListCursorListCursor)
 ; reads: wListCursor
-UpdateListCursorListCursor_Sub03::
+UpdateListCursorListCursor_ReadListCursor_Sub03::
 Func_01D_6688:: ; address name
     ld b, $C3
     jr Jump_01D_668E
@@ -5938,7 +5938,7 @@ Func_01D_66B6:: ; address name
     jp nz, Jump_01D_6789
     bit 1, a
     jp nz, Jump_01D_6797
-    call UpdatePagedListCursor_Sub01
+    call UpdatePagedListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -5953,7 +5953,7 @@ Jump_01D_66E3::
     ld a, [wListPages]
     cp a, $01
     jr nz, Jump_01D_66FD
-    call UpdatePagedListCursor_Sub01
+    call UpdatePagedListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -5965,7 +5965,7 @@ Jump_01D_66FE::
     ld [wListPageIndex], a
     xor a, a
     ld [wListCursorAux], a
-    call UpdatePagedListCursor_Sub02
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FB
@@ -5979,7 +5979,7 @@ Jump_01D_6713::
     ld a, [wListPages]
     cp a, $01
     jr nz, Jump_01D_6728
-    call UpdatePagedListCursor_Sub01
+    call UpdatePagedListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -5993,14 +5993,14 @@ Jump_01D_672C::
     jp Jump_01D_66FE
 
 Jump_01D_6730::
-    call UpdatePagedListCursor_Sub03
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
     ld a, [wListCursor]
     and a, a
     jr nz, Jump_01D_674C
     ld a, [wListLastRow]
     and a, a
     jr nz, Jump_01D_6747
-    call UpdatePagedListCursor_Sub01
+    call UpdatePagedListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -6015,7 +6015,7 @@ Jump_01D_674C::
     jr Jump_01D_6777
 
 Jump_01D_6752::
-    call UpdatePagedListCursor_Sub03
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
     ld a, [wListLastRow]
     ld b, a
     ld a, [wListCursor]
@@ -6024,7 +6024,7 @@ Jump_01D_6752::
     ld a, [wListLastRow]
     and a, a
     jr nz, Jump_01D_676D
-    call UpdatePagedListCursor_Sub01
+    call UpdatePagedListCursor_WriteListCursorAux
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -6041,7 +6041,7 @@ Jump_01D_6773::
 Jump_01D_6777::
     xor a, a
     ld [wListCursorAux], a
-    call UpdatePagedListCursor_Sub02
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -6065,25 +6065,25 @@ Jump_01D_6797::
 ; 5 call sites from 1 routine (e.g. UpdatePagedListCursor)
 ; reads: wJoypadRepeatTimer, wListCursorAux, wMenuInputResult, wListCursor
 ; writes: wListCursorAux
-UpdatePagedListCursor_Sub01::
+UpdatePagedListCursor_WriteListCursorAux::
 Func_01D_679D:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, UpdatePagedListCursor_Sub02
+    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor
     ld a, [wListCursorAux]
     inc a
     ld [wListCursorAux], a
     cp a, $10
-    jr c, UpdatePagedListCursor_Sub02
+    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor
     cp a, $18
-    jr c, UpdatePagedListCursor_Sub03
+    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
     xor a, a
     ld [wListCursorAux], a
 
 ; only called from UpdatePagedListCursor (E-0047)
 ; 2 call sites from 1 routine (e.g. UpdatePagedListCursor)
 ; reads: wMenuInputResult, wListCursor
-UpdatePagedListCursor_Sub02::
+UpdatePagedListCursor_ReadMenuInputResultAndListCursor::
 Func_01D_67B7:: ; address name
     ld b, $BB
     jr Jump_01D_67C1
@@ -6091,7 +6091,7 @@ Func_01D_67B7:: ; address name
 ; only called from UpdatePagedListCursor (E-0047)
 ; 2 call sites from 1 routine (e.g. UpdatePagedListCursor)
 ; reads: wMenuInputResult, wListCursor
-UpdatePagedListCursor_Sub03::
+UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03::
 Func_01D_67BB:: ; address name
     ld b, $C3
     jr Jump_01D_67C1

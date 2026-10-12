@@ -2008,7 +2008,7 @@ Func_032_4C3E:: ; address name
 Jump_032_4C4F::
     bit 7, [hl]
     jr z, Jump_032_4C5A
-    call ShowActorStatusRecoveryMessage_Sub01
+    call ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget
     jr c, Jump_032_4C91
     jr Jump_032_4C97
 
@@ -2367,7 +2367,7 @@ Func_032_4E29:: ; address name
 ; reads: wRandomLo, wBattleActor, wBattleTarget, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
 ; points at: wBattleStatus3, wBattleActionChoice
-ShowActorStatusRecoveryMessage_Sub01::
+ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget::
 Func_032_4E51:: ; address name
     ld a, [hl]
     and a, $0C
@@ -4452,7 +4452,7 @@ Func_032_5B12:: ; address name
     call ResetTargetAGLAndDEFToBase
 
 Jump_032_5B2A::
-    call DefeatTarget_Sub01
+    call DefeatTarget_WriteDefeatFlagsBA
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -4517,7 +4517,7 @@ Jump_032_5B93::
 ; reads: wRecordBufferData, wDefeatByteBF, wDefeatByteD1, wBattleTarget, wDefeatFlagsBA
 ; writes: wDefeatFlagsBA
 ; points at: wBattleStatus6
-DefeatTarget_Sub01::
+DefeatTarget_WriteDefeatFlagsBA::
 Func_032_5B94:: ; address name
     ld a, [wRecordBufferData + $4]
     and a, $0F
@@ -4633,7 +4633,7 @@ Func_032_5C3F:: ; address name
     and a, $30
     ret z
     and a, $20
-    call nz, RecomputeTargetMaxHPAndMP_Sub01
+    call nz, RecomputeTargetMaxHPAndMP_ReadBattleTargetAndLinkMode
     ld a, $01
     ld [wBattleArg0], a
     ld a, [wBattleTarget]
@@ -4832,7 +4832,7 @@ Jump_032_5E0B::
 ; 1 call site from 1 routine (e.g. RecomputeTargetMaxHPAndMP)
 ; reads: wBattleTarget, wLinkMode
 ; points at: wSlotNameBytes
-RecomputeTargetMaxHPAndMP_Sub01::
+RecomputeTargetMaxHPAndMP_ReadBattleTargetAndLinkMode::
 Func_032_5E1A:: ; address name
     ld a, [wBattleTarget]
     ld c, a
@@ -4841,7 +4841,7 @@ Func_032_5E1A:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_BeDragon)
 ; reads: wLinkMode
 ; points at: wSlotNameBytes
-ActionEffect_BeDragon_Sub01::
+ActionEffect_BeDragon_ReadLinkMode::
 Func_032_5E1E:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -5444,7 +5444,7 @@ Jump_032_61E3:: ; address name
     rst $00
     dw ResolveStep0EEffect_Case04_SkipTurnIfActorAbsent
     dw ResolveStep0EEffect_Case04_AddDoubleAToHL_Bank32
-    dw ResolveStep0EEffect_Case04_Case02
+    dw ResolveStep0EEffect_Case04_WriteLoadSlotAndBattleTarget
     dw ResolveStep0EEffect_Case04_ToSetBattleSubStep1
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect_Case04
@@ -5525,7 +5525,7 @@ Jump_032_625F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
-ResolveStep0EEffect_Case04_Case02::
+ResolveStep0EEffect_Case04_WriteLoadSlotAndBattleTarget::
 Jump_032_6266:: ; address name
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -5537,7 +5537,7 @@ Jump_032_6266:: ; address name
     ret
 
 ; only called from ResolveStep0EEffect_Case04_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case04_Case02)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case04_WriteLoadSlotAndBattleTarget)
 ; reads: wEffectSubStep
 ResolveStep0EEffect_Case04_Case02_Sub01::
 Func_032_627C:: ; address name

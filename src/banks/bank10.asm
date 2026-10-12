@@ -1914,7 +1914,7 @@ Jump_010_4A74::
     ld l, a
     ld a, [wScriptParam1]
     ld h, a
-    call ScriptCommand09_Case01_Sub01
+    call ScriptCommand09_Case01_WriteStringIndexAndStringCategory
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1976,7 +1976,7 @@ Jump_010_4AC6::
 ; 1 call site from 1 routine (e.g. ScriptCommand09_Case01)
 ; reads: wMessageMode, wMapType
 ; writes: wStringIndex, wStringCategory
-ScriptCommand09_Case01_Sub01::
+ScriptCommand09_Case01_WriteStringIndexAndStringCategory::
 Func_010_4AD0:: ; address name
     ld a, h
     and a, $3F
@@ -2015,7 +2015,7 @@ Jump_010_4AE8::
     rst $10
     ret
 
-; address loaded by ScriptCommand09_Case01_Sub01
+; address loaded by ScriptCommand09_Case01_WriteStringIndexAndStringCategory
 Data_010_4AFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $F0, $01, $40, $F0, $0E, $52, $1F, $01, $40, $1D, $86, $4C, $1B, $D0
     db $43, $F2, $01, $40, $0D, $01, $40, $0E, $01, $40, $0B, $90, $64, $33, $10, $5D

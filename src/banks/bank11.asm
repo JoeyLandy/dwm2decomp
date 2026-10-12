@@ -11,7 +11,7 @@ Func_011_4002:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_011_4010
-    farcall CheckWarpAtPlayer_Sub01
+    farcall CheckWarpAtPlayer_ReadMapType
     ret
 
 Jump_011_4010::

@@ -734,7 +734,7 @@ Jump_000_0530::
     db $CD, $CC, $0B, $C9
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
-; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_Case03, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_ReadLinkScreenState, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
 ; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
 ; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
@@ -897,7 +897,7 @@ Jump_000_0636::
 ; reads: rP1
 ; writes: rP1
 ; points at: wSGBJoypad1
-PollJoypad_Sub01::
+PollJoypad_WriteP1::
 Func_000_0646:: ; address name
     ldh a, [rP1]
     ld b, $04
@@ -1126,7 +1126,7 @@ Jump_000_077A::
 Jump_000_0784::
     call ClearSGBPacketBuffer_SendSGBPacketSet
     pop af
-    call ClearSGBPacketBuffer_Shared01
+    call ClearSGBPacketBuffer_WriteIFAndIE
     ei
     ret
 
@@ -1196,7 +1196,7 @@ Func_000_07D1:: ; address name
 ; only called from routines of ClearSGBPacketBuffer (E-0098)
 ; 2 call sites from 2 routines (e.g. ClearSGBPacketBuffer, ClearSGBPacketBuffer_WaitSerialTransferDone)
 ; writes: rIF, rIE
-ClearSGBPacketBuffer_Shared01::
+ClearSGBPacketBuffer_WriteIFAndIE::
 Func_000_07D8:: ; address name
     ld b, a
     xor a, a
@@ -1608,7 +1608,7 @@ Func_000_0A17:: ; address name
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_000_0A39
-    call PollJoypad_Sub01
+    call PollJoypad_WriteP1
     ld a, [wJoypadHeld]
     ld [wJoypadHeldPrev], a
     ld a, [wSGBJoypad1]
@@ -2721,12 +2721,12 @@ Func_000_0FC1:: ; address name
     bit 0, a
     ld a, $00
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_Sub01
+    call nz, StepFade_Sub01_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 1, a
     ld a, $08
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_Sub01
+    call nz, StepFade_Sub01_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 4, a
     jr z, Jump_000_0FFC
@@ -2734,12 +2734,12 @@ Func_000_0FC1:: ; address name
     bit 2, a
     ld a, $10
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_Sub01
+    call nz, StepFade_Sub01_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 3, a
     ld a, $18
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_Sub01
+    call nz, StepFade_Sub01_WriteFadeStepSize
 
 Jump_000_0FFC::
     call ClearSGBPacketBuffer
@@ -2793,25 +2793,25 @@ Jump_000_102E::
 ; reads: wFadeStepSize, wFadeLevel
 ; writes: wFadeStepSize
 ; points at: wOBJPaletteBuffer
-StepFade_Sub01_Sub01::
+StepFade_Sub01_WriteFadeStepSize::
 Func_000_1040:: ; address name
     call StepFade_Sub01_Sub01_AdjustColorChannelForFade
-    call StepFade_Sub01_Sub01_Sub01
-    call StepFade_Sub01_Sub01_Sub01
+    call StepFade_Sub01_Sub01_WriteFadeStepSize
+    call StepFade_Sub01_Sub01_WriteFadeStepSize
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. StepFade_Sub01_Sub01)
+; 2 call sites from 1 routine (e.g. StepFade_Sub01_WriteFadeStepSize)
 ; reads: wFadeStepSize, wFadeLevel
 ; writes: wFadeStepSize
 ; points at: wOBJPaletteBuffer
-StepFade_Sub01_Sub01_Sub01::
+StepFade_Sub01_Sub01_WriteFadeStepSize::
 Func_000_1049:: ; address name
     ld a, [wFadeStepSize]
     add a, $02
     ld [wFadeStepSize], a
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. StepFade_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. StepFade_Sub01_WriteFadeStepSize)
 ; reads: wFadeStepSize, wFadeLevel
 ; points at: wOBJPaletteBuffer
 StepFade_Sub01_Sub01_AdjustColorChannelForFade::
@@ -3611,7 +3611,7 @@ Func_000_14D1:: ; address name
     or a, a
     jp z, Jump_000_1575
     ld a, $08
-    call ClearSGBPacketBuffer_Shared01
+    call ClearSGBPacketBuffer_WriteIFAndIE
     ld a, [wLinkStatus]
     set 7, a
     res 6, a
@@ -4473,7 +4473,7 @@ Jump_000_18D5::
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
-; 10 call sites from 8 routines (e.g. ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB, ShopMenu_Buy_Case09_Sub02, ShopMenu_Buy_ReadFarPointerAtDEInBankB, ReadF2FarPointerForScreenTableIndex, ...)
+; 10 call sites from 8 routines (e.g. ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB, ShopMenu_Buy_Case09_WriteThreeDigits, ShopMenu_Buy_ReadFarPointerAtDEInBankB, ReadF2FarPointerForScreenTableIndex, ...)
 ; writes: rROMB0
 ReadFarPointerAtDEInBankB::
 Func_000_18D6:: ; address name
@@ -4496,7 +4496,7 @@ Func_000_18D6:: ; address name
     db $C6, $05, $6F, $7C, $CE, $67, $67, $3E, $02, $18, $19
 
 ; for the current map screen decompresses its tile block (chunk table in bank $61, indexed by hFFC6 and the screen position) into wScreenTileBuffer, and on CGB its attributes (E-0130)
-; 4 call sites from 4 routines (e.g. LoadMapScreen_Sub03_LoadMapScreenFromChunk, LoadMapScreen_Sub03_Case06, LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03, LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02)
+; 4 call sites from 4 routines (e.g. LoadMapScreen_Sub03_LoadMapScreenFromChunk, LoadMapScreen_Sub03_WriteTemp0, LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03, LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02)
 ; reads: hTemp0, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp1, hTemp2, hTemp3
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4623,7 +4623,7 @@ Func_000_19A9:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_000_19B7
-    farcall LoadMapScreen_Sub03
+    farcall LoadMapScreen_ReadMapType
     ret
 
 Jump_000_19B7::
@@ -4748,7 +4748,7 @@ Jump_000_1A62::
     ld [rROMB0], a
     farcall ApplyMapScreenFlagEvents
     call LoadMapScreen_TestFlagBit
-    call LoadMapScreen_Sub01
+    call LoadMapScreen_WriteTemp0
     ret
 
 ; only called from LoadMapScreen (E-0047)
@@ -4756,7 +4756,7 @@ Jump_000_1A62::
 ; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey
 ; writes: hTemp0
 ; points at: wKeyWorldGoal
-LoadMapScreen_Sub01::
+LoadMapScreen_WriteTemp0::
 Func_000_1A73:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -4792,7 +4792,7 @@ Jump_000_1A92::
     ld de, wKeyWorldGoal
     ld a, b
     ldh [hTemp0], a
-    call LoadMapScreen_Sub01_Sub01
+    call LoadMapScreen_Sub01_WriteSVBK
     ret
 
 Jump_000_1AA9::
@@ -4801,7 +4801,7 @@ Jump_000_1AA9::
     inc de
     ld a, b
     ldh [hTemp0], a
-    call LoadMapScreen_Sub01_Sub01
+    call LoadMapScreen_Sub01_WriteSVBK
     ret
 
 Jump_000_1AB3::
@@ -4811,10 +4811,10 @@ Jump_000_1AB3::
     db $00, $FF
 
 ; only called from LoadMapScreen_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. LoadMapScreen_Sub01)
+; 2 call sites from 1 routine (e.g. LoadMapScreen_WriteTemp0)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB, hTemp0
 ; writes: rSVBK
-LoadMapScreen_Sub01_Sub01::
+LoadMapScreen_Sub01_WriteSVBK::
 Func_000_1AD6:: ; address name
     ldh a, [hMapScreenX]
     swap a
@@ -4950,7 +4950,7 @@ Jump_000_1B95::
     ret
 
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
-; 4 call sites from 4 routines (e.g. LoadMapHeaderByMapType_LoadSpecialMapHeader, LoadMapHeaderByMapType_Case06, LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03, LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02)
+; 4 call sites from 4 routines (e.g. LoadMapHeaderByMapType_LoadSpecialMapHeader, LoadMapHeaderByMapType_WriteTemp0, LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0, LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0AndKeyWorldByte06)
 ; reads: hTemp0
 ; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, wEncounterRate, wMapMoveType, ...
 LoadSpecialMapHeader::
@@ -5251,7 +5251,7 @@ Func_000_1D7F:: ; address name
 ; 1 call site from 1 routine (e.g. DebugMapEditor_Update)
 ; reads: hTemp0, wDebugValue1, wDebugValue3
 ; writes: rROMB0, hTemp0
-DebugMapEditor_Update_Sub01::
+DebugMapEditor_Update_WriteROMB0AndTemp0::
 Func_000_1D90:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -5360,7 +5360,7 @@ Jump_000_1E23::
     ret
 
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
-; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_DrawFullScreenBufferToBGMap, ...)
+; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case02_Sub01_WritePartyWindowFlagsAndPartyWindowTimer, GameMode5_Update_Case01_Case06_DrawFullScreenBufferToBGMap, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -6098,7 +6098,7 @@ Jump_000_219A::
     ret
 
 ; DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile
-; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_Sub01, DrawMonsterNameForWordAtDE_Bank01, DebugAutomap_Update_CopyGlyphTilesToVRAM, ...)
+; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DrawMonsterNameForWordAtDE_Bank01, DebugAutomap_Update_CopyGlyphTilesToVRAM, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 ; points at: wNameGlyphBuf
@@ -6761,7 +6761,7 @@ Func_000_24E5:: ; address name
     ret
 
 ; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
-; 73 call sites from 57 routines (e.g. ArenaMenu_Case12_Sub03, ArenaMenu_Case02_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap, ...)
+; 73 call sites from 57 routines (e.g. ArenaMenu_Case12_ReadGridCursorX_Sub03, ArenaMenu_Case02_ReadGridCursorX_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap, ...)
 ; reads: hScrollX
 StepBGMapAddressBackOnScrollWrap::
 Func_000_24F8:: ; address name
@@ -6808,7 +6808,7 @@ Jump_000_2528::
     ret
 
 ; hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6
-; 11 call sites from 3 routines (e.g. GameFrameUpdate, RunFieldActionRequestActionIfBit7_Case01, SceneLandHo_ComputeSpriteScrollOffsets)
+; 11 call sites from 3 routines (e.g. GameFrameUpdate, RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY, SceneLandHo_ComputeSpriteScrollOffsets)
 ; reads: wGameMode, wModeState
 ; writes: hSpriteScrollXLo, hSpriteScrollXHi, hSpriteScrollYLo, hSpriteScrollYHi
 ; points at: hScrollX, hScrollY
@@ -6867,15 +6867,15 @@ Jump_000_256A::
     ld a, [wSTATSplitEnable]
     and a, $03
     rst $00
-    dw ComputeSpriteScrollOffsets_Case00
-    dw ComputeSpriteScrollOffsets_Case01
+    dw ComputeSpriteScrollOffsets_WriteSVBK
+    dw ComputeSpriteScrollOffsets_WriteSVBK_Case01
     dw ComputeSpriteScrollOffsets_Case02
     dw ComputeSpriteScrollOffsets_Case03
 
 ; entry 0 of the `rst $00` table in ComputeSpriteScrollOffsets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rSVBK
-ComputeSpriteScrollOffsets_Case00::
+ComputeSpriteScrollOffsets_WriteSVBK::
 Jump_000_2582:: ; address name
     pop af
     ldh [rSVBK], a
@@ -6887,9 +6887,9 @@ Jump_000_2582:: ; address name
 ; entry 1 of the `rst $00` table in ComputeSpriteScrollOffsets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rSVBK
-ComputeSpriteScrollOffsets_Case01::
+ComputeSpriteScrollOffsets_WriteSVBK_Case01::
 Jump_000_2589:: ; address name
-    jr ComputeSpriteScrollOffsets_Case00
+    jr ComputeSpriteScrollOffsets_WriteSVBK
 
 ; entry 2 of the `rst $00` table in ComputeSpriteScrollOffsets
 ; no direct call (reached through a table, a jump or a vector)
@@ -6913,7 +6913,7 @@ Jump_000_258B:: ; address name
 
 Jump_000_25A6::
     ldh [rLYC], a
-    jr ComputeSpriteScrollOffsets_Case00
+    jr ComputeSpriteScrollOffsets_WriteSVBK
 
 ; entry 3 of the `rst $00` table in ComputeSpriteScrollOffsets
 ; no direct call (reached through a table, a jump or a vector)
@@ -6937,7 +6937,7 @@ Jump_000_25AA:: ; address name
 
 Jump_000_25C5::
     ldh [rLYC], a
-    jr ComputeSpriteScrollOffsets_Case00
+    jr ComputeSpriteScrollOffsets_WriteSVBK
 
 ; DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620
 ; 51 call sites from 51 routines (e.g. BeginStringDisplay_Bank07, BeginStringDisplay_Bank08, BeginStringDisplay_Bank09, BeginStringDisplay_Bank0B, ...)
@@ -7300,7 +7300,7 @@ Jump_000_282C::
     adc a, $00
     ld [wTextPosHi], a
     ld a, [hl]
-    call StepStringDisplayUntilDone_Sub01_Sub02
+    call StepStringDisplayUntilDone_Sub01_WriteTextLastChar
     ld hl, wTextControl
     res 1, [hl]
     jr Jump_000_2875
@@ -7468,7 +7468,7 @@ Func_000_28F4:: ; address name
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
-; 110 call sites from 74 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark_Case12, FillTilesRequest, BeginStringDisplay, DebugResultsDisplay_Update_Sub02_Sub01, ...)
+; 110 call sites from 74 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark_Case12, FillTilesRequest, BeginStringDisplay, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowWidth, wTextWindowRows, rSTAT
 ; points at: wTextWindowRows
 FillTilesFromRequest::
@@ -7517,7 +7517,7 @@ Jump_000_292B::
 ; only called from StepStringDisplayUntilDone_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo)
 ; writes: wTextLastChar
-StepStringDisplayUntilDone_Sub01_Sub02::
+StepStringDisplayUntilDone_Sub01_WriteTextLastChar::
 Func_000_2950:: ; address name
     ld [wTextLastChar], a
     sub a, $E0
@@ -7532,9 +7532,9 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt
     dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case08
     dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case09
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case0A
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case0B
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case0C
+    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound
+    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound_Case0B
+    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case0D
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteVRAMByte
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case0F
@@ -7668,7 +7668,7 @@ Jump_000_2A1A::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextBeepSound
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case0A::
+StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound::
 Jump_000_2A25:: ; address name
     ld hl, wTextControl
     set 0, [hl]
@@ -7680,7 +7680,7 @@ Jump_000_2A25:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextBeepSound
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case0B::
+StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound_Case0B::
 Jump_000_2A30:: ; address name
     ld hl, wTextControl
     set 0, [hl]
@@ -7693,7 +7693,7 @@ Jump_000_2A30:: ; address name
 ; reads: wBattleKindFlags
 ; writes: wTextDelayCounter
 ; points at: wTextControl, wTextFlags
-StepStringDisplayUntilDone_Sub01_Sub02_Case0C::
+StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter::
 Jump_000_2A3B:: ; address name
     ld hl, wTextControl
     res 7, [hl]
@@ -9055,7 +9055,7 @@ Func_000_32DB:: ; address name
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: wSoundChannelIndex, wSoundTimer14
 ; writes: wSoundTimer14
-SoundTick_Sub01::
+SoundTick_WriteSoundTimer14::
 Func_000_32E8:: ; address name
     ld a, [wSoundChannelIndex]
     inc a
@@ -9080,7 +9080,7 @@ Jump_000_32F5::
 ; reads: wSoundTimer14, wSoundTimer13, wSoundTimer12
 ; writes: wSoundTimer14, wSoundTimer12
 ; points at: wSoundTimer12
-SoundTick_Sub02::
+SoundTick_WriteSoundTimer14AndSoundTimer12::
 Func_000_32FE:: ; address name
     ld a, [wSoundTimer14]
     ld hl, wSoundTimer12
@@ -9377,7 +9377,7 @@ Jump_000_343C::
     and a, a
     jp z, Jump_000_3554
     call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
-    call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05
+    call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteNR32
     ldh a, [hSndVibratoDelay]
     ld b, a
     ldh a, [hSndVibratoCounter]
@@ -9426,7 +9426,7 @@ Jump_000_347F::
     ldh [hSndEnvelope], a
 
 Jump_000_349C::
-    call SoundTick_Sub01
+    call SoundTick_WriteSoundTimer14
 
 Jump_000_349F::
     ldh a, [hSndNoteLength]
@@ -9440,7 +9440,7 @@ Jump_000_34A8::
     dec a
     cp a, [hl]
     jr nz, Jump_000_34C7
-    call SoundTick_Sub07
+    call SoundTick_WriteSndEnvelopeReloadAndSndEnvelope
     ldh a, [hSndEnvelope]
     call WriteChannelEnvelopeIfChanged
     jr Jump_000_34C7
@@ -9481,7 +9481,7 @@ Jump_000_34C7::
     ld [wSoundInitByte19], a
     ldh [rNR30], a
     ld d, a
-    call SoundTick_Sub06
+    call SoundTick_ReadSndA8Param
     ld a, $80
     ldh [rNR30], a
 
@@ -9541,7 +9541,7 @@ Jump_000_352F::
     ldh [rNR51], a
     pop af
     ld [rROMB0], a
-    call SoundTick_Sub02
+    call SoundTick_WriteSoundTimer14AndSoundTimer12
     ret
 
 ; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble -> $FFDF, byte 1 -> duty bits of $FFDE (wave: $FFE6), byte 2 swapped -> $FFE0, byte 3 -> $FFE2) and begins playback at event 2 ($FFD8 = 2).
@@ -10234,13 +10234,13 @@ Jump_000_3938::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr nz, Jump_000_394C
-    call SoundNextEvent_Sub04
+    call SoundNextEvent_WriteSoundEventByte17AndNR30
     ld a, $80
     ldh [rNR30], a
 
 Jump_000_394C::
     push hl
-    call SoundNextEvent_Sub01
+    call SoundNextEvent_WriteNR32
     pop hl
     ld a, [wSoundHwChannel]
     and a, a
@@ -10390,7 +10390,7 @@ Func_000_39F8:: ; address name
 ; reads: wSoundHwChannel, hSndVibratoDepth, hSndEnvelope, wSoundRegBase, hSndFreqHi, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param
 ; writes: rNR32
 ; points at: hSndEnvelope
-SoundNextEvent_Sub01::
+SoundNextEvent_WriteNR32::
 Func_000_3A21:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
@@ -10476,7 +10476,7 @@ Jump_000_3A69::
 ; reads: hSndFreqLo, hSndFreqHi, wSoundHwChannel, hSndVibratoDepth, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param, hSndEnvelope, ...
 ; writes: rNR32
 ; points at: hSndEnvelope
-SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05::
+SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteNR32::
 Func_000_3A7A:: ; address name
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ldh a, [hSndFreqLo]
@@ -10640,7 +10640,7 @@ Func_000_3B41:: ; address name
     ret
 
 ; when wDD08 & wDD0B is non-zero, drops the caller's return address (pop af) so it returns to the caller's caller; otherwise returns normally with Z set (E-0119)
-; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05, ...)
+; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteNR32, ...)
 ; reads: wSoundSkipMaskB, wSoundSkipMaskA
 ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
 Func_000_3B51:: ; address name
@@ -10704,7 +10704,7 @@ Data_000_3C8C:: ; address name
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wSoundEventByte17, hSndSweepOrWave, hSndA8Param
 ; writes: wSoundEventByte17, rNR30
-SoundNextEvent_Sub04::
+SoundNextEvent_WriteSoundEventByte17AndNR30::
 Func_000_3D7C:: ; address name
     ld a, [wSoundEventByte17]
     ld b, a
@@ -10720,7 +10720,7 @@ Func_000_3D7C:: ; address name
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hSndA8Param
-SoundTick_Sub06::
+SoundTick_ReadSndA8Param::
 Func_000_3D8D:: ; address name
     ld d, a
     ld hl, SoundWaveSetTable
@@ -10777,7 +10777,7 @@ Func_000_3DAE:: ; address name
 ; 1 call site from 1 routine (e.g. SoundTick)
 ; reads: hSndEnvelopeReload, hSndEnvelope
 ; writes: hSndEnvelopeReload, hSndEnvelope
-SoundTick_Sub07::
+SoundTick_WriteSndEnvelopeReloadAndSndEnvelope::
 Func_000_3DC8:: ; address name
     push de
     push bc

@@ -493,7 +493,7 @@ Jump_013_42DC:: ; address name
     ld a, [wScreenTileBuffer + $D2]
     cp a, $68
     ret z
-    farcall DispatchTalkEvent_Case05_Case0F_Sub01
+    farcall DispatchTalkEvent_Case05_Case0F_WriteRAMGAndTemp0
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_42F4
@@ -845,7 +845,7 @@ Jump_013_448F:: ; address name
     ld de, $00A4
     call TestFlagBit
     ret nc
-    farcall DispatchTalkEvent_Case05_Case29_Sub01
+    farcall DispatchTalkEvent_Case05_Case29_WriteTemp0AndRAMG
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -1371,7 +1371,7 @@ Jump_013_474A:: ; address name
 ; reads: hTemp0
 DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case4C::
 Jump_013_475B:: ; address name
-    farcall DispatchTalkEvent_Shared01
+    farcall DispatchTalkEvent_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_476D
@@ -1816,7 +1816,7 @@ Jump_013_4995:: ; address name
 ; reads: hTemp0
 DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6E::
 Jump_013_499C:: ; address name
-    farcall DispatchTalkEvent_Shared01
+    farcall DispatchTalkEvent_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49AE
@@ -1834,7 +1834,7 @@ Jump_013_49AE::
 ; reads: hTemp0
 DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6F::
 Jump_013_49B5:: ; address name
-    farcall DispatchTalkEvent_Shared01
+    farcall DispatchTalkEvent_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49C7
@@ -9984,7 +9984,7 @@ Jump_013_7A2E:: ; address name
 ; writes: wFieldStateByte34
 DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseCC::
 Jump_013_7A35:: ; address name
-    farcall DispatchTalkEvent_Case01_CaseCC_Sub01
+    farcall DispatchTalkEvent_Case01_CaseCC_WriteTemp1
     ldh a, [hTemp1]
     bit 7, a
     ret nz

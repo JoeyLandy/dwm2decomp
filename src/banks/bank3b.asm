@@ -721,7 +721,7 @@ Call774CWithBattleFoeCount::
 Func_03B_444A:: ; address name
     ld a, [wBattleFoeCount]
     ldh [hTemp0], a
-    farcall Call774CWithBattleFoeCount_Sub01
+    farcall Call774CWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
 ; entry 3 of the `rst $00` table in Func_03B_42F4
@@ -1849,7 +1849,7 @@ RollChanceByHLBits6And7_Bank3B::
 Func_03B_4A86:: ; address name
     bit 6, [hl]
     jr z, Jump_03B_4A8F
-    call RollChanceByHLBits6And7_Bank3B_Sub01
+    call RollChanceByHLBits6And7_Bank3B_ReadRandomLo
     jr Jump_03B_4A9B
 
 Jump_03B_4A8F::
@@ -1910,7 +1910,7 @@ Jump_03B_4ABC::
 ; only called from RollChanceByHLBits6And7_Bank3B (E-0047)
 ; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
 ; reads: wRandomLo
-RollChanceByHLBits6And7_Bank3B_Sub01::
+RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
 Func_03B_4ABF:: ; address name
     and a, a
     jr nz, Jump_03B_4AC4

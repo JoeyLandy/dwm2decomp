@@ -3366,7 +3366,7 @@ Func_01A_730E:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_796F, then QueueSoundEffect $6C (E-0115)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case0C, BattleEnd_Step5_Case01_Case01_Sub01_Case11)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex, BattleEnd_Step5_Case01_Case01_Sub01_Case11)
 CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Func_01A_7315:: ; address name
     ld hl, TileRect_1A_796F

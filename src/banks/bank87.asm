@@ -382,7 +382,7 @@ Data_087_40A0:: ; address name
     dw $0000 ; id 255
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_WaitTextWindowState_Shared03::
@@ -603,7 +603,7 @@ Jump_087_43FC::
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_087_440A
-    call FieldModeStateDispatch_Shared03_Sub01
+    call FieldModeStateDispatch_Shared03_ReadKeyWorldFloor
     or a, a
     jr nz, Jump_087_4420
     ret
@@ -791,7 +791,7 @@ Jump_087_44FC::
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
 ; reads: wKeyWorldFloor
-FieldModeStateDispatch_Shared03_Sub01::
+FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
 Func_087_4507:: ; address name
     cp a, $84
     jr nz, Jump_087_4511

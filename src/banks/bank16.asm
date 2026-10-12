@@ -3004,7 +3004,7 @@ Data_016_51C9:: ; address name
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_WaitTextFlags)
 ; reads: wInventorySlot
 ; writes: wItemId
-PauseMenu_Skills_Case03_Case02_Sub01::
+PauseMenu_Skills_Case03_Case02_WriteItemId::
 Func_016_52C9:: ; address name
     ld a, [wInventorySlot]
     cp a, $14
@@ -3792,7 +3792,7 @@ Func_016_56E4:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_56F2
-    farcall CollectUniqueEncounterIdsToWD09F_Sub01
+    farcall CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags
     ret
 
 Jump_016_56F2::
@@ -5048,7 +5048,7 @@ Func_016_5D13:: ; address name
     dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags_Case09
     dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case0C
+    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex
     dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor
     dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E
     dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F
@@ -5340,7 +5340,7 @@ Jump_016_5ED7::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wListEntries, wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_Case0C::
+BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex::
 Jump_016_5EEC:: ; address name
     ld hl, wListEntries
     ld bc, $001E
@@ -6156,7 +6156,7 @@ Jump_016_64C4::
     ret
 
 ; lists the party records and then the stored records (state 1, field $6E clear) in wD789 and sets the page counts wCFD0-wCFD3 (E-0130)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_Case0C)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex)
 ; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
 ; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
 ; points at: wListEntries, wPartyList, sRecords
@@ -6517,7 +6517,7 @@ Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $99, $6B, $99
 
 ; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_Case0C)
+; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListPage, wPartyCount, wListPageCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wListEntries
@@ -6903,7 +6903,7 @@ Jump_016_694B::
     ret
 
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls BeginStringDisplay_Bank2F (E-0072)
-; 16 call sites from 14 routines (e.g. ShowRecordNameString1D, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, BattleEnd_Step5_Case04_Sub01_Case05, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6, ...)
+; 16 call sites from 14 routines (e.g. ShowRecordNameString1D, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6, ...)
 ; writes: wStringCategory
 ShowStringCategory5_Bank16::
 Func_016_6955:: ; address name
@@ -7381,7 +7381,7 @@ Func_016_6C16:: ; address name
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
     dw BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6
     dw BattleEnd_Step5_Case04_Sub01_SetBattleStep
-    dw BattleEnd_Step5_Case04_Sub01_Case05
+    dw BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex
     dw BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB
     dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16
     dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep
@@ -7552,7 +7552,7 @@ Jump_016_6D11:: ; address name
 ; reads: wPartyCount
 ; writes: wBattleSubStep, wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_Case05::
+BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex::
 Jump_016_6D1E:: ; address name
     ld a, [wPartyCount]
     cp a, $03
@@ -8265,7 +8265,7 @@ Func_016_7183:: ; address name
     ret
 
 ; A = 1 when Data $71AC[battle monster id of wDAAB] is at least 6, else 0 (E-0124)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case04_Sub01_Case05, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6)
 ; reads: wDisplaySlot
 ; points at: wBattleMonsterId
 BattleMonsterTable71ACAtLeast6::

@@ -9,10 +9,10 @@ Func_0E0_4001:: ; address name
     ld a, [wDebugSubState]
     rst $00
     dw RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault
-    dw RunDebugSubState_E0_Case01
-    dw RunDebugSubState_E0_Case02
-    dw RunDebugSubState_E0_Case03
-    dw RunDebugSubState_E0_Case04
+    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor
+    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0
+    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1
+    dw RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag
     dw RunDebugSubState_E0_SetDebugSubState
 
 ; entry 0 of the `rst $00` table in RunDebugSubState_E0
@@ -56,7 +56,7 @@ Jump_0E0_4045::
     pop bc
     dec c
     jr nz, Jump_0E0_4043
-    call RunDebugSubState_E0_WriteVRAMByte_Shared01
+    call RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor
     call ShowSkillNumberAndName_BankE0
     call RunDebugSubState_E0_HLToDecimalDigits
     call RunDebugSubState_E0_WriteVRAMByte
@@ -71,7 +71,7 @@ Jump_0E0_4045::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor
 ; writes: wDebugSubState, wDebugCursor
-RunDebugSubState_E0_Case01::
+RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
 Jump_0E0_406F:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
@@ -102,7 +102,7 @@ Jump_0E0_4095::
     and a, $01
     xor a, $01
     ld [wDebugCursor], a
-    call RunDebugSubState_E0_WriteVRAMByte_Shared01
+    call RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor
     ret
 
 Jump_0E0_40A6::
@@ -118,7 +118,7 @@ Jump_0E0_40A6::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugValue0
 ; writes: wDebugSubState, wDebugValue0
-RunDebugSubState_E0_Case02::
+RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
 Jump_0E0_40B7:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -193,7 +193,7 @@ Jump_0E0_4112::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugValue1
 ; writes: wDebugSubState, wDebugValue1
-RunDebugSubState_E0_Case03::
+RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
 Jump_0E0_4123:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -249,7 +249,7 @@ Jump_0E0_4164::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleEndFlag
 ; writes: wDebugSubState, wBattleEndFlag
-RunDebugSubState_E0_Case04::
+RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag::
 Jump_0E0_4175:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
@@ -304,9 +304,9 @@ Jump_0E0_41BD:: ; address name
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case01, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugCursor
-RunDebugSubState_E0_WriteVRAMByte_Shared01::
+RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor::
 Func_0E0_41C7:: ; address name
     ld a, [wDebugCursor]
     and a, $01
@@ -329,7 +329,7 @@ Jump_0E0_41D6::
     db $BB, $C3, $BB
 
 ; writes the two nibbles of wC5F9, each plus 1, as tiles at vBGMap0 + $CA; copies string wC5F9 of category 4 (skill names) to wC130 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
-; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case02, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugValue0
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
@@ -358,7 +358,7 @@ Func_0E0_41E9:: ; address name
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case03, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugValue1, wDigits
 RunDebugSubState_E0_HLToDecimalDigits::
 Func_0E0_421F:: ; address name
@@ -401,7 +401,7 @@ Jump_0E0_424E::
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case04, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wBattleEndFlag
 RunDebugSubState_E0_WriteVRAMByte::
 Func_0E0_425A:: ; address name
@@ -520,7 +520,7 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_WaitJoypadPressed
     dw DrawTileMap4946AndStep
     dw RunDebugState_E0_DrawEightBytesAsHexColumns
-    dw RunDebugState_E0_WaitJoypadPressed_Case09
+    dw RunDebugState_E0_WaitJoypadPressed_WriteDebugState
     dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A
     dw RunDebugState_E0_BlinkWC0A0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
@@ -1378,7 +1378,7 @@ Jump_0E0_4929::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunDebugState_E0_WaitJoypadPressed_Case09::
+RunDebugState_E0_WaitJoypadPressed_WriteDebugState::
 Jump_0E0_493B:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
@@ -1770,10 +1770,10 @@ Jump_0E0_4C9A:: ; address name
     rst $00
     dw RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0
     dw RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0
-    dw RunDebugState_E0_Case0D_Case02
-    dw RunDebugState_E0_Case0D_Case03
+    dw RunDebugState_E0_Case0D_WriteDebugSubState
+    dw RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor
     dw RunDebugState_E0_Case0D_Case04
-    dw RunDebugState_E0_Case0D_Case05
+    dw RunDebugState_E0_Case0D_WriteDebugSubState_Case05
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
@@ -1837,7 +1837,7 @@ Jump_0E0_4CF6:: ; address name
 ; entry 2 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case02::
+RunDebugState_E0_Case0D_WriteDebugSubState::
 Jump_0E0_4D0B:: ; address name
     farcall RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor
     ld a, $03
@@ -1849,7 +1849,7 @@ Jump_0E0_4D0B:: ; address name
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleActor
 ; writes: wDebugSubState, wBattleActor
 ; points at: wBattleSubPhase
-RunDebugState_E0_Case0D_Case03::
+RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor::
 Jump_0E0_4D17:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1929,7 +1929,7 @@ Jump_0E0_4D72:: ; address name
 ; entry 5 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case05::
+RunDebugState_E0_Case0D_WriteDebugSubState_Case05::
 Jump_0E0_4D89:: ; address name
     farcall RunDebugState_E0_Case0D_Case05_AIChooseActionForActor
     ld a, $02
@@ -2594,7 +2594,7 @@ Jump_0E0_572C::
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_WriteDebugSubState)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
 ; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
@@ -2892,7 +2892,7 @@ Jump_0E0_5905::
     di
     call WriteVRAMByteInc
     ei
-    call RunDebugState_E0_Case0D_Case02_Sub01_Sub01
+    call RunDebugState_E0_Case0D_Case02_Sub01_ReadBattleActorAndLinkMode
     ld hl, $5A05
     call ReadWordTableEntry_Bank00
     ld d, h
@@ -2994,7 +2994,7 @@ Func_0E0_5992:: ; address name
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; reads: wBattleActor, wLinkMode
 ; points at: wBattleTargetChoice, wLinkRole
-RunDebugState_E0_Case0D_Case02_Sub01_Sub01::
+RunDebugState_E0_Case0D_Case02_Sub01_ReadBattleActorAndLinkMode::
 Func_0E0_59A4:: ; address name
     ld a, [wBattleActor]
     add a, a
@@ -3111,7 +3111,7 @@ Data_0E0_5A31:: ; heuristic: target of a monotone pointer table; C0
     db $83, $84, $04, $C3
 
 ; only called from RunDebugState_E0_Case0D_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_WriteDebugSubState_Case05)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 RunDebugState_E0_Case0D_Case05_AIChooseActionForActor::

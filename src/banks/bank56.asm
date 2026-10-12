@@ -277,7 +277,7 @@ Data_056_4241:: ; address name
     dfar Map30Attrs0_Y7X6 ; entry 62
     dfar Map30Attrs0_Y0X0 ; entry 63
 
-; address loaded by SceneKamehaEscape_Case0A
+; address loaded by SceneKamehaEscape_WriteScriptParam0
 ; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map30Screens0_Y0X0:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_056_4301:: ; address name

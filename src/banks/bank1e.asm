@@ -167,7 +167,7 @@ SwapMonstersMenu_Case01_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_40E4:: ; address name
     ld hl, GlyphCopyDestList0
     ld de, GlyphCopySrcList0
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld hl, wScreenStep
     inc [hl]
     ret
@@ -222,17 +222,17 @@ Jump_01E_412A:: ; address name
     jp nz, Jump_01E_418E
     bit 1, a
     jp nz, Jump_01E_41D0
-    call SwapMonstersMenu_Case02_Sub01
+    call SwapMonstersMenu_Case02_WriteGridCursorY
     ret
 
 Jump_01E_4146::
-    call SwapMonstersMenu_Case02_Sub03
+    call SwapMonstersMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     and a, a
     jr nz, Jump_01E_415D
     ld a, $04
     ld [wGridCursorX], a
-    call SwapMonstersMenu_Case02_Sub01
+    call SwapMonstersMenu_Case02_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -246,19 +246,19 @@ Jump_01E_415E::
     ld [wListCursor], a
     ld [wChoiceCursor], a
     ld [wListPageIndex], a
-    call SwapMonstersMenu_Case02_Sub02
+    call SwapMonstersMenu_Case02_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_01E_4174::
-    call SwapMonstersMenu_Case02_Sub03
+    call SwapMonstersMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     cp a, $04
     jr c, Jump_01E_418B
     xor a, a
     ld [wGridCursorX], a
-    call SwapMonstersMenu_Case02_Sub01
+    call SwapMonstersMenu_Case02_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -316,25 +316,25 @@ Jump_01E_41D0::
 ; 3 call sites from 1 routine (e.g. SwapMonstersMenu_Case02)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-SwapMonstersMenu_Case02_Sub01::
+SwapMonstersMenu_Case02_WriteGridCursorY::
 Func_01E_41DF:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, SwapMonstersMenu_Case02_Sub02
+    jr c, SwapMonstersMenu_Case02_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, SwapMonstersMenu_Case02_Sub02
+    jr c, SwapMonstersMenu_Case02_ReadGridCursorX
     cp a, $18
-    jr c, SwapMonstersMenu_Case02_Sub03
+    jr c, SwapMonstersMenu_Case02_ReadGridCursorX_Sub03
     xor a, a
     ld [wGridCursorY], a
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02)
 ; reads: wGridCursorX
-SwapMonstersMenu_Case02_Sub02::
+SwapMonstersMenu_Case02_ReadGridCursorX::
 Func_01E_41F9:: ; address name
     ld b, $BB
     jr Jump_01E_4203
@@ -342,7 +342,7 @@ Func_01E_41F9:: ; address name
 ; only called from SwapMonstersMenu_Case02 (E-0047)
 ; 2 call sites from 1 routine (e.g. SwapMonstersMenu_Case02)
 ; reads: wGridCursorX
-SwapMonstersMenu_Case02_Sub03::
+SwapMonstersMenu_Case02_ReadGridCursorX_Sub03::
 Func_01E_41FD:: ; address name
     ld b, $C3
     jr Jump_01E_4203
@@ -727,7 +727,7 @@ SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_4493:: ; address name
     ld hl, GlyphCopyDestList1
     ld de, GlyphCopySrcList1
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld hl, wScreenStep
     inc [hl]
     ret
@@ -754,7 +754,7 @@ SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A::
 Jump_01E_44B5:: ; address name
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld hl, wScreenStep
     inc [hl]
     ret
@@ -1646,7 +1646,7 @@ SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20::
 Jump_01E_4AE0:: ; address name
     ld hl, GlyphCopyDestList2
     ld de, GlyphCopySrcList2
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2208,7 +2208,7 @@ SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_4EC3:: ; address name
     ld hl, GlyphCopyDestList2
     ld de, GlyphCopySrcList2
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2460,7 +2460,7 @@ SwapMonstersMenu_Case06::
 Jump_01E_506C:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case06_Case00
+    dw SwapMonstersMenu_Case06_WriteScreenStepAndChoiceCursorF0
     dw SwapMonstersMenu_Case06_ListRecordsInUseWithByte6EClear
     dw SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E
     dw SwapMonstersMenu_Case06_CopyScreenBufferRectWithAttrs_1E
@@ -2496,11 +2496,11 @@ Jump_01E_506C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wListCount, wDigits, wRecordsFlagged, wGridCursorX
 ; writes: wScreenStep, wChoiceCursorF0
-SwapMonstersMenu_Case06_Case00::
+SwapMonstersMenu_Case06_WriteScreenStepAndChoiceCursorF0::
 Jump_01E_50AE:: ; address name
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3228,7 +3228,7 @@ SwapMonstersMenu_Case07::
 Jump_01E_568E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case06_Case00
+    dw SwapMonstersMenu_Case06_WriteScreenStepAndChoiceCursorF0
     dw SwapMonstersMenu_Case06_ListRecordsInUseWithByte6EClear
     dw SwapMonstersMenu_Case07_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E
     dw SwapMonstersMenu_Case06_CopyScreenBufferRectWithAttrs_1E
@@ -4661,7 +4661,7 @@ SwapMonstersMenu_Case0E_ClearTileAreasAndIncScreenSubStep::
 Jump_01E_6055:: ; address name
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     call SwapMonstersMenu_Shared04
     call ClearTileAreasAndIncScreenSubStep
     call RedrawRecordListAndNextStep
@@ -4673,7 +4673,7 @@ Jump_01E_6055:: ; address name
     ret
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_Case01, SwapMonstersMenu_Case0E_ClearTileAreasAndIncScreenSubStep)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_WriteScreenSubStepAndScreenStep, SwapMonstersMenu_Case0E_ClearTileAreasAndIncScreenSubStep)
 SwapMonstersMenu_Shared04::
 Func_01E_6074:: ; address name
     ld c, $00
@@ -4800,7 +4800,7 @@ SwapMonstersMenu_Case0A_ListRecordsInUseWithByte6EClear::
 Jump_01E_613A:: ; address name
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     farcall ListRecordsInUseWithByte6EClear
     call GetListEntriesCell5Address
     push hl
@@ -4867,7 +4867,7 @@ SwapMonstersMenu_Case0E_ListRecordsAndDrawListEntriesCell5Panel::
 Jump_01E_619F:: ; address name
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     call ListRecordsAndDrawListEntriesCell5Panel
     call GetListEntriesCell5Address
     ld a, [hl]
@@ -4991,7 +4991,7 @@ Jump_01E_625A:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_Case0D_Case01
+    dw SwapMonstersMenu_Case0D_WriteScreenSubStepAndScreenStep
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
     dw SwapMonstersMenu_Case0D_FillTilesBxC_Case03
     dw SwapMonstersMenu_Case0D_UploadTilesFromData6D20
@@ -5012,11 +5012,11 @@ Jump_01E_625A:: ; address name
 ; entry 1 of the `rst $00` table in SwapMonstersMenu_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep, wScreenStep
-SwapMonstersMenu_Case0D_Case01::
+SwapMonstersMenu_Case0D_WriteScreenSubStepAndScreenStep::
 Jump_01E_6282:: ; address name
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     call SwapMonstersMenu_Shared04
     xor a, a
     ld [wScreenSubStep], a
@@ -5338,7 +5338,7 @@ SwapMonstersMenu_Case0D_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_64AD:: ; address name
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5558,7 +5558,7 @@ SwapMonstersMenu_Case09_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_6635:: ; address name
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5788,7 +5788,7 @@ SwapMonstersMenu_Case09_StoreBAtWordTableEntry_Bank1E::
 Jump_01E_67B1:: ; address name
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     xor a, a
     ld b, $C3
     ld hl, CursorCellTable7880
@@ -6408,7 +6408,7 @@ Jump_01E_6BC6:: ; address name
 Jump_01E_6C0A::
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
-    call SwapMonstersMenu_Shared05
+    call SwapMonstersMenu_WriteGlyphListPos
     xor a, a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
@@ -7848,7 +7848,7 @@ Jump_01E_7446::
 ; only called from routines of SwapMonstersMenu (E-0098)
 ; 14 call sites from 14 routines (e.g. SwapMonstersMenu_Case01_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A, SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20, ...)
 ; writes: wGlyphListPos
-SwapMonstersMenu_Shared05::
+SwapMonstersMenu_WriteGlyphListPos::
 Func_01E_7454:: ; address name
     ld b, $00
 

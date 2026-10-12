@@ -19,11 +19,11 @@ Func_00C_4001:: ; address name
     dw LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_GridIndexFromGridCursorXGridCursorY
-    dw LibraryMenu_Case0B
+    dw LibraryMenu_WriteScreenState
     dw LibraryMenu_Case0C
     dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D
     dw LibraryMenu_StoreBAtWordTableEntry_Bank0C
-    dw LibraryMenu_Case0F
+    dw LibraryMenu_WriteScreenState_Case0F
     dw LibraryMenu_Case10
 
 ; entry 0 of the `rst $00` table in LibraryMenu
@@ -90,7 +90,7 @@ Jump_00C_406F::
     ld a, b
     or a, c
     jr nz, Jump_00C_406E
-    call LibraryMenu_Shared05
+    call LibraryMenu_WriteSVBK
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -143,7 +143,7 @@ Jump_00C_40A9::
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call LibraryMenu_Shared02
+    call LibraryMenu_WriteWorkBuf
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -328,7 +328,7 @@ Jump_00C_41D7:: ; address name
     jp nz, Jump_00C_4278
     bit 1, a
     jp nz, Jump_00C_42D3
-    call LibraryMenu_Case05_Sub01
+    call LibraryMenu_Case05_WriteGlyphListStart
     ret
 
 Jump_00C_41FB::
@@ -352,7 +352,7 @@ Jump_00C_4206::
     ld [wGridCursorX], a
 
 Jump_00C_4218::
-    call LibraryMenu_Case05_Sub02
+    call LibraryMenu_Case05_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -372,7 +372,7 @@ Jump_00C_4233::
     jr Jump_00C_4206
 
 Jump_00C_4236::
-    call LibraryMenu_Case05_Sub03
+    call LibraryMenu_Case05_ReadGridCursorX_Sub03
     ld a, [wGridCursorY]
     ld de, Data_00C_56D7
     add a, e
@@ -394,13 +394,13 @@ Jump_00C_424F::
 
 Jump_00C_4250::
     ld [wGridCursorX], a
-    call LibraryMenu_Case05_Sub02
+    call LibraryMenu_Case05_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_425C::
-    call LibraryMenu_Case05_Sub03
+    call LibraryMenu_Case05_ReadGridCursorX_Sub03
     ld a, [wGridCursorY]
     ld de, Data_00C_56D7
     add a, e
@@ -486,25 +486,25 @@ Jump_00C_42D3::
 ; 1 call site from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wJoypadRepeatTimer, wGlyphListStart, wGridCursorX
 ; writes: wGlyphListStart
-LibraryMenu_Case05_Sub01::
+LibraryMenu_Case05_WriteGlyphListStart::
 Func_00C_42F0:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, LibraryMenu_Case05_Sub02
+    jr c, LibraryMenu_Case05_ReadGridCursorX
     ld a, [wGlyphListStart]
     inc a
     ld [wGlyphListStart], a
     cp a, $10
-    jr c, LibraryMenu_Case05_Sub02
+    jr c, LibraryMenu_Case05_ReadGridCursorX
     cp a, $18
-    jr c, LibraryMenu_Case05_Sub03
+    jr c, LibraryMenu_Case05_ReadGridCursorX_Sub03
     xor a, a
     ld [wGlyphListStart], a
 
 ; only called from LibraryMenu_Case05 (E-0047)
 ; 2 call sites from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wGridCursorX
-LibraryMenu_Case05_Sub02::
+LibraryMenu_Case05_ReadGridCursorX::
 Func_00C_430A:: ; address name
     ld b, $BB
     jr Jump_00C_4314
@@ -512,7 +512,7 @@ Func_00C_430A:: ; address name
 ; only called from LibraryMenu_Case05 (E-0047)
 ; 2 call sites from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wGridCursorX
-LibraryMenu_Case05_Sub03::
+LibraryMenu_Case05_ReadGridCursorX_Sub03::
 Func_00C_430E:: ; address name
     ld b, $C3
     jr Jump_00C_4314
@@ -735,9 +735,9 @@ Jump_00C_445F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case0B::
+LibraryMenu_WriteScreenState::
 Jump_00C_4492:: ; address name
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_ReadGrid2CursorY
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -763,7 +763,7 @@ Jump_00C_449D:: ; address name
     jp nz, Jump_00C_4563
     bit 1, a
     jp nz, Jump_00C_459F
-    call LibraryMenu_Case0C_Sub01
+    call LibraryMenu_Case0C_WriteListEntries
     ret
 
 Jump_00C_44C3::
@@ -817,7 +817,7 @@ Jump_00C_44E9::
     ret
 
 Jump_00C_450B::
-    call LibraryMenu_Case0C_Sub02
+    call LibraryMenu_Case0C_ReadGrid2CursorX
     ld a, [wScreenState]
     sub a, $03
     ld [wScreenState], a
@@ -845,7 +845,7 @@ Jump_00C_4530::
     jr Jump_00C_44DA
 
 Jump_00C_4533::
-    call LibraryMenu_Case0C_Sub03
+    call LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -859,13 +859,13 @@ Jump_00C_4543::
 
 Jump_00C_4544::
     ld [wGrid2CursorX], a
-    call LibraryMenu_Case0C_Sub02
+    call LibraryMenu_Case0C_ReadGrid2CursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_4550::
-    call LibraryMenu_Case0C_Sub03
+    call LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -912,7 +912,7 @@ Jump_00C_456F::
     ret
 
 Jump_00C_459B::
-    call LibraryMenu_Case0C_Sub02
+    call LibraryMenu_Case0C_ReadGrid2CursorX
     ret
 
 Jump_00C_459F::
@@ -934,25 +934,25 @@ Jump_00C_459F::
 ; 1 call site from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wJoypadRepeatTimer, wListEntries, wGrid2CursorX
 ; writes: wListEntries
-LibraryMenu_Case0C_Sub01::
+LibraryMenu_Case0C_WriteListEntries::
 Func_00C_45BC:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, LibraryMenu_Case0C_Sub02
+    jr c, LibraryMenu_Case0C_ReadGrid2CursorX
     ld a, [wListEntries]
     inc a
     ld [wListEntries], a
     cp a, $10
-    jr c, LibraryMenu_Case0C_Sub02
+    jr c, LibraryMenu_Case0C_ReadGrid2CursorX
     cp a, $18
-    jr c, LibraryMenu_Case0C_Sub03
+    jr c, LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
     xor a, a
     ld [wListEntries], a
 
 ; only called from LibraryMenu_Case0C (E-0047)
 ; 3 call sites from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wGrid2CursorX
-LibraryMenu_Case0C_Sub02::
+LibraryMenu_Case0C_ReadGrid2CursorX::
 Func_00C_45D6:: ; address name
     ld b, $BB
     jr Jump_00C_45E0
@@ -960,7 +960,7 @@ Func_00C_45D6:: ; address name
 ; only called from LibraryMenu_Case0C (E-0047)
 ; 2 call sites from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wGrid2CursorX
-LibraryMenu_Case0C_Sub03::
+LibraryMenu_Case0C_ReadGrid2CursorX_Sub03::
 Func_00C_45DA:: ; address name
     ld b, $C3
     jr Jump_00C_45E0
@@ -985,7 +985,7 @@ Jump_00C_45E0::
     ei
     ret
 
-; address loaded by LibraryMenu_Case0C_Sub03
+; address loaded by LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
 Data_00C_45FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $00, $69, $00, $A9, $00, $E9, $00, $29, $01, $69, $01
 
@@ -1051,10 +1051,10 @@ Jump_00C_4650:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case0F::
+LibraryMenu_WriteScreenState_Case0F::
 Jump_00C_4676:: ; address name
     call LibraryMenu_FillTileRectWithArg1Tile
-    call LibraryMenu_Shared05
+    call LibraryMenu_WriteSVBK
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -1877,7 +1877,7 @@ Jump_00C_4CE2:: ; address name
     ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    call LibraryMenu_Shared05
+    call LibraryMenu_WriteSVBK
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1943,7 +1943,7 @@ Jump_00C_4D12::
 LibraryMenu_Case10_WriteBGPalette0From555C::
 Jump_00C_4D6B:: ; address name
     call WriteBGPalette0From555C
-    call LibraryMenu_Shared02
+    call LibraryMenu_WriteWorkBuf
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
     ld a, [wScreenStep]
     inc a
@@ -1974,7 +1974,7 @@ Jump_00C_4D7C:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_ReadGrid2CursorY
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2260,7 +2260,7 @@ Data_00C_4F68:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_Case10_WriteBGPalette0From555C)
 ; reads: wGridCursorY
 ; writes: wWorkBuf
-LibraryMenu_Shared02::
+LibraryMenu_WriteWorkBuf::
 Func_00C_4F74:: ; address name
     ld a, [wGridCursorY]
     add a, a
@@ -2303,7 +2303,7 @@ Jump_00C_4FA2::
     jr c, Jump_00C_4F85
     ret
 
-; address loaded by LibraryMenu_Shared02
+; address loaded by LibraryMenu_WriteWorkBuf
 Data_00C_4FAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $FF, $20, $90, $70, $90
     db $C0, $90, $10, $91, $60, $91, $B0, $91
@@ -2353,9 +2353,9 @@ Func_00C_4FC2:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case0B, LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits)
+; 2 call sites from 2 routines (e.g. LibraryMenu_WriteScreenState, LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits)
 ; reads: wGrid2CursorY
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_ReadGrid2CursorY::
 Func_00C_501F:: ; address name
     call BGMapAddressAtScroll_Bank0C
     ld de, $018F
@@ -2540,10 +2540,10 @@ Data_00C_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
 ; only called from routines of LibraryMenu (E-0098)
-; 3 call sites from 3 routines (e.g. LibraryMenu_Case0F, LibraryMenu_Case01, LibraryMenu_Case10_DecompressToVRAM)
+; 3 call sites from 3 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_Case01, LibraryMenu_Case10_DecompressToVRAM)
 ; reads: wIsCGB
 ; writes: rSVBK
-LibraryMenu_Shared05::
+LibraryMenu_WriteSVBK::
 Func_00C_511B:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -2621,7 +2621,7 @@ Func_00C_5156:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 4 call sites from 4 routines (e.g. LibraryMenu_Case0F, LibraryMenu_LoadMapHeader, LibraryMenu_Case01, LibraryMenu_Case10_DecompressToVRAM)
+; 4 call sites from 4 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_LoadMapHeader, LibraryMenu_Case01, LibraryMenu_Case10_DecompressToVRAM)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 LibraryMenu_FillTileRectWithArg1Tile::
 Func_00C_5177:: ; address name
@@ -2654,7 +2654,7 @@ Data_00C_51AB:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 23 call sites from 13 routines (e.g. ArenaMenu_Number24ToPackedBCD, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10, ...)
+; 23 call sites from 13 routines (e.g. ArenaMenu_Number24ToPackedBCD, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18, ArenaMenu_CopyRectTo20ByteRows_Bank0C_WriteScreenState, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0C::
@@ -2906,7 +2906,7 @@ Jump_00C_52DD::
     ret
 
 ; A = 6 * wD787 + wD786 (row-major index in a 6-column grid: wD786 column, wD787 row); BC kept (E-0072)
-; 15 call sites from 8 routines (e.g. LibraryMenu_Case0C, ReadGridCellByteForGridCursorXGridCursorY, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03, LibraryMenu_GridIndexFromGridCursorXGridCursorY, ...)
+; 15 call sites from 8 routines (e.g. LibraryMenu_Case0C, ReadGridCellByteForGridCursorXGridCursorY, LibraryMenu_GridIndexFromGridCursorXGridCursorY_ReadGrid2CursorY, LibraryMenu_GridIndexFromGridCursorXGridCursorY, ...)
 ; reads: wGridCursorY, wGridCursorX
 GridIndexFromGridCursorXGridCursorY::
 Func_00C_52EC:: ; address name
@@ -3947,7 +3947,7 @@ Data_00C_592E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1B, $00, $43, $00, $67, $00, $85, $00, $A8, $00, $CA, $00, $F1, $00, $11, $01
     db $39, $01, $5C, $01, $75, $01
 
-; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_Case0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_Case0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_GridIndexFromGridCursorXGridCursorY_ReadGrid2CursorY
 Data_00C_5944:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
@@ -5578,10 +5578,10 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_SetScreenState
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11
+    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_WriteScreenState
     dw ArenaMenu_Case12
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13
-    dw ArenaMenu_AdvanceScreenState_SetScreenState_Case14
+    dw ArenaMenu_AdvanceScreenState_SetScreenState_WriteScreenState
     dw ArenaMenu_Case15
     dw ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17
@@ -5890,7 +5890,7 @@ Jump_00C_67E5:: ; address name
     ld hl, wWindowTileBuffer + $B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call ArenaMenu_Case01_Sub01
+    call ArenaMenu_Case01_ReadArenaRank
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
@@ -5917,11 +5917,11 @@ Jump_00C_680B:: ; address name
     jr nz, Jump_00C_684F
     bit 0, a
     jr nz, Jump_00C_685E
-    call ArenaMenu_Case02_Sub01
+    call ArenaMenu_Case02_WriteGridCursorY
     ret
 
 Jump_00C_6825::
-    call ArenaMenu_Case02_Sub03
+    call ArenaMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     and a, a
     jr nz, Jump_00C_6832
@@ -5933,13 +5933,13 @@ Jump_00C_6832::
 
 Jump_00C_6833::
     ld [wGridCursorX], a
-    call ArenaMenu_Case02_Sub02
+    call ArenaMenu_Case02_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_683F::
-    call ArenaMenu_Case02_Sub03
+    call ArenaMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     cp a, $03
     jr c, Jump_00C_684C
@@ -5960,7 +5960,7 @@ Jump_00C_684F::
     ret
 
 Jump_00C_685E::
-    call ArenaMenu_Case02_Sub02
+    call ArenaMenu_Case02_ReadGridCursorX
     ld a, [wArenaRank]
     dec a
     ld b, a
@@ -6022,25 +6022,25 @@ Data_00C_68D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-ArenaMenu_Case02_Sub01::
+ArenaMenu_Case02_WriteGridCursorY::
 Func_00C_68D5:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ArenaMenu_Case02_Sub02
+    jr c, ArenaMenu_Case02_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, ArenaMenu_Case02_Sub02
+    jr c, ArenaMenu_Case02_ReadGridCursorX
     cp a, $18
-    jr c, ArenaMenu_Case02_Sub03
+    jr c, ArenaMenu_Case02_ReadGridCursorX_Sub03
     xor a, a
     ld [wGridCursorY], a
 
 ; only called from ArenaMenu_Case02 (E-0047)
 ; 2 call sites from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wGridCursorX
-ArenaMenu_Case02_Sub02::
+ArenaMenu_Case02_ReadGridCursorX::
 Func_00C_68EF:: ; address name
     ld b, $BB
     jr Jump_00C_68F9
@@ -6048,7 +6048,7 @@ Func_00C_68EF:: ; address name
 ; only called from ArenaMenu_Case02 (E-0047)
 ; 2 call sites from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wGridCursorX
-ArenaMenu_Case02_Sub03::
+ArenaMenu_Case02_ReadGridCursorX_Sub03::
 Func_00C_68F3:: ; address name
     ld b, $C3
     jr Jump_00C_68F9
@@ -6074,7 +6074,7 @@ Jump_00C_68F9::
     ei
     ret
 
-; address loaded by ArenaMenu_Case02_Sub03
+; address loaded by ArenaMenu_Case02_ReadGridCursorX_Sub03
 Data_00C_691A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
@@ -6118,7 +6118,7 @@ Jump_00C_694B:: ; address name
     ret
 
 Jump_00C_695F::
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_WriteArg1AndArg2
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6185,7 +6185,7 @@ Jump_00C_69BF::
 ; only called from routines of ArenaMenu (E-0098)
 ; 3 call sites from 3 routines (e.g. ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C, ArenaMenu_BGMapAddressAtScroll_Bank0C, ArenaMenu_UpdateTwoChoiceCursor_Bank1D)
 ; writes: wArg1, wArg2
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_WriteArg1AndArg2::
 Func_00C_69D5:: ; address name
     ld b, $00
     ld c, $05
@@ -6211,7 +6211,7 @@ Func_00C_69D5:: ; address name
 ; writes: wScreenState
 ArenaMenu_BGMapAddressAtScroll_Bank0C::
 Jump_00C_6A04:: ; address name
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_WriteArg1AndArg2
     ld c, $04
     ld hl, Data_00C_784F
     call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
@@ -6371,7 +6371,7 @@ Jump_00C_6AF2::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_00C_6AE3
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_WriteArg1AndArg2
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
@@ -6468,7 +6468,7 @@ Jump_00C_6B78:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call ArenaMenu_Shared05
+    call ArenaMenu_WriteTwoChoiceCursor
     ld a, [wScreenState]
     inc a
     inc a
@@ -6483,7 +6483,7 @@ Jump_00C_6B78:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11::
+ArenaMenu_CopyRectTo20ByteRows_Bank0C_WriteScreenState::
 Jump_00C_6BB4:: ; address name
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $B4
@@ -6519,11 +6519,11 @@ Jump_00C_6BE3:: ; address name
     jr nz, Jump_00C_6C27
     bit 0, a
     jr nz, Jump_00C_6C36
-    call ArenaMenu_Case12_Sub01
+    call ArenaMenu_Case12_WriteGridCursorY
     ret
 
 Jump_00C_6BFD::
-    call ArenaMenu_Case12_Sub03
+    call ArenaMenu_Case12_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     and a, a
     jr nz, Jump_00C_6C0A
@@ -6535,13 +6535,13 @@ Jump_00C_6C0A::
 
 Jump_00C_6C0B::
     ld [wGridCursorX], a
-    call ArenaMenu_Case12_Sub02
+    call ArenaMenu_Case12_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_6C17::
-    call ArenaMenu_Case12_Sub03
+    call ArenaMenu_Case12_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     cp a, $03
     jr c, Jump_00C_6C24
@@ -6562,7 +6562,7 @@ Jump_00C_6C27::
     ret
 
 Jump_00C_6C36::
-    call ArenaMenu_Case12_Sub02
+    call ArenaMenu_Case12_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
@@ -6600,25 +6600,25 @@ Data_00C_6C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-ArenaMenu_Case12_Sub01::
+ArenaMenu_Case12_WriteGridCursorY::
 Func_00C_6C83:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ArenaMenu_Case12_Sub02
+    jr c, ArenaMenu_Case12_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, ArenaMenu_Case12_Sub02
+    jr c, ArenaMenu_Case12_ReadGridCursorX
     cp a, $18
-    jr c, ArenaMenu_Case12_Sub03
+    jr c, ArenaMenu_Case12_ReadGridCursorX_Sub03
     xor a, a
     ld [wGridCursorY], a
 
 ; only called from ArenaMenu_Case12 (E-0047)
 ; 2 call sites from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wGridCursorX
-ArenaMenu_Case12_Sub02::
+ArenaMenu_Case12_ReadGridCursorX::
 Func_00C_6C9D:: ; address name
     ld b, $BB
     jr Jump_00C_6CA7
@@ -6626,7 +6626,7 @@ Func_00C_6C9D:: ; address name
 ; only called from ArenaMenu_Case12 (E-0047)
 ; 2 call sites from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wGridCursorX
-ArenaMenu_Case12_Sub03::
+ArenaMenu_Case12_ReadGridCursorX_Sub03::
 Func_00C_6CA1:: ; address name
     ld b, $C3
     jr Jump_00C_6CA7
@@ -6652,7 +6652,7 @@ Jump_00C_6CA7::
     ei
     ret
 
-; address loaded by ArenaMenu_Case12_Sub03
+; address loaded by ArenaMenu_Case12_ReadGridCursorX_Sub03
 Data_00C_6CC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $E1, $00, $21, $01, $61, $01
 
@@ -6688,7 +6688,7 @@ Jump_00C_6CD0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_AdvanceScreenState_SetScreenState_Case14::
+ArenaMenu_AdvanceScreenState_SetScreenState_WriteScreenState::
 Jump_00C_6D05:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6819,7 +6819,7 @@ Jump_00C_6DC5:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call ArenaMenu_Shared05
+    call ArenaMenu_WriteTwoChoiceCursor
     ld a, $11
     ld [wScreenState], a
     xor a, a
@@ -6929,7 +6929,7 @@ Jump_00C_6EA2::
 ; no direct call (reached through a table, a jump or a vector)
 ArenaMenu_Case1C::
 Jump_00C_6EB0:: ; address name
-    call ArenaMenu_Case1C_Sub01
+    call ArenaMenu_Case1C_ReadArenaRound
     ret
 
 ; entry 30 of the `rst $00` table in ArenaMenu
@@ -7174,7 +7174,7 @@ Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0C, $0C, $0B, $0A, $1C
 
 ; wD588 += 1 and wD78C = wD7FC (E-0122)
-; 3 call sites from 3 routines (e.g. ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea, ArenaRounds_StartArenaRankMessage_Case0D, ArenaRounds_StartArenaRankMessage_Case05)
+; 3 call sites from 3 routines (e.g. ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea, ArenaRounds_StartArenaRankMessage_WriteScriptStep_Case0D, ArenaRounds_StartArenaRankMessage_WriteScriptStep)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; writes: wArenaRound, wScreenArea
 IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
@@ -7187,7 +7187,7 @@ Func_00C_703D:: ; address name
     ret
 
 ; wD78E = wD7FF + 1 (and stored back to wD7FF), wD786 = wD7FC, wTwoChoiceCursor = 1 (E-0122)
-; 5 call sites from 3 routines (e.g. ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity, ArenaGridBattle_StartArenaRankMessage_Case0E, ArenaGridBattle_StartArenaRankMessage_Case06)
+; 5 call sites from 3 routines (e.g. ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity, ArenaGridBattle_StartArenaRankMessage_ReadArenaRank_Case0E, ArenaGridBattle_StartArenaRankMessage_ReadArenaRank)
 ; reads: wRecordCapacity, wAreaGraphicsIndex, wScreenCountPlusOne
 ; writes: wScreenCountPlusOne, wGridCursorX, wTwoChoiceCursor, wRecordCapacity
 SetupScreenCountPlusOneFromRecordCapacity::
@@ -7206,7 +7206,7 @@ Func_00C_704B:: ; address name
 ; only called from ArenaMenu_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ArenaMenu_CopyRectTo20ByteRows_Bank0C)
 ; reads: wArenaRank
-ArenaMenu_Case01_Sub01::
+ArenaMenu_Case01_ReadArenaRank::
 Func_00C_7064:: ; address name
     ld hl, wWindowTileBuffer + $C9
     ld a, [wArenaRank]
@@ -7241,7 +7241,7 @@ Jump_00C_708B::
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 5 call sites from 5 routines (e.g. ArenaMenu_SubtractArg1AmountFromGold_Case19, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10, ArenaMenu_ShowTwoChoiceBoxAtWC412, ...)
+; 5 call sites from 5 routines (e.g. ArenaMenu_SubtractArg1AmountFromGold_Case19, ArenaMenu_CopyRectTo20ByteRows_Bank0C_WriteScreenState, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10, ArenaMenu_ShowTwoChoiceBoxAtWC412, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
 ; points at: wArg3
@@ -7275,7 +7275,7 @@ Jump_00C_70C7::
     ret
 
 ; only called from ArenaMenu_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ArenaMenu_Shared05)
+; 1 call site from 1 routine (e.g. ArenaMenu_WriteTwoChoiceCursor)
 ; reads: wPartyCount
 ; points at: wArenaEntry
 ArenaMenu_Shared05_DivideHLByA::
@@ -7312,7 +7312,7 @@ Jump_00C_70DB::
     ret
 
 ; only called from ArenaMenu_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ArenaMenu_Shared05)
+; 1 call site from 1 routine (e.g. ArenaMenu_WriteTwoChoiceCursor)
 ; reads: hTemp0, wPartyCount
 ; writes: wArenaEntry, rRAMG2, rRAMB
 ; points at: wPartyList, wArenaEntry
@@ -7714,7 +7714,7 @@ Jump_00C_7320::
     ret
 
 ; only called from ArenaRounds_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. ArenaRounds_Shared01)
+; 1 call site from 1 routine (e.g. ArenaRounds_WriteBattleIntroKindAndEncounterKind)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; points at: wArenaList, wArenaList2
 ArenaRounds_Shared01_RandomModulo52::
@@ -7869,11 +7869,11 @@ Func_00C_73C7:: ; address name
     farcall ClearBit1OfPlayerAndObjectFlags
 
 ; only called from routines of ArenaRounds (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaRounds_StartArenaRankMessage_Case0D, ArenaRounds_StartArenaRankMessage_Case05)
+; 2 call sites from 2 routines (e.g. ArenaRounds_StartArenaRankMessage_WriteScriptStep_Case0D, ArenaRounds_StartArenaRankMessage_WriteScriptStep)
 ; reads: wArenaRound
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wArenaList2, wEncounterMonsters
-ArenaRounds_Shared01::
+ArenaRounds_WriteBattleIntroKindAndEncounterKind::
 Func_00C_73F5:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7885,7 +7885,7 @@ Func_00C_73F5:: ; address name
 ; 1 call site from 1 routine (e.g. ArenaMenu_Case1C)
 ; reads: wArenaRound
 ; points at: wArenaList2, wEncounterMonsters
-ArenaMenu_Case1C_Sub01::
+ArenaMenu_Case1C_ReadArenaRound::
 Func_00C_7402:: ; address name
     ld a, [wArenaRound]
     sla a
@@ -7930,11 +7930,11 @@ Func_00C_741F:: ; address name
     farcall ClearBit1OfPlayerAndObjectFlags
 
 ; only called from routines of ArenaGridBattle (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaGridBattle_StartArenaRankMessage_Case0E, ArenaGridBattle_StartArenaRankMessage_Case06)
+; 2 call sites from 2 routines (e.g. ArenaGridBattle_StartArenaRankMessage_ReadArenaRank_Case0E, ArenaGridBattle_StartArenaRankMessage_ReadArenaRank)
 ; reads: wScreenCountPlusOne
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wEncounterMonsters
-ArenaGridBattle_Shared01::
+ArenaGridBattle_WriteBattleIntroKindAndEncounterKind::
 Func_00C_744D:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7993,11 +7993,11 @@ Func_00C_7478:: ; address name
     farcall ClearBit1OfPlayerAndObjectFlags
 
 ; only called from routines of ArenaGridBattle (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaGridBattle_StartArenaRankMessage_Case0E, ArenaGridBattle_StartArenaRankMessage_Case06)
+; 2 call sites from 2 routines (e.g. ArenaGridBattle_StartArenaRankMessage_ReadArenaRank_Case0E, ArenaGridBattle_StartArenaRankMessage_ReadArenaRank)
 ; reads: wGridCursorX, wScreenCountPlusOne
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wEncounterMonsters
-ArenaGridBattle_Shared02::
+ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02::
 Func_00C_74A6:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
@@ -8037,7 +8037,7 @@ Jump_00C_74D4::
 ; only called from routines of ArenaMenu (E-0098)
 ; 2 call sites from 2 routines (e.g. ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18, ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10)
 ; writes: wTwoChoiceCursor
-ArenaMenu_Shared05::
+ArenaMenu_WriteTwoChoiceCursor::
 Func_00C_74DB:: ; address name
     call ArenaMenu_Shared05_AddTemp0WordToHL
     call ArenaMenu_Shared05_DivideHLByA
@@ -8332,7 +8332,7 @@ Data_00C_7857:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_7871:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $00, $F4, $01, $E8, $03, $88, $13, $02, $04, $08, $10
 
-; address loaded by ArenaGridBattle_Shared01
+; address loaded by ArenaGridBattle_WriteBattleIntroKindAndEncounterKind
 Data_00C_787D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7F, $78, $85, $78, $8B, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00

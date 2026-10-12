@@ -375,11 +375,11 @@ Func_061_420D:: ; address name
     rst $00
     dw LoadKeyWorldTilesetAndHeader
     dw LoadMapHeaderByMapType_DecompressToVRAM
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0AndKeyWorldByte06
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0
     dw LoadMapType5TilesetAndHeader
-    dw LoadMapHeaderByMapType_Case06
+    dw LoadMapHeaderByMapType_WriteTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
 
 ; entry 7 of the `rst $00` table in LoadMapHeaderByMapType
@@ -396,7 +396,7 @@ Jump_061_4223:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
-LoadMapHeaderByMapType_Case06::
+LoadMapHeaderByMapType_WriteTemp0::
 Jump_061_422B:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
@@ -608,7 +608,7 @@ Jump_061_4380::
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0, wKeyWorldByte06
 ; points at: hTemp0
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0AndKeyWorldByte06::
 Jump_061_439F:: ; address name
     ld a, $61
     ldh [hTemp0], a
@@ -630,7 +630,7 @@ Jump_061_43AE::
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wKeyWorldFloorState
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_WriteTemp0::
 Jump_061_43B9:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -748,18 +748,18 @@ Data_061_4468:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: wMapType
-LoadMapScreen_Sub03::
+LoadMapScreen_ReadMapType::
 Func_061_4472:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw LoadMapScreen_Sub03_Case00
+    dw LoadMapScreen_Sub03_WriteSVBK
     dw LoadMapScreen_Sub03_Return
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
-    dw LoadMapScreen_Sub03_Case05
-    dw LoadMapScreen_Sub03_Case06
+    dw LoadMapScreen_Sub03_WriteTemp0AndSVBK
+    dw LoadMapScreen_Sub03_WriteTemp0
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
 
 ; entry 7 of the `rst $00` table in Func_061_4472
@@ -776,7 +776,7 @@ Jump_061_4488:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
-LoadMapScreen_Sub03_Case06::
+LoadMapScreen_Sub03_WriteTemp0::
 Jump_061_4490:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
@@ -823,7 +823,7 @@ Jump_061_44D7::
     ret
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
-; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, Talk00Event0B_DrawDoorTilesForKeyWorldFloor, Talk00Event0B_Case02)
+; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_WriteTemp0, Talk00Event0B_DrawDoorTilesForKeyWorldFloor, Talk00Event0B_WriteScriptStartRequestAndStepPtrLo)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
 DrawDoorTilesForKeyWorldFloor::
@@ -891,7 +891,7 @@ Jump_061_44F1::
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenY, hMapScreenX, wIsCGB
 ; writes: hTemp0, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-LoadMapScreen_Sub03_Case05::
+LoadMapScreen_Sub03_WriteTemp0AndSVBK::
 Jump_061_4533:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -1007,7 +1007,7 @@ Jump_061_45E1::
     ret
 
 ; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
-; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_Case05, Talk00Event0E_Case02)
+; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK, Talk00Event0E_WriteScriptStartRequestAndStepPtrLo)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 CheckTwoWCDB0EntriesForKeyWorldArea::
@@ -1040,7 +1040,7 @@ Jump_061_460A::
 
 Jump_061_460E::
     push hl
-    call CheckTwoWCDB0EntriesForKeyWorldArea_Sub01
+    call CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
     pop hl
 
 Jump_061_4613::
@@ -1062,7 +1062,7 @@ Jump_061_4613::
     or a, a
     jr z, Jump_061_462B
     ld c, $80
-    jr CheckTwoWCDB0EntriesForKeyWorldArea_Sub01
+    jr CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
 
 Jump_061_462B::
     dec hl
@@ -1074,7 +1074,7 @@ Jump_061_462B::
 ; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForKeyWorldArea)
 ; reads: hMapScreenX, hMapScreenY, wKeyWorldFloor, wKeyWorldArea, wIsCGB
 ; writes: rSVBK
-CheckTwoWCDB0EntriesForKeyWorldArea_Sub01::
+CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK::
 Func_061_462F:: ; address name
     ld a, b
     ld hl, KeyWorldEntryScreenXY
@@ -1276,7 +1276,7 @@ Func_061_4706:: ; address name
     ret
 
 ; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case05)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
 ; writes: hTemp0, rSVBK
 DrawKeyWorldExitTile::
@@ -1668,7 +1668,7 @@ Jump_061_542D:: ; address name
 ; reads: hMapScreenY, hMapScreenX, wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-LoadMapScreen_Sub03_Case00::
+LoadMapScreen_Sub03_WriteSVBK::
 Jump_061_5443:: ; address name
     ldh a, [hMapScreenY]
     and a, $FC
@@ -1778,7 +1778,7 @@ Jump_061_54E2::
     ret
 
 ; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: wMapType, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
 ; writes: rSVBK
 DrawKeyWorldGoalAtScreen::
@@ -1909,7 +1909,7 @@ Jump_061_5585::
     ret
 
 ; for the wCD7B entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wC240 with CGB attribute 5 (E-0129)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wKeyWorldObjects
@@ -2014,7 +2014,7 @@ Jump_061_562E::
     ret
 
 ; for the wCD8B object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 DrawWCD8BObjectTilesForScreen::
@@ -2252,7 +2252,7 @@ Data_061_5728:: ; address name
 ; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
 ; reads: wMapType
-CheckWarpAtPlayer_Sub01::
+CheckWarpAtPlayer_ReadMapType::
 Func_061_5764:: ; address name
     ld a, [wMapType]
     and a, $07

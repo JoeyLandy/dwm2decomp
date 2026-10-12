@@ -11,7 +11,7 @@ Func_030_4001:: ; address name
     ret nz
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattleCommandEntry_Case00
+    dw RunBattleCommandEntry_WriteCommandByteE8
     dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_ChooseTargetForActor
@@ -24,7 +24,7 @@ Func_030_4001:: ; address name
 ; reads: wLinkMode, wBattlePartyCount
 ; writes: wCommandByteE8
 ; points at: wBattleSubPhase, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wSlotTrait
-RunBattleCommandEntry_Case00::
+RunBattleCommandEntry_WriteCommandByteE8::
 Jump_030_4018:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -97,7 +97,7 @@ Jump_030_408C::
     ret
 
 ; only called from RunBattleCommandEntry_Case00 (E-0047)
-; 4 call sites from 1 routine (e.g. RunBattleCommandEntry_Case00)
+; 4 call sites from 1 routine (e.g. RunBattleCommandEntry_WriteCommandByteE8)
 RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty::
 Func_030_408D:: ; address name
     ld a, c
@@ -741,7 +741,7 @@ Jump_030_4438::
     jr z, Jump_030_4480
     cp a, $01
     jr z, Jump_030_4497
-    call RunCommandEntryResolveStep_Case01_Sub01
+    call RunCommandEntryResolveStep_Case01_ReadBattleActor
     call RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2
     call AddPersonalityWeightToBattleArg0
     call AddActorBattleWordArray3FDiv16ToBattleArg2
@@ -826,7 +826,7 @@ Jump_030_4505::
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_AddAx9ToHL)
 ; reads: wBattleActor
 ; points at: wSlotTrait, wBattleArg0
-RunCommandEntryResolveStep_Case01_Sub01::
+RunCommandEntryResolveStep_Case01_ReadBattleActor::
 Func_030_4506:: ; address name
     ld hl, wSlotTrait
     jr Jump_030_451F
@@ -3482,11 +3482,11 @@ Func_030_5472:: ; address name
     ld [wAIChoiceOrder + $2], a
     ld a, $03
     ld [wAIChoiceIndex], a
-    call AIChooseActionForActor_Sub01_Sub01
+    call AIChooseActionForActor_Sub01_ReadRecordBufferData
     call AddCommandWeightToAIChoiceWeights
     call AddActorPersonalityTensToAIChoiceWeights
     call AddStatusAndHPWeightsToAI
-    call AIChooseActionForActor_Sub01_Sub02
+    call AIChooseActionForActor_Sub01_WriteAIChoiceWeights
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies
     ld a, $00
@@ -3497,7 +3497,7 @@ Func_030_5472:: ; address name
 ; 1 call site from 1 routine (e.g. AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wRecordBufferData
 ; points at: wAIChoiceWeights
-AIChooseActionForActor_Sub01_Sub01::
+AIChooseActionForActor_Sub01_ReadRecordBufferData::
 Func_030_54B5:: ; address name
     ld a, [wRecordBufferData + $3]
     and a, $F0
@@ -3533,7 +3533,7 @@ Jump_030_54D9::
 ; reads: wBattleActor, wAIChoiceWeights
 ; writes: wAIChoiceWeights
 ; points at: wBattleCommandArgs, wBattleHP
-AIChooseActionForActor_Sub01_Sub02::
+AIChooseActionForActor_Sub01_WriteAIChoiceWeights::
 Func_030_54DA:: ; address name
     ld a, [wBattleActor]
     rrca

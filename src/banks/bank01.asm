@@ -1259,7 +1259,7 @@ Jump_001_4CB8::
     and a, $10
     jr z, Jump_001_4CCF
     inc [hl]
-    call DebugMessageTest_Update_Case21_Sub05
+    call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
     jr Jump_001_4CE5
 
 Jump_001_4CCF::
@@ -1267,7 +1267,7 @@ Jump_001_4CCF::
     and a, $20
     jr z, Jump_001_4CDC
     dec [hl]
-    call DebugMessageTest_Update_Case21_Sub05
+    call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
     jr Jump_001_4CE5
 
 Jump_001_4CDC::
@@ -1494,7 +1494,7 @@ Jump_001_4E30::
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wMenuState
 ; writes: wTemp1, wMenuRowCount
-DebugMessageTest_Update_Case21_Sub05::
+DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount::
 Func_001_4E3B:: ; address name
     ld a, [wMenuState]
     cp a, $00
@@ -2374,7 +2374,7 @@ Jump_001_543A:: ; address name
     jp nz, Jump_001_549D
     bit 3, a
     jr nz, Jump_001_546F
-    call DebugResultsDisplay_Update_Sub01
+    call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 Jump_001_546F::
@@ -2405,7 +2405,7 @@ Jump_001_5489::
 Jump_001_5497::
     dec a
     ld [hl], a
-    call DebugResultsDisplay_Update_Sub01
+    call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 Jump_001_549D::
@@ -2429,7 +2429,7 @@ Jump_001_54AC::
 Jump_001_54BB::
     inc a
     ld [hl], a
-    call DebugResultsDisplay_Update_Sub01
+    call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 Jump_001_54C1::
@@ -2442,7 +2442,7 @@ Jump_001_54C1::
 Jump_001_54CD::
     inc a
     ld [wScreenByteBD], a
-    call DebugResultsDisplay_Update_Sub01
+    call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 Jump_001_54D5::
@@ -2455,7 +2455,7 @@ Jump_001_54D5::
 Jump_001_54E0::
     dec a
     ld [wScreenByteBD], a
-    call DebugResultsDisplay_Update_Sub01
+    call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 ; only called from DebugResultsDisplay_Update (E-0047)
@@ -2463,7 +2463,7 @@ Jump_001_54E0::
 ; reads: wDebugCounter, wDebugCursor, wScreenByteBD, wDigits
 ; writes: wDebugCounter
 ; points at: wGridCursorY, wDebugResultsBuf
-DebugResultsDisplay_Update_Sub01::
+DebugResultsDisplay_Update_WriteDebugCounter::
 Func_001_54E8:: ; address name
     ld a, [wDebugCounter]
     inc a
@@ -2497,7 +2497,7 @@ Jump_001_550A::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call DebugResultsDisplay_Update_Sub02_Sub01
+    call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
     ld a, [wDigits + $2]
     add a, $10
     ld c, a
@@ -2509,7 +2509,7 @@ Jump_001_550A::
     ret
 
 Jump_001_552A::
-    call DebugResultsDisplay_Update_Sub02_Sub01
+    call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
     di
     call WaitForVRAMAccess
     xor a, a
@@ -2520,7 +2520,7 @@ Jump_001_552A::
 ; only called from DebugResultsDisplay_Update_Sub02 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_HLToDecimalDigits)
 ; reads: wDebugCursor, wScreenByteBD
-DebugResultsDisplay_Update_Sub02_Sub01::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
 Func_001_5535:: ; address name
     ld a, [wDebugCursor]
     cp a, $04
@@ -2550,11 +2550,11 @@ Jump_001_554F::
     add_a_to_hl
     ret
 
-; address loaded by DebugResultsDisplay_Update_Sub02_Sub01
+; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
 Data_001_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $86, $99, $A6, $99
 
-; address loaded by DebugResultsDisplay_Update_Sub02_Sub01
+; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
 Data_001_5560:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E6, $99, $06, $9A
 
@@ -2739,7 +2739,7 @@ Jump_001_56B7::
     ret
 
 ; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01)
+; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD)
 DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess::
 Func_001_56D3:: ; address name
     ld a, c
@@ -3447,7 +3447,7 @@ Jump_001_5B14::
     ret
 
 ; C = the last two decimal digits of C packed as BCD (E-0125)
-; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueDebugCursor)
+; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DrawDebugFieldValueDebugCursor)
 ; reads: wDigits
 PackTwoDigitsOfCAsBCD::
 Func_001_5B2D:: ; address name
@@ -3507,7 +3507,7 @@ Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $9A, $22, $9A
 
 ; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
-; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DebugToggleArg1Marker)
+; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DebugToggleArg1Marker)
 ; writes: wNameGlyphBuf
 DrawMonsterNameForWordAtDE_Bank01::
 Func_001_5B98:: ; address name
@@ -3568,7 +3568,7 @@ Func_001_5BAD:: ; address name
     ret
 
 ; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01)
+; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD)
 ; points at: wNameGlyphBuf
 DebugResultsDisplay_Update_Sub02_Sub01_Sub02::
 Func_001_5BE8:: ; address name
@@ -4092,7 +4092,7 @@ Jump_001_5FFE:: ; address name
     jr z, Jump_001_604B
     ld a, [wDebugValue0]
     ldh [hTemp0], a
-    call DebugMapEditor_Update_Sub01
+    call DebugMapEditor_Update_WriteROMB0AndTemp0
     or a, a
     jr z, Jump_001_601F
     ld b, $08
@@ -4853,7 +4853,7 @@ Jump_001_64F0::
     jr Jump_001_6505
 
 Jump_001_6502::
-    call DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
+    call DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1
 
 Jump_001_6505::
     ld a, [wMenuState]
@@ -4935,7 +4935,7 @@ Func_001_6578:: ; address name
 Jump_001_6583::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
+    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1
     xor a, a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
@@ -4945,7 +4945,7 @@ Jump_001_6583::
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wTemp1
-DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1::
 Func_001_6596:: ; address name
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
@@ -5786,7 +5786,7 @@ Func_001_6A7E:: ; address name
     ret
 
 ; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueDebugCursor, DrawDebugValueHexForMenuState, DebugBattleSetupLoadWords, ...)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DrawDebugFieldValueDebugCursor, DrawDebugValueHexForMenuState, DebugBattleSetupLoadWords, ...)
 WriteThreeHexDigitsAtDE::
 Func_001_6A98:: ; address name
     ld a, b
@@ -6012,7 +6012,7 @@ Func_001_6C1F:: ; address name
     ret
 
 ; only called from CreateMonsterRecordOfKindTemp1_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_WriteBattleArg0)
 ; reads: hTemp3, wBattleArg0, wRecordBuffer, wBattleArg1, wRandomHi, wRecordBufferData, wScreenAttrBuffer, wBattleArg2, ...
 ; writes: wMonsterId, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wWorkBuf
 ; points at: wPlayerName
@@ -6236,7 +6236,7 @@ Jump_001_6D33::
     ld [wWorkBuf + $2], a
     ld a, h
     ld [wWorkBuf + $3], a
-    farcall CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
+    farcall CreateMonsterRecordOfKindTemp1_Sub01_Sub01_ReadWorkBuf
     jr Jump_001_6DF4
 
 Jump_001_6DD9::
@@ -6341,7 +6341,7 @@ Func_001_6E46:: ; address name
     xor a, a
     ld [wBattleArg2], a
     ldh a, [hTemp2]
-    call CreateMonsterRecordOfKindTemp1_Sub01
+    call CreateMonsterRecordOfKindTemp1_WriteBattleArg0
     ldh a, [hTemp1]
     cp a, $01
     jr z, Jump_001_6E73
@@ -6375,7 +6375,7 @@ Func_001_6E82:: ; address name
 ; only called from CreateMonsterRecordOfKindTemp1 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1)
 ; writes: wBattleArg0
-CreateMonsterRecordOfKindTemp1_Sub01::
+CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
 Func_001_6E91:: ; address name
     ld [wBattleArg0], a
     call CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
@@ -6483,6 +6483,6 @@ Data_001_7115:: ; heuristic: target of a monotone pointer table; C0
     db $0B, $35, $24, $25, $32, $F0, $F0, $F0, $F0, $F0
     ds $4A6, $00
 
-; address loaded by DebugResultsDisplay_Update_Sub02_Sub01
+; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
 Data_001_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $A3B, $00

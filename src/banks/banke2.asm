@@ -1479,7 +1479,7 @@ Jump_0E2_4A51::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A61::
-    farcall AIScore_MegaMagic_Sub01
+    farcall AIScore_MegaMagic_ReadLinkModeAndBattleActor
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A71
@@ -1503,7 +1503,7 @@ Jump_0E2_4A81::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A91::
-    farcall AIScore_MegaMagic_Sub02
+    farcall AIScore_MegaMagic_ReadLinkMode
     ld a, c
     and a, a
     jr nz, Jump_0E2_4AA1
@@ -4814,7 +4814,7 @@ Func_0E2_61E0:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall AIScore_SealPray_Sub01
+    farcall AIScore_SealPray_ReadQueuedActionId
     ld a, c
     and a, a
     jr nz, Jump_0E2_61F9
@@ -5834,7 +5834,7 @@ Func_0E2_67F9:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_680D::
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6821
