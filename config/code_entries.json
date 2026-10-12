@@ -2,6 +2,21 @@
   "_comment": "Code entry points that no traced code reaches but whose bytes decode as a complete routine; each cites its evidence in docs/EVIDENCE_LOG.md. tools/disasm_all.py traces from them like any other entry.",
   "entries": [
     {
+      "bank": "E2",
+      "addr": "64BF",
+      "evidence": "E-0316"
+    },
+    {
+      "bank": "E2",
+      "addr": "64C0",
+      "evidence": "E-0316"
+    },
+    {
+      "bank": "E2",
+      "addr": "64C1",
+      "evidence": "E-0316"
+    },
+    {
       "bank": "05",
       "addr": "5A38",
       "evidence": "E-0175"

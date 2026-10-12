@@ -2431,6 +2431,30 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0316 — Rule-made names checked against their instructions; a padding mis-trace from E-0305 found and fixed
+
+- Kind: TOOL (C2 for the mechanical claims: each name is checked against the code it describes).
+- **The claim checker.** tests/test_name_claims.py reads the generated source and confirms that every rule-made name says what its instructions do:
+  - **10,185 local labels**, each by its shape:
+    - `.loop`: a conditional branch comes back to it;
+    - `.return` and `.return_NN`, `.return_0`, `.return_carry`, `.return_no_carry`: the instructions that end it;
+    - `.set_x`, `.clear_x`, `.check_x`, `.read_x`, `.call_x`, `.to_x`: the store, load, call or jump named;
+    - `.cp_NN`, `.check_bitN`, `.next`, `.restore`, `.set_carry`, `.done`: the first instruction;
+    - only `.skip` makes no claim.
+  - **2,629 global names**: Parent_To<Target>, Parent_<Callee>[AndStep], Parent_Call<X>, Parent_Set<V>To<NN>, Parent_Write/Read/Check/Set/Clear<V> (V a RAM symbol), and Parent_Wait<V>. Only the label's own part after its parent counts. Names from config/names.json carry their own evidence and are left out.
+  - All claims hold after the fixes below. These names are therefore verified descriptions of the code (C2), not guesses.
+- **Stale names fixed.** 11 Parent_To<Target> names kept a target name that a later pass changed, for example GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03. A new pass, refresh_to_names, re-reads each target's final name.
+- **Regression found and fixed.**
+  - E-0305 named a case target RunBattleActions_StatusChecks_CheckAction_NopRun, a run of nop (zero) bytes. Named routines become copy signatures (discover_copies: the first 16 bytes), so this all-zero signature matched padding throughout the ROM. That traced about 46,000 bytes of padding as code. It also turned two AI-table pointer runs and an 83-byte region into unexplained INCBIN slices (503 bytes; build/measure2.py).
+  - The build still matched byte for byte and the tests passed, because nothing tested that measure.
+  - Fix: discover_copies now ignores signatures with fewer than 4 distinct byte values. Code is back to 455,507 bytes, 181 more than before, from genuine copies.
+  - tests/test_incbin_identified.py now fails on any INCBIN without an asset comment.
+- **AI scoring tables are 201 entries long.** AIScoreRoutineTableA (30:$5785) and B (30:$59E0) were laid out with 131 entries. Both have 201: the 3-byte far pointers continue to skill number 200, and A ends exactly where B starts, at $59E0.
+  - The old bytes-as-pointer-run reading had put the targets' labels in bank $30.
+  - Three targets were never traced and are now configured code entries: AIScore_NoWeightA and AIScore_NoWeightB (lone `ret` for skill numbers 175-191 and 192-199) and AIScore_Skill200 (which can call ResetAISkillScoreE2).
+- **Counts.** Unidentified INCBIN: 0. Routines with only an address name: 0. Data labels with only an address name: 0.
+- Binary verification: build/run440 PASS, 0 differing bytes; tests OK (skipped=3), 189 run.
+
 ### E-0315 — Helpers from E-0305 executed in tools/sm83.py; two palette quirks
 
 - Kind: EMULATION (our own emulator; not checked against hardware).
@@ -2588,6 +2612,8 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Binary verification: build/run424 PASS, 0 differing bytes; tests OK (skipped=3).
 
 ### E-0305 — No structural label left: a shape fallback and 70 helpers named by reading
+
+- (Note from E-0316: one name given here, RunBattleActions_StatusChecks_CheckAction_NopRun, made an all-zero copy signature that traced padding as code until E-0316 fixed it.)
 
 - Kind: TOOL + STATIC (C1/C2 per name).
 - **The fallback pass.** name_structural_by_shape runs after the other naming passes. A step that still has only a structural name (Parent_CaseNN / _SubNN / _SharedNN) and is not a dispatcher gets Parent_<Shape>:

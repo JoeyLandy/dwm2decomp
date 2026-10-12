@@ -349,14 +349,14 @@ Jump_024_424D:: ; address name
     dw GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep
     dw GameMode6_Update_SavePrompt_ShowYesNo_Case04
     dw GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D
-    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03
+    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     dw GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg
     dw GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor
     dw GameMode6_Update_SavePrompt_SetScreenStepTo05
     dw GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24
     dw GameMode6_Update_SavePrompt_ReturnStub_51A3
     dw GameMode6_Update_SavePrompt_DecompressToVRAM
-    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_Shared01AndStep
+    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep
     dw GameMode6_Update_SavePrompt_ObjectScene_Case0E
     dw GameMode6_Update_SavePrompt_SetScreenStep
 
@@ -538,7 +538,7 @@ Jump_024_4355:: ; address name
 
 ; entry 6 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03::
+GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc::
 Jump_024_4390:: ; address name
     call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     ret
@@ -758,7 +758,7 @@ Data_024_44FE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_Shared01AndStep::
+GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep::
 Jump_024_450E:: ; address name
     call GameMode6_Update_Save_TestFlagBit
     ld a, [wScreenStep]
@@ -1212,7 +1212,7 @@ GameMode6_Update_ChooseRecordAndSave::
 Jump_024_47CF:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_Shared04AndStep
+    dw GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_FillTilesFromRequestAndStep
     dw GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep
     dw GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4
     dw GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageSpeciesNames
@@ -1229,7 +1229,7 @@ Jump_024_47CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_Shared04AndStep::
+GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_FillTilesFromRequestAndStep::
 Jump_024_47EB:: ; address name
     call GameMode6_Update_FillTilesFromRequest
     ld a, [wScreenStep]
@@ -2106,7 +2106,7 @@ Func_024_4DA8:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 6 call sites from 6 routines (e.g. GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState, GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03, GameMode6_Update_SavePrompt_RunSaveGameSteps, GameMode6_Update_Save_RunSaveGameSteps, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState, GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc, GameMode6_Update_SavePrompt_RunSaveGameSteps, GameMode6_Update_Save_RunSaveGameSteps, ...)
 ; reads: wBattleScene
 ; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
@@ -3061,7 +3061,7 @@ Func_024_5392:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_Shared04AndStep, GameMode6_Update_SwitchEgg_ShowInfoOKYesN)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_FillTilesFromRequestAndStep, GameMode6_Update_SwitchEgg_ShowInfoOKYesN)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 GameMode6_Update_FillTilesFromRequest::
 Func_024_53A0:: ; address name
@@ -3579,7 +3579,7 @@ Func_024_567C:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update_Save (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_Shared01AndStep, GameMode6_Update_Save_WriteScreenStep)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep, GameMode6_Update_Save_WriteScreenStep)
 ; reads: wRecordBufB, wBattleScene, wIsCGB, wRecordBufA
 ; writes: hTemp0, hTemp1, wObject2, wSpriteSlotCount, wOBJPaletteUploadRequest, wObject5
 ; points at: wSpriteSlots, wObject1, hTemp0, wObject2

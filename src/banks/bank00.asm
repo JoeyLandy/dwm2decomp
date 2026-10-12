@@ -5654,7 +5654,7 @@ Func_000_1F6F:: ; address name
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 103 call sites from 79 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
+; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
 ; writes: hTemp0
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -11057,7 +11057,7 @@ Func_000_3E98:: ; address name
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
-; 77 call sites from 61 routines (e.g. RandomInRange, ChooseHighestWeightedAction, AddSkillBaseWeightAndLoadSkill_AdvanceRandom, AIPickRandomSkillOfKind3, ...)
+; 78 call sites from 62 routines (e.g. RandomInRange, ChooseHighestWeightedAction, AddSkillBaseWeightAndLoadSkill_AdvanceRandom, AIPickRandomSkillOfKind3, ...)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 AdvanceRandom::

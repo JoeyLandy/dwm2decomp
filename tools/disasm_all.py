@@ -1009,6 +1009,9 @@ class Rom:
                     continue
                 if not all(x in cov for x in range(a, a + 16)) or any(ins.get(x, ("",))[0] == "dw" for x in range(a, a + 16)):
                     continue
+                o = b * BANK - base + a
+                if len(set(self.data[o:o + 16])) < 4:
+                    continue  # E-0316: a run of nops or another near-constant block matches any padding
                 k = norm(b, a)
                 if k:
                     sig.setdefault(k, f"{b:02X}:{a:04X}")
@@ -1614,6 +1617,25 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def refresh_to_names(self) -> None:
+        """E-0316: a Parent_To<Target> name records its target's name at the time it was made; a later pass may
+        rename the target (GameMode6_Update_Shared03 became GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc),
+        so after all passes the step takes its target's current name."""
+        used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+        fixed = 0
+        for (b, a), (target, old_t, parent, and_step) in getattr(self, "_to_targets", {}).items():
+            cur = self.labels[b].get(a, "")
+            now_t = self.labels[target[0]].get(target[1])
+            if not now_t or now_t == old_t or not cur.startswith(f"{parent}_To{old_t}"):
+                continue
+            new = f"{parent}_To{now_t}" + ("AndStep" if and_step else "") + cur[len(f"{parent}_To{old_t}") + (7 if and_step else 0):]
+            if new in used or len(new) > 90:
+                continue
+            used.add(new)
+            self.labels[b][a] = new
+            fixed += 1
+        log(f"To<Target> names refreshed after their target was renamed: {fixed}")
+
     def name_structural_by_shape(self) -> None:
         """E-0305: a structural step (Parent_CaseNN / _SubNN / _SharedNN with nothing descriptive) that no rule
         named is named Parent_<Shape> from its first instructions, by the rules that name branch targets
@@ -1898,6 +1920,9 @@ class Rom:
                             if tname and not tname.startswith(("Func_", "Jump_")) and not (
                                     pat.match(tname) and tname.startswith(parent)):
                                 new = f"{parent}_To{tname}" + ("AndStep" if step is not None else "")
+                                if not hasattr(self, "_to_targets"):
+                                    self._to_targets = {}
+                                self._to_targets[(b, a)] = (target, tname, parent, step is not None)
                             hlw = next((int(t[8:], 16) for t in loads if re.match(r"ld hl, \$[0-9A-F]{4}$", t)), None)
                             if tname and hlw is not None and self.MESSAGE_HL_CALLEE.search(tname):
                                 text = self.message_preview(hlw)  # E-0273: a step that shows one message
@@ -4948,6 +4973,7 @@ class Rom:
         self.name_trampoline_cases()
         self.name_trampoline_cases()  # E-0283: a second pass sees the targets the first pass named
         self.name_structural_by_shape()
+        self.refresh_to_names()
         self.name_data_by_reader()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")

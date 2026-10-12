@@ -5927,7 +5927,7 @@ Func_003_649C:: ; address name
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, $6921
+    ld hl, TileRectTable_03_6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -5979,7 +5979,7 @@ Func_003_6526:: ; address name
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, $6921
+    ld hl, TileRectTable_03_6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -6349,237 +6349,40 @@ Func_003_67B0:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ret
+    ds $1B, $00
+    db $01, $01, $01
+    ds $B2, $00
 
-; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_StatusChecks_CheckAction_NopRun_Bank03:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 32:7A49; C0
-Func_003_6851:: ; address name
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    ld bc, $0101
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    dec h
-    ld l, c
-    ld d, [hl]
-    ld l, c
-    jr nz, .next
-    add hl, bc
+; E-0221 (derived: a word table of tile-rectangle records; the code derefs one entry into HL for a record copier)
+; record: rectangle record
+TileRectTable_03_6921::
+Data_003_6921:: ; address name
+    dw TileRect_03_6925 ; id 0
+    dw TileRect_03_6956 ; id 1
 
-.next:
-    dec b
-    or a, b
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, c
-    or a, d
-    or a, [hl]
-    di
-    INCBIN "dwm2-cobi-us.gbc", $00E934, $53
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0120 (row 9, column 0); 9 x 5 tiles
+TileRect_03_6925::
+Data_003_6925:: ; address name
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $09, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0120 (row 9, column 0); 9 x 5 tiles
+TileRect_03_6956::
+Data_003_6956:: ; address name
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $09, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F5, $F6, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; address loaded by PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37
 PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0

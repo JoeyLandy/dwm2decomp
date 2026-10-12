@@ -7586,5 +7586,9 @@
   "F2:648E": {"name": "VaultMenu_Store_MapItemsToInventory", "note": "for each item in the list at DE finds its inventory slot and records it in wWorkBuf", "evidence": "E-0305 (C1)"},
   "F2:6692": {"name": "GreatLogTalkEvents_ClearArenaData", "note": "clears $20F bytes from wArenaEntry", "evidence": "E-0305 (C2)"},
   "16:5CFB": {"name": "JoinChanceByClass", "note": "join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS", "evidence": "E-0306 (C1)", "data": true},
-  "0E:61FC": {"name": "SexChanceByClass", "note": "chance (of about 100) of a female child (RollChildSexFromSpecies sets MON_SEX to 1), per sex-ratio class 0-3: 0, 10, 50, 90 (E-0311)", "evidence": "E-0307 (C1)", "data": true}
+  "0E:61FC": {"name": "SexChanceByClass", "note": "chance (of about 100) of a female child (RollChildSexFromSpecies sets MON_SEX to 1), per sex-ratio class 0-3: 0, 10, 50, 90 (E-0311)", "evidence": "E-0307 (C1)", "data": true},
+  "E2:64BF": {"name": "AIScore_NoWeightA", "note": "AI scoring routine (a lone ret: leaves the score unchanged) for skill numbers 175-191 of the per-skill far tables (AIScoreRoutineTableA/B, 201 entries); the skill-name table gives these numbers the placeholder name 'HighJump'", "evidence": "E-0316 (C2)"},
+  "E2:64C0": {"name": "AIScore_NoWeightB", "note": "AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables", "evidence": "E-0316 (C2)"},
+  "E2:64C1": {"name": "AIScore_Skill200", "note": "AI scoring routine for skill number 200: advances the random value and, when wRandomLo bit 7 is clear, sets wAISkillScore to $0000 and the next word to $FFFF (ResetAISkillScoreE2)", "evidence": "E-0316 (C2)"},
+  "E2:6540": {"name": "ResetAISkillScoreE2", "note": "wAISkillScore = $0000 and the next word = $FFFF", "evidence": "E-0316 (C2)"}
 }
