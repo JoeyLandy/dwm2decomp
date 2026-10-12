@@ -4531,7 +4531,7 @@ Func_012_5C3F:: ; address name
     jr Jump_012_5C4E
 
 Jump_012_5C49::
-    ld de, Data_07E_5A9A
+    ld de, Tiles0Plus700Gfx_7E_5A9A
     ld b, $7E
 
 Jump_012_5C4E::
@@ -4900,7 +4900,7 @@ Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wOBJPaletteBuffer, wScriptStep
 Talk00Event01_Sub02_Case03::
 Jump_012_5E64:: ; address name
-    ld de, Data_07E_58FF
+    ld de, Tiles0Plus700Gfx_7E_58FF
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -5407,7 +5407,7 @@ Jump_012_6132::
 ; points at: wOBJPaletteBuffer, wScriptStep
 Talk00Event01_Sub03_Case03::
 Jump_012_616C:: ; address name
-    ld de, Data_07E_594A
+    ld de, Tiles0Plus700Gfx_7E_594A
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -7161,7 +7161,7 @@ Jump_012_6AE3::
     ld hl, vTiles0 + $700
 
 Jump_012_6AE6::
-    ld de, Data_07E_5595
+    ld de, Tiles0Plus700Gfx_7E_5595
     ld b, $7E
     call DecompressToVRAM
     ld a, $30
@@ -7182,7 +7182,7 @@ Jump_012_6B03::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $D8
-    ld de, ObjPalettes_7E_4BBD
+    ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_012_6B15
@@ -8126,17 +8126,17 @@ Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; record: bank-$7E graphics stream; palette index; returned byte
 FieldCommandSpriteTable::
 Data_012_704C:: ; address name
-    dw Data_07E_4F22 ; id 0
+    dw Tiles0Plus300Gfx_7E_4F22 ; id 0
     db $0A, $00
-    dw Data_07E_4F22 ; id 1
+    dw Tiles0Plus300Gfx_7E_4F22 ; id 1
     db $0A, $00
-    dw Data_07E_4CED ; id 2
+    dw Tiles0Gfx_7E_4CED ; id 2
     db $00, $00
     dw Data_07E_56C3 ; id 3
     db $1D, $00
-    dw Data_07E_4CED ; id 4
+    dw Tiles0Gfx_7E_4CED ; id 4
     db $00, $00
-    dw Data_07E_52BC ; id 5
+    dw Tiles0Plus600Gfx_7E_52BC ; id 5
     db $15, $00
     dw Data_07E_51A8 ; id 6
     db $93, $00
@@ -8160,11 +8160,11 @@ Data_012_704C:: ; address name
     db $0B, $00
     dw Data_07E_4EF1 ; id 16
     db $09, $00
-    dw Data_07E_5706 ; id 17
+    dw Tiles0Plus100Gfx_7E_5706 ; id 17
     db $9E, $00
     dw Data_07E_541A ; id 18
     db $98, $00
-    dw Data_07E_4CED ; id 19
+    dw Tiles0Gfx_7E_4CED ; id 19
     db $00, $00
     dw Data_07E_5870 ; id 20
     db $20, $00
@@ -8419,7 +8419,7 @@ Data_012_71EE:: ; address name
     dfar Data_07E_4E79 ; id 9: compressed sprite graphics
     db $38 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4EB3 ; id 10: compressed sprite graphics
+    dfar Tiles0Gfx_7E_4EB3 ; id 10: compressed sprite graphics
     db $40 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
 

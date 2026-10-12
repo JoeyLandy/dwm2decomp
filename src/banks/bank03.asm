@@ -1761,7 +1761,7 @@ Func_003_4A08:: ; address name
 DecompressMenuTilesTo16E0::
 Func_003_4A27:: ; address name
     ld b, $16
-    ld de, Data_016_7B7D
+    ld de, Tiles1Plus6E0Gfx_16_7B7D
     ld hl, vTiles1 + $6E0
     call DecompressToVRAM
     call DrawRecordMonsterPictureForMenuSelectedMember
@@ -6699,17 +6699,17 @@ Jump_003_6B67:: ; address name
 PauseMenu_State3_Case01_Case00::
 Jump_003_6B8D:: ; address name
     ld hl, vTiles2 + $710
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $720
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $730
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -8308,7 +8308,7 @@ Jump_003_7571:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles1 + $740
     ld b, $1F
     ld c, $10

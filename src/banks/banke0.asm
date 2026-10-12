@@ -3263,7 +3263,7 @@ Jump_0E0_5B16:: ; address name
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7E
-    ld de, Data_07E_4F22
+    ld de, Tiles0Plus300Gfx_7E_4F22
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $93
@@ -3286,27 +3286,27 @@ Jump_0E0_5B16:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, AreaPalettes0
+    ld de, BGPaletteBufferData_48_4001
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BA5
+    ld de, OBJPaletteBufferData_7E_4BA5
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4BAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B45
+    ld de, OBJPaletteBufferPlus10Data_7E_4B45
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4C0D
+    ld de, OBJPaletteBufferPlus18Data_7E_4C0D
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -3789,22 +3789,22 @@ Jump_0E0_5E83:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Map02Palettes
+    ld de, BGPaletteBufferData_48_4081
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BA5
+    ld de, OBJPaletteBufferData_7E_4BA5
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4BAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B45
+    ld de, OBJPaletteBufferPlus10Data_7E_4B45
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -4419,37 +4419,37 @@ Jump_0E0_62A0:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Map18Palettes
+    ld de, BGPaletteBufferData_48_5138
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BA5
+    ld de, OBJPaletteBufferData_7E_4BA5
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4BAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B2D
+    ld de, OBJPaletteBufferPlus10Data_7E_4B2D
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $27
-    ld de, Data_027_7850
+    ld de, OBJPaletteBufferPlus18Data_27_7850
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B4D
+    ld de, OBJPaletteBufferPlus20Data_7E_4B4D
     ld hl, wOBJPaletteBuffer + $20
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B45
+    ld de, OBJPaletteBufferPlus10Data_7E_4B45
     ld hl, wOBJPaletteBuffer + $28
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -5242,7 +5242,7 @@ Jump_0E0_685B:: ; address name
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $7E
-    ld de, Data_07E_52BC
+    ld de, Tiles0Plus600Gfx_7E_52BC
     ld hl, vTiles0 + $600
     call DecompressToVRAM
     ld b, $48
@@ -5265,47 +5265,47 @@ Jump_0E0_685B:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
-    ld de, Map19Palettes
+    ld de, BGPaletteBufferData_94_4001
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $48
-    ld de, Map18Palettes
+    ld de, BGPaletteBufferData_48_5138
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BA5
+    ld de, OBJPaletteBufferData_7E_4BA5
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4BAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B4D
+    ld de, OBJPaletteBufferPlus20Data_7E_4B4D
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B45
+    ld de, OBJPaletteBufferPlus10Data_7E_4B45
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B2D
+    ld de, OBJPaletteBufferPlus10Data_7E_4B2D
     ld hl, wOBJPaletteBuffer + $20
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B1D
+    ld de, OBJPaletteBufferPlus28Data_7E_4B1D
     ld hl, wOBJPaletteBuffer + $28
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4C65
+    ld de, OBJPaletteBufferPlus30Data_7E_4C65
     ld hl, wOBJPaletteBuffer + $30
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -5788,27 +5788,27 @@ Jump_0E0_6C2C:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
-    ld de, Map1APalettes
+    ld de, BGPaletteBufferData_49_52BB
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BA5
+    ld de, OBJPaletteBufferData_7E_4BA5
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4BAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4BAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B4D
+    ld de, OBJPaletteBufferPlus20Data_7E_4B4D
     ld hl, wOBJPaletteBuffer + $10
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4B45
+    ld de, OBJPaletteBufferPlus10Data_7E_4B45
     ld hl, wOBJPaletteBuffer + $18
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -6827,7 +6827,7 @@ Jump_0E0_735E:: ; address name
     or a, a
     jr z, Jump_0E0_73A2
     ld b, $48
-    ld de, AreaPalettes0
+    ld de, BGPaletteBufferData_48_4001
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM

@@ -131,16 +131,20 @@ Data_07E_4AD7:: ; address name
 FieldSpritePalettes::
 Data_07E_4B15:: ; address name
     dw $0000, $6BFF, $663F, $0800 ; id 0
-Data_07E_4B1D:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus28Data_7E_4B1D:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4B1D:: ; address name
     dw $0000, $6BFF, $001F, $0800 ; id 1
     dw $0000, $6BFF, $0553, $0800 ; id 2
-Data_07E_4B2D:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus10Data_7E_4B2D:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4B2D:: ; address name
     dw $0000, $6BFF, $7000, $0800 ; id 3
     dw $0000, $6BFF, $03E0, $0800 ; id 4
     dw $0000, $6BFF, $5AB4, $0800 ; id 5
-Data_07E_4B45:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus10Data_7E_4B45:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4B45:: ; address name
     dw $0000, $6BFF, $6017, $0800 ; id 6
-Data_07E_4B4D:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus20Data_7E_4B4D:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4B4D:: ; address name
     dw $0000, $6BFF, $027F, $0800 ; id 7
     dw $0000, $6BFF, $662C, $0800 ; id 8
     dw $0000, $6BFF, $031D, $0800 ; id 9
@@ -152,15 +156,18 @@ Data_07E_4B4D:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $4F5D, $1415, $0000 ; id 15
     dw $0000, $5EFD, $39B2, $0000 ; id 16
     dw $0000, $6BFF, $6B2A, $0800 ; id 17
-Data_07E_4BA5:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferData_7E_4BA5:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4BA5:: ; address name
     dw $0000, $6BFF, $7DA0, $0000 ; id 18
-Data_07E_4BAD:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus8Data_7E_4BAD:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4BAD:: ; address name
     dw $0000, $6BFF, $2E0A, $0000 ; id 19
     dw $0000, $6BFF, $7EC5, $0800 ; id 20
 
 ; E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_Shared01 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes).
 ; record: one CGB OBJ palette: 4 BGR555 colours
 ObjPalettes_7E_4BBD::
+OBJPaletteBufferData_7E_4BBD:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_07E_4BBD:: ; address name
     dw $0000, $037F, $027F, $0000 ; id 0
     dw $0000, $4F5D, $1415, $0000 ; id 1
@@ -172,7 +179,8 @@ Data_07E_4BBD:: ; address name
     dw $0000, $4F5D, $19B2, $0000 ; id 7
     dw $0000, $4F5D, $4A6D, $0000 ; id 8
     dw $0000, $4F5D, $01FC, $0000 ; id 9
-Data_07E_4C0D:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus18Data_7E_4C0D:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4C0D:: ; address name
     dw $0000, $4F5D, $2DB0, $0000 ; id 10
     dw $0000, $7FFF, $11AD, $0000 ; id 11
     dw $0000, $037F, $021C, $0000 ; id 12
@@ -184,7 +192,8 @@ Data_07E_4C0D:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $6FB8, $7DAB, $0000 ; id 18
     dw $0000, $027F, $001F, $0000 ; id 19
     dw $0000, $7FFF, $316B, $0000 ; id 20
-Data_07E_4C65:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus30Data_7E_4C65:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4C65:: ; address name
     dw $0000, $7FFF, $316B, $0000 ; id 21
     dw $0000, $5EB5, $3DAD, $0000 ; id 22
     dw $0000, $673C, $3190, $0000 ; id 23
@@ -194,7 +203,8 @@ Data_07E_4C65:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $0B5F, $15DF, $0800 ; id 27
     dw $0000, $7FF5, $7CA0, $0800 ; id 28
     dw $0000, $037F, $021C, $0000 ; id 29
-Data_07E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus8Data_7E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_4CAD:: ; address name
     dw $0000, $7FFF, $021C, $0000 ; id 30
     dw $0000, $6BFF, $035F, $0800 ; id 31
     dw $0000, $6BFF, $035F, $0800 ; id 32
@@ -206,7 +216,8 @@ Data_07E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
 
 ; address loaded by RunGameMode5Case00SubStates_Case00
 ; LZSS-compressed asset: 45 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4CED:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Gfx_7E_4CED:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_4CED:: ; address name
     db $40, $00, $02, $02, $FF, $FA, $01, $01, $00, $00, $1C, $1C, $6E, $72, $BE, $EA
     db $7A, $46, $5C, $6C, $B4, $FC, $48, $C8, $1A, $1B, $15, $1F, $6B, $6D, $56, $7A
     db $2C, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $A0, $FA
@@ -256,7 +267,8 @@ Data_07E_4E79:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by RunGameMode2State_Case04, RunGameMode2State_Case01
 ; LZSS-compressed asset: 62 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4EB3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Gfx_7E_4EB3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_4EB3:: ; address name
     db $40, $00, $02, $02, $FF, $F0, $03, $00, $07, $01, $0E, $03, $1F, $04, $1E, $09
     db $1E, $09, $78, $00, $D4, $38, $7C, $E8, $EA, $9C, $EE, $34, $BA, $CC, $74, $B8
     db $DC, $68, $1E, $09, $1C, $0B, $1C, $0B, $3D, $0B, $3A, $17, $3B, $16, $3F, $0C
@@ -271,7 +283,8 @@ Data_07E_4EF1:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by DebugStaffRoll_Update_Sub01_Case00_Case00
 ; LZSS-compressed asset: 65 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4F22:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus300Gfx_7E_4F22:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_4F22:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8F22, $41
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -328,7 +341,8 @@ Data_07E_5285:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by DebugStaffRoll_Update_Sub01_Case03_Case00
 ; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_52BC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus600Gfx_7E_52BC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_52BC:: ; address name
     db $40, $00, $01, $00, $00, $1F, $1F, $3F, $20, $7D, $43, $7F, $43, $7D, $43, $7F
     db $41, $7F, $40, $00, $00, $F0, $F0, $F8, $08, $7C, $84, $FC, $84, $7C, $84, $FC
     db $04, $FC, $04, $7D, $43, $7D, $43, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01
@@ -357,7 +371,8 @@ Data_07E_5513:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by LoadSpriteGraphics7E5595ToTiles0
 ; LZSS-compressed asset: 171 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5595:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus700Gfx_7E_5595:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5595:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9595, $AB
 
 ; LZSS-compressed asset: 131 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -370,7 +385,8 @@ Data_07E_56C3:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by RunGameMode5Case00SubStates_Case00
 ; LZSS-compressed asset: 80 bytes expand to 96 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5706:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus100Gfx_7E_5706:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5706:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9706, $50
 
 ; LZSS-compressed asset: 282 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -383,12 +399,14 @@ Data_07E_5870:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, Talk00Event01_Sub02_Case03
 ; LZSS-compressed asset: 75 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_58FF:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus700Gfx_7E_58FF:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_58FF:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F98FF, $4B
 
 ; address loaded by Talk00Event01_Sub03_Case03
 ; LZSS-compressed asset: 74 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus700Gfx_7E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_594A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A
 
 ; LZSS-compressed asset: 129 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -401,12 +419,14 @@ Data_07E_5A15:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 
 ; address loaded by SpawnScriptSpriteInFrontOfPlayer
 ; LZSS-compressed asset: 92 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5A9A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus700Gfx_7E_5A9A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5A9A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9A9A, $5C
 
 ; E-0164 (derived: 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5AF6::
+OBJPaletteBufferPlus8Data_7E_5AF6:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_07E_5AF6:: ; address name
     dw $0000, $6BFF, $0279, $0000 ; id 0
     dw $7C00, $7C00, $7C00, $7C00 ; id 1
@@ -414,30 +434,35 @@ Data_07E_5AF6:: ; address name
 
 ; address loaded by RunGameMode2State_Case01
 ; LZSS-compressed asset: 25 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5B0E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus100Gfx_7E_5B0E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5B0E:: ; address name
     db $00, $01, $01, $50, $50, $F8, $A8, $F8, $88, $F8, $A8, $D8, $D8, $01, $A0, $FF
     db $4D, $01, $69, $0F, $4D, $01, $C9, $0F, $23
 
 ; address loaded by RunGameMode2State_Case04
 ; LZSS-compressed asset: 31 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5B27:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus100Gfx_7E_5B27:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5B27:: ; address name
     db $00, $01, $01, $10, $10, $38, $28, $7C, $44, $FE, $82, $FE, $82, $7C, $44, $38
     db $28, $10, $10, $01, $A0, $FF, $4D, $01, $6F, $0F, $4D, $01, $CF, $0F, $1D
 
 ; address loaded by RunGameMode2State_Case04
 ; LZSS-compressed asset: 29 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5B46:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Plus200Gfx_7E_5B46:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5B46:: ; address name
     db $00, $01, $01, $D6, $D6, $FE, $AA, $FE, $82, $01, $04, $01, $BA, $EE, $AA, $EE
     db $EE, $01, $A0, $FF, $4D, $01, $6F, $0F, $4D, $01, $CF, $0F, $1D
 
 ; address loaded by DrawTitleSaveSummaryScreen
 ; LZSS-compressed asset: 85 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5B63:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles0Gfx_7E_5B63:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5B63:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9B63, $55
 
 ; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5BB8::
+OBJPaletteBufferData_7E_5BB8:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_07E_5BB8:: ; address name
     dw $0000, $3D7D, $2011, $0000 ; id 0
     ds $2440, $00

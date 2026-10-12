@@ -4,6 +4,7 @@ SECTION "Bank 48", ROMX[$4000], BANK[$48]
 ; E-0145 (C1: entry 0 of AreaPaletteTable).
 ; record: one CGB palette: 4 BGR555 colours
 AreaPalettes0::
+BGPaletteBufferData_48_4001:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_048_4001:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $7DA0, $7FFF, $5AD6, $0063 ; entry 1
@@ -30,6 +31,7 @@ Data_048_4041:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map02Palettes::
+BGPaletteBufferData_48_4081:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_048_4081:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $7DA0, $7FFF, $5AD6, $0063 ; entry 1
@@ -188,6 +190,7 @@ Data_048_4DDC:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map18Palettes::
+BGPaletteBufferData_48_5138:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_048_5138:: ; address name
     dw $7D86, $7FFF, $7FE1, $0000 ; entry 0
     dw $012F, $031D, $01D8, $0000 ; entry 1
@@ -558,7 +561,8 @@ Data_048_7330:: ; address name
 
 ; address loaded by LoadMapHeader
 ; LZSS-compressed asset: 1494 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_048_7861:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles2Gfx_48_7861:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_048_7861:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $123861, $5D6
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)

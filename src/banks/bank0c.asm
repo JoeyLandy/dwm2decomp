@@ -1108,22 +1108,22 @@ Jump_00C_46A4:: ; address name
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
-    ld de, Data_01F_41D0
+    ld de, Tiles2Plus250Tiles_1F_41D0
     ld hl, vTiles2 + $7C0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4170
+    ld de, Tiles2Plus240Tiles_1F_4170
     ld hl, vTiles2 + $7D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4160
+    ld de, Tiles2Plus200Tiles_1F_4160
     ld hl, vTiles2 + $7E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4110
+    ld de, Tiles2Plus7F0Tiles_1F_4110
     ld hl, vTiles2 + $7F0
     ld b, $1F
     ld c, $10
@@ -1167,15 +1167,15 @@ Jump_00C_4778:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, Data_0F1_5C14
+    ld de, Tiles1Gfx_F1_5C14
     ld hl, vTiles1
     ld b, $F1
     call DecompressToVRAM
-    ld de, Data_0F1_5D44
+    ld de, WindowTileBufferPlus64Gfx_F1_5D44
     ld hl, wWindowTileBuffer + $64
     ld b, $F1
     call DecompressToVRAM
-    ld de, Data_0F1_5D9C
+    ld de, WindowTileBufferGfx_F1_5D9C
     ld hl, wWindowTileBuffer
     ld b, $F1
     call DecompressToVRAM
@@ -1184,11 +1184,11 @@ Jump_00C_4778:: ; address name
     jr z, Jump_00C_47E9
     ld a, $02
     ldh [rSVBK], a
-    ld de, Data_0F1_5DBC
+    ld de, WindowAttrBufferPlus64Gfx_F1_5DBC
     ld hl, wWindowAttrBuffer + $64
     ld b, $F1
     call DecompressToVRAM
-    ld de, Data_0F1_5DEE
+    ld de, WindowAttrBufferGfx_F1_5DEE
     ld hl, wWindowAttrBuffer
     ld b, $F1
     call DecompressToVRAM
@@ -1549,12 +1549,12 @@ Jump_00C_4AA6:: ; address name
     call LibraryMenu_Shared08
     cp a, $FF
     jr z, Jump_00C_4B0A
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles2 + $420
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles2 + $430
     ld b, $1F
     ld c, $10
@@ -1874,7 +1874,7 @@ LibraryMenu_Case10_Case09::
 Jump_00C_4CE2:: ; address name
     call LibraryMenu_Shared06
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     call LibraryMenu_Shared05
@@ -2131,7 +2131,7 @@ Jump_00C_4EA4::
     rl h
     ld de, vTiles2
     add hl, de
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM

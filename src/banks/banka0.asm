@@ -2414,11 +2414,11 @@ Jump_0A0_4F19::
     ld a, h
     ld [wTextCursorHi], a
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToRAMLocked
     call GameMode7_Init_Sub01

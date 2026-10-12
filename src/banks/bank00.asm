@@ -5045,7 +5045,7 @@ Jump_000_1C1A::
     jr nz, Jump_000_1C51
     ld hl, vTiles1
     call DecompressToVRAM
-    ld de, Data_048_7861
+    ld de, Tiles2Gfx_48_7861
     ld b, $48
     ld hl, vTiles2
     call DecompressToVRAM
@@ -6346,7 +6346,7 @@ Jump_000_22A5::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $C8
-    ld de, ObjPalettes_7E_4BBD
+    ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_000_22FB
@@ -8253,12 +8253,12 @@ Func_000_2D33:: ; address name
 AcknowledgeTextPrompt_Sub01::
 Func_000_2D4A:: ; address name
     call UploadTwoTilesFromScriptTileBuf0
-    ld de, Data_01F_4180
+    ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10

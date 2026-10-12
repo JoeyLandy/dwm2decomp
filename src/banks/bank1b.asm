@@ -2011,7 +2011,7 @@ Jump_01B_5358::
     or a, c
     jr nz, Jump_01B_5358
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -2111,12 +2111,12 @@ Jump_01B_53E9:: ; address name
     call CopyLow3BitsToWRAMBank2_Bank1B
 
 Jump_01B_5407::
-    ld de, Data_01F_4AD0
+    ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
@@ -5086,7 +5086,7 @@ Jump_01B_6613::
     dec b
     jr nz, Jump_01B_6613
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1

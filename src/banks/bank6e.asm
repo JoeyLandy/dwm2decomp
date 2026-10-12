@@ -460,6 +460,7 @@ Data_06E_74E4:: ; address name
 ; E-0140 (C1: entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes5::
+BGPaletteBufferData_6E_77E0:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_06E_77E0:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $150B, $5F17, $15AE, $0044 ; entry 1

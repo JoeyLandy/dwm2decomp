@@ -4,6 +4,7 @@ SECTION "Bank 94", ROMX[$4000], BANK[$94]
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map19Palettes::
+BGPaletteBufferData_94_4001:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_094_4001:: ; address name
     dw $7D86, $7FFF, $0214, $0000 ; entry 0
     dw $012F, $031D, $01D8, $0000 ; entry 1

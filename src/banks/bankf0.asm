@@ -1505,12 +1505,12 @@ Jump_0F0_50D7:: ; address name
     ld a, $0D
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_F0
-    ld de, Data_01F_4A60
+    ld de, Tiles1Plus6A0Tiles_1F_4A60
     ld hl, vTiles1 + $6A0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A40
+    ld de, Tiles1Plus7D0Tiles_1F_4A40
     ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10
@@ -3426,7 +3426,7 @@ Jump_0F0_5CAC:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 RunLinkSession8Case01Steps_Case05::
 Jump_0F0_5CBE:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
@@ -3528,22 +3528,22 @@ Jump_0F0_5D58:: ; address name
     ld bc, $1409
     ld de, $01CC
     call DrawScreenBufferRect_BankF0
-    ld de, Data_01F_4260
+    ld de, Tiles1Plus4F0Tiles_1F_4260
     ld hl, vTiles1 + $4F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4120
+    ld de, Tiles1Plus710Tiles_1F_4120
     ld hl, vTiles1 + $750
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4170
+    ld de, Tiles2Plus240Tiles_1F_4170
     ld hl, vTiles1 + $760
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_41A0
+    ld de, Tiles1Plus770Tiles_1F_41A0
     ld hl, vTiles1 + $770
     ld b, $1F
     ld c, $10
@@ -3626,12 +3626,12 @@ Func_0F0_5DE8:: ; address name
 RunLinkSession8Case03Steps_Case00::
 Jump_0F0_5E0E:: ; address name
     call ClearBGMapAtScrollAndResetScroll_BankF0
-    ld de, Data_01F_4250
+    ld de, Tiles1Plus2F0Tiles_1F_4250
     ld hl, vTiles1 + $7E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A70
+    ld de, Tiles1Plus7F0Tiles_1F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
@@ -3733,7 +3733,7 @@ Jump_0F0_5ECA:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1304
     call FillTilesBxC
-    ld de, Data_01F_4A40
+    ld de, Tiles1Plus7D0Tiles_1F_4A40
     ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10
@@ -3810,12 +3810,12 @@ Jump_0F0_5F2F:: ; address name
     ld a, [wListCount]
     cp a, $02
     jr c, Jump_0F0_5F9B
-    ld de, Data_01F_4AA0
+    ld de, Tiles2Plus20Tiles_1F_4AA0
     ld hl, vTiles2 + $20
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4AE0
+    ld de, Tiles2Plus30Tiles_1F_4AE0
     ld hl, vTiles2 + $30
     ld b, $1F
     ld c, $10
@@ -4140,7 +4140,7 @@ Jump_0F0_6176:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 RunLinkSession8Case03Steps_Case0F::
 Jump_0F0_6188:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10

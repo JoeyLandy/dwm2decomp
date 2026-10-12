@@ -237,7 +237,8 @@ class BankSwitchingCallSites(unittest.TestCase):
                         if not k.startswith("_") and v["name"].startswith(self.HELPERS)]
         self.assertTrue(helper_names)
         call = re.compile(r"\s+call (" + "|".join(helper_names) + r")$")
-        ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), Data_([0-9A-F]{3})_[0-9A-F]{4}$")
+        # Data_BBB_AAAA, or a name ending in _BB_AAAA (E-0264, E-0267 keep bank and address in the name)
+        ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), (?:Data_|\w+_)([0-9A-F]{2,3})_[0-9A-F]{4}$")
         ld_b = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
         barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst|add_a_to_hl)\b)")  # add_a_to_hl hides a jr
         checked, wrong = 0, []

@@ -1406,7 +1406,7 @@ Data_014_4965:: ; address name
 ; writes: wScreenStep, wTwoChoiceCursor
 HibernateMenu_Case05_Case1B::
 Jump_014_496D:: ; address name
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $730
     ld b, $1F
     ld c, $10
@@ -2132,12 +2132,12 @@ Jump_014_4EFD::
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank14
-    ld de, Data_01F_4130
+    ld de, Tiles2Plus210Tiles_1F_4130
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4320
+    ld de, Tiles2Plus710Tiles_1F_4320
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
@@ -2185,7 +2185,7 @@ Jump_014_4F4A::
 ; writes: wScreenStep, wTwoChoiceCursor
 HibernateMenu_Case05_Case10::
 Jump_014_4F51:: ; address name
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $730
     ld b, $1F
     ld c, $10
@@ -2196,17 +2196,17 @@ Jump_014_4F51:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank14
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4180
+    ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
@@ -4078,32 +4078,32 @@ Jump_014_5CD5::
     ldh [hSpriteHideTile], a
     ld a, $02
     ldh [hSpriteWindowClipMode], a
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld hl, vTiles2
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles1 + $4F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A80
+    ld de, Tiles1Plus7E0Tiles_1F_4A80
     ld hl, vTiles1 + $4C0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A90
+    ld de, Tiles1Plus7F0Tiles_1F_4A90
     ld hl, vTiles1 + $4D0
     ld b, $1F
     ld c, $10

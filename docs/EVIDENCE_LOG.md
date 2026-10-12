@@ -2430,6 +2430,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0267 — Streams and bank-copy sources named after their destination
+
+- Kind: TOOL (derived from call sites; C1).
+- A call to DecompressToVRAM, DecompressToRAMLocked, CopyFromBankWaitVRAM or CopyFromBank is preceded by `ld de, source` and `ld hl, destination`, plus `ld b, bank` for the copies. When those loads are constants, a still address-named source is labelled after the destination:
+  - `<Destination>Gfx_BB_AAAA` for compressed streams;
+  - `<Destination>Tiles_BB_AAAA` for copies into VRAM;
+  - `<Destination>Data_BB_AAAA` for copies elsewhere.
+  - Examples: Tiles1Plus6E0Gfx_16_7B7D, Tiles2Plus7F0Tiles_1F_4110.
+- Strings and other labels are only given these names when config/names.json does not name the address. This was also enforced for the E-0249 to E-0266 passes after two tests caught a clash.
+- A test that checks pointer labels against `ld b` now also reads the bank from a `_BB_AAAA` suffix.
+- Address-named data labels went from 1,236 to 1,029.
+- Binary verification: build/run348 PASS, 0 differing bytes; tests OK.
+
 ### E-0266 — SGB packets named by command; special map records by index
 
 - Kind: HARDWARE (SGB command codes) and TOOL.

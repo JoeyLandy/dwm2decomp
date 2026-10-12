@@ -3113,7 +3113,8 @@ class Rom:
             dl = self.dlabels[b]
             cur = dl.get(tgt)
             if not 0x4000 <= tgt < 0x8000 or (cur and not cur.startswith("Data_")) or name in self._string_names \
-                    or tgt in self.insn[b] or tgt in self.covered[b]:  # a list entry pointing at code
+                    or tgt in self.insn[b] or tgt in self.covered[b] \
+                    or (b, tgt) in self.names:  # code, or a name config/names.json gives
                 return
             if cur:
                 self.dalias.setdefault((b, tgt), cur)
@@ -3251,6 +3252,43 @@ class Rom:
         if smr:
             for i in range(smr["count"]):
                 give(smr["bank"], smr["addr"] + 26 * i, f"SpecialMapRecord{i:02X}")
+        # E-0267: streams and bank-copy sources named after the RAM/VRAM destination their call site gives:
+        # `ld de, source` and `ld hl, destination` (`ld b, bank` for the bank copies) before a call to
+        # DecompressToVRAM, DecompressToRAMLocked, CopyFromBankWaitVRAM or CopyFromBank
+        targets = {k for k, info in self.names.items() if not info.get("data") and info["name"] in (
+            "DecompressToVRAM", "DecompressToRAMLocked", "CopyFromBankWaitVRAM", "CopyFromBank")}
+        seen_dest: dict[tuple[int, int], str] = {}
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] != "call" or v[3] is None or self.resolve(cb, v[3]) not in targets:
+                    continue
+                regs = {}
+                for x in reversed(order[max(0, k - 5):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    mm = re.match(r"ld (hl|de|b), \$([0-9A-F]{2,4})$", ins[x][1])
+                    if mm and mm.group(1) not in regs:
+                        regs[mm.group(1)] = int(mm.group(2), 16)
+                if "de" not in regs or "hl" not in regs:
+                    continue
+                sb = regs.get("b", cb) if regs["de"] >= 0x4000 else 0
+                if not 0 <= sb < self.nbanks:
+                    continue
+                seen_dest.setdefault((sb, regs["de"]), (self.sym_name(regs["hl"], True) or "") + (
+                    "|vram" if 0x8000 <= regs["hl"] < 0xA000 else ""))
+        for (sb, sa), dest in seen_dest.items():
+            why = self.dreason.get((sb, sa), "")
+            if dest in ("", "|vram") or why not in ("stream decompressed by a call to DecompressTo*",
+                                       "argument of a bank-switching copy helper"):
+                continue
+            vram = dest.endswith("|vram")
+            stem = re.sub(r"[^A-Za-z0-9]", "", dest.removesuffix("|vram").replace(" + $", "Plus"))
+            stem = stem[1:] if stem[:1] in "wvh" else stem
+            kind = "Gfx" if "stream" in why else ("Tiles" if vram else "Data")
+            give(sb, sa, f"{stem}{kind}_{sb:02X}_{sa:04X}")
         it = next((t for t in self.schemas if t["label"] == "ItemDescriptionTable"), None)
         if it:  # E-0255: item descriptions, by item name (StringTable_ItemNames, 08:$4716)
             for i in list(range(1, it["count"])) + [0]:  # item 0 has no name; a named item wins a shared text

@@ -1075,7 +1075,7 @@ Jump_002_45DB::
     call GameMode1_Init_Sub01
     call LoadSGBBorderForSetA
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, Data_002_4AD6

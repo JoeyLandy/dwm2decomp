@@ -236,7 +236,7 @@ Jump_073_4139:: ; address name
     farcall RestoreScreenBufferFromBGMap1
     farcall DrawFullScreenBufferAtScroll
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     call LoadRecordListNameTiles

@@ -18,76 +18,100 @@ Data_01F_4010:: ; address name
     db $FF, $10, $FF, $28, $FF, $28, $FF, $44, $FF, $7C, $FF, $82, $FF, $82, $FF, $00 ; id 10 'A'
     db $FF, $F8, $FF, $84, $FF, $84, $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $00 ; id 11 'B'
     db $FF, $3C, $FF, $42, $FF, $80, $FF, $80, $FF, $80, $FF, $42, $FF, $3C, $FF, $00 ; id 12 'C'
-Data_01F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus260Tiles_1F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_40E0:: ; address name
     db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00 ; id 13 'D'
     db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 14 'E'
     db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 15 'F'
-Data_01F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus7F0Tiles_1F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4110:: ; address name
     db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00 ; id 16 'G'
-Data_01F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus710Tiles_1F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4120:: ; address name
     db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 17 'H'
-Data_01F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus210Tiles_1F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4130:: ; address name
     db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 18 'I'
     db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00 ; id 19 'J'
     db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00 ; id 20 'K'
-Data_01F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus200Tiles_1F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4160:: ; address name
     db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 21 'L'
-Data_01F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus240Tiles_1F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4170:: ; address name
     db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 22 'M'
-Data_01F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus6E0Tiles_1F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4180:: ; address name
     db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00 ; id 23 'N'
-Data_01F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus230Tiles_1F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4190:: ; address name
     db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00 ; id 24 'O'
-Data_01F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus770Tiles_1F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_41A0:: ; address name
     db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 25 'P'
     db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00 ; id 26 'Q'
     db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00 ; id 27 'R'
-Data_01F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus250Tiles_1F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_41D0:: ; address name
     db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 28 'S'
     db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 29 'T'
     db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 30 'U'
     db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00 ; id 31 'V'
-Data_01F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus700Tiles_1F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4210:: ; address name
     db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00 ; id 32 'W'
     db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00 ; id 33 'X'
-Data_01F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus700Tiles_1F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4230:: ; address name
     db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 34 'Y'
     db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00 ; id 35 'Z'
-Data_01F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus2F0Tiles_1F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4250:: ; address name
     db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00 ; id 36 'a'
-Data_01F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus4F0Tiles_1F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4260:: ; address name
     db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00 ; id 37 'b'
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00 ; id 38 'c'
-Data_01F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus2E0Tiles_1F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4280:: ; address name
     db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00 ; id 39 'd'
-Data_01F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus710Tiles_1F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4290:: ; address name
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00 ; id 40 'e'
     db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00 ; id 41 'f'
     db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 42 'g'
     db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 43 'h'
-Data_01F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus2E0Tiles_1F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_42D0:: ; address name
     db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 44 'i'
     db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60 ; id 45 'j'
     db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00 ; id 46 'k'
-Data_01F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7C0Tiles_1F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4300:: ; address name
     db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 47 'l'
-Data_01F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus7B0Tiles_1F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4310:: ; address name
     db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00 ; id 48 'm'
-Data_01F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus710Tiles_1F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4320:: ; address name
     db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 49 'n'
-Data_01F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus6F0Tiles_1F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4330:: ; address name
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 50 'o'
-Data_01F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus250Tiles_1F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4340:: ; address name
     db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80 ; id 51 'p'
     db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04 ; id 52 'q'
     db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00 ; id 53 'r'
-Data_01F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus720Tiles_1F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4370:: ; address name
     db $FF, $00, $FF, $00, $FF, $78, $FF, $80, $FF, $78, $FF, $04, $FF, $F8, $FF, $00 ; id 54 's'
     db $FF, $00, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $1C, $FF, $00 ; id 55 't'
     db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 56 'u'
     db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $48, $FF, $30, $FF, $00 ; id 57 'v'
     db $FF, $00, $FF, $00, $FF, $82, $FF, $92, $FF, $92, $FF, $AA, $FF, $44, $FF, $00 ; id 58 'w'
-Data_01F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus2D0Tiles_1F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_43C0:: ; address name
     db $FF, $00, $FF, $00, $FF, $84, $FF, $48, $FF, $30, $FF, $48, $FF, $84, $FF, $00 ; id 59 'x'
     db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 60 'y'
     db $FF, $00, $FF, $00, $FF, $FC, $FF, $08, $FF, $30, $FF, $40, $FF, $FC, $FF, $00 ; id 61 'z'
@@ -97,11 +121,13 @@ Data_01F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $80, $FF, $90, $FF, $7E, $FF, $10, $FF, $10, $FF, $10, $FF, $0E, $FF, $00 ; id 65 ''t'
     db $FF, $80, $FF, $80, $FF, $00, $FF, $42, $FF, $42, $FF, $24, $FF, $18, $FF, $00 ; id 66
     db $FF, $88, $FF, $88, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00 ; id 67 ''l'
-Data_01F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus6F0Tiles_1F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4450:: ; address name
     db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00 ; id 68
     db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00 ; id 69
     db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00 ; id 70
-Data_01F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7B0Tiles_1F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4480:: ; address name
     db $FF, $F8, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $F8, $FF, $00 ; id 71
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 72
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 73
@@ -110,9 +136,11 @@ Data_01F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 76
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 77
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 78
-Data_01F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus4C0Tiles_1F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4500:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 79
-Data_01F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus6E0Tiles_1F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4510:: ; address name
     db $FF, $00, $FF, $EE, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $D6, $FF, $FE ; id 80
     db $FF, $0E, $FF, $1B, $FF, $11, $FF, $1B, $FF, $3E, $FF, $70, $FF, $E0, $FF, $C0 ; id 81
     db $FF, $0C, $FF, $1E, $FF, $65, $FF, $B9, $FF, $C9, $FF, $7F, $FF, $4A, $FF, $4E ; id 82
@@ -152,7 +180,8 @@ Data_01F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 116
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 117
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 118
-Data_01F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7C0Tiles_1F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4780:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 119
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 120
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 121
@@ -180,7 +209,8 @@ Data_01F_48E0:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_48F0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 142
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30 ; id 143
-Data_01F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus710Tiles_1F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4910:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 144 ' '
     db $FF, $00, $EB, $08, $ED, $70, $FF, $82, $B7, $CA, $8B, $FE, $F7, $74, $FF, $00 ; id 145
     db $FF, $00, $FF, $24, $FF, $54, $FF, $58, $FF, $2A, $FF, $15, $FF, $15, $FF, $22 ; id 146
@@ -189,7 +219,8 @@ Data_01F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $60, $FF, $60, $FF, $20, $FF, $40, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 149
     db $FF, $00, $FF, $0E, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00, $FF, $00 ; id 150
     db $FF, $00, $FF, $00, $FF, $00, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $E0 ; id 151
-Data_01F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus420Tiles_1F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4990:: ; address name
     db $FF, $00, $FF, $3C, $FF, $66, $FF, $66, $FF, $0C, $FF, $18, $FF, $00, $FF, $18 ; id 152 '?'
     db $FF, $00, $FF, $0C, $FF, $0C, $FF, $0C, $FF, $08, $FF, $08, $FF, $00, $FF, $18 ; id 153 '!'
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $40, $FF, $60, $FF, $60 ; id 154
@@ -201,24 +232,32 @@ Data_01F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $08, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $08 ; id 160
     db $FF, $00, $FF, $10, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $10 ; id 161
     db $FF, $00, $FF, $00, $FF, $10, $FF, $10, $FF, $7C, $FF, $10, $FF, $10, $FF, $00 ; id 162
-Data_01F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7D0Tiles_1F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4A40:: ; address name
     db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00 ; id 163
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00 ; id 164
-Data_01F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus6A0Tiles_1F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4A60:: ; address name
     db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4 ; id 165
-Data_01F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7F0Tiles_1F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4A70:: ; address name
     db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA ; id 166
-Data_01F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7E0Tiles_1F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4A80:: ; address name
     db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60 ; id 167
-Data_01F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus7F0Tiles_1F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4A90:: ; address name
     db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10 ; id 168
-Data_01F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus20Tiles_1F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4AA0:: ; address name
     db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38 ; id 169
     db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00 ; id 170
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40 ; id 171 ','
-Data_01F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles1Plus4A0Tiles_1F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4AD0:: ; address name
     db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6 ; id 172
-Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
+Tiles2Plus30Tiles_1F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_4AE0:: ; address name
     db $FF, $38, $FF, $38, $FF, $38, $FF, $FE, $FF, $7C, $FF, $38, $FF, $10, $FF, $00 ; id 173
     db $FF, $00, $FF, $10, $FF, $30, $FF, $7E, $FF, $FE, $FF, $7E, $FF, $30, $FF, $10 ; id 174
     db $FF, $00, $FF, $10, $FF, $18, $FF, $FC, $FF, $FE, $FF, $FC, $FF, $18, $FF, $10 ; id 175
@@ -2276,17 +2315,17 @@ Func_01F_7494:: ; address name
     xor a, a
     ld [wArg7], a
     call FillTileRectWithArg1Tile
-    ld de, Data_01F_4250
+    ld de, Tiles1Plus2F0Tiles_1F_4250
     ld hl, vTiles1 + $7E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A70
+    ld de, Tiles1Plus7F0Tiles_1F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4AD0
+    ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
     ld c, $10

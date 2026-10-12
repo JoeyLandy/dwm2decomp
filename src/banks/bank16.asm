@@ -7208,11 +7208,11 @@ Jump_016_6AE3:: ; address name
     cp a, $FF
     ret nz
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
     ld hl, wBattleScreenFlags
@@ -7877,11 +7877,11 @@ Jump_016_6F30:: ; address name
     ld a, [wSavedSpriteSlotCount]
     ld [wSpriteSlotCount], a
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
     ld hl, wBattleScreenFlags
@@ -9366,13 +9366,13 @@ Func_016_777B:: ; address name
 DrawTitleSaveSummaryScreen:: ; heuristic: follows a terminator; C0
 Func_016_7783:: ; address name
     ld b, $7E
-    ld de, Data_07E_5B63
+    ld de, Tiles0Gfx_7E_5B63
     ld hl, vTiles0
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_016_77A6
-    ld de, Palettes_7E_5BB8
+    ld de, OBJPaletteBufferData_7E_5BB8
     ld b, $7E
     ld hl, wOBJPaletteBuffer
     ld c, $08
@@ -9916,7 +9916,8 @@ Data_016_7ACD:: ; address name
 
 ; address loaded by DecompressMenuTilesTo16E0
 ; LZSS-compressed asset: 405 bytes expand to 624 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_016_7B7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles1Plus6E0Gfx_16_7B7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_016_7B7D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05BB7D, $195
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)

@@ -8495,7 +8495,8 @@ Data_027_7328:: ; address name
     dw $0000, $001F, $036C, $0800 ; id 162 Rosevine
     dw $0000, $036C, $296D, $0800 ; id 163 Egdracil
     dw $0000, $6E5F, $6017, $0800 ; id 164 Warubou
-Data_027_7850:: ; heuristic: argument of a bank-switching copy helper; C0
+OBJPaletteBufferPlus18Data_27_7850:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_027_7850:: ; address name
     dw $0000, $7FB5, $7EA6, $0800 ; id 165 Watabou
     dw $0000, $7FFF, $6CD6, $0800 ; id 166 Eggplaton
     dw $0000, $02FF, $024A, $0800 ; id 167 FooHero

@@ -543,7 +543,7 @@ Jump_061_4325:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_4348
-    ld de, MapType5Palettes5
+    ld de, BGPaletteBufferData_6E_77E0
     ld b, $6E
     ld hl, wBGPaletteBuffer
     ld c, $40

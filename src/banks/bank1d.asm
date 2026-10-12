@@ -472,17 +472,17 @@ Data_01D_4547:: ; address name
 LoadThreeTilesAndDrawRows4603To460B::
 Func_01D_45AB:: ; address name
     ld hl, vTiles2 + $7A0
-    ld de, Data_01F_4130
+    ld de, Tiles2Plus210Tiles_1F_4130
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7B0
-    ld de, Data_01F_4310
+    ld de, Tiles2Plus7B0Tiles_1F_4310
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7C0
-    ld de, Data_01F_4300
+    ld de, Tiles1Plus7C0Tiles_1F_4300
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM

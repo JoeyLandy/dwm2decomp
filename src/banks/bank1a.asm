@@ -3320,7 +3320,7 @@ Func_01A_72C9:: ; address name
 ; 7 call sites from 7 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case03, BattleEnd_Step5_Case04_Sub01_Case00, BattleEnd_Step5_Case04_Sub01_Case0C, BattleEnd_Step5_Case04_Sub01_Case10, ...)
 LoadCursorTileAndRect7826::
 Func_01A_72DB:: ; address name
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10

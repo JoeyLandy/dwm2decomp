@@ -59,7 +59,7 @@ Jump_024_4052::
 
 Jump_024_4057::
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -109,7 +109,7 @@ Jump_024_40C2::
     jr Jump_024_40D3
 
 Jump_024_40CE::
-    ld de, Data_024_6E13
+    ld de, Tiles1Plus600Gfx_24_6E13
     ld b, $24
 
 Jump_024_40D3::
@@ -711,7 +711,7 @@ Jump_024_4477::
 GameMode6_Update_Case02_Case0C::
 Jump_024_44AA:: ; address name
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, vTiles1
@@ -1301,7 +1301,7 @@ Jump_024_4842:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 GameMode6_Update_Case05_Case04::
 Jump_024_4854:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
@@ -1643,7 +1643,7 @@ Jump_024_4A94:: ; address name
 GameMode6_Update_Case0E_Case00::
 Jump_024_4AA4:: ; address name
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1734,7 +1734,7 @@ Jump_024_4B40:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 GameMode6_Update_Case0E_Case03::
 Jump_024_4B52:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
@@ -1852,7 +1852,7 @@ Jump_024_4C18:: ; address name
 GameMode6_Update_Case0F_Case00::
 Jump_024_4C2C:: ; address name
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -2572,7 +2572,7 @@ Func_024_504C:: ; address name
     jr Jump_024_505D
 
 Jump_024_5058::
-    ld de, Data_024_6E13
+    ld de, Tiles1Plus600Gfx_24_6E13
     ld b, $24
 
 Jump_024_505D::
@@ -6093,7 +6093,8 @@ Data_024_6CE4:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 
 ; address loaded by GameMode6_Init, GameMode6_Update_Shared01_Sub01
 ; LZSS-compressed asset: 315 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_024_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles1Plus600Gfx_24_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_024_6E13:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $092E13, $13B
 
 ; address loaded by GameMode6_Init

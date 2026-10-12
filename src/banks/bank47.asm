@@ -330,6 +330,7 @@ Data_047_629A:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map0DPalettes::
+BGPaletteBufferData_47_67E2:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_047_67E2:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $012F, $4FFF, $01D8, $0C63 ; entry 1

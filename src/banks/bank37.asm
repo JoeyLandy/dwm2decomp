@@ -1184,12 +1184,12 @@ Jump_037_4D43:: ; address name
 
 Jump_037_4D5B::
     farcall BreedMenu
-    ld de, Data_01F_4510
+    ld de, Tiles1Plus6E0Tiles_1F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4450
+    ld de, Tiles1Plus6F0Tiles_1F_4450
     ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10
@@ -1713,22 +1713,22 @@ Jump_037_50D9:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles2 + $720
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4180
+    ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
@@ -2691,7 +2691,7 @@ Jump_037_56B3::
 
 Jump_037_56D4::
     ld hl, vTiles2 + $730
-    ld de, Data_01F_42D0
+    ld de, Tiles1Plus2E0Tiles_1F_42D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -2742,7 +2742,7 @@ Jump_037_5715:: ; address name
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
     call DrawWCA2CNameAndWCA36String_Bank37
-    ld de, Data_01F_4AD0
+    ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
     ld c, $10

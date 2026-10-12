@@ -2036,7 +2036,7 @@ Func_004_4B7E:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     ret z
-    ld de, Data_07E_58FF
+    ld de, Tiles0Plus700Gfx_7E_58FF
     ld b, $7E
     ld hl, vTiles0 + $700
     call DecompressToVRAM

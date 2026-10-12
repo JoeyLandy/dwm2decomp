@@ -608,7 +608,7 @@ Jump_007_48D3::
 
 Jump_007_48F3::
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     xor a, a
@@ -745,7 +745,7 @@ Jump_007_49B3::
     ld a, $01
     ld [wBattleKindFlags], a
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     ld hl, vTiles2
@@ -981,7 +981,7 @@ Jump_007_4B95::
     ld a, $FC
     call StartPaletteFade
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -1088,7 +1088,7 @@ Jump_007_4C74::
     ld a, $FC
     call StartPaletteFade
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -1184,11 +1184,11 @@ Jump_007_4D45::
     ld a, $FC
     call StartPaletteFade
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToRAMLocked
     ld hl, vTiles2 + $400
@@ -1387,7 +1387,7 @@ Jump_007_4E8D::
     ld a, $FC
     call StartPaletteFade
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -2034,11 +2034,11 @@ Jump_007_591A:: ; address name
     or a, a
     jr z, Jump_007_596A
     ld b, $E1
-    ld de, Data_0E1_4001
+    ld de, Tiles2Gfx_E1_4001
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_40D6
+    ld de, ScreenTileBufferGfx_E1_40D6
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2047,13 +2047,13 @@ Jump_007_591A:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_40FB
+    ld de, ScreenAttrBufferGfx_E1_40FB
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_410E
+    ld de, BGPaletteBufferData_E1_410E
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2144,11 +2144,11 @@ Jump_007_59C0:: ; address name
     or a, a
     jr z, Jump_007_5A10
     ld b, $E1
-    ld de, Data_0E1_4116
+    ld de, Tiles2Gfx_E1_4116
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_45A7
+    ld de, ScreenTileBufferGfx_E1_45A7
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2157,13 +2157,13 @@ Jump_007_59C0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_45FC
+    ld de, ScreenAttrBufferGfx_E1_45FC
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_460F
+    ld de, BGPaletteBufferData_E1_460F
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2254,11 +2254,11 @@ Jump_007_5A66:: ; address name
     or a, a
     jr z, Jump_007_5AB6
     ld b, $E1
-    ld de, Data_0E1_4617
+    ld de, Tiles2Gfx_E1_4617
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_4946
+    ld de, ScreenTileBufferGfx_E1_4946
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2267,13 +2267,13 @@ Jump_007_5A66:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_49BE
+    ld de, ScreenAttrBufferGfx_E1_49BE
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_49D2
+    ld de, BGPaletteBufferData_E1_49D2
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2377,11 +2377,11 @@ Jump_007_5B2A:: ; address name
     or a, a
     ret nz
     ld b, $7E
-    ld de, Data_07E_4CED
+    ld de, Tiles0Gfx_7E_4CED
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7E
-    ld de, Data_07E_5706
+    ld de, Tiles0Plus100Gfx_7E_5706
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $10
@@ -2430,12 +2430,12 @@ Jump_007_5B76::
     ld bc, $0040
     call FillBytes
     ld b, $7E
-    ld de, ObjPalettes_7E_4BBD
+    ld de, OBJPaletteBufferData_7E_4BBD
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
     ld b, $7E
-    ld de, Data_07E_4CAD
+    ld de, OBJPaletteBufferPlus8Data_7E_4CAD
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2562,11 +2562,11 @@ Jump_007_5C5F:: ; address name
     or a, a
     jp nz, RunGameMode5Case00SubStates_Shared01
     ld b, $E1
-    ld de, Data_0E1_5405
+    ld de, Tiles2Gfx_E1_5405
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_590F
+    ld de, ScreenTileBufferGfx_E1_590F
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2575,13 +2575,13 @@ Jump_007_5C5F:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_5974
+    ld de, ScreenAttrBufferGfx_E1_5974
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_5A67
+    ld de, BGPaletteBufferData_E1_5A67
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2629,15 +2629,15 @@ Jump_007_5CD8:: ; address name
     or a, a
     ret nz
     ld b, $E1
-    ld de, Data_0E1_49DA
+    ld de, Tiles1Gfx_E1_49DA
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_4E67
+    ld de, Tiles2Gfx_E1_4E67
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_5987
+    ld de, BGMap0Gfx_E1_5987
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -2646,13 +2646,13 @@ Jump_007_5CD8:: ; address name
     ld a, $01
     ldh [rVBK], a
     ld b, $E1
-    ld de, Data_0E1_59F7
+    ld de, BGMap0Gfx_E1_59F7
     ld hl, vBGMap0
     call DecompressToVRAM
     ld a, $00
     ldh [rVBK], a
     ld b, $E1
-    ld de, Data_0E1_5A27
+    ld de, BGPaletteBufferData_E1_5A27
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3014,19 +3014,19 @@ Jump_007_5F09:: ; address name
     or a, a
     ret nz
     ld b, $E1
-    ld de, Data_0E1_577C
+    ld de, Tiles0Gfx_E1_577C
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_49DA
+    ld de, Tiles1Gfx_E1_49DA
     ld hl, vTiles1
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_4E67
+    ld de, Tiles2Gfx_E1_4E67
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $E1
-    ld de, Data_0E1_582B
+    ld de, ScreenTileBufferGfx_E1_582B
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -3035,18 +3035,18 @@ Jump_007_5F09:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_58C3
+    ld de, ScreenAttrBufferGfx_E1_58C3
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $E1
-    ld de, Data_0E1_5A27
+    ld de, BGPaletteBufferData_E1_5A27
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $E1
-    ld de, Data_0E1_5AA7
+    ld de, OBJPaletteBufferData_E1_5AA7
     ld hl, wOBJPaletteBuffer
     ld c, $10
     call CopyFromBankWaitVRAM

@@ -26,7 +26,7 @@ Jump_0F2_4013::
     bit 7, a
     jr z, Jump_0F2_4013
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -969,12 +969,12 @@ Func_0F2_4A0B:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld de, Data_01F_4510
+    ld de, Tiles1Plus6E0Tiles_1F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4450
+    ld de, Tiles1Plus6F0Tiles_1F_4450
     ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10

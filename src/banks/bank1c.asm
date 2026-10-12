@@ -1054,7 +1054,7 @@ Jump_01C_4615:: ; address name
 CloseShopMenu_Case02::
 Jump_01C_4619:: ; address name
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles1 + $500
@@ -1690,7 +1690,7 @@ Jump_01C_49D5::
     inc de
     ld a, [de]
     ld h, a
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -3603,7 +3603,7 @@ Jump_01C_5589::
     inc de
     ld a, [de]
     ld h, a
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -7049,22 +7049,22 @@ Jump_01C_6D7D:: ; address name
 VaultMenu_Case01_Case03::
 Jump_01C_6D8B:: ; address name
     ld hl, vTiles1 + $240
-    ld de, Data_01F_43C0
+    ld de, Tiles1Plus2D0Tiles_1F_43C0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $250
-    ld de, Data_01F_4340
+    ld de, Tiles1Plus250Tiles_1F_4340
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $260
-    ld de, Data_01F_40E0
+    ld de, Tiles1Plus260Tiles_1F_40E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles1 + $270
-    ld de, Data_01F_4330
+    ld de, Tiles1Plus6F0Tiles_1F_4330
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -7680,7 +7680,7 @@ Jump_01C_716A:: ; address name
     ld de, vTiles2 + $700
     call CopyTileBytesToVRAM_Bank1C
     ld hl, vTiles1 + $4C0
-    ld de, Data_01F_4500
+    ld de, Tiles1Plus4C0Tiles_1F_4500
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -7913,7 +7913,7 @@ Jump_01C_72D0::
     inc de
     ld a, [de]
     ld h, a
-    ld de, Data_01F_4910
+    ld de, Tiles2Plus710Tiles_1F_4910
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM

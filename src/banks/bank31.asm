@@ -50,11 +50,11 @@ Jump_031_404B::
     ld [wTextCursorHi], a
     farcall GameMode4_Init_Sub01
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToRAMLocked
     ld hl, vTiles1
@@ -1304,11 +1304,11 @@ Jump_031_4751:: ; address name
     ld [wSpriteSlotCount], a
     call BuildBattleScreenBuffer
     ld b, $31
-    ld de, Data_031_7C1E
+    ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Data_031_7DFB
+    ld de, Tiles1Plus5F0Gfx_31_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
     ld hl, wBattleSubPhase
@@ -1501,7 +1501,7 @@ Jump_031_4893::
     ld [wNewRecordByte0D], a
     ld [wScreenState], a
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ExitPauseMenuToField
@@ -10417,11 +10417,13 @@ Jump_031_7C1C::
 
 ; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_031_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles1Plus240Gfx_31_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_031_7C1E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
 ; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_031_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles1Plus5F0Gfx_31_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_031_7DFB:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7DFB, $97
     ds $16E, $00

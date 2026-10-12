@@ -966,19 +966,19 @@ Jump_0A1_452D:: ; address name
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
-    ld de, Data_07E_4EB3
+    ld de, Tiles0Gfx_7E_4EB3
     ld b, $7E
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Data_07E_5B27
+    ld de, Tiles0Plus100Gfx_7E_5B27
     ld b, $7E
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Data_07E_5B46
+    ld de, Tiles0Plus200Gfx_7E_5B46
     ld b, $7E
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld de, Data_05D_43AE
+    ld de, Tiles2Gfx_5D_43AE
     ld b, $5D
     ld hl, vTiles2
     call DecompressToVRAM
@@ -1005,7 +1005,7 @@ Jump_0A1_4576::
     or a, a
     jr z, Jump_0A1_45C0
     ld a, $40
-    ld de, ObjPalettes_7E_4BBD
+    ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_0A1_4592
@@ -1016,14 +1016,14 @@ Jump_0A1_4592::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Palettes_7E_5AF6
+    ld de, OBJPaletteBufferPlus8Data_7E_5AF6
     ld b, $7E
     ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld de, Palettes_5D_4565
+    ld de, BGPaletteBufferData_5D_4565
     ld b, $5D
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -2776,19 +2776,19 @@ Jump_0A1_4FE2:: ; address name
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
-    ld de, Data_07E_4EB3
+    ld de, Tiles0Gfx_7E_4EB3
     ld b, $7E
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Data_07E_5B0E
+    ld de, Tiles0Plus100Gfx_7E_5B0E
     ld b, $7E
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Data_05D_4001
+    ld de, Tiles2Gfx_5D_4001
     ld b, $5D
     ld hl, vTiles2
     call DecompressToVRAM
-    ld de, Data_05E_4001
+    ld de, Tiles2Plus500Gfx_5E_4001
     ld b, $5E
     ld hl, vTiles2 + $500
     call DecompressToVRAM
@@ -2820,7 +2820,7 @@ Jump_0A1_5039::
     or a, a
     jr z, Jump_0A1_5090
     ld a, $40
-    ld de, ObjPalettes_7E_4BBD
+    ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_0A1_5055
@@ -2831,19 +2831,19 @@ Jump_0A1_5055::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Palettes_7E_5AF6
+    ld de, OBJPaletteBufferPlus8Data_7E_5AF6
     ld b, $7E
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld de, Palettes_5D_4139
+    ld de, BGPaletteBufferData_5D_4139
     ld b, $5D
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Palettes_5E_422F
+    ld de, BGPaletteBufferPlus8Data_5E_422F
     ld b, $5E
     ld hl, wBGPaletteBuffer + $8
     ld c, $08

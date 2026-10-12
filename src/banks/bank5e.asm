@@ -3,12 +3,14 @@ SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
 
 ; address loaded by RunGameMode2State_Case01
 ; LZSS-compressed asset: 558 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05E_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles2Plus500Gfx_5E_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_05E_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $178001, $22E
 
 ; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_5E_422F::
+BGPaletteBufferPlus8Data_5E_422F:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_05E_422F:: ; address name
     dw $014D, $6BFF, $2A55, $0000 ; id 0
     db $88

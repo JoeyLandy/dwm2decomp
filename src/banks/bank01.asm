@@ -89,32 +89,32 @@ Jump_001_4061:: ; address name
     ld a, h
     ld [wTextCursorHi], a
     ld hl, vTiles2 + $200
-    ld de, Data_01F_4160
+    ld de, Tiles2Plus200Tiles_1F_4160
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $210
-    ld de, Data_01F_4130
+    ld de, Tiles2Plus210Tiles_1F_4130
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $220
-    ld de, Data_01F_4180
+    ld de, Tiles1Plus6E0Tiles_1F_4180
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $230
-    ld de, Data_01F_4190
+    ld de, Tiles2Plus230Tiles_1F_4190
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $240
-    ld de, Data_01F_4170
+    ld de, Tiles2Plus240Tiles_1F_4170
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $250
-    ld de, Data_01F_41D0
+    ld de, Tiles2Plus250Tiles_1F_41D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -316,17 +316,17 @@ Jump_001_4472:: ; address name
     ld a, $FB
     ld [vBGMap0 + $1C1], a
     ld [vBGMap0 + $221], a
-    ld de, Data_01F_4A80
+    ld de, Tiles1Plus7E0Tiles_1F_4A80
     ld hl, vTiles1 + $7E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4A90
+    ld de, Tiles1Plus7F0Tiles_1F_4A90
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4780
+    ld de, Tiles1Plus7C0Tiles_1F_4780
     ld hl, vTiles1 + $7C0
     ld b, $1F
     ld c, $10
@@ -336,12 +336,12 @@ Jump_001_4472:: ; address name
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_4160
+    ld de, Tiles2Plus200Tiles_1F_4160
     ld hl, vTiles1 + $7D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4480
+    ld de, Tiles1Plus7B0Tiles_1F_4480
     ld hl, vTiles1 + $7B0
     ld b, $1F
     ld c, $10

@@ -52,6 +52,7 @@ Data_049_4418:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map0APalettes::
+BGPaletteBufferData_49_46DC:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_049_46DC:: ; address name
     dw $7D00, $7FFF, $7FE1, $0000 ; entry 0
     dw $7D00, $031D, $01D8, $0000 ; entry 1
@@ -97,6 +98,7 @@ Data_049_4832:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map13Palettes::
+BGPaletteBufferData_49_4AC5:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_049_4AC5:: ; address name
     dw $7D86, $7FFF, $7FE1, $0000 ; entry 0
     dw $012F, $031D, $01D8, $0000 ; entry 1
@@ -139,6 +141,7 @@ Data_049_4C1B:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map1APalettes::
+BGPaletteBufferData_49_52BB:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_049_52BB:: ; address name
     dw $7D86, $7FFF, $7F26, $0000 ; entry 0
     dw $012F, $031D, $01D8, $0000 ; entry 1

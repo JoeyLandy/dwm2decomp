@@ -1975,12 +1975,12 @@ Jump_0F1_4CCA:: ; address name
 
 Jump_0F1_4CE2::
     farcall BreedMenu
-    ld de, Data_01F_4510
+    ld de, Tiles1Plus6E0Tiles_1F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4450
+    ld de, Tiles1Plus6F0Tiles_1F_4450
     ld hl, vTiles1 + $6F0
     ld b, $1F
     ld c, $10
@@ -2515,22 +2515,22 @@ Jump_0F1_505A::
 Jump_0F1_5067::
     xor a, a
     ld [wScreenSubStep], a
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles2 + $700
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles2 + $710
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles2 + $720
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4180
+    ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles2 + $760
     ld b, $1F
     ld c, $10
@@ -3435,7 +3435,7 @@ Jump_0F1_55E9:: ; address name
     ld bc, $0901
     call FillTilesBxC
     call DrawWCA2CNameAndWCA36String
-    ld de, Data_01F_4AD0
+    ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
     ld c, $10
@@ -4440,23 +4440,27 @@ Jump_0F1_5C0D::
 
 ; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 304 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_5C14:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Tiles1Gfx_F1_5C14:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_0F1_5C14:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3C5C14, $130
 
 ; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 88 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_5D44:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+WindowTileBufferPlus64Gfx_F1_5D44:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_0F1_5D44:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3C5D44, $58
 
 ; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 32 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_5D9C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+WindowTileBufferGfx_F1_5D9C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_0F1_5D9C:: ; address name
     db $64, $00, $00, $9C, $80, $00, $01, $02, $90, $91, $00, $09, $04, $92, $9D, $00
     db $00, $04, $00, $15, $07, $00, $13, $0F, $16, $9E, $9F, $A0, $00, $52, $0C, $A1
 
 ; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 50 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+WindowAttrBufferPlus64Gfx_F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_0F1_5DBC:: ; address name
     db $04, $01, $03, $01, $03, $00, $0F, $01, $03, $EE, $FF, $01, $03, $F8, $FD, $03
     db $26, $07, $03, $1D, $0F, $01, $03, $45, $0F, $28, $03, $08, $0F, $01, $03, $14
     db $06, $03, $9E, $07, $03, $09, $0B, $02, $02, $02, $02, $03, $A8, $0F, $11, $03
@@ -4464,7 +4468,8 @@ Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 
 ; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 22 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+WindowAttrBufferGfx_F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_0F1_5DEE:: ; address name
     db $64, $00, $02, $01, $02, $F9, $F4, $02, $08, $08, $02, $EE, $FF, $00, $02, $14
     db $0F, $16, $02, $4F, $0F, $00
 

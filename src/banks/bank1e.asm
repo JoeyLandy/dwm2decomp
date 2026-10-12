@@ -56,7 +56,7 @@ Jump_01E_403F:: ; address name
 CloseMenuE9_Case02::
 Jump_01E_4046:: ; address name
     ld b, $46
-    ld de, Data_046_4001
+    ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles1 + $500
@@ -1269,7 +1269,7 @@ Jump_01E_4817::
 ; writes: wScreenStep, wTwoChoiceCursor
 SwapMonstersMenu_Case04_Case11::
 Jump_01E_4831:: ; address name
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
     ld c, $10
@@ -2681,12 +2681,12 @@ Jump_01E_51E6:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    ld de, Data_01F_4A70
+    ld de, Tiles1Plus7F0Tiles_1F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
     ld c, $10
@@ -3078,7 +3078,7 @@ Jump_01E_556A:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 SwapMonstersMenu_Case06_Case1A::
 Jump_01E_557C:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
@@ -3160,27 +3160,27 @@ Jump_01E_55F3:: ; address name
     ld bc, $1409
     ld de, $01CC
     call DrawScreenBufferRect_Bank1E
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles1 + $4F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4120
+    ld de, Tiles1Plus710Tiles_1F_4120
     ld hl, vTiles1 + $750
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4170
+    ld de, Tiles2Plus240Tiles_1F_4170
     ld hl, vTiles1 + $760
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_41A0
+    ld de, Tiles1Plus770Tiles_1F_41A0
     ld hl, vTiles1 + $770
     ld b, $1F
     ld c, $10
@@ -3809,32 +3809,32 @@ Jump_01E_5A88:: ; address name
 ; writes: wScreenStep
 SwapMonstersMenu_Case07_Case37::
 Jump_01E_5AB0:: ; address name
-    ld de, Data_01F_4370
+    ld de, Tiles2Plus720Tiles_1F_4370
     ld hl, vTiles1 + $5F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4290
+    ld de, Tiles2Plus710Tiles_1F_4290
     ld hl, vTiles1 + $4F0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4230
+    ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4120
+    ld de, Tiles1Plus710Tiles_1F_4120
     ld hl, vTiles1 + $750
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4170
+    ld de, Tiles2Plus240Tiles_1F_4170
     ld hl, vTiles1 + $760
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_41A0
+    ld de, Tiles1Plus770Tiles_1F_41A0
     ld hl, vTiles1 + $770
     ld b, $1F
     ld c, $10
@@ -4323,7 +4323,7 @@ Jump_01E_5E06::
 
 Jump_01E_5E17::
     ld hl, vTiles2 + $730
-    ld de, Data_01F_42D0
+    ld de, Tiles1Plus2E0Tiles_1F_42D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -4880,7 +4880,7 @@ Jump_01E_619F:: ; address name
 SwapMonstersMenu_Case0E_Case00::
 Jump_01E_61B4:: ; address name
     call ClearBGMapAtScrollAndResetScroll
-    ld de, Data_01F_4A70
+    ld de, Tiles1Plus7F0Tiles_1F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
@@ -5059,7 +5059,7 @@ Jump_01E_62C0:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1304
     call FillTilesBxC
-    ld de, Data_01F_4A40
+    ld de, Tiles1Plus7D0Tiles_1F_4A40
     ld hl, vTiles1 + $6D0
     ld b, $1F
     ld c, $10
@@ -5137,12 +5137,12 @@ Jump_01E_6325:: ; address name
     ld a, [wListCount]
     cp a, $02
     jr c, Jump_01E_6391
-    ld de, Data_01F_4AA0
+    ld de, Tiles2Plus20Tiles_1F_4AA0
     ld hl, vTiles2 + $20
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_4AE0
+    ld de, Tiles2Plus30Tiles_1F_4AE0
     ld hl, vTiles2 + $30
     ld b, $1F
     ld c, $10
@@ -5446,7 +5446,7 @@ Data_01E_6567:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 SwapMonstersMenu_Case0D_Case10::
 Jump_01E_656F:: ; address name
-    ld de, Data_01F_4990
+    ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
     ld b, $1F
     ld c, $10
@@ -6323,7 +6323,7 @@ Jump_01E_6B44::
 
 Jump_01E_6B55::
     ld hl, vTiles2 + $730
-    ld de, Data_01F_42D0
+    ld de, Tiles1Plus2E0Tiles_1F_42D0
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -6440,7 +6440,7 @@ Jump_01E_6C1F:: ; address name
     ld a, b
     ld [wArg1], a
     farcall DrawRecordNameAndSpeciesNameTiles
-    ld de, Data_01F_4AD0
+    ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
     ld c, $10
