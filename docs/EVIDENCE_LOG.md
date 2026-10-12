@@ -2456,7 +2456,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Names.**
   - The record is now one sized symbol, wGiftRecord (size $A5, replacing 17 entries). Its operands use MON_* through the buffer pass, for example `ld hl, wGiftRecord + MON_MAX_HP` in every GiftEffect_*.
   - wFamilyScores is the Egg's 11 family scores, and wPendingGiftItem and wGiftCount refer to gifts to the Egg.
-- **What the gift effects change.** A gift raises the Egg's maximum HP by 1-3 (capped at 999) and raises one family's score while lowering others. RankFamilyScoresIntoFamilyRanking ranks the families, and the top family picks the species when the egg hatches (RunLinkSession8Exchange_EggHatched: 'G hatched from the egg that ...'). That answers the open question from E-0295.
+- **What the gift effects change.** A gift raises the Egg's maximum HP by 1, 2, 3, 5 or 8 depending on the item (counted over the 70 effects that start with `ld hl, wGiftRecord + MON_MAX_HP`; capped at 999; some effects do other things) and raises one family's score while lowering others. RankFamilyScoresIntoFamilyRanking ranks the families, and the top family picks the species when the egg hatches (RunLinkSession8Exchange_EggHatched: 'G hatched from the egg that ...'). That answers the open question from E-0295.
 - Binary verification: build/run431 PASS, 0 differing bytes; tests OK (skipped=3).
 
 ### E-0311 — Sex 0 = male, 1 = female; egg states; the bytes no code reads
