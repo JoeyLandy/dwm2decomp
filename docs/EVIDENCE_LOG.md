@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0228 — Two more unreferenced AI routines (bank $05)
+
+- Kind: OBSERVATION (reading; C1).
+- **AllySkillMPCosts_5AF8.** 6 MP costs that FailIfAllyLacksMPForSkillList5AF8 compares with an ally's MP.
+  - The E-0102 data region at $5AF8 ran to $5B11. It is trimmed to $5AFE, as was done at $5A33 in E-0175.
+- **FailIfAbleAllyKnowsSkill42To47 ($5AFE) and FailIfAbleAllyWithStatus6KnowsSkill78To92 ($5B57).** Both have the shape of FailIfAbleAllyKnowsSkillList6D1A (E-0175).
+  - When the actor's AI mode is at least 3, they look for another able slot of the actor's side with a status bit clear or set that knows one of the listed skills.
+  - No caller was found; they are configured code entries.
+- Binary verification: build/run280 PASS, 0 differing bytes; tests OK.
+
 ### E-0227 — Two order lists and an unreferenced VRAM clear (bank $1D)
 
 - Kind: OBSERVATION (reading; C1).

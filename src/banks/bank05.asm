@@ -2,7 +2,7 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_Transform_Sub01, PassIfFoeAverageDEFAtMostTwiceAllyATK, AIScore_Sap_Sub02_Sub01, ...)
+; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, AIScore_Transform_Sub01, PassIfFoeAverageDEFAtMostTwiceAllyATK, ...)
 ; points at: wBattleATK
 GetBattleATK_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_4001:: ; address name
@@ -10,7 +10,7 @@ Func_005_4001:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 18 call sites from 15 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, AIScore_TwinHits_Shared01, ...)
+; 18 call sites from 15 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, CompareHPWithHalfMax, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, AIScore_BeDragon_Sub01, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -26,7 +26,7 @@ Func_005_400B:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 12 call sites from 7 routines (e.g. ActorMPBelowThreeQuarters, AIScore_Transform_Sub01, CompareMPWithThreeQuartersMax, AddSlotStatSumToTemp0, ...)
+; 12 call sites from 7 routines (e.g. AIScore_BeDragon_Sub01, ActorMPBelowThreeQuarters, AIScore_Transform_Sub01, CompareMPWithThreeQuartersMax, ...)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
@@ -50,7 +50,7 @@ Func_005_401A:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
-; 10 call sites from 8 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, AIScore_SquallHit_Sub01_Sub01, AverageAGLOfSideA, FastestFoeAGLAbove31PercentOfActor, ...)
+; 10 call sites from 8 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, AIScore_BeDragon_Sub01, AIScore_SquallHit_Sub01_Sub01, AverageAGLOfSideA, ...)
 ; points at: wBattleAGL
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
@@ -5364,7 +5364,7 @@ Jump_005_5AC5::
 Jump_005_5ACB::
     push hl
     push bc
-    ld hl, Data_005_5AF8
+    ld hl, AllySkillMPCosts_5AF8
     ld a, e
     add_a_to_hl
     ld a, [hl]
@@ -5401,15 +5401,162 @@ Jump_005_5AF5::
     ld c, $01
     ret
 
-; address loaded by FailIfAllyLacksMPForSkillList5AF8
-Data_005_5AF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $015AF8, $C4
+; E-0228 (C1: FailIfAllyLacksMPForSkillList5AF8 compares an ally's MP (GetBattleMP_Bank05) with the byte at $5AF8 + E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6 bytes, then code).
+; record: MP cost
+AllySkillMPCosts_5AF8::
+Data_005_5AF8:: ; address name
+    db $0F ; id 0
+    db $01 ; id 1
+    db $1E ; id 2
+    db $19 ; id 3
+    db $14 ; id 4
+    db $14 ; id 5
+
+; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another able slot of the actor's side has status byte 1 bit 7 clear and knows skill $42, $43, $46 or $47, else $FF; no traced caller (E-0228)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; points at: wBattleStatus1, wBattleSkills
+FailIfAbleAllyKnowsSkill42To47:: ; configured code entry (E-0228); C0
+Func_005_5AFE:: ; address name
+    ld a, [wBattleActor]
+    call ReadSlotAIModeIndexed_Bank05
+    cp a, $03
+    jr c, Jump_005_5B54
+    ld a, [wBattleActor]
+    ld e, a
+    and a, $04
+    ld c, a
+    ld b, $03
+
+Jump_005_5B11::
+    ld a, c
+    cp a, e
+    jr z, Jump_005_5B1A
+    call CheckSlotStatusBlock
+    jr nc, Jump_005_5B20
+
+Jump_005_5B1A::
+    inc c
+    dec b
+    jr nz, Jump_005_5B11
+    jr Jump_005_5B51
+
+Jump_005_5B20::
+    ld a, c
+    ld hl, wBattleStatus1
+    call AddAx9ToHL
+    bit 7, [hl]
+    jr nz, Jump_005_5B1A
+    ld hl, wBattleSkills
+    swap a
+    add_a_to_hl
+    ld d, $08
+
+Jump_005_5B37::
+    ld a, [hl+]
+    cp a, $42
+    jr z, Jump_005_5B4E
+    cp a, $43
+    jr z, Jump_005_5B4E
+    cp a, $46
+    jr z, Jump_005_5B4E
+    cp a, $47
+    jr z, Jump_005_5B4E
+    inc hl
+    dec d
+    jr nz, Jump_005_5B37
+    jr Jump_005_5B1A
+
+Jump_005_5B4E::
+    ld c, $00
+    ret
+
+Jump_005_5B51::
+    ld c, $FF
+    ret
+
+Jump_005_5B54::
+    ld c, $01
+    ret
+
+; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another able slot of the actor's side has status byte 1 bit 6 set and knows skill $78-$7D or $92, else $FF; no traced caller (E-0228)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; points at: wBattleStatus1, wBattleSkills
+FailIfAbleAllyWithStatus6KnowsSkill78To92:: ; heuristic: follows a terminator; C0
+Func_005_5B57:: ; address name
+    ld a, [wBattleActor]
+    call ReadSlotAIModeIndexed_Bank05
+    cp a, $03
+    jr c, Jump_005_5BB9
+    ld a, [wBattleActor]
+    ld e, a
+    and a, $04
+    ld c, a
+    ld b, $03
+
+Jump_005_5B6A::
+    ld a, c
+    cp a, e
+    jr z, Jump_005_5B73
+    call CheckSlotStatusBlock
+    jr nc, Jump_005_5B79
+
+Jump_005_5B73::
+    inc c
+    dec b
+    jr nz, Jump_005_5B6A
+    jr Jump_005_5BB6
+
+Jump_005_5B79::
+    ld a, c
+    ld hl, wBattleStatus1
+    call AddAx9ToHL
+    bit 6, [hl]
+    jr z, Jump_005_5B73
+    ld hl, wBattleSkills
+    swap a
+    add_a_to_hl
+    ld d, $08
+
+Jump_005_5B90::
+    ld a, [hl+]
+    cp a, $78
+    jr z, Jump_005_5BB3
+    cp a, $79
+    jr z, Jump_005_5BB3
+    cp a, $7A
+    jr z, Jump_005_5BB3
+    cp a, $7B
+    jr z, Jump_005_5BB3
+    cp a, $7C
+    jr z, Jump_005_5BB3
+    cp a, $7D
+    jr z, Jump_005_5BB3
+    cp a, $92
+    jr z, Jump_005_5BB3
+    inc hl
+    dec d
+    jr nz, Jump_005_5B90
+    jr Jump_005_5B73
+
+Jump_005_5BB3::
+    ld c, $00
+    ret
+
+Jump_005_5BB6::
+    ld c, $FF
+    ret
+
+Jump_005_5BB9::
+    ld c, $01
+    ret
 
 ; only called from AIScore_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
 ; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7, ...
-AIScore_BeDragon_Sub01::
+AIScore_BeDragon_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_5BBC:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -8329,7 +8476,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
-; 33 call sites from 33 routines (e.g. FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, CheckFoeStatus7Bit2, FailIfFoeSkill3DThreatensActorHP, ...)
+; 35 call sites from 35 routines (e.g. FailIfAbleAllyKnowsSkill42To47, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, FailIfAllyLacksMPForSkillList5AF8, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8976,7 +9123,7 @@ Jump_005_6E20::
 ; D = the number of set status bits and fields in slot C's 9-byte wD80D record (checks 16 flags across bytes 0, 1, 4, 5 and 7) (E-0121)
 ; 1 call site from 1 routine (e.g. PassIfSkill83OrNoAllyHasStatus)
 ; points at: wBattleStatus1
-CountActiveStatusEffectsOfSlotC:: ; heuristic: follows a terminator; C0
+CountActiveStatusEffectsOfSlotC::
 Func_005_6E30:: ; address name
     ld a, c
     ld d, $00
@@ -9329,7 +9476,7 @@ Func_005_6FFD:: ; address name
 
 ; HL = (HL / 5) * 4; BC and DE kept (E-0117)
 ; 1 call site from 1 routine (e.g. FailIfFoeHPAtMostFourFifthsAIDamageEstimates)
-ScaleHLToFourFifths:: ; heuristic: follows a terminator; C0
+ScaleHLToFourFifths::
 Func_005_701B:: ; address name
     push de
     push bc

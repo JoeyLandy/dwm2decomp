@@ -14393,6 +14393,21 @@
       ],
       "record": "95 numbers, then $FF",
       "note": "E-0227 (C1: two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found, directly or by a computed base)."
+    },
+    {
+      "bank": "05",
+      "addr": "5AF8",
+      "label": "AllySkillMPCosts_5AF8",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "MP cost"
+        }
+      ],
+      "note": "E-0228 (C1: FailIfAllyLacksMPForSkillList5AF8 compares an ally's MP (GetBattleMP_Bank05) with the byte at $5AF8 + E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6 bytes, then code)."
     }
   ]
 }

@@ -10759,7 +10759,7 @@ Data_000_3E13:: ; address name
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 36 call sites from 33 routines (e.g. CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, FailIfAllyLacksMPForHealSkill, ...)
+; 38 call sites from 35 routines (e.g. FailIfAbleAllyKnowsSkill42To47, CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -11006,7 +11006,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 318 call sites from 263 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
+; 320 call sites from 265 routines (e.g. CheckSlotStatusBlock, FailIfAbleAllyKnowsSkill42To47, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de
