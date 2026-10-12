@@ -139,6 +139,12 @@
       "note": "shakes the screen (ScriptStepShakeScreen) with a sound effect",
       "evidence": "E-0245"
     },
+    "29": {
+      "const": "SCRIPT_SCENE_WHO_ARE_YOU",
+      "routine": "SceneWhoAreYou",
+      "note": "a cutscene step named after the scene its only script shows: after a sound and a 140-frame wait, before 'Who are you? This is our...' and 'Zzz Zzz Huh! Watch out!'",
+      "evidence": "E-0246"
+    },
     "2A": {
       "const": "SCRIPT_SCENE_WATCH_OUT",
       "routine": "SceneWatchOut",
@@ -630,6 +636,204 @@
       "routine": "SceneChestServant",
       "note": "a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... 'How may we serve your mortal...'",
       "evidence": "E-0245"
+    },
+    "80": {
+      "const": "SCRIPT_TALK00_0F",
+      "routine": "Talk00Event0F",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0F starts (talk event category $00, group $0F); its states are not yet read (a structural name); it gives gold (a byte * 10), an item (AppendItemWC928ToInventory) or starts a battle with intro 5",
+      "evidence": "E-0246"
+    },
+    "81": {
+      "const": "SCRIPT_TALK00_0E",
+      "routine": "Talk00Event0E",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0E starts (talk event category $00, group $0E); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "82": {
+      "const": "SCRIPT_TALK08",
+      "routine": "Talk08Event",
+      "note": "the one command of the script DispatchTalkEvent_Case08 starts; its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "83": {
+      "const": "SCRIPT_TALK00_01",
+      "routine": "Talk00Event01",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case01 starts (talk event category $00, group $01); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "84": {
+      "const": "SCRIPT_TALK00_02",
+      "routine": "Talk00Event02",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case02 starts (talk event category $00, group $02); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "85": {
+      "const": "SCRIPT_TALK09_00",
+      "routine": "Talk09Event00",
+      "note": "the one command of the script DispatchTalkEvent_Case09_Sub01_Case00 starts (talk event category $09, group $00); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "86": {
+      "const": "SCRIPT_TALK00_0B",
+      "routine": "Talk00Event0B",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0B starts (talk event category $00, group $0B); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "87": {
+      "const": "SCRIPT_TALK00_04",
+      "routine": "Talk00Event04",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case04 starts (talk event category $00, group $04); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "88": {
+      "const": "SCRIPT_TALK00_05",
+      "routine": "Talk00Event05",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case05 starts (talk event category $00, group $05); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "89": {
+      "const": "SCRIPT_TALK00_06",
+      "routine": "Talk00Event06",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case06 starts (talk event category $00, group $06); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8A": {
+      "const": "SCRIPT_TALK00_07",
+      "routine": "Talk00Event07",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case07 starts (talk event category $00, group $07); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8B": {
+      "const": "SCRIPT_TALK00_15",
+      "routine": "Talk00Event15",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case15 starts (talk event category $00, group $15); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8C": {
+      "const": "SCRIPT_TALK00_16",
+      "routine": "Talk00Event16",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case16 starts (talk event category $00, group $16); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8D": {
+      "const": "SCRIPT_TALK00_17",
+      "routine": "Talk00Event17",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8E": {
+      "const": "SCRIPT_TALK00_08",
+      "routine": "Talk00Event08",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case08 starts (talk event category $00, group $08); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "8F": {
+      "const": "SCRIPT_TALK00_20",
+      "routine": "Talk00Event20",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case20 starts (talk event category $00, group $20); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "90": {
+      "const": "SCRIPT_TALK00_10",
+      "routine": "Talk00Event10",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case10 starts (talk event category $00, group $10); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "91": {
+      "const": "SCRIPT_TALK00_11",
+      "routine": "Talk00Event11",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case11 starts (talk event category $00, group $11); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "92": {
+      "const": "SCRIPT_TALK00_12",
+      "routine": "Talk00Event12",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case12 starts (talk event category $00, group $12); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "93": {
+      "const": "SCRIPT_TALK00_13",
+      "routine": "Talk00Event13",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case13 starts (talk event category $00, group $13); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "94": {
+      "const": "SCRIPT_TALK00_14",
+      "routine": "Talk00Event14",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case14 starts (talk event category $00, group $14); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "95": {
+      "const": "SCRIPT_ARENA_GRID_BATTLE",
+      "routine": "ArenaGridBattle",
+      "note": "an arena battle: messages from ArenaRankMessageTable (StartMessageFromTable48B9ByArenaRank) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02)",
+      "evidence": "E-0246"
+    },
+    "96": {
+      "const": "SCRIPT_ARENA_ROUNDS",
+      "routine": "ArenaRounds",
+      "note": "the arena's rounds: messages from ArenaRankMessageTable and foes from ArenaEncounterLists by wAreaGraphicsIndex, advancing the round (IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea)",
+      "evidence": "E-0246"
+    },
+    "98": {
+      "const": "SCRIPT_TALK00_1B",
+      "routine": "Talk00Event1B",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1B starts (talk event category $00, group $1B); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "99": {
+      "const": "SCRIPT_TALK00_1C",
+      "routine": "Talk00Event1C",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1C starts (talk event category $00, group $1C); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9A": {
+      "const": "SCRIPT_TALK00_19",
+      "routine": "Talk00Event19",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case19 starts (talk event category $00, group $19); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9B": {
+      "const": "SCRIPT_TALK00_1A",
+      "routine": "Talk00Event1A",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1A starts (talk event category $00, group $1A); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9C": {
+      "const": "SCRIPT_TALK00_1D",
+      "routine": "Talk00Event1D",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1D starts (talk event category $00, group $1D); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9D": {
+      "const": "SCRIPT_TALK00_1E",
+      "routine": "Talk00Event1E",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1E starts (talk event category $00, group $1E); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9E": {
+      "const": "SCRIPT_TALK09_03",
+      "routine": "Talk09Event03",
+      "note": "the one command of the script DispatchTalkEvent_Case09_Sub01_Case03 starts (talk event category $09, group $03); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "9F": {
+      "const": "SCRIPT_TALK00_21",
+      "routine": "Talk00Event21",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case21 starts (talk event category $00, group $21); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "A0": {
+      "const": "SCRIPT_TALK00_09",
+      "routine": "Talk00Event09",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case09 starts (talk event category $00, group $09); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
+    },
+    "A1": {
+      "const": "SCRIPT_TALK00_0A",
+      "routine": "Talk00Event0A",
+      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0A starts (talk event category $00, group $0A); its states are not yet read (a structural name)",
+      "evidence": "E-0246"
     },
     "C0": {
       "const": "SCRIPT_SCENE_ROLT_ELDER",

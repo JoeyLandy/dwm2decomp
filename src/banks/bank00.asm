@@ -5690,7 +5690,7 @@ Func_000_1F95:: ; address name
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, DispatchTalkEvent_Case03_Sub01_Case13, ScriptCommand87_Run_Case01, HibernateMenu_Case05_Case32_Sub01, ...)
+; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, DispatchTalkEvent_Case03_Sub01_Case13, Talk00Event04_Case01, HibernateMenu_Case05_Case32_Sub01, ...)
 ; points at: wNameGlyphBuf
 CopyRecordNameToNameGlyphBuf::
 Func_000_1FA4:: ; address name
@@ -6499,7 +6499,7 @@ Func_000_23BD:: ; address name
     ret
 
 ; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
-; 10 call sites from 8 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, AddRewardToCounterCappedAt999, ScriptCommand82_Run_Case01_Case00, ...)
+; 10 call sites from 8 routines (e.g. Talk00Event02_Case06, Talk00Event0F_Case00, AddRewardToCounterCappedAt999, Talk08Event_Case01_Case00, ...)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp2
 WritePackedBCDNoLeadingZeros::
@@ -6591,7 +6591,7 @@ Func_000_241A:: ; address name
     jr Jump_000_2447
 
 ; A = item number: with ROM bank $08 mapped, copies that string of StringTable_ItemNames, including its $F0 terminator, to DE; restores the bank (E-0071)
-; 17 call sites from 13 routines (e.g. ScriptCommand86_Run_Case00, ScriptCommand84_Run_Case06, ScriptCommand81_Run_Case00, ScriptCommand80_Run_Case00, ...)
+; 17 call sites from 13 routines (e.g. Talk00Event0B_Case00, Talk00Event02_Case06, Talk00Event0E_Case00, Talk00Event0F_Case00, ...)
 ; writes: rROMB0
 CopyItemNameToDE::
 Func_000_2431:: ; address name

@@ -2430,6 +2430,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0246 — The last numbered script commands: key-world talk events and the arena
+
+- Kind: OBSERVATION (C1 for the arena and $29; the talk-event names are structural).
+- **$80-$A1 except $95/$96.** Each is the only command of a one-command script started by DispatchTalkEvent_Case00_Sub01 (talk event category 0, indexed by wTalkEventGroup), _Case09_Sub01 or _Case08. They are named after that case: SCRIPT_TALK00_0F (Talk00Event0F), SCRIPT_TALK09_03, SCRIPT_TALK08, and so on.
+  - Their messages depend on the wMessageGroup each talk event sets, so they are not quoted.
+  - $80's states give gold (a byte * 10), an item, or start a battle with intro 5.
+- **$95 SCRIPT_ARENA_GRID_BATTLE / $96 SCRIPT_ARENA_ROUNDS.** Both start with StartMessageFromTable48B9ByArenaRank (ArenaRankMessageTable).
+  - $95 takes its foes from GridEncounterTable (E-0236).
+  - $96 takes its foes from ArenaEncounterLists and advances the round.
+- **$29 SCRIPT_SCENE_WHO_ARE_YOU** comes before "Who are you? This is our...".
+- After this entry, no `script_command` line uses a bare number. config/script_commands.json names 176 command types.
+- Binary verification: build/run313 PASS, 0 differing bytes; tests OK.
+
 ### E-0245 — Cutscene and action script commands named; structural names re-prefixed by their parents
 
 - Kind: OBSERVATION (C1) and TOOL.

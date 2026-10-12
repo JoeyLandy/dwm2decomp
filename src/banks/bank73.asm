@@ -1,54 +1,54 @@
 SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
-; implements script command type 82; reached through ScriptCommand82 in bank $10 (E-0038)
+; implements script command type 82 (SCRIPT_TALK08): the one command of the script DispatchTalkEvent_Case08 starts; its states are not yet read (a structural name); reached through ScriptCommand82 in bank $10 (E-0038, E-0246)
 ; 1 call site from 1 routine (e.g. ScriptCommand82)
 ; reads: wPendingFieldEvent
-ScriptCommand82_Run::
+Talk08Event::
 Func_073_4001:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
     rst $00
-    dw ScriptCommand82_Run_Case00
-    dw ScriptCommand82_Run_Case01
-    dw ScriptCommand82_Run_Case02
-    dw ScriptCommand82_Run_Case03
-    dw ScriptCommand82_Run_Case04
-    dw ScriptCommand82_Run_Case05
-    dw ScriptCommand82_Run_Case06
-    dw ScriptCommand82_Run_Case07
-    dw ScriptCommand82_Run_Case08
-    dw ScriptCommand82_Run_Case09
-    dw ScriptCommand82_Run_Case0A
-    dw ScriptCommand82_Run_Case0B
-    dw ScriptCommand82_Run_Case0C
-    dw ScriptCommand82_Run_Case0C
-    dw ScriptCommand82_Run_Case0C
-    dw ScriptCommand82_Run_Case0C
+    dw Talk08Event_Case00
+    dw Talk08Event_Case01
+    dw Talk08Event_Case02
+    dw Talk08Event_Case03
+    dw Talk08Event_Case04
+    dw Talk08Event_Case05
+    dw Talk08Event_Case06
+    dw Talk08Event_Case07
+    dw Talk08Event_Case08
+    dw Talk08Event_Case09
+    dw Talk08Event_Case0A
+    dw Talk08Event_Case0B
+    dw Talk08Event_Case0C
+    dw Talk08Event_Case0C
+    dw Talk08Event_Case0C
+    dw Talk08Event_Case0C
 
-; entry 12 of the `rst $00` table in ScriptCommand82_Run
+; entry 12 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case0C::
+Talk08Event_Case0C::
 Jump_073_4027:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case0C_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case0C_Case03
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0C_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case0C_Case03
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case07
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case0C
+; entry 0 of the `rst $00` table in Talk08Event_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0C_Case00::
+Talk08Event_Case0C_Case00::
 Jump_073_403F:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -61,12 +61,12 @@ Jump_073_403F:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand82_Run_Case0C
+; entry 3 of the `rst $00` table in Talk08Event_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wPendingFieldEvent
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0C_Case03::
+Talk08Event_Case0C_Case03::
 Jump_073_4053:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -101,33 +101,33 @@ Jump_073_407B::
     ret
     db $93, $01, $96, $01, $99, $01, $9C, $01
 
-; entry 11 of the `rst $00` table in ScriptCommand82_Run
+; entry 11 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case0B::
+Talk08Event_Case0B::
 Jump_073_4098:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case0B_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0B_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case0B_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0B_Case07
-    dw ScriptCommand82_Run_Case0B_Case08
-    dw ScriptCommand82_Run_Case0B_Case09
+    dw Talk08Event_Case0B_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0B_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case0B_Case05
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_Case08
+    dw Talk08Event_Case0B_Case09
     dw ScriptStepBlinkSpritesThenEnd
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case07
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 0 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0B_Case00::
+Talk08Event_Case0B_Case00::
 Jump_073_40BA:: ; address name
     ld hl, $4037
     call StartMessageHL_B73
@@ -135,12 +135,12 @@ Jump_073_40BA:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 2 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0B_Case02::
+Talk08Event_Case0B_Case02::
 Jump_073_40C5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -158,12 +158,12 @@ Jump_073_40D6::
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 5 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wIsCGB
 ; writes: wScriptStep
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-ScriptCommand82_Run_Case0B_Case05::
+Talk08Event_Case0B_Case05::
 Jump_073_40E2:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -190,10 +190,10 @@ Jump_073_4105::
     ld [wScriptStep], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case0C
+; entry 7 of the `rst $00` table in Talk08Event_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0C_Case07::
+Talk08Event_Case0C_Case07::
 Jump_073_4111:: ; address name
     ld hl, $000F
     call StartMessageHL_B73
@@ -202,31 +202,31 @@ Jump_073_4111:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommand82_Run
+; entry 10 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case0A::
+Talk08Event_Case0A::
 Jump_073_411F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case0A_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0A_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0A_Case04
-    dw ScriptCommand82_Run_Case0A_Case05
-    dw ScriptCommand82_Run_Case0A_Case06
-    dw ScriptCommand82_Run_Case0A_Case07
-    dw ScriptCommand82_Run_Case0A_Case08
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0A_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0A_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0A_Case04
+    dw Talk08Event_Case0A_Case05
+    dw Talk08Event_Case0A_Case06
+    dw Talk08Event_Case0A_Case07
+    dw Talk08Event_Case0A_Case08
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 8 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 8 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wScriptParam0, wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0A_Case08::
+Talk08Event_Case0A_Case08::
 Jump_073_4139:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -391,13 +391,13 @@ Jump_073_4250::
     farcall AddGoldCapped
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 7 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wMenuCursor
 ; points at: wMenuState, wScriptStep, wMenuSubState, wMenuSelectedMember
-ScriptCommand82_Run_Case0A_Case07::
+Talk08Event_Case0A_Case07::
 Jump_073_4269:: ; address name
-    call ScriptCommand82_Run_Shared01
+    call Talk08Event_Shared01
     ld a, [wFrameCounterLo]
     and a, $01
     jr z, Jump_073_42A7
@@ -405,7 +405,7 @@ Jump_073_4269:: ; address name
     dec a
     jr nz, Jump_073_4288
     ld hl, wMenuState
-    call ScriptCommand82_Run_Case0A_Case07_Sub01
+    call Talk08Event_Case0A_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
@@ -416,7 +416,7 @@ Jump_073_4288::
     dec a
     jr nz, Jump_073_429A
     ld hl, wMenuSubState
-    call ScriptCommand82_Run_Case0A_Case07_Sub01
+    call Talk08Event_Case0A_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
@@ -425,19 +425,19 @@ Jump_073_4288::
 
 Jump_073_429A::
     ld hl, wMenuSelectedMember
-    call ScriptCommand82_Run_Case0A_Case07_Sub01
+    call Talk08Event_Case0A_Case07_Sub01
     or a, a
     jr z, Jump_073_42A7
     ld hl, wScriptStep
     inc [hl]
 
 Jump_073_42A7::
-    call ScriptCommand82_Run_Shared02
+    call Talk08Event_Shared02
     ret
 
-; only called from ScriptCommand82_Run_Case0A_Case07 (E-0047)
-; 3 call sites from 1 routine (e.g. ScriptCommand82_Run_Case0A_Case07)
-ScriptCommand82_Run_Case0A_Case07_Sub01::
+; only called from Talk08Event_Case0A_Case07 (E-0047)
+; 3 call sites from 1 routine (e.g. Talk08Event_Case0A_Case07)
+Talk08Event_Case0A_Case07_Sub01::
 Func_073_42AB:: ; address name
     ld a, [hl]
     and a, $0F
@@ -460,11 +460,11 @@ Jump_073_42BF::
     ld a, $01
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 6 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wMenuCursor, wScriptStep
-ScriptCommand82_Run_Case0A_Case06::
+Talk08Event_Case0A_Case06::
 Jump_073_42C2:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
@@ -475,19 +475,19 @@ Jump_073_42C2:: ; address name
     inc [hl]
 
 Jump_073_42D1::
-    call ScriptCommand82_Run_Shared01
-    call ScriptCommand82_Run_Shared02
+    call Talk08Event_Shared01
+    call Talk08Event_Shared02
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 5 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0A_Case05::
+Talk08Event_Case0A_Case05::
 Jump_073_42D8:: ; address name
-    call ScriptCommand82_Run_Shared01
-    call ScriptCommand82_Run_Shared02
+    call Talk08Event_Shared01
+    call Talk08Event_Shared02
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -499,12 +499,12 @@ Jump_073_42D8:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 4 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomHi, wIsCGB
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember, wMenuCursor, rSVBK
 ; points at: wScreenTileBuffer, wScriptStep
-ScriptCommand82_Run_Case0A_Case04::
+Talk08Event_Case0A_Case04::
 Jump_073_42F1:: ; address name
     farcall SaveScreenBufferToBGMap1
     call NextRandomSeed
@@ -524,7 +524,7 @@ Jump_073_42F1:: ; address name
     ld [wMenuSelectedMember], a
     xor a, a
     ld [wMenuCursor], a
-    call ScriptCommand82_Run_Shared02
+    call Talk08Event_Shared02
     ld de, $4378
     ld hl, wScreenTileBuffer
     ld b, $03
@@ -586,12 +586,12 @@ Jump_073_4363::
     ret
     db $B0, $B1, $B1, $B1, $B2, $B6, $A4, $A5, $A6, $B7, $B3, $B4, $B4, $B4, $B5
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 2 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: hTemp0, hTemp1, wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0A_Case02::
+Talk08Event_Case0A_Case02::
 Jump_073_4387:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -615,10 +615,10 @@ Jump_073_43A7::
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case0A
+; entry 0 of the `rst $00` table in Talk08Event_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0A_Case00::
+Talk08Event_Case0A_Case00::
 Jump_073_43B3:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -626,11 +626,11 @@ Jump_073_43B3:: ; address name
     call StartMessageHL_B73
     ret
 
-; only called from routines of ScriptCommand82_Run (E-0098)
-; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Case0A_Case07, ScriptCommand82_Run_Case0A_Case06, ScriptCommand82_Run_Case0A_Case05)
+; only called from routines of Talk08Event (E-0098)
+; 3 call sites from 3 routines (e.g. Talk08Event_Case0A_Case07, Talk08Event_Case0A_Case06, Talk08Event_Case0A_Case05)
 ; reads: wFrameCounterLo, wMenuCursor, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember
-ScriptCommand82_Run_Shared01::
+Talk08Event_Shared01::
 Func_073_43BE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $01
@@ -681,11 +681,11 @@ Jump_073_4404::
 Jump_073_441C::
     ret
 
-; only called from routines of ScriptCommand82_Run (E-0098)
-; 4 call sites from 4 routines (e.g. ScriptCommand82_Run_Case0A_Case07, ScriptCommand82_Run_Case0A_Case06, ScriptCommand82_Run_Case0A_Case05, ScriptCommand82_Run_Case0A_Case04)
+; only called from routines of Talk08Event (E-0098)
+; 4 call sites from 4 routines (e.g. Talk08Event_Case0A_Case07, Talk08Event_Case0A_Case06, Talk08Event_Case0A_Case05, Talk08Event_Case0A_Case04)
 ; reads: wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: hTemp0, hTemp1
-ScriptCommand82_Run_Shared02::
+Talk08Event_Shared02::
 Func_073_441D:: ; address name
     ld hl, vTiles1 + $240
     ld a, [wMenuState]
@@ -718,7 +718,7 @@ Jump_073_4443::
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuState]
-    call ScriptCommand82_Run_Shared02_Sub01
+    call Talk08Event_Shared02_Sub01
     ld a, [wMenuSubState]
     and a, $F0
     swap a
@@ -749,7 +749,7 @@ Jump_073_446F::
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSubState]
-    call ScriptCommand82_Run_Shared02_Sub01
+    call Talk08Event_Shared02_Sub01
     ld a, [wMenuSelectedMember]
     and a, $F0
     swap a
@@ -780,14 +780,14 @@ Jump_073_449B::
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSelectedMember]
-    call ScriptCommand82_Run_Shared02_Sub01
+    call Talk08Event_Shared02_Sub01
     ret
 
-; only called from ScriptCommand82_Run_Shared02 (E-0047)
-; 3 call sites from 1 routine (e.g. ScriptCommand82_Run_Shared02)
+; only called from Talk08Event_Shared02 (E-0047)
+; 3 call sites from 1 routine (e.g. Talk08Event_Shared02)
 ; reads: hTemp1, hTemp2, hTemp0
 ; writes: hTemp2
-ScriptCommand82_Run_Shared02_Sub01::
+Talk08Event_Shared02_Sub01::
 Func_073_44A5:: ; address name
     and a, $0E
     ldh [hTemp2], a
@@ -981,26 +981,26 @@ Data_073_45CA:: ; address name
     db $67 ; id 4
     db $69 ; id 5
 
-; entry 8 of the `rst $00` table in ScriptCommand82_Run
+; entry 8 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case08::
+Talk08Event_Case08::
 Jump_073_45D0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case08_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case08_Case02
-    dw ScriptCommand82_Run_Case08_Case03
-    dw ScriptCommand82_Run_Case08_Case04
-    dw ScriptCommand82_Run_Case08_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case08_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case08_Case02
+    dw Talk08Event_Case08_Case03
+    dw Talk08Event_Case08_Case04
+    dw Talk08Event_Case08_Case05
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case08
+; entry 0 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case08_Case00::
+Talk08Event_Case08_Case00::
 Jump_073_45E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1008,12 +1008,12 @@ Jump_073_45E4:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case08
+; entry 2 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wVisitedScreens, hTemp0, hTemp1, wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case08_Case02::
+Talk08Event_Case08_Case02::
 Jump_073_45EF:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1046,17 +1046,17 @@ Jump_073_4629::
     ld [wScriptStep], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case08
+; entry 4 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand82_Run_Case08_Case04::
+Talk08Event_Case08_Case04::
 Jump_073_4635:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case08
+; entry 5 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case08_Case05::
+Talk08Event_Case08_Case05::
 Jump_073_463C:: ; address name
     ld hl, $0052
     call StartMessageHL_B73
@@ -1064,38 +1064,38 @@ Jump_073_463C:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommand82_Run
+; entry 6 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case06::
+Talk08Event_Case06::
 Jump_073_4647:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case06_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case06_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case06_Case04
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case06_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case06_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case06_Case04
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
     dw $0000 ; unused index (E-0207)
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case06_Case09
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case06_Case09
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case06_Case0D
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case06_Case0D
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 13 of the `rst $00` table in ScriptCommand82_Run_Case06
+; entry 13 of the `rst $00` table in Talk08Event_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 ; writes: wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand82_Run_Case06_Case0D::
+Talk08Event_Case06_Case0D::
 Jump_073_466F:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1109,11 +1109,11 @@ Jump_073_466F:: ; address name
     farcall AppendItemWC928ToInventory
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand82_Run_Case06
+; entry 9 of the `rst $00` table in Talk08Event_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wMenuSubState
 ; writes: wMenuState, wScriptStep
-ScriptCommand82_Run_Case06_Case09::
+Talk08Event_Case06_Case09::
 Jump_073_468F:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1133,18 +1133,18 @@ Jump_073_46A7::
     ld [wScriptStep], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case06
+; entry 4 of the `rst $00` table in Talk08Event_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, wMenuState, wMenuSubState, wScriptParam1, wDigits, wGoldLo, wGoldMid, wGoldHi, ...
 ; writes: wMenuSubState, wDigits, wGoldLo, wGoldMid, wGoldHi, wScriptParam1, wMenuSelectedMember, wStepPtrLo, ...
 ; points at: wTextNumber, wScriptStep
-ScriptCommand82_Run_Case06_Case04::
+Talk08Event_Case06_Case04::
 Jump_073_46B3:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $0F
     cp a, $0D
-    jr nc, ScriptCommand82_Run_Case06_Case04
+    jr nc, Talk08Event_Case06_Case04
     ld [wMenuSubState], a
     inc a
     ld [wDigits], a
@@ -1272,12 +1272,12 @@ Jump_073_4797::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case06
+; entry 2 of the `rst $00` table in Talk08Event_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wMenuState, wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case06_Case02::
+Talk08Event_Case06_Case02::
 Jump_073_47DB:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1297,12 +1297,12 @@ Jump_073_47F1::
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case06
+; entry 0 of the `rst $00` table in Talk08Event_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand82_Run_Case06_Case00::
+Talk08Event_Case06_Case00::
 Jump_073_47FD:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -1321,32 +1321,32 @@ Jump_073_47FD:: ; address name
     db $03, $22, $28, $2A, $0B, $25, $05, $2B, $0C, $23, $27, $2C, $11, $12, $26, $1E
     db $0D, $0E, $0F, $10, $64, $00, $2C, $01, $58, $02, $E8, $03, $DC, $05
 
-; entry 9 of the `rst $00` table in ScriptCommand82_Run
+; entry 9 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case09::
+Talk08Event_Case09::
 Jump_073_4840:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case09_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case09_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case09_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case09_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case09_Case09
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case09_Case0B
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case09_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case09_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case09_Case05
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case09_Case07
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case09_Case09
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case09_Case0B
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 0 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case00::
+Talk08Event_Case09_Case00::
 Jump_073_4860:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1354,12 +1354,12 @@ Jump_073_4860:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 2 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case02::
+Talk08Event_Case09_Case02::
 Jump_073_486B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1377,11 +1377,11 @@ Jump_073_487C::
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 5 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case05::
+Talk08Event_Case09_Case05::
 Jump_073_4888:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1397,12 +1397,12 @@ Jump_073_4899::
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 7 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wPartyCount, wPartyList, hTemp0
 ; writes: wScriptStep, rRAMG
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case07::
+Talk08Event_Case09_Case07::
 Jump_073_48A0:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1412,9 +1412,9 @@ Jump_073_48A0:: ; address name
     ld a, $00
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $00
-    call ScriptCommand82_Run_Shared03
+    call Talk08Event_Shared03
     ld a, $00
-    call ScriptCommand82_Run_Shared04
+    call Talk08Event_Shared04
     ld a, [wPartyCount]
     dec a
     jr nz, Jump_073_48CB
@@ -1449,21 +1449,21 @@ Jump_073_48E9::
     ld [wScriptStep], a
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 9 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: wScriptStep, rRAMG
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case09::
+Talk08Event_Case09_Case09::
 Jump_073_48F8:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld a, $01
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $01
-    call ScriptCommand82_Run_Shared03
+    call Talk08Event_Shared03
     ld a, $01
-    call ScriptCommand82_Run_Shared04
+    call Talk08Event_Shared04
     ld a, [wPartyCount]
     dec a
     dec a
@@ -1491,10 +1491,10 @@ Jump_073_491E::
     call StartMessageHL_B73
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommand82_Run_Case09
+; entry 11 of the `rst $00` table in Talk08Event_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case09_Case0B::
+Talk08Event_Case09_Case0B::
 Jump_073_493C:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1503,13 +1503,13 @@ Jump_073_493C:: ; address name
     ld a, $02
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $02
-    call ScriptCommand82_Run_Shared03
+    call Talk08Event_Shared03
     ld a, $02
-    call ScriptCommand82_Run_Shared04
+    call Talk08Event_Shared04
     ret
 
 ; for record wC6FE[A]: passes word field $5D and word fields $61, $63, $65, $67, $69 (B = 1-5) to Func_073_49B1, then copies the item string to wC152 (E-0121)
-; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Case09_Case0B, ScriptCommand82_Run_Case09_Case09, ScriptCommand82_Run_Case09_Case07)
+; 3 call sites from 3 routines (e.g. Talk08Event_Case09_Case0B, Talk08Event_Case09_Case09, Talk08Event_Case09_Case07)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG, hTemp2
 ; points at: wPartyList
@@ -1601,11 +1601,11 @@ Func_073_49C5:: ; address name
     farcall CopyStringToBuffer_Bank09
     ret
 
-; only called from routines of ScriptCommand82_Run (E-0098)
-; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Case09_Case0B, ScriptCommand82_Run_Case09_Case09, ScriptCommand82_Run_Case09_Case07)
+; only called from routines of Talk08Event (E-0098)
+; 3 call sites from 3 routines (e.g. Talk08Event_Case09_Case0B, Talk08Event_Case09_Case09, Talk08Event_Case09_Case07)
 ; writes: rRAMG
 ; points at: wPartyList, wNameGlyphBuf
-ScriptCommand82_Run_Shared03::
+Talk08Event_Shared03::
 Func_073_49E6:: ; address name
     ld hl, wPartyList
     add_a_to_hl
@@ -1630,12 +1630,12 @@ Jump_073_4A05::
     ld [de], a
     ret
 
-; only called from routines of ScriptCommand82_Run (E-0098)
-; 3 call sites from 3 routines (e.g. ScriptCommand82_Run_Case09_Case0B, ScriptCommand82_Run_Case09_Case09, ScriptCommand82_Run_Case09_Case07)
+; only called from routines of Talk08Event (E-0098)
+; 3 call sites from 3 routines (e.g. Talk08Event_Case09_Case0B, Talk08Event_Case09_Case09, Talk08Event_Case09_Case07)
 ; reads: wScriptParam0, hTemp0, hTemp1, hTemp3, hTemp2
 ; writes: rRAMG, hTemp2, hTemp3, wDigits
 ; points at: wPartyList, wTextNumber
-ScriptCommand82_Run_Shared04::
+Talk08Event_Shared04::
 Func_073_4A0F:: ; address name
     ld hl, wPartyList
     add_a_to_hl
@@ -1698,30 +1698,30 @@ Jump_073_4A4E::
     ret
     db $5D, $61, $63, $65, $67, $69
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run
+; entry 7 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case07::
+Talk08Event_Case07::
 Jump_073_4A82:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case07_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case07_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case07_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case07_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case07_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case07_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case07_Case05
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case07_Case07
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case07_Case0B
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case07_Case0B
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case07
+; entry 0 of the `rst $00` table in Talk08Event_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case07_Case00::
+Talk08Event_Case07_Case00::
 Jump_073_4A9E:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1729,12 +1729,12 @@ Jump_073_4A9E:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case07
+; entry 2 of the `rst $00` table in Talk08Event_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case07_Case02::
+Talk08Event_Case07_Case02::
 Jump_073_4AA9:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1752,11 +1752,11 @@ Jump_073_4ABA::
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case07
+; entry 5 of the `rst $00` table in Talk08Event_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-ScriptCommand82_Run_Case07_Case05::
+Talk08Event_Case07_Case05::
 Jump_073_4AC6:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1772,12 +1772,12 @@ Jump_073_4AD7::
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case07
+; entry 7 of the `rst $00` table in Talk08Event_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case07_Case07::
+Talk08Event_Case07_Case07::
 Jump_073_4ADE:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1815,12 +1815,12 @@ Jump_073_4B21::
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommand82_Run_Case07
+; entry 11 of the `rst $00` table in Talk08Event_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case07_Case0B::
+Talk08Event_Case07_Case0B::
 Jump_073_4B2B:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -1849,28 +1849,28 @@ Jump_073_4B5D::
     dec [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run
+; entry 5 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case05::
+Talk08Event_Case05::
 Jump_073_4B68:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case05_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case05_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case05_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case05_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case05_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case05_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case05_Case05
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case05_Case07
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case05
+; entry 0 of the `rst $00` table in Talk08Event_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case05_Case00::
+Talk08Event_Case05_Case00::
 Jump_073_4B80:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1878,12 +1878,12 @@ Jump_073_4B80:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case05
+; entry 2 of the `rst $00` table in Talk08Event_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case05_Case02::
+Talk08Event_Case05_Case02::
 Jump_073_4B8B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1901,11 +1901,11 @@ Jump_073_4B9C::
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case05
+; entry 5 of the `rst $00` table in Talk08Event_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-ScriptCommand82_Run_Case05_Case05::
+Talk08Event_Case05_Case05::
 Jump_073_4BA8:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1922,28 +1922,28 @@ Jump_073_4BB9::
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand82_Run
+; entry 4 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case04::
+Talk08Event_Case04::
 Jump_073_4BC3:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case04_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case04_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case0C_Case02
-    dw ScriptCommand82_Run_Case04_Case05
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case05_Case07
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case04_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case04_Case02
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case0C_Case02
+    dw Talk08Event_Case04_Case05
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case05_Case07
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case04
+; entry 0 of the `rst $00` table in Talk08Event_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case04_Case00::
+Talk08Event_Case04_Case00::
 Jump_073_4BDB:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1951,12 +1951,12 @@ Jump_073_4BDB:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case04
+; entry 2 of the `rst $00` table in Talk08Event_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand82_Run_Case04_Case02::
+Talk08Event_Case04_Case02::
 Jump_073_4BE6:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1974,11 +1974,11 @@ Jump_073_4BF7::
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case04
+; entry 5 of the `rst $00` table in Talk08Event_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-ScriptCommand82_Run_Case04_Case05::
+Talk08Event_Case04_Case05::
 Jump_073_4C03:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1994,12 +1994,12 @@ Jump_073_4C14::
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case05
+; entry 7 of the `rst $00` table in Talk08Event_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wRandomLo, hTemp0
 ; writes: wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand82_Run_Case05_Case07::
+Talk08Event_Case05_Case07::
 Jump_073_4C1B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2035,7 +2035,7 @@ Jump_073_4C53::
     ret
 
 ; saves the gold, far-calls DeductGoldPenalty, stores the amount lost in wC8C0-wC8C2 and writes it as packed BCD to wC17E (Func_000_23CA) (E-0121)
-; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Case05_Case07, ScriptCommand82_Run_Case05_Case05, ScriptCommand82_Run_Case07_Case07, ScriptCommand82_Run_Case09_Case07, ...)
+; 5 call sites from 5 routines (e.g. Talk08Event_Case05_Case07, Talk08Event_Case05_Case05, Talk08Event_Case07_Case07, Talk08Event_Case09_Case07, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wDigits
 ; writes: wDigits
 ; points at: wTextNumber
@@ -2068,31 +2068,31 @@ Func_073_4C5D:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand82_Run
+; entry 3 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case03::
+Talk08Event_Case03::
 Jump_073_4CA0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case03_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case03_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case03_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case03_Case02
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case03
+; entry 0 of the `rst $00` table in Talk08Event_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wDigits
 ; points at: wScriptStep, wTextNumber
-ScriptCommand82_Run_Case03_Case00::
+Talk08Event_Case03_Case00::
 Jump_073_4CAE:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4008
     call StartMessageHL_B73
-    call ScriptCommand82_Run_Shared05
+    call Talk08Event_Shared05
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2114,12 +2114,12 @@ Jump_073_4CAE:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case03
+; entry 2 of the `rst $00` table in Talk08Event_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wScriptParam0
 ; writes: wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-ScriptCommand82_Run_Case03_Case02::
+Talk08Event_Case03_Case02::
 Jump_073_4CE5:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2150,27 +2150,27 @@ Jump_073_4D19::
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run
+; entry 2 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case02::
+Talk08Event_Case02::
 Jump_073_4D20:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case02_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case02_Case02
-    dw ScriptCommand82_Run_Case08_Case03
-    dw ScriptCommand82_Run_Case0B_Case07
-    dw ScriptCommand82_Run_Case02_Case05
-    dw ScriptCommand82_Run_Case0B_Case09
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case02_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case02_Case02
+    dw Talk08Event_Case08_Case03
+    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case02_Case05
+    dw Talk08Event_Case0B_Case09
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case02
+; entry 0 of the `rst $00` table in Talk08Event_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case02_Case00::
+Talk08Event_Case02_Case00::
 Jump_073_4D36:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2178,11 +2178,11 @@ Jump_073_4D36:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case02
+; entry 2 of the `rst $00` table in Talk08Event_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; points at: wScriptStep
-ScriptCommand82_Run_Case02_Case02::
+Talk08Event_Case02_Case02::
 Jump_073_4D41:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2200,12 +2200,12 @@ Jump_073_4D52::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand82_Run_Case02
+; entry 5 of the `rst $00` table in Talk08Event_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex
 ; writes: hTemp0, hTemp1
 ; points at: wScriptStep
-ScriptCommand82_Run_Case02_Case05::
+Talk08Event_Case02_Case05::
 Jump_073_4D5B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2230,31 +2230,31 @@ Jump_073_4D82::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand82_Run
+; entry 1 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case01::
+Talk08Event_Case01::
 Jump_073_4D8D:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case01_Case00
-    dw ScriptCommand82_Run_Case0C_Case01
-    dw ScriptCommand82_Run_Case01_Case02
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case01_Case00
+    dw Talk08Event_Case0C_Case01
+    dw Talk08Event_Case01_Case02
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case01
+; entry 0 of the `rst $00` table in Talk08Event_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wDigits
 ; points at: wScriptStep, wTextNumber
-ScriptCommand82_Run_Case01_Case00::
+Talk08Event_Case01_Case00::
 Jump_073_4D9B:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4002
     call StartMessageHL_B73
-    call ScriptCommand82_Run_Shared05
+    call Talk08Event_Shared05
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2271,12 +2271,12 @@ Jump_073_4D9B:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case01
+; entry 2 of the `rst $00` table in Talk08Event_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wScriptParam0
 ; writes: wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-ScriptCommand82_Run_Case01_Case02::
+Talk08Event_Case01_Case02::
 Jump_073_4DCD:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2302,25 +2302,25 @@ Jump_073_4DFC::
     call StartMessageHL_B73
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run
+; entry 0 of the `rst $00` table in Talk08Event
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-ScriptCommand82_Run_Case00::
+Talk08Event_Case00::
 Jump_073_4E03:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand82_Run_Case00_Case00
-    dw ScriptCommand82_Run_Case08_Case03
-    dw ScriptCommand82_Run_Case0B_Case07
-    dw ScriptCommand82_Run_Case0B_Case08
-    dw ScriptCommand82_Run_Case0B_Case09
-    dw ScriptCommand82_Run_Case0C_Case01
+    dw Talk08Event_Case00_Case00
+    dw Talk08Event_Case08_Case03
+    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_Case08
+    dw Talk08Event_Case0B_Case09
+    dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case00
+; entry 0 of the `rst $00` table in Talk08Event_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case00_Case00::
+Talk08Event_Case00_Case00::
 Jump_073_4E15:: ; address name
     ld hl, $0000
     call StartMessageHL_B73
@@ -2328,11 +2328,11 @@ Jump_073_4E15:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand82_Run_Case08
+; entry 3 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-ScriptCommand82_Run_Case08_Case03::
+Talk08Event_Case08_Case03::
 Jump_073_4E20:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank73
@@ -2352,18 +2352,18 @@ Jump_073_4E37::
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 7 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand82_Run_Case0B_Case07::
+Talk08Event_Case0B_Case07::
 Jump_073_4E41:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 8 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0B_Case08::
+Talk08Event_Case0B_Case08::
 Jump_073_4E48:: ; address name
     farcall FullyHealParty
     ld hl, $0001
@@ -2374,10 +2374,10 @@ Jump_073_4E48:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand82_Run_Case0C
+; entry 1 of the `rst $00` table in Talk08Event_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0C_Case01::
+Talk08Event_Case0C_Case01::
 Jump_073_4E5D:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank73
@@ -2386,12 +2386,12 @@ Jump_073_4E5D:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand82_Run_Case0B
+; entry 9 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0B_Case09::
+Talk08Event_Case0B_Case09::
 Jump_073_4E67:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2464,7 +2464,7 @@ Jump_073_4EC4::
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 80 call sites from 44 routines (e.g. ScriptCommand82_Run_Case00_Case00, ScriptCommand82_Run_Case01_Case02, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case02_Case05, ...)
+; 80 call sites from 44 routines (e.g. Talk08Event_Case00_Case00, Talk08Event_Case01_Case02, Talk08Event_Case01_Case00, Talk08Event_Case02_Case05, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73::
 Func_073_4ED8:: ; address name
@@ -2618,7 +2618,7 @@ Jump_073_4FA3::
     ret
 
 ; RunMessageBox_Bank73, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0116)
-; 2 call sites from 2 routines (e.g. ScriptCommand82_Run_Case08_Case03, ScriptCommand82_Run_Case0C_Case01)
+; 2 call sites from 2 routines (e.g. Talk08Event_Case08_Case03, Talk08Event_Case0C_Case01)
 ; reads: wMessageState
 RunMessageBoxCarryWhenIdle_Bank73::
 Func_073_4FA9:: ; address name
@@ -2634,7 +2634,7 @@ Jump_073_4FB5::
     ret
 
 ; HL = the word at $4CC3 + 13 * A in bank $16 (ReadByteInBank twice) (E-0121)
-; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Case01_Case02, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Shared05_Sub05, ScriptCommand82_Run_Case03_Case02, ...)
+; 5 call sites from 5 routines (e.g. Talk08Event_Case01_Case02, Talk08Event_Case01_Case00, Talk08Event_Shared05_Sub05, Talk08Event_Case03_Case02, ...)
 ReadBank16Table4CC3Word::
 Func_073_4FB7:: ; address name
     ld c, $0D
@@ -2655,11 +2655,11 @@ Func_073_4FB7:: ; address name
     ld h, c
     ret
 
-; only called from routines of ScriptCommand82_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case03_Case00)
+; only called from routines of Talk08Event (E-0098)
+; 2 call sites from 2 routines (e.g. Talk08Event_Case01_Case00, Talk08Event_Case03_Case00)
 ; reads: wStepArrived, wPartyCount, wRecordsInUse, hTemp3, hTemp2
 ; writes: wScriptParam0
-ScriptCommand82_Run_Shared05::
+Talk08Event_Shared05::
 Func_073_4FD2:: ; address name
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
@@ -2667,29 +2667,29 @@ Func_073_4FD2:: ; address name
     jr z, Jump_073_4FE8
     ld a, $0C
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
 Jump_073_4FE8::
-    farcall ScriptCommand82_Run_Shared05_Sub02
+    farcall Talk08Event_Shared05_Sub02
     ld a, [wStepArrived]
     or a, a
     jr z, Jump_073_4FFE
     ld a, $08
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
 Jump_073_4FFE::
-    farcall ScriptCommand82_Run_Shared05_Sub01
+    farcall Talk08Event_Shared05_Sub01
     ld a, [wStepArrived]
     or a, a
     jr z, Jump_073_5014
     ld a, $06
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2703,7 +2703,7 @@ Jump_073_5014::
     jr nc, Jump_073_5032
     ld a, $19
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2715,7 +2715,7 @@ Jump_073_5032::
     jr nc, Jump_073_5047
     ld a, $1A
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2727,12 +2727,12 @@ Jump_073_5047::
     jr nc, Jump_073_505C
     ld a, $1B
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
 Jump_073_505C::
-    call ScriptCommand82_Run_Shared05_Sub04
+    call Talk08Event_Shared05_Sub04
     ldh a, [hTemp3]
     or a, a
     jr nz, Jump_073_506A
@@ -2743,7 +2743,7 @@ Jump_073_505C::
 Jump_073_506A::
     ld a, $05
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2758,12 +2758,12 @@ Jump_073_5074::
     jr z, Jump_073_508C
     ld a, $04
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
 Jump_073_508C::
-    call ScriptCommand82_Run_Shared05_Sub03
+    call Talk08Event_Shared05_Sub03
     ldh a, [hTemp3]
     or a, a
     jr nz, Jump_073_509A
@@ -2774,7 +2774,7 @@ Jump_073_508C::
 Jump_073_509A::
     ld a, $03
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2789,7 +2789,7 @@ Jump_073_50A4::
     jr nc, Jump_073_50BD
     ld a, $02
     ld [wScriptParam0], a
-    call ScriptCommand82_Run_Shared05_Sub05
+    call Talk08Event_Shared05_Sub05
     or a, a
     ret nz
 
@@ -2798,12 +2798,12 @@ Jump_073_50BD::
     ld [wScriptParam0], a
     ret
 
-; only called from ScriptCommand82_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
+; only called from Talk08Event_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG
 ; points at: wPartyList
-ScriptCommand82_Run_Shared05_Sub03::
+Talk08Event_Shared05_Sub03::
 Func_073_50C3:: ; address name
     ld hl, $0000
     ld a, l
@@ -2861,12 +2861,12 @@ Jump_073_5112::
     ld [rRAMG], a
     ret
 
-; only called from ScriptCommand82_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
+; only called from Talk08Event_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG
 ; points at: wPartyList
-ScriptCommand82_Run_Shared05_Sub04::
+Talk08Event_Shared05_Sub04::
 Func_073_5117:: ; address name
     ld hl, $0000
     ld a, l
@@ -2924,10 +2924,10 @@ Jump_073_5166::
     ld [rRAMG], a
     ret
 
-; only called from ScriptCommand82_Run_Shared05 (E-0047)
-; 10 call sites from 1 routine (e.g. ScriptCommand82_Run_Shared05)
+; only called from Talk08Event_Shared05 (E-0047)
+; 10 call sites from 1 routine (e.g. Talk08Event_Shared05)
 ; reads: wPendingFieldEvent, wGoldHi, wGoldMid, wGoldLo
-ScriptCommand82_Run_Shared05_Sub05::
+Talk08Event_Shared05_Sub05::
 Func_073_516B:: ; address name
     call ReadBank16Table4CC3Word
     ld a, [wPendingFieldEvent]
@@ -2962,11 +2962,11 @@ Jump_073_5192::
     xor a, a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case0C
+; entry 2 of the `rst $00` table in Talk08Event_Case0C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep, wModeState, wBattleTransitionStep, wFieldReturnPhase
 ; points at: wScriptStep
-ScriptCommand82_Run_Case0C_Case02::
+Talk08Event_Case0C_Case02::
 Jump_073_5194:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -7979,7 +7979,7 @@ Func_073_6E17:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMonstersInTow_Case00
-    dw ScriptCommand82_Run_Case0B_Case07
+    dw Talk08Event_Case0B_Case07
     dw SceneMonstersInTow_Case02
     dw SceneMonstersInTow_Case03
 

@@ -7890,29 +7890,29 @@ Jump_00F_70E2::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 29; reached through ScriptCommand29 in bank $10 (E-0038)
+; implements script command type 29 (SCRIPT_SCENE_WHO_ARE_YOU): a cutscene step named after the scene its only script shows: after a sound and a 140-frame wait, before 'Who are you? This is our...' and 'Zzz Zzz Huh! Watch out!'; reached through ScriptCommand29 in bank $10 (E-0038, E-0246)
 ; 1 call site from 1 routine (e.g. ScriptCommand29)
 ; reads: wScriptStep
-ScriptCommand29_Run::
+SceneWhoAreYou::
 Func_00F_70EC:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand29_Run_Case00
-    dw ScriptCommand29_Run_Case01
+    dw SceneWhoAreYou_Case00
+    dw SceneWhoAreYou_Case01
     dw SceneHomecoming_Case03
-    dw ScriptCommand29_Run_Case03
-    dw ScriptCommand29_Run_Case04
+    dw SceneWhoAreYou_Case03
+    dw SceneWhoAreYou_Case04
     dw SceneHomecoming_Case03
-    dw ScriptCommand29_Run_Case06
-    dw ScriptCommand29_Run_Case07
-    dw ScriptCommand29_Run_Case08
-    dw ScriptCommand29_Run_Case09
+    dw SceneWhoAreYou_Case06
+    dw SceneWhoAreYou_Case07
+    dw SceneWhoAreYou_Case08
+    dw SceneWhoAreYou_Case09
 
-; entry 9 of the `rst $00` table in ScriptCommand29_Run
+; entry 9 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, wScriptParam0, hPlayerStateFlags
 ; writes: wScriptParam0, hPlayerStateFlags, wScriptStartRequest
-ScriptCommand29_Run_Case09::
+SceneWhoAreYou_Case09::
 Jump_00F_7104:: ; address name
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
@@ -7932,12 +7932,12 @@ Jump_00F_7104:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommand29_Run
+; entry 8 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: hPlayerX, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand29_Run_Case08::
+SceneWhoAreYou_Case08::
 Jump_00F_712A:: ; address name
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
@@ -7957,12 +7957,12 @@ Jump_00F_712A:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand29_Run
+; entry 7 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wScriptParam0, wSpriteSlots, wStepArrived, hPlayerStateFlags
 ; writes: wScriptParam0, wSpriteSlots, wScriptParam1, wStepPtrHi, wStepTarget, wStepPtrLo, hPlayerStateFlags
 ; points at: wScriptStep
-ScriptCommand29_Run_Case07::
+SceneWhoAreYou_Case07::
 Jump_00F_714A:: ; address name
     ld a, [wScriptParam1]
     or a, a
@@ -8003,12 +8003,12 @@ Jump_00F_716A::
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommand29_Run
+; entry 6 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlots, hPlayerFacing
 ; points at: wScriptStep
-ScriptCommand29_Run_Case06::
+SceneWhoAreYou_Case06::
 Jump_00F_7198:: ; address name
     ld a, [wSpriteSlots + $B]
     cp a, $30
@@ -8041,12 +8041,12 @@ Jump_00F_71B5::
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand29_Run
+; entry 4 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wObject1, wObject2, wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand29_Run_Case04::
+SceneWhoAreYou_Case04::
 Jump_00F_71DD:: ; address name
     xor a, a
     ld [wObject1 + $7], a
@@ -8067,19 +8067,19 @@ Jump_00F_71DD:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand29_Run
+; entry 3 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand29_Run_Case03::
+SceneWhoAreYou_Case03::
 Jump_00F_7209:: ; address name
     ld de, wSpriteSlots + $C
     call ScriptStepDeltaThenNextStep
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand29_Run
+; entry 1 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
 ; points at: wScriptStep
-ScriptCommand29_Run_Case01::
+SceneWhoAreYou_Case01::
 Jump_00F_7210:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
@@ -8092,12 +8092,12 @@ Jump_00F_7210:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand29_Run
+; entry 0 of the `rst $00` table in SceneWhoAreYou
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wObject2
 ; points at: wScriptStep
-ScriptCommand29_Run_Case00::
+SceneWhoAreYou_Case00::
 Jump_00F_7225:: ; address name
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B0F
@@ -10295,7 +10295,7 @@ Jump_00F_7F05::
     ret
 
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStep += 1 (E-0117)
-; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case18, SceneCheerYuna_Case09, SceneReportToKing_Case05, ScriptCommand29_Run_Case03)
+; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case18, SceneCheerYuna_Case09, SceneReportToKing_Case05, SceneWhoAreYou_Case03)
 ; writes: wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
 ScriptStepDeltaThenNextStep::

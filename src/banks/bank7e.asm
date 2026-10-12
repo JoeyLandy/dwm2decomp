@@ -381,12 +381,12 @@ Data_07E_5756:: ; heuristic: stream decompressed while the game ran on the emula
 Data_07E_5870:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9870, $8F
 
-; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, ScriptCommand83_Run_Sub02_Case03
+; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, Talk00Event01_Sub02_Case03
 ; LZSS-compressed asset: 75 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_58FF:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F98FF, $4B
 
-; address loaded by ScriptCommand83_Run_Sub03_Case03
+; address loaded by Talk00Event01_Sub03_Case03
 ; LZSS-compressed asset: 74 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A

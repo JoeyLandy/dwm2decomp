@@ -7174,7 +7174,7 @@ Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0C, $0C, $0B, $0A, $1C
 
 ; wD588 += 1 and wD78C = wD7FC (E-0122)
-; 3 call sites from 3 routines (e.g. ArenaMenu_Case1B, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case1B, ArenaRounds_Case0D, ArenaRounds_Case05)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; writes: wArenaRound, wScreenArea
 IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
@@ -7187,7 +7187,7 @@ Func_00C_703D:: ; address name
     ret
 
 ; wD78E = wD7FF + 1 (and stored back to wD7FF), wD786 = wD7FC, wTwoChoiceCursor = 1 (E-0122)
-; 5 call sites from 3 routines (e.g. ArenaMenu_Case08, ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
+; 5 call sites from 3 routines (e.g. ArenaMenu_Case08, ArenaGridBattle_Case0E, ArenaGridBattle_Case06)
 ; reads: wRecordCapacity, wAreaGraphicsIndex, wScreenCountPlusOne
 ; writes: wScreenCountPlusOne, wGridCursorX, wTwoChoiceCursor, wRecordCapacity
 SetupScreenCountPlusOneFromRecordCapacity::
@@ -7713,11 +7713,11 @@ Jump_00C_7320::
     jr c, CopyScreenBufferRectWithAttrs_0C
     ret
 
-; only called from ScriptCommand96_Run_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand96_Run_Shared01)
+; only called from ArenaRounds_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaRounds_Shared01)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; points at: wArenaList, wArenaList2
-ScriptCommand96_Run_Shared01_Sub01::
+ArenaRounds_Shared01_Sub01::
 Func_00C_7326:: ; address name
     ld hl, wArenaList
     ld b, $28
@@ -7822,7 +7822,7 @@ Jump_00C_737E::
     ret
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $52 (E-0117)
-; 3 call sites from 3 routines (e.g. ArenaMenu_Case27, ArenaMenu_Case27_Sub01, ScriptCommand96_Run_Shared01_Sub01)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case27, ArenaMenu_Case27_Sub01, ArenaRounds_Shared01_Sub01)
 ; reads: wRandomLo
 RandomModulo52::
 Func_00C_73B3:: ; address name
@@ -7868,18 +7868,18 @@ Func_00C_73C7:: ; address name
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-; only called from routines of ScriptCommand96_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
+; only called from routines of ArenaRounds (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaRounds_Case0D, ArenaRounds_Case05)
 ; reads: wArenaRound
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wArenaList2, wEncounterMonsters
-ScriptCommand96_Run_Shared01::
+ArenaRounds_Shared01::
 Func_00C_73F5:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
     ld [wEncounterKind], a
-    call ScriptCommand96_Run_Shared01_Sub01
+    call ArenaRounds_Shared01_Sub01
 
 ; only called from ArenaMenu_Case1C (E-0047)
 ; 1 call site from 1 routine (e.g. ArenaMenu_Case1C)
@@ -7929,12 +7929,12 @@ Func_00C_741F:: ; address name
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-; only called from routines of ScriptCommand95_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
+; only called from routines of ArenaGridBattle (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaGridBattle_Case0E, ArenaGridBattle_Case06)
 ; reads: wScreenCountPlusOne
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wEncounterMonsters
-ScriptCommand95_Run_Shared01::
+ArenaGridBattle_Shared01::
 Func_00C_744D:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7992,12 +7992,12 @@ Func_00C_7478:: ; address name
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-; only called from routines of ScriptCommand95_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
+; only called from routines of ArenaGridBattle (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaGridBattle_Case0E, ArenaGridBattle_Case06)
 ; reads: wGridCursorX, wScreenCountPlusOne
 ; writes: wBattleIntroKind, wEncounterKind
 ; points at: wEncounterMonsters
-ScriptCommand95_Run_Shared02::
+ArenaGridBattle_Shared02::
 Func_00C_74A6:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
@@ -8332,12 +8332,12 @@ Data_00C_7857:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_7871:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $00, $F4, $01, $E8, $03, $88, $13, $02, $04, $08, $10
 
-; address loaded by ScriptCommand95_Run_Shared01
+; address loaded by ArenaGridBattle_Shared01
 Data_00C_787D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7F, $78, $85, $78, $8B, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00
 
-; E-0236 (C1: ScriptCommand95_Run_Shared02 sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202)).
+; E-0236 (C1: ArenaGridBattle_Shared02 sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202)).
 ; record: encounter list for this wGridCursorX
 GridEncounterTable::
 Data_00C_7897:: ; address name
@@ -8418,7 +8418,7 @@ Data_00C_78F3:: ; heuristic: grid encounter; C0
 Data_00C_78F9:: ; heuristic: grid encounter; C0
     dw $00A6, $00A7, $00A8 ; id 2
 
-; E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list).
+; E-0183 (C1: ArenaRounds_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list).
 ; record: number of usable entries in the list (39 each)
 ArenaEncounterListSizes::
 Data_00C_78FF:: ; address name
@@ -8429,7 +8429,7 @@ Data_00C_78FF:: ; address name
     db $27 ; id 4
     db $27 ; id 5
 
-; E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and then the word at that pointer + 2 * the chosen entry; indexes 0-2 share one list).
+; E-0183 (C1: ArenaRounds_Shared01_Sub01 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and then the word at that pointer + 2 * the chosen entry; indexes 0-2 share one list).
 ; record: encounter word list for this wAreaGraphicsIndex
 ArenaEncounterLists::
 Data_00C_7905:: ; address name

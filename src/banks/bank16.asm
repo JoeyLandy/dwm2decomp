@@ -8296,7 +8296,7 @@ Jump_016_71AA::
     xor a, a
     ret
 
-; E-0206 (C1: BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and returns A = 1 when it is 6 or more; Func_016_6C16_Case03 and _Case05 call it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not read).
+; E-0206 (C1: BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and returns A = 1 when it is 6 or more; BattleEnd_Step5_Case04_Sub01_Case03 and _Case05 call it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not read).
 ; record: class 0-7
 MonsterClassByteTable_71AC::
 Data_016_71AC:: ; address name

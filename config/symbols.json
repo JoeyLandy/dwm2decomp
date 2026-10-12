@@ -3772,12 +3772,12 @@
   },
   "D589": {
     "name": "wArenaList",
-    "note": "arena list (ScriptCommand96_Run_Shared01_Sub01)",
+    "note": "arena list (ArenaRounds_Shared01_Sub01)",
     "evidence": "E-0136"
   },
   "D5B1": {
     "name": "wArenaList2",
-    "note": "second arena list (ScriptCommand96_Run_Shared01_Sub01)",
+    "note": "second arena list (ArenaRounds_Shared01_Sub01)",
     "evidence": "E-0136"
   },
   "D780": {

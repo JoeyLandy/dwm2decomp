@@ -7349,7 +7349,7 @@ Palette_E0_7641::
 Data_0E0_7641:: ; address name
     dw $67DE, $331F, $123C, $0000 ; entry 0
 
-; E-0213 (C1: Func_0E0_5AD3_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read).
+; E-0213 (C1: DebugStaffRoll_Update_Sub01_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read).
 ; record: sequence for wWorkBuf + 2 = id
 WorkBufSequenceTable::
 Data_0E0_7649:: ; address name

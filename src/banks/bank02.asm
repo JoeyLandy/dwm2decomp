@@ -4858,7 +4858,7 @@ Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 23 call sites from 12 routines (e.g. InitFieldScreen, RunFunc5E85Twice, SceneThreeItems_Case22, ScriptCommand9B_Run_Case05, ...)
+; 23 call sites from 12 routines (e.g. InitFieldScreen, RunFunc5E85Twice, SceneThreeItems_Case22, Talk00Event1A_Case05, ...)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 MoveIncapacitatedPartyMembersBack::
@@ -4954,7 +4954,7 @@ Jump_002_5F1B::
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
-; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, SceneWatchOut_Case0F, SceneWatchOut_Case0D, ...)
+; 7 call sites from 7 routines (e.g. InitFieldScreen, Talk08Event_Case0A_Case08, SceneWatchOut_Case0F, SceneWatchOut_Case0D, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wSavedScreenAttrs, wScreenAttrBuffer

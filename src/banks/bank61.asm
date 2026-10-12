@@ -2,7 +2,7 @@ SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
 ; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
-; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case05, ScriptCommand84_Run_Case04_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case05, Talk00Event02_Case04_Sub01)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
 ; writes: wPartyStrength, hTemp4, hTemp5, rRAMG
 ; points at: wPartyList
@@ -823,7 +823,7 @@ Jump_061_44D7::
     ret
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
-; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
+; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, Talk00Event0B_Case04, Talk00Event0B_Case02)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
 DrawDoorTilesForKeyWorldFloor::
@@ -1007,7 +1007,7 @@ Jump_061_45E1::
     ret
 
 ; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
-; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_Case05, ScriptCommand81_Run_Case02)
+; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_Case05, Talk00Event0E_Case02)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 CheckTwoWCDB0EntriesForKeyWorldArea::

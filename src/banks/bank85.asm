@@ -4545,7 +4545,7 @@ Jump_085_5B4E::
     ret
 
 ; on map $0B places four monster objects and picks the monster for the wC82C / wD7FF entry (table $5C5E) or a random one (E-0130)
-; 3 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommand96_Run_Case07)
+; 3 call sites from 2 routines (e.g. InitFieldScreen, ArenaRounds_Case07)
 ; reads: hMapId, wArenaFlags, wRecordCapacity, wArenaRank, hTemp0, hTemp1, wKeyRandomHi
 ; writes: wSpriteSlots, wObject1, wObject2, wObject3, wFollowerRecords, wSpriteSlotCount, hTemp0, hTemp1, ...
 ; points at: wEncounterMonsters, hTemp0
@@ -4692,12 +4692,12 @@ Jump_085_5C08::
     db $14, $15, $16, $1A, $1B, $1C, $1D, $21, $24, $25, $26, $28, $29, $2A, $2E, $2F
     db $33, $38, $39, $3D
 
-; only called from ScriptCommand84_Run_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04)
+; only called from Talk00Event02_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. Talk00Event02_Case04)
 ; reads: wTriggerKind, wPendingFieldEvent, wInventory, wRandomLo, wMapSpriteKind, wMessageIndex, wMessageGroup, wKeyRandomHi, ...
 ; writes: wTriggerMarkerFlags, wScriptStartRequest, wScriptParam1, wTriggerKind, wTriggerCell, wTriggerIndex, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand84_Run_Case04_Sub01::
+Talk00Event02_Case04_Sub01::
 Func_085_5C92:: ; address name
     ld a, [wTriggerKind]
     cp a, $FF
@@ -4730,7 +4730,7 @@ Jump_085_5CBE::
     and a, $0F
     dec a
     jr nz, Jump_085_5CFC
-    call ScriptCommand84_Run_Case04_Sub01_Sub02
+    call Talk00Event02_Case04_Sub01_Sub02
     cp a, $05
     jr nc, Jump_085_5CD8
     ld a, $80
@@ -4761,7 +4761,7 @@ Jump_085_5CFC::
     push af
     ld a, $80
     ld [wTriggerMarkerFlags], a
-    call ScriptCommand84_Run_Case04_Sub01_Sub02
+    call Talk00Event02_Case04_Sub01_Sub02
     cp a, $32
     jr nc, Jump_085_5D0D
     ld a, $00
@@ -4815,7 +4815,7 @@ Jump_085_5D41::
     or a, a
     jp z, Jump_085_5CB4
     ld [wTriggerKind], a
-    farcall ScriptCommand84_Run_Case04_Sub01_Sub01
+    farcall Talk00Event02_Case04_Sub01_Sub01
     ld a, [wMessageIndex]
     ld [wTriggerCell], a
     ld a, [wMessageGroup]
@@ -4826,16 +4826,16 @@ Jump_085_5D41::
     inc [hl]
     ret
 
-; only called from ScriptCommand84_Run_Case04_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommand84_Run_Case04_Sub01)
+; only called from Talk00Event02_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. Talk00Event02_Case04_Sub01)
 ; reads: wKeyRandomLo
-ScriptCommand84_Run_Case04_Sub01_Sub02::
+Talk00Event02_Case04_Sub01_Sub02::
 Func_085_5D6F:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $7F
     cp a, $63
-    jr nc, ScriptCommand84_Run_Case04_Sub01_Sub02
+    jr nc, Talk00Event02_Case04_Sub01_Sub02
     ret
     db $19, $1A, $1B, $1B, $1C, $2C, $00, $00, $01, $07, $28, $22, $0C, $2C, $00, $00
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07

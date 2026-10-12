@@ -928,7 +928,7 @@ Func_05F_6C5A:: ; address name
     ret
 
 ; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
-; 5 call sites from 5 routines (e.g. ScriptCommand9A_Run, ScriptCommand96_Run_Case04, ScriptCommand85_Run_Case01, ScriptCommand9E_Run_Case01, ...)
+; 5 call sites from 5 routines (e.g. Talk00Event19, ArenaRounds_Case04, Talk09Event00_Case01, Talk09Event03_Case01, ...)
 ; writes: wModeState, wBattleTransitionStep, wFieldReturnPhase
 SetModeState3AndSaveScreen::
 Func_05F_6C71:: ; address name
@@ -943,7 +943,7 @@ Func_05F_6C71:: ; address name
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
-; 19 call sites from 18 routines (e.g. GiveItemBlink_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
+; 19 call sites from 18 routines (e.g. GiveItemBlink_Case00, Talk00Event02_Case08, Talk00Event0B_Case02, Talk00Event0E_Case02, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
 ; points at: wInventory
@@ -971,7 +971,7 @@ Jump_05F_6C9B::
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
+; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_Case6F, Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1010,12 +1010,12 @@ Jump_05F_6CD1::
     ld [rRAMG], a
     ret
 
-; only called from ScriptCommand82_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
+; only called from Talk08Event_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-ScriptCommand82_Run_Shared05_Sub01::
+Talk08Event_Shared05_Sub01::
 Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1050,12 +1050,12 @@ Jump_05F_6D03::
     ld [rRAMG], a
     ret
 
-; only called from ScriptCommand82_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
+; only called from Talk08Event_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-ScriptCommand82_Run_Shared05_Sub02::
+Talk08Event_Shared05_Sub02::
 Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a

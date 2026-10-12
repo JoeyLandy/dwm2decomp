@@ -5832,7 +5832,7 @@ Data_0F0_704B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $3C304B, $4C
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
-; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRun72C8)
+; 14 call sites from 4 routines (e.g. Talk00Event0B_Case04_Sub01, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRun72C8)
 ; reads: wRandomLo
 RandomModulo29_BankF0::
 Func_0F0_7097:: ; address name
@@ -7739,11 +7739,11 @@ Func_0F0_7D03:: ; address name
     ld [hl], a
     ret
 
-; only called from ScriptCommand86_Run_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand86_Run_Case04)
+; only called from Talk00Event0B_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. Talk00Event0B_Case04)
 ; reads: wSaveByte16
 ; points at: wGM2TimerFrames, wGM2Mode, wPlayerName, wGM2Byte
-ScriptCommand86_Run_Case04_Sub01::
+Talk00Event0B_Case04_Sub01::
 Func_0F0_7D0A:: ; address name
     ld hl, wGM2TimerFrames
     ld bc, $00D8
@@ -7803,16 +7803,16 @@ Jump_0F0_7D4A::
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    call ScriptCommand86_Run_Case04_Sub01_Sub02
+    call Talk00Event0B_Case04_Sub01_Sub02
     ld c, $06
     ld b, $F0
-    call ScriptCommand86_Run_Case04_Sub01_Sub01
+    call Talk00Event0B_Case04_Sub01_Sub01
     ld a, $F0
     ld [hl+], a
-    call ScriptCommand86_Run_Case04_Sub01_Sub02
+    call Talk00Event0B_Case04_Sub01_Sub02
     ld c, $06
     ld b, $F0
-    call ScriptCommand86_Run_Case04_Sub01_Sub01
+    call Talk00Event0B_Case04_Sub01_Sub01
     ld a, $F0
     ld [hl+], a
     ld c, $21
@@ -7836,7 +7836,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7850,7 +7850,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7864,7 +7864,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7874,7 +7874,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7884,7 +7884,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7894,7 +7894,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $20
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7911,7 +7911,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7919,7 +7919,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7927,7 +7927,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7935,7 +7935,7 @@ Jump_0F0_7D73::
     ld b, $0F
     call RandomModulo29_BankF0
     ld b, $FE
-    call ScriptCommand86_Run_Case04_Sub01_Sub03
+    call Talk00Event0B_Case04_Sub01_Sub03
     pop hl
     ld a, e
     ld [hl+], a
@@ -7968,19 +7968,19 @@ Jump_0F0_7E3F::
     ld [hl+], a
     ret
 
-; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
-ScriptCommand86_Run_Case04_Sub01_Sub01::
+; only called from Talk00Event0B_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. Talk00Event0B_Case04_Sub01)
+Talk00Event0B_Case04_Sub01_Sub01::
 Func_0F0_7E4A:: ; address name
     ld a, b
     ld [hl+], a
     dec c
-    jr nz, ScriptCommand86_Run_Case04_Sub01_Sub01
+    jr nz, Talk00Event0B_Case04_Sub01_Sub01
     ret
 
-; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
-ScriptCommand86_Run_Case04_Sub01_Sub02::
+; only called from Talk00Event0B_Case04_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. Talk00Event0B_Case04_Sub01)
+Talk00Event0B_Case04_Sub01_Sub02::
 Func_0F0_7E50:: ; address name
     ld a, $98
     ld [hl+], a
@@ -7992,9 +7992,9 @@ Func_0F0_7E50:: ; address name
     ld [hl+], a
     ret
 
-; only called from ScriptCommand86_Run_Case04_Sub01 (E-0047)
-; 10 call sites from 1 routine (e.g. ScriptCommand86_Run_Case04_Sub01)
-ScriptCommand86_Run_Case04_Sub01_Sub03::
+; only called from Talk00Event0B_Case04_Sub01 (E-0047)
+; 10 call sites from 1 routine (e.g. Talk00Event0B_Case04_Sub01)
+Talk00Event0B_Case04_Sub01_Sub03::
 Func_0F0_7E5D:: ; address name
     ld a, l
 

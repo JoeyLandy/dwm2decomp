@@ -1205,168 +1205,168 @@
     "evidence": "reading (E-0039)"
   },
   "12:59AC": {
-    "name": "ScriptCommand9E_Run",
-    "note": "implements script command type 9E; reached through ScriptCommand9E in bank $10 (E-0038)",
+    "name": "Talk09Event03",
+    "note": "implements script command type 9E (SCRIPT_TALK09_03): the one command of the script DispatchTalkEvent_Case09_Sub01_Case03 starts (talk event category $09, group $03); its states are not yet read (a structural name); reached through ScriptCommand9E in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4001": {
-    "name": "ScriptCommand9D_Run",
-    "note": "implements script command type 9D; reached through ScriptCommand9D in bank $10 (E-0038)",
+    "name": "Talk00Event1E",
+    "note": "implements script command type 9D (SCRIPT_TALK00_1E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1E starts (talk event category $00, group $1E); its states are not yet read (a structural name); reached through ScriptCommand9D in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4013": {
-    "name": "ScriptCommand9C_Run",
-    "note": "implements script command type 9C; reached through ScriptCommand9C in bank $10 (E-0038)",
+    "name": "Talk00Event1D",
+    "note": "implements script command type 9C (SCRIPT_TALK00_1D): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1D starts (talk event category $00, group $1D); its states are not yet read (a structural name); reached through ScriptCommand9C in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:550E": {
-    "name": "ScriptCommand9B_Run",
-    "note": "implements script command type 9B; reached through ScriptCommand9B in bank $10 (E-0038)",
+    "name": "Talk00Event1A",
+    "note": "implements script command type 9B (SCRIPT_TALK00_1A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1A starts (talk event category $00, group $1A); its states are not yet read (a structural name); reached through ScriptCommand9B in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4030": {
-    "name": "ScriptCommand9A_Run",
-    "note": "implements script command type 9A; reached through ScriptCommand9A in bank $10 (E-0038)",
+    "name": "Talk00Event19",
+    "note": "implements script command type 9A (SCRIPT_TALK00_19): the one command of the script DispatchTalkEvent_Case00_Sub01_Case19 starts (talk event category $00, group $19); its states are not yet read (a structural name); reached through ScriptCommand9A in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4064": {
-    "name": "ScriptCommand99_Run",
-    "note": "implements script command type 99; reached through ScriptCommand99 in bank $10 (E-0038)",
+    "name": "Talk00Event1C",
+    "note": "implements script command type 99 (SCRIPT_TALK00_1C): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1C starts (talk event category $00, group $1C); its states are not yet read (a structural name); reached through ScriptCommand99 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4210": {
-    "name": "ScriptCommand98_Run",
-    "note": "implements script command type 98; reached through ScriptCommand98 in bank $10 (E-0038)",
+    "name": "Talk00Event1B",
+    "note": "implements script command type 98 (SCRIPT_TALK00_1B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1B starts (talk event category $00, group $1B); its states are not yet read (a structural name); reached through ScriptCommand98 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:44DB": {
-    "name": "ScriptCommand95_Run",
-    "note": "implements script command type 95; reached through ScriptCommand95 in bank $10 (E-0038)",
+    "name": "ArenaGridBattle",
+    "note": "implements script command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable (StartMessageFromTable48B9ByArenaRank) and foes from GridEncounterTable by wGridCursorX and wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02); reached through ScriptCommand95 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:43DA": {
-    "name": "ScriptCommand96_Run",
-    "note": "implements script command type 96; reached through ScriptCommand96 in bank $10 (E-0038)",
+    "name": "ArenaRounds",
+    "note": "implements script command type 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ArenaEncounterLists by wAreaGraphicsIndex, advancing the round (IncArenaRoundAndCopyArena); reached through ScriptCommand96 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4F1E": {
-    "name": "ScriptCommand90_Run",
-    "note": "implements script command type 90; reached through ScriptCommand90 in bank $10 (E-0038)",
+    "name": "Talk00Event10",
+    "note": "implements script command type 90 (SCRIPT_TALK00_10): the one command of the script DispatchTalkEvent_Case00_Sub01_Case10 starts (talk event category $00, group $10); its states are not yet read (a structural name); reached through ScriptCommand90 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4EF9": {
-    "name": "ScriptCommand91_Run",
-    "note": "implements script command type 91; reached through ScriptCommand91 in bank $10 (E-0038)",
+    "name": "Talk00Event11",
+    "note": "implements script command type 91 (SCRIPT_TALK00_11): the one command of the script DispatchTalkEvent_Case00_Sub01_Case11 starts (talk event category $00, group $11); its states are not yet read (a structural name); reached through ScriptCommand91 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4ECE": {
-    "name": "ScriptCommand92_Run",
-    "note": "implements script command type 92; reached through ScriptCommand92 in bank $10 (E-0038)",
+    "name": "Talk00Event12",
+    "note": "implements script command type 92 (SCRIPT_TALK00_12): the one command of the script DispatchTalkEvent_Case00_Sub01_Case12 starts (talk event category $00, group $12); its states are not yet read (a structural name); reached through ScriptCommand92 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4E55": {
-    "name": "ScriptCommand93_Run",
-    "note": "implements script command type 93; reached through ScriptCommand93 in bank $10 (E-0038)",
+    "name": "Talk00Event13",
+    "note": "implements script command type 93 (SCRIPT_TALK00_13): the one command of the script DispatchTalkEvent_Case00_Sub01_Case13 starts (talk event category $00, group $13); its states are not yet read (a structural name); reached through ScriptCommand93 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4E4B": {
-    "name": "ScriptCommand94_Run",
-    "note": "implements script command type 94; reached through ScriptCommand94 in bank $10 (E-0038)",
+    "name": "Talk00Event14",
+    "note": "implements script command type 94 (SCRIPT_TALK00_14): the one command of the script DispatchTalkEvent_Case00_Sub01_Case14 starts (talk event category $00, group $14); its states are not yet read (a structural name); reached through ScriptCommand94 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4A1E": {
-    "name": "ScriptCommand8D_Run",
-    "note": "implements script command type 8D; reached through ScriptCommand8D in bank $10 (E-0038)",
+    "name": "Talk00Event17",
+    "note": "implements script command type 8D (SCRIPT_TALK00_17): the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name); reached through ScriptCommand8D in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4A9A": {
-    "name": "ScriptCommand8C_Run",
-    "note": "implements script command type 8C; reached through ScriptCommand8C in bank $10 (E-0038)",
+    "name": "Talk00Event16",
+    "note": "implements script command type 8C (SCRIPT_TALK00_16): the one command of the script DispatchTalkEvent_Case00_Sub01_Case16 starts (talk event category $00, group $16); its states are not yet read (a structural name); reached through ScriptCommand8C in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4C07": {
-    "name": "ScriptCommand8B_Run",
-    "note": "implements script command type 8B; reached through ScriptCommand8B in bank $10 (E-0038)",
+    "name": "Talk00Event15",
+    "note": "implements script command type 8B (SCRIPT_TALK00_15): the one command of the script DispatchTalkEvent_Case00_Sub01_Case15 starts (talk event category $00, group $15); its states are not yet read (a structural name); reached through ScriptCommand8B in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4965": {
-    "name": "ScriptCommand8F_Run",
-    "note": "implements script command type 8F; reached through ScriptCommand8F in bank $10 (E-0038)",
+    "name": "Talk00Event20",
+    "note": "implements script command type 8F (SCRIPT_TALK00_20): the one command of the script DispatchTalkEvent_Case00_Sub01_Case20 starts (talk event category $00, group $20); its states are not yet read (a structural name); reached through ScriptCommand8F in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4919": {
-    "name": "ScriptCommand9F_Run",
-    "note": "implements script command type 9F; reached through ScriptCommand9F in bank $10 (E-0038)",
+    "name": "Talk00Event21",
+    "note": "implements script command type 9F (SCRIPT_TALK00_21): the one command of the script DispatchTalkEvent_Case00_Sub01_Case21 starts (talk event category $00, group $21); its states are not yet read (a structural name); reached through ScriptCommand9F in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4FEA": {
-    "name": "ScriptCommandA0_Run",
-    "note": "implements script command type A0; reached through ScriptCommandA0 in bank $10 (E-0038)",
+    "name": "Talk00Event09",
+    "note": "implements script command type A0 (SCRIPT_TALK00_09): the one command of the script DispatchTalkEvent_Case00_Sub01_Case09 starts (talk event category $00, group $09); its states are not yet read (a structural name); reached through ScriptCommandA0 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:50B3": {
-    "name": "ScriptCommandA1_Run",
-    "note": "implements script command type A1; reached through ScriptCommandA1 in bank $10 (E-0038)",
+    "name": "Talk00Event0A",
+    "note": "implements script command type A1 (SCRIPT_TALK00_0A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0A starts (talk event category $00, group $0A); its states are not yet read (a structural name); reached through ScriptCommandA1 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:50E5": {
-    "name": "ScriptCommand8E_Run",
-    "note": "implements script command type 8E; reached through ScriptCommand8E in bank $10 (E-0038)",
+    "name": "Talk00Event08",
+    "note": "implements script command type 8E (SCRIPT_TALK00_08): the one command of the script DispatchTalkEvent_Case00_Sub01_Case08 starts (talk event category $00, group $08); its states are not yet read (a structural name); reached through ScriptCommand8E in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:51F4": {
-    "name": "ScriptCommand8A_Run",
-    "note": "implements script command type 8A; reached through ScriptCommand8A in bank $10 (E-0038)",
+    "name": "Talk00Event07",
+    "note": "implements script command type 8A (SCRIPT_TALK00_07): the one command of the script DispatchTalkEvent_Case00_Sub01_Case07 starts (talk event category $00, group $07); its states are not yet read (a structural name); reached through ScriptCommand8A in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:63A1": {
-    "name": "ScriptCommand80_Run",
-    "note": "implements script command type 80; reached through ScriptCommand80 in bank $10 (E-0038)",
+    "name": "Talk00Event0F",
+    "note": "implements script command type 80 (SCRIPT_TALK00_0F): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0F starts (talk event category $00, group $0F); its states are not yet read (a structural name); it gives gold (a byte * 10), an item (AppendItemWC928ToInventory) or starts a battle with intro 5; reached through ScriptCommand80 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:630E": {
-    "name": "ScriptCommand81_Run",
-    "note": "implements script command type 81; reached through ScriptCommand81 in bank $10 (E-0038)",
+    "name": "Talk00Event0E",
+    "note": "implements script command type 81 (SCRIPT_TALK00_0E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0E starts (talk event category $00, group $0E); its states are not yet read (a structural name); reached through ScriptCommand81 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:6211": {
-    "name": "ScriptCommand86_Run",
-    "note": "implements script command type 86; reached through ScriptCommand86 in bank $10 (E-0038)",
+    "name": "Talk00Event0B",
+    "note": "implements script command type 86 (SCRIPT_TALK00_0B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0B starts (talk event category $00, group $0B); its states are not yet read (a structural name); reached through ScriptCommand86 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:4001": {
-    "name": "ScriptCommand82_Run",
-    "note": "implements script command type 82; reached through ScriptCommand82 in bank $10 (E-0038)",
+    "name": "Talk08Event",
+    "note": "implements script command type 82 (SCRIPT_TALK08): the one command of the script DispatchTalkEvent_Case08 starts; its states are not yet read (a structural name); reached through ScriptCommand82 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5CE5": {
-    "name": "ScriptCommand83_Run",
-    "note": "implements script command type 83; reached through ScriptCommand83 in bank $10 (E-0038)",
+    "name": "Talk00Event01",
+    "note": "implements script command type 83 (SCRIPT_TALK00_01): the one command of the script DispatchTalkEvent_Case00_Sub01_Case01 starts (talk event category $00, group $01); its states are not yet read (a structural name); reached through ScriptCommand83 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5A2F": {
-    "name": "ScriptCommand84_Run",
-    "note": "implements script command type 84; reached through ScriptCommand84 in bank $10 (E-0038)",
+    "name": "Talk00Event02",
+    "note": "implements script command type 84 (SCRIPT_TALK00_02): the one command of the script DispatchTalkEvent_Case00_Sub01_Case02 starts (talk event category $00, group $02); its states are not yet read (a structural name); reached through ScriptCommand84 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5854": {
-    "name": "ScriptCommand85_Run",
-    "note": "implements script command type 85; reached through ScriptCommand85 in bank $10 (E-0038)",
+    "name": "Talk09Event00",
+    "note": "implements script command type 85 (SCRIPT_TALK09_00): the one command of the script DispatchTalkEvent_Case09_Sub01_Case00 starts (talk event category $09, group $00); its states are not yet read (a structural name); reached through ScriptCommand85 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5728": {
-    "name": "ScriptCommand87_Run",
-    "note": "implements script command type 87; reached through ScriptCommand87 in bank $10 (E-0038)",
+    "name": "Talk00Event04",
+    "note": "implements script command type 87 (SCRIPT_TALK00_04): the one command of the script DispatchTalkEvent_Case00_Sub01_Case04 starts (talk event category $00, group $04); its states are not yet read (a structural name); reached through ScriptCommand87 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:55E8": {
-    "name": "ScriptCommand88_Run",
-    "note": "implements script command type 88; reached through ScriptCommand88 in bank $10 (E-0038)",
+    "name": "Talk00Event05",
+    "note": "implements script command type 88 (SCRIPT_TALK00_05): the one command of the script DispatchTalkEvent_Case00_Sub01_Case05 starts (talk event category $00, group $05); its states are not yet read (a structural name); reached through ScriptCommand88 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5534": {
-    "name": "ScriptCommand89_Run",
-    "note": "implements script command type 89; reached through ScriptCommand89 in bank $10 (E-0038)",
+    "name": "Talk00Event06",
+    "note": "implements script command type 89 (SCRIPT_TALK00_06): the one command of the script DispatchTalkEvent_Case00_Sub01_Case06 starts (talk event category $00, group $06); its states are not yet read (a structural name); reached through ScriptCommand89 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "5F:78CE": {
@@ -1515,8 +1515,8 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:70EC": {
-    "name": "ScriptCommand29_Run",
-    "note": "implements script command type 29; reached through ScriptCommand29 in bank $10 (E-0038)",
+    "name": "SceneWhoAreYou",
+    "note": "implements script command type 29 (SCRIPT_SCENE_WHO_ARE_YOU): a cutscene step named after the scene its only script shows: after a sound and a 140-frame wait, before 'Who are you? This is our...' and 'Zzz Zzz Huh! Watch out!'; reached through ScriptCommand29 in bank $10 (E-0038, E-0246)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4047": {
@@ -4799,7 +4799,7 @@
   "0E:6138": {"name": "DrawSpeciesAndFamilyIconForTemp0", "note": "wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)", "evidence": "reading (E-0126)"},
   "10:663D": {"name": "CallScriptCommandE9Far", "note": "far-calls ScriptCommandE9_RunFar (E-0126)", "evidence": "reading (E-0126)"},
   "12:55F8": {"name": "StartReturnWarpByFlag25", "note": "with bit 7 of wCC44 saves the wCD07 record; sets the position ($50, $30), wC8C6 = 3 (story flag $25) or 4, wC957 = 1 and starts the fade (E-0126)", "evidence": "reading (E-0126)"},
-  "12:5C31": {"name": "SetupScriptSpriteFromMapSpriteKind", "note": "A = wC195 >> 4, DE = ScriptCommand85_Run_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)", "evidence": "reading (E-0126)"},
+  "12:5C31": {"name": "SetupScriptSpriteFromMapSpriteKind", "note": "A = wC195 >> 4, DE = Talk09Event00_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)", "evidence": "reading (E-0126)"},
   "12:684A": {"name": "RunMessageBoxThenContinue_684A", "note": "runs RunMessageBoxStateIfActive_Bank12, then continues at Jump_012_683F (E-0126)", "evidence": "reading (E-0126)"},
   "16:70C5": {"name": "SetRecordState2ForB", "note": "A = B, then falls into SetRecordState2 (E-0126)", "evidence": "reading (E-0126)"},
   "19:4349": {"name": "SetCFromBattleArg0ThenRun434D", "note": "C = wD868, then falls into Func_019_434D (E-0126)", "evidence": "reading (E-0126)"},
