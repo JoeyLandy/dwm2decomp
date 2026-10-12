@@ -2431,6 +2431,31 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0286 — Key-world and field talk-event commands named from their triggers and calls
+
+- Kind: STATIC (C1 names; C2 for the trigger and call relations).
+- Talk events are dispatched by DispatchTalkEvent on wTalkEventIndex (category), then wTalkEventGroup. Each category-0 group, category 8 and the category-9 groups start a one-command script whose command ($80–$A1) holds the event's state machine (E-0246). We found the constant groups by searching for their stores to wTalkEventGroup. Each command is named from the routine that stores its group and from the calls its states make.
+- Examples:
+  - $80 StepTriggerReward: group $0F, from CheckStepTriggerAndDispatchTalk. It gives gold (byte × 10), gives an item, or starts a battle.
+  - $87 PartyDefeatedReturn: group $04. It calls MoveIncapacitatedPartyMembersBack, then StartReturnWarpByFlag25.
+  - $9B HealPartyEvent: group $1A. It calls FullyHealParty.
+  - $8B/$8C/$8D BreedFade/BreedChildSprite/BreedChildScene: groups $15–$17, from BreedMenu states.
+  - $82 GoldItemOrLoss: category 8. It gives random gold or an item, or takes a gold loss (DeductGoldPenaltyAndFormatLoss).
+  - $8A MapExitWarp and $8E MapLinkWarp: groups $07 and $08. Each fades, then sets the warp destination from the map exit records (E-0182) or the map link records (E-0238).
+  - $93 WarpWithFollowers and $8F NpcBreedWarp: also set a warp destination.
+  - $9A RandomBattleEvent: starts a battle (SetModeState3AndSaveScreen).
+- $85 KeyWorldBossBattle (category 9, group 0):
+  - shows a random message from $00D0–$00DF;
+  - fights the monsters in wKeyWorldEncounter (one monster, or three when bytes 3–4 are non-zero);
+  - after the "Warubou" message, sets wKeyWorldFlags bit 7, sets byte 3 of every wKeyWorldEncounterTable entry to 1, and sets bit 6 of byte 7 of the current key entry.
+- $9E KeyWorldFloorBattle (category 9, group 3):
+  - shows a random message from $00E0–$00EF;
+  - fights the wKeyWorldEncounterTable entry for wKeyWorldFloor;
+  - then sets that entry's byte 3 to 1.
+- Names such as "Boss", "Floor" and "Return" are C1 readings of these writes. They have not been checked in play.
+- No SCRIPT_TALKnn_xx constant or Talk0nEventxx routine name remains. The names.json notes for these routines now quote the new command notes.
+- Binary verification: build/run377 PASS, 0 differing bytes; tests OK.
+
 ### E-0285 — Data labels named after reader, pointer run, stream kind or record; shared-helper roots
 
 - Kind: TOOL (structural naming; C2 for the relations used).

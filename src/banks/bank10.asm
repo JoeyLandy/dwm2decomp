@@ -1550,49 +1550,49 @@ Data_010_46F5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_48E5:: ; address name
-    farcall Talk09Event03
+    farcall KeyWorldFloorBattle
     ret
 
 ; runs one frame of script command type 9D (entry 156 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_48EC:: ; address name
-    farcall Talk00Event1E
+    farcall CountdownMessage
     ret
 
 ; runs one frame of script command type 9C (entry 155 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_48F3:: ; address name
-    farcall Talk00Event1D
+    farcall EncounterCounterMessage
     ret
 
 ; runs one frame of script command type 9B (entry 154 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_48FA:: ; address name
-    farcall Talk00Event1A
+    farcall HealPartyEvent
     ret
 
 ; runs one frame of script command type 9A (entry 153 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4901:: ; address name
-    farcall Talk00Event19
+    farcall RandomBattleEvent
     ret
 
 ; runs one frame of script command type 99 (entry 152 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand99:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4908:: ; address name
-    farcall Talk00Event1C
+    farcall ObjectPath1C
     ret
 
 ; runs one frame of script command type 98 (entry 151 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand98:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_490F:: ; address name
-    farcall Talk00Event1B
+    farcall ObjectPath1B
     ret
 
 ; runs one frame of script command type 95 (entry 148 of ScriptCommandHandlers)
@@ -1613,168 +1613,168 @@ Func_010_491D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand90:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4924:: ; address name
-    farcall Talk00Event10
+    farcall FollowersStep10
     ret
 
 ; runs one frame of script command type 91 (entry 144 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand91:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_492B:: ; address name
-    farcall Talk00Event11
+    farcall FollowersStep11
     ret
 
 ; runs one frame of script command type 92 (entry 145 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand92:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4932:: ; address name
-    farcall Talk00Event12
+    farcall PlayerAndFollowersStep
     ret
 
 ; runs one frame of script command type 93 (entry 146 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand93:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4939:: ; address name
-    farcall Talk00Event13
+    farcall WarpWithFollowers
     ret
 
 ; runs one frame of script command type 94 (entry 147 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand94:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4940:: ; address name
-    farcall Talk00Event14
+    farcall FollowersStep14
     ret
 
 ; runs one frame of script command type 8D (entry 140 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4947:: ; address name
-    farcall Talk00Event17
+    farcall BreedChildScene
     ret
 
 ; runs one frame of script command type 8C (entry 139 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_494E:: ; address name
-    farcall Talk00Event16
+    farcall BreedChildSprite
     ret
 
 ; runs one frame of script command type 8B (entry 138 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4955:: ; address name
-    farcall Talk00Event15
+    farcall BreedFade
     ret
 
 ; runs one frame of script command type 8F (entry 142 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_495C:: ; address name
-    farcall Talk00Event20
+    farcall NpcBreedWarp
     ret
 
 ; runs one frame of script command type 9F (entry 158 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand9F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4963:: ; address name
-    farcall Talk00Event21
+    farcall LinkMessageEvent
     ret
 
 ; runs one frame of script command type A0 (entry 159 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandA0:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_496A:: ; address name
-    farcall Talk00Event09
+    farcall PlayerSpriteFlash
     ret
 
 ; runs one frame of script command type A1 (entry 160 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandA1:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4971:: ; address name
-    farcall Talk00Event0A
+    farcall PlayerSpriteMessage
     ret
 
 ; runs one frame of script command type 8E (entry 141 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4978:: ; address name
-    farcall Talk00Event08
+    farcall MapLinkWarp
     ret
 
 ; runs one frame of script command type 8A (entry 137 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand8A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_497F:: ; address name
-    farcall Talk00Event07
+    farcall MapExitWarp
     ret
 
 ; runs one frame of script command type 80 (entry 127 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand80:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4986:: ; address name
-    farcall Talk00Event0F
+    farcall StepTriggerReward
     ret
 
 ; runs one frame of script command type 81 (entry 128 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand81:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_498D:: ; address name
-    farcall Talk00Event0E
+    farcall AreaItemEvent
     ret
 
 ; runs one frame of script command type 86 (entry 133 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand86:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4994:: ; address name
-    farcall Talk00Event0B
+    farcall KeyWorldDoorItem
     ret
 
 ; runs one frame of script command type 82 (entry 129 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand82:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_499B:: ; address name
-    farcall Talk08Event
+    farcall GoldItemOrLoss
     ret
 
 ; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand83:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49A2:: ; address name
-    farcall Talk00Event01
+    farcall FieldScene01
     ret
 
 ; runs one frame of script command type 84 (entry 131 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand84:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49A9:: ; address name
-    farcall Talk00Event02
+    farcall RandomGoldOrItem
     ret
 
 ; runs one frame of script command type 85 (entry 132 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand85:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49B0:: ; address name
-    farcall Talk09Event00
+    farcall KeyWorldBossBattle
     ret
 
 ; runs one frame of script command type 87 (entry 134 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand87:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49B7:: ; address name
-    farcall Talk00Event04
+    farcall PartyDefeatedReturn
     ret
 
 ; runs one frame of script command type 88 (entry 135 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand88:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49BE:: ; address name
-    farcall Talk00Event05
+    farcall ReturnMessage
     ret
 
 ; runs one frame of script command type 89 (entry 136 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand89:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49C5:: ; address name
-    farcall Talk00Event06
+    farcall ReturnWarp
     ret
 
 ; runs one frame of script command type 06 (entry 5 of ScriptCommandHandlers)
@@ -3284,79 +3284,79 @@ Script_5129:: ; heuristic: event script entry or jump target; C0
     script_message $8008 ; 'Good. That's good to hear! You'
     script_end
 Script_512D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK08
+    script_command SCRIPT_GOLD_ITEM_OR_LOSS
     script_end
 Script_512F:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_01
+    script_command SCRIPT_FIELD_SCENE_01
     script_end
 Script_5131:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_02
+    script_command SCRIPT_RANDOM_GOLD_OR_ITEM
     script_end
 Script_5133:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK09_00
+    script_command SCRIPT_KEY_WORLD_BOSS_BATTLE
     script_end
 Script_5135:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK09_03
+    script_command SCRIPT_KEY_WORLD_FLOOR_BATTLE
     script_end
 Script_5137:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_04
+    script_command SCRIPT_PARTY_DEFEATED_RETURN
     script_end
 Script_5139:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_05
+    script_command SCRIPT_RETURN_MESSAGE
     script_end
 Script_513B:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_06
+    script_command SCRIPT_RETURN_WARP
     script_end
 Script_513D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_07
+    script_command SCRIPT_MAP_EXIT_WARP
     script_end
 Script_513F:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_08
+    script_command SCRIPT_MAP_LINK_WARP
     script_end
 Script_5141:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_09
+    script_command SCRIPT_PLAYER_SPRITE_FLASH
     script_end
 Script_5143:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_0A
+    script_command SCRIPT_PLAYER_SPRITE_MESSAGE
     script_end
 Script_5145:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_0B
+    script_command SCRIPT_KEY_WORLD_DOOR_ITEM
     script_end
 Script_5147:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_0E
+    script_command SCRIPT_AREA_ITEM
     script_end
 Script_5149:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_0F
+    script_command SCRIPT_STEP_TRIGGER_REWARD
     script_end
 Script_514B:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_10
+    script_command SCRIPT_FOLLOWERS_STEP_10
     script_end
 Script_514D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_11
+    script_command SCRIPT_FOLLOWERS_STEP_11
     script_end
 Script_514F:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_12
+    script_command SCRIPT_PLAYER_AND_FOLLOWERS_STEP
     script_end
 Script_5151:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_13
+    script_command SCRIPT_WARP_WITH_FOLLOWERS
     script_end
 Script_5153:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_14
+    script_command SCRIPT_FOLLOWERS_STEP_14
     script_end
 Script_5155:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_15
+    script_command SCRIPT_BREED_FADE
     script_end
 Script_5157:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_16
+    script_command SCRIPT_BREED_CHILD_SPRITE
     script_end
 Script_5159:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_17
+    script_command SCRIPT_BREED_CHILD_SCENE
     script_end
 Script_515B:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_20
+    script_command SCRIPT_NPC_BREED_WARP
     script_end
 Script_515D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_21
+    script_command SCRIPT_LINK_MESSAGE
     script_end
 Script_515F:: ; heuristic: event script entry or jump target; C0
     script_hold_dpad $00, 5
@@ -3367,22 +3367,22 @@ Script_5164:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA_ROUNDS
     script_end
 Script_5169:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_19
+    script_command SCRIPT_RANDOM_BATTLE
     script_end
 Script_516B:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_1A
+    script_command SCRIPT_HEAL_PARTY
     script_end
 Script_516D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_1B
+    script_command SCRIPT_OBJECT_PATH_1B
     script_end
 Script_516F:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_1C
+    script_command SCRIPT_OBJECT_PATH_1C
     script_end
 Script_5171:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_1D
+    script_command SCRIPT_ENCOUNTER_MESSAGE
     script_end
 Script_5173:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_TALK00_1E
+    script_command SCRIPT_COUNTDOWN_MESSAGE
     script_end
 Script_5175:: ; heuristic: event script entry or jump target; C0
     script_message $0100 ; 'Are you going out to play?'

@@ -953,7 +953,7 @@ Func_05F_6C5A:: ; address name
     ret
 
 ; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
-; 5 call sites from 5 routines (e.g. Talk00Event19, ArenaRounds_StepScriptParam0Counter_Bank12, Talk09Event00_RunMessageBoxFar_Bank12, Talk09Event03_RunMessageBoxFar_Bank12, ...)
+; 5 call sites from 5 routines (e.g. RandomBattleEvent, ArenaRounds_StepScriptParam0Counter_Bank12, KeyWorldBossBattle_RunMessageBoxFar_Bank12, KeyWorldFloorBattle_RunMessageBoxFar_Bank12, ...)
 ; writes: wModeState, wBattleTransitionStep, wFieldReturnPhase
 SetModeState3AndSaveScreen::
 Func_05F_6C71:: ; address name
@@ -968,7 +968,7 @@ Func_05F_6C71:: ; address name
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
-; 19 call sites from 18 routines (e.g. GiveItemBlink_TestFlagBit, Talk00Event02_AddGoldCapped, Talk00Event0B_WriteScriptStartRequestAndStepPtrLo, Talk00Event0E_WriteScriptStartRequestAndStepPtrLo, ...)
+; 19 call sites from 18 routines (e.g. GiveItemBlink_TestFlagBit, RandomGoldOrItem_AddGoldCapped, KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo, AreaItemEvent_WriteScriptStartRequestAndStepPtrLo, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
 ; points at: wInventory
@@ -996,7 +996,7 @@ Jump_05F_6C9B::
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13, DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
+; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13, DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1035,12 +1035,12 @@ Jump_05F_6CD1::
     ld [rRAMG], a
     ret
 
-; only called from Talk08Event_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GoldItemOrLoss_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-Talk08Event_Shared05_LoadSRAMRecordByte_Sub01::
+GoldItemOrLoss_Shared05_LoadSRAMRecordByte_Sub01::
 Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1075,12 +1075,12 @@ Jump_05F_6D03::
     ld [rRAMG], a
     ret
 
-; only called from Talk08Event_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GoldItemOrLoss_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-Talk08Event_Shared05_LoadSRAMRecordByte::
+GoldItemOrLoss_Shared05_LoadSRAMRecordByte::
 Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a

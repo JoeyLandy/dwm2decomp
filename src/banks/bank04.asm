@@ -1970,7 +1970,7 @@ Jump_004_4B23::
     ret
 
 ; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hFF94/hFF95 when bit 7 of hFF93 is set (E-0127)
-; 5 call sites from 3 routines (e.g. LoadPlayerAndFollowerSpriteGraphics, Talk00Event09_LoadPlayerSpriteGraphics, Talk00Event0A_LoadPlayerSpriteGraphics)
+; 5 call sites from 3 routines (e.g. LoadPlayerAndFollowerSpriteGraphics, PlayerSpriteFlash_LoadPlayerSpriteGraphics, PlayerSpriteMessage_LoadPlayerSpriteGraphics)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hTemp0, hPlayerSpriteVariant, hTemp1, hTemp3, hTemp2, hTemp4, hTemp5
 LoadPlayerSpriteGraphics::

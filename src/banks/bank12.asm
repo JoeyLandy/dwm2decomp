@@ -1,20 +1,20 @@
 SECTION "Bank 12", ROMX[$4000], BANK[$12]
     db $12
 
-; implements script command type 9D (SCRIPT_TALK00_1E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1E starts (talk event category $00, group $1E); its states are not yet read (a structural name); reached through ScriptCommand9D in bank $10 (E-0038, E-0246)
+; implements script command type 9D (SCRIPT_COUNTDOWN_MESSAGE): a key-world/field talk event (group $1E, dispatched by CountDownTalkCountdownThenDispatchTalkEvent: one message); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand9D)
 ; reads: wScriptStep
-Talk00Event1E::
+CountdownMessage::
 Func_012_4001:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1E_ToStartMessageAAndStep
-    dw Talk00Event1E_RunMessageBoxCarryWhenIdle_Bank12
+    dw CountdownMessage_ToStartMessageAAndStep
+    dw CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12
 
-; entry 0 of the `rst $00` table in Talk00Event1E
+; entry 0 of the `rst $00` table in CountdownMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event1E_ToStartMessageAAndStep::
+CountdownMessage_ToStartMessageAAndStep::
 Jump_012_4009:: ; address name
     ld a, $10
     call StartMessageA
@@ -22,20 +22,20 @@ Jump_012_4009:: ; address name
     inc [hl]
     ret
 
-; implements script command type 9C (SCRIPT_TALK00_1D): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1D starts (talk event category $00, group $1D); its states are not yet read (a structural name); reached through ScriptCommand9C in bank $10 (E-0038, E-0246)
+; implements script command type 9C (SCRIPT_ENCOUNTER_MESSAGE): a key-world/field talk event (group $1D, dispatched by TickRandomEncounterCounter: one message (StartMessageA)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand9C)
 ; reads: wScriptStep
-Talk00Event1D::
+EncounterCounterMessage::
 Func_012_4013:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1D_ToStartMessageAAndStep
-    dw Talk00Event1E_RunMessageBoxCarryWhenIdle_Bank12
+    dw EncounterCounterMessage_ToStartMessageAAndStep
+    dw CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12
 
-; entry 1 of the `rst $00` table in Talk00Event1E
+; entry 1 of the `rst $00` table in CountdownMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-Talk00Event1E_RunMessageBoxCarryWhenIdle_Bank12::
+CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_401B:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -44,10 +44,10 @@ Jump_012_401B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event1D
+; entry 0 of the `rst $00` table in EncounterCounterMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event1D_ToStartMessageAAndStep::
+EncounterCounterMessage_ToStartMessageAAndStep::
 Jump_012_4026:: ; address name
     ld a, $0F
     call StartMessageA
@@ -55,12 +55,12 @@ Jump_012_4026:: ; address name
     inc [hl]
     ret
 
-; implements script command type 9A (SCRIPT_TALK00_19): the one command of the script DispatchTalkEvent_Case00_Sub01_Case19 starts (talk event category $00, group $19); its states are not yet read (a structural name); reached through ScriptCommand9A in bank $10 (E-0038, E-0246)
+; implements script command type 9A (SCRIPT_RANDOM_BATTLE): a key-world/field talk event (group $19, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: picks a battle intro (NextRandomSeed) and starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand9A)
 ; reads: wScriptStep, wMapType, wKeyRandomLo
 ; writes: wScriptStartRequest, wBattleIntroKind, wBattleTransitionSubStep
 ; points at: wScriptStep
-Talk00Event19::
+RandomBattleEvent::
 Func_012_4030:: ; address name
     ld a, [wScriptStep]
     or a, a
@@ -89,31 +89,31 @@ Jump_012_404C::
     inc [hl]
     ret
 
-; implements script command type 99 (SCRIPT_TALK00_1C): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1C starts (talk event category $00, group $1C); its states are not yet read (a structural name); reached through ScriptCommand99 in bank $10 (E-0038, E-0246)
+; implements script command type 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step deltas with the followers, then fades); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand99)
 ; reads: wScriptStep
-Talk00Event1C::
+ObjectPath1C::
 Func_012_4064:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1C_SetBit2AtHL_B12
-    dw Talk00Event1C_UpdateFollowersOnStep_Bank12
-    dw Talk00Event1C_UpdateFollowersOnStep_Bank12_Case02
-    dw Talk00Event1C_AddStepDeltaToPointedByte
-    dw Talk00Event1C_WriteFollowerRecordsAndMapIdEtc
-    dw Talk00Event1C_SetBit2AtHL_B12_Case05
-    dw Talk00Event1C_WritePlayerY
-    dw Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case07
-    dw Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case08
-    dw Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case09
-    dw Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12
-    dw Talk00Event1C_ClearBit2AtHL_Bank12
+    dw ObjectPath1C_SetBit2AtHL_B12
+    dw ObjectPath1C_UpdateFollowersOnStep_Bank12
+    dw ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02
+    dw ObjectPath1C_AddStepDeltaToPointedByte
+    dw ObjectPath1C_WriteFollowerRecordsAndMapIdEtc
+    dw ObjectPath1C_SetBit2AtHL_B12_Case05
+    dw ObjectPath1C_WritePlayerY
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12
+    dw ObjectPath1C_ClearBit2AtHL_Bank12
 
-; entry 10 of the `rst $00` table in Talk00Event1C
+; entry 10 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
-Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12::
 Jump_012_4080:: ; address name
     xor a, a
     ld [wFollowerRecords + $A], a
@@ -124,11 +124,11 @@ Jump_012_4080:: ; address name
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-; entry 9 of the `rst $00` table in Talk00Event1C
+; entry 9 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords, wScriptParam0, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
-Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case09::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09::
 Jump_012_4092:: ; address name
     xor a, a
     ld [wFollowerRecords + $5], a
@@ -150,11 +150,11 @@ Jump_012_4092:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 8 of the `rst $00` table in Talk00Event1C
+; entry 8 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords, wScriptParam0, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
-Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case08::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08::
 Jump_012_40B8:: ; address name
     xor a, a
     ld [wFollowerRecords], a
@@ -177,12 +177,12 @@ Jump_012_40B8:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 7 of the `rst $00` table in Talk00Event1C
+; entry 7 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerFacing, hPlayerY
 ; points at: hPlayerY
-Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case07::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07::
 Jump_012_40E1:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
@@ -199,12 +199,12 @@ Jump_012_40E1:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Talk00Event1C
+; entry 6 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: wScriptStep
-Talk00Event1C_WritePlayerY::
+ObjectPath1C_WritePlayerY::
 Jump_012_40FC:: ; address name
     ld hl, wFollowerRecords + $C
     inc [hl]
@@ -221,11 +221,11 @@ Jump_012_40FC:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event1C
+; entry 5 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: hPlayerStateFlags, wScriptStep
-Talk00Event1C_SetBit2AtHL_B12_Case05::
+ObjectPath1C_SetBit2AtHL_B12_Case05::
 Jump_012_4115:: ; address name
     ld a, $02
     ldh [hPlayerFacing], a
@@ -244,12 +244,12 @@ Jump_012_4115:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event1C
+; entry 4 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
 ; points at: hPlayerY
-Talk00Event1C_WriteFollowerRecordsAndMapIdEtc::
+ObjectPath1C_WriteFollowerRecordsAndMapIdEtc::
 Jump_012_413C:: ; address name
     ld a, $02
     ld [wFollowerRecords + $A], a
@@ -279,12 +279,12 @@ Jump_012_413C:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event1C
+; entry 3 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wFollowerRecords, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1C_AddStepDeltaToPointedByte::
+ObjectPath1C_AddStepDeltaToPointedByte::
 Jump_012_4177:: ; address name
     ld a, $01
     ld [wFollowerRecords + $A], a
@@ -308,12 +308,12 @@ Jump_012_4177:: ; address name
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; entry 2 of the `rst $00` table in Talk00Event1C
+; entry 2 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: wFollowerRecords, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1C_UpdateFollowersOnStep_Bank12_Case02::
+ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02::
 Jump_012_41AA:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -329,12 +329,12 @@ Jump_012_41AA:: ; address name
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; entry 1 of the `rst $00` table in Talk00Event1C
+; entry 1 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: hPlayerFacing, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1C_UpdateFollowersOnStep_Bank12::
+ObjectPath1C_UpdateFollowersOnStep_Bank12::
 Jump_012_41CC:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -350,12 +350,12 @@ Jump_012_41CC:: ; address name
     farcall AddStepDeltaToPointedByte
     jp Jump_012_43C6
 
-; entry 0 of the `rst $00` table in Talk00Event1C
+; entry 0 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerStateFlags, hPlayerY, hPlayerX, wScriptStep
-Talk00Event1C_SetBit2AtHL_B12::
+ObjectPath1C_SetBit2AtHL_B12::
 Jump_012_41ED:: ; address name
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
@@ -371,31 +371,31 @@ Jump_012_41ED:: ; address name
     inc [hl]
     jp Jump_012_43C6
 
-; implements script command type 98 (SCRIPT_TALK00_1B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1B starts (talk event category $00, group $1B); its states are not yet read (a structural name); reached through ScriptCommand98 in bank $10 (E-0038, E-0246)
+; implements script command type 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step deltas with the followers, then fades); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand98)
 ; reads: wScriptStep
-Talk00Event1B::
+ObjectPath1B::
 Func_012_4210:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1B_SetBit2AtHL_B12
-    dw Talk00Event1B_UpdateFollowersOnStep_Bank12
-    dw Talk00Event1B_UpdateFollowersOnStep_Bank12_Case02
-    dw Talk00Event1B_AddStepDeltaToPointedByte
-    dw Talk00Event1B_WriteFollowerRecordsAndMapIdEtc
-    dw Talk00Event1B_SetBit2AtHL_B12_Case05
-    dw Talk00Event1B_UpdateFollowersOnStep_Bank12_Case06
-    dw Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case07
-    dw Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case08
-    dw Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case09
-    dw Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12
-    dw Talk00Event1C_ClearBit2AtHL_Bank12
+    dw ObjectPath1B_SetBit2AtHL_B12
+    dw ObjectPath1B_UpdateFollowersOnStep_Bank12
+    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02
+    dw ObjectPath1B_AddStepDeltaToPointedByte
+    dw ObjectPath1B_WriteFollowerRecordsAndMapIdEtc
+    dw ObjectPath1B_SetBit2AtHL_B12_Case05
+    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12
+    dw ObjectPath1C_ClearBit2AtHL_Bank12
 
-; entry 11 of the `rst $00` table in Talk00Event1C
+; entry 11 of the `rst $00` table in ObjectPath1C
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 ; points at: hPlayerStateFlags
-Talk00Event1C_ClearBit2AtHL_Bank12::
+ObjectPath1C_ClearBit2AtHL_Bank12::
 Jump_012_422C:: ; address name
     ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank12
@@ -403,11 +403,11 @@ Jump_012_422C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 10 of the `rst $00` table in Talk00Event1B
+; entry 10 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords
-Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12::
 Jump_012_4238:: ; address name
     ld a, $03
     ld [wFollowerRecords + $A], a
@@ -418,11 +418,11 @@ Jump_012_4238:: ; address name
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-; entry 9 of the `rst $00` table in Talk00Event1B
+; entry 9 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
-Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case09::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09::
 Jump_012_424B:: ; address name
     ld a, $03
     ld [wFollowerRecords + $5], a
@@ -443,11 +443,11 @@ Jump_012_424B:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 8 of the `rst $00` table in Talk00Event1B
+; entry 8 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords, wScriptParam0, wPartyCount
 ; writes: wFollowerRecords, wScriptStep
-Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case08::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08::
 Jump_012_426F:: ; address name
     ld a, $03
     ld [wFollowerRecords], a
@@ -470,12 +470,12 @@ Jump_012_426F:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 7 of the `rst $00` table in Talk00Event1B
+; entry 7 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: hPlayerFacing, hPlayerX
 ; points at: hPlayerY
-Talk00Event1B_ScriptApplyStepDeltaAtDE_Bank12_Case07::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07::
 Jump_012_4299:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
@@ -493,7 +493,7 @@ Jump_012_4299:: ; address name
     ret
 
 ; DE = address of a byte: adds the step delta for wScriptParam0, then wScriptParam0 += 2; at $20 it is reset and wScriptStep += 1 (the bank-$12 form of ScriptApplyStepDeltaAtDE) (E-0117)
-; 8 call sites from 8 routines (e.g. Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12, Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case09, Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case08, Talk00Event1C_ScriptApplyStepDeltaAtDE_Bank12_Case07, ...)
+; 8 call sites from 8 routines (e.g. ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12, ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09, ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08, ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07, ...)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptStep
@@ -516,12 +516,12 @@ Func_012_42B5:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Talk00Event1B
+; entry 6 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: wScriptStep
-Talk00Event1B_UpdateFollowersOnStep_Bank12_Case06::
+ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06::
 Jump_012_42D7:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -534,11 +534,11 @@ Jump_012_42D7:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event1B
+; entry 5 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: hPlayerStateFlags, wScriptStep
-Talk00Event1B_SetBit2AtHL_B12_Case05::
+ObjectPath1B_SetBit2AtHL_B12_Case05::
 Jump_012_42E9:: ; address name
     ld a, $02
     ldh [hPlayerFacing], a
@@ -557,12 +557,12 @@ Jump_012_42E9:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event1B
+; entry 4 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords
 ; writes: wFollowerRecords, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
 ; points at: hPlayerY
-Talk00Event1B_WriteFollowerRecordsAndMapIdEtc::
+ObjectPath1B_WriteFollowerRecordsAndMapIdEtc::
 Jump_012_4310:: ; address name
     ld hl, hPlayerY
     dec [hl]
@@ -590,12 +590,12 @@ Jump_012_4310:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event1B
+; entry 3 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wFollowerRecords, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1B_AddStepDeltaToPointedByte::
+ObjectPath1B_AddStepDeltaToPointedByte::
 Jump_012_4346:: ; address name
     ld a, $02
     ld [wFollowerRecords + $A], a
@@ -615,12 +615,12 @@ Jump_012_4346:: ; address name
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; entry 2 of the `rst $00` table in Talk00Event1B
+; entry 2 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1B_UpdateFollowersOnStep_Bank12_Case02::
+ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02::
 Jump_012_436E:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -634,12 +634,12 @@ Jump_012_436E:: ; address name
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; entry 1 of the `rst $00` table in Talk00Event1B
+; entry 1 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event1B_UpdateFollowersOnStep_Bank12::
+ObjectPath1B_UpdateFollowersOnStep_Bank12::
 Jump_012_438A:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -653,12 +653,12 @@ Jump_012_438A:: ; address name
     farcall AddStepDeltaToPointedByte
     jr Jump_012_43C6
 
-; entry 0 of the `rst $00` table in Talk00Event1B
+; entry 0 of the `rst $00` table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerStateFlags, hPlayerY, wScriptStep
-Talk00Event1B_SetBit2AtHL_B12::
+ObjectPath1B_SetBit2AtHL_B12::
 Jump_012_43A6:: ; address name
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
@@ -1503,42 +1503,42 @@ Data_012_48B9:: ; address name
     dw $0044, $0090, $0013, $0017, $0014, $0018, $0015, $001F ; id 4
     dw $FFFF, $FFFF, $0013, $0019, $0014, $001A, $0016, $0020 ; id 5
 
-; implements script command type 9F (SCRIPT_TALK00_21): the one command of the script DispatchTalkEvent_Case00_Sub01_Case21 starts (talk event category $00, group $21); its states are not yet read (a structural name); reached through ScriptCommand9F in bank $10 (E-0038, E-0246)
+; implements script command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from the link screens (GameMode5_Update, RunLinkSession4ScreenState): graphics and a message); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand9F)
 ; reads: wScriptStep
-Talk00Event21::
+LinkMessageEvent::
 Func_012_4919:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event21_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject1AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case05
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject2AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteFieldInitFlagAndMapIdEtc
-    dw Talk00Event21_ToStartMessageAAndStep
-    dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetObject5
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetSaveStateFlag
+    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject1AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject2AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
+    dw LinkMessageEvent_ToStartMessageAAndStep
+    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetObject5
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetSaveStateFlag
 
-; entry 22 of the `rst $00` table in Talk00Event21
+; entry 22 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptByte65
 ; writes: wSaveStateFlag, wGameMode, wModeState, wModeChangeRequest, wScriptRunning
-Talk00Event21_SetSaveStateFlag::
+LinkMessageEvent_SetSaveStateFlag::
 Jump_012_494B:: ; address name
     ld a, [wScriptByte65]
     ld [wSaveStateFlag], a
@@ -1552,44 +1552,44 @@ Jump_012_494B:: ; address name
     ld [wScriptRunning], a
     ret
 
-; implements script command type 8F (SCRIPT_TALK00_20): the one command of the script DispatchTalkEvent_Case00_Sub01_Case20 starts (talk event category $00, group $20); its states are not yet read (a structural name); reached through ScriptCommand8F in bank $10 (E-0038, E-0246)
+; implements script command type 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group $20, dispatched by NpcBreedMenu_Case04_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8F)
 ; reads: wScriptStep
-Talk00Event20::
+NpcBreedWarp::
 Func_012_4965:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event20_ScriptStartFadeAndAdvanceStep
-    dw Talk00Event21_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject1AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case05
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject2AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteFieldInitFlagAndMapIdEtc
-    dw Talk00Event21_ToStartMessageAAndStep
-    dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetObject5
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event20_WriteMapIdAndMapScreenXEtc
-    dw Talk00Event20_WriteSpriteSlotsAndTalkEventIndexEtc
+    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
+    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject1AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject2AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
+    dw LinkMessageEvent_ToStartMessageAAndStep
+    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetObject5
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw NpcBreedWarp_WriteMapIdAndMapScreenXEtc
+    dw NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc
 
-; entry 24 of the `rst $00` table in Talk00Event20
+; entry 24 of the `rst $00` table in NpcBreedWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSavedPlayerState, wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: wSpriteSlots, wTalkEventIndex, wTalkEventGroup, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptCommandType, wScriptInDataBank
-Talk00Event20_WriteSpriteSlotsAndTalkEventIndexEtc::
+NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc::
 Jump_012_499B:: ; address name
     ld a, [wSavedPlayerState]
     ld [wSpriteSlots + $7], a
@@ -1609,14 +1609,14 @@ Jump_012_499B:: ; address name
     ld [wScriptInDataBank], a
     ret
 
-; entry 23 of the `rst $00` table in Talk00Event20
+; entry 23 of the `rst $00` table in NpcBreedWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenTableIndex
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hFieldDrawFlags, wFieldTransitionKind, wSavedPositionValid
-Talk00Event20_WriteMapIdAndMapScreenXEtc::
+NpcBreedWarp_WriteMapIdAndMapScreenXEtc::
 Jump_012_49C8:: ; address name
     ld a, [wScreenTableIndex]
-    ld hl, Talk00Event20_WriteMapIdAndMapScreenXEtc_Data
+    ld hl, NpcBreedWarp_WriteMapIdAndMapScreenXEtc_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -1651,52 +1651,52 @@ Jump_012_49F6::
     ld [wSavedPositionValid], a
     ret
 
-; address loaded by Talk00Event20_WriteMapIdAndMapScreenXEtc
-Talk00Event20_WriteMapIdAndMapScreenXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by NpcBreedWarp_WriteMapIdAndMapScreenXEtc
+NpcBreedWarp_WriteMapIdAndMapScreenXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_4A14:: ; address name
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
-; implements script command type 8D (SCRIPT_TALK00_17): the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name); reached through ScriptCommand8D in bank $10 (E-0038, E-0246)
+; implements script command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by BreedMenu_TalkEvent17ThenNameEntry: a field object with loaded graphics, a message with a name from the string database (CopyStringToBuffer_Bank08)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8D)
 ; reads: wScriptStep
-Talk00Event17::
+BreedChildScene::
 Func_012_4A1E:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event20_ScriptStartFadeAndAdvanceStep
-    dw Talk00Event21_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject1AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case05
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject2AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteFieldInitFlagAndMapIdEtc
-    dw Talk00Event21_ToStartMessageAAndStep
-    dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event17_DecompressGraphicsTemp0ToTemp4
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event17_RunFieldCommandTemp0AndStep
-    dw Talk00Event17_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event17_CopyStringToBuffer_Bank08
-    dw Talk00Event17_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event17_WriteMapIdAndMapScreenXEtc
+    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
+    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject1AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject2AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
+    dw LinkMessageEvent_ToStartMessageAAndStep
+    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
+    dw BreedChildScene_DecompressGraphicsTemp0ToTemp4
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedChildScene_RunFieldCommandTemp0AndStep
+    dw BreedChildScene_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedChildScene_CopyStringToBuffer_Bank08
+    dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
+    dw BreedChildScene_WriteMapIdAndMapScreenXEtc
 
-; entry 17 of the `rst $00` table in Talk00Event17
+; entry 17 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wOBJPaletteUploadRequest
 ; points at: wChildRecord, wScriptStep
-Talk00Event17_DecompressGraphicsTemp0ToTemp4::
+BreedChildScene_DecompressGraphicsTemp0ToTemp4::
 Jump_012_4A5A:: ; address name
     ld a, $0B
     ld hl, wChildRecord
@@ -1726,36 +1726,36 @@ Jump_012_4A5A:: ; address name
     inc [hl]
     ret
 
-; implements script command type 8C (SCRIPT_TALK00_16): the one command of the script DispatchTalkEvent_Case00_Sub01_Case16 starts (talk event category $00, group $16); its states are not yet read (a structural name); reached through ScriptCommand8C in bank $10 (E-0038, E-0246)
+; implements script command type 8C (SCRIPT_BREED_CHILD_SPRITE): a key-world/field talk event (group $16, dispatched by BreedMenu_CopyToChildThenTalkEvent16: loads graphics (DecompressGraphicsTemp0ToTemp4) for a field object (RunFieldCommandTemp0)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8C)
 ; reads: wScriptStep
-Talk00Event16::
+BreedChildSprite::
 Func_012_4A9A:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event20_ScriptStartFadeAndAdvanceStep
-    dw Talk00Event16_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event16_SetObject5
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event17_RunFieldCommandTemp0AndStep
-    dw Talk00Event17_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event17_CopyStringToBuffer_Bank08
-    dw Talk00Event17_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event17_WriteMapIdAndMapScreenXEtc
+    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
+    dw BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedChildSprite_SetObject5
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedChildScene_RunFieldCommandTemp0AndStep
+    dw BreedChildScene_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedChildScene_CopyStringToBuffer_Bank08
+    dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
+    dw BreedChildScene_WriteMapIdAndMapScreenXEtc
 
-; entry 27 of the `rst $00` table in Talk00Event17
+; entry 27 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wObject5, wSpriteSlotCount, wFieldEventKind, ...
-Talk00Event17_WriteMapIdAndMapScreenXEtc::
+BreedChildScene_WriteMapIdAndMapScreenXEtc::
 Jump_012_4AC0:: ; address name
     ld a, $0D
     ldh [hMapId], a
@@ -1791,12 +1791,12 @@ Jump_012_4AC0:: ; address name
     ld [wScriptInDataBank], a
     ret
 
-; entry 26 of the `rst $00` table in Talk00Event17
+; entry 26 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hSpriteWindowClipMode
 ; points at: wScriptStep
-Talk00Event17_RunMessageBoxCarryWhenIdle_Bank12::
+BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_4B0A:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -1807,12 +1807,12 @@ Jump_012_4B0A:: ; address name
     ldh [hSpriteWindowClipMode], a
     ret
 
-; entry 25 of the `rst $00` table in Talk00Event17
+; entry 25 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hSpriteWindowClipMode
 ; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi, wScriptParam0, hSpriteWindowClipMode
 ; points at: wScriptStep, wChildRecord, wTextNumber
-Talk00Event17_CopyStringToBuffer_Bank08::
+BreedChildScene_CopyStringToBuffer_Bank08::
 Jump_012_4B19:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1864,12 +1864,12 @@ Jump_012_4B65::
     ldh [hSpriteWindowClipMode], a
     ret
 
-; entry 21 of the `rst $00` table in Talk00Event17
+; entry 21 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wObject5, wObject1
 ; points at: wScriptStep
-Talk00Event17_StepScriptParam0Counter_Bank12::
+BreedChildScene_StepScriptParam0Counter_Bank12::
 Jump_012_4B77:: ; address name
     ld a, [wScriptParam0]
     cp a, $C2
@@ -1891,11 +1891,11 @@ Jump_012_4B83::
     inc [hl]
     ret
 
-; entry 20 of the `rst $00` table in Talk00Event17
+; entry 20 of the `rst $00` table in BreedChildScene
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-Talk00Event17_RunFieldCommandTemp0AndStep::
+BreedChildScene_RunFieldCommandTemp0AndStep::
 Jump_012_4B9B:: ; address name
     ld a, $0E
     ldh [hTemp0], a
@@ -1904,11 +1904,11 @@ Jump_012_4B9B:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event16
+; entry 4 of the `rst $00` table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-Talk00Event16_SetObject5::
+BreedChildSprite_SetObject5::
 Jump_012_4BAA:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -1916,12 +1916,12 @@ Jump_012_4BAA:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event16
+; entry 1 of the `rst $00` table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFieldDrawFlags
 ; writes: hSpriteWindowClipMode, hFieldDrawFlags, wObject1, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
 ; points at: wChildRecord, wScriptStep
-Talk00Event16_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
+BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
 Jump_012_4BB4:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -1960,44 +1960,44 @@ Jump_012_4BB4:: ; address name
     inc [hl]
     ret
 
-; implements script command type 8B (SCRIPT_TALK00_15): the one command of the script DispatchTalkEvent_Case00_Sub01_Case15 starts (talk event category $00, group $15); its states are not yet read (a structural name); reached through ScriptCommand8B in bank $10 (E-0038, E-0246)
+; implements script command type 8B (SCRIPT_BREED_FADE): a key-world/field talk event (group $15, dispatched by BreedMenu_TalkEvent15: a palette fade); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8B)
 ; reads: wScriptStep
-Talk00Event15::
+BreedFade::
 Func_012_4C07:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event20_ScriptStartFadeAndAdvanceStep
-    dw Talk00Event21_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject1AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case05
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteObject2AndScriptParam0
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_WriteFieldInitFlagAndMapIdEtc
-    dw Talk00Event21_ToStartMessageAAndStep
-    dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event21_ClearBit2AtHL_Bank12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetObject5
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_SetBit2AtHL_B12
-    dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event15_StartPaletteFade
-    dw Talk00Event15_WaitFadeState
+    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
+    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject1AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteObject2AndScriptParam0
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
+    dw LinkMessageEvent_ToStartMessageAAndStep
+    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
+    dw LinkMessageEvent_ClearBit2AtHL_Bank12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetObject5
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_SetBit2AtHL_B12
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw BreedFade_StartPaletteFade
+    dw BreedFade_WaitFadeState
 
-; entry 24 of the `rst $00` table in Talk00Event15
+; entry 24 of the `rst $00` table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: wTalkEventIndex, wTalkEventGroup, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptCommandType, wScriptInDataBank
-Talk00Event15_WaitFadeState::
+BreedFade_WaitFadeState::
 Jump_012_4C3D:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2018,11 +2018,11 @@ Jump_012_4C3D:: ; address name
     ld [wScriptInDataBank], a
     ret
 
-; entry 23 of the `rst $00` table in Talk00Event15
+; entry 23 of the `rst $00` table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hFieldDrawFlags, wFieldTransitionKind, wSavedPositionValid
 ; points at: wScriptStep
-Talk00Event15_StartPaletteFade::
+BreedFade_StartPaletteFade::
 Jump_012_4C69:: ; address name
     ld a, $0D
     ldh [hMapId], a
@@ -2047,11 +2047,11 @@ Jump_012_4C69:: ; address name
     inc [hl]
     ret
 
-; entry 18 of the `rst $00` table in Talk00Event21
+; entry 18 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-Talk00Event21_SetObject5::
+LinkMessageEvent_SetObject5::
 Jump_012_4C97:: ; address name
     xor a, a
     ld [wObject5], a
@@ -2059,10 +2059,10 @@ Jump_012_4C97:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in Talk00Event21
+; entry 15 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12::
+LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_4CA0:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -2071,10 +2071,10 @@ Jump_012_4CA0:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in Talk00Event21
+; entry 14 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event21_ToStartMessageAAndStep::
+LinkMessageEvent_ToStartMessageAAndStep::
 Jump_012_4CAA:: ; address name
     ld a, $0E
     call StartMessageA
@@ -2082,21 +2082,21 @@ Jump_012_4CAA:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in Talk00Event21
+; entry 13 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldInitFlag, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-Talk00Event21_WriteFieldInitFlagAndMapIdEtc::
+LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc::
 Jump_012_4CB4:: ; address name
     ld a, $8D
     ld [wFieldInitFlag], a
-    jp Talk00Event20_ScriptStartFadeAndAdvanceStep
+    jp NpcBreedWarp_ScriptStartFadeAndAdvanceStep
 
-; entry 10 of the `rst $00` table in Talk00Event21
+; entry 10 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots, wObject1, wObject2
 ; points at: wScriptStep
-Talk00Event21_SetBit2AtHL_B12::
+LinkMessageEvent_SetBit2AtHL_B12::
 Jump_012_4CBC:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -2115,12 +2115,12 @@ Jump_012_4CBC:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Talk00Event21
+; entry 7 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2
 ; writes: wObject2, wScriptParam0
 ; points at: wScriptStep
-Talk00Event21_WriteObject2AndScriptParam0::
+LinkMessageEvent_WriteObject2AndScriptParam0::
 Jump_012_4CDF:: ; address name
     ld a, $01
     ld [wObject2 + $7], a
@@ -2142,11 +2142,11 @@ Jump_012_4CDF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event21
+; entry 5 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject2
 ; points at: wScriptStep
-Talk00Event21_StepScriptParam0Counter_Bank12_Case05::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05::
 Jump_012_4D05:: ; address name
     ld b, $3C
     call StepScriptParam0Counter_Bank12
@@ -2157,12 +2157,12 @@ Jump_012_4D05:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event21
+; entry 4 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject1
 ; writes: wObject1, wScriptParam0
 ; points at: wScriptStep
-Talk00Event21_WriteObject1AndScriptParam0::
+LinkMessageEvent_WriteObject1AndScriptParam0::
 Jump_012_4D15:: ; address name
     ld a, $03
     ld [wObject1 + $7], a
@@ -2184,10 +2184,10 @@ Jump_012_4D15:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event21
+; entry 3 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event21_StepScriptParam0Counter_Bank12_Case03::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03::
 Jump_012_4D3B:: ; address name
     ld b, $1E
     call StepScriptParam0Counter_Bank12
@@ -2196,11 +2196,11 @@ Jump_012_4D3B:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event21
+; entry 2 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
 ; points at: wScriptStep
-Talk00Event21_StepScriptParam0Counter_Bank12::
+LinkMessageEvent_StepScriptParam0Counter_Bank12::
 Jump_012_4D46:: ; address name
     ld b, $3C
     call StepScriptParam0Counter_Bank12
@@ -2211,12 +2211,12 @@ Jump_012_4D46:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event21
+; entry 1 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-Talk00Event21_ClearBit2AtHL_Bank12::
+LinkMessageEvent_ClearBit2AtHL_Bank12::
 Jump_012_4D56:: ; address name
     ld a, [wSpriteSlots + $C]
     dec a
@@ -2229,12 +2229,12 @@ Jump_012_4D56:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event21
+; entry 0 of the `rst $00` table in LinkMessageEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFieldDrawFlags
 ; writes: hSpriteWindowClipMode, hFieldDrawFlags, wObject1, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
 ; points at: wRecordBufA, wRecordBufB, wScriptStep
-Talk00Event21_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
+LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
 Jump_012_4D6B:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -2287,10 +2287,10 @@ Jump_012_4D6B:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event20
+; entry 0 of the `rst $00` table in NpcBreedWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-Talk00Event20_ScriptStartFadeAndAdvanceStep::
+NpcBreedWarp_ScriptStartFadeAndAdvanceStep::
 Jump_012_4DDC:: ; address name
     ld a, $14
     ldh [hMapId], a
@@ -2343,36 +2343,36 @@ Func_012_4DFB:: ; address name
     inc [hl]
     ret
 
-; implements script command type 94 (SCRIPT_TALK00_14): the one command of the script DispatchTalkEvent_Case00_Sub01_Case14 starts (talk event category $00, group $14); its states are not yet read (a structural name); reached through ScriptCommand94 in bank $10 (E-0038, E-0246)
+; implements script command type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers, toggling object flag bit 1, with a sound); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand94)
 ; reads: wScriptStep
-Talk00Event14::
+FollowersStep14::
 Func_012_4E4B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event14_SetBit1AtHL_Bank12AndStep
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; implements script command type 93 (SCRIPT_TALK00_13): the one command of the script DispatchTalkEvent_Case00_Sub01_Case13 starts (talk event category $00, group $13); its states are not yet read (a structural name); reached through ScriptCommand93 in bank $10 (E-0038, E-0246)
+; implements script command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the field transition); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand93)
 ; reads: wScriptStep
-Talk00Event13::
+WarpWithFollowers::
 Func_012_4E55:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event14_SetBit1AtHL_Bank12AndStep
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12
-    dw Talk00Event13_ScriptStartFadeAndAdvanceStep
-    dw Talk00Event13_SetBit1AtHL_Bank12
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12
+    dw WarpWithFollowers_ScriptStartFadeAndAdvanceStep
+    dw WarpWithFollowers_SetBit1AtHL_Bank12
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; entry 3 of the `rst $00` table in Talk00Event13
+; entry 3 of the `rst $00` table in WarpWithFollowers
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerRecords, hPlayerY
 ; writes: wFollowerRecords, hPlayerY
 ; points at: hPlayerStateFlags, wScriptStep
-Talk00Event13_SetBit1AtHL_Bank12::
+WarpWithFollowers_SetBit1AtHL_Bank12::
 Jump_012_4E63:: ; address name
     ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank12
@@ -2417,11 +2417,11 @@ Jump_012_4E9F::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event13
+; entry 2 of the `rst $00` table in WarpWithFollowers
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-Talk00Event13_ScriptStartFadeAndAdvanceStep::
+WarpWithFollowers_ScriptStartFadeAndAdvanceStep::
 Jump_012_4EAD:: ; address name
     ld a, $01
     ldh [hMapId], a
@@ -2438,26 +2438,26 @@ Jump_012_4EAD:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; implements script command type 92 (SCRIPT_TALK00_12): the one command of the script DispatchTalkEvent_Case00_Sub01_Case12 starts (talk event category $00, group $12); its states are not yet read (a structural name); reached through ScriptCommand92 in bank $10 (E-0038, E-0246)
+; implements script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event (group $12: moves the player (UpdatePlayerMovement) and the followers); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand92)
 ; reads: wScriptStep
-Talk00Event12::
+PlayerAndFollowersStep::
 Func_012_4ECE:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event14_SetBit1AtHL_Bank12AndStep
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12
-    dw Talk00Event12_UpdatePlayerMovement
-    dw Talk00Event12_UpdatePlayerMovement_Case03
-    dw Talk00Event12_UpdateFollowersOnStep_Bank12
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12
+    dw PlayerAndFollowersStep_UpdatePlayerMovement
+    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03
+    dw PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; entry 4 of the `rst $00` table in Talk00Event12
+; entry 4 of the `rst $00` table in PlayerAndFollowersStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: hPlayerY, wScriptStep
-Talk00Event12_UpdateFollowersOnStep_Bank12::
+PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12::
 Jump_012_4EDE:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -2474,23 +2474,23 @@ Jump_012_4EDE:: ; address name
     inc [hl]
     ret
 
-; implements script command type 91 (SCRIPT_TALK00_11): the one command of the script DispatchTalkEvent_Case00_Sub01_Case11 starts (talk event category $00, group $11); its states are not yet read (a structural name); reached through ScriptCommand91 in bank $10 (E-0038, E-0246)
+; implements script command type 91 (SCRIPT_FOLLOWERS_STEP_11): a key-world/field talk event (group $11: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand91)
 ; reads: wScriptStep
-Talk00Event11::
+FollowersStep11::
 Func_012_4EF9:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event14_SetBit1AtHL_Bank12AndStep
-    dw Talk00Event11_UpdateFollowersOnStep_Bank12
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
+    dw FollowersStep11_UpdateFollowersOnStep_Bank12
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; entry 1 of the `rst $00` table in Talk00Event11
+; entry 1 of the `rst $00` table in FollowersStep11
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: hPlayerY, wScriptStep
-Talk00Event11_UpdateFollowersOnStep_Bank12::
+FollowersStep11_UpdateFollowersOnStep_Bank12::
 Jump_012_4F03:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -2507,26 +2507,26 @@ Jump_012_4F03:: ; address name
     inc [hl]
     ret
 
-; implements script command type 90 (SCRIPT_TALK00_10): the one command of the script DispatchTalkEvent_Case00_Sub01_Case10 starts (talk event category $00, group $10); its states are not yet read (a structural name); reached through ScriptCommand90 in bank $10 (E-0038, E-0246)
+; implements script command type 90 (SCRIPT_FOLLOWERS_STEP_10): a key-world/field talk event (group $10: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand90)
 ; reads: wScriptStep
-Talk00Event10::
+FollowersStep10::
 Func_012_4F1E:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event14_SetBit1AtHL_Bank12AndStep
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12
-    dw Talk00Event12_UpdatePlayerMovement
-    dw Talk00Event12_UpdatePlayerMovement_Case03
-    dw Talk00Event10_UpdateFollowersOnStep_Bank12
-    dw Talk00Event14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12
+    dw PlayerAndFollowersStep_UpdatePlayerMovement
+    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03
+    dw FollowersStep10_UpdateFollowersOnStep_Bank12
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; entry 2 of the `rst $00` table in Talk00Event14
+; entry 2 of the `rst $00` table in FollowersStep14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wPartyCount
 ; writes: wScriptStartRequest
 ; points at: hPlayerStateFlags
-Talk00Event14_UpdateFollowersOnStep_Bank12_Case02::
+FollowersStep14_UpdateFollowersOnStep_Bank12_Case02::
 Jump_012_4F2E:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -2551,12 +2551,12 @@ Jump_012_4F2E:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event10
+; entry 4 of the `rst $00` table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: hPlayerY, wScriptStep
-Talk00Event10_UpdateFollowersOnStep_Bank12::
+FollowersStep10_UpdateFollowersOnStep_Bank12::
 Jump_012_4F5C:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -2573,11 +2573,11 @@ Jump_012_4F5C:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event12
+; entry 3 of the `rst $00` table in PlayerAndFollowersStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFieldActionRequest
 ; points at: wScriptStep
-Talk00Event12_UpdatePlayerMovement_Case03::
+PlayerAndFollowersStep_UpdatePlayerMovement_Case03::
 Jump_012_4F77:: ; address name
     farcall UpdatePlayerMovement
     farcall RunFieldActionRequestActionIfBit7
@@ -2588,12 +2588,12 @@ Jump_012_4F77:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event12
+; entry 2 of the `rst $00` table in PlayerAndFollowersStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
 ; writes: wFieldActionRequest, wScreenScrollDir, hPlayerStateFlags, hPlayerStepDYLo, hPlayerStepDYHi
 ; points at: hMapScreenY, hFF80, wScriptStep
-Talk00Event12_UpdatePlayerMovement::
+PlayerAndFollowersStep_UpdatePlayerMovement::
 Jump_012_4F8E:: ; address name
     ld a, $80
     ld [wFieldActionRequest], a
@@ -2615,12 +2615,12 @@ Jump_012_4F8E:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event14
+; entry 1 of the `rst $00` table in FollowersStep14
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
 ; points at: hPlayerY, wScriptStep
-Talk00Event14_UpdateFollowersOnStep_Bank12::
+FollowersStep14_UpdateFollowersOnStep_Bank12::
 Jump_012_4FBC:: ; address name
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -2637,11 +2637,11 @@ Jump_012_4FBC:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event14
+; entry 0 of the `rst $00` table in FollowersStep14
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing
 ; points at: hPlayerStateFlags, wScriptStep
-Talk00Event14_SetBit1AtHL_Bank12AndStep::
+FollowersStep14_SetBit1AtHL_Bank12AndStep::
 Jump_012_4FD7:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
@@ -2653,26 +2653,26 @@ Jump_012_4FD7:: ; address name
     inc [hl]
     ret
 
-; implements script command type A0 (SCRIPT_TALK00_09): the one command of the script DispatchTalkEvent_Case00_Sub01_Case09 starts (talk event category $00, group $09); its states are not yet read (a structural name); reached through ScriptCommandA0 in bank $10 (E-0038, E-0246)
+; implements script command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: reloads the player sprite graphics with a negative screen flash); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommandA0)
 ; reads: wScriptStep
-Talk00Event09::
+PlayerSpriteFlash::
 Func_012_4FEA:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event09_QueueSoundEffect
-    dw Talk00Event09_ToScriptStepFlashScreenNegative
-    dw Talk00Event09_NextRandomSeed
-    dw Talk00Event09_WriteScriptParam0AndPlayerFacing
-    dw Talk00Event09_LoadPlayerSpriteGraphics
-    dw Talk00Event09_WriteScriptParam0AndPlayerFacing
-    dw Talk00Event09_WriteScriptParam0AndPlayerFacing
-    dw Talk00Event09_WriteSpriteWindowClipModeAndScriptStartRequest
+    dw PlayerSpriteFlash_QueueSoundEffect
+    dw PlayerSpriteFlash_ToScriptStepFlashScreenNegative
+    dw PlayerSpriteFlash_NextRandomSeed
+    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
+    dw PlayerSpriteFlash_LoadPlayerSpriteGraphics
+    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
+    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
+    dw PlayerSpriteFlash_WriteSpriteWindowClipModeAndScriptStartRequest
 
-; entry 7 of the `rst $00` table in Talk00Event09
+; entry 7 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wScriptStartRequest
-Talk00Event09_WriteSpriteWindowClipModeAndScriptStartRequest::
+PlayerSpriteFlash_WriteSpriteWindowClipModeAndScriptStartRequest::
 Jump_012_4FFE:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -2680,16 +2680,16 @@ Jump_012_4FFE:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event09
+; entry 4 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerSpriteOverride, hPlayerFacing
 ; writes: hPlayerSpriteOverride, wOBJPaletteUploadRequest, wScriptParam0, hPlayerFacing
 ; points at: wScriptStep
-Talk00Event09_LoadPlayerSpriteGraphics::
+PlayerSpriteFlash_LoadPlayerSpriteGraphics::
 Jump_012_5007:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Talk00Event09_WriteScriptParam0AndPlayerFacing
+    jr nz, PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
     ldh a, [hPlayerSpriteOverride]
     or a, $80
     ldh [hPlayerSpriteOverride], a
@@ -2697,12 +2697,12 @@ Jump_012_5007:: ; address name
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
 
-; entry 3 of the `rst $00` table in Talk00Event09
+; entry 3 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: wScriptParam0, hPlayerFacing
 ; points at: wScriptStep
-Talk00Event09_WriteScriptParam0AndPlayerFacing::
+PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing::
 Jump_012_501E:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -2719,12 +2719,12 @@ Jump_012_501E:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event09
+; entry 2 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlotCount, wKeyRandomHi, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hPlayerFacing, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wScriptParam0
 ; points at: wScriptStep
-Talk00Event09_NextRandomSeed::
+PlayerSpriteFlash_NextRandomSeed::
 Jump_012_5038:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
@@ -2779,18 +2779,18 @@ Jump_012_5080::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event09
+; entry 1 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
-Talk00Event09_ToScriptStepFlashScreenNegative::
+PlayerSpriteFlash_ToScriptStepFlashScreenNegative::
 Jump_012_5090:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event09
+; entry 0 of the `rst $00` table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-Talk00Event09_QueueSoundEffect::
+PlayerSpriteFlash_QueueSoundEffect::
 Jump_012_5097:: ; address name
     ld a, $7A
     call QueueSoundEffect
@@ -2807,21 +2807,21 @@ Jump_012_50AE::
     inc [hl]
     ret
 
-; implements script command type A1 (SCRIPT_TALK00_0A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0A starts (talk event category $00, group $0A); its states are not yet read (a structural name); reached through ScriptCommandA1 in bank $10 (E-0038, E-0246)
+; implements script command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event (group $0A, dispatched by UpdatePlayerMovement: reloads the player sprite graphics and shows a message); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommandA1)
 ; reads: wScriptStep
-Talk00Event0A::
+PlayerSpriteMessage::
 Func_012_50B3:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event0A_ToStartMessageAAndStep
-    dw Talk00Event0A_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event0A_LoadPlayerSpriteGraphics
+    dw PlayerSpriteMessage_ToStartMessageAAndStep
+    dw PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12
+    dw PlayerSpriteMessage_LoadPlayerSpriteGraphics
 
-; entry 2 of the `rst $00` table in Talk00Event0A
+; entry 2 of the `rst $00` table in PlayerSpriteMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerSpriteOverride, wOBJPaletteUploadRequest, wScriptStartRequest
-Talk00Event0A_LoadPlayerSpriteGraphics::
+PlayerSpriteMessage_LoadPlayerSpriteGraphics::
 Jump_012_50BD:: ; address name
     xor a, a
     ldh [hPlayerSpriteOverride], a
@@ -2832,10 +2832,10 @@ Jump_012_50BD:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event0A
+; entry 1 of the `rst $00` table in PlayerSpriteMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event0A_RunMessageBoxCarryWhenIdle_Bank12::
+PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_50D1:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -2844,10 +2844,10 @@ Jump_012_50D1:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event0A
+; entry 0 of the `rst $00` table in PlayerSpriteMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event0A_ToStartMessageAAndStep::
+PlayerSpriteMessage_ToStartMessageAAndStep::
 Jump_012_50DB:: ; address name
     ld a, $12
     call StartMessageA
@@ -2855,22 +2855,22 @@ Jump_012_50DB:: ; address name
     inc [hl]
     ret
 
-; implements script command type 8E (SCRIPT_TALK00_08): the one command of the script DispatchTalkEvent_Case00_Sub01_Case08 starts (talk event category $00, group $08); its states are not yet read (a structural name); reached through ScriptCommand8E in bank $10 (E-0038, E-0246)
+; implements script command type 8E (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: a timed palette fade, then the warp destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8E)
 ; reads: wScriptStep
-Talk00Event08::
+MapLinkWarp::
 Func_012_50E5:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event08_WritePlayerYAndPlayerFacingEtc
-    dw Talk00Event08_WriteScriptStartRequestAndMapIdEtc
+    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
+    dw MapLinkWarp_WriteScriptStartRequestAndMapIdEtc
 
-; entry 1 of the `rst $00` table in Talk00Event08
+; entry 1 of the `rst $00` table in MapLinkWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalPos, wKeyWorldGoalPos2
 ; writes: wScriptStartRequest, hMapId, wWarpDestX, wWarpDestY
 ; points at: wKeyWorldGoal, wKeyWorldGoalScreen
-Talk00Event08_WriteScriptStartRequestAndMapIdEtc::
+MapLinkWarp_WriteScriptStartRequestAndMapIdEtc::
 Jump_012_50ED:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -2918,10 +2918,10 @@ Jump_012_5112::
     ld de, wKeyWorldGoal
 
 Jump_012_512C::
-    call Talk00Event08_Case01_WriteWarpDestXAndWarpDestYEtc
+    call MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc
     ret
 
-; E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to Talk00Event08_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF).
+; E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to MapLinkWarp_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF).
 ; record: map, new map, key; destination position and screen
 MapExitWarpTable::
 Data_012_5130:: ; address name
@@ -2972,7 +2972,7 @@ Jump_012_5181::
     cp a, c
     jr nz, Jump_012_519E
     ld de, wKeyWorldGoal
-    call Talk00Event08_Case01_WriteWarpDestXAndWarpDestYEtc
+    call MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc
     ret
 
 Jump_012_519E::
@@ -2981,15 +2981,15 @@ Jump_012_519E::
     ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
     ld de, wKeyWorldGoalScreen
-    call Talk00Event08_Case01_StartPaletteFade
+    call MapLinkWarp_Case01_StartPaletteFade
     ret
 
-; only called from Talk00Event08_Case01 (E-0047)
-; 2 call sites from 1 routine (e.g. Talk00Event08_WriteScriptStartRequestAndMapIdEtc)
+; only called from MapLinkWarp_Case01 (E-0047)
+; 2 call sites from 1 routine (e.g. MapLinkWarp_WriteScriptStartRequestAndMapIdEtc)
 ; reads: hPlayerStateFlags
 ; writes: wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionStep, wFieldTransitionKind, wModeState, hPlayerStateFlags
 ; points at: wFieldInitStage
-Talk00Event08_Case01_WriteWarpDestXAndWarpDestYEtc::
+MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc::
 Func_012_51B1:: ; address name
     ld a, [de]
     and a, $F0
@@ -3000,12 +3000,12 @@ Func_012_51B1:: ; address name
     ld [wWarpDestY], a
     inc de
 
-; only called from Talk00Event08_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event08_WriteScriptStartRequestAndMapIdEtc)
+; only called from MapLinkWarp_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. MapLinkWarp_WriteScriptStartRequestAndMapIdEtc)
 ; reads: hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wFieldTransitionStep, wFieldTransitionKind, wModeState, hPlayerStateFlags
 ; points at: wFieldInitStage
-Talk00Event08_Case01_StartPaletteFade::
+MapLinkWarp_Case01_StartPaletteFade::
 Func_012_51C0:: ; address name
     ld a, [de]
     swap a
@@ -3034,22 +3034,22 @@ Func_012_51C0:: ; address name
     ldh [hPlayerStateFlags], a
     ret
 
-; implements script command type 8A (SCRIPT_TALK00_07): the one command of the script DispatchTalkEvent_Case00_Sub01_Case07 starts (talk event category $00, group $07); its states are not yet read (a structural name); reached through ScriptCommand8A in bank $10 (E-0038, E-0246)
+; implements script command type 8A (SCRIPT_MAP_EXIT_WARP): a key-world/field talk event (group $07, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: fades, then sets the warp destination from the map exit records (E-0182), wMapType, the map size and the field transition); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand8A)
 ; reads: wScriptStep
-Talk00Event07::
+MapExitWarp::
 Func_012_51F4:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event08_WritePlayerYAndPlayerFacingEtc
-    dw Talk00Event07_ScriptStartFadeAndAdvanceStep
+    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
+    dw MapExitWarp_ScriptStartFadeAndAdvanceStep
 
-; entry 1 of the `rst $00` table in Talk00Event07
+; entry 1 of the `rst $00` table in MapExitWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wMapType, wKeyWorldFloor, wKeyWorldWidth, wKeyWorldHeight, hMapId, wLastWarpIndex
 ; writes: wScriptStartRequest, hPlayerStateFlags, wFieldTransitionKind, wFieldTransitionStep, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
 ; points at: wKeyWorldFloorInfo
-Talk00Event07_ScriptStartFadeAndAdvanceStep::
+MapExitWarp_ScriptStartFadeAndAdvanceStep::
 Jump_012_51FC:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3148,7 +3148,7 @@ Jump_012_52A6::
     ldh [hPlayerStateFlags], a
     ret
 
-; E-0182 (C1: Talk00Event07_Case01, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more bytes when wLastWarpIndex = 2, then loads hMapId, hMapScreenX/Y from the nibbles of the next byte and wWarpDestX/Y from the nibbles of the byte after (each nibble x16), clearing wWarpDestFacing; 87 records end at the routine at $550E, and every map id is unique).
+; E-0182 (C1: MapExitWarp_Case01, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more bytes when wLastWarpIndex = 2, then loads hMapId, hMapScreenX/Y from the nibbles of the next byte and wWarpDestX/Y from the nibbles of the byte after (each nibble x16), clearing wWarpDestFacing; 87 records end at the routine at $550E, and every map id is unique).
 ; record: map id; exit A (map, screen XY nibbles, position XY nibbles); exit B (same, used when wLastWarpIndex = 2)
 MapExitDestinationTable::
 Data_012_52AD:: ; address name
@@ -3240,26 +3240,26 @@ Data_012_52AD:: ; address name
     db $DF, $DA, $10, $44, $00, $00, $00 ; id 85
     db $E0, $DA, $10, $44, $00, $00, $00 ; id 86
 
-; implements script command type 9B (SCRIPT_TALK00_1A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1A starts (talk event category $00, group $1A); its states are not yet read (a structural name); reached through ScriptCommand9B in bank $10 (E-0038, E-0246)
+; implements script command type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by RunMenuStateMenuState: heals the party (FullyHealParty) after a flag-chosen message); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand9B)
 ; reads: wScriptStep
-Talk00Event1A::
+HealPartyEvent::
 Func_012_550E:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1A_TestFlagBit_Case00
-    dw Talk00Event1A_TestFlagBit
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12
+    dw HealPartyEvent_TestFlagBit_Case00
+    dw HealPartyEvent_TestFlagBit
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw ScriptStepFlashScreenNegative
-    dw Talk00Event1A_FullyHealParty
-    dw Talk00Event1A_MoveIncapacitatedPartyMembersBack
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_FullyHealParty
+    dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
 
-; entry 0 of the `rst $00` table in Talk00Event1A
+; entry 0 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing
 ; points at: wScriptStep
-Talk00Event1A_TestFlagBit_Case00::
+HealPartyEvent_TestFlagBit_Case00::
 Jump_012_5520:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3272,27 +3272,27 @@ Jump_012_5520:: ; address name
     ldh [hPlayerFacing], a
     ret
 
-; implements script command type 89 (SCRIPT_TALK00_06): the one command of the script DispatchTalkEvent_Case00_Sub01_Case06 starts (talk event category $00, group $06); its states are not yet read (a structural name); reached through ScriptCommand89 in bank $10 (E-0038, E-0246)
+; implements script command type 89 (SCRIPT_RETURN_WARP): a key-world/field talk event (group $06, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: StartReturnWarpByFlag25); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand89)
 ; reads: wScriptStep
-Talk00Event06::
+ReturnWarp::
 Func_012_5534:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event08_WritePlayerYAndPlayerFacingEtc
-    dw Talk00Event06_StartReturnWarpByFlag25
-    dw Talk00Event1A_TestFlagBit
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12
+    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
+    dw ReturnWarp_StartReturnWarpByFlag25
+    dw HealPartyEvent_TestFlagBit
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw ScriptStepFlashScreenNegative
-    dw Talk00Event1A_FullyHealParty
-    dw Talk00Event1A_MoveIncapacitatedPartyMembersBack
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_FullyHealParty
+    dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
 
-; entry 1 of the `rst $00` table in Talk00Event1A
+; entry 1 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots, wObject1
 ; points at: wScriptStep
-Talk00Event1A_TestFlagBit::
+HealPartyEvent_TestFlagBit::
 Jump_012_5548:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3320,22 +3320,22 @@ Jump_012_556E::
     ld [wObject1 + $7], a
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event06
+; entry 1 of the `rst $00` table in ReturnWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldTransitionStep
-Talk00Event06_StartReturnWarpByFlag25::
+ReturnWarp_StartReturnWarpByFlag25::
 Jump_012_5573:: ; address name
     call StartReturnWarpByFlag25
     ld a, $80
     ld [wFieldTransitionStep], a
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event08
+; entry 0 of the `rst $00` table in MapLinkWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0, wFollowerRecords, hPlayerFacing, hPlayerStateFlags
 ; writes: hPlayerY, hPlayerFacing, wFollowerRecords, hPlayerStateFlags
 ; points at: wScriptStep
-Talk00Event08_WritePlayerYAndPlayerFacingEtc::
+MapLinkWarp_WritePlayerYAndPlayerFacingEtc::
 Jump_012_557C:: ; address name
     ldh a, [hPlayerY]
     cp a, $E0
@@ -3394,22 +3394,22 @@ Jump_012_55D7::
     inc [hl]
     ret
 
-; implements script command type 88 (SCRIPT_TALK00_05): the one command of the script DispatchTalkEvent_Case00_Sub01_Case05 starts (talk event category $00, group $05); its states are not yet read (a structural name); reached through ScriptCommand88 in bank $10 (E-0038, E-0246)
+; implements script command type 88 (SCRIPT_RETURN_MESSAGE): a key-world/field talk event (group $05, dispatched by RunFieldReturnPhase_ResetLeadRecordFields55And5B and PartyDefeatedReturn: a message chosen by a story flag); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand88)
 ; reads: wScriptStep
-Talk00Event05::
+ReturnMessage::
 Func_012_55E8:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event05_TestFlagBit
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12
+    dw ReturnMessage_TestFlagBit
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw ScriptStepFlashScreenNegative
-    dw Talk00Event1A_FullyHealParty
-    dw Talk00Event1A_MoveIncapacitatedPartyMembersBack
-    dw Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_FullyHealParty
+    dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
 
 ; with bit 7 of wCC44 saves the wCD07 record; sets the position ($50, $30), wC8C6 = 3 (story flag $25) or 4, wC957 = 1 and starts the fade (E-0126)
-; 2 call sites from 2 routines (e.g. Talk00Event06_StartReturnWarpByFlag25, Talk00Event04_StartReturnWarpByFlag25)
+; 2 call sites from 2 routines (e.g. ReturnWarp_StartReturnWarpByFlag25, PartyDefeatedReturn_StartReturnWarpByFlag25)
 ; reads: wMapType
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, wFieldTransitionKind, wReturnWarpFlag
 StartReturnWarpByFlag25::
@@ -3443,15 +3443,15 @@ Jump_012_5627::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event05
+; entry 0 of the `rst $00` table in ReturnMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots, wObject1
 ; points at: wScriptStep
-Talk00Event05_TestFlagBit::
+ReturnMessage_TestFlagBit::
 Jump_012_5633:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    farcall Talk00Event05_Case00_WriteGoldHiAndGoldMidEtc
+    farcall ReturnMessage_Case00_WriteGoldHiAndGoldMidEtc
     ld de, $0025
     call TestFlagBit
     jr c, Jump_012_5650
@@ -3476,11 +3476,11 @@ Jump_012_5662::
     call StartMessageA
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event1A
+; entry 2 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12::
+HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_5668:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3500,12 +3500,12 @@ Jump_012_567F::
     call QueueSoundEffect
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event1A
+; entry 4 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wScriptParam0, wScriptStep
 ; writes: rRAMG, wScriptParam0, wScriptStep, hFieldDrawFlags
 ; points at: wPartyList, wScriptStep
-Talk00Event1A_FullyHealParty::
+HealPartyEvent_FullyHealParty::
 Jump_012_5689:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -3565,11 +3565,11 @@ Jump_012_56DB::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event1A
+; entry 5 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest, hFieldDrawFlags
 ; points at: wScriptStep
-Talk00Event1A_MoveIncapacitatedPartyMembersBack::
+HealPartyEvent_MoveIncapacitatedPartyMembersBack::
 Jump_012_56E8:: ; address name
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
@@ -3593,10 +3593,10 @@ Jump_012_5717::
     call StartMessageA
     ret
 
-; entry 6 of the `rst $00` table in Talk00Event1A
+; entry 6 of the `rst $00` table in HealPartyEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-Talk00Event1A_RunMessageBoxCarryWhenIdle_Bank12_Case06::
+HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06::
 Jump_012_571D:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3605,27 +3605,27 @@ Jump_012_571D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 87 (SCRIPT_TALK00_04): the one command of the script DispatchTalkEvent_Case00_Sub01_Case04 starts (talk event category $00, group $04); its states are not yet read (a structural name); reached through ScriptCommand87 in bank $10 (E-0038, E-0246)
+; implements script command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04, dispatched from FieldModeStateDispatch_Case07: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand87)
 ; reads: wScriptStep
-Talk00Event04::
+PartyDefeatedReturn::
 Func_012_5728:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event04_WriteScriptParam0AndScriptParam1
-    dw Talk00Event04_WriteScriptParam0AndMessageIndexEtc
-    dw Talk00Event04_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event04_WriteScriptParam0AndMessageIndexEtc_Case03
-    dw Talk00Event04_WriteScriptParam0AndFieldDrawFlagsEtc
-    dw Talk00Event04_QueueMusic
-    dw Talk00Event04_StepScriptParam0Counter_Bank12
-    dw Talk00Event04_StartReturnWarpByFlag25
-    dw Talk00Event04_DispatchTalkEvent
+    dw PartyDefeatedReturn_WriteScriptParam0AndScriptParam1
+    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc
+    dw PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12
+    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03
+    dw PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw PartyDefeatedReturn_QueueMusic
+    dw PartyDefeatedReturn_StepScriptParam0Counter_Bank12
+    dw PartyDefeatedReturn_StartReturnWarpByFlag25
+    dw PartyDefeatedReturn_DispatchTalkEvent
 
-; entry 8 of the `rst $00` table in Talk00Event04
+; entry 8 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTalkEventGroup, wTalkEventIndex
-Talk00Event04_DispatchTalkEvent::
+PartyDefeatedReturn_DispatchTalkEvent::
 Jump_012_573E:: ; address name
     ld a, $05
     ld [wTalkEventGroup], a
@@ -3634,10 +3634,10 @@ Jump_012_573E:: ; address name
     farcall DispatchTalkEvent
     ret
 
-; entry 7 of the `rst $00` table in Talk00Event04
+; entry 7 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldReturnPhase, wFieldTransitionStep
-Talk00Event04_StartReturnWarpByFlag25::
+PartyDefeatedReturn_StartReturnWarpByFlag25::
 Jump_012_574E:: ; address name
     call StartReturnWarpByFlag25
     xor a, a
@@ -3646,10 +3646,10 @@ Jump_012_574E:: ; address name
     ld [wFieldTransitionStep], a
     ret
 
-; entry 6 of the `rst $00` table in Talk00Event04
+; entry 6 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event04_StepScriptParam0Counter_Bank12::
+PartyDefeatedReturn_StepScriptParam0Counter_Bank12::
 Jump_012_575B:: ; address name
     ld b, $B4
     call StepScriptParam0Counter_Bank12
@@ -3658,12 +3658,12 @@ Jump_012_575B:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event04
+; entry 5 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: rRAMG, wScriptStartRequest
 ; points at: wPartyList, wScriptStep
-Talk00Event04_QueueMusic::
+PartyDefeatedReturn_QueueMusic::
 Jump_012_5766:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -3694,12 +3694,12 @@ Jump_012_578D::
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event04
+; entry 3 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wPartyList
 ; writes: wScriptParam0, wMessageIndex, wMessageGroup, wMessageState, wScriptParam1, rRAMG
 ; points at: wScriptStep, wNameGlyphBuf
-Talk00Event04_WriteScriptParam0AndMessageIndexEtc_Case03::
+PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03::
 Jump_012_5797:: ; address name
     ld hl, wScriptStep
     dec [hl]
@@ -3712,12 +3712,12 @@ Jump_012_5797:: ; address name
     ld de, vTiles0 + $B
     jr Jump_012_57DB
 
-; entry 2 of the `rst $00` table in Talk00Event04
+; entry 2 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, wScriptStep
 ; points at: wScriptStep
-Talk00Event04_RunMessageBoxCarryWhenIdle_Bank12::
+PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_57AD:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3736,12 +3736,12 @@ Jump_012_57C2::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event04
+; entry 1 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wPartyList
 ; writes: wScriptParam0, wMessageIndex, wMessageGroup, wMessageState, wScriptParam1, rRAMG
 ; points at: wScriptStep, wNameGlyphBuf
-Talk00Event04_WriteScriptParam0AndMessageIndexEtc::
+PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
 Jump_012_57C7:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3799,12 +3799,12 @@ Jump_012_5817::
     call CopyBytes
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event04
+; entry 0 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wStatusFieldStep
 ; writes: wScriptParam0, wScriptParam1
 ; points at: wScriptStep
-Talk00Event04_WriteScriptParam0AndScriptParam1::
+PartyDefeatedReturn_WriteScriptParam0AndScriptParam1::
 Jump_012_5834:: ; address name
     ld a, [wPartyCount]
     ld b, a
@@ -3827,27 +3827,27 @@ Jump_012_5842::
     inc [hl]
     ret
 
-; implements script command type 85 (SCRIPT_TALK09_00): the one command of the script DispatchTalkEvent_Case09_Sub01_Case00 starts (talk event category $09, group $00); its states are not yet read (a structural name); reached through ScriptCommand85 in bank $10 (E-0038, E-0246)
+; implements script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0 + 0..F), a battle against wKeyWorldEncounter (one or three monsters), then after the 'Warubou' message sets wKeyWorldFlags bit 7, marks every floor entry of wKeyWorldEncounterTable done and sets bit 6 of the current key entry byte 7; a C1 name from its calls and writes
 ; 1 call site from 1 routine (e.g. ScriptCommand85)
 ; reads: wScriptStep
-Talk09Event00::
+KeyWorldBossBattle::
 Func_012_5854:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk09Event00_StartMessageHL_B0F_Bank12
-    dw Talk09Event00_RunMessageBoxFar_Bank12
-    dw Talk09Event00_CopyBytes
-    dw Talk09Event00_ToScriptStepFlashScreenNegative
-    dw Talk09Event00_ShowWarubouWaheyNoGood
-    dw Talk09Event00_WriteScriptParam0
-    dw Talk09Event00_WriteSpriteSlotCountAndScriptParam0
-    dw Talk09Event00_WriteKeyWorldFlagsAndScriptStartRequest
+    dw KeyWorldBossBattle_StartMessageHL_B0F_Bank12
+    dw KeyWorldBossBattle_RunMessageBoxFar_Bank12
+    dw KeyWorldBossBattle_CopyBytes
+    dw KeyWorldBossBattle_ToScriptStepFlashScreenNegative
+    dw KeyWorldBossBattle_ShowWarubouWaheyNoGood
+    dw KeyWorldBossBattle_WriteScriptParam0
+    dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
+    dw KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest
 
-; entry 7 of the `rst $00` table in Talk09Event00
+; entry 7 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFlags, wCurrentKeyIndex
 ; writes: wKeyWorldFlags, wScriptStartRequest
-Talk09Event00_WriteKeyWorldFlagsAndScriptStartRequest::
+KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
 Jump_012_5868:: ; address name
     ld a, [wKeyWorldFlags]
     or a, $80
@@ -3879,12 +3879,12 @@ Jump_012_5875::
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in Talk09Event00
+; entry 6 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wSpriteSlotCount, wScriptParam0
 ; points at: wScriptStep
-Talk09Event00_WriteSpriteSlotCountAndScriptParam0::
+KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0::
 Jump_012_589B:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
@@ -3926,14 +3926,14 @@ Jump_012_58C3::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Talk09Event00
+; entry 5 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-Talk09Event00_WriteScriptParam0::
+KeyWorldBossBattle_WriteScriptParam0::
 Jump_012_58D6:: ; address name
     xor a, a
-    call Talk09Event00_Case05_ReadMessageState
+    call KeyWorldBossBattle_Case05_ReadMessageState
     ret nc
     xor a, a
     ld [wScriptParam0], a
@@ -3941,10 +3941,10 @@ Jump_012_58D6:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk09Event00
+; entry 4 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk09Event00_ShowWarubouWaheyNoGood::
+KeyWorldBossBattle_ShowWarubouWaheyNoGood::
 Jump_012_58E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3952,18 +3952,18 @@ Jump_012_58E4:: ; address name
     call StartMessageHL_B0F_Bank12
     ret
 
-; entry 3 of the `rst $00` table in Talk09Event00
+; entry 3 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
-Talk09Event00_ToScriptStepFlashScreenNegative::
+KeyWorldBossBattle_ToScriptStepFlashScreenNegative::
 Jump_012_58EF:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 2 of the `rst $00` table in Talk09Event00
+; entry 2 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-Talk09Event00_CopyBytes::
+KeyWorldBossBattle_CopyBytes::
 Jump_012_58F6:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -3978,12 +3978,12 @@ Jump_012_5908::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Talk09Event00
+; entry 1 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldEncounter
 ; writes: wBattleIntroKind, wEncounterMonsters, wWildLevel, wEncounterKind, wBattleTransitionSubStep, wWildBand, wWildByteE5
 ; points at: wScriptStep
-Talk09Event00_RunMessageBoxFar_Bank12::
+KeyWorldBossBattle_RunMessageBoxFar_Bank12::
 Jump_012_590D:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank12
@@ -4051,11 +4051,11 @@ Jump_012_5988::
     farcall SetModeState3AndSaveScreen
     ret
 
-; entry 0 of the `rst $00` table in Talk09Event00
+; entry 0 of the `rst $00` table in KeyWorldBossBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomHi
 ; points at: wScriptStep
-Talk09Event00_StartMessageHL_B0F_Bank12::
+KeyWorldBossBattle_StartMessageHL_B0F_Bank12::
 Jump_012_5994:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -4067,25 +4067,25 @@ Jump_012_5994:: ; address name
     inc [hl]
     ret
 
-; implements script command type 9E (SCRIPT_TALK09_03): the one command of the script DispatchTalkEvent_Case09_Sub01_Case03 starts (talk event category $09, group $03); its states are not yet read (a structural name); reached through ScriptCommand9E in bank $10 (E-0038, E-0246)
+; implements script command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0 + 0..F), a battle against the wKeyWorldEncounterTable entry of wKeyWorldFloor, then after the 'Warubou' message marks that floor entry done (byte 3 = 1); a C1 name from its calls and writes
 ; 1 call site from 1 routine (e.g. ScriptCommand9E)
 ; reads: wScriptStep
-Talk09Event03::
+KeyWorldFloorBattle::
 Func_012_59AC:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk09Event03_StartMessageHL_B0F_Bank12
-    dw Talk09Event03_RunMessageBoxFar_Bank12
-    dw Talk09Event03_ShowWarubouWaheyThatWas
-    dw Talk09Event00_WriteScriptParam0
-    dw Talk09Event00_WriteSpriteSlotCountAndScriptParam0
-    dw Talk09Event03_WriteScriptStartRequest
+    dw KeyWorldFloorBattle_StartMessageHL_B0F_Bank12
+    dw KeyWorldFloorBattle_RunMessageBoxFar_Bank12
+    dw KeyWorldFloorBattle_ShowWarubouWaheyThatWas
+    dw KeyWorldBossBattle_WriteScriptParam0
+    dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
+    dw KeyWorldFloorBattle_WriteScriptStartRequest
 
-; entry 5 of the `rst $00` table in Talk09Event03
+; entry 5 of the `rst $00` table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wScriptStartRequest
-Talk09Event03_WriteScriptStartRequest::
+KeyWorldFloorBattle_WriteScriptStartRequest::
 Jump_012_59BC:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $7F
@@ -4098,10 +4098,10 @@ Jump_012_59BC:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 2 of the `rst $00` table in Talk09Event03
+; entry 2 of the `rst $00` table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk09Event03_ShowWarubouWaheyThatWas::
+KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
 Jump_012_59D3:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -4109,12 +4109,12 @@ Jump_012_59D3:: ; address name
     call StartMessageHL_B0F_Bank12
     ret
 
-; entry 1 of the `rst $00` table in Talk09Event03
+; entry 1 of the `rst $00` table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wBattleIntroKind, wEncounterMonsters, wWildLevel, wEncounterKind, wBattleTransitionSubStep
 ; points at: wScriptStep, wKeyWorldEncounterTable
-Talk09Event03_RunMessageBoxFar_Bank12::
+KeyWorldFloorBattle_RunMessageBoxFar_Bank12::
 Jump_012_59DE:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank12
@@ -4142,11 +4142,11 @@ Jump_012_59DE:: ; address name
     farcall SetModeState3AndSaveScreen
     ret
 
-; entry 0 of the `rst $00` table in Talk09Event03
+; entry 0 of the `rst $00` table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomHi
 ; points at: wScriptStep
-Talk09Event03_StartMessageHL_B0F_Bank12::
+KeyWorldFloorBattle_StartMessageHL_B0F_Bank12::
 Jump_012_5A17:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -4158,11 +4158,11 @@ Jump_012_5A17:: ; address name
     inc [hl]
     ret
 
-; implements script command type 84 (SCRIPT_TALK00_02): the one command of the script DispatchTalkEvent_Case00_Sub01_Case02 starts (talk event category $00, group $02); its states are not yet read (a structural name); reached through ScriptCommand84 in bank $10 (E-0038, E-0246)
+; implements script command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemWC928ToInventory)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand84)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Talk00Event02::
+RandomGoldOrItem::
 Func_012_5A2F:: ; address name
     ld a, [wScriptStep]
     cp a, $07
@@ -4177,18 +4177,18 @@ Jump_012_5A3D::
     dw SetupScriptSpriteFromMapSpriteKind
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
-    dw Talk00Event02_WriteSVBKAndFieldDrawFlags
-    dw Talk00Event02_ToTalk00Event02_Case04_NextRandomSeed
-    dw Talk00Event02_AddStepDeltaToPointedByte
-    dw Talk00Event02_Number24ToPackedBCD
-    dw Talk00Event02_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event02_AddGoldCapped
+    dw RandomGoldOrItem_WriteSVBKAndFieldDrawFlags
+    dw RandomGoldOrItem_ToRandomGoldOrItem_Case04_NextRandomSeed
+    dw RandomGoldOrItem_AddStepDeltaToPointedByte
+    dw RandomGoldOrItem_Number24ToPackedBCD
+    dw RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12
+    dw RandomGoldOrItem_AddGoldCapped
 
-; entry 8 of the `rst $00` table in Talk00Event02
+; entry 8 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTriggerMarkerFlags, wScriptParam1
 ; writes: hTemp0, hTemp1, wTriggerMarkerFlags, wScriptStartRequest, wStepPtrLo
-Talk00Event02_AddGoldCapped::
+RandomGoldOrItem_AddGoldCapped::
 Jump_012_5A53:: ; address name
     ld a, [wTriggerMarkerFlags]
     and a, $7F
@@ -4211,11 +4211,11 @@ Jump_012_5A70::
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in Talk00Event02
+; entry 7 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTriggerKind
 ; points at: wScriptStep
-Talk00Event02_RunMessageBoxCarryWhenIdle_Bank12::
+RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_5A7A:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -4226,12 +4226,12 @@ Jump_012_5A7A:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Talk00Event02
+; entry 6 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTriggerMarkerFlags, wScriptParam1
 ; writes: wDigits, wMessageGroup
 ; points at: wScriptStep, wTextNumber
-Talk00Event02_Number24ToPackedBCD::
+RandomGoldOrItem_Number24ToPackedBCD::
 Jump_012_5A89:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -4261,12 +4261,12 @@ Jump_012_5AB1::
     ld [wMessageGroup], a
     ret
 
-; entry 5 of the `rst $00` table in Talk00Event02
+; entry 5 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wTriggerIndex, wScriptStep
-Talk00Event02_AddStepDeltaToPointedByte::
+RandomGoldOrItem_AddStepDeltaToPointedByte::
 Jump_012_5AC4:: ; address name
     ld de, wTriggerIndex
     ld a, e
@@ -4286,19 +4286,19 @@ Jump_012_5AC4:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event02
+; entry 4 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
-Talk00Event02_ToTalk00Event02_Case04_NextRandomSeed::
+RandomGoldOrItem_ToRandomGoldOrItem_Case04_NextRandomSeed::
 Jump_012_5AE9:: ; address name
-    farcall Talk00Event02_Case04_NextRandomSeed
+    farcall RandomGoldOrItem_Case04_NextRandomSeed
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event02
+; entry 3 of the `rst $00` table in RandomGoldOrItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageGroup, wMessageIndex, wIsCGB, wMapType, hMapId
 ; writes: rSVBK, hFieldDrawFlags
 ; points at: wScriptStep
-Talk00Event02_WriteSVBKAndFieldDrawFlags::
+RandomGoldOrItem_WriteSVBKAndFieldDrawFlags::
 Jump_012_5AF0:: ; address name
     ld a, [wMessageGroup]
     swap a
@@ -4504,7 +4504,7 @@ Func_012_5C27:: ; address name
     inc [hl]
     ret
 
-; A = wC195 >> 4, DE = Talk09Event00_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)
+; A = wC195 >> 4, DE = KeyWorldBossBattle_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)
 ; 1 call site from 1 routine (e.g. SceneStrongestMaster_SetupScriptSpriteFromMapSpriteKind)
 ; reads: wMapSpriteKind, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, wFollowerRecords, wScriptParam0
@@ -4514,7 +4514,7 @@ Func_012_5C31:: ; address name
     ld a, [wMapSpriteKind]
     swap a
     and a, $0F
-    ld de, Talk09Event00_StartMessageHL_B0F_Bank12
+    ld de, KeyWorldBossBattle_StartMessageHL_B0F_Bank12
     ld b, $7E
     jr Jump_012_5C4E
 
@@ -4622,47 +4622,47 @@ Jump_012_5CD1::
     inc [hl]
     ret
 
-; implements script command type 83 (SCRIPT_TALK00_01): the one command of the script DispatchTalkEvent_Case00_Sub01_Case01 starts (talk event category $00, group $01); its states are not yet read (a structural name); reached through ScriptCommand83 in bank $10 (E-0038, E-0246)
+; implements script command type 83 (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: draws script meta-sprite 21, moves objects, changes the music); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand83)
 ; reads: wScriptParam1
-Talk00Event01::
+FieldScene01::
 Func_012_5CE5:: ; address name
     ld a, [wScriptParam1]
     dec a
     jr nz, Jump_012_5CEF
-    call Talk00Event01_WriteJoypadHeldAndJoypadPressed
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed
     ret
 
 Jump_012_5CEF::
     dec a
     jr nz, Jump_012_5CF6
-    call Talk00Event01_WriteJoypadHeldAndJoypadPressed_Sub03
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03
     ret
 
 Jump_012_5CF6::
-    call Talk00Event01_WriteJoypadHeldAndJoypadPressed_Sub01
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01
     ret
 
-; only called from Talk00Event01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event01)
+; only called from FieldScene01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldScene01)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Talk00Event01_WriteJoypadHeldAndJoypadPressed_Sub01::
+FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01::
 Func_012_5CFA:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
-    dw Talk00Event01_Sub01_AddStepDeltaToPointedByte
+    dw FieldScene01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
+    dw FieldScene01_Sub01_AddStepDeltaToPointedByte
 
 ; entry 0 of the `rst $00` table in Func_012_5CFA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, hPlayerY
 ; writes: hPlayerStateFlags, hFieldDrawFlags, hPlayerSpriteMode, hPlayerY, wScriptParam0
 ; points at: wScriptStep
-Talk00Event01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
+FieldScene01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
 Jump_012_5D09:: ; address name
     ldh a, [hPlayerStateFlags]
     and a, $F7
@@ -4685,7 +4685,7 @@ Jump_012_5D09:: ; address name
 ; reads: wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing, hPlayerStateFlags
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, wFollowerRecords, hFieldDrawFlags, wScriptStartRequest, hPlayerStateFlags, hPlayerStepDXLo, ...
 ; points at: hPlayerY, hPlayerX
-Talk00Event01_Sub01_AddStepDeltaToPointedByte::
+FieldScene01_Sub01_AddStepDeltaToPointedByte::
 Jump_012_5D25:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -4766,11 +4766,11 @@ Jump_012_5DB1::
     dec [hl]
     ret
 
-; only called from Talk00Event01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event01)
+; only called from FieldScene01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldScene01)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Talk00Event01_WriteJoypadHeldAndJoypadPressed::
+FieldScene01_WriteJoypadHeldAndJoypadPressed::
 Func_012_5DB6:: ; address name
     xor a, a
     ld [wJoypadHeld], a
@@ -4780,19 +4780,19 @@ Func_012_5DB6:: ; address name
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw Talk00Event01_Sub02_DecompressToVRAM
-    dw Talk00Event01_Sub02_StepScriptParam0Counter_Bank12
-    dw Talk00Event01_Sub02_AddStepDeltaToPointedByte
-    dw Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset
-    dw Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
-    dw Talk00Event01_Sub02_AddStepDeltaToPointedByte_Case08
+    dw FieldScene01_Sub02_DecompressToVRAM
+    dw FieldScene01_Sub02_StepScriptParam0Counter_Bank12
+    dw FieldScene01_Sub02_AddStepDeltaToPointedByte
+    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
+    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
+    dw FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08
 
 ; entry 8 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerFacing
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerSpriteMode, wScriptStartRequest
 ; points at: hPlayerY, hPlayerX
-Talk00Event01_Sub02_AddStepDeltaToPointedByte_Case08::
+FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08::
 Jump_012_5DD3:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -4861,7 +4861,7 @@ Jump_012_5E37::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hMapId
 ; points at: wScriptStep
-Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07::
+FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07::
 Jump_012_5E3C:: ; address name
     call DrawScriptMetaSprite21AtScrollOffset
     ld hl, wScriptStep
@@ -4876,7 +4876,7 @@ Jump_012_5E3C:: ; address name
 Jump_012_5E4F::
     ldh a, [hMapId]
     ld c, a
-    ld hl, Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data
+    ld hl, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data
 
 Jump_012_5E55::
     ld a, [hl+]
@@ -4890,8 +4890,8 @@ Jump_012_5E5C::
     call QueueMusic
     ret
 
-; address loaded by Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
-Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
+FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_5E62:: ; address name
     db $30, $FF
 
@@ -4900,7 +4900,7 @@ Data_012_5E62:: ; address name
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Talk00Event01_Sub02_DecompressToVRAM::
+FieldScene01_Sub02_DecompressToVRAM::
 Jump_012_5E64:: ; address name
     ld de, Tiles0Plus700Gfx_7E_58FF
     ld b, $7E
@@ -4975,11 +4975,11 @@ Jump_012_5ECF::
     inc [hl]
     ret
 
-; only called from Talk00Event01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event01)
+; only called from FieldScene01 (E-0047)
+; 1 call site from 1 routine (e.g. FieldScene01)
 ; reads: wScriptStep
 ; writes: wJoypadHeld, wJoypadPressed
-Talk00Event01_WriteJoypadHeldAndJoypadPressed_Sub03::
+FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03::
 Func_012_5EE7:: ; address name
     xor a, a
     ld [wJoypadHeld], a
@@ -4989,18 +4989,18 @@ Func_012_5EE7:: ; address name
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw Talk00Event01_Sub03_DecompressToVRAM
-    dw Talk00Event01_Sub02_StepScriptParam0Counter_Bank12
-    dw Talk00Event01_Sub02_AddStepDeltaToPointedByte
-    dw Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset
-    dw Talk00Event01_Sub03_AddStepDeltaToPointedByte
-    dw Talk00Event01_Sub03_WaitFieldActionRequest
-    dw Talk00Event01_Sub03_AddStepDeltaToPointedByte_Case09
+    dw FieldScene01_Sub03_DecompressToVRAM
+    dw FieldScene01_Sub02_StepScriptParam0Counter_Bank12
+    dw FieldScene01_Sub02_AddStepDeltaToPointedByte
+    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
+    dw FieldScene01_Sub03_AddStepDeltaToPointedByte
+    dw FieldScene01_Sub03_WaitFieldActionRequest
+    dw FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09
 
 ; entry 4 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event01_Sub02_StepScriptParam0Counter_Bank12::
+FieldScene01_Sub02_StepScriptParam0Counter_Bank12::
 Jump_012_5F06:: ; address name
     ld b, $1E
     call StepScriptParam0Counter_Bank12
@@ -5014,7 +5014,7 @@ Jump_012_5F06:: ; address name
 ; reads: wScriptParam0, hPlayerFacing, wFollowerRecords
 ; writes: wStepPtrLo, wStepPtrHi, hPlayerFacing, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Talk00Event01_Sub02_AddStepDeltaToPointedByte::
+FieldScene01_Sub02_AddStepDeltaToPointedByte::
 Jump_012_5F11:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -5051,7 +5051,7 @@ Jump_012_5F30::
 ; reads: hPlayerStateFlags, wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wTriggerEnable, hPlayerStateFlags, wStepPtrLo, wStepPtrHi, wScriptParam0, wFollowerRecords, hFieldDrawFlags, wScriptStartRequest, ...
 ; points at: hPlayerY
-Talk00Event01_Sub03_AddStepDeltaToPointedByte_Case09::
+FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09::
 Jump_012_5F4D:: ; address name
     ld a, $01
     ld [wTriggerEnable], a
@@ -5119,7 +5119,7 @@ Jump_012_5FC8::
 ; reads: wFieldActionRequest, hPlayerStateFlags, hPlayerX, hPlayerY, hPlayerFacing, wJoypadHeld, wSpriteSlotCount, wSpriteSlots, ...
 ; writes: wJoypadHeld, hPlayerSpriteMode, hPlayerY, wScriptParam0, hPlayerFacing
 ; points at: wTilesUnderPoint, wScriptStep
-Talk00Event01_Sub03_WaitFieldActionRequest::
+FieldScene01_Sub03_WaitFieldActionRequest::
 Jump_012_5FC9:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -5240,7 +5240,7 @@ Jump_012_606A::
 ; reads: wScriptParam0, hPlayerY, hPlayerFacing
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, hPlayerY, hPlayerSpriteMode
 ; points at: hPlayerY, wScriptStep, hPlayerX
-Talk00Event01_Sub03_AddStepDeltaToPointedByte::
+FieldScene01_Sub03_AddStepDeltaToPointedByte::
 Jump_012_6077:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -5308,7 +5308,7 @@ Jump_012_60D6::
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags
 ; points at: wScriptStep
-Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset::
+FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset::
 Jump_012_60DB:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
@@ -5348,7 +5348,7 @@ Jump_012_60FD::
     ret
 
 ; draws metasprite set $21 (or $22 unless wC195 & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
-; 4 call sites from 4 routines (e.g. Talk00Event01_Sub03_AddStepDeltaToPointedByte, Talk00Event01_Sub02_AddStepDeltaToPointedByte_Case08, Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07, Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset)
+; 4 call sites from 4 routines (e.g. FieldScene01_Sub03_AddStepDeltaToPointedByte, FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset)
 ; reads: wMapSpriteKind, hPlayerFacing, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 ; points at: hSpriteSetIndex
@@ -5407,7 +5407,7 @@ Jump_012_6132::
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Talk00Event01_Sub03_DecompressToVRAM::
+FieldScene01_Sub03_DecompressToVRAM::
 Jump_012_616C:: ; address name
     ld de, Tiles0Plus700Gfx_7E_594A
     ld b, $7E
@@ -5505,26 +5505,26 @@ Jump_012_6200::
     inc [hl]
     ret
 
-; implements script command type 86 (SCRIPT_TALK00_0B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0B starts (talk event category $00, group $0B); its states are not yet read (a structural name); reached through ScriptCommand86 in bank $10 (E-0038, E-0246)
+; implements script command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item or key entry (GenerateNewKeyEntry) and door tiles for the key-world floor (DrawDoorTilesForKeyWorldFloor)); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand86)
 ; reads: wScriptStep
-Talk00Event0B::
+KeyWorldDoorItem::
 Func_012_6211:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event0B_StartMessageA
-    dw Talk00Event0B_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event0B_WriteScriptStartRequestAndStepPtrLo
-    dw Talk00Event0B_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event0B_DrawDoorTilesForKeyWorldFloor
+    dw KeyWorldDoorItem_StartMessageA
+    dw KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12
+    dw KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo
+    dw KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12
+    dw KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor
 
-; entry 4 of the `rst $00` table in Talk00Event0B
+; entry 4 of the `rst $00` table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wScriptStartRequest
-Talk00Event0B_DrawDoorTilesForKeyWorldFloor::
+KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor::
 Jump_012_621F:: ; address name
-    farcall Talk00Event0B_Case04_RandomModulo29_BankF0
+    farcall KeyWorldDoorItem_Case04_RandomModulo29_BankF0
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $3
@@ -5537,11 +5537,11 @@ Jump_012_621F:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event0B
+; entry 2 of the `rst $00` table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wKeyWorldFloor
 ; writes: wScriptStartRequest, wStepPtrLo
-Talk00Event0B_WriteScriptStartRequestAndStepPtrLo::
+KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo::
 Jump_012_6247:: ; address name
     ld a, [wScriptParam0]
     ld l, a
@@ -5575,10 +5575,10 @@ Jump_012_6279::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event0B
+; entry 1 of the `rst $00` table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event0B_RunMessageBoxCarryWhenIdle_Bank12::
+KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_628B:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5587,12 +5587,12 @@ Jump_012_628B:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event0B
+; entry 0 of the `rst $00` table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wInventory, wGM2Mode, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wScriptStep
 ; points at: wScriptStep
-Talk00Event0B_StartMessageA::
+KeyWorldDoorItem_StartMessageA::
 Jump_012_6295:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -5663,22 +5663,22 @@ Jump_012_62FC::
     ld [wScriptStep], a
     ret
 
-; implements script command type 81 (SCRIPT_TALK00_0E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0E starts (talk event category $00, group $0E); its states are not yet read (a structural name); reached through ScriptCommand81 in bank $10 (E-0038, E-0246)
+; implements script command type 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemWC928ToInventory) after CheckTwoWCDB0EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand81)
 ; reads: wScriptStep
-Talk00Event0E::
+AreaItemEvent::
 Func_012_630E:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event0E_StartMessageA
-    dw Talk00Event0E_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event0E_WriteScriptStartRequestAndStepPtrLo
+    dw AreaItemEvent_StartMessageA
+    dw AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12
+    dw AreaItemEvent_WriteScriptStartRequestAndStepPtrLo
 
-; entry 2 of the `rst $00` table in Talk00Event0E
+; entry 2 of the `rst $00` table in AreaItemEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptStartRequest, wStepPtrLo
-Talk00Event0E_WriteScriptStartRequestAndStepPtrLo::
+AreaItemEvent_WriteScriptStartRequestAndStepPtrLo::
 Jump_012_6318:: ; address name
     ld a, [wScriptParam0]
     ld l, a
@@ -5707,10 +5707,10 @@ Jump_012_6328::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event0E
+; entry 1 of the `rst $00` table in AreaItemEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event0E_RunMessageBoxCarryWhenIdle_Bank12::
+AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_6351:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5719,12 +5719,12 @@ Jump_012_6351:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event0E
+; entry 0 of the `rst $00` table in AreaItemEvent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wInventory
 ; writes: wScriptParam0, wScriptParam1
 ; points at: wScriptStep
-Talk00Event0E_StartMessageA::
+AreaItemEvent_StartMessageA::
 Jump_012_635B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -5770,40 +5770,40 @@ Jump_012_6390::
     ld [wScriptParam1], a
     ret
 
-; implements script command type 80 (SCRIPT_TALK00_0F): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0F starts (talk event category $00, group $0F); its states are not yet read (a structural name); it gives gold (a byte * 10), an item (AppendItemWC928ToInventory) or starts a battle with intro 5; reached through ScriptCommand80 in bank $10 (E-0038, E-0246)
+; implements script command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemWC928ToInventory) or starts a battle with intro 5); named from its trigger and calls
 ; 1 call site from 1 routine (e.g. ScriptCommand80)
 ; reads: wScriptStep
-Talk00Event0F::
+StepTriggerReward::
 Func_012_63A1:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event0F_CopyItemNameToDE
-    dw Talk00Event0F_RunMessageBoxCarryWhenIdle_Bank12
-    dw Talk00Event0F_AddGoldCapped
-    dw Talk00Event0F_AppendItemWC928ToInventory
-    dw Talk00Event0F_SetModeState3AndSaveScreen
-    dw Talk00Event0F_SetScriptStartRequestTo80
+    dw StepTriggerReward_CopyItemNameToDE
+    dw StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12
+    dw StepTriggerReward_AddGoldCapped
+    dw StepTriggerReward_AppendItemWC928ToInventory
+    dw StepTriggerReward_SetModeState3AndSaveScreen
+    dw StepTriggerReward_SetScriptStartRequestTo80
 
-; entry 5 of the `rst $00` table in Talk00Event0F
+; entry 5 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-Talk00Event0F_SetScriptStartRequestTo80::
+StepTriggerReward_SetScriptStartRequestTo80::
 Jump_012_63B1:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event0F
+; entry 4 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep, wScriptStartRequest
-Talk00Event0F_SetModeState3AndSaveScreen::
+StepTriggerReward_SetModeState3AndSaveScreen::
 Jump_012_63B7:: ; address name
     ld a, $05
     ld [wBattleIntroKind], a
     ld a, $01
     ld [wBattleTransitionSubStep], a
     farcall SetModeState3AndSaveScreen
-    call Talk00Event0F_ReadScreenTriggerCountAndTriggerIndex
+    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     ld a, [hl]
     or a, $80
     ld [hl], a
@@ -5811,12 +5811,12 @@ Jump_012_63B7:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in Talk00Event0F
+; entry 3 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepPtrLo, wTriggerKind, wScriptStartRequest
-Talk00Event0F_AppendItemWC928ToInventory::
+StepTriggerReward_AppendItemWC928ToInventory::
 Jump_012_63D4:: ; address name
-    call Talk00Event0F_ReadScreenTriggerCountAndTriggerIndex
+    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     inc hl
     ld a, [hl]
     ld [wStepPtrLo], a
@@ -5831,12 +5831,12 @@ Jump_012_63D4:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 2 of the `rst $00` table in Talk00Event0F
+; entry 2 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0, hTemp1, wTriggerKind, wScriptStartRequest
-Talk00Event0F_AddGoldCapped::
+StepTriggerReward_AddGoldCapped::
 Jump_012_63F2:: ; address name
-    call Talk00Event0F_ReadScreenTriggerCountAndTriggerIndex
+    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     inc hl
     ld a, [hl]
     push hl
@@ -5864,11 +5864,11 @@ Jump_012_63F2:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in Talk00Event0F
+; entry 1 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptStep
-Talk00Event0F_RunMessageBoxCarryWhenIdle_Bank12::
+StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12::
 Jump_012_641F:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5877,16 +5877,16 @@ Jump_012_641F:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in Talk00Event0F
+; entry 0 of the `rst $00` table in StepTriggerReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory
 ; writes: wScriptParam0, wDigits
 ; points at: wScriptStep, wTextNumber
-Talk00Event0F_CopyItemNameToDE::
+StepTriggerReward_CopyItemNameToDE::
 Jump_012_642B:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    call Talk00Event0F_ReadScreenTriggerCountAndTriggerIndex
+    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     ld a, [hl]
     or a, a
     jr nz, Jump_012_6467
@@ -5984,11 +5984,11 @@ Jump_012_64CA::
     ld [wScriptParam0], a
     ret
 
-; only called from routines of Talk00Event0F (E-0098)
-; 4 call sites from 4 routines (e.g. Talk00Event0F_SetModeState3AndSaveScreen, Talk00Event0F_AppendItemWC928ToInventory, Talk00Event0F_AddGoldCapped, Talk00Event0F_CopyItemNameToDE)
+; only called from routines of StepTriggerReward (E-0098)
+; 4 call sites from 4 routines (e.g. StepTriggerReward_SetModeState3AndSaveScreen, StepTriggerReward_AppendItemWC928ToInventory, StepTriggerReward_AddGoldCapped, StepTriggerReward_CopyItemNameToDE)
 ; reads: wScreenTriggerCount, wTriggerIndex
 ; points at: wMapObjects, wScreenTriggers
-Talk00Event0F_ReadScreenTriggerCountAndTriggerIndex::
+StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex::
 Func_012_64D5:: ; address name
     ld a, [wScreenTriggerCount]
     or a, a
@@ -6010,7 +6010,7 @@ Jump_012_64EA::
     ret
 
 ; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
-; 11 call sites from 10 routines (e.g. ArenaRounds_FullyHealParty, Talk00Event1A_FullyHealParty, RunFieldReturnPhase_ResetLeadRecordFields55And5B, GameMode5_Init_SendSGBPaletteSetPacket_Case06, ...)
+; 11 call sites from 10 routines (e.g. ArenaRounds_FullyHealParty, HealPartyEvent_FullyHealParty, RunFieldReturnPhase_ResetLeadRecordFields55And5B, GameMode5_Init_SendSGBPaletteSetPacket_Case06, ...)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList
@@ -6062,7 +6062,7 @@ Jump_012_6504::
     ret
 
 ; for 30 frames alternates every 4 frames between the normal palettes and their inverse (DMG palettes $D2/$E2 and $2D/$1D), then advances wScriptStep (E-0127)
-; 7 call sites from 7 routines (e.g. SceneThreeItems_ToScriptStepFlashScreenNegative, SceneShield_ToScriptStepFlashScreenNegative, SceneExplosion_ScriptStepFlashScreenNegative, Talk00Event09_ToScriptStepFlashScreenNegative, ...)
+; 7 call sites from 7 routines (e.g. SceneThreeItems_ToScriptStepFlashScreenNegative, SceneShield_ToScriptStepFlashScreenNegative, SceneExplosion_ScriptStepFlashScreenNegative, PlayerSpriteFlash_ToScriptStepFlashScreenNegative, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wBGPaletteUploadRequest, wScriptParam0
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wScriptStep
@@ -6129,7 +6129,7 @@ Jump_012_6591::
     ret
 
 ; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
-; 10 call sites from 10 routines (e.g. ArenaRounds_StepScriptParam0Counter_Bank12, Talk00Event17_StepScriptParam0Counter_Bank12, Talk00Event21_StepScriptParam0Counter_Bank12_Case05, Talk00Event21_StepScriptParam0Counter_Bank12_Case03, ...)
+; 10 call sites from 10 routines (e.g. ArenaRounds_StepScriptParam0Counter_Bank12, BreedChildScene_StepScriptParam0Counter_Bank12, LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05, LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 StepScriptParam0Counter_Bank12::
@@ -6148,12 +6148,12 @@ Jump_012_65B0::
     scf
     ret
 
-; entry 4 of the `rst $00` table in Talk00Event04
+; entry 4 of the `rst $00` table in PartyDefeatedReturn
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wScriptStep
-Talk00Event04_WriteScriptParam0AndFieldDrawFlagsEtc::
+PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc::
 Jump_012_65B6:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -6180,7 +6180,7 @@ Jump_012_65C5::
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. Talk00Event13_SetBit1AtHL_Bank12, Talk00Event14_SetBit1AtHL_Bank12AndStep)
+; 2 call sites from 2 routines (e.g. WarpWithFollowers_SetBit1AtHL_Bank12, FollowersStep14_SetBit1AtHL_Bank12AndStep)
 SetBit1AtHL_Bank12::
 Func_012_65EB:: ; address name
     ld a, [hl]
@@ -6189,7 +6189,7 @@ Func_012_65EB:: ; address name
     ret
 
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-; 1 call site from 1 routine (e.g. Talk00Event14_UpdateFollowersOnStep_Bank12_Case02)
+; 1 call site from 1 routine (e.g. FollowersStep14_UpdateFollowersOnStep_Bank12_Case02)
 ClearBit1AtHL_Bank12::
 Func_012_65F0:: ; address name
     ld a, [hl]
@@ -6198,7 +6198,7 @@ Func_012_65F0:: ; address name
     ret
 
 ; sets bit 2 of the byte at [HL]; only A is clobbered
-; 14 call sites from 11 routines (e.g. Talk00Event1C_SetBit2AtHL_B12_Case05, Talk00Event1C_SetBit2AtHL_B12, Talk00Event1B_SetBit2AtHL_B12_Case05, Talk00Event1B_SetBit2AtHL_B12, ...)
+; 14 call sites from 11 routines (e.g. ObjectPath1C_SetBit2AtHL_B12_Case05, ObjectPath1C_SetBit2AtHL_B12, ObjectPath1B_SetBit2AtHL_B12_Case05, ObjectPath1B_SetBit2AtHL_B12, ...)
 SetBit2AtHL_B12::
 Func_012_65F5:: ; address name
     ld a, [hl]
@@ -6207,7 +6207,7 @@ Func_012_65F5:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 7 call sites from 4 routines (e.g. Talk00Event1C_ClearBit2AtHL_Bank12, ArenaRounds_ClearBit2AtHL_Bank12, ArenaRounds_SetBit2AtHL_B12, Talk00Event21_ClearBit2AtHL_Bank12)
+; 7 call sites from 4 routines (e.g. ObjectPath1C_ClearBit2AtHL_Bank12, ArenaRounds_ClearBit2AtHL_Bank12, ArenaRounds_SetBit2AtHL_B12, LinkMessageEvent_ClearBit2AtHL_Bank12)
 ClearBit2AtHL_Bank12::
 Func_012_65FA:: ; address name
     ld a, [hl]
@@ -6216,7 +6216,7 @@ Func_012_65FA:: ; address name
     ret
 
 ; A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093) (the same 17 bytes appear in 3 banks)
-; 21 call sites from 13 routines (e.g. Talk00Event1C_UpdateFollowersOnStep_Bank12_Case02, Talk00Event1C_UpdateFollowersOnStep_Bank12, Talk00Event1C_SetBit2AtHL_B12, Talk00Event1B_UpdateFollowersOnStep_Bank12_Case06, ...)
+; 21 call sites from 13 routines (e.g. ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02, ObjectPath1C_UpdateFollowersOnStep_Bank12, ObjectPath1C_SetBit2AtHL_B12, ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06, ...)
 UpdateFollowersOnStep_Bank12::
 Func_012_65FF:: ; address name
     and a, $0F
@@ -6492,10 +6492,10 @@ Jump_012_6782::
     inc [hl]
     ret
 
-; only called from Talk09Event00_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk09Event00_Case05_ReadMessageState)
+; only called from KeyWorldBossBattle_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. KeyWorldBossBattle_Case05_ReadMessageState)
 ; reads: wMessageState
-Talk09Event00_Case05_Sub01_ReadMessageState::
+KeyWorldBossBattle_Case05_Sub01_ReadMessageState::
 Func_012_6787:: ; address name
     push af
     ld a, [wMessageState]
@@ -6506,9 +6506,9 @@ Func_012_6787:: ; address name
 
 Jump_012_6791::
     rst $00
-    dw Talk09Event00_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags
-    dw Talk09Event00_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A
-    dw Talk09Event00_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc
+    dw KeyWorldBossBattle_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags
+    dw KeyWorldBossBattle_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A
+    dw KeyWorldBossBattle_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc
     dw RunMessageBox_Bank12_WriteMessageState
 
 ; entry 0 of the `rst $00` table in Func_012_6787
@@ -6516,7 +6516,7 @@ Jump_012_6791::
 ; reads: hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-Talk09Event00_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags::
+KeyWorldBossBattle_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags::
 Jump_012_679A:: ; address name
     pop af
     or a, a
@@ -6552,7 +6552,7 @@ Jump_012_67CD::
 ; reads: wTextWindowState, wMessageIndex
 ; writes: wStringIndex, wStringCategory
 ; points at: wMessageState
-Talk09Event00_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A::
+KeyWorldBossBattle_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A::
 Jump_012_67D2:: ; address name
     pop af
     ld a, [wTextWindowState]
@@ -6572,7 +6572,7 @@ Jump_012_67D2:: ; address name
 ; reads: wTextFlags, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-Talk09Event00_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc::
+KeyWorldBossBattle_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc::
 Jump_012_67EE:: ; address name
     pop af
     ld a, [wTextFlags]
@@ -6596,7 +6596,7 @@ Jump_012_680E::
     ret
 
 ; the same 13 bytes as StartMessageHL_B0F (0F:7F68)
-; 4 call sites from 4 routines (e.g. Talk09Event03_ShowWarubouWaheyThatWas, Talk09Event03_StartMessageHL_B0F_Bank12, Talk09Event00_ShowWarubouWaheyNoGood, Talk09Event00_StartMessageHL_B0F_Bank12)
+; 4 call sites from 4 routines (e.g. KeyWorldFloorBattle_ShowWarubouWaheyThatWas, KeyWorldFloorBattle_StartMessageHL_B0F_Bank12, KeyWorldBossBattle_ShowWarubouWaheyNoGood, KeyWorldBossBattle_StartMessageHL_B0F_Bank12)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B0F_Bank12::
 Func_012_6813:: ; address name
@@ -6609,7 +6609,7 @@ Func_012_6813:: ; address name
     ret
 
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that string of the group already in wMessageGroup (E-0063, E-0079)
-; 35 call sites from 15 routines (e.g. Talk00Event0A_ToStartMessageAAndStep, Talk00Event1E_ToStartMessageAAndStep, Talk00Event1D_ToStartMessageAAndStep, StartArenaRankMessage, ...)
+; 35 call sites from 15 routines (e.g. PlayerSpriteMessage_ToStartMessageAAndStep, CountdownMessage_ToStartMessageAAndStep, EncounterCounterMessage_ToStartMessageAAndStep, StartArenaRankMessage, ...)
 ; writes: wMessageIndex, wMessageState
 StartMessageA::
 Func_012_6820:: ; address name
@@ -6619,7 +6619,7 @@ Func_012_6820:: ; address name
     ret
 
 ; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. Talk09Event03_RunMessageBoxFar_Bank12, Talk09Event00_RunMessageBoxFar_Bank12)
+; 2 call sites from 2 routines (e.g. KeyWorldFloorBattle_RunMessageBoxFar_Bank12, KeyWorldBossBattle_RunMessageBoxFar_Bank12)
 ; reads: wMessageState
 ; writes: wStepPtrLo
 RunMessageBoxFar_Bank12::
@@ -6637,7 +6637,7 @@ Jump_012_683A::
     ret
 
 ; RunMessageBox_Bank12 (A = the freeze flag), then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
-; 11 call sites from 11 routines (e.g. Talk00Event0A_RunMessageBoxCarryWhenIdle_Bank12, Talk00Event1E_RunMessageBoxCarryWhenIdle_Bank12, Talk00Event17_RunMessageBoxCarryWhenIdle_Bank12, Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12, ...)
+; 11 call sites from 11 routines (e.g. PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12, CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12, BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12, LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12, ...)
 ; reads: wMessageState
 RunMessageBoxCarryWhenIdle_Bank12::
 Func_012_683C:: ; address name
@@ -6662,16 +6662,16 @@ Func_012_684A:: ; address name
     call RunMessageBoxStateIfActive_Bank12
     jr Jump_012_683F
 
-; only called from Talk09Event00_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. Talk09Event00_WriteScriptParam0)
+; only called from KeyWorldBossBattle_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. KeyWorldBossBattle_WriteScriptParam0)
 ; reads: wMessageState
-Talk09Event00_Case05_ReadMessageState::
+KeyWorldBossBattle_Case05_ReadMessageState::
 Func_012_684F:: ; address name
-    call Talk09Event00_Case05_Sub01_ReadMessageState
+    call KeyWorldBossBattle_Case05_Sub01_ReadMessageState
     jr Jump_012_683F
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Talk00Event01_Sub03_WaitFieldActionRequest)
+; 1 call site from 1 routine (e.g. FieldScene01_Sub03_WaitFieldActionRequest)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12_6854::
 Func_012_6854:: ; address name
@@ -6718,7 +6718,7 @@ Func_012_6893:: ; address name
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
-; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, Talk00Event0B_StartMessageA, DispatchTalkEvent_Case01_GenerateNewKeyEntry, ...)
+; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, DispatchTalkEvent_Case01_GenerateNewKeyEntry, ...)
 ; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
 ; points at: wKeySeeds
@@ -8342,12 +8342,12 @@ Jump_012_7174::
     ret z
     ld [wTriggerKind], a
 
-; only called from Talk00Event02_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event02_Case04_NextRandomSeed)
+; only called from RandomGoldOrItem_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RandomGoldOrItem_Case04_NextRandomSeed)
 ; reads: wTriggerKind, wIsCGB
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
-Talk00Event02_Case04_Sub01_DecompressToVRAM::
+RandomGoldOrItem_Case04_Sub01_DecompressToVRAM::
 Func_012_7179:: ; address name
     ld a, [wTriggerKind]
     ld c, a
@@ -8394,13 +8394,13 @@ Data_012_71BB:: ; address name
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0A, $06, $00, $01
 
-; E-0239 (C1: record 0 of the 6-byte records Talk00Event02_Case04_Sub01_Sub01 reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero).
+; E-0239 (C1: record 0 of the 6-byte records RandomGoldOrItem_Case04_Sub01_Sub01 reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero).
 ; record: record 0 of the trigger sprite records: all zero
 TriggerSpriteRecord0::
 Data_012_71E8:: ; address name
     db $00, $00, $00, $00, $00, $00 ; id 0
 
-; E-0239 (C1: Talk00Event02_Case04_Sub01_Sub01 reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0).
+; E-0239 (C1: RandomGoldOrItem_Case04_Sub01_Sub01 reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0).
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
 Data_012_71EE:: ; address name
@@ -10559,7 +10559,7 @@ Func_012_7E80:: ; address name
     ret
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
-; 5 call sites from 5 routines (e.g. Talk08Event_Case0A_ShowIfSomeMonsterMasters, Talk08Event_Case08_ShowHeroCheckedTheBookshelf, Talk08Event_Case03_ShowIsThatSoToo, Talk08Event_Case02_ShowTheresASpiritIn, ...)
+; 5 call sites from 5 routines (e.g. GoldItemOrLoss_Case0A_ShowIfSomeMonsterMasters, GoldItemOrLoss_Case08_ShowHeroCheckedTheBookshelf, GoldItemOrLoss_Case03_ShowIsThatSoToo, GoldItemOrLoss_Case02_ShowTheresASpiritIn, ...)
 ; reads: hTemp0, hTemp1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 SubtractGoldFloorZero::
@@ -10602,7 +10602,7 @@ Jump_012_7EB7::
     ret
 
 ; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
-; 13 call sites from 6 routines (e.g. Talk00Event02_AddGoldCapped, ScriptFetch0E, Talk00Event0F_AddGoldCapped, TalkMsg0A3C_KingIfYouSee, ...)
+; 13 call sites from 6 routines (e.g. RandomGoldOrItem_AddGoldCapped, ScriptFetch0E, StepTriggerReward_AddGoldCapped, TalkMsg0A3C_KingIfYouSee, ...)
 ; reads: hTemp0, hTemp1, wGoldLo, wGoldMid, wGoldHi
 ; writes: wGoldLo, wGoldMid, wGoldHi
 AddGoldCapped::
@@ -10646,11 +10646,11 @@ Jump_012_7EF5::
     ld [wGoldHi], a
     ret
 
-; only called from Talk00Event05_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event05_TestFlagBit)
+; only called from ReturnMessage_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. ReturnMessage_TestFlagBit)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldHi, wGoldMid, wGoldLo
-Talk00Event05_Case00_WriteGoldHiAndGoldMidEtc::
+ReturnMessage_Case00_WriteGoldHiAndGoldMidEtc::
 Func_012_7F05:: ; address name
     ld a, [wGoldHi]
     srl a

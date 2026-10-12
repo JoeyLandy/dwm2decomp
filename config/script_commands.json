@@ -638,130 +638,130 @@
       "evidence": "E-0245"
     },
     "80": {
-      "const": "SCRIPT_TALK00_0F",
-      "routine": "Talk00Event0F",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0F starts (talk event category $00, group $0F); its states are not yet read (a structural name); it gives gold (a byte * 10), an item (AppendItemWC928ToInventory) or starts a battle with intro 5",
-      "evidence": "E-0246"
+      "const": "SCRIPT_STEP_TRIGGER_REWARD",
+      "routine": "StepTriggerReward",
+      "note": "a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemWC928ToInventory) or starts a battle with intro 5); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "81": {
-      "const": "SCRIPT_TALK00_0E",
-      "routine": "Talk00Event0E",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0E starts (talk event category $00, group $0E); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_AREA_ITEM",
+      "routine": "AreaItemEvent",
+      "note": "a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemWC928ToInventory) after CheckTwoWCDB0EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "82": {
-      "const": "SCRIPT_TALK08",
-      "routine": "Talk08Event",
-      "note": "the one command of the script DispatchTalkEvent_Case08 starts; its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_GOLD_ITEM_OR_LOSS",
+      "routine": "GoldItemOrLoss",
+      "note": "a key-world/field talk event (category 8: random gold or item (NextRandomSeed, AddGoldCapped, AppendItemWC928ToInventory) or a gold loss (DeductGoldPenaltyAndFormatLoss)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "83": {
-      "const": "SCRIPT_TALK00_01",
-      "routine": "Talk00Event01",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case01 starts (talk event category $00, group $01); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_FIELD_SCENE_01",
+      "routine": "FieldScene01",
+      "note": "a key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: draws script meta-sprite 21, moves objects, changes the music); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "84": {
-      "const": "SCRIPT_TALK00_02",
-      "routine": "Talk00Event02",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case02 starts (talk event category $00, group $02); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_RANDOM_GOLD_OR_ITEM",
+      "routine": "RandomGoldOrItem",
+      "note": "a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemWC928ToInventory)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "85": {
-      "const": "SCRIPT_TALK09_00",
-      "routine": "Talk09Event00",
-      "note": "the one command of the script DispatchTalkEvent_Case09_Sub01_Case00 starts (talk event category $09, group $00); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_KEY_WORLD_BOSS_BATTLE",
+      "routine": "KeyWorldBossBattle",
+      "note": "talk category 9, group 0: a random message ($00D0 + 0..F), a battle against wKeyWorldEncounter (one or three monsters), then after the 'Warubou' message sets wKeyWorldFlags bit 7, marks every floor entry of wKeyWorldEncounterTable done and sets bit 6 of the current key entry byte 7; a C1 name from its calls and writes",
+      "evidence": "E-0286"
     },
     "86": {
-      "const": "SCRIPT_TALK00_0B",
-      "routine": "Talk00Event0B",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0B starts (talk event category $00, group $0B); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_KEY_WORLD_DOOR_ITEM",
+      "routine": "KeyWorldDoorItem",
+      "note": "a key-world/field talk event (group $0B: random item or key entry (GenerateNewKeyEntry) and door tiles for the key-world floor (DrawDoorTilesForKeyWorldFloor)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "87": {
-      "const": "SCRIPT_TALK00_04",
-      "routine": "Talk00Event04",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case04 starts (talk event category $00, group $04); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_PARTY_DEFEATED_RETURN",
+      "routine": "PartyDefeatedReturn",
+      "note": "a key-world/field talk event (group $04, dispatched from FieldModeStateDispatch_Case07: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "88": {
-      "const": "SCRIPT_TALK00_05",
-      "routine": "Talk00Event05",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case05 starts (talk event category $00, group $05); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_RETURN_MESSAGE",
+      "routine": "ReturnMessage",
+      "note": "a key-world/field talk event (group $05, dispatched by RunFieldReturnPhase_ResetLeadRecordFields55And5B and PartyDefeatedReturn: a message chosen by a story flag); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "89": {
-      "const": "SCRIPT_TALK00_06",
-      "routine": "Talk00Event06",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case06 starts (talk event category $00, group $06); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_RETURN_WARP",
+      "routine": "ReturnWarp",
+      "note": "a key-world/field talk event (group $06, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: StartReturnWarpByFlag25); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8A": {
-      "const": "SCRIPT_TALK00_07",
-      "routine": "Talk00Event07",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case07 starts (talk event category $00, group $07); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_MAP_EXIT_WARP",
+      "routine": "MapExitWarp",
+      "note": "a key-world/field talk event (group $07, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: fades, then sets the warp destination from the map exit records (E-0182), wMapType, the map size and the field transition); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8B": {
-      "const": "SCRIPT_TALK00_15",
-      "routine": "Talk00Event15",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case15 starts (talk event category $00, group $15); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_BREED_FADE",
+      "routine": "BreedFade",
+      "note": "a key-world/field talk event (group $15, dispatched by BreedMenu_TalkEvent15: a palette fade); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8C": {
-      "const": "SCRIPT_TALK00_16",
-      "routine": "Talk00Event16",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case16 starts (talk event category $00, group $16); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_BREED_CHILD_SPRITE",
+      "routine": "BreedChildSprite",
+      "note": "a key-world/field talk event (group $16, dispatched by BreedMenu_CopyToChildThenTalkEvent16: loads graphics (DecompressGraphicsTemp0ToTemp4) for a field object (RunFieldCommandTemp0)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8D": {
-      "const": "SCRIPT_TALK00_17",
-      "routine": "Talk00Event17",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_BREED_CHILD_SCENE",
+      "routine": "BreedChildScene",
+      "note": "a key-world/field talk event (group $17, dispatched by BreedMenu_TalkEvent17ThenNameEntry: a field object with loaded graphics, a message with a name from the string database (CopyStringToBuffer_Bank08)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8E": {
-      "const": "SCRIPT_TALK00_08",
-      "routine": "Talk00Event08",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case08 starts (talk event category $00, group $08); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_MAP_LINK_WARP",
+      "routine": "MapLinkWarp",
+      "note": "a key-world/field talk event (group $08, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: a timed palette fade, then the warp destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "8F": {
-      "const": "SCRIPT_TALK00_20",
-      "routine": "Talk00Event20",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case20 starts (talk event category $00, group $20); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_NPC_BREED_WARP",
+      "routine": "NpcBreedWarp",
+      "note": "a key-world/field talk event (group $20, dispatched by NpcBreedMenu_Case04_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "90": {
-      "const": "SCRIPT_TALK00_10",
-      "routine": "Talk00Event10",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case10 starts (talk event category $00, group $10); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_FOLLOWERS_STEP_10",
+      "routine": "FollowersStep10",
+      "note": "a key-world/field talk event (group $10: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "91": {
-      "const": "SCRIPT_TALK00_11",
-      "routine": "Talk00Event11",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case11 starts (talk event category $00, group $11); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_FOLLOWERS_STEP_11",
+      "routine": "FollowersStep11",
+      "note": "a key-world/field talk event (group $11: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "92": {
-      "const": "SCRIPT_TALK00_12",
-      "routine": "Talk00Event12",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case12 starts (talk event category $00, group $12); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_PLAYER_AND_FOLLOWERS_STEP",
+      "routine": "PlayerAndFollowersStep",
+      "note": "a key-world/field talk event (group $12: moves the player (UpdatePlayerMovement) and the followers); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "93": {
-      "const": "SCRIPT_TALK00_13",
-      "routine": "Talk00Event13",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case13 starts (talk event category $00, group $13); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_WARP_WITH_FOLLOWERS",
+      "routine": "WarpWithFollowers",
+      "note": "a key-world/field talk event (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the field transition); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "94": {
-      "const": "SCRIPT_TALK00_14",
-      "routine": "Talk00Event14",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case14 starts (talk event category $00, group $14); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_FOLLOWERS_STEP_14",
+      "routine": "FollowersStep14",
+      "note": "a key-world/field talk event (group $14: steps the followers, toggling object flag bit 1, with a sound); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "95": {
       "const": "SCRIPT_ARENA_GRID_BATTLE",
@@ -776,64 +776,64 @@
       "evidence": "E-0246"
     },
     "98": {
-      "const": "SCRIPT_TALK00_1B",
-      "routine": "Talk00Event1B",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1B starts (talk event category $00, group $1B); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_OBJECT_PATH_1B",
+      "routine": "ObjectPath1B",
+      "note": "a key-world/field talk event (group $1B: moves an object by step deltas with the followers, then fades); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "99": {
-      "const": "SCRIPT_TALK00_1C",
-      "routine": "Talk00Event1C",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1C starts (talk event category $00, group $1C); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_OBJECT_PATH_1C",
+      "routine": "ObjectPath1C",
+      "note": "a key-world/field talk event (group $1C: moves an object by step deltas with the followers, then fades); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "9A": {
-      "const": "SCRIPT_TALK00_19",
-      "routine": "Talk00Event19",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case19 starts (talk event category $00, group $19); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_RANDOM_BATTLE",
+      "routine": "RandomBattleEvent",
+      "note": "a key-world/field talk event (group $19, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: picks a battle intro (NextRandomSeed) and starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "9B": {
-      "const": "SCRIPT_TALK00_1A",
-      "routine": "Talk00Event1A",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1A starts (talk event category $00, group $1A); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_HEAL_PARTY",
+      "routine": "HealPartyEvent",
+      "note": "a key-world/field talk event (group $1A, dispatched by RunMenuStateMenuState: heals the party (FullyHealParty) after a flag-chosen message); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "9C": {
-      "const": "SCRIPT_TALK00_1D",
-      "routine": "Talk00Event1D",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1D starts (talk event category $00, group $1D); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_ENCOUNTER_MESSAGE",
+      "routine": "EncounterCounterMessage",
+      "note": "a key-world/field talk event (group $1D, dispatched by TickRandomEncounterCounter: one message (StartMessageA)); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "9D": {
-      "const": "SCRIPT_TALK00_1E",
-      "routine": "Talk00Event1E",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case1E starts (talk event category $00, group $1E); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_COUNTDOWN_MESSAGE",
+      "routine": "CountdownMessage",
+      "note": "a key-world/field talk event (group $1E, dispatched by CountDownTalkCountdownThenDispatchTalkEvent: one message); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "9E": {
-      "const": "SCRIPT_TALK09_03",
-      "routine": "Talk09Event03",
-      "note": "the one command of the script DispatchTalkEvent_Case09_Sub01_Case03 starts (talk event category $09, group $03); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_KEY_WORLD_FLOOR_BATTLE",
+      "routine": "KeyWorldFloorBattle",
+      "note": "talk category 9, group 3: a random message ($00E0 + 0..F), a battle against the wKeyWorldEncounterTable entry of wKeyWorldFloor, then after the 'Warubou' message marks that floor entry done (byte 3 = 1); a C1 name from its calls and writes",
+      "evidence": "E-0286"
     },
     "9F": {
-      "const": "SCRIPT_TALK00_21",
-      "routine": "Talk00Event21",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case21 starts (talk event category $00, group $21); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_LINK_MESSAGE",
+      "routine": "LinkMessageEvent",
+      "note": "a key-world/field talk event (group $21, dispatched from the link screens (GameMode5_Update, RunLinkSession4ScreenState): graphics and a message); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "A0": {
-      "const": "SCRIPT_TALK00_09",
-      "routine": "Talk00Event09",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case09 starts (talk event category $00, group $09); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_PLAYER_SPRITE_FLASH",
+      "routine": "PlayerSpriteFlash",
+      "note": "a key-world/field talk event (group $09, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: reloads the player sprite graphics with a negative screen flash); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "A1": {
-      "const": "SCRIPT_TALK00_0A",
-      "routine": "Talk00Event0A",
-      "note": "the one command of the script DispatchTalkEvent_Case00_Sub01_Case0A starts (talk event category $00, group $0A); its states are not yet read (a structural name)",
-      "evidence": "E-0246"
+      "const": "SCRIPT_PLAYER_SPRITE_MESSAGE",
+      "routine": "PlayerSpriteMessage",
+      "note": "a key-world/field talk event (group $0A, dispatched by UpdatePlayerMovement: reloads the player sprite graphics and shows a message); named from its trigger and calls",
+      "evidence": "E-0286"
     },
     "C0": {
       "const": "SCRIPT_SCENE_ROLT_ELDER",

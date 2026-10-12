@@ -1197,38 +1197,38 @@
     "evidence": "reading (E-0039)"
   },
   "12:59AC": {
-    "name": "Talk09Event03",
-    "note": "implements script command type 9E (SCRIPT_TALK09_03): the one command of the script DispatchTalkEvent_Case09_Sub01_Case03 starts (talk event category $09, group $03); its states are not yet read (a structural name); reached through ScriptCommand9E in bank $10 (E-0038, E-0246)",
+    "name": "KeyWorldFloorBattle",
+    "note": "implements script command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0 + 0..F), a battle against the wKeyWorldEncounterTable entry of wKeyWorldFloor, then after the 'Warubou' message marks that floor entry done (byte 3 = 1); a C1 name from its calls and writes",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4001": {
-    "name": "Talk00Event1E",
-    "note": "implements script command type 9D (SCRIPT_TALK00_1E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1E starts (talk event category $00, group $1E); its states are not yet read (a structural name); reached through ScriptCommand9D in bank $10 (E-0038, E-0246)",
+    "name": "CountdownMessage",
+    "note": "implements script command type 9D (SCRIPT_COUNTDOWN_MESSAGE): a key-world/field talk event (group $1E, dispatched by CountDownTalkCountdownThenDispatchTalkEvent: one message); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4013": {
-    "name": "Talk00Event1D",
-    "note": "implements script command type 9C (SCRIPT_TALK00_1D): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1D starts (talk event category $00, group $1D); its states are not yet read (a structural name); reached through ScriptCommand9C in bank $10 (E-0038, E-0246)",
+    "name": "EncounterCounterMessage",
+    "note": "implements script command type 9C (SCRIPT_ENCOUNTER_MESSAGE): a key-world/field talk event (group $1D, dispatched by TickRandomEncounterCounter: one message (StartMessageA)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:550E": {
-    "name": "Talk00Event1A",
-    "note": "implements script command type 9B (SCRIPT_TALK00_1A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1A starts (talk event category $00, group $1A); its states are not yet read (a structural name); reached through ScriptCommand9B in bank $10 (E-0038, E-0246)",
+    "name": "HealPartyEvent",
+    "note": "implements script command type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by RunMenuStateMenuState: heals the party (FullyHealParty) after a flag-chosen message); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4030": {
-    "name": "Talk00Event19",
-    "note": "implements script command type 9A (SCRIPT_TALK00_19): the one command of the script DispatchTalkEvent_Case00_Sub01_Case19 starts (talk event category $00, group $19); its states are not yet read (a structural name); reached through ScriptCommand9A in bank $10 (E-0038, E-0246)",
+    "name": "RandomBattleEvent",
+    "note": "implements script command type 9A (SCRIPT_RANDOM_BATTLE): a key-world/field talk event (group $19, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: picks a battle intro (NextRandomSeed) and starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4064": {
-    "name": "Talk00Event1C",
-    "note": "implements script command type 99 (SCRIPT_TALK00_1C): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1C starts (talk event category $00, group $1C); its states are not yet read (a structural name); reached through ScriptCommand99 in bank $10 (E-0038, E-0246)",
+    "name": "ObjectPath1C",
+    "note": "implements script command type 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step deltas with the followers, then fades); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4210": {
-    "name": "Talk00Event1B",
-    "note": "implements script command type 98 (SCRIPT_TALK00_1B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case1B starts (talk event category $00, group $1B); its states are not yet read (a structural name); reached through ScriptCommand98 in bank $10 (E-0038, E-0246)",
+    "name": "ObjectPath1B",
+    "note": "implements script command type 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step deltas with the followers, then fades); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:44DB": {
@@ -1242,123 +1242,123 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4F1E": {
-    "name": "Talk00Event10",
-    "note": "implements script command type 90 (SCRIPT_TALK00_10): the one command of the script DispatchTalkEvent_Case00_Sub01_Case10 starts (talk event category $00, group $10); its states are not yet read (a structural name); reached through ScriptCommand90 in bank $10 (E-0038, E-0246)",
+    "name": "FollowersStep10",
+    "note": "implements script command type 90 (SCRIPT_FOLLOWERS_STEP_10): a key-world/field talk event (group $10: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4EF9": {
-    "name": "Talk00Event11",
-    "note": "implements script command type 91 (SCRIPT_TALK00_11): the one command of the script DispatchTalkEvent_Case00_Sub01_Case11 starts (talk event category $00, group $11); its states are not yet read (a structural name); reached through ScriptCommand91 in bank $10 (E-0038, E-0246)",
+    "name": "FollowersStep11",
+    "note": "implements script command type 91 (SCRIPT_FOLLOWERS_STEP_11): a key-world/field talk event (group $11: steps the followers (UpdateFollowersOnStep)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4ECE": {
-    "name": "Talk00Event12",
-    "note": "implements script command type 92 (SCRIPT_TALK00_12): the one command of the script DispatchTalkEvent_Case00_Sub01_Case12 starts (talk event category $00, group $12); its states are not yet read (a structural name); reached through ScriptCommand92 in bank $10 (E-0038, E-0246)",
+    "name": "PlayerAndFollowersStep",
+    "note": "implements script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event (group $12: moves the player (UpdatePlayerMovement) and the followers); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4E55": {
-    "name": "Talk00Event13",
-    "note": "implements script command type 93 (SCRIPT_TALK00_13): the one command of the script DispatchTalkEvent_Case00_Sub01_Case13 starts (talk event category $00, group $13); its states are not yet read (a structural name); reached through ScriptCommand93 in bank $10 (E-0038, E-0246)",
+    "name": "WarpWithFollowers",
+    "note": "implements script command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the field transition); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4E4B": {
-    "name": "Talk00Event14",
-    "note": "implements script command type 94 (SCRIPT_TALK00_14): the one command of the script DispatchTalkEvent_Case00_Sub01_Case14 starts (talk event category $00, group $14); its states are not yet read (a structural name); reached through ScriptCommand94 in bank $10 (E-0038, E-0246)",
+    "name": "FollowersStep14",
+    "note": "implements script command type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers, toggling object flag bit 1, with a sound); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4A1E": {
-    "name": "Talk00Event17",
-    "note": "implements script command type 8D (SCRIPT_TALK00_17): the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name); reached through ScriptCommand8D in bank $10 (E-0038, E-0246)",
+    "name": "BreedChildScene",
+    "note": "implements script command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by BreedMenu_TalkEvent17ThenNameEntry: a field object with loaded graphics, a message with a name from the string database (CopyStringToBuffer_Bank08)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4A9A": {
-    "name": "Talk00Event16",
-    "note": "implements script command type 8C (SCRIPT_TALK00_16): the one command of the script DispatchTalkEvent_Case00_Sub01_Case16 starts (talk event category $00, group $16); its states are not yet read (a structural name); reached through ScriptCommand8C in bank $10 (E-0038, E-0246)",
+    "name": "BreedChildSprite",
+    "note": "implements script command type 8C (SCRIPT_BREED_CHILD_SPRITE): a key-world/field talk event (group $16, dispatched by BreedMenu_CopyToChildThenTalkEvent16: loads graphics (DecompressGraphicsTemp0ToTemp4) for a field object (RunFieldCommandTemp0)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4C07": {
-    "name": "Talk00Event15",
-    "note": "implements script command type 8B (SCRIPT_TALK00_15): the one command of the script DispatchTalkEvent_Case00_Sub01_Case15 starts (talk event category $00, group $15); its states are not yet read (a structural name); reached through ScriptCommand8B in bank $10 (E-0038, E-0246)",
+    "name": "BreedFade",
+    "note": "implements script command type 8B (SCRIPT_BREED_FADE): a key-world/field talk event (group $15, dispatched by BreedMenu_TalkEvent15: a palette fade); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4965": {
-    "name": "Talk00Event20",
-    "note": "implements script command type 8F (SCRIPT_TALK00_20): the one command of the script DispatchTalkEvent_Case00_Sub01_Case20 starts (talk event category $00, group $20); its states are not yet read (a structural name); reached through ScriptCommand8F in bank $10 (E-0038, E-0246)",
+    "name": "NpcBreedWarp",
+    "note": "implements script command type 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group $20, dispatched by NpcBreedMenu_Case04_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4919": {
-    "name": "Talk00Event21",
-    "note": "implements script command type 9F (SCRIPT_TALK00_21): the one command of the script DispatchTalkEvent_Case00_Sub01_Case21 starts (talk event category $00, group $21); its states are not yet read (a structural name); reached through ScriptCommand9F in bank $10 (E-0038, E-0246)",
+    "name": "LinkMessageEvent",
+    "note": "implements script command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from the link screens (GameMode5_Update, RunLinkSession4ScreenState): graphics and a message); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:4FEA": {
-    "name": "Talk00Event09",
-    "note": "implements script command type A0 (SCRIPT_TALK00_09): the one command of the script DispatchTalkEvent_Case00_Sub01_Case09 starts (talk event category $00, group $09); its states are not yet read (a structural name); reached through ScriptCommandA0 in bank $10 (E-0038, E-0246)",
+    "name": "PlayerSpriteFlash",
+    "note": "implements script command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: reloads the player sprite graphics with a negative screen flash); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:50B3": {
-    "name": "Talk00Event0A",
-    "note": "implements script command type A1 (SCRIPT_TALK00_0A): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0A starts (talk event category $00, group $0A); its states are not yet read (a structural name); reached through ScriptCommandA1 in bank $10 (E-0038, E-0246)",
+    "name": "PlayerSpriteMessage",
+    "note": "implements script command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event (group $0A, dispatched by UpdatePlayerMovement: reloads the player sprite graphics and shows a message); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:50E5": {
-    "name": "Talk00Event08",
-    "note": "implements script command type 8E (SCRIPT_TALK00_08): the one command of the script DispatchTalkEvent_Case00_Sub01_Case08 starts (talk event category $00, group $08); its states are not yet read (a structural name); reached through ScriptCommand8E in bank $10 (E-0038, E-0246)",
+    "name": "MapLinkWarp",
+    "note": "implements script command type 8E (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: a timed palette fade, then the warp destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:51F4": {
-    "name": "Talk00Event07",
-    "note": "implements script command type 8A (SCRIPT_TALK00_07): the one command of the script DispatchTalkEvent_Case00_Sub01_Case07 starts (talk event category $00, group $07); its states are not yet read (a structural name); reached through ScriptCommand8A in bank $10 (E-0038, E-0246)",
+    "name": "MapExitWarp",
+    "note": "implements script command type 8A (SCRIPT_MAP_EXIT_WARP): a key-world/field talk event (group $07, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: fades, then sets the warp destination from the map exit records (E-0182), wMapType, the map size and the field transition); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:63A1": {
-    "name": "Talk00Event0F",
-    "note": "implements script command type 80 (SCRIPT_TALK00_0F): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0F starts (talk event category $00, group $0F); its states are not yet read (a structural name); it gives gold (a byte * 10), an item (AppendItemWC928ToInventory) or starts a battle with intro 5; reached through ScriptCommand80 in bank $10 (E-0038, E-0246)",
+    "name": "StepTriggerReward",
+    "note": "implements script command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemWC928ToInventory) or starts a battle with intro 5); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:630E": {
-    "name": "Talk00Event0E",
-    "note": "implements script command type 81 (SCRIPT_TALK00_0E): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0E starts (talk event category $00, group $0E); its states are not yet read (a structural name); reached through ScriptCommand81 in bank $10 (E-0038, E-0246)",
+    "name": "AreaItemEvent",
+    "note": "implements script command type 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemWC928ToInventory) after CheckTwoWCDB0EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:6211": {
-    "name": "Talk00Event0B",
-    "note": "implements script command type 86 (SCRIPT_TALK00_0B): the one command of the script DispatchTalkEvent_Case00_Sub01_Case0B starts (talk event category $00, group $0B); its states are not yet read (a structural name); reached through ScriptCommand86 in bank $10 (E-0038, E-0246)",
+    "name": "KeyWorldDoorItem",
+    "note": "implements script command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item or key entry (GenerateNewKeyEntry) and door tiles for the key-world floor (DrawDoorTilesForKeyWorldFloor)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:4001": {
-    "name": "Talk08Event",
-    "note": "implements script command type 82 (SCRIPT_TALK08): the one command of the script DispatchTalkEvent_Case08 starts; its states are not yet read (a structural name); reached through ScriptCommand82 in bank $10 (E-0038, E-0246)",
+    "name": "GoldItemOrLoss",
+    "note": "implements script command type 82 (SCRIPT_GOLD_ITEM_OR_LOSS), the script of talk category 8: random gold or item (NextRandomSeed, AddGoldCapped, AppendItemWC928ToInventory) or a gold loss (DeductGoldPenaltyAndFormatLoss); reached through ScriptCommand82 in bank $10 (E-0038, E-0286)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5CE5": {
-    "name": "Talk00Event01",
-    "note": "implements script command type 83 (SCRIPT_TALK00_01): the one command of the script DispatchTalkEvent_Case00_Sub01_Case01 starts (talk event category $00, group $01); its states are not yet read (a structural name); reached through ScriptCommand83 in bank $10 (E-0038, E-0246)",
+    "name": "FieldScene01",
+    "note": "implements script command type 83 (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: draws script meta-sprite 21, moves objects, changes the music); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5A2F": {
-    "name": "Talk00Event02",
-    "note": "implements script command type 84 (SCRIPT_TALK00_02): the one command of the script DispatchTalkEvent_Case00_Sub01_Case02 starts (talk event category $00, group $02); its states are not yet read (a structural name); reached through ScriptCommand84 in bank $10 (E-0038, E-0246)",
+    "name": "RandomGoldOrItem",
+    "note": "implements script command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemWC928ToInventory)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5854": {
-    "name": "Talk09Event00",
-    "note": "implements script command type 85 (SCRIPT_TALK09_00): the one command of the script DispatchTalkEvent_Case09_Sub01_Case00 starts (talk event category $09, group $00); its states are not yet read (a structural name); reached through ScriptCommand85 in bank $10 (E-0038, E-0246)",
+    "name": "KeyWorldBossBattle",
+    "note": "implements script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0 + 0..F), a battle against wKeyWorldEncounter (one or three monsters), then after the 'Warubou' message sets wKeyWorldFlags bit 7, marks every floor entry of wKeyWorldEncounterTable done and sets bit 6 of the current key entry byte 7; a C1 name from its calls and writes",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5728": {
-    "name": "Talk00Event04",
-    "note": "implements script command type 87 (SCRIPT_TALK00_04): the one command of the script DispatchTalkEvent_Case00_Sub01_Case04 starts (talk event category $00, group $04); its states are not yet read (a structural name); reached through ScriptCommand87 in bank $10 (E-0038, E-0246)",
+    "name": "PartyDefeatedReturn",
+    "note": "implements script command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04, dispatched from FieldModeStateDispatch_Case07: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:55E8": {
-    "name": "Talk00Event05",
-    "note": "implements script command type 88 (SCRIPT_TALK00_05): the one command of the script DispatchTalkEvent_Case00_Sub01_Case05 starts (talk event category $00, group $05); its states are not yet read (a structural name); reached through ScriptCommand88 in bank $10 (E-0038, E-0246)",
+    "name": "ReturnMessage",
+    "note": "implements script command type 88 (SCRIPT_RETURN_MESSAGE): a key-world/field talk event (group $05, dispatched by RunFieldReturnPhase_ResetLeadRecordFields55And5B and PartyDefeatedReturn: a message chosen by a story flag); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "12:5534": {
-    "name": "Talk00Event06",
-    "note": "implements script command type 89 (SCRIPT_TALK00_06): the one command of the script DispatchTalkEvent_Case00_Sub01_Case06 starts (talk event category $00, group $06); its states are not yet read (a structural name); reached through ScriptCommand89 in bank $10 (E-0038, E-0246)",
+    "name": "ReturnWarp",
+    "note": "implements script command type 89 (SCRIPT_RETURN_WARP): a key-world/field talk event (group $06, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: StartReturnWarpByFlag25); named from its trigger and calls",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "5F:78CE": {
@@ -4787,7 +4787,7 @@
   "0E:6138": {"name": "DrawSpeciesAndFamilyIconForTemp0", "note": "wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)", "evidence": "reading (E-0126)"},
   "10:663D": {"name": "CallScriptCommandE9Far", "note": "far-calls ScriptCommandE9_RunFar (E-0126)", "evidence": "reading (E-0126)"},
   "12:55F8": {"name": "StartReturnWarpByFlag25", "note": "with bit 7 of wCC44 saves the wCD07 record; sets the position ($50, $30), wC8C6 = 3 (story flag $25) or 4, wC957 = 1 and starts the fade (E-0126)", "evidence": "reading (E-0126)"},
-  "12:5C31": {"name": "SetupScriptSpriteFromMapSpriteKind", "note": "A = wC195 >> 4, DE = Talk09Event00_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)", "evidence": "reading (E-0126)"},
+  "12:5C31": {"name": "SetupScriptSpriteFromMapSpriteKind", "note": "A = wC195 >> 4, DE = KeyWorldBossBattle_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)", "evidence": "reading (E-0126)"},
   "12:684A": {"name": "RunMessageBoxThenContinue_684A", "note": "runs RunMessageBoxStateIfActive_Bank12, then continues at Jump_012_683F (E-0126)", "evidence": "reading (E-0126)"},
   "16:70C5": {"name": "SetRecordState2ForB", "note": "A = B, then falls into SetRecordState2 (E-0126)", "evidence": "reading (E-0126)"},
   "19:4349": {"name": "SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord", "note": "C = wD868, then falls into Func_019_434D (E-0126)", "evidence": "reading (E-0126)"},
