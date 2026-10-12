@@ -848,7 +848,7 @@ Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1F_5A51, Script_1F_5A4E, Script_1F_5A4B, Script_1F_5A48, Script_1F_5A42
 Script_1F_5A42:: ; heuristic: event script entry or jump target; C0
     script_command $E9
-    script_op $EA, $1D, $80 ; '0 checked the pump. It's rusted'
+    script_message_unless_flag0 $801D ; 'Cobi Come back anytime, sis!'
     script_command $E9
     script_end
 Script_1F_5A48:: ; heuristic: event script entry or jump target; C0
@@ -863,67 +863,67 @@ Script_1F_5A51:: ; heuristic: event script entry or jump target; C0
 Script_1F_5A55:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5A80
 Script_1F_5A58:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $02, $C0 ; 'Cobi 0! Papa's calling. He's at'
+    script_message_unless_flag0 $C002 ; 'Cobi Which one's staying here?'
 Script_1F_5A5B:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5A66, Script_1F_5A5F
 Script_1F_5A5F:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_command $E8
     script_jump Script_1F_5A3B
 Script_1F_5A66:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $03, $C0 ; 'Tara There you are, big brother!'
+    script_message_unless_flag0 $C003 ; 'Cobi So this one is staying'
 Script_1F_5A69:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5A7C, Script_1F_5A75, Script_1F_5A6E
 Script_1F_5A6E:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $02, $C0 ; 'Cobi 0! Papa's calling. He's at'
+    script_message_unless_flag0 $C002 ; 'Cobi Which one's staying here?'
     script_command $E8
     script_jump Script_1F_5A5B
 Script_1F_5A75:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $04, $C0 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message_unless_flag0 $C004 ; 'Cobi Check up on the others'
     script_command $E8
     script_jump Script_1F_5A5F
 Script_1F_5A7C:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_jump Script_1F_5A69
 Script_1F_5A80:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+    script_message_unless_flag0 $C006 ; 'Cobi No, you can't go off'
     script_command $E8
     script_choice_jump Script_1F_5A87, Script_1F_5A8D
 Script_1F_5A87:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5A8D:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $07, $C0 ; 'There's a spirit in GreatLog that's'
+    script_message_unless_flag0 $C007 ; 'Cobi Switch with one on the'
 Script_1F_5A90:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5A9A, Script_1F_5A94
 Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5A9A:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_message_unless_flag0 $C008 ; 'Cobi What'll you switch it with?'
 Script_1F_5A9D:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5AA7, Script_1F_5AA1
 Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $07, $C0 ; 'There's a spirit in GreatLog that's'
+    script_message_unless_flag0 $C007 ; 'Cobi Switch with one on the'
     script_jump Script_1F_5A90
 Script_1F_5AA7:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $09, $C0 ; 'Good. That's good to hear! You'
+    script_message_unless_flag0 $C009 ; 'Cobi So you'll take this one?'
 Script_1F_5AAA:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5AC1, Script_1F_5AB6, Script_1F_5AAF
 Script_1F_5AAF:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_message_unless_flag0 $C008 ; 'Cobi What'll you switch it with?'
     script_command $E8
     script_jump Script_1F_5A9D
 Script_1F_5AB6:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $0A, $C0 ; 'Is that so? Too bad! You'll'
+    script_message_unless_flag0 $C00A ; 'Cobi I switched 0.'
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AC1:: ; heuristic: event script entry or jump target; C0
     script_command $E8
@@ -932,67 +932,67 @@ Script_1F_5AC5:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5ACA, Script_1F_5AD3, Script_1F_5AD6
 Script_1F_5ACA:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $10, $C0 ; '0 peered into the barrel. It'
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C010 ; 'Cobi You haven't left any here.'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AD3:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B01
 Script_1F_5AD6:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0D, $C0 ; 'GreatLog's King asked us to settle'
+    script_message_unless_flag0 $C00D ; 'Cobi Which one will you take?'
 Script_1F_5AD9:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5AE3, Script_1F_5ADD
 Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AE3:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0E, $C0 ; 'When our farm gets established in'
+    script_message_unless_flag0 $C00E ; 'Cobi Is this the one you'll'
 Script_1F_5AE6:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5AFD, Script_1F_5AF2, Script_1F_5AEB
 Script_1F_5AEB:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0D, $C0 ; 'GreatLog's King asked us to settle'
+    script_message_unless_flag0 $C00D ; 'Cobi Which one will you take?'
     script_command $E8
     script_jump Script_1F_5AD9
 Script_1F_5AF2:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $0F, $C0 ; 'Worried about your monsters? Don't be!'
+    script_message_unless_flag0 $C00F ; 'Cobi It's eager to go, 0.'
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AFD:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_jump Script_1F_5AE6
 Script_1F_5B01:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $11, $C0 ; '0 peered into the vase. Freshly'
-    script_op $EA, $07, $C0 ; 'There's a spirit in GreatLog that's'
+    script_message_unless_flag0 $C011 ; 'Cobi You can't take any more.'
+    script_message_unless_flag0 $C007 ; 'Cobi Switch with one on the'
 Script_1F_5B07:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B11, Script_1F_5B0B
 Script_1F_5B0B:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B11:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0C, $C0 ; 'GreatLog's King asked us to settle'
+    script_message_unless_flag0 $C00C ; 'Cobi What'll you switch it with?'
 Script_1F_5B14:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B1F, Script_1F_5B18
 Script_1F_5B18:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $07, $C0 ; 'There's a spirit in GreatLog that's'
+    script_message_unless_flag0 $C007 ; 'Cobi Switch with one on the'
     script_jump Script_1F_5B07
 Script_1F_5B1F:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $03, $C0 ; 'Tara There you are, big brother!'
+    script_message_unless_flag0 $C003 ; 'Cobi So this one is staying'
 Script_1F_5B22:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B35, Script_1F_5B2E, Script_1F_5B27
 Script_1F_5B27:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0C, $C0 ; 'GreatLog's King asked us to settle'
+    script_message_unless_flag0 $C00C ; 'Cobi What'll you switch it with?'
     script_command $E8
     script_jump Script_1F_5B14
 Script_1F_5B2E:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_message_unless_flag0 $C008 ; 'Cobi What'll you switch it with?'
     script_jump Script_1F_5B39
 Script_1F_5B35:: ; heuristic: event script entry or jump target; C0
     script_command $E8
@@ -1001,22 +1001,22 @@ Script_1F_5B39:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B43, Script_1F_5B3D
 Script_1F_5B3D:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0C, $C0 ; 'GreatLog's King asked us to settle'
+    script_message_unless_flag0 $C00C ; 'Cobi What'll you switch it with?'
     script_jump Script_1F_5B14
 Script_1F_5B43:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $0E, $C0 ; 'When our farm gets established in'
+    script_message_unless_flag0 $C00E ; 'Cobi Is this the one you'll'
 Script_1F_5B46:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B5D, Script_1F_5B52, Script_1F_5B4B
 Script_1F_5B4B:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_message_unless_flag0 $C008 ; 'Cobi What'll you switch it with?'
     script_command $E8
     script_jump Script_1F_5B39
 Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $0A, $C0 ; 'Is that so? Too bad! You'll'
+    script_message_unless_flag0 $C00A ; 'Cobi I switched 0.'
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
     script_command $E8
@@ -1024,7 +1024,7 @@ Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B61:: ; heuristic: event script entry or jump target; C0
     script_command $E8
 Script_1F_5B62:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $12, $C0 ; 'Cobi 0! They said GreatLog will'
+    script_message_unless_flag0 $C012 ; 'Cobi What do you want to'
     script_command $E8
     script_choice_jump Script_1F_5B6B, Script_1F_5B6E, Script_1F_5B71, Script_1F_5B7E
 Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
@@ -1032,16 +1032,16 @@ Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B6E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B8F
 Script_1F_5B71:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $13, $C0 ; 'Land ho! There's GreatLog!'
+    script_message_unless_flag0 $C013 ; 'Cobi We don't have any of'
     script_jump Script_1F_5B62
 Script_1F_5B77:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B77
 Script_1F_5B81:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $15, $C0 ; 'This is a tale of children'
+    script_message_unless_flag0 $C015 ; 'Cobi Which one will you check?'
 Script_1F_5B84:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5B8B, Script_1F_5B88
@@ -1051,81 +1051,81 @@ Script_1F_5B8B:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_jump Script_1F_5B84
 Script_1F_5B8F:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $16, $C0 ; 'Listen you two! Quit your horsing'
+    script_message_unless_flag0 $C016 ; 'Cobi Which egg will you check?'
     script_command $E8
     script_jump Script_1F_5B62
 Script_1F_5B96:: ; heuristic: event script entry or jump target; C0
     script_command $E8
 Script_1F_5B97:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $17, $C0 ; 'It seems to me that the'
+    script_message_unless_flag0 $C017 ; 'Cobi What do you want to'
     script_command $E8
     script_choice_jump Script_1F_5BA7, Script_1F_5BAA, Script_1F_5BAD, Script_1F_5BBA, Script_1F_5BA1
 Script_1F_5BA1:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+    script_message_unless_flag0 $C006 ; 'Cobi No, you can't go off'
     script_jump Script_1F_5B97
 Script_1F_5BA7:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BBD
 Script_1F_5BAA:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BE9
 Script_1F_5BAD:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $13, $C0 ; 'Land ho! There's GreatLog!'
+    script_message_unless_flag0 $C013 ; 'Cobi We don't have any of'
     script_jump Script_1F_5B97
 Script_1F_5BB3:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BB3
 Script_1F_5BBD:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $18, $C0 ; 'Yo, did you enjoy the voyage?'
+    script_message_unless_flag0 $C018 ; 'Cobi Which one will you release?'
 Script_1F_5BC0:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5BC7, Script_1F_5BC4
 Script_1F_5BC4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BC7:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $1A, $C0 ; 'There aren't many friends here. It's'
+    script_message_unless_flag0 $C01A ; 'Cobi It'll be gone forever. Sure?'
 Script_1F_5BCA:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5BE5, Script_1F_5BDA, Script_1F_5BD3, Script_1F_5BD0
 Script_1F_5BD0:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+    script_message_unless_flag0 $C006 ; 'Cobi No, you can't go off'
 Script_1F_5BD3:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $18, $C0 ; 'Yo, did you enjoy the voyage?'
+    script_message_unless_flag0 $C018 ; 'Cobi Which one will you release?'
     script_command $E8
     script_jump Script_1F_5BC0
 Script_1F_5BDA:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $1C, $C0 ; 'This hay is pretty good. Maybe'
+    script_message_unless_flag0 $C01C ; '0 was released in the wild.'
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BE5:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_jump Script_1F_5BCA
 Script_1F_5BE9:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $19, $C0 ; 'Slash If you're in need of'
+    script_message_unless_flag0 $C019 ; 'Cobi Which egg will you release?'
 Script_1F_5BEC:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5BF3, Script_1F_5BF0
 Script_1F_5BF0:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BF3:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $1A, $C0 ; 'There aren't many friends here. It's'
+    script_message_unless_flag0 $C01A ; 'Cobi It'll be gone forever. Sure?'
 Script_1F_5BF6:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5C11, Script_1F_5C06, Script_1F_5BFF, Script_1F_5BFC
 Script_1F_5BFC:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+    script_message_unless_flag0 $C006 ; 'Cobi No, you can't go off'
 Script_1F_5BFF:: ; heuristic: event script entry or jump target; C0
-    script_op $EA, $19, $C0 ; 'Slash If you're in need of'
+    script_message_unless_flag0 $C019 ; 'Cobi Which egg will you release?'
     script_command $E8
     script_jump Script_1F_5BEC
 Script_1F_5C06:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_op $EA, $1B, $C0 ; 'I accidentally went outside. People gave'
+    script_message_unless_flag0 $C01B ; 'The egg was released.'
     script_command $E8
-    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_message_unless_flag0 $C005 ; 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_command $E8
@@ -2638,30 +2638,30 @@ Script_1F_77DC:: ; heuristic: event script entry or jump target; C0
     script_command $EE
     script_end
 Script_1F_77E2:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'Tara There you are, big brother!'
+    script_message $C003 ; 'But none appear to be cursed'
     script_jump Script_1F_77F7
 Script_1F_77E8:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $C002 ; 'Oh? But no one is poisoned.'
     script_jump Script_1F_77F7
 Script_1F_77EE:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'In the middle of the sea'
+    script_message $C001 ; 'Oh? But none appear to be'
     script_jump Script_1F_77F7
 Script_1F_77F4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_77FD
 Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004 ; 'Do you need any other help?'
     script_jump Script_1F_77D5
 Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_780E, Script_1F_7808, Script_1F_7802
 Script_1F_7802:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $C008 ; 'Who should be freed of a'
     script_jump Script_1F_7811
 Script_1F_7808:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; 'There's a spirit in GreatLog that's'
+    script_message $C007 ; 'Who should be cured of poison?'
     script_jump Script_1F_7811
 Script_1F_780E:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'You folks run a monster farm?'
+    script_message $C006 ; 'Which monster should be revived?'
 Script_1F_7811:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_7819, Script_1F_7815
@@ -2672,48 +2672,48 @@ Script_1F_7819:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_7831, Script_1F_782B, Script_1F_7825, Script_1F_781F
 Script_1F_781F:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'We'll soon be reaching GreatLog. I'
+    script_message $C00B ; 'But that monster is not cursed.'
     script_jump Script_1F_77FD
 Script_1F_7825:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_message $C00A ; 'But that monster is not poisoned.'
     script_jump Script_1F_77FD
 Script_1F_782B:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Good. That's good to hear! You'
+    script_message $C009 ; 'Surely you jest. That one is'
     script_jump Script_1F_77FD
 Script_1F_7831:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_message $C00C ; 'GreatLog's King asked us to settle'
+    script_message $C00C ; 'I must ask for a small'
     script_command $F8
     script_choice_jump Script_1F_7845, Script_1F_783E, Script_1F_783A
 Script_1F_783A:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_jump Script_1F_77FD
 Script_1F_783E:: ; heuristic: event script entry or jump target; C0
-    script_message $C014 ; 'Tara Big brother! GreatLog will be'
+    script_message $C014 ; 'Oh, my, my How deplorable! You'
     script_command $F8
     script_jump Script_1F_77F7
 Script_1F_7845:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_7856, Script_1F_7850, Script_1F_784A
 Script_1F_784A:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_message $C00F ; 'Gods, I beg you, free 0'
     script_jump Script_1F_7859
 Script_1F_7850:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'When our farm gets established in'
+    script_message $C00E ; 'Gods, I beg you, purify the'
     script_jump Script_1F_7859
 Script_1F_7856:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; 'GreatLog's King asked us to settle'
+    script_message $C00D ; 'Gods, the spirits of earth! Please'
 Script_1F_7859:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_786A, Script_1F_7864, Script_1F_785E
 Script_1F_785E:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'Cobi 0! They said GreatLog will'
+    script_message $C012 ; '0 was freed from the curse.'
     script_jump Script_1F_786D
 Script_1F_7864:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; '0 peered into the vase. Freshly'
+    script_message $C011 ; '0 was cleansed of poison.'
     script_jump Script_1F_786D
 Script_1F_786A:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; '0 peered into the barrel. It'
+    script_message $C010 ; '0 was revived!'
 Script_1F_786D:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_choice_jump Script_1F_7877, Script_1F_7871
@@ -2732,26 +2732,26 @@ Script_1F_787C:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1F_7890, Script_1F_7887, Script_1F_7881
 Script_1F_7881:: ; heuristic: event script entry or jump target; C0
     script_command $F6
-    script_message $8002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $8002
     script_command $F6
     script_end
 Script_1F_7887:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C005
+    script_message $C004
     script_jump Script_1F_787C
 Script_1F_7890:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'Tara There you are, big brother!'
+    script_message $C003
 Script_1F_7893:: ; heuristic: event script entry or jump target; C0
     script_command $F6
     script_choice_jump Script_1F_789F, Script_1F_7897
 Script_1F_7897:: ; heuristic: event script entry or jump target; C0
     script_command $F6
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004
     script_command $F6
     script_jump Script_1F_787C
 Script_1F_789F:: ; heuristic: event script entry or jump target; C0
     script_command $F6
-    script_message $C003 ; 'Tara There you are, big brother!'
+    script_message $C003
     script_command $F6
     script_jump Script_1F_7893
     ds $759, $00

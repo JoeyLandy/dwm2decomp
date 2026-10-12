@@ -70,6 +70,62 @@ MACRO script_jump_data_bank
     dw \1
 ENDM
 
+; E-0242: the dedicated opcodes with inline bytes, named from their fetch handlers and the
+; command types they start (ScriptStepObject, ScriptWaitFrames, ScriptCommand05_Run,
+; ScriptSetDirection, ScriptSlideObjectY, ScriptCommand0E_Run).
+; script_walk object, direction (0 down, 1 right, 2 up, 3 left), tiles: 16 frames per tile
+MACRO script_walk
+    db $01, \1, \2, \3
+ENDM
+
+; the same at two pixels per frame (command type 03 runs ScriptStepObject twice)
+MACRO script_walk_fast
+    db $02, \1, \2, \3
+ENDM
+
+; script_wait frames (a 16-bit count)
+MACRO script_wait
+    db $03
+    dw \1
+ENDM
+
+; script_hold_dpad direction (0 down, 1 right, 2 up, 3 left), frames: sets that D-pad bit in wJoypadHeld
+MACRO script_hold_dpad
+    db $04, \1, \2
+ENDM
+
+; script_face target (0 player, n follower record n, $80 + n object n), direction
+MACRO script_face
+    db $05, \1, \2
+ENDM
+
+; script_slide_y target (as script_face): 32 frames of Y steps from Data_05F_7959
+MACRO script_slide_y
+    db $0B, \1
+ENDM
+
+; script_hide_object n: byte $C of sprite slot n = $E0, at once
+MACRO script_hide_object
+    db $0C, \1
+ENDM
+
+; script_encounter n: StartScriptedEncounterTemp0 with ScriptedEncounterTable record n
+MACRO script_encounter
+    db $0D, \1
+ENDM
+
+; a message whose index gets + $20 unless story flag 0 is set
+MACRO script_message_unless_flag0
+    db $EA
+    dw \1
+ENDM
+
+; a message whose index gets + 16 * wScreenTableIndex
+MACRO script_message_by_screen
+    db $F5
+    dw \1
+ENDM
+
 MACRO script_op
     db \#
 ENDM

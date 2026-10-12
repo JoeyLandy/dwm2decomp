@@ -1174,25 +1174,25 @@ Script_96_6F06:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F13, Script_96_6F0A
 Script_96_6F0A:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'You folks run a monster farm?'
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C006 ; 'Um You don't have any eggs'
+    script_message $C004 ; 'How else may I serve you?'
     script_jump Script_96_6EF8
 Script_96_6F13:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $C002 ; 'Which egg should I appraise?'
 Script_96_6F16:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F21, Script_96_6F1A
 Script_96_6F1A:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004 ; 'How else may I serve you?'
     script_command $EF
     script_jump Script_96_6EF8
 Script_96_6F21:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'Tara There you are, big brother!'
+    script_message $C003 ; 'It will cost 20G. It that'
 Script_96_6F24:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F30, Script_96_6F34, Script_96_6F29
 Script_96_6F29:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $C002 ; 'Which egg should I appraise?'
     script_command $EF
     script_jump Script_96_6F16
 Script_96_6F30:: ; heuristic: event script entry or jump target; C0
@@ -1202,73 +1202,73 @@ Script_96_6F34:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F3E, Script_96_6F38
 Script_96_6F38:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_message $C005 ; 'Um You don't have enough gold'
     script_jump Script_96_6FEF
 Script_96_6F3E:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'We'll soon be reaching GreatLog. I'
+    script_message $C00B ; 'OK, I'll evaluate this egg now'
     script_command $EF
     script_choice_jump Script_96_6F47, Script_96_6F4D, Script_96_6F53, Script_96_6F59
 Script_96_6F47:: ; heuristic: event script entry or jump target; C0
-    script_message $C00C ; 'GreatLog's King asked us to settle'
+    script_message $C00C ; 'It's fine. There's nothing wrong.'
     script_jump Script_96_6F5C
 Script_96_6F4D:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; 'GreatLog's King asked us to settle'
+    script_message $C00D ; 'It's good, and growing healthy.'
     script_jump Script_96_6F5C
 Script_96_6F53:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'When our farm gets established in'
+    script_message $C00E ; 'Wow, this egg is really vigorous.'
     script_jump Script_96_6F5C
 Script_96_6F59:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_message $C00F ; 'Oh, my! This egg is incredible!'
 Script_96_6F5C:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F62, Script_96_6F68, Script_96_6F6E, Script_96_6F74
 Script_96_6F62:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; '0 peered into the barrel. It'
+    script_message $C010 ; 'Don't expect too many skills.'
     script_jump Script_96_6F77
 Script_96_6F68:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; '0 peered into the vase. Freshly'
+    script_message $C011 ; 'It has a fair number of'
     script_jump Script_96_6F77
 Script_96_6F6E:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'Cobi 0! They said GreatLog will'
+    script_message $C012 ; 'It inherited its parents skills.'
     script_jump Script_96_6F77
 Script_96_6F74:: ; heuristic: event script entry or jump target; C0
-    script_message $C013 ; 'Land ho! There's GreatLog!'
+    script_message $C013 ; 'It knows a great variety of'
 Script_96_6F77:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F7D, Script_96_6F83, Script_96_6F89, Script_96_6F8F
 Script_96_6F7D:: ; heuristic: event script entry or jump target; C0
-    script_message $C014 ; 'Tara Big brother! GreatLog will be'
+    script_message $C014 ; 'Its growth may be a bit'
     script_jump Script_96_6F92
 Script_96_6F83:: ; heuristic: event script entry or jump target; C0
-    script_message $C015 ; 'This is a tale of children'
+    script_message $C015 ; 'It will grow in an average'
     script_jump Script_96_6F92
 Script_96_6F89:: ; heuristic: event script entry or jump target; C0
-    script_message $C016 ; 'Listen you two! Quit your horsing'
+    script_message $C016 ; 'It will be hard to raise'
     script_jump Script_96_6F92
 Script_96_6F8F:: ; heuristic: event script entry or jump target; C0
-    script_message $C017 ; 'It seems to me that the'
+    script_message $C017 ; 'Its growth can't be faulted.'
 Script_96_6F92:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6F97, Script_96_6F9D, Script_96_6FA3
 Script_96_6F97:: ; heuristic: event script entry or jump target; C0
-    script_message $C018 ; 'Yo, did you enjoy the voyage?'
+    script_message $C018 ; 'It appears to be a hard'
     script_jump Script_96_6FA6
 Script_96_6F9D:: ; heuristic: event script entry or jump target; C0
-    script_message $C019 ; 'Slash If you're in need of'
+    script_message $C019 ; 'This one seems to be quite'
     script_jump Script_96_6FA6
 Script_96_6FA3:: ; heuristic: event script entry or jump target; C0
-    script_message $C01A ; 'There aren't many friends here. It's'
+    script_message $C01A ; 'I can tell this one is'
 Script_96_6FA6:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6FAA, Script_96_6FB0
 Script_96_6FAA:: ; heuristic: event script entry or jump target; C0
-    script_message $C01B ; 'I accidentally went outside. People gave'
+    script_message $C01B ; 'No doubt at all-it's male.'
     script_jump Script_96_6FB3
 Script_96_6FB0:: ; heuristic: event script entry or jump target; C0
-    script_message $C01C ; 'This hay is pretty good. Maybe'
+    script_message $C01C ; 'No doubt at all-it's female.'
 Script_96_6FB3:: ; heuristic: event script entry or jump target; C0
     script_command $EF
-    script_message $C01D ; '0 checked the pump. It's rusted'
+    script_message $C01D ; 'That's the best I could do'
     script_jump Script_96_6FEF
 Script_96_6FBA:: ; heuristic: event script entry or jump target; C0
     script_command $EF
@@ -1276,21 +1276,21 @@ Script_96_6FBA:: ; heuristic: event script entry or jump target; C0
 Script_96_6FBE:: ; heuristic: event script entry or jump target; C0
     script_jump Script_96_6F0A
 Script_96_6FC1:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; 'There's a spirit in GreatLog that's'
+    script_message $C007 ; 'Which egg should I bless?'
 Script_96_6FC4:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6FCF, Script_96_6FC8
 Script_96_6FC8:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004 ; 'How else may I serve you?'
     script_command $EF
     script_jump Script_96_6EF8
 Script_96_6FCF:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $C008 ; 'It will cost 0G. Is that'
 Script_96_6FD2:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6FDE, Script_96_6FE2, Script_96_6FD7
 Script_96_6FD7:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; 'There's a spirit in GreatLog that's'
+    script_message $C007 ; 'Which egg should I bless?'
     script_command $EF
     script_jump Script_96_6FC4
 Script_96_6FDE:: ; heuristic: event script entry or jump target; C0
@@ -1300,14 +1300,14 @@ Script_96_6FE2:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_choice_jump Script_96_6FEC, Script_96_6FE6
 Script_96_6FE6:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_message $C005 ; 'Um You don't have enough gold'
     script_jump Script_96_6FEF
 Script_96_6FEC:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Good. That's good to hear! You'
+    script_message $C009 ; 'Egg, egg, toss and scramble 0'
 Script_96_6FEF:: ; heuristic: event script entry or jump target; C0
     script_command $EF
     script_command $EF
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004 ; 'How else may I serve you?'
     script_command $EF
     script_jump Script_96_6EF8
 Script_96_6FF8:: ; heuristic: event script entry or jump target; C0

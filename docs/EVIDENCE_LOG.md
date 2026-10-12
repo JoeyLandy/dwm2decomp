@@ -2430,6 +2430,29 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0242 — Named script opcodes; script message quotes follow wMessageMode
+
+- Kind: OBSERVATION (reading of the fetch handlers, ScriptCommand09_Case01_Sub01 and the menu commands; C1) and TOOL. **Correction** to E-0153's quotes.
+- **Opcodes with inline bytes, now named macros.** Every `script_op` line is gone:
+  - $01 `script_walk object, direction, tiles`: type 02, ScriptStepObject. Param0 = direction << 4 | object; one pixel a frame, 16 frames a tile; directions 0 down, 1 right, 2 up, 3 left.
+  - $02 `script_walk_fast`: type 03, whose stub runs ScriptStepObject twice a frame.
+  - $03 `script_wait frames`: a 16-bit little-endian count (ScriptWaitFrames).
+  - $04 `script_hold_dpad direction, frames`: ScriptCommand05_Run sets the D-pad bit of wJoypadHeld (down/right/up/left = bits 7/4/6/5) for that many frames.
+  - $05 `script_face target, direction` (ScriptSetDirection).
+  - $0B `script_slide_y target` (ScriptSlideObjectY).
+  - $0C `script_hide_object n`: ScriptFetch0C stores $E0 in byte $C of sprite slot n at once.
+  - $0D `script_encounter n`: ScriptCommand0E_Run calls StartScriptedEncounterTemp0 with n.
+  - $EA `script_message_unless_flag0`: the index gets + $20 unless story flag 0 is set.
+  - $F5 `script_message_by_screen`: the index gets + 16 * wScreenTableIndex.
+- **Message modes.** ScriptCommand09_Case01_Sub01 is the script message display. When wMessageMode is non-zero it ignores the group byte. It passes the low byte as the string index (category 0) to the displayer the mode picks from Data_010_4AFF (3-byte far pointers):
+  - modes 1-2: F0:$4001; 3: 1F:$520E; 4: 1D:$4001; 5: 1B:$4C86; 6: F2:$43D0; 7: 0D:$4001; 8: 0E:$4001; 9: 0B:$4001; 10: 33:$6490; 11: 24:$5D10.
+  - The menu commands set the mode in their first state: E0 1, E2/E5 2, E8 3, EB 4, ED 5, EF 6, F2/F3 7, F4 8, F6 9, F7 10, F8 11.
+  - E1, E3, EC and EE (and a later state of F6) clear it.
+- **Tool.** prepare_scripts propagates the mode along each script's flow, starting from 0 at every start site and data-bank entry. Where paths disagree the mode is marked unknown. Messages under a known non-zero mode are quoted from that mode's string table; under an unknown mode they get no quote.
+  - Example: the ship shop script Script_6659 now reads 'What would you like to buy?', 'That comes to 0G. OK?' instead of unrelated story lines.
+  - Mode 8's displayer has no `ld de, table`, so its messages are not quoted.
+- Binary verification: build/run305 PASS, 0 differing bytes; tests OK.
+
 ### E-0241 — Last uncommented INCBIN (F0:$70C5)
 
 - Kind: OBSERVATION (C0).

@@ -4696,22 +4696,22 @@ Script_0D_62C4:: ; heuristic: event script entry or jump target; C0
     script_command $EE
     script_end
 Script_0D_62CA:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_message $C004 ; 'Which key should I appraise?'
 Script_0D_62CD:: ; heuristic: event script entry or jump target; C0
     script_command $F2
     script_choice_jump Script_0D_62DE, Script_0D_62D5, Script_0D_62D2
 Script_0D_62D2:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0D_62BE
 Script_0D_62D5:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Good. That's good to hear! You'
-    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $C009 ; 'That key's been appraised already.'
+    script_message $C008 ; 'Which Magic Key should I appraise?'
     script_jump Script_0D_62CD
 Script_0D_62DE:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_message $C005 ; 'Appraisal will cost 0G. OK?'
     script_command $F2
     script_choice_jump Script_0D_62F3, Script_0D_62ED, Script_0D_62E6
 Script_0D_62E6:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $C008 ; 'Which Magic Key should I appraise?'
     script_command $F2
     script_jump Script_0D_62CD
 Script_0D_62ED:: ; heuristic: event script entry or jump target; C0
@@ -4728,14 +4728,14 @@ Script_0D_62F8:: ; heuristic: event script entry or jump target; C0
 Script_0D_62FB:: ; heuristic: event script entry or jump target; C0
     script_command $F2
     script_command $F2
-    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_message $C00F ; 'Let's see the Magic Key, then.'
     script_command $F2
     script_choice_jump Script_0D_630A, Script_0D_6304
 Script_0D_6304:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_message $C00A ; 'You have no more Magic Keys'
     script_jump Script_0D_62BE
 Script_0D_630A:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $C008 ; 'Which Magic Key should I appraise?'
     script_jump Script_0D_62CD
 
 ; implements script command type F3; reached through ScriptCommandF3 in bank $10 (E-0038)

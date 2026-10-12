@@ -130,6 +130,62 @@ MACRO script_jump_data_bank
     dw \\1
 ENDM
 
+; E-0242: the dedicated opcodes with inline bytes, named from their fetch handlers and the
+; command types they start (ScriptStepObject, ScriptWaitFrames, ScriptCommand05_Run,
+; ScriptSetDirection, ScriptSlideObjectY, ScriptCommand0E_Run).
+; script_walk object, direction (0 down, 1 right, 2 up, 3 left), tiles: 16 frames per tile
+MACRO script_walk
+    db $01, \\1, \\2, \\3
+ENDM
+
+; the same at two pixels per frame (command type 03 runs ScriptStepObject twice)
+MACRO script_walk_fast
+    db $02, \\1, \\2, \\3
+ENDM
+
+; script_wait frames (a 16-bit count)
+MACRO script_wait
+    db $03
+    dw \\1
+ENDM
+
+; script_hold_dpad direction (0 down, 1 right, 2 up, 3 left), frames: sets that D-pad bit in wJoypadHeld
+MACRO script_hold_dpad
+    db $04, \\1, \\2
+ENDM
+
+; script_face target (0 player, n follower record n, $80 + n object n), direction
+MACRO script_face
+    db $05, \\1, \\2
+ENDM
+
+; script_slide_y target (as script_face): 32 frames of Y steps from Data_05F_7959
+MACRO script_slide_y
+    db $0B, \\1
+ENDM
+
+; script_hide_object n: byte $C of sprite slot n = $E0, at once
+MACRO script_hide_object
+    db $0C, \\1
+ENDM
+
+; script_encounter n: StartScriptedEncounterTemp0 with ScriptedEncounterTable record n
+MACRO script_encounter
+    db $0D, \\1
+ENDM
+
+; a message whose index gets + $20 unless story flag 0 is set
+MACRO script_message_unless_flag0
+    db $EA
+    dw \\1
+ENDM
+
+; a message whose index gets + 16 * wScreenTableIndex
+MACRO script_message_by_screen
+    db $F5
+    dw \\1
+ENDM
+
 MACRO script_op
     db \\#
 ENDM
@@ -3064,6 +3120,7 @@ class Rom:
                 for t2 in trace(sb, t, {sb}):
                     data_entries.add((sb, t2))
         self.data_script_entries = done
+        self.script_mode = self.script_message_modes(code, {(b, a) for a in site_bank} | done)
         used = 0
         for sb in sorted({k[0] for k in code}):
             dl, dt = self.dlabels[sb], self.dtab[sb]
@@ -3107,6 +3164,62 @@ class Rom:
                     del self.dlabels[wrong[0]][wrong[1]]
         log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions, "
             f"{len(self.data_script_entries)} data-bank entries" + f", {getattr(self, 'e4_fallbacks', 0)} $E4 counts not fixed by layout")
+
+    # E-0242: the menu commands that set wMessageMode in their first state (and the ones that clear
+    # it); ScriptCommand09_Case01_Sub01 shows a script message with the string displayer the mode
+    # picks from Data_010_4AFF (string index = the low byte; the group byte is ignored) when the
+    # mode is not 0. F6 sets 9 and clears it again in a later state, so its exit mode is unknown.
+    MESSAGE_MODE_SET = {0xE0: 1, 0xE2: 2, 0xE5: 2, 0xE8: 3, 0xEB: 4, 0xED: 5, 0xEF: 6, 0xF2: 7, 0xF3: 7,
+                        0xF4: 8, 0xF6: -1, 0xF7: 10, 0xF8: 11, 0xE1: 0, 0xE3: 0, 0xEC: 0, 0xEE: 0}
+
+    def script_message_modes(self, code: dict, entries: set) -> dict:
+        """wMessageMode before each traced script instruction: 0 at every start site and data-bank
+        entry, changed by the commands in MESSAGE_MODE_SET, -1 where paths disagree."""
+        mode: dict[tuple[int, int], int] = {}
+        todo = [(e, 0) for e in entries if e in code]
+        while todo:
+            (sb, pc), m = todo.pop()
+            old = mode.get((sb, pc))
+            if old is not None and (old == m or old == -1):
+                continue
+            m = m if old is None else -1
+            mode[(sb, pc)] = m
+            op, arg = code[(sb, pc)]
+            out = self.MESSAGE_MODE_SET.get(op, m) if m != -1 else (
+                self.MESSAGE_MODE_SET[op] if self.MESSAGE_MODE_SET.get(op, -1) != -1 else -1)
+            nxt = []
+            if op not in (0xFF, 0x07, 0xE4, 0xE7):
+                nxt.append(pc + 1 + len(arg))
+            if op == 0x06:
+                nxt.append(pc + 2 + arg[0])
+            if op == 0x07:
+                nxt.append(arg[0] | arg[1] << 8)
+            if op == 0xE4:
+                nxt += [pc + 2 + i + o for i, o in enumerate(arg)]
+            todo += [((sb, t), out) for t in nxt if (sb, t) in code]
+        return mode
+
+    def mode_message_preview(self, m: int, w: int) -> str | None:
+        """The string a script message word shows under wMessageMode m > 0: index (low byte) of
+        category 0 in the table that mode's displayer passes to BeginStringDisplay."""
+        o = 0x10 * BANK - BANK + 0x4AFF + 3 * (m - 1)
+        addr, bank = self.data[o] | self.data[o + 1] << 8, self.data[o + 2]
+        r = bank * BANK - self.base(bank) + addr
+        if not 0x4000 <= addr < 0x8000 or self.data[r] != 0x11:  # ld de, table
+            return None
+        table = self.data[r + 1] | self.data[r + 2] << 8
+        lst = self._u16(bank, table)
+        if not 0x4000 <= lst < 0x8000:
+            return None
+        q = self._u16(bank, lst + 2 * (w & 0xFF))
+        if not 0x4000 <= q < 0x8000:
+            return None
+        chars, q = [], bank * BANK - self.base(bank) + q
+        while len(chars) < 80 and self.data[q] != 0xF0:
+            chars.append(gb_text.BYTE_TO_TEXT.get(self.data[q], " "))
+            q += 1
+        words = "".join(chars).split()
+        return " ".join(words[:6]) if words else None
 
     MESSAGE_GROUP_BANKS = [0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2E, 0x7C, 0x80, 0x80, 0x82, 0x86, 0x89]
 
@@ -3167,8 +3280,11 @@ class Rom:
             if op == 0xFF:
                 out.append("    script_end")
             elif op in (0x00, 0xEA, 0xF5):
-                text = self.message_preview(w)
-                macro = f"    script_message ${w:04X}" if op == 0x00 else f"    script_op ${op:02X}, ${arg[0]:02X}, ${arg[1]:02X}"
+                m = getattr(self, "script_mode", {}).get((bank, a), 0)
+                text = self.message_preview(w) if m == 0 else (self.mode_message_preview(m, w) if m > 0 else None)
+                macro = {0x00: "script_message", 0xEA: "script_message_unless_flag0",
+                         0xF5: "script_message_by_screen"}[op]
+                macro = f"    {macro} ${w:04X}"
                 out.append(macro + (f" ; '{text}'" if text else ""))
             elif op == 0x06:
                 out.append(f"    script_skip_if_no {lab(a + 2 + arg[0])}")
@@ -3188,6 +3304,16 @@ class Rom:
                 tl = self.dlabels.get(tb, {}).get(w) if tb is not None else None
                 out.append(f"    script_jump_data_bank {tl or f'${w:04X}'}"
                            + ("" if tl else " ; data bank not known here"))
+            elif op in (0x01, 0x02):  # E-0242
+                out.append(f"    {'script_walk' if op == 1 else 'script_walk_fast'} "
+                           f"{arg[0]}, {arg[1]}, {arg[2]}")
+            elif op == 0x03:
+                out.append(f"    script_wait {w}")
+            elif op in (0x04, 0x05):
+                out.append(f"    {'script_hold_dpad' if op == 4 else 'script_face'} ${arg[0]:02X}, {arg[1]}")
+            elif op in (0x0B, 0x0C, 0x0D):
+                macro = {0x0B: "script_slide_y", 0x0C: "script_hide_object", 0x0D: "script_encounter"}[op]
+                out.append(f"    {macro} ${arg[0]:02X}")
             elif arg:
                 out.append(f"    script_op ${op:02X}, " + ", ".join(f"${v:02X}" for v in arg))
             else:
