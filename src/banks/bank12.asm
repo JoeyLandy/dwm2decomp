@@ -2878,7 +2878,7 @@ Jump_012_50ED:: ; address name
     jp nz, Jump_012_5181
     ldh a, [hMapId]
     ld c, a
-    ld hl, Data_012_5130
+    ld hl, MapExitWarpTable
 
 Jump_012_5100::
     ld a, [hl]
@@ -2920,9 +2920,27 @@ Jump_012_512C::
     call ScriptCommand8E_Run_Case01_Sub01
     ret
 
-; address loaded by ScriptCommand8E_Run_Case01
-Data_012_5130:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $049130, $51
+; E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to ScriptCommand8E_Run_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF).
+; record: map, new map, key; destination position and screen
+MapExitWarpTable::
+Data_012_5130:: ; address name
+    db $20, $20, $00, $44, $00 ; id 0
+    db $2F, $20, $00, $44, $00 ; id 1
+    db $30, $30, $01, $44, $76 ; id 2
+    db $43, $30, $01, $44, $76 ; id 3
+    db $48, $48, $02, $44, $B4 ; id 4
+    db $49, $48, $02, $44, $B4 ; id 5
+    db $70, $70, $03, $44, $B4 ; id 6
+    db $7A, $70, $03, $44, $B4 ; id 7
+    db $A0, $A0, $04, $44, $10 ; id 8
+    db $A8, $A8, $05, $44, $00 ; id 9
+    db $AA, $A8, $05, $44, $00 ; id 10
+    db $B0, $B0, $06, $44, $01 ; id 11
+    db $B8, $B8, $07, $44, $44 ; id 12
+    db $C8, $C8, $08, $44, $01 ; id 13
+    db $D1, $D1, $09, $44, $00 ; id 14
+    db $DA, $DA, $0A, $44, $00 ; id 15
+    db $FF ; end
 
 Jump_012_5181::
     ld a, [wKeyWorldActive]
@@ -7148,7 +7166,7 @@ Jump_012_6B03::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $D8
-    ld de, Data_07E_4BBD
+    ld de, ObjPalettes_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_012_6B15
@@ -7729,7 +7747,7 @@ Func_012_6E0B:: ; address name
     and a, $7F
     add a, a
     add a, a
-    ld hl, Data_012_704C
+    ld hl, FieldCommandSpriteTable
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7785,7 +7803,7 @@ Func_012_6E61:: ; address name
     and a, $7F
     add a, a
     add a, a
-    ld hl, Data_012_704C
+    ld hl, FieldCommandSpriteTable
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -8088,9 +8106,54 @@ Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $FF, $FF
 
-; address loaded by RunFieldCommandTemp0_Shared01, RunFieldCommandTemp0_Shared02
-Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
+; E-0238 (C1: RunFieldCommandTemp0_Shared01 and _Shared02 index it with hTemp0 & $7F: the word is decompressed from bank $7E to vTiles0 + $400 (DecompressToVRAM); on CGB, byte 2 & $7F selects the palette at 7E:$4BBD + 8 * index copied to wOBJPaletteBuffer + $20; byte 3 is returned in A; 22 records).
+; record: bank-$7E graphics stream; palette index; returned byte
+FieldCommandSpriteTable::
+Data_012_704C:: ; address name
+    dw Data_07E_4F22 ; id 0
+    db $0A, $00
+    dw Data_07E_4F22 ; id 1
+    db $0A, $00
+    dw Data_07E_4CED ; id 2
+    db $00, $00
+    dw Data_07E_56C3 ; id 3
+    db $1D, $00
+    dw Data_07E_4CED ; id 4
+    db $00, $00
+    dw Data_07E_52BC ; id 5
+    db $15, $00
+    dw Data_07E_51A8 ; id 6
+    db $93, $00
+    dw Data_07E_52F9 ; id 7
+    db $16, $00
+    dw Data_07E_4FE8 ; id 8
+    db $0D, $00
+    dw Data_07E_50EB ; id 9
+    db $11, $00
+    dw Data_07E_5027 ; id 10
+    db $0E, $00
+    dw Data_07E_5513 ; id 11
+    db $9A, $00
+    dw Data_07E_5370 ; id 12
+    db $97, $00
+    dw Data_07E_5756 ; id 13
+    db $1F, $00
+    dw Data_07E_5756 ; id 14
+    db $9F, $00
+    dw Data_07E_4F63 ; id 15
+    db $0B, $00
+    dw Data_07E_4EF1 ; id 16
+    db $09, $00
+    dw Data_07E_5706 ; id 17
+    db $9E, $00
+    dw Data_07E_541A ; id 18
+    db $98, $00
+    dw Data_07E_4CED ; id 19
+    db $00, $00
+    dw Data_07E_5870 ; id 20
+    db $20, $00
+    dw Data_07E_5870 ; id 21
+    db $A0, $00
 
 ; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case02)

@@ -1669,7 +1669,7 @@ ScriptCommandE2_Run_Case03_Case03::
 Jump_01C_49BC:: ; address name
     ld a, [wScreenCounter]
     add a, a
-    ld hl, Data_01C_6289
+    ld hl, TileDestTable_1C_6289
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1752,7 +1752,7 @@ Jump_01C_4A23::
     push de
     ld a, [wScreenCounter]
     add a, a
-    ld de, Data_01C_6289
+    ld de, TileDestTable_1C_6289
     add a, e
     ld e, a
     jr nc, Jump_01C_4A55
@@ -3582,7 +3582,7 @@ ScriptCommandE2_Run_Case04_Case03::
 Jump_01C_5570:: ; address name
     ld a, [wScreenCounter]
     add a, a
-    ld hl, Data_01C_6289
+    ld hl, TileDestTable_1C_6289
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3663,7 +3663,7 @@ Jump_01C_55D2::
     push de
     ld a, [wScreenCounter]
     add a, a
-    ld de, Data_01C_6289
+    ld de, TileDestTable_1C_6289
     add a, e
     ld e, a
     jr nc, Jump_01C_5604
@@ -5226,93 +5226,197 @@ Data_01C_60AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $11, $B4
     db $B5, $7F
 
-; address loaded by LoadArg1PointerForScreenTableIndex
-Data_01C_6158:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_01C_6188
-    dw Data_01C_6191
-    dw Data_01C_619D
-    dw Data_01C_61A9
-    dw Data_01C_61B1
-    dw Data_01C_61B9
-    dw Data_01C_61BA
-    dw Data_01C_61C2
-    dw Data_01C_61CE
-    dw Data_01C_61D6
-    dw Data_01C_61DF
-    dw Data_01C_61E7
-    dw Data_01C_61EF
-    dw Data_01C_61F8
-    dw Data_01C_6201
-    dw Data_01C_620D
-    dw Data_01C_621A
-    dw Data_01C_6223
-    dw Data_01C_622B
-    dw Data_01C_6234
-    db $B9, $61, $B9, $61, $B9, $61, $3D, $62
+; E-0238 (C1: LoadArg1PointerForScreenTableIndex loads wArg1/wArg2 with the word at $6158 + 2 * wScreenTableIndex, and LoadArg1ByteForItemGridXItemGridY reads the byte at that pointer + 4 * wItemGridY + wItemGridX; 24 words, several sharing a list; the lists run to $6289).
+; record: item list ($FF ends)
+ShopItemListTable::
+Data_01C_6158:: ; address name
+    dw ShopItems000 ; id 0
+    dw ShopItems001 ; id 1
+    dw ShopItems002 ; id 2
+    dw ShopItems003 ; id 3
+    dw ShopItems004 ; id 4
+    dw ShopItems005 ; id 5
+    dw ShopItems006 ; id 6
+    dw ShopItems007 ; id 7
+    dw ShopItems008 ; id 8
+    dw ShopItems009 ; id 9
+    dw ShopItems00A ; id 10
+    dw ShopItems00B ; id 11
+    dw ShopItems00C ; id 12
+    dw ShopItems00D ; id 13
+    dw ShopItems00E ; id 14
+    dw ShopItems00F ; id 15
+    dw ShopItems010 ; id 16
+    dw ShopItems011 ; id 17
+    dw ShopItems012 ; id 18
+    dw ShopItems013 ; id 19
+    dw ShopItems005 ; id 20
+    dw ShopItems005 ; id 21
+    dw ShopItems005 ; id 22
+    dw ShopItems017 ; id 23
 
-Data_01C_6188:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $06, $19, $1A, $29, $2B, $53, $FF
+; E-0199 (derived: list for entry $00 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems000::
+Data_01C_6188:: ; address name
+    db $01, $02, $06, $19, $1A, $29, $2B, $53, $FF ; id 0
 
-Data_01C_6191:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $04, $07, $08, $09, $0A, $1B, $2E, $2B, $FF, $FF, $FF
+; E-0199 (derived: list for entry $01 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems001::
+Data_01C_6191:: ; address name
+    db $03, $04, $07, $08, $09, $0A, $1B, $2E, $2B, $FF, $FF, $FF ; id 0
 
-Data_01C_619D:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $0C, $1C, $22, $23, $24, $25, $1F, $21, $2D, $FF, $FF
+; E-0199 (derived: list for entry $02 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems002::
+Data_01C_619D:: ; address name
+    db $05, $0C, $1C, $22, $23, $24, $25, $1F, $21, $2D, $FF, $FF ; id 0
 
-Data_01C_61A9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $06, $09, $19, $29, $FF, $FF, $FF
+; E-0199 (derived: list for entry $03 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems003::
+Data_01C_61A9:: ; address name
+    db $01, $06, $09, $19, $29, $FF, $FF, $FF ; id 0
 
-Data_01C_61B1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $06, $09, $1A, $29, $2B, $FF
+; E-0199 (derived: list for entry $04 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems004::
+Data_01C_61B1:: ; address name
+    db $01, $02, $06, $09, $1A, $29, $2B, $FF ; id 0
 
-Data_01C_61B9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF
+; E-0199 (derived: list for entry $05 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems005::
+Data_01C_61B9:: ; address name
+    db $FF ; id 0
 
-Data_01C_61BA:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $06, $09, $1A, $1B, $28, $2A, $FF
+; E-0199 (derived: list for entry $06 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems006::
+Data_01C_61BA:: ; address name
+    db $02, $06, $09, $1A, $1B, $28, $2A, $FF ; id 0
 
-Data_01C_61C2:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $06, $07, $08, $1A, $1B, $28, $2A, $2E, $FF, $FF, $FF
+; E-0199 (derived: list for entry $07 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems007::
+Data_01C_61C2:: ; address name
+    db $02, $06, $07, $08, $1A, $1B, $28, $2A, $2E, $FF, $FF, $FF ; id 0
 
-Data_01C_61CE:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $04, $0A, $1A, $28, $2A, $FF
+; E-0199 (derived: list for entry $08 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems008::
+Data_01C_61CE:: ; address name
+    db $02, $03, $04, $0A, $1A, $28, $2A, $FF ; id 0
 
-Data_01C_61D6:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $0C, $1B, $2B, $2E, $1F, $21, $2D, $FF
+; E-0199 (derived: list for entry $09 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems009::
+Data_01C_61D6:: ; address name
+    db $08, $0C, $1B, $2B, $2E, $1F, $21, $2D, $FF ; id 0
 
-Data_01C_61DF:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $14, $15, $16, $17, $18, $FF, $FF
+; E-0199 (derived: list for entry $0A of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00A::
+Data_01C_61DF:: ; address name
+    db $13, $14, $15, $16, $17, $18, $FF, $FF ; id 0
 
-Data_01C_61E7:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $07, $0A, $1B, $29, $2A, $2E, $FF
+; E-0199 (derived: list for entry $0B of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00B::
+Data_01C_61E7:: ; address name
+    db $02, $07, $0A, $1B, $29, $2A, $2E, $FF ; id 0
 
-Data_01C_61EF:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $07, $0A, $1B, $28, $2A, $2B, $2E, $FF
+; E-0199 (derived: list for entry $0C of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00C::
+Data_01C_61EF:: ; address name
+    db $02, $07, $0A, $1B, $28, $2A, $2B, $2E, $FF ; id 0
 
-Data_01C_61F8:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $04, $1B, $1C, $20, $28, $2A, $FF
+; E-0199 (derived: list for entry $0D of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00D::
+Data_01C_61F8:: ; address name
+    db $02, $03, $04, $1B, $1C, $20, $28, $2A, $FF ; id 0
 
-Data_01C_6201:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $04, $0C, $1C, $20, $28, $2A, $2B, $2E, $FF, $FF
+; E-0199 (derived: list for entry $0E of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00E::
+Data_01C_6201:: ; address name
+    db $02, $03, $04, $0C, $1C, $20, $28, $2A, $2B, $2E, $FF, $FF ; id 0
 
-Data_01C_620D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $03, $04, $06, $07, $08, $0A, $1B, $20, $28, $2A, $FF
+; E-0199 (derived: list for entry $0F of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems00F::
+Data_01C_620D:: ; address name
+    db $01, $02, $03, $04, $06, $07, $08, $0A, $1B, $20, $28, $2A, $FF ; id 0
 
-Data_01C_621A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $03, $05, $06, $07, $08, $27, $FF
+; E-0199 (derived: list for entry $10 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems010::
+Data_01C_621A:: ; address name
+    db $01, $02, $03, $05, $06, $07, $08, $27, $FF ; id 0
 
-Data_01C_6223:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $04, $0B, $1C, $20, $21, $FF, $FF
+; E-0199 (derived: list for entry $11 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems011::
+Data_01C_6223:: ; address name
+    db $02, $04, $0B, $1C, $20, $21, $FF, $FF ; id 0
 
-Data_01C_622B:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $05, $1C, $20, $24, $28, $2A, $FF
+; E-0199 (derived: list for entry $12 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems012::
+Data_01C_622B:: ; address name
+    db $02, $03, $05, $1C, $20, $24, $28, $2A, $FF ; id 0
 
-Data_01C_6234:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $072234, $55
+; E-0199 (derived: list for entry $13 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems013::
+Data_01C_6234:: ; address name
+    db $01, $02, $04, $06, $1B, $20, $28, $2A, $FF ; id 0
 
-; address loaded by ScriptCommandE2_Run_Case03_Case03, ScriptCommandE2_Run_Case04_Case03, ScriptCommandE5_Run_Case03_Case09, ScriptCommandE5_Run_Shared01
-Data_01C_6289:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $072289, $50
+; E-0199 (derived: list for entry $17 of ShopItemListTable; it runs to the next list)
+; record: item numbers, then $FF
+ShopItems017::
+Data_01C_623D:: ; address name
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $FF, $FF ; id 0
+
+; E-0238 (C1: ScriptCommandE2_Run_Case03_Case03 and four other sites read the word at $6289 + 2 * wScreenCounter, then the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at $4910 there (CopyFromBankWaitVRAM, 16 bytes)).
+; record: list of VRAM tile addresses
+TileDestTable_1C_6289::
+Data_01C_6289:: ; address name
+    dw TileDests_1C_0 ; id 0
+    dw TileDests_1C_1 ; id 1
+    dw TileDests_1C_2 ; id 2
+    dw TileDests_1C_3 ; id 3
+
+; E-0238 (C1: list 0 of TileDestTable_1C_6289; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListPos
+TileDests_1C_0::
+Data_01C_6291:: ; address name
+    dw vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750 ; entry 0
+    dw vTiles1 + $760, vTiles1 + $770, vTiles1 + $470
+
+; E-0238 (C1: list 1 of TileDestTable_1C_6289; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListPos
+TileDests_1C_1::
+Data_01C_62A3:: ; address name
+    dw vTiles1 + $780, vTiles1 + $790, vTiles1 + $7A0, vTiles1 + $7B0, vTiles1 + $7C0, vTiles1 + $7D0 ; entry 0
+    dw vTiles1 + $7E0, vTiles1 + $7F0, vTiles1 + $480
+
+; E-0238 (C1: list 2 of TileDestTable_1C_6289; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListPos
+TileDests_1C_2::
+Data_01C_62B5:: ; address name
+    dw vTiles1 + $500, vTiles1 + $510, vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550 ; entry 0
+    dw vTiles1 + $560, vTiles1 + $570, vTiles1 + $490
+
+; E-0238 (C1: list 3 of TileDestTable_1C_6289; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListPos
+TileDests_1C_3::
+Data_01C_62C7:: ; address name
+    dw vTiles1 + $580, vTiles1 + $590, vTiles1 + $5A0, vTiles1 + $5B0, vTiles1 + $5C0, vTiles1 + $5D0 ; entry 0
+    dw vTiles1 + $5E0, vTiles1 + $2A0, vTiles1 + $4A0
 
 ; address loaded by ScriptCommandE2_Run_Case03_Case05, ScriptCommandE2_Run_Case04_Case04
 Data_01C_62D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6134,7 +6238,7 @@ Jump_01C_68D4::
 ; writes: wArg2, wArg1
 LoadArg1PointerForScreenTableIndex::
 Func_01C_68DF:: ; address name
-    ld hl, Data_01C_6158
+    ld hl, ShopItemListTable
     ld a, [wScreenTableIndex]
     ld e, a
     ld d, $00
@@ -6579,7 +6683,7 @@ Jump_01C_6B53:: ; address name
 
 Jump_01C_6B68::
     push bc
-    ld hl, Data_01C_6BE1
+    ld hl, Tiles_1C_6BE1
     call CopyTileBytesToVRAM_Bank1C
     pop bc
     dec c
@@ -6599,9 +6703,11 @@ Data_01C_6B7D:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by Func_01C_6AF7_Case00
-Data_01C_6BE1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+; E-0238 (derived: HL = $6BE1 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_1C_6BE1::
+Data_01C_6BE1:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; entry 1 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
@@ -7277,7 +7383,7 @@ Jump_01C_7026::
     push de
     ld a, [wScreenCounter]
     sla a
-    ld de, Data_01C_6289
+    ld de, TileDestTable_1C_6289
     add a, e
     ld e, a
     jr nc, Jump_01C_704E
@@ -7694,7 +7800,7 @@ ScriptCommandE5_Run_Shared01::
 Func_01C_72B3:: ; address name
     ld a, [wScreenCounter]
     sla a
-    ld hl, Data_01C_6289
+    ld hl, TileDestTable_1C_6289
     add_a_to_hl
     ld a, [hl]
     ld e, a

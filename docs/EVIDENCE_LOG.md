@@ -2430,6 +2430,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0238 — OBJ palettes (bank $7E), field command sprites, shop item lists, sound test tables, map exit warps, tile upload runs
+
+- Kind: OBSERVATION (reading; C1, code entries C0) and TOOL.
+- **ObjPalettes_7E_4BBD (38 palettes, up to the stream at $4CED).** It continues FieldSpritePalettes. Loaders in banks $00, $07, $12, $A1 and $E0 copy 8 bytes from $4BBD (+ $C8), $4C0D, $4C65 or $4CAD, or from $4BBD + 8 * index, to wOBJPaletteBuffer slots.
+- **FieldCommandSpriteTable (12:$704C, 22 x 4).** RunFieldCommandTemp0_Shared01/_Shared02 index it with hTemp0 & $7F:
+  - they decompress the bank-$7E word to vTiles0 + $400;
+  - on CGB, byte 2 & $7F picks the ObjPalettes_7E_4BBD palette copied to wOBJPaletteBuffer + $20;
+  - byte 3 is returned.
+- **ShopItemListTable (1C:$6158, 24 words; ShopItems* lists up to $6289).** LoadArg1PointerForScreenTableIndex and LoadArg1ByteForItemGridXItemGridY read byte 4 * wItemGridY + wItemGridX of the list for wScreenTableIndex. Each list is item numbers ending with $FF.
+- **TileDestTable_1C_6289 (4 lists of 9 VRAM addresses).** Indexed by wScreenCounter, then wGlyphListPos. The bank-$1F tile at $4910 is copied to each address.
+- **DebugSoundTestMusic (01:$65DE, 32) and DebugSoundTestEffects (01:$65FE, 84).** DebugSoundTest_Update passes the bytes to QueueMusic and QueueSoundEffect and draws them in hex.
+- **MapExitWarpTable (12:$5130, 16 x 5, then $FF).** Matched on hMapId. Byte 1 becomes hMapId. Bytes 3-4 go to ScriptCommand8E_Run_Case01_Sub01 as the destination (X/Y nibbles, then the screen byte), unless the active key world's wKeyWorldKey - 1 equals byte 2, in which case wKeyWorldGoal is used.
+- **Bank $A0/$31 code.** The 80 identical bytes after ShowStringBank08AtTilesHL_BankA0 ($6CF7) and at 31:$7A78 are UnreferencedShowFiveGlyphsAtTilesHL_*. They copy five glyphs to wTextBuf0 and show string 2/0 in a 5 x 1 window at HL.
+- **Tool.** add_tile_upload_runs treats `ld hl, n` followed by k calls to a 16-byte VRAM copier as k tiles at n. Only `ld de, n` may come between the calls. A copier is any routine named CopyTileBytesToVRAM*, including byte-identical name-family copies. The pass found 10 runs; F1:$57A7 was renamed CopyTileBytesToVRAM_BankF1.
+- Unidentified INCBIN went from 2,656 to 1,598 bytes.
+- Binary verification: build/run297 PASS, 0 differing bytes; tests OK.
+
 ### E-0237 — Action handler masks, key-world return destinations, arena messages, item order lists, shop values, skill replacement pairs
 
 - Kind: OBSERVATION (reading; C1, code entries C0).

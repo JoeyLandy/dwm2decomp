@@ -158,24 +158,51 @@ Data_07E_4BAD:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $6BFF, $2E0A, $0000 ; id 19
     dw $0000, $6BFF, $7EC5, $0800 ; id 20
 
-; address loaded by LoadPlayerAndFollowerSpriteGraphics_Sub01, RunLinkScreenSubStateSubState_5B14_Case00, LoadSpriteGraphics7E5595ToTiles0, RunGameMode2State_Case04 and 1 more
-Data_07E_4BBD:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $1F8BBD, $50
-
-; address loaded by Func_0E0_5AD3_Case00_Case00
+; E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_Shared01 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes).
+; record: one CGB OBJ palette: 4 BGR555 colours
+ObjPalettes_7E_4BBD::
+Data_07E_4BBD:: ; address name
+    dw $0000, $037F, $027F, $0000 ; id 0
+    dw $0000, $4F5D, $1415, $0000 ; id 1
+    dw $0000, $4F5D, $02B0, $0000 ; id 2
+    dw $0000, $4F5D, $662C, $0000 ; id 3
+    dw $0000, $4F5D, $01FC, $0000 ; id 4
+    dw $0000, $4F5D, $19B2, $0000 ; id 5
+    dw $0000, $4F5D, $00F4, $0000 ; id 6
+    dw $0000, $4F5D, $19B2, $0000 ; id 7
+    dw $0000, $4F5D, $4A6D, $0000 ; id 8
+    dw $0000, $4F5D, $01FC, $0000 ; id 9
 Data_07E_4C0D:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $1F8C0D, $58
-
-; address loaded by Func_0E0_5AD3_Case03_Case00
+    dw $0000, $4F5D, $2DB0, $0000 ; id 10
+    dw $0000, $7FFF, $11AD, $0000 ; id 11
+    dw $0000, $037F, $021C, $0000 ; id 12
+    dw $0000, $7FFF, $7DAB, $0000 ; id 13
+    dw $0000, $5EFD, $39B2, $0000 ; id 14
+    dw $0000, $7B1F, $6513, $0000 ; id 15
+    dw $0000, $62F8, $3DCF, $0000 ; id 16
+    dw $0000, $037F, $021C, $0000 ; id 17
+    dw $0000, $6FB8, $7DAB, $0000 ; id 18
+    dw $0000, $027F, $001F, $0000 ; id 19
+    dw $0000, $7FFF, $316B, $0000 ; id 20
 Data_07E_4C65:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $1F8C65, $48
-
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case00
+    dw $0000, $7FFF, $316B, $0000 ; id 21
+    dw $0000, $5EB5, $3DAD, $0000 ; id 22
+    dw $0000, $673C, $3190, $0000 ; id 23
+    dw $0000, $6FB8, $7DAB, $0000 ; id 24
+    dw $0000, $7FFF, $7DAB, $0000 ; id 25
+    dw $0000, $027F, $001F, $0000 ; id 26
+    dw $0000, $0B5F, $15DF, $0800 ; id 27
+    dw $0000, $7FF5, $7CA0, $0800 ; id 28
+    dw $0000, $037F, $021C, $0000 ; id 29
 Data_07E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $00, $00, $FF, $7F, $1C, $02, $00, $00, $00, $00, $FF, $6B, $5F, $03, $00, $08
-    db $00, $00, $FF, $6B, $5F, $03, $00, $08, $00, $00, $BF, $5F, $3D, $2A, $00, $00
-    db $00, $00, $FF, $6B, $52, $66, $00, $00, $00, $00, $5D, $4F, $D3, $19, $00, $00
-    db $00, $00, $7F, $02, $1F, $00, $00, $00, $00, $00, $FF, $6B, $7F, $02, $00, $00
+    dw $0000, $7FFF, $021C, $0000 ; id 30
+    dw $0000, $6BFF, $035F, $0800 ; id 31
+    dw $0000, $6BFF, $035F, $0800 ; id 32
+    dw $0000, $5FBF, $2A3D, $0000 ; id 33
+    dw $0000, $6BFF, $6652, $0000 ; id 34
+    dw $0000, $4F5D, $19D3, $0000 ; id 35
+    dw $0000, $027F, $001F, $0000 ; id 36
+    dw $0000, $6BFF, $027F, $0000 ; id 37
 
 ; address loaded by RunLinkScreenSubStateSubState_5B14_Case00
 ; LZSS-compressed asset: 45 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)

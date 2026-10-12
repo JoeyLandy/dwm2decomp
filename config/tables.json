@@ -18484,6 +18484,204 @@
         }
       ],
       "note": "E-0237 (C1: ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each)."
+    },
+    {
+      "bank": "7E",
+      "addr": "4BBD",
+      "label": "ObjPalettes_7E_4BBD",
+      "count": 38,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB OBJ palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_Shared01 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes)."
+    },
+    {
+      "bank": "12",
+      "addr": "704C",
+      "label": "FieldCommandSpriteTable",
+      "count": 22,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "7E",
+          "stream": true,
+          "name": "compressed sprite graphics in bank $7E",
+          "reason": "field command sprite graphics"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "palette (& $7F, into ObjPalettes_7E_4BBD), byte returned in A"
+        }
+      ],
+      "record": "bank-$7E graphics stream; palette index; returned byte",
+      "note": "E-0238 (C1: RunFieldCommandTemp0_Shared01 and _Shared02 index it with hTemp0 & $7F: the word is decompressed from bank $7E to vTiles0 + $400 (DecompressToVRAM); on CGB, byte 2 & $7F selects the palette at 7E:$4BBD + 8 * index copied to wOBJPaletteBuffer + $20; byte 3 is returned in A; 22 records)."
+    },
+    {
+      "bank": "1C",
+      "addr": "6158",
+      "label": "ShopItemListTable",
+      "count": 24,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "item list ($FF ends)",
+          "reason": "shop item list"
+        }
+      ],
+      "lists": {
+        "until": "6289",
+        "size": 1,
+        "one_line": true,
+        "label": "ShopItems",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "item numbers, then $FF"
+          }
+        ],
+        "record": "item numbers, then $FF"
+      },
+      "note": "E-0238 (C1: LoadArg1PointerForScreenTableIndex loads wArg1/wArg2 with the word at $6158 + 2 * wScreenTableIndex, and LoadArg1ByteForItemGridXItemGridY reads the byte at that pointer + 4 * wItemGridY + wItemGridX; 24 words, several sharing a list; the lists run to $6289)."
+    },
+    {
+      "bank": "1C",
+      "addr": "6289",
+      "label": "TileDestTable_1C_6289",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "tile destination list"
+        }
+      ],
+      "note": "E-0238 (C1: ScriptCommandE2_Run_Case03_Case03 and four other sites read the word at $6289 + 2 * wScreenCounter, then the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at $4910 there (CopyFromBankWaitVRAM, 16 bytes))."
+    },
+    {
+      "bank": "1C",
+      "addr": "6291",
+      "label": "TileDests_1C_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListPos"
+        }
+      ],
+      "note": "E-0238 (C1: list 0 of TileDestTable_1C_6289; 9 words)."
+    },
+    {
+      "bank": "1C",
+      "addr": "62A3",
+      "label": "TileDests_1C_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListPos"
+        }
+      ],
+      "note": "E-0238 (C1: list 1 of TileDestTable_1C_6289; 9 words)."
+    },
+    {
+      "bank": "1C",
+      "addr": "62B5",
+      "label": "TileDests_1C_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListPos"
+        }
+      ],
+      "note": "E-0238 (C1: list 2 of TileDestTable_1C_6289; 9 words)."
+    },
+    {
+      "bank": "1C",
+      "addr": "62C7",
+      "label": "TileDests_1C_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListPos"
+        }
+      ],
+      "note": "E-0238 (C1: list 3 of TileDestTable_1C_6289; 9 words)."
+    },
+    {
+      "bank": "01",
+      "addr": "65DE",
+      "label": "DebugSoundTestMusic",
+      "count": 32,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "music number"
+        }
+      ],
+      "note": "E-0238 (C1: DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and DebugSoundTest_Update_Sub03 draws it in hex; 32 entries)."
+    },
+    {
+      "bank": "01",
+      "addr": "65FE",
+      "label": "DebugSoundTestEffects",
+      "count": 84,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "sound effect number"
+        }
+      ],
+      "note": "E-0238 (C1: DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at Jump_001_65CA draws it in hex at vBGMap0 + $10C; 84 entries up to the next routine)."
+    },
+    {
+      "bank": "12",
+      "addr": "5130",
+      "label": "MapExitWarpTable",
+      "count": 16,
+      "id_base": 0,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte"
+        }
+      ],
+      "record": "map, new map, key; destination position and screen",
+      "note": "E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to ScriptCommand8E_Run_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF)."
     }
   ]
 }

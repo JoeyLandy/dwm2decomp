@@ -2364,7 +2364,7 @@ Jump_007_5B76::
     ld bc, $0040
     call FillBytes
     ld b, $7E
-    ld de, Data_07E_4BBD
+    ld de, ObjPalettes_7E_4BBD
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM

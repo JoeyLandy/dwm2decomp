@@ -4828,7 +4828,7 @@ Jump_001_64C0:: ; address name
     jr nz, Jump_001_64E0
     call InitSoundHardware
     ld a, [wTemp0]
-    ld hl, Data_001_65DE
+    ld hl, DebugSoundTestMusic
     add_a_to_hl
     ld a, [hl]
     call QueueMusic
@@ -4836,7 +4836,7 @@ Jump_001_64C0:: ; address name
 
 Jump_001_64E0::
     ld a, [wTemp1]
-    ld hl, Data_001_65FE
+    ld hl, DebugSoundTestEffects
     add_a_to_hl
     ld a, [hl]
     call QueueSoundEffect
@@ -4980,13 +4980,13 @@ Jump_001_65B9::
     ld a, [wMenuState]
     or a, a
     jr nz, Jump_001_65CA
-    ld hl, Data_001_65DE
+    ld hl, DebugSoundTestMusic
     ld de, vBGMap0 + $EC
     ld a, [wTemp0]
     jr Jump_001_65D3
 
 Jump_001_65CA::
-    ld hl, Data_001_65FE
+    ld hl, DebugSoundTestEffects
     ld de, vBGMap0 + $10C
     ld a, [wTemp1]
 
@@ -4997,14 +4997,131 @@ Jump_001_65D3::
     pop af
     ret
 
-; address loaded by DebugSoundTest_Update, DebugSoundTest_Update_Sub03
-Data_001_65DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $02, $06, $09, $0C, $0F, $13, $16, $19, $1C, $1F, $22, $25, $28, $2B, $2E, $31
-    db $35, $3D, $40, $42, $44, $46, $48, $4A, $4D, $50, $52, $54, $58, $CC, $CF, $D6
+; E-0238 (C1: DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and DebugSoundTest_Update_Sub03 draws it in hex; 32 entries).
+; record: music number
+DebugSoundTestMusic::
+Data_001_65DE:: ; address name
+    db $02 ; id 0
+    db $06 ; id 1
+    db $09 ; id 2
+    db $0C ; id 3
+    db $0F ; id 4
+    db $13 ; id 5
+    db $16 ; id 6
+    db $19 ; id 7
+    db $1C ; id 8
+    db $1F ; id 9
+    db $22 ; id 10
+    db $25 ; id 11
+    db $28 ; id 12
+    db $2B ; id 13
+    db $2E ; id 14
+    db $31 ; id 15
+    db $35 ; id 16
+    db $3D ; id 17
+    db $40 ; id 18
+    db $42 ; id 19
+    db $44 ; id 20
+    db $46 ; id 21
+    db $48 ; id 22
+    db $4A ; id 23
+    db $4D ; id 24
+    db $50 ; id 25
+    db $52 ; id 26
+    db $54 ; id 27
+    db $58 ; id 28
+    db $CC ; id 29
+    db $CF ; id 30
+    db $D6 ; id 31
 
-; address loaded by DebugSoundTest_Update, DebugSoundTest_Update_Sub03
-Data_001_65FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0065FE, $54
+; E-0238 (C1: DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at Jump_001_65CA draws it in hex at vBGMap0 + $10C; 84 entries up to the next routine).
+; record: sound effect number
+DebugSoundTestEffects::
+Data_001_65FE:: ; address name
+    db $00 ; id 0
+    db $60 ; id 1
+    db $61 ; id 2
+    db $62 ; id 3
+    db $63 ; id 4
+    db $65 ; id 5
+    db $66 ; id 6
+    db $67 ; id 7
+    db $69 ; id 8
+    db $6A ; id 9
+    db $6B ; id 10
+    db $6C ; id 11
+    db $6D ; id 12
+    db $70 ; id 13
+    db $72 ; id 14
+    db $74 ; id 15
+    db $76 ; id 16
+    db $78 ; id 17
+    db $7A ; id 18
+    db $7B ; id 19
+    db $7C ; id 20
+    db $7D ; id 21
+    db $7E ; id 22
+    db $80 ; id 23
+    db $81 ; id 24
+    db $82 ; id 25
+    db $83 ; id 26
+    db $84 ; id 27
+    db $85 ; id 28
+    db $86 ; id 29
+    db $87 ; id 30
+    db $88 ; id 31
+    db $89 ; id 32
+    db $8B ; id 33
+    db $8D ; id 34
+    db $8F ; id 35
+    db $90 ; id 36
+    db $91 ; id 37
+    db $93 ; id 38
+    db $94 ; id 39
+    db $95 ; id 40
+    db $96 ; id 41
+    db $97 ; id 42
+    db $98 ; id 43
+    db $99 ; id 44
+    db $9A ; id 45
+    db $9B ; id 46
+    db $9D ; id 47
+    db $9E ; id 48
+    db $9F ; id 49
+    db $A1 ; id 50
+    db $A2 ; id 51
+    db $A3 ; id 52
+    db $A4 ; id 53
+    db $A5 ; id 54
+    db $A7 ; id 55
+    db $A8 ; id 56
+    db $A9 ; id 57
+    db $AA ; id 58
+    db $AB ; id 59
+    db $AC ; id 60
+    db $AE ; id 61
+    db $B0 ; id 62
+    db $B1 ; id 63
+    db $B2 ; id 64
+    db $B4 ; id 65
+    db $B6 ; id 66
+    db $B8 ; id 67
+    db $BA ; id 68
+    db $BC ; id 69
+    db $BD ; id 70
+    db $BF ; id 71
+    db $C1 ; id 72
+    db $C3 ; id 73
+    db $C5 ; id 74
+    db $C7 ; id 75
+    db $C9 ; id 76
+    db $CB ; id 77
+    db $D2 ; id 78
+    db $D4 ; id 79
+    db $D9 ; id 80
+    db $DA ; id 81
+    db $DC ; id 82
+    db $DD ; id 83
 
 ; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)

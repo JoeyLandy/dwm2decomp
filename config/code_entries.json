@@ -240,6 +240,16 @@
       "bank": "05",
       "addr": "6223",
       "evidence": "E-0237"
+    },
+    {
+      "bank": "A0",
+      "addr": "6CF7",
+      "evidence": "E-0238"
+    },
+    {
+      "bank": "31",
+      "addr": "7A78",
+      "evidence": "E-0238"
     }
   ]
 }

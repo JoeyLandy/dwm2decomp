@@ -2625,7 +2625,7 @@ Func_00C_5156:: ; address name
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 ScriptCommandF6_Run_Shared06::
 Func_00C_5177:: ; address name
-    ld hl, Data_00C_51AB
+    ld hl, Tiles_0C_51AB
     ld de, vTiles1 + $430
     call CopyTileBytesToVRAM_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -2647,9 +2647,11 @@ Func_00C_5177:: ; address name
     farcall FillTileRectWithArg1Tile
     ret
 
-; address loaded by ScriptCommandF6_Run_Shared06
-Data_00C_51AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+; E-0238 (derived: HL = $51AB and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_0C_51AB::
+Data_00C_51AB:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
 ; 23 call sites from 13 routines (e.g. ScriptCommandF7_Run_Shared02, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ...)

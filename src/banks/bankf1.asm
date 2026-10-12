@@ -3614,24 +3614,30 @@ Func_0F1_5719:: ; address name
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1B)
 UploadTilesFromData5757_BankF1::
 Func_0F1_573E:: ; address name
-    ld hl, Data_0F1_5757
+    ld hl, Tiles_F1_5757
     ld de, vTiles2 + $6E0
-    call UploadTilesFromData5757_BankF1_Sub01
-    call UploadTilesFromData5757_BankF1_Sub01
+    call CopyTileBytesToVRAM_BankF1
+    call CopyTileBytesToVRAM_BankF1
     ld de, vTiles2 + $7C0
-    call UploadTilesFromData5757_BankF1_Sub01
-    call UploadTilesFromData5757_BankF1_Sub01
-    call UploadTilesFromData5757_BankF1_Sub01
+    call CopyTileBytesToVRAM_BankF1
+    call CopyTileBytesToVRAM_BankF1
+    call CopyTileBytesToVRAM_BankF1
     ret
 
-; address loaded by UploadTilesFromData5757_BankF1
-Data_0F1_5757:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $3C5757, $50
+; E-0238 (derived: HL = $5757 and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_F1_5757::
+Data_0F1_5757:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FF ; entry 0
+    db $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 1
+    db $FF, $FF, $FF, $FF, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 2
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $FF, $FF, $FF ; entry 3
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 4
 
-; only called from UploadTilesFromData5757_BankF1 (E-0047)
+; copies 16 bytes from [HL] to [DE], each written with interrupts off after waiting for rSTAT bit 1 to clear; HL and DE advance (a counter variant of CopyTileBytesToVRAM) (E-0238)
 ; 5 call sites from 1 routine (e.g. UploadTilesFromData5757_BankF1)
 ; reads: rSTAT
-UploadTilesFromData5757_BankF1_Sub01::
+CopyTileBytesToVRAM_BankF1::
 Func_0F1_57A7:: ; address name
     ld a, $10
 

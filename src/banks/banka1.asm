@@ -1005,7 +1005,7 @@ Jump_0A1_4576::
     or a, a
     jr z, Jump_0A1_45C0
     ld a, $40
-    ld de, Data_07E_4BBD
+    ld de, ObjPalettes_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_0A1_4592
@@ -2820,7 +2820,7 @@ Jump_0A1_5039::
     or a, a
     jr z, Jump_0A1_5090
     ld a, $40
-    ld de, Data_07E_4BBD
+    ld de, ObjPalettes_7E_4BBD
     add a, e
     ld e, a
     jr nc, Jump_0A1_5055

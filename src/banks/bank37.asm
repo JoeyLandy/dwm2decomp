@@ -2880,7 +2880,7 @@ Func_037_5870:: ; address name
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case0D_Case1B)
 UploadTilesFromData58AE::
 Func_037_5895:: ; address name
-    ld hl, Data_037_58AE
+    ld hl, Tiles_37_58AE
     ld de, vTiles2 + $6E0
     call CopyTileBytesToVRAM_Bank37
     call CopyTileBytesToVRAM_Bank37
@@ -2890,9 +2890,15 @@ Func_037_5895:: ; address name
     call CopyTileBytesToVRAM_Bank37
     ret
 
-; address loaded by UploadTilesFromData58AE
-Data_037_58AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DD8AE, $50
+; E-0238 (derived: HL = $58AE and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_37_58AE::
+Data_037_58AE:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FF ; entry 0
+    db $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 1
+    db $FF, $FF, $FF, $FF, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 2
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $FF, $FF, $FF ; entry 3
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 4
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
 ; 5 call sites from 1 routine (e.g. UploadTilesFromData58AE)

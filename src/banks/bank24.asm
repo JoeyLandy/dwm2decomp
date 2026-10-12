@@ -719,7 +719,7 @@ Jump_024_44AA:: ; address name
 
 Jump_024_44BA::
     push bc
-    ld hl, Data_024_44FE
+    ld hl, Tiles_24_44FE
     call CopyTileBytesToVRAM_Bank24_52BA
     pop bc
     dec b
@@ -748,9 +748,11 @@ Jump_024_44BA::
     ld [wScreenState], a
     ret
 
-; address loaded by GameMode6_Update_Case02_Case0C
-Data_024_44FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+; E-0238 (derived: HL = $44FE and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_24_44FE::
+Data_024_44FE:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; entry 13 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -4431,12 +4433,12 @@ ScriptCommandF8_Run_Case02_Case01::
 Jump_024_620A:: ; address name
     ld a, [wListCursor]
     ld [wTwoChoiceCursor], a
-    ld hl, Data_024_6239
+    ld hl, Tiles_24_6239
     ld de, vTiles1 + $7E0
     call CopyTileBytesToVRAM_Bank24
-    ld hl, Data_024_6249
+    ld hl, Tiles_24_6249
     call CopyTileBytesToVRAM_Bank24
-    ld hl, Data_024_6259
+    ld hl, Tiles_24_6259
     ld de, vTiles1 + $6F0
     call CopyTileBytesToVRAM_Bank24
     ld a, [wScreenStep]
@@ -4448,17 +4450,23 @@ Jump_024_620A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by ScriptCommandF8_Run_Case02_Case01
-Data_024_6239:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $06, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00
+; E-0238 (derived: HL = $6239 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_24_6239::
+Data_024_6239:: ; address name
+    db $FF, $06, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
-; address loaded by ScriptCommandF8_Run_Case02_Case01
-Data_024_6249:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $F8, $FF, $FC, $FF, $0E, $FF, $06, $FF, $06
+; E-0238 (derived: HL = $6249 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_24_6249::
+Data_024_6249:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $F8, $FF, $FC, $FF, $0E, $FF, $06, $FF, $06 ; entry 0
 
-; address loaded by ScriptCommandF8_Run_Case02_Case01
-Data_024_6259:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60
+; E-0238 (derived: HL = $6259 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_24_6259::
+Data_024_6259:: ; address name
+    db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60 ; entry 0
 
 ; entry 2 of the `rst $00` table in ScriptCommandF8_Run_Case02
 ; no direct call (reached through a table, a jump or a vector)

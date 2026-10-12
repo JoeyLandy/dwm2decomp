@@ -2159,6 +2159,61 @@ class Rom:
                 added += 1
         log(f"key-world screen gaps tiled: {gaps} ({added} streams)")
 
+    def add_tile_upload_runs(self) -> None:
+        """E-0238: `ld hl, n` followed by k calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*,
+        which advances HL and DE), with only `ld de, n` between the calls, uploads k tiles from n."""
+        copiers = {k for k, info in self.names.items() if not info.get("data")
+                   and info["name"].startswith("CopyTileBytesToVRAM")}
+        if not copiers:
+            return
+        # byte-identical copies (name families, config/name_families.json) are only named later
+        canon = list(copiers) + [tuple(int(x, 16) for x in fam["canonical"].split(":")) for fam in self.families
+                                 if fam["name"].startswith("CopyTileBytesToVRAM")]
+        pats = set()
+        for b, a in canon:
+            if (size := self.routine_extent(b, a)):
+                pats.add(self.data[b * BANK - self.base(b) + a:b * BANK - self.base(b) + a + size])
+        for b in range(self.nbanks):
+            for a in self.labels[b]:
+                off = b * BANK - self.base(b) + a
+                if a in self.insn[b] and any(self.data[off:off + len(p)] == p for p in pats):
+                    copiers.add((b, a))
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        runs: dict[tuple[int, int], int] = {}
+        for cb in range(1, self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                m = ld_hl.match(ins[a][1])
+                if not m or not 0x4000 <= (t := int(m.group(1), 16)) < 0x8000:
+                    continue
+                n, j = 0, k + 1
+                while j < len(order) and order[j] == order[j - 1] + ins[order[j - 1]][0]:
+                    v = ins[order[j]]
+                    if v[2] == "call" and v[3] is not None and self.resolve(cb, v[3]) in copiers:
+                        n += 1
+                    elif not v[1].startswith("ld de, "):
+                        break
+                    j += 1
+                if n:
+                    runs[(cb, t)] = max(n, runs.get((cb, t), 0))
+        made = 0
+        for (cb, t), n in sorted(runs.items()):
+            end = t + 16 * n
+            if end > 0x8000 or any(b == cb and lo < end and t < hi for b, lo, hi in taken) or \
+                    any(q in self.covered[cb] for q in range(t, end)):
+                continue
+            self.schemas.append({"bank": cb, "addr": t, "label": f"Tiles_{cb:02X}_{t:04X}", "count": n,
+                                 "fields": [{"type": "db", "size": 16, "line": True,
+                                             "name": "tile (16 bytes, 2 bits per pixel)"}],
+                                 "note": f"E-0238 (derived: HL = ${t:04X} and {n} calls to a 16-byte VRAM copier "
+                                         f"(CopyTileBytesToVRAM_*), one tile each)"})
+            taken.append((cb, t, end))
+            made += 1
+        log(f"tile upload runs derived: {made}")
+
     def add_tile_copy_lists(self) -> None:
         """E-0225: VRAM destination lists (HL, words up to one whose low byte is $FF) and their
         source lists (DE, as many words) passed to tile-list copiers: routines whose first 64
@@ -3315,6 +3370,7 @@ class Rom:
         self.label_data_refs()
         self.add_string_table_schemas()
         self.add_tile_copy_lists()
+        self.add_tile_upload_runs()
         self.add_rect_record_schemas()
         self.prepare_object_selectors()
         self.prepare_tables()

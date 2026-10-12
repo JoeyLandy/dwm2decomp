@@ -7463,7 +7463,53 @@ Func_0A0_6CBC:: ; address name
     ld a, d
     ld [wTextWindowWidth], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $282CF7, $50
+
+; copies five glyphs plus marks to wTextBuf0 (CopyFiveGlyphsPlusMarks), then shows string category 2, index 0 in a 5 x 1 window at tile HL with ShowString_Bank08, saving and restoring the text window fields; no caller found (E-0238)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
+; points at: wTextBuf0
+UnreferencedShowFiveGlyphsAtTilesHL_BankA0:: ; configured code entry (E-0238); C0
+Func_0A0_6CF7:: ; address name
+    push hl
+    ld hl, wTextBuf0
+    call CopyFiveGlyphsPlusMarks
+    pop hl
+    ld a, [wTextWindowTileLo]
+    ld c, a
+    ld a, [wTextWindowTileHi]
+    ld b, a
+    push bc
+    ld a, [wTextWindowRows]
+    ld c, a
+    ld a, [wTextWindowWidth]
+    ld b, a
+    push bc
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ld de, $0501
+    ld a, e
+    ld [wTextWindowRows], a
+    ld a, d
+    ld [wTextWindowWidth], a
+    ld a, $02
+    ld [wStringCategory], a
+    ld a, $00
+    ld [wStringIndex], a
+    farcall ShowString_Bank08
+    pop de
+    pop hl
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ld a, e
+    ld [wTextWindowRows], a
+    ld a, d
+    ld [wTextWindowWidth], a
+    ret
 
 ; address loaded by DrawSlotHPDigits_BankA0, CopySlotPanelPart6D47ToVRAM
 Data_0A0_6D47:: ; heuristic: pointer load in the same bank (bank assumed); C0

@@ -6902,7 +6902,7 @@ Jump_01D_6CF9::
 ; 4 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case1B_Case00, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case08_Case1B, RunScreenStep_F0_5DE8_Case04)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
-    ld hl, Data_01D_6D20
+    ld hl, Tiles_1D_6D20
     ld de, vTiles2 + $6E0
     call CopyTileBytesToVRAM_Bank1D
     call CopyTileBytesToVRAM_Bank1D
@@ -6912,9 +6912,15 @@ Func_01D_6D07:: ; address name
     call CopyTileBytesToVRAM_Bank1D
     ret
 
-; address loaded by UploadTilesFromData6D20
-Data_01D_6D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $076D20, $50
+; E-0238 (derived: HL = $6D20 and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_1D_6D20::
+Data_01D_6D20:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FF ; entry 0
+    db $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 1
+    db $FF, $FF, $FF, $FF, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 2
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $FF, $FF, $FF ; entry 3
+    db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 4
 
 ; C = wD7FF = Data_01D_6D81[wC7C7] (E-0073)
 ; 10 call sites from 9 routines (e.g. ListRecordsInUseWithByte6ESet, ListRecordsState1WithByte6EClear, ListRecordsInUseWithByte6EClear, ListPartyRecordsWithState2ToListEntries, ...)

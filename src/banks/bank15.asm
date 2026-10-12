@@ -6730,7 +6730,7 @@ Jump_015_6B6B::
     ld a, [hl]
     and a, a
     jr z, Jump_015_6BA1
-    ld hl, Data_015_763B
+    ld hl, Tiles_15_763B
     ld de, vTiles2 + $6F0
     call CopyTileBytesToVRAM_Bank15
     ld a, $6F
@@ -7643,9 +7643,11 @@ Data_015_761D:: ; address name
     db $72, $73, $74, $75, $76, $B7 ; id 3
     db $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ShowSaveFileInfoWindow
-Data_015_763B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+; E-0238 (derived: HL = $763B and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each)
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_15_763B::
+Data_015_763B:: ; address name
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_15_764B:: ; heuristic: event script entry or jump target; C0
