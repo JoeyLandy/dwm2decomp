@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0233 — Debug menu names and message test table (bank $01)
+
+- Kind: OBSERVATION (reading; C1).
+- **DebugMenuNames ($5F56).** 10 rows of 16 bytes plus an 8-byte last row. The debug menu copies the row at 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and draws it with CopyGlyphTilesToVRAM.
+  - The bytes are glyph codes that charmap.inc renders as nonsense Latin letters, so they are kept as bytes.
+- **DebugMessageTestTable ($4E54, 34 words) and DebugMessageTestSubLists ($4E98-$4ED4).** DebugMessageTest_Update_Case21 takes word wTemp0. A zero high byte is a value; otherwise the word points at one of seven sub-lists, whose format is not read.
+- Binary verification: build/run287 PASS, 0 differing bytes; tests OK.
+
 ### E-0232 — Screen block records (bank $33); 27 false streams removed
 
 - Kind: OBSERVATION (reading; C1) and TOOL.

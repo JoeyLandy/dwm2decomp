@@ -1286,7 +1286,7 @@ Jump_001_4CE5::
     call z, DebugMessageTest_Update_Case21_Sub04
     ld a, [wTemp0]
     add a, a
-    ld hl, Data_001_4E54
+    ld hl, DebugMessageTestTable
     add_a_to_hl
     push hl
     inc hl
@@ -1306,7 +1306,7 @@ Jump_001_4D0C::
     call z, DebugMessageTest_Update_Case21_Sub04
     ld a, [wTemp0]
     add a, a
-    ld hl, Data_001_4E54
+    ld hl, DebugMessageTestTable
     add_a_to_hl
     push hl
     inc hl
@@ -1514,9 +1514,50 @@ Jump_001_4E4B::
 Jump_001_4E53::
     ret
 
-; address loaded by DebugMessageTest_Update_Case21
-Data_001_4E54:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $004E54, $80
+; E-0233 (C1: DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to the first sub-list).
+; record: value (high byte 0) or pointer to a sub-list
+DebugMessageTestTable::
+Data_001_4E54:: ; address name
+    dw $4E98 ; id 0
+    dw $4EAE ; id 1
+    dw $00FF ; id 2
+    dw $00D4 ; id 3
+    dw $00EF ; id 4
+    dw $00C2 ; id 5
+    dw $00D2 ; id 6
+    dw $00FF ; id 7
+    dw $00DD ; id 8
+    dw $00EF ; id 9
+    dw $00FF ; id 10
+    dw $00C3 ; id 11
+    dw $00FE ; id 12
+    dw $00F8 ; id 13
+    dw $4EB9 ; id 14
+    dw $4EC1 ; id 15
+    dw $4EC8 ; id 16
+    dw $4ECB ; id 17
+    dw $00F1 ; id 18
+    dw $0017 ; id 19
+    dw $002A ; id 20
+    dw $002F ; id 21
+    dw $0029 ; id 22
+    dw $003F ; id 23
+    dw $0022 ; id 24
+    dw $002F ; id 25
+    dw $0036 ; id 26
+    dw $0015 ; id 27
+    dw $009F ; id 28
+    dw $0016 ; id 29
+    dw $0023 ; id 30
+    dw $0012 ; id 31
+    dw $4ECF ; id 32
+    dw $0027 ; id 33
+
+; E-0233 (C1: the sub-lists that DebugMessageTestTable's pointer words name ($4E98, $4EAE, $4EB9, $4EC1, $4EC8, $4ECB, $4ECF); their format is not read).
+; record: sub-lists named by DebugMessageTestTable
+DebugMessageTestSubLists::
+Data_001_4E98:: ; address name
+    db $14, $FF, $10, $FF, $7F, $DF, $6F, $6F, $27, $0D, $AF, $00, $23, $00, $06, $05, $01, $08, $0A, $1B, $07, $03, $09, $02, $19, $09, $57, $00, $53, $0C, $0D, $00, $21, $06, $06, $05, $00, $06, $02, $1A, $08, $05, $85, $FC, $03, $00, $00, $21, $01, $35, $1F, $02, $FF, $FF, $FF, $02, $FF, $84, $0A, $C9 ; entry 0
 
 ; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -4000,7 +4041,7 @@ Jump_001_5F1C::
     dec a
     swap a
     and a, $F0
-    ld hl, Data_001_5F56
+    ld hl, DebugMenuNames
     add_a_to_hl
     ld de, wNameGlyphBuf
 
@@ -4023,9 +4064,21 @@ Jump_001_5F44::
     call CopyGlyphTilesToVRAM
     ret
 
-; address loaded by DebugAutomap_Update_Sub03
-Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $005F56, $A8
+; E-0233 (C1: the debug menu copies the string at $5F56 + 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and draws it with CopyGlyphTilesToVRAM; 10 rows, then an 8-byte string for the 11th entry).
+; record: a debug menu entry name: glyph codes ending in $F0, padded to 16 bytes (not charmap.inc text)
+DebugMenuNames::
+Data_001_5F56:: ; address name
+    db $8A, $87, $42, $8D, $26, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 1
+    db $5E, $56, $66, $67, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $29, $25, $32, $8D, $2B, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 3
+    db $44, $30, $8D, $26, $44, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 4
+    db $40, $4A, $26, $33, $25, $4F, $2B, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00 ; id 5
+    db $64, $88, $62, $6A, $9C, $3D, $2F, $52, $3D, $29, $2A, $8D, $F0, $00, $00, $00 ; id 6
+    db $5C, $87, $77, $3D, $47, $4F, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00 ; id 7
+    db $2C, $55, $2A, $4B, $26, $2F, $8D, $4D, $3D, $29, $2A, $8D, $F0, $00, $00, $00 ; id 8
+    db $28, $47, $25, $37, $8D, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 9
+    db $43, $47, $3D, $35, $29, $25, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00 ; id 10
+    db $2F, $51, $55, $3D, $29, $2A, $8D, $F0 ; end
 
 ; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)

@@ -17400,6 +17400,52 @@
       ],
       "record": "offset $0000 (row 0, column 0); 20 x 18 tiles",
       "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "01",
+      "addr": "5F56",
+      "label": "DebugMenuNames",
+      "count": 10,
+      "id_base": 1,
+      "tail": 8,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "name bytes ending in $F0, zero padded (glyph codes of the debug font, not charmap.inc letters)"
+        }
+      ],
+      "record": "a debug menu entry name: glyph codes ending in $F0, padded to 16 bytes (not charmap.inc text)",
+      "note": "E-0233 (C1: the debug menu copies the string at $5F56 + 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and draws it with CopyGlyphTilesToVRAM; 10 rows, then an 8-byte string for the 11th entry)."
+    },
+    {
+      "bank": "01",
+      "addr": "4E54",
+      "label": "DebugMessageTestTable",
+      "count": 34,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "value (high byte 0) or pointer to a sub-list"
+        }
+      ],
+      "note": "E-0233 (C1: DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to the first sub-list)."
+    },
+    {
+      "bank": "01",
+      "addr": "4E98",
+      "label": "DebugMessageTestSubLists",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 60,
+          "name": "sub-lists named by DebugMessageTestTable"
+        }
+      ],
+      "note": "E-0233 (C1: the sub-lists that DebugMessageTestTable's pointer words name ($4E98, $4EAE, $4EB9, $4EC1, $4EC8, $4ECB, $4ECF); their format is not read)."
     }
   ]
 }
