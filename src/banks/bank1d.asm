@@ -24,85 +24,96 @@ Data_01D_4016:: ; address name
 ; record: string
 StringList_1D_4018::
 Data_01D_4018:: ; address name
-    dw Data_01D_4048 ; id 0
-    dw Data_01D_4048 ; id 1
-    dw Data_01D_4069 ; id 2
-    dw Data_01D_408E ; id 3
-    dw Data_01D_40AF ; id 4
-    dw Data_01D_40D0 ; id 5
-    dw Data_01D_40F4 ; id 6
-    dw Data_01D_4113 ; id 7
-    dw Data_01D_4133 ; id 8
-    dw Data_01D_414C ; id 9
-    dw Data_01D_4165 ; id 10
-    dw Data_01D_4184 ; id 11
-    dw Data_01D_41BD ; id 12
-    dw Data_01D_41D6 ; id 13
-    dw Data_01D_41F3 ; id 14
-    dw Data_01D_4212 ; id 15
-    dw Data_01D_4237 ; id 16
-    dw Data_01D_4259 ; id 17
-    dw Data_01D_4276 ; id 18
-    dw Data_01D_4295 ; id 19
-    dw Data_01D_42B4 ; id 20
-    dw Data_01D_42D2 ; id 21
-    dw Data_01D_4310 ; id 22
-    dw Data_01D_4310 ; id 23
+    dw String_1D_00_00 ; id 0
+    dw String_1D_00_00 ; id 1
+    dw String_1D_00_02 ; id 2
+    dw String_1D_00_03 ; id 3
+    dw String_1D_00_04 ; id 4
+    dw String_1D_00_05 ; id 5
+    dw String_1D_00_06 ; id 6
+    dw String_1D_00_07 ; id 7
+    dw String_1D_00_08 ; id 8
+    dw String_1D_00_09 ; id 9
+    dw String_1D_00_0A ; id 10
+    dw String_1D_00_0B ; id 11
+    dw String_1D_00_0C ; id 12
+    dw String_1D_00_0D ; id 13
+    dw String_1D_00_0E ; id 14
+    dw String_1D_00_0F ; id 15
+    dw String_1D_00_10 ; id 16
+    dw String_1D_00_11 ; id 17
+    dw String_1D_00_12 ; id 18
+    dw String_1D_00_13 ; id 19
+    dw String_1D_00_14 ; id 20
+    dw String_1D_00_15 ; id 21
+    dw String_1D_00_16 ; id 22
+    dw String_1D_00_16 ; id 23
 
-Data_01D_4048:: ; heuristic: string; C0
+String_1D_00_00:: ; heuristic: string; C0
+Data_01D_4048:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Which monster", $F1
     db "will hibernate?", $F0
 
-Data_01D_4069:: ; heuristic: string; C0
+String_1D_00_02:: ; heuristic: string; C0
+Data_01D_4069:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Do you need me", $F1
     db "for anything else?", $F0
 
-Data_01D_408E:: ; heuristic: string; C0
+String_1D_00_03:: ; heuristic: string; C0
+Data_01D_408E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " So this one", $F1
     db "should hibernate?", $F0
 
-Data_01D_40AF:: ; heuristic: string; C0
+String_1D_00_04:: ; heuristic: string; C0
+Data_01D_40AF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " OK my friend,", $F1
     db "time to sleep!", $F7
     db $F0
 
-Data_01D_40D0:: ; heuristic: string; C0
+String_1D_00_05:: ; heuristic: string; C0
+Data_01D_40D0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Huh? There's no", $F1
     db "one on the farm.", $F7
     db $F0
 
-Data_01D_40F4:: ; heuristic: string; C0
+String_1D_00_06:: ; heuristic: string; C0
+Data_01D_40F4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Uh-oh, the", $F1
     db "stable is full!", $F7
     db $F0
 
-Data_01D_4113:: ; heuristic: string; C0
+String_1D_00_07:: ; heuristic: string; C0
+Data_01D_4113:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Want to switch", $F1
     db "with someone?", $F0
 
-Data_01D_4133:: ; heuristic: string; C0
+String_1D_00_08:: ; heuristic: string; C0
+Data_01D_4133:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who should I", $F1
     db "wake up?", $F0
 
-Data_01D_414C:: ; heuristic: string; C0
+String_1D_00_09:: ; heuristic: string; C0
+Data_01D_414C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Wake this", $F1
     db "monster up?", $F0
 
-Data_01D_4165:: ; heuristic: string; C0
+String_1D_00_0A:: ; heuristic: string; C0
+Data_01D_4165:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Which one should", $F1
     db "hibernate?", $F0
 
-Data_01D_4184:: ; heuristic: string; C0
+String_1D_00_0B:: ; heuristic: string; C0
+Data_01D_4184:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " So switch ", $F9, "0", $F1
     db "and ", $F9, "G, huh?", $FA, $F7
@@ -110,63 +121,74 @@ Data_01D_4184:: ; heuristic: string; C0
     db "for you.", $F7
     db $F0
 
-Data_01D_41BD:: ; heuristic: string; C0
+String_1D_00_0C:: ; heuristic: string; C0
+Data_01D_41BD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who should I", $F1
     db "wake up?", $F0
 
-Data_01D_41D6:: ; heuristic: string; C0
+String_1D_00_0D:: ; heuristic: string; C0
+Data_01D_41D6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I'll send ", $F9, "G", $F1
     db "to the farm.", $F7
     db $F0
 
-Data_01D_41F3:: ; heuristic: string; C0
+String_1D_00_0E:: ; heuristic: string; C0
+Data_01D_41F3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Huh? No one's", $F1
     db "sleeping now.", $F7
     db $F0
 
-Data_01D_4212:: ; heuristic: string; C0
+String_1D_00_0F:: ; heuristic: string; C0
+Data_01D_4212:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Huh? There's no", $F1
     db "room on the farm.", $F7
     db $F0
 
-Data_01D_4237:: ; heuristic: string; C0
+String_1D_00_10:: ; heuristic: string; C0
+Data_01D_4237:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Should someone", $F1
     db "else hibernate?", $F0
 
-Data_01D_4259:: ; heuristic: string; C0
+String_1D_00_11:: ; heuristic: string; C0
+Data_01D_4259:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who do you want", $F1
     db "to check?", $F0
 
-Data_01D_4276:: ; heuristic: string; C0
+String_1D_00_12:: ; heuristic: string; C0
+Data_01D_4276:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who do you want", $F1
     db "to release?", $F0
 
-Data_01D_4295:: ; heuristic: string; C0
+String_1D_00_13:: ; heuristic: string; C0
+Data_01D_4295:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " It'll disappear.", $F1
     db "Is that OK?", $F0
 
-Data_01D_42B4:: ; heuristic: string; C0
+String_1D_00_14:: ; heuristic: string; C0
+Data_01D_42B4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "G was released", $F1
     db "in the wild.", $F7
     db $F0
 
-Data_01D_42D2:: ; heuristic: string; C0
+String_1D_00_15:: ; heuristic: string; C0
+Data_01D_42D2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Come see me if", $F1
     db "you get more", $FA, $F7
     db $EF, $EE, "monsters.", $EF, $EE, "I'll be waiting.", $F7
     db $F0
 
-Data_01D_4310:: ; heuristic: string; C0
+String_1D_00_16:: ; heuristic: string; C0
+Data_01D_4310:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " No one else can", $F1
     db "hibernate,I see.", $F7

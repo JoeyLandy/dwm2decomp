@@ -3001,6 +3001,78 @@ class Rom:
             self.table_at[(bank, addr)] = dict(t, stride=stride, end=end, sizes=sizes)
         log(f"structured tables: {len(self.table_at)} ({sum(t['count'] for t in self.schemas)} records)")
 
+    def name_string_targets(self) -> None:
+        """E-0249: label strings by identity. A message bank's strings (MESSAGE_GROUP_BANKS, category 0
+        of MessageStrings_BankBB, and its overflow table from the threshold up) become Message_GG_II
+        (group, index: the message word $GGII shows it); bank $0E's become MessageBank0E_II; the
+        strings of other derived string tables become String_BB_CC_II (bank, category, index; the
+        table address follows the bank when a bank has two tables). The first index naming a
+        string wins; the address name stays as an alias."""
+        cats = [t for t in self.schemas if t["label"].startswith("StringCategories_")]
+        per_bank: dict[int, int] = {}
+        for t in cats:
+            per_bank[t["bank"]] = per_bank.get(t["bank"], 0) + 1
+        first_group = {}
+        for g, b in enumerate(self.MESSAGE_GROUP_BANKS):
+            first_group.setdefault(b, g)
+        named = 0
+
+        def give(b: int, tgt: int, name: str) -> None:
+            nonlocal named
+            dl = self.dlabels[b]
+            cur = dl.get(tgt)
+            if not 0x4000 <= tgt < 0x8000 or (cur and not cur.startswith("Data_")) or name in self._string_names \
+                    or tgt in self.insn[b] or tgt in self.covered[b]:  # a list entry pointing at code
+                return
+            if cur:
+                self.dalias.setdefault((b, tgt), cur)
+            dl[tgt] = name
+            self.dreason.setdefault((b, tgt), "string")
+            self._string_names.add(name)
+            named += 1
+
+        self._string_names: set[str] = set()
+        lists = {(t["bank"], t["addr"]): t["count"] for t in self.schemas if t["label"].startswith("StringList_")}
+        for t in cats:
+            b, top = t["bank"], t["addr"]
+            msg = b in first_group and top == (0x4016 if b == 0x86 else 0x4032)
+            for c in range(t["count"]):
+                lst = self._u16(b, top + 2 * c)
+                for i in range(lists.get((b, lst), 0)):
+                    tgt = self._u16(b, lst + 2 * i)
+                    if msg:
+                        give(b, tgt, f"Message_{first_group[b]:02X}_{i:02X}")
+                    elif b == 0x0E and top == 0x4032:
+                        give(b, tgt, f"MessageBank0E_{i:02X}")
+                    elif per_bank[b] == 1:
+                        give(b, tgt, f"String_{b:02X}_{c:02X}_{i:02X}")
+                    else:
+                        give(b, tgt, f"String_{b:02X}_{top:04X}_{c:02X}_{i:02X}")
+        # overflow tables: a category table (one list) in another bank, indexed by index - threshold
+        if not hasattr(self, "_name_addr"):
+            self._name_addr = {v["name"]: k for k, v in self.names.items()}
+        for b, g in list(first_group.items()) + [(0x0E, None)]:
+            o = b * BANK
+            if self.data[o + 4] != 0xFE:
+                continue
+            ov = self._name_addr.get(f"MessageStrings_Bank{b:02X}_Overflow")
+            if not ov:
+                continue
+            ob, oa = ov
+            lst = self._u16(ob, oa)
+            if not 0x4000 <= lst < 0x8000:
+                continue
+            i, low = 0, 0x8000
+            while lst + 2 * i < low and i < 256:
+                tgt = self._u16(ob, lst + 2 * i)
+                if not lst < tgt < 0x8000:
+                    break
+                low = min(low, tgt)
+                idx = self.data[o + 5] + i
+                give(ob, tgt, f"Message_{g:02X}_{idx:02X}" if g is not None else f"MessageBank0E_{idx:02X}")
+                i += 1
+        log(f"strings named by identity: {named}")
+
     def prepare_tracks(self) -> None:
         """Decode the sound track regions named by tables flagged "tracks" (E-0019).
 
@@ -3641,6 +3713,7 @@ class Rom:
         self.add_rect_record_schemas()
         self.prepare_object_selectors()
         self.prepare_tables()
+        self.name_string_targets()
         self.prepare_tracks()
         self.prepare_scripts()
         self.drop_tile_pointer_runs()

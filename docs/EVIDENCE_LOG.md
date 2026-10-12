@@ -2430,6 +2430,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0249 — Strings labelled by identity
+
+- Kind: TOOL (derived from the E-0217 string tables, the E-0080 overflow tables and the E-0243 lookup; C2 for the identities).
+- name_string_targets labels every string reached through a derived string table, 5,821 in all:
+  - **Message_GG_II** for message banks: group GG (MESSAGE_GROUP_BANKS, first group per bank), index II in category 0 of MessageStrings_BankBB. From the bank's threshold up, the index runs on into its overflow table in another bank (Message_00_DA ...). Message word $GGII (bits 6-7 of GG are window flags) shows Message_GG_II.
+  - **MessageBank0E_II** for bank $0E (wMessageMode 8), including its overflow in bank $96.
+  - **String_BB_CC_II** (bank, category, index) for the other string tables; the table address follows the bank when a bank has two tables.
+  - The first index naming a string wins. Entries that point at code are skipped. Address names stay as aliases.
+- No string label keeps an address-only name (5,264 before).
+- Binary verification: build/run317 PASS, 0 differing bytes; tests OK.
+
 ### E-0248 — Message words and started scripts quoted in code
 
 - Kind: TOOL (C1 quotes, by the E-0243 lookup).

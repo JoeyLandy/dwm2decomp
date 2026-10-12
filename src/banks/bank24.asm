@@ -4079,136 +4079,155 @@ Data_024_5D25:: ; address name
 ; record: string
 StringList_24_5D27::
 Data_024_5D27:: ; address name
-    dw Data_024_5D53 ; id 0
-    dw Data_024_5D53 ; id 1
-    dw Data_024_5D78 ; id 2
-    dw Data_024_5D99 ; id 3
-    dw Data_024_5DBC ; id 4
-    dw Data_024_5DDB ; id 5
-    dw Data_024_5DF9 ; id 6
-    dw Data_024_5E1D ; id 7
-    dw Data_024_5E3F ; id 8
-    dw Data_024_5E62 ; id 9
-    dw Data_024_5E8B ; id 10
-    dw Data_024_5EB2 ; id 11
-    dw Data_024_5ED7 ; id 12
-    dw Data_024_5F15 ; id 13
-    dw Data_024_5F57 ; id 14
-    dw Data_024_5F90 ; id 15
-    dw Data_024_5FCB ; id 16
-    dw Data_024_5FDD ; id 17
-    dw Data_024_5FFA ; id 18
-    dw Data_024_6019 ; id 19
-    dw Data_024_6087 ; id 20
-    dw Data_024_60CD ; id 21
+    dw String_24_00_00 ; id 0
+    dw String_24_00_00 ; id 1
+    dw String_24_00_02 ; id 2
+    dw String_24_00_03 ; id 3
+    dw String_24_00_04 ; id 4
+    dw String_24_00_05 ; id 5
+    dw String_24_00_06 ; id 6
+    dw String_24_00_07 ; id 7
+    dw String_24_00_08 ; id 8
+    dw String_24_00_09 ; id 9
+    dw String_24_00_0A ; id 10
+    dw String_24_00_0B ; id 11
+    dw String_24_00_0C ; id 12
+    dw String_24_00_0D ; id 13
+    dw String_24_00_0E ; id 14
+    dw String_24_00_0F ; id 15
+    dw String_24_00_10 ; id 16
+    dw String_24_00_11 ; id 17
+    dw String_24_00_12 ; id 18
+    dw String_24_00_13 ; id 19
+    dw String_24_00_14 ; id 20
+    dw String_24_00_15 ; id 21
 
-Data_024_5D53:: ; heuristic: string; C0
+String_24_00_00:: ; heuristic: string; C0
+Data_024_5D53:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Oh? But none", $F1
     db "appear to be dead", $A4, $FA, $F7
     db $F0
 
-Data_024_5D78:: ; heuristic: string; C0
+String_24_00_02:: ; heuristic: string; C0
+Data_024_5D78:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Oh? But no one", $F1
     db "is poisoned.", $FA, $F7
     db $F0
 
-Data_024_5D99:: ; heuristic: string; C0
+String_24_00_03:: ; heuristic: string; C0
+Data_024_5D99:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " But none appear", $F1
     db "to be cursed", $A4, $FA, $F7
     db $F0
 
-Data_024_5DBC:: ; heuristic: string; C0
+String_24_00_04:: ; heuristic: string; C0
+Data_024_5DBC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Do you need any", $F1
     db "other help?", $F0
 
-Data_024_5DDB:: ; heuristic: string; C0
+String_24_00_05:: ; heuristic: string; C0
+Data_024_5DDB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " May the gods go", $F1
     db "with you.", $F7
     db $F0
 
-Data_024_5DF9:: ; heuristic: string; C0
+String_24_00_06:: ; heuristic: string; C0
+Data_024_5DF9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Which monster", $F1
     db "should be revived?", $F0
 
-Data_024_5E1D:: ; heuristic: string; C0
+String_24_00_07:: ; heuristic: string; C0
+Data_024_5E1D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who should be", $F1
     db "cured of poison?", $F0
 
-Data_024_5E3F:: ; heuristic: string; C0
+String_24_00_08:: ; heuristic: string; C0
+Data_024_5E3F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Who should be", $F1
     db "freed of a curse?", $F0
 
-Data_024_5E62:: ; heuristic: string; C0
+String_24_00_09:: ; heuristic: string; C0
+Data_024_5E62:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Surely you jest.", $F1
     db "That one is alive.", $FA, $F7
     db $F0
 
-Data_024_5E8B:: ; heuristic: string; C0
+String_24_00_0A:: ; heuristic: string; C0
+Data_024_5E8B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " But that monster", $F1
     db "is not poisoned.", $FA, $F7
     db $F0
 
-Data_024_5EB2:: ; heuristic: string; C0
+String_24_00_0B:: ; heuristic: string; C0
+Data_024_5EB2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " But that monster", $F1
     db "is not cursed.", $FA, $F7
     db $F0
 
-Data_024_5ED7:: ; heuristic: string; C0
+String_24_00_0C:: ; heuristic: string; C0
+Data_024_5ED7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I must ask for a", $F1
     db "small donation of", $FA, $F7
     db $EF, $EE, $F9, "0G.", $EF, $EE, "Do you accept?", $F0
 
-Data_024_5F15:: ; heuristic: string; C0
+String_24_00_0D:: ; heuristic: string; C0
+Data_024_5F15:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Gods, the", $F1
     db "spirits of earth!", $FA, $F7
     db $EF, $EE, "Please summon the", $EF, $EE, "soul of ", $F9, "0!", $F7
     db $F0
 
-Data_024_5F57:: ; heuristic: string; C0
+String_24_00_0E:: ; heuristic: string; C0
+Data_024_5F57:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Gods, I  beg", $F1
     db "you, purify the", $FA, $F7
     db $EF, $EE, "poison sullying", $EF, $EE, $F9, "0!", $F7
     db $F0
 
-Data_024_5F90:: ; heuristic: string; C0
+String_24_00_0F:: ; heuristic: string; C0
+Data_024_5F90:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Gods, I beg", $F1
     db "you, free ", $F9, "0", $FA, $F7
     db $EF, $EE, "from its enslaving", $EF, $EE, "curse!", $F7
     db $F0
 
-Data_024_5FCB:: ; heuristic: string; C0
+String_24_00_10:: ; heuristic: string; C0
+Data_024_5FCB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $F9, "0 was revived!", $F7
     db $F0
 
-Data_024_5FDD:: ; heuristic: string; C0
+String_24_00_11:: ; heuristic: string; C0
+Data_024_5FDD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $F9, "0 was cleansed", $F1
     db "of poison.", $F7
     db $F0
 
-Data_024_5FFA:: ; heuristic: string; C0
+String_24_00_12:: ; heuristic: string; C0
+Data_024_5FFA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $F9, "0 was freed", $F1
     db "from the curse.", $F7
     db $F0
 
-Data_024_6019:: ; heuristic: string; C0
+String_24_00_13:: ; heuristic: string; C0
+Data_024_6019:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "No one else seems", $F1
     db "to need help.", $FA, $F7
@@ -4216,14 +4235,16 @@ Data_024_6019:: ; heuristic: string; C0
     db $EF, $EE, "The gods will be", $EF, $EE, "with you always.", $F7
     db $F0
 
-Data_024_6087:: ; heuristic: string; C0
+String_24_00_14:: ; heuristic: string; C0
+Data_024_6087:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Oh, my, my", $A4, $F1
     db "How deplorable!", $FA, $F7
     db $EF, $EE, "You haven't enough", $EF, $EE, "gold for this.", $FA, $F7
     db $F0
 
-Data_024_60CD:: ; heuristic: string; C0
+String_24_00_15:: ; heuristic: string; C0
+Data_024_60CD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "RviD-oxUncurt", $F0
 

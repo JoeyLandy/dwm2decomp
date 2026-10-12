@@ -6900,26 +6900,30 @@ Data_014_706D:: ; address name
 ; record: string
 StringList_14_706F::
 Data_014_706F:: ; address name
-    dw Data_014_7077 ; id 0
-    dw Data_014_7084 ; id 1
-    dw Data_014_7091 ; id 2
-    dw Data_014_70B2 ; id 3
+    dw String_14_00_00 ; id 0
+    dw String_14_00_01 ; id 1
+    dw String_14_00_02 ; id 2
+    dw String_14_00_03 ; id 3
 
-Data_014_7077:: ; heuristic: string; C0
+String_14_00_00:: ; heuristic: string; C0
+Data_014_7077:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Is ", $F9, "0 OK?", $F0
 
-Data_014_7084:: ; heuristic: string; C0
+String_14_00_01:: ; heuristic: string; C0
+Data_014_7084:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Is ", $F9, "0 OK?", $F0
 
-Data_014_7091:: ; heuristic: string; C0
+String_14_00_02:: ; heuristic: string; C0
+Data_014_7091:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " That name is", $F1
     db "already in use.", $F7
     db $F0
 
-Data_014_70B2:: ; heuristic: string; C0
+String_14_00_03:: ; heuristic: string; C0
+Data_014_70B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " That name can't", $F1
     db "be used.", $FA, $F7

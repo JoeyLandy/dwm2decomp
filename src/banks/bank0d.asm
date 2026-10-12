@@ -28,116 +28,127 @@ Data_00D_4016:: ; address name
 ; record: string
 StringList_0D_4018::
 Data_00D_4018:: ; address name
-    dw Data_00D_4078 ; id 0
-    dw Data_00D_4078 ; id 1
-    dw Data_00D_40B8 ; id 2
-    dw Data_00D_40EB ; id 3
-    dw Data_00D_410E ; id 4
-    dw Data_00D_412D ; id 5
-    dw Data_00D_414D ; id 6
-    dw Data_00D_414D ; id 7
-    dw Data_00D_418C ; id 8
-    dw Data_00D_41B2 ; id 9
-    dw Data_00D_41D8 ; id 10
-    dw Data_00D_4221 ; id 11
-    dw Data_00D_423F ; id 12
-    dw Data_00D_423F ; id 13
-    dw Data_00D_423F ; id 14
-    dw Data_00D_423F ; id 15
-    dw Data_00D_42A0 ; id 16
-    dw Data_00D_42A0 ; id 17
-    dw Data_00D_42E2 ; id 18
-    dw Data_00D_4303 ; id 19
-    dw Data_00D_4325 ; id 20
-    dw Data_00D_4348 ; id 21
-    dw Data_00D_436C ; id 22
-    dw Data_00D_4388 ; id 23
-    dw Data_00D_43AC ; id 24
-    dw Data_00D_43CF ; id 25
-    dw Data_00D_43F4 ; id 26
-    dw Data_00D_4417 ; id 27
-    dw Data_00D_443F ; id 28
-    dw Data_00D_4459 ; id 29
-    dw Data_00D_447B ; id 30
-    dw Data_00D_449D ; id 31
-    dw Data_00D_44BE ; id 32
-    dw Data_00D_44E6 ; id 33
-    dw Data_00D_44FE ; id 34
-    dw Data_00D_4521 ; id 35
-    dw Data_00D_452A ; id 36
-    dw Data_00D_4599 ; id 37
-    dw Data_00D_4599 ; id 38
-    dw Data_00D_4599 ; id 39
-    dw Data_00D_4599 ; id 40
-    dw Data_00D_45A1 ; id 41
-    dw Data_00D_45A8 ; id 42
-    dw Data_00D_45B1 ; id 43
-    dw Data_00D_45BB ; id 44
-    dw Data_00D_45C3 ; id 45
-    dw Data_00D_45CB ; id 46
+    dw String_0D_00_00 ; id 0
+    dw String_0D_00_00 ; id 1
+    dw String_0D_00_02 ; id 2
+    dw String_0D_00_03 ; id 3
+    dw String_0D_00_04 ; id 4
+    dw String_0D_00_05 ; id 5
+    dw String_0D_00_06 ; id 6
+    dw String_0D_00_06 ; id 7
+    dw String_0D_00_08 ; id 8
+    dw String_0D_00_09 ; id 9
+    dw String_0D_00_0A ; id 10
+    dw String_0D_00_0B ; id 11
+    dw String_0D_00_0C ; id 12
+    dw String_0D_00_0C ; id 13
+    dw String_0D_00_0C ; id 14
+    dw String_0D_00_0C ; id 15
+    dw String_0D_00_10 ; id 16
+    dw String_0D_00_10 ; id 17
+    dw String_0D_00_12 ; id 18
+    dw String_0D_00_13 ; id 19
+    dw String_0D_00_14 ; id 20
+    dw String_0D_00_15 ; id 21
+    dw String_0D_00_16 ; id 22
+    dw String_0D_00_17 ; id 23
+    dw String_0D_00_18 ; id 24
+    dw String_0D_00_19 ; id 25
+    dw String_0D_00_1A ; id 26
+    dw String_0D_00_1B ; id 27
+    dw String_0D_00_1C ; id 28
+    dw String_0D_00_1D ; id 29
+    dw String_0D_00_1E ; id 30
+    dw String_0D_00_1F ; id 31
+    dw String_0D_00_20 ; id 32
+    dw String_0D_00_21 ; id 33
+    dw String_0D_00_22 ; id 34
+    dw String_0D_00_23 ; id 35
+    dw String_0D_00_24 ; id 36
+    dw String_0D_00_25 ; id 37
+    dw String_0D_00_25 ; id 38
+    dw String_0D_00_25 ; id 39
+    dw String_0D_00_25 ; id 40
+    dw String_0D_00_29 ; id 41
+    dw String_0D_00_2A ; id 42
+    dw String_0D_00_2B ; id 43
+    dw String_0D_00_2C ; id 44
+    dw String_0D_00_2D ; id 45
+    dw String_0D_00_2E ; id 46
     dw EggServiceMenu ; id 47
 
-Data_00D_4078:: ; heuristic: string; C0
+String_0D_00_00:: ; heuristic: string; C0
+Data_00D_4078:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Welcome to the", $F1
     db "Key Shop.", $FA, $F7
     db $EF, $EE, "Do you need any", $EF, $EE, "keys appraised?", $F0
 
-Data_00D_40B8:: ; heuristic: string; C0
+String_0D_00_02:: ; heuristic: string; C0
+Data_00D_40B8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Okay. Come back if", $F1
     db "you find any Magic", $FA, $F7
     db $EF, $EE, "Keys.", $EF, $EE, $F7
     db $F0
 
-Data_00D_40EB:: ; heuristic: string; C0
+String_0D_00_03:: ; heuristic: string; C0
+Data_00D_40EB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Don't come if", $F1
     db "you have no keys.", $F7
     db $F0
 
-Data_00D_410E:: ; heuristic: string; C0
+String_0D_00_04:: ; heuristic: string; C0
+Data_00D_410E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Which key should", $F1
     db "I appraise?", $F7
     db $F0
 
-Data_00D_412D:: ; heuristic: string; C0
+String_0D_00_05:: ; heuristic: string; C0
+Data_00D_412D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Appraisal will", $F1
     db "cost ", $F9, "0G. OK?", $F0
 
-Data_00D_414D:: ; heuristic: string; C0
+String_0D_00_06:: ; heuristic: string; C0
+Data_00D_414D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Hah? I'm not", $F1
     db "appraising any", $FA, $F7
     db $EF, $EE, "key if you don't", $EF, $EE, "pay my fee.", $F7
     db $F0
 
-Data_00D_418C:: ; heuristic: string; C0
+String_0D_00_08:: ; heuristic: string; C0
+Data_00D_418C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Which Magic Key", $F1
     db "should I appraise?", $F0
 
-Data_00D_41B2:: ; heuristic: string; C0
+String_0D_00_09:: ; heuristic: string; C0
+Data_00D_41B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " That key's been", $F1
     db "appraised already.", $F7
     db $F0
 
-Data_00D_41D8:: ; heuristic: string; C0
+String_0D_00_0A:: ; heuristic: string; C0
+Data_00D_41D8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You have no more", $F1
     db "Magic Keys that", $FA, $F7
     db $EF, $EE, "need appraisal, it", $EF, $EE, "seems to me.", $F7
     db $F0
 
-Data_00D_4221:: ; heuristic: string; C0
+String_0D_00_0B:: ; heuristic: string; C0
+Data_00D_4221:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Should I save", $F1
     db "the results?", $F0
 
-Data_00D_423F:: ; heuristic: string; C0
+String_0D_00_0C:: ; heuristic: string; C0
+Data_00D_423F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Let's see the", $F1
     db "Magic Key, then.", $FA, $F7
@@ -145,115 +156,135 @@ Data_00D_423F:: ; heuristic: string; C0
     db $EF, $EE, "I got it! This is", $EF, $EE, "the ", $F9, "0!", $E5, "0", $E4, $D4, $F7
     db $E9, $FF, $F0
 
-Data_00D_42A0:: ; heuristic: string; C0
+String_0D_00_10:: ; heuristic: string; C0
+Data_00D_42A0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Ah, you have", $F1
     db "some TinyMedals?", $FA, $F7
     db $EF, $EE, "Let me relieve you", $EF, $EE, "of them.", $F7
     db $F0
 
-Data_00D_42E2:: ; heuristic: string; C0
+String_0D_00_12:: ; heuristic: string; C0
+Data_00D_42E2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " ", $A4, "But, I can't", $F1
     db "take this many.", $F7
     db $F0
 
-Data_00D_4303:: ; heuristic: string; C0
+String_0D_00_13:: ; heuristic: string; C0
+Data_00D_4303:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I have ", $F9, "0 of", $F1
     db "your TinyMedals.", $F7
     db $F0
 
-Data_00D_4325:: ; heuristic: string; C0
+String_0D_00_14:: ; heuristic: string; C0
+Data_00D_4325:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I hope you'll", $F1
     db "find many medals!", $F7
     db $F0
 
-Data_00D_4348:: ; heuristic: string; C0
+String_0D_00_15:: ; heuristic: string; C0
+Data_00D_4348:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Want to trade", $F1
     db "medals for prizes?", $F0
 
-Data_00D_436C:: ; heuristic: string; C0
+String_0D_00_16:: ; heuristic: string; C0
+Data_00D_436C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Which prize do", $F1
     db "you want?", $F0
 
-Data_00D_4388:: ; heuristic: string; C0
+String_0D_00_17:: ; heuristic: string; C0
+Data_00D_4388:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I'll trade for", $F1
     db $F9, "0 TinyMedals. OK?", $F0
 
-Data_00D_43AC:: ; heuristic: string; C0
+String_0D_00_18:: ; heuristic: string; C0
+Data_00D_43AC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " That requires", $F1
     db "more TinyMedals.", $F7
     db $F0
 
-Data_00D_43CF:: ; heuristic: string; C0
+String_0D_00_19:: ; heuristic: string; C0
+Data_00D_43CF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You don't have", $F1
     db "any room for that.", $F7
     db $F0
 
-Data_00D_43F4:: ; heuristic: string; C0
+String_0D_00_1A:: ; heuristic: string; C0
+Data_00D_43F4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Your key ring is", $F1
     db "already full.", $F7
     db $F0
 
-Data_00D_4417:: ; heuristic: string; C0
+String_0D_00_1B:: ; heuristic: string; C0
+Data_00D_4417:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You have no more", $F1
     db "room for monsters.", $F7
     db $F0
 
-Data_00D_443F:: ; heuristic: string; C0
+String_0D_00_1C:: ; heuristic: string; C0
+Data_00D_443F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Fine, we shall", $F1
     db "trade.", $F7
     db $F0
 
-Data_00D_4459:: ; heuristic: string; C0
+String_0D_00_1D:: ; heuristic: string; C0
+Data_00D_4459:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I'll send the egg", $F1
     db "to the farm.", $F7
     db $F0
 
-Data_00D_447B:: ; heuristic: string; C0
+String_0D_00_1E:: ; heuristic: string; C0
+Data_00D_447B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You can't take", $F1
     db "any more items.", $F7
     db $F0
 
-Data_00D_449D:: ; heuristic: string; C0
+String_0D_00_1F:: ; heuristic: string; C0
+Data_00D_449D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You can't hold any", $F1
     db "more keys.", $F7
     db $F0
 
-Data_00D_44BE:: ; heuristic: string; C0
+String_0D_00_20:: ; heuristic: string; C0
+Data_00D_44BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You have no more", $F1
     db "room for monsters.", $F7
     db $F0
 
-Data_00D_44E6:: ; heuristic: string; C0
+String_0D_00_21:: ; heuristic: string; C0
+Data_00D_44E6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Leads to another", $F1
     db "world.", $F0
 
-Data_00D_44FE:: ; heuristic: string; C0
+String_0D_00_22:: ; heuristic: string; C0
+Data_00D_44FE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames a monster by", $F1
     db "a great amount.", $F0
 
-Data_00D_4521:: ; heuristic: string; C0
+String_0D_00_23:: ; heuristic: string; C0
+Data_00D_4521:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0's egg.", $F0
 
-Data_00D_452A:: ; heuristic: string; C0
+String_0D_00_24:: ; heuristic: string; C0
+Data_00D_452A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " At minimum, you", $F1
     db "must have three", $FA, $F7
@@ -261,31 +292,38 @@ Data_00D_452A:: ; heuristic: string; C0
     db $EF, $EE, "I hope you'll find", $EF, $EE, "many medals!", $F7
     db $F0
 
-Data_00D_4599:: ; heuristic: string; C0
+String_0D_00_25:: ; heuristic: string; C0
+Data_00D_4599:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "MeteOrb", $F0
 
-Data_00D_45A1:: ; heuristic: string; C0
+String_0D_00_29:: ; heuristic: string; C0
+Data_00D_45A1:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "MadCat", $F0
 
-Data_00D_45A8:: ; heuristic: string; C0
+String_0D_00_2A:: ; heuristic: string; C0
+Data_00D_45A8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "HornBeet", $F0
 
-Data_00D_45B1:: ; heuristic: string; C0
+String_0D_00_2B:: ; heuristic: string; C0
+Data_00D_45B1:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "SkyDragon", $F0
 
-Data_00D_45BB:: ; heuristic: string; C0
+String_0D_00_2C:: ; heuristic: string; C0
+Data_00D_45BB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Octogon", $F0
 
-Data_00D_45C3:: ; heuristic: string; C0
+String_0D_00_2D:: ; heuristic: string; C0
+Data_00D_45C3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Servant", $F0
 
-Data_00D_45CB:: ; heuristic: string; C0
+String_0D_00_2E:: ; heuristic: string; C0
+Data_00D_45CB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Darck", $F0
 

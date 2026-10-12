@@ -20,263 +20,264 @@ Data_08A_4016:: ; address name
 ; record: string
 StringList_8A_4018::
 Data_08A_4018:: ; address name
-    dw Data_08A_4216 ; id 0
-    dw Data_08A_432E ; id 1
-    dw Data_08A_4428 ; id 2
-    dw Data_08A_4545 ; id 3
-    dw Data_08A_4657 ; id 4
-    dw Data_08A_4704 ; id 5
-    dw Data_08A_4704 ; id 6
-    dw Data_08A_4704 ; id 7
-    dw Data_08A_4704 ; id 8
-    dw Data_08A_486F ; id 9
-    dw Data_08A_49B2 ; id 10
-    dw Data_08A_4AEE ; id 11
-    dw Data_08A_4AEE ; id 12
-    dw Data_08A_4AEE ; id 13
-    dw Data_08A_4AEE ; id 14
-    dw Data_08A_4AEE ; id 15
-    dw Data_08A_4AEE ; id 16
-    dw Data_08A_4B79 ; id 17
-    dw Data_08A_4B79 ; id 18
-    dw Data_08A_4B79 ; id 19
-    dw Data_08A_4BFC ; id 20
-    dw Data_08A_4C75 ; id 21
-    dw Data_08A_4CB9 ; id 22
-    dw Data_08A_4D45 ; id 23
-    dw Data_08A_4D7D ; id 24
-    dw Data_08A_4DDE ; id 25
-    dw Data_08A_4E71 ; id 26
-    dw Data_08A_4EB8 ; id 27
-    dw Data_08A_4F54 ; id 28
-    dw Data_08A_4FBB ; id 29
-    dw Data_08A_5022 ; id 30
-    dw Data_08A_505C ; id 31
-    dw Data_08A_50C3 ; id 32
-    dw Data_08A_50F4 ; id 33
-    dw Data_08A_5125 ; id 34
-    dw Data_08A_515A ; id 35
-    dw Data_08A_517F ; id 36
-    dw Data_08A_51A1 ; id 37
-    dw Data_08A_51C6 ; id 38
-    dw Data_08A_51E9 ; id 39
-    dw Data_08A_5228 ; id 40
-    dw Data_08A_526C ; id 41
-    dw Data_08A_52A9 ; id 42
-    dw Data_08A_52E0 ; id 43
-    dw Data_08A_52E0 ; id 44
-    dw Data_08A_52E0 ; id 45
-    dw Data_08A_52E0 ; id 46
-    dw Data_08A_52E0 ; id 47
-    dw Data_08A_52E0 ; id 48
-    dw Data_08A_52E0 ; id 49
-    dw Data_08A_52E0 ; id 50
-    dw Data_08A_52E0 ; id 51
-    dw Data_08A_52E0 ; id 52
-    dw Data_08A_52E0 ; id 53
-    dw Data_08A_52E0 ; id 54
-    dw Data_08A_52E0 ; id 55
-    dw Data_08A_52E0 ; id 56
-    dw Data_08A_52E0 ; id 57
-    dw Data_08A_52E0 ; id 58
-    dw Data_08A_52E0 ; id 59
-    dw Data_08A_52E0 ; id 60
-    dw Data_08A_52E0 ; id 61
-    dw Data_08A_52E0 ; id 62
-    dw Data_08A_52E0 ; id 63
-    dw Data_08A_52E0 ; id 64
-    dw Data_08A_52E0 ; id 65
-    dw Data_08A_52E0 ; id 66
-    dw Data_08A_52E0 ; id 67
-    dw Data_08A_52E0 ; id 68
-    dw Data_08A_52E0 ; id 69
-    dw Data_08A_52E0 ; id 70
-    dw Data_08A_52E0 ; id 71
-    dw Data_08A_52E0 ; id 72
-    dw Data_08A_52E0 ; id 73
-    dw Data_08A_52E0 ; id 74
-    dw Data_08A_52E0 ; id 75
-    dw Data_08A_52E0 ; id 76
-    dw Data_08A_52E0 ; id 77
-    dw Data_08A_52E0 ; id 78
-    dw Data_08A_52E0 ; id 79
-    dw Data_08A_52E0 ; id 80
-    dw Data_08A_52E0 ; id 81
-    dw Data_08A_52E0 ; id 82
-    dw Data_08A_52E0 ; id 83
-    dw Data_08A_52E0 ; id 84
-    dw Data_08A_52E0 ; id 85
-    dw Data_08A_52E0 ; id 86
-    dw Data_08A_52E0 ; id 87
-    dw Data_08A_52E0 ; id 88
-    dw Data_08A_52E0 ; id 89
-    dw Data_08A_52E0 ; id 90
-    dw Data_08A_52E0 ; id 91
-    dw Data_08A_52E0 ; id 92
-    dw Data_08A_52E0 ; id 93
-    dw Data_08A_52E0 ; id 94
-    dw Data_08A_52E0 ; id 95
-    dw Data_08A_52E0 ; id 96
-    dw Data_08A_52E0 ; id 97
-    dw Data_08A_52E0 ; id 98
-    dw Data_08A_52E0 ; id 99
-    dw Data_08A_52E0 ; id 100
-    dw Data_08A_52E0 ; id 101
-    dw Data_08A_52E0 ; id 102
-    dw Data_08A_52E0 ; id 103
-    dw Data_08A_52E0 ; id 104
-    dw Data_08A_52E0 ; id 105
-    dw Data_08A_52E0 ; id 106
-    dw Data_08A_52E0 ; id 107
-    dw Data_08A_52E0 ; id 108
-    dw Data_08A_52E0 ; id 109
-    dw Data_08A_52E0 ; id 110
-    dw Data_08A_52E0 ; id 111
-    dw Data_08A_52E0 ; id 112
-    dw Data_08A_52E0 ; id 113
-    dw Data_08A_52E0 ; id 114
-    dw Data_08A_52E0 ; id 115
-    dw Data_08A_52E0 ; id 116
-    dw Data_08A_52E0 ; id 117
-    dw Data_08A_52E0 ; id 118
-    dw Data_08A_52E0 ; id 119
-    dw Data_08A_52E0 ; id 120
-    dw Data_08A_52E0 ; id 121
-    dw Data_08A_52E0 ; id 122
-    dw Data_08A_52E0 ; id 123
-    dw Data_08A_52E0 ; id 124
-    dw Data_08A_52E0 ; id 125
-    dw Data_08A_52E0 ; id 126
-    dw Data_08A_52E0 ; id 127
-    dw Data_08A_52E0 ; id 128
-    dw Data_08A_52E0 ; id 129
-    dw Data_08A_52E0 ; id 130
-    dw Data_08A_52E0 ; id 131
-    dw Data_08A_52E0 ; id 132
-    dw Data_08A_52E0 ; id 133
-    dw Data_08A_52E0 ; id 134
-    dw Data_08A_52E0 ; id 135
-    dw Data_08A_52E0 ; id 136
-    dw Data_08A_52E0 ; id 137
-    dw Data_08A_52E0 ; id 138
-    dw Data_08A_52E0 ; id 139
-    dw Data_08A_52E0 ; id 140
-    dw Data_08A_52E0 ; id 141
-    dw Data_08A_52E0 ; id 142
-    dw Data_08A_52E0 ; id 143
-    dw Data_08A_52E0 ; id 144
-    dw Data_08A_52E0 ; id 145
-    dw Data_08A_52E0 ; id 146
-    dw Data_08A_52E0 ; id 147
-    dw Data_08A_52E0 ; id 148
-    dw Data_08A_52E0 ; id 149
-    dw Data_08A_52E0 ; id 150
-    dw Data_08A_52E0 ; id 151
-    dw Data_08A_52E0 ; id 152
-    dw Data_08A_52E0 ; id 153
-    dw Data_08A_52E0 ; id 154
-    dw Data_08A_52E0 ; id 155
-    dw Data_08A_52E0 ; id 156
-    dw Data_08A_52E0 ; id 157
-    dw Data_08A_52E0 ; id 158
-    dw Data_08A_52E0 ; id 159
-    dw Data_08A_52E0 ; id 160
-    dw Data_08A_52E0 ; id 161
-    dw Data_08A_52E0 ; id 162
-    dw Data_08A_52E0 ; id 163
-    dw Data_08A_52E0 ; id 164
-    dw Data_08A_52E0 ; id 165
-    dw Data_08A_52E0 ; id 166
-    dw Data_08A_52E0 ; id 167
-    dw Data_08A_52E0 ; id 168
-    dw Data_08A_52E0 ; id 169
-    dw Data_08A_52E0 ; id 170
-    dw Data_08A_52E0 ; id 171
-    dw Data_08A_52E0 ; id 172
-    dw Data_08A_52E0 ; id 173
-    dw Data_08A_52E0 ; id 174
-    dw Data_08A_52E0 ; id 175
-    dw Data_08A_52E0 ; id 176
-    dw Data_08A_52E0 ; id 177
-    dw Data_08A_52E0 ; id 178
-    dw Data_08A_52E0 ; id 179
-    dw Data_08A_52E0 ; id 180
-    dw Data_08A_52E0 ; id 181
-    dw Data_08A_52E0 ; id 182
-    dw Data_08A_52E0 ; id 183
-    dw Data_08A_52E0 ; id 184
-    dw Data_08A_52E0 ; id 185
-    dw Data_08A_52E0 ; id 186
-    dw Data_08A_52E0 ; id 187
-    dw Data_08A_52E0 ; id 188
-    dw Data_08A_52E0 ; id 189
-    dw Data_08A_52E0 ; id 190
-    dw Data_08A_52E0 ; id 191
-    dw Data_08A_52E0 ; id 192
-    dw Data_08A_52E0 ; id 193
-    dw Data_08A_52E0 ; id 194
-    dw Data_08A_52E0 ; id 195
-    dw Data_08A_52E0 ; id 196
-    dw Data_08A_52E0 ; id 197
-    dw Data_08A_52E0 ; id 198
-    dw Data_08A_52E0 ; id 199
-    dw Data_08A_52E0 ; id 200
-    dw Data_08A_52E0 ; id 201
-    dw Data_08A_52E0 ; id 202
-    dw Data_08A_52E0 ; id 203
-    dw Data_08A_52E0 ; id 204
-    dw Data_08A_52E0 ; id 205
-    dw Data_08A_52E0 ; id 206
-    dw Data_08A_52E0 ; id 207
-    dw Data_08A_52E0 ; id 208
-    dw Data_08A_52E0 ; id 209
-    dw Data_08A_52E0 ; id 210
-    dw Data_08A_52E0 ; id 211
-    dw Data_08A_52E0 ; id 212
-    dw Data_08A_52E0 ; id 213
-    dw Data_08A_52E0 ; id 214
-    dw Data_08A_52E0 ; id 215
-    dw Data_08A_52E0 ; id 216
-    dw Data_08A_52E0 ; id 217
-    dw Data_08A_52E0 ; id 218
-    dw Data_08A_52E0 ; id 219
-    dw Data_08A_52E0 ; id 220
-    dw Data_08A_52E0 ; id 221
-    dw Data_08A_52E0 ; id 222
-    dw Data_08A_52E0 ; id 223
-    dw Data_08A_52E0 ; id 224
-    dw Data_08A_52E0 ; id 225
-    dw Data_08A_52E0 ; id 226
-    dw Data_08A_52E0 ; id 227
-    dw Data_08A_52E0 ; id 228
-    dw Data_08A_52E0 ; id 229
-    dw Data_08A_52E0 ; id 230
-    dw Data_08A_52E0 ; id 231
-    dw Data_08A_52E0 ; id 232
-    dw Data_08A_52E0 ; id 233
-    dw Data_08A_52E0 ; id 234
-    dw Data_08A_52E0 ; id 235
-    dw Data_08A_52E0 ; id 236
-    dw Data_08A_52E0 ; id 237
-    dw Data_08A_52E0 ; id 238
-    dw Data_08A_52E0 ; id 239
-    dw Data_08A_52E0 ; id 240
-    dw Data_08A_52E0 ; id 241
-    dw Data_08A_52E0 ; id 242
-    dw Data_08A_52E0 ; id 243
-    dw Data_08A_52E0 ; id 244
-    dw Data_08A_52E0 ; id 245
-    dw Data_08A_52E0 ; id 246
-    dw Data_08A_52E0 ; id 247
-    dw Data_08A_52E0 ; id 248
-    dw Data_08A_52E0 ; id 249
-    dw Data_08A_52E0 ; id 250
-    dw Data_08A_52E0 ; id 251
-    dw Data_08A_52E0 ; id 252
-    dw Data_08A_52E0 ; id 253
-    dw Data_08A_52E0 ; id 254
+    dw String_8A_00_00 ; id 0
+    dw String_8A_00_01 ; id 1
+    dw String_8A_00_02 ; id 2
+    dw String_8A_00_03 ; id 3
+    dw String_8A_00_04 ; id 4
+    dw String_8A_00_05 ; id 5
+    dw String_8A_00_05 ; id 6
+    dw String_8A_00_05 ; id 7
+    dw String_8A_00_05 ; id 8
+    dw String_8A_00_09 ; id 9
+    dw String_8A_00_0A ; id 10
+    dw String_8A_00_0B ; id 11
+    dw String_8A_00_0B ; id 12
+    dw String_8A_00_0B ; id 13
+    dw String_8A_00_0B ; id 14
+    dw String_8A_00_0B ; id 15
+    dw String_8A_00_0B ; id 16
+    dw String_8A_00_11 ; id 17
+    dw String_8A_00_11 ; id 18
+    dw String_8A_00_11 ; id 19
+    dw String_8A_00_14 ; id 20
+    dw String_8A_00_15 ; id 21
+    dw String_8A_00_16 ; id 22
+    dw String_8A_00_17 ; id 23
+    dw String_8A_00_18 ; id 24
+    dw String_8A_00_19 ; id 25
+    dw String_8A_00_1A ; id 26
+    dw String_8A_00_1B ; id 27
+    dw String_8A_00_1C ; id 28
+    dw String_8A_00_1D ; id 29
+    dw String_8A_00_1E ; id 30
+    dw String_8A_00_1F ; id 31
+    dw String_8A_00_20 ; id 32
+    dw String_8A_00_21 ; id 33
+    dw String_8A_00_22 ; id 34
+    dw String_8A_00_23 ; id 35
+    dw String_8A_00_24 ; id 36
+    dw String_8A_00_25 ; id 37
+    dw String_8A_00_26 ; id 38
+    dw String_8A_00_27 ; id 39
+    dw String_8A_00_28 ; id 40
+    dw String_8A_00_29 ; id 41
+    dw String_8A_00_2A ; id 42
+    dw String_8A_00_2B ; id 43
+    dw String_8A_00_2B ; id 44
+    dw String_8A_00_2B ; id 45
+    dw String_8A_00_2B ; id 46
+    dw String_8A_00_2B ; id 47
+    dw String_8A_00_2B ; id 48
+    dw String_8A_00_2B ; id 49
+    dw String_8A_00_2B ; id 50
+    dw String_8A_00_2B ; id 51
+    dw String_8A_00_2B ; id 52
+    dw String_8A_00_2B ; id 53
+    dw String_8A_00_2B ; id 54
+    dw String_8A_00_2B ; id 55
+    dw String_8A_00_2B ; id 56
+    dw String_8A_00_2B ; id 57
+    dw String_8A_00_2B ; id 58
+    dw String_8A_00_2B ; id 59
+    dw String_8A_00_2B ; id 60
+    dw String_8A_00_2B ; id 61
+    dw String_8A_00_2B ; id 62
+    dw String_8A_00_2B ; id 63
+    dw String_8A_00_2B ; id 64
+    dw String_8A_00_2B ; id 65
+    dw String_8A_00_2B ; id 66
+    dw String_8A_00_2B ; id 67
+    dw String_8A_00_2B ; id 68
+    dw String_8A_00_2B ; id 69
+    dw String_8A_00_2B ; id 70
+    dw String_8A_00_2B ; id 71
+    dw String_8A_00_2B ; id 72
+    dw String_8A_00_2B ; id 73
+    dw String_8A_00_2B ; id 74
+    dw String_8A_00_2B ; id 75
+    dw String_8A_00_2B ; id 76
+    dw String_8A_00_2B ; id 77
+    dw String_8A_00_2B ; id 78
+    dw String_8A_00_2B ; id 79
+    dw String_8A_00_2B ; id 80
+    dw String_8A_00_2B ; id 81
+    dw String_8A_00_2B ; id 82
+    dw String_8A_00_2B ; id 83
+    dw String_8A_00_2B ; id 84
+    dw String_8A_00_2B ; id 85
+    dw String_8A_00_2B ; id 86
+    dw String_8A_00_2B ; id 87
+    dw String_8A_00_2B ; id 88
+    dw String_8A_00_2B ; id 89
+    dw String_8A_00_2B ; id 90
+    dw String_8A_00_2B ; id 91
+    dw String_8A_00_2B ; id 92
+    dw String_8A_00_2B ; id 93
+    dw String_8A_00_2B ; id 94
+    dw String_8A_00_2B ; id 95
+    dw String_8A_00_2B ; id 96
+    dw String_8A_00_2B ; id 97
+    dw String_8A_00_2B ; id 98
+    dw String_8A_00_2B ; id 99
+    dw String_8A_00_2B ; id 100
+    dw String_8A_00_2B ; id 101
+    dw String_8A_00_2B ; id 102
+    dw String_8A_00_2B ; id 103
+    dw String_8A_00_2B ; id 104
+    dw String_8A_00_2B ; id 105
+    dw String_8A_00_2B ; id 106
+    dw String_8A_00_2B ; id 107
+    dw String_8A_00_2B ; id 108
+    dw String_8A_00_2B ; id 109
+    dw String_8A_00_2B ; id 110
+    dw String_8A_00_2B ; id 111
+    dw String_8A_00_2B ; id 112
+    dw String_8A_00_2B ; id 113
+    dw String_8A_00_2B ; id 114
+    dw String_8A_00_2B ; id 115
+    dw String_8A_00_2B ; id 116
+    dw String_8A_00_2B ; id 117
+    dw String_8A_00_2B ; id 118
+    dw String_8A_00_2B ; id 119
+    dw String_8A_00_2B ; id 120
+    dw String_8A_00_2B ; id 121
+    dw String_8A_00_2B ; id 122
+    dw String_8A_00_2B ; id 123
+    dw String_8A_00_2B ; id 124
+    dw String_8A_00_2B ; id 125
+    dw String_8A_00_2B ; id 126
+    dw String_8A_00_2B ; id 127
+    dw String_8A_00_2B ; id 128
+    dw String_8A_00_2B ; id 129
+    dw String_8A_00_2B ; id 130
+    dw String_8A_00_2B ; id 131
+    dw String_8A_00_2B ; id 132
+    dw String_8A_00_2B ; id 133
+    dw String_8A_00_2B ; id 134
+    dw String_8A_00_2B ; id 135
+    dw String_8A_00_2B ; id 136
+    dw String_8A_00_2B ; id 137
+    dw String_8A_00_2B ; id 138
+    dw String_8A_00_2B ; id 139
+    dw String_8A_00_2B ; id 140
+    dw String_8A_00_2B ; id 141
+    dw String_8A_00_2B ; id 142
+    dw String_8A_00_2B ; id 143
+    dw String_8A_00_2B ; id 144
+    dw String_8A_00_2B ; id 145
+    dw String_8A_00_2B ; id 146
+    dw String_8A_00_2B ; id 147
+    dw String_8A_00_2B ; id 148
+    dw String_8A_00_2B ; id 149
+    dw String_8A_00_2B ; id 150
+    dw String_8A_00_2B ; id 151
+    dw String_8A_00_2B ; id 152
+    dw String_8A_00_2B ; id 153
+    dw String_8A_00_2B ; id 154
+    dw String_8A_00_2B ; id 155
+    dw String_8A_00_2B ; id 156
+    dw String_8A_00_2B ; id 157
+    dw String_8A_00_2B ; id 158
+    dw String_8A_00_2B ; id 159
+    dw String_8A_00_2B ; id 160
+    dw String_8A_00_2B ; id 161
+    dw String_8A_00_2B ; id 162
+    dw String_8A_00_2B ; id 163
+    dw String_8A_00_2B ; id 164
+    dw String_8A_00_2B ; id 165
+    dw String_8A_00_2B ; id 166
+    dw String_8A_00_2B ; id 167
+    dw String_8A_00_2B ; id 168
+    dw String_8A_00_2B ; id 169
+    dw String_8A_00_2B ; id 170
+    dw String_8A_00_2B ; id 171
+    dw String_8A_00_2B ; id 172
+    dw String_8A_00_2B ; id 173
+    dw String_8A_00_2B ; id 174
+    dw String_8A_00_2B ; id 175
+    dw String_8A_00_2B ; id 176
+    dw String_8A_00_2B ; id 177
+    dw String_8A_00_2B ; id 178
+    dw String_8A_00_2B ; id 179
+    dw String_8A_00_2B ; id 180
+    dw String_8A_00_2B ; id 181
+    dw String_8A_00_2B ; id 182
+    dw String_8A_00_2B ; id 183
+    dw String_8A_00_2B ; id 184
+    dw String_8A_00_2B ; id 185
+    dw String_8A_00_2B ; id 186
+    dw String_8A_00_2B ; id 187
+    dw String_8A_00_2B ; id 188
+    dw String_8A_00_2B ; id 189
+    dw String_8A_00_2B ; id 190
+    dw String_8A_00_2B ; id 191
+    dw String_8A_00_2B ; id 192
+    dw String_8A_00_2B ; id 193
+    dw String_8A_00_2B ; id 194
+    dw String_8A_00_2B ; id 195
+    dw String_8A_00_2B ; id 196
+    dw String_8A_00_2B ; id 197
+    dw String_8A_00_2B ; id 198
+    dw String_8A_00_2B ; id 199
+    dw String_8A_00_2B ; id 200
+    dw String_8A_00_2B ; id 201
+    dw String_8A_00_2B ; id 202
+    dw String_8A_00_2B ; id 203
+    dw String_8A_00_2B ; id 204
+    dw String_8A_00_2B ; id 205
+    dw String_8A_00_2B ; id 206
+    dw String_8A_00_2B ; id 207
+    dw String_8A_00_2B ; id 208
+    dw String_8A_00_2B ; id 209
+    dw String_8A_00_2B ; id 210
+    dw String_8A_00_2B ; id 211
+    dw String_8A_00_2B ; id 212
+    dw String_8A_00_2B ; id 213
+    dw String_8A_00_2B ; id 214
+    dw String_8A_00_2B ; id 215
+    dw String_8A_00_2B ; id 216
+    dw String_8A_00_2B ; id 217
+    dw String_8A_00_2B ; id 218
+    dw String_8A_00_2B ; id 219
+    dw String_8A_00_2B ; id 220
+    dw String_8A_00_2B ; id 221
+    dw String_8A_00_2B ; id 222
+    dw String_8A_00_2B ; id 223
+    dw String_8A_00_2B ; id 224
+    dw String_8A_00_2B ; id 225
+    dw String_8A_00_2B ; id 226
+    dw String_8A_00_2B ; id 227
+    dw String_8A_00_2B ; id 228
+    dw String_8A_00_2B ; id 229
+    dw String_8A_00_2B ; id 230
+    dw String_8A_00_2B ; id 231
+    dw String_8A_00_2B ; id 232
+    dw String_8A_00_2B ; id 233
+    dw String_8A_00_2B ; id 234
+    dw String_8A_00_2B ; id 235
+    dw String_8A_00_2B ; id 236
+    dw String_8A_00_2B ; id 237
+    dw String_8A_00_2B ; id 238
+    dw String_8A_00_2B ; id 239
+    dw String_8A_00_2B ; id 240
+    dw String_8A_00_2B ; id 241
+    dw String_8A_00_2B ; id 242
+    dw String_8A_00_2B ; id 243
+    dw String_8A_00_2B ; id 244
+    dw String_8A_00_2B ; id 245
+    dw String_8A_00_2B ; id 246
+    dw String_8A_00_2B ; id 247
+    dw String_8A_00_2B ; id 248
+    dw String_8A_00_2B ; id 249
+    dw String_8A_00_2B ; id 250
+    dw String_8A_00_2B ; id 251
+    dw String_8A_00_2B ; id 252
+    dw String_8A_00_2B ; id 253
+    dw String_8A_00_2B ; id 254
 
-Data_08A_4216:: ; heuristic: string; C0
+String_8A_00_00:: ; heuristic: string; C0
+Data_08A_4216:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I'll tell you", $F1
     db "about this great", $FA, $F7
@@ -289,7 +290,8 @@ Data_08A_4216:: ; heuristic: string; C0
     db $EF, $EE, $A4, "Wait, how", $44, " the", $EF, $EE, "rest of it go?", $F7
     db $F0
 
-Data_08A_432E:: ; heuristic: string; C0
+String_8A_00_01:: ; heuristic: string; C0
+Data_08A_432E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Hey, do you know", $F1
     db "this tale? Listen!", $FA, $F7
@@ -301,7 +303,8 @@ Data_08A_432E:: ; heuristic: string; C0
     db $EF, $EE, "What do you think?", $EF, $EE, "Pretty scary, eh?", $F7
     db $F0
 
-Data_08A_4428:: ; heuristic: string; C0
+String_8A_00_02:: ; heuristic: string; C0
+Data_08A_4428:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Want to hear", $F1
     db "about a story I", $FA, $F7
@@ -315,7 +318,8 @@ Data_08A_4428:: ; heuristic: string; C0
     db $EF, $EE, "Oooh, I thought it", $EF, $EE, "was so scary!", $F7
     db $F0
 
-Data_08A_4545:: ; heuristic: string; C0
+String_8A_00_03:: ; heuristic: string; C0
+Data_08A_4545:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Let me recount", $F1
     db "this ancient lore", $A4, $FA, $F7
@@ -328,7 +332,8 @@ Data_08A_4545:: ; heuristic: string; C0
     db $EF, $EE, "like the dead is", $EF, $EE, "all about.", $F7
     db $F0
 
-Data_08A_4657:: ; heuristic: string; C0
+String_8A_00_04:: ; heuristic: string; C0
+Data_08A_4657:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Long ago, there", $F1
     db "were books titled", $FA, $F7
@@ -338,7 +343,8 @@ Data_08A_4657:: ; heuristic: string; C0
     db $EF, $EE, "I wonder if anyone", $EF, $EE, "remembers them?", $F7
     db $F0
 
-Data_08A_4704:: ; heuristic: string; C0
+String_8A_00_05:: ; heuristic: string; C0
+Data_08A_4704:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Hey, did you", $F1
     db "know?", $FA, $F7
@@ -353,7 +359,8 @@ Data_08A_4704:: ; heuristic: string; C0
     db $EF, $EE, "you need to defeat", $EF, $EE, "the area bosses.", $F7
     db $F0
 
-Data_08A_486F:: ; heuristic: string; C0
+String_8A_00_09:: ; heuristic: string; C0
+Data_08A_486F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " If you visit any", $F1
     db "world using an", $FA, $F7
@@ -367,7 +374,8 @@ Data_08A_486F:: ; heuristic: string; C0
     db $EF, $EE, "you, defeat the", $EF, $EE, "area bosses.", $F7
     db $F0
 
-Data_08A_49B2:: ; heuristic: string; C0
+String_8A_00_0A:: ; heuristic: string; C0
+Data_08A_49B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " In every world", $F1
     db "visited using an", $FA, $F7
@@ -381,7 +389,8 @@ Data_08A_49B2:: ; heuristic: string; C0
     db $EF, $EE, "first to befriend", $EF, $EE, "wild monsters.", $F7
     db $F0
 
-Data_08A_4AEE:: ; heuristic: string; C0
+String_8A_00_0B:: ; heuristic: string; C0
+Data_08A_4AEE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " There should be", $F1
     db "a castle in which", $FA, $F7
@@ -390,7 +399,8 @@ Data_08A_4AEE:: ; heuristic: string; C0
     db $EF, $EE, "boss, and won't", $EF, $EE, "become tame", $A4, $F7
     db $F0
 
-Data_08A_4B79:: ; heuristic: string; C0
+String_8A_00_11:: ; heuristic: string; C0
+Data_08A_4B79:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Monsters you", $F1
     db "beat in battle", $FA, $F7
@@ -399,7 +409,8 @@ Data_08A_4B79:: ; heuristic: string; C0
     db $EF, $EE, "companion-if you", $EF, $EE, "can get one.", $F7
     db $F0
 
-Data_08A_4BFC:: ; heuristic: string; C0
+String_8A_00_14:: ; heuristic: string; C0
+Data_08A_4BFC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Monsters you", $F1
     db "beat in battle", $FA, $F7
@@ -408,14 +419,16 @@ Data_08A_4BFC:: ; heuristic: string; C0
     db $EF, $EE, "before that can", $EF, $EE, "happen.", $F7
     db $F0
 
-Data_08A_4C75:: ; heuristic: string; C0
+String_8A_00_15:: ; heuristic: string; C0
+Data_08A_4C75:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Traveling with", $F1
     db "monsters?", $FA, $F7
     db $EF, $EE, "That takes a good", $EF, $EE, "deal of courage.", $F7
     db $F0
 
-Data_08A_4CB9:: ; heuristic: string; C0
+String_8A_00_16:: ; heuristic: string; C0
+Data_08A_4CB9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You're so young", $F1
     db "and small, but", $FA, $F7
@@ -424,14 +437,16 @@ Data_08A_4CB9:: ; heuristic: string; C0
     db $EF, $EE, "thing or two from", $EF, $EE, "you!", $F7
     db $F0
 
-Data_08A_4D45:: ; heuristic: string; C0
+String_8A_00_17:: ; heuristic: string; C0
+Data_08A_4D45:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " The Castle is", $F1
     db "safe.", $FA, $F7
     db $EF, $EE, "Relax, and enjoy", $EF, $EE, "your stay.", $F7
     db $F0
 
-Data_08A_4D7D:: ; heuristic: string; C0
+String_8A_00_18:: ; heuristic: string; C0
+Data_08A_4D7D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Do you know of", $F1
     db "the MeteOrb?", $FA, $F7
@@ -439,7 +454,8 @@ Data_08A_4D7D:: ; heuristic: string; C0
     db $EF, $EE, "with a monster's", $EF, $EE, "mistrust.", $F7
     db $F0
 
-Data_08A_4DDE:: ; heuristic: string; C0
+String_8A_00_19:: ; heuristic: string; C0
+Data_08A_4DDE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " The last monster", $F1
     db "you beat in battle", $FA, $F7
@@ -448,14 +464,16 @@ Data_08A_4DDE:: ; heuristic: string; C0
     db $EF, $EE, "you might consider", $EF, $EE, "healing it.", $F7
     db $F0
 
-Data_08A_4E71:: ; heuristic: string; C0
+String_8A_00_1A:: ; heuristic: string; C0
+Data_08A_4E71:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " There's a monster", $F1
     db "that's skilled at", $FA, $F7
     db $EF, $EE, "attracting the", $EF, $EE, "opposite sex.", $F7
     db $F0
 
-Data_08A_4EB8:: ; heuristic: string; C0
+String_8A_00_1B:: ; heuristic: string; C0
+Data_08A_4EB8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " If you want to", $F1
     db "befriend monsters,", $FA, $F7
@@ -464,7 +482,8 @@ Data_08A_4EB8:: ; heuristic: string; C0
     db $EF, $EE, "the quality of the", $EF, $EE, "meat, you see.", $F7
     db $F0
 
-Data_08A_4F54:: ; heuristic: string; C0
+String_8A_00_1C:: ; heuristic: string; C0
+Data_08A_4F54:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I met a traveler", $F1
     db "who had monsters", $FA, $F7
@@ -472,7 +491,8 @@ Data_08A_4F54:: ; heuristic: string; C0
     db $EF, $EE, "Those monsters", $EF, $EE, "looked fearsome!", $F7
     db $F0
 
-Data_08A_4FBB:: ; heuristic: string; C0
+String_8A_00_1D:: ; heuristic: string; C0
+Data_08A_4FBB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I met a traveler", $F1
     db "who had monsters", $FA, $F7
@@ -480,14 +500,16 @@ Data_08A_4FBB:: ; heuristic: string; C0
     db $EF, $EE, "They used skills", $EF, $EE, "I", $44, " never seen.", $F7
     db $F0
 
-Data_08A_5022:: ; heuristic: string; C0
+String_8A_00_1E:: ; heuristic: string; C0
+Data_08A_5022:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " If you ignore", $F1
     db "them, monsters", $FA, $F7
     db $EF, $EE, "will ignore you", $EF, $EE, "too.", $F7
     db $F0
 
-Data_08A_505C:: ; heuristic: string; C0
+String_8A_00_1F:: ; heuristic: string; C0
+Data_08A_505C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " While we do get", $F1
     db "travelers here,", $FA, $F7
@@ -495,79 +517,91 @@ Data_08A_505C:: ; heuristic: string; C0
     db $EF, $EE, "It was a boy", $A4, $EF, $EE, "Terry, I think.", $F7
     db $F0
 
-Data_08A_50C3:: ; heuristic: string; C0
+String_8A_00_20:: ; heuristic: string; C0
+Data_08A_50C3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 peered into", $F1
     db "the vase.", $FA, $F7
     db $EF, $EE, "But it was empty.", $EF, $EE, $F7
     db $F0
 
-Data_08A_50F4:: ; heuristic: string; C0
+String_8A_00_21:: ; heuristic: string; C0
+Data_08A_50F4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 peered into", $F1
     db "the oven.", $FA, $F7
     db $EF, $EE, "But it was empty.", $EF, $EE, $F7
     db $F0
 
-Data_08A_5125:: ; heuristic: string; C0
+String_8A_00_22:: ; heuristic: string; C0
+Data_08A_5125:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 tried to", $F1
     db "open the chest.", $FA, $F7
     db $EF, $EE, "But it was locked.", $EF, $EE, $F7
     db $F0
 
-Data_08A_515A:: ; heuristic: string; C0
+String_8A_00_23:: ; heuristic: string; C0
+Data_08A_515A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Hello! How may I", $F1
     db "help you today?", $F7
     db $F0
 
-Data_08A_517F:: ; heuristic: string; C0
+String_8A_00_24:: ; heuristic: string; C0
+Data_08A_517F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Welcome to the", $F1
     db "traveler's inn!", $F7
     db $F0
 
-Data_08A_51A1:: ; heuristic: string; C0
+String_8A_00_25:: ; heuristic: string; C0
+Data_08A_51A1:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Let me see what", $F1
     db "you are made of!", $F7
     db $F0
 
-Data_08A_51C6:: ; heuristic: string; C0
+String_8A_00_26:: ; heuristic: string; C0
+Data_08A_51C6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " You'll have to", $F1
     db "beat me to pass!", $F7
     db $F0
 
-Data_08A_51E9:: ; heuristic: string; C0
+String_8A_00_27:: ; heuristic: string; C0
+Data_08A_51E9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I am a servant", $F1
     db "of the Gods.", $FA, $F7
     db $EF, $EE, "How may I serve", $EF, $EE, "you today?", $F7
     db $F0
 
-Data_08A_5228:: ; heuristic: string; C0
+String_8A_00_28:: ; heuristic: string; C0
+Data_08A_5228:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Welcome to the", $F1
     db "traveler's inn!", $FA, $F7
     db $EF, $EE, "The view here is", $EF, $EE, "magnificent!", $F7
     db $F0
 
-Data_08A_526C:: ; heuristic: string; C0
+String_8A_00_29:: ; heuristic: string; C0
+Data_08A_526C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The evil force", $F1
     db "enshrouding the", $FA, $F7
     db $EF, $EE, "entire world faded", $EF, $EE, "away!", $F7
     db $F0
 
-Data_08A_52A9:: ; heuristic: string; C0
+String_8A_00_2A:: ; heuristic: string; C0
+Data_08A_52A9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The evil force", $F1
     db "covering the", $FA, $F7
     db $EF, $EE, "continent faded", $EF, $EE, "away!", $F7
     db $F0
 
-Data_08A_52E0:: ; heuristic: string; C0
+String_8A_00_2B:: ; heuristic: string; C0
+Data_08A_52E0:: ; address name
     db $F0
     ds $2D1F, $00
