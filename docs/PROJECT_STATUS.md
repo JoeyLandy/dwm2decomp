@@ -55,9 +55,9 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-12, after E-0262)
+## Readability state (2026-10-12, after E-0267)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run340; 160 tests, 3 skipped). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run348; 160 tests, 3 skipped). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -65,10 +65,11 @@ Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/ru
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 |
 | Code labels | 9,450: 5,495 structural; dispatchers named by caller rather than address (RunLinkSession and its eight exchanges, E-0259/E-0260); (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), all prefixed by a named parent (E-0245: no `Func_BBB_AAAA_CaseNN` left); 151 still spelling a RAM address (E-0155) |
 | `INCBIN` without an asset comment | 0 (build/measure2.py, E-0240/E-0241) |
-| Data labels with only an address name | 1,325 (from 12,533 before E-0249). Labelled by identity: 6,175 strings (`Message_GG_II` = message word $GGII, `MessageBank0E_II`, `String_BB_CC_II`); 2,352 map screen streams and 732 key-world chunk screens by position; key-world rooms; 218 sound tracks; species records, item descriptions and default names by monster, item and family (E-0249 to E-0256). Most of the rest are same-bank loads whose comment names their readers |
+| Data labels with only an address name | 1,029 (from 12,533 before E-0249). Labelled by identity: 6,175 strings (`Message_GG_II` = message word $GGII, `MessageBank0E_II`, `String_BB_CC_II`); 2,352 map screen streams and 732 key-world chunk screens by position; key-world rooms; 218 sound tracks; species records, item descriptions and default names by monster, item and family; skill prerequisite lists by skill; SGB packets by command; RAM init blocks, streams and bank-copy sources by destination (E-0249 to E-0267). Most of the rest are same-bank loads whose comment names their readers |
 | Event scripts | 3,580 script lines. Every opcode with inline bytes has a named macro (E-0242). All 176 command types used are named constants: menus (`SCRIPT_SHOP`, `SCRIPT_BREED`, ...), actions (`SCRIPT_GIVE_MONSTER`, `SCRIPT_TAKE_ITEM`, ...), cutscene steps `SCRIPT_SCENE_*` named after their scene, and key-world talk events `SCRIPT_TALKGG_CC` (E-0244 to E-0246) |
 | Tables | small multi-field tables print one field per line with its name (E-0262); the $A5-byte monster record and species records are laid out by field |
 | Message quotes | read on LookupString's two levels (E-0243; they were one string off before), under the script's wMessageMode (E-0242), and in code: 1,354 `ld hl, $XXXX` message words before message calls, plus the first message of every script a routine starts (E-0248), string displays with constant category and index (E-0257) and battle text (E-0258) |
+| Encounters | encounter words are MonsterTable ids and print their species; MonsterTable rows show theirs; `script_encounter` lines list the words (E-0263) |
 | Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
 
 Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning. Not yet done: meanings for most `_CaseNN` state-machine steps; many record fields (the SRAM monster record beyond its names, species records beyond family and EXP curve, MonsterTable bytes 6-9, object slot bytes 0 and $F); the states of the key-world talk-event commands; message quotes for key-world talk events (they use the wMapType bit-7 path).
