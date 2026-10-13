@@ -1,6 +1,7 @@
 """Steer the reference ROM in tools/sm83.py by an input recipe, keeping state between runs (E-0320).
 
     python -I tools/play.py STATE RECIPE [--from OLDSTATE] [--poke SYMBOL=VALUE ...]
+    python -I tools/play.py --chain tools/recipes/FILE.txt    (replays one run per line)
 
 RECIPE is space-separated steps: `W60` waits 60 frames; `A`, `B`, `S` (Start), `E` (Select), `U`, `D`, `L`, `R`
 press that button for 6 frames and release it for 10; a number after a direction or button holds it that many
@@ -108,5 +109,44 @@ def main(argv: list[str]) -> None:
         print("  +", n)
 
 
+def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
+    """Replay a recipe file in memory (nothing written): returns ({state: GameBoy} for the states in `keep`,
+    {state: {routine name: wGameMode values}} for every run)."""
+    labels = boot_trace.load_labels()
+    ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
+    states: dict[str, bytes] = {}
+    kept, ran = {}, {}
+    for ln in Path(path).read_text(encoding="utf-8").splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
+        gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+        for p in pokes.split():
+            sym, val = p.split("=")
+            gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
+        seen: dict = {}
+        run(gb, parse(recipe), labels, seen)
+        states[state] = pickle.dumps(gb)
+        ran[state] = {labels[k]: m for k, m in seen.items()}
+        if state in keep:
+            kept[state] = gb
+    return kept, ran
+
+
+def chain(path: str) -> None:
+    """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments."""
+    for ln in Path(path).read_text(encoding="utf-8").splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
+        argv = [state, recipe] + (["--from", old] if old else [])
+        for p in pokes.split():
+            argv += ["--poke", p]
+        main(argv)
+
+
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    if sys.argv[1] == "--chain":
+        chain(sys.argv[2])
+    else:
+        main(sys.argv[1:])

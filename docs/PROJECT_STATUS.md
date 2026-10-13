@@ -57,7 +57,7 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 
 ## Readability state (2026-10-12, after E-0308)
 
-Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run449). Tests: 203 run, 3 skipped. The figures below are measured from the generated `src/`:
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run450). Tests: 206 run, 3 skipped. The figures below are measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |

@@ -2453,6 +2453,12 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - SRAM record 0 holds exactly these at our MON_* offsets: name "Kheri" at $01, MON_SEX bit 0 = 0, level 25 at $56, and HP, max HP, MP, max MP, ATK, DEF, AGL, INT and WLD as words at $5B-$6C in that order.
   - Battler record 0 (wBattlerRecords, $D0D5) holds the same values at our BATTLER_* offsets ($00, $17, $1B-$2A), and WLD at $2B, a field we had not named; it is now BATTLER_WLD.
   - MON_NAME, MON_LEVEL, MON_ATK to MON_WLD and the BATTLER_* equivalents are C2. The HP and MP pairs are C2 as pairs; which word of a pair is the current value is not shown, since both were equal.
+- **A party member's page (the farm path).** In the battle forced from the farm, the join flow opens the page of party member 1, Patta: Lv 4, ♀, "Pushy", Dracky, Ex 15, and 12 to the next level.
+  - Its SRAM record holds level 4, cap 50, MON_SEX bit 0 = 1, MON_EXP = 15 and species $0073.
+  - $73 is Dracky in the monster names (String_08_02_73). Dracky's species record has base level cap $32 = 50 and EXP curve 2, and ExpTable row 2 needs 15 EXP for level 4 and 27 for level 5.
+  - The monster list numbers the three records in state 2 as party members 1-3 and lists the state-1 records after them unnumbered.
+  - So MON_EXP and MON_SPECIES are C2, MON_STATE is C2 as 0 empty / 1 kept / 2 in the party, and MON_MAX_LEVEL gains this agreement but stays C1.
+  - tools/recipes/e0320_farm_battle.txt holds the whole played chain, one run per line. `python -I tools/play.py --chain FILE` replays it, and the replay reproduced the saved state exactly (cycles, SRAM, WRAM). tests/test_play_chain.py replays it in memory (about 67 s) and pins the scene routines of each step and these record values.
 - **Glyphs.** The debug menu pictures "1:GOTO PROGRAM" for "1", $A3, "GOTO PROGRAM", so $A3 is ":". $45 is a single character cell holding "*:", the mark before an unnamed speaker's words. Both are in the character table (C2); the bytes are unchanged.
 - **Tests.** tests/test_battle_trace.py replays the forced battle from power-on and checks five things:
   - the debug-menu names run only in mode 0;
@@ -2466,8 +2472,8 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - tools/check_note_grounding.py reads those mentions the same way. It now checks 6,669 mentions instead of 4,369, and all are connected to their routine.
   - Seven notes still named wLinkScreenState and wLinkScreenSubState, replaced in E-0318; the check had skipped them as non-symbols. They now name wTitleScreenState and wTitleScreenSubState.
   - tests/test_note_grounding.py adds a test that every RAM name in a note is a symbol, the stem of several (wGold for wGoldLo/Mid/Hi), or a former name after "was". It fails on the old notes.
-- Tests OK (203, skipped=3).
-- Binary verification: build/run445 (BATTLER_WLD), build/run446 (glyphs), build/run447 (comment names), build/run448 (notes) and build/run449 (an annotation written with its symbol) PASS, 0 differing bytes.
+- Tests OK (206, skipped=3).
+- Binary verification: build/run445 (BATTLER_WLD), build/run446 (glyphs), build/run447 (comment names), build/run448 (notes), build/run449 (an annotation written with its symbol) and build/run450 (record notes) PASS, 0 differing bytes.
 
 ### E-0319 — The game's own string lookups and screen pictures check our text reading
 

@@ -1,0 +1,37 @@
+# E-0320: a new game played to the farm on GreatLog, then the debug menu's battle (forced). One run per line:
+# STATE | FROM (empty = power-on) | POKES (space-separated SYMBOL=VALUE) | RECIPE (tools/play.py steps)
+s01_title |  |  | W800
+s02 | s01_title |  | S W60 A W60
+s03 | s02 |  | A W90
+s04 | s03 |  | S W20 A W90
+s05 | s04 |  | A W300
+s06 | s05 |  | A*30 W60
+s06b | s06 |  | W2
+s07 | s06b |  | L64 W10
+s08 | s07 |  | W300 A*6 W60
+s09 | s08 |  | W200 A*10 W100
+s10 | s09 |  | D32 W10
+s11 | s10 |  | L16 D48 W10
+s12 | s11 |  | L160 W10
+s13 | s12 |  | U64 L32 W10
+s14 | s13 |  | U2 W10 A W60 A*25 W60
+s15 | s14 |  | A*6 W30 R16 U2 W10 A W60 A*30 W60
+s16 | s15 |  | B*4 W30 R16 W10 U4 W10
+s17 | s16 |  | A W90
+s18 | s17 |  | A*12 W300
+s19 | s18 |  | A W40 A W40 A W40 A W300
+s20 | s19 |  | B*6 W30 D32 R48 W400
+s21 | s20 |  | D16 R128 W10
+s22 | s21 |  | U2 W10 A W60 A*10 W200
+s23 | s22 |  | W200 A W60 A W60 A W60 A W60 A W200
+s24 | s23 |  | W400 A W60 A W60 A W60 A W400
+s25 | s24 |  | A*40 W400
+s26 | s25 |  | A*40 W400
+d01! | s26 | wGameMode=0 wModeChangeRequest=1 | W120
+d02! | d01! |  | D W10 D W10 D W10 D W10 D W30
+d03! | d02! |  | A W200
+d04! | d03! |  | R W10 R W10 W30
+d05! | d04! |  | L W10 D W10 R W10 D W10 D W10 D W10 D W10 D W10 R W10 D W10 R*5 W30
+d06! | d05! |  | S W300
+d07! | d06! |  | A W30 A*30 W100
+d08! | d07! |  | A*30 W200

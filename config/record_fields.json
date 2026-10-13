@@ -1,9 +1,9 @@
 {
   "_comment": "Offsets into the $A5-byte SRAM monster record (E-0262) that have evidence. tools/disasm_all.py writes them to src/records.inc as MON_* constants and uses them for the offset a record-access routine takes in C (E-0290). Offsets without an entry stay numeric.",
   "fields": {
-    "00": {"const": "MON_STATE", "note": "state: 0 empty, 1 or 2 in use", "evidence": "E-0104"},
+    "00": {"const": "MON_STATE", "note": "state: 0 empty, 1 kept, 2 in the party (C2 from E-0320: the monster list numbers the three records in state 2 as party members 1-3 and lists the state-1 records after them unnumbered)", "evidence": "E-0104, E-0320"},
     "01": {"size": 10, "text": true, "const": "MON_NAME", "note": "name, 10 bytes ending in $F0 (C2 from E-0320: the status page's monster, Kheri, is spelled at $01)", "evidence": "E-0034, E-0320"},
-    "0B": {"size": 2, "const": "MON_SPECIES", "note": "word compared with monster ids by talk events $29/$47 (C1: the species id)", "evidence": "E-0236"},
+    "0B": {"size": 2, "const": "MON_SPECIES", "note": "species id word (C2 from E-0320: Patta's record holds $0073 and its status page names it Dracky, String_08_02_73, entry $73 of the monster names; talk events $29/$47 compare it with monster ids, E-0236)", "evidence": "E-0236, E-0320"},
     "0D": {"const": "MON_FAMILY", "note": "low nibble = family", "evidence": "E-0122"},
     "0E": {"const": "MON_SEX", "note": "bit 0 = sex: 0 male, 1 female (C2: the egg appraiser's script chooses 'No doubt at all-it's male.' for 0 and '...female.' for 1 through wTwoChoiceCursor = this bit, EggServiceMenu_ChooseAndPay_CheckAndPay); breeding steps back when no other listed record has the other sex; DrawRecordListPageMarks draws mark tile $CC + bit 0 when MON_EGG is 2", "evidence": "E-0291, E-0311"},
     "0F": {"size": 10, "text": true, "const": "MON_MASTER_NAME", "note": "the master's name, 10 bytes: ComputeBreedingChild stores the player name here (CopyPlayerNameToWCADF) and copies each parent's into the child's parent master names (E-0297); called 'second name' in E-0034", "evidence": "E-0034, E-0297"},
@@ -18,8 +18,8 @@
     "3C": {"size": 25, "const": "MON_SKILL_LIST", "note": "the list AppendMappedSkillsToWCA67 appends to, up to $FF", "evidence": "E-0237"},
     "55": {"const": "MON_STATUS", "note": "status bits (bit 2 read as poison)", "evidence": "E-0085"},
     "56": {"const": "MON_LEVEL", "note": "level (C2 from E-0320: a monster's status page in tools/sm83.py shows Lv 25, HP 156/156, MP 89/89, ATK 84, DEF 149, AGL 115, INT 366, WLD 387 for SRAM record 0, which holds them at $56 and $5B-$6C in this order)", "evidence": "E-0122, E-0320"},
-    "57": {"const": "MON_MAX_LEVEL", "note": "level cap (C1): DrawRecordLevelAndStatusRow_1E loads $56-$57 as a pair and draws the cap mark $6F when the level is at least this byte", "evidence": "E-0296"},
-    "58": {"size": 3, "const": "MON_EXP", "note": "experience, 24 bits", "evidence": "E-0125"},
+    "57": {"const": "MON_MAX_LEVEL", "note": "level cap (C1): DrawRecordLevelAndStatusRow_1E loads $56-$57 as a pair and draws the cap mark $6F when the level is at least this byte; in E-0320 the Dracky record holds 50, Dracky's species base level cap ($32)", "evidence": "E-0296, E-0320"},
+    "58": {"size": 3, "const": "MON_EXP", "note": "experience, 24 bits (C2 from E-0320: the status page shows Ex 15 and 12 more for the next level for a level-4 record holding 15; ExpTable row 2 needs 15 for level 4 and 27 for level 5)", "evidence": "E-0125, E-0320"},
     "5B": {"size": 2, "const": "MON_HP", "note": "HP word (the HP and MP pairs are C2 from E-0320; which word of a pair is the current value is not shown there, since both were equal)", "evidence": "E-0122, E-0320"},
     "5D": {"size": 2, "const": "MON_MAX_HP", "note": "maximum HP word (the HP and MP pairs are C2 from E-0320; which word of a pair is the current value is not shown there, since both were equal)", "evidence": "E-0122, E-0320"},
     "5F": {"size": 2, "const": "MON_MP", "note": "MP word (the HP and MP pairs are C2 from E-0320; which word of a pair is the current value is not shown there, since both were equal)", "evidence": "E-0122, E-0320"},
