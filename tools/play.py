@@ -8,7 +8,8 @@ press that button for 6 frames and release it for 10; a number after a direction
 frames (`R32`); `A*4` repeats a step. The run starts from power-on, or from OLDSTATE (a pickle under build/states),
 and saves the result as STATE plus a picture build/states/STATE.png. Each named routine that first executes during
 the run is added to build/states/coverage.json with the state name and wGameMode (an observation of our own
-emulator). `--poke` writes a WRAM byte before the run (a symbol from src/ram.asm or a hex address); such a state
+emulator). `--poke` writes a byte before the run (a symbol from src/ram.asm, a hex address, or sram+HEX for
+cartridge RAM); such a state
 is forced, not reached by play, and its name is recorded with a `!` in the coverage file. States and pictures stay
 local (build/ is not tracked). `--sram-from` powers on afresh with OLDSTATE's cartridge RAM, as after switching the
 console off and on with the battery-backed save."""
@@ -44,6 +45,16 @@ def parse(recipe: str) -> list[tuple[int, int]]:
                 out.append((BUTTON[kind], int(n or 6)))
                 out.append((0, 10))
     return out
+
+
+def poke(gb: GameBoy, ram: dict, spec: str) -> None:
+    """SYMBOL=VALUE or HEXADDR=VALUE writes a byte through the bus; sram+HEX=VALUE writes cartridge RAM directly
+    (byte HEX of the 32 KB, bank * $2000 + offset)."""
+    sym, val = spec.split("=")
+    if sym.startswith("sram+"):
+        gb.sram[int(sym[5:], 16)] = int(val, 0)
+    else:
+        gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
 
 
 def run(gb: GameBoy, segments, labels, seen: dict) -> None:
@@ -87,8 +98,7 @@ def main(argv: list[str]) -> None:
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     for k, a in enumerate(argv):
         if a == "--poke":
-            sym, val = argv[k + 1].split("=")
-            gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
+            poke(gb, ram, argv[k + 1])
             forced = True
     if forced and not state.endswith("!"):
         state += "!"
@@ -141,8 +151,7 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dic
         else:
             gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
         for p in pokes.split():
-            sym, val = p.split("=")
-            gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
+            poke(gb, ram, p)
         seen: dict = {}
         run(gb, parse(recipe), labels, seen)
         states[state] = pickle.dumps(gb)

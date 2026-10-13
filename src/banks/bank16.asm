@@ -1372,7 +1372,7 @@ ItemApply_Item00::
 Jump_016_475E:: ; address name
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater; the body is not interpreted beyond the Herb case (E-0089)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater; the body is not interpreted beyond the Herb case (E-0089) (C2 from E-0326: a Herb on a record at 50 of 138 HP leaves 89; at 5 of 21, 21)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wItemEffectAmount, wTargetRecord
 ItemApply_Herb::
@@ -2534,7 +2534,7 @@ Func_016_4C1D:: ; address name
     call CompactInventory
     ret
 
-; copies the 24 wInventory bytes to wWorkBuf, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
+; copies the 24 wInventory bytes to wWorkBuf, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063) (C2 from E-0326: the used Herb leaves the bag, which closes up)
 ; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordTargetRecord, RemoveWItemIdFromInventory, PauseMenu_Items_SubMenu_BeginStringDisplay_Bank08, ...)
 ; points at: wWorkBuf, wInventory
 CompactInventory::
@@ -3961,7 +3961,7 @@ Func_016_5766:: ; address name
     add_a_to_hl
     ret
 
-; adds HL to record A's HP (field $5B), capped at its max HP (field $5D), through Func_016_58CC (E-0122)
+; adds HL to record A's HP (field $5B), capped at its max HP (field $5D), through Func_016_58CC (E-0122) (C2 from E-0326: it adds a Herb's 30-40 to MON_HP, capped at MON_MAX_HP)
 ; 2 call sites from 2 routines (e.g. HealRecordHPByRandomAmount, ItemApply_Herb)
 AddHLToRecordHPCapped::
 Func_016_57D1:: ; address name

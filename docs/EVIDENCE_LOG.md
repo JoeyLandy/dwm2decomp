@@ -2431,6 +2431,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0326 — The current HP and MP words, and the Herb
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: one record word is written straight into cartridge RAM (tools/play.py `--poke sram+HEX=VALUE`) at the field menu of E-0321.
+- **Why it was open.** In every screen of E-0320-E-0322 the two words of each pair were equal. Battles against the debug foes, even one at level 82, did no damage to the debug party.
+- **HP.** With Patta's MON_HP ($5B) set to 5, INFO's stats page shows "HP: 5/21". So $5B is the current HP and MON_MAX_HP ($5D) the maximum (C2).
+- **MP.** With MON_MP ($5F) set to 7, it shows "MP: 7/35". So $5F is the current MP and $61 the maximum (C2).
+- **The Herb.**
+  - On Patta at 5 of 21 HP, a Herb runs ApplyItemEffect, ItemApply_Herb, AddHLToRecordHPCapped, ConsumeSelectedItemByChance and CompactInventory. HP becomes 21 and the Herb leaves the bag, which closes up.
+  - On Moahm at 50 of 138 HP it gives 89, inside the description's "30~40", and the maximum stays 138.
+- **Reproduction and tests.** tools/recipes/e0326_hp.txt includes e0325_town.txt. tests/test_play_chain.py checks the two Herb results and the routines that ran. The two screen readings are recorded here with their recipe lines (hp01!, hp03!).
+- Binary verification: build/run459 PASS, 0 differing bytes; tests OK (222, skipped=3).
+
 ### E-0325 — GreatLog's Vault, Egg Evaluator and Christener, and a battle-loop plateau
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced as in E-0321: the location bytes (screen 0,0, player $50,$70) with the party and story flag 2.

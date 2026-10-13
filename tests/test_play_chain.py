@@ -1,8 +1,8 @@
 """A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt),
 then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt), then
 the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt), then saving on the farm and continuing after a fresh
-power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Christener (E-0325; e0325_town.txt, which
-includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Christener (E-0325; e0325_town.txt), then the
+HP/MP pairs and the Herb (E-0326; e0326_hp.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0325_town.txt"
+CHAIN = ROOT / "tools/recipes/e0326_hp.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -23,7 +23,8 @@ class FarmChain(unittest.TestCase):
         import play
         cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!", "m03!", "m04!", "m07!",
                                                              "m09!", "m11!", "m12!", "j02!", "j03!", "r04!",
-                                                             "v05!", "v07!", "x07!", "c04!", "c05!"})
+                                                             "v05!", "v07!", "x07!", "c04!", "c05!",
+                                                             "hp02!", "hp04!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -194,6 +195,20 @@ class FarmChain(unittest.TestCase):
         self.assertEqual(self.ran["c04!"].get("RenameMenu"), {1})
         self.assertEqual(bytes(self.kept["c04!"].sram[1:7]), bytes([0x19, 0x24, 0x37, 0x37, 0x24, 0xF0]))
         self.assertEqual(bytes(self.kept["c05!"].sram[1:7]), bytes([0x19, 0x24, 0x37, 0x37, 0x0A, 0xF0]))
+
+
+    def test_a_herb_raises_the_current_hp_word_up_to_the_maximum(self):
+        """With MON_HP lowered (the stats page then showed 'HP: 5/21'), a Herb raises $5B by 30-40, capped at $5D, and
+        leaves the bag: Patta 5 -> 21 (cap 21), Moahm 50 -> 80..90 (cap 138)."""
+        for name in ("ItemApply_Herb", "AddHLToRecordHPCapped", "CompactInventory"):
+            self.assertEqual(self.ran["hp02!"].get(name), {2}, name)
+        w = lambda gb, o: gb.sram[o] | gb.sram[o + 1] << 8
+        patta = self.kept["hp02!"]
+        self.assertEqual((w(patta, 0x5B), w(patta, 0x5D)), (21, 21))
+        self.assertEqual(patta.rb(0xC61D), 2)  # the Herb (1) in slot 0 is gone
+        moahm = self.kept["hp04!"]
+        self.assertTrue(80 <= w(moahm, 2 * 0xA5 + 0x5B) <= 90)
+        self.assertEqual(w(moahm, 2 * 0xA5 + 0x5D), 138)
 
 
 if __name__ == "__main__":
