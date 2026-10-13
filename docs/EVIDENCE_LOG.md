@@ -2431,6 +2431,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0335 — Cobi's monster swap: drop off and pick up
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: Script_1F_5A3A is started by its RAM bytes on Main Street.
+- **The menu.** Drawn with the per-scanline renderer of E-0328, the menu reads Drop off / Pick up / Check / Release / Exit. E-0331's picture had hidden most of it.
+- **Drop off.** Choosing Patta and OK runs SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord. Her MON_STATE goes from 2 to 1, and the party list then shows Vanyl and Moahm.
+- **Pick up.** It lists the state-1 records (ListRecordsState1ThenContinue). Choosing Stera and OK turns her MON_STATE from 1 to 2. Both writes agree with MON_STATE's meaning (E-0320).
+- **Reproduction and tests.** tools/recipes/e0335_swap.txt includes e0334_keys.txt. tests/test_play_chain.py checks the five record states after each step.
+- Binary verification: build/run470 PASS, 0 differing bytes; tests OK (235, skipped=3).
+
 ### E-0334 — A Magic Key appraised: the key list's entries
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced.

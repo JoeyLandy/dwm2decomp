@@ -5,7 +5,7 @@ power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Chri
 HP/MP pairs and the Herb (E-0326; e0326_hp.txt), then a shop and an inn (E-0327; e0327_shop_inn.txt), then breeding
 (E-0328; e0328_breed.txt), then the monster library (E-0329; e0329_library.txt), then the priest (E-0330; e0330_priest.txt), then
 hibernation and the TinyMedal prizes (E-0331; e0331_hibernate_medals.txt), then a Magic Key's appraisal (E-0334;
-e0334_keys.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+e0334_keys.txt), then the monster swap (E-0335; e0335_swap.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0334_keys.txt"
+CHAIN = ROOT / "tools/recipes/e0335_swap.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -29,7 +29,7 @@ class FarmChain(unittest.TestCase):
                                                              "v05!", "v07!", "x07!", "c04!", "c05!",
                                                              "hp02!", "hp04!", "sh12!", "sh13!", "sh15!", "q06!",
                                                              "q07!", "br01!", "bb02!", "bb19!", "lb01!", "lb02!", "pr03!", "pr05!", "t02!", "hb02!", "hb07!",
-                                                             "md11!", "ky01!", "ky06!"})
+                                                             "md11!", "ky01!", "ky06!", "sw10!", "sw11!", "sw14!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -351,6 +351,15 @@ class FarmChain(unittest.TestCase):
             return "".join(gb_text.BYTE_TO_TEXT[c] for c in rom[q:rom.index(0xF0, q)])
         self.assertEqual(word(entry[1] + 1) + word(entry[2] + 0x11), "WhiteMtn")
         self.assertIn(1, self.ran["ky06!"].get("WriteKeyNameToDE", set()))
+
+
+    def test_the_swap_menu_moves_monsters_between_party_and_farm(self):
+        """Drop off turns Patta's MON_STATE from 2 (party) to 1 (kept); Pick up turns Stera's from 1 to 2."""
+        states = lambda st: [self.kept[st].sram[i * 0xA5] for i in range(5)]
+        self.assertEqual(states("sw10!"), [2, 2, 2, 1, 1])
+        self.assertEqual(states("sw11!"), [1, 2, 2, 1, 1])
+        self.assertEqual(states("sw14!"), [1, 2, 2, 2, 1])
+        self.assertIn(1, self.ran["sw11!"].get("StoreTemp0BytesToSRAMRecord", set()))
 
 
 if __name__ == "__main__":

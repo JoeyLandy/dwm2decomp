@@ -74,7 +74,7 @@ Jump_01E_4062:: ; address name
     farcall CloseBreedMenu
     ret
 
-; implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244)
+; implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244) (C2 from E-0335: Drop off / Pick up / Check / Release / Exit; Drop off sets a party record's MON_STATE to 1 and Pick up a kept one's to 2)
 ; 18 call sites from 18 routines (e.g. EggServiceMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu_Case0C, ScriptCommandE8, ...)
 ; reads: wScreenState
 SwapMonstersMenu::
@@ -8385,7 +8385,7 @@ Func_01E_76C7:: ; address name
     jr nz, .loop
     ret
 
-; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hTemp0 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
+; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hTemp0 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074) (E-0335: the swap menu's Drop off and Pick up write MON_STATE through it)
 ; 9 call sites from 4 routines (e.g. SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_Case29, SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord_Case48, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord)
 ; points at: hTemp0
 StoreTemp0BytesToSRAMRecord::

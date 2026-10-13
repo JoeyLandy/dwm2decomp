@@ -1,0 +1,8 @@
+# E-0335: Cobi's monster swap (the script at 1F:5A3A, started by its RAM bytes on Main Street): Drop off takes Patta
+# out of the party, Pick up brings Stera in (includes e0334_keys.txt).
+@ e0334_keys.txt
+sw10! | t02! | wDataBank=0x1F wScriptInDataBank=1 wScriptPointerLo=0x3A wScriptPointerHi=0x5A wScriptStartRequest=0x80 wModeState=1 | W60
+sw11! | sw10! |  | A2 W60 A2 W60 D2 W30 A2 W60 A2 W60 A2 W60
+sw12! | sw11! |  | B2 W40
+sw13! | sw12! |  | D2 W30 A2 W60
+sw14! | sw13! |  | D2 W30 A2 W60 D2 W30 A2 W60 A2 W60 A2 W60
