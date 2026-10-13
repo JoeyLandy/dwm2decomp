@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STRUCT = re.compile(r"_(?:Case|Sub|Table|Shared)[0-9A-F]{0,2}(?=_|$)|Etc(?=_|$)|(?:^|_)(?:Data|Func|Jump)_|"
                     r"[A-Za-z][0-9A-F]{3,4}(?=_|$)|Byte[0-9A-F]{2}|_Bank[0-9A-F]{2}$")
-RAM_MECH = re.compile(r"[A-Za-z][0-9A-F]{2,4}(?:$|[A-Z_])|Byte[0-9A-F]{2}|Unk|^[wsh][0-9A-F]{4}$")
+RAM_MECH = re.compile(r"[A-Za-z](?=[0-9A-F]{0,3}\d)[0-9A-F]{2,4}(?:$|[A-Z_])|Byte[0-9A-F]{2}|Unk|^[wsh][0-9A-F]{4}$")
 
 
 def measure() -> dict:

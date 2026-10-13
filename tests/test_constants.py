@@ -1,0 +1,48 @@
+"""Named ids (D-007, tools/gb_constants.py): each constant names its own string in the ROM's name tables."""
+import re
+import sys
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+REF = ROOT / "local" / "roms" / "dwm2-cobi-us.gbc"
+
+
+@unittest.skipUnless(REF.exists(), "reference ROM not present")
+class ConstantsTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import gb_constants
+        cls.c = gb_constants.build(REF.read_bytes())
+
+    def test_names_are_unique_identifiers(self):
+        names = [n for t in self.c.values() for n, _ in t.values()]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertTrue(all(re.fullmatch(r"[A-Z][A-Z0-9_]*", n) for n in names))
+
+    def test_each_name_spells_its_string(self):
+        for prefix, table in self.c.items():
+            for v, (name, text) in table.items():
+                stem = re.sub(r"[^A-Za-z0-9]", "", text).upper()
+                if stem and not name.startswith("ACTION_"):
+                    self.assertTrue(name == f"{prefix}_{stem}" or name == f"{prefix}_{stem}_{v:02X}", (name, text))
+
+    def test_known_ids(self):
+        self.assertEqual(self.c["MONSTER"][0x73][0], "MONSTER_DRACKY")  # E-0320: Patta's species
+        self.assertEqual(self.c["SKILL"][0x83][0], "SKILL_DEMAGIC")
+        self.assertEqual(self.c["SKILL"][0][0], "ACTION_FIGHT")  # E-0333
+        self.assertEqual(self.c["ITEM"][1][0], "ITEM_HERB")  # E-0326
+
+    def test_generated_file_and_uses(self):
+        inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
+        self.assertIn("DEF SKILL_DEMAGIC EQU $83", inc)
+        main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8")
+        self.assertLess(main.index('INCLUDE "constants.inc"'), main.index('INCLUDE "banks/bank00'))
+        text = "\n".join(p.read_text(encoding="utf-8") for p in (ROOT / "src" / "banks").glob("bank3*.asm"))
+        self.assertIn("cp SKILL_DEMAGIC", text)  # ResolveStepBranchOnAction: $83 DeMagic
+        self.assertIn("db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills", text)
+
+
+if __name__ == "__main__":
+    unittest.main()

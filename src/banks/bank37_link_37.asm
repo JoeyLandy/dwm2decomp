@@ -3733,221 +3733,221 @@ CallFunc4001InBank81KeepRegs::
 ; gives the code back (C2 for the pairing) (E-0217, C1)
 ; record: species for this link code
 LinkCodeToSpeciesTable::
-    dw $0001 ; id 0 DrakSlime
-    dw $0002 ; id 1 SpotSlime
-    dw $0003 ; id 2 WingSlime
-    dw $0004 ; id 3 TreeSlime
-    dw $0005 ; id 4 Snaily
-    dw $0006 ; id 5 SlimeNite
-    dw $0007 ; id 6 Babble
-    dw $0008 ; id 7 BoxSlime
-    dw $000a ; id 8 Slime
-    dw $000b ; id 9 Healer
-    dw $000c ; id 10 FangSlime
-    dw $000d ; id 11 RockSlime
-    dw $000e ; id 12 SlimeBorg
-    dw $000f ; id 13 Slabbit
-    dw $0013 ; id 14 SpotKing
-    dw $0010 ; id 15 KingSlime
-    dw $0011 ; id 16 Metaly
-    dw $0012 ; id 17 Metabble
-    dw $0017 ; id 18 MetalKing
-    dw $0018 ; id 19 GoldSlime
-    dw $0024 ; id 20 DragonKid
-    dw $0025 ; id 21 Tortragon
-    dw $0026 ; id 22 Pteranod
-    dw $0027 ; id 23 Gasgon
-    dw $0028 ; id 24 FairyDrak
-    dw $0029 ; id 25 LizardMan
-    dw $002a ; id 26 Poisongon
-    dw $002b ; id 27 Swordgon
-    dw $002d ; id 28 Dragon
-    dw $002e ; id 29 MiniDrak
-    dw $002f ; id 30 MadDragon
-    dw $0030 ; id 31 Rayburn
-    dw $0031 ; id 32 Chamelgon
-    dw $0032 ; id 33 LizardFly
-    dw $0033 ; id 34 Andreal
-    dw $0034 ; id 35 KingCobra
-    dw $0037 ; id 36 Spikerous
-    dw $0038 ; id 37 GreatDrak
-    dw $0039 ; id 38 Crestpent
-    dw $003a ; id 39 WingSnake
-    dw $003b ; id 40 Coatol
-    dw $003c ; id 41 Orochi
-    dw $003d ; id 42 BattleRex
-    dw $003e ; id 43 SkyDragon
-    dw $0040 ; id 44 Divinegon
-    dw $0047 ; id 45 Tonguella
-    dw $0048 ; id 46 Almiraj
-    dw $0049 ; id 47 CatFly
-    dw $004a ; id 48 PillowRat
-    dw $004b ; id 49 Saccer
-    dw $004c ; id 50 GulpBeast
-    dw $004d ; id 51 Skullroo
-    dw $004e ; id 52 WindBeast
-    dw $0050 ; id 53 Antbear
-    dw $0051 ; id 54 SuperTen
-    dw $0052 ; id 55 IronTurt
-    dw $0053 ; id 56 Mommonja
-    dw $0054 ; id 57 HammerMan
-    dw $0055 ; id 58 Grizzly
-    dw $0056 ; id 59 Yeti
-    dw $005a ; id 60 MadGopher
-    dw $005b ; id 61 FairyRat
-    dw $005c ; id 62 Unicorn
-    dw $005d ; id 63 Goategon
-    dw $005e ; id 64 WildApe
-    dw $005f ; id 65 Trumpeter
-    dw $0060 ; id 66 KingLeo
-    dw $0061 ; id 67 DarkHorn
-    dw $0062 ; id 68 MadCat
-    dw $0063 ; id 69 BigEye
-    dw $006a ; id 70 Picky
-    dw $006b ; id 71 Wyvern
-    dw $006c ; id 72 BullBird
-    dw $006d ; id 73 Florajay
-    dw $006e ; id 74 DuckKite
-    dw $006f ; id 75 MadPecker
-    dw $0070 ; id 76 MadRaven
-    dw $0071 ; id 77 MistyWing
-    dw $0073 ; id 78 Dracky
-    dw $0075 ; id 79 BigRoost
-    dw $0076 ; id 80 StubBird
-    dw $0077 ; id 81 LandOwl
-    dw $0078 ; id 82 MadGoose
-    dw $0079 ; id 83 MadCondor
-    dw $007b ; id 84 Blizzardy
-    dw $007c ; id 85 Phoenix
-    dw $007d ; id 86 ZapBird
-    dw $007f ; id 87 WhipBird
-    dw $0080 ; id 88 FunkyBird
-    dw $0081 ; id 89 RainHawk
-    dw $008d ; id 90 MadPlant
-    dw $008e ; id 91 FireWeed
-    dw $008f ; id 92 FloraMan
-    dw $0090 ; id 93 WingTree
-    dw $0091 ; id 94 CactiBall
-    dw $0092 ; id 95 Gulpple
-    dw $0093 ; id 96 Toadstool
-    dw $0094 ; id 97 AmberWeed
-    dw $0096 ; id 98 Stubsuck
-    dw $0097 ; id 99 Oniono
-    dw $0098 ; id 100 DanceVegi
-    dw $0099 ; id 101 TreeBoy
-    dw $009b ; id 102 FaceTree
-    dw $009c ; id 103 HerbMan
-    dw $009d ; id 104 BeanMan
-    dw $009e ; id 105 EvilSeed
-    dw $009f ; id 106 ManEater
-    dw $00a0 ; id 107 Snapper
-    dw $00a2 ; id 108 Rosevine
-    dw $00a5 ; id 109 Watabou
-    dw $00b0 ; id 110 GiantSlug
-    dw $00b1 ; id 111 Catapila
-    dw $00b2 ; id 112 Gophecada
-    dw $00b3 ; id 113 Butterfly
-    dw $00b4 ; id 114 WeedBug
-    dw $00b5 ; id 115 GiantWorm
-    dw $00b6 ; id 116 Lipsy
-    dw $00b7 ; id 117 StagBug
-    dw $00b9 ; id 118 ArmyAnt
-    dw $00ba ; id 119 GoHopper
-    dw $00bb ; id 120 TailEater
-    dw $00bc ; id 121 ArmorPede
-    dw $00bd ; id 122 Eyeder
-    dw $00be ; id 123 GiantMoth
-    dw $00bf ; id 124 Droll
-    dw $00c0 ; id 125 ArmyCrab
-    dw $00c1 ; id 126 MadHornet
-    dw $00c4 ; id 127 HornBeet
-    dw $00c6 ; id 128 Armorpion
-    dw $00c7 ; id 129 Digster
-    dw $00d3 ; id 130 Pixy
-    dw $00de ; id 131 ArcDemon
-    dw $00d5 ; id 132 AgDevil
-    dw $00d6 ; id 133 Demonite
-    dw $00d7 ; id 134 DarkEye
-    dw $00d8 ; id 135 EyeBall
-    dw $00d9 ; id 136 SkulRider
-    dw $00da ; id 137 EvilBeast
-    dw $00dc ; id 138 1EyeClown
-    dw $00dd ; id 139 Gremlin
-    dw $00d4 ; id 140 MedusaEye
-    dw $00df ; id 141 Lionex
-    dw $00e0 ; id 142 GoatHorn
-    dw $00e1 ; id 143 Orc
-    dw $00e2 ; id 144 Ogre
-    dw $00e3 ; id 145 GateGuard
-    dw $00e4 ; id 146 ChopClown
-    dw $00e6 ; id 147 Grendal
-    dw $00e7 ; id 148 Akubar
-    dw $00e8 ; id 149 MadKnight
-    dw $00ea ; id 150 Gigantes
-    dw $00eb ; id 151 Centasaur
-    dw $00ec ; id 152 EvilArmor
-    dw $00ed ; id 153 Jamirus
-    dw $00ee ; id 154 Durran
-    dw $00f6 ; id 155 Spooky
-    dw $00f7 ; id 156 Skullgon
-    dw $00f8 ; id 157 PutrePup
-    dw $00f9 ; id 158 RotRaven
-    dw $00fa ; id 159 Mummy
-    dw $00fb ; id 160 DarkCrab
-    dw $00fc ; id 161 DeadNite
-    dw $00fd ; id 162 Shadow
-    dw $00ff ; id 163 Hork
-    dw $0100 ; id 164 Mudron
-    dw $0101 ; id 165 NiteWhip
-    dw $010e ; id 166 MadSpirit
-    dw $0102 ; id 167 WindMerge
-    dw $0103 ; id 168 Reaper
-    dw $0107 ; id 169 DeadNoble
-    dw $0108 ; id 170 WhiteKing
-    dw $0109 ; id 171 BoneSlave
-    dw $010a ; id 172 Skeletor
-    dw $010b ; id 173 Servant
-    dw $010d ; id 174 Copycat
-    dw $0119 ; id 175 JewelBag
-    dw $011a ; id 176 EvilWand
-    dw $011b ; id 177 MadCandle
-    dw $011c ; id 178 CoilBird
-    dw $011d ; id 179 Facer
-    dw $011e ; id 180 SpikyBoy
-    dw $011f ; id 181 MadMirror
-    dw $0120 ; id 182 RogueNite
-    dw $0122 ; id 183 Goopi
-    dw $0123 ; id 184 Voodoll
-    dw $0124 ; id 185 MetalDrak
-    dw $0125 ; id 186 Balzak
-    dw $0126 ; id 187 SabreMan
-    dw $0127 ; id 188 CurseLamp
-    dw $0129 ; id 189 Roboster
-    dw $012b ; id 190 EvilPot
-    dw $012c ; id 191 Gismo
-    dw $012d ; id 192 LavaMan
-    dw $012e ; id 193 IceMan
-    dw $012f ; id 194 Mimic
-    dw $0131 ; id 195 MudDoll
-    dw $0132 ; id 196 Golem
-    dw $0133 ; id 197 StoneMan
-    dw $0134 ; id 198 BombCrag
-    dw $0135 ; id 199 GoldGolem
-    dw $015f ; id 200 DracoLord
-    dw $0160 ; id 201 DracoLord
-    dw $0162 ; id 202 Hargon
-    dw $0163 ; id 203 Sidoh
-    dw $0165 ; id 204 Baramos
-    dw $0166 ; id 205 Zoma
-    dw $0168 ; id 206 Pizzaro
-    dw $016a ; id 207 Esterk
-    dw $016b ; id 208 Mirudraas
-    dw $016c ; id 209 Mirudraas
-    dw $016d ; id 210 Mudou
-    dw $016e ; id 211 DeathMore
-    dw $016f ; id 212 DeathMore
-    dw $0170 ; id 213 DeathMore
-    dw $0171 ; id 214 Darkdrium
+    dw MONSTER_DRAKSLIME ; id 0
+    dw MONSTER_SPOTSLIME ; id 1
+    dw MONSTER_WINGSLIME ; id 2
+    dw MONSTER_TREESLIME ; id 3
+    dw MONSTER_SNAILY ; id 4
+    dw MONSTER_SLIMENITE ; id 5
+    dw MONSTER_BABBLE ; id 6
+    dw MONSTER_BOXSLIME ; id 7
+    dw MONSTER_SLIME ; id 8
+    dw MONSTER_HEALER ; id 9
+    dw MONSTER_FANGSLIME ; id 10
+    dw MONSTER_ROCKSLIME ; id 11
+    dw MONSTER_SLIMEBORG ; id 12
+    dw MONSTER_SLABBIT ; id 13
+    dw MONSTER_SPOTKING ; id 14
+    dw MONSTER_KINGSLIME ; id 15
+    dw MONSTER_METALY ; id 16
+    dw MONSTER_METABBLE ; id 17
+    dw MONSTER_METALKING ; id 18
+    dw MONSTER_GOLDSLIME ; id 19
+    dw MONSTER_DRAGONKID ; id 20
+    dw MONSTER_TORTRAGON ; id 21
+    dw MONSTER_PTERANOD ; id 22
+    dw MONSTER_GASGON ; id 23
+    dw MONSTER_FAIRYDRAK ; id 24
+    dw MONSTER_LIZARDMAN ; id 25
+    dw MONSTER_POISONGON ; id 26
+    dw MONSTER_SWORDGON ; id 27
+    dw MONSTER_DRAGON ; id 28
+    dw MONSTER_MINIDRAK ; id 29
+    dw MONSTER_MADDRAGON ; id 30
+    dw MONSTER_RAYBURN ; id 31
+    dw MONSTER_CHAMELGON ; id 32
+    dw MONSTER_LIZARDFLY ; id 33
+    dw MONSTER_ANDREAL ; id 34
+    dw MONSTER_KINGCOBRA ; id 35
+    dw MONSTER_SPIKEROUS ; id 36
+    dw MONSTER_GREATDRAK ; id 37
+    dw MONSTER_CRESTPENT ; id 38
+    dw MONSTER_WINGSNAKE ; id 39
+    dw MONSTER_COATOL ; id 40
+    dw MONSTER_OROCHI ; id 41
+    dw MONSTER_BATTLEREX ; id 42
+    dw MONSTER_SKYDRAGON ; id 43
+    dw MONSTER_DIVINEGON ; id 44
+    dw MONSTER_TONGUELLA ; id 45
+    dw MONSTER_ALMIRAJ ; id 46
+    dw MONSTER_CATFLY ; id 47
+    dw MONSTER_PILLOWRAT ; id 48
+    dw MONSTER_SACCER ; id 49
+    dw MONSTER_GULPBEAST ; id 50
+    dw MONSTER_SKULLROO ; id 51
+    dw MONSTER_WINDBEAST ; id 52
+    dw MONSTER_ANTBEAR ; id 53
+    dw MONSTER_SUPERTEN ; id 54
+    dw MONSTER_IRONTURT ; id 55
+    dw MONSTER_MOMMONJA ; id 56
+    dw MONSTER_HAMMERMAN ; id 57
+    dw MONSTER_GRIZZLY ; id 58
+    dw MONSTER_YETI ; id 59
+    dw MONSTER_MADGOPHER ; id 60
+    dw MONSTER_FAIRYRAT ; id 61
+    dw MONSTER_UNICORN ; id 62
+    dw MONSTER_GOATEGON ; id 63
+    dw MONSTER_WILDAPE ; id 64
+    dw MONSTER_TRUMPETER ; id 65
+    dw MONSTER_KINGLEO ; id 66
+    dw MONSTER_DARKHORN ; id 67
+    dw MONSTER_MADCAT ; id 68
+    dw MONSTER_BIGEYE ; id 69
+    dw MONSTER_PICKY ; id 70
+    dw MONSTER_WYVERN ; id 71
+    dw MONSTER_BULLBIRD ; id 72
+    dw MONSTER_FLORAJAY ; id 73
+    dw MONSTER_DUCKKITE ; id 74
+    dw MONSTER_MADPECKER ; id 75
+    dw MONSTER_MADRAVEN ; id 76
+    dw MONSTER_MISTYWING ; id 77
+    dw MONSTER_DRACKY ; id 78
+    dw MONSTER_BIGROOST ; id 79
+    dw MONSTER_STUBBIRD ; id 80
+    dw MONSTER_LANDOWL ; id 81
+    dw MONSTER_MADGOOSE ; id 82
+    dw MONSTER_MADCONDOR ; id 83
+    dw MONSTER_BLIZZARDY ; id 84
+    dw MONSTER_PHOENIX ; id 85
+    dw MONSTER_ZAPBIRD ; id 86
+    dw MONSTER_WHIPBIRD ; id 87
+    dw MONSTER_FUNKYBIRD ; id 88
+    dw MONSTER_RAINHAWK ; id 89
+    dw MONSTER_MADPLANT ; id 90
+    dw MONSTER_FIREWEED ; id 91
+    dw MONSTER_FLORAMAN ; id 92
+    dw MONSTER_WINGTREE ; id 93
+    dw MONSTER_CACTIBALL ; id 94
+    dw MONSTER_GULPPLE ; id 95
+    dw MONSTER_TOADSTOOL ; id 96
+    dw MONSTER_AMBERWEED ; id 97
+    dw MONSTER_STUBSUCK ; id 98
+    dw MONSTER_ONIONO ; id 99
+    dw MONSTER_DANCEVEGI ; id 100
+    dw MONSTER_TREEBOY ; id 101
+    dw MONSTER_FACETREE ; id 102
+    dw MONSTER_HERBMAN ; id 103
+    dw MONSTER_BEANMAN ; id 104
+    dw MONSTER_EVILSEED ; id 105
+    dw MONSTER_MANEATER ; id 106
+    dw MONSTER_SNAPPER ; id 107
+    dw MONSTER_ROSEVINE ; id 108
+    dw MONSTER_WATABOU ; id 109
+    dw MONSTER_GIANTSLUG ; id 110
+    dw MONSTER_CATAPILA ; id 111
+    dw MONSTER_GOPHECADA ; id 112
+    dw MONSTER_BUTTERFLY ; id 113
+    dw MONSTER_WEEDBUG ; id 114
+    dw MONSTER_GIANTWORM ; id 115
+    dw MONSTER_LIPSY ; id 116
+    dw MONSTER_STAGBUG ; id 117
+    dw MONSTER_ARMYANT ; id 118
+    dw MONSTER_GOHOPPER ; id 119
+    dw MONSTER_TAILEATER ; id 120
+    dw MONSTER_ARMORPEDE ; id 121
+    dw MONSTER_EYEDER ; id 122
+    dw MONSTER_GIANTMOTH ; id 123
+    dw MONSTER_DROLL ; id 124
+    dw MONSTER_ARMYCRAB ; id 125
+    dw MONSTER_MADHORNET ; id 126
+    dw MONSTER_HORNBEET ; id 127
+    dw MONSTER_ARMORPION ; id 128
+    dw MONSTER_DIGSTER ; id 129
+    dw MONSTER_PIXY ; id 130
+    dw MONSTER_ARCDEMON ; id 131
+    dw MONSTER_AGDEVIL ; id 132
+    dw MONSTER_DEMONITE ; id 133
+    dw MONSTER_DARKEYE ; id 134
+    dw MONSTER_EYEBALL ; id 135
+    dw MONSTER_SKULRIDER ; id 136
+    dw MONSTER_EVILBEAST ; id 137
+    dw MONSTER_1EYECLOWN ; id 138
+    dw MONSTER_GREMLIN ; id 139
+    dw MONSTER_MEDUSAEYE ; id 140
+    dw MONSTER_LIONEX ; id 141
+    dw MONSTER_GOATHORN ; id 142
+    dw MONSTER_ORC ; id 143
+    dw MONSTER_OGRE ; id 144
+    dw MONSTER_GATEGUARD ; id 145
+    dw MONSTER_CHOPCLOWN ; id 146
+    dw MONSTER_GRENDAL ; id 147
+    dw MONSTER_AKUBAR ; id 148
+    dw MONSTER_MADKNIGHT ; id 149
+    dw MONSTER_GIGANTES ; id 150
+    dw MONSTER_CENTASAUR ; id 151
+    dw MONSTER_EVILARMOR ; id 152
+    dw MONSTER_JAMIRUS ; id 153
+    dw MONSTER_DURRAN ; id 154
+    dw MONSTER_SPOOKY ; id 155
+    dw MONSTER_SKULLGON ; id 156
+    dw MONSTER_PUTREPUP ; id 157
+    dw MONSTER_ROTRAVEN ; id 158
+    dw MONSTER_MUMMY ; id 159
+    dw MONSTER_DARKCRAB ; id 160
+    dw MONSTER_DEADNITE ; id 161
+    dw MONSTER_SHADOW ; id 162
+    dw MONSTER_HORK ; id 163
+    dw MONSTER_MUDRON ; id 164
+    dw MONSTER_NITEWHIP ; id 165
+    dw MONSTER_MADSPIRIT ; id 166
+    dw MONSTER_WINDMERGE ; id 167
+    dw MONSTER_REAPER ; id 168
+    dw MONSTER_DEADNOBLE ; id 169
+    dw MONSTER_WHITEKING ; id 170
+    dw MONSTER_BONESLAVE ; id 171
+    dw MONSTER_SKELETOR ; id 172
+    dw MONSTER_SERVANT ; id 173
+    dw MONSTER_COPYCAT ; id 174
+    dw MONSTER_JEWELBAG ; id 175
+    dw MONSTER_EVILWAND ; id 176
+    dw MONSTER_MADCANDLE ; id 177
+    dw MONSTER_COILBIRD ; id 178
+    dw MONSTER_FACER ; id 179
+    dw MONSTER_SPIKYBOY ; id 180
+    dw MONSTER_MADMIRROR ; id 181
+    dw MONSTER_ROGUENITE ; id 182
+    dw MONSTER_GOOPI ; id 183
+    dw MONSTER_VOODOLL ; id 184
+    dw MONSTER_METALDRAK ; id 185
+    dw MONSTER_BALZAK ; id 186
+    dw MONSTER_SABREMAN ; id 187
+    dw MONSTER_CURSELAMP ; id 188
+    dw MONSTER_ROBOSTER ; id 189
+    dw MONSTER_EVILPOT ; id 190
+    dw MONSTER_GISMO ; id 191
+    dw MONSTER_LAVAMAN ; id 192
+    dw MONSTER_ICEMAN ; id 193
+    dw MONSTER_MIMIC ; id 194
+    dw MONSTER_MUDDOLL ; id 195
+    dw MONSTER_GOLEM ; id 196
+    dw MONSTER_STONEMAN ; id 197
+    dw MONSTER_BOMBCRAG ; id 198
+    dw MONSTER_GOLDGOLEM ; id 199
+    dw MONSTER_DRACOLORD ; id 200
+    dw MONSTER_DRACOLORD_160 ; id 201
+    dw MONSTER_HARGON ; id 202
+    dw MONSTER_SIDOH ; id 203
+    dw MONSTER_BARAMOS ; id 204
+    dw MONSTER_ZOMA ; id 205
+    dw MONSTER_PIZZARO ; id 206
+    dw MONSTER_ESTERK ; id 207
+    dw MONSTER_MIRUDRAAS ; id 208
+    dw MONSTER_MIRUDRAAS_16C ; id 209
+    dw MONSTER_MUDOU ; id 210
+    dw MONSTER_DEATHMORE ; id 211
+    dw MONSTER_DEATHMORE_16F ; id 212
+    dw MONSTER_DEATHMORE_170 ; id 213
+    dw MONSTER_DARKDRIUM ; id 214
 
 ; AppendSpeciesToLinkCodeByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at
 ; LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range
@@ -4344,182 +4344,182 @@ SpeciesToLinkCodeTable::
 ; LinkSkillMapTable_A (E-0217, C1)
 ; record: mapped skill ($FE/$FF = dropped)
 LinkSkillMapTable_B::
-    db $01 ; id 0
-    db $02 ; id 1
-    db $03 ; id 2
-    db $04 ; id 3
-    db $05 ; id 4
-    db $06 ; id 5
-    db $07 ; id 6
-    db $08 ; id 7
-    db $09 ; id 8
-    db $0a ; id 9
-    db $0b ; id 10
-    db $0c ; id 11
-    db $10 ; id 12
-    db $11 ; id 13
-    db $12 ; id 14
-    db $0d ; id 15
-    db $0e ; id 16
-    db $0f ; id 17
-    db $13 ; id 18
-    db $14 ; id 19
-    db $15 ; id 20
-    db $2f ; id 21
-    db $30 ; id 22
-    db $33 ; id 23
-    db $2e ; id 24
-    db $34 ; id 25
-    db $32 ; id 26
-    db $31 ; id 27
-    db $27 ; id 28
-    db $28 ; id 29
-    db $25 ; id 30
-    db $26 ; id 31
-    db $2b ; id 32
-    db $2c ; id 33
-    db $29 ; id 34
-    db $2a ; id 35
-    db $38 ; id 36
-    db $2d ; id 37
-    db $39 ; id 38
-    db $36 ; id 39
-    db $37 ; id 40
-    db $3a ; id 41
-    db $35 ; id 42
-    db $16 ; id 43
-    db $17 ; id 44
-    db $18 ; id 45
-    db $19 ; id 46
-    db $1a ; id 47
-    db $1e ; id 48
-    db $1f ; id 49
-    db $20 ; id 50
-    db $21 ; id 51
-    db $23 ; id 52
-    db $22 ; id 53
-    db $24 ; id 54
-    db $a4 ; id 55
-    db $a9 ; id 56
-    db $3c ; id 57
-    db $00 ; id 58
-    db $6d ; id 59
-    db $6f ; id 60
-    db $6e ; id 61
-    db $70 ; id 62
-    db $6c ; id 63
-    db $6b ; id 64
-    db $68 ; id 65
-    db $6a ; id 66
-    db $89 ; id 67
-    db $50 ; id 68
-    db $52 ; id 69
-    db $51 ; id 70
-    db $53 ; id 71
-    db $5e ; id 72
-    db $55 ; id 73
-    db $56 ; id 74
-    db $57 ; id 75
-    db $5a ; id 76
-    db $5b ; id 77
-    db $5c ; id 78
-    db $66 ; id 79
-    db $63 ; id 80
-    db $64 ; id 81
-    db $4e ; id 82
-    db $4f ; id 83
-    db $8a ; id 84
-    db $62 ; id 85
-    db $69 ; id 86
-    db $65 ; id 87
-    db $48 ; id 88
-    db $49 ; id 89
-    db $4a ; id 90
-    db $4b ; id 91
-    db $40 ; id 92
-    db $41 ; id 93
-    db $42 ; id 94
-    db $43 ; id 95
-    db $44 ; id 96
-    db $45 ; id 97
-    db $46 ; id 98
-    db $47 ; id 99
-    db $3f ; id 100
-    db $3e ; id 101
-    db $3d ; id 102
-    db $5f ; id 103
-    db $61 ; id 104
-    db $60 ; id 105
-    db $71 ; id 106
-    db $72 ; id 107
-    db $73 ; id 108
-    db $74 ; id 109
-    db $78 ; id 110
-    db $75 ; id 111
-    db $8f ; id 112
-    db $79 ; id 113
-    db $7e ; id 114
-    db $7f ; id 115
-    db $80 ; id 116
-    db $76 ; id 117
-    db $77 ; id 118
-    db $7d ; id 119
-    db $7a ; id 120
-    db $8b ; id 121
-    db $8c ; id 122
-    db $8d ; id 123
-    db $8e ; id 124
-    db $90 ; id 125
-    db $a2 ; id 126
-    db $9e ; id 127
-    db $83 ; id 128
-    db $81 ; id 129
-    db $82 ; id 130
-    db $84 ; id 131
-    db $85 ; id 132
-    db $86 ; id 133
-    db $87 ; id 134
-    db $88 ; id 135
-    db $97 ; id 136
-    db $98 ; id 137
-    db $99 ; id 138
-    db $9a ; id 139
-    db $95 ; id 140
-    db $95 ; id 141
-    db $94 ; id 142
-    db $9d ; id 143
-    db $96 ; id 144
-    db $92 ; id 145
-    db $93 ; id 146
-    db $9f ; id 147
-    db $7c ; id 148
-    db $a0 ; id 149
-    db $7b ; id 150
-    db $c8 ; id 151
-    db $ab ; id 152
-    db $c0 ; id 153
-    db $c1 ; id 154
-    db $c2 ; id 155
-    db $c3 ; id 156
-    db $c4 ; id 157
-    db $c5 ; id 158
-    db $c6 ; id 159
-    db $c7 ; id 160
-    db $c8 ; id 161
-    db $b0 ; id 162
-    db $b1 ; id 163
-    db $b2 ; id 164
-    db $b3 ; id 165
-    db $b4 ; id 166
-    db $b5 ; id 167
-    db $b6 ; id 168
-    db $b7 ; id 169
-    db $b8 ; id 170
-    db $b9 ; id 171
-    db $ba ; id 172
-    db $bb ; id 173
-    db $bc ; id 174
-    db $bd ; id 175
+    db SKILL_BLAZE ; id 0
+    db SKILL_BLAZEMORE ; id 1
+    db SKILL_BLAZEMOST ; id 2
+    db SKILL_FIREBAL ; id 3
+    db SKILL_FIREBANE ; id 4
+    db SKILL_FIREBOLT ; id 5
+    db SKILL_BANG ; id 6
+    db SKILL_BOOM ; id 7
+    db SKILL_EXPLODET ; id 8
+    db SKILL_INFERNOS ; id 9
+    db SKILL_INFERMORE ; id 10
+    db SKILL_INFERMOST ; id 11
+    db SKILL_ICEBOLT ; id 12
+    db SKILL_SNOWSTORM ; id 13
+    db SKILL_BLIZZARD ; id 14
+    db SKILL_BOLT ; id 15
+    db SKILL_ZAP ; id 16
+    db SKILL_THORDAIN ; id 17
+    db SKILL_BEAT ; id 18
+    db SKILL_DEFEAT ; id 19
+    db SKILL_SACRIFICE ; id 20
+    db SKILL_SLEEP ; id 21
+    db SKILL_SLEEPALL ; id 22
+    db SKILL_STOPSPELL ; id 23
+    db SKILL_SURROUND ; id 24
+    db SKILL_PANICALL ; id 25
+    db SKILL_ROBMAGIC ; id 26
+    db SKILL_TAKEMAGIC ; id 27
+    db SKILL_SAP ; id 28
+    db SKILL_DEFENSE ; id 29
+    db SKILL_UPPER ; id 30
+    db SKILL_INCREASE ; id 31
+    db SKILL_SLOW ; id 32
+    db SKILL_SLOWALL ; id 33
+    db SKILL_SPEED ; id 34
+    db SKILL_SPEEDUP ; id 35
+    db SKILL_BARRIER ; id 36
+    db SKILL_TWINHITS ; id 37
+    db SKILL_MAGICWALL ; id 38
+    db SKILL_MAGICBACK ; id 39
+    db SKILL_BOUNCE ; id 40
+    db SKILL_TRANSFORM ; id 41
+    db SKILL_IRONIZE ; id 42
+    db SKILL_HEAL ; id 43
+    db SKILL_HEALMORE ; id 44
+    db SKILL_HEALALL ; id 45
+    db SKILL_HEALUS ; id 46
+    db SKILL_HEALUSALL ; id 47
+    db SKILL_VIVIFY ; id 48
+    db SKILL_REVIVE ; id 49
+    db SKILL_FAREWELL ; id 50
+    db SKILL_ANTIDOTE ; id 51
+    db SKILL_NUMBOFF ; id 52
+    db SKILL_DECHAOS ; id 53
+    db SKILL_CURSEOFF ; id 54
+    db SKILL_STEPGUARD ; id 55
+    db SKILL_MAPMAGIC ; id 56
+    db SKILL_CHANCE ; id 57
+    db ACTION_FIGHT ; id 58
+    db SKILL_TWINSLASH ; id 59
+    db SKILL_RAMMING ; id 60
+    db SKILL_BERSERKER ; id 61
+    db SKILL_KAMIKAZE ; id 62
+    db SKILL_MASSACRE ; id 63
+    db SKILL_EVILSLASH ; id 64
+    db SKILL_CHARGEUP ; id 65
+    db SKILL_HIGHJUMP ; id 66
+    db SKILL_SUCKAIR ; id 67
+    db SKILL_FIRESLASH ; id 68
+    db SKILL_BOLTSLASH ; id 69
+    db SKILL_VACUSLASH ; id 70
+    db SKILL_ICESLASH ; id 71
+    db SKILL_METALCUT ; id 72
+    db SKILL_DRAKSLASH ; id 73
+    db SKILL_BEASTCUT ; id 74
+    db SKILL_BIRDBLOW ; id 75
+    db SKILL_DEVILCUT ; id 76
+    db SKILL_ZOMBIECUT ; id 77
+    db SKILL_CLEANCUT ; id 78
+    db SKILL_MULTICUT ; id 79
+    db SKILL_BIATTACK ; id 80
+    db SKILL_QUADHITS ; id 81
+    db SKILL_CALLHELP ; id 82
+    db SKILL_YELLHELP ; id 83
+    db SKILL_FOCUS ; id 84
+    db SKILL_SQUALLHIT ; id 85
+    db SKILL_PSYCHEUP ; id 86
+    db SKILL_RAINSLASH ; id 87
+    db SKILL_WINDBEAST ; id 88
+    db SKILL_VACUUM ; id 89
+    db SKILL_LIGHTNING ; id 90
+    db SKILL_ROCKTHROW ; id 91
+    db SKILL_FIREAIR ; id 92
+    db SKILL_BLAZEAIR ; id 93
+    db SKILL_SCORCHING ; id 94
+    db SKILL_WHITEFIRE ; id 95
+    db SKILL_FRIGIDAIR ; id 96
+    db SKILL_ICEAIR ; id 97
+    db SKILL_ICESTORM ; id 98
+    db SKILL_WHITEAIR ; id 99
+    db SKILL_HELLBLAST ; id 100
+    db SKILL_BIGBANG ; id 101
+    db SKILL_MEGAMAGIC ; id 102
+    db SKILL_POISONHIT ; id 103
+    db SKILL_NAPATTACK ; id 104
+    db SKILL_PARALYZE ; id 105
+    db SKILL_SLEEPAIR ; id 106
+    db SKILL_PALSYAIR ; id 107
+    db SKILL_POISONGAS ; id 108
+    db SKILL_POISONAIR ; id 109
+    db SKILL_PANIDANCE ; id 110
+    db SKILL_CURSE ; id 111
+    db SKILL_AHHH ; id 112
+    db SKILL_KODANCE ; id 113
+    db SKILL_SANDSTORM ; id 114
+    db SKILL_RADIANT ; id 115
+    db SKILL_EERIELITE ; id 116
+    db SKILL_ODDDANCE ; id 117
+    db SKILL_ROBDANCE ; id 118
+    db SKILL_SIDESTEP ; id 119
+    db SKILL_LUREDANCE ; id 120
+    db SKILL_LUSHLICKS ; id 121
+    db SKILL_SICKLICK ; id 122
+    db SKILL_LEGSWEEP ; id 123
+    db SKILL_BIGTRIP ; id 124
+    db SKILL_WARCRY ; id 125
+    db SKILL_WHISTLE ; id 126
+    db SKILL_IMITATE ; id 127
+    db SKILL_DEMAGIC ; id 128
+    db SKILL_SURGE ; id 129
+    db SKILL_ULTRADOWN ; id 130
+    db SKILL_THICKFOG ; id 131
+    db SKILL_TATSUCALL ; id 132
+    db SKILL_DIAGOCALL ; id 133
+    db SKILL_SAMSICALL ; id 134
+    db SKILL_BAZOOCALL ; id 135
+    db SKILL_COVER ; id 136
+    db SKILL_GUARDIAN ; id 137
+    db SKILL_TAILWIND ; id 138
+    db SKILL_STORMWIND ; id 139
+    db SKILL_DODGE ; id 140
+    db SKILL_DODGE ; id 141
+    db SKILL_STRONGD ; id 142
+    db SKILL_SUCKALL ; id 143
+    db SKILL_BLADED ; id 144
+    db SKILL_DANCESHUT ; id 145
+    db SKILL_MOUTHSHUT ; id 146
+    db SKILL_MEDITATE ; id 147
+    db SKILL_HUSTLE ; id 148
+    db SKILL_LIFESONG ; id 149
+    db SKILL_LIFEDANCE ; id 150
+    db SKILL_HIGHJUMP_C8 ; id 151
+    db SKILL_ZONEOUT ; id 152
+    db SKILL_HIGHJUMP_C0 ; id 153
+    db SKILL_HIGHJUMP_C1 ; id 154
+    db SKILL_HIGHJUMP_C2 ; id 155
+    db SKILL_HIGHJUMP_C3 ; id 156
+    db SKILL_HIGHJUMP_C4 ; id 157
+    db SKILL_HIGHJUMP_C5 ; id 158
+    db SKILL_HIGHJUMP_C6 ; id 159
+    db SKILL_HIGHJUMP_C7 ; id 160
+    db SKILL_HIGHJUMP_C8 ; id 161
+    db SKILL_HIGHJUMP_B0 ; id 162
+    db SKILL_HIGHJUMP_B1 ; id 163
+    db SKILL_HIGHJUMP_B2 ; id 164
+    db SKILL_HIGHJUMP_B3 ; id 165
+    db SKILL_HIGHJUMP_B4 ; id 166
+    db SKILL_HIGHJUMP_B5 ; id 167
+    db SKILL_HIGHJUMP_B6 ; id 168
+    db SKILL_HIGHJUMP_B7 ; id 169
+    db SKILL_HIGHJUMP_B8 ; id 170
+    db SKILL_HIGHJUMP_B9 ; id 171
+    db SKILL_HIGHJUMP_BA ; id 172
+    db SKILL_HIGHJUMP_BB ; id 173
+    db SKILL_HIGHJUMP_BC ; id 174
+    db SKILL_HIGHJUMP_BD ; id 175
     db $ff ; id 176
     db $ff ; id 177
     db $ff ; id 178
@@ -4557,191 +4557,191 @@ LinkSkillMapTable_B::
     db $ff ; id 210
     db $ff ; id 211
     db $ff ; id 212
-    db $3b ; id 213
-    db $54 ; id 214
-    db $58 ; id 215
-    db $59 ; id 216
-    db $67 ; id 217
-    db $34 ; id 218
-    db $c8 ; id 219
-    db $35 ; id 220
-    db $8f ; id 221
+    db SKILL_BEDRAGON ; id 213
+    db SKILL_SLIMEBLOW ; id 214
+    db SKILL_BUGBLOW ; id 215
+    db SKILL_SHEARS ; id 216
+    db SKILL_GIGASLASH ; id 217
+    db SKILL_PANICALL ; id 218
+    db SKILL_HIGHJUMP_C8 ; id 219
+    db SKILL_IRONIZE ; id 220
+    db SKILL_AHHH ; id 221
 
 ; MapAndCompactSkillListLinkSkillMapTable_A, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes
 ; through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them
 ; LinkSkillMapTable_B maps the result back (E-0217, C1)
 ; record: mapped skill ($FE = dropped)
 LinkSkillMapTable_A::
-    db $3a ; id 0
-    db $00 ; id 1
-    db $01 ; id 2
-    db $02 ; id 3
-    db $03 ; id 4
-    db $04 ; id 5
-    db $05 ; id 6
-    db $06 ; id 7
-    db $07 ; id 8
-    db $08 ; id 9
-    db $09 ; id 10
-    db $0a ; id 11
-    db $0b ; id 12
-    db $0f ; id 13
-    db $10 ; id 14
-    db $11 ; id 15
-    db $0c ; id 16
-    db $0d ; id 17
-    db $0e ; id 18
-    db $12 ; id 19
-    db $13 ; id 20
-    db $14 ; id 21
-    db $2b ; id 22
-    db $2c ; id 23
-    db $2d ; id 24
-    db $2e ; id 25
-    db $2f ; id 26
+    db SKILL_TRANSFORM ; id 0
+    db ACTION_FIGHT ; id 1
+    db SKILL_BLAZE ; id 2
+    db SKILL_BLAZEMORE ; id 3
+    db SKILL_BLAZEMOST ; id 4
+    db SKILL_FIREBAL ; id 5
+    db SKILL_FIREBANE ; id 6
+    db SKILL_FIREBOLT ; id 7
+    db SKILL_BANG ; id 8
+    db SKILL_BOOM ; id 9
+    db SKILL_EXPLODET ; id 10
+    db SKILL_INFERNOS ; id 11
+    db SKILL_INFERMORE ; id 12
+    db SKILL_THORDAIN ; id 13
+    db SKILL_ICEBOLT ; id 14
+    db SKILL_SNOWSTORM ; id 15
+    db SKILL_INFERMOST ; id 16
+    db SKILL_BOLT ; id 17
+    db SKILL_ZAP ; id 18
+    db SKILL_BLIZZARD ; id 19
+    db SKILL_BEAT ; id 20
+    db SKILL_DEFEAT ; id 21
+    db SKILL_SLOW ; id 22
+    db SKILL_SLOWALL ; id 23
+    db SKILL_TWINHITS ; id 24
+    db SKILL_SURROUND ; id 25
+    db SKILL_SLEEP ; id 26
     db $fe ; id 27
     db $fe ; id 28
     db $fe ; id 29
-    db $30 ; id 30
-    db $31 ; id 31
-    db $32 ; id 32
-    db $33 ; id 33
-    db $35 ; id 34
-    db $34 ; id 35
-    db $36 ; id 36
-    db $1e ; id 37
-    db $1f ; id 38
-    db $1c ; id 39
-    db $1d ; id 40
-    db $22 ; id 41
-    db $23 ; id 42
-    db $20 ; id 43
-    db $21 ; id 44
-    db $25 ; id 45
-    db $18 ; id 46
-    db $15 ; id 47
-    db $16 ; id 48
-    db $1b ; id 49
-    db $1a ; id 50
-    db $17 ; id 51
-    db $19 ; id 52
-    db $2a ; id 53
-    db $27 ; id 54
-    db $28 ; id 55
-    db $24 ; id 56
-    db $26 ; id 57
-    db $29 ; id 58
-    db $d5 ; id 59
-    db $39 ; id 60
-    db $66 ; id 61
-    db $65 ; id 62
-    db $64 ; id 63
-    db $5c ; id 64
-    db $5d ; id 65
-    db $5e ; id 66
-    db $5f ; id 67
-    db $60 ; id 68
-    db $61 ; id 69
-    db $62 ; id 70
-    db $63 ; id 71
-    db $58 ; id 72
-    db $59 ; id 73
-    db $5a ; id 74
-    db $5b ; id 75
+    db SKILL_SLEEPALL ; id 30
+    db SKILL_TAKEMAGIC ; id 31
+    db SKILL_ROBMAGIC ; id 32
+    db SKILL_STOPSPELL ; id 33
+    db SKILL_IRONIZE ; id 34
+    db SKILL_PANICALL ; id 35
+    db SKILL_MAGICBACK ; id 36
+    db SKILL_VIVIFY ; id 37
+    db SKILL_REVIVE ; id 38
+    db SKILL_MPASSMORE ; id 39
+    db SKILL_MPASSMOST ; id 40
+    db SKILL_DECHAOS ; id 41
+    db SKILL_NUMBOFF ; id 42
+    db SKILL_FAREWELL ; id 43
+    db SKILL_ANTIDOTE ; id 44
+    db SKILL_UPPER ; id 45
+    db SKILL_HEALALL ; id 46
+    db SKILL_SACRIFICE ; id 47
+    db SKILL_HEAL ; id 48
+    db SKILL_MPASS ; id 49
+    db SKILL_HEALUSALL ; id 50
+    db SKILL_HEALMORE ; id 51
+    db SKILL_HEALUS ; id 52
+    db SKILL_SPEEDUP ; id 53
+    db SKILL_SAP ; id 54
+    db SKILL_DEFENSE ; id 55
+    db SKILL_CURSEOFF ; id 56
+    db SKILL_INCREASE ; id 57
+    db SKILL_SPEED ; id 58
+    db ACTION_D5 ; id 59
+    db SKILL_MAGICWALL ; id 60
+    db SKILL_MULTICUT ; id 61
+    db SKILL_RAINSLASH ; id 62
+    db SKILL_QUADHITS ; id 63
+    db SKILL_CLEANCUT ; id 64
+    db SKILL_AQUACUT ; id 65
+    db SKILL_METALCUT ; id 66
+    db SKILL_POISONHIT ; id 67
+    db SKILL_PARALYZE ; id 68
+    db SKILL_NAPATTACK ; id 69
+    db SKILL_SQUALLHIT ; id 70
+    db SKILL_BIATTACK ; id 71
+    db SKILL_BUGBLOW ; id 72
+    db SKILL_SHEARS ; id 73
+    db SKILL_DEVILCUT ; id 74
+    db SKILL_ZOMBIECUT ; id 75
     db $fe ; id 76
     db $fe ; id 77
-    db $52 ; id 78
-    db $53 ; id 79
-    db $44 ; id 80
-    db $46 ; id 81
-    db $45 ; id 82
-    db $47 ; id 83
-    db $d6 ; id 84
-    db $49 ; id 85
-    db $4a ; id 86
-    db $4b ; id 87
-    db $d7 ; id 88
-    db $d8 ; id 89
-    db $4c ; id 90
-    db $4d ; id 91
-    db $4e ; id 92
+    db SKILL_BOLTSLASH ; id 78
+    db SKILL_ICESLASH ; id 79
+    db SKILL_FRIGIDAIR ; id 80
+    db SKILL_ICESTORM ; id 81
+    db SKILL_ICEAIR ; id 82
+    db SKILL_WHITEAIR ; id 83
+    db ACTION_D6 ; id 84
+    db SKILL_VACUUM ; id 85
+    db SKILL_LIGHTNING ; id 86
+    db SKILL_ROCKTHROW ; id 87
+    db ACTION_D7 ; id 88
+    db ACTION_D8 ; id 89
+    db SKILL_WATERSHOT ; id 90
+    db SKILL_TIDALWAVE ; id 91
+    db SKILL_CALLHELP ; id 92
     db $fe ; id 93
-    db $48 ; id 94
-    db $67 ; id 95
-    db $69 ; id 96
-    db $68 ; id 97
-    db $55 ; id 98
-    db $50 ; id 99
-    db $51 ; id 100
-    db $57 ; id 101
-    db $4f ; id 102
-    db $d9 ; id 103
-    db $41 ; id 104
-    db $56 ; id 105
-    db $42 ; id 106
-    db $40 ; id 107
-    db $3f ; id 108
-    db $3b ; id 109
-    db $3d ; id 110
-    db $3c ; id 111
-    db $3e ; id 112
-    db $6a ; id 113
-    db $6b ; id 114
-    db $6c ; id 115
-    db $6d ; id 116
-    db $6f ; id 117
-    db $75 ; id 118
-    db $76 ; id 119
-    db $6e ; id 120
-    db $71 ; id 121
-    db $78 ; id 122
-    db $96 ; id 123
-    db $94 ; id 124
-    db $77 ; id 125
-    db $72 ; id 126
-    db $73 ; id 127
-    db $74 ; id 128
-    db $81 ; id 129
-    db $82 ; id 130
-    db $80 ; id 131
-    db $83 ; id 132
-    db $84 ; id 133
-    db $85 ; id 134
-    db $86 ; id 135
-    db $87 ; id 136
-    db $43 ; id 137
-    db $54 ; id 138
-    db $79 ; id 139
-    db $7a ; id 140
-    db $7b ; id 141
-    db $7c ; id 142
-    db $70 ; id 143
-    db $7d ; id 144
+    db SKILL_WINDBEAST ; id 94
+    db SKILL_GIGASLASH ; id 95
+    db SKILL_PSYCHEUP ; id 96
+    db SKILL_CHARGEUP ; id 97
+    db SKILL_DRAKSLASH ; id 98
+    db SKILL_FIRESLASH ; id 99
+    db SKILL_VACUSLASH ; id 100
+    db SKILL_BIRDBLOW ; id 101
+    db SKILL_YELLHELP ; id 102
+    db ACTION_D9 ; id 103
+    db SKILL_BLAZEAIR ; id 104
+    db SKILL_BEASTCUT ; id 105
+    db SKILL_SCORCHING ; id 106
+    db SKILL_FIREAIR ; id 107
+    db SKILL_HELLBLAST ; id 108
+    db SKILL_BEDRAGON ; id 109
+    db SKILL_MEGAMAGIC ; id 110
+    db SKILL_CHANCE ; id 111
+    db SKILL_BIGBANG ; id 112
+    db SKILL_HIGHJUMP ; id 113
+    db SKILL_EVILSLASH ; id 114
+    db SKILL_MASSACRE ; id 115
+    db SKILL_TWINSLASH ; id 116
+    db SKILL_RAMMING ; id 117
+    db SKILL_CURSE ; id 118
+    db SKILL_ODDDANCE ; id 119
+    db SKILL_BERSERKER ; id 120
+    db SKILL_SLEEPAIR ; id 121
+    db SKILL_PANIDANCE ; id 122
+    db SKILL_BLADED ; id 123
+    db SKILL_STRONGD ; id 124
+    db SKILL_ROBDANCE ; id 125
+    db SKILL_PALSYAIR ; id 126
+    db SKILL_POISONGAS ; id 127
+    db SKILL_POISONAIR ; id 128
+    db SKILL_SURGE ; id 129
+    db SKILL_ULTRADOWN ; id 130
+    db SKILL_EERIELITE ; id 131
+    db SKILL_DEMAGIC ; id 132
+    db SKILL_THICKFOG ; id 133
+    db SKILL_TATSUCALL ; id 134
+    db SKILL_DIAGOCALL ; id 135
+    db SKILL_SAMSICALL ; id 136
+    db SKILL_WHITEFIRE ; id 137
+    db SKILL_SLIMEBLOW ; id 138
+    db SKILL_KODANCE ; id 139
+    db SKILL_LUREDANCE ; id 140
+    db SKILL_LIFEDANCE ; id 141
+    db SKILL_HUSTLE ; id 142
+    db SKILL_KAMIKAZE ; id 143
+    db SKILL_SIDESTEP ; id 144
     db $fe ; id 145
-    db $91 ; id 146
-    db $92 ; id 147
-    db $8e ; id 148
-    db $8c ; id 149
-    db $90 ; id 150
-    db $88 ; id 151
-    db $89 ; id 152
-    db $8a ; id 153
-    db $8b ; id 154
+    db SKILL_GEYSER ; id 146
+    db SKILL_DANCESHUT ; id 147
+    db SKILL_BIGTRIP ; id 148
+    db SKILL_SICKLICK ; id 149
+    db SKILL_WARCRY ; id 150
+    db SKILL_BAZOOCALL ; id 151
+    db SKILL_SUCKAIR ; id 152
+    db SKILL_FOCUS ; id 153
+    db SKILL_LUSHLICKS ; id 154
     db $fe ; id 155
     db $fe ; id 156
-    db $8f ; id 157
-    db $7f ; id 158
-    db $93 ; id 159
-    db $95 ; id 160
+    db SKILL_AHHH ; id 157
+    db SKILL_RADIANT ; id 158
+    db SKILL_MOUTHSHUT ; id 159
+    db SKILL_DODGE ; id 160
     db $fe ; id 161
-    db $7e ; id 162
+    db SKILL_SANDSTORM ; id 162
     db $fe ; id 163
-    db $37 ; id 164
+    db SKILL_BOUNCE ; id 164
     db $fe ; id 165
     db $fe ; id 166
     db $fe ; id 167
     db $fe ; id 168
-    db $38 ; id 169
+    db SKILL_BARRIER ; id 169
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)

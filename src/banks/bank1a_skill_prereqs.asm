@@ -388,61 +388,61 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0d ; id 2
     dw 0, 46, 0, 0, 0, 116
-    db $01, $ff, $ff, $ff, $ff
+    db SKILL_BLAZE, $ff, $ff, $ff, $ff
     db $1c ; id 3
     dw 0, 112, 0, 0, 0, 263
-    db $02, $ff, $ff, $ff, $ff
+    db SKILL_BLAZEMORE, $ff, $ff, $ff, $ff
     db $03 ; id 4
     dw 0, 11, 0, 0, 0, 42
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 5
     dw 0, 34, 0, 0, 0, 94
-    db $04, $ff, $ff, $ff, $ff
+    db SKILL_FIREBAL, $ff, $ff, $ff, $ff
     db $1a ; id 6
     dw 0, 96, 0, 0, 0, 220
-    db $05, $ff, $ff, $ff, $ff
+    db SKILL_FIREBANE, $ff, $ff, $ff, $ff
     db $04 ; id 7
     dw 0, 13, 0, 0, 0, 47
     db $ff, $ff, $ff, $ff, $ff
     db $0e ; id 8
     dw 0, 50, 0, 0, 0, 123
-    db $07, $ff, $ff, $ff, $ff
+    db SKILL_BANG, $ff, $ff, $ff, $ff
     db $1d ; id 9
     dw 0, 120, 0, 0, 0, 285
-    db $08, $ff, $ff, $ff, $ff
+    db SKILL_BOOM, $ff, $ff, $ff, $ff
     db $02 ; id 10
     dw 0, 10, 0, 0, 0, 38
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 11
     dw 0, 38, 0, 0, 0, 101
-    db $0a, $ff, $ff, $ff, $ff
+    db SKILL_INFERNOS, $ff, $ff, $ff, $ff
     db $15 ; id 12
     dw 0, 104, 0, 0, 0, 242
-    db $0b, $ff, $ff, $ff, $ff
+    db SKILL_INFERMORE, $ff, $ff, $ff, $ff
     db $06 ; id 13
     dw 0, 20, 0, 0, 0, 63
     db $ff, $ff, $ff, $ff, $ff
     db $0f ; id 14
     dw 0, 54, 0, 0, 0, 130
-    db $0d, $ff, $ff, $ff, $ff
+    db SKILL_BOLT, $ff, $ff, $ff, $ff
     db $1e ; id 15
     dw 0, 128, 0, 0, 0, 306
-    db $0e, $ff, $ff, $ff, $ff
+    db SKILL_ZAP, $ff, $ff, $ff, $ff
     db $05 ; id 16
     dw 0, 16, 0, 0, 0, 54
     db $ff, $ff, $ff, $ff, $ff
     db $0c ; id 17
     dw 0, 42, 0, 0, 0, 108
-    db $10, $ff, $ff, $ff, $ff
+    db SKILL_ICEBOLT, $ff, $ff, $ff, $ff
     db $19 ; id 18
     dw 0, 88, 0, 0, 0, 198
-    db $11, $ff, $ff, $ff, $ff
+    db SKILL_SNOWSTORM, $ff, $ff, $ff, $ff
     db $10 ; id 19
     dw 0, 58, 0, 0, 0, 137
     db $ff, $ff, $ff, $ff, $ff
     db $18 ; id 20
     dw 0, 80, 0, 0, 0, 177
-    db $13, $ff, $ff, $ff, $ff
+    db SKILL_BEAT, $ff, $ff, $ff, $ff
     db $1c ; id 21
     dw 0, 40, 0, 140, 0, 78
     db $ff, $ff, $ff, $ff, $ff
@@ -451,34 +451,34 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 23
     dw 0, 52, 0, 0, 0, 87
-    db $16, $ff, $ff, $ff, $ff
+    db SKILL_HEAL, $ff, $ff, $ff, $ff
     db $10 ; id 24
     dw 0, 82, 0, 0, 0, 144
-    db $17, $ff, $ff, $ff, $ff
+    db SKILL_HEALMORE, $ff, $ff, $ff, $ff
     db $14 ; id 25
     dw 0, 140, 0, 0, 0, 216
     db $ff, $ff, $ff, $ff, $ff
     db $1c ; id 26
     dw 0, 196, 0, 0, 0, 288
-    db $19, $ff, $ff, $ff, $ff
+    db SKILL_HEALUS, $ff, $ff, $ff, $ff
     db $01 ; id 27
     dw 0, 55, 0, 0, 0, 11
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 28
     dw 0, 120, 0, 0, 0, 87
-    db $1b, $ff, $ff, $ff, $ff
+    db SKILL_MPASS, $ff, $ff, $ff, $ff
     db $10 ; id 29
     dw 0, 82, 0, 0, 0, 144
-    db $1c, $ff, $ff, $ff, $ff
+    db SKILL_MPASSMORE, $ff, $ff, $ff, $ff
     db $0e ; id 30
     dw 0, 63, 0, 0, 0, 98
     db $ff, $ff, $ff, $ff, $ff
     db $1b ; id 31
     dw 0, 174, 0, 0, 0, 274
-    db $1e, $ff, $ff, $ff, $ff
+    db SKILL_VIVIFY, $ff, $ff, $ff, $ff
     db $20 ; id 32
     dw 0, 188, 0, 0, 0, 317
-    db $ff, $15, $1f, $ff, $ff
+    db $ff, SKILL_SACRIFICE, SKILL_REVIVE, $ff, $ff
     db $05 ; id 33
     dw 0, 21, 0, 0, 0, 47
     db $ff, $ff, $ff, $ff, $ff
@@ -496,25 +496,25 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $06 ; id 38
     dw 0, 27, 0, 0, 0, 44
-    db $25, $ff, $ff, $ff, $ff
+    db SKILL_UPPER, $ff, $ff, $ff, $ff
     db $04 ; id 39
     dw 0, 18, 0, 0, 0, 27
     db $ff, $ff, $ff, $ff, $ff
     db $08 ; id 40
     dw 0, 36, 0, 0, 0, 58
-    db $27, $ff, $ff, $ff, $ff
+    db SKILL_SAP, $ff, $ff, $ff, $ff
     db $01 ; id 41
     dw 0, 10, 0, 0, 0, 15
     db $ff, $ff, $ff, $ff, $ff
     db $05 ; id 42
     dw 0, 24, 0, 0, 0, 36
-    db $29, $ff, $ff, $ff, $ff
+    db SKILL_SPEED, $ff, $ff, $ff, $ff
     db $03 ; id 43
     dw 0, 16, 0, 0, 0, 26
     db $ff, $ff, $ff, $ff, $ff
     db $07 ; id 44
     dw 0, 32, 0, 0, 0, 51
-    db $2b, $ff, $ff, $ff, $ff
+    db SKILL_SLOW, $ff, $ff, $ff, $ff
     db $11 ; id 45
     dw 0, 72, 0, 0, 0, 119
     db $ff, $ff, $ff, $ff, $ff
@@ -526,7 +526,7 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0b ; id 48
     dw 0, 52, 0, 0, 0, 83
-    db $2f, $ff, $ff, $ff, $ff
+    db SKILL_SLEEP, $ff, $ff, $ff, $ff
     db $0d ; id 49
     dw 0, 58, 0, 0, 0, 94
     db $ff, $ff, $ff, $ff, $ff
@@ -547,7 +547,7 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $14 ; id 55
     dw 0, 84, 0, 0, 0, 141
-    db $36, $ff, $ff, $ff, $ff
+    db SKILL_MAGICBACK, $ff, $ff, $ff, $ff
     db $12 ; id 56
     dw 0, 76, 0, 0, 0, 126
     db $ff, $ff, $ff, $ff, $ff
@@ -565,43 +565,43 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $26 ; id 61
     dw 0, 210, 0, 0, 0, 794
-    db $03, $06, $09, $0c, $12
+    db SKILL_BLAZEMOST, SKILL_FIREBOLT, SKILL_EXPLODET, SKILL_INFERMOST, SKILL_BLIZZARD
     db $24 ; id 62
     dw 196, 196, 0, 0, 0, 612
-    db $ff, $09, $43, $47, $ff
+    db $ff, SKILL_EXPLODET, SKILL_WHITEFIRE, SKILL_WHITEAIR, $ff
     db $22 ; id 63
     dw 184, 184, 0, 0, 0, 538
-    db $ff, $0f, $4a, $ff, $ff
+    db $ff, SKILL_THORDAIN, SKILL_LIGHTNING, $ff, $ff
     db $03 ; id 64
     dw 21, 0, 0, 0, 0, 0
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 65
     dw 70, 0, 0, 0, 0, 0
-    db $40, $ff, $ff, $ff, $ff
+    db SKILL_FIREAIR, $ff, $ff, $ff, $ff
     db $14 ; id 66
     dw 140, 0, 0, 0, 0, 0
-    db $41, $ff, $ff, $ff, $ff
+    db SKILL_BLAZEAIR, $ff, $ff, $ff, $ff
     db $14 ; id 67
     dw 210, 0, 0, 0, 0, 0
-    db $42, $ff, $ff, $ff, $ff
+    db SKILL_SCORCHING, $ff, $ff, $ff, $ff
     db $03 ; id 68
     dw 21, 0, 0, 0, 0, 0
     db $ff, $ff, $ff, $ff, $ff
     db $0a ; id 69
     dw 70, 0, 0, 0, 0, 0
-    db $44, $ff, $ff, $ff, $ff
+    db SKILL_FRIGIDAIR, $ff, $ff, $ff, $ff
     db $14 ; id 70
     dw 140, 0, 0, 0, 0, 0
-    db $45, $ff, $ff, $ff, $ff
+    db SKILL_ICEAIR, $ff, $ff, $ff, $ff
     db $14 ; id 71
     dw 210, 0, 0, 0, 0, 0
-    db $46, $ff, $ff, $ff, $ff
+    db SKILL_ICESTORM, $ff, $ff, $ff, $ff
     db $0d ; id 72
     dw 74, 0, 60, 0, 84, 0
     db $ff, $ff, $ff, $ff, $ff
     db $13 ; id 73
     dw 112, 0, 114, 0, 132, 0
-    db $48, $ff, $ff, $ff, $ff
+    db SKILL_WINDBEAST, $ff, $ff, $ff, $ff
     db $0a ; id 74
     dw 65, 0, 90, 0, 52, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -613,25 +613,25 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $13 ; id 77
     dw 112, 0, 114, 0, 132, 0
-    db $4c, $ff, $ff, $ff, $ff
+    db SKILL_WATERSHOT, $ff, $ff, $ff, $ff
     db $11 ; id 78
     dw 84, 42, 0, 0, 68, 98
     db $ff, $ff, $ff, $ff, $ff
     db $17 ; id 79
     dw 128, 64, 0, 0, 82, 134
-    db $4e, $ff, $ff, $ff, $ff
+    db SKILL_CALLHELP, $ff, $ff, $ff, $ff
     db $0b ; id 80
     dw 77, 34, 66, 0, 0, 98
-    db $ff, $02, $68, $ff, $ff
+    db $ff, SKILL_BLAZEMORE, SKILL_CHARGEUP, $ff, $ff
     db $0b ; id 81
     dw 77, 34, 66, 0, 0, 76
-    db $ff, $48, $68, $ff, $ff
+    db $ff, SKILL_WINDBEAST, SKILL_CHARGEUP, $ff, $ff
     db $0b ; id 82
     dw 77, 34, 66, 0, 0, 76
-    db $ff, $4a, $68, $ff, $ff
+    db $ff, SKILL_LIGHTNING, SKILL_CHARGEUP, $ff, $ff
     db $0b ; id 83
     dw 77, 34, 66, 0, 0, 76
-    db $ff, $11, $68, $ff, $ff
+    db $ff, SKILL_SNOWSTORM, SKILL_CHARGEUP, $ff, $ff
     db $0c ; id 84
     dw 62, 0, 68, 0, 72, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -670,28 +670,28 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $09 ; id 96
     dw 63, 0, 54, 0, 0, 98
-    db $ff, $5f, $61, $ff, $ff
+    db $ff, SKILL_POISONHIT, SKILL_NAPATTACK, $ff, $ff
     db $07 ; id 97
     dw 49, 0, 42, 0, 0, 76
     db $ff, $ff, $ff, $ff, $ff
     db $0c ; id 98
     dw 72, 0, 68, 0, 82, 0
-    db $ff, $2a, $68, $ff, $ff
+    db $ff, SKILL_SPEEDUP, SKILL_CHARGEUP, $ff, $ff
     db $13 ; id 99
     dw 98, 0, 88, 0, 112, 0
     db $ff, $ff, $ff, $ff, $ff
     db $18 ; id 100
     dw 124, 0, 112, 0, 136, 0
-    db $63, $ff, $ff, $ff, $ff
+    db SKILL_BIATTACK, $ff, $ff, $ff, $ff
     db $0f ; id 101
     dw 92, 0, 90, 0, 96, 0
-    db $ff, $62, $63, $ff, $ff
+    db $ff, SKILL_SQUALLHIT, SKILL_BIATTACK, $ff, $ff
     db $1c ; id 102
     dw 154, 140, 168, 0, 168, 572
-    db $ff, $49, $5b, $ff, $ff
+    db $ff, SKILL_VACUUM, SKILL_ZOMBIECUT, $ff, $ff
     db $21 ; id 103
     dw 231, 164, 198, 0, 198, 608
-    db $ff, $50, $51, $52, $53
+    db $ff, SKILL_FIRESLASH, SKILL_VACUSLASH, SKILL_BOLTSLASH, SKILL_ICESLASH
     db $0e ; id 104
     dw 98, 0, 0, 84, 0, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -718,19 +718,19 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $12 ; id 112
     dw 126, 0, 108, 108, 0, 0
-    db $ff, $68, $6f, $ff, $ff
+    db $ff, SKILL_CHARGEUP, SKILL_RAMMING, $ff, $ff
     db $0a ; id 113
     dw 70, 0, 0, 0, 0, 108
     db $ff, $ff, $ff, $ff, $ff
     db $10 ; id 114
     dw 112, 0, 0, 0, 0, 173
-    db $ff, $71, $74, $ff, $ff
+    db $ff, SKILL_SLEEPAIR, SKILL_POISONAIR, $ff, $ff
     db $09 ; id 115
     dw 63, 0, 0, 0, 0, 98
     db $ff, $ff, $ff, $ff, $ff
     db $0e ; id 116
     dw 98, 0, 0, 0, 0, 152
-    db $73, $ff, $ff, $ff, $ff
+    db SKILL_POISONGAS, $ff, $ff, $ff, $ff
     db $0f ; id 117
     dw 0, 65, 0, 0, 82, 148
     db $ff, $ff, $ff, $ff, $ff
@@ -739,22 +739,22 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0c ; id 119
     dw 68, 39, 0, 0, 85, 110
-    db $76, $ff, $ff, $ff, $ff
+    db SKILL_ODDDANCE, $ff, $ff, $ff, $ff
     db $0d ; id 120
     dw 74, 0, 0, 0, 78, 141
     db $ff, $ff, $ff, $ff, $ff
     db $14 ; id 121
     dw 140, 72, 0, 0, 120, 216
-    db $ff, $75, $7a, $ff, $ff
+    db $ff, SKILL_CURSE, SKILL_LUREDANCE, $ff, $ff
     db $0e ; id 122
     dw 84, 0, 0, 0, 98, 0
     db $ff, $ff, $ff, $ff, $ff
     db $1e ; id 123
     dw 210, 0, 0, 0, 180, 446
-    db $ff, $15, $7c, $ff, $ff
+    db $ff, SKILL_SACRIFICE, SKILL_HUSTLE, $ff, $ff
     db $12 ; id 124
     dw 114, 0, 0, 0, 130, 173
-    db $ff, $18, $7d, $ff, $ff
+    db $ff, SKILL_HEALALL, SKILL_SIDESTEP, $ff, $ff
     db $09 ; id 125
     dw 63, 0, 0, 0, 54, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -766,16 +766,16 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0e ; id 128
     dw 0, 65, 0, 0, 84, 152
-    db $ff, $75, $7f, $ff, $ff
+    db $ff, SKILL_CURSE, SKILL_RADIANT, $ff, $ff
     db $17 ; id 129
     dw 0, 130, 0, 0, 0, 306
-    db $ff, $21, $22, $23, $24
+    db $ff, SKILL_ANTIDOTE, SKILL_DECHAOS, SKILL_NUMBOFF, SKILL_CURSEOFF
     db $15 ; id 130
     dw 0, 110, 0, 0, 0, 270
-    db $ff, $28, $2c, $2e, $ff
+    db $ff, SKILL_DEFENSE, SKILL_SLOWALL, SKILL_SURROUND, $ff
     db $14 ; id 131
     dw 0, 100, 0, 0, 0, 252
-    db $ff, $81, $82, $ff, $ff
+    db $ff, SKILL_SURGE, SKILL_ULTRADOWN, $ff, $ff
     db $16 ; id 132
     dw 0, 120, 0, 0, 0, 288
     db $ff, $ff, $ff, $ff, $ff
@@ -784,31 +784,31 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $19 ; id 134
     dw 0, 100, 0, 0, 0, 250
-    db $85, $ff, $ff, $ff, $ff
+    db SKILL_TATSUCALL, $ff, $ff, $ff, $ff
     db $1e ; id 135
     dw 0, 130, 0, 0, 0, 400
-    db $86, $ff, $ff, $ff, $ff
+    db SKILL_DIAGOCALL, $ff, $ff, $ff, $ff
     db $23 ; id 136
     dw 0, 160, 0, 0, 0, 550
-    db $87, $ff, $ff, $ff, $ff
+    db SKILL_SAMSICALL, $ff, $ff, $ff, $ff
     db $11 ; id 137
     dw 119, 0, 0, 102, 0, 0
     db $ff, $ff, $ff, $ff, $ff
     db $12 ; id 138
     dw 126, 0, 0, 108, 108, 195
-    db $ff, $68, $89, $9f, $ff
+    db $ff, SKILL_CHARGEUP, SKILL_SUCKAIR, SKILL_MEDITATE, $ff
     db $07 ; id 139
     dw 55, 0, 0, 0, 67, 0
     db $ff, $ff, $ff, $ff, $ff
     db $0d ; id 140
     dw 81, 0, 0, 0, 94, 0
-    db $8b, $ff, $ff, $ff, $ff
+    db SKILL_LUSHLICKS, $ff, $ff, $ff, $ff
     db $06 ; id 141
     dw 32, 0, 31, 0, 48, 0
     db $ff, $ff, $ff, $ff, $ff
     db $0c ; id 142
     dw 66, 0, 63, 0, 77, 0
-    db $8d, $ff, $ff, $ff, $ff
+    db SKILL_LEGSWEEP, $ff, $ff, $ff, $ff
     db $0a ; id 143
     dw 0, 0, 60, 0, 60, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -817,7 +817,7 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $16 ; id 145
     dw 140, 120, 120, 0, 120, 288
-    db $ff, $4b, $6a, $ff, $ff
+    db $ff, SKILL_ROCKTHROW, SKILL_HIGHJUMP, $ff, $ff
     db $10 ; id 146
     dw 100, 0, 0, 0, 120, 0
     db $ff, $ff, $ff, $ff, $ff
@@ -832,40 +832,40 @@ BattleEnd_Step3_FindSkillInTable_Data::
     db $ff, $ff, $ff, $ff, $ff
     db $0e ; id 150
     dw 98, 0, 84, 84, 84, 0
-    db $ff, $6d, $94, $ff, $ff
+    db $ff, SKILL_TWINSLASH, SKILL_STRONGD, $ff, $ff
     db $05 ; id 151
     dw 35, 0, 0, 30, 30, 0
     db $ff, $ff, $ff, $ff, $ff
     db $0c ; id 152
     dw 84, 0, 0, 72, 72, 0
-    db $97, $ff, $ff, $ff, $ff
+    db SKILL_COVER, $ff, $ff, $ff, $ff
     db $0b ; id 153
     dw 75, 0, 0, 84, 70, 0
     db $ff, $ff, $ff, $ff, $ff
     db $13 ; id 154
     dw 140, 0, 0, 126, 140, 0
-    db $99, $ff, $ff, $ff, $ff
+    db SKILL_TAILWIND, $ff, $ff, $ff, $ff
     db $14 ; id 155
     dw 100, 94, 0, 84, 0, 202
-    db $ff, $37, $4d, $ff, $ff
+    db $ff, SKILL_BOUNCE, SKILL_TIDALWAVE, $ff, $ff
     db $23 ; id 156
     dw 87, 160, 0, 0, 0, 794
-    db $ff, $33, $92, $93, $ff
+    db $ff, SKILL_STOPSPELL, SKILL_DANCESHUT, SKILL_MOUTHSHUT, $ff
     db $0d ; id 157
     dw 91, 0, 0, 78, 0, 0
     db $ff, $ff, $ff, $ff, $ff
     db $15 ; id 158
     dw 147, 147, 126, 126, 126, 227
-    db $ff, $3a, $8a, $ff, $ff
+    db $ff, SKILL_TRANSFORM, SKILL_FOCUS, $ff, $ff
     db $1a ; id 159
     dw 182, 0, 0, 156, 0, 281
-    db $ff, $94, $98, $ff, $ff
+    db $ff, SKILL_STRONGD, SKILL_GUARDIAN, $ff, $ff
     db $1b ; id 160
     dw 198, 94, 0, 0, 145, 292
-    db $ff, $1f, $90, $ff, $ff
+    db $ff, SKILL_REVIVE, SKILL_WARCRY, $ff, $ff
     db $18 ; id 161
     dw 116, 96, 0, 0, 78, 263
-    db $ff, $9f, $a0, $ff, $ff
+    db $ff, SKILL_MEDITATE, SKILL_LIFESONG, $ff, $ff
     db $04 ; id 162
     dw 0, 28, 0, 0, 0, 44
     db $ff, $ff, $ff, $ff, $ff
@@ -1074,122 +1074,122 @@ SkillPrerequisiteLists::
 SkillPrerequisites_Blazemost::
     db $ff ; entry 0
 SkillPrerequisites_Blaze::
-    db $02 ; entry 1
+    db SKILL_BLAZEMORE ; entry 1
 SkillPrerequisites_Blazemore::
-    db $03 ; entry 2
+    db SKILL_BLAZEMOST ; entry 2
     db $ff ; entry 3
 SkillPrerequisites_Firebal::
-    db $05 ; entry 4
+    db SKILL_FIREBANE ; entry 4
 SkillPrerequisites_Firebane::
-    db $06 ; entry 5
+    db SKILL_FIREBOLT ; entry 5
     db $ff ; entry 6
 SkillPrerequisites_Bang::
-    db $08 ; entry 7
+    db SKILL_BOOM ; entry 7
 SkillPrerequisites_Boom::
-    db $09 ; entry 8
+    db SKILL_EXPLODET ; entry 8
     db $ff ; entry 9
 SkillPrerequisites_Infernos::
-    db $0b ; entry 10
+    db SKILL_INFERMORE ; entry 10
 SkillPrerequisites_Infermore::
-    db $0c ; entry 11
+    db SKILL_INFERMOST ; entry 11
     db $ff ; entry 12
 SkillPrerequisites_Bolt::
-    db $0e ; entry 13
+    db SKILL_ZAP ; entry 13
 SkillPrerequisites_Zap::
-    db $0f ; entry 14
+    db SKILL_THORDAIN ; entry 14
     db $ff ; entry 15
 SkillPrerequisites_IceBolt::
-    db $11 ; entry 16
+    db SKILL_SNOWSTORM ; entry 16
 SkillPrerequisites_SnowStorm::
-    db $12 ; entry 17
+    db SKILL_BLIZZARD ; entry 17
     db $ff ; entry 18
 SkillPrerequisites_Beat::
-    db $14 ; entry 19
+    db SKILL_DEFEAT ; entry 19
     db $ff ; entry 20
 SkillPrerequisites_Heal::
-    db $17 ; entry 21
+    db SKILL_HEALMORE ; entry 21
 SkillPrerequisites_HealMore::
-    db $18 ; entry 22
+    db SKILL_HEALALL ; entry 22
     db $ff ; entry 23
 SkillPrerequisites_HealUs::
-    db $1a ; entry 24
+    db SKILL_HEALUSALL ; entry 24
     db $ff ; entry 25
 SkillPrerequisites_MPass::
-    db $1c ; entry 26
+    db SKILL_MPASSMORE ; entry 26
 SkillPrerequisites_MPassmore::
-    db $1d ; entry 27
+    db SKILL_MPASSMOST ; entry 27
     db $ff ; entry 28
 SkillPrerequisites_Vivify::
-    db $1f ; entry 29
+    db SKILL_REVIVE ; entry 29
     db $ff ; entry 30
 SkillPrerequisites_Upper::
-    db $26 ; entry 31
+    db SKILL_INCREASE ; entry 31
     db $ff ; entry 32
 SkillPrerequisites_Sap::
-    db $28 ; entry 33
+    db SKILL_DEFENSE ; entry 33
     db $ff ; entry 34
 SkillPrerequisites_Speed::
-    db $2a ; entry 35
+    db SKILL_SPEEDUP ; entry 35
     db $ff ; entry 36
 SkillPrerequisites_Slow::
-    db $2c ; entry 37
+    db SKILL_SLOWALL ; entry 37
     db $ff ; entry 38
 SkillPrerequisites_Sleep::
-    db $30 ; entry 39
+    db SKILL_SLEEPALL ; entry 39
     db $ff ; entry 40
 SkillPrerequisites_MagicBack::
-    db $37 ; entry 41
+    db SKILL_BOUNCE ; entry 41
     db $ff ; entry 42
 SkillPrerequisites_FireAir::
-    db $41 ; entry 43
+    db SKILL_BLAZEAIR ; entry 43
 SkillPrerequisites_BlazeAir::
-    db $42 ; entry 44
+    db SKILL_SCORCHING ; entry 44
 SkillPrerequisites_Scorching::
-    db $43 ; entry 45
+    db SKILL_WHITEFIRE ; entry 45
     db $ff ; entry 46
 SkillPrerequisites_FrigidAir::
-    db $45 ; entry 47
+    db SKILL_ICEAIR ; entry 47
 SkillPrerequisites_IceAir::
-    db $46 ; entry 48
+    db SKILL_ICESTORM ; entry 48
 SkillPrerequisites_IceStorm::
-    db $47 ; entry 49
+    db SKILL_WHITEAIR ; entry 49
     db $ff ; entry 50
 SkillPrerequisites_WindBeast::
-    db $49 ; entry 51
+    db SKILL_VACUUM ; entry 51
     db $ff ; entry 52
 SkillPrerequisites_Watershot::
-    db $4d ; entry 53
+    db SKILL_TIDALWAVE ; entry 53
     db $ff ; entry 54
 SkillPrerequisites_CallHelp::
-    db $4f ; entry 55
+    db SKILL_YELLHELP ; entry 55
     db $ff ; entry 56
 SkillPrerequisites_BiAttack::
-    db $64 ; entry 57
+    db SKILL_QUADHITS ; entry 57
     db $ff ; entry 58
 SkillPrerequisites_PoisonGas::
-    db $74 ; entry 59
+    db SKILL_POISONAIR ; entry 59
     db $ff ; entry 60
 SkillPrerequisites_OddDance::
-    db $77 ; entry 61
+    db SKILL_ROBDANCE ; entry 61
     db $ff ; entry 62
 SkillPrerequisites_TatsuCall::
-    db $86 ; entry 63
+    db SKILL_DIAGOCALL ; entry 63
 SkillPrerequisites_DiagoCall::
-    db $87 ; entry 64
+    db SKILL_SAMSICALL ; entry 64
 SkillPrerequisites_SamsiCall::
-    db $88 ; entry 65
+    db SKILL_BAZOOCALL ; entry 65
     db $ff ; entry 66
 SkillPrerequisites_LushLicks::
-    db $8c ; entry 67
+    db SKILL_SICKLICK ; entry 67
     db $ff ; entry 68
 SkillPrerequisites_LegSweep::
-    db $8e ; entry 69
+    db SKILL_BIGTRIP ; entry 69
     db $ff ; entry 70
 SkillPrerequisites_Cover::
-    db $98 ; entry 71
+    db SKILL_GUARDIAN ; entry 71
     db $ff ; entry 72
 SkillPrerequisites_TailWind::
-    db $9a ; entry 73
+    db SKILL_STORMWIND ; entry 73
     db $ff ; entry 74
 
 AddSkillCToFreeSlotUnlessExcluded_Data::

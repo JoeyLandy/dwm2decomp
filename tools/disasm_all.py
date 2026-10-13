@@ -36,6 +36,7 @@ from lzss_gfx import decompress as lzss_decompress  # noqa: E402
 from sound_tracks import decode_event, decode_header, decode_region  # noqa: E402
 import gb_symbols as gbs  # noqa: E402
 import gb_text  # noqa: E402
+import gb_constants  # noqa: E402
 import present  # noqa: E402
 
 _T0 = time.monotonic()
@@ -511,6 +512,40 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
     return ["\n".join(ls) for ls in files], len(names)
 
 
+ID_LOAD = re.compile(r"^\s+ld a, \[(\w+)\]$")
+ID_VARS = {"wBattleActionId": "SKILL", "wItemId": "ITEM"}  # D-007: RAM bytes that hold an id of that kind
+ACTION_CP = re.compile(r"^(\s+cp a, )\$([0-9A-F]{2})(\s*;.*)?$")
+ACTION_KEEPS_A = re.compile(r"^\s+(?:cp a, |jr (?:z|nz|c|nc), |jp (?:z|nz|c|nc), |ret (?:z|nz|c|nc)$)")
+
+
+def name_id_compares(texts: list[str], consts: dict) -> tuple[list[str], int]:
+    """D-007: after `ld a, [V]` for a RAM byte V that holds an id (ID_VARS), the `cp a, $NN` of the comparison chain
+    that follows name the id (SKILL_*/ACTION_*, ITEM_*). The chain ends at a label or any instruction other than cp
+    and a conditional jr/jp/ret, since A may then hold something else."""
+    out, n = [], 0
+    for text in texts:
+        ls = text.split("\n")
+        table = None
+        for i, ln in enumerate(ls):
+            m = ID_LOAD.match(ln)
+            if m:
+                table = consts[ID_VARS[m.group(1)]] if m.group(1) in ID_VARS else None
+                continue
+            if table is None:
+                continue
+            if not ln.strip() or ln.lstrip().startswith(";"):
+                continue
+            m = ACTION_CP.match(ln)
+            if m and int(m.group(2), 16) in table:
+                ls[i] = m.group(1) + table[int(m.group(2), 16)][0] + (m.group(3) or "")
+                n += 1
+                continue
+            if not ACTION_KEEPS_A.match(ln):
+                table = None
+        out.append("\n".join(ls))
+    return out, n
+
+
 def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[str], reg: str = "c",
                         buffers: tuple[str, ...] = ("wRecordBufA", "wRecordBufB", "wChildRecord", "wGiftRecord")) -> tuple[list[str], int]:
     """E-0290: `ld c, $NN` whose value reaches a record-access routine that takes the field offset in C
@@ -572,6 +607,8 @@ def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[
 class Rom:
     def __init__(self, data: bytes):
         self.data = data
+        # D-007: MONSTER_*, SKILL_*, ITEM_* from the name tables in bank $08 (none for a synthetic test image)
+        self.consts = gb_constants.build(data) if len(data) > 9 * BANK else {}
         self.nbanks = len(data) // BANK
         self.zero = {b for b in range(self.nbanks) if not any(data[b * BANK:(b + 1) * BANK])}
         # insn[bank][addr] = (len, text, kind, tgt) or ("dw", word)
@@ -4876,10 +4913,17 @@ class Rom:
                     per = f.get("per_line", len(words))  # long rows wrap after "per_line" words
                     for v in words if f.get("names") else []:  # one word per line with what it names (E-0199)
                         note = self.word_note(f["names"], v)
-                        out.append(f"    dw ${v:04X}" + (tag if not tagged else " ;") + (f" {note}" if note else ""))
+                        const = (self.consts["MONSTER"][v][0] if f["names"] not in ("monster_table", "message")
+                                 and 0 < v < 0x180 and self.consts else None)  # D-007: a monster id by name
+                        if const:
+                            out.append(f"    dw {const}" + ("" if tagged else tag))
+                        else:
+                            out.append(f"    dw ${v:04X}" + (tag if not tagged else " ;") + (f" {note}" if note else ""))
                         tagged = True
+                    enum = self.consts.get(f["enum"].upper(), {}) if f.get("enum") and self.consts else {}
                     for j in range(0, len(words) if not f.get("names") else 0, per):
                         out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True))
+                                                         or (enum[v][0] if v in enum and v else None)  # D-007
                                                          or (str(v) if f.get("decimal") else f"${v:04X}")
                                                          for v in words[j:j + per]) + suffix(f if j == 0 else None))
                         tagged = True
@@ -4908,6 +4952,12 @@ class Rom:
                         skip_bank = nxt
                     else:
                         out.append(f"    dw {nm or f'${tgt:04X}'}" + suffix(f))
+                    tagged = True
+                elif f.get("enum") and self.consts:  # D-007: ids by name (SKILL_*, ITEM_*, MONSTER_*)
+                    flush()
+                    table = self.consts[f["enum"].upper()]
+                    out.append("    db " + ", ".join(table[v][0] if v in table else f"${v:02X}" for v in raws[fi])
+                               + suffix(f))
                     tagged = True
                 else:
                     if f.get("line") or fc:
@@ -5779,6 +5829,8 @@ def main() -> int:
         texts, nk = name_record_offsets(texts, extra[key], set(cfg_k["callees"]), "c", tuple(cfg_k["buffers"]))
         log(f"{key} field offsets named: {nk}")
     sp_fields = extra["species"]
+    texts, nact = name_id_compares(texts, rom.consts)
+    log(f"id compares named: {nact}")
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")
@@ -5815,11 +5867,13 @@ def main() -> int:
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
+    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts)
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
     (ROOT / "src/main.asm").write_text(
         'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\nINCLUDE "records.inc"\n'
+        'INCLUDE "constants.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
     present.main([str(out)])

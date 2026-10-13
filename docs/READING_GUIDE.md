@@ -21,7 +21,8 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | `src/main.asm` | The include list: definitions first, then the 256 bank files in order. |
 | `src/banks/bankNN_<topic>.asm` | One ROM bank each, named and headed by what it holds (`bank00_home.asm`, `bank36_battle_effects.asm`, `bank2f_battle_text.asm`). The topics are in `config/banks.json`. |
 | `src/ram.asm` | Names for work RAM (`w...`), high RAM (`h...`) and save RAM (`s...`) addresses, each with a note. |
-| `src/records.inc` | Field offsets inside the game's records: `MON_*` (a monster in the save, $A5 bytes), `BATTLER_*` (a monster in battle), `SPECIES_*`, `OBJ_*` (a field object). Code names a field as `ld c, MON_LEVEL` before a record-access routine. |
+| `src/records.inc` | Field offsets inside the game's records: `MON_*` (a monster in the save, $A5 bytes), `BATTLER_*` (a monster in battle), `SPECIES_*`, `OBJ_*` (a field object), and `RESIST_*`, the 27 resistances. Code names a field as `ld c, MON_LEVEL` before a record-access routine. |
+| `src/constants.inc` | Named ids made from the ROM's own name tables: `MONSTER_DRACKY`, `SKILL_DEMAGIC`, `ITEM_HERB`, and `ACTION_FIGHT` for the plain attack. Code compares battle actions by name (`cp SKILL_DEMAGIC`), and data tables list skills and monsters by name (`db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills`). |
 | `src/macros.inc` | Macros for the ROM's own idioms (below) and the event-script command constants. |
 | `src/charmap.inc` | The text encoding: characters, and the text printer's commands as `<TOKENS>`. |
 | `src/hardware.inc` | Game Boy hardware register names. |

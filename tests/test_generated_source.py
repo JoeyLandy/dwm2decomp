@@ -407,7 +407,7 @@ class DerivedLayouts(unittest.TestCase):
         text = (BANKS / "bank0e.asm").read_text(encoding="utf-8")
         self.assertIn("    dw $FE04 ; id 0 same species, parent B +4 or more\n", text)
         self.assertIn("FamilyPairResults000::\nData_00E_7E99:: ; address name\n    dw $FFFF ; id 0 parent A's species\n"
-                      "    dw $0001 ; DrakSlime\n", text)
+                      "    dw MONSTER_DRAKSLIME\n", text)  # D-007: monster ids by name
         self.assertNotIn("$03A508", text)  # the old INCBIN over the rule lists
 
     def test_fill_tile_callers_use_the_callee_bank(self):

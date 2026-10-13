@@ -2600,8 +2600,8 @@ DefaultMonsterRecord::
     db $00 ; $28 (unused)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
-    db $16, $1b, $40, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db SKILL_HEAL, SKILL_MPASS, SKILL_FIREAIR, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $12 ; $56: level (E-0122)
     db $2d ; $57: level cap (C1, E-0296)
@@ -2615,7 +2615,7 @@ DefaultMonsterRecord::
     db $00 ; $98: plus value of parent 1 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $99: name of parent 2 (E-0297)
     db $00 ; $A3: plus value of parent 2 (E-0297)
-    db $00 ; $A4: equipped item (E-0125)
+    db ITEM_00 ; $A4: equipped item (E-0125)
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
 ; banks)

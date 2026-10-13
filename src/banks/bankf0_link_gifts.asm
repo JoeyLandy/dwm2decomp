@@ -4696,61 +4696,61 @@ FamilyBandLists_Slime::
 ; list for entry $00 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Slime_000::
-    dw $0002 ; id 0 SpotSlime
-    dw $0005 ; id 1 Snaily
-    dw $000f ; id 2 Slabbit
+    dw MONSTER_SPOTSLIME ; id 0
+    dw MONSTER_SNAILY ; id 1
+    dw MONSTER_SLABBIT ; id 2
     dw $fefe ; id 3
 
 ; list for entry $01 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_001::
-    dw $0004 ; id 0 TreeSlime
-    dw $0007 ; id 1 Babble
-    dw $000a ; id 2 Slime
-    dw $0014 ; id 3 TropicGel
-    dw $001a ; id 4 WonderEgg
+    dw MONSTER_TREESLIME ; id 0
+    dw MONSTER_BABBLE ; id 1
+    dw MONSTER_SLIME ; id 2
+    dw MONSTER_TROPICGEL ; id 3
+    dw MONSTER_WONDEREGG ; id 4
     dw $fefe ; id 5
 
 ; list for entry $02 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_002::
-    dw $0003 ; id 0 WingSlime
-    dw $0008 ; id 1 BoxSlime
-    dw $0009 ; id 2 PearlGel
-    dw $000b ; id 3 Healer
+    dw MONSTER_WINGSLIME ; id 0
+    dw MONSTER_BOXSLIME ; id 1
+    dw MONSTER_PEARLGEL ; id 2
+    dw MONSTER_HEALER ; id 3
     dw $fefe ; id 4
 
 ; list for entry $03 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_003::
-    dw $0001 ; id 0 DrakSlime
-    dw $0006 ; id 1 SlimeNite
-    dw $000c ; id 2 FangSlime
-    dw $000d ; id 3 RockSlime
-    dw $000e ; id 4 SlimeBorg
+    dw MONSTER_DRAKSLIME ; id 0
+    dw MONSTER_SLIMENITE ; id 1
+    dw MONSTER_FANGSLIME ; id 2
+    dw MONSTER_ROCKSLIME ; id 3
+    dw MONSTER_SLIMEBORG ; id 4
     dw $fefe ; id 5
 
 ; list for entry $04 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Slime_004::
-    dw $0011 ; id 0 Metaly
-    dw $0013 ; id 1 SpotKing
-    dw $0015 ; id 2 MimeSlime
-    dw $0016 ; id 3 HaloSlime
+    dw MONSTER_METALY ; id 0
+    dw MONSTER_SPOTKING ; id 1
+    dw MONSTER_MIMESLIME ; id 2
+    dw MONSTER_HALOSLIME ; id 3
     dw $fefe ; id 4
 
 ; list for entry $05 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_005::
-    dw $0010 ; id 0 KingSlime
-    dw $0012 ; id 1 Metabble
-    dw $0017 ; id 2 MetalKing
+    dw MONSTER_KINGSLIME ; id 0
+    dw MONSTER_METABBLE ; id 1
+    dw MONSTER_METALKING ; id 2
     dw $fefe ; id 3
 
 ; list for entry $06 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_006::
-    dw $0018 ; id 0 GoldSlime
+    dw MONSTER_GOLDSLIME ; id 0
     dw $fefe ; id 1
 
 ; list for entry $07 of FamilyBandLists_Slime; it runs to the next list (E-0199)
 FamilyBandSpecies_Slime_007::
-    dw $0019 ; id 0 GranSlime
+    dw MONSTER_GRANSLIME ; id 0
     dw $fefe ; id 1
 
 ; family 1 (Dragon) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -4768,66 +4768,66 @@ FamilyBandLists_Dragon::
 ; list for entry $00 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Dragon_000::
-    dw $0028 ; id 0 FairyDrak
-    dw $0031 ; id 1 Chamelgon
-    dw $0032 ; id 2 LizardFly
+    dw MONSTER_FAIRYDRAK ; id 0
+    dw MONSTER_CHAMELGON ; id 1
+    dw MONSTER_LIZARDFLY ; id 2
     dw $fefe ; id 3
 
 ; list for entry $01 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_001::
-    dw $002a ; id 0 Poisongon
-    dw $002e ; id 1 MiniDrak
-    dw $0034 ; id 2 KingCobra
-    dw $0036 ; id 3 SnakeBat
-    dw $0039 ; id 4 Crestpent
+    dw MONSTER_POISONGON ; id 0
+    dw MONSTER_MINIDRAK ; id 1
+    dw MONSTER_KINGCOBRA ; id 2
+    dw MONSTER_SNAKEBAT ; id 3
+    dw MONSTER_CRESTPENT ; id 4
     dw $fefe ; id 5
 
 ; list for entry $02 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_002::
-    dw $0024 ; id 0 DragonKid
-    dw $0025 ; id 1 Tortragon
-    dw $0026 ; id 2 Pteranod
-    dw $0027 ; id 3 Gasgon
-    dw $003a ; id 4 WingSnake
+    dw MONSTER_DRAGONKID ; id 0
+    dw MONSTER_TORTRAGON ; id 1
+    dw MONSTER_PTERANOD ; id 2
+    dw MONSTER_GASGON ; id 3
+    dw MONSTER_WINGSNAKE ; id 4
     dw $fefe ; id 5
 
 ; list for entry $03 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_003::
-    dw $002b ; id 0 Swordgon
-    dw $002c ; id 1 Drygon
-    dw $0030 ; id 2 Rayburn
-    dw $0035 ; id 3 Vampirus
+    dw MONSTER_SWORDGON ; id 0
+    dw MONSTER_DRYGON ; id 1
+    dw MONSTER_RAYBURN ; id 2
+    dw MONSTER_VAMPIRUS ; id 3
     dw $fefe ; id 4
 
 ; list for entry $04 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Dragon_004::
-    dw $0029 ; id 0 LizardMan
-    dw $002d ; id 1 Dragon
-    dw $002f ; id 2 MadDragon
-    dw $0033 ; id 3 Andreal
-    dw $0037 ; id 4 Spikerous
-    dw $003b ; id 5 Coatol
+    dw MONSTER_LIZARDMAN ; id 0
+    dw MONSTER_DRAGON ; id 1
+    dw MONSTER_MADDRAGON ; id 2
+    dw MONSTER_ANDREAL ; id 3
+    dw MONSTER_SPIKEROUS ; id 4
+    dw MONSTER_COATOL ; id 5
     dw $fefe ; id 6
 
 ; list for entry $05 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_005::
-    dw $0038 ; id 0 GreatDrak
-    dw $003d ; id 1 BattleRex
-    dw $003e ; id 2 SkyDragon
-    dw $003f ; id 3 Serpentia
+    dw MONSTER_GREATDRAK ; id 0
+    dw MONSTER_BATTLEREX ; id 1
+    dw MONSTER_SKYDRAGON ; id 2
+    dw MONSTER_SERPENTIA ; id 3
     dw $fefe ; id 4
 
 ; list for entry $06 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_006::
-    dw $003c ; id 0 Orochi
-    dw $0040 ; id 1 Divinegon
-    dw $0042 ; id 2 GigaDraco
+    dw MONSTER_OROCHI ; id 0
+    dw MONSTER_DIVINEGON ; id 1
+    dw MONSTER_GIGADRACO ; id 2
     dw $fefe ; id 3
 
 ; list for entry $07 of FamilyBandLists_Dragon; it runs to the next list (E-0199)
 FamilyBandSpecies_Dragon_007::
-    dw $0041 ; id 0 Orligon
+    dw MONSTER_ORLIGON ; id 0
     dw $fefe ; id 1
 
 ; family 2 (Beast) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -4845,67 +4845,67 @@ FamilyBandLists_Beast::
 ; list for entry $00 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Beast_000::
-    dw $0048 ; id 0 Almiraj
-    dw $0049 ; id 1 CatFly
-    dw $004a ; id 2 PillowRat
-    dw $004b ; id 3 Saccer
-    dw $0050 ; id 4 Antbear
-    dw $005b ; id 5 FairyRat
+    dw MONSTER_ALMIRAJ ; id 0
+    dw MONSTER_CATFLY ; id 1
+    dw MONSTER_PILLOWRAT ; id 2
+    dw MONSTER_SACCER ; id 3
+    dw MONSTER_ANTBEAR ; id 4
+    dw MONSTER_FAIRYRAT ; id 5
     dw $fefe ; id 6
 
 ; list for entry $01 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_001::
-    dw $004d ; id 0 Skullroo
-    dw $004e ; id 1 WindBeast
-    dw $0053 ; id 2 Mommonja
-    dw $0054 ; id 3 HammerMan
-    dw $0057 ; id 4 ArrowDog
-    dw $005a ; id 5 MadGopher
+    dw MONSTER_SKULLROO ; id 0
+    dw MONSTER_WINDBEAST ; id 1
+    dw MONSTER_MOMMONJA ; id 2
+    dw MONSTER_HAMMERMAN ; id 3
+    dw MONSTER_ARROWDOG ; id 4
+    dw MONSTER_MADGOPHER ; id 5
     dw $fefe ; id 6
 
 ; list for entry $02 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_002::
-    dw $0047 ; id 0 Tonguella
-    dw $004f ; id 1 Beavern
-    dw $0051 ; id 2 SuperTen
-    dw $0052 ; id 3 IronTurt
-    dw $0058 ; id 4 NoctoKing
-    dw $0059 ; id 5 BeastNite
+    dw MONSTER_TONGUELLA ; id 0
+    dw MONSTER_BEAVERN ; id 1
+    dw MONSTER_SUPERTEN ; id 2
+    dw MONSTER_IRONTURT ; id 3
+    dw MONSTER_NOCTOKING ; id 4
+    dw MONSTER_BEASTNITE ; id 5
     dw $fefe ; id 6
 
 ; list for entry $03 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_003::
-    dw $0055 ; id 0 Grizzly
-    dw $0056 ; id 1 Yeti
-    dw $005d ; id 2 Goategon
-    dw $005e ; id 3 WildApe
-    dw $0065 ; id 4 CatMage
-    dw $0066 ; id 5 Dumbira
+    dw MONSTER_GRIZZLY ; id 0
+    dw MONSTER_YETI ; id 1
+    dw MONSTER_GOATEGON ; id 2
+    dw MONSTER_WILDAPE ; id 3
+    dw MONSTER_CATMAGE ; id 4
+    dw MONSTER_DUMBIRA ; id 5
     dw $fefe ; id 6
 
 ; list for entry $04 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Beast_004::
-    dw $004c ; id 0 GulpBeast
-    dw $005f ; id 1 Trumpeter
-    dw $0062 ; id 2 MadCat
-    dw $0063 ; id 3 BigEye
+    dw MONSTER_GULPBEAST ; id 0
+    dw MONSTER_TRUMPETER ; id 1
+    dw MONSTER_MADCAT ; id 2
+    dw MONSTER_BIGEYE ; id 3
     dw $fefe ; id 4
 
 ; list for entry $05 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_005::
-    dw $005c ; id 0 Unicorn
-    dw $0061 ; id 1 DarkHorn
+    dw MONSTER_UNICORN ; id 0
+    dw MONSTER_DARKHORN ; id 1
     dw $fefe ; id 2
 
 ; list for entry $06 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_006::
-    dw $0060 ; id 0 KingLeo
+    dw MONSTER_KINGLEO ; id 0
     dw $fefe ; id 1
 
 ; list for entry $07 of FamilyBandLists_Beast; it runs to the next list (E-0199)
 FamilyBandSpecies_Beast_007::
-    dw $0064 ; id 0 Gorago
+    dw MONSTER_GORAGO ; id 0
     dw $fefe ; id 1
 
 ; family 3 (Bird) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -4923,62 +4923,62 @@ FamilyBandLists_Bird::
 ; list for entry $00 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Bird_000::
-    dw $006a ; id 0 Picky
-    dw $0073 ; id 1 Dracky
+    dw MONSTER_PICKY ; id 0
+    dw MONSTER_DRACKY ; id 1
     dw $fefe ; id 2
 
 ; list for entry $01 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_001::
-    dw $006d ; id 0 Florajay
-    dw $0070 ; id 1 MadRaven
-    dw $0074 ; id 2 KiteHawk
-    dw $0075 ; id 3 BigRoost
+    dw MONSTER_FLORAJAY ; id 0
+    dw MONSTER_MADRAVEN ; id 1
+    dw MONSTER_KITEHAWK ; id 2
+    dw MONSTER_BIGROOST ; id 3
     dw $fefe ; id 4
 
 ; list for entry $02 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_002::
-    dw $006c ; id 0 BullBird
-    dw $0071 ; id 1 MistyWing
-    dw $0072 ; id 2 AquaHawk
-    dw $0076 ; id 3 StubBird
-    dw $0077 ; id 4 LandOwl
-    dw $0084 ; id 5 CragDevil
+    dw MONSTER_BULLBIRD ; id 0
+    dw MONSTER_MISTYWING ; id 1
+    dw MONSTER_AQUAHAWK ; id 2
+    dw MONSTER_STUBBIRD ; id 3
+    dw MONSTER_LANDOWL ; id 4
+    dw MONSTER_CRAGDEVIL ; id 5
     dw $fefe ; id 6
 
 ; list for entry $03 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_003::
-    dw $006b ; id 0 Wyvern
-    dw $006e ; id 1 DuckKite
-    dw $006f ; id 2 MadPecker
-    dw $0078 ; id 3 MadGoose
-    dw $0079 ; id 4 MadCondor
-    dw $007a ; id 5 Emyu
+    dw MONSTER_WYVERN ; id 0
+    dw MONSTER_DUCKKITE ; id 1
+    dw MONSTER_MADPECKER ; id 2
+    dw MONSTER_MADGOOSE ; id 3
+    dw MONSTER_MADCONDOR ; id 4
+    dw MONSTER_EMYU ; id 5
     dw $fefe ; id 6
 
 ; list for entry $04 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Bird_004::
-    dw $007b ; id 0 Blizzardy
-    dw $007c ; id 1 Phoenix
-    dw $007d ; id 2 ZapBird
-    dw $0080 ; id 3 FunkyBird
+    dw MONSTER_BLIZZARDY ; id 0
+    dw MONSTER_PHOENIX ; id 1
+    dw MONSTER_ZAPBIRD ; id 2
+    dw MONSTER_FUNKYBIRD ; id 3
     dw $fefe ; id 4
 
 ; list for entry $05 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_005::
-    dw $007e ; id 0 Garudian
-    dw $007f ; id 1 WhipBird
+    dw MONSTER_GARUDIAN ; id 0
+    dw MONSTER_WHIPBIRD ; id 1
     dw $fefe ; id 2
 
 ; list for entry $06 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_006::
-    dw $0081 ; id 0 RainHawk
-    dw $0083 ; id 1 Shantak
+    dw MONSTER_RAINHAWK ; id 0
+    dw MONSTER_SHANTAK ; id 1
     dw $fefe ; id 2
 
 ; list for entry $07 of FamilyBandLists_Bird; it runs to the next list (E-0199)
 FamilyBandSpecies_Bird_007::
-    dw $0082 ; id 0 Azurile
+    dw MONSTER_AZURILE ; id 0
     dw $fefe ; id 1
 
 ; family 4 (Plant) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -4996,62 +4996,62 @@ FamilyBandLists_Plant::
 ; list for entry $00 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Plant_000::
-    dw $0091 ; id 0 CactiBall
-    dw $0093 ; id 1 Toadstool
-    dw $0095 ; id 2 Slurperon
-    dw $00a6 ; id 3 Eggplaton
+    dw MONSTER_CACTIBALL ; id 0
+    dw MONSTER_TOADSTOOL ; id 1
+    dw MONSTER_SLURPERON ; id 2
+    dw MONSTER_EGGPLATON ; id 3
     dw $fefe ; id 4
 
 ; list for entry $01 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_001::
-    dw $008d ; id 0 MadPlant
-    dw $0090 ; id 1 WingTree
-    dw $0097 ; id 2 Oniono
+    dw MONSTER_MADPLANT ; id 0
+    dw MONSTER_WINGTREE ; id 1
+    dw MONSTER_ONIONO ; id 2
     dw $fefe ; id 3
 
 ; list for entry $02 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_002::
-    dw $008e ; id 0 FireWeed
-    dw $008f ; id 1 FloraMan
-    dw $0092 ; id 2 Gulpple
-    dw $0096 ; id 3 Stubsuck
-    dw $0098 ; id 4 DanceVegi
+    dw MONSTER_FIREWEED ; id 0
+    dw MONSTER_FLORAMAN ; id 1
+    dw MONSTER_GULPPLE ; id 2
+    dw MONSTER_STUBSUCK ; id 3
+    dw MONSTER_DANCEVEGI ; id 4
     dw $fefe ; id 5
 
 ; list for entry $03 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_003::
-    dw $0094 ; id 0 AmberWeed
-    dw $0099 ; id 1 TreeBoy
-    dw $009a ; id 2 Devipine
-    dw $009d ; id 3 BeanMan
-    dw $009e ; id 4 EvilSeed
-    dw $009f ; id 5 ManEater
-    dw $00a7 ; id 6 FooHero
+    dw MONSTER_AMBERWEED ; id 0
+    dw MONSTER_TREEBOY ; id 1
+    dw MONSTER_DEVIPINE ; id 2
+    dw MONSTER_BEANMAN ; id 3
+    dw MONSTER_EVILSEED ; id 4
+    dw MONSTER_MANEATER ; id 5
+    dw MONSTER_FOOHERO ; id 6
     dw $fefe ; id 7
 
 ; list for entry $04 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Plant_004::
-    dw $00a0 ; id 0 Snapper
-    dw $00a1 ; id 1 GhosTree
+    dw MONSTER_SNAPPER ; id 0
+    dw MONSTER_GHOSTREE ; id 1
     dw $fefe ; id 2
 
 ; list for entry $05 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_005::
-    dw $009a ; id 0 Devipine
-    dw $009b ; id 1 FaceTree
+    dw MONSTER_DEVIPINE ; id 0
+    dw MONSTER_FACETREE ; id 1
     dw $fefe ; id 2
 
 ; list for entry $06 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_006::
-    dw $00a2 ; id 0 Rosevine
+    dw MONSTER_ROSEVINE ; id 0
     dw $fefe ; id 1
 
 ; list for entry $07 of FamilyBandLists_Plant; it runs to the next list (E-0199)
 FamilyBandSpecies_Plant_007::
-    dw $00a3 ; id 0 Egdracil
-    dw $00a4 ; id 1 Warubou
-    dw $00a5 ; id 2 Watabou
+    dw MONSTER_EGDRACIL ; id 0
+    dw MONSTER_WARUBOU ; id 1
+    dw MONSTER_WATABOU ; id 2
     dw $fefe ; id 3
 
 ; family 5 (Bug) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5069,61 +5069,61 @@ FamilyBandLists_Bug::
 ; list for entry $00 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Bug_000::
-    dw $00b0 ; id 0 GiantSlug
-    dw $00b5 ; id 1 GiantWorm
-    dw $00b9 ; id 2 ArmyAnt
-    dw $00bb ; id 3 TailEater
+    dw MONSTER_GIANTSLUG ; id 0
+    dw MONSTER_GIANTWORM ; id 1
+    dw MONSTER_ARMYANT ; id 2
+    dw MONSTER_TAILEATER ; id 3
     dw $fefe ; id 4
 
 ; list for entry $01 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_001::
-    dw $00b2 ; id 0 Gophecada
-    dw $00b3 ; id 1 Butterfly
-    dw $00ba ; id 2 GoHopper
+    dw MONSTER_GOPHECADA ; id 0
+    dw MONSTER_BUTTERFLY ; id 1
+    dw MONSTER_GOHOPPER ; id 2
     dw $fefe ; id 3
 
 ; list for entry $02 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_002::
-    dw $00b6 ; id 0 Lipsy
-    dw $00b7 ; id 1 StagBug
-    dw $00b8 ; id 2 Pyuro
-    dw $00bd ; id 3 Eyeder
-    dw $00c2 ; id 4 Belzebub
+    dw MONSTER_LIPSY ; id 0
+    dw MONSTER_STAGBUG ; id 1
+    dw MONSTER_PYURO ; id 2
+    dw MONSTER_EYEDER ; id 3
+    dw MONSTER_BELZEBUB ; id 4
     dw $fefe ; id 5
 
 ; list for entry $03 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_003::
-    dw $00b1 ; id 0 Catapila
-    dw $00b4 ; id 1 WeedBug
-    dw $00bc ; id 2 ArmorPede
-    dw $00be ; id 3 GiantMoth
-    dw $00bf ; id 4 Droll
-    dw $00c1 ; id 5 MadHornet
-    dw $00c9 ; id 6 MultiEyes
+    dw MONSTER_CATAPILA ; id 0
+    dw MONSTER_WEEDBUG ; id 1
+    dw MONSTER_ARMORPEDE ; id 2
+    dw MONSTER_GIANTMOTH ; id 3
+    dw MONSTER_DROLL ; id 4
+    dw MONSTER_MADHORNET ; id 5
+    dw MONSTER_MULTIEYES ; id 6
     dw $fefe ; id 7
 
 ; list for entry $04 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Bug_004::
-    dw $00c0 ; id 0 ArmyCrab
-    dw $00c5 ; id 1 Sickler
+    dw MONSTER_ARMYCRAB ; id 0
+    dw MONSTER_SICKLER ; id 1
     dw $fefe ; id 2
 
 ; list for entry $05 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_005::
-    dw $00c3 ; id 0 WarMantis
-    dw $00c4 ; id 1 HornBeet
-    dw $00c7 ; id 2 Digster
+    dw MONSTER_WARMANTIS ; id 0
+    dw MONSTER_HORNBEET ; id 1
+    dw MONSTER_DIGSTER ; id 2
     dw $fefe ; id 3
 
 ; list for entry $06 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_006::
-    dw $00c6 ; id 0 Armorpion
+    dw MONSTER_ARMORPION ; id 0
     dw $fefe ; id 1
 
 ; list for entry $07 of FamilyBandLists_Bug; it runs to the next list (E-0199)
 FamilyBandSpecies_Bug_007::
-    dw $00c8 ; id 0 Skularach
+    dw MONSTER_SKULARACH ; id 0
     dw $fefe ; id 1
 
 ; family 6 (Demon) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5141,64 +5141,64 @@ FamilyBandLists_Demon::
 ; list for entry $00 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Demon_000::
-    dw $00d3 ; id 0 Pixy
-    dw $00d6 ; id 1 Demonite
+    dw MONSTER_PIXY ; id 0
+    dw MONSTER_DEMONITE ; id 1
     dw $fefe ; id 2
 
 ; list for entry $01 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_001::
-    dw $00dc ; id 0 1EyeClown
-    dw $00dd ; id 1 Gremlin
+    dw MONSTER_1EYECLOWN ; id 0
+    dw MONSTER_GREMLIN ; id 1
     dw $fefe ; id 2
 
 ; list for entry $02 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_002::
-    dw $00d4 ; id 0 MedusaEye
-    dw $00d8 ; id 1 EyeBall
+    dw MONSTER_MEDUSAEYE ; id 0
+    dw MONSTER_EYEBALL ; id 1
     dw $fefe ; id 2
 
 ; list for entry $03 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_003::
-    dw $00d7 ; id 0 DarkEye
-    dw $00d9 ; id 1 SkulRider
-    dw $00e1 ; id 2 Orc
-    dw $00ea ; id 3 Gigantes
-    dw $00ec ; id 4 EvilArmor
+    dw MONSTER_DARKEYE ; id 0
+    dw MONSTER_SKULRIDER ; id 1
+    dw MONSTER_ORC ; id 2
+    dw MONSTER_GIGANTES ; id 3
+    dw MONSTER_EVILARMOR ; id 4
     dw $fefe ; id 5
 
 ; list for entry $04 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Demon_004::
-    dw $00da ; id 0 EvilBeast
-    dw $00db ; id 1 Bubblemon
-    dw $00df ; id 2 Lionex
-    dw $00e2 ; id 3 Ogre
-    dw $00e8 ; id 4 MadKnight
+    dw MONSTER_EVILBEAST ; id 0
+    dw MONSTER_BUBBLEMON ; id 1
+    dw MONSTER_LIONEX ; id 2
+    dw MONSTER_OGRE ; id 3
+    dw MONSTER_MADKNIGHT ; id 4
     dw $fefe ; id 5
 
 ; list for entry $05 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_005::
-    dw $00de ; id 0 ArcDemon
-    dw $00e0 ; id 1 GoatHorn
-    dw $00e3 ; id 2 GateGuard
-    dw $00e4 ; id 3 ChopClown
-    dw $00e5 ; id 4 BossTroll
-    dw $00e6 ; id 5 Grendal
-    dw $00e9 ; id 6 EvilWell
-    dw $00eb ; id 7 Centasaur
+    dw MONSTER_ARCDEMON ; id 0
+    dw MONSTER_GOATHORN ; id 1
+    dw MONSTER_GATEGUARD ; id 2
+    dw MONSTER_CHOPCLOWN ; id 3
+    dw MONSTER_BOSSTROLL ; id 4
+    dw MONSTER_GRENDAL ; id 5
+    dw MONSTER_EVILWELL ; id 6
+    dw MONSTER_CENTASAUR ; id 7
     dw $fefe ; id 8
 
 ; list for entry $06 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_006::
-    dw $00e7 ; id 0 Akubar
-    dw $00ed ; id 1 Jamirus
-    dw $00ee ; id 2 Durran
-    dw $00f0 ; id 3 LampGenie
+    dw MONSTER_AKUBAR ; id 0
+    dw MONSTER_JAMIRUS ; id 1
+    dw MONSTER_DURRAN ; id 2
+    dw MONSTER_LAMPGENIE ; id 3
     dw $fefe ; id 4
 
 ; list for entry $07 of FamilyBandLists_Demon; it runs to the next list (E-0199)
 FamilyBandSpecies_Demon_007::
-    dw $00ef ; id 0 Titanis
+    dw MONSTER_TITANIS ; id 0
     dw $fefe ; id 1
 
 ; family 7 (Zombie) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5216,62 +5216,62 @@ FamilyBandLists_Zombie::
 ; list for entry $00 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Zombie_000::
-    dw $00f6 ; id 0 Spooky
+    dw MONSTER_SPOOKY ; id 0
     dw $fefe ; id 1
 
 ; list for entry $01 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_001::
-    dw $00f9 ; id 0 RotRaven
-    dw $0100 ; id 1 Mudron
-    dw $0104 ; id 2 Inverzon
-    dw $0105 ; id 3 FoxFire
+    dw MONSTER_ROTRAVEN ; id 0
+    dw MONSTER_MUDRON ; id 1
+    dw MONSTER_INVERZON ; id 2
+    dw MONSTER_FOXFIRE ; id 3
     dw $fefe ; id 4
 
 ; list for entry $02 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_002::
-    dw $00f8 ; id 0 PutrePup
-    dw $00fa ; id 1 Mummy
-    dw $00fd ; id 2 Shadow
-    dw $00fe ; id 3 Skulpent
-    dw $00ff ; id 4 Hork
-    dw $0101 ; id 5 NiteWhip
-    dw $0102 ; id 6 WindMerge
-    dw $010f ; id 7 PomPomBom
+    dw MONSTER_PUTREPUP ; id 0
+    dw MONSTER_MUMMY ; id 1
+    dw MONSTER_SHADOW ; id 2
+    dw MONSTER_SKULPENT ; id 3
+    dw MONSTER_HORK ; id 4
+    dw MONSTER_NITEWHIP ; id 5
+    dw MONSTER_WINDMERGE ; id 6
+    dw MONSTER_POMPOMBOM ; id 7
     dw $fefe ; id 8
 
 ; list for entry $03 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_003::
-    dw $00fb ; id 0 DarkCrab
-    dw $00fc ; id 1 DeadNite
-    dw $0103 ; id 2 Reaper
-    dw $0106 ; id 3 CaptDead
-    dw $0109 ; id 4 BoneSlave
-    dw $010e ; id 5 MadSpirit
+    dw MONSTER_DARKCRAB ; id 0
+    dw MONSTER_DEADNITE ; id 1
+    dw MONSTER_REAPER ; id 2
+    dw MONSTER_CAPTDEAD ; id 3
+    dw MONSTER_BONESLAVE ; id 4
+    dw MONSTER_MADSPIRIT ; id 5
     dw $fefe ; id 6
 
 ; list for entry $04 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Zombie_004::
-    dw $010a ; id 0 Skeletor
+    dw MONSTER_SKELETOR ; id 0
     dw $fefe ; id 1
 
 ; list for entry $05 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_005::
-    dw $00f7 ; id 0 Skullgon
-    dw $010b ; id 1 Servant
+    dw MONSTER_SKULLGON ; id 0
+    dw MONSTER_SERVANT ; id 1
     dw $fefe ; id 2
 
 ; list for entry $06 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_006::
-    dw $0107 ; id 0 DeadNoble
-    dw $0108 ; id 1 WhiteKing
-    dw $010d ; id 2 Copycat
-    dw $0110 ; id 3 Niterich
+    dw MONSTER_DEADNOBLE ; id 0
+    dw MONSTER_WHITEKING ; id 1
+    dw MONSTER_COPYCAT ; id 2
+    dw MONSTER_NITERICH ; id 3
     dw $fefe ; id 4
 
 ; list for entry $07 of FamilyBandLists_Zombie; it runs to the next list (E-0199)
 FamilyBandSpecies_Zombie_007::
-    dw $010c ; id 0 Lazamanus
+    dw MONSTER_LAZAMANUS ; id 0
     dw $fefe ; id 1
 
 ; family 8 (Material) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5289,67 +5289,67 @@ FamilyBandLists_Material::
 ; list for entry $00 of FamilyBandLists_Material; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Material_000::
-    dw $011b ; id 0 MadCandle
-    dw $011d ; id 1 Facer
-    dw $011e ; id 2 SpikyBoy
-    dw $0122 ; id 3 Goopi
-    dw $0131 ; id 4 MudDoll
+    dw MONSTER_MADCANDLE ; id 0
+    dw MONSTER_FACER ; id 1
+    dw MONSTER_SPIKYBOY ; id 2
+    dw MONSTER_GOOPI ; id 3
+    dw MONSTER_MUDDOLL ; id 4
     dw $fefe ; id 5
 
 ; list for entry $01 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_001::
-    dw $0119 ; id 0 JewelBag
-    dw $011c ; id 1 CoilBird
-    dw $0128 ; id 2 Brushead
+    dw MONSTER_JEWELBAG ; id 0
+    dw MONSTER_COILBIRD ; id 1
+    dw MONSTER_BRUSHEAD ; id 2
     dw $fefe ; id 3
 
 ; list for entry $02 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_002::
-    dw $011a ; id 0 EvilWand
-    dw $0121 ; id 1 Puppetor
-    dw $0127 ; id 2 CurseLamp
-    dw $0137 ; id 3 ProtoMech
+    dw MONSTER_EVILWAND ; id 0
+    dw MONSTER_PUPPETOR ; id 1
+    dw MONSTER_CURSELAMP ; id 2
+    dw MONSTER_PROTOMECH ; id 3
     dw $fefe ; id 4
 
 ; list for entry $03 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_003::
-    dw $011f ; id 0 MadMirror
-    dw $0120 ; id 1 RogueNite
-    dw $0123 ; id 2 Voodoll
-    dw $0126 ; id 3 SabreMan
-    dw $012b ; id 4 EvilPot
-    dw $012c ; id 5 Gismo
-    dw $0130 ; id 6 Exaucers
+    dw MONSTER_MADMIRROR ; id 0
+    dw MONSTER_ROGUENITE ; id 1
+    dw MONSTER_VOODOLL ; id 2
+    dw MONSTER_SABREMAN ; id 3
+    dw MONSTER_EVILPOT ; id 4
+    dw MONSTER_GISMO ; id 5
+    dw MONSTER_EXAUCERS ; id 6
     dw $fefe ; id 7
 
 ; list for entry $04 of FamilyBandLists_Material; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Material_004::
-    dw $0124 ; id 0 MetalDrak
-    dw $0129 ; id 1 Roboster
-    dw $012f ; id 2 Mimic
-    dw $0132 ; id 3 Golem
-    dw $0134 ; id 4 BombCrag
-    dw $0138 ; id 5 CloudKing
+    dw MONSTER_METALDRAK ; id 0
+    dw MONSTER_ROBOSTER ; id 1
+    dw MONSTER_MIMIC ; id 2
+    dw MONSTER_GOLEM ; id 3
+    dw MONSTER_BOMBCRAG ; id 4
+    dw MONSTER_CLOUDKING ; id 5
     dw $fefe ; id 6
 
 ; list for entry $05 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_005::
-    dw $0125 ; id 0 Balzak
-    dw $012a ; id 1 Roboster2
-    dw $012d ; id 2 LavaMan
-    dw $012e ; id 3 IceMan
-    dw $0133 ; id 4 StoneMan
+    dw MONSTER_BALZAK ; id 0
+    dw MONSTER_ROBOSTER2 ; id 1
+    dw MONSTER_LAVAMAN ; id 2
+    dw MONSTER_ICEMAN ; id 3
+    dw MONSTER_STONEMAN ; id 4
     dw $fefe ; id 5
 
 ; list for entry $06 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_006::
-    dw $0135 ; id 0 GoldGolem
+    dw MONSTER_GOLDGOLEM ; id 0
     dw $fefe ; id 1
 
 ; list for entry $07 of FamilyBandLists_Material; it runs to the next list (E-0199)
 FamilyBandSpecies_Material_007::
-    dw $0136 ; id 0 DarkMate
+    dw MONSTER_DARKMATE ; id 0
     dw $fefe ; id 1
 
 ; family 9 (Water) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5367,66 +5367,66 @@ FamilyBandLists_Water::
 ; list for entry $00 of FamilyBandLists_Water; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Water_000::
-    dw $013c ; id 0 Petiteel
-    dw $013d ; id 1 Moray
-    dw $0144 ; id 2 PutreFish
+    dw MONSTER_PETITEEL ; id 0
+    dw MONSTER_MORAY ; id 1
+    dw MONSTER_PUTREFISH ; id 2
     dw $fefe ; id 3
 
 ; list for entry $01 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_001::
-    dw $0143 ; id 0 Octokid
-    dw $0149 ; id 1 Gamanian
-    dw $014d ; id 2 Scallopa
-    dw $015b ; id 3 Starfish
+    dw MONSTER_OCTOKID ; id 0
+    dw MONSTER_GAMANIAN ; id 1
+    dw MONSTER_SCALLOPA ; id 2
+    dw MONSTER_STARFISH ; id 3
     dw $fefe ; id 4
 
 ; list for entry $02 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_002::
-    dw $0140 ; id 0 Anemon
-    dw $0141 ; id 1 Aquarella
-    dw $0145 ; id 2 Octoreach
-    dw $014c ; id 3 RogueWave
-    dw $015a ; id 4 Pumpoise
+    dw MONSTER_ANEMON ; id 0
+    dw MONSTER_AQUARELLA ; id 1
+    dw MONSTER_OCTOREACH ; id 2
+    dw MONSTER_ROGUEWAVE ; id 3
+    dw MONSTER_PUMPOISE ; id 4
     dw $fefe ; id 5
 
 ; list for entry $03 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_003::
-    dw $013e ; id 0 WalrusMan
-    dw $013f ; id 1 RayGigas
-    dw $0142 ; id 2 Merman
-    dw $0146 ; id 3 Angleron
-    dw $0147 ; id 4 FishRider
-    dw $014a ; id 5 Clawster
+    dw MONSTER_WALRUSMAN ; id 0
+    dw MONSTER_RAYGIGAS ; id 1
+    dw MONSTER_MERMAN ; id 2
+    dw MONSTER_ANGLERON ; id 3
+    dw MONSTER_FISHRIDER ; id 4
+    dw MONSTER_CLAWSTER ; id 5
     dw $fefe ; id 6
 
 ; list for entry $04 of FamilyBandLists_Water; it runs to the next list (E-0199)
 ; record: species
 FamilyBandSpecies_Water_004::
-    dw $0148 ; id 0 RushFish
-    dw $014b ; id 1 CancerMan
-    dw $014e ; id 2 SeaHorse
-    dw $014f ; id 3 HoodSquid
-    dw $0150 ; id 4 MerTiger
+    dw MONSTER_RUSHFISH ; id 0
+    dw MONSTER_CANCERMAN ; id 1
+    dw MONSTER_SEAHORSE ; id 2
+    dw MONSTER_HOODSQUID ; id 3
+    dw MONSTER_MERTIGER ; id 4
     dw $fefe ; id 5
 
 ; list for entry $05 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_005::
-    dw $0151 ; id 0 AxeShark
-    dw $0152 ; id 1 Octogon
-    dw $0154 ; id 2 Digong
-    dw $0155 ; id 3 WhaleMage
-    dw $0157 ; id 4 Octoraid
+    dw MONSTER_AXESHARK ; id 0
+    dw MONSTER_OCTOGON ; id 1
+    dw MONSTER_DIGONG ; id 2
+    dw MONSTER_WHALEMAGE ; id 3
+    dw MONSTER_OCTORAID ; id 4
     dw $fefe ; id 5
 
 ; list for entry $06 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_006::
-    dw $0156 ; id 0 Aquadon
-    dw $0158 ; id 1 Grakos
+    dw MONSTER_AQUADON ; id 0
+    dw MONSTER_GRAKOS ; id 1
     dw $fefe ; id 2
 
 ; list for entry $07 of FamilyBandLists_Water; it runs to the next list (E-0199)
 FamilyBandSpecies_Water_007::
-    dw $0159 ; id 0 Poseidon
+    dw MONSTER_POSEIDON ; id 0
     dw $fefe ; id 1
 
 ; family 10 (Boss) of FamilyBandSpeciesTable, one list per wRankBand (E-0256, C1)
@@ -5457,30 +5457,30 @@ FamilyBandSpecies_Boss_04::
 FamilyBandSpecies_Boss_05::
     dw $ffff ; id 5
 FamilyBandSpecies_Boss_06::
-    dw $015f ; id 6 DracoLord
-    dw $0160 ; id 7 DracoLord
-    dw $0162 ; id 8 Hargon
-    dw $0163 ; id 9 Sidoh
-    dw $0165 ; id 10 Baramos
-    dw $0166 ; id 11 Zoma
-    dw $0168 ; id 12 Pizzaro
-    dw $016a ; id 13 Esterk
-    dw $016b ; id 14 Mirudraas
-    dw $016c ; id 15 Mirudraas
-    dw $016d ; id 16 Mudou
-    dw $016e ; id 17 DeathMore
-    dw $016f ; id 18 DeathMore
-    dw $0174 ; id 19 Darck
+    dw MONSTER_DRACOLORD ; id 6
+    dw MONSTER_DRACOLORD_160 ; id 7
+    dw MONSTER_HARGON ; id 8
+    dw MONSTER_SIDOH ; id 9
+    dw MONSTER_BARAMOS ; id 10
+    dw MONSTER_ZOMA ; id 11
+    dw MONSTER_PIZZARO ; id 12
+    dw MONSTER_ESTERK ; id 13
+    dw MONSTER_MIRUDRAAS ; id 14
+    dw MONSTER_MIRUDRAAS_16C ; id 15
+    dw MONSTER_MUDOU ; id 16
+    dw MONSTER_DEATHMORE ; id 17
+    dw MONSTER_DEATHMORE_16F ; id 18
+    dw MONSTER_DARCK ; id 19
     dw $fefe ; id 20
 FamilyBandSpecies_Boss_15::
-    dw $0161 ; id 21 LordDraco
-    dw $0164 ; id 22 Genosidoh
-    dw $0167 ; id 23 AsuraZoma
-    dw $0169 ; id 24 PsychoPiz
-    dw $0170 ; id 25 DeathMore
-    dw $0171 ; id 26 Darkdrium
-    dw $0172 ; id 27 Orgodemir
-    dw $0173 ; id 28 Orgodemir
+    dw MONSTER_LORDDRACO ; id 21
+    dw MONSTER_GENOSIDOH ; id 22
+    dw MONSTER_ASURAZOMA ; id 23
+    dw MONSTER_PSYCHOPIZ ; id 24
+    dw MONSTER_DEATHMORE_170 ; id 25
+    dw MONSTER_DARKDRIUM ; id 26
+    dw MONSTER_ORGODEMIR ; id 27
+    dw MONSTER_ORGODEMIR_173 ; id 28
     dw $fefe ; id 29
 
 ; NextTableByte; L = wRandomLo, H = (wRandomLo rotated left through carry) & B; returns A = HL mod

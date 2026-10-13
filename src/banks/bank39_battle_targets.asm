@@ -7178,15 +7178,15 @@ AnySlotStatusMaskSet::
 ComputeDamageEstimateForAction::
     push bc
     ld a, [wBattleActionId]
-    cp $00
+    cp ACTION_FIGHT
     jr z, .call_run_effect_handler_for_action_id
-    cp $48
+    cp SKILL_WINDBEAST
     jr c, .call_compute_damage_estimate_for_action
-    cp $66
+    cp SKILL_MULTICUT
     jr z, .call_compute_damage_estimate_for_action
-    cp $6b
+    cp SKILL_EVILSLASH
     jr z, .read_battle_actor
-    cp $6c
+    cp SKILL_MASSACRE
     jr z, .read_battle_actor
 
 .call_run_effect_handler_for_action_id:

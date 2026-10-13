@@ -4779,722 +4779,722 @@ KeyWorldBandSpeciesTable::
 ; record: count; species
 KeyWorldBandSpecies_Slime_0::
     db $03 ; entry 0
-    dw $0002 ; SpotSlime
-    dw $0005 ; Snaily
-    dw $000f ; Slabbit
+    dw MONSTER_SPOTSLIME
+    dw MONSTER_SNAILY
+    dw MONSTER_SLABBIT
 
 ; row 0 (Slime), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_1::
     db $04 ; entry 0
-    dw $0004 ; TreeSlime
-    dw $0007 ; Babble
-    dw $000a ; Slime
-    dw $0014 ; TropicGel
+    dw MONSTER_TREESLIME
+    dw MONSTER_BABBLE
+    dw MONSTER_SLIME
+    dw MONSTER_TROPICGEL
 
 ; row 0 (Slime), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_2::
     db $04 ; entry 0
-    dw $0002 ; SpotSlime
-    dw $0008 ; BoxSlime
-    dw $0009 ; PearlGel
-    dw $000b ; Healer
+    dw MONSTER_SPOTSLIME
+    dw MONSTER_BOXSLIME
+    dw MONSTER_PEARLGEL
+    dw MONSTER_HEALER
 
 ; row 0 (Slime), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_3::
     db $05 ; entry 0
-    dw $0001 ; DrakSlime
-    dw $0006 ; SlimeNite
-    dw $000c ; FangSlime
-    dw $000d ; RockSlime
-    dw $000e ; SlimeBorg
+    dw MONSTER_DRAKSLIME
+    dw MONSTER_SLIMENITE
+    dw MONSTER_FANGSLIME
+    dw MONSTER_ROCKSLIME
+    dw MONSTER_SLIMEBORG
 
 ; row 0 (Slime), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Slime_4::
     db $04 ; entry 0
-    dw $0011 ; Metaly
-    dw $0013 ; SpotKing
-    dw $0015 ; MimeSlime
-    dw $0016 ; HaloSlime
+    dw MONSTER_METALY
+    dw MONSTER_SPOTKING
+    dw MONSTER_MIMESLIME
+    dw MONSTER_HALOSLIME
 
 ; row 0 (Slime), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_5::
     db $03 ; entry 0
-    dw $0010 ; KingSlime
-    dw $0012 ; Metabble
-    dw $0017 ; MetalKing
+    dw MONSTER_KINGSLIME
+    dw MONSTER_METABBLE
+    dw MONSTER_METALKING
 
 ; row 0 (Slime), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_6::
     db $01 ; entry 0
-    dw $0018 ; GoldSlime
+    dw MONSTER_GOLDSLIME
 
 ; row 0 (Slime), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Slime_7::
     db $02 ; entry 0
-    dw $0019 ; GranSlime
-    dw $001a ; WonderEgg
+    dw MONSTER_GRANSLIME
+    dw MONSTER_WONDEREGG
 
 ; row 1 (Dragon), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Dragon_0::
     db $03 ; entry 0
-    dw $0028 ; FairyDrak
-    dw $0031 ; Chamelgon
-    dw $0032 ; LizardFly
+    dw MONSTER_FAIRYDRAK
+    dw MONSTER_CHAMELGON
+    dw MONSTER_LIZARDFLY
 
 ; row 1 (Dragon), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_1::
     db $05 ; entry 0
-    dw $002a ; Poisongon
-    dw $002e ; MiniDrak
-    dw $0034 ; KingCobra
-    dw $0036 ; SnakeBat
-    dw $0039 ; Crestpent
+    dw MONSTER_POISONGON
+    dw MONSTER_MINIDRAK
+    dw MONSTER_KINGCOBRA
+    dw MONSTER_SNAKEBAT
+    dw MONSTER_CRESTPENT
 
 ; row 1 (Dragon), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_2::
     db $05 ; entry 0
-    dw $0024 ; DragonKid
-    dw $0025 ; Tortragon
-    dw $0026 ; Pteranod
-    dw $0027 ; Gasgon
-    dw $003a ; WingSnake
+    dw MONSTER_DRAGONKID
+    dw MONSTER_TORTRAGON
+    dw MONSTER_PTERANOD
+    dw MONSTER_GASGON
+    dw MONSTER_WINGSNAKE
 
 ; row 1 (Dragon), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_3::
     db $04 ; entry 0
-    dw $002b ; Swordgon
-    dw $002c ; Drygon
-    dw $0030 ; Rayburn
-    dw $0035 ; Vampirus
+    dw MONSTER_SWORDGON
+    dw MONSTER_DRYGON
+    dw MONSTER_RAYBURN
+    dw MONSTER_VAMPIRUS
 
 ; row 1 (Dragon), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Dragon_4::
     db $06 ; entry 0
-    dw $0029 ; LizardMan
-    dw $002d ; Dragon
-    dw $002f ; MadDragon
-    dw $0033 ; Andreal
-    dw $0037 ; Spikerous
-    dw $003b ; Coatol
+    dw MONSTER_LIZARDMAN
+    dw MONSTER_DRAGON
+    dw MONSTER_MADDRAGON
+    dw MONSTER_ANDREAL
+    dw MONSTER_SPIKEROUS
+    dw MONSTER_COATOL
 
 ; row 1 (Dragon), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_5::
     db $04 ; entry 0
-    dw $0038 ; GreatDrak
-    dw $003d ; BattleRex
-    dw $003e ; SkyDragon
-    dw $003f ; Serpentia
+    dw MONSTER_GREATDRAK
+    dw MONSTER_BATTLEREX
+    dw MONSTER_SKYDRAGON
+    dw MONSTER_SERPENTIA
 
 ; row 1 (Dragon), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_6::
     db $03 ; entry 0
-    dw $003c ; Orochi
-    dw $0040 ; Divinegon
-    dw $0042 ; GigaDraco
+    dw MONSTER_OROCHI
+    dw MONSTER_DIVINEGON
+    dw MONSTER_GIGADRACO
 
 ; row 1 (Dragon), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Dragon_7::
     db $01 ; entry 0
-    dw $0041 ; Orligon
+    dw MONSTER_ORLIGON
 
 ; row 2 (Beast), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Beast_0::
     db $06 ; entry 0
-    dw $0048 ; Almiraj
-    dw $0049 ; CatFly
-    dw $004a ; PillowRat
-    dw $004b ; Saccer
-    dw $0050 ; Antbear
-    dw $005b ; FairyRat
+    dw MONSTER_ALMIRAJ
+    dw MONSTER_CATFLY
+    dw MONSTER_PILLOWRAT
+    dw MONSTER_SACCER
+    dw MONSTER_ANTBEAR
+    dw MONSTER_FAIRYRAT
 
 ; row 2 (Beast), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_1::
     db $06 ; entry 0
-    dw $004d ; Skullroo
-    dw $004e ; WindBeast
-    dw $0053 ; Mommonja
-    dw $0054 ; HammerMan
-    dw $0057 ; ArrowDog
-    dw $005a ; MadGopher
+    dw MONSTER_SKULLROO
+    dw MONSTER_WINDBEAST
+    dw MONSTER_MOMMONJA
+    dw MONSTER_HAMMERMAN
+    dw MONSTER_ARROWDOG
+    dw MONSTER_MADGOPHER
 
 ; row 2 (Beast), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_2::
     db $06 ; entry 0
-    dw $0047 ; Tonguella
-    dw $004f ; Beavern
-    dw $0051 ; SuperTen
-    dw $0052 ; IronTurt
-    dw $0058 ; NoctoKing
-    dw $0059 ; BeastNite
+    dw MONSTER_TONGUELLA
+    dw MONSTER_BEAVERN
+    dw MONSTER_SUPERTEN
+    dw MONSTER_IRONTURT
+    dw MONSTER_NOCTOKING
+    dw MONSTER_BEASTNITE
 
 ; row 2 (Beast), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_3::
     db $06 ; entry 0
-    dw $0055 ; Grizzly
-    dw $0056 ; Yeti
-    dw $005d ; Goategon
-    dw $005e ; WildApe
-    dw $0065 ; CatMage
-    dw $0066 ; Dumbira
+    dw MONSTER_GRIZZLY
+    dw MONSTER_YETI
+    dw MONSTER_GOATEGON
+    dw MONSTER_WILDAPE
+    dw MONSTER_CATMAGE
+    dw MONSTER_DUMBIRA
 
 ; row 2 (Beast), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Beast_4::
     db $04 ; entry 0
-    dw $004c ; GulpBeast
-    dw $005f ; Trumpeter
-    dw $0062 ; MadCat
-    dw $0063 ; BigEye
+    dw MONSTER_GULPBEAST
+    dw MONSTER_TRUMPETER
+    dw MONSTER_MADCAT
+    dw MONSTER_BIGEYE
 
 ; row 2 (Beast), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_5::
     db $02 ; entry 0
-    dw $005c ; Unicorn
-    dw $0061 ; DarkHorn
+    dw MONSTER_UNICORN
+    dw MONSTER_DARKHORN
 
 ; row 2 (Beast), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_6::
     db $01 ; entry 0
-    dw $0060 ; KingLeo
+    dw MONSTER_KINGLEO
 
 ; row 2 (Beast), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Beast_7::
     db $01 ; entry 0
-    dw $0064 ; Gorago
+    dw MONSTER_GORAGO
 
 ; row 3 (Bird), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Bird_0::
     db $02 ; entry 0
-    dw $006a ; Picky
-    dw $0073 ; Dracky
+    dw MONSTER_PICKY
+    dw MONSTER_DRACKY
 
 ; row 3 (Bird), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_1::
     db $04 ; entry 0
-    dw $006d ; Florajay
-    dw $0070 ; MadRaven
-    dw $0074 ; KiteHawk
-    dw $0075 ; BigRoost
+    dw MONSTER_FLORAJAY
+    dw MONSTER_MADRAVEN
+    dw MONSTER_KITEHAWK
+    dw MONSTER_BIGROOST
 
 ; row 3 (Bird), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_2::
     db $06 ; entry 0
-    dw $006c ; BullBird
-    dw $0071 ; MistyWing
-    dw $0072 ; AquaHawk
-    dw $0076 ; StubBird
-    dw $0077 ; LandOwl
-    dw $0084 ; CragDevil
+    dw MONSTER_BULLBIRD
+    dw MONSTER_MISTYWING
+    dw MONSTER_AQUAHAWK
+    dw MONSTER_STUBBIRD
+    dw MONSTER_LANDOWL
+    dw MONSTER_CRAGDEVIL
 
 ; row 3 (Bird), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_3::
     db $06 ; entry 0
-    dw $006b ; Wyvern
-    dw $006e ; DuckKite
-    dw $006f ; MadPecker
-    dw $0078 ; MadGoose
-    dw $0079 ; MadCondor
-    dw $007a ; Emyu
+    dw MONSTER_WYVERN
+    dw MONSTER_DUCKKITE
+    dw MONSTER_MADPECKER
+    dw MONSTER_MADGOOSE
+    dw MONSTER_MADCONDOR
+    dw MONSTER_EMYU
 
 ; row 3 (Bird), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Bird_4::
     db $04 ; entry 0
-    dw $007b ; Blizzardy
-    dw $007c ; Phoenix
-    dw $007d ; ZapBird
-    dw $0080 ; FunkyBird
+    dw MONSTER_BLIZZARDY
+    dw MONSTER_PHOENIX
+    dw MONSTER_ZAPBIRD
+    dw MONSTER_FUNKYBIRD
 
 ; row 3 (Bird), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_5::
     db $02 ; entry 0
-    dw $007e ; Garudian
-    dw $007f ; WhipBird
+    dw MONSTER_GARUDIAN
+    dw MONSTER_WHIPBIRD
 
 ; row 3 (Bird), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_6::
     db $02 ; entry 0
-    dw $0081 ; RainHawk
-    dw $0083 ; Shantak
+    dw MONSTER_RAINHAWK
+    dw MONSTER_SHANTAK
 
 ; row 3 (Bird), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bird_7::
     db $01 ; entry 0
-    dw $0082 ; Azurile
+    dw MONSTER_AZURILE
 
 ; row 4 (Plant), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Plant_0::
     db $04 ; entry 0
-    dw $0091 ; CactiBall
-    dw $0093 ; Toadstool
-    dw $0095 ; Slurperon
-    dw $00a6 ; Eggplaton
+    dw MONSTER_CACTIBALL
+    dw MONSTER_TOADSTOOL
+    dw MONSTER_SLURPERON
+    dw MONSTER_EGGPLATON
 
 ; row 4 (Plant), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_1::
     db $03 ; entry 0
-    dw $008d ; MadPlant
-    dw $0090 ; WingTree
-    dw $0097 ; Oniono
+    dw MONSTER_MADPLANT
+    dw MONSTER_WINGTREE
+    dw MONSTER_ONIONO
 
 ; row 4 (Plant), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_2::
     db $05 ; entry 0
-    dw $008e ; FireWeed
-    dw $008f ; FloraMan
-    dw $0092 ; Gulpple
-    dw $0096 ; Stubsuck
-    dw $0098 ; DanceVegi
+    dw MONSTER_FIREWEED
+    dw MONSTER_FLORAMAN
+    dw MONSTER_GULPPLE
+    dw MONSTER_STUBSUCK
+    dw MONSTER_DANCEVEGI
 
 ; row 4 (Plant), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_3::
     db $07 ; entry 0
-    dw $0094 ; AmberWeed
-    dw $0099 ; TreeBoy
-    dw $009a ; Devipine
-    dw $009d ; BeanMan
-    dw $009e ; EvilSeed
-    dw $009f ; ManEater
-    dw $00a7 ; FooHero
+    dw MONSTER_AMBERWEED
+    dw MONSTER_TREEBOY
+    dw MONSTER_DEVIPINE
+    dw MONSTER_BEANMAN
+    dw MONSTER_EVILSEED
+    dw MONSTER_MANEATER
+    dw MONSTER_FOOHERO
 
 ; row 4 (Plant), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Plant_4::
     db $02 ; entry 0
-    dw $00a0 ; Snapper
-    dw $00a1 ; GhosTree
+    dw MONSTER_SNAPPER
+    dw MONSTER_GHOSTREE
 
 ; row 4 (Plant), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_5::
     db $02 ; entry 0
-    dw $009b ; FaceTree
-    dw $009c ; HerbMan
+    dw MONSTER_FACETREE
+    dw MONSTER_HERBMAN
 
 ; row 4 (Plant), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_6::
     db $01 ; entry 0
-    dw $00a2 ; Rosevine
+    dw MONSTER_ROSEVINE
 
 ; row 4 (Plant), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Plant_7::
     db $03 ; entry 0
-    dw $00a3 ; Egdracil
-    dw $00a4 ; Warubou
-    dw $00a5 ; Watabou
+    dw MONSTER_EGDRACIL
+    dw MONSTER_WARUBOU
+    dw MONSTER_WATABOU
 
 ; row 5 (Bug), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Bug_0::
     db $04 ; entry 0
-    dw $00b0 ; GiantSlug
-    dw $00b5 ; GiantWorm
-    dw $00b9 ; ArmyAnt
-    dw $00bb ; TailEater
+    dw MONSTER_GIANTSLUG
+    dw MONSTER_GIANTWORM
+    dw MONSTER_ARMYANT
+    dw MONSTER_TAILEATER
 
 ; row 5 (Bug), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_1::
     db $03 ; entry 0
-    dw $00b2 ; Gophecada
-    dw $00b3 ; Butterfly
-    dw $00ba ; GoHopper
+    dw MONSTER_GOPHECADA
+    dw MONSTER_BUTTERFLY
+    dw MONSTER_GOHOPPER
 
 ; row 5 (Bug), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_2::
     db $05 ; entry 0
-    dw $00b6 ; Lipsy
-    dw $00b7 ; StagBug
-    dw $00b8 ; Pyuro
-    dw $00bd ; Eyeder
-    dw $00c2 ; Belzebub
+    dw MONSTER_LIPSY
+    dw MONSTER_STAGBUG
+    dw MONSTER_PYURO
+    dw MONSTER_EYEDER
+    dw MONSTER_BELZEBUB
 
 ; row 5 (Bug), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_3::
     db $07 ; entry 0
-    dw $00b1 ; Catapila
-    dw $00b4 ; WeedBug
-    dw $00bc ; ArmorPede
-    dw $00be ; GiantMoth
-    dw $00bf ; Droll
-    dw $00c1 ; MadHornet
-    dw $00c9 ; MultiEyes
+    dw MONSTER_CATAPILA
+    dw MONSTER_WEEDBUG
+    dw MONSTER_ARMORPEDE
+    dw MONSTER_GIANTMOTH
+    dw MONSTER_DROLL
+    dw MONSTER_MADHORNET
+    dw MONSTER_MULTIEYES
 
 ; row 5 (Bug), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Bug_4::
     db $02 ; entry 0
-    dw $00c0 ; ArmyCrab
-    dw $00c5 ; Sickler
+    dw MONSTER_ARMYCRAB
+    dw MONSTER_SICKLER
 
 ; row 5 (Bug), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_5::
     db $03 ; entry 0
-    dw $00c3 ; WarMantis
-    dw $00c4 ; HornBeet
-    dw $00c7 ; Digster
+    dw MONSTER_WARMANTIS
+    dw MONSTER_HORNBEET
+    dw MONSTER_DIGSTER
 
 ; row 5 (Bug), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_6::
     db $01 ; entry 0
-    dw $00c6 ; Armorpion
+    dw MONSTER_ARMORPION
 
 ; row 5 (Bug), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Bug_7::
     db $01 ; entry 0
-    dw $00c8 ; Skularach
+    dw MONSTER_SKULARACH
 
 ; row 6 (Demon), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Demon_0::
     db $02 ; entry 0
-    dw $00d3 ; Pixy
-    dw $00d6 ; Demonite
+    dw MONSTER_PIXY
+    dw MONSTER_DEMONITE
 
 ; row 6 (Demon), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_1::
     db $02 ; entry 0
-    dw $00dc ; 1EyeClown
-    dw $00dd ; Gremlin
+    dw MONSTER_1EYECLOWN
+    dw MONSTER_GREMLIN
 
 ; row 6 (Demon), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_2::
     db $03 ; entry 0
-    dw $00d4 ; MedusaEye
-    dw $00d8 ; EyeBall
-    dw $00e1 ; Orc
+    dw MONSTER_MEDUSAEYE
+    dw MONSTER_EYEBALL
+    dw MONSTER_ORC
 
 ; row 6 (Demon), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_3::
     db $04 ; entry 0
-    dw $00d7 ; DarkEye
-    dw $00d9 ; SkulRider
-    dw $00ea ; Gigantes
-    dw $00ec ; EvilArmor
+    dw MONSTER_DARKEYE
+    dw MONSTER_SKULRIDER
+    dw MONSTER_GIGANTES
+    dw MONSTER_EVILARMOR
 
 ; row 6 (Demon), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Demon_4::
     db $06 ; entry 0
-    dw $00d5 ; AgDevil
-    dw $00da ; EvilBeast
-    dw $00db ; Bubblemon
-    dw $00df ; Lionex
-    dw $00e2 ; Ogre
-    dw $00e8 ; MadKnight
+    dw MONSTER_AGDEVIL
+    dw MONSTER_EVILBEAST
+    dw MONSTER_BUBBLEMON
+    dw MONSTER_LIONEX
+    dw MONSTER_OGRE
+    dw MONSTER_MADKNIGHT
 
 ; row 6 (Demon), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_5::
     db $08 ; entry 0
-    dw $00de ; ArcDemon
-    dw $00e0 ; GoatHorn
-    dw $00e3 ; GateGuard
-    dw $00e4 ; ChopClown
-    dw $00e5 ; BossTroll
-    dw $00e6 ; Grendal
-    dw $00e9 ; EvilWell
-    dw $00eb ; Centasaur
+    dw MONSTER_ARCDEMON
+    dw MONSTER_GOATHORN
+    dw MONSTER_GATEGUARD
+    dw MONSTER_CHOPCLOWN
+    dw MONSTER_BOSSTROLL
+    dw MONSTER_GRENDAL
+    dw MONSTER_EVILWELL
+    dw MONSTER_CENTASAUR
 
 ; row 6 (Demon), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_6::
     db $04 ; entry 0
-    dw $00e7 ; Akubar
-    dw $00ed ; Jamirus
-    dw $00ee ; Durran
-    dw $00f0 ; LampGenie
+    dw MONSTER_AKUBAR
+    dw MONSTER_JAMIRUS
+    dw MONSTER_DURRAN
+    dw MONSTER_LAMPGENIE
 
 ; row 6 (Demon), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Demon_7::
     db $01 ; entry 0
-    dw $00ef ; Titanis
+    dw MONSTER_TITANIS
 
 ; row 7 (Zombie), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Zombie_0::
     db $01 ; entry 0
-    dw $00f6 ; Spooky
+    dw MONSTER_SPOOKY
 
 ; row 7 (Zombie), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_1::
     db $04 ; entry 0
-    dw $00f9 ; RotRaven
-    dw $0100 ; Mudron
-    dw $0104 ; Inverzon
-    dw $0105 ; FoxFire
+    dw MONSTER_ROTRAVEN
+    dw MONSTER_MUDRON
+    dw MONSTER_INVERZON
+    dw MONSTER_FOXFIRE
 
 ; row 7 (Zombie), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_2::
     db $08 ; entry 0
-    dw $00f8 ; PutrePup
-    dw $00fa ; Mummy
-    dw $00fd ; Shadow
-    dw $00fe ; Skulpent
-    dw $00ff ; Hork
-    dw $0101 ; NiteWhip
-    dw $0102 ; WindMerge
-    dw $010f ; PomPomBom
+    dw MONSTER_PUTREPUP
+    dw MONSTER_MUMMY
+    dw MONSTER_SHADOW
+    dw MONSTER_SKULPENT
+    dw MONSTER_HORK
+    dw MONSTER_NITEWHIP
+    dw MONSTER_WINDMERGE
+    dw MONSTER_POMPOMBOM
 
 ; row 7 (Zombie), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_3::
     db $06 ; entry 0
-    dw $00fb ; DarkCrab
-    dw $00fc ; DeadNite
-    dw $0103 ; Reaper
-    dw $0106 ; CaptDead
-    dw $0109 ; BoneSlave
-    dw $010e ; MadSpirit
+    dw MONSTER_DARKCRAB
+    dw MONSTER_DEADNITE
+    dw MONSTER_REAPER
+    dw MONSTER_CAPTDEAD
+    dw MONSTER_BONESLAVE
+    dw MONSTER_MADSPIRIT
 
 ; row 7 (Zombie), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Zombie_4::
     db $01 ; entry 0
-    dw $010a ; Skeletor
+    dw MONSTER_SKELETOR
 
 ; row 7 (Zombie), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_5::
     db $02 ; entry 0
-    dw $00f7 ; Skullgon
-    dw $010b ; Servant
+    dw MONSTER_SKULLGON
+    dw MONSTER_SERVANT
 
 ; row 7 (Zombie), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_6::
     db $04 ; entry 0
-    dw $0107 ; DeadNoble
-    dw $0108 ; WhiteKing
-    dw $010d ; Copycat
-    dw $0110 ; Niterich
+    dw MONSTER_DEADNOBLE
+    dw MONSTER_WHITEKING
+    dw MONSTER_COPYCAT
+    dw MONSTER_NITERICH
 
 ; row 7 (Zombie), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Zombie_7::
     db $01 ; entry 0
-    dw $010c ; Lazamanus
+    dw MONSTER_LAZAMANUS
 
 ; row 8 (Material), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Material_0::
     db $05 ; entry 0
-    dw $011b ; MadCandle
-    dw $011d ; Facer
-    dw $011e ; SpikyBoy
-    dw $0122 ; Goopi
-    dw $0131 ; MudDoll
+    dw MONSTER_MADCANDLE
+    dw MONSTER_FACER
+    dw MONSTER_SPIKYBOY
+    dw MONSTER_GOOPI
+    dw MONSTER_MUDDOLL
 
 ; row 8 (Material), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_1::
     db $04 ; entry 0
-    dw $0119 ; JewelBag
-    dw $011c ; CoilBird
-    dw $0128 ; Brushead
-    dw $0137 ; ProtoMech
+    dw MONSTER_JEWELBAG
+    dw MONSTER_COILBIRD
+    dw MONSTER_BRUSHEAD
+    dw MONSTER_PROTOMECH
 
 ; row 8 (Material), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_2::
     db $03 ; entry 0
-    dw $011a ; EvilWand
-    dw $0121 ; Puppetor
-    dw $0127 ; CurseLamp
+    dw MONSTER_EVILWAND
+    dw MONSTER_PUPPETOR
+    dw MONSTER_CURSELAMP
 
 ; row 8 (Material), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_3::
     db $08 ; entry 0
-    dw $011f ; MadMirror
-    dw $0120 ; RogueNite
-    dw $0123 ; Voodoll
-    dw $0126 ; SabreMan
-    dw $012b ; EvilPot
-    dw $012c ; Gismo
-    dw $0130 ; Exaucers
-    dw $0138 ; CloudKing
+    dw MONSTER_MADMIRROR
+    dw MONSTER_ROGUENITE
+    dw MONSTER_VOODOLL
+    dw MONSTER_SABREMAN
+    dw MONSTER_EVILPOT
+    dw MONSTER_GISMO
+    dw MONSTER_EXAUCERS
+    dw MONSTER_CLOUDKING
 
 ; row 8 (Material), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Material_4::
     db $06 ; entry 0
-    dw $0124 ; MetalDrak
-    dw $0129 ; Roboster
-    dw $012f ; Mimic
-    dw $0132 ; Golem
-    dw $0133 ; StoneMan
-    dw $0134 ; BombCrag
+    dw MONSTER_METALDRAK
+    dw MONSTER_ROBOSTER
+    dw MONSTER_MIMIC
+    dw MONSTER_GOLEM
+    dw MONSTER_STONEMAN
+    dw MONSTER_BOMBCRAG
 
 ; row 8 (Material), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_5::
     db $04 ; entry 0
-    dw $0125 ; Balzak
-    dw $012a ; Roboster2
-    dw $012d ; LavaMan
-    dw $012e ; IceMan
+    dw MONSTER_BALZAK
+    dw MONSTER_ROBOSTER2
+    dw MONSTER_LAVAMAN
+    dw MONSTER_ICEMAN
 
 ; row 8 (Material), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_6::
     db $01 ; entry 0
-    dw $0135 ; GoldGolem
+    dw MONSTER_GOLDGOLEM
 
 ; row 8 (Material), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Material_7::
     db $01 ; entry 0
-    dw $0136 ; DarkMate
+    dw MONSTER_DARKMATE
 
 ; row 9 (Water), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Water_0::
     db $03 ; entry 0
-    dw $013c ; Petiteel
-    dw $013d ; Moray
-    dw $0144 ; PutreFish
+    dw MONSTER_PETITEEL
+    dw MONSTER_MORAY
+    dw MONSTER_PUTREFISH
 
 ; row 9 (Water), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_1::
     db $04 ; entry 0
-    dw $0143 ; Octokid
-    dw $0149 ; Gamanian
-    dw $014d ; Scallopa
-    dw $015b ; Starfish
+    dw MONSTER_OCTOKID
+    dw MONSTER_GAMANIAN
+    dw MONSTER_SCALLOPA
+    dw MONSTER_STARFISH
 
 ; row 9 (Water), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_2::
     db $05 ; entry 0
-    dw $0140 ; Anemon
-    dw $0141 ; Aquarella
-    dw $0145 ; Octoreach
-    dw $014c ; RogueWave
-    dw $015a ; Pumpoise
+    dw MONSTER_ANEMON
+    dw MONSTER_AQUARELLA
+    dw MONSTER_OCTOREACH
+    dw MONSTER_ROGUEWAVE
+    dw MONSTER_PUMPOISE
 
 ; row 9 (Water), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_3::
     db $06 ; entry 0
-    dw $013e ; WalrusMan
-    dw $013f ; RayGigas
-    dw $0142 ; Merman
-    dw $0146 ; Angleron
-    dw $0147 ; FishRider
-    dw $014a ; Clawster
+    dw MONSTER_WALRUSMAN
+    dw MONSTER_RAYGIGAS
+    dw MONSTER_MERMAN
+    dw MONSTER_ANGLERON
+    dw MONSTER_FISHRIDER
+    dw MONSTER_CLAWSTER
 
 ; row 9 (Water), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Water_4::
     db $05 ; entry 0
-    dw $0148 ; RushFish
-    dw $014b ; CancerMan
-    dw $014e ; SeaHorse
-    dw $014f ; HoodSquid
-    dw $0150 ; MerTiger
+    dw MONSTER_RUSHFISH
+    dw MONSTER_CANCERMAN
+    dw MONSTER_SEAHORSE
+    dw MONSTER_HOODSQUID
+    dw MONSTER_MERTIGER
 
 ; row 9 (Water), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_5::
     db $05 ; entry 0
-    dw $0151 ; AxeShark
-    dw $0152 ; Octogon
-    dw $0154 ; Digong
-    dw $0155 ; WhaleMage
-    dw $0157 ; Octoraid
+    dw MONSTER_AXESHARK
+    dw MONSTER_OCTOGON
+    dw MONSTER_DIGONG
+    dw MONSTER_WHALEMAGE
+    dw MONSTER_OCTORAID
 
 ; row 9 (Water), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_6::
     db $03 ; entry 0
-    dw $0153 ; KingSquid
-    dw $0156 ; Aquadon
-    dw $0158 ; Grakos
+    dw MONSTER_KINGSQUID
+    dw MONSTER_AQUADON
+    dw MONSTER_GRAKOS
 
 ; row 9 (Water), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Water_7::
     db $01 ; entry 0
-    dw $0159 ; Poseidon
+    dw MONSTER_POSEIDON
 
 ; row 10 (Boss), band 0 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Boss_0::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 1 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_1::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 2 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_2::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 3 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_3::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 4 of KeyWorldBandSpeciesTable (E-0256, C1)
 ; record: count; species
 KeyWorldBandSpecies_Boss_4::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 5 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_5::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
     db $06
 
 ; row 10 (Boss), band 6 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_6::
     db $06 ; entry 0
-    dw $015f ; DracoLord
-    dw $0162 ; Hargon
-    dw $0165 ; Baramos
-    dw $016a ; Esterk
-    dw $016b ; Mirudraas
-    dw $016d ; Mudou
+    dw MONSTER_DRACOLORD
+    dw MONSTER_HARGON
+    dw MONSTER_BARAMOS
+    dw MONSTER_ESTERK
+    dw MONSTER_MIRUDRAAS
+    dw MONSTER_MUDOU
 
 ; row 10 (Boss), band 7 of KeyWorldBandSpeciesTable (E-0256, C1)
 KeyWorldBandSpecies_Boss_7::
     db $10 ; entry 0
-    dw $0160 ; DracoLord
-    dw $0161 ; LordDraco
-    dw $0163 ; Sidoh
-    dw $0164 ; Genosidoh
-    dw $0166 ; Zoma
-    dw $0167 ; AsuraZoma
-    dw $0168 ; Pizzaro
-    dw $0169 ; PsychoPiz
-    dw $016c ; Mirudraas
-    dw $016e ; DeathMore
-    dw $016f ; DeathMore
-    dw $0170 ; DeathMore
-    dw $0171 ; Darkdrium
-    dw $0172 ; Orgodemir
-    dw $0173 ; Orgodemir
-    dw $0174 ; Darck
+    dw MONSTER_DRACOLORD_160
+    dw MONSTER_LORDDRACO
+    dw MONSTER_SIDOH
+    dw MONSTER_GENOSIDOH
+    dw MONSTER_ZOMA
+    dw MONSTER_ASURAZOMA
+    dw MONSTER_PIZZARO
+    dw MONSTER_PSYCHOPIZ
+    dw MONSTER_MIRUDRAAS_16C
+    dw MONSTER_DEATHMORE
+    dw MONSTER_DEATHMORE_16F
+    dw MONSTER_DEATHMORE_170
+    dw MONSTER_DARKDRIUM
+    dw MONSTER_ORGODEMIR
+    dw MONSTER_ORGODEMIR_173
+    dw MONSTER_DARCK
     ds $ed2, $00

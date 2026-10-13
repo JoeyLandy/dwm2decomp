@@ -221,9 +221,9 @@ TryShuntOrGuard::
     bit 5, a
     jr z, .call_try_ally_guard
     ld a, [wBattleActionId]
-    cp $4e
+    cp SKILL_CALLHELP
     jr z, .call_set_sub_phase2_and_restart_resolve
-    cp $4f
+    cp SKILL_YELLHELP
     jr z, .call_set_sub_phase2_and_restart_resolve
     ld a, $84
     call QueueSoundEffect
@@ -240,9 +240,9 @@ TryShuntOrGuard::
     call TryAllyGuard
     jp nc, ShowReactionTextAndCarry
     ld a, [wBattleActionId]
-    cp $4e
+    cp SKILL_CALLHELP
     jr z, .read_battle_actor
-    cp $4f
+    cp SKILL_YELLHELP
     jr nz, .read_battle_target
 
 .read_battle_actor:
@@ -272,7 +272,7 @@ TryShuntOrGuard::
     jr c, .call_show_battle_text
     push af
     ld a, [wBattleActionId]
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr nz, .restore
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -487,7 +487,7 @@ ResolveStepCallEffect82::
 ; RunBattleResolveStep_Case02 (E-0050)
 ActionIs91AndStatusBit6Set::
     ld a, [wBattleActionId]
-    cp $91
+    cp SKILL_GEYSER
     jr z, .read_battle_actor
     ret
 
@@ -551,7 +551,7 @@ ResolveStepEffectChecks::
     bit 1, a
     jr z, .check_record_buffer_data
     ld a, [wBattleActionId]
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr nz, .read_battle_target
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -584,7 +584,7 @@ ResolveStepEffectChecks::
     cp $0c
     jr nz, .loop
     ld a, [wBattleActionId]
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -610,7 +610,7 @@ ResolveStepEffectChecks::
     cp $c0
     jr nz, .loop
     ld a, [wBattleActionId]
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr z, .check_record_buffer_data2
     jr .loop
 
@@ -772,46 +772,46 @@ ResolveStepEffectChecks::
 
 ResolveStepEffectChecks_WaitBattleActionId::
     ld a, [wBattleActionId]
-    cp $35
+    cp SKILL_IRONIZE
     ret z
-    cp $16
+    cp SKILL_HEAL
     ret z
-    cp $17
+    cp SKILL_HEALMORE
     ret z
-    cp $18
+    cp SKILL_HEALALL
     ret z
-    cp $1b
+    cp SKILL_MPASS
     ret z
-    cp $1c
+    cp SKILL_MPASSMORE
     ret z
-    cp $1d
+    cp SKILL_MPASSMOST
     ret z
-    cp $1e
+    cp SKILL_VIVIFY
     ret z
-    cp $1f
+    cp SKILL_REVIVE
     ret z
-    cp $20
+    cp SKILL_FAREWELL
     ret z
-    cp $7b
+    cp SKILL_LIFEDANCE
     ret z
-    cp $98
+    cp SKILL_GUARDIAN
     ret z
-    cp $9a
+    cp SKILL_STORMWIND
     ret z
-    cp $9d
+    cp SKILL_SUCKALL
     ret z
-    cp $bb
+    cp SKILL_HIGHJUMP_BB
     ret z
-    cp $ce
+    cp SKILL_LOVERAIN_CE
     ret
 
 ResolveStepEffectChecks_WaitBattleActionId_Sub02::
     ld a, [wBattleActionId]
-    cp $6a
+    cp SKILL_HIGHJUMP
     ret z
-    cp $a0
+    cp SKILL_LIFESONG
     ret z
-    cp $a1
+    cp SKILL_LOVERAIN
     ret
 
 ; resolve step $05: advances wBattleResolveStep. With wRecordBufferData + $6 bits 3-4 both clear it
@@ -1071,9 +1071,9 @@ ResolveStepComputeDamage::
     bit 7, a
     jr z, .return
     ld a, [wBattleActionId]
-    cp $6f
+    cp SKILL_RAMMING
     jr z, .return
-    cp $70
+    cp SKILL_KAMIKAZE
     jr z, .return
     ld a, [wBattleDamageLo]
     ld l, a
@@ -1097,7 +1097,7 @@ ResolveStepComputeDamage::
 ; SelectEffectByEffectFlags and SelectEffectByEffectFlags2Flags (E-0053)
 ResolveStepSoundWaitAndMessage::
     ld a, [wBattleActionId]
-    cp $cd
+    cp SKILL_LOVERAIN_CD
     jr nz, .skip
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -1135,7 +1135,7 @@ ResolveStepSoundWaitAndMessage::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $cf
+    cp SKILL_LOVERAIN_CF
     jr nz, .check_resolve_msg_flags
     ld a, [wResolveMsgFlags]
     bit 4, a
@@ -1207,9 +1207,9 @@ ResolveStepDamageMessage::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $dc
+    cp ACTION_DC
     jr z, .call_resolve_step_damage_message_set_sub
-    cp $d7
+    cp ACTION_D7
     jr nz, .read_temp0
     farcall ResolveStepDamageMessage_AddAx9ToHL
 
@@ -1227,17 +1227,17 @@ ResolveStepDamageMessage::
 
 .check_battle_action_id2:
     ld a, [wBattleActionId]
-    cp $3a
+    cp SKILL_TRANSFORM
     jr z, .read_battle_target
-    cp $3b
+    cp SKILL_BEDRAGON
     jr z, .skip
-    cp $b8
+    cp SKILL_HIGHJUMP_B8
     jr z, .skip
-    cp $32
+    cp SKILL_ROBMAGIC
     jr z, .read_battle_actor2
-    cp $77
+    cp SKILL_ROBDANCE
     jr z, .read_battle_actor2
-    cp $dc
+    cp ACTION_DC
     jr z, .read_battle_actor3
     cp $df
     jr z, .call_actor_formation_slot_to_temp0
@@ -1311,13 +1311,13 @@ ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB::
 ; wBattleResolveStep and returns (E-0050)
 ResolveStepBranchOnAction::
     ld a, [wBattleActionId]
-    cp $82
+    cp SKILL_ULTRADOWN
     jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots
-    cp $83
+    cp SKILL_DEMAGIC
     jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
-    cp $84
+    cp SKILL_THICKFOG
     jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
-    cp $b3
+    cp SKILL_HIGHJUMP_B3
     jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1434,7 +1434,7 @@ ResolveStepDamageMessage_SetSubPhase3AndRestartResolve::
 
 ResolveStepDamageMessage_TargetOnLocalSide_Bank36::
     ld a, [wBattleActionId]
-    cp $6c
+    cp SKILL_MASSACRE
     jr nz, .check_redirect_flags
 
 .loop:
@@ -1451,41 +1451,41 @@ ResolveStepDamageMessage_TargetOnLocalSide_Bank36::
     call ActorOnLocalSide_Bank36
     ret c
     ld a, [wBattleActionId]
-    cp $34
+    cp SKILL_PANICALL
     jr z, .done
-    cp $ad
+    cp SKILL_PANICALL_AD
     jr z, .done
-    cp $78
+    cp SKILL_PANIDANCE
     jr z, .done
-    cp $13
+    cp SKILL_BEAT
     jr z, .loop3
-    cp $14
+    cp SKILL_DEFEAT
     jr z, .loop3
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .skip
-    cp $2b
+    cp SKILL_SLOW
     jr z, .set_temp0_to_CD
-    cp $2c
+    cp SKILL_SLOWALL
     jr z, .set_temp0_to_CD
-    cp $79
+    cp SKILL_KODANCE
     jr z, .loop3
-    cp $80
+    cp SKILL_EERIELITE
     jr z, .set_temp0_to_56
-    cp $92
+    cp SKILL_DANCESHUT
     jr z, .set_temp0_to_63
-    cp $b5
+    cp SKILL_HIGHJUMP_B5
     jr z, .check_resolve_msg_actor
-    cp $ba
+    cp SKILL_HIGHJUMP_BA
     jr z, .set_temp0_to_78
-    cp $bf
+    cp SKILL_HIGHJUMP_BF
     jr z, .done
-    cp $c0
+    cp SKILL_HIGHJUMP_C0
     jr z, .done
-    cp $c9
+    cp SKILL_HIGHJUMP_C9
     jr z, .done
-    cp $ca
+    cp SKILL_HIGHJUMP_CA
     jr z, .done
-    cp $cb
+    cp SKILL_HIGHJUMP_CB
     jr z, .done
 
 .loop2:
@@ -1544,29 +1544,29 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36::
     call ActorOnLocalSide_Bank36
     ret c
     ld a, [wBattleActionId]
-    cp $72
+    cp SKILL_PALSYAIR
     jr z, .set_temp0_to_6A
-    cp $73
+    cp SKILL_POISONGAS
     jr z, .set_temp0_to_6A
-    cp $74
+    cp SKILL_POISONAIR
     jr z, .set_temp0_to_6A
-    cp $75
+    cp SKILL_CURSE
     jr z, .set_temp0_to_6B
-    cp $7e
+    cp SKILL_SANDSTORM
     jr z, .set_temp0_to_6C
-    cp $7f
+    cp SKILL_RADIANT
     jr z, .set_temp0_to_6D
-    cp $80
+    cp SKILL_EERIELITE
     jr z, .set_temp0_to_6E
-    cp $8b
+    cp SKILL_LUSHLICKS
     jr z, .set_temp0_to_6E
-    cp $8c
+    cp SKILL_SICKLICK
     jr z, .set_temp0_to_6E
-    cp $8f
+    cp SKILL_AHHH
     jr z, .set_temp0_to_71
-    cp $aa
+    cp SKILL_AHHH_AA
     jr z, .set_temp0_to_71
-    cp $c0
+    cp SKILL_HIGHJUMP_C0
     jr z, .done
     ld hl, wTemp0
     inc [hl]
@@ -2022,7 +2022,7 @@ ResolveStepDamageMessage_Sub04_WriteBattleResolveStepAndBattleSubStepEtc::
     and $93
     ld [wSideFlags1], a
     ld a, [wBattleActionId]
-    cp $83
+    cp SKILL_DEMAGIC
     ret z
     ld a, [wSideFlags0]
     or $08
@@ -2319,10 +2319,10 @@ ResolveStepEffectChecks_ShowMissHeroAvoidedDamage::
 ; clears wBattleResolveStep (E-0055)
 SetSubPhase2AndRestartResolve::
     ld a, [wBattleActionId]
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr z, .read_battle_actor
     ld a, [wBattleActionId]
-    cp $d0
+    cp ACTION_D0
     jr c, .loop
     cp $e4
     jr nc, .loop
@@ -2686,19 +2686,19 @@ ActionEffect_IceBolt_RollSkillDamageFromRecord::
 ; other cases for $18, $1A, $CF), capped at its max HP (E-0129)
 HealTargetHP::
     ld a, [wBattleActionId]
-    cp $18
+    cp SKILL_HEALALL
     jp z, .check_link_mode
-    cp $1a
+    cp SKILL_HEALUSALL
     jp z, .check_link_mode
-    cp $20
+    cp SKILL_FAREWELL
     jr z, .loop
-    cp $b1
+    cp SKILL_HIGHJUMP_B1
     jr z, .loop
-    cp $7b
+    cp SKILL_LIFEDANCE
     jr z, .loop
-    cp $cf
+    cp SKILL_LOVERAIN_CF
     jr z, .read_battle_target
-    cp $da
+    cp ACTION_DA
     jr z, .loop
 
 .call_roll_skill_damage_from_record:
@@ -2793,9 +2793,9 @@ HealTargetHP::
 
 ActionEffect_MPass_AddDoubleAToHL_Bank36::
     ld a, [wBattleActionId]
-    cp $1b
+    cp SKILL_MPASS
     jr z, .skip
-    cp $1c
+    cp SKILL_MPASSMORE
     jr z, .set_battle_damage_lo
     ld de, $0050
     jr .set_battle_damage_lo2
@@ -2882,7 +2882,7 @@ RaiseTargetDEF::
     ld a, [wBattleTarget]
     call GetBaseDEFOfSlotA
     ld a, [wBattleActionId]
-    cp $25
+    cp SKILL_UPPER
     jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
@@ -2963,7 +2963,7 @@ RollVsSapResistance::
     and $03
     ld b, a
     ld a, [wBattleActionId]
-    cp $8c
+    cp SKILL_SICKLICK
     ld a, b
     jr z, .call_roll_chance_by_flags_at_hl_sided
     call RollChanceByFlagsAtHL
@@ -2988,7 +2988,7 @@ ActionEffect_UltraDown_Sub02_GetBattleDEF::
     ld a, [wBattleTarget]
     call GetBaseDEFOfSlotA
     ld a, [wBattleActionId]
-    cp $27
+    cp SKILL_SAP
     jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
@@ -3042,7 +3042,7 @@ RaiseTargetAGL::
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
-    cp $29
+    cp SKILL_SPEED
     jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
@@ -3129,7 +3129,7 @@ ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA::
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
-    cp $2b
+    cp SKILL_SLOW
     jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
@@ -3349,7 +3349,7 @@ AttackDamageTimes1_5IfSlotDamageFlagsBit0::
 ; through (E-0095, E-0338)
 RollVsRadiantResistance::
     ld a, [wBattleActionId]
-    cp $82
+    cp SKILL_ULTRADOWN
     jr z, .return_carry
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
@@ -3366,7 +3366,7 @@ RollVsRadiantResistance::
     and $03
     ld b, a
     ld a, [wBattleActionId]
-    cp $7e
+    cp SKILL_SANDSTORM
     ld a, b
     jr z, .call_roll_chance_by_hl_bits6_and7
     call RollChanceByFlagsAtHL
@@ -4163,13 +4163,13 @@ RollVsBeatResistance::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $13
+    cp SKILL_BEAT
     jr c, .read_battle_arg2
-    cp $14
+    cp SKILL_DEFEAT
     jr z, .read_battle_arg2
-    cp $79
+    cp SKILL_KODANCE
     jr z, .read_battle_arg2
-    cp $82
+    cp SKILL_ULTRADOWN
     jr z, .read_battle_arg22
     ld a, [wBattleArg2]
     call RollChanceByFlagsAtHL
@@ -4198,11 +4198,11 @@ RollVsLegSweepResistance::
     and $03
     ld b, a
     ld a, [wBattleActionId]
-    cp $7a
+    cp SKILL_LUREDANCE
     jr z, .call_force_level4_if_actor_concentrated
-    cp $8e
+    cp SKILL_BIGTRIP
     jr z, .call_force_level4_if_actor_concentrated
-    cp $90
+    cp SKILL_WARCRY
     jr z, .call_force_level4_if_actor_concentrated
     ld a, b
     call RollChanceByFlagsAtHL
@@ -4567,7 +4567,7 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ld a, $1e
     call Multiply8By16
     ld a, [wBattleActionId]
-    cp $63
+    cp SKILL_BIATTACK
     jr z, .call_scale_hl_to75_percent
     call ShiftHLRight1
     ld b, h
@@ -4688,7 +4688,7 @@ ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3::
 .check_battle_action_id:
     push af
     ld a, [wBattleActionId]
-    cp $d6
+    cp ACTION_D6
     jr z, .call_roll_chance_for_level_a_6346
     pop af
     call ActionEffect_Sacrifice_Sub01_RollChanceByLevel_100_84_50_0
@@ -4717,7 +4717,7 @@ RollVsSleepResistance::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $2f
+    cp SKILL_SLEEP
     ld a, [wBattleArg2]
     jp z, RollChanceByFlagsAtHL
     jp RollChanceByFlagsAtHLSided
@@ -4725,7 +4725,7 @@ RollVsSleepResistance::
 ActionEffect_BeDragon_LoadMonsterRecord::
     ld hl, $0082
     ld a, [wBattleActionId]
-    cp $dc
+    cp ACTION_DC
     jr nz, .set_monster_id
     ld hl, $0262
 
@@ -4944,7 +4944,7 @@ ActionEffect_Watershot_RollSkillDamageFromRecord::
     and $03
     ld b, a
     ld a, [wBattleActionId]
-    cp $4c
+    cp SKILL_WATERSHOT
     ld a, b
     jr z, .call_scale_damage_by_flags_at_hl
     call ScaleDamageByFlagsAtHLAlt
@@ -7379,7 +7379,7 @@ ActionEffect_Sleep::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $71
+    cp SKILL_SLEEPAIR
     ld h, $b5
     jr z, .skip
     ld h, $ce
@@ -7599,7 +7599,7 @@ ActionEffect_MagicBack::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [wBattleActionId]
-    cp $37
+    cp SKILL_BOUNCE
     jr z, .skip
     bit 5, [hl]
     jr nz, .skip2
@@ -7746,7 +7746,7 @@ ActionEffect_BeDragon::
     ld c, a
     farcall ActionEffect_BeDragon_ReadLinkMode
     ld a, [wBattleActionId]
-    cp $dc
+    cp ACTION_DC
     jr z, .skip
     ld l, $44
     ld bc, $4090
@@ -8257,7 +8257,7 @@ ActionEffect_PoisonGas::
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [wBattleActionId]
-    cp $74
+    cp SKILL_POISONAIR
     jr z, .skip
     ld a, [hl]
     and $03
@@ -8279,7 +8279,7 @@ ActionEffect_PoisonGas::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $74
+    cp SKILL_POISONAIR
     jr z, .skip2
     set 0, [hl]
     res 1, [hl]
@@ -8627,7 +8627,7 @@ ActionEffect_LushLicks::
     bit 3, [hl]
     jr nz, .skip3
     ld a, [wBattleActionId]
-    cp $8c
+    cp SKILL_SICKLICK
     jr z, .call_roll_vs_sap_resistance
     call RollVsLegSweepResistance
     jr .skip
@@ -8641,7 +8641,7 @@ ActionEffect_LushLicks::
     set 3, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld a, [wBattleActionId]
-    cp $8b
+    cp SKILL_LUSHLICKS
     jr z, .read_battle_action_id
     ld a, [wBattleTarget]
     ld hl, wBattleDEF
@@ -8880,7 +8880,7 @@ ActionEffect_StrongD::
     ld hl, wBattleStatus7
     call AddAx9ToHL
     ld a, [wBattleActionId]
-    cp $96
+    cp SKILL_BLADED
     jr z, .skip2
     cp $e0
     jr nz, .skip
@@ -8929,7 +8929,7 @@ ActionEffect_Cover::
     bit 4, [hl]
     jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
     ld a, [wBattleActionId]
-    cp $98
+    cp SKILL_GUARDIAN
     jr z, .check_battle_target
     ld a, [wBattleTarget]
     ld c, a
@@ -8974,7 +8974,7 @@ ActionEffect_Cover::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_TailWind::
     ld a, [wBattleActionId]
-    cp $9a
+    cp SKILL_STORMWIND
     jr z, .check_battle_target
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
@@ -9236,7 +9236,7 @@ ActionEffect_ActionB0::
     ld [hl], a
     farcall BlankTargetMonsterPicture
     ld a, [wBattleActionId]
-    cp $b2
+    cp SKILL_HIGHJUMP_B2
     ld d, $8f
     jr z, .call_show_battle_text
     ld d, $d8 ; battle text '0 fled!'
@@ -9247,7 +9247,7 @@ ActionEffect_ActionB0::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $b2
+    cp SKILL_HIGHJUMP_B2
     ld d, $8f
     jr z, .call_show_battle_text
     ld d, $5c ; battle text '0 was shocked!'

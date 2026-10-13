@@ -17,9 +17,9 @@ SelectEffectByEffectFlags::
     cp $03
     jr nz, .check_effect_flags
     ld a, [wBattleActionId]
-    cp $85
+    cp SKILL_TATSUCALL
     ret c
-    cp $89
+    cp SKILL_SUCKAIR
     ret nc
     ld a, [wEffectFlags]
     and $41
@@ -1223,7 +1223,7 @@ ActionEffectTable_Flag3_ClearEffectFlags52::
     xor a
     ld [wEffectFlags52], a
     ld a, [wBattleActionId]
-    cp $d7
+    cp ACTION_D7
     jr z, .set_effect_flags52_to_01
     jr .call_select_effect_by_effect_flags_write
 
@@ -1248,9 +1248,9 @@ ActionEffectTable_Flag3_ClearEffectFlags52::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $32
+    cp SKILL_ROBMAGIC
     jr z, .check_effect_flags
-    cp $77
+    cp SKILL_ROBDANCE
     ret nz
 
 .check_effect_flags:
@@ -1271,7 +1271,7 @@ ActionEffectTable_Flag3_ClearEffectFlags52::
     cp $09
     jr nz, .cp_0D
     ld a, [wBattleActionId]
-    cp $48
+    cp SKILL_WINDBEAST
     ld a, b
     jr nz, .cp_0D
     xor a
@@ -1357,7 +1357,7 @@ SelectEffectByEffectFlags_WaitEffectFlags::
     cp $1d
     ret nz
     ld a, [wBattleActionId]
-    cp $65
+    cp SKILL_RAINSLASH
     ret nz
     ld a, $02
     ret
@@ -1367,7 +1367,7 @@ SelectEffectByEffectFlags_WriteBattleArg0::
     bit 3, a
     jr nz, .read_battle_target
     ld a, [wBattleActionId]
-    cp $3a
+    cp SKILL_TRANSFORM
     jr z, .read_battle_actor
     ld a, [wBattleTarget]
     jr .set_battle_arg0
@@ -3510,13 +3510,13 @@ SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags::
     bit 4, a
     ret z
     ld a, [wBattleActionId]
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .skip
-    cp $20
+    cp SKILL_FAREWELL
     jr z, .check_resolve_msg_flags
-    cp $7b
+    cp SKILL_LIFEDANCE
     jr z, .check_resolve_msg_flags
-    cp $d6
+    cp ACTION_D6
     jr z, .skip
     xor a
     ret
@@ -4833,7 +4833,7 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
     cp $04
     jr z, .check_battle_action_id
     ld a, [wBattleActionId]
-    cp $63
+    cp SKILL_BIATTACK
     jr z, .call_run_multi_hit_counter
     ld hl, wBattleSubPhase
     inc [hl]
@@ -4849,7 +4849,7 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $64
+    cp SKILL_QUADHITS
     jr z, .call_run_multi_hit_counter
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -4873,15 +4873,15 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
 ; resolve step $0E; otherwise wBattleSubPhase += 1 (E-0127)
 RunActionSpecificPostStep::
     ld a, [wBattleActionId]
-    cp $4e
+    cp SKILL_CALLHELP
     jr z, .check_defeat_flags_ba
-    cp $4f
+    cp SKILL_YELLHELP
     jr z, .check_defeat_flags_ba
-    cp $b9
+    cp SKILL_HIGHJUMP_B9
     jr z, .read_battle_actor
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .set_battle_sub_phase_to_01
-    cp $d6
+    cp ACTION_D6
     jr z, .read_battle_actor2
     jr .done
 
@@ -5091,7 +5091,7 @@ RunBattleActions_CheckActionBDOrRun63B2And63D2::
 ; CheckActionBDOrRun63B2And63D2_CarryUnlessBattleSlotOutSlotEmpty (E-0122)
 CheckActionBDOrRun63B2And63D2::
     ld a, [wBattleActionId]
-    cp $bd
+    cp SKILL_HIGHJUMP_BD
     jr nz, .call_check_action_bd_or_run63_b2_and63_d2
     ld a, [wDefeatFlagsBA]
     and $7f
@@ -5674,13 +5674,13 @@ RunBattleStep4_Case03_Sub01_WriteDefeatFlagsBAAndSavedActorSlotEtc::
     and $7f
     ret nz
     ld a, [wBattleActionId]
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .set_battle_sub_phase_to_01
-    cp $20
+    cp SKILL_FAREWELL
     jr z, .set_battle_sub_phase_to_01
-    cp $7b
+    cp SKILL_LIFEDANCE
     jr z, .set_battle_sub_phase_to_01
-    cp $d6
+    cp ACTION_D6
     jr z, .read_battle_actor
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5727,13 +5727,13 @@ RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
     jr nc, .skip
     jr z, .check_record_buffer_data
     ld a, [wBattleActionId]
-    cp $20
+    cp SKILL_FAREWELL
     jr z, .skip
-    cp $7b
+    cp SKILL_LIFEDANCE
     jr z, .skip
-    cp $ce
+    cp SKILL_LOVERAIN_CE
     jr z, .skip
-    cp $bb
+    cp SKILL_HIGHJUMP_BB
     jr z, .skip
     jr .check_record_buffer_data
 
@@ -5790,13 +5790,13 @@ RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
     ret nc
     jr z, .next
     ld a, [wBattleActionId]
-    cp $20
+    cp SKILL_FAREWELL
     ret z
-    cp $7b
+    cp SKILL_LIFEDANCE
     ret z
-    cp $ce
+    cp SKILL_LOVERAIN_CE
     ret z
-    cp $bb
+    cp SKILL_HIGHJUMP_BB
     ret z
 
 .next:
@@ -5821,7 +5821,7 @@ RollRepeatCountForAction::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $4e
+    cp SKILL_CALLHELP
     jr z, .call_random_in_range
     sla c
 
@@ -5847,7 +5847,7 @@ RunMultiHitCounter::
     bit 7, a
     jp nz, RunMultiHitCounter_Skip
     ld a, [wBattleActionId]
-    cp $63
+    cp SKILL_BIATTACK
     ld a, $81
     jr z, .set_defeat_flags_ba
     ld a, $83
@@ -5867,7 +5867,7 @@ RunMultiHitCounter_Skip::
     and $7f
     jr z, RunMultiHitCounter_Done
     ld a, [wBattleActionId]
-    cp $63
+    cp SKILL_BIATTACK
     jr nz, RunMultiHitCounter_ReadBattleActor
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -5953,7 +5953,7 @@ RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
     cp $04
     jr z, .check_battle_action_id
     ld a, [wBattleActionId]
-    cp $63
+    cp SKILL_BIATTACK
     jr z, .call_run_multi_hit_counter
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5965,7 +5965,7 @@ RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $64
+    cp SKILL_QUADHITS
     jr z, .call_run_multi_hit_counter
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -6528,7 +6528,7 @@ RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A::
     bit 2, a
     jr z, .call_show_battle_text
     ld a, [wBattleActionId]
-    cp $6c
+    cp SKILL_MASSACRE
     jr nz, .check_attack_deflected
     ld a, [wBattleActor]
     and $04
@@ -6621,7 +6621,7 @@ ShowActionBattleTextFromActionBattleTextTable::
     ret z
     ld d, a
     ld a, [wBattleActionId]
-    cp $cf
+    cp SKILL_LOVERAIN_CF
     call z, ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom
     jp ShowBattleText
 
@@ -7912,7 +7912,7 @@ BattleTextPrepF2::
 BuildActionMessageNames::
     push de
     ld a, [wBattleActionId]
-    cp $d0
+    cp ACTION_D0
     jr nc, .set_saved_actor_slot_to_01
     xor a
     ld [wSavedActorSlot], a

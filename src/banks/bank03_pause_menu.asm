@@ -4892,7 +4892,7 @@ PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped::
     ld a, $00
     ld [rRAMG], a
     ld a, [wItemId]
-    cp $1e
+    cp ITEM_METEORB
     ret nz
     call NextTableByte
     ld a, [wRandomLo]
@@ -4924,11 +4924,11 @@ PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc::
     ld a, $00
     ld [rRAMG], a
     ld a, [wItemId]
-    cp $19
+    cp ITEM_BEEFJERKY
     jr z, .set_string_category_to_00
-    cp $1a
+    cp ITEM_PORKCHOP
     jr z, .set_string_category_to_00
-    cp $24
+    cp ITEM_WIND
     jr z, .set_string_category_to_00
     ld a, $01
     ld [wStringCategory], a

@@ -2402,7 +2402,7 @@ RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp $6e
+    cp SKILL_BERSERKER
     jr z, .done
     ld a, [wBattleActor]
     ld hl, wBattleStatus
@@ -2698,7 +2698,7 @@ CheckFormationPartnersCanAct::
 ; carry set). The MP is not written here (E-0048)
 CheckSkillMPCost::
     ld a, [wBattleActionId]
-    cp $d0
+    cp ACTION_D0
     jr c, .read_record_buffer_data
     cp $e4
     jr nc, .read_record_buffer_data
@@ -2953,21 +2953,21 @@ CheckActorStatusBit6::
 ; A = 0 for action $BF or $C9-$CF, otherwise carry (E-0124)
 ActionIsSpecialBFOrC9ToCF::
     ld a, [wBattleActionId]
-    cp $bf
+    cp SKILL_HIGHJUMP_BF
     jr z, .return_0
-    cp $c9
+    cp SKILL_HIGHJUMP_C9
     jr z, .return_0
-    cp $ca
+    cp SKILL_HIGHJUMP_CA
     jr z, .return_0
-    cp $cb
+    cp SKILL_HIGHJUMP_CB
     jr z, .return_0
-    cp $cc
+    cp SKILL_HIGHJUMP_CC
     jr z, .return_0
-    cp $cd
+    cp SKILL_LOVERAIN_CD
     jr z, .return_0
-    cp $ce
+    cp SKILL_LOVERAIN_CE
     jr z, .return_0
-    cp $cf
+    cp SKILL_LOVERAIN_CF
     jr z, .return_0
     scf
     ret
@@ -2980,7 +2980,7 @@ ActionIsSpecialBFOrC9ToCF::
 ; ActionIsSpecialBFOrC9ToCF (E-0126)
 CheckActionD0ToE3OrSpecial::
     ld a, [wBattleActionId]
-    cp $d0
+    cp ACTION_D0
     jr c, .call_action_is_special_bf_or_c9_to_cf
     cp $e4
     jr nc, .call_action_is_special_bf_or_c9_to_cf
@@ -3225,7 +3225,7 @@ RunBattleActions_StatusChecks_CompareActionIdWithCD::
 ; compares wBattleActionId with $CD: carry when below, Z when equal (E-0115)
 CompareActionIdWithCD::
     ld a, [wBattleActionId]
-    cp $cd
+    cp SKILL_LOVERAIN_CD
     ret
 
 ; by its step: 'G was shattered!' and 'SealPray was broken!', then CheckActionD0ToE3OrSpecial
@@ -3254,7 +3254,7 @@ RunBattleActions_StatusChecks_ShatterChecks_ReadByteAtHLPlusA::
     cp $02
     jr z, .check_battle_target
     ld a, [wBattleActionId]
-    cp $35
+    cp SKILL_IRONIZE
     jr z, .check_battle_target
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
@@ -3908,7 +3908,7 @@ RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32::
     call RunDefeatSequence_Case02_WaitBattleActionId
     ret z
     ld a, [wBattleActionId]
-    cp $91
+    cp SKILL_GEYSER
     jr nz, .call_target_on_local_side_bank32
     ld d, $8a
     call ActorOnLocalSide_Bank32
@@ -3930,14 +3930,14 @@ RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32::
 
 RunDefeatSequence_Case02_WaitBattleActionId::
     ld a, [wBattleActionId]
-    cp $13
+    cp SKILL_BEAT
     ret z
-    cp $14
+    cp SKILL_DEFEAT
     ret z
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .skip
-    cp $79
-    cp $d6
+    cp SKILL_KODANCE
+    cp ACTION_D6
     jr z, .skip
     ret
 
@@ -4514,31 +4514,31 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     xor a
     ld [wEffectSubStep], a
     ld a, [wBattleActionId]
-    cp $15
+    cp SKILL_SACRIFICE
     jr z, .check_battle_screen_flags
-    cp $20
+    cp SKILL_FAREWELL
     jr z, .check_battle_screen_flags
-    cp $3b
+    cp SKILL_BEDRAGON
     jr z, .call_resolve_step0_e_effect_case00_advance
-    cp $5f
+    cp SKILL_POISONHIT
     jp z, .read_battle_target
-    cp $60
+    cp SKILL_PARALYZE
     jp z, .read_battle_target2
-    cp $61
+    cp SKILL_NAPATTACK
     jp z, .read_battle_target3
-    cp $6d
+    cp SKILL_TWINSLASH
     jr z, .set_battle_sub_step_to_09
-    cp $6f
+    cp SKILL_RAMMING
     jr z, .set_battle_sub_step_to_03
-    cp $70
+    cp SKILL_KAMIKAZE
     jr z, .set_battle_sub_step_to_04
-    cp $7b
+    cp SKILL_LIFEDANCE
     jr z, .check_battle_screen_flags
-    cp $b8
+    cp SKILL_HIGHJUMP_B8
     jr z, .call_resolve_step0_e_effect_case00_advance
-    cp $d6
+    cp ACTION_D6
     jr z, .read_battle_actor
-    cp $dc
+    cp ACTION_DC
     jr z, .read_battle_actor2
 
 .loop:
@@ -5061,7 +5061,7 @@ ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1::
 
 ResolveStep0EEffect_ActorFormationSlotToTemp0::
     ld a, [wBattleActionId]
-    cp $d6
+    cp ACTION_D6
     jr nz, .read_battle_sub_step2
     ld a, [wSavedActorByte]
     bit 0, a
@@ -5226,7 +5226,7 @@ RunEffectSubStep_63C2_ShowHeroDroppedDead::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleActionId]
-    cp $7b
+    cp SKILL_LIFEDANCE
     ld d, $8c
     jr z, .call_show_battle_text
     ld d, $90
@@ -5241,7 +5241,7 @@ RunEffectSubStep_63C2_ShowHeroDroppedDead::
 
 ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CheckBattleActionId::
     ld a, [wBattleActionId]
-    cp $d6
+    cp ACTION_D6
     jr nz, .set_battle_sub_phase_to_06
     ld a, [wSavedActorByte]
     bit 0, a

@@ -571,9 +571,9 @@ RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleActionId]
-    cp $19
+    cp SKILL_HEALUS
     jr c, .set_effect_flags_to_08
-    cp $1e
+    cp SKILL_VIVIFY
     jr nc, .set_effect_flags_to_08
     call TargetOnLocalSide_Bank3B
     jr c, .set_effect_flags_to_08
@@ -729,18 +729,18 @@ RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ld a, [wBattleActionId]
-    cp $01
+    cp SKILL_BLAZE
     ret c
-    cp $06
+    cp SKILL_FIREBOLT
     jr c, .check_battle_target
-    cp $0b
+    cp SKILL_INFERMORE
     jr z, .check_battle_target
     jr c, .check_battle_target2
-    cp $0c
+    cp SKILL_INFERMOST
     jr z, .check_battle_target2
-    cp $24
+    cp SKILL_CURSEOFF
     ret c
-    cp $28
+    cp SKILL_DEFENSE
     jr c, .read_battle_damage_lo
     ret
 
@@ -1283,11 +1283,11 @@ GroupTargetsBySpeciesToSpeciesGroups::
 ; amount actually added when capped) (E-0236)
 RestoreTargetHPByActionAmount::
     ld a, [wBattleActionId]
-    cp $03
+    cp SKILL_BLAZEMOST
     jr z, .read_battle_target
-    cp $01
+    cp SKILL_BLAZE
     jr z, .call_set_damage_random_in_range
-    cp $38
+    cp SKILL_BARRIER
     jr z, .call_set_damage_random_in_range
     ld hl, $003c
     ld bc, $0046
@@ -1341,7 +1341,7 @@ RestoreTargetHPByActionAmount::
 
 RestoreTargetMPIfLow_SetDamageRandomInRange::
     ld a, [wBattleActionId]
-    cp $05
+    cp SKILL_FIREBANE
     jr z, .read_battle_target
     ld hl, $0014
     ld bc, $001e
@@ -1527,7 +1527,7 @@ RollTableDamageScaledByResistance::
     ld b, a
     call SetDamageRandomInRange
     ld a, [wBattleActionId]
-    cp $24
+    cp SKILL_CURSEOFF
     jr nz, .cp_25
     call TargetSlotResistancesByte1_Bank3B
     rlca

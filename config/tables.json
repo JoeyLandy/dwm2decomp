@@ -248,21 +248,25 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 1 (SkillTable index, $FF = none)"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 2"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 3"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 4"
         },
         {
@@ -1990,6 +1994,7 @@
         {
           "type": "db",
           "size": 5,
+          "enum": "skill",
           "name": "skills this one follows from ($FF = none)"
         }
       ],
@@ -2142,6 +2147,7 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill number, or $FF ending a list"
         }
       ],
@@ -13585,6 +13591,7 @@
           "type": "words",
           "size": 2,
           "names": "monster",
+          "enum": "monster",
           "name": "species for this link code"
         }
       ],
@@ -13616,6 +13623,7 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "mapped skill ($FE/$FF = dropped)"
         }
       ],
@@ -13631,6 +13639,7 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "mapped skill ($FE = dropped)"
         }
       ],
@@ -18172,6 +18181,7 @@
         {
           "type": "words",
           "size": 4,
+          "enum": "monster",
           "name": "$1A, $1C: species of parent 1 and 2 (E-0297)"
         },
         {
@@ -18200,12 +18210,14 @@
           "type": "db",
           "size": 8,
           "line": true,
+          "enum": "skill",
           "name": "skills, $34-$3B (E-0122)"
         },
         {
           "type": "db",
           "size": 25,
           "line": true,
+          "enum": "skill",
           "name": "$3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)"
         },
         {
@@ -18280,6 +18292,7 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "item",
           "name": "$A4: equipped item (E-0125)"
         }
       ],
@@ -18601,6 +18614,7 @@
           "type": "db",
           "size": 12,
           "line": true,
+          "enum": "item",
           "name": "item numbers in order, $FF ends the list"
         }
       ],
@@ -18617,6 +18631,7 @@
           "type": "db",
           "size": 12,
           "line": true,
+          "enum": "item",
           "name": "item numbers in order, $FF ends the list"
         }
       ],
@@ -18945,6 +18960,7 @@
         {
           "type": "words",
           "size": 4,
+          "enum": "monster",
           "name": "$1A, $1C: species of parent 1 and 2 (E-0297)"
         },
         {
@@ -18973,12 +18989,14 @@
           "type": "db",
           "size": 8,
           "line": true,
+          "enum": "skill",
           "name": "skills, $34-$3B (E-0122)"
         },
         {
           "type": "db",
           "size": 25,
           "line": true,
+          "enum": "skill",
           "name": "$3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)"
         },
         {
@@ -19053,6 +19071,7 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "item",
           "name": "$A4: equipped item (E-0125)"
         }
       ],
@@ -19563,21 +19582,25 @@
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 1 (SkillTable index, $FF = none)"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 2"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 3"
         },
         {
           "type": "db",
           "size": 1,
+          "enum": "skill",
           "name": "skill id 4"
         },
         {
@@ -19759,6 +19782,7 @@
         {
           "type": "db",
           "size": 3,
+          "enum": "skill",
           "name": "natural skills (C1, E-0299)"
         },
         {
@@ -20508,6 +20532,7 @@
           "type": "words",
           "size": 2,
           "names": "monster",
+          "enum": "monster",
           "name": "species ($FFFF skipped, $FEFE ends a list)"
         }
       ],
@@ -20544,6 +20569,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20565,6 +20591,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20586,6 +20613,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20607,6 +20635,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20628,6 +20657,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20649,6 +20679,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20670,6 +20701,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20691,6 +20723,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20712,6 +20745,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20733,6 +20767,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20754,6 +20789,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20775,6 +20811,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20796,6 +20833,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20817,6 +20855,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20838,6 +20877,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20859,6 +20899,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20880,6 +20921,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20901,6 +20943,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20922,6 +20965,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20943,6 +20987,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20964,6 +21009,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -20985,6 +21031,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21006,6 +21053,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21027,6 +21075,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21048,6 +21097,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21069,6 +21119,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21090,6 +21141,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21111,6 +21163,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21132,6 +21185,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21153,6 +21207,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21174,6 +21229,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21195,6 +21251,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21216,6 +21273,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21237,6 +21295,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21258,6 +21317,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21279,6 +21339,7 @@
           "size": 14,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21300,6 +21361,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21321,6 +21383,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21342,6 +21405,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21363,6 +21427,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21384,6 +21449,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21405,6 +21471,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21426,6 +21493,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21447,6 +21515,7 @@
           "size": 14,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21468,6 +21537,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21489,6 +21559,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21510,6 +21581,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21531,6 +21603,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21552,6 +21625,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21573,6 +21647,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21594,6 +21669,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21615,6 +21691,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21636,6 +21713,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21657,6 +21735,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21678,6 +21757,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21699,6 +21779,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21720,6 +21801,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21741,6 +21823,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21762,6 +21845,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21783,6 +21867,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21804,6 +21889,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21825,6 +21911,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21846,6 +21933,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21867,6 +21955,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21888,6 +21977,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21909,6 +21999,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21930,6 +22021,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21951,6 +22043,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21972,6 +22065,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -21993,6 +22087,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22014,6 +22109,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22035,6 +22131,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22056,6 +22153,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22077,6 +22175,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22098,6 +22197,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22119,6 +22219,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22140,6 +22241,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22161,6 +22263,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22182,6 +22285,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22203,6 +22307,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22224,6 +22329,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22245,6 +22351,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22266,6 +22373,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22287,6 +22395,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22308,6 +22417,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22329,6 +22439,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22350,6 +22461,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22371,6 +22483,7 @@
           "size": 32,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22407,6 +22520,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22428,6 +22542,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22449,6 +22564,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22470,6 +22586,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22491,6 +22608,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22512,6 +22630,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22533,6 +22652,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22554,6 +22674,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22575,6 +22696,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22596,6 +22718,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22617,6 +22740,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22638,6 +22762,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22659,6 +22784,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22680,6 +22806,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22701,6 +22828,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22722,6 +22850,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22743,6 +22872,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22764,6 +22894,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22785,6 +22916,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22806,6 +22938,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22827,6 +22960,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22848,6 +22982,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22869,6 +23004,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22890,6 +23026,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22911,6 +23048,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22932,6 +23070,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22953,6 +23092,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22974,6 +23114,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -22995,6 +23136,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23016,6 +23158,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23037,6 +23180,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23058,6 +23202,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23079,6 +23224,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23100,6 +23246,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23121,6 +23268,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23142,6 +23290,7 @@
           "size": 14,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23163,6 +23312,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23184,6 +23334,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23205,6 +23356,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23226,6 +23378,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23247,6 +23400,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23268,6 +23422,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23289,6 +23444,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23310,6 +23466,7 @@
           "size": 14,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23331,6 +23488,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23352,6 +23510,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23373,6 +23532,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23394,6 +23554,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23415,6 +23576,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23436,6 +23598,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23457,6 +23620,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23478,6 +23642,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23499,6 +23664,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23520,6 +23686,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23541,6 +23708,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23562,6 +23730,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23583,6 +23752,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23604,6 +23774,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23625,6 +23796,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23646,6 +23818,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23667,6 +23840,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23688,6 +23862,7 @@
           "size": 4,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23709,6 +23884,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23730,6 +23906,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23751,6 +23928,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23772,6 +23950,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23793,6 +23972,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23814,6 +23994,7 @@
           "size": 16,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23835,6 +24016,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23856,6 +24038,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23877,6 +24060,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23898,6 +24082,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23919,6 +24104,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23940,6 +24126,7 @@
           "size": 8,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23961,6 +24148,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -23982,6 +24170,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24003,6 +24192,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24024,6 +24214,7 @@
           "size": 10,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24045,6 +24236,7 @@
           "size": 6,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24066,6 +24258,7 @@
           "size": 2,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24087,6 +24280,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24108,6 +24302,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24129,6 +24324,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24150,6 +24346,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24171,6 +24368,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24192,6 +24390,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24213,6 +24412,7 @@
           "size": 12,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],
@@ -24234,6 +24434,7 @@
           "size": 32,
           "per_line": 8,
           "names": "monster",
+          "enum": "monster",
           "name": "species"
         }
       ],

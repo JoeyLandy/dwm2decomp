@@ -2324,7 +2324,7 @@ CompactInventory::
 ; puts wItemId in the first empty inventory slot; sets wItemId = $FF when all 24 are full (E-0124)
 AddWItemIdToInventory::
     ld a, [wItemId]
-    cp $00
+    cp ITEM_00
     ret z
     cp $ff
     ret z
@@ -2353,7 +2353,7 @@ AddWItemIdToInventory::
 ; when not found (E-0124)
 RemoveWItemIdFromInventory::
     ld a, [wItemId]
-    cp $00
+    cp ITEM_00
     ret z
     cp $ff
     ret z

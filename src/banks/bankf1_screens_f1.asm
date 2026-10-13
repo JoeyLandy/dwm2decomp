@@ -191,9 +191,9 @@ PauseMenu_State4_GiftMenu_GiveGift::
 
 PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc::
     ld a, [wItemId]
-    cp $1f
+    cp ITEM_BEASTTAIL
     jr z, .skip3
-    cp $21
+    cp ITEM_SHINYHARP
     jr z, .skip3
     ld b, $2b
     ld c, $2e

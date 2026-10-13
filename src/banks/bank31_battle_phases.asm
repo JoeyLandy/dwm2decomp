@@ -3763,9 +3763,9 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
     and $01
     jr nz, .check_sub_menu_cursor
     ld a, [wItemId]
-    cp $19
+    cp ITEM_BEEFJERKY
     jr c, .set_battle_arg0_to_01
-    cp $1f
+    cp ITEM_BEASTTAIL
     jr nc, .set_battle_arg0_to_01
     ld a, [wSubMenuCursor]
     and $01
@@ -3855,7 +3855,7 @@ RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep::
 RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9::
     call DrawWC2B8LeftToBGMapRow9
     ld a, [wItemId]
-    cp $0c
+    cp ITEM_WORLDLEAF
     jr z, .set_name_slot
     xor a
 
@@ -3956,7 +3956,7 @@ RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0B::
 RunBattleSetup_ItemCommand_CopyRectRecord7750ToScreenBufferFar::
     call CopyRectRecord7750ToScreenBufferFar
     ld a, [wItemId]
-    cp $0c
+    cp ITEM_WORLDLEAF
     jr z, .set_battle_arg1
     xor a
 
@@ -3972,7 +3972,7 @@ RunBattleSetup_ItemCommand_CopyRectRecord7750ToScreenBufferFar::
 RunBattleSetup_ItemCommand_DrawWC2F8RectToBGMapRow11::
     call DrawWC2F8RectToBGMapRow11
     ld a, [wItemId]
-    cp $0c
+    cp ITEM_WORLDLEAF
     jr z, .set_name_slot
     xor a
 
@@ -5365,7 +5365,7 @@ RunBattleSetup_CommandMenu_Case18_ReadRecordBufferAndLinkRoleEtc::
 
 RunBattleSetup_ItemCommand_Case08_ReadItemIdAndLinkRoleEtc::
     ld a, [wItemId]
-    cp $0c
+    cp ITEM_WORLDLEAF
     jr nz, RunBattleSetup_ItemCommand_Case08_ReadItemIdAndLinkRoleEtc_ReadLinkRole2
 
 RunBattleSetup_ItemCommand_Case08_ReadItemIdAndLinkRoleEtc_ReadLinkRole::
