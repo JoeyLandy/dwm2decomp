@@ -2079,8 +2079,8 @@
   },
   "0D:55BE": {
     "name": "KeyAppraisalMenu",
-    "note": "implements script command type F2 (SCRIPT_KEY_APPRAISAL): Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings); reached through ScriptCommandF2 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type F2 (SCRIPT_KEY_APPRAISAL): Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings); reached through ScriptCommandF2 in bank $10 (E-0038, E-0244) (C2 from E-0334: with a generated key it lists the key, charges 140G and names it ('I got it! This is the WhiteMtn!'); with no key KeyAppraisalMenu_HasAnyKey ends it at once)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0334"
   },
   "0D:6310": {
     "name": "MedalPrizeMenu",
@@ -7521,7 +7521,7 @@
   "00:214F": {"name": "WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros", "note": "writes the nibbles at hTemp3 downward as digit tiles ($E0 + n), a leading zero as the blank tile $C3", "evidence": "E-0305 (C1)"},
   "01:5311": {"name": "DebugSkillViewer_Update_IndexOfFlagValue", "note": "C = the position of A in the list $11, $12, $14, $21, $22, $31, $32, $40, $80, ...; returns at once for 0", "evidence": "E-0305 (C2)"},
   "01:5BE8": {"name": "DebugResultsDisplay_Update_WriteUnknownName", "note": "fills wNameGlyphBuf with nine $98 placeholder glyphs and $F0", "evidence": "E-0305 (C2)"},
-  "01:6E98": {"name": "DebugBattleSetup_Update_FillKeyListFromTable", "note": "copies 128 bytes (32 four-byte entries) from its table into wKeyList", "evidence": "E-0305 (C2)"},
+  "01:6E98": {"name": "DebugBattleSetup_ClearKeyList", "note": "copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after it) (was DebugBattleSetup_Update_FillKeyListFromTable)", "evidence": "E-0305 (C2); E-0334"},
   "03:7257": {"name": "PauseMenu_Plan_PagedMenu_WriteFiveTileRun", "note": "writes five consecutive tile numbers, starting at the table byte for A, at DE", "evidence": "E-0305 (C2)"},
   "03:7630": {"name": "PauseMenu_Plan_RecordJourney_RestartGame", "note": "jumps to BootAndMainLoop (restarts the game)", "evidence": "E-0305 (C2)"},
   "03:7880": {"name": "PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark", "note": "reads the key entry byte for A (bit flags) and writes a mark tile for list row C", "evidence": "E-0305 (C1)"},

@@ -2842,7 +2842,7 @@ Data_00D_5576:: ; address name
     db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; implements script command type F2 (SCRIPT_KEY_APPRAISAL): Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings); reached through ScriptCommandF2 in bank $10 (E-0038, E-0244)
+; implements script command type F2 (SCRIPT_KEY_APPRAISAL): Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings); reached through ScriptCommandF2 in bank $10 (E-0038, E-0244) (C2 from E-0334: with a generated key it lists the key, charges 140G and names it ('I got it! This is the WhiteMtn!'); with no key KeyAppraisalMenu_HasAnyKey ends it at once)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2)
 ; reads: wScreenState
 KeyAppraisalMenu::

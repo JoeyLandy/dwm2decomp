@@ -243,7 +243,7 @@ DEF wEventItemSlot EQU $C627 ; save byte tested before the gold events ($FF or 0
 DEF wItemStorage EQU $C635 ; the Vault: 100 two-byte entries of item id, then count (ItemStorageHasNonZeroEntry); ends right before wPartyCount; item storage of the save data (C2 from E-0325: depositing one item $28 writes $28, 1 to the first entry) (E-0133, E-0325)
 DEF wPartyCount EQU $C6FD ; number of party monsters (0-3) (E-0133)
 DEF wPartyList EQU $C6FE ; record indexes of the party members (up to 3, then $FF); MoveIncapacitatedPartyMembersBack reorders it (E-0133)
-DEF wKeyList EQU $C707 ; up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090) (reading + data (E-0090))
+DEF wKeyList EQU $C707 ; up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090) (C2 from E-0334: a generated key enters as $FE, $06, $25, $0D; appraisal turns byte 0 into 0 and shows 'WhiteMtn', word 6 + 1 and word $25 + $11 of the list at 09:$4078) (reading + data (E-0090); E-0334)
 DEF wKeySeeds EQU $C787 ; two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryTemp0) (E-0133)
 DEF wFarmLevel EQU $C7C7 ; storage level: Data_016_75EB[it] is how many SRAM records the farm holds (E-0133)
 DEF wStepCounterLo EQU $C7C9 ; field step counter for stored-record updates (wraps at 1000), low byte (E-0133)

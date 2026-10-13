@@ -2431,6 +2431,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0334 — A Magic Key appraised: the key list's entries
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced.
+- **A key.** GenerateNewKeyEntry, called at the main loop's halt on Main Street as a reward event would call it, writes the entry $FE, $06, $25, $0D to wKeyList, which was empty.
+  - The debug battle set-up's DebugBattleSetup_Update_FillKeyListFromTable copies $80 bytes of $FF into the list, so it empties it rather than filling it. The list reads $FF throughout after it. It is renamed DebugBattleSetup_ClearKeyList.
+- **Appraisal** (Script_0D_62B8 by its RAM bytes). KeyAppraisalMenu lists the key (KeyAppraisalMenu_ChooseKey_*) and asks for confirmation. It charges 140 gold (99,999 to 99,859) and saves (KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_7347).
+  - It shows "I got it! This is the WhiteMtn!" (WriteKeyNameToDE, CopyKeyNameWordToDE).
+  - The entry becomes $00, $06, $25, $0D. So byte 0 is $FE for an unappraised generated key and 0 once appraised. Bytes 1 and 2 pick the name's words, word (byte 1 + 1) = "White" and word (byte 2 + $11) = "Mtn" of the list at 09:$4078, as E-0090 read (C2).
+  - With no key, KeyAppraisalMenu_HasAnyKey ends the script at once.
+- **Reproduction and tests.** tools/recipes/e0334_keys.txt includes e0331_hibernate_medals.txt. tests/test_play_chain.py checks the entry before and after, the 140 gold, and the two words from the ROM.
+- Binary verification: build/run469 PASS, 0 differing bytes; tests OK (234, skipped=3).
+
 ### E-0333 — Battle action effects follow the skill the battle text names
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL, forced through the debug battle as in E-0332.

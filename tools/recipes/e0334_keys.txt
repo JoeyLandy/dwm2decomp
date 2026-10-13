@@ -1,0 +1,9 @@
+# E-0334: a generated Magic Key (GenerateNewKeyEntry, called as a reward event would) is appraised (Script_0D_62B8,
+# started by its RAM bytes on Main Street) (includes e0331_hibernate_medals.txt).
+@ e0331_hibernate_medals.txt
+ky01! | t02! | call:GenerateNewKeyEntry | W30
+ky02! | ky01! | wDataBank=0x0D wScriptInDataBank=1 wScriptPointerLo=0xB8 wScriptPointerHi=0x62 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40
+ky03! | ky02! |  | A2 W60
+ky04! | ky03! |  | A2 W60
+ky05! | ky04! |  | A2 W60
+ky06! | ky05! |  | A2 W60 A2 W60 A2 W60 A2 W60

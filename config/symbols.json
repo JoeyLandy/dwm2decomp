@@ -511,8 +511,8 @@
   },
   "C707": {
     "name": "wKeyList",
-    "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090)",
-    "evidence": "reading + data (E-0090)",
+    "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090) (C2 from E-0334: a generated key enters as $FE, $06, $25, $0D; appraisal turns byte 0 into 0 and shows 'WhiteMtn', word 6 + 1 and word $25 + $11 of the list at 09:$4078)",
+    "evidence": "reading + data (E-0090); E-0334",
     "size": "80"
   },
   "C8EF": {

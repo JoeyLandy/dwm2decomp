@@ -5971,7 +5971,7 @@ Func_001_6ABE:: ; address name
     ld [wTinyMedalsLo], a
     xor a, a
     ld [wTinyMedalsHi], a
-    call DebugBattleSetup_Update_FillKeyListFromTable
+    call DebugBattleSetup_ClearKeyList
     call DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82
     ret
 
@@ -6418,12 +6418,12 @@ Func_001_6E91:: ; address name
     call CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
     ret
 
-; copies 128 bytes (32 four-byte entries) from its table into wKeyList
+; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after it) (was DebugBattleSetup_Update_FillKeyListFromTable)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc)
 ; points at: wKeyList
-DebugBattleSetup_Update_FillKeyListFromTable::
+DebugBattleSetup_ClearKeyList::
 Func_001_6E98:: ; address name
-    ld de, DebugBattleSetup_Update_FillKeyListFromTable_Data
+    ld de, DebugBattleSetup_ClearKeyList_Data
     ld hl, wKeyList
     ld b, $20
 
@@ -6444,8 +6444,8 @@ Func_001_6E98:: ; address name
     jr nz, .loop
     ret
 
-; address loaded by DebugBattleSetup_Update_FillKeyListFromTable
-DebugBattleSetup_Update_FillKeyListFromTable_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by DebugBattleSetup_ClearKeyList
+DebugBattleSetup_ClearKeyList_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_001_6EB0:: ; address name
     ds $80, $FF
 
