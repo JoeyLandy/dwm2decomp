@@ -54,16 +54,15 @@ VBlankVector::
     jp VBlankHandler
     db $00, $00, $00, $00
 
-; the LCD STAT interrupt vector ($0048): jumps to the handler at ComputeSpriteScrollOffsets_Skip2
-; (E-0114)
+; the LCD STAT interrupt vector ($0048): jumps to the handler at StatInterruptHandler (E-0114)
 StatInterruptVector::
-    jp ComputeSpriteScrollOffsets_Skip2
+    jp StatInterruptHandler
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; the serial-transfer interrupt vector ($0058): jumps to the handler at
-; ComputeSpriteScrollOffsets_Skip (E-0114)
+; the serial-transfer interrupt vector ($0058): jumps to the handler at SerialInterruptHandler
+; (E-0114)
 SerialInterruptVector::
-    jp ComputeSpriteScrollOffsets_Skip
+    jp SerialInterruptHandler
     db $d9
     ds $24, $00
 
@@ -6359,7 +6358,9 @@ ComputeSpriteScrollOffsets::
     ldh [hSpriteScrollYHi], a
     ret
 
-ComputeSpriteScrollOffsets_Skip::
+; the serial interrupt (vector $0058): saves AF, BC, DE and HL, runs a step of the link session
+; (RunLinkSession) and returns with reti (E-0341; was ComputeSpriteScrollOffsets_Skip)
+SerialInterruptHandler::
     push af
     push bc
     push de
@@ -6371,7 +6372,10 @@ ComputeSpriteScrollOffsets_Skip::
     pop af
     reti
 
-ComputeSpriteScrollOffsets_Skip2::
+; the LCD STAT interrupt (vector $0048): with WRAM bank 0 mapped, runs the split chosen by
+; wSTATSplitEnable & 3 (0 none; 2 and 3 rewrite SCX or SCY and LYC for a scroll split) and returns
+; with reti (E-0341; was ComputeSpriteScrollOffsets_Skip2)
+StatInterruptHandler::
     push af
     push hl
     push de
@@ -6383,12 +6387,12 @@ ComputeSpriteScrollOffsets_Skip2::
     ld a, [wSTATSplitEnable]
     and $03
     jumptable
-    dw ComputeSpriteScrollOffsets_WriteSVBK
-    dw ComputeSpriteScrollOffsets_WriteSVBK_Case01
-    dw ComputeSpriteScrollOffsets_WriteSCXAndLYCEtc
-    dw ComputeSpriteScrollOffsets_WriteSCYAndLYCEtc
+    dw StatInterruptHandler_WriteSVBK
+    dw StatInterruptHandler_WriteSVBK_Case01
+    dw StatInterruptHandler_WriteSCXAndLYCEtc
+    dw StatInterruptHandler_WriteSCYAndLYCEtc
 
-ComputeSpriteScrollOffsets_WriteSVBK::
+StatInterruptHandler_WriteSVBK::
     pop af
     ldh [rSVBK], a
     pop de
@@ -6396,10 +6400,10 @@ ComputeSpriteScrollOffsets_WriteSVBK::
     pop af
     reti
 
-ComputeSpriteScrollOffsets_WriteSVBK_Case01::
-    jr ComputeSpriteScrollOffsets_WriteSVBK
+StatInterruptHandler_WriteSVBK_Case01::
+    jr StatInterruptHandler_WriteSVBK
 
-ComputeSpriteScrollOffsets_WriteSCXAndLYCEtc::
+StatInterruptHandler_WriteSCXAndLYCEtc::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
     add_a_to_hl
@@ -6415,9 +6419,9 @@ ComputeSpriteScrollOffsets_WriteSCXAndLYCEtc::
 
 .skip:
     ldh [rLYC], a
-    jr ComputeSpriteScrollOffsets_WriteSVBK
+    jr StatInterruptHandler_WriteSVBK
 
-ComputeSpriteScrollOffsets_WriteSCYAndLYCEtc::
+StatInterruptHandler_WriteSCYAndLYCEtc::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
     add_a_to_hl
@@ -6433,7 +6437,7 @@ ComputeSpriteScrollOffsets_WriteSCYAndLYCEtc::
 
 .skip:
     ldh [rLYC], a
-    jr ComputeSpriteScrollOffsets_WriteSVBK
+    jr StatInterruptHandler_WriteSVBK
 
 ; DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies
 ; the position wTextWindowTileLo/wTextWindowTileHi to wTextGlyphDestLo/wTextGlyphDestHi and

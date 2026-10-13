@@ -210,7 +210,7 @@ FhuntTalkEvents::
     dw TalkMsg0423_SomeTimeAgoAHumanChild
     dw TalkMsg0424_ThereWasntAMonsterKingFor
     dw TalkMsg0425_TheNewMonsterKingMakesOthers
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case1F
+    dw FhuntTalkEvents_StartScriptAtHL_B13_YouAreYouA
     dw TalkMsg042A_ThisIsJustARumorBut
     dw TalkMsg042B_TheTunnelInTheWestWill
     dw TalkMsg042C_AreYouLookingForSomething
@@ -220,7 +220,7 @@ FhuntTalkEvents::
     dw TalkMsg04AA_HeroReadTheSignDetermine
     dw TalkMsg0DD3_InnDownstairsRoomsAvailable
     dw TalkScript6048_WelcomeToTheTravelersInn
-    dw FhuntTalkEvents_TestFlagBit_FhuntTalkEvents_Case29_WriteTemp0AndRAMG
+    dw FhuntTalkEvents_TestFlagBit_Kweeeeeh
     dw FhuntTalkEvents_ShowWhenIPassedToo
     dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw ChestItem_WorldDew_Flag00AA
@@ -237,7 +237,7 @@ FhuntTalkEvents::
     dw TalkMsg0446_IfIHadTheLightOrbEven
     dw TalkScript606F_WantToKnowTheMostFundamental
     dw TalkMsg044A_HearMeOutIfYouWish
-    dw FhuntTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex
+    dw FhuntTalkEvents_StartScriptAtHL_B13_WelcomeHowMayI
     dw TalkScript6083_HowMayOurChurchHelpYou
     dw TalkMsg044D_HeroReadTheSignTheFinder
     dw TalkMsg0450_HeroPeeredIntoTheVaseA
@@ -253,9 +253,9 @@ FhuntTalkEvents::
     dw FhuntTalkEvents_ShowHeroCheckedTheSmall
     dw ChestItem_SilvrCape_Flag00AB
     dw ChestItem_Heaven
-    dw FhuntTalkEvents_TestFlagBit_StartScriptAtHL_B13
+    dw FhuntTalkEvents_TestFlagBit_YouCanTakeThis
     dw ChestItem_Heaven_Flag00AF
-    dw FhuntTalkEvents_StartScriptAtHL_B13_FhuntTalkEvents_WriteTemp0AndTemp1
+    dw FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
     dw TalkScript60CE
     dw TalkMsg04A8_WhereIsMyCasketWhereRing
@@ -263,8 +263,8 @@ FhuntTalkEvents::
     dw TalkScript60D0
     dw TalkMsg0463_HeroCheckedTheNoticeFollow
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E
-    dw FhuntTalkEvents_TestFlagBit_Case54_StartScriptAtHL_B13
-    dw FhuntTalkEvents_TestFlagBit_Case55_StartScriptAtHL_B13
+    dw FhuntTalkEvents_TestFlagBit_HeroCheckedTheGravestone
+    dw FhuntTalkEvents_TestFlagBit_YouOvercameTheTraps
     dw ChestItem_Heaven_Flag00B5
     dw TalkMsg046D_TheMonsterArmysGeneralIs
     dw TalkMsg046E_OurKingsCastleIsAnInvincible
@@ -289,8 +289,8 @@ FhuntTalkEvents::
     dw TalkMsg04A6_IWasTakingAWalkOutside
     dw TalkMsg04A4_SouthBeyondTheMountainsIs
     dw TalkMsg04A5_SeveralAncientRuinsRemain
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6E_FhuntTalkEvents_WriteTemp0AndTemp1
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6F_FhuntTalkEvents_WriteTemp0AndTemp1
+    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6E_LetThePowerOf
+    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6F_LetThePowerOf
     dw TalkMsg0413_HeroCheckedTheTreasureChest_1349CE
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
@@ -422,7 +422,7 @@ TalkMsg040A_TheTopOfTheTowerCollapsed::
 TalkScript5FE8_HowMayWeServeYourMortal::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_5FE8
+    ld hl, Script_5FE8 ; script '*: How may we serve your'
     call StartScriptAtHL_B13
     ret
 
@@ -439,12 +439,12 @@ FhuntTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_GRAVE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_5FEF
+    ld hl, Script_5FEF ; script '0 checked the grave. There was'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5FF7
+    ld hl, Script_5FF7 ; script '0 checked the grave. There was'
     call StartScriptAtHL_B13
     ret
 
@@ -454,7 +454,7 @@ FhuntTalkEvents_TestFlagBit::
 TalkScript6003_WelcomeToOurInn::
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_6003
+    ld hl, Script_6003 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ret
 
@@ -471,7 +471,7 @@ FhuntTalkEvents_ShowBeGoneIfYour::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5FFC
+    ld hl, Script_5FFC ; script '*: …Fine! You've done well to'
     call StartScriptAtHL_B13
     ret
 
@@ -526,7 +526,7 @@ ChestMagicKey::
 ; DispatchTalkEvent_Case05_Case14)
 ; starts Script_600A: '*: Kweeeeh!'
 TalkScript600A_Kweeeeh::
-    ld hl, Script_600A
+    ld hl, Script_600A ; script '*: Kweeeeh!'
     call StartScriptAtHL_B13
     ret
 
@@ -578,7 +578,7 @@ FhuntTalkEvents_TestFlagBit_HmYou::
     ld a, [wSpriteSlots + $b]
     cp $50
     jr z, .call_start_message_command09_hl_b132
-    ld hl, Script_6015
+    ld hl, Script_6015 ; script '*: Hm? You're from the village!'
     call StartScriptAtHL_B13
     ld de, $0209
     call SetFlagBit
@@ -690,7 +690,7 @@ TalkMsg0425_TheNewMonsterKingMakesOthers::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case1F::
+FhuntTalkEvents_StartScriptAtHL_B13_YouAreYouA::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, .call_start_script_at_hl_b13
@@ -698,12 +698,12 @@ FhuntTalkEvents_StartScriptAtHL_B13_Case1F::
     jr z, .call_start_script_at_hl_b132
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_6020
+    ld hl, Script_6020 ; script '*: You… Are you a monster?'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_602D
+    ld hl, Script_602D ; script '*: You… Are you a monster?'
     call StartScriptAtHL_B13
     ret
 
@@ -735,7 +735,7 @@ TalkMsg042C_AreYouLookingForSomething::
 TalkScript603A_HowMayWeServeYourMortal::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_603A
+    ld hl, Script_603A ; script '*: How may we serve your'
     call StartScriptAtHL_B13
     ret
 
@@ -744,7 +744,7 @@ FhuntTalkEvents_StartScriptAtHL_B13::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_6041
+    ld hl, Script_6041 ; script '*: Good day. How may I'
     call StartScriptAtHL_B13
     ret
 
@@ -776,11 +776,11 @@ TalkMsg0DD3_InnDownstairsRoomsAvailable::
 TalkScript6048_WelcomeToTheTravelersInn::
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_6048
+    ld hl, Script_6048 ; script '*: Welcome to the traveler's inn.'
     call StartScriptAtHL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
+FhuntTalkEvents_TestFlagBit_Kweeeeeh::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
     ret nc
@@ -788,7 +788,7 @@ FhuntTalkEvents_TestFlagBit_FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
     ldh a, [hTemp0]
     or a
     ret z
-    ld hl, Script_604F
+    ld hl, Script_604F ; script '*: Kweeeeeh!'
     call StartScriptAtHL_B13
     ret
 
@@ -855,7 +855,7 @@ TalkMsg0438_AMonsterKingHasAppearedTo::
 ; was DispatchTalkEvent_Case05_Case2F)
 ; starts Script_6062: '*: I've lived here for 200'
 TalkScript6062_IELivedHereFor2Hero::
-    ld hl, Script_6062
+    ld hl, Script_6062 ; script '*: I've lived here for 200'
     call StartScriptAtHL_B13
     ret
 
@@ -954,7 +954,7 @@ FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_6119
+    ld hl, Script_6119 ; script '*: What? You have the three'
     call StartScriptAtHL_B13
     ret
 
@@ -1058,7 +1058,7 @@ TalkMsg0446_IfIHadTheLightOrbEven::
 ; (E-0271; was DispatchTalkEvent_Case05_Case38)
 ; starts Script_606F: '*: Want to know the most'
 TalkScript606F_WantToKnowTheMostFundamental::
-    ld hl, Script_606F
+    ld hl, Script_606F ; script '*: Want to know the most'
     call StartScriptAtHL_B13
     ret
 
@@ -1069,12 +1069,12 @@ TalkMsg044A_HearMeOutIfYouWish::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex::
+FhuntTalkEvents_StartScriptAtHL_B13_WelcomeHowMayI::
     ld a, $0e
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_607C
+    ld hl, Script_607C ; script '*: Welcome! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -1084,7 +1084,7 @@ FhuntTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex::
 TalkScript6083_HowMayOurChurchHelpYou::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_6083
+    ld hl, Script_6083 ; script '*: How may our church help'
     call StartScriptAtHL_B13
     ret
 
@@ -1134,7 +1134,7 @@ TalkMsg0314_HeroTriedToOpenTheChest::
 TalkScript6048_WelcomeToTheTravelersInn_1346A3::
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_6048
+    ld hl, Script_6048 ; script '*: Welcome to the traveler's inn.'
     call StartScriptAtHL_B13
     ret
 
@@ -1217,7 +1217,7 @@ FhuntTalkEvents_ShowHeroCheckedTheSmall::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_6091
+    ld hl, Script_6091 ; script '0 checked the small hole. It'
     call StartScriptAtHL_B13
     ret
 
@@ -1248,16 +1248,16 @@ ChestItem_Heaven::
     ret
 
 ; starts Script_6096: '*: You can take this treasure,'
-FhuntTalkEvents_TestFlagBit_StartScriptAtHL_B13::
+FhuntTalkEvents_TestFlagBit_YouCanTakeThis::
     ld de, EVENT_YOU_CAN_TAKE_THIS_TREASURE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_6096
+    ld hl, Script_6096 ; script '*: You can take this treasure,'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_60B0
+    ld hl, Script_60B0 ; script '*: I'm up for your challenge'
     call StartScriptAtHL_B13
     ret
 
@@ -1274,12 +1274,12 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_FhuntTalkEvents_WriteTemp0AndTemp1::
+FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
-    ld hl, Script_60C7
+    ld hl, Script_60C7 ; script '*: Let the power of justice'
     call StartScriptAtHL_B13
     ret
 
@@ -1344,11 +1344,11 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E::
     ret
 
 ; starts Script_60D4: '0 checked the gravestone. There was'
-FhuntTalkEvents_TestFlagBit_Case54_StartScriptAtHL_B13::
+FhuntTalkEvents_TestFlagBit_HeroCheckedTheGravestone::
     ld de, EVENT_SET_FLAG_322
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_60D4
+    ld hl, Script_60D4 ; script '0 checked the gravestone. There was'
     call StartScriptAtHL_B13
     ret
 
@@ -1358,16 +1358,16 @@ FhuntTalkEvents_TestFlagBit_Case54_StartScriptAtHL_B13::
     ret
 
 ; starts Script_60EA: '*: You overcame the traps I'
-FhuntTalkEvents_TestFlagBit_Case55_StartScriptAtHL_B13::
+FhuntTalkEvents_TestFlagBit_YouOvercameTheTraps::
     ld de, EVENT_YOU_OVERCAME_THE_TRAPS_I
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_60EA
+    ld hl, Script_60EA ; script '*: You overcame the traps I'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_6103
+    ld hl, Script_6103 ; script '*: Wahahahah! Here again, are you?'
     call StartScriptAtHL_B13
     ret
 
@@ -1451,7 +1451,7 @@ FhuntTalkEvents_TestFlagBit_Case5A_FindTemp0InInventoryList::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_6126
+    ld hl, Script_6126 ; script '*: I'm surprised anyone managed to'
     call StartScriptAtHL_B13
     ret
 
@@ -1489,7 +1489,7 @@ TalkScript6131::
 ; DispatchTalkEvent_Case05_Case5D)
 ; starts Script_6059: '*: Kweeeeeh!'
 TalkScript6059_Kweeeeeh::
-    ld hl, Script_6059
+    ld hl, Script_6059 ; script '*: Kweeeeeh!'
     call StartScriptAtHL_B13
     ret
 
@@ -1625,12 +1625,12 @@ FhuntTalkEvents_TestFlagBit_Case67_FindTemp0InInventoryList::
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
-    ld hl, Script_6133
+    ld hl, Script_6133 ; script '*: Ah, so good of you'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_614A
+    ld hl, Script_614A ; script '*: Fwahahaha! Don't you ever give'
     call StartScriptAtHL_B13
     ret
 
@@ -1638,7 +1638,7 @@ FhuntTalkEvents_TestFlagBit_Case67_FindTemp0InInventoryList::
 ; was DispatchTalkEvent_Case05_Case68)
 ; starts Script_6152: 'Kameha: So it was you who'
 TalkScript6152_KamehaSoItWasYouWho::
-    ld hl, Script_6152
+    ld hl, Script_6152 ; script 'Kameha: So it was you who'
     call StartScriptAtHL_B13
     ret
 
@@ -1646,7 +1646,7 @@ TalkScript6152_KamehaSoItWasYouWho::
 ; DispatchTalkEvent_Case05_Case69)
 ; starts Script_6198: '*: ……This way… …Here… …Here…'
 TalkScript6198_ThisWayHereHere::
-    ld hl, Script_6198
+    ld hl, Script_6198 ; script '*: ……This way… …Here… …Here…'
     call StartScriptAtHL_B13
     ret
 
@@ -1683,12 +1683,12 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case6E_FhuntTalkEvents_WriteTemp0AndTemp1::
+FhuntTalkEvents_StartScriptAtHL_B13_Case6E_LetThePowerOf::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
-    ld hl, Script_60C7
+    ld hl, Script_60C7 ; script '*: Let the power of justice'
     call StartScriptAtHL_B13
     ret
 
@@ -1697,12 +1697,12 @@ FhuntTalkEvents_StartScriptAtHL_B13_Case6E_FhuntTalkEvents_WriteTemp0AndTemp1::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case6F_FhuntTalkEvents_WriteTemp0AndTemp1::
+FhuntTalkEvents_StartScriptAtHL_B13_Case6F_LetThePowerOf::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
-    ld hl, Script_60C7
+    ld hl, Script_60C7 ; script '*: Let the power of justice'
     call StartScriptAtHL_B13
     ret
 
@@ -1786,13 +1786,13 @@ NordenTalkEvents::
     dw VaseItem_TinyMedal_Flag01E6
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt
     dw TalkMsg0314_HeroTriedToOpenTheChest_134C97
-    dw NordenTalkEvents_StartScriptAtHL_B13_SetDataBank
+    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn
     dw TalkMsg0315_TheBorderIsClosedSoI
     dw NordenTalkEvents_TestFlagBit
     dw TalkMsg031E_HisMajestyHasBeenCrankyIs
     dw TalkMsg031F_AfterTheGoldDiscoveryOur
     dw TalkMsg0320_IRememberTheKingToBe
-    dw NordenTalkEvents_TestFlagBit_HisMajestyIsFurious
+    dw NordenTalkEvents_TestFlagBit_AhYouAreThe
     dw TalkMsg0ABD_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABE_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt
@@ -1809,9 +1809,9 @@ NordenTalkEvents::
     dw TalkMsg032E_DoYouKnowLadyYunaOf
     dw TalkMsg032F_TheScholarInTheTavernSaid
     dw TalkMsg0330_DontYouThinkItsTooExpensive
-    dw NordenTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case2A_SetScreenTableIndex
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case2B_SetScreenTableIndex
+    dw NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI
+    dw NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI
+    dw NordenTalkEvents_StartScriptAtHL_B13_HelloHaveALook
     dw TalkScript5DCC_HowMayOurChurchServeYou
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt
     dw TalkMsg0D3B_Whinny
@@ -1822,7 +1822,7 @@ NordenTalkEvents::
     dw TalkMsg0336_SighIsntThatScholarAppealing
     dw TalkMsg0337_ICameFromTheEasternKingdom
     dw TalkMsg0ABF_HeroPeeredIntoTheBarrelIt
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case36_SetDataBank
+    dw NordenTalkEvents_StartScriptAtHL_B13_Case36_WelcomeToOurInn
     dw TalkMsg0338_TheKingOfTheWestIs
     dw TalkMsg0339_ThisIsTheBorderWeShare
     dw TalkMsg033A_TheBorderHasBeenSealedBy
@@ -1862,8 +1862,8 @@ NordenTalkEvents::
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1352A0
     dw BarrelItem_TinyMedal_Flag01E7
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1352B8
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case5E_SetDataBank
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case5F_SetScreenTableIndex
+    dw NordenTalkEvents_StartScriptAtHL_B13_Case5E_WelcomeToOurInn
+    dw NordenTalkEvents_StartScriptAtHL_B13_HelloHowMayI
     dw TalkMsg038C_TheLakeIsFrozenSoI
     dw TalkMsg038D_ThisIsWestaniaCastleWestania
     dw TalkMsg038E_NobodyFailsToBeImpressed
@@ -1872,7 +1872,7 @@ NordenTalkEvents::
     dw TalkMsg0391_IHurlKnivesWithIncredible
     dw TalkMsg0392_PleaseLineUpAndQuitPushing
     dw TalkMsg0393_OhLadyYunaToThinkThat
-    dw NordenTalkEvents_TestFlagBit_StartScriptAtHL_B13
+    dw NordenTalkEvents_TestFlagBit_HeroReadTheSign
     dw TalkMsg0397_TheCastleIsInAnUproar
     dw TalkMsg0398_LadyYunaUsedToBeVery
     dw TalkMsg0399_InTheEastLivesAnOld
@@ -1893,7 +1893,7 @@ NordenTalkEvents::
     dw TalkMsg03AD_IHeardThisOnTheSly
     dw TalkMsg03AF_AroundThesePartsThereAre
     dw NordenTalkEvents_ShowThisIsNoPlace
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case7D_SetScreenTableIndex
+    dw NordenTalkEvents_StartScriptAtHL_B13_HelloWhatMayI
     dw TalkMsg03B4_ABotanistDoesLiveHereBut
     dw TalkScript5F12_IRetiredAsATeacherAnd
     dw TalkScript5FD6_HowMayOurChurchServeYou
@@ -1902,7 +1902,7 @@ NordenTalkEvents::
     dw TalkScript5FD6_HowMayOurChurchServeYou_1355EA
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1355F6
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case86_SetDataBank
+    dw NordenTalkEvents_StartScriptAtHL_B13_Case86_WelcomeToOurInn
     dw TalkMsg03B8_IWantToReturnToThe
     dw TalkMsg03AC_ThereIsASpringInThe
     dw TalkMsg0396_ItsAMeanOldWorldOut
@@ -1921,7 +1921,7 @@ NordenTalkEvents::
     dw TalkMsg0AC1_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt_1357A9
     dw TalkScript5F4A
-    dw NordenTalkEvents_TestFlagBit_Case99_StartScriptAtHL_B13
+    dw NordenTalkEvents_TestFlagBit_YouStartledMeI
     dw NordenTalkEvents_ShowHeroCheckedTheMarionette
     dw TalkMsg0A16_MyMaidIsAngryThatI
     dw NordenTalkEvents_TestFlagBit_HeroCheckedTheBlue
@@ -2044,7 +2044,7 @@ TalkMsg0307_TheSpringInTheNorthWhere::
 ; (E-0271; was DispatchTalkEvent_Case04_Case08)
 ; starts Script_5D5B: '*: Have you heard about the'
 TalkScript5D5B_HaveYouHeardAboutTheSpirit::
-    ld hl, Script_5D5B
+    ld hl, Script_5D5B ; script '*: Have you heard about the'
     call StartScriptAtHL_B13
     ret
 
@@ -2097,7 +2097,7 @@ NordenTalkEvents_ShowHisMajestyIsIn::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5D8A
+    ld hl, Script_5D8A ; script '*: What is that dirty medal?'
     call StartScriptAtHL_B13
     ret
 
@@ -2128,7 +2128,7 @@ NordenTalkEvents_StartScriptAtHL_B13::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5D68
+    ld hl, Script_5D68 ; script '*: Welcome! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -2168,8 +2168,8 @@ TalkMsg0314_HeroTriedToOpenTheChest_134C97::
     ret
 
 ; starts Script_5D6F: '*: Welcome to our inn!'
-NordenTalkEvents_StartScriptAtHL_B13_SetDataBank::
-    ld hl, Script_5D6F
+NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn::
+    ld hl, Script_5D6F ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -2192,7 +2192,7 @@ NordenTalkEvents_TestFlagBit::
     ld de, EVENT_BLINK_SPRITES
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5D76
+    ld hl, Script_5D76 ; script '0 checked the shield. A beautiful'
     call StartScriptAtHL_B13
     ret
 
@@ -2205,7 +2205,7 @@ NordenTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_SHIELD
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_5FCD
+    ld hl, Script_5FCD ; script '0 checked the shield.'
     call StartScriptAtHL_B13
     ret
 
@@ -2290,7 +2290,7 @@ TalkMsg0320_IRememberTheKingToBe::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_HisMajestyIsFurious::
+NordenTalkEvents_TestFlagBit_AhYouAreThe::
     ld de, EVENT_SCENE_PLAN_RUINED_094
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -2303,7 +2303,7 @@ NordenTalkEvents_TestFlagBit_HisMajestyIsFurious::
     ld de, EVENT_SCENE_SPIRIT_ENVOY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5D97
+    ld hl, Script_5D97 ; script '*: Ah, you are the spirit's'
     call StartScriptAtHL_B13
     ret
 
@@ -2313,7 +2313,7 @@ NordenTalkEvents_TestFlagBit_HisMajestyIsFurious::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5DA6
+    ld hl, Script_5DA6 ; script '*: We reported to the King'
     call StartScriptAtHL_B13
     ret
 
@@ -2524,30 +2524,30 @@ TalkMsg0330_DontYouThinkItsTooExpensive::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI::
     ld a, $0a
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5DB0
+    ld hl, Script_5DB0 ; script '*: Welcome! What can I do'
     call StartScriptAtHL_B13
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_Case2A_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI::
     ld a, $08
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5DB7
+    ld hl, Script_5DB7 ; script '*: Greetings! How shall I serve'
     call StartScriptAtHL_B13
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_Case2B_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_HelloHaveALook::
     ld a, $09
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5DBE
+    ld hl, Script_5DBE ; script '*: Hello! Have a look at'
     call StartScriptAtHL_B13
     ret
 
@@ -2557,7 +2557,7 @@ NordenTalkEvents_StartScriptAtHL_B13_Case2B_SetScreenTableIndex::
 TalkScript5DCC_HowMayOurChurchServeYou::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_5DCC
+    ld hl, Script_5DCC ; script '*: How may our church serve'
     call StartScriptAtHL_B13
     ret
 
@@ -2671,8 +2671,8 @@ TalkMsg0ABF_HeroPeeredIntoTheBarrelIt::
     ret
 
 ; starts Script_5DC5: '*: Welcome to our inn!'
-NordenTalkEvents_StartScriptAtHL_B13_Case36_SetDataBank::
-    ld hl, Script_5DC5
+NordenTalkEvents_StartScriptAtHL_B13_Case36_WelcomeToOurInn::
+    ld hl, Script_5DC5 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -2889,7 +2889,7 @@ TalkMsg0343_TheVeinOfGoldIsJust::
 ; (E-0271; was DispatchTalkEvent_Case04_Case45)
 ; starts Script_5DD3: '*: What? What was that explosion?'
 TalkScript5DD3_WhatWhatWasThatExplosion::
-    ld hl, Script_5DD3
+    ld hl, Script_5DD3 ; script '*: What? What was that explosion?'
     call StartScriptAtHL_B13
     ret
 
@@ -2897,7 +2897,7 @@ TalkScript5DD3_WhatWhatWasThatExplosion::
 ; (E-0271; was DispatchTalkEvent_Case04_Case46)
 ; starts Script_5E02: '*: What? What was that explosion?'
 TalkScript5E02_WhatWhatWasThatExplosion::
-    ld hl, Script_5E02
+    ld hl, Script_5E02 ; script '*: What? What was that explosion?'
     call StartScriptAtHL_B13
     ret
 
@@ -3010,7 +3010,7 @@ NordenTalkEvents_ShowKamehaWheresTheExit::
 ; (E-0271; was DispatchTalkEvent_Case04_Case4A)
 ; starts Script_5E2F: '0 tapped on the wall. The'
 TalkScript5E2F_HeroTappedOnTheWallThe::
-    ld hl, Script_5E2F
+    ld hl, Script_5E2F ; script '0 tapped on the wall. The'
     call StartScriptAtHL_B13
     ret
 
@@ -3018,7 +3018,7 @@ TalkScript5E2F_HeroTappedOnTheWallThe::
 ; (E-0271; was DispatchTalkEvent_Case04_Case4B)
 ; starts Script_5E37: '0 tapped on the wall. Sound'
 TalkScript5E37_HeroTappedOnTheWallSound::
-    ld hl, Script_5E37
+    ld hl, Script_5E37 ; script '0 tapped on the wall. Sound'
     call StartScriptAtHL_B13
     ret
 
@@ -3026,7 +3026,7 @@ TalkScript5E37_HeroTappedOnTheWallSound::
 ; (E-0271; was DispatchTalkEvent_Case04_Case4C)
 ; starts Script_5E5A: '*: I'm the real King, you'
 TalkScript5E5A_ImTheRealKingYouFake::
-    ld hl, Script_5E5A
+    ld hl, Script_5E5A ; script '*: I'm the real King, you'
     call StartScriptAtHL_B13
     ret
 
@@ -3074,12 +3074,12 @@ NordenTalkEvents_ShowIAmRealDont::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5E67
+    ld hl, Script_5E67 ; script '*: Arrgh, you've ruined my plan'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5E77
+    ld hl, Script_5E77 ; script '*: It almost worked to perfection!'
     call StartScriptAtHL_B13
     ret
 
@@ -3303,19 +3303,19 @@ TalkMsg0313_HeroPeeredIntoTheOvenIt_1352B8::
     ret
 
 ; starts Script_5E87: '*: Welcome to our inn!'
-NordenTalkEvents_StartScriptAtHL_B13_Case5E_SetDataBank::
-    ld hl, Script_5E87
+NordenTalkEvents_StartScriptAtHL_B13_Case5E_WelcomeToOurInn::
+    ld hl, Script_5E87 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_Case5F_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_HelloHowMayI::
     ld a, $0b
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5E8E
+    ld hl, Script_5E8E ; script '*: Hello! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -3428,14 +3428,14 @@ TalkMsg0393_OhLadyYunaToThinkThat::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_StartScriptAtHL_B13::
+NordenTalkEvents_TestFlagBit_HeroReadTheSign::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
     ld de, EVENT_GATHER_FOLLOWERS
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5E95
+    ld hl, Script_5E95 ; script '0 read the sign. 'Come all'
     call StartScriptAtHL_B13
     ret
 
@@ -3552,7 +3552,7 @@ NordenTalkEvents_ShowYoureHereToCheer::
     ld a, [wStepArrived]
     or a
     jr nz, .call_start_message_command09_hl_b13
-    ld hl, Script_5EE6
+    ld hl, Script_5EE6 ; script '*: You're here to cheer Lady'
     call StartScriptAtHL_B13
     ret
 
@@ -3585,7 +3585,7 @@ NordenTalkEvents_ShowYoureHereToCheer::
 ; agree?' (E-0271; was DispatchTalkEvent_Case04_Case70)
 ; starts Script_5EF5: 'King: Magnificent! Don't you agree?'
 TalkScript5EF5_KingMagnificentDontYouAgree::
-    ld hl, Script_5EF5
+    ld hl, Script_5EF5 ; script 'King: Magnificent! Don't you agree?'
     call StartScriptAtHL_B13
     ret
 
@@ -3641,12 +3641,12 @@ NordenTalkEvents_TestFlagBit_Case72::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, .loop
-    ld hl, Script_5FA5
+    ld hl, Script_5FA5 ; script '*: …………!'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5FAD
+    ld hl, Script_5FAD ; script '*: …………'
     call StartScriptAtHL_B13
     ret
 
@@ -3803,12 +3803,12 @@ NordenTalkEvents_ShowThisIsNoPlace::
     ldh a, [hPlayerX]
     cp $41
     jr nc, .call_start_script_at_hl_b13
-    ld hl, Script_5F26
+    ld hl, Script_5F26 ; script '*: This is no place for'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5F38
+    ld hl, Script_5F38 ; script '*: This is no place for'
     call StartScriptAtHL_B13
     ret
 
@@ -3817,12 +3817,12 @@ NordenTalkEvents_ShowThisIsNoPlace::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_Case7D_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_HelloWhatMayI::
     ld a, $0c
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5F0B
+    ld hl, Script_5F0B ; script '*: Hello! What may I do'
     call StartScriptAtHL_B13
     ret
 
@@ -3847,7 +3847,7 @@ TalkMsg03B4_ABotanistDoesLiveHereBut::
 ; (E-0271; was DispatchTalkEvent_Case04_Case7F)
 ; starts Script_5F12: '*: I retired as a teacher'
 TalkScript5F12_IRetiredAsATeacherAnd::
-    ld hl, Script_5F12
+    ld hl, Script_5F12 ; script '*: I retired as a teacher'
     call StartScriptAtHL_B13
     ret
 
@@ -3857,7 +3857,7 @@ TalkScript5F12_IRetiredAsATeacherAnd::
 TalkScript5FD6_HowMayOurChurchServeYou::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_5FD6
+    ld hl, Script_5FD6 ; script '*: How may our church serve'
     call StartScriptAtHL_B13
     ret
 
@@ -3874,7 +3874,7 @@ TalkScript5FE6::
 TalkScript5FD6_HowMayOurChurchServeYou_1355DE::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_5FD6
+    ld hl, Script_5FD6 ; script '*: How may our church serve'
     call StartScriptAtHL_B13
     ret
 
@@ -3884,7 +3884,7 @@ TalkScript5FD6_HowMayOurChurchServeYou_1355DE::
 TalkScript5FD6_HowMayOurChurchServeYou_1355EA::
     ld a, $1f
     ld [wDataBank], a
-    ld hl, Script_5FD6
+    ld hl, Script_5FD6 ; script '*: How may our church serve'
     call StartScriptAtHL_B13
     ret
 
@@ -3904,8 +3904,8 @@ TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD::
     ret
 
 ; starts Script_5F1F: '*: Welcome to our inn!'
-NordenTalkEvents_StartScriptAtHL_B13_Case86_SetDataBank::
-    ld hl, Script_5F1F
+NordenTalkEvents_StartScriptAtHL_B13_Case86_WelcomeToOurInn::
+    ld hl, Script_5F1F ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -4041,7 +4041,7 @@ Talk0DD8_QueenHelenIsWracked::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, .loop2
-    ld hl, Script_5FB8
+    ld hl, Script_5FB8 ; script '*: Pardon me? You have medicine?'
     call StartScriptAtHL_B13
     ret
 
@@ -4216,26 +4216,26 @@ TalkScript5F4A::
     call StartScriptAtHL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_Case99_StartScriptAtHL_B13::
+NordenTalkEvents_TestFlagBit_YouStartledMeI::
     ld de, EVENT_GIVE_ITEM_BLINK_09A
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld de, EVENT_SCENE_CHEER_YUNA
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check_bank13
-    ld hl, Script_5F4C
+    ld hl, Script_5F4C ; script '*: …………? You startled me… I'
     call StartScriptAtHL_B13
     ret
 
 .call_inventory_has_free_slot_check_bank13:
     call InventoryHasFreeSlotCheck_Bank13
     jr nc, .call_start_script_at_hl_b13
-    ld hl, Script_5F54
+    ld hl, Script_5F54 ; script '*: …………? You startled me… I'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5F6C
+    ld hl, Script_5F6C ; script '*: …………? You startled me… I'
     call StartScriptAtHL_B13
     ret
 
@@ -4243,19 +4243,19 @@ NordenTalkEvents_TestFlagBit_Case99_StartScriptAtHL_B13::
     ld de, EVENT_SCENE_CHEER_YUNA
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check_bank132
-    ld hl, Script_5F7D
+    ld hl, Script_5F7D ; script '*: I don't remember who I'
     call StartScriptAtHL_B13
     ret
 
 .call_inventory_has_free_slot_check_bank132:
     call InventoryHasFreeSlotCheck_Bank13
     jr nc, .call_start_script_at_hl_b132
-    ld hl, Script_5F82
+    ld hl, Script_5F82 ; script '*: I don't remember who I'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5F97
+    ld hl, Script_5F97 ; script '*: I don't remember who I'
     call StartScriptAtHL_B13
     ret
 
@@ -4271,7 +4271,7 @@ NordenTalkEvents_ShowHeroCheckedTheMarionette::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5FAD
+    ld hl, Script_5FAD ; script '*: …………'
     call StartScriptAtHL_B13
     ret
 
@@ -4349,7 +4349,7 @@ NordenTalkEvents_ShowHeroCheckedTheTreasure::
     ld a, [wInventorySortFlags]
     set 6, a
     ld [wInventorySortFlags], a
-    ld hl, Script_5FDD
+    ld hl, Script_5FDD ; script '0 checked the treasure chest. 0'
     call StartScriptAtHL_B13
     ret
 
@@ -4518,7 +4518,7 @@ GreatLogTalkEvents::
     dw TalkMsg021F_DoYouKnowAboutLogTwigIts
     dw TalkMsg04D0_HeroReadTheSignMonsterArena
     dw GreatLogTalkEvents_TestFlagBit_GreatLog
-    dw GreatLogTalkEvents_TestFlagBit_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs
     dw TalkMsg021C_MonstersHateBeingAwayFrom
     dw TalkMsg0221_HelloThereYoungsterTakeThese
     dw TalkMsg0222_HeyALittleBittyMasterHi
@@ -4547,21 +4547,21 @@ GreatLogTalkEvents::
     dw TalkMsg0243_HeroCheckedTheBookshelfBookmark
     dw TalkMsg0244_HeroCheckedTheBookshelfJournal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt
-    dw GreatLogTalkEvents_TestFlagBit_Case3E_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_HeyLetMeAsk
     dw TalkMsg0249_HeroCheckedTheBookshelfDiary
     dw TalkMsg0256_HeroCheckedTheDresserItWas
     dw TalkMsg02B0_HeroPeeredIntoTheBarrelIt
-    dw GreatLogTalkEvents_TestFlagBit_Case42_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_DidYouKnowThat
     dw TalkMsg025A_HeroCheckedTheDresserItWas
     dw TalkMsg025B_HeroCheckedTheBookshelfThis
     dw IfFlag134Msg0314_HeroTriedToOpenTheChest
-    dw GreatLogTalkEvents_TestFlagBit_Case46_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_WelcomeI
     dw TalkMsg04C5_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C6_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C7_HeroCheckedTheBookshelfHandbook
     dw TalkMsg08C0_WeGetMoreAndMoreStubborn
     dw GreatLogTalkEvents_ShowHeresThatTinyMedalWait
-    dw GreatLogTalkEvents_TestFlagBit_Case4C_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_HelloHeroWelcomeThis
     dw TalkMsg0A50_ZzzzYawnHuhIsItMorning
     dw TalkMsg0A52_OurKindAlwaysStaysNearWater
     dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
@@ -4582,16 +4582,16 @@ GreatLogTalkEvents::
     dw TalkMsg0294_IfYouWinAnArenaTourney
     dw TalkMsg0290_SirloinIsTheTopsHarrumph
     dw TalkMsg0291_IIDidntFallForAny
-    dw GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_OhACuteLittle
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
-    dw GreatLogTalkEvents_ClearArenaData_SetDataBank
+    dw GreatLogTalkEvents_ClearArenaData_Here
     dw GreatLogTalkEvents_SaveScreenBufferToBGMap1
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
-    dw GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13
-    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState
+    dw GreatLogTalkEvents_TestFlagBit_UmI
+    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1_WelcomeToTheStarry
     dw TalkScript55CE_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
@@ -4599,7 +4599,7 @@ GreatLogTalkEvents::
     dw TalkMsg02DC_GreatLogsStarryShrineWasnt
     dw TalkMsg0DD4_IfYouBreedTheParentsGo
     dw TalkMsg02DD_ParentsPassOnAbilitiesTo
-    dw GreatLogTalkEvents_TestFlagBit_Case72_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_YouCanCallMe
     dw TalkMsg0A6F_MyHusbandLovesToCollectThings
     dw TalkMsg0A75_HeroCheckedTheDresserItOverflowed
     dw TalkMsg0A76_HeroCheckedTheDresserItOverflowed
@@ -4663,7 +4663,7 @@ GreatLogTalkEvents::
     dw TalkMsg022F_EvenICanCastSpellsIf
     dw TalkMsg0242_MyDadsAFamousMonsterMaster
     dw TalkMsg02B1_HeroPeeredIntoTheOvenIt
-    dw GreatLogTalkEvents_TestFlagBit_CaseB2_StartScriptAtHL_B13
+    dw GreatLogTalkEvents_TestFlagBit_WantToKnowHow
     dw TalkMsg02A6_PuttingUpABridgeIsEasy
     dw TalkMsg0209_DidYouKnowYouCanRecord
     dw TalkMsg0A51_WhenAAppearsByAMonsters
@@ -4714,7 +4714,7 @@ GreatLogTalkEvents::
     dw TalkMsg055E_HeroCheckedTheBookshelfMagic
     dw TalkMsg0DD5_MonsterSkillsArePassedOn
     dw GreatLogTalkEvents_RunFieldCommandTemp0
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_CopyItemNameToDE
+    dw GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive
     dw GreatLogTalkEvents_StartMessageCommand09HL_B13
     dw GreatLogTalkEvents_SetScriptByte68
     dw $0000 ; unused index (E-0207)
@@ -4769,7 +4769,7 @@ GreatLogTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_VAULT_SETTLED
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_4FA4
+    ld hl, Script_4FA4 ; script '*: You've come at the right'
     call StartScriptAtHL_B13
     ret
 
@@ -4785,7 +4785,7 @@ GreatLogTalkEvents_TestFlagBit::
     ld a, $01
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
-    ld hl, Script_4FAF
+    ld hl, Script_4FAF ; script '*: Did you get the package'
     call StartScriptAtHL_B13
     ld de, $000d
     call SetFlagBit
@@ -4810,7 +4810,7 @@ GreatLogTalkEvents_TestFlagBit::
 
 .call_start_script_at_hl_b13:
     ld [hl], $01
-    ld hl, Script_5175
+    ld hl, Script_5175 ; script '*: Are you going out to'
     call StartScriptAtHL_B13
     ret
 
@@ -4860,7 +4860,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ld de, $0180
     call TestFlagBit
     jr c, .set_temp0_to_02
-    ld hl, Script_517F
+    ld hl, Script_517F ; script '*: You've been going out a'
     call StartScriptAtHL_B13
     ld de, $0104
     call SetFlagBit
@@ -4881,7 +4881,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
 
 .call_remove_inventory_slot_shift_down:
     farcall RemoveInventorySlotShiftDown
-    ld hl, Script_522B
+    ld hl, Script_522B ; script '*: Oh? You bought the LoveWater!'
     call StartScriptAtHL_B13
     ld de, $0181
     call SetFlagBit
@@ -4901,7 +4901,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ld de, EVENT_MAMA_HANDED_OVER_400_G
     call TestFlagBit
     jr c, .set_temp0_to_04
-    ld hl, Script_5189
+    ld hl, Script_5189 ; script '*: Oh? You'll run another errand?'
     call StartScriptAtHL_B13
     ret
 
@@ -4917,7 +4917,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_519F
+    ld hl, Script_519F ; script '*: Oh… You've found what I'
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -4929,7 +4929,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ld de, EVENT_MAMA_HANDED_OVER_600_G
     call TestFlagBit
     jr c, .set_temp0_to_1B
-    ld hl, Script_51A9
+    ld hl, Script_51A9 ; script '*: Oh? You'll run another errand?'
     call StartScriptAtHL_B13
     ret
 
@@ -4945,7 +4945,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_51BF
+    ld hl, Script_51BF ; script '*: Oh… You've found what I'
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -4968,12 +4968,12 @@ GreatLogTalkEvents_Case02_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b133
-    ld hl, Script_51F5
+    ld hl, Script_51F5 ; script '*: I was going to ask'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b133:
-    ld hl, Script_520B
+    ld hl, Script_520B ; script '*: I was going to ask'
     call StartScriptAtHL_B13
     ret
 
@@ -4990,7 +4990,7 @@ GreatLogTalkEvents_Case02_TestFlagBit::
 
 .call_remove_inventory_slot_shift_down2:
     farcall RemoveInventorySlotShiftDown
-    ld hl, Script_5221
+    ld hl, Script_5221 ; script '*: They didn't have any around'
     call StartScriptAtHL_B13
     ret
 
@@ -5022,12 +5022,12 @@ TalkMsg001B_ThisHayIsPrettyGoodMaybe::
     ld de, $012a
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_596B
+    ld hl, Script_596B ; script '*: This is a great spot'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_597B
+    ld hl, Script_597B ; script '*: Have you ever found a'
     call StartScriptAtHL_B13
     ret
 
@@ -5097,12 +5097,12 @@ TalkMsg0016_ItSeemsToMeThatThe::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_4FB7
+    ld hl, Script_4FB7 ; script '*: I've heard that there are'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_4FD0
+    ld hl, Script_4FD0 ; script '*: I've heard that there are'
     call StartScriptAtHL_B13
     ret
 
@@ -5115,12 +5115,12 @@ TalkMsg0016_ItSeemsToMeThatThe::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
-    ld hl, Script_4FE8
+    ld hl, Script_4FE8 ; script '*: Hah? The island's going to'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_4FF7
+    ld hl, Script_4FF7 ; script '*: Hah? The island's going to'
     call StartScriptAtHL_B13
     ret
 
@@ -5141,7 +5141,7 @@ TalkMsg0016_ItSeemsToMeThatThe::
 
 .call_start_script_at_hl_b133:
     ld [hl], $1a
-    ld hl, Script_52DC
+    ld hl, Script_52DC ; script '*: Why do you have a'
     call StartScriptAtHL_B13
     ld de, EVENT_IT_SEEMS_TO_ME_THAT
     call SetFlagBit
@@ -5270,7 +5270,7 @@ TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     ld de, $0190
     call TestFlagBit
     jr c, .set_temp0
-    ld hl, Script_52E3
+    ld hl, Script_52E3 ; script '*: Beavern helped put up the'
     call StartScriptAtHL_B13
     ret
 
@@ -5284,7 +5284,7 @@ TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     ldh a, [hTemp0]
     bit 7, a
     jr z, .check_party_count
-    ld hl, Script_52E3
+    ld hl, Script_52E3 ; script '*: Beavern helped put up the'
     call StartScriptAtHL_B13
     ret
 
@@ -5300,17 +5300,17 @@ TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     jr z, .call_start_script_at_hl_b13
     or a
     jr z, .call_start_script_at_hl_b13
-    ld hl, Script_530D
+    ld hl, Script_530D ; script '*: A MadGopher joined you? Could'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5324
+    ld hl, Script_5324 ; script '*: A MadGopher joined you? Could'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_52F3
+    ld hl, Script_52F3 ; script '*: A MadGopher joined you? Could'
     call StartScriptAtHL_B13
     ret
 
@@ -5496,7 +5496,7 @@ TalkMsg003C_YoureTheKidsFromTheNew::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_4F66
+    ld hl, Script_4F66 ; script '*: Have you heard about Magic'
     call StartScriptAtHL_B13
     ret
 
@@ -5744,12 +5744,12 @@ TalkMsg003A_ThatWeirdApeThingIsWarubou::
     ld de, $012c
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_57ED
+    ld hl, Script_57ED ; script '*: I'm sorry. I was wrong'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_57F7
+    ld hl, Script_57F7 ; script '*: Hello! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -5797,7 +5797,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_533E
+    ld hl, Script_533E ; script '*: You're too young to be'
     call StartScriptAtHL_B13
     ld de, EVENT_THE_KING_IS_TOO_LENIENT_106
     call SetFlagBit
@@ -5808,7 +5808,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_5345
+    ld hl, Script_5345 ; script '*: Welcome! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -5820,7 +5820,7 @@ TalkMsg0035_TheKingIsTooLenientOn::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_534C
+    ld hl, Script_534C ; script '*: Well, well! If it isn't'
     call StartScriptAtHL_B13
     ld de, EVENT_THE_KING_IS_TOO_LENIENT
     call SetFlagBit
@@ -6086,7 +6086,7 @@ GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit::
     ldh a, [hMapScreenX]
     cp $02
     jr nz, .loop
-    ld hl, Script_4F8D
+    ld hl, Script_4F8D ; script 'Warubou: Wha…? I smell something! I'
     call StartScriptAtHL_B13
     ld a, $01
     ldh [hTemp0], a
@@ -6158,12 +6158,12 @@ GreatLogTalkEvents_TestFlagBit_WarubouANewPlug::
     ld de, EVENT_WARUBOU_NO_THEN_FIND_SOMEONE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_5006
+    ld hl, Script_5006 ; script 'Warubou: Wa-hey! Good, you're back. You'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5029
+    ld hl, Script_5029 ; script 'Warubou: Wa-hey? No one believed! You'
     call StartScriptAtHL_B13
     ret
 
@@ -6173,7 +6173,7 @@ GreatLogTalkEvents_TestFlagBit_WarubouANewPlug::
     ret
 
 .loop:
-    ld hl, Script_536E
+    ld hl, Script_536E ; script 'Warubou: Wa-hey! You remember the promise'
     call StartScriptAtHL_B13
     ret
 
@@ -6241,12 +6241,12 @@ GreatLogTalkEvents_TestFlagBit_WarubouANewPlug::
     jr z, .call_start_script_at_hl_b132
     cp $ff
     jr z, .call_start_script_at_hl_b132
-    ld hl, Script_53AD
+    ld hl, Script_53AD ; script 'Warubou: Wa-hey! Are you ready? Ready'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_53BA
+    ld hl, Script_53BA ; script 'Warubou: Wa-hey! Are you ready? Ready'
     call StartScriptAtHL_B13
     ret
 
@@ -6391,12 +6391,12 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0102
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5256
+    ld hl, Script_5256 ; script 'Cobi: Hi, I'm helping Papa to'
     call StartScriptAtHL_B13
     ret
 
 .loop:
-    ld hl, Script_5260
+    ld hl, Script_5260 ; script 'Cobi: Hi, 0! What's up today?'
     call StartScriptAtHL_B13
     ret
 
@@ -6404,7 +6404,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0105
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5267
+    ld hl, Script_5267 ; script 'Cobi: 0, what was it like'
     call StartScriptAtHL_B13
     ret
 
@@ -6412,7 +6412,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0109
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5271
+    ld hl, Script_5271 ; script 'Cobi: 0, what was it like'
     call StartScriptAtHL_B13
     ret
 
@@ -6420,7 +6420,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0115
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_527B
+    ld hl, Script_527B ; script 'Cobi: 0, what was it like'
     call StartScriptAtHL_B13
     ret
 
@@ -6428,7 +6428,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0121
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5285
+    ld hl, Script_5285 ; script 'Cobi: 0, tell me about what'
     call StartScriptAtHL_B13
     ret
 
@@ -6436,7 +6436,7 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld de, $0131
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_528F
+    ld hl, Script_528F ; script 'Cobi: 0, I envied you for'
     call StartScriptAtHL_B13
     ret
 
@@ -6469,12 +6469,12 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0102
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5299
+    ld hl, Script_5299 ; script 'Tara: I'm helping Papa take care'
     call StartScriptAtHL_B13
     ret
 
 .loop:
-    ld hl, Script_52A3
+    ld hl, Script_52A3 ; script 'Tara: Hi! How are you? Do'
     call StartScriptAtHL_B13
     ret
 
@@ -6482,7 +6482,7 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0105
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_52AA
+    ld hl, Script_52AA ; script 'Tara: Big brother, have you found'
     call StartScriptAtHL_B13
     ret
 
@@ -6490,7 +6490,7 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0109
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_52B4
+    ld hl, Script_52B4 ; script 'Tara: Big brother, tell me about'
     call StartScriptAtHL_B13
     ret
 
@@ -6498,7 +6498,7 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0115
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_52BE
+    ld hl, Script_52BE ; script 'Tara: Big brother, tell me about'
     call StartScriptAtHL_B13
     ret
 
@@ -6506,7 +6506,7 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0121
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_52C8
+    ld hl, Script_52C8 ; script 'Tara: Big brother, tell me about'
     call StartScriptAtHL_B13
     ret
 
@@ -6514,7 +6514,7 @@ GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld de, $0131
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_52D2
+    ld hl, Script_52D2 ; script 'Tara: 0, I was a little'
     call StartScriptAtHL_B13
     ret
 
@@ -6605,7 +6605,7 @@ GreatLogTalkEvents_TestFlagBit_GreatLog::
     ld de, EVENT_WHAT
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_53D2
+    ld hl, Script_53D2 ; script '*: Prince Kameha has been missing'
     call StartScriptAtHL_B13
     ret
 
@@ -6618,18 +6618,18 @@ GreatLogTalkEvents_TestFlagBit_GreatLog::
     ld de, EVENT_WHAT
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_53FA
+    ld hl, Script_53FA ; script '*: If the island sink, is'
     call StartScriptAtHL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
     ld de, $0107
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5418
+    ld hl, Script_5418 ; script '*: Take this slide as a'
     call StartScriptAtHL_B13
     ld de, $0107
     call SetFlagBit
@@ -6769,7 +6769,7 @@ GreatLogTalkEvents_TestFlagBit_SetTemp0::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5422
+    ld hl, Script_5422 ; script '*: Oh… You're so lucky to'
     call StartScriptAtHL_B13
     ret
 
@@ -6792,7 +6792,7 @@ GreatLogTalkEvents_TestFlagBit_SetTemp0::
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5433
+    ld hl, Script_5433 ; script '*: I became a master because'
     call StartScriptAtHL_B13
     ret
 
@@ -6825,7 +6825,7 @@ TalkMsg022D_WarpWingReturnsYouInstantly::
 ; (E-0271; was DispatchTalkEvent_Case01_Case2B)
 ; starts Script_5476: '*: Do you have any idea'
 TalkScript5476_DoYouHaveAnyIdeaAbout::
-    ld hl, Script_5476
+    ld hl, Script_5476 ; script '*: Do you have any idea'
     call StartScriptAtHL_B13
     ret
 
@@ -6865,12 +6865,12 @@ GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13::
     ld a, $01
     or a
     jr z, .call_start_script_at_hl_b13
-    ld hl, Script_50DB
+    ld hl, Script_50DB ; script 'Tara: Big brother! GreatLog will be'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_50F6
+    ld hl, Script_50F6 ; script 'Cobi: 0! They said GreatLog will'
     call StartScriptAtHL_B13
     ret
 
@@ -6878,7 +6878,7 @@ GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13::
 ; Right?' (E-0271; was DispatchTalkEvent_Case01_Case30)
 ; starts Script_5120: '*: Sailing is sure exhilarating. Right?'
 TalkScript5120_SailingIsSureExhilarating::
-    ld hl, Script_5120
+    ld hl, Script_5120 ; script '*: Sailing is sure exhilarating. Right?'
     call StartScriptAtHL_B13
     ret
 
@@ -7052,14 +7052,14 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case3E_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_HeyLetMeAsk::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5483
+    ld hl, Script_5483 ; script '*: Hey, let me ask you'
     call StartScriptAtHL_B13
     ret
 
@@ -7096,14 +7096,14 @@ TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case42_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_DidYouKnowThat::
     ld de, $0025
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5490
+    ld hl, Script_5490 ; script '*: Did you know that there's'
     call StartScriptAtHL_B13
     ret
 
@@ -7170,20 +7170,20 @@ IfFlag134Msg0314_HeroTriedToOpenTheChest::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case46_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_WelcomeI::
     ld a, $96
     ld [wDataBank], a
     ld de, $0111
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_549D
+    ld hl, Script_549D ; script '*: Welcome. I'm the Christener. I'
     call StartScriptAtHL_B13
     ld de, $0111
     call SetFlagBit
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_54A4
+    ld hl, Script_54A4 ; script '*: Welcome. I'm the Christener. Do'
     call StartScriptAtHL_B13
     ret
 
@@ -7235,7 +7235,7 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_599F
+    ld hl, Script_599F ; script '*: Here's that TinyMedal.'
     call StartScriptAtHL_B13
     ld a, $2c
     ld [wStepPtrLo], a
@@ -7256,11 +7256,11 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     ret
 
 ; starts Script_54AB: '*: Hello, 0, welcome! This is'
-GreatLogTalkEvents_TestFlagBit_Case4C_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_HelloHeroWelcomeThis::
     ld de, $010a
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_54AB
+    ld hl, Script_54AB ; script '*: Hello, 0, welcome! This is'
     call StartScriptAtHL_B13
     ld a, $1d
     ld [wDataBank], a
@@ -7269,7 +7269,7 @@ GreatLogTalkEvents_TestFlagBit_Case4C_StartScriptAtHL_B13::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_54B2
+    ld hl, Script_54B2 ; script '*: Hello, 0, welcome! Want to'
     call StartScriptAtHL_B13
     ld a, $1d
     ld [wDataBank], a
@@ -7309,7 +7309,7 @@ TalkMsg0A59_HeroReadTheSignSshMonsters::
 ; was DispatchTalkEvent_Case01_Case51)
 ; starts Script_54B9: '0 checked the casket.'
 TalkScript54B9_HeroCheckedTheCasket::
-    ld hl, Script_54B9
+    ld hl, Script_54B9 ; script '0 checked the casket.'
     call StartScriptAtHL_B13
     ret
 
@@ -7317,7 +7317,7 @@ TalkScript54B9_HeroCheckedTheCasket::
 ; was DispatchTalkEvent_Case01_Case52)
 ; starts Script_54C0: '0 checked the casket.'
 TalkScript54C0_HeroCheckedTheCasket::
-    ld hl, Script_54C0
+    ld hl, Script_54C0 ; script '0 checked the casket.'
     call StartScriptAtHL_B13
     ret
 
@@ -7333,7 +7333,7 @@ TalkMsg0A5D_HeroReadTheSignWatchYour::
 ; was DispatchTalkEvent_Case01_Case54)
 ; starts Script_54C7: '0 peered into the hole.'
 TalkScript54C7_HeroPeeredIntoTheHole::
-    ld hl, Script_54C7
+    ld hl, Script_54C7 ; script '0 peered into the hole.'
     call StartScriptAtHL_B13
     ret
 
@@ -7456,19 +7456,19 @@ TalkMsg0291_IIDidntFallForAny::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_OhACuteLittle::
     ld a, [wArenaRank]
     or a
     jr nz, .skip
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_54CE
+    ld hl, Script_54CE ; script '*: Oh, a cute little master!'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_550F
+    ld hl, Script_550F ; script '*: Oh, a cute little master!'
     call StartScriptAtHL_B13
     ret
 
@@ -7478,12 +7478,12 @@ GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
-    ld hl, Script_54DB
+    ld hl, Script_54DB ; script '*: Oh, you're the Kids Class'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_551C
+    ld hl, Script_551C ; script '*: Oh, you're the Kids Class'
     call StartScriptAtHL_B13
     ret
 
@@ -7493,12 +7493,12 @@ GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b133
-    ld hl, Script_54E8
+    ld hl, Script_54E8 ; script '*: Oh, you're the C Class'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b133:
-    ld hl, Script_5529
+    ld hl, Script_5529 ; script '*: Oh, you're the C Class'
     call StartScriptAtHL_B13
     ret
 
@@ -7508,12 +7508,12 @@ GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b134
-    ld hl, Script_54F5
+    ld hl, Script_54F5 ; script '*: Oh, you're the B Class'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b134:
-    ld hl, Script_5536
+    ld hl, Script_5536 ; script '*: Oh, you're the B Class'
     call StartScriptAtHL_B13
     ret
 
@@ -7523,12 +7523,12 @@ GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b135
-    ld hl, Script_5502
+    ld hl, Script_5502 ; script '*: Oh, you're the A Class'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b135:
-    ld hl, Script_5543
+    ld hl, Script_5543 ; script '*: Oh, you're the A Class'
     call StartScriptAtHL_B13
     ret
 
@@ -7574,7 +7574,7 @@ TalkMsg027A_ListenThisIsASecretTheres::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_ClearArenaData_SetDataBank::
+GreatLogTalkEvents_ClearArenaData_Here::
     ld a, $0c
     ld [wDataBank], a
     xor a
@@ -7595,12 +7595,12 @@ GreatLogTalkEvents_ClearArenaData_SetDataBank::
     ld [wTalkEventByte92], a
     or a
     jr nz, .call_start_script_at_hl_b13
-    ld hl, Script_5578
+    ld hl, Script_5578 ; script '*: Here's the Magic Key you'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_557F
+    ld hl, Script_557F ; script '*: Here's the Magic Key you'
     call StartScriptAtHL_B13
     ret
 
@@ -7610,7 +7610,7 @@ GreatLogTalkEvents_ClearArenaData_SetDataBank::
     jr nz, .call_test_flag_bit
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5550
+    ld hl, Script_5550 ; script '*: Welcome to the Arena! Masters'
     call StartScriptAtHL_B13
     ret
 
@@ -7618,17 +7618,17 @@ GreatLogTalkEvents_ClearArenaData_SetDataBank::
     ld de, $0189
     call TestFlagBit
     jr c, .call_start_script_at_hl_b133
-    ld hl, Script_5560
+    ld hl, Script_5560 ; script '*: Welcome to the Arena! The'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b133:
-    ld hl, Script_556A
+    ld hl, Script_556A ; script '*: Hello, which Class will it'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b134:
-    ld hl, Script_5571
+    ld hl, Script_5571 ; script '*: Welcome! Do you wish to'
     call StartScriptAtHL_B13
     ret
 
@@ -7645,12 +7645,12 @@ GreatLogTalkEvents_SaveScreenBufferToBGMap1::
     ld de, $010d
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_5586
+    ld hl, Script_5586 ; script '*: I lost again. I need'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_558B
+    ld hl, Script_558B ; script '*: I lost again. I need'
     call StartScriptAtHL_B13
     ret
 
@@ -7729,7 +7729,7 @@ TalkMsg04B6_IfYouEatAnyBadMeatLike::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_UmI::
     ld a, $96
     ld [wDataBank], a
     ld de, $0025
@@ -7738,12 +7738,12 @@ GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13::
     ld de, EVENT_UM_I
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_5598
+    ld hl, Script_5598 ; script '*: Um… I'm the Egg Evaluator.'
     call StartScriptAtHL_B13
     ret
 
 .loop:
-    ld hl, Script_55A2
+    ld hl, Script_55A2 ; script '*: I'm the Egg Evaluator. May'
     call StartScriptAtHL_B13
     ret
 
@@ -7751,11 +7751,11 @@ GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13::
     ld de, $0028
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_55A9
+    ld hl, Script_55A9 ; script '*: Oh, the savior of GreatLog.'
     call StartScriptAtHL_B13
     ret
 
-GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState::
+GreatLogTalkEvents_SaveScreenBufferToBGMap1_WelcomeToTheStarry::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $15
@@ -7766,12 +7766,12 @@ GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState::
     ld de, EVENT_WELCOME_TO_THE_STARRY_SHRINE
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_55B3
+    ld hl, Script_55B3 ; script '*: Welcome to the Starry Shrine.'
     call StartScriptAtHL_B13
     ret
 
 .loop:
-    ld hl, Script_55BD
+    ld hl, Script_55BD ; script '*: Welcome to the Starry Shrine.'
     call StartScriptAtHL_B13
     ret
 
@@ -7779,7 +7779,7 @@ GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState::
     ld de, $002c
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_55C4
+    ld hl, Script_55C4 ; script '*: Aren't you GreatLog's savior? Well,'
     call StartScriptAtHL_B13
     ret
 
@@ -7787,7 +7787,7 @@ GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState::
 ; (E-0271; was DispatchTalkEvent_Case01_Case6B)
 ; starts Script_55CE: '*: I'm the Prof's assistant. Do'
 TalkScript55CE_ImTheProfsAssistantDoYou::
-    ld hl, Script_55CE
+    ld hl, Script_55CE ; script '*: I'm the Prof's assistant. Do'
     call StartScriptAtHL_B13
     ret
 
@@ -7837,7 +7837,7 @@ TalkMsg02DD_ParentsPassOnAbilitiesTo::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case72_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_YouCanCallMe::
     ld a, $0c
     ld [wDataBank], a
     ld de, $0025
@@ -7846,12 +7846,12 @@ GreatLogTalkEvents_TestFlagBit_Case72_StartScriptAtHL_B13::
     ld de, $0112
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_55DB
+    ld hl, Script_55DB ; script '*: You can call me the'
     call StartScriptAtHL_B13
     ret
 
 .loop:
-    ld hl, Script_55E5
+    ld hl, Script_55E5 ; script '*: You can call me the'
     call StartScriptAtHL_B13
     ret
 
@@ -7859,7 +7859,7 @@ GreatLogTalkEvents_TestFlagBit_Case72_StartScriptAtHL_B13::
     ld de, $0031
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_55EC
+    ld hl, Script_55EC ; script '*: Well, who would have thought'
     call StartScriptAtHL_B13
     ret
 
@@ -7930,7 +7930,7 @@ TalkMsg025E_MyGranddaughterIsPainfully::
     ld a, [wInventorySortFlags]
     set 6, a
     ld [wInventorySortFlags], a
-    ld hl, Script_55F6
+    ld hl, Script_55F6 ; script '*: I've never seen my granddaughter'
     call StartScriptAtHL_B13
     ret
 
@@ -8080,17 +8080,17 @@ GreatLogTalkEvents_TestFlagBit_SetFlagBit::
     jr z, .call_start_script_at_hl_b13
     or a
     jr z, .call_start_script_at_hl_b13
-    ld hl, Script_561A
+    ld hl, Script_561A ; script '*: Wait! Could I get you'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5631
+    ld hl, Script_5631 ; script '*: Wait! Could I get you'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5600
+    ld hl, Script_5600 ; script '*: Wait! Could I get you'
     call StartScriptAtHL_B13
     ret
 
@@ -8120,14 +8120,14 @@ GreatLogTalkEvents_TestFlagBit_SetFlagBit::
     ld de, $0116
     call TestFlagBit
     jr c, .call_start_script_at_hl_b133
-    ld hl, Script_564B
+    ld hl, Script_564B ; script '*: ArmyAnt helped me get my'
     call StartScriptAtHL_B13
     ld de, $0116
     call SetFlagBit
     ret
 
 .call_start_script_at_hl_b133:
-    ld hl, Script_5652
+    ld hl, Script_5652 ; script '*: Welcome! How may I serve'
     call StartScriptAtHL_B13
     ret
 
@@ -8201,7 +8201,7 @@ TalkMsg0A3C_KingIfYouSee::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5903
+    ld hl, Script_5903 ; script 'King: Oh? It's our savior 0!'
     call StartScriptAtHL_B13
     ret
 
@@ -8217,7 +8217,7 @@ TalkMsg0A3C_KingIfYouSee::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, Script_5913
+    ld hl, Script_5913 ; script 'King: Ah, you've finally caught the'
     call StartScriptAtHL_B13
     ret
 
@@ -8243,7 +8243,7 @@ TalkMsg0A3C_KingIfYouSee::
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_591D
+    ld hl, Script_591D ; script 'King: Oh? It's our savior 0!'
     call StartScriptAtHL_B13
     ret
 
@@ -8259,7 +8259,7 @@ TalkMsg0A3C_KingIfYouSee::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, Script_592D
+    ld hl, Script_592D ; script 'King: Ah, you've finally caught the'
     call StartScriptAtHL_B13
     ret
 
@@ -8285,7 +8285,7 @@ TalkMsg0A3C_KingIfYouSee::
     ret
 
 .call_start_script_at_hl_b133:
-    ld hl, Script_5937
+    ld hl, Script_5937 ; script 'King: Oh? It's our savior 0!'
     call StartScriptAtHL_B13
     ret
 
@@ -8301,7 +8301,7 @@ TalkMsg0A3C_KingIfYouSee::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, Script_5947
+    ld hl, Script_5947 ; script 'King: Ah, you've finally caught the'
     call StartScriptAtHL_B13
     ret
 
@@ -8327,7 +8327,7 @@ TalkMsg0A3C_KingIfYouSee::
     ret
 
 .call_start_script_at_hl_b134:
-    ld hl, Script_5951
+    ld hl, Script_5951 ; script 'King: Oh? It's our savior 0!'
     call StartScriptAtHL_B13
     ret
 
@@ -8343,7 +8343,7 @@ TalkMsg0A3C_KingIfYouSee::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, Script_5961
+    ld hl, Script_5961 ; script 'King: Ah, you've finally caught the'
     call StartScriptAtHL_B13
     ret
 
@@ -8517,7 +8517,7 @@ Talk0A49_BreedingCouldResultIn::
     jr c, .call_start_message_command09_hl_b13
     ld a, $01
     ld [wScreenTableIndex], a
-    ld hl, Script_5660
+    ld hl, Script_5660 ; script '*: I'm a traveling merchant. I'm'
     call StartScriptAtHL_B13
     ld a, $0e
     ld [wDataBank], a
@@ -8536,7 +8536,7 @@ Talk0A49_BreedingCouldResultIn::
     jr c, .call_start_message_command09_hl_b132
     ld a, $03
     ld [wScreenTableIndex], a
-    ld hl, Script_5670
+    ld hl, Script_5670 ; script '*: I'm a scientist. I've been'
     call StartScriptAtHL_B13
     ld a, $0e
     ld [wDataBank], a
@@ -8647,7 +8647,7 @@ Talk04BA_IfYouGetAn::
     ld de, $011a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5680
+    ld hl, Script_5680 ; script '*: Hm? Little one, are you'
     call StartScriptAtHL_B13
     ld a, $02
     ld [wScreenTableIndex], a
@@ -8670,7 +8670,7 @@ Talk04CB_ThatKeyIUsed::
     ld de, EVENT_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_5690
+    ld hl, Script_5690 ; script '*: I was once a great'
     call StartScriptAtHL_B13
     ret
 
@@ -8705,7 +8705,7 @@ Talk04CB_ThatKeyIUsed::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_56A0
+    ld hl, Script_56A0 ; script '*: Oh! Goodness! I'm surprised! I've'
     call StartScriptAtHL_B13
     ret
 
@@ -8723,7 +8723,7 @@ Talk04CB_ThatKeyIUsed::
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_56A8
+    ld hl, Script_56A8 ; script '*: How good of you to'
     call StartScriptAtHL_B13
     ld de, EVENT_THAT_KEY_IUSED_03E
     call SetFlagBit
@@ -8786,14 +8786,14 @@ GreatLogTalkEvents_ShowItsExcitingToThink::
     ld de, EVENT_ITS_EXCITING_TO_THINK
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_56AD
+    ld hl, Script_56AD ; script '*: Welcome to my Key Shop!'
     call StartScriptAtHL_B13
     ld de, EVENT_ITS_EXCITING_TO_THINK
     call SetFlagBit
     ret
 
 .loop:
-    ld hl, Script_56B7
+    ld hl, Script_56B7 ; script '*: Welcome to my Key Shop!'
     call StartScriptAtHL_B13
     ret
 
@@ -8801,7 +8801,7 @@ GreatLogTalkEvents_ShowItsExcitingToThink::
     ld de, $0113
     call TestFlagBit
     jr c, .loop
-    ld hl, Script_56BE
+    ld hl, Script_56BE ; script '*: You're GreatLog's savior! Do you'
     call StartScriptAtHL_B13
     ret
 
@@ -8881,7 +8881,7 @@ TalkMsg0512_KamehaYoHeroThanks::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_58B5
+    ld hl, Script_58B5 ; script 'Kameha: I've gone to other worlds'
     call StartScriptAtHL_B13
     ret
 
@@ -8913,7 +8913,7 @@ TalkMsg0512_KamehaYoHeroThanks::
 
 .call_write_key_entry_temp0:
     farcall WriteKeyEntryTemp0
-    ld hl, Script_58C3
+    ld hl, Script_58C3 ; script 'Kameha: What? Oh, it's 0. Did'
     call StartScriptAtHL_B13
     ret
 
@@ -8922,7 +8922,7 @@ TalkMsg0512_KamehaYoHeroThanks::
     ldh a, [hTemp0]
     or a
     jr z, .loop
-    ld hl, Script_58CD
+    ld hl, Script_58CD ; script 'Kameha: What? Oh, it's 0. Did'
     call StartScriptAtHL_B13
     ret
 
@@ -8945,7 +8945,7 @@ TalkMsg0512_KamehaYoHeroThanks::
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_58E1
+    ld hl, Script_58E1 ; script 'Kameha: I've gone to other worlds'
     call StartScriptAtHL_B13
     ret
 
@@ -8977,7 +8977,7 @@ TalkMsg0512_KamehaYoHeroThanks::
 
 .call_write_key_entry_temp02:
     farcall WriteKeyEntryTemp0
-    ld hl, Script_58EF
+    ld hl, Script_58EF ; script 'Kameha: What? Oh, it's 0. Did'
     call StartScriptAtHL_B13
     ret
 
@@ -8986,7 +8986,7 @@ TalkMsg0512_KamehaYoHeroThanks::
     ldh a, [hTemp0]
     or a
     jr z, .loop2
-    ld hl, Script_58F9
+    ld hl, Script_58F9 ; script 'Kameha: What? Oh, it's 0. Did'
     call StartScriptAtHL_B13
     ret
 
@@ -9030,7 +9030,7 @@ Talk04C0_AllRightyWellDo::
     ld de, $0129
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, Script_56C8
+    ld hl, Script_56C8 ; script '*: Yo! Up close, you look'
     call StartScriptAtHL_B13
     ld a, $04
     ld [wScreenTableIndex], a
@@ -9057,12 +9057,12 @@ Talk0276_IfYouWantTo::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_56D8
+    ld hl, Script_56D8 ; script '*: Welcome to the Arena! Would'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_56E5
+    ld hl, Script_56E5 ; script '*: Welcome to the Arena! Would'
     call StartScriptAtHL_B13
     ret
 
@@ -9081,12 +9081,12 @@ StartScript5709Or56F5IfFlagD1::
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_5709
+    ld hl, Script_5709 ; script 'Tara: 0, congratulations! I was sad'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_56F5
+    ld hl, Script_56F5 ; script 'Cobi: 0, congratulations! I thought we'
     call StartScriptAtHL_B13
     ret
 
@@ -9142,7 +9142,7 @@ GreatLogTalkEvents_StartScriptAtHL_B13::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Script_59B3
+    ld hl, Script_59B3 ; script '*: Hello! What can I do'
     call StartScriptAtHL_B13
     ret
 
@@ -9233,7 +9233,7 @@ Talk0037_HeroTriedToOpen::
 StartScript5660WithBank0E::
     ld a, $01
     ld [wScreenTableIndex], a
-    ld hl, Script_5660
+    ld hl, Script_5660 ; script '*: I'm a traveling merchant. I'm'
     call StartScriptAtHL_B13
     ld a, $0e
     ld [wDataBank], a
@@ -9303,24 +9303,24 @@ TalkMsg02B1_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_CaseB2_StartScriptAtHL_B13::
+GreatLogTalkEvents_TestFlagBit_WantToKnowHow::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
-    ld hl, Script_571D
+    ld hl, Script_571D ; script '*: Want to know how the'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_572A
+    ld hl, Script_572A ; script '*: Want to know how the'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b132:
-    ld hl, Script_5737
+    ld hl, Script_5737 ; script '*: Want to know how the'
     call StartScriptAtHL_B13
     ret
 
@@ -9371,7 +9371,7 @@ TalkMsg0A51_WhenAAppearsByAMonsters::
 ; was DispatchTalkEvent_Case01_CaseB6)
 ; starts Script_5744: '*: Do you want to know'
 TalkScript5744_DoYouWantToKnowHow::
-    ld hl, Script_5744
+    ld hl, Script_5744 ; script '*: Do you want to know'
     call StartScriptAtHL_B13
     ret
 
@@ -9396,12 +9396,12 @@ Talk08D1_TheEvaluatorSaidI::
     ld a, [wArg5]
     cp $ff
     jr nz, .call_start_script_at_hl_b13
-    ld hl, Script_57FE
+    ld hl, Script_57FE ; script '*: Hello, hero! Let me help'
     call StartScriptAtHL_B13
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_580B
+    ld hl, Script_580B ; script '*: Hello, hero! Let me help'
     call StartScriptAtHL_B13
     ret
 
@@ -9532,7 +9532,7 @@ TalkMsg0288_MyHusbandIsAMasterStill::
 ; (E-0271; was DispatchTalkEvent_Case01_CaseC0)
 ; starts Script_5752: '*: Hello there. Do you know'
 TalkScript5752_HelloThereDoYouKnowAbout::
-    ld hl, Script_5752
+    ld hl, Script_5752 ; script '*: Hello there. Do you know'
     call StartScriptAtHL_B13
     ret
 
@@ -9677,7 +9677,7 @@ GreatLogTalkEvents_ShowHereItIstheTinyMedal::
     ld a, $2c
     ld [wStepPtrLo], a
     farcall AppendItemStepPtrLoToInventory
-    ld hl, Script_59A9
+    ld hl, Script_59A9 ; script '*: Here it is-the TinyMedal. My'
     call StartScriptAtHL_B13
     ret
 
@@ -9733,7 +9733,7 @@ IfFlag0023StartScript57A2::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
     ret nc
-    ld hl, Script_57A2
+    ld hl, Script_57A2 ; script '*: Prince Kameha has been missing'
     call StartScriptAtHL_B13
     ret
 
@@ -9923,7 +9923,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_586C
+    ld hl, Script_586C ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ret
 
@@ -9935,7 +9935,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_588D
+    ld hl, Script_588D ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ld de, EVENT_DESK_KEY
     call SetFlagBit
@@ -9975,7 +9975,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_5877
+    ld hl, Script_5877 ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ret
 
@@ -9987,7 +9987,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_588D
+    ld hl, Script_588D ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ld de, EVENT_DESK_KEY
     call SetFlagBit
@@ -10030,7 +10030,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_5882
+    ld hl, Script_5882 ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ret
 
@@ -10042,7 +10042,7 @@ GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld hl, Script_588D
+    ld hl, Script_588D ; script '0 checked the desk.'
     call StartScriptAtHL_B13
     ld de, EVENT_DESK_KEY_0C8
     call SetFlagBit
@@ -10127,21 +10127,21 @@ GreatLogTalkEvents_RunFieldCommandTemp0::
     farcall RunFieldCommandTemp0
     ret
 
-GreatLogTalkEvents_StartScriptAtHL_B13_CopyItemNameToDE::
+GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
     ld a, [wGiftRecord]
     cp $01
     ret nz
     ld a, [wPendingGiftItem]
     or a
     jr nz, .call_copy_item_name_to_de
-    ld hl, Script_57E3
+    ld hl, Script_57E3 ; script 'What will you give to the'
     call StartScriptAtHL_B13
     ret
 
 .call_copy_item_name_to_de:
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
-    ld hl, Script_57E8
+    ld hl, Script_57E8 ; script 'Y has been given to the'
     call StartScriptAtHL_B13
     ret
 
@@ -10279,7 +10279,7 @@ Talk0B56_WhenYouBreedMonsters::
     jr c, .call_start_message_command09_hl_b13
     ld a, $05
     ld [wScreenTableIndex], a
-    ld hl, Script_581C
+    ld hl, Script_581C ; script '*: Didn't you save GreatLog? That'
     call StartScriptAtHL_B13
     ret
 
@@ -10306,7 +10306,7 @@ Talk0B56_WhenYouBreedMonsters::
 .set_screen_table_index_to_06:
     ld a, $06
     ld [wScreenTableIndex], a
-    ld hl, Script_582C
+    ld hl, Script_582C ; script '*: Ah, you must be the'
     call StartScriptAtHL_B13
     ret
 
@@ -10333,7 +10333,7 @@ Talk0B56_WhenYouBreedMonsters::
 .set_screen_table_index_to_07:
     ld a, $07
     ld [wScreenTableIndex], a
-    ld hl, Script_583C
+    ld hl, Script_583C ; script '*: I didn't think GreatLog's hero'
     call StartScriptAtHL_B13
     ret
 
@@ -10358,7 +10358,7 @@ Talk0B6D_BreedingFireAndIce::
     jr c, .call_start_message_command09_hl_b13
     ld a, $08
     ld [wScreenTableIndex], a
-    ld hl, Script_584C
+    ld hl, Script_584C ; script '*: Are you perhaps GreatLog's savior?'
     call StartScriptAtHL_B13
     ret
 
@@ -10385,7 +10385,7 @@ Talk0B6D_BreedingFireAndIce::
 .set_screen_table_index_to_09:
     ld a, $09
     ld [wScreenTableIndex], a
-    ld hl, Script_585C
+    ld hl, Script_585C ; script '*: Hey! You're still at it,'
     call StartScriptAtHL_B13
     ret
 
@@ -10413,7 +10413,7 @@ Talk0D90_HumphImTerry::
     ret
 
 .call_start_script_at_hl_b13:
-    ld hl, Script_5899
+    ld hl, Script_5899 ; script '*: Humph… I'm Terry. I'm a'
     call StartScriptAtHL_B13
     ret
 
@@ -10480,7 +10480,7 @@ IfFlag0021StartScript5988::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     ret nc
-    ld hl, Script_5988
+    ld hl, Script_5988 ; script '*: You're the child of the'
     call StartScriptAtHL_B13
     ret
 

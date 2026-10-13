@@ -43,6 +43,17 @@ class ConstantsTest(unittest.TestCase):
         self.assertIn("cp SKILL_DEMAGIC", text)  # ResolveStepBranchOnAction: $83 DeMagic
         self.assertIn("db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills", text)
 
+    def test_indexed_cases_sit_at_their_id(self):
+        """E-0342: ApplyEquipmentEffect_<Item> is entry (item id - $40) of ApplyEquipmentEffectKeepA_ByItem."""
+        text = next((ROOT / "src" / "banks").glob("bank*_items_battle_end.asm")).read_text(encoding="utf-8")
+        m = re.search(r"^ApplyEquipmentEffectKeepA_ByItem::\n(?:.*\n)*?\s+jumptable\n((?:\s+dw \w+\n)+)", text, re.M)
+        entries = re.findall(r"dw (\w+)", m.group(1))
+        named = [(k, e) for k, e in enumerate(entries) if e.startswith("ApplyEquipmentEffect_")]
+        self.assertGreaterEqual(len(named), 10)
+        for k, e in named:
+            want = re.sub(r"[^A-Za-z0-9]", "", self.c["ITEM"][0x40 + k][1]).upper()
+            self.assertEqual(e.split("_", 1)[1].upper(), want, e)
+
 
 if __name__ == "__main__":
     unittest.main()

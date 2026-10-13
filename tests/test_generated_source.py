@@ -446,7 +446,8 @@ class EventScripts(unittest.TestCase):
 
     def test_callers_name_their_script(self):
         text = (BANKS / "bank13.asm").read_text(encoding="utf-8")
-        self.assertIn("    ld hl, Script_6083\n    call StartScriptAtHL_B13\n", text)
+        self.assertRegex(text, r"    ld hl, Script_6083(?: ; script '[^'\n]+')?\n    call StartScriptAtHL_B13\n")
+        self.assertIn("ld hl, Script_6083 ; script '", text)  # E-0342: the script's first message
 
     def test_choice_jump_takes_one_offset_per_option(self):
         """E-0188: $E4 has as many offsets as menu options; the first target follows them."""

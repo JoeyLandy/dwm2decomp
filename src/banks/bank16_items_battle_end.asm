@@ -1951,18 +1951,18 @@ ApplyEquipmentEffectKeepA::
 ApplyEquipmentEffectKeepA_ByItem::
     sub $40
     jumptable
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case05
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case06
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case07
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case08
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B
+    dw ApplyEquipmentEffect_VITbelt
+    dw ApplyEquipmentEffect_DracoBelt
+    dw ApplyEquipmentEffect_MagicBelt
+    dw ApplyEquipmentEffect_OddBelt
+    dw ApplyEquipmentEffect_StoneFang
+    dw ApplyEquipmentEffect_SteelFang
+    dw ApplyEquipmentEffect_MermScale
+    dw ApplyEquipmentEffect_DrakScale
+    dw ApplyEquipmentEffect_AGL
+    dw ApplyEquipmentEffect_Starry
+    dw ApplyEquipmentEffect_Smart
+    dw ApplyEquipmentEffect_Wise
     dw ApplyEquipmentEffectKeepA_ByItem_Return
     dw ApplyEquipmentEffectKeepA_ByItem_Return
     dw ApplyEquipmentEffectKeepA_ByItem_Return
@@ -1970,7 +1970,7 @@ ApplyEquipmentEffectKeepA_ByItem::
     dw ApplyEquipmentEffectKeepA_ByItem_Return
     dw ApplyEquipmentEffectKeepA_ByItem_Return
     dw ApplyEquipmentEffectKeepA_ByItem_Return
-    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13
+    dw ApplyEquipmentEffect_DScale
     dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
     dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
     dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
@@ -1987,73 +1987,73 @@ ApplyEquipmentEffectKeepA_ByItem::
     dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
     dw ApplyEquipmentEffectKeepA_ByItem_Return_Case22
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1::
+ApplyEquipmentEffect_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01::
+ApplyEquipmentEffect_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02::
+ApplyEquipmentEffect_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03::
+ApplyEquipmentEffect_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1::
+ApplyEquipmentEffect_StoneFang::
     ld a, $0a
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case05::
+ApplyEquipmentEffect_SteelFang::
     ld a, $32
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case06::
+ApplyEquipmentEffect_MermScale::
     ld a, $0a
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case07::
+ApplyEquipmentEffect_DrakScale::
     ld a, $32
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case08::
+ApplyEquipmentEffect_AGL::
     ld a, $0a
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09::
+ApplyEquipmentEffect_Starry::
     ld a, $32
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A::
+ApplyEquipmentEffect_Smart::
     ld a, $32
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B::
+ApplyEquipmentEffect_Wise::
     ld a, $64
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
@@ -2062,7 +2062,7 @@ ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B::
 ApplyEquipmentEffectKeepA_ByItem_Return::
     ret
 
-ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13::
+ApplyEquipmentEffect_DScale::
     ld a, $05
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1

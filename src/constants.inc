@@ -881,11 +881,11 @@ DEF EVENT_SCENE_CYAL_SHINE EQU $140 ; set by Script_6200
 DEF EVENT_YOURE_AHUMAN_HOW EQU $141 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow
 DEF EVENT_CYAL_YAY_YOU EQU $143 ; set by Script_620C
 DEF EVENT_WELL_WELL_IT_IS EQU $144 ; set by ElvenVillageTalkEvents_ShowWellWellItIs
-DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow, ElvenVillageTalkEvents_TestFlagBit_Case02
+DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow, ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA
 DEF EVENT_SCENE_ROLT_ELDER EQU $146 ; set by Script_6218, Script_622C
 DEF EVENT_CYAL_LISTEN_HERO_WE_SHOULD EQU $147 ; set by Script_6240
 DEF EVENT_CYAL_EEEK_HERO_HELP_ME EQU $148 ; set by Script_624B
-DEF EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_Case12_StartScriptAtHL_B04, Script_626A
+DEF EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_RoltI, Script_626A
 DEF EVENT_THAT EQU $14A ; set by Script_6290
 DEF EVENT_SCENE_TOO_STRONG EQU $14B ; set by Script_6290, Script_62A0
 DEF EVENT_ROLT_WAIT_GONE_ALREADY EQU $14C ; set by Script_62AD

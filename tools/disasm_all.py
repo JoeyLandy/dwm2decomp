@@ -684,6 +684,32 @@ def name_steps_by_text(texts: list[str], uncalled_only: bool = False) -> tuple[l
     return [pat.sub(lambda m: rename[m.group(1)], t) for t in texts], len(rename)
 
 
+def name_indexed_cases(texts: list[str], tables: list[dict], consts: dict) -> tuple[list[str], int]:
+    """E-0342: in a jump table indexed by an id (config/indexed_dispatch.json), an entry reached by one id only is
+    named <name>_<Id> after that id's constant (ITEM_LEATHERARMOR -> ApplyEquipmentEffect_LeatherArmor)."""
+    labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+    rename: dict[str, str] = {}
+    for spec in tables:
+        enum, base = consts[spec["enum"]], int(spec["base"], 16)
+        for t in texts:
+            m = re.search(r"^" + re.escape(spec["label"]) + r"::.*\n(?:.*\n)*?\s+(?:rst \$00|jumptable)\n((?:\s+dw \w+\n)+)", t, re.M)
+            if not m:
+                continue
+            entries = re.findall(r"dw (\w+)", m.group(1))
+            for k, target in enumerate(entries):
+                if entries.count(target) != 1 or (base + k) not in enum or target in rename:
+                    continue
+                text = enum[base + k][1]
+                stem = "".join(w[:1].upper() + w[1:] for w in re.sub(r"[^A-Za-z0-9 ]", " ", text).split())
+                new = f"{spec['name']}_{stem}"
+                if stem and new not in labels and new not in rename.values():
+                    rename[target] = new
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
+
+
 STATUS_LD = re.compile(r"^\s+ld hl, wBattleStatus(\d?)\s*(?:;.*)?$")
 STATUS_HELPER = re.compile(r"^\s+call (?:TargetStatus(\d)Address|HLToBattleStatus(8)EntryOf\w+)\s*(?:;.*)?$")
 STATUS_OP = re.compile(r"^(\s+(?:bit|set|res) )(\d)(, \[hl\].*)$")
@@ -5730,17 +5756,20 @@ class Rom:
                 look.append(nx[1])
                 q += nx[0]
             text = self.symbolize(text, tuple(look), (bank, pc))
+            script_note = ""
             if (bank, pc) in getattr(self, "script_refs", {}):
                 text = f"ld hl, {self.script_refs[(bank, pc)]}"  # the script FetchScriptCommand runs (bank $10)
+                q = self.script_first_quote(self.script_refs[(bank, pc)])
+                script_note = f" ; script {q}" if q else ""  # E-0342: what the script says first
             sp = self.split_ptr.get((bank, pc))
             if sp and sp[2] in self.dlabels.get(sp[1], {}):
                 text = re.sub(r"\$[0-9A-F]{2}$", f"{sp[0]}({self.dlabels[sp[1]][sp[2]]})", text)
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
-                out.append(f"    {text}" + self.message_word_note(bank, pc + n, text)
+                out.append(f"    {text}" + (script_note or self.message_word_note(bank, pc + n, text)
                            + self.string_index_note(bank, pc, text) + self.battle_text_note(bank, pc + n, text)
-                           + self.string_arg_note(bank, pc, text))
+                           + self.string_arg_note(bank, pc, text)))
             pc += n
         return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
 
@@ -6032,6 +6061,9 @@ def main() -> int:
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
     texts, folded = fold_idioms(texts)
     log(f"folded idioms: {folded}")
+    idx_cfg = json.loads((ROOT / "config/indexed_dispatch.json").read_text(encoding="utf-8"))["tables"]
+    texts, nidx = name_indexed_cases(texts, idx_cfg, rom.consts)  # E-0342
+    log(f"jump-table entries named after their id: {nidx}")
     texts, nsteps = name_steps_by_text(texts)  # E-0340, before branch targets are named after their callees
     log(f"structural steps named after what they show, call or write: {nsteps}")
     texts, nlocal = localize_jump_labels(texts)

@@ -1,0 +1,7 @@
+{
+  "_comment": "Jump tables indexed by an id (E-0342): the entry for id (base + index) that no other id shares is named <name>_<Id>, from the id's constant (src/constants.inc). tools/disasm_all.py applies it as a last naming pass.",
+  "tables": [
+    {"label": "ApplyEquipmentEffectKeepA_ByItem", "name": "ApplyEquipmentEffect", "enum": "ITEM", "base": "40",
+     "evidence": "E-0122, E-0259: ApplyEquipmentEffectKeepA is called with the item id in A and jumps by A - $40"}
+  ]
+}

@@ -2431,6 +2431,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0342 — Interrupt handlers; jump-table entries named after their id
+
+- Kind: READING and a generator naming rule.
+- **Interrupt handlers.** The serial and LCD STAT vectors jump to code that was named as branch targets inside another routine. They are now named:
+  - SerialInterruptHandler (00:$255B, was ComputeSpriteScrollOffsets_Skip): it saves the registers, runs RunLinkSession and returns with reti.
+  - StatInterruptHandler (00:$256A, was ComputeSpriteScrollOffsets_Skip2): with WRAM bank 0 mapped, it runs the split chosen by wSTATSplitEnable & 3, and its cases write SCX or SCY and LYC.
+- **Indexed jump tables.** config/indexed_dispatch.json lists jump tables indexed by an id. In such a table, an entry that only one id reaches is named <name>_<Id> from that id's constant.
+  - ApplyEquipmentEffectKeepA is called with the item id in A and jumps by A - $40 (E-0122, E-0259).
+  - So 13 equipment cases are named after their items: ApplyEquipmentEffect_VITbelt, _DracoBelt, _MagicBelt, _StoneFang, _MermScale, and so on.
+- **Script loads.** Every `ld hl, Script_X` that starts an event script now carries the script's first message as a comment (`ld hl, Script_4F54 ; script '*: Heh, so these are the'`). The step-naming rule of E-0340 then reads it too. Undescribed labels number 177 and labels with a structural part 3,887.
+- **Tests.** tests/test_constants.py checks that each ApplyEquipmentEffect_<Item> sits at entry item - $40, and tests/test_generated_source.py checks the script comment.
+- Binary verification: build/run507 PASS, 0 differing bytes.
+
 ### E-0341 — Shorter step names; battle scratch and item bytes
 
 - Kind: READING and generator naming rules.
