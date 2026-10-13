@@ -327,7 +327,7 @@ Data_00D_45CB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Darck", $F0
 
-; implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244)
+; implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244) (C2 from E-0325: the Egg Evaluator's 'May I help you…' runs it with 'Evaluate / Bless / Exit')
 ; 2 call sites from 2 routines (e.g. RenameMenu_ToEggServiceMenu, ScriptCommandEF)
 ; reads: wScreenState
 EggServiceMenu::
@@ -2207,7 +2207,7 @@ Jump_00D_50F8:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type F0 (SCRIPT_RENAME): the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6); reached through ScriptCommandF0 in bank $10 (E-0038, E-0244)
+; implements script command type F0 (SCRIPT_RENAME): the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6); reached through ScriptCommandF0 in bank $10 (E-0038, E-0244) (C2 from E-0325: the Christener runs it and its name entry changes MON_NAME)
 ; 1 call site from 1 routine (e.g. ScriptCommandF0)
 ; reads: wScreenState
 RenameMenu::

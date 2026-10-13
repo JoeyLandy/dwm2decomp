@@ -6391,7 +6391,7 @@ Func_01C_68FA:: ; address name
     ld [wArg1], a
     ret
 
-; removes 10 * wNumberTens + wNumberOnes copies of the selected item (wItemGrid[4 * wItemGridY + wItemGridX]) from the inventory and compacts it (E-0128)
+; removes 10 * wNumberTens + wNumberOnes copies of the selected item (wItemGrid[4 * wItemGridY + wItemGridX]) from the inventory and compacts it (E-0128) (C2 from E-0325: depositing one item at the Vault removes it and closes up the bag, a 0 at its end)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_AddArg1ToGoldCapped99999, VaultMenu_Store_ReadScreenState)
 ; reads: wNumberTens, wNumberOnes, wItemGridY, wItemGridX, wCursorBlinkB8, wRecordsFlagged
 ; writes: wRecordsFlagged, wCursorBlinkB8
@@ -6957,7 +6957,7 @@ Func_01C_6CEB:: ; address name
     call CloseShopMenu
     ret
 
-; implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10 (E-0038, E-0244)
+; implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10 (E-0038, E-0244) (C2 from E-0325: talking to the Vault clerk runs it with 'Deposit: Item / Gold / Exit')
 ; 1 call site from 1 routine (e.g. ScriptCommandE5)
 ; reads: wScreenState
 VaultMenu::

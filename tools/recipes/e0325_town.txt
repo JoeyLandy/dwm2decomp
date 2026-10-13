@@ -1,0 +1,22 @@
+# E-0325: GreatLog's Vault (map 8), Egg Evaluator (map $0A) and Christener (map $13), entered by the location bytes
+# with the party of E-0321 (includes e0323_save.txt).
+@ e0323_save.txt
+v01! | k03! | hMapId=8 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x70 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+v02! | v01! |  | L16 W8 U96 W10 A2 W60
+v03! | v02! |  | A2 W40 A2 W40 A2 W60
+v04! | v03! |  | A2 W40 A2 W40 A2 W60
+v05! | v04! |  | A2 W30 A2 W30 A2 W30 A2 W30 A2 W60
+v06! | v05! |  | A2 W40 A2 W40
+v07! | v06! |  | A2 W40 A2 W40 A2 W40 A2 W60
+x01! | k03! | hMapId=0x0A hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x70 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+x02! | x01! |  | U64 W8 L16 W8 U32 W10 A2 W60
+x03! | x02! |  | B2 W20 R16 W8 U2 W10 A2 W60
+x04! | x03! |  | A2 W30 A2 W30 A2 W30 A2 W30 A2 W60
+x05! | x04! |  | A2 W30 A2 W30 A2 W30 A2 W30 A2 W30 A2 W30 A2 W60
+x06! | x05! |  | A2 W40
+x07! | x06! |  | A2 W40 A2 W40 A2 W40
+c01! | k03! | hMapId=0x13 hMapScreenX=0 hMapScreenY=0 hPlayerX=0x50 hPlayerY=0x70 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+c02! | c01! |  | R16 W8 R16 W8 U96 W8 L32 W8 L16 W8 U2 W10
+c03! | c02! |  | R16 W10 U2 W10 A2 W60
+c04! | c03! |  | A2 W30 A2 W30 A2 W30 A2 W30 A2 W30 A2 W30 A2 W60
+c05! | c04! |  | B2 W12 A2 W12 S W20 A2 W60 A2 W60 A2 W60 A2 W60

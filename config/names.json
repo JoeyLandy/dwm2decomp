@@ -2024,8 +2024,8 @@
   },
   "1C:6CEF": {
     "name": "VaultMenu",
-    "note": "implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10 (E-0038, E-0244) (C2 from E-0325: talking to the Vault clerk runs it with 'Deposit: Item / Gold / Exit')",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0325"
   },
   "1C:6CEB": {
     "name": "CloseVaultMenu",
@@ -2064,13 +2064,13 @@
   },
   "0D:45D1": {
     "name": "EggServiceMenu",
-    "note": "implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244) (C2 from E-0325: the Egg Evaluator's 'May I help you…' runs it with 'Evaluate / Bless / Exit')",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0325"
   },
   "0D:5159": {
     "name": "RenameMenu",
-    "note": "implements script command type F0 (SCRIPT_RENAME): the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6); reached through ScriptCommandF0 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type F0 (SCRIPT_RENAME): the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6); reached through ScriptCommandF0 in bank $10 (E-0038, E-0244) (C2 from E-0325: the Christener runs it and its name entry changes MON_NAME)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0325"
   },
   "0D:50E5": {
     "name": "CloseRenameMenu",
@@ -3467,7 +3467,7 @@
   "1D:5E3F": {"name": "CountRecordsInUse", "note": "over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)", "evidence": "reading (E-0104)"},
   "1D:5ECE": {"name": "ListRecordsState1WithByte6EClear", "note": "over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wD789, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many state-1 records had byte $6E set (E-0104)", "evidence": "reading (E-0104)"},
   "1D:5F2D": {"name": "ListRecordsInUseWithByte6EClear", "note": "over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)", "evidence": "reading (E-0104)"},
-  "1D:6026": {"name": "ListRecordsInUseWithByte6ESet", "note": "over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)", "evidence": "reading (E-0104)"},
+  "1D:6026": {"name": "ListRecordsInUseWithByte6ESet", "note": "over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104) (C2 from E-0325: Evaluate with no egg in any record shows 'You don't have any eggs')", "evidence": "reading (E-0104); E-0325"},
   "1D:7AD8": {"name": "UnpackByteAtHLTo2BitFieldsArg5", "note": "with SRAM bank wD7F2 selected, splits the byte at HL into four 2-bit fields: wD7F5 = bits 7-6, wD7F6 = bits 5-4, wD7F7 = bits 3-2, wD7F8 = bits 1-0 (E-0104)", "evidence": "reading (E-0104)"},
   "1D:70F9": {"name": "Pack2BitFieldsFromPackFields", "note": "B = (wD7E2 & 3) << 6 | (wD7E3 & 3) << 4 | (wD7E4 & 3) << 2 | (wD7E5 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)", "evidence": "reading (E-0104)"},
   "1D:58C8": {"name": "DrawThreeDigitsAtScrollOffset6E", "note": "writes the three bytes at wD7CE as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)", "evidence": "reading (E-0104)"},
@@ -4982,7 +4982,7 @@
   "1B:4736": {"name": "LinkReceiveStepWithBuffer", "note": "link: reads the received byte; stores it in the transfer buffer wC590 while bytes remain, else as the remote joypad; handles the $F3 resync (E-0128)", "evidence": "reading (E-0128)"},
   "1B:7537": {"name": "DrawPickedRecordsRecordNamesAndIcons", "note": "for up to wD7DC records listed at wD7DD draws each name at Data_01B_75A8[n] and loads its family icon into tile Data_01B_75B0[n] (E-0128)", "evidence": "reading (E-0128)"},
   "1C:4395": {"name": "DrawGoldDigitsAtHLWrapped_1C", "note": "writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)", "evidence": "reading (E-0128)"},
-  "1C:6919": {"name": "RemoveItemCountFromInventory", "note": "removes 10 * wD7CA + wD7CB copies of the selected item (wD7D5[4 * wD7B6 + wD7B5]) from the inventory and compacts it (E-0128)", "evidence": "reading (E-0128)"},
+  "1C:6919": {"name": "RemoveItemCountFromInventory", "note": "removes 10 * wD7CA + wD7CB copies of the selected item (wD7D5[4 * wD7B6 + wD7B5]) from the inventory and compacts it (E-0128) (C2 from E-0325: depositing one item at the Vault removes it and closes up the bag, a 0 at its end)", "evidence": "reading (E-0128); E-0325"},
   "1D:5B4D": {"name": "DrawRecordStatsBoxForArg1", "note": "record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)", "evidence": "reading (E-0128)"},
   "1D:64D6": {"name": "HandleListCursorInput_1D", "note": "up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)", "evidence": "reading (E-0128)"},
   "1D:682A": {"name": "LoadPartySpeciesSpriteGraphics", "note": "for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)", "evidence": "reading (E-0128)"},

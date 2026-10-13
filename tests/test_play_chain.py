@@ -1,7 +1,8 @@
 """A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt),
 then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt), then
 the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt), then saving on the farm and continuing after a fresh
-power-on (E-0323; e0323_save.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Christener (E-0325; e0325_town.txt, which
+includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -12,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0323_save.txt"
+CHAIN = ROOT / "tools/recipes/e0325_town.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -21,7 +22,8 @@ class FarmChain(unittest.TestCase):
     def setUpClass(cls):
         import play
         cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!", "m03!", "m04!", "m07!",
-                                                             "m09!", "m11!", "m12!", "j02!", "j03!", "r04!"})
+                                                             "m09!", "m11!", "m12!", "j02!", "j03!", "r04!",
+                                                             "v05!", "v07!", "x07!", "c04!", "c05!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -166,6 +168,32 @@ class FarmChain(unittest.TestCase):
             end = a.index(0xF0, 1)
             self.assertEqual(b[:end + 1] + b[11:], a[:end + 1] + a[11:], i)
             self.assertEqual(set(b[end:11]), {0xF0}, i)
+
+
+    def test_the_vault_stores_an_item_as_an_id_and_a_count(self):
+        """Depositing the first listed item ($28) takes it out of the bag, which closes up with a 0 at the end, and
+        writes ($28, 1) to the first two-byte entry of wItemStorage."""
+        self.assertEqual(self.ran["v05!"].get("VaultMenu"), {1})
+        self.assertEqual(self.ran["v07!"].get("RemoveItemCountFromInventory"), {1})
+        before, after = self.kept["v05!"], self.kept["v07!"]
+        bag0 = [before.rb(0xC61D + i) for i in range(24)]
+        bag1 = [after.rb(0xC61D + i) for i in range(24)]
+        i = bag0.index(0x28)
+        self.assertEqual(bag1, bag0[:i] + bag0[i + 1:] + [0])
+        self.assertEqual([before.rb(0xC635), before.rb(0xC636)], [0, 0])
+        self.assertEqual([after.rb(0xC635), after.rb(0xC636)], [0x28, 1])
+
+    def test_the_egg_evaluator_finds_no_egg(self):
+        """'You don't have any eggs': EggServiceMenu lists the records in use whose MON_EGG byte is set, and none is."""
+        self.assertEqual(self.ran["x07!"].get("ListRecordsInUseWithByte6ESet"), {1})
+        sram = self.kept["x07!"].sram
+        self.assertEqual([i for i in range(8) if sram[i * 0xA5] and sram[i * 0xA5 + 0x6E]], [])
+
+    def test_the_christener_renames_a_monster(self):
+        """RenameMenu's name entry, with BACK and 'A', turns record 0's MON_NAME from Patta into PattA."""
+        self.assertEqual(self.ran["c04!"].get("RenameMenu"), {1})
+        self.assertEqual(bytes(self.kept["c04!"].sram[1:7]), bytes([0x19, 0x24, 0x37, 0x37, 0x24, 0xF0]))
+        self.assertEqual(bytes(self.kept["c05!"].sram[1:7]), bytes([0x19, 0x24, 0x37, 0x37, 0x0A, 0xF0]))
 
 
 if __name__ == "__main__":

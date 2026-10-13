@@ -2241,8 +2241,8 @@
   "C635": {
     "name": "wItemStorage",
     "size": "C8",
-    "note": "100 two-byte entries (ItemStorageHasNonZeroEntry); ends right before wPartyCount; item storage of the save data",
-    "evidence": "E-0133"
+    "note": "the Vault: 100 two-byte entries of item id, then count (ItemStorageHasNonZeroEntry); ends right before wPartyCount; item storage of the save data (C2 from E-0325: depositing one item $28 writes $28, 1 to the first entry)",
+    "evidence": "E-0133, E-0325"
   },
   "C6FE": {
     "name": "wPartyList",

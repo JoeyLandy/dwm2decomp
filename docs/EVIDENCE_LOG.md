@@ -2431,6 +2431,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0325 — GreatLog's Vault, Egg Evaluator and Christener, and a battle-loop plateau
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced as in E-0321: the location bytes (screen 0,0, player $50,$70) with the party and story flag 2.
+- **The Vault (map 8).** The clerk's talk (Talk0046_ThanksForComingBy …) runs VaultMenu: "Deposit: Item / Gold / Exit", G99999, "Qty:24".
+  - The item list shows each distinct bag item once (ListDistinctInventoryItemsToItemGrid).
+  - Depositing the first ($28) runs RemoveItemCountFromInventory. The bag loses it and closes up with a 0 at the end, and Qty becomes 23.
+  - wItemStorage's first entry goes from 0, 0 to $28, 1, so its two-byte entries are item id then count (C2).
+- **The Egg Evaluator (map $0A).** "Um… I'm the Egg Evaluator." leads to EggServiceMenu, which offers Evaluate / Bless / Exit.
+  - Evaluate runs ListRecordsInUseWithByte6ESet and shows "Um… You don't have any eggs…". No record in use has MON_EGG set.
+- **The Christener (map $13).** "Welcome. I'm the Christener." leads to RenameMenu and its name entry. BACK plus "A" turns record 0's MON_NAME from Patta into PattA.
+- **A battle loop.** Repeated walking and fighting in the Desert world (f01!-f19!) adds about 150 named routines.
+  - It also exercises releasing a monster when the list is full: DeleteSRAMRecordAndCompact runs, "… was set free" is shown, and naming the newcomer reuses the name-entry routines in mode 4. The game rejects the name "AAAAA" ("Sorry, that name can't be used.").
+  - Then "Anvar joined the party." runs SetRecordState2ForB, which agrees with MON_STATE 2 meaning in the party.
+  - The loop then plateaus at the same few monsters and AI paths. These steps are not in a recipe.
+- **Reproduction and tests.** tools/recipes/e0325_town.txt includes e0323_save.txt. tests/test_play_chain.py replays it (about 135 s) and checks the vault entry and the bag, the egg listing, and the rename.
+- Binary verification: build/run458 PASS, 0 differing bytes; tests OK (221, skipped=3).
+
 ### E-0324 — All 466 talk-message names checked by running them
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL.

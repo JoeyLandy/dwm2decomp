@@ -4781,7 +4781,7 @@ Func_01D_5F9C:: ; address name
 .return:
     ret
 
-; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104)
+; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104) (C2 from E-0325: Evaluate with no egg in any record shows 'You don't have any eggs')
 ; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
