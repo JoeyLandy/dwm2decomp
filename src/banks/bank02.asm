@@ -7638,7 +7638,7 @@ Func_002_706E:: ; address name
     ld [rRAMB], a
     ret
 
-; sums the SRAM bank-1 bytes from sBank1Records into the word DE (the loop adds several bytes per pass; the comparison at the end is not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; sums the $29A * 10 bytes of SRAM bank 1 from sBank1Records ($A06F) into the word DE, then returns A = 0 when sBank1Checksum ($BA73, little-endian) equals (~DE + $4321) & $FFFF and A = 1 otherwise, as CheckSaveData uses it (C2 from E-0323: after a save the stored word equals that value, and a fresh power-on offers CONTINUE)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum
@@ -7751,7 +7751,7 @@ Func_002_70A2:: ; address name
     ld a, $01
     ret
 
-; sums the SRAM bank-3 bytes from sRecords into the word DE (comparison not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; sums the $333 * 10 = $1FFE bytes of SRAM bank 3 from sRecords ($A000) into the word DE, then returns A = 0 when the little-endian word right after them ($BFFE) equals (~DE + $1234) & $FFFF and A = 1 otherwise, as CheckSaveData uses it (C2 from E-0323, as VerifySaveBank1Checksum)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sRecords
@@ -8254,7 +8254,7 @@ Jump_002_7377:: ; address name
     ld [rRAMB], a
     ret
 
-; sums $29A * 10 bytes from sBank1Records in SRAM bank 1 and stores the complement plus $4321 at sBank1Checksum (E-0129)
+; sums $29A * 10 bytes from sBank1Records in SRAM bank 1 and stores (~sum + $4321) & $FFFF, little-endian, at sBank1Checksum (C2 from E-0323: recomputed from the cartridge RAM after a save it equals the stored word, 0 before)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum

@@ -1,0 +1,10 @@
+# E-0323: with the party of E-0321, the farm (saving allowed) is forced, PLAN > Journal records the journey, and a
+# fresh power-on with that cartridge RAM continues the game (includes e0322_menus.txt).
+@ e0322_menus.txt
+j01! | k03! | hMapId=0 hMapScreenX=1 hMapScreenY=2 hPlayerX=0x50 hPlayerY=0x50 wStoryFlags=0x06 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W200
+j02! | j01! |  | A2 W40 D2 W30 R2 W30 A2 W60 D2 W20 D2 W20 D2 W20 D2 W20 D2 W20 A2 W60
+j03! | j02! |  | A2 W120 A2 W60 A2 W60
+r01! | sram:j03! |  | W800 S W60 W30
+r02! | r01! |  | S W60 W60
+r03! | r02! |  | A2 W90
+r04! | r03! |  | A2 W300

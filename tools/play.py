@@ -1,6 +1,6 @@
 """Steer the reference ROM in tools/sm83.py by an input recipe, keeping state between runs (E-0320).
 
-    python -I tools/play.py STATE RECIPE [--from OLDSTATE] [--poke SYMBOL=VALUE ...]
+    python -I tools/play.py STATE RECIPE [--from OLDSTATE | --sram-from OLDSTATE] [--poke SYMBOL=VALUE ...]
     python -I tools/play.py --chain tools/recipes/FILE.txt    (replays one run per line)
 
 RECIPE is space-separated steps: `W60` waits 60 frames; `A`, `B`, `S` (Start), `E` (Select), `U`, `D`, `L`, `R`
@@ -10,7 +10,8 @@ and saves the result as STATE plus a picture build/states/STATE.png. Each named 
 the run is added to build/states/coverage.json with the state name and wGameMode (an observation of our own
 emulator). `--poke` writes a WRAM byte before the run (a symbol from src/ram.asm or a hex address); such a state
 is forced, not reached by play, and its name is recorded with a `!` in the coverage file. States and pictures stay
-local (build/ is not tracked)."""
+local (build/ is not tracked). `--sram-from` powers on afresh with OLDSTATE's cartridge RAM, as after switching the
+console off and on with the battery-backed save."""
 import json
 import pickle
 import re
@@ -78,6 +79,10 @@ def main(argv: list[str]) -> None:
         gb = pickle.loads((STATES / f"{old}.pkl").read_bytes())
     else:
         gb = GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+    if "--sram-from" in argv:
+        src = argv[argv.index("--sram-from") + 1]
+        gb.sram[:] = pickle.loads((STATES / f"{src}.pkl").read_bytes()).sram
+        old = src  # inherits the source's forced mark
     forced = bool(old and "!" in old)  # a state continued from a forced one is forced too
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     for k, a in enumerate(argv):
@@ -129,7 +134,11 @@ def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
     kept, ran = {}, {}
     for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
-        gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+        if old.startswith("sram:"):  # power on afresh with that state's cartridge RAM
+            gb = GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
+            gb.sram[:] = pickle.loads(states[old[5:]]).sram
+        else:
+            gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
         for p in pokes.split():
             sym, val = p.split("=")
             gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
@@ -143,10 +152,14 @@ def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
 
 
 def chain(path: str) -> None:
-    """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments, `@ FILE` includes."""
+    """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments, `@ FILE` includes; FROM
+    `sram:STATE` powers on afresh with that state's cartridge RAM."""
     for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
-        argv = [state, recipe] + (["--from", old] if old else [])
+        if old.startswith("sram:"):
+            argv = [state, recipe, "--sram-from", old[5:]]
+        else:
+            argv = [state, recipe] + (["--from", old] if old else [])
         for p in pokes.split():
             argv += ["--poke", p]
         main(argv)

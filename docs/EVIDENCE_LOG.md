@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0323 — Saving and continuing: the checksums recomputed, the records round-tripped
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware). The party comes from the forced states of E-0321; the farm (map 0, MapItemUseFlags bit 4 set) is entered by the location bytes.
+- **Recording the journey.** PLAN > Journal on the farm runs TestSaveForbiddenHere and SaveForbiddenHere (allowed), then PauseMenu_Plan_RecordJourney. It shows "Want to record your journey?" over the slot summary "Not in use." (LoadSaveFileSummary).
+  - Yes runs the save: RunSaveGameSteps_7347, BackupRecordsToSRAMBank1, PackRecordFieldsToBank1Slot, ComputeSRAMBank1RecordChecksum, CopySaveBlocksToSRAMWithSum, SaveGM2TimerFramesBlockToSRAMBank1 and others.
+  - It shows "Your progress has been recorded", and the slot summary becomes "Master: … 000:03", the three party monsters with their levels, and "MonsterFarm".
+- **The checksums, recomputed from the cartridge RAM.**
+  - SRAM bank 1: the little-endian word at sBank1Checksum ($BA73) equals (~sum + $4321) & $FFFF of the $29A × 10 bytes from $A06F, which end exactly at $BA73. VerifySaveBank1Checksum compares the same word.
+  - SRAM bank 3: the word at $BFFE equals (~sum + $1234) & $FFFF of the bank's first $1FFE bytes, as VerifySaveBank3Checksum reads it. Bank 3 is all zeros here, so its checksum is $1233.
+  - Both words were 0 before the save. The comparisons E-0109 had not read are now read and confirmed (C2).
+- **Continuing.** A fresh power-on with that cartridge RAM (tools/play.py `--sram-from`, or `sram:STATE` in a recipe) shows the title logo. Its menu now offers CONTINUE, NEW GAME, BREEDING, KEY TRADE, VS MODE, DREAM EGG and TEAM MODE; with empty RAM it offered only NEW GAME.
+  - CONTINUE shows the same summary and resumes on the farm (wGameMode 1, hMapId 0). It runs RunSaveSteps, RestoreRecordsFromSRAMBank1Backup, UnpackRecordFromBank1Slot and LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot.
+  - All eight records come back byte for byte, except that each name keeps its letters and $F0 and pads the rest of its 10 bytes with $F0 (the debug-made records had $FF or $00 there). Gold, the bag and the map are kept.
+- **Reproduction and tests.** tools/recipes/e0323_save.txt includes e0322_menus.txt. tests/test_play_chain.py replays it (about 105 s) and checks:
+  - the save routines ran;
+  - both checksum formulas against the saved RAM, with the words 0 before;
+  - CONTINUE restores every record as described.
+- Binary verification: build/run456 PASS, 0 differing bytes; tests OK (216, skipped=3).
+
 ### E-0322 — The field menu's four choices, the bag, an item, and saving refused
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced as in E-0321 (the Desert world, story flag 2).

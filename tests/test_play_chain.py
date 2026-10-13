@@ -1,6 +1,7 @@
 """A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt),
 then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt), then
-the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt), then saving on the farm and continuing after a fresh
+power-on (E-0323; e0323_save.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -11,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0322_menus.txt"
+CHAIN = ROOT / "tools/recipes/e0323_save.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -20,7 +21,7 @@ class FarmChain(unittest.TestCase):
     def setUpClass(cls):
         import play
         cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!", "m03!", "m04!", "m07!",
-                                                             "m09!", "m11!", "m12!"})
+                                                             "m09!", "m11!", "m12!", "j02!", "j03!", "r04!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -133,6 +134,38 @@ class FarmChain(unittest.TestCase):
         flags = ROM.read_bytes()[b * 0x4000 + a - 0x4000:][:0x100]
         self.assertFalse(flags[0x20] & 0x10)
         self.assertTrue(all(f & 0x10 for f in flags[:0x20]))
+
+
+    def test_the_save_checksums(self):
+        """Recording the journey stores, little-endian, (~sum + $4321) of the $1A04 bytes from sA06F of SRAM bank 1
+        at sBA73, and (~sum + $1234) of the first $1FFE bytes of SRAM bank 3 at sBFFE; both words were 0 before."""
+        for name in ("ComputeSRAMBank1RecordChecksum", "CopySaveBlocksToSRAMWithSum", "BackupRecordsToSRAMBank1",
+                     "PauseMenu_Plan_RecordJourney_ShowYourProgressHasBeen"):
+            self.assertEqual(self.ran["j03!"].get(name), {2}, name)
+
+        def words(gb):
+            b1, b3 = bytes(gb.sram[0x2000:0x4000]), bytes(gb.sram[0x6000:0x8000])
+            s1, s3 = sum(b1[0x6F:0x1A73]) & 0xFFFF, sum(b3[:0x1FFE]) & 0xFFFF
+            return ((s1 ^ 0xFFFF) + 0x4321) & 0xFFFF, b1[0x1A73] | b1[0x1A74] << 8,                 ((s3 ^ 0xFFFF) + 0x1234) & 0xFFFF, b3[0x1FFE] | b3[0x1FFF] << 8
+
+        c1, w1, c3, w3 = words(self.kept["j03!"])
+        self.assertEqual((w1, w3), (c1, c3))
+        self.assertEqual(words(self.kept["j02!"])[1::2], (0, 0))
+
+    def test_continue_after_a_fresh_power_on_restores_the_records(self):
+        """Powered on with the saved cartridge RAM, the title menu offers CONTINUE (its checks accept the save) and
+        the game resumes on the farm; every record comes back, its name kept up to its $F0 and padded with $F0."""
+        for name in ("VerifySaveBank1Checksum", "VerifySaveBank3Checksum"):
+            self.assertIn(5, self.ran["r01!"].get(name, set()) | self.ran["r02!"].get(name, set()), name)
+        self.assertEqual(self.ran["r04!"].get("RestoreRecordsFromSRAMBank1Backup"), {5})
+        before, after = self.kept["j03!"], self.kept["r04!"]
+        self.assertEqual((after.rb(0xC5DB), after.rb(0xFF90)), (1, 0))  # wGameMode, hMapId
+        for i in range(8):
+            a = bytes(before.sram[i * 0xA5:(i + 1) * 0xA5])
+            b = bytes(after.sram[i * 0xA5:(i + 1) * 0xA5])
+            end = a.index(0xF0, 1)
+            self.assertEqual(b[:end + 1] + b[11:], a[:end + 1] + a[11:], i)
+            self.assertEqual(set(b[end:11]), {0xF0}, i)
 
 
 if __name__ == "__main__":

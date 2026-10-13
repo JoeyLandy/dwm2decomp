@@ -1,6 +1,6 @@
 ; Offsets into the $A5-byte SRAM monster record that have evidence (config/record_fields.json, E-0290).
 DEF MON_STATE EQU $00 ; state: 0 empty, 1 kept, 2 in the party (C2 from E-0320: the monster list numbers the three records in state 2 as party members 1-3 and lists the state-1 records after them unnumbered) (E-0104, E-0320)
-DEF MON_NAME EQU $01 ; name, 10 bytes ending in $F0 (C2 from E-0320: the status page's monster, Kheri, is spelled at $01) (E-0034, E-0320)
+DEF MON_NAME EQU $01 ; name, 10 bytes ending in $F0 (C2 from E-0320: the status page's monster, Kheri, is spelled at $01) (E-0323: a save and a fresh load keep the name up to its $F0 and pad the rest of the 10 bytes with $F0) (E-0034, E-0320, E-0323)
 DEF MON_SPECIES EQU $0B ; species id word (C2 from E-0320: Patta's record holds $0073 and its status page names it Dracky, String_08_02_73, entry $73 of the monster names; talk events $29/$47 compare it with monster ids, E-0236) (E-0236, E-0320)
 DEF MON_FAMILY EQU $0D ; low nibble = family (E-0122)
 DEF MON_SEX EQU $0E ; bit 0 = sex: 0 male, 1 female (C2: the egg appraiser's script chooses 'No doubt at all-it's male.' for 0 and '...female.' for 1 through wTwoChoiceCursor = this bit, EggServiceMenu_ChooseAndPay_CheckAndPay); breeding steps back when no other listed record has the other sex; DrawRecordListPageMarks draws mark tile $CC + bit 0 when MON_EGG is 2 (E-0291, E-0311)
