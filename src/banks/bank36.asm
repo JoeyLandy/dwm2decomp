@@ -6827,7 +6827,7 @@ Func_036_6717:: ; address name
 ; record: effect routine
 ActionEffectTable::
 Data_036_6726:: ; address name
-    dw ActionEffect_Action00 ; entry 0
+    dw ActionEffect_Fight ; entry 0
     dw ActionEffect_Blaze ; entry 1
     dw ActionEffect_Blaze ; entry 2
     dw ActionEffect_Blaze ; entry 3
@@ -7474,10 +7474,10 @@ ActionEffect_ActionAF:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B74:: ; address name
     ret
 
-; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 0 (no name); ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
+; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 0 (no name); ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084) (E-0333: action 0 is Fight, the plain attack: it is dispatched on turns whose battle text names no skill, while every other action follows the skill-name lookup of its own id; skill 0 is AIScore_Fight; C2) (was ActionEffect_Action00)
 ; 2 call sites from 2 routines (e.g. ActionEffect_ActionC2, ActionEffect_PoisonHit)
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
-ActionEffect_Action00:: ; code pointer of the table ActionEffectTable; C0
+ActionEffect_Fight:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B75:: ; address name
     call ComputeAttackDamage
     jp UnreferencedStoreResolveMessage35D0_Bank36
@@ -8790,7 +8790,7 @@ Func_036_726E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ActionEffect_PoisonHit:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7274:: ; address name
-    call ActionEffect_Action00
+    call ActionEffect_Fight
     ret
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 98 SquallHit; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
@@ -10392,7 +10392,7 @@ Func_036_7B89:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ActionEffect_ActionC2:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7BA1:: ; address name
-    call ActionEffect_Action00
+    call ActionEffect_Fight
     ret
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 171 ZoneOut, 183, 195, 196; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)

@@ -2431,6 +2431,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0333 — Battle action effects follow the skill the battle text names
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL, forced through the debug battle as in E-0332.
+- **The check.** tools/effect_check.py reads wBattleActionId at each DispatchActionEffectTable (36:$6717) and pairs it with the next ActionEffect_* routine that starts. It keeps the skill-name lookups (bank $08, category 4) made since the previous dispatch.
+- **What a battle turn shows.** For a skill, the battle text first looks up that skill's name, and then the dispatch runs with wBattleActionId equal to the same number: (8, 4, 120) PaniDance before action 120, (8, 4, 72) WindBeast before 72, (8, 4, 49) TakeMagic before 49.
+  - The routine that runs is ActionEffectTable's entry for the id. Its name is the first skill that uses it (ActionEffect_PanicAll for 52 PanicAll, 120 PaniDance and 173), so wBattleActionId is the skill number of the action (C2).
+  - Action 0 runs on turns whose text names no skill. It is the plain attack, so ActionEffect_Action00 is renamed ActionEffect_Fight, matching AIScore_Fight (C2).
+- **Result.** Over 14 templates there are 161 effects through 15 routines and no mismatch (16 skill uses had their name shown; the rest are attacks and repeated targets).
+- **Tests.** tests/test_effect_check.py runs three battles (about 110 s) and checks:
+  - no mismatch;
+  - a control: a shown skill name is rarely the id of the next different action.
+- Binary verification: build/run468 PASS, 0 differing bytes; tests OK (233, skipped=3).
+
 ### E-0332 — The AI's per-skill scoring routines, checked in battle
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL, forced through the debug battle.
