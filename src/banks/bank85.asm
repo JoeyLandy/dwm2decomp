@@ -4493,7 +4493,7 @@ Func_085_5B04:: ; address name
     ret
 
 ; hTemp0 = 1 when a used key entry has kind hTemp0, else 0 (E-0125)
-; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, GreatLogTalkEvents_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_SetFlagBit, SceneKamehaKeyBattle_SetFlagBit)
+; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYoHeroThanks, GreatLogTalkEvents_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_SetFlagBit, SceneKamehaKeyBattle_SetFlagBit)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList

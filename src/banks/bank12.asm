@@ -6914,7 +6914,7 @@ Func_012_6955:: ; address name
     ret
 
 ; counts the 4-byte wKeyList entries before the first $FF: hTemp0 = the count, or $80 when all 32 are in use (E-0074)
-; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ArenaMenu_SetFlagBit, SceneThreeItems_RunMessageBoxFar_Bank0F, TalkMsg0512_KamehaYo0Thanks, ...)
+; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ArenaMenu_SetFlagBit, SceneThreeItems_RunMessageBoxFar_Bank0F, TalkMsg0512_KamehaYoHeroThanks, ...)
 ; writes: hTemp0
 ; points at: wKeyList
 CountKeysOrFull::

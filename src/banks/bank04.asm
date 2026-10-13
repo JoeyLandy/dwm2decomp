@@ -7261,7 +7261,7 @@ Func_004_6A35:: ; address name
     dw TalkMsg070B_HeyThereImATalkingHorse
     dw TalkMsg070C_ThisHorseWasHereBeforeUs
     dw TalkMsg070D_ThisIsElvenVillageYoureA
-    dw TalkMsg0752_IEHeardThatHumansAre
+    dw TalkMsg0752_IveHeardThatHumansAre
     dw ElvenVillageTalkEvents_StartScriptAtHL_B04
     dw ElvenVillageTalkEvents_ShowWellWellItIs
     dw ElvenVillageTalkEvents_TestFlagBit_Case0C
@@ -7725,9 +7725,9 @@ Jump_004_6D61:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg0752_IEHeardThatHumansAre.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg0752_IEHeardThatHumansAre.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg0752_IEHeardThatHumansAre.call_start_message_command09_hl_b04); starts message $0752 through StartMessageCommand09HL (script command $09); that string begins 'I e heard that humans are wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case09)
+; tests story flags (flag 0151 then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b04); starts message $0752 through StartMessageCommand09HL (script command $09); that string begins 'I've heard that humans are wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case09) (E-0324: was TalkMsg0752_IEHeardThatHumansAre; read before $42 was known as 'v)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0752_IEHeardThatHumansAre::
+TalkMsg0752_IveHeardThatHumansAre::
 Jump_004_6D95:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -8814,7 +8814,7 @@ Jump_004_73F3:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07D7, whose string begins 'Milayou I e been checking around,'; the branching is not interpreted (E-0097)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07D7, whose string begins 'Milayou I've been checking around,'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 Talk07D7_MilayouIEBeen::
 Jump_004_7418:: ; address name

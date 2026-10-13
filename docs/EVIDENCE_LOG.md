@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0324 — All 466 talk-message names checked by running them
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL.
+- **The check.** tools/talk_check.py takes a field state from a recipe, replayed in memory: s26, the farm reached by play in E-0320, with nothing forced. For each TalkMsgNNNN_<words> routine (466 in banks $04 and $13):
+  1. it runs to the main loop's `halt`;
+  2. it clears the story flags, because the names quote the flag-clear path;
+  3. it pushes the return address, maps the routine's bank and calls it;
+  4. it runs frames until LookupString returns. The text the game looks up must begin with <words>; the "0" before a name is the hero insert and is read as Hero.
+- **Result.** All 466 pass after ten names were corrected (below), which raises them to C2.
+  - Messages from an overflow table (E-0243) come from bank $97/$98 string lists at String_97_474A_00_06-style labels, and messages that share a string carry the first one's number (TalkMsg0130 looks up Message_01_2E for index $30). So the label is not part of the check.
+- **Ten names corrected.** Nine had been read in E-0268 before $42 was known as "'v" (E-0319), e.g. TalkMsg0327_InAllMyYearsIE is now TalkMsg0327_InAllMyYearsIve, and TalkMsg0402_YouEComeAllThisWay is now TalkMsg0402_YouveComeAllThisWay. TalkMsg0512_KamehaYo0Thanks is now TalkMsg0512_KamehaYoHeroThanks, the convention of the other names. Twelve quotes in notes that still showed the gap ("I e never") now read "I've".
+- **Negative control.** Each name compared with the text its neighbour looked up passes 14 times in 466 (3.0%). Those are neighbouring messages that begin alike, such as "Hero peered into the vase".
+- **Tests.** tests/test_talk_check.py runs the check (about 100 s) and the control (below 10%).
+- Binary verification: build/run457 PASS, 0 differing bytes; tests OK (218, skipped=3).
+
 ### E-0323 — Saving and continuing: the checksums recomputed, the records round-tripped
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware). The party comes from the forced states of E-0321; the farm (map 0, MapItemUseFlags bit 4 set) is entered by the location bytes.

@@ -125,9 +125,10 @@ def recipe_lines(path: str) -> list[str]:
     return out
 
 
-def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
+def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dict, dict]:
     """Replay a recipe file in memory (nothing written): returns ({state: GameBoy} for the states in `keep`,
-    {state: {routine name: wGameMode values}} for every run)."""
+    {state: {routine name: wGameMode values}} for every run). With `stop_when_kept` it stops once every state in
+    `keep` exists."""
     labels = boot_trace.load_labels()
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     states: dict[str, bytes] = {}
@@ -148,6 +149,8 @@ def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
         ran[state] = {labels[k]: m for k, m in seen.items()}
         if state in keep:
             kept[state] = gb
+        if stop_when_kept and len(kept) == len(keep):
+            break
     return kept, ran
 
 
