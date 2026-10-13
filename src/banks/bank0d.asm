@@ -4805,22 +4805,22 @@ Func_00D_6310:: ; address name
 
 ; entry 2 of the `rst $00` table in MedalPrizeMenu
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wArenaWinsHi, wArenaWinsLo, wScreenState
+; reads: wTinyMedalsHi, wTinyMedalsLo, wScreenState
 ; writes: wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wTextBuf0, wDigits
 MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 Jump_00D_6320:: ; address name
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     and a, a
-    jr nz, .read_arena_wins_lo
-    ld a, [wArenaWinsLo]
+    jr nz, .read_tiny_medals_lo
+    ld a, [wTinyMedalsLo]
     and a, a
     jr z, .set_two_choice_cursor_to_01
     cp a, $01
     jr z, .set_two_choice_cursor_to_01
     cp a, $02
     jr z, .set_two_choice_cursor_to_01
-    jr .read_arena_wins_lo
+    jr .read_tiny_medals_lo
 
 .set_two_choice_cursor_to_01:
     ld a, $01
@@ -4831,10 +4831,10 @@ Jump_00D_6320:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-.read_arena_wins_lo:
-    ld a, [wArenaWinsLo]
+.read_tiny_medals_lo:
+    ld a, [wTinyMedalsLo]
     ld l, a
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     ld h, a
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F_Bank15
@@ -4871,16 +4871,16 @@ Jump_00D_6320:: ; address name
 
 ; entry 1 of the `rst $00` table in MedalPrizeMenu
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wArenaWinsLo, wArenaWinsHi, wScreenState
-; writes: wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest, wArenaWinsHi, wArenaWinsLo
+; reads: wTinyMedalsLo, wTinyMedalsHi, wScreenState
+; writes: wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest, wTinyMedalsHi, wTinyMedalsLo
 ; points at: wInventory
 MedalPrizeMenu_CountItem2C_Case01::
 Jump_00D_6384:: ; address name
     call MedalPrizeMenu_CountItem2C
     push af
-    ld a, [wArenaWinsLo]
+    ld a, [wTinyMedalsLo]
     ld l, a
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     ld h, a
     pop af
     cp a, $FF
@@ -4911,16 +4911,16 @@ Jump_00D_6384:: ; address name
     sub a, b
     ld b, a
     and a, a
-    jr z, .set_arena_wins_hi_to_03
+    jr z, .set_tiny_medals_hi_to_03
     ld hl, wInventory
     ld c, $00
     call MedalPrizeMenu_RemoveItem2C
 
-.set_arena_wins_hi_to_03:
+.set_tiny_medals_hi_to_03:
     ld a, $03
-    ld [wArenaWinsHi], a
+    ld [wTinyMedalsHi], a
     ld a, $E7
-    ld [wArenaWinsLo], a
+    ld [wTinyMedalsLo], a
 
 .skip3:
     ld a, $01
@@ -4930,9 +4930,9 @@ Jump_00D_6384:: ; address name
     pop af
     ld b, a
     ld a, l
-    ld [wArenaWinsLo], a
+    ld [wTinyMedalsLo], a
     ld a, h
-    ld [wArenaWinsHi], a
+    ld [wTinyMedalsHi], a
     ld hl, wInventory
     ld c, $00
     call MedalPrizeMenu_RemoveItem2C
@@ -5076,7 +5076,7 @@ Jump_00D_643A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; by wScreenStep: copies tiles and draws the count box (DrawArenaWinsLoCountBoxAndStep)
+; by wScreenStep: copies tiles and draws the count box (DrawTinyMedalCountBoxAndStep)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 MedalPrizeMenu_DrawCountBox::
@@ -5084,7 +5084,7 @@ Jump_00D_649C:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM
-    dw DrawArenaWinsLoCountBoxAndStep
+    dw DrawTinyMedalCountBoxAndStep
     dw MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D
 
 ; entry 0 of the `rst $00` table in MedalPrizeMenu_DrawCountBox
@@ -5133,20 +5133,20 @@ Jump_00D_64A6:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies box Data_00D_6EB7 to wWindowTileBuffer + $6D and writes the word wArenaWinsLo as three digits (leading blanks) at wWindowTileBuffer + $88, then wScreenStep += 1 (E-0124)
+; copies box Data_00D_6EB7 to wWindowTileBuffer + $6D and writes the word wTinyMedalsLo as three digits (leading blanks) at wWindowTileBuffer + $88, then wScreenStep += 1 (E-0124) (C2 from E-0331: it draws 'Medal: 80') (was DrawArenaWinsLoCountBoxAndStep)
 ; 1 call site from 1 routine (e.g. MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D)
-; reads: wArenaWinsLo, wArenaWinsHi, wScreenStep
+; reads: wTinyMedalsLo, wTinyMedalsHi, wScreenStep
 ; writes: wScreenStep
 ; points at: wDigits
-DrawArenaWinsLoCountBoxAndStep::
+DrawTinyMedalCountBoxAndStep::
 Func_00D_6509:: ; address name
     ld de, TileRect_0D_6EB7
     ld hl, wWindowTileBuffer + $6D
     ld bc, $0B03
     call CopyRectTo20ByteRows_Bank0D
-    ld a, [wArenaWinsLo]
+    ld a, [wTinyMedalsLo]
     ld l, a
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     ld h, a
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F_Bank15
@@ -5754,7 +5754,7 @@ Jump_00D_68FD:: ; address name
 
 ; entry 9 of the `rst $00` table in MedalPrizeMenu_ChoosePrize
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wMenuInputResult, wTwoChoiceCursor, wArg5, wArg6, wArenaWinsHi, wArenaWinsLo, wScreenStep
+; reads: wMenuInputResult, wTwoChoiceCursor, wArg5, wArg6, wTinyMedalsHi, wTinyMedalsLo, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenSubStep
 MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
 Jump_00D_6929:: ; address name
@@ -5794,16 +5794,16 @@ Jump_00D_6929:: ; address name
     ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
-    jr nc, .check_arena_wins_hi
+    jr nc, .check_tiny_medals_hi
     inc d
 
-.check_arena_wins_hi:
+.check_tiny_medals_hi:
     ld a, [de]
     ld b, a
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     and a, a
     jr nz, .clear_two_choice_cursor
-    ld a, [wArenaWinsLo]
+    ld a, [wTinyMedalsLo]
     cp a, b
     jr nc, .clear_two_choice_cursor
     ld a, $02
@@ -5981,8 +5981,8 @@ Func_00D_6A80:: ; address name
 
 ; entry 13 of the `rst $00` table in MedalPrizeMenu_ChoosePrize
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wArg5, wArg6, wArenaWinsLo, wArenaWinsHi
-; writes: wArenaWinsHi, wArenaWinsLo, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
+; reads: wArg5, wArg6, wTinyMedalsLo, wTinyMedalsHi
+; writes: wTinyMedalsHi, wTinyMedalsLo, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D::
 Jump_00D_6AA2:: ; address name
     farcall SetArg5ToListEntriesCell4
@@ -5995,25 +5995,25 @@ Jump_00D_6AA2:: ; address name
     ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
-    jr nc, .read_arena_wins_lo
+    jr nc, .read_tiny_medals_lo
     inc d
 
-.read_arena_wins_lo:
+.read_tiny_medals_lo:
     ld a, [de]
     ld b, a
-    ld a, [wArenaWinsLo]
+    ld a, [wTinyMedalsLo]
     ld l, a
-    ld a, [wArenaWinsHi]
+    ld a, [wTinyMedalsHi]
     ld h, a
     ld a, l
     sub a, b
     ld l, a
     ld a, h
     sbc a, $00
-    ld [wArenaWinsHi], a
+    ld [wTinyMedalsHi], a
     ld a, l
-    ld [wArenaWinsLo], a
-    call DrawArenaWinsLoCountBoxAndStep
+    ld [wTinyMedalsLo], a
+    call DrawTinyMedalCountBoxAndStep
     pop hl
     ld a, [hl]
     cp a, $01

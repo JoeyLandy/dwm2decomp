@@ -5962,15 +5962,15 @@ Func_001_6ABE:: ; address name
     ld a, $1C
     ld [wInventory + $14], a
     ld a, $0C
-    ld [wSaveByte32], a
+    ld [wInventory + $15], a
     ld a, $0C
     ld [wInventory + $16], a
     ld a, $0C
     ld [wInventory + $17], a
     ld a, $50
-    ld [wArenaWinsLo], a
+    ld [wTinyMedalsLo], a
     xor a, a
-    ld [wArenaWinsHi], a
+    ld [wTinyMedalsHi], a
     call DebugBattleSetup_Update_FillKeyListFromTable
     call DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82
     ret

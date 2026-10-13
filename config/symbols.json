@@ -408,8 +408,8 @@
   },
   "C61D": {
     "name": "wInventory",
-    "note": "24-slot bag of item ids (searched by FindTemp0InInventoryList; empty at the start of a new game)",
-    "evidence": "reading",
+    "note": "24-slot bag of item ids (searched by FindTemp0InInventoryList; empty at the start of a new game) (E-0331: every byte is a slot: $C632, once named wSaveByte32, is slot $15, filled and shifted like the others in the emulator's bag listings)",
+    "evidence": "reading; E-0331",
     "size": "18"
   },
   "FF90": {
@@ -1966,11 +1966,6 @@
     "note": "save byte tested before the gold events ($FF or 0 allows them)",
     "evidence": "E-0133"
   },
-  "C632": {
-    "name": "wSaveByte32",
-    "note": "save-data byte read by talk event 1/$19",
-    "evidence": "E-0133"
-  },
   "C6FD": {
     "name": "wPartyCount",
     "note": "number of party monsters (0-3)",
@@ -2037,14 +2032,14 @@
     "evidence": "E-0133"
   },
   "C838": {
-    "name": "wArenaWinsLo",
-    "note": "16-bit count shown by DrawArenaWinsLoCountBoxAndStep (script command $F3), low byte",
-    "evidence": "E-0133"
+    "name": "wTinyMedalsLo",
+    "note": "the TinyMedal count, a 16-bit word, low byte (C2 from E-0331: the medal prize menu shows 'Medal: 80' for $0050 and a 3-medal prize leaves 77; the debug battle set-up gives 80) (was wArenaWinsLo)",
+    "evidence": "E-0133, E-0331"
   },
   "C839": {
-    "name": "wArenaWinsHi",
-    "note": "that count, high byte",
-    "evidence": "E-0133"
+    "name": "wTinyMedalsHi",
+    "note": "the TinyMedal count, high byte; see wTinyMedalsLo (was wArenaWinsHi)",
+    "evidence": "E-0133, E-0331"
   },
   "C83A": {
     "name": "wSpriteSnapshotCount",

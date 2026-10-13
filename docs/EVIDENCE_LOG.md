@@ -2431,6 +2431,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0331 — Hibernation, TinyMedals, key appraisal and the swap menu; two RAM names corrected
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: each script is started by its RAM bytes on Main Street.
+- **Hibernation** (Script_1D_4335). HibernateMenu lists the kept monsters (state 1). Choosing Stera and OK takes her full record out of the list; the 30 full records close up, one fewer in use.
+  - A compact record appears at sCompactRecords ($B356, bank 0): $A0, $00, $03, then her name at bytes 3-7.
+  - So hibernating monsters are kept as compact records there. The compact format's other bytes are not read here.
+- **TinyMedals** (Script_0C_7BA9). MedalPrizeMenu shows "Medal: 80" for the word at $C838, and prizes priced in medals (MeteOrb 3, MadCat 3, …).
+  - With a full bag it checks MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot and gives nothing.
+  - With the last slot emptied, MeteOrb takes 3 medals (77 left) and item $1E (String_08_05_1E, MeteOrb) goes into that slot.
+  - The debug battle set-up writes 80 there with its debug inventory. So $C838/$C839, named wArenaWinsLo/Hi from the drawing routine (E-0133), are the TinyMedal count. They are now wTinyMedalsLo/Hi, and DrawArenaWinsLoCountBoxAndStep is DrawTinyMedalCountBoxAndStep (C2).
+- **An inventory slot with its own name.** $C632 was named wSaveByte32 ("save-data byte read by talk event 1/$19"). It is byte $15 of wInventory's 24 bytes, filled and shifted like the other slots in every bag listing of E-0322-E-0327, and the debug set-up writes it in sequence with the other slots. The symbol is removed, so the code reads wInventory + $15.
+- **Key appraisal** (Script_0D_62B8). KeyAppraisalMenu runs KeyAppraisalMenu_HasAnyKey and the script ends at once; no key is held.
+- **Swap** (Script_1F_5A3A). Ten scripts jump to this address with script_jump_data_bank. The last two words (ids 62, 63) of StringList_1F_5225, which E-0217 bounds by its lowest string, also point here, so the string pass had named it String_1F_00_3E. The script pass now replaces a String_ label at a script entry, as it did a Data_ one. SwapMonstersMenu lists the party. Its Info page shows "Base: ??? / Mate: ???" for a record whose parent species are $FFFF. No swap was completed.
+- **Reproduction and tests.** tools/recipes/e0331_hibernate_medals.txt includes e0330_priest.txt. tests/test_play_chain.py checks the hibernation record move and the medal trade.
+- Binary verification: build/run465 (renames) and build/run466 (the script label) PASS, 0 differing bytes; tests OK (229, skipped=3).
+
 ### E-0330 — The priest revives a dead monster: MON_STATUS bit 7
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: Script_1F_77D4 is started by its RAM bytes on Main Street, with Patta's MON_STATUS set to $80 and MON_HP to 0 in cartridge RAM.

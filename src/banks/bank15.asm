@@ -6293,7 +6293,7 @@ Func_015_688D:: ; address name
     ret
 
 ; when wDigits is 0 it becomes $E3, and then when wDigits + $1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
-; 7 call sites from 7 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordField0EMarkAndField56Digits, MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc, DrawArenaWinsLoCountBoxAndStep, ...)
+; 7 call sites from 7 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordField0EMarkAndField56Digits, MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc, DrawTinyMedalCountBoxAndStep, ...)
 ; reads: wDigits
 ; writes: wDigits
 BlankLeadingZeroDigits_F_Bank15::

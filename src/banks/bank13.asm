@@ -6331,7 +6331,7 @@ Jump_013_645F:: ; address name
 
 ; entry 25 of the `rst $00` table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSaveByte32, hTemp1, hTemp0
+; reads: wInventory, hTemp1, hTemp0
 ; writes: hTemp0
 GreatLogTalkEvents_TestFlagBit_Case19::
 Jump_013_647B:: ; address name
@@ -6456,7 +6456,7 @@ Jump_013_647B:: ; address name
     ld de, $013B
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b136
-    ld a, [wSaveByte32]
+    ld a, [wInventory + $15]
     or a, a
     jr z, .call_start_script_at_hl_b132
     cp a, $FF

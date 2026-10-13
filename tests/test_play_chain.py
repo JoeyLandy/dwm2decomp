@@ -3,8 +3,9 @@ then the Desert key world with random encounters, the field menu and a PLAN batt
 the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt), then saving on the farm and continuing after a fresh
 power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Christener (E-0325; e0325_town.txt), then the
 HP/MP pairs and the Herb (E-0326; e0326_hp.txt), then a shop and an inn (E-0327; e0327_shop_inn.txt), then breeding
-(E-0328; e0328_breed.txt), then the monster library (E-0329; e0329_library.txt), then the priest (E-0330; e0330_priest.txt, which
-includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+(E-0328; e0328_breed.txt), then the monster library (E-0329; e0329_library.txt), then the priest (E-0330; e0330_priest.txt), then
+hibernation and the TinyMedal prizes (E-0331; e0331_hibernate_medals.txt, which includes the others), replayed in
+memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -15,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0330_priest.txt"
+CHAIN = ROOT / "tools/recipes/e0331_hibernate_medals.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -27,7 +28,8 @@ class FarmChain(unittest.TestCase):
                                                              "m09!", "m11!", "m12!", "j02!", "j03!", "r04!",
                                                              "v05!", "v07!", "x07!", "c04!", "c05!",
                                                              "hp02!", "hp04!", "sh12!", "sh13!", "sh15!", "q06!",
-                                                             "q07!", "br01!", "bb02!", "bb19!", "lb01!", "lb02!", "pr03!", "pr05!"})
+                                                             "q07!", "br01!", "bb02!", "bb19!", "lb01!", "lb02!", "pr03!", "pr05!", "t02!", "hb02!", "hb07!",
+                                                             "md11!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -309,6 +311,27 @@ class FarmChain(unittest.TestCase):
         self.assertEqual((alive.sram[0x55], alive.sram[0x5B]), (0, alive.sram[0x5D]))
         self.assertEqual(self.gold("pr03!") - self.gold("pr05!"), 25)
         self.assertIn(1, self.ran["pr04!"].get("PriestMenu_PayForService_SubtractArg1AmountFromGold", set()))
+
+
+    def test_hibernation_moves_a_record_into_the_compact_records(self):
+        """Hibernating Stera takes her full record out of the list (the others close up) and writes a compact record
+        at sCompactRecords ($B356) whose bytes 3-7 are her name."""
+        self.assertEqual(self.ran["hb01!"].get("HibernateMenu"), {1})
+        stera = bytes([0x1C, 0x37, 0x28, 0x35, 0x24])
+        before, after = self.kept["hb02!"].sram, self.kept["hb07!"].sram
+        names = lambda sram: [bytes(sram[i * 0xA5 + 1:i * 0xA5 + 6]) for i in range(30) if sram[i * 0xA5] in (1, 2)]
+        self.assertIn(stera, names(before))
+        self.assertNotIn(stera, names(after))
+        self.assertEqual(len(names(after)), len(names(before)) - 1)
+        self.assertEqual(bytes(after[0x1356 + 3:0x1356 + 8]), stera)
+
+    def test_a_medal_prize_takes_its_price_in_tiny_medals(self):
+        """The prize menu showed 'Medal: 80' for wTinyMedalsLo/Hi = 80; MeteOrb (3 medals) leaves 77 and goes into the
+        free bag slot as item $1E (String_08_05_1E is MeteOrb)."""
+        self.assertEqual(self.ran["md11!"].get("MedalPrizeMenu"), {1})
+        medals = lambda gb: gb.rb(0xC838) | gb.rb(0xC839) << 8
+        self.assertEqual((medals(self.kept["t02!"]), medals(self.kept["md11!"])), (80, 77))
+        self.assertEqual(self.kept["md11!"].rb(0xC61D + 23), 0x1E)
 
 
 if __name__ == "__main__":

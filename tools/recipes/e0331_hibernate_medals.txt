@@ -1,0 +1,11 @@
+# E-0331: hibernation (Script_1D_4335) and the TinyMedal prizes (Script_0C_7BA9), started by their RAM bytes on Main
+# Street; for the prize, the bag's last slot is emptied first (includes e0330_priest.txt).
+@ e0330_priest.txt
+hb01! | t02! | wDataBank=0x1D wScriptInDataBank=1 wScriptPointerLo=0x35 wScriptPointerHi=0x43 wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40
+hb02! | hb01! |  | W40
+hb03! | hb02! |  | A2 W40
+hb04! | hb03! |  | D2 W30 A2 W60
+hb05! | hb04! |  | A2 W60
+hb06! | hb05! |  | A2 W60
+hb07! | hb06! |  | A2 W60
+md11! | t02! | 0xC634=0 wDataBank=0x0C wScriptInDataBank=1 wScriptPointerLo=0xA9 wScriptPointerHi=0x7B wScriptStartRequest=0x80 wModeState=1 | W60 A2 W40 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60

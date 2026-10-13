@@ -4507,7 +4507,9 @@ class Rom:
                     if (sb, a) in targets:
                         if a in dl and dl[a].startswith("Data_"):
                             self.dalias.setdefault((sb, a), dl[a])
-                        if a not in dl or dl[a].startswith("Data_"):
+                        # E-0331: a script entry that a string list's last words also point at (1F:5A3A, jumped to
+                        # by ten scripts) is a script, not a string
+                        if a not in dl or dl[a].startswith(("Data_", "String_")):
                             dl[a] = f"Script_{a:04X}" if sb == b else f"Script_{sb:02X}_{a:04X}"
                             self.dreason[(sb, a)] = "event script entry or jump target"
                 self.script_at[(sb, lo)] = {"ins": [(a, *code[(sb, a)]) for a in reg], "end": hi}

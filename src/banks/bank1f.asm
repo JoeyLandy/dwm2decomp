@@ -593,8 +593,8 @@ Data_01F_5225:: ; address name
     dw String_1F_00_3B ; id 59
     dw String_1F_00_3C ; id 60
     dw String_1F_00_3D ; id 61
-    dw String_1F_00_3E ; id 62
-    dw String_1F_00_3E ; id 63
+    dw Script_1F_5A3A ; id 62
+    dw Script_1F_5A3A ; id 63
 
 String_1F_00_00:: ; heuristic: string; C0
 Data_01F_52A5:: ; address name
@@ -958,7 +958,7 @@ Data_01F_59F2:: ; address name
     db $F0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-String_1F_00_3E:: ; heuristic: string; C0
+Script_1F_5A3A:: ; heuristic: event script entry or jump target; C0
 Data_01F_5A3A:: ; address name
     script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
