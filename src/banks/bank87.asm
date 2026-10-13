@@ -1,14 +1,9 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-; only called from FieldModeStateDispatch_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement)
-; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wStepTriggerFlag, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
-; writes: wStepTriggerFlag, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_WaitTextWindowState::
-Func_087_4001:: ; address name
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     ret nz
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -17,7 +12,7 @@ Func_087_4001:: ; address name
     bit 0, a
     ret nz
     ld a, [wStepTriggerFlag]
-    or a, a
+    or a
     ret nz
     inc a
     ld [wStepTriggerFlag], a
@@ -26,15 +21,15 @@ Func_087_4001:: ; address name
     ld h, $00
     add hl, hl
     ld a, l
-    add a, $A0
+    add $a0
     ld l, a
     ld a, h
-    adc a, $40
+    adc $40
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
-    or a, e
+    or e
     ret z
     ld a, [hl]
     ld h, a
@@ -42,29 +37,29 @@ Func_087_4001:: ; address name
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     ret z
     push hl
-    or a, a
+    or a
     jr nz, .restore
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapId]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr nz, .check_player_x
     inc hl
     jr .skip2
@@ -72,41 +67,41 @@ Func_087_4001:: ; address name
 .check_player_x:
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .restore
 
 .skip2:
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
-    cp a, e
+    cp e
     jr nz, .call_test_flag_bit
-    cp a, $FF
+    cp $ff
     jr nz, .call_test_flag_bit
     inc hl
     jr .set_talk_event_group
 
 .call_test_flag_bit:
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
     call TestFlagBit
     jr c, .restore
 
 .set_talk_event_group:
-    ld a, [hl+]
+    ld a, [hli]
     ld [wTalkEventGroup], a
     ld a, [hl]
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ld a, [wModeState]
-    cp a, $01
+    cp $01
     jr nz, .done
-    xor a, a
+    xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
 
@@ -116,14 +111,17 @@ Func_087_4001:: ; address name
 
 .restore:
     pop hl
-    ld a, $0A
+    ld a, $0a
     add_a_to_hl
     jr .skip
 
-; E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0).
+; FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2
+; * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and
+; position (unless player X is $FF) match and whose flag is $FFFF or clear sets
+; wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0 (E-0198,
+; C1)
 ; record: list of step triggers for this map ($0000 = none)
 MapStepTriggerTable::
-Data_087_40A0:: ; address name
     dw MapStepTriggers00 ; id 0
     dw MapStepTriggers01 ; id 1
     dw MapStepTriggers02 ; id 2
@@ -381,14 +379,9 @@ Data_087_40A0:: ; address name
     dw $0000 ; id 254
     dw $0000 ; id 255
 
-; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
-; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
-; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_WaitTextWindowState_Shared03::
-Func_087_42A0:: ; address name
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     ret nz
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -400,14 +393,14 @@ Func_087_42A0:: ; address name
     bit 0, a
     ret z
     ld a, [wSpriteSlotCount]
-    or a, a
+    or a
     jp z, .check_map_type
     ldh a, [hPlayerX]
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
     ldh a, [hPlayerFacing]
-    or a, a
+    or a
     jr z, .skip
     dec a
     jr z, .skip2
@@ -418,13 +411,13 @@ Func_087_42A0:: ; address name
 
 .skip:
     ld a, c
-    add a, $11
+    add $11
     ld c, a
     jr .call_field_mode_state_dispatch_shared03_wait2
 
 .skip2:
     ld a, b
-    add a, $11
+    add $11
     ld b, a
     jr .call_field_mode_state_dispatch_shared03_wait2
 
@@ -433,25 +426,25 @@ Func_087_42A0:: ; address name
 
 .call_field_mode_state_dispatch_shared03_wait2:
     call FieldModeStateDispatch_Shared03_WaitSpriteSlotCount
-    or a, a
+    or a
     jp z, .check_map_type
     dec a
     ld c, $10
     call Multiply8
     ld a, l
-    add a, $7F
+    add $7f
     ld l, a
     ld a, h
-    adc a, $CB
+    adc $cb
     ld h, a
     ld a, [hl]
-    or a, a
+    or a
     jr z, .skip3
     push hl
     ld a, [hl]
-    cp a, $02
+    cp $02
     jr nz, .restore
-    ld a, $0A
+    ld a, $0a
     add_a_to_hl
     ld a, [hl]
     bit 7, a
@@ -462,10 +455,10 @@ Func_087_42A0:: ; address name
 .restore:
     pop hl
     push hl
-    ld a, $0B
+    ld a, $0b
     add_a_to_hl
     ld a, [hl]
-    and a, $0F
+    and $0f
     jr z, .next
     pop hl
     jp .check_map_type
@@ -473,7 +466,7 @@ Func_087_42A0:: ; address name
 .next:
     inc hl
     ld a, [hl]
-    and a, $0F
+    and $0f
     jr z, .restore2
     pop hl
     jp .check_map_type
@@ -484,34 +477,34 @@ Func_087_42A0:: ; address name
 .skip3:
     ld a, $09
     add_a_to_hl
-    xor a, a
+    xor a
     ld [hl], a
     dec hl
     dec hl
     ldh a, [hPlayerFacing]
-    add a, $02
-    and a, $03
+    add $02
+    and $03
     ld [hl], a
     ld a, $08
     add_a_to_hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .cp_FE
     ld a, $08
     ld [wTalkEventIndex], a
     jp .call_dispatch_talk_event
 
 .cp_FE:
-    cp a, $FE
+    cp $fe
     jr nz, .cp_FC
     ld a, $09
     ld [wTalkEventIndex], a
-    xor a, a
+    xor a
     ld [wTalkEventGroup], a
     jr .call_dispatch_talk_event
 
 .cp_FC:
-    cp a, $FC
+    cp $fc
     jr nz, .cp_FB
     ld a, $09
     ld [wTalkEventIndex], a
@@ -520,7 +513,7 @@ Func_087_42A0:: ; address name
     jr .call_dispatch_talk_event
 
 .cp_FB:
-    cp a, $FB
+    cp $fb
     jr nz, .cp_FA
     ld a, $09
     ld [wTalkEventIndex], a
@@ -529,7 +522,7 @@ Func_087_42A0:: ; address name
     jr .call_dispatch_talk_event
 
 .cp_FA:
-    cp a, $FA
+    cp $fa
     jr nz, .set_talk_event_group
     ld a, $09
     ld [wTalkEventIndex], a
@@ -540,42 +533,42 @@ Func_087_42A0:: ; address name
 .set_talk_event_group:
     ld [wTalkEventGroup], a
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     jr nc, .cp_30
     ld a, $01
     ld [wTalkEventIndex], a
     jr .call_dispatch_talk_event
 
 .cp_30:
-    cp a, $30
+    cp $30
     jr nc, .cp_48
     ld a, $02
     ld [wTalkEventIndex], a
     jr .call_dispatch_talk_event
 
 .cp_48:
-    cp a, $48
+    cp $48
     jr nc, .cp_70
     ld a, $03
     ld [wTalkEventIndex], a
     jr .call_dispatch_talk_event
 
 .cp_70:
-    cp a, $70
+    cp $70
     jr nc, .cp_A0
     ld a, $04
     ld [wTalkEventIndex], a
     jr .call_dispatch_talk_event
 
 .cp_A0:
-    cp a, $A0
+    cp $a0
     jr nc, .cp_A8
     ld a, $05
     ld [wTalkEventIndex], a
     jr .call_dispatch_talk_event
 
 .cp_A8:
-    cp a, $A8
+    cp $a8
     jr nc, .set_talk_event_index_to_07
     ld a, $06
     ld [wTalkEventIndex], a
@@ -588,9 +581,9 @@ Func_087_42A0:: ; address name
 .call_dispatch_talk_event:
     farcall DispatchTalkEvent
     ld a, [wModeState]
-    cp a, $01
+    cp $01
     ret nz
-    xor a, a
+    xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     ld a, [wPartyWindowFlags]
@@ -604,7 +597,7 @@ Func_087_42A0:: ; address name
     bit 7, a
     jr z, .read_map_id
     call FieldModeStateDispatch_Shared03_ReadKeyWorldFloor
-    or a, a
+    or a
     jr nz, .skip4
     ret
 
@@ -614,15 +607,15 @@ Func_087_42A0:: ; address name
     ld h, $00
     add hl, hl
     ld a, l
-    add a, $39
+    add $39
     ld l, a
     ld a, h
-    adc a, $45
+    adc $45
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
-    or a, e
+    or e
     ret z
     ld a, [hl]
     ld h, a
@@ -630,12 +623,12 @@ Func_087_42A0:: ; address name
 
 .skip4:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     ret z
     push hl
-    or a, a
+    or a
     jp z, .restore3
-    cp a, $05
+    cp $05
     jr nz, .check_player_facing
     inc hl
     ld a, [wMapType]
@@ -644,28 +637,28 @@ Func_087_42A0:: ; address name
     ld a, [hl]
     ld c, a
     ldh a, [hMapId]
-    cp a, c
+    cp c
     jp nz, .restore3
 
 .next2:
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jp nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jp nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hPlayerFacing]
     dec a
     jp nz, .skip5
     ld a, c
-    sub a, $10
+    sub $10
     ld c, a
     jp .check_player_x
 
@@ -674,20 +667,20 @@ Func_087_42A0:: ; address name
     dec a
     jp nz, .check_player_x
     ld a, c
-    add a, $10
+    add $10
     ld c, a
 
 .check_player_x:
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jp nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hPlayerFacing]
-    or a, a
+    or a
     jr nz, .skip6
     ld a, c
-    sub a, $10
+    sub $10
     ld c, a
     jr .check_player_y
 
@@ -696,12 +689,12 @@ Func_087_42A0:: ; address name
     dec a
     jr nz, .check_player_y
     ld a, c
-    add a, $10
+    add $10
     ld c, a
 
 .check_player_y:
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jp nz, .restore3
     jr .skip7
 
@@ -709,7 +702,7 @@ Func_087_42A0:: ; address name
     dec a
     ld c, a
     ldh a, [hPlayerFacing]
-    cp a, c
+    cp c
     jr nz, .restore3
     inc hl
     ld a, [wMapType]
@@ -718,59 +711,59 @@ Func_087_42A0:: ; address name
     ld a, [hl]
     ld c, a
     ldh a, [hMapId]
-    cp a, c
+    cp c
     jr nz, .restore3
 
 .next3:
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jp nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .restore3
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .restore3
 
 .skip7:
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
-    cp a, e
+    cp e
     jr nz, .call_test_flag_bit
-    cp a, $FF
+    cp $ff
     jr nz, .call_test_flag_bit
     inc hl
     jr .set_talk_event_group2
 
 .call_test_flag_bit:
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
     call TestFlagBit
     jr c, .restore3
 
 .set_talk_event_group2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [wTalkEventGroup], a
     ld a, [hl]
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ld a, [wModeState]
-    cp a, $01
+    cp $01
     jr nz, .restore3
-    xor a, a
+    xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     ld a, [wPartyWindowFlags]
@@ -784,51 +777,50 @@ Func_087_42A0:: ; address name
 
 .restore3:
     pop hl
-    ld a, $0A
+    ld a, $0a
     add_a_to_hl
     jp .skip4
 
-; only called from FieldModeStateDispatch_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
-; reads: wKeyWorldFloor
 FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
-Func_087_4507:: ; address name
-    cp a, $84
+    cp $84
     jr nz, .cp_83
     ld hl, SpecialMapInteractions_5D28
     ld a, $01
     ret
 
 .cp_83:
-    cp a, $83
+    cp $83
     jr nz, .return_0
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
-    cp a, $02
+    cp $02
     jr nz, .cp_03
     ld hl, SpecialMapInteractions_5CA4
     ld a, $01
     ret
 
 .cp_03:
-    cp a, $03
+    cp $03
     jr nz, .return_0
     ld hl, SpecialMapInteractions_5CFF
     ld a, $01
     ret
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
-; E-0157 (C1: FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index).
+; FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up
+; to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an
+; entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front),
+; map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the
+; group and index (E-0157, C1)
 ; record: list of interaction spots for this map ($0000 = none)
 MapInteractionTable::
-Data_087_4539:: ; address name
     dw MapInteractions00 ; id 0
     dw MapInteractions01 ; id 1
     dw MapInteractions02 ; id 2
@@ -1062,45 +1054,40 @@ Data_087_4539:: ; address name
     dw $0000 ; id 230
     dw $0000 ; id 231
 
-; only called from FieldModeStateDispatch_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
-; reads: wSpriteSlotCount, hTemp1, hTemp0
-; writes: hTemp0, hTemp1
 FieldModeStateDispatch_Shared03_WaitSpriteSlotCount::
-Func_087_4709:: ; address name
     ld a, [wSpriteSlotCount]
-    or a, a
+    or a
     ret z
     ld a, c
     swap a
-    and a, $0F
+    and $0f
     ldh [hTemp0], a
     ld a, b
     swap a
-    and a, $0F
+    and $0f
     ldh [hTemp1], a
     ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
-    ld hl, wSpriteSlots + $B
+    ld hl, wSpriteSlots + $b
 
 .loop:
     push hl
     push bc
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr nz, .restore
     inc hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr z, .restore2
 
 .restore:
@@ -1111,7 +1098,7 @@ Func_087_4709:: ; address name
     add_a_to_hl
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ret
 
 .restore2:
@@ -1120,2737 +1107,2502 @@ Func_087_4709:: ; address name
     ld a, c
     ret
 
-; E-0157 (derived: list for entry $00 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $00 of MapInteractionTable; 4 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions00::
-Data_087_4751:: ; address name
     db $05, $00, $01, $02, $70, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A3, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a3, $01 ; talk event group, index
     db $04, $00, $00, $02, $30, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A2, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a2, $01 ; talk event group, index
     db $03, $00, $00, $02, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1B, $00 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1b, $00 ; talk event group, index
     db $01, $00, $00, $03, $40, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E5, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e5, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $01 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $01 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions01::
-Data_087_477A:: ; address name
     db $03, $01, $02, $02, $60, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $17, $0A ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $17, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $02 of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $02 of MapInteractionTable; 6 record(s), then $FF (E-0157)
 MapInteractions02::
-Data_087_4785:: ; address name
     db $03, $02, $01, $00, $30, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $13, $01 ; talk event group, index
     db $05, $02, $01, $00, $20, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $13, $01 ; talk event group, index
     db $03, $02, $01, $00, $50, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A5, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a5, $01 ; talk event group, index
     db $03, $02, $00, $00, $10, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $45, $01 ; talk event group, index
     db $01, $02, $00, $00, $50, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AB, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ab, $01 ; talk event group, index
     db $01, $02, $00, $00, $70, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AB, $01 ; talk event group, index
-    db $FF ; end
-    db $03, $03, $00, $00, $50, $40, $02, $00, $03, $0A, $FF
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ab, $01 ; talk event group, index
+    db $ff ; end
+    db $03, $03, $00, $00, $50, $40, $02, $00, $03, $0a, $ff
 
-; E-0157 (derived: list for entry $04 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $04 of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions04::
-Data_087_47CD:: ; address name
     db $03, $04, $01, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $65, $01 ; talk event group, index
     db $03, $04, $01, $00, $50, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9D, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9d, $01 ; talk event group, index
     db $05, $04, $00, $00, $40, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $22, $00 ; talk event group, index
     db $05, $04, $00, $00, $30, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $23, $00 ; talk event group, index
     db $05, $04, $00, $00, $40, $60 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $24, $00 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $05 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $05 of MapInteractionTable; 1 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions05::
-Data_087_4800:: ; address name
     db $05, $05, $01, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A9, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a9, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $06 of MapInteractionTable; 10 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $06 of MapInteractionTable; 10 record(s), then $FF (E-0157)
 MapInteractions06::
-Data_087_480B:: ; address name
     db $03, $06, $00, $00, $40, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $03, $01 ; talk event group, index
     db $03, $06, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A0, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a0, $01 ; talk event group, index
     db $03, $06, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A1, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a1, $01 ; talk event group, index
     db $05, $06, $00, $00, $20, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $05, $01 ; talk event group, index
     db $01, $06, $00, $00, $10, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $01 ; talk event group, index
     db $04, $06, $00, $00, $20, $60 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $01 ; talk event group, index
     db $05, $06, $00, $00, $20, $70 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $01 ; talk event group, index
     db $03, $06, $01, $00, $40, $10 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E6, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e6, $01 ; talk event group, index
     db $03, $06, $01, $00, $30, $10 ; id 8: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E6, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e6, $01 ; talk event group, index
     db $03, $06, $01, $00, $60, $10 ; id 9: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E6, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e6, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $07 of MapInteractionTable; 7 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $07 of MapInteractionTable; 7 record(s), then $FF (E-0157)
 MapInteractions07::
-Data_087_4870:: ; address name
     db $03, $07, $00, $00, $60, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $50, $01 ; talk event group, index
     db $05, $07, $00, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $D2, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $d2, $01 ; talk event group, index
     db $03, $07, $00, $00, $80, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $D3, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $d3, $01 ; talk event group, index
     db $03, $07, $00, $01, $10, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $51, $01 ; talk event group, index
     db $05, $07, $00, $01, $20, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $52, $01 ; talk event group, index
     db $03, $07, $00, $01, $70, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $53, $01 ; talk event group, index
     db $03, $07, $00, $01, $80, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $54, $01 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $08 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $08 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions08::
-Data_087_48B7:: ; address name
     db $03, $08, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $07, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $07, $0a ; talk event group, index
     db $03, $08, $00, $00, $60, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $08, $0A ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $08, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $09 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $09 of MapInteractionTable; 3 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions09::
-Data_087_48CC:: ; address name
     db $03, $09, $00, $00, $20, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $C5, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $c5, $01 ; talk event group, index
     db $05, $09, $00, $00, $60, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $C6, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $c6, $01 ; talk event group, index
     db $03, $09, $00, $00, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $C7, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $c7, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $0C of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $0C of MapInteractionTable; 3 record(s), then $FF (E-0157)
 MapInteractions0C::
-Data_087_48EB:: ; address name
-    db $04, $0C, $00, $00, $20, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $C9, $01 ; talk event group, index
-    db $04, $0C, $00, $00, $20, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $CA, $01 ; talk event group, index
-    db $03, $0C, $01, $00, $30, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1F, $01 ; talk event group, index
-    db $FF ; end
+    db $04, $0c, $00, $00, $20, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $c9, $01 ; talk event group, index
+    db $04, $0c, $00, $00, $20, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ca, $01 ; talk event group, index
+    db $03, $0c, $01, $00, $30, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1f, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $0D of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $0D of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions0D::
-Data_087_490A:: ; address name
-    db $03, $0D, $01, $01, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6C, $01 ; talk event group, index
-    db $03, $0D, $01, $01, $80, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6D, $01 ; talk event group, index
-    db $03, $0D, $01, $00, $50, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6E, $01 ; talk event group, index
-    db $01, $0D, $00, $01, $50, $70 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $012B ; story flag that disables the entry ($FFFF = none)
-    db $CC, $01 ; talk event group, index
-    db $FF ; end
+    db $03, $0d, $01, $01, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6c, $01 ; talk event group, index
+    db $03, $0d, $01, $01, $80, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6d, $01 ; talk event group, index
+    db $03, $0d, $01, $00, $50, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6e, $01 ; talk event group, index
+    db $01, $0d, $00, $01, $50, $70 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $012b ; story flag that disables the entry ($FFFF = none)
+    db $cc, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $0E of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $0E of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions0E::
-Data_087_4933:: ; address name
-    db $03, $0E, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3B, $01 ; talk event group, index
-    db $03, $0E, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3C, $01 ; talk event group, index
-    db $03, $0E, $00, $00, $50, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $01 ; talk event group, index
-    db $03, $0E, $00, $00, $60, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $01 ; talk event group, index
-    db $03, $0E, $00, $00, $70, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B1, $01 ; talk event group, index
-    db $FF ; end
+    db $03, $0e, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3b, $01 ; talk event group, index
+    db $03, $0e, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3c, $01 ; talk event group, index
+    db $03, $0e, $00, $00, $50, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $01 ; talk event group, index
+    db $03, $0e, $00, $00, $60, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $01 ; talk event group, index
+    db $03, $0e, $00, $00, $70, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b1, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $0F of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $0F of MapInteractionTable; 6 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions0F::
-Data_087_4966:: ; address name
-    db $03, $0F, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $0f, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $40, $01 ; talk event group, index
-    db $03, $0F, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3F, $01 ; talk event group, index
-    db $05, $0F, $00, $00, $10, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $0f, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3f, $01 ; talk event group, index
+    db $05, $0f, $00, $00, $10, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $41, $01 ; talk event group, index
-    db $03, $0F, $00, $00, $60, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $0f, $00, $00, $60, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $43, $01 ; talk event group, index
-    db $03, $0F, $00, $00, $70, $10 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $0f, $00, $00, $70, $10 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $44, $01 ; talk event group, index
-    db $05, $0F, $00, $00, $80, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $CB, $01 ; talk event group, index
-    db $FF ; end
+    db $05, $0f, $00, $00, $80, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $cb, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $10 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $10 of MapInteractionTable; 3 record(s), then $FF (E-0157)
 MapInteractions10::
-Data_087_49A3:: ; address name
     db $03, $10, $00, $00, $60, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $43, $01 ; talk event group, index
     db $03, $10, $00, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $44, $01 ; talk event group, index
     db $05, $10, $00, $00, $80, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $CB, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $cb, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $11 of MapInteractionTable; 16 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $11 of MapInteractionTable; 16 record(s), then $FF (E-0157)
 MapInteractions11::
-Data_087_49C2:: ; address name
     db $05, $11, $00, $01, $70, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $09, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $09, $0a ; talk event group, index
     db $02, $11, $00, $01, $20, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0A, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0a, $0a ; talk event group, index
     db $03, $11, $00, $01, $40, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0A, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0a, $0a ; talk event group, index
     db $03, $11, $00, $00, $10, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0B, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0b, $0a ; talk event group, index
     db $03, $11, $00, $00, $20, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $0a ; talk event group, index
     db $03, $11, $00, $00, $30, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0D, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0d, $0a ; talk event group, index
     db $03, $11, $00, $00, $70, $30 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0E, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0e, $0a ; talk event group, index
     db $03, $11, $00, $00, $80, $30 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0F, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0f, $0a ; talk event group, index
     db $03, $11, $00, $00, $10, $70 ; id 8: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $10, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $10, $0a ; talk event group, index
     db $03, $11, $00, $00, $20, $70 ; id 9: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $11, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $11, $0a ; talk event group, index
     db $03, $11, $00, $00, $40, $70 ; id 10: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $12, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $12, $0a ; talk event group, index
     db $03, $11, $00, $00, $50, $70 ; id 11: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $13, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $13, $0a ; talk event group, index
     db $03, $11, $00, $00, $70, $70 ; id 12: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $14, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $14, $0a ; talk event group, index
     db $03, $11, $00, $00, $80, $70 ; id 13: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $15, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $15, $0a ; talk event group, index
     db $03, $11, $00, $00, $40, $30 ; id 14: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $16, $0A ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $16, $0a ; talk event group, index
     db $03, $11, $00, $00, $60, $30 ; id 15: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $16, $0A ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $16, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $12 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $12 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions12::
-Data_087_4A63:: ; address name
     db $03, $12, $00, $00, $80, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $C8, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $c8, $01 ; talk event group, index
     db $03, $12, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $01 ; talk event group, index
     db $05, $12, $00, $00, $70, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $79, $01 ; talk event group, index
     db $05, $12, $00, $00, $50, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $7A, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $7a, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $13 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $13 of MapInteractionTable; 3 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions13::
-Data_087_4A8C:: ; address name
     db $03, $13, $00, $00, $10, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $47, $01 ; talk event group, index
     db $03, $13, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $48, $01 ; talk event group, index
     db $03, $13, $00, $00, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $49, $01 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $15 of MapInteractionTable; 10 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $15 of MapInteractionTable; 10 record(s), then $FF (E-0157)
 MapInteractions15::
-Data_087_4AAB:: ; address name
     db $03, $15, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $03, $15, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $03, $15, $00, $00, $30, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $03, $15, $00, $00, $60, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $03, $15, $00, $00, $70, $50 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $03, $15, $00, $00, $80, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $01 ; talk event group, index
     db $02, $15, $00, $00, $30, $10 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $91, $01 ; talk event group, index
     db $05, $15, $00, $00, $40, $20 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $91, $01 ; talk event group, index
     db $05, $15, $00, $00, $10, $60 ; id 8: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $91, $01 ; talk event group, index
     db $03, $15, $00, $00, $60, $20 ; id 9: kind, map, screen X, screen Y, player X, player Y
     dw $0030 ; story flag that disables the entry ($FFFF = none)
-    db $DB, $01 ; talk event group, index
-    db $FF ; end
+    db $db, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $16 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $16 of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions16::
-Data_087_4B10:: ; address name
     db $03, $16, $00, $00, $20, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $74, $01 ; talk event group, index
     db $03, $16, $00, $00, $30, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $75, $01 ; talk event group, index
     db $03, $16, $00, $00, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $76, $01 ; talk event group, index
     db $05, $16, $00, $00, $50, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $CE, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ce, $01 ; talk event group, index
     db $03, $16, $00, $00, $60, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $CE, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ce, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $17 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $17 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions17::
-Data_087_4B43:: ; address name
     db $02, $17, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $86, $01 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $18 of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $18 of MapInteractionTable; 6 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions18::
-Data_087_4B4E:: ; address name
     db $04, $18, $00, $01, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $01 ; talk event group, index
     db $05, $18, $00, $01, $30, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $01 ; talk event group, index
     db $01, $18, $00, $00, $50, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $01 ; talk event group, index
     db $05, $18, $00, $00, $20, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $63, $01 ; talk event group, index
     db $05, $18, $02, $01, $70, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $01 ; talk event group, index
     db $01, $18, $02, $01, $60, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $01 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $19 of MapInteractionTable; 14 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $19 of MapInteractionTable; 14 record(s), then $FF (E-0157)
 MapInteractions19::
-Data_087_4B8B:: ; address name
     db $04, $19, $00, $01, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $D8, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $d8, $01 ; talk event group, index
     db $02, $19, $00, $01, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $D8, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $d8, $01 ; talk event group, index
     db $03, $19, $00, $02, $60, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E2, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e2, $01 ; talk event group, index
     db $03, $19, $00, $02, $70, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $EE, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ee, $01 ; talk event group, index
     db $05, $19, $00, $02, $80, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9A, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9a, $01 ; talk event group, index
     db $05, $19, $00, $02, $80, $60 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9B, $01 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9b, $01 ; talk event group, index
     db $04, $19, $00, $00, $30, $30 ; id 6: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $1B, $0A ; talk event group, index
+    db $1b, $0a ; talk event group, index
     db $04, $19, $00, $00, $30, $50 ; id 7: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $1C, $0A ; talk event group, index
+    db $1c, $0a ; talk event group, index
     db $04, $19, $00, $00, $30, $60 ; id 8: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $1D, $0A ; talk event group, index
+    db $1d, $0a ; talk event group, index
     db $04, $19, $00, $00, $30, $70 ; id 9: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $1E, $0A ; talk event group, index
+    db $1e, $0a ; talk event group, index
     db $02, $19, $00, $00, $60, $30 ; id 10: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $1F, $0A ; talk event group, index
+    db $1f, $0a ; talk event group, index
     db $02, $19, $00, $00, $60, $40 ; id 11: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $20, $0A ; talk event group, index
+    db $20, $0a ; talk event group, index
     db $02, $19, $00, $00, $60, $50 ; id 12: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $21, $0A ; talk event group, index
+    db $21, $0a ; talk event group, index
     db $02, $19, $00, $00, $60, $70 ; id 13: kind, map, screen X, screen Y, player X, player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $22, $0A ; talk event group, index
-    db $FF ; end
+    db $22, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $1A of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $1A of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions1A::
-Data_087_4C18:: ; address name
-    db $05, $1A, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8B, $01 ; talk event group, index
-    db $02, $1A, $02, $00, $50, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1C, $00 ; talk event group, index
-    db $FF ; end
+    db $05, $1a, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8b, $01 ; talk event group, index
+    db $02, $1a, $02, $00, $50, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1c, $00 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $1B of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $1B of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions1B::
-Data_087_4C2D:: ; address name
-    db $05, $1B, $00, $02, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $EC, $01 ; talk event group, index
-    db $05, $1B, $00, $02, $60, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $ED, $01 ; talk event group, index
-    db $FF ; end
+    db $05, $1b, $00, $02, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ec, $01 ; talk event group, index
+    db $05, $1b, $00, $02, $60, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ed, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $1D of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $1D of MapInteractionTable; 8 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions1D::
-Data_087_4C42:: ; address name
-    db $04, $1D, $00, $00, $90, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $18, $0A ; talk event group, index
-    db $05, $1D, $00, $00, $80, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $19, $0A ; talk event group, index
-    db $01, $1D, $00, $00, $90, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $19, $0A ; talk event group, index
-    db $05, $1D, $01, $00, $10, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $19, $0A ; talk event group, index
-    db $03, $1D, $01, $00, $40, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $19, $0A ; talk event group, index
-    db $01, $1D, $01, $00, $00, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $19, $0A ; talk event group, index
-    db $01, $1D, $01, $00, $20, $50 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $18, $0A ; talk event group, index
-    db $01, $1D, $01, $00, $30, $50 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $18, $0A ; talk event group, index
-    db $FF ; end
+    db $04, $1d, $00, $00, $90, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $18, $0a ; talk event group, index
+    db $05, $1d, $00, $00, $80, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $19, $0a ; talk event group, index
+    db $01, $1d, $00, $00, $90, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $19, $0a ; talk event group, index
+    db $05, $1d, $01, $00, $10, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $19, $0a ; talk event group, index
+    db $03, $1d, $01, $00, $40, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $19, $0a ; talk event group, index
+    db $01, $1d, $01, $00, $00, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $19, $0a ; talk event group, index
+    db $01, $1d, $01, $00, $20, $50 ; id 6: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $18, $0a ; talk event group, index
+    db $01, $1d, $01, $00, $30, $50 ; id 7: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $18, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $21 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $21 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions21::
-Data_087_4C93:: ; address name
     db $05, $21, $00, $00, $10, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $07, $02 ; talk event group, index
     db $05, $21, $01, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $08, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $22 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $22 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions22::
-Data_087_4CA8:: ; address name
     db $04, $22, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0A, $02 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0a, $02 ; talk event group, index
     db $01, $22, $00, $00, $30, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0A, $02 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0a, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $23 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $23 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions23::
-Data_087_4CBD:: ; address name
     db $01, $23, $00, $00, $10, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1F, $02 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1f, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $24 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $24 of MapInteractionTable; 5 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions24::
-Data_087_4CC8:: ; address name
     db $05, $24, $00, $00, $20, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $19, $02 ; talk event group, index
     db $03, $24, $00, $00, $80, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1D, $02 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1d, $02 ; talk event group, index
     db $03, $24, $00, $01, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1E, $02 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1e, $02 ; talk event group, index
     db $02, $24, $01, $01, $60, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1A, $02 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1a, $02 ; talk event group, index
     db $04, $24, $01, $01, $60, $60 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1B, $02 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1b, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $25 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $25 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions25::
-Data_087_4CFB:: ; address name
     db $03, $25, $01, $00, $50, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2A, $02 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2a, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $28 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $28 of MapInteractionTable; 3 record(s), then $FF (E-0157)
 MapInteractions28::
-Data_087_4D06:: ; address name
     db $05, $28, $00, $00, $30, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $40, $02 ; talk event group, index
     db $05, $28, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $40, $02 ; talk event group, index
     db $05, $28, $00, $00, $60, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $40, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2A of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2A of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions2A::
-Data_087_4D25:: ; address name
-    db $02, $2A, $00, $00, $70, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $02, $2a, $00, $00, $70, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $42, $02 ; talk event group, index
-    db $02, $2A, $00, $00, $70, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3F, $02 ; talk event group, index
-    db $FF ; end
+    db $02, $2a, $00, $00, $70, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3f, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2B of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2B of MapInteractionTable; 8 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions2B::
-Data_087_4D3A:: ; address name
-    db $05, $2B, $00, $01, $10, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2F, $02 ; talk event group, index
-    db $05, $2B, $00, $01, $20, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $00, $01, $10, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2f, $02 ; talk event group, index
+    db $05, $2b, $00, $01, $20, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $30, $02 ; talk event group, index
-    db $05, $2B, $01, $00, $80, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $01, $00, $80, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $31, $02 ; talk event group, index
-    db $05, $2B, $02, $01, $60, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $02, $01, $60, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $32, $02 ; talk event group, index
-    db $05, $2B, $01, $02, $20, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $01, $02, $20, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $33, $02 ; talk event group, index
-    db $05, $2B, $02, $02, $60, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $02, $02, $60, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $34, $02 ; talk event group, index
-    db $05, $2B, $00, $03, $30, $70 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $00, $03, $30, $70 ; id 6: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $35, $02 ; talk event group, index
-    db $05, $2B, $00, $03, $50, $70 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $2b, $00, $03, $50, $70 ; id 7: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $36, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2D of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2D of MapInteractionTable; 3 record(s), then $FF (E-0157)
 MapInteractions2D::
-Data_087_4D8B:: ; address name
-    db $03, $2D, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $005A ; story flag that disables the entry ($FFFF = none)
+    db $03, $2d, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $005a ; story flag that disables the entry ($FFFF = none)
     db $38, $02 ; talk event group, index
-    db $01, $2D, $00, $00, $20, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $005A ; story flag that disables the entry ($FFFF = none)
-    db $1C, $02 ; talk event group, index
-    db $03, $2D, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $01, $2d, $00, $00, $20, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $005a ; story flag that disables the entry ($FFFF = none)
+    db $1c, $02 ; talk event group, index
+    db $03, $2d, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $41, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2E of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2E of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions2E::
-Data_087_4DAA:: ; address name
-    db $04, $2E, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $02 ; talk event group, index
-    db $03, $2E, $00, $00, $40, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $02 ; talk event group, index
-    db $02, $2E, $00, $00, $50, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $02 ; talk event group, index
-    db $03, $2E, $00, $00, $50, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $02 ; talk event group, index
-    db $FF ; end
+    db $04, $2e, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $02 ; talk event group, index
+    db $03, $2e, $00, $00, $40, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $02 ; talk event group, index
+    db $02, $2e, $00, $00, $50, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $02 ; talk event group, index
+    db $03, $2e, $00, $00, $50, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $31 of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $31 of MapInteractionTable; 8 record(s), then $FF (E-0157)
 MapInteractions31::
-Data_087_4DD3:: ; address name
     db $03, $31, $00, $00, $20, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $08, $03 ; talk event group, index
     db $04, $31, $00, $00, $20, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $09, $03 ; talk event group, index
     db $05, $31, $00, $00, $80, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $08, $03 ; talk event group, index
     db $02, $31, $00, $00, $70, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0A, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0a, $03 ; talk event group, index
     db $02, $31, $00, $01, $70, $10 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0B, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0b, $03 ; talk event group, index
     db $05, $31, $00, $01, $10, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $03 ; talk event group, index
     db $03, $31, $00, $01, $70, $40 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0D, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0d, $03 ; talk event group, index
     db $05, $31, $00, $01, $10, $40 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0E, $03 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0e, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $32 of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $32 of MapInteractionTable; 6 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions32::
-Data_087_4E24:: ; address name
     db $05, $32, $01, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2A, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2a, $03 ; talk event group, index
     db $05, $32, $01, $01, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2A, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2a, $03 ; talk event group, index
     db $05, $32, $01, $00, $20, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2B, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2b, $03 ; talk event group, index
     db $03, $32, $00, $00, $10, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $28, $03 ; talk event group, index
     db $05, $32, $01, $00, $60, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $29, $03 ; talk event group, index
     db $05, $32, $01, $00, $80, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $29, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $33 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $33 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions33::
-Data_087_4E61:: ; address name
     db $03, $33, $00, $00, $50, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $30, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $34 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $34 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions34::
-Data_087_4E6C:: ; address name
     db $03, $34, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2C, $03 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2c, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $35 of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $35 of MapInteractionTable; 6 record(s), then $FF (E-0157)
 MapInteractions35::
-Data_087_4E77:: ; address name
     db $05, $35, $00, $00, $50, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $35, $03 ; talk event group, index
     db $05, $35, $01, $00, $40, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $36, $03 ; talk event group, index
     db $05, $35, $03, $00, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $37, $03 ; talk event group, index
     db $05, $35, $03, $00, $70, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $38, $03 ; talk event group, index
     db $05, $35, $03, $00, $70, $70 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $39, $03 ; talk event group, index
     db $05, $35, $02, $03, $30, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3A, $03 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3a, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $37 of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $37 of MapInteractionTable; 8 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions37::
-Data_087_4EB4:: ; address name
     db $03, $37, $00, $00, $60, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5C, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5c, $03 ; talk event group, index
     db $03, $37, $00, $00, $70, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5D, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5d, $03 ; talk event group, index
     db $01, $37, $01, $00, $20, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5E, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5e, $03 ; talk event group, index
     db $05, $37, $01, $00, $50, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $60, $03 ; talk event group, index
     db $05, $37, $01, $00, $60, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $05, $37, $01, $00, $80, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $03, $37, $02, $00, $70, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $03, $37, $02, $00, $80, $20 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $61, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $39 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $39 of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions39::
-Data_087_4F05:: ; address name
     db $05, $39, $03, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $54, $03 ; talk event group, index
     db $05, $39, $03, $00, $70, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $55, $03 ; talk event group, index
     db $05, $39, $03, $02, $30, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $56, $03 ; talk event group, index
     db $05, $39, $03, $02, $50, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $57, $03 ; talk event group, index
     db $05, $39, $03, $02, $70, $60 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $58, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3A of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3A of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions3A::
-Data_087_4F38:: ; address name
-    db $05, $3A, $00, $00, $40, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5A, $03 ; talk event group, index
-    db $05, $3A, $00, $00, $50, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5B, $03 ; talk event group, index
-    db $FF ; end
+    db $05, $3a, $00, $00, $40, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5a, $03 ; talk event group, index
+    db $05, $3a, $00, $00, $50, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5b, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3B of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3B of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions3B::
-Data_087_4F4D:: ; address name
-    db $05, $3B, $00, $00, $70, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6B, $03 ; talk event group, index
-    db $FF ; end
+    db $05, $3b, $00, $00, $70, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6b, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3C of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3C of MapInteractionTable; 3 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3C::
-Data_087_4F58:: ; address name
-    db $04, $3C, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $03 ; talk event group, index
-    db $03, $3C, $01, $00, $40, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $04, $3c, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $03 ; talk event group, index
+    db $03, $3c, $01, $00, $40, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $18, $03 ; talk event group, index
-    db $03, $3C, $02, $00, $70, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $3c, $02, $00, $70, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $19, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3D of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3D of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions3D::
-Data_087_4F77:: ; address name
-    db $03, $3D, $00, $00, $70, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $3d, $00, $00, $70, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $14, $03 ; talk event group, index
-    db $01, $3D, $00, $00, $30, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $01, $3d, $00, $00, $30, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $59, $03 ; talk event group, index
-    db $01, $3D, $00, $00, $40, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $01, $3d, $00, $00, $40, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $59, $03 ; talk event group, index
-    db $01, $3D, $00, $00, $50, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $01, $3d, $00, $00, $50, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $59, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3E of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3E of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions3E::
-Data_087_4FA0:: ; address name
-    db $05, $3E, $01, $01, $60, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4E, $03 ; talk event group, index
-    db $FF ; end
+    db $05, $3e, $01, $01, $60, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4e, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $40 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $40 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions40::
-Data_087_4FAB:: ; address name
     db $03, $40, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4f, $03 ; talk event group, index
     db $03, $40, $00, $00, $50, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4F, $03 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4f, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $42 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $42 of MapInteractionTable; 5 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions42::
-Data_087_4FC0:: ; address name
     db $03, $42, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $03 ; talk event group, index
     db $03, $42, $00, $00, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $63, $03 ; talk event group, index
     db $03, $42, $00, $00, $60, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $64, $03 ; talk event group, index
     db $05, $42, $01, $00, $50, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $65, $03 ; talk event group, index
     db $05, $42, $02, $00, $80, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $43 of MapInteractionTable; 10 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $43 of MapInteractionTable; 10 record(s), then $FF (E-0157)
 MapInteractions43::
-Data_087_4FF3:: ; address name
     db $05, $43, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $0077 ; story flag that disables the entry ($FFFF = none)
-    db $4C, $03 ; talk event group, index
+    db $4c, $03 ; talk event group, index
     db $04, $43, $00, $00, $30, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $05, $43, $00, $00, $60, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $05, $43, $00, $00, $90, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $02, $43, $01, $00, $10, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $66, $03 ; talk event group, index
     db $01, $43, $01, $00, $10, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $03, $43, $01, $00, $00, $50 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $02, $43, $01, $00, $20, $40 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $04, $43, $01, $00, $70, $30 ; id 8: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $03 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $03 ; talk event group, index
     db $02, $43, $01, $00, $80, $20 ; id 9: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $67, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $44 of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $44 of MapInteractionTable; 8 record(s), then $FF (E-0157)
 MapInteractions44::
-Data_087_5058:: ; address name
     db $03, $44, $00, $00, $60, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $0076 ; story flag that disables the entry ($FFFF = none)
-    db $4B, $03 ; talk event group, index
+    db $4b, $03 ; talk event group, index
     db $01, $44, $00, $00, $10, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $03 ; talk event group, index
     db $05, $44, $00, $00, $20, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $03 ; talk event group, index
     db $05, $44, $00, $00, $60, $70 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $03 ; talk event group, index
     db $01, $44, $00, $00, $70, $60 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $03 ; talk event group, index
     db $03, $44, $00, $00, $10, $10 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $69, $03 ; talk event group, index
     db $03, $44, $00, $00, $70, $10 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $69, $03 ; talk event group, index
     db $03, $44, $00, $00, $80, $10 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $69, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4A of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4A of MapInteractionTable; 6 record(s), then $FF (E-0157)
 MapInteractions4A::
-Data_087_50A9:: ; address name
-    db $04, $4A, $00, $00, $40, $80 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0E, $04 ; talk event group, index
-    db $04, $4A, $00, $01, $30, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0F, $04 ; talk event group, index
-    db $02, $4A, $00, $00, $70, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $04, $4a, $00, $00, $40, $80 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0e, $04 ; talk event group, index
+    db $04, $4a, $00, $01, $30, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0f, $04 ; talk event group, index
+    db $02, $4a, $00, $00, $70, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $10, $04 ; talk event group, index
-    db $03, $4A, $00, $01, $10, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $4a, $00, $01, $10, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $10, $04 ; talk event group, index
-    db $03, $4A, $01, $01, $60, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $4a, $01, $01, $60, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $11, $04 ; talk event group, index
-    db $03, $4A, $01, $01, $80, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $4a, $01, $01, $80, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $11, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4B of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4B of MapInteractionTable; 1 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4B::
-Data_087_50E6:: ; address name
-    db $04, $4B, $00, $00, $80, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $04, $4b, $00, $00, $80, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $12, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4C of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4C of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions4C::
-Data_087_50F1:: ; address name
-    db $03, $4C, $01, $00, $20, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $4c, $01, $00, $20, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $19, $04 ; talk event group, index
-    db $03, $4C, $01, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1A, $04 ; talk event group, index
-    db $03, $4C, $01, $01, $60, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1B, $04 ; talk event group, index
-    db $03, $4C, $01, $01, $70, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1B, $04 ; talk event group, index
-    db $FF ; end
+    db $03, $4c, $01, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1a, $04 ; talk event group, index
+    db $03, $4c, $01, $01, $60, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1b, $04 ; talk event group, index
+    db $03, $4c, $01, $01, $70, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1b, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4D of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4D of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions4D::
-Data_087_511A:: ; address name
-    db $03, $4D, $00, $01, $60, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $008A ; story flag that disables the entry ($FFFF = none)
-    db $4A, $04 ; talk event group, index
-    db $03, $4D, $00, $01, $50, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $008A ; story flag that disables the entry ($FFFF = none)
-    db $4A, $04 ; talk event group, index
-    db $03, $4D, $00, $01, $40, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $008A ; story flag that disables the entry ($FFFF = none)
-    db $4A, $04 ; talk event group, index
-    db $03, $4D, $00, $01, $30, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $008A ; story flag that disables the entry ($FFFF = none)
-    db $4B, $04 ; talk event group, index
-    db $FF ; end
+    db $03, $4d, $00, $01, $60, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $008a ; story flag that disables the entry ($FFFF = none)
+    db $4a, $04 ; talk event group, index
+    db $03, $4d, $00, $01, $50, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $008a ; story flag that disables the entry ($FFFF = none)
+    db $4a, $04 ; talk event group, index
+    db $03, $4d, $00, $01, $40, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $008a ; story flag that disables the entry ($FFFF = none)
+    db $4a, $04 ; talk event group, index
+    db $03, $4d, $00, $01, $30, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $008a ; story flag that disables the entry ($FFFF = none)
+    db $4b, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4F of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4F of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions4F::
-Data_087_5143:: ; address name
-    db $05, $4F, $00, $00, $10, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2D, $04 ; talk event group, index
-    db $04, $4F, $01, $01, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2D, $04 ; talk event group, index
-    db $04, $4F, $01, $00, $20, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2F, $04 ; talk event group, index
-    db $02, $4F, $01, $00, $70, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2F, $04 ; talk event group, index
-    db $02, $4F, $01, $01, $70, $10 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $4f, $00, $00, $10, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2d, $04 ; talk event group, index
+    db $04, $4f, $01, $01, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2d, $04 ; talk event group, index
+    db $04, $4f, $01, $00, $20, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2f, $04 ; talk event group, index
+    db $02, $4f, $01, $00, $70, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2f, $04 ; talk event group, index
+    db $02, $4f, $01, $01, $70, $10 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $30, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $50 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $50 of MapInteractionTable; 3 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions50::
-Data_087_5176:: ; address name
     db $04, $50, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $31, $04 ; talk event group, index
     db $05, $50, $00, $00, $40, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $35, $04 ; talk event group, index
     db $01, $50, $00, $00, $50, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $35, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $51 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $51 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions51::
-Data_087_5195:: ; address name
     db $04, $51, $00, $00, $30, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $36, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $55 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $55 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions55::
-Data_087_51A0:: ; address name
     db $05, $55, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $47, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $57 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $57 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions57::
-Data_087_51AB:: ; address name
     db $03, $57, $01, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
     dw $0085 ; story flag that disables the entry ($FFFF = none)
     db $45, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $58 of MapInteractionTable; 7 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $58 of MapInteractionTable; 7 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions58::
-Data_087_51B6:: ; address name
     db $01, $58, $01, $00, $10, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5B, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5b, $04 ; talk event group, index
     db $05, $58, $01, $00, $20, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5B, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5b, $04 ; talk event group, index
     db $05, $58, $00, $01, $90, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5C, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5c, $04 ; talk event group, index
     db $05, $58, $00, $00, $20, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5D, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5d, $04 ; talk event group, index
     db $03, $58, $01, $00, $30, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5D, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5d, $04 ; talk event group, index
     db $02, $58, $01, $00, $20, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5D, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5d, $04 ; talk event group, index
     db $03, $58, $00, $01, $20, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5D, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5d, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $59 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $59 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions59::
-Data_087_51FD:: ; address name
     db $03, $59, $00, $00, $80, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5E, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5e, $04 ; talk event group, index
     db $03, $59, $00, $00, $60, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5F, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5f, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5A of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5A of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions5A::
-Data_087_5212:: ; address name
-    db $03, $5A, $01, $00, $60, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5a, $01, $00, $60, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5B of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5B of MapInteractionTable; 5 record(s), then $FF (E-0157)
 MapInteractions5B::
-Data_087_521D:: ; address name
-    db $03, $5B, $00, $00, $20, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5b, $00, $00, $20, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $94, $04 ; talk event group, index
-    db $03, $5B, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5b, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $95, $04 ; talk event group, index
-    db $03, $5B, $00, $00, $40, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5b, $00, $00, $40, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $96, $04 ; talk event group, index
-    db $03, $5B, $00, $01, $10, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5b, $00, $01, $10, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $97, $04 ; talk event group, index
-    db $03, $5B, $00, $01, $20, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $5b, $00, $01, $20, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $97, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5E of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5E of MapInteractionTable; 2 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions5E::
-Data_087_5250:: ; address name
-    db $02, $5E, $00, $01, $80, $00 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $02, $5e, $00, $01, $80, $00 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $85, $04 ; talk event group, index
-    db $02, $5E, $00, $01, $70, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $02, $5e, $00, $01, $70, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $84, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5F of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5F of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions5F::
-Data_087_5265:: ; address name
-    db $01, $5F, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $01, $5f, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $86, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $60 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $60 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions60::
-Data_087_5270:: ; address name
     db $03, $60, $00, $01, $20, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $91, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $62 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $62 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractions62::
-Data_087_527B:: ; address name
     db $02, $62, $01, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9C, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9c, $04 ; talk event group, index
     db $03, $62, $01, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9C, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9c, $04 ; talk event group, index
     db $02, $62, $01, $00, $20, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9C, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9c, $04 ; talk event group, index
     db $02, $62, $01, $01, $60, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $9D, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $9d, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $63 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $63 of MapInteractionTable; 2 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions63::
-Data_087_52A4:: ; address name
     db $05, $63, $01, $00, $10, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A2, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a2, $04 ; talk event group, index
     db $05, $63, $00, $01, $80, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A3, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a3, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $64 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $64 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions64::
-Data_087_52B9:: ; address name
     db $05, $64, $00, $00, $10, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A4, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a4, $04 ; talk event group, index
     db $05, $64, $00, $00, $40, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A5, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a5, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $66 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $66 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions66::
-Data_087_52CE:: ; address name
     db $05, $66, $00, $00, $10, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A6, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a6, $04 ; talk event group, index
     db $05, $66, $00, $00, $30, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A7, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a7, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $67 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $67 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractions67::
-Data_087_52E3:: ; address name
     db $05, $67, $00, $00, $30, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A8, $04 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a8, $04 ; talk event group, index
     db $05, $67, $00, $00, $60, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A9, $04 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a9, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $71 of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $71 of MapInteractionTable; 8 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions71::
-Data_087_52F8:: ; address name
     db $03, $71, $00, $00, $10, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $10, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $20, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $10, $70 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $20, $70 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0C, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0c, $05 ; talk event group, index
     db $03, $71, $00, $00, $20, $50 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0D, $05 ; talk event group, index
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0d, $05 ; talk event group, index
     db $01, $71, $00, $00, $20, $30 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $15, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $72 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $72 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions72::
-Data_087_5349:: ; address name
     db $03, $72, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0E, $05 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0e, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $89 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $89 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions89::
-Data_087_5354:: ; address name
     db $03, $89, $00, $01, $50, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $0F, $05 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $0f, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $73 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $73 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions73::
-Data_087_535F:: ; address name
     db $02, $73, $00, $01, $70, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $10, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $76 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $76 of MapInteractionTable; 4 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions76::
-Data_087_536A:: ; address name
     db $03, $76, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $11, $05 ; talk event group, index
     db $05, $76, $00, $00, $60, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $11, $05 ; talk event group, index
     db $05, $76, $00, $00, $30, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $12, $05 ; talk event group, index
     db $05, $76, $00, $00, $80, $60 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $13, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $78 of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $78 of MapInteractionTable; 6 record(s), then $FF (E-0157)
 MapInteractions78::
-Data_087_5393:: ; address name
     db $04, $78, $00, $00, $20, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $05 ; talk event group, index
     db $03, $78, $01, $00, $50, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $26, $05 ; talk event group, index
     db $05, $78, $00, $01, $10, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $05 ; talk event group, index
     db $05, $78, $00, $01, $10, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $05 ; talk event group, index
     db $01, $78, $01, $01, $50, $60 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $05 ; talk event group, index
     db $03, $78, $01, $01, $60, $30 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $27, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $79 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $79 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions79::
-Data_087_53D0:: ; address name
     db $03, $79, $00, $01, $70, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $28, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7A of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7A of MapInteractionTable; 3 record(s), then $FF (E-0157)
 MapInteractions7A::
-Data_087_53DB:: ; address name
-    db $04, $7A, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2B, $05 ; talk event group, index
-    db $02, $7A, $00, $00, $60, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2B, $05 ; talk event group, index
-    db $03, $7A, $00, $00, $40, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2C, $05 ; talk event group, index
-    db $FF ; end
+    db $04, $7a, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2b, $05 ; talk event group, index
+    db $02, $7a, $00, $00, $60, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2b, $05 ; talk event group, index
+    db $03, $7a, $00, $00, $40, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2c, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7C of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7C of MapInteractionTable; 6 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7C::
-Data_087_53FA:: ; address name
-    db $03, $7C, $00, $00, $30, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3C, $05 ; talk event group, index
-    db $02, $7C, $01, $00, $70, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $05 ; talk event group, index
-    db $05, $7C, $01, $00, $80, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3E, $05 ; talk event group, index
-    db $05, $7C, $00, $01, $90, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $05 ; talk event group, index
-    db $05, $7C, $01, $01, $00, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $05 ; talk event group, index
-    db $02, $7C, $01, $01, $70, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $05 ; talk event group, index
-    db $FF ; end
+    db $03, $7c, $00, $00, $30, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3c, $05 ; talk event group, index
+    db $02, $7c, $01, $00, $70, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $05 ; talk event group, index
+    db $05, $7c, $01, $00, $80, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3e, $05 ; talk event group, index
+    db $05, $7c, $00, $01, $90, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $05 ; talk event group, index
+    db $05, $7c, $01, $01, $00, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $05 ; talk event group, index
+    db $02, $7c, $01, $01, $70, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7D of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7D of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions7D::
-Data_087_5437:: ; address name
-    db $04, $7D, $00, $00, $30, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3F, $05 ; talk event group, index
-    db $FF ; end
+    db $04, $7d, $00, $00, $30, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3f, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7E of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7E of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions7E::
-Data_087_5442:: ; address name
-    db $03, $7E, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $7e, $00, $00, $30, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $43, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7F of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7F of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions7F::
-Data_087_544D:: ; address name
-    db $05, $7F, $00, $01, $70, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $5B, $05 ; talk event group, index
-    db $FF ; end
+    db $05, $7f, $00, $01, $70, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $5b, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $81 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $81 of MapInteractionTable; 1 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions81::
-Data_087_5458:: ; address name
     db $03, $81, $00, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $47, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $82 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $82 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions82::
-Data_087_5463:: ; address name
     db $05, $82, $02, $02, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $48, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $84 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $84 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions84::
-Data_087_546E:: ; address name
     db $02, $84, $00, $00, $50, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $49, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $85 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $85 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions85::
-Data_087_5479:: ; address name
     db $05, $85, $01, $00, $50, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4B, $05 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4b, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $8D of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $8D of MapInteractionTable; 2 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions8D::
-Data_087_5484:: ; address name
-    db $03, $8D, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4D, $05 ; talk event group, index
-    db $03, $8D, $00, $00, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4D, $05 ; talk event group, index
-    db $FF ; end
+    db $03, $8d, $00, $00, $40, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4d, $05 ; talk event group, index
+    db $03, $8d, $00, $00, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4d, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $8E of MapInteractionTable; 75 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $8E of MapInteractionTable; 75 record(s), then $FF (E-0157)
 MapInteractions8E::
-Data_087_5499:: ; address name
-    db $03, $8E, $01, $00, $40, $20 ; id 0
-    dw $00B2
+    db $03, $8e, $01, $00, $40, $20 ; id 0
+    dw $00b2
     db $52, $05
-    db $03, $8E, $01, $00, $50, $20 ; id 1
-    dw $00B2
+    db $03, $8e, $01, $00, $50, $20 ; id 1
+    dw $00b2
     db $52, $05
-    db $03, $8E, $00, $00, $70, $30 ; id 2
-    dw $FFFF
+    db $03, $8e, $00, $00, $70, $30 ; id 2
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $00, $10, $50 ; id 3
-    dw $FFFF
+    db $03, $8e, $00, $00, $10, $50 ; id 3
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $00, $50, $50 ; id 4
-    dw $FFFF
+    db $03, $8e, $00, $00, $50, $50 ; id 4
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $00, $70, $50 ; id 5
-    dw $FFFF
+    db $03, $8e, $00, $00, $70, $50 ; id 5
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $00, $50, $70 ; id 6
-    dw $FFFF
+    db $03, $8e, $00, $00, $50, $70 ; id 6
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $00, $10, $80 ; id 7
-    dw $FFFF
+    db $03, $8e, $00, $00, $10, $80 ; id 7
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $00, $20, $30 ; id 8
-    dw $FFFF
+    db $03, $8e, $01, $00, $20, $30 ; id 8
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $00, $20, $50 ; id 9
-    dw $FFFF
+    db $03, $8e, $01, $00, $20, $50 ; id 9
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $00, $70, $50 ; id 10
-    dw $FFFF
+    db $03, $8e, $01, $00, $70, $50 ; id 10
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $00, $20, $70 ; id 11
-    dw $FFFF
+    db $03, $8e, $01, $00, $20, $70 ; id 11
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $00, $70, $70 ; id 12
-    dw $FFFF
+    db $03, $8e, $01, $00, $70, $70 ; id 12
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $00, $20, $30 ; id 13
-    dw $FFFF
+    db $03, $8e, $02, $00, $20, $30 ; id 13
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $00, $40, $30 ; id 14
-    dw $FFFF
+    db $03, $8e, $02, $00, $40, $30 ; id 14
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $00, $40, $50 ; id 15
-    dw $FFFF
+    db $03, $8e, $02, $00, $40, $50 ; id 15
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $00, $20, $70 ; id 16
-    dw $FFFF
+    db $03, $8e, $02, $00, $20, $70 ; id 16
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $00, $40, $70 ; id 17
-    dw $FFFF
+    db $03, $8e, $02, $00, $40, $70 ; id 17
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $50, $30 ; id 18
-    dw $FFFF
+    db $03, $8e, $00, $01, $50, $30 ; id 18
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $70, $30 ; id 19
-    dw $FFFF
+    db $03, $8e, $00, $01, $70, $30 ; id 19
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $10, $50 ; id 20
-    dw $FFFF
+    db $03, $8e, $00, $01, $10, $50 ; id 20
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $70, $50 ; id 21
-    dw $FFFF
+    db $03, $8e, $00, $01, $70, $50 ; id 21
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $70, $70 ; id 22
-    dw $FFFF
+    db $03, $8e, $00, $01, $70, $70 ; id 22
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $01, $10, $80 ; id 23
-    dw $FFFF
+    db $03, $8e, $00, $01, $10, $80 ; id 23
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $01, $20, $30 ; id 24
-    dw $FFFF
+    db $03, $8e, $01, $01, $20, $30 ; id 24
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $01, $70, $30 ; id 25
-    dw $FFFF
+    db $03, $8e, $01, $01, $70, $30 ; id 25
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $01, $70, $50 ; id 26
-    dw $FFFF
+    db $03, $8e, $01, $01, $70, $50 ; id 26
+    dw $ffff
     db $53, $05
-    db $03, $8E, $01, $01, $20, $70 ; id 27
-    dw $FFFF
+    db $03, $8e, $01, $01, $20, $70 ; id 27
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $20, $30 ; id 28
-    dw $FFFF
+    db $03, $8e, $02, $01, $20, $30 ; id 28
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $20, $50 ; id 29
-    dw $FFFF
+    db $03, $8e, $02, $01, $20, $50 ; id 29
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $40, $30 ; id 30
-    dw $FFFF
+    db $03, $8e, $02, $01, $40, $30 ; id 30
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $40, $50 ; id 31
-    dw $FFFF
+    db $03, $8e, $02, $01, $40, $50 ; id 31
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $20, $70 ; id 32
-    dw $FFFF
+    db $03, $8e, $02, $01, $20, $70 ; id 32
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $01, $80, $80 ; id 33
-    dw $FFFF
+    db $03, $8e, $02, $01, $80, $80 ; id 33
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $02, $10, $20 ; id 34
-    dw $FFFF
+    db $03, $8e, $00, $02, $10, $20 ; id 34
+    dw $ffff
     db $53, $05
-    db $03, $8E, $00, $02, $30, $50 ; id 35
-    dw $FFFF
+    db $03, $8e, $00, $02, $30, $50 ; id 35
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $02, $80, $20 ; id 36
-    dw $FFFF
+    db $03, $8e, $02, $02, $80, $20 ; id 36
+    dw $ffff
     db $53, $05
-    db $03, $8E, $02, $02, $80, $50 ; id 37
-    dw $FFFF
+    db $03, $8e, $02, $02, $80, $50 ; id 37
+    dw $ffff
     db $53, $05
-    db $01, $8E, $02, $01, $20, $50 ; id 38
-    dw $FFFF
+    db $01, $8e, $02, $01, $20, $50 ; id 38
+    dw $ffff
     db $54, $05
-    db $01, $8E, $00, $00, $10, $30 ; id 39
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $00, $50, $30 ; id 40
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $00, $70, $30 ; id 41
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $00, $50, $50 ; id 42
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $00, $10, $60 ; id 43
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $00, $20, $30 ; id 44
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $00, $70, $30 ; id 45
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $00, $20, $50 ; id 46
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $00, $70, $50 ; id 47
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $50, $10 ; id 48
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $70, $10 ; id 49
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $10, $30 ; id 50
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $70, $30 ; id 51
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $70, $50 ; id 52
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $01, $10, $60 ; id 53
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $01, $20, $10 ; id 54
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $01, $70, $10 ; id 55
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $01, $70, $30 ; id 56
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $01, $20, $50 ; id 57
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $01, $20, $10 ; id 58
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $01, $40, $10 ; id 59
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $01, $20, $30 ; id 60
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $01, $40, $30 ; id 61
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $01, $80, $60 ; id 62
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $10, $00 ; id 63
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $20, $30 ; id 64
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $30, $30 ; id 65
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $30, $60 ; id 66
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $60, $60 ; id 67
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $00, $02, $80, $60 ; id 68
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $02, $10, $60 ; id 69
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $02, $30, $60 ; id 70
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $01, $02, $80, $60 ; id 71
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $02, $80, $00 ; id 72
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $02, $80, $30 ; id 73
-    dw $FFFF
-    db $5E, $05
-    db $01, $8E, $02, $02, $10, $60 ; id 74
-    dw $FFFF
-    db $5E, $05
-    db $FF ; end
+    db $01, $8e, $00, $00, $10, $30 ; id 39
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $00, $50, $30 ; id 40
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $00, $70, $30 ; id 41
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $00, $50, $50 ; id 42
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $00, $10, $60 ; id 43
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $00, $20, $30 ; id 44
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $00, $70, $30 ; id 45
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $00, $20, $50 ; id 46
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $00, $70, $50 ; id 47
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $50, $10 ; id 48
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $70, $10 ; id 49
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $10, $30 ; id 50
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $70, $30 ; id 51
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $70, $50 ; id 52
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $01, $10, $60 ; id 53
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $01, $20, $10 ; id 54
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $01, $70, $10 ; id 55
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $01, $70, $30 ; id 56
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $01, $20, $50 ; id 57
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $01, $20, $10 ; id 58
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $01, $40, $10 ; id 59
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $01, $20, $30 ; id 60
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $01, $40, $30 ; id 61
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $01, $80, $60 ; id 62
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $10, $00 ; id 63
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $20, $30 ; id 64
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $30, $30 ; id 65
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $30, $60 ; id 66
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $60, $60 ; id 67
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $00, $02, $80, $60 ; id 68
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $02, $10, $60 ; id 69
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $02, $30, $60 ; id 70
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $01, $02, $80, $60 ; id 71
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $02, $80, $00 ; id 72
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $02, $80, $30 ; id 73
+    dw $ffff
+    db $5e, $05
+    db $01, $8e, $02, $02, $10, $60 ; id 74
+    dw $ffff
+    db $5e, $05
+    db $ff ; end
 
-; E-0157 (derived: list for entry $8F of MapInteractionTable; 6 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $8F of MapInteractionTable; 6 record(s), then $FF (E-0157)
 MapInteractions8F::
-Data_087_5788:: ; address name
-    db $03, $8F, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $10, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $50, $05 ; talk event group, index
-    db $03, $8F, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $20, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $50, $05 ; talk event group, index
-    db $03, $8F, $00, $00, $50, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $50, $70 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $51, $05 ; talk event group, index
-    db $03, $8F, $00, $00, $60, $70 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $60, $70 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $51, $05 ; talk event group, index
-    db $03, $8F, $00, $00, $70, $70 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $70, $70 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $51, $05 ; talk event group, index
-    db $03, $8F, $00, $00, $80, $70 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $00B1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $8f, $00, $00, $80, $70 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $00b1 ; story flag that disables the entry ($FFFF = none)
     db $51, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $91 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $91 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions91::
-Data_087_57C5:: ; address name
     db $03, $91, $00, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $56, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $94 of MapInteractionTable; 3 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $94 of MapInteractionTable; 3 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions94::
-Data_087_57D0:: ; address name
     db $05, $94, $02, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $62, $05 ; talk event group, index
     db $05, $94, $01, $02, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $63, $05 ; talk event group, index
     db $05, $94, $02, $02, $70, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $63, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $96 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $96 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions96::
-Data_087_57EF:: ; address name
     db $05, $96, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $64, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $98 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $98 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions98::
-Data_087_57FA:: ; address name
     db $05, $98, $00, $00, $10, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $65, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $9A of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $9A of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractions9A::
-Data_087_5805:: ; address name
-    db $05, $9A, $00, $00, $80, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $9a, $00, $00, $80, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $66, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $9B of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $9B of MapInteractionTable; 8 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions9B::
-Data_087_5810:: ; address name
-    db $03, $9B, $00, $01, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $00C1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $01, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $00c1 ; story flag that disables the entry ($FFFF = none)
     db $67, $05 ; talk event group, index
-    db $03, $9B, $00, $01, $50, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $00C1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $01, $50, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $00c1 ; story flag that disables the entry ($FFFF = none)
     db $67, $05 ; talk event group, index
-    db $05, $9B, $00, $00, $20, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $9b, $00, $00, $20, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $03, $9B, $00, $00, $30, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $00, $30, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $03, $9B, $00, $00, $40, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $00, $40, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $03, $9B, $00, $00, $50, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $00, $50, $20 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $03, $9B, $00, $00, $60, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $9b, $00, $00, $60, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $05, $9B, $00, $00, $70, $20 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $9b, $00, $00, $70, $20 ; id 7: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $A3 of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $A3 of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractionsA3::
-Data_087_5861:: ; address name
-    db $03, $A3, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $00D1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $a3, $00, $00, $40, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $00d1 ; story flag that disables the entry ($FFFF = none)
     db $01, $06 ; talk event group, index
-    db $03, $A3, $00, $00, $50, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $00D1 ; story flag that disables the entry ($FFFF = none)
+    db $03, $a3, $00, $00, $50, $40 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $00d1 ; story flag that disables the entry ($FFFF = none)
     db $01, $06 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $A9 of MapInteractionTable; 7 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $A9 of MapInteractionTable; 7 record(s), then $FF (E-0157)
 MapInteractionsA9::
-Data_087_5876:: ; address name
-    db $03, $A9, $00, $00, $20, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $a9, $00, $00, $20, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $13, $07 ; talk event group, index
-    db $05, $A9, $00, $00, $30, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $a9, $00, $00, $30, $60 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $14, $07 ; talk event group, index
-    db $03, $A9, $01, $00, $10, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $a9, $01, $00, $10, $20 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $15, $07 ; talk event group, index
-    db $04, $A9, $00, $01, $40, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $04, $a9, $00, $01, $40, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $16, $07 ; talk event group, index
-    db $05, $A9, $00, $01, $30, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $a9, $00, $01, $30, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $16, $07 ; talk event group, index
-    db $03, $A9, $00, $01, $10, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $a9, $00, $01, $10, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $16, $07 ; talk event group, index
-    db $05, $A9, $01, $01, $80, $30 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1B, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $a9, $01, $01, $80, $30 ; id 6: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1b, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $AB of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $AB of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractionsAB::
-Data_087_58BD:: ; address name
-    db $05, $AB, $00, $00, $70, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ab, $00, $00, $70, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $17, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $AD of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $AD of MapInteractionTable; 1 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsAD::
-Data_087_58C8:: ; address name
-    db $05, $AD, $00, $00, $60, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ad, $00, $00, $60, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $18, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $AE of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $AE of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractionsAE::
-Data_087_58D3:: ; address name
-    db $05, $AE, $00, $02, $60, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ae, $00, $02, $60, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $19, $07 ; talk event group, index
-    db $05, $AE, $02, $03, $80, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $1A, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $ae, $02, $03, $80, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $1a, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $B1 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $B1 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsB1::
-Data_087_58E8:: ; address name
-    db $03, $B1, $00, $00, $60, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $b1, $00, $00, $60, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $22, $07 ; talk event group, index
-    db $03, $B1, $00, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $03, $b1, $00, $00, $70, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $23, $07 ; talk event group, index
-    db $05, $B1, $00, $00, $10, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b1, $00, $00, $10, $50 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $24, $07 ; talk event group, index
-    db $05, $B1, $00, $00, $20, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b1, $00, $00, $20, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $B6 of MapInteractionTable; 8 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $B6 of MapInteractionTable; 8 record(s), then $FF (E-0157)
 MapInteractionsB6::
-Data_087_5911:: ; address name
-    db $05, $B6, $00, $00, $50, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2E, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b6, $00, $00, $50, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2e, $07 ; talk event group, index
+    db $05, $b6, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $29, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2A, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $30, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b6, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2a, $07 ; talk event group, index
+    db $05, $b6, $00, $00, $30, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $28, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $70, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2C, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $10, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b6, $00, $00, $70, $40 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2c, $07 ; talk event group, index
+    db $05, $b6, $00, $00, $10, $50 ; id 5: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $27, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $60, $60 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $b6, $00, $00, $60, $60 ; id 6: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $26, $07 ; talk event group, index
-    db $05, $B6, $00, $00, $20, $70 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $2B, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $b6, $00, $00, $20, $70 ; id 7: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $2b, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $B9 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $B9 of MapInteractionTable; 5 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsB9::
-Data_087_5962:: ; address name
-    db $04, $B9, $00, $00, $40, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $04, $b9, $00, $00, $40, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $49, $07 ; talk event group, index
-    db $05, $B9, $01, $01, $80, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4A, $07 ; talk event group, index
-    db $03, $B9, $01, $00, $30, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4B, $07 ; talk event group, index
-    db $03, $B9, $01, $00, $50, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4B, $07 ; talk event group, index
-    db $04, $B9, $00, $01, $30, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4C, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $b9, $01, $01, $80, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4a, $07 ; talk event group, index
+    db $03, $b9, $01, $00, $30, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4b, $07 ; talk event group, index
+    db $03, $b9, $01, $00, $50, $30 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4b, $07 ; talk event group, index
+    db $04, $b9, $00, $01, $30, $30 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4c, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $BA of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $BA of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsBA::
-Data_087_5995:: ; address name
-    db $03, $BA, $00, $00, $70, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4D, $07 ; talk event group, index
-    db $05, $BA, $00, $01, $70, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4D, $07 ; talk event group, index
-    db $02, $BA, $00, $01, $60, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4E, $07 ; talk event group, index
-    db $05, $BA, $00, $01, $70, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $4F, $07 ; talk event group, index
-    db $FF ; end
+    db $03, $ba, $00, $00, $70, $50 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4d, $07 ; talk event group, index
+    db $05, $ba, $00, $01, $70, $50 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4d, $07 ; talk event group, index
+    db $02, $ba, $00, $01, $60, $60 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4e, $07 ; talk event group, index
+    db $05, $ba, $00, $01, $70, $10 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $4f, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $BB of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $BB of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractionsBB::
-Data_087_59BE:: ; address name
-    db $03, $BB, $00, $00, $40, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $01C0 ; story flag that disables the entry ($FFFF = none)
-    db $2F, $07 ; talk event group, index
-    db $FF ; end
+    db $03, $bb, $00, $00, $40, $10 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $01c0 ; story flag that disables the entry ($FFFF = none)
+    db $2f, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $BC of MapInteractionTable; 2 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $BC of MapInteractionTable; 2 record(s), then $FF (E-0157)
 MapInteractionsBC::
-Data_087_59C9:: ; address name
-    db $03, $BC, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $07 ; talk event group, index
-    db $04, $BC, $00, $00, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $3D, $07 ; talk event group, index
-    db $FF ; end
+    db $03, $bc, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $07 ; talk event group, index
+    db $04, $bc, $00, $00, $50, $20 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $3d, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $BE of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $BE of MapInteractionTable; 1 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBE::
-Data_087_59DE:: ; address name
-    db $05, $BE, $00, $00, $50, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $be, $00, $00, $50, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $50, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $BF of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $BF of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractionsBF::
-Data_087_59E9:: ; address name
-    db $05, $BF, $01, $00, $70, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $bf, $01, $00, $70, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $51, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $C0 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $C0 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractionsC0::
-Data_087_59F4:: ; address name
-    db $05, $C0, $00, $01, $10, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $c0, $00, $01, $10, $70 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $52, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $C2 of MapInteractionTable; 1 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $C2 of MapInteractionTable; 1 record(s), then $FF (E-0157)
 MapInteractionsC2::
-Data_087_59FF:: ; address name
-    db $05, $C2, $01, $01, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $c2, $01, $01, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $53, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $C4 of MapInteractionTable; 5 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $C4 of MapInteractionTable; 5 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsC4::
-Data_087_5A0A:: ; address name
-    db $05, $C4, $00, $00, $30, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $c4, $00, $00, $30, $60 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $54, $07 ; talk event group, index
-    db $05, $C4, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $01CF ; story flag that disables the entry ($FFFF = none)
+    db $05, $c4, $00, $00, $20, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $01cf ; story flag that disables the entry ($FFFF = none)
     db $55, $07 ; talk event group, index
-    db $05, $C4, $00, $00, $40, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $01D0 ; story flag that disables the entry ($FFFF = none)
+    db $05, $c4, $00, $00, $40, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $01d0 ; story flag that disables the entry ($FFFF = none)
     db $55, $07 ; talk event group, index
-    db $05, $C4, $00, $00, $50, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $01D1 ; story flag that disables the entry ($FFFF = none)
+    db $05, $c4, $00, $00, $50, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $01d1 ; story flag that disables the entry ($FFFF = none)
     db $55, $07 ; talk event group, index
-    db $05, $C4, $00, $00, $80, $50 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $01D2 ; story flag that disables the entry ($FFFF = none)
+    db $05, $c4, $00, $00, $80, $50 ; id 4: kind, map, screen X, screen Y, player X, player Y
+    dw $01d2 ; story flag that disables the entry ($FFFF = none)
     db $55, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $CA of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $CA of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsCA::
-Data_087_5A3D:: ; address name
-    db $05, $CA, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ca, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $68, $07 ; talk event group, index
-    db $05, $CA, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ca, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $69, $07 ; talk event group, index
-    db $05, $CA, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ca, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $CA, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6A, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $ca, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6a, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $CB of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $CB of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsCB::
-Data_087_5A66:: ; address name
-    db $05, $CB, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6B, $07 ; talk event group, index
-    db $05, $CB, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6C, $07 ; talk event group, index
-    db $05, $CB, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6D, $07 ; talk event group, index
-    db $05, $CB, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cb, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6b, $07 ; talk event group, index
+    db $05, $cb, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6c, $07 ; talk event group, index
+    db $05, $cb, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6d, $07 ; talk event group, index
+    db $05, $cb, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $CC of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $CC of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsCC::
-Data_087_5A8F:: ; address name
-    db $05, $CC, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cc, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $CC, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6E, $07 ; talk event group, index
-    db $05, $CC, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $6F, $07 ; talk event group, index
-    db $05, $CC, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cc, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6e, $07 ; talk event group, index
+    db $05, $cc, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $6f, $07 ; talk event group, index
+    db $05, $cc, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $70, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $CD of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $CD of MapInteractionTable; 4 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCD::
-Data_087_5AB8:: ; address name
-    db $05, $CD, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cd, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $71, $07 ; talk event group, index
-    db $05, $CD, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cd, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $72, $07 ; talk event group, index
-    db $05, $CD, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cd, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $73, $07 ; talk event group, index
-    db $05, $CD, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $cd, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $CE of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $CE of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsCE::
-Data_087_5AE1:: ; address name
-    db $05, $CE, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ce, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $74, $07 ; talk event group, index
-    db $05, $CE, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ce, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $75, $07 ; talk event group, index
-    db $05, $CE, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ce, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $76, $07 ; talk event group, index
-    db $05, $CE, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $ce, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $77, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $D3 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $D3 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsD3::
-Data_087_5B0A:: ; address name
-    db $05, $D3, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d3, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $88, $07 ; talk event group, index
-    db $05, $D3, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d3, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $89, $07 ; talk event group, index
-    db $05, $D3, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8A, $07 ; talk event group, index
-    db $05, $D3, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d3, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8a, $07 ; talk event group, index
+    db $05, $d3, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $D4 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $D4 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsD4::
-Data_087_5B33:: ; address name
-    db $05, $D4, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d4, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $D4, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8B, $07 ; talk event group, index
-    db $05, $D4, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8C, $07 ; talk event group, index
-    db $05, $D4, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8D, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $d4, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8b, $07 ; talk event group, index
+    db $05, $d4, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8c, $07 ; talk event group, index
+    db $05, $d4, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8d, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $D5 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $D5 of MapInteractionTable; 4 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD5::
-Data_087_5B5C:: ; address name
-    db $05, $D5, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d5, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $D5, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8E, $07 ; talk event group, index
-    db $05, $D5, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $8F, $07 ; talk event group, index
-    db $05, $D5, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d5, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8e, $07 ; talk event group, index
+    db $05, $d5, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $8f, $07 ; talk event group, index
+    db $05, $d5, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $90, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $D6 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $D6 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsD6::
-Data_087_5B85:: ; address name
-    db $05, $D6, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d6, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $D6, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d6, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $91, $07 ; talk event group, index
-    db $05, $D6, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d6, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $92, $07 ; talk event group, index
-    db $05, $D6, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d6, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $93, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $D7 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $D7 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsD7::
-Data_087_5BAE:: ; address name
-    db $05, $D7, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d7, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $94, $07 ; talk event group, index
-    db $05, $D7, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d7, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $95, $07 ; talk event group, index
-    db $05, $D7, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d7, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $96, $07 ; talk event group, index
-    db $05, $D7, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $d7, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $97, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $DC of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $DC of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsDC::
-Data_087_5BD7:: ; address name
-    db $05, $DC, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $dc, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $DC, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A8, $07 ; talk event group, index
-    db $05, $DC, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $A9, $07 ; talk event group, index
-    db $05, $DC, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AA, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $dc, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a8, $07 ; talk event group, index
+    db $05, $dc, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $a9, $07 ; talk event group, index
+    db $05, $dc, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $aa, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $DD of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $DD of MapInteractionTable; 4 record(s), then $FF (E-0157)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsDD::
-Data_087_5C00:: ; address name
-    db $05, $DD, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AB, $07 ; talk event group, index
-    db $05, $DD, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AC, $07 ; talk event group, index
-    db $05, $DD, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AD, $07 ; talk event group, index
-    db $05, $DD, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $dd, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ab, $07 ; talk event group, index
+    db $05, $dd, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ac, $07 ; talk event group, index
+    db $05, $dd, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ad, $07 ; talk event group, index
+    db $05, $dd, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $DE of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $DE of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsDE::
-Data_087_5C29:: ; address name
-    db $05, $DE, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $de, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $DE, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AE, $07 ; talk event group, index
-    db $05, $DE, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $AF, $07 ; talk event group, index
-    db $05, $DE, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B0, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $de, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $ae, $07 ; talk event group, index
+    db $05, $de, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $af, $07 ; talk event group, index
+    db $05, $de, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b0, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $DF of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $DF of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsDF::
-Data_087_5C52:: ; address name
-    db $05, $DF, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $05, $df, $00, $00, $10, $20 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $78, $07 ; talk event group, index
-    db $05, $DF, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B1, $07 ; talk event group, index
-    db $05, $DF, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B2, $07 ; talk event group, index
-    db $05, $DF, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B3, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $df, $00, $00, $30, $10 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b1, $07 ; talk event group, index
+    db $05, $df, $00, $00, $60, $10 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b2, $07 ; talk event group, index
+    db $05, $df, $00, $00, $80, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b3, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $E0 of MapInteractionTable; 4 record(s), then $FF)
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $E0 of MapInteractionTable; 4 record(s), then $FF (E-0157)
 MapInteractionsE0::
-Data_087_5C7B:: ; address name
-    db $05, $E0, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B4, $07 ; talk event group, index
-    db $05, $E0, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B5, $07 ; talk event group, index
-    db $05, $E0, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B6, $07 ; talk event group, index
-    db $05, $E0, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $B7, $07 ; talk event group, index
-    db $FF ; end
+    db $05, $e0, $00, $00, $20, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b4, $07 ; talk event group, index
+    db $05, $e0, $00, $00, $30, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b5, $07 ; talk event group, index
+    db $05, $e0, $00, $00, $60, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b6, $07 ; talk event group, index
+    db $05, $e0, $00, $00, $70, $40 ; id 3: kind, map, screen X, screen Y, player X, player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $b7, $07 ; talk event group, index
+    db $ff ; end
 
-; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte
+; is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
+; player Y; story flag ($FFFF = none; set = skip); talk event group, index
 SpecialMapInteractions_5CA4::
-Data_087_5CA4:: ; address name
     db $05, $00, $00, $00, $50, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $09 ; talk event group, index
     db $05, $00, $00, $00, $30, $70 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
     db $05, $00, $01, $00, $70, $40 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $06, $09 ; talk event group, index
     db $05, $00, $01, $01, $80, $50 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
     db $04, $00, $00, $00, $40, $20 ; id 4: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $02, $09 ; talk event group, index
     db $03, $00, $00, $00, $20, $40 ; id 5: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $02, $09 ; talk event group, index
     db $02, $00, $00, $00, $10, $20 ; id 6: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $02, $09 ; talk event group, index
     db $03, $00, $00, $00, $30, $40 ; id 7: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $02, $09 ; talk event group, index
     db $02, $00, $01, $00, $50, $10 ; id 8: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $02, $09 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the
+; same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
 SpecialMapInteractions_5CFF::
-Data_087_5CFF:: ; address name
     db $05, $00, $00, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
     db $05, $00, $00, $00, $60, $30 ; id 1: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $05, $09 ; talk event group, index
     db $05, $00, $00, $00, $80, $30 ; id 2: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
     db $05, $00, $01, $00, $10, $20 ; id 3: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $04, $09 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
-; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries
+; as MapInteractionTable's lists, ending with $FF (E-0170, C1)
 SpecialMapInteractions_5D28::
-Data_087_5D28:: ; address name
     db $03, $00, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $07, $09 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $00 of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $00 of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers00::
-Data_087_5D33:: ; address name
-    db $00, $00, $01, $01, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $00, $01, $01, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0015 ; story flag that disables the entry ($FFFF = none)
-    db $01, $0A ; talk event group, index
-    db $00, $00, $00, $03, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E4, $01 ; talk event group, index
-    db $FF ; end
+    db $01, $0a ; talk event group, index
+    db $00, $00, $00, $03, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e4, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $01 of MapStepTriggerTable; 4 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $01 of MapStepTriggerTable; 4 record(s), then $FF (E-0157)
 MapStepTriggers01::
-Data_087_5D48:: ; address name
     db $00, $01, $01, $01, $30, $48 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $E7, $01 ; talk event group, index
-    db $00, $01, $01, $01, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $e7, $01 ; talk event group, index
+    db $00, $01, $01, $01, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0138 ; story flag that disables the entry ($FFFF = none)
-    db $D1, $01 ; talk event group, index
-    db $00, $01, $01, $00, $FF, $FF ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $F4, $01 ; talk event group, index
-    db $00, $01, $02, $02, $FF, $FF ; id 3: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $d1, $01 ; talk event group, index
+    db $00, $01, $01, $00, $ff, $ff ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $f4, $01 ; talk event group, index
+    db $00, $01, $02, $02, $ff, $ff ; id 3: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0187 ; story flag that disables the entry ($FFFF = none)
-    db $F6, $01 ; talk event group, index
-    db $FF ; end
+    db $f6, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $02 of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $02 of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
 MapStepTriggers02::
-Data_087_5D71:: ; address name
-    db $00, $02, $02, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $02, $02, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0005 ; story flag that disables the entry ($FFFF = none)
-    db $04, $0A ; talk event group, index
-    db $00, $02, $00, $00, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $04, $0a ; talk event group, index
+    db $00, $02, $00, $00, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0006 ; story flag that disables the entry ($FFFF = none)
-    db $05, $0A ; talk event group, index
-    db $FF ; end
+    db $05, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $04 of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $04 of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
 MapStepTriggers04::
-Data_087_5D86:: ; address name
     db $00, $04, $00, $00, $50, $50 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $25, $00 ; talk event group, index
-    db $00, $04, $01, $00, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $04, $01, $00, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $26, $00 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $05 of MapStepTriggerTable; 3 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $05 of MapStepTriggerTable; 3 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers05::
-Data_087_5D9B:: ; address name
-    db $00, $05, $01, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $000B ; story flag that disables the entry ($FFFF = none)
-    db $06, $0A ; talk event group, index
+    db $00, $05, $01, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $000b ; story flag that disables the entry ($FFFF = none)
+    db $06, $0a ; talk event group, index
     db $00, $05, $01, $00, $00, $40 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0002 ; story flag that disables the entry ($FFFF = none)
-    db $1A, $0A ; talk event group, index
+    db $1a, $0a ; talk event group, index
     db $00, $05, $01, $00, $90, $40 ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0002 ; story flag that disables the entry ($FFFF = none)
-    db $1A, $0A ; talk event group, index
-    db $FF ; end
+    db $1a, $0a ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $0C of MapStepTriggerTable; 3 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $0C of MapStepTriggerTable; 3 record(s), then $FF (E-0157)
 MapStepTriggers0C::
-Data_087_5DBA:: ; address name
-    db $00, $0C, $00, $00, $20, $10 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $0c, $00, $00, $20, $10 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $01, $01 ; talk event group, index
-    db $00, $0C, $00, $00, $70, $10 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $0c, $00, $00, $70, $10 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $01, $01 ; talk event group, index
-    db $00, $0C, $01, $00, $FF, $FF ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $F5, $01 ; talk event group, index
-    db $FF ; end
+    db $00, $0c, $01, $00, $ff, $ff ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $f5, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $19 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $19 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers19::
-Data_087_5DD9:: ; address name
     db $00, $19, $00, $02, $40, $00 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $F3, $01 ; talk event group, index
-    db $FF ; end
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $f3, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $1A of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $1A of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers1A::
-Data_087_5DE4:: ; address name
-    db $00, $1A, $01, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $1a, $01, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0025 ; story flag that disables the entry ($FFFF = none)
-    db $9E, $01 ; talk event group, index
-    db $FF ; end
+    db $9e, $01 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $20 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $20 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers20::
-Data_087_5DEF:: ; address name
-    db $00, $20, $05, $05, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $20, $05, $05, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $44, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2A of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2A of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers2A::
-Data_087_5DFA:: ; address name
-    db $00, $2A, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $004A ; story flag that disables the entry ($FFFF = none)
-    db $2E, $02 ; talk event group, index
-    db $FF ; end
+    db $00, $2a, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $004a ; story flag that disables the entry ($FFFF = none)
+    db $2e, $02 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $2F of MapStepTriggerTable; 3 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $2F of MapStepTriggerTable; 3 record(s), then $FF (E-0157)
 MapStepTriggers2F::
-Data_087_5E05:: ; address name
-    db $00, $2F, $00, $01, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $2f, $00, $01, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0058 ; story flag that disables the entry ($FFFF = none)
     db $29, $02 ; talk event group, index
-    db $00, $2F, $01, $00, $40, $30 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $2f, $01, $00, $40, $30 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $43, $02 ; talk event group, index
-    db $00, $2F, $01, $00, $50, $30 ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $2f, $01, $00, $50, $30 ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $43, $02 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $33 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $33 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers33::
-Data_087_5E24:: ; address name
     db $00, $33, $00, $01, $40, $70 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0064 ; story flag that disables the entry ($FFFF = none)
-    db $2F, $03 ; talk event group, index
-    db $FF ; end
+    db $2f, $03 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $38 of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $38 of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers38::
-Data_087_5E2F:: ; address name
-    db $00, $38, $00, $00, $E0, $00 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
-    db $00, $0A ; talk event group, index
-    db $00, $38, $02, $03, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $007B ; story flag that disables the entry ($FFFF = none)
+    db $00, $38, $00, $00, $e0, $00 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
+    db $00, $0a ; talk event group, index
+    db $00, $38, $02, $03, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $007b ; story flag that disables the entry ($FFFF = none)
     db $50, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $39 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $39 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers39::
-Data_087_5E44:: ; address name
-    db $00, $39, $01, $01, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $007C ; story flag that disables the entry ($FFFF = none)
+    db $00, $39, $01, $01, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $007c ; story flag that disables the entry ($FFFF = none)
     db $51, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3A of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3A of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers3A::
-Data_087_5E4F:: ; address name
-    db $00, $3A, $01, $00, $60, $60 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $007E ; story flag that disables the entry ($FFFF = none)
+    db $00, $3a, $01, $00, $60, $60 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $007e ; story flag that disables the entry ($FFFF = none)
     db $52, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $3B of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $3B of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers3B::
-Data_087_5E5A:: ; address name
-    db $00, $3B, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $005F ; story flag that disables the entry ($FFFF = none)
+    db $00, $3b, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $005f ; story flag that disables the entry ($FFFF = none)
     db $53, $03 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $4C of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $4C of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers4C::
-Data_087_5E65:: ; address name
-    db $00, $4C, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $008B ; story flag that disables the entry ($FFFF = none)
-    db $4C, $04 ; talk event group, index
-    db $FF ; end
+    db $00, $4c, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $008b ; story flag that disables the entry ($FFFF = none)
+    db $4c, $04 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5B of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5B of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers5B::
-Data_087_5E70:: ; address name
-    db $00, $5B, $01, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $5b, $01, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0096 ; story flag that disables the entry ($FFFF = none)
     db $70, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $5D of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $5D of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
 MapStepTriggers5D::
-Data_087_5E7B:: ; address name
-    db $00, $5D, $02, $01, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $5d, $02, $01, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0098 ; story flag that disables the entry ($FFFF = none)
     db $98, $04 ; talk event group, index
-    db $00, $5D, $02, $02, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $5d, $02, $02, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0099 ; story flag that disables the entry ($FFFF = none)
     db $98, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $67 of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $67 of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
 MapStepTriggers67::
-Data_087_5E90:: ; address name
     db $00, $67, $00, $00, $40, $20 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $81, $04 ; talk event group, index
     db $00, $67, $00, $00, $50, $20 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $81, $04 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $76 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $76 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers76::
-Data_087_5EA5:: ; address name
-    db $00, $76, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00A4 ; story flag that disables the entry ($FFFF = none)
+    db $00, $76, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00a4 ; story flag that disables the entry ($FFFF = none)
     db $14, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7A of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7A of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers7A::
-Data_087_5EB0:: ; address name
-    db $00, $7A, $00, $01, $40, $80 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00A8 ; story flag that disables the entry ($FFFF = none)
+    db $00, $7a, $00, $01, $40, $80 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00a8 ; story flag that disables the entry ($FFFF = none)
     db $29, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $7F of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $7F of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers7F::
-Data_087_5EBB:: ; address name
-    db $00, $7F, $00, $00, $40, $10 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $00, $7f, $00, $00, $40, $10 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $72, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $8D of MapStepTriggerTable; 4 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $8D of MapStepTriggerTable; 4 record(s), then $FF (E-0157)
 MapStepTriggers8D::
-Data_087_5EC6:: ; address name
-    db $00, $8D, $00, $00, $30, $30 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4E, $05 ; talk event group, index
-    db $00, $8D, $00, $00, $60, $30 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4E, $05 ; talk event group, index
-    db $00, $8D, $00, $00, $30, $60 ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4E, $05 ; talk event group, index
-    db $00, $8D, $00, $00, $60, $60 ; id 3: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00B0 ; story flag that disables the entry ($FFFF = none)
-    db $4E, $05 ; talk event group, index
-    db $FF ; end
+    db $00, $8d, $00, $00, $30, $30 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4e, $05 ; talk event group, index
+    db $00, $8d, $00, $00, $60, $30 ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4e, $05 ; talk event group, index
+    db $00, $8d, $00, $00, $30, $60 ; id 2: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4e, $05 ; talk event group, index
+    db $00, $8d, $00, $00, $60, $60 ; id 3: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00b0 ; story flag that disables the entry ($FFFF = none)
+    db $4e, $05 ; talk event group, index
+    db $ff ; end
 
-; E-0157 (derived: list for entry $92 of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $92 of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the
+; screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapStepTriggers92::
-Data_087_5EEF:: ; address name
     db $00, $92, $00, $00, $40, $40 ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $72, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $9B of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $9B of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggers9B::
-Data_087_5EFA:: ; address name
-    db $00, $9B, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $00C2 ; story flag that disables the entry ($FFFF = none)
+    db $00, $9b, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $00c2 ; story flag that disables the entry ($FFFF = none)
     db $68, $05 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $AA of MapStepTriggerTable; 2 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $AA of MapStepTriggerTable; 2 record(s), then $FF (E-0157)
 MapStepTriggersAA::
-Data_087_5F05:: ; address name
-    db $00, $AA, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    db $00, $aa, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
     dw $0149 ; story flag that disables the entry ($FFFF = none)
-    db $0C, $07 ; talk event group, index
-    db $00, $AA, $00, $01, $FF, $FF ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $FFFF ; story flag that disables the entry ($FFFF = none)
+    db $0c, $07 ; talk event group, index
+    db $00, $aa, $00, $01, $ff, $ff ; id 1: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $ffff ; story flag that disables the entry ($FFFF = none)
     db $00, $07 ; talk event group, index
-    db $FF ; end
+    db $ff ; end
 
-; E-0157 (derived: list for entry $AC of MapStepTriggerTable; 1 record(s), then $FF)
-; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+; list for entry $AC of MapStepTriggerTable; 1 record(s), then $FF (E-0157)
 MapStepTriggersAC::
-Data_087_5F1A:: ; address name
-    db $00, $AC, $00, $00, $FF, $FF ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
-    dw $014F ; story flag that disables the entry ($FFFF = none)
+    db $00, $ac, $00, $00, $ff, $ff ; id 0: 0, map, screen X, screen Y, player X ($FF = any), player Y
+    dw $014f ; story flag that disables the entry ($FFFF = none)
     db $12, $07 ; talk event group, index
-    db $FF ; end
-    ds $20DB, $00
+    db $ff ; end
+    ds $20db, $00

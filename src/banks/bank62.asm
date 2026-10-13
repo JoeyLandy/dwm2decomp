@@ -1,1146 +1,889 @@
 SECTION "Bank 62", ROMX[$4000], BANK[$62]
     db $62
 
-KeyWorld01_0_Y2X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_4001:: ; address name
-    db $03, $02, $04, $0B, $0D, $33, $01, $00
+KeyWorld01_0_Y2X1_Header::
+    db $03, $02, $04, $0b, $0d, $33, $01, $00
 
-; LZSS-compressed asset: 97 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y2X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_4009:: ; address name
+; LZSS-compressed: 97 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $188009, $61
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_406A::
-KeyWorld04_0_Y2X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_406A:: ; address name
-    db $05, $00, $01, $0E, $0F, $33, $02, $00 ; entry 0
+KeyWorld04_0_Y2X2_Header::
+    db $05, $00, $01, $0e, $0f, $33, $02, $00 ; entry 0
 
-; LZSS-compressed asset: 124 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_4072:: ; address name
+; LZSS-compressed: 124 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $188072, $7C
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_40EE::
-KeyWorld04_0_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_40EE:: ; address name
-    db $07, $00, $07, $08, $0F, $33, $03, $00 ; entry 0
+KeyWorld04_0_Y1X2_Header::
+    db $07, $00, $07, $08, $0f, $33, $03, $00 ; entry 0
 
-; LZSS-compressed asset: 211 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_40F6:: ; address name
+; LZSS-compressed: 211 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1880F6, $D3
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_41C9::
-KeyWorld11_1_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_41C9:: ; address name
-    db $06, $04, $05, $0A, $0B, $33, $04, $00 ; entry 0
+KeyWorld11_1_Y1X1_Header::
+    db $06, $04, $05, $0a, $0b, $33, $04, $00 ; entry 0
 
-; LZSS-compressed asset: 105 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld11_1_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_41D1:: ; address name
+; LZSS-compressed: 105 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld11_1_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1881D1, $69
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_423A::
-KeyWorld01_0_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_423A:: ; address name
-    db $04, $03, $07, $08, $0A, $33, $05, $00 ; entry 0
+KeyWorld01_0_Y1X2_Header::
+    db $04, $03, $07, $08, $0a, $33, $05, $00 ; entry 0
 
-; LZSS-compressed asset: 113 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_4242:: ; address name
+; LZSS-compressed: 113 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $188242, $71
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_42B3::
-KeyWorld04_0_Y2X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_42B3:: ; address name
-    db $07, $04, $06, $09, $0B, $33, $06, $00 ; entry 0
+KeyWorld04_0_Y2X1_Header::
+    db $07, $04, $06, $09, $0b, $33, $06, $00 ; entry 0
 
-; LZSS-compressed asset: 170 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_42BB:: ; address name
+; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1882BB, $AA
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_4365::
-KeyWorld02_0_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_4365:: ; address name
-    db $00, $00, $06, $09, $0F, $33, $07, $00 ; entry 0
+KeyWorld02_0_Y1X2_Header::
+    db $00, $00, $06, $09, $0f, $33, $07, $00 ; entry 0
 
-; LZSS-compressed asset: 93 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_436D:: ; address name
+; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18836D, $5D
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_43CA::
-KeyWorld02_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_43CA:: ; address name
-    db $01, $01, $06, $0C, $0E, $33, $08, $00 ; entry 0
+KeyWorld02_0_Y1X1_Header::
+    db $01, $01, $06, $0c, $0e, $33, $08, $00 ; entry 0
 
-; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_43D2:: ; address name
+; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1883D2, $82
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_4454::
-KeyWorld06_0_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_4454:: ; address name
-    db $00, $02, $05, $0A, $0D, $33, $09, $00 ; entry 0
+KeyWorld06_0_Y1X2_Header::
+    db $00, $02, $05, $0a, $0d, $33, $09, $00 ; entry 0
 
-; LZSS-compressed asset: 171 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld06_0_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_445C:: ; address name
+; LZSS-compressed: 171 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld06_0_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18845C, $AB
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_4507::
-KeyWorld1C_1_Y2X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_4507:: ; address name
-    db $01, $03, $07, $08, $0F, $33, $0A, $00 ; entry 0
+KeyWorld1C_1_Y2X2_Header::
+    db $01, $03, $07, $08, $0f, $33, $0a, $00 ; entry 0
 
-; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y2X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_450F:: ; address name
+; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y2X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18850F, $98
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_45A7::
-KeyWorld2A_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_45A7:: ; address name
-    db $04, $02, $04, $0B, $0D, $33, $0B, $00 ; entry 0
+KeyWorld2A_0_Y1X1_Header::
+    db $04, $02, $04, $0b, $0d, $33, $0b, $00 ; entry 0
 
-; LZSS-compressed asset: 147 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld2A_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_45AF:: ; address name
+; LZSS-compressed: 147 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld2A_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1885AF, $93
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_4642::
-KeyWorld0F_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_4642:: ; address name
-    db $06, $00, $01, $09, $0F, $33, $0C, $00 ; entry 0
+KeyWorld0F_0_Y1X1_Header::
+    db $06, $00, $01, $09, $0f, $33, $0c, $00 ; entry 0
 
-; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld0F_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_464A:: ; address name
+; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0F_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18864A, $82
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_46CC::
-KeyWorld1E_0_Y3X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_46CC:: ; address name
-    db $04, $00, $07, $08, $0F, $33, $0D, $00 ; entry 0
+KeyWorld1E_0_Y3X2_Header::
+    db $04, $00, $07, $08, $0f, $33, $0d, $00 ; entry 0
 
-; LZSS-compressed asset: 95 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y3X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_46D4:: ; address name
+; LZSS-compressed: 95 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y3X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1886D4, $5F
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_4733::
-KeyWorld1F_0_Y3X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_4733:: ; address name
-    db $05, $03, $07, $08, $0A, $33, $0E, $00 ; entry 0
+KeyWorld1F_0_Y3X1_Header::
+    db $05, $03, $07, $08, $0a, $33, $0e, $00 ; entry 0
 
-; LZSS-compressed asset: 87 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1F_0_Y3X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_473B:: ; address name
+; LZSS-compressed: 87 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1F_0_Y3X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18873B, $57
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_4792::
-KeyWorld28_0_Y2X3_Header:: ; heuristic: key-world screen header; C0
-Data_062_4792:: ; address name
-    db $01, $05, $07, $08, $0C, $33, $0F, $00 ; entry 0
+KeyWorld28_0_Y2X3_Header::
+    db $01, $05, $07, $08, $0c, $33, $0f, $00 ; entry 0
 
-; LZSS-compressed asset: 147 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld28_0_Y2X3_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_479A:: ; address name
+; LZSS-compressed: 147 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld28_0_Y2X3_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18879A, $93
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
-; record: screen header
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 KeyWorldScreenHeader_62_482D::
-Data_062_482D:: ; address name
-    db $06, $04, $06, $09, $0B, $33, $10, $00 ; entry 0
+    db $06, $04, $06, $09, $0b, $33, $10, $00 ; entry 0
 
-; LZSS-compressed asset: 119 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_4835:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_4835:: ; address name
+; LZSS-compressed: 119 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_4835::
     INCBIN "dwm2-cobi-us.gbc", $188835, $77
 
-; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y2X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_48AC:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
-    db $00, $08, $1F, $34
+; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
+    db $00, $08, $1f, $34
 
-; LZSS-compressed asset: 26 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_48C0:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $42, $09, $09, $00, $44, $0F, $13, $00, $7D
-    db $0F, $4D, $00, $DD, $0F, $4D, $00, $00, $0F, $17
+; LZSS-compressed: 26 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $42, $09, $09, $00, $44, $0f, $13, $00, $7d
+    db $0f, $4d, $00, $dd, $0f, $4d, $00, $00, $0f, $17
 
-; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_48DA:: ; address name
+; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y1X2_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $1888DA, $55
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld11_1_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_492F:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $42, $09, $09, $00, $44, $0F, $39, $09, $09
-    db $00, $92, $0F, $4D, $00, $B6, $0F, $03, $00, $00, $0F, $39
+; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld11_1_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $42, $09, $09, $00, $44, $0f, $39, $09, $09
+    db $00, $92, $0f, $4d, $00, $b6, $0f, $03, $00, $00, $0f, $39
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_494B:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $42, $09, $09, $00, $44, $0F, $39, $09, $09
-    db $00, $92, $0F, $3B, $00, $F3, $0F, $4D, $00, $00, $0F, $01
+KeyWorld01_0_Y1X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $42, $09, $09, $00, $44, $0f, $39, $09, $09
+    db $00, $92, $0f, $3b, $00, $f3, $0f, $4d, $00, $00, $0f, $01
 
-; LZSS-compressed asset: 67 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4967:: ; address name
+; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X1_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $188967, $43
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_49AA:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $42, $09, $09, $00, $44, $0F, $39, $09, $09
-    db $00, $92, $0F, $13, $00, $54, $0F, $3D, $00, $00, $0F, $39
+KeyWorld02_0_Y1X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $42, $09, $09, $00, $44, $0f, $39, $09, $09
+    db $00, $92, $0f, $13, $00, $54, $0f, $3d, $00, $00, $0f, $39
 
-; LZSS-compressed asset: 43 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_49C6:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $48, $03, $03, $00, $4A, $0F, $0D, $03, $00
-    db $7E, $01, $00, $5A, $0A, $00, $7E, $0F, $05, $00, $4C, $0E, $00, $5C, $0C, $00
-    db $A6, $0F, $13, $00, $5A, $0F, $11, $00, $00, $0F, $3F
+; LZSS-compressed: 43 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $48, $03, $03, $00, $4a, $0f, $0d, $03, $00
+    db $7e, $01, $00, $5a, $0a, $00, $7e, $0f, $05, $00, $4c, $0e, $00, $5c, $0c, $00
+    db $a6, $0f, $13, $00, $5a, $0f, $11, $00, $00, $0f, $3f
 
-; LZSS-compressed asset: 69 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld06_0_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_49F1:: ; address name
+; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld06_0_Y1X2_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $1889F1, $45
 
-; LZSS-compressed asset: 45 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y2X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4A36:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $1C, $03, $03, $00, $1E, $0F, $11, $03, $00
-    db $56, $01, $00, $48, $0F, $15, $00, $30, $0A, $00, $7E, $0F, $01, $00, $7C, $0F
-    db $17, $00, $A8, $0F, $1B, $00, $48, $0F, $0F, $00, $12, $1F, $35
+; LZSS-compressed: 45 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y2X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $1c, $03, $03, $00, $1e, $0f, $11, $03, $00
+    db $56, $01, $00, $48, $0f, $15, $00, $30, $0a, $00, $7e, $0f, $01, $00, $7c, $0f
+    db $17, $00, $a8, $0f, $1b, $00, $48, $0f, $0f, $00, $12, $1f, $35
 
-; LZSS-compressed asset: 55 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld2A_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4A63:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $1A, $03, $03, $00, $1C, $0F, $11, $03, $00
-    db $54, $01, $00, $46, $0F, $0D, $00, $54, $02, $00, $6C, $0F, $0F, $00, $52, $02
-    db $00, $44, $0F, $01, $00, $1C, $0F, $03, $00, $58, $0E, $00, $2C, $0F, $05, $00
-    db $A6, $0F, $15, $00, $12, $1F, $31
+; LZSS-compressed: 55 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld2A_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $1a, $03, $03, $00, $1c, $0f, $11, $03, $00
+    db $54, $01, $00, $46, $0f, $0d, $00, $54, $02, $00, $6c, $0f, $0f, $00, $52, $02
+    db $00, $44, $0f, $01, $00, $1c, $0f, $03, $00, $58, $0e, $00, $2c, $0f, $05, $00
+    db $a6, $0f, $15, $00, $12, $1f, $31
 
-; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld0F_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4A9A:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $1C, $03, $03, $00, $1E, $0F, $11, $03, $00
-    db $56, $03, $00, $4A, $0F, $11, $00, $46, $0F, $01, $00, $84, $0F, $0D, $00, $7C
-    db $0F, $0B, $00, $5A, $08, $00, $CC, $0F, $01, $00, $54, $0F, $17, $00, $A2, $0F
-    db $17, $00, $00, $0F, $0D
+; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0F_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $1c, $03, $03, $00, $1e, $0f, $11, $03, $00
+    db $56, $03, $00, $4a, $0f, $11, $00, $46, $0f, $01, $00, $84, $0f, $0d, $00, $7c
+    db $0f, $0b, $00, $5a, $08, $00, $cc, $0f, $01, $00, $54, $0f, $17, $00, $a2, $0f
+    db $17, $00, $00, $0f, $0d
 
-; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y3X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4ACF:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
-    db $00, $08, $1F, $34
+; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y3X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
+    db $00, $08, $1f, $34
 
-; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1F_0_Y3X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4AE3:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
-    db $00, $08, $1F, $34
+KeyWorld1F_0_Y3X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
+    db $00, $08, $1f, $34
 
-; LZSS-compressed asset: 31 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld28_0_Y2X3_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_4AF7:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $46, $02, $00, $5A, $01, $00, $4C, $0F, $35
-    db $00, $5A, $02, $00, $9A, $0F, $3D, $00, $4C, $0F, $0F, $00, $00, $0F, $35
+; LZSS-compressed: 31 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld28_0_Y2X3_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $46, $02, $00, $5a, $01, $00, $4c, $0f, $35
+    db $00, $5a, $02, $00, $9a, $0f, $3d, $00, $4c, $0f, $0f, $00, $00, $0f, $35
 
-; LZSS-compressed asset: 34 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_4B16:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_4B16:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $40, $02, $00, $54, $03, $00, $48, $0F, $0B
-    db $00, $54, $04, $00, $58, $08, $00, $7A, $0F, $4D, $00, $4E, $0F, $19, $00, $00
-    db $0F, $3B
+; LZSS-compressed: 34 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_4B16::
+    db $68, $01, $00, $01, $00, $00, $0f, $40, $02, $00, $54, $03, $00, $48, $0f, $0b
+    db $00, $54, $04, $00, $58, $08, $00, $7a, $0f, $4d, $00, $4e, $0f, $19, $00, $00
+    db $0f, $3b
 
-; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 4: entry 4 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00
-; LZSS-compressed asset: 1366 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldTiles4:: ; heuristic: key-world tileset stream; C0
-Data_062_4B38:: ; address name
+; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 4: entry 4 of KeyWorldTilesetTable,
+; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; LZSS-compressed: 1366 bytes that expand to 2048 (E-0016, E-0017)
+KeyWorldTiles4::
     INCBIN "dwm2-cobi-us.gbc", $188B38, $556
 
-; E-0139 (C1: entry 4 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
+; entry 4 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes4::
-Data_062_508E:: ; address name
-    dw $7DA0, $7FFF, $2AB7, $0063 ; entry 0
-    dw $0160, $3FBF, $03E2, $0000 ; entry 1
-    dw $01C4, $03FF, $0348, $0084 ; entry 2
-    dw $01C4, $7FFF, $0348, $0084 ; entry 3
-    dw $158F, $2AB7, $03E2, $0000 ; entry 4
-    dw $0171, $3FBF, $03E2, $0000 ; entry 5
-    dw $1415, $7FFF, $03E2, $0000 ; entry 6
-    dw $318C, $7FFF, $5294, $0000 ; entry 7
+    dw $7da0, $7fff, $2ab7, $0063 ; entry 0
+    dw $0160, $3fbf, $03e2, $0000 ; entry 1
+    dw $01c4, $03ff, $0348, $0084 ; entry 2
+    dw $01c4, $7fff, $0348, $0084 ; entry 3
+    dw $158f, $2ab7, $03e2, $0000 ; entry 4
+    dw $0171, $3fbf, $03e2, $0000 ; entry 5
+    dw $1415, $7fff, $03e2, $0000 ; entry 6
+    dw $318c, $7fff, $5294, $0000 ; entry 7
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_50CE::
-KeyWorld00_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_50CE:: ; address name
-    db $03, $04, $05, $0C, $0E, $33, $35, $00 ; entry 0
+KeyWorld00_0_Y1X1_Header::
+    db $03, $04, $05, $0c, $0e, $33, $35, $00 ; entry 0
 
-; LZSS-compressed asset: 144 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_50D6:: ; address name
+; LZSS-compressed: 144 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1890D6, $90
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_5166::
-KeyWorld23_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_5166:: ; address name
-    db $04, $04, $05, $0C, $0E, $33, $36, $00 ; entry 0
+KeyWorld23_0_Y1X1_Header::
+    db $04, $04, $05, $0c, $0e, $33, $36, $00 ; entry 0
 
-; LZSS-compressed asset: 155 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld23_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_516E:: ; address name
+; LZSS-compressed: 155 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld23_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18916E, $9B
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_5209::
-KeyWorld40_1_Y2X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_5209:: ; address name
-    db $06, $00, $04, $05, $0E, $33, $37, $00 ; entry 0
+KeyWorld40_1_Y2X1_Header::
+    db $06, $00, $04, $05, $0e, $33, $37, $00 ; entry 0
 
-; LZSS-compressed asset: 125 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_1_Y2X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5211:: ; address name
+; LZSS-compressed: 125 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_1_Y2X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189211, $7D
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_528E::
-KeyWorld10_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_528E:: ; address name
-    db $00, $04, $05, $0C, $0E, $33, $38, $00 ; entry 0
+KeyWorld10_0_Y1X1_Header::
+    db $00, $04, $05, $0c, $0e, $33, $38, $00 ; entry 0
 
-; LZSS-compressed asset: 161 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5296:: ; address name
+; LZSS-compressed: 161 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189296, $A1
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_5337::
-KeyWorld12_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_5337:: ; address name
-    db $05, $04, $05, $0C, $0E, $33, $39, $00 ; entry 0
+KeyWorld12_0_Y1X1_Header::
+    db $05, $04, $05, $0c, $0e, $33, $39, $00 ; entry 0
 
-; LZSS-compressed asset: 136 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld12_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_533F:: ; address name
+; LZSS-compressed: 136 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18933F, $88
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_53C7::
-KeyWorld39_1_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_53C7:: ; address name
-    db $06, $04, $05, $0C, $0E, $33, $3A, $00 ; entry 0
+KeyWorld39_1_Y1X0_Header::
+    db $06, $04, $05, $0c, $0e, $33, $3a, $00 ; entry 0
 
-; LZSS-compressed asset: 182 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld39_1_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_53CF:: ; address name
+; LZSS-compressed: 182 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld39_1_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1893CF, $B6
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_5485::
-KeyWorld12_0_Y3X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_5485:: ; address name
-    db $01, $04, $05, $0D, $0E, $33, $3B, $00 ; entry 0
+KeyWorld12_0_Y3X1_Header::
+    db $01, $04, $05, $0d, $0e, $33, $3b, $00 ; entry 0
 
-; LZSS-compressed asset: 140 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld12_0_Y3X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_548D:: ; address name
+; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y3X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18948D, $8C
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_5519::
-KeyWorld1E_0_Y1X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_5519:: ; address name
-    db $00, $04, $05, $07, $0E, $33, $3C, $00 ; entry 0
+KeyWorld1E_0_Y1X1_Header::
+    db $00, $04, $05, $07, $0e, $33, $3c, $00 ; entry 0
 
-; LZSS-compressed asset: 122 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y1X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5521:: ; address name
+; LZSS-compressed: 122 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y1X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189521, $7A
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_559B::
-KeyWorld16_0_Y3X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_559B:: ; address name
-    db $01, $04, $06, $08, $0B, $33, $3D, $00 ; entry 0
+KeyWorld16_0_Y3X1_Header::
+    db $01, $04, $06, $08, $0b, $33, $3d, $00 ; entry 0
 
-; LZSS-compressed asset: 204 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld16_0_Y3X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_55A3:: ; address name
+; LZSS-compressed: 204 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld16_0_Y3X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $1895A3, $CC
 
-; LZSS-compressed asset: 45 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_566F:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $52, $0F, $3E, $03, $03, $00, $A0
-    db $0F, $11, $03, $03, $00, $C6, $0F, $11, $00, $D8, $00, $00, $EE, $0F, $0F, $00
-    db $FE, $02, $00, $16, $1F, $0D, $00, $24, $14, $00, $3E, $1F, $03
+; LZSS-compressed: 45 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $52, $0f, $3e, $03, $03, $00, $a0
+    db $0f, $11, $03, $03, $00, $c6, $0f, $11, $00, $d8, $00, $00, $ee, $0f, $0f, $00
+    db $fe, $02, $00, $16, $1f, $0d, $00, $24, $14, $00, $3e, $1f, $03
 
-; LZSS-compressed asset: 67 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld23_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_569C:: ; address name
+; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld23_0_Y1X1_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18969C, $43
 
-; LZSS-compressed asset: 31 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_1_Y2X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_56DF:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $4C, $0F, $38, $03, $00, $AC, $03
-    db $00, $A0, $0F, $0B, $00, $AC, $04, $00, $C6, $0F, $4D, $00, $FE, $0F, $1B
+; LZSS-compressed: 31 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_1_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $4c, $0f, $38, $03, $00, $ac, $03
+    db $00, $a0, $0f, $0b, $00, $ac, $04, $00, $c6, $0f, $4d, $00, $fe, $0f, $1b
 
-; LZSS-compressed asset: 61 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_56FE:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $1E, $02, $00, $32, $01, $00, $24, $0F, $0B
-    db $00, $32, $02, $00, $36, $0A, $00, $56, $0E, $00, $32, $0F, $11, $00, $30, $0C
-    db $03, $03, $03, $03, $00, $A0, $0F, $07, $00, $AA, $06, $00, $C4, $0F, $09, $00
-    db $A8, $08, $00, $EC, $0F, $07, $00, $F4, $0C, $00, $16, $1F, $2B
+; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $1e, $02, $00, $32, $01, $00, $24, $0f, $0b
+    db $00, $32, $02, $00, $36, $0a, $00, $56, $0e, $00, $32, $0f, $11, $00, $30, $0c
+    db $03, $03, $03, $03, $00, $a0, $0f, $07, $00, $aa, $06, $00, $c4, $0f, $09, $00
+    db $a8, $08, $00, $ec, $0f, $07, $00, $f4, $0c, $00, $16, $1f, $2b
 
-; LZSS-compressed asset: 38 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld12_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_573B:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $4D, $00, $52, $0F, $3E, $03, $03, $00, $A0
-    db $0F, $4D, $00, $C4, $0F, $01, $03, $03, $00, $16, $1F, $0D, $00, $28, $10, $00
-    db $4A, $12, $00, $40, $1F, $01
+; LZSS-compressed: 38 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $52, $0f, $3e, $03, $03, $00, $a0
+    db $0f, $4d, $00, $c4, $0f, $01, $03, $03, $00, $16, $1f, $0d, $00, $28, $10, $00
+    db $4a, $12, $00, $40, $1f, $01
 
-; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld39_1_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_5761:: ; address name
+; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld39_1_Y1X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $189761, $41
 
-; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld12_0_Y3X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_57A2:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $48, $03, $03, $03, $03, $00, $4C, $0F, $15
-    db $00, $5E, $0C, $00, $84, $0F, $07, $00, $5E, $0A, $00, $AC, $0F, $01, $00, $82
-    db $0F, $17, $00, $58, $02, $00, $F0, $0F, $0B, $00, $5C, $04, $00, $16, $1F, $11
-    db $00, $84, $0C, $00, $4A, $16
+; LZSS-compressed: 54 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y3X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $48, $03, $03, $03, $03, $00, $4c, $0f, $15
+    db $00, $5e, $0c, $00, $84, $0f, $07, $00, $5e, $0a, $00, $ac, $0f, $01, $00, $82
+    db $0f, $17, $00, $58, $02, $00, $f0, $0f, $0b, $00, $5c, $04, $00, $16, $1f, $11
+    db $00, $84, $0c, $00, $4a, $16
 
-; LZSS-compressed asset: 41 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y1X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_57D8:: ; address name
-    db $68, $01, $00, $01, $00, $00, $0F, $46, $03, $00, $5A, $01, $00, $4C, $0F, $15
-    db $00, $5E, $0A, $00, $82, $0F, $01, $00, $80, $0F, $11, $00, $82, $04, $00, $C2
-    db $0F, $35, $00, $CA, $0A, $00, $18, $1F, $29
+; LZSS-compressed: 41 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $46, $03, $00, $5a, $01, $00, $4c, $0f, $15
+    db $00, $5e, $0a, $00, $82, $0f, $01, $00, $80, $0f, $11, $00, $82, $04, $00, $c2
+    db $0f, $35, $00, $ca, $0a, $00, $18, $1f, $29
 
-; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld16_0_Y3X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_5801:: ; address name
+; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld16_0_Y3X1_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $189801, $51
 
-; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 8: entry 8 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00
-; LZSS-compressed asset: 1243 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldTiles8:: ; heuristic: key-world tileset stream; C0
-Data_062_5852:: ; address name
+; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 8: entry 8 of KeyWorldTilesetTable,
+; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; LZSS-compressed: 1243 bytes that expand to 2048 (E-0016, E-0017)
+KeyWorldTiles8::
     INCBIN "dwm2-cobi-us.gbc", $189852, $4DB
 
-; E-0139 (C1: entry 8 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
+; entry 8 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes8::
-Data_062_5D2D:: ; address name
-    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
-    dw $0188, $3FBF, $0210, $0000 ; entry 1
-    dw $012F, $3FBF, $01D5, $0000 ; entry 2
-    dw $012F, $3FBF, $01D5, $0000 ; entry 3
-    dw $318C, $3FBF, $2A13, $0000 ; entry 4
-    dw $0171, $3FBF, $2A13, $0000 ; entry 5
-    dw $1415, $3FBF, $25F5, $0000 ; entry 6
-    dw $318C, $7FFF, $5294, $0000 ; entry 7
+    dw $7da0, $7fff, $7fe0, $0063 ; entry 0
+    dw $0188, $3fbf, $0210, $0000 ; entry 1
+    dw $012f, $3fbf, $01d5, $0000 ; entry 2
+    dw $012f, $3fbf, $01d5, $0000 ; entry 3
+    dw $318c, $3fbf, $2a13, $0000 ; entry 4
+    dw $0171, $3fbf, $2a13, $0000 ; entry 5
+    dw $1415, $3fbf, $25f5, $0000 ; entry 6
+    dw $318c, $7fff, $5294, $0000 ; entry 7
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_5D6D::
-KeyWorld32_0_Y3X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_5D6D:: ; address name
-    db $05, $02, $06, $09, $0D, $33, $59, $00 ; entry 0
+KeyWorld32_0_Y3X2_Header::
+    db $05, $02, $06, $09, $0d, $33, $59, $00 ; entry 0
 
-; LZSS-compressed asset: 125 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld32_0_Y3X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5D75:: ; address name
+; LZSS-compressed: 125 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld32_0_Y3X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189D75, $7D
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
-; record: screen header
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 KeyWorldScreenHeader_62_5DF2::
-Data_062_5DF2:: ; address name
-    db $06, $02, $07, $09, $0F, $33, $5A, $00 ; entry 0
+    db $06, $02, $07, $09, $0f, $33, $5a, $00 ; entry 0
 
-; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_5DFA:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_5DFA:: ; address name
+; LZSS-compressed: 151 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_5DFA::
     INCBIN "dwm2-cobi-us.gbc", $189DFA, $97
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_5E91::
-KeyWorld50_5_Y0X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_5E91:: ; address name
-    db $07, $02, $06, $09, $0D, $33, $5B, $00 ; entry 0
+KeyWorld50_5_Y0X0_Header::
+    db $07, $02, $06, $09, $0d, $33, $5b, $00 ; entry 0
 
-; LZSS-compressed asset: 127 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld50_5_Y0X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5E99:: ; address name
+; LZSS-compressed: 127 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld50_5_Y0X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189E99, $7F
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
-; record: screen header
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 KeyWorldScreenHeader_62_5F18::
-Data_062_5F18:: ; address name
-    db $02, $02, $03, $06, $0D, $33, $5C, $00 ; entry 0
+    db $02, $02, $03, $06, $0d, $33, $5c, $00 ; entry 0
 
-; LZSS-compressed asset: 156 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_5F20:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_5F20:: ; address name
+; LZSS-compressed: 156 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_5F20::
     INCBIN "dwm2-cobi-us.gbc", $189F20, $9C
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_5FBC::
-KeyWorld47_2_Y0X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_5FBC:: ; address name
-    db $03, $01, $04, $09, $0A, $33, $5D, $00 ; entry 0
+KeyWorld47_2_Y0X2_Header::
+    db $03, $01, $04, $09, $0a, $33, $5d, $00 ; entry 0
 
-; LZSS-compressed asset: 191 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld47_2_Y0X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_5FC4:: ; address name
+; LZSS-compressed: 191 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld47_2_Y0X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $189FC4, $BF
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_6083::
-KeyWorld40_2_Y1X3_Header:: ; heuristic: key-world screen header; C0
-Data_062_6083:: ; address name
-    db $07, $04, $07, $09, $0B, $33, $5E, $00 ; entry 0
+KeyWorld40_2_Y1X3_Header::
+    db $07, $04, $07, $09, $0b, $33, $5e, $00 ; entry 0
 
-; LZSS-compressed asset: 179 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_2_Y1X3_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_608B:: ; address name
+; LZSS-compressed: 179 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_2_Y1X3_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A08B, $B3
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_613E::
-KeyWorld44_3_Y3X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_613E:: ; address name
-    db $FF, $02, $03, $07, $0B, $33, $5F, $00 ; entry 0
+KeyWorld44_3_Y3X1_Header::
+    db $ff, $02, $03, $07, $0b, $33, $5f, $00 ; entry 0
 
-; LZSS-compressed asset: 155 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld44_3_Y3X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6146:: ; address name
+; LZSS-compressed: 155 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld44_3_Y3X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A146, $9B
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_61E1::
-Data_062_61E1:: ; address name
-    db $FF, $00, $08, $07, $0F, $33, $60, $00 ; entry 0
+    db $ff, $00, $08, $07, $0f, $33, $60, $00 ; entry 0
 
-; LZSS-compressed asset: 164 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_61E9:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_61E9:: ; address name
+; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_61E9::
     INCBIN "dwm2-cobi-us.gbc", $18A1E9, $A4
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
-; record: screen header
 KeyWorldScreenHeader_62_628D::
-Data_062_628D:: ; address name
-    db $07, $05, $0A, $0B, $0D, $33, $61, $00 ; entry 0
+    db $07, $05, $0a, $0b, $0d, $33, $61, $00 ; entry 0
 
-; LZSS-compressed asset: 189 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6295:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6295:: ; address name
+; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6295::
     INCBIN "dwm2-cobi-us.gbc", $18A295, $BD
 
-; LZSS-compressed asset: 59 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld32_0_Y3X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6352:: ; address name
-    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0A, $05, $00, $00, $0F, $0B, $00
-    db $06, $06, $00, $28, $0F, $0F, $00, $08, $02, $00, $50, $0F, $11, $00, $08, $00
-    db $00, $78, $0F, $01, $00, $76, $0F, $29, $00, $4C, $0F, $05, $00, $26, $0F, $17
-    db $00, $26, $0A, $00, $18, $1F, $09, $00, $12, $0F, $0D
+; LZSS-compressed: 59 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld32_0_Y3X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $0b, $00
+    db $06, $06, $00, $28, $0f, $0f, $00, $08, $02, $00, $50, $0f, $11, $00, $08, $00
+    db $00, $78, $0f, $01, $00, $76, $0f, $29, $00, $4c, $0f, $05, $00, $26, $0f, $17
+    db $00, $26, $0a, $00, $18, $1f, $09, $00, $12, $0f, $0d
 
-; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_638D:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_638D:: ; address name
+; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_638D::
     INCBIN "dwm2-cobi-us.gbc", $18A38D, $4D
 
-; LZSS-compressed asset: 46 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld50_5_Y0X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_63DA:: ; address name
-    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0A, $05, $00, $00, $0F, $4D, $00
-    db $10, $0A, $00, $1C, $06, $00, $78, $0F, $01, $00, $72, $0E, $00, $1C, $04, $00
-    db $A6, $0F, $01, $00, $76, $0F, $19, $00, $E6, $0F, $4D, $00, $F6, $0A
+; LZSS-compressed: 46 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld50_5_Y0X0_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $4d, $00
+    db $10, $0a, $00, $1c, $06, $00, $78, $0f, $01, $00, $72, $0e, $00, $1c, $04, $00
+    db $a6, $0f, $01, $00, $76, $0f, $19, $00, $e6, $0f, $4d, $00, $f6, $0a
 
-; LZSS-compressed asset: 72 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6408:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6408:: ; address name
+; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6408::
     INCBIN "dwm2-cobi-us.gbc", $18A408, $48
 
-; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld47_2_Y0X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6450:: ; address name
+; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld47_2_Y0X2_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18A450, $46
 
-; LZSS-compressed asset: 90 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_2_Y1X3_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6496:: ; address name
+; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_2_Y1X3_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18A496, $5A
 
-; LZSS-compressed asset: 64 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld44_3_Y3X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_64F0:: ; address name
-    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0A, $05, $00, $00, $0F, $0B, $00
-    db $08, $06, $00, $28, $0F, $0D, $00, $04, $04, $00, $50, $0F, $29, $00, $12, $02
-    db $00, $0E, $0A, $00, $A0, $0F, $05, $00, $0A, $06, $00, $A0, $04, $00, $CA, $0F
-    db $01, $00, $F0, $0A, $00, $EC, $0F, $0D, $00, $28, $0F, $15, $00, $12, $0F, $0D
+; LZSS-compressed: 64 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld44_3_Y3X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $0b, $00
+    db $08, $06, $00, $28, $0f, $0d, $00, $04, $04, $00, $50, $0f, $29, $00, $12, $02
+    db $00, $0e, $0a, $00, $a0, $0f, $05, $00, $0a, $06, $00, $a0, $04, $00, $ca, $0f
+    db $01, $00, $f0, $0a, $00, $ec, $0f, $0d, $00, $28, $0f, $15, $00, $12, $0f, $0d
 
-; LZSS-compressed asset: 79 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6530:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6530:: ; address name
+; LZSS-compressed: 79 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6530::
     INCBIN "dwm2-cobi-us.gbc", $18A530, $4F
 
-; LZSS-compressed asset: 88 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_657F:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_657F:: ; address name
+; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_657F::
     INCBIN "dwm2-cobi-us.gbc", $18A57F, $58
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_65D7::
-Data_062_65D7:: ; address name
-    db $06, $06, $08, $09, $0B, $33, $7D, $00 ; entry 0
+    db $06, $06, $08, $09, $0b, $33, $7d, $00 ; entry 0
 
-; LZSS-compressed asset: 79 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_65DF:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_65DF:: ; address name
+KeyWorldScreen_62_65DF::
     INCBIN "dwm2-cobi-us.gbc", $18A5DF, $4F
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
+; the 8-byte header of the screen stream that follows (E-0222)
 KeyWorldScreenHeader_62_662E::
-KeyWorld30_2_Y0X3_Header:: ; heuristic: key-world screen header; C0
-Data_062_662E:: ; address name
-    db $FF, $FF, $FF, $FF, $FF, $33, $7E, $00 ; entry 0
+KeyWorld30_2_Y0X3_Header::
+    db $ff, $ff, $ff, $ff, $ff, $33, $7e, $00 ; entry 0
 
-; LZSS-compressed asset: 84 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld30_2_Y0X3_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6636:: ; address name
+; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_2_Y0X3_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A636, $54
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_668A::
-KeyWorld3C_1_Y3X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_668A:: ; address name
-    db $FF, $08, $09, $0A, $0B, $33, $7F, $00 ; entry 0
+KeyWorld3C_1_Y3X0_Header::
+    db $ff, $08, $09, $0a, $0b, $33, $7f, $00 ; entry 0
 
-; LZSS-compressed asset: 117 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld3C_1_Y3X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6692:: ; address name
+; LZSS-compressed: 117 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_1_Y3X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A692, $75
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_6707::
-Data_062_6707:: ; address name
-    db $FF, $FF, $FF, $FF, $FF, $33, $80, $00 ; entry 0
+    db $ff, $ff, $ff, $ff, $ff, $33, $80, $00 ; entry 0
 
-; LZSS-compressed asset: 117 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_670F:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_670F:: ; address name
+KeyWorldScreen_62_670F::
     INCBIN "dwm2-cobi-us.gbc", $18A70F, $75
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
+; the 8-byte header of the screen stream that follows (E-0222)
 KeyWorldScreenHeader_62_6784::
-KeyWorld4E_2_Y3X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_6784:: ; address name
-    db $04, $05, $06, $0B, $0C, $33, $81, $00 ; entry 0
+KeyWorld4E_2_Y3X0_Header::
+    db $04, $05, $06, $0b, $0c, $33, $81, $00 ; entry 0
 
-; LZSS-compressed asset: 123 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld4E_2_Y3X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_678C:: ; address name
+; LZSS-compressed: 123 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld4E_2_Y3X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A78C, $7B
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_6807::
-KeyWorld40_2_Y2X3_Header:: ; heuristic: key-world screen header; C0
-Data_062_6807:: ; address name
+KeyWorld40_2_Y2X3_Header::
     db $01, $04, $06, $07, $09, $33, $82, $00 ; entry 0
 
-; LZSS-compressed asset: 179 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_2_Y2X3_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_680F:: ; address name
+; LZSS-compressed: 179 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_2_Y2X3_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A80F, $B3
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_68C2::
-KeyWorld40_5_Y0X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_68C2:: ; address name
-    db $04, $03, $05, $0A, $0B, $33, $83, $00 ; entry 0
+KeyWorld40_5_Y0X0_Header::
+    db $04, $03, $05, $0a, $0b, $33, $83, $00 ; entry 0
 
-; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_5_Y0X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_68CA:: ; address name
+; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y0X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A8CA, $82
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
 ; record: screen header
 KeyWorldScreenHeader_62_694C::
-KeyWorld3F_3_Y0X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_694C:: ; address name
-    db $06, $04, $06, $0D, $0E, $33, $84, $00 ; entry 0
+KeyWorld3F_3_Y0X1_Header::
+    db $06, $04, $06, $0d, $0e, $33, $84, $00 ; entry 0
 
-; LZSS-compressed asset: 146 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld3F_3_Y0X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6954:: ; address name
+; LZSS-compressed: 146 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3F_3_Y0X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18A954, $92
 
-; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
-; record: screen header
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
 KeyWorldScreenHeader_62_69E6::
-Data_062_69E6:: ; address name
     db $06, $00, $03, $07, $08, $33, $85, $00 ; entry 0
 
-; LZSS-compressed asset: 211 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_69EE:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_69EE:: ; address name
+; LZSS-compressed: 211 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_69EE::
     INCBIN "dwm2-cobi-us.gbc", $18A9EE, $D3
 
-; LZSS-compressed asset: 39 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6AC1:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6AC1:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $4D, $00
-    db $10, $06, $00, $1E, $06, $00, $74, $0F, $13, $00, $14, $06, $00, $A4, $0F, $2B
-    db $00, $F5, $0F, $4D, $00, $08, $1E
+; LZSS-compressed: 39 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6AC1::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $4d, $00
+    db $10, $06, $00, $1e, $06, $00, $74, $0f, $13, $00, $14, $06, $00, $a4, $0f, $2b
+    db $00, $f5, $0f, $4d, $00, $08, $1e
 
-; LZSS-compressed asset: 40 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld30_2_Y0X3_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6AE8:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $33, $03
-    db $03, $02, $02, $02, $02, $00, $4C, $0F, $11, $00, $5A, $00, $00, $74, $0F, $13
-    db $00, $AD, $0F, $4D, $00, $08, $1F, $47
+; LZSS-compressed: 40 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_2_Y0X3_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $33, $03
+    db $03, $02, $02, $02, $02, $00, $4c, $0f, $11, $00, $5a, $00, $00, $74, $0f, $13
+    db $00, $ad, $0f, $4d, $00, $08, $1f, $47
 
-; LZSS-compressed asset: 50 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld3C_1_Y3X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6B10:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $09, $00
-    db $0A, $06, $00, $26, $0F, $33, $00, $08, $0F, $15, $00, $06, $04, $00, $A0, $08
-    db $00, $A8, $0F, $07, $00, $B0, $0C, $00, $D2, $0F, $03, $00, $FB, $0F, $4D, $00
-    db $A0, $08
+; LZSS-compressed: 50 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_1_Y3X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $09, $00
+    db $0a, $06, $00, $26, $0f, $33, $00, $08, $0f, $15, $00, $06, $04, $00, $a0, $08
+    db $00, $a8, $0f, $07, $00, $b0, $0c, $00, $d2, $0f, $03, $00, $fb, $0f, $4d, $00
+    db $a0, $08
 
-; LZSS-compressed asset: 52 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6B42:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6B42:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $0F, $02
-    db $02, $00, $24, $0F, $11, $00, $36, $02, $00, $4E, $0F, $0D, $00, $5C, $04, $00
-    db $76, $0F, $0F, $02, $02, $00, $00, $06, $00, $A4, $0F, $07, $00, $D1, $0F, $4D
-    db $00, $08, $1F, $23
+; LZSS-compressed: 52 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6B42::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $0f, $02
+    db $02, $00, $24, $0f, $11, $00, $36, $02, $00, $4e, $0f, $0d, $00, $5c, $04, $00
+    db $76, $0f, $0f, $02, $02, $00, $00, $06, $00, $a4, $0f, $07, $00, $d1, $0f, $4d
+    db $00, $08, $1f, $23
 
-; LZSS-compressed asset: 48 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld4E_2_Y3X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6B76:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $09, $00
-    db $0A, $06, $00, $26, $0F, $31, $00, $30, $08, $00, $76, $0F, $13, $00, $00, $0F
-    db $1D, $00, $08, $0F, $09, $00, $00, $06, $00, $F2, $0F, $05, $00, $10, $1F, $37
+; LZSS-compressed: 48 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld4E_2_Y3X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $09, $00
+    db $0a, $06, $00, $26, $0f, $31, $00, $30, $08, $00, $76, $0f, $13, $00, $00, $0f
+    db $1d, $00, $08, $0f, $09, $00, $00, $06, $00, $f2, $0f, $05, $00, $10, $1f, $37
 
-; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_2_Y2X3_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6BA6:: ; address name
+; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_2_Y2X3_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18ABA6, $51
 
-; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld40_5_Y0X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6BF7:: ; address name
-    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0A, $05, $00, $00, $0F, $07, $00
-    db $0A, $06, $00, $24, $0F, $09, $00, $2E, $0A, $00, $4E, $0F, $2D, $00, $2E, $0F
-    db $13, $00, $08, $02, $00, $06, $06, $00, $C4, $0F, $09, $00, $00, $08, $00, $EC
-    db $0F, $07, $00, $14, $1F, $3B
+; LZSS-compressed: 54 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y0X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $07, $00
+    db $0a, $06, $00, $24, $0f, $09, $00, $2e, $0a, $00, $4e, $0f, $2d, $00, $2e, $0f
+    db $13, $00, $08, $02, $00, $06, $06, $00, $c4, $0f, $09, $00, $00, $08, $00, $ec
+    db $0f, $07, $00, $14, $1f, $3b
 
-; LZSS-compressed asset: 80 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld3F_3_Y0X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_6C2D:: ; address name
+; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3F_3_Y0X1_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18AC2D, $50
 
-; LZSS-compressed asset: 100 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorldScreen_62_6C7D:: ; heuristic: key-world screen map found by tiling a gap after another; C0
-Data_062_6C7D:: ; address name
+; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_62_6C7D::
     INCBIN "dwm2-cobi-us.gbc", $18AC7D, $64
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_6CE1::
-KeyWorld10_1_Y0X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_6CE1:: ; address name
-    db $01, $02, $04, $09, $0D, $01, $A1, $00 ; entry 0
+KeyWorld10_1_Y0X2_Header::
+    db $01, $02, $04, $09, $0d, $01, $a1, $00 ; entry 0
 
-; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_1_Y0X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6CE9:: ; address name
+; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_1_Y0X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18ACE9, $82
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_6D6B::
-KeyWorld08_0_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_6D6B:: ; address name
-    db $00, $02, $04, $09, $0D, $01, $A2, $00 ; entry 0
+KeyWorld08_0_Y1X2_Header::
+    db $00, $02, $04, $09, $0d, $01, $a2, $00 ; entry 0
 
-; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld08_0_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6D73:: ; address name
+; LZSS-compressed: 192 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld08_0_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18AD73, $C0
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_6E33::
-KeyWorld05_0_Y2X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_6E33:: ; address name
-    db $03, $02, $04, $09, $0D, $30, $A3, $00 ; entry 0
+KeyWorld05_0_Y2X1_Header::
+    db $03, $02, $04, $09, $0d, $30, $a3, $00 ; entry 0
 
-; LZSS-compressed asset: 161 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld05_0_Y2X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6E3B:: ; address name
+; LZSS-compressed: 161 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld05_0_Y2X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18AE3B, $A1
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_6EDC::
-KeyWorld17_1_Y0X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_6EDC:: ; address name
-    db $FF, $02, $04, $05, $0D, $30, $A4, $00 ; entry 0
+KeyWorld17_1_Y0X2_Header::
+    db $ff, $02, $04, $05, $0d, $30, $a4, $00 ; entry 0
 
-; LZSS-compressed asset: 172 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld17_1_Y0X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6EE4:: ; address name
+; LZSS-compressed: 172 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_1_Y0X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18AEE4, $AC
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_6F90::
-KeyWorld1C_1_Y1X2_Header:: ; heuristic: key-world screen header; C0
-Data_062_6F90:: ; address name
-    db $05, $02, $04, $09, $0D, $01, $A5, $00 ; entry 0
+KeyWorld1C_1_Y1X2_Header::
+    db $05, $02, $04, $09, $0d, $01, $a5, $00 ; entry 0
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y1X2_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_6F98:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y1X2_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18AF98, $94
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_702C::
-KeyWorld10_1_Y2X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_702C:: ; address name
-    db $05, $02, $04, $09, $0D, $01, $A6, $00 ; entry 0
+KeyWorld10_1_Y2X1_Header::
+    db $05, $02, $04, $09, $0d, $01, $a6, $00 ; entry 0
 
-; LZSS-compressed asset: 141 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_1_Y2X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_7034:: ; address name
+; LZSS-compressed: 141 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_1_Y2X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B034, $8D
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_70C1::
-KeyWorld1C_1_Y0X1_Header:: ; heuristic: key-world screen header; C0
-Data_062_70C1:: ; address name
-    db $FF, $02, $04, $06, $0D, $01, $A7, $00 ; entry 0
+KeyWorld1C_1_Y0X1_Header::
+    db $ff, $02, $04, $06, $0d, $01, $a7, $00 ; entry 0
 
-; LZSS-compressed asset: 172 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y0X1_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_70C9:: ; address name
+; LZSS-compressed: 172 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y0X1_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B0C9, $AC
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_7175::
-KeyWorld22_1_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7175:: ; address name
-    db $FF, $02, $04, $09, $0D, $01, $A8, $00 ; entry 0
+KeyWorld22_1_Y1X0_Header::
+    db $ff, $02, $04, $09, $0d, $01, $a8, $00 ; entry 0
 
-; LZSS-compressed asset: 170 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld22_1_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_717D:: ; address name
+; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld22_1_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B17D, $AA
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_7227::
-KeyWorld28_1_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7227:: ; address name
-    db $00, $02, $09, $0B, $0C, $01, $A9, $00 ; entry 0
+KeyWorld28_1_Y2X0_Header::
+    db $00, $02, $09, $0b, $0c, $01, $a9, $00 ; entry 0
 
-; LZSS-compressed asset: 215 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld28_1_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_722F:: ; address name
+; LZSS-compressed: 215 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld28_1_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B22F, $D7
 
-; LZSS-compressed asset: 40 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_1_Y0X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7306:: ; address name
-    db $68, $01, $02, $01, $02, $00, $05, $02, $F6, $FF, $15, $02, $08, $06, $02, $28
-    db $0F, $0D, $02, $08, $04, $02, $50, $0F, $0F, $02, $08, $02, $02, $78, $0F, $11
-    db $02, $AF, $0F, $4D, $02, $08, $1F, $45
+; LZSS-compressed: 40 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_1_Y0X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $15, $02, $08, $06, $02, $28
+    db $0f, $0d, $02, $08, $04, $02, $50, $0f, $0f, $02, $08, $02, $02, $78, $0f, $11
+    db $02, $af, $0f, $4d, $02, $08, $1f, $45
 
-; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld08_0_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_732E:: ; address name
+; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld08_0_Y1X2_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18B32E, $4D
 
-; LZSS-compressed asset: 44 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld05_0_Y2X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_737B:: ; address name
-    db $68, $01, $03, $01, $03, $00, $05, $03, $F6, $FF, $11, $02, $02, $03, $1C, $0F
-    db $11, $02, $02, $03, $42, $0F, $11, $03, $54, $02, $03, $04, $08, $03, $78, $0F
-    db $03, $03, $A1, $0F, $4D, $03, $01, $1F, $4D, $03, $04, $02
+; LZSS-compressed: 44 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld05_0_Y2X1_Attrs::
+    db $68, $01, $03, $01, $03, $00, $05, $03, $f6, $ff, $11, $02, $02, $03, $1c, $0f
+    db $11, $02, $02, $03, $42, $0f, $11, $03, $54, $02, $03, $04, $08, $03, $78, $0f
+    db $03, $03, $a1, $0f, $4d, $03, $01, $1f, $4d, $03, $04, $02
 
-; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld17_1_Y0X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_73A7:: ; address name
+; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_1_Y0X2_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18B3A7, $41
 
-; LZSS-compressed asset: 33 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y1X2_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_73E8:: ; address name
-    db $68, $01, $02, $01, $02, $00, $05, $02, $F6, $FF, $15, $02, $04, $06, $02, $28
-    db $0F, $11, $02, $08, $00, $02, $50, $0F, $3B, $02, $B1, $0F, $4D, $02, $08, $1F
+; LZSS-compressed: 33 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y1X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $15, $02, $04, $06, $02, $28
+    db $0f, $11, $02, $08, $00, $02, $50, $0f, $3b, $02, $b1, $0f, $4d, $02, $08, $1f
     db $43
 
-; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_1_Y2X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7409:: ; address name
+KeyWorld10_1_Y2X1_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18B409, $41
 
-; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1C_1_Y0X1_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_744A:: ; address name
-    db $68, $01, $02, $01, $02, $00, $05, $02, $F6, $FF, $13, $02, $F4, $FF, $01, $02
-    db $F4, $FE, $02, $F2, $FF, $01, $02, $56, $0F, $07, $02, $7C, $06, $02, $7A, $0F
-    db $09, $02, $A2, $08, $02, $A2, $0F, $05, $02, $B2, $0C, $02, $CA, $0F, $0D, $02
-    db $FD, $0F, $4D, $02, $00, $06
+; LZSS-compressed: 54 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1C_1_Y0X1_Attrs::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $13, $02, $f4, $ff, $01, $02
+    db $f4, $fe, $02, $f2, $ff, $01, $02, $56, $0f, $07, $02, $7c, $06, $02, $7a, $0f
+    db $09, $02, $a2, $08, $02, $a2, $0f, $05, $02, $b2, $0c, $02, $ca, $0f, $0d, $02
+    db $fd, $0f, $4d, $02, $00, $06
 
-; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld22_1_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7480:: ; address name
+KeyWorld22_1_Y1X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18B480, $41
 
-; LZSS-compressed asset: 86 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld28_1_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_74C1:: ; address name
+; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld28_1_Y2X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18B4C1, $56
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_7517::
-KeyWorld10_0_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7517:: ; address name
-    db $05, $03, $05, $08, $0A, $38, $C5, $00 ; entry 0
+KeyWorld10_0_Y1X0_Header::
+    db $05, $03, $05, $08, $0a, $38, $c5, $00 ; entry 0
 
-; LZSS-compressed asset: 145 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_0_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_751F:: ; address name
+; LZSS-compressed: 145 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B51F, $91
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_75B0::
-KeyWorld02_0_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_75B0:: ; address name
-    db $FF, $08, $09, $0A, $0D, $05, $C6, $00 ; entry 0
+KeyWorld02_0_Y1X0_Header::
+    db $ff, $08, $09, $0a, $0d, $05, $c6, $00 ; entry 0
 
-; LZSS-compressed asset: 110 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_75B8:: ; address name
+; LZSS-compressed: 110 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B5B8, $6E
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_7626::
-KeyWorld02_0_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7626:: ; address name
-    db $FF, $0B, $0D, $0E, $0F, $05, $C7, $00 ; entry 0
+KeyWorld02_0_Y2X0_Header::
+    db $ff, $0b, $0d, $0e, $0f, $05, $c7, $00 ; entry 0
 
-; LZSS-compressed asset: 128 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_762E:: ; address name
+; LZSS-compressed: 128 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B62E, $80
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_76AE::
-KeyWorld00_0_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_76AE:: ; address name
-    db $FF, $0B, $0C, $0D, $0F, $05, $C8, $00 ; entry 0
+KeyWorld00_0_Y1X0_Header::
+    db $ff, $0b, $0c, $0d, $0f, $05, $c8, $00 ; entry 0
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_76B6:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B6B6, $94
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_774A::
-KeyWorld00_0_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_774A:: ; address name
-    db $06, $03, $07, $08, $0A, $38, $C9, $00 ; entry 0
+KeyWorld00_0_Y2X0_Header::
+    db $06, $03, $07, $08, $0a, $38, $c9, $00 ; entry 0
 
-; LZSS-compressed asset: 153 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_7752:: ; address name
+; LZSS-compressed: 153 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B752, $99
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_77EB::
-KeyWorld01_0_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_77EB:: ; address name
-    db $07, $03, $05, $0B, $0D, $38, $CA, $00 ; entry 0
+KeyWorld01_0_Y2X0_Header::
+    db $07, $03, $05, $0b, $0d, $38, $ca, $00 ; entry 0
 
-; LZSS-compressed asset: 205 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_77F3:: ; address name
+; LZSS-compressed: 205 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B7F3, $CD
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; the 8-byte header of the screen stream that follows (E-0222)
 ; record: screen header
 KeyWorldScreenHeader_62_78C0::
-KeyWorld04_0_Y1X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_78C0:: ; address name
-    db $04, $03, $04, $05, $0B, $38, $CB, $00 ; entry 0
+KeyWorld04_0_Y1X0_Header::
+    db $04, $03, $04, $05, $0b, $38, $cb, $00 ; entry 0
 
-; LZSS-compressed asset: 189 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y1X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_78C8:: ; address name
+; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y1X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B8C8, $BD
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_7985::
-KeyWorld04_0_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7985:: ; address name
-    db $05, $00, $03, $07, $08, $38, $CC, $00 ; entry 0
+KeyWorld04_0_Y2X0_Header::
+    db $05, $00, $03, $07, $08, $38, $cc, $00 ; entry 0
 
-; LZSS-compressed asset: 213 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_798D:: ; address name
+; LZSS-compressed: 213 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18B98D, $D5
 
-; E-0222 (derived: the 8-byte header of the screen stream that follows)
-; record: screen header
 KeyWorldScreenHeader_62_7A62::
-KeyWorld1E_0_Y2X0_Header:: ; heuristic: key-world screen header; C0
-Data_062_7A62:: ; address name
-    db $07, $04, $06, $09, $0B, $38, $CD, $00 ; entry 0
+KeyWorld1E_0_Y2X0_Header::
+    db $07, $04, $06, $09, $0b, $38, $cd, $00 ; entry 0
 
-; LZSS-compressed asset: 209 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y2X0_Tiles:: ; heuristic: key-world screen tile map; C0
-Data_062_7A6A:: ; address name
+; LZSS-compressed: 209 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y2X0_Tiles::
     INCBIN "dwm2-cobi-us.gbc", $18BA6A, $D1
 
-; LZSS-compressed asset: 43 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld10_0_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7B3B:: ; address name
-    db $68, $01, $02, $02, $FF, $F6, $01, $02, $0A, $05, $02, $00, $0F, $4D, $02, $10
-    db $06, $02, $1E, $06, $02, $74, $0F, $09, $02, $7E, $0A, $02, $9E, $0F, $07, $02
-    db $7C, $0F, $15, $02, $18, $0F, $4D, $02, $04, $1F, $01
+; LZSS-compressed: 43 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y1X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $4d, $02, $10
+    db $06, $02, $1e, $06, $02, $74, $0f, $09, $02, $7e, $0a, $02, $9e, $0f, $07, $02
+    db $7c, $0f, $15, $02, $18, $0f, $4d, $02, $04, $1f, $01
 
-; LZSS-compressed asset: 48 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7B66:: ; address name
-    db $68, $01, $03, $03, $FF, $F6, $01, $03, $0A, $05, $03, $00, $0F, $0F, $02, $02
-    db $03, $24, $0F, $11, $02, $03, $5C, $01, $03, $4E, $0F, $4D, $03, $72, $0F, $03
-    db $03, $4C, $0F, $01, $03, $24, $0F, $25, $03, $0C, $0F, $17, $03, $0E, $0F, $07
+; LZSS-compressed: 48 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y1X0_Attrs::
+    db $68, $01, $03, $03, $ff, $f6, $01, $03, $0a, $05, $03, $00, $0f, $0f, $02, $02
+    db $03, $24, $0f, $11, $02, $03, $5c, $01, $03, $4e, $0f, $4d, $03, $72, $0f, $03
+    db $03, $4c, $0f, $01, $03, $24, $0f, $25, $03, $0c, $0f, $17, $03, $0e, $0f, $07
 
-; LZSS-compressed asset: 47 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld02_0_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7B96:: ; address name
-    db $68, $01, $02, $02, $FF, $F6, $01, $02, $0A, $05, $02, $00, $0F, $0B, $02, $08
-    db $06, $02, $28, $0F, $0D, $02, $08, $04, $02, $50, $0F, $0F, $02, $08, $02, $02
-    db $78, $0F, $4D, $02, $4C, $0F, $25, $02, $20, $0F, $13, $02, $0A, $0F, $0B
+; LZSS-compressed: 47 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y2X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $0b, $02, $08
+    db $06, $02, $28, $0f, $0d, $02, $08, $04, $02, $50, $0f, $0f, $02, $08, $02, $02
+    db $78, $0f, $4d, $02, $4c, $0f, $25, $02, $20, $0f, $13, $02, $0a, $0f, $0b
 
-; LZSS-compressed asset: 56 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7BC5:: ; address name
-    db $68, $01, $03, $03, $FF, $F6, $01, $03, $0A, $05, $03, $00, $0F, $0B, $00, $00
-    db $02, $02, $02, $02, $03, $24, $0F, $11, $03, $32, $00, $03, $4C, $0F, $15, $03
-    db $36, $00, $03, $78, $0F, $4D, $03, $9C, $0C, $03, $34, $0F, $13, $03, $34, $04
-    db $03, $16, $1F, $0D, $03, $0A, $0F, $0B
+; LZSS-compressed: 56 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y1X0_Attrs::
+    db $68, $01, $03, $03, $ff, $f6, $01, $03, $0a, $05, $03, $00, $0f, $0b, $00, $00
+    db $02, $02, $02, $02, $03, $24, $0f, $11, $03, $32, $00, $03, $4c, $0f, $15, $03
+    db $36, $00, $03, $78, $0f, $4d, $03, $9c, $0c, $03, $34, $0f, $13, $03, $34, $04
+    db $03, $16, $1f, $0d, $03, $0a, $0f, $0b
 
-; LZSS-compressed asset: 40 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld00_0_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7BFD:: ; address name
-    db $68, $01, $02, $02, $FF, $F6, $01, $02, $0A, $05, $02, $00, $0F, $05, $02, $0A
-    db $06, $02, $22, $0F, $09, $02, $2C, $0C, $02, $4E, $0F, $4D, $02, $AE, $0F, $45
-    db $02, $2A, $0F, $15, $02, $02, $0F, $13
+; LZSS-compressed: 40 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y2X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $05, $02, $0a
+    db $06, $02, $22, $0f, $09, $02, $2c, $0c, $02, $4e, $0f, $4d, $02, $ae, $0f, $45
+    db $02, $2a, $0f, $15, $02, $02, $0f, $13
 
-; LZSS-compressed asset: 93 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld01_0_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7C25:: ; address name
+; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18BC25, $5D
 
-; LZSS-compressed asset: 56 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y1X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7C82:: ; address name
-    db $68, $01, $02, $02, $FF, $F6, $01, $02, $0A, $05, $02, $00, $0F, $31, $02, $0A
-    db $06, $02, $4E, $0F, $07, $02, $58, $08, $02, $74, $0F, $07, $02, $7C, $0C, $02
-    db $9E, $0F, $09, $02, $04, $0A, $02, $C8, $0F, $2B, $02, $08, $00, $02, $06, $0E
-    db $02, $1C, $1F, $01, $02, $04, $0F, $11
+KeyWorld04_0_Y1X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $31, $02, $0a
+    db $06, $02, $4e, $0f, $07, $02, $58, $08, $02, $74, $0f, $07, $02, $7c, $0c, $02
+    db $9e, $0f, $09, $02, $04, $0a, $02, $c8, $0f, $2b, $02, $08, $00, $02, $06, $0e
+    db $02, $1c, $1f, $01, $02, $04, $0f, $11
 
-; LZSS-compressed asset: 69 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld04_0_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7CBA:: ; address name
+; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y2X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18BCBA, $45
 
-; LZSS-compressed asset: 80 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-KeyWorld1E_0_Y2X0_Attrs:: ; heuristic: key-world screen attribute map; C0
-Data_062_7CFF:: ; address name
+; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y2X0_Attrs::
     INCBIN "dwm2-cobi-us.gbc", $18BCFF, $50
-    ds $2B1, $00
+    ds $2b1, $00

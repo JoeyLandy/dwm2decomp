@@ -1,22 +1,17 @@
 SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
-    db $0A
+    db $0a
 
-; only called from FieldModeStateDispatch_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_FieldStateCommonUpdate)
-; reads: wMenuState, wMenuSubState, wStatusFieldStep, wMapType
-; writes: wMenuState, rRAMG, wTalkEventGroup, wTalkEventIndex, wModeState
 FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc::
-Func_00A_4001:: ; address name
     call FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect
     ld a, [wMenuState]
     inc a
     ld [wMenuState], a
-    cp a, $05
+    cp $05
     ret nz
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld a, [wMenuSubState]
-    or a, a
+    or a
     jr nz, .call_field_mode_state_dispatch_case07_sub01
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
@@ -27,14 +22,14 @@ Func_00A_4001:: ; address name
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
 
 .check_status_field_step:
-    xor a, a
+    xor a
     ld [rRAMG], a
     ld a, [wStatusFieldStep]
-    and a, $07
+    and $07
     jr z, .check_map_type
     ld a, $04
     ld [wTalkEventGroup], a
-    xor a, a
+    xor a
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
@@ -52,14 +47,9 @@ Func_00A_4001:: ; address name
     ld [wModeState], a
     ret
 
-; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc)
-; reads: wStatusStepFlags, wPartyCount, hTemp0, hTemp1
-; points at: wPartyList
 FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01::
-Func_00A_4055:: ; address name
     ld a, [wStatusStepFlags]
-    and a, $01
+    and $01
     ret z
     ld a, [wPartyCount]
     ld b, a
@@ -82,20 +72,20 @@ Func_00A_4055:: ; address name
     ldh a, [hTemp1]
     ld d, a
     ld a, e
-    or a, d
+    or d
     jr z, .next
     ld a, e
-    sub a, $01
+    sub $01
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     push hl
     ld a, [hl]
     ld c, MON_MP
     call SRAMRecordAddress
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
     ld [hl], a
     pop hl
@@ -108,23 +98,13 @@ Func_00A_4055:: ; address name
     ret
 
 ; sets bit 7 of wFieldStepFlags (E-0114)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte, FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02)
-; reads: wFieldStepFlags
-; writes: wFieldStepFlags
 SetFieldStepFlagsBit7::
-Func_00A_409B:: ; address name
     ld a, [wFieldStepFlags]
     set 7, a
     ld [wFieldStepFlags], a
     ret
 
-; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc)
-; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep
-; writes: wStatusFieldStep
-; points at: wPartyList
 FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02::
-Func_00A_40A4:: ; address name
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -146,21 +126,21 @@ Func_00A_40A4:: ; address name
     ldh a, [hTemp1]
     ld d, a
     ld a, e
-    sub a, $01
+    sub $01
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     bit 7, a
     jr nz, .call_set_field_step_flags_bit7
-    or a, e
+    or e
     jr nz, .skip
 
 .call_set_field_step_flags_bit7:
     ld c, $01
     call SetFieldStepFlagsBit7
     ld a, [wPartyCount]
-    sub a, b
+    sub b
     jr z, .check_status_field_step
     ld b, a
 
@@ -171,15 +151,15 @@ Func_00A_40A4:: ; address name
 
 .check_status_field_step:
     ld a, [wStatusFieldStep]
-    or a, c
+    or c
     ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
     ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [hl]
-    and a, $F3
-    or a, $80
+    and $f3
+    or $80
     ld [hl], a
     pop hl
     ld de, $0000
@@ -190,7 +170,7 @@ Func_00A_40A4:: ; address name
     ld c, MON_HP
     call SRAMRecordAddress
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
     ld [hl], a
     pop hl
@@ -202,13 +182,7 @@ Func_00A_40A4:: ; address name
     jr nz, .loop
     ret
 
-; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc)
-; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep, wMapType, hMapId
-; writes: wFieldStepFlags, wStatusFieldStep
-; points at: wPartyList
 FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte::
-Func_00A_4110:: ; address name
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -230,7 +204,7 @@ Func_00A_4110:: ; address name
     ld a, [wStatusFieldStep]
     bit 7, a
     jr nz, .check_map_type
-    ld c, $0A
+    ld c, $0a
     ld a, $40
     ld [wFieldStepFlags], a
     jr .skip
@@ -241,27 +215,27 @@ Func_00A_4110:: ; address name
     bit 7, a
     jr nz, .skip
     ldh a, [hMapId]
-    cp a, $3A
+    cp $3a
     jr nz, .skip
     ld c, $05
 
 .skip:
     ld a, e
-    sub a, c
+    sub c
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     bit 7, a
     jr nz, .call_set_field_step_flags_bit7
-    or a, e
+    or e
     jr nz, .skip2
 
 .call_set_field_step_flags_bit7:
     ld c, $01
     call SetFieldStepFlagsBit7
     ld a, [wPartyCount]
-    sub a, b
+    sub b
     jr z, .check_status_field_step
     ld b, a
 
@@ -272,14 +246,14 @@ Func_00A_4110:: ; address name
 
 .check_status_field_step:
     ld a, [wStatusFieldStep]
-    or a, c
+    or c
     ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
     ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [hl]
-    or a, $80
+    or $80
     ld [hl], a
     pop hl
     ld de, $0000
@@ -290,7 +264,7 @@ Func_00A_4110:: ; address name
     ld c, MON_HP
     call SRAMRecordAddress
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
     ld [hl], a
     pop hl
@@ -302,27 +276,21 @@ Func_00A_4110:: ; address name
     jr nz, .loop
     ret
 
-; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc)
-; reads: wMenuState, wIsCGB
-; writes: wBGPaletteUploadRequest
-; points at: wDMGPaletteBGP, wBGPaletteBuffer, wBGPaletteCopy
 FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect::
-Func_00A_4196:: ; address name
     ld a, [wMenuState]
-    or a, a
+    or a
     jr nz, .read_menu_state
     ld a, $66
     call QueueSoundEffect
     ld hl, wDMGPaletteBGP
-    ld a, $D2
-    ld [hl+], a
-    ld a, $D2
-    ld [hl+], a
-    ld a, $E2
+    ld a, $d2
+    ld [hli], a
+    ld a, $d2
+    ld [hli], a
+    ld a, $e2
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .return
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
@@ -334,17 +302,17 @@ Func_00A_4196:: ; address name
     ld a, [wMenuState]
     srl a
     srl a
-    and a, $01
+    and $01
     jr z, .skip
     ld hl, wDMGPaletteBGP
-    ld a, $D2
-    ld [hl+], a
-    ld a, $D2
-    ld [hl+], a
-    ld a, $E2
+    ld a, $d2
+    ld [hli], a
+    ld a, $d2
+    ld [hli], a
+    ld a, $e2
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .return
     ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
@@ -354,41 +322,38 @@ Func_00A_4196:: ; address name
 
 .skip:
     ld hl, wDMGPaletteBGP
-    ld a, $2D
-    ld [hl+], a
-    ld a, $2D
-    ld [hl+], a
-    ld a, $1D
+    ld a, $2d
+    ld [hli], a
+    ld a, $2d
+    ld [hli], a
+    ld a, $1d
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .return
     ld b, $40
     ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
 
 .loop:
-    ld a, [hl+]
-    xor a, $FF
+    ld a, [hli]
+    xor $ff
     ld [de], a
     inc de
     dec b
     jr nz, .loop
 
 .set_bg_palette_upload_request_to_7F:
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .return:
     ret
 
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0122)
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: wMapMoveType
 RunPlayerMoveTypeMapMoveType::
-Func_00A_4214:: ; address name
     ld a, [wMapMoveType]
-    rst $00
+    jumptable
     dw RunPlayerMoveTypeMapMoveType_Return
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02
@@ -398,18 +363,10 @@ Func_00A_4214:: ; address name
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07
 
-; entry 0 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
 RunPlayerMoveTypeMapMoveType_Return::
-Jump_00A_4228:: ; address name
     ret
 
-; entry 6 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06::
-Jump_00A_4229:: ; address name
     ld a, $50
     ldh [hTemp1], a
     ld a, $80
@@ -418,60 +375,35 @@ Jump_00A_4229:: ; address name
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 7 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07::
-Jump_00A_4239:: ; address name
     ld a, $52
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 1 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
-Jump_00A_4243:: ; address name
     ld a, $44
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 2 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02::
-Jump_00A_424D:: ; address name
     ld a, $56
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 3 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03::
-Jump_00A_4257:: ; address name
     ld a, $44
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 4 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04::
-Jump_00A_4261:: ; address name
     ld a, $44
     ldh [hTemp1], a
     ld a, $80
@@ -480,28 +412,22 @@ Jump_00A_4261:: ; address name
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; entry 5 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
-; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
-Jump_00A_4271:: ; address name
     ld a, $44
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState::
-Jump_00A_427B:: ; address name
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ld a, [wTalkCountdown]
-    or a, a
+    or a
     ret nz
     ldh a, [hPlayerX]
     ld b, a
@@ -511,34 +437,30 @@ Jump_00A_427B:: ; address name
     ldh a, [hTemp1]
     ld c, a
     ld a, [wTilesUnderPoint]
-    cp a, c
+    cp c
     jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $1]
-    cp a, c
+    cp c
     jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $2]
-    cp a, c
+    cp c
     jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $3]
-    cp a, c
+    cp c
     jr z, .set_mode_state_to_07
     ret
 
 .set_mode_state_to_07:
     ld a, $07
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wMenuState], a
     ld [wMenuSubState], a
     ret
 
-; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wStatusStepFlags (E-0129)
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: hPlayerStateFlags, wModeState, wMapType, hMapId, wPartyCount, wStatusStepFlags
-; writes: rRAMG, wStatusStepFlags, wEncounterCountdown, wModeState, wMenuState, wMenuSubState, wStatusFieldStep
-; points at: wPartyList
+; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member
+; has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wStatusStepFlags (E-0129)
 EnterStatusEffectFieldState::
-Func_00A_42BC:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 7, a
     ret nz
@@ -548,41 +470,41 @@ Func_00A_42BC:: ; address name
     call TestFlagBit
     ret nc
     ld a, [wModeState]
-    and a, $0F
+    and $0f
     dec a
     ret z
     ld a, [wModeState]
-    cp a, $07
+    cp $07
     ret z
     ld a, [wMapType]
     bit 7, a
     jr nz, .cp_82
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     ret c
     ld c, a
     ld hl, EnterStatusEffectFieldState_Data
 
 .skip:
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr z, .read_party_count
-    cp a, c
+    cp c
     ret z
     jr .skip
 
 .cp_82:
-    cp a, $82
+    cp $82
     ret z
-    cp a, $83
+    cp $83
     ret z
-    cp a, $84
+    cp $84
     ret z
-    cp a, $87
+    cp $87
     ret z
 
 .read_party_count:
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
     ld b, a
@@ -607,28 +529,28 @@ Func_00A_42BC:: ; address name
 .loop2:
     pop bc
     ld a, [wModeState]
-    cp a, $03
+    cp $03
     jr nz, .set_mode_state_to_07
-    xor a, a
+    xor a
     ld [wEncounterCountdown], a
 
 .set_mode_state_to_07:
     ld a, $07
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wMenuState], a
     ld a, $01
     ld [wMenuSubState], a
-    xor a, a
+    xor a
     ld [wStatusFieldStep], a
     ld a, [wStatusStepFlags]
-    and a, $7F
+    and $7f
     ld [wStatusStepFlags], a
     jr .check_status_step_flags
 
 .call_toggle_status_step_flags_low_bit_once2:
     call ToggleStatusStepFlagsLowBitOnce
-    and a, $01
+    and $01
     jr nz, .loop2
 
 .restore:
@@ -639,95 +561,85 @@ Func_00A_42BC:: ; address name
 
 .check_status_step_flags:
     ld a, [wStatusStepFlags]
-    and a, $7F
+    and $7f
     ld [wStatusStepFlags], a
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; when wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80 (E-0119)
-; 2 call sites from 1 routine (e.g. EnterStatusEffectFieldState)
-; reads: wStatusStepFlags
-; writes: wStatusStepFlags
+; when wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80
+; (E-0119)
 ToggleStatusStepFlagsLowBitOnce::
-Func_00A_4362:: ; address name
     ld a, [wStatusStepFlags]
     bit 7, a
     ret nz
     ld a, [wStatusStepFlags]
     inc a
-    and a, $01
-    or a, $80
+    and $01
+    or $80
     ld [wStatusStepFlags], a
     ret
 
-; address loaded by EnterStatusEffectFieldState
-EnterStatusEffectFieldState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_4374:: ; address name
-    db $21, $22, $23, $24, $25, $26, $29, $2A, $2B, $2D, $2E, $31, $32, $33, $34, $3C
-    db $3D, $41, $45, $49, $4A, $4B, $4C, $4D, $4F
+EnterStatusEffectFieldState_Data::
+    db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c
+    db $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f
     dw RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
     dw $5852
-    dw $5A59
+    dw $5a59
     dw PointerRun_0A_438D_Entry03
     dw PointerRun_0A_438D_Entry04
-    dw $605F
+    dw $605f
     dw PointerRun_0A_438D_Entry06
     dw PointerRun_0A_438D_Entry07
     dw PointerRun_0A_438D_Entry08
     dw PointerRun_0A_438D_Entry09
     dw PointerRun_0A_438D_Entry0A
-    db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
-    db $E2, $FF
+    db $89, $92, $9d, $a4, $a9, $ab, $af, $b2, $b1, $b6, $b9, $ba, $bc, $c5, $d0, $d9
+    db $e2, $ff
 
-; when nothing else runs and wEncounterRate & $7F is set, counts wTalkCountdown down; at zero sets wTalkEventGroup = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: wFadeState, wScriptRunning, wEncounterRate, wTalkCountdown
-; writes: wTalkCountdown, wTalkEventGroup, wTalkEventIndex
+; when nothing else runs and wEncounterRate & $7F is set, counts wTalkCountdown down; at zero sets
+; wTalkEventGroup = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs)
+; (E-0124)
 CountDownTalkCountdownThenDispatchTalkEvent::
-Func_00A_43B5:: ; address name
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ld a, [wEncounterRate]
-    and a, $7F
+    and $7f
     ret z
     ld a, [wTalkCountdown]
-    or a, a
+    or a
     ret z
     dec a
     ld [wTalkCountdown], a
-    or a, a
+    or a
     ret nz
     ld a, [wScriptRunning]
-    or a, a
+    or a
     jr z, .set_talk_event_group_to_1E
     ld a, $01
     ld [wTalkCountdown], a
     ret
 
 .set_talk_event_group_to_1E:
-    ld a, $1E
+    ld a, $1e
     ld [wTalkEventGroup], a
-    xor a, a
+    xor a
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
-; in the field when nothing blocks it: counts down the encounter or talk timers (wEncounterRate, wEncounterDelay) and starts a battle or talk event when they expire (E-0131)
-; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_FieldStateCommonUpdate, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wEncounterRate, wEncounterDelay, wEncounterCountdown, wMapType, ...
-; writes: wEncounterRate, wEncounterDelay, wTalkEventGroup, wTalkEventIndex, wEncounterCountdown, wBattleIntroKind, wModeState, wBattleTransitionStep, ...
+; in the field when nothing blocks it: counts down the encounter or talk timers (wEncounterRate,
+; wEncounterDelay) and starts a battle or talk event when they expire (E-0131)
 TickRandomEncounterCounter::
-Func_00A_43EC:: ; address name
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ldh a, [hPlayerStateFlags]
     bit 7, a
@@ -735,39 +647,39 @@ Func_00A_43EC:: ; address name
     bit 5, a
     ret nz
     ld a, [wModeState]
-    cp a, $04
+    cp $04
     ret z
-    cp a, $01
+    cp $01
     ret z
     ld a, [wEncounterRate]
     bit 7, a
     jr z, .check_encounter_rate
-    and a, $7F
+    and $7f
     ld [wEncounterRate], a
     ret
 
 .check_encounter_rate:
     ld a, [wEncounterRate]
-    or a, a
+    or a
     ret z
     ld a, [wEncounterDelay]
-    or a, a
+    or a
     jr z, .read_encounter_rate
     dec a
     ld [wEncounterDelay], a
-    or a, a
+    or a
     ret nz
     ld a, [wModeState]
-    cp a, $01
+    cp $01
     jr nz, .set_talk_event_group_to_1D
     ld a, $01
     ld [wEncounterDelay], a
     ret
 
 .set_talk_event_group_to_1D:
-    ld a, $1D
+    ld a, $1d
     ld [wTalkEventGroup], a
-    xor a, a
+    xor a
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
@@ -793,13 +705,13 @@ Func_00A_43EC:: ; address name
     sla l
     rl h
     ld a, l
-    add a, $FE
+    add $fe
     ld l, a
     ld a, h
-    adc a, $44
+    adc $44
     ld h, a
-    ld a, [hl+]
-    or a, a
+    ld a, [hli]
+    or a
     jr nz, .read_encounter_countdown
     push hl
     ldh a, [hPlayerX]
@@ -811,27 +723,27 @@ Func_00A_43EC:: ; address name
     ld b, $02
 
 .loop:
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr z, .next
     ld c, a
     ld a, [wTilesUnderPoint]
-    cp a, c
+    cp c
     jr z, .skip
     ld a, [wTilesUnderPoint + $1]
-    cp a, c
+    cp c
     jr z, .skip
     ld a, [wTilesUnderPoint + $2]
-    cp a, c
+    cp c
     jr z, .skip
     ld a, [wTilesUnderPoint + $3]
-    cp a, c
+    cp c
     jr z, .skip
 
 .next:
     inc b
     ld a, b
-    cp a, $09
+    cp $09
     jr nz, .loop
     ld b, $02
 
@@ -840,7 +752,7 @@ Func_00A_43EC:: ; address name
     srl a
     ld b, a
     ld a, [wEncounterCountdown]
-    sub a, b
+    sub b
     ld [wEncounterCountdown], a
     jr .skip2
 
@@ -848,20 +760,20 @@ Func_00A_43EC:: ; address name
     ld a, [hl]
     ld c, a
     ld a, [wEncounterCountdown]
-    sub a, c
+    sub c
     ld [wEncounterCountdown], a
 
 .skip2:
     jr c, .clear_battle_intro_kind
     ld a, [wEncounterCountdown]
-    or a, a
+    or a
     jr z, .clear_battle_intro_kind
-    cp a, $E0
+    cp $e0
     jr nc, .clear_battle_intro_kind
     ret
 
 .clear_battle_intro_kind:
-    xor a, a
+    xor a
     ld [wBattleIntroKind], a
     ld a, [wMapType]
     bit 7, a
@@ -873,11 +785,11 @@ Func_00A_43EC:: ; address name
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ld a, $03
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wBattleTransitionStep], a
     call NextRandomSeed
     ld a, [wKeyRandomLo]
-    and a, $01
+    and $01
     sla a
     ld [wBattleTransitionSubStep], a
     ld a, $02
@@ -886,52 +798,55 @@ Func_00A_43EC:: ; address name
     call PickRandomEncounterCountdownFromTable478F
     ret
 
-; E-0202 (C1: TickRandomEncounterCounter.restore reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0 it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot) / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of hPlayerStateFlags is set the decrement is 1; 36 records end at the code at $461E).
-; record: mode (0 = by tile); then tile numbers, slot k taking (k + 2) / 2 off wEncounterCountdown when a tile under the player matches (otherwise 1), or with a non-zero mode the decrement itself
+; TickRandomEncounterCounter.restore reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0
+; it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot)
+; / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of
+; hPlayerStateFlags is set the decrement is 1; 36 records end at the code at $461E (E-0202, C1)
+; record: mode (0 = by tile); then tile numbers, slot k taking (k + 2) / 2 off wEncounterCountdown
+; when a tile under the player matches (otherwise 1), or with a non-zero mode the decrement itself
 EncounterRateTable::
-Data_00A_44FE:: ; address name
-    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 0
-    db $00, $FF, $FF, $40, $FF, $42, $FF, $44 ; id 1
-    db $01, $04, $FF, $FF, $FF, $FF, $FF, $FF ; id 2
-    db $00, $FF, $FF, $40, $42, $44, $FF, $FF ; id 3
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 4
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 5
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 6
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 7
-    db $01, $04, $FF, $FF, $FF, $FF, $FF, $FF ; id 8
-    db $01, $01, $FF, $FF, $FF, $FF, $FF, $FF ; id 9
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 10
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 11
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 12
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 13
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 14
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 15
-    db $00, $FF, $FF, $40, $42, $44, $FF, $FF ; id 16
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 17
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 18
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 19
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 20
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 21
-    db $00, $FF, $FF, $40, $FF, $42, $44, $FF ; id 22
-    db $01, $04, $FF, $FF, $FF, $FF, $FF, $FF ; id 23
-    db $00, $FF, $FF, $40, $FF, $42, $FF, $44 ; id 24
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 25
-    db $00, $FF, $FF, $40, $FF, $42, $FF, $44 ; id 26
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 27
-    db $00, $FF, $FF, $40, $FF, $42, $FF, $44 ; id 28
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 29
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 30
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 31
-    db $01, $05, $FF, $FF, $FF, $FF, $FF, $FF ; id 32
-    db $01, $02, $FF, $FF, $FF, $FF, $FF, $FF ; id 33
-    db $00, $FF, $FF, $40, $42, $44, $FF, $FF ; id 34
-    db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 35
+    db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff ; id 0
+    db $00, $ff, $ff, $40, $ff, $42, $ff, $44 ; id 1
+    db $01, $04, $ff, $ff, $ff, $ff, $ff, $ff ; id 2
+    db $00, $ff, $ff, $40, $42, $44, $ff, $ff ; id 3
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 4
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 5
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 6
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 7
+    db $01, $04, $ff, $ff, $ff, $ff, $ff, $ff ; id 8
+    db $01, $01, $ff, $ff, $ff, $ff, $ff, $ff ; id 9
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 10
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 11
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 12
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 13
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 14
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 15
+    db $00, $ff, $ff, $40, $42, $44, $ff, $ff ; id 16
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 17
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 18
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 19
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 20
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 21
+    db $00, $ff, $ff, $40, $ff, $42, $44, $ff ; id 22
+    db $01, $04, $ff, $ff, $ff, $ff, $ff, $ff ; id 23
+    db $00, $ff, $ff, $40, $ff, $42, $ff, $44 ; id 24
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 25
+    db $00, $ff, $ff, $40, $ff, $42, $ff, $44 ; id 26
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 27
+    db $00, $ff, $ff, $40, $ff, $42, $ff, $44 ; id 28
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 29
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 30
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 31
+    db $01, $05, $ff, $ff, $ff, $ff, $ff, $ff ; id 32
+    db $01, $02, $ff, $ff, $ff, $ff, $ff, $ff ; id 33
+    db $00, $ff, $ff, $40, $42, $44, $ff, $ff ; id 34
+    db $01, $03, $ff, $ff, $ff, $ff, $ff, $ff ; id 35
 
-; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. TickRandomEncounterCounter, RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A)
-; writes: wTilesUnderPoint
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
+; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
+; wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry
+; (E-0064) (the same 63 bytes appear in 3 banks)
 ReadTileBuffer2x2AtPixel_Bank0A::
-Func_00A_461E:: ; address name
     ld a, c
     srl a
     srl a
@@ -949,34 +864,31 @@ Func_00A_461E:: ; address name
     srl a
     add_a_to_hl
     ld a, l
-    add a, $98
+    add $98
     ld l, a
     ld a, h
-    adc a, $C1
+    adc $c1
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wTilesUnderPoint], a
-    ld a, [hl-]
+    ld a, [hld]
     ld [wTilesUnderPoint + $1], a
     ld a, $14
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wTilesUnderPoint + $2], a
     ld a, [hl]
     ld [wTilesUnderPoint + $3], a
     ret
 
-; clears wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleTransitionStep_WriteGameModeAndModeStateEtc)
-; reads: wBattleIntroKind
-; writes: wBattleIntroFlag
+; clears wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight)
+; (E-0122)
 RunBattleIntroKindCase::
-Func_00A_465D:: ; address name
-    xor a, a
+    xor a
     ld [wBattleIntroFlag], a
     ld a, [wBattleIntroKind]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags
     dw RunBattleIntroKindCase_NextTableByte
     dw RunBattleIntroKindCase_SetBattleKindTo02
@@ -986,16 +898,10 @@ Func_00A_465D:: ; address name
     dw RunBattleIntroKindCase_ComputePartyStrengthForKey
     dw RunBattleIntroKindCase_SetBattleKindTo05
 
-; entry 6 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPendingFieldEvent, wPartyStrength, wKeyRandomHi, hTemp0, hTemp1
-; writes: hTemp0, hTemp1, wEncounterKind, wBattleKind
-; points at: wEncounterMonsters
 RunBattleIntroKindCase_ComputePartyStrengthForKey::
-Jump_00A_4677:: ; address name
     ld a, [wPendingFieldEvent]
-    and a, $0F
-    cp a, $0C
+    and $0f
+    cp $0c
     jr nc, .skip2
     farcall ComputePartyStrengthForKey
     ld a, [wPartyStrength]
@@ -1003,9 +909,9 @@ Jump_00A_4677:: ; address name
     ld a, $05
     call DivideBByA
     ld a, b
-    add a, a
+    add a
     ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE
-    add a, e
+    add e
     ld e, a
     jr nc, .set_temp0
     inc d
@@ -1022,8 +928,8 @@ Jump_00A_4677:: ; address name
 .loop:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $0F
-    cp a, $0A
+    and $0f
+    cp $0a
     jr nc, .loop
     push af
     ldh a, [hTemp0]
@@ -1031,16 +937,16 @@ Jump_00A_4677:: ; address name
     ldh a, [hTemp1]
     ld d, a
     pop af
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop
 
@@ -1052,13 +958,13 @@ Jump_00A_4677:: ; address name
     ret
 
 .skip2:
-    sub a, $0C
+    sub $0c
     ld c, a
-    add a, a
-    add a, c
-    add a, a
+    add a
+    add c
+    add a
     ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -1070,79 +976,67 @@ Jump_00A_4677:: ; address name
 .loop2:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop2
     jr .set_encounter_kind_to_02
 
-; address loaded by RunBattleIntroKindCase_ComputePartyStrengthForKey
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_46EE:: ; address name
-    db $AC, $00, $BC, $00, $CC, $00, $DC, $00, $EC, $00, $FC, $00, $0C, $01, $1C, $01
-    db $2C, $01, $3C, $01, $1E, $02, $23, $02, $28, $02, $2D, $02, $32, $02, $37, $02
-    db $3C, $02, $41, $02, $46, $02, $48, $02
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE::
+    db $ac, $00, $bc, $00, $cc, $00, $dc, $00, $ec, $00, $fc, $00, $0c, $01, $1c, $01
+    db $2c, $01, $3c, $01, $1e, $02, $23, $02, $28, $02, $2d, $02, $32, $02, $37, $02
+    db $3c, $02, $41, $02, $46, $02, $48, $02
 
-; address loaded by RunBattleIntroKindCase_ComputePartyStrengthForKey
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_4716:: ; address name
-    db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $0E, $02, $10, $02, $11, $02
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716::
+    db $0b, $02, $0c, $02, $0d, $02, $0e, $02, $0f, $02, $0e, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
 
-; entry 5 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPartyStrength
-; writes: wEncounterMonsters, wEncounterKind, wBattleKind
 RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength::
-Jump_00A_472E:: ; address name
     farcall ComputePartyStrengthLevelPartyStrength
     ld c, $76
     ld a, [wPartyStrength]
-    cp a, $05
+    cp $05
     jr c, .set_encounter_monsters
     inc c
-    cp a, $0A
+    cp $0a
     jr c, .set_encounter_monsters
     inc c
-    cp a, $0F
+    cp $0f
     jr c, .set_encounter_monsters
     inc c
-    cp a, $14
+    cp $14
     jr c, .set_encounter_monsters
     inc c
-    cp a, $19
+    cp $19
     jr c, .set_encounter_monsters
     inc c
-    cp a, $1E
+    cp $1e
     jr c, .set_encounter_monsters
     inc c
-    cp a, $23
+    cp $23
     jr c, .set_encounter_monsters
     inc c
 
 .set_encounter_monsters:
     ld a, c
     ld [wEncounterMonsters], a
-    xor a, a
+    xor a
     ld [wEncounterMonsters + $1], a
-    xor a, a
+    xor a
     ld [wEncounterKind], a
     ld a, $02
     ld [wBattleKind], a
     ret
 
-; draws random values until wKeyRandomHi & $3F is below 100, then wEncounterCountdown = 2 * Data_00A_478F[value / 5] (E-0122)
-; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunGameMode5Case01SubStates_Case02_Case00_RunSaveSteps, StartScriptedEncounterTemp0, SetModeState3AndSaveScreen, ...)
-; reads: wKeyRandomHi
-; writes: wEncounterCountdown
+; draws random values until wKeyRandomHi & $3F is below 100, then wEncounterCountdown = 2 *
+; PickRandomEncounterCountdownFromTable478F_Data[value / 5] (E-0122)
 PickRandomEncounterCountdownFromTable478F::
-Func_00A_476E:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $3F
-    cp a, $64
+    and $3f
+    cp $64
     jr nc, PickRandomEncounterCountdownFromTable478F
     ld b, a
     ld a, $05
@@ -1151,22 +1045,18 @@ Func_00A_476E:: ; address name
     ld hl, PickRandomEncounterCountdownFromTable478F_Data
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld [wEncounterCountdown], a
     ret
 
-; address loaded by PickRandomEncounterCountdownFromTable478F
-PickRandomEncounterCountdownFromTable478F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_478F:: ; address name
-    db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
-    db $3C, $41, $46, $50, $50
+PickRandomEncounterCountdownFromTable478F_Data::
+    db $0a, $14, $19, $1e, $23, $28, $2a, $2c, $2d, $2e, $30, $32, $34, $36, $38, $3a
+    db $3c, $41, $46, $50, $50
 
-; loads encounter entry $481C + 8 * hTemp0 into wEncounterKind-wEncounterMonsters + $5, sets the battle intro (wBattleIntroKind = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
-; 14 call sites from 14 routines (e.g. SceneShield_RunMessageBoxFar_Bank0F, SceneShieldGuardian_RunMessageBoxFar_Bank0F, ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep, SceneExplosion_RunMessageBoxFar_Bank0F, ...)
-; reads: hTemp0
-; writes: wEncounterKind, wEncounterMonsters, wBattleIntroKind, wModeState, wBattleTransitionStep, wBattleTransitionSubStep, wFieldReturnPhase
+; loads encounter entry $481C + 8 * hTemp0 into wEncounterKind-wEncounterMonsters + $5, sets the
+; battle intro (wBattleIntroKind = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the
+; battle transition (E-0128)
 StartScriptedEncounterTemp0::
-Func_00A_47A4:: ; address name
     push hl
     ldh a, [hTemp0]
     ld l, a
@@ -1178,38 +1068,38 @@ Func_00A_47A4:: ; address name
     sla l
     rl h
     ld a, l
-    add a, $1C
+    add $1c
     ld l, a
     ld a, h
-    adc a, $48
+    adc $48
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterKind], a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $1], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $2], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $3], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $4], a
     ld a, [hl]
     ld [wEncounterMonsters + $5], a
     ld a, $02
     ld [wBattleIntroKind], a
     ldh a, [hTemp0]
-    cp a, $14
+    cp $14
     jr z, .set_battle_intro_kind_to_07
-    cp a, $15
+    cp $15
     jr z, .set_battle_intro_kind_to_07
-    cp a, $2F
+    cp $2f
     jr z, .set_battle_intro_kind_to_07
-    cp a, $30
+    cp $30
     jr z, .set_battle_intro_kind_to_07
-    cp a, $31
+    cp $31
     jr nz, .set_mode_state_to_03
 
 .set_battle_intro_kind_to_07:
@@ -1219,7 +1109,7 @@ Func_00A_47A4:: ; address name
 .set_mode_state_to_03:
     ld a, $03
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wBattleTransitionStep], a
     ld a, $01
     ld [wBattleTransitionSubStep], a
@@ -1230,22 +1120,24 @@ Func_00A_47A4:: ; address name
     pop hl
     ret
 
-; E-0202 (C1: StartScriptedEncounterTemp0 (14 callers, script commands among them) reads the record at $481C + 8 * hTemp0: byte 0 to wEncounterKind, bytes 2-7 to wEncounterMonsters; records $14, $15 and $2F-$31 use battle intro 7, the rest intro 2; 51 records end at RunBattleIntroKindCase_Case00 ($49B4)).
+; StartScriptedEncounterTemp0 (14 callers, script commands among them) reads the record at $481C + 8
+; * hTemp0: byte 0 to wEncounterKind, bytes 2-7 to wEncounterMonsters; records $14, $15 and $2F-$31
+; use battle intro 7, the rest intro 2; 51 records end at RunBattleIntroKindCase_Case00 ($49B4)
+; (E-0202, C1)
 ; record: wEncounterKind; unread byte; three encounter words (wEncounterMonsters)
 ScriptedEncounterTable::
-Data_00A_481C:: ; address name
     db $00, $00 ; id 0
     dw $0007 ; MonsterTable $007: CurseLamp
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 1
-    dw $001A ; MonsterTable $01A: HoodSquid
+    dw $001a ; MonsterTable $01A: HoodSquid
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 2
-    dw $018F ; MonsterTable $18F: BoneSlave
-    dw $001C ; MonsterTable $01C: CaptDead
-    dw $018F ; MonsterTable $18F: BoneSlave
+    dw $018f ; MonsterTable $18F: BoneSlave
+    dw $001c ; MonsterTable $01C: CaptDead
+    dw $018f ; MonsterTable $18F: BoneSlave
     db $00, $00 ; id 3
     dw $0032 ; MonsterTable $032: BombCrag
     dw $0001 ; MonsterTable $001: Slime
@@ -1255,15 +1147,15 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 5
-    dw $01AB ; MonsterTable $1AB: MadCondor
+    dw $01ab ; MonsterTable $1AB: MadCondor
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 6
-    dw $01A6 ; MonsterTable $1A6: Metabble
+    dw $01a6 ; MonsterTable $1A6: Metabble
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 7
-    dw $006D ; MonsterTable $06D: Skeletor
+    dw $006d ; MonsterTable $06D: Skeletor
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 8
@@ -1271,15 +1163,15 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $01, $00 ; id 9
-    dw $01DF ; MonsterTable $1DF: ArrowDog
-    dw $01DF ; MonsterTable $1DF: ArrowDog
+    dw $01df ; MonsterTable $1DF: ArrowDog
+    dw $01df ; MonsterTable $1DF: ArrowDog
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 10
     dw $0179 ; MonsterTable $179: Darck
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 11
-    dw $01E2 ; MonsterTable $1E2: AgDevil
+    dw $01e2 ; MonsterTable $1E2: AgDevil
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 12
@@ -1287,39 +1179,39 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 13
-    dw $01E9 ; MonsterTable $1E9: Roboster
+    dw $01e9 ; MonsterTable $1E9: Roboster
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 14
-    dw $01EA ; MonsterTable $1EA: Roboster
+    dw $01ea ; MonsterTable $1EA: Roboster
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 15
-    dw $01EB ; MonsterTable $1EB: Roboster
+    dw $01eb ; MonsterTable $1EB: Roboster
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 16
-    dw $01EC ; MonsterTable $1EC: Roboster
+    dw $01ec ; MonsterTable $1EC: Roboster
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $01, $00 ; id 17
-    dw $01F8 ; MonsterTable $1F8: Pixy
-    dw $01F8 ; MonsterTable $1F8: Pixy
+    dw $01f8 ; MonsterTable $1F8: Pixy
+    dw $01f8 ; MonsterTable $1F8: Pixy
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 18
-    dw $01F9 ; MonsterTable $1F9: Copycat
-    dw $01FA ; MonsterTable $1FA: StoneMan
-    dw $01FB ; MonsterTable $1FB: WhipBird
+    dw $01f9 ; MonsterTable $1F9: Copycat
+    dw $01fa ; MonsterTable $1FA: StoneMan
+    dw $01fb ; MonsterTable $1FB: WhipBird
     db $02, $00 ; id 19
-    dw $021B ; MonsterTable $21B: MetalKing
-    dw $021C ; MonsterTable $21C: RainHawk
-    dw $021D ; MonsterTable $21D: Coatol
+    dw $021b ; MonsterTable $21B: MetalKing
+    dw $021c ; MonsterTable $21C: RainHawk
+    dw $021d ; MonsterTable $21D: Coatol
     db $02, $00 ; id 20
     dw $0208 ; MonsterTable $208: GreatDrak
     dw $0209 ; MonsterTable $209: Watabou
-    dw $020A ; MonsterTable $20A: Durran
+    dw $020a ; MonsterTable $20A: Durran
     db $02, $00 ; id 21
-    dw $025F ; MonsterTable $25F: Drygon
+    dw $025f ; MonsterTable $25F: Drygon
     dw $0260 ; MonsterTable $260: Butch
     dw $0261 ; MonsterTable $261: Pumpoise
     db $00, $00 ; id 22
@@ -1327,27 +1219,27 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 23
-    dw $018F ; MonsterTable $18F: BoneSlave
+    dw $018f ; MonsterTable $18F: BoneSlave
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 24
-    dw $019A ; MonsterTable $19A: Puppetor
+    dw $019a ; MonsterTable $19A: Puppetor
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 25
-    dw $019B ; MonsterTable $19B: ArcDemon
-    dw $019C ; MonsterTable $19C: GoatHorn
-    dw $019B ; MonsterTable $19B: ArcDemon
+    dw $019b ; MonsterTable $19B: ArcDemon
+    dw $019c ; MonsterTable $19C: GoatHorn
+    dw $019b ; MonsterTable $19B: ArcDemon
     db $02, $00 ; id 26
-    dw $02AC ; MonsterTable $2AC: Slime
-    dw $02AC ; MonsterTable $2AC: Slime
-    dw $02AC ; MonsterTable $2AC: Slime
+    dw $02ac ; MonsterTable $2AC: Slime
+    dw $02ac ; MonsterTable $2AC: Slime
+    dw $02ac ; MonsterTable $2AC: Slime
     db $01, $00 ; id 27
-    dw $006C ; MonsterTable $06C: EvilArmor
-    dw $006C ; MonsterTable $06C: EvilArmor
+    dw $006c ; MonsterTable $06C: EvilArmor
+    dw $006c ; MonsterTable $06C: EvilArmor
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 28
-    dw $006B ; MonsterTable $06B: Mudou
+    dw $006b ; MonsterTable $06B: Mudou
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 29
@@ -1363,69 +1255,69 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $01, $00 ; id 32
-    dw $01B0 ; MonsterTable $1B0: WindBeast
-    dw $01B1 ; MonsterTable $1B1: MadGoose
+    dw $01b0 ; MonsterTable $1B0: WindBeast
+    dw $01b1 ; MonsterTable $1B1: MadGoose
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 33
-    dw $01B2 ; MonsterTable $1B2: WhaleMage
-    dw $01B3 ; MonsterTable $1B3: SeaHorse
-    dw $01B4 ; MonsterTable $1B4: Octoreach
+    dw $01b2 ; MonsterTable $1B2: WhaleMage
+    dw $01b3 ; MonsterTable $1B3: SeaHorse
+    dw $01b4 ; MonsterTable $1B4: Octoreach
     db $02, $00 ; id 34
-    dw $01B5 ; MonsterTable $1B5: IceMan
-    dw $01B6 ; MonsterTable $1B6: Shadow
-    dw $01B7 ; MonsterTable $1B7: BigEye
+    dw $01b5 ; MonsterTable $1B5: IceMan
+    dw $01b6 ; MonsterTable $1B6: Shadow
+    dw $01b7 ; MonsterTable $1B7: BigEye
     db $01, $00 ; id 35
-    dw $01B8 ; MonsterTable $1B8: Balzak
-    dw $01B9 ; MonsterTable $1B9: RotRaven
+    dw $01b8 ; MonsterTable $1B8: Balzak
+    dw $01b9 ; MonsterTable $1B9: RotRaven
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 36
-    dw $01BA ; MonsterTable $1BA: Jamirus
-    dw $01BB ; MonsterTable $1BB: SkyDragon
-    dw $01BC ; MonsterTable $1BC: Gremlin
+    dw $01ba ; MonsterTable $1BA: Jamirus
+    dw $01bb ; MonsterTable $1BB: SkyDragon
+    dw $01bc ; MonsterTable $1BC: Gremlin
     db $01, $00 ; id 37
-    dw $01BD ; MonsterTable $1BD: Crestpent
-    dw $01BE ; MonsterTable $1BE: SpotKing
+    dw $01bd ; MonsterTable $1BD: Crestpent
+    dw $01be ; MonsterTable $1BE: SpotKing
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 38
-    dw $01BF ; MonsterTable $1BF: Gulpple
-    dw $01C0 ; MonsterTable $1C0: FairyDrak
-    dw $01C1 ; MonsterTable $1C1: DuckKite
+    dw $01bf ; MonsterTable $1BF: Gulpple
+    dw $01c0 ; MonsterTable $1C0: FairyDrak
+    dw $01c1 ; MonsterTable $1C1: DuckKite
     db $02, $00 ; id 39
-    dw $01C2 ; MonsterTable $1C2: FunkyBird
-    dw $01C3 ; MonsterTable $1C3: DanceVegi
-    dw $01C4 ; MonsterTable $1C4: Slurperon
+    dw $01c2 ; MonsterTable $1C2: FunkyBird
+    dw $01c3 ; MonsterTable $1C3: DanceVegi
+    dw $01c4 ; MonsterTable $1C4: Slurperon
     db $02, $00 ; id 40
-    dw $01C5 ; MonsterTable $1C5: MadPlant
-    dw $01C6 ; MonsterTable $1C6: Orc
-    dw $01C7 ; MonsterTable $1C7: PutrePup
+    dw $01c5 ; MonsterTable $1C5: MadPlant
+    dw $01c6 ; MonsterTable $1C6: Orc
+    dw $01c7 ; MonsterTable $1C7: PutrePup
     db $02, $00 ; id 41
-    dw $01C8 ; MonsterTable $1C8: Devipine
-    dw $01C9 ; MonsterTable $1C9: Anemon
-    dw $01CA ; MonsterTable $1CA: HerbMan
+    dw $01c8 ; MonsterTable $1C8: Devipine
+    dw $01c9 ; MonsterTable $1C9: Anemon
+    dw $01ca ; MonsterTable $1CA: HerbMan
     db $01, $00 ; id 42
-    dw $01CB ; MonsterTable $1CB: KingSlime
-    dw $01CC ; MonsterTable $1CC: Coatol
+    dw $01cb ; MonsterTable $1CB: KingSlime
+    dw $01cc ; MonsterTable $1CC: Coatol
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 43
-    dw $01CD ; MonsterTable $1CD: FangSlime
-    dw $01CE ; MonsterTable $1CE: Grizzly
-    dw $01CF ; MonsterTable $1CF: BeastNite
+    dw $01cd ; MonsterTable $1CD: FangSlime
+    dw $01ce ; MonsterTable $1CE: Grizzly
+    dw $01cf ; MonsterTable $1CF: BeastNite
     db $02, $00 ; id 44
-    dw $01D0 ; MonsterTable $1D0: SlimeBorg
-    dw $01D1 ; MonsterTable $1D1: Unicorn
-    dw $01D2 ; MonsterTable $1D2: SuperTen
+    dw $01d0 ; MonsterTable $1D0: SlimeBorg
+    dw $01d1 ; MonsterTable $1D1: Unicorn
+    dw $01d2 ; MonsterTable $1D2: SuperTen
     db $02, $00 ; id 45
-    dw $01D3 ; MonsterTable $1D3: Slime
-    dw $01D4 ; MonsterTable $1D4: RockSlime
-    dw $01D5 ; MonsterTable $1D5: Metabble
+    dw $01d3 ; MonsterTable $1D3: Slime
+    dw $01d4 ; MonsterTable $1D4: RockSlime
+    dw $01d5 ; MonsterTable $1D5: Metabble
     db $00, $00 ; id 46
-    dw $01D6 ; MonsterTable $1D6: Gorago
+    dw $01d6 ; MonsterTable $1D6: Gorago
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $02, $00 ; id 47
-    dw $01FC ; MonsterTable $1FC: MimeSlime
-    dw $01FD ; MonsterTable $1FD: Tonguella
-    dw $01FE ; MonsterTable $1FE: Golem
+    dw $01fc ; MonsterTable $1FC: MimeSlime
+    dw $01fd ; MonsterTable $1FD: Tonguella
+    dw $01fe ; MonsterTable $1FE: Golem
     db $02, $00 ; id 48
     dw $0205 ; MonsterTable $205: MetalKing
     dw $0206 ; MonsterTable $206: KingLeo
@@ -1435,127 +1327,123 @@ Data_00A_481C:: ; address name
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
     db $00, $00 ; id 50
-    dw $007D ; MonsterTable $07D: Mimic
+    dw $007d ; MonsterTable $07D: Mimic
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
 
-; entry 0 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; reads: hMapId, hPlayerStateFlags
 RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
-Jump_00A_49B4:: ; address name
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     jp z, .call_read_map_cell_word_for_screen_xy
-    cp a, $2B
+    cp $2b
     jp z, .check_player_state_flags
-    cp a, $30
+    cp $30
     jp z, .check_player_state_flags2
-    cp a, $35
+    cp $35
     jp z, .call_read_map_cell_word_for_screen_xy2
-    cp a, $38
+    cp $38
     jp z, .call_read_map_cell_word_for_screen_xy3
-    cp a, $39
+    cp $39
     jp z, .call_read_map_cell_word_for_screen_xy4
-    cp a, $3A
+    cp $3a
     jp z, .call_read_map_cell_word_for_screen_xy5
-    cp a, $3E
+    cp $3e
     jp z, .call_read_map_cell_word_for_screen_xy6
-    cp a, $3F
+    cp $3f
     jp z, .call_read_map_cell_word_for_screen_xy7
-    cp a, $37
+    cp $37
     jp z, .call_read_map_cell_word_for_screen_xy8
-    cp a, $42
+    cp $42
     jp z, .call_read_map_cell_word_for_screen_xy9
-    cp a, $43
+    cp $43
     jp z, .call_read_map_cell_word_for_screen_xy10
-    cp a, $48
+    cp $48
     jp z, .check_player_state_flags3
-    cp a, $53
+    cp $53
     jp z, .call_read_map_cell_word_for_screen_xy11
-    cp a, $54
+    cp $54
     jp z, .call_run_battle_intro_kind_case_case00_write4
-    cp a, $55
+    cp $55
     jp z, .call_run_battle_intro_kind_case_case00_write4
-    cp a, $56
+    cp $56
     jp z, .call_run_battle_intro_kind_case_case00_write4
-    cp a, $5D
+    cp $5d
     jp z, .call_read_map_cell_word_for_screen_xy12
-    cp a, $62
+    cp $62
     jp z, .call_read_map_cell_word_for_screen_xy13
-    cp a, $63
+    cp $63
     jp z, .call_read_map_cell_word_for_screen_xy14
-    cp a, $64
+    cp $64
     jp z, .call_read_map_cell_word_for_screen_xy15
-    cp a, $65
+    cp $65
     jp z, .call_read_map_cell_word_for_screen_xy16
-    cp a, $66
+    cp $66
     jp z, .call_read_map_cell_word_for_screen_xy17
-    cp a, $67
+    cp $67
     jp z, .call_read_map_cell_word_for_screen_xy18
-    cp a, $70
+    cp $70
     jp z, .call_read_map_cell_word_for_screen_xy19
-    cp a, $73
+    cp $73
     jp z, .call_read_map_cell_word_for_screen_xy20
-    cp a, $74
+    cp $74
     jp z, .call_read_map_cell_word_for_screen_xy21
-    cp a, $75
+    cp $75
     jp z, .call_read_map_cell_word_for_screen_xy22
-    cp a, $76
+    cp $76
     jp z, .call_read_map_cell_word_for_screen_xy23
-    cp a, $81
+    cp $81
     jp z, .call_read_map_cell_word_for_screen_xy24
-    cp a, $82
+    cp $82
     jp z, .call_read_map_cell_word_for_screen_xy25
-    cp a, $83
+    cp $83
     jp z, .call_read_map_cell_word_for_screen_xy26
-    cp a, $85
+    cp $85
     jp z, .call_read_map_cell_word_for_screen_xy27
-    cp a, $86
+    cp $86
     jp z, .call_read_map_cell_word_for_screen_xy28
-    cp a, $87
+    cp $87
     jp z, .call_read_map_cell_word_for_screen_xy29
-    cp a, $88
+    cp $88
     jp z, .call_read_map_cell_word_for_screen_xy30
-    cp a, $8B
+    cp $8b
     jp z, .call_read_map_cell_word_for_screen_xy31
-    cp a, $8C
+    cp $8c
     jp z, .call_read_map_cell_word_for_screen_xy32
-    cp a, $8E
+    cp $8e
     jp z, .call_read_map_cell_word_for_screen_xy33
-    cp a, $90
+    cp $90
     jp z, .call_read_map_cell_word_for_screen_xy34
-    cp a, $A0
+    cp $a0
     jp z, .call_read_map_cell_word_for_screen_xy35
-    cp a, $A2
+    cp $a2
     jp z, .call_read_map_cell_word_for_screen_xy36
-    cp a, $A8
+    cp $a8
     jp z, .call_read_map_cell_word_for_screen_xy37
-    cp a, $AD
+    cp $ad
     jp z, .call_read_map_cell_word_for_screen_xy38
-    cp a, $AE
+    cp $ae
     jp z, .call_read_map_cell_word_for_screen_xy38
-    cp a, $B0
+    cp $b0
     jp z, .call_read_map_cell_word_for_screen_xy39
-    cp a, $B3
+    cp $b3
     jp z, .call_read_map_cell_word_for_screen_xy40
-    cp a, $B4
+    cp $b4
     jp z, .call_read_map_cell_word_for_screen_xy40
-    cp a, $B5
+    cp $b5
     jp z, .call_read_map_cell_word_for_screen_xy40
-    cp a, $B8
+    cp $b8
     jp z, .check_player_state_flags4
-    cp a, $BE
+    cp $be
     jp z, .call_read_map_cell_word_for_screen_xy41
-    cp a, $BF
+    cp $bf
     jp z, .call_read_map_cell_word_for_screen_xy42
-    cp a, $C0
+    cp $c0
     jp z, .call_read_map_cell_word_for_screen_xy43
-    cp a, $C1
+    cp $c1
     jp z, .call_read_map_cell_word_for_screen_xy43
-    cp a, $C2
+    cp $c2
     jp z, .call_read_map_cell_word_for_screen_xy44
-    cp a, $C3
+    cp $c3
     jp z, .call_read_map_cell_word_for_screen_xy44
     ret
 
@@ -1652,7 +1540,7 @@ Jump_00A_49B4:: ; address name
     bit 3, a
     jr nz, .call_run_battle_intro_kind_case_case00_write3
     ld de, EncounterGrid_5B6B
-    ld a, $0C
+    ld a, $0c
     call ReadMapCellWordForScreenXY
     ret
 
@@ -1716,7 +1604,7 @@ Jump_00A_49B4:: ; address name
 
 .call_read_map_cell_word_for_screen_xy19:
     ld de, EncounterGrid_5E2B
-    ld a, $0C
+    ld a, $0c
     call ReadMapCellWordForScreenXY
     ret
 
@@ -1884,35 +1772,25 @@ Jump_00A_49B4:: ; address name
     call ReadMapCellWordForScreenXY
     ret
 
-; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
-; 48 call sites from 1 routine (e.g. RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags)
-; reads: hMapScreenY, hMapScreenX, wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
-; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
-; points at: wEncounterMonsters
+; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through
+; (E-0122)
 ReadMapCellWordForScreenXY::
-Func_00A_4CBA:: ; address name
     sla a
     ld c, a
     ldh a, [hMapScreenY]
-    and a, $0F
+    and $0f
     call Multiply8
     ldh a, [hMapScreenX]
-    and a, $0F
+    and $0f
     sla a
     add_a_to_hl
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
 
-; only called from RunBattleIntroKindCase_Case00 (E-0047)
-; 5 call sites from 1 routine (e.g. RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags)
-; reads: wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wEncounterKind
-; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
-; points at: wEncounterMonsters
 RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
-Func_00A_4CD4:: ; address name
     ld a, [de]
     inc de
     dec a
@@ -1941,35 +1819,35 @@ Func_00A_4CD4:: ; address name
 .loop:
     call NextTableByte
     ld a, [wRandomLo]
-    and a, $7F
+    and $7f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr c, .loop
     push hl
     push de
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp2]
-    cp a, c
+    cp c
     jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp3]
-    cp a, c
+    cp c
     jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp4]
-    cp a, c
+    cp c
     jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp5]
-    cp a, c
+    cp c
     jr nc, .skip
 
 .restore:
@@ -1984,16 +1862,16 @@ Func_00A_4CD4:: ; address name
 .skip:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     ld [hl], a
     jr .restore
 
 .clear_battle_kind:
-    xor a, a
+    xor a
     ld [wBattleKind], a
     ld a, [wEncounterKind]
-    or a, a
+    or a
     ret z
     dec a
     jr nz, .call_next_table_byte
@@ -2006,129 +1884,125 @@ Func_00A_4CD4:: ; address name
 .call_next_table_byte2:
     call NextTableByte
     ld a, [wRandomLo]
-    and a, $03
+    and $03
     add_a_to_hl
     ld a, [hl]
     ld [wEncounterKind], a
     ret
 
-; only called from CollectUniqueEncounterIdsToWD09F (E-0047)
-; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
-; reads: hMapId, hPlayerStateFlags
 CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags::
-Func_00A_4D5E:: ; address name
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     jp z, .call_read_map_cell_word_for_screen_xy_5057
-    cp a, $2B
+    cp $2b
     jp z, .check_player_state_flags
-    cp a, $30
+    cp $30
     jp z, .check_player_state_flags2
-    cp a, $35
+    cp $35
     jp z, .call_read_map_cell_word_for_screen_xy_50572
-    cp a, $38
+    cp $38
     jp z, .call_read_map_cell_word_for_screen_xy_50573
-    cp a, $39
+    cp $39
     jp z, .call_read_map_cell_word_for_screen_xy_50574
-    cp a, $3A
+    cp $3a
     jp z, .call_read_map_cell_word_for_screen_xy_50575
-    cp a, $3E
+    cp $3e
     jp z, .call_read_map_cell_word_for_screen_xy_50576
-    cp a, $3F
+    cp $3f
     jp z, .call_read_map_cell_word_for_screen_xy_50577
-    cp a, $37
+    cp $37
     jp z, .call_read_map_cell_word_for_screen_xy_50578
-    cp a, $42
+    cp $42
     jp z, .call_read_map_cell_word_for_screen_xy_50579
-    cp a, $43
+    cp $43
     jp z, .call_read_map_cell_word_for_screen_xy_505710
-    cp a, $48
+    cp $48
     jp z, .check_player_state_flags3
-    cp a, $53
+    cp $53
     jp z, .call_read_map_cell_word_for_screen_xy_505711
-    cp a, $54
+    cp $54
     jp z, .call_load_encounter_monster_ids_to_work_buf4
-    cp a, $55
+    cp $55
     jp z, .call_load_encounter_monster_ids_to_work_buf4
-    cp a, $56
+    cp $56
     jp z, .call_load_encounter_monster_ids_to_work_buf4
-    cp a, $5D
+    cp $5d
     jp z, .call_read_map_cell_word_for_screen_xy_505712
-    cp a, $62
+    cp $62
     jp z, .call_read_map_cell_word_for_screen_xy_505713
-    cp a, $63
+    cp $63
     jp z, .call_read_map_cell_word_for_screen_xy_505714
-    cp a, $64
+    cp $64
     jp z, .call_read_map_cell_word_for_screen_xy_505715
-    cp a, $65
+    cp $65
     jp z, .call_read_map_cell_word_for_screen_xy_505716
-    cp a, $66
+    cp $66
     jp z, .call_read_map_cell_word_for_screen_xy_505717
-    cp a, $67
+    cp $67
     jp z, .call_read_map_cell_word_for_screen_xy_505718
-    cp a, $70
+    cp $70
     jp z, .call_read_map_cell_word_for_screen_xy_505719
-    cp a, $73
+    cp $73
     jp z, .call_read_map_cell_word_for_screen_xy_505720
-    cp a, $74
+    cp $74
     jp z, .call_read_map_cell_word_for_screen_xy_505721
-    cp a, $75
+    cp $75
     jp z, .call_read_map_cell_word_for_screen_xy_505722
-    cp a, $76
+    cp $76
     jp z, .call_read_map_cell_word_for_screen_xy_505723
-    cp a, $81
+    cp $81
     jp z, .call_read_map_cell_word_for_screen_xy_505724
-    cp a, $82
+    cp $82
     jp z, .call_read_map_cell_word_for_screen_xy_505725
-    cp a, $83
+    cp $83
     jp z, .call_read_map_cell_word_for_screen_xy_505726
-    cp a, $85
+    cp $85
     jp z, .call_read_map_cell_word_for_screen_xy_505727
-    cp a, $86
+    cp $86
     jp z, .call_read_map_cell_word_for_screen_xy_505728
-    cp a, $87
+    cp $87
     jp z, .call_read_map_cell_word_for_screen_xy_505729
-    cp a, $88
+    cp $88
     jp z, .call_read_map_cell_word_for_screen_xy_505730
-    cp a, $8B
+    cp $8b
     jp z, .call_read_map_cell_word_for_screen_xy_505731
-    cp a, $8C
+    cp $8c
     jp z, .call_read_map_cell_word_for_screen_xy_505732
-    cp a, $8E
+    cp $8e
     jp z, .call_read_map_cell_word_for_screen_xy_505733
-    cp a, $90
+    cp $90
     jp z, .call_read_map_cell_word_for_screen_xy_505734
-    cp a, $A0
+    cp $a0
     jp z, .call_read_map_cell_word_for_screen_xy_505735
-    cp a, $A2
+    cp $a2
     jp z, .call_read_map_cell_word_for_screen_xy_505736
-    cp a, $A8
+    cp $a8
     jp z, .call_read_map_cell_word_for_screen_xy_505737
-    cp a, $AD
+    cp $ad
     jp z, .call_read_map_cell_word_for_screen_xy_505738
-    cp a, $AE
+    cp $ae
     jp z, .call_read_map_cell_word_for_screen_xy_505738
-    cp a, $B0
+    cp $b0
     jp z, .call_read_map_cell_word_for_screen_xy_505739
-    cp a, $B3
+    cp $b3
     jp z, .call_read_map_cell_word_for_screen_xy_505740
-    cp a, $B4
+    cp $b4
     jp z, .call_read_map_cell_word_for_screen_xy_505740
-    cp a, $B5
+    cp $b5
     jp z, .call_read_map_cell_word_for_screen_xy_505740
-    cp a, $B8
+    cp $b8
     jp z, .call_read_map_cell_word_for_screen_xy_505741
-    cp a, $BE
+    cp $be
     jp z, .call_read_map_cell_word_for_screen_xy_505742
-    cp a, $BF
+    cp $bf
     jp z, .call_read_map_cell_word_for_screen_xy_505743
-    cp a, $C0
+    cp $c0
     jp z, .call_read_map_cell_word_for_screen_xy_505744
-    cp a, $C1
+    cp $c1
     jp z, .call_read_map_cell_word_for_screen_xy_505744
-    cp a, $C2
+    cp $c2
     jp z, .call_read_map_cell_word_for_screen_xy_505745
-    cp a, $C3
+    cp $c3
     jp z, .call_read_map_cell_word_for_screen_xy_505745
     ret
 
@@ -2225,7 +2099,7 @@ Func_00A_4D5E:: ; address name
     bit 3, a
     jr nz, .call_load_encounter_monster_ids_to_work_buf3
     ld de, EncounterGrid_5B6B
-    ld a, $0C
+    ld a, $0c
     call ReadMapCellWordForScreenXY_5057
     ret
 
@@ -2289,7 +2163,7 @@ Func_00A_4D5E:: ; address name
 
 .call_read_map_cell_word_for_screen_xy_505719:
     ld de, EncounterGrid_5E2B
-    ld a, $0C
+    ld a, $0c
     call ReadMapCellWordForScreenXY_5057
     ret
 
@@ -2449,35 +2323,27 @@ Func_00A_4D5E:: ; address name
     call ReadMapCellWordForScreenXY_5057
     ret
 
-; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
-; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags)
-; reads: hMapScreenY, hMapScreenX, wWorkBuf, hTemp0, hTemp1
-; writes: wWorkBuf, wMonsterId, hTemp0
-; points at: hTemp0
+; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through
+; (E-0122)
 ReadMapCellWordForScreenXY_5057::
-Func_00A_5057:: ; address name
     sla a
     ld c, a
     ldh a, [hMapScreenY]
-    and a, $0F
+    and $0f
     call Multiply8
     ldh a, [hMapScreenX]
-    and a, $0F
+    and $0f
     sla a
     add_a_to_hl
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
 
-; DE += 2; wWorkBuf = the number of non-zero entries (up to 5); copies their monster ids to wWorkBuf + $2 and replaces each with two bytes of its monster table entry (E-0127)
-; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags)
-; reads: wWorkBuf, hTemp0, hTemp1
-; writes: wWorkBuf, wMonsterId, hTemp0
-; points at: hTemp0
+; DE += 2; wWorkBuf = the number of non-zero entries (up to 5); copies their monster ids to wWorkBuf
+; + $2 and replaces each with two bytes of its monster table entry (E-0127)
 LoadEncounterMonsterIdsToWorkBuf::
-Func_00A_5071:: ; address name
     inc de
     inc de
     push de
@@ -2486,18 +2352,18 @@ Func_00A_5071:: ; address name
 .skip:
     ld a, [de]
     inc de
-    or a, a
+    or a
     jr z, .restore
     inc b
     ld a, b
-    cp a, $05
+    cp $05
     jr z, .restore
     jr .skip
 
 .restore:
     pop de
     ld a, $05
-    add a, e
+    add e
     ld e, a
     jr nc, .set_work_buf
     inc d
@@ -2505,17 +2371,17 @@ Func_00A_5071:: ; address name
 .set_work_buf:
     ld a, b
     ld [wWorkBuf], a
-    xor a, a
+    xor a
     ld [wWorkBuf + $1], a
     ld hl, wWorkBuf + $2
 
 .loop:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld a, [wWorkBuf]
@@ -2524,9 +2390,9 @@ Func_00A_5071:: ; address name
 
 .loop2:
     push bc
-    ld a, [hl+]
+    ld a, [hli]
     ld [wMonsterId], a
-    ld a, [hl-]
+    ld a, [hld]
     ld [wMonsterId + $1], a
     push hl
     ld a, $02
@@ -2536,60 +2402,50 @@ Func_00A_5071:: ; address name
     farcall CopyMonsterTableBytesFromMonsterTable
     pop hl
     ldh a, [hTemp0]
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp1]
-    ld [hl+], a
+    ld [hli], a
     pop bc
     dec b
     jr nz, .loop2
     ret
 
-; entry 2 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleKind
 RunBattleIntroKindCase_SetBattleKindTo02::
-Jump_00A_50CB:: ; address name
     ld a, $02
     ld [wBattleKind], a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; reads: wRandomLo, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
-; writes: wEncounterKind, wBattleKind
-; points at: wKeyWorldAreas, wKeyWorldFloorInfo
 RunBattleIntroKindCase_NextTableByte::
-Jump_00A_50D1:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
-    and a, $03
+    and $03
     ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
     add_a_to_hl
     ld a, [hl]
     ld [wEncounterKind], a
     ld a, [wMapType]
-    and a, $07
-    cp a, $01
+    and $07
+    cp $01
     jr z, .read_map_screen_y
-    or a, a
+    or a
     jr nz, .read_key_world_floor
 
 .read_map_screen_y:
     ldh a, [hMapScreenY]
     srl a
-    and a, $FE
+    and $fe
     ld c, a
     ldh a, [hMapScreenX]
     srl a
     srl a
-    add a, c
+    add c
     ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
     ld c, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add c
     ld c, a
     call RunBattleIntroKindCase_Case01_NextRandomSeed
     ld a, $01
@@ -2598,50 +2454,41 @@ Jump_00A_50D1:: ; address name
 
 .read_key_world_floor:
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     push af
-    and a, $0F
+    and $0f
     srl a
-    and a, $FE
+    and $fe
     ld c, a
     pop af
     swap a
-    and a, $0F
+    and $0f
     srl a
     srl a
-    add a, c
+    add c
     ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     call RunBattleIntroKindCase_Case01_NextRandomSeed
     ld a, $01
     ld [wBattleKind], a
     ret
 
-; address loaded by RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc, RunBattleIntroKindCase_NextTableByte
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_514C:: ; address name
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C::
     db $00, $02, $01, $02
 
-; address loaded by RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_5150:: ; address name
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150::
     db $00, $01, $00, $01
 
-; only called from RunBattleIntroKindCase_Case01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunBattleIntroKindCase_NextTableByte)
-; reads: hPlayerStateFlags, wKeyRandomLo
-; points at: wEncounterMonsters, wKeyWorldMonsters
 RunBattleIntroKindCase_Case01_NextRandomSeed::
-Func_00A_5154:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .skip2
@@ -2652,37 +2499,37 @@ Func_00A_5154:: ; address name
     push bc
     call NextRandomSeed
     ld a, [wKeyRandomLo]
-    and a, $07
-    add a, c
-    cp a, $20
+    and $07
+    add c
+    cp $20
     jr c, .skip
-    ld a, $1F
+    ld a, $1f
 
 .skip:
-    add a, a
+    add a
     ld hl, wKeyWorldMonsters
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
-    and a, $01
+    and $01
     ld [de], a
     inc de
     push de
     ld a, e
-    sub a, $DF
+    sub $df
     ld e, a
     ld a, d
-    sbc a, $CF
+    sbc $cf
     ld d, a
     sra d
     rr e
     ld a, e
-    add a, $E3
+    add $e3
     ld e, a
     ld a, d
-    adc a, $CF
+    adc $cf
     ld d, a
     ld a, [hl]
     srl a
@@ -2701,32 +2548,32 @@ Func_00A_5154:: ; address name
     push bc
     call NextRandomSeed
     ld a, [wKeyRandomLo]
-    and a, $07
-    add a, $20
-    add a, a
+    and $07
+    add $20
+    add a
     ld hl, wKeyWorldMonsters
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
-    and a, $01
+    and $01
     ld [de], a
     inc de
     push de
     ld a, e
-    sub a, $DF
+    sub $df
     ld e, a
     ld a, d
-    sbc a, $CF
+    sbc $cf
     ld d, a
     sra d
     rr e
     ld a, e
-    add a, $E3
+    add $e3
     ld e, a
     ld a, d
-    adc a, $CF
+    adc $cf
     ld d, a
     ld a, [hl]
     srl a
@@ -2737,14 +2584,9 @@ Func_00A_5154:: ; address name
     jr nz, .loop2
     ret
 
-; entry 3 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; reads: wMapType
-; writes: wBattleIntroFlag, wBattleKind
 RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind::
-Jump_00A_51DF:: ; address name
     ld a, [wMapType]
-    cp a, $82
+    cp $82
     jr nz, .set_battle_kind_to_03
     ld a, $01
     ld [wBattleIntroFlag], a
@@ -2754,53 +2596,36 @@ Jump_00A_51DF:: ; address name
     ld [wBattleKind], a
     ret
 
-; entry 4 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleKind
 RunBattleIntroKindCase_SetBattleKindTo04::
-Jump_00A_51F1:: ; address name
     ld a, $04
     ld [wBattleKind], a
     ret
 
-; entry 7 of the `rst $00` table in RunBattleIntroKindCase
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleKind
 RunBattleIntroKindCase_SetBattleKindTo05::
-Jump_00A_51F7:: ; address name
     ld a, $05
     ld [wBattleKind], a
     ret
 
 ; runs the routine for wBattleTransitionStep (jump table of three); field mode state 3 (E-0122)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunBattleTransitionStep)
-; reads: wBattleTransitionStep
 RunBattleTransitionStep::
-Func_00A_51FD:: ; address name
     ld a, [wBattleTransitionStep]
-    rst $00
+    jumptable
     dw RunBattleTransitionStep_QueueMusic
     dw RunBattleTransitionStep_StagedSteps
     dw RunBattleTransitionStep_WriteGameModeAndModeStateEtc
 
-; entry 0 of the `rst $00` table in RunBattleTransitionStep
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCurrentMusic, wBattleTransitionSubStep, hScrollY, hScrollX
-; writes: wTransitionByteCD, hSpriteWindowClipMode, wTransitionBGPtrLo, wTransitionBGPtrHi, wTransitionCounter, wTransitionStage, wTransitionByte08
-; points at: wBattleTransitionStep
 RunBattleTransitionStep_QueueMusic::
-Jump_00A_5207:: ; address name
     ld a, [wCurrentMusic]
     ld [wTransitionByteCD], a
     ld a, [wBattleTransitionSubStep]
-    and a, $01
+    and $01
     sla a
-    add a, $44
+    add $44
     call QueueMusic
     ld a, $03
     ldh [hSpriteWindowClipMode], a
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -2808,19 +2633,19 @@ Jump_00A_5207:: ; address name
     sla e
     rl d
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $98
+    adc $98
     ld d, a
     ld a, d
-    and a, $9B
+    and $9b
     ld d, a
     ldh a, [hScrollX]
     srl a
     srl a
     srl a
-    add a, e
+    add e
     ld e, a
     jr nc, .set_transition_bg_ptr_lo
     inc d
@@ -2830,7 +2655,7 @@ Jump_00A_5207:: ; address name
     ld [wTransitionBGPtrLo], a
     ld a, d
     ld [wTransitionBGPtrHi], a
-    xor a, a
+    xor a
     ld [wTransitionCounter], a
     ld [wTransitionStage], a
     ld [wTransitionByte08], a
@@ -2838,44 +2663,38 @@ Jump_00A_5207:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattleTransitionStep
-; no direct call (reached through a table, a jump or a vector)
-; reads: wSoundChannelSlots
-; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg
-; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5, wModeChangeRequest, wBGFillFlag
 RunBattleTransitionStep_WriteGameModeAndModeStateEtc::
-Jump_00A_525C:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
-    and a, [hl]
+    and [hl]
     ld hl, wSoundChannel1
-    and a, [hl]
+    and [hl]
     inc hl
-    and a, [hl]
+    and [hl]
     ld hl, wSoundChannel2
-    and a, [hl]
+    and [hl]
     inc hl
-    and a, [hl]
+    and [hl]
     ld hl, wSoundChannel3
-    and a, [hl]
+    and [hl]
     inc hl
-    and a, [hl]
+    and [hl]
     ld hl, wSoundChannel4
-    and a, [hl]
+    and [hl]
     inc hl
-    and a, [hl]
+    and [hl]
     ld hl, wSoundChannel5
-    and a, [hl]
+    and [hl]
     inc hl
-    and a, [hl]
-    cp a, $FF
+    and [hl]
+    cp $ff
     ret nz
     call RunBattleIntroKindCase
     ld a, $04
     call StartPaletteFade
     ld a, $04
     ld [wGameMode], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld [wGameMode2State], a
     ld [wGameMode2Arg], a
@@ -2886,34 +2705,23 @@ Jump_00A_525C:: ; address name
     ret
 
 ; by its sub-step: CheckStage, the transition counter, SetCounts
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTransitionSubStep
 RunBattleTransitionStep_StagedSteps::
-Jump_00A_52A4:: ; address name
     ld a, [wBattleTransitionSubStep]
-    rst $00
+    jumptable
     dw RunBattleTransitionStep_Case01_CheckStage
     dw RunBattleTransitionStep_StagedSteps_ReadTransitionCounter
     dw RunBattleTransitionStep_Case01_SetCounts
 
 ; reads the transition stage, then advances the step
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionCounter
 RunBattleTransitionStep_Case01_CheckStage::
-Jump_00A_52AE:: ; address name
     ld a, [wTransitionCounter]
-    rst $00
+    jumptable
     dw RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage
     dw RunBattleTransitionStep_Case01_CheckStage_AdvanceBattleTransitionStep
 
-; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_CheckStage
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionStage
-; points at: wTransitionCounter, wTransitionStage
 RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage::
-Jump_00A_52B6:: ; address name
     ld a, [wTransitionStage]
-    cp a, $14
+    cp $14
     jr nz, .read_transition_stage
     ld hl, wTransitionCounter
     inc [hl]
@@ -2932,17 +2740,17 @@ Jump_00A_52B6:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $40
+    add $40
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec b
     jr nz, .loop
     ld a, [wTransitionStage]
     ld b, a
     ld a, $13
-    sub a, b
+    sub b
     ld hl, $0020
     add_a_to_hl
     ld b, $09
@@ -2954,10 +2762,10 @@ Jump_00A_52B6:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $40
+    add $40
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec b
     jr nz, .loop2
@@ -2965,47 +2773,38 @@ Jump_00A_52B6:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01_CheckStage
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleTransitionStep
 RunBattleTransitionStep_Case01_CheckStage_AdvanceBattleTransitionStep::
-Jump_00A_5309:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
-; writes tile $C4 at the BG map address from Func_00A_5328 and, on CGB, attribute 0 in VRAM bank 1 (E-0122)
-; 10 call sites from 3 routines (e.g. RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage)
-; reads: wIsCGB
-; writes: rVBK
+; writes tile $C4 at the BG map address from
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap and, on CGB, attribute
+; 0 in VRAM bank 1 (E-0122)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr::
-Func_00A_530E:: ; address name
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap
-    ld a, $C4
+    ld a, $c4
     call WriteVRAMByte
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, $01
     ldh [rVBK], a
-    xor a, a
+    xor a
     call WriteVRAMByte
     ld a, $00
     ldh [rVBK], a
     ret
 
-; only called from WriteTileC4AtTransitionBGPtrLoAndClearAttr (E-0047)
-; 1 call site from 1 routine (e.g. WriteTileC4AtTransitionBGPtrLoAndClearAttr)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap::
-Func_00A_5328:: ; address name
     push bc
     ld b, l
     ld a, l
-    and a, $E0
+    and $e0
     ld l, a
     call AddHLToTransitionBGPtrLoInBGMap
     ld a, b
-    and a, $1F
+    and $1f
     jr z, .done
     ld b, a
 
@@ -3018,150 +2817,129 @@ Func_00A_5328:: ; address name
     pop bc
     ret
 
-; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping at the row end; keeps AF (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap)
+; L = (L & $E0) | ((L + 1) & $1F): moves HL one entry right inside its 32-entry BG map row, wrapping
+; at the row end; keeps AF (the same 15 bytes appear in 2 banks)
 NextBGMapColumn_Bank0A::
-Func_00A_533F:: ; address name
     push af
     ld a, l
-    and a, $E0
+    and $e0
     push af
     ld a, l
     inc a
-    and a, $1F
+    and $1f
     ld l, a
     pop af
-    or a, l
+    or l
     ld l, a
     pop af
     ret
 
-; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wTransitionBGPtrHi (stays inside one 1 KB BG map) (E-0117)
-; 1 call site from 1 routine (e.g. WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap)
-; reads: wTransitionBGPtrLo, wTransitionBGPtrHi
+; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper
+; 6 bits kept from wTransitionBGPtrHi (stays inside one 1 KB BG map) (E-0117)
 AddHLToTransitionBGPtrLoInBGMap::
-Func_00A_534E:: ; address name
     ld a, [wTransitionBGPtrLo]
-    add a, l
+    add l
     ld l, a
     ld a, [wTransitionBGPtrHi]
-    adc a, h
-    and a, $03
+    adc h
+    and $03
     ld h, a
     ld a, [wTransitionBGPtrHi]
-    and a, $FC
-    or a, h
+    and $fc
+    or h
     ld h, a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleTransitionStep_StagedSteps
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionCounter
 RunBattleTransitionStep_StagedSteps_ReadTransitionCounter::
-Jump_00A_5362:: ; address name
     ld b, $06
 
 RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter::
-Jump_00A_5364:: ; address name
     ld a, [wTransitionCounter]
-    rst $00
+    jumptable
     dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc
     dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01
     dw AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep
 
-; entry 0 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionStage, wTransitionCountA, wTransitionCountB, wTransitionCounter
-; writes: wTransitionCountA, wTransitionCountB, wTransitionStage
-; points at: wTransitionStage, wTransitionCounter
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc::
-Jump_00A_536E:: ; address name
     push bc
     ld a, [wTransitionStage]
-    cp a, $11
+    cp $11
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $23
+    cp $23
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $33
+    cp $33
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $43
+    cp $43
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $51
+    cp $51
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $5F
+    cp $5f
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $6B
+    cp $6b
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $77
+    cp $77
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $81
+    cp $81
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $8B
+    cp $8b
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $93
+    cp $93
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $9B
+    cp $9b
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $A1
+    cp $a1
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $A7
+    cp $a7
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $AB
+    cp $ab
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $AF
+    cp $af
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $B1
+    cp $b1
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
 
-; entry 1 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionStage, wTransitionCountA, wTransitionCountB, wTransitionCounter
-; writes: wTransitionCountA, wTransitionCountB, wTransitionStage
-; points at: wTransitionStage, wTransitionCounter
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01::
-Jump_00A_53C6:: ; address name
     push bc
     ld a, [wTransitionStage]
-    cp a, $02
+    cp $02
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $04
+    cp $04
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $08
+    cp $08
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $0C
+    cp $0c
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $12
+    cp $12
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $18
+    cp $18
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $20
+    cp $20
     jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $28
+    cp $28
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $32
+    cp $32
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $3C
+    cp $3c
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $48
+    cp $48
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $54
+    cp $54
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $62
+    cp $62
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    cp a, $70
+    cp $70
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    cp a, $80
+    cp $80
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
-    cp a, $90
+    cp $90
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
-    cp a, $A2
+    cp $a2
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip::
-Jump_00A_5413:: ; address name
-    or a, a
+    or a
     jr nz, .read_transition_count_a
     ld hl, $0233
     ld a, l
@@ -3178,18 +2956,17 @@ Jump_00A_5413:: ; address name
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
     pop hl
     ld a, l
-    sub a, $20
+    sub $20
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2::
-Jump_00A_5438:: ; address name
-    or a, a
+    or a
     jr nz, .read_transition_count_a
-    ld hl, $012A
+    ld hl, $012a
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3204,15 +2981,14 @@ Jump_00A_5438:: ; address name
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
     pop hl
     ld a, l
-    sub a, $01
+    sub $01
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA::
-Jump_00A_545D:: ; address name
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3221,15 +2997,14 @@ Jump_00A_545D:: ; address name
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
     pop hl
     ld a, l
-    add a, $20
+    add $20
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2::
-Jump_00A_5474:: ; address name
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3238,14 +3013,13 @@ Jump_00A_5474:: ; address name
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
     pop hl
     ld a, l
-    add a, $01
+    add $01
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA::
-Jump_00A_5489:: ; address name
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3253,11 +3027,11 @@ Jump_00A_5489:: ; address name
     ld hl, wTransitionStage
     inc [hl]
     ld a, [wTransitionStage]
-    cp a, $B4
+    cp $b4
     jr nz, .restore
     ld hl, wTransitionCounter
     inc [hl]
-    xor a, a
+    xor a
     ld [wTransitionStage], a
 
 .restore:
@@ -3266,35 +3040,22 @@ Jump_00A_5489:: ; address name
     jp nz, RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
     ret
 
-; entry 2 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleTransitionStep
 AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep::
-Jump_00A_54AA:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
 ; sets the transition counts from the stage record, then advances
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionCounter
 RunBattleTransitionStep_Case01_SetCounts::
-Jump_00A_54AF:: ; address name
     ld a, [wTransitionCounter]
-    rst $00
+    jumptable
     dw RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
     dw RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup
     dw RunBattleTransitionStep_Case01_SetCounts_AdvanceBattleTransitionStep
 
-; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_SetCounts
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTransitionStage, wTransitionCountA, wTransitionCountB
-; writes: wTransitionCountA, wTransitionCountB
-; points at: wTransitionStage, wTransitionCounter
 RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
-Jump_00A_54B9:: ; address name
     ld a, [wTransitionStage]
-    or a, a
+    or a
     jr nz, .read_transition_stage
     ld hl, $0000
     ld a, l
@@ -3309,7 +3070,7 @@ Jump_00A_54B9:: ; address name
     ld b, [hl]
     ld hl, TransitionRowStepTable
     ld a, [wTransitionStage]
-    add a, a
+    add a
     add_a_to_hl
     ld a, [wTransitionCountA]
     ld e, a
@@ -3359,10 +3120,10 @@ Jump_00A_54B9:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $20
+    add $20
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec b
     jr nz, .loop3
@@ -3382,10 +3143,10 @@ Jump_00A_54B9:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $20
+    add $20
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec b
     jr nz, .loop4
@@ -3394,10 +3155,10 @@ Jump_00A_54B9:: ; address name
     ld a, [wTransitionCountB]
     ld h, a
     ld a, l
-    add a, $21
+    add $21
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, l
     ld [wTransitionCountA], a
@@ -3408,177 +3169,146 @@ Jump_00A_54B9:: ; address name
     ld hl, wTransitionCounter
     inc [hl]
     ld a, [wTransitionStage]
-    cp a, $09
+    cp $09
     ret nz
     ld hl, wTransitionCounter
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01_SetCounts
-; no direct call (reached through a table, a jump or a vector)
-; points at: wTransitionCounter
 RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup::
-Jump_00A_5589:: ; address name
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattleTransitionStep_Case01_SetCounts
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleTransitionStep
 RunBattleTransitionStep_Case01_SetCounts_AdvanceBattleTransitionStep::
-Jump_00A_558E:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
 ; HL = the word at HL, then jp hl (E-0114)
-; 1 call site from 1 routine (e.g. RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage)
 JumpToWordAtHL_Bank0A::
-Func_00A_5593:: ; address name
     deref_hl
     jp hl
 
 ; handler 00 (entry 0 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep00:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_5597:: ; address name
+TransitionRowStep00::
     ld a, e
-    add a, $20
+    add $20
     ld e, a
     ld a, d
-    adc a, $02
+    adc $02
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 01 (entry 1 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep01:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55A2:: ; address name
+TransitionRowStep01::
     ld a, e
-    add a, $E0
+    add $e0
     ld e, a
     ld a, d
-    adc a, $01
+    adc $01
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 02 (entry 2 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep02:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55AD:: ; address name
+TransitionRowStep02::
     ld a, e
-    add a, $A0
+    add $a0
     ld e, a
     ld a, d
-    adc a, $01
+    adc $01
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 03 (entry 3 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep03:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55B8:: ; address name
+TransitionRowStep03::
     ld a, e
-    add a, $60
+    add $60
     ld e, a
     ld a, d
-    adc a, $01
+    adc $01
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 04 (entry 4 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep04:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55C3:: ; address name
+TransitionRowStep04::
     ld a, e
-    add a, $20
+    add $20
     ld e, a
     ld a, d
-    adc a, $01
+    adc $01
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 05 (entry 5 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep05:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55CE:: ; address name
+TransitionRowStep05::
     ld a, e
-    add a, $E0
+    add $e0
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 06 (entry 6 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep06:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55D9:: ; address name
+TransitionRowStep06::
     ld a, e
-    add a, $A0
+    add $a0
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 07 (entry 7 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep07:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55E4:: ; address name
+TransitionRowStep07::
     ld a, e
-    add a, $60
+    add $60
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld l, e
     ld h, d
     ret
 
 ; handler 08 (entry 8 of TransitionRowStepTable)
-; no direct call (reached through a table, a jump or a vector)
-TransitionRowStep08:: ; code pointer of the table TransitionRowStepTable; C0
-Func_00A_55EF:: ; address name
+TransitionRowStep08::
     ld a, e
-    add a, $20
+    add $20
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld l, e
     ld h, d
     ret
 
-; address loaded by RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_55FA:: ; address name
-    db $14, $12, $10, $0E, $0C, $0A, $08, $06, $04
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA::
+    db $14, $12, $10, $0e, $0c, $0a, $08, $06, $04
 
-; address loaded by RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_00A_5603:: ; address name
-    db $12, $10, $0E, $0C, $0A, $08, $06, $04, $02
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603::
+    db $12, $10, $0e, $0c, $0a, $08, $06, $04, $02
 
-; E-0202 (C1: RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 * wTransitionStage and DE = wTransitionCountA/B; each target adds a constant ($220, $1E0, $1A0, ...) to DE and returns it in HL; the nine targets were the INCBIN slice at $5597).
+; RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 *
+; wTransitionStage and DE = wTransitionCountA/B; each target adds a constant ($220, $1E0, $1A0, ...)
+; to DE and returns it in HL; the nine targets were the INCBIN slice at $5597 (E-0202, C1)
 ; record: routine adding this stage's step to DE
 TransitionRowStepTable::
-Data_00A_560C:: ; address name
     dw TransitionRowStep00 ; id 0
     dw TransitionRowStep01 ; id 1
     dw TransitionRowStep02 ; id 2
@@ -3589,20 +3319,16 @@ Data_00A_560C:: ; address name
     dw TransitionRowStep07 ; id 7
     dw TransitionRowStep08 ; id 8
 
-; counts steps in wStepCounterLo (wrapping at 1000); every 100 steps and at 1000 updates the stored SRAM records by their state byte and field $6E (E-0130)
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: wScriptRunning, wEncounterRate, wStepCounterLo, wStepCounterHi, hTemp0
-; writes: hTemp0, wStepCounterLo, wStepCounterHi, rRAMG
-; points at: sRecords
+; counts steps in wStepCounterLo (wrapping at 1000); every 100 steps and at 1000 updates the stored
+; SRAM records by their state byte and field $6E (E-0130)
 AdvanceStepCounterAndUpdateStoredRecords::
-Func_00A_561E:: ; address name
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ld a, [wEncounterRate]
-    and a, $7F
+    and $7f
     ret z
-    xor a, a
+    xor a
     ldh [hTemp0], a
     ld a, [wStepCounterLo]
     ld l, a
@@ -3612,7 +3338,7 @@ Func_00A_561E:: ; address name
     push hl
     ld a, $64
     call DivideHLByA
-    or a, a
+    or a
     jr nz, .restore
     ld a, $01
     ldh [hTemp0], a
@@ -3620,13 +3346,13 @@ Func_00A_561E:: ; address name
 .restore:
     pop hl
     ld a, l
-    cp a, $E8
+    cp $e8
     jr nz, .set_step_counter_lo
     ld a, h
-    cp a, $03
+    cp $03
     jr nz, .set_step_counter_lo
     ldh a, [hTemp0]
-    or a, $02
+    or $02
     ldh [hTemp0], a
     ld hl, $0000
 
@@ -3636,19 +3362,19 @@ Func_00A_561E:: ; address name
     ld a, h
     ld [wStepCounterHi], a
     ldh a, [hTemp0]
-    or a, a
+    or a
     ret z
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld hl, sRecords
-    ld a, $6B
+    ld a, $6b
     add_a_to_hl
     ld de, sRecords
-    ld b, $1E
+    ld b, $1e
 
 .loop:
     ld a, [de]
-    or a, a
+    or a
     jr z, .skip2
     dec a
     jr nz, .skip
@@ -3657,32 +3383,32 @@ Func_00A_561E:: ; address name
     jr z, .skip2
     push de
     ld a, e
-    add a, $6E
+    add $6e
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld a, [de]
     pop de
-    or a, a
+    or a
     jr nz, .skip2
     push de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl-]
+    ld a, [hld]
     ld d, a
-    cp a, $03
+    cp $03
     jr nz, .next
     ld a, e
-    cp a, $E7
+    cp $e7
     jr z, .restore2
 
 .next:
     inc de
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
-    ld [hl-], a
+    ld [hld], a
 
 .restore2:
     pop de
@@ -3690,66 +3416,60 @@ Func_00A_561E:: ; address name
 
 .skip:
     push de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl-]
+    ld a, [hld]
     ld d, a
-    cp a, e
+    cp e
     jr nz, .next2
-    or a, a
+    or a
     jr z, .restore3
 
 .next2:
     dec de
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
-    ld [hl-], a
+    ld [hld], a
 
 .restore3:
     pop de
 
 .skip2:
     ld a, e
-    add a, $A5
+    add $a5
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld a, l
-    add a, $A5
+    add $a5
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; only called from UpdatePlayerMovement_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7)
-; reads: wEncounterRate, wScriptRunning, wPartyCount, hTemp0, hTemp1
-; writes: rRAMG
-; points at: wPartyList
 UpdatePlayerMovement_Sub01_TestFlagBit::
-Func_00A_56D0:: ; address name
     ld a, [wEncounterRate]
-    and a, $7F
+    and $7f
     ret z
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ld de, $0002
     call TestFlagBit
     ret nc
     ld a, [wPartyCount]
-    or a, a
+    or a
     ret z
     ld b, a
     ld hl, wPartyList
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
 
 .loop:
@@ -3762,13 +3482,13 @@ Func_00A_56D0:: ; address name
     ld a, [hl]
     ld c, MON_ITEM
     call LoadSRAMRecordByte
-    cp a, $1B
+    cp $1b
     jr nz, .cp_1C
-    ld c, $5D
+    ld c, $5d
     jr .call_load_sram_record_word
 
 .cp_1C:
-    cp a, $1C
+    cp $1c
     jr nz, .restore
     ld c, $61
 
@@ -3788,10 +3508,10 @@ Func_00A_56D0:: ; address name
     call LoadSRAMRecordWord
     pop bc
     ldh a, [hTemp0]
-    cp a, e
+    cp e
     jr nz, .read_temp0
     ldh a, [hTemp1]
-    cp a, d
+    cp d
     jr z, .restore
 
 .read_temp0:
@@ -3804,7 +3524,7 @@ Func_00A_56D0:: ; address name
     ld a, [hl]
     call SRAMRecordAddress
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
     ld [hl], a
     pop hl
@@ -3814,21 +3534,16 @@ Func_00A_56D0:: ; address name
     inc hl
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; only called from UpdatePlayerMovement_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7)
-; reads: hPlayerSpriteOverride, wScriptRunning, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi
-; writes: hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wTalkEventGroup, wTalkEventIndex
 UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride::
-Func_00A_5748:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     ret z
     ld a, [wScriptRunning]
-    or a, a
+    or a
     ret nz
     ldh a, [hPlayerSpriteTimerLo]
     ld l, a
@@ -3842,17 +3557,18 @@ Func_00A_5748:: ; address name
     ld a, h
     bit 7, a
     ret z
-    ld a, $0A
+    ld a, $0a
     ld [wTalkEventGroup], a
-    xor a, a
+    xor a
     ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 64 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (8 per row): its encounter group
 EncounterGrid_5773::
-Data_00A_5773:: ; address name
     dw EncounterGroup_57F3 ; id 0
     dw EncounterGroup_57F3 ; id 1
     dw EncounterGroup_57F3 ; id 2
@@ -3918,84 +3634,71 @@ Data_00A_5773:: ; address name
     dw EncounterGroup_5845 ; id 62
     dw EncounterGroup_5845 ; id 63
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_57F3::
-Data_00A_57F3:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_57FE::
-Data_00A_57FE:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
-    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0005 ; MonsterTable $005: Crestpent
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_580B::
-Data_00A_580B:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
-    db $0C, $05, $0A, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $05, $0a, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0004 ; MonsterTable $004: TailEater
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5818::
-Data_00A_5818:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
-    db $10, $05, $0A, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $10, $05, $0a, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0004 ; MonsterTable $004: TailEater
     dw $0005 ; MonsterTable $005: Crestpent
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5827::
-Data_00A_5827:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0D, $02, $04, $09, $0D, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0d, $02, $04, $09, $0d, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0005 ; MonsterTable $005: Crestpent
     dw $0006 ; MonsterTable $006: KingCobra
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5836::
-Data_00A_5836:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0E, $02, $04, $09, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0e, $02, $04, $09, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0005 ; MonsterTable $005: Crestpent
     dw $0004 ; MonsterTable $004: TailEater
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5845::
-Data_00A_5845:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $14, $02, $04, $09, $0E, $14 ; limit for the random 0-127, then rising slot thresholds
+    db $14, $02, $04, $09, $0e, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0005 ; MonsterTable $005: Crestpent
     dw $0004 ; MonsterTable $004: TailEater
     dw $0006 ; MonsterTable $006: KingCobra
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_5856::
-Data_00A_5856:: ; address name
     dw EncounterGroup_5881 ; id 0
     dw EncounterGroup_5881 ; id 1
     dw EncounterGroup_5881 ; id 2
@@ -4013,39 +3716,40 @@ Data_00A_5856:: ; address name
     dw EncounterGroup_5876 ; id 14
     dw EncounterGroup_5876 ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5876::
-Data_00A_5876:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
     dw $0181 ; MonsterTable $181: Spooky
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5881::
-Data_00A_5881:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0B, $03, $06, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0b, $03, $06, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
     dw $0181 ; MonsterTable $181: Spooky
     dw $0184 ; MonsterTable $184: MadCandle
 
-; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
+; passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01
+; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
+; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
+; threshold (E-0202, C1)
 EncounterGroup_588E::
-Data_00A_588E:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0C, $05, $0A, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $05, $0a, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
     dw $0181 ; MonsterTable $181: Spooky
     dw $0186 ; MonsterTable $186: Anemon
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 64 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (8 per row): its encounter group
 EncounterGrid_589B::
-Data_00A_589B:: ; address name
     dw EncounterGroup_591B ; id 0
     dw EncounterGroup_59BD ; id 1
     dw EncounterGroup_59BD ; id 2
@@ -4111,229 +3815,183 @@ Data_00A_589B:: ; address name
     dw EncounterGroup_591B ; id 62
     dw EncounterGroup_591B ; id 63
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_591B::
-Data_00A_591B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000A ; MonsterTable $00A: Antbear
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000a ; MonsterTable $00A: Antbear
+    dw $000c ; MonsterTable $00C: Eggplaton
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5928::
-Data_00A_5928:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $03, $07, $0B, $0F, $12 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $03, $07, $0b, $0f, $12 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000A ; MonsterTable $00A: Antbear
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000a ; MonsterTable $00A: Antbear
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5939::
-Data_00A_5939:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $03, $07, $0B, $10, $12 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $03, $07, $0b, $10, $12 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_594A::
-Data_00A_594A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $17, $05, $0A, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    db $17, $05, $0a, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0277 ; MonsterTable $277: Healer
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_595B::
-Data_00A_595B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0F, $03, $06, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $018B ; MonsterTable $18B: MiniDrak
-    dw $000C ; MonsterTable $00C: Eggplaton
+    db $0f, $03, $06, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018b ; MonsterTable $18B: MiniDrak
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_596A::
-Data_00A_596A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $15, $05, $08, $0D, $12, $15 ; limit for the random 0-127, then rising slot thresholds
-    dw $018B ; MonsterTable $18B: MiniDrak
+    db $15, $05, $08, $0d, $12, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $018b ; MonsterTable $18B: MiniDrak
     dw $0014 ; MonsterTable $014: Poisongon
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_597B::
-Data_00A_597B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $10, $03, $07, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $10, $03, $07, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0014 ; MonsterTable $014: Poisongon
     dw $0187 ; MonsterTable $187: ArrowDog
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_598A::
-Data_00A_598A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $16, $05, $0A, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    db $16, $05, $0a, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $0014 ; MonsterTable $014: Poisongon
     dw $0187 ; MonsterTable $187: ArrowDog
-    dw $000F ; MonsterTable $00F: Wyvern
+    dw $000f ; MonsterTable $00F: Wyvern
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_599B::
-Data_00A_599B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $17, $03, $08, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    db $17, $03, $08, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0013 ; MonsterTable $013: Snaily
     dw $0014 ; MonsterTable $014: Poisongon
     dw $0187 ; MonsterTable $187: ArrowDog
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59AC::
-Data_00A_59AC:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $03, $07, $0C, $0F, $14 ; limit for the random 0-127, then rising slot thresholds
-    dw $018D ; MonsterTable $18D: DragonKid
+    db $14, $03, $07, $0c, $0f, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $018d ; MonsterTable $18D: DragonKid
     dw $0187 ; MonsterTable $187: ArrowDog
     dw $0189 ; MonsterTable $189: DanceVegi
     dw $0188 ; MonsterTable $188: Pyuro
-    dw $018A ; MonsterTable $18A: Brushead
+    dw $018a ; MonsterTable $18A: Brushead
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_59BD::
-Data_00A_59BD:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $018B ; MonsterTable $18B: MiniDrak
+    db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018b ; MonsterTable $18B: MiniDrak
     dw $0189 ; MonsterTable $189: DanceVegi
-    dw $018A ; MonsterTable $18A: Brushead
+    dw $018a ; MonsterTable $18A: Brushead
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_59CA::
-Data_00A_59CA:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $018D ; MonsterTable $18D: DragonKid
-    dw $018C ; MonsterTable $18C: Pteranod
-    dw $018E ; MonsterTable $18E: CatFly
+    db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018d ; MonsterTable $18D: DragonKid
+    dw $018c ; MonsterTable $18C: Pteranod
+    dw $018e ; MonsterTable $18E: CatFly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_59D7::
-Data_00A_59D7:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $05, $0A, $0C, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0e, $05, $0a, $0c, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
+    dw $000b ; MonsterTable $00B: Dracky
     dw $0189 ; MonsterTable $189: DanceVegi
-    dw $018A ; MonsterTable $18A: Brushead
+    dw $018a ; MonsterTable $18A: Brushead
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59E6::
-Data_00A_59E6:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $10, $01, $03, $04, $0A, $10 ; limit for the random 0-127, then rising slot thresholds
+    db $10, $01, $03, $04, $0a, $10 ; limit for the random 0-127, then rising slot thresholds
     dw $0277 ; MonsterTable $277: Healer
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59F7::
-Data_00A_59F7:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $02, $03, $04, $0C, $13 ; limit for the random 0-127, then rising slot thresholds
+    db $13, $02, $03, $04, $0c, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A08::
-Data_00A_5A08:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $01, $03, $04, $0B, $13 ; limit for the random 0-127, then rising slot thresholds
+    db $13, $01, $03, $04, $0b, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A19::
-Data_00A_5A19:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $01, $03, $05, $0A, $13 ; limit for the random 0-127, then rising slot thresholds
+    db $13, $01, $03, $05, $0a, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A2A::
-Data_00A_5A2A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $01, $03, $05, $07, $10 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
-    dw $000B ; MonsterTable $00B: Dracky
-    dw $000C ; MonsterTable $00C: Eggplaton
+    dw $000b ; MonsterTable $00B: Dracky
+    dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
+; passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01
+; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
+; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
+; threshold (E-0202, C1)
 EncounterGroup_5A3B::
-Data_00A_5A3B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $04, $08, $0B, $0E, $12 ; limit for the random 0-127, then rising slot thresholds
-    dw $001D ; MonsterTable $01D: Petiteel
-    dw $001F ; MonsterTable $01F: Merman
+    db $12, $04, $08, $0b, $0e, $12 ; limit for the random 0-127, then rising slot thresholds
+    dw $001d ; MonsterTable $01D: Petiteel
+    dw $001f ; MonsterTable $01F: Merman
     dw $0018 ; MonsterTable $018: Gamanian
     dw $0020 ; MonsterTable $020: Octokid
     dw $0021 ; MonsterTable $021: RogueWave
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_5A4C::
-Data_00A_5A4C:: ; address name
     dw EncounterGroup_5A6C ; id 0
     dw EncounterGroup_5A6C ; id 1
     dw EncounterGroup_5A6C ; id 2
@@ -4351,32 +4009,35 @@ Data_00A_5A4C:: ; address name
     dw EncounterGroup_5A6C ; id 14
     dw EncounterGroup_5A6C ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5A6C::
-Data_00A_5A6C:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0022 ; MonsterTable $022: PearlGel
     dw $0015 ; MonsterTable $015: Moray
     dw $0017 ; MonsterTable $017: PutreFish
     dw $0018 ; MonsterTable $018: Gamanian
 
-; E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws
+; three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold
+; (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold
+; (E-0202, C1)
 EncounterGroup_5A7B::
-Data_00A_5A7B:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0022 ; MonsterTable $022: PearlGel
     dw $0015 ; MonsterTable $015: Moray
     dw $0017 ; MonsterTable $017: PutreFish
     dw $0018 ; MonsterTable $018: Gamanian
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_5A8A::
-Data_00A_5A8A:: ; address name
     dw EncounterGroup_5AAA ; id 0
     dw EncounterGroup_5AAA ; id 1
     dw EncounterGroup_5AAA ; id 2
@@ -4394,20 +4055,21 @@ Data_00A_5A8A:: ; address name
     dw EncounterGroup_5AAA ; id 14
     dw EncounterGroup_5AAA ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5AAA::
-Data_00A_5AAA:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0024 ; MonsterTable $024: AquaHawk
     dw $0025 ; MonsterTable $025: DarkEye
     dw $0027 ; MonsterTable $027: EvilWand
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
-; record: one screen, row by row (4 per row): its encounter group
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 EncounterGrid_5AB7::
-Data_00A_5AB7:: ; address name
     dw EncounterGroup_5ACF ; id 0
     dw EncounterGroup_5ACF ; id 1
     dw EncounterGroup_5ACF ; id 2
@@ -4421,21 +4083,20 @@ Data_00A_5AB7:: ; address name
     dw EncounterGroup_5ACF ; id 10
     dw EncounterGroup_5ACF ; id 11
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5ACF::
-Data_00A_5ACF:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $03, $08, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $03, $08, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0023 ; MonsterTable $023: Tortragon
     dw $0024 ; MonsterTable $024: AquaHawk
     dw $0025 ; MonsterTable $025: DarkEye
     dw $0027 ; MonsterTable $027: EvilWand
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_5ADE::
-Data_00A_5ADE:: ; address name
     dw EncounterGroup_5AF0 ; id 0
     dw EncounterGroup_5AF0 ; id 1
     dw EncounterGroup_5AF0 ; id 2
@@ -4446,121 +4107,114 @@ Data_00A_5ADE:: ; address name
     dw EncounterGroup_5AF0 ; id 7
     dw EncounterGroup_5AF0 ; id 8
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_5AF0::
-Data_00A_5AF0:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $018D ; MonsterTable $18D: DragonKid
+    db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018d ; MonsterTable $18D: DragonKid
     dw $0023 ; MonsterTable $023: Tortragon
     dw $0019 ; MonsterTable $019: SpikyBoy
-    dw $001E ; MonsterTable $01E: RotRaven
+    dw $001e ; MonsterTable $01E: RotRaven
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5AFF::
-Data_00A_5AFF:: ; address name
     dw EncounterGroup_5B07 ; id 0
     dw EncounterGroup_5B07 ; id 1
     dw EncounterGroup_5B07 ; id 2
     dw EncounterGroup_5B07 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B07::
-Data_00A_5B07:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0013 ; MonsterTable $013: Snaily
     dw $0026 ; MonsterTable $026: RayGigas
     dw $0016 ; MonsterTable $016: Eyeder
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5B14::
-Data_00A_5B14:: ; address name
     dw EncounterGroup_5B1C ; id 0
     dw EncounterGroup_5B1C ; id 1
     dw EncounterGroup_5B1C ; id 2
     dw EncounterGroup_5B1C ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B1C::
-Data_00A_5B1C:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $02, $06, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $000F ; MonsterTable $00F: Wyvern
+    db $0a, $02, $06, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $000f ; MonsterTable $00F: Wyvern
     dw $0012 ; MonsterTable $012: 1EyeClown
     dw $0016 ; MonsterTable $016: Eyeder
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 3 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_5B29::
-Data_00A_5B29:: ; address name
     dw EncounterGroup_5B2F ; id 0
     dw EncounterGroup_5B2F ; id 1
     dw EncounterGroup_5B2F ; id 2
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5B2F::
-Data_00A_5B2F:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
-    dw $000E ; MonsterTable $00E: Hork
+    dw $000e ; MonsterTable $00E: Hork
 
-; E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
+; no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws
+; three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold
+; (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold
+; (E-0202, C1)
 EncounterGroup_5B3A::
-Data_00A_5B3A:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
-    dw $000E ; MonsterTable $00E: Hork
+    dw $000e ; MonsterTable $00E: Hork
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 3 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_5B45::
-Data_00A_5B45:: ; address name
     dw EncounterGroup_5B4B ; id 0
     dw EncounterGroup_5B4B ; id 1
     dw EncounterGroup_5B4B ; id 2
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B4B::
-Data_00A_5B4B:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
-    dw $000E ; MonsterTable $00E: Hork
-    dw $000D ; MonsterTable $00D: JewelBag
+    dw $000e ; MonsterTable $00E: Hork
+    dw $000d ; MonsterTable $00D: JewelBag
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
-; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_5B58::
-Data_00A_5B58:: ; address name
     dw EncounterGroup_5B5E ; id 0
     dw EncounterGroup_5B5E ; id 1
     dw EncounterGroup_5B5E ; id 2
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B5E::
-Data_00A_5B5E:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
-    dw $000E ; MonsterTable $00E: Hork
-    dw $000D ; MonsterTable $00D: JewelBag
+    dw $000e ; MonsterTable $00E: Hork
+    dw $000d ; MonsterTable $00D: JewelBag
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 144 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (12 per row): its encounter group
 EncounterGrid_5B6B::
-Data_00A_5B6B:: ; address name
     dw EncounterGroup_5C8B ; id 0
     dw EncounterGroup_5C8B ; id 1
     dw EncounterGroup_5C8B ; id 2
@@ -4681,8 +4335,7 @@ Data_00A_5B6B:: ; address name
     dw EncounterGroup_5D1D ; id 117
     dw EncounterGroup_5D1D ; id 118
     dw EncounterGroup_5D1D ; id 119
-PointerRun_0A_438D_Entry03:: ; heuristic: label inside a table; C0
-Data_00A_5C5B:: ; address name
+PointerRun_0A_438D_Entry03::
     dw EncounterGroup_5CEE ; id 120
     dw EncounterGroup_5CFD ; id 121
     dw EncounterGroup_5CEE ; id 122
@@ -4708,164 +4361,134 @@ Data_00A_5C5B:: ; address name
     dw EncounterGroup_5D1D ; id 142
     dw EncounterGroup_5D1D ; id 143
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5C8B::
-Data_00A_5C8B:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5C96::
-Data_00A_5C96:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0036 ; MonsterTable $036: Gulpple
-    dw $003C ; MonsterTable $03C: WingSlime
+    dw $003c ; MonsterTable $03C: WingSlime
     dw $0191 ; MonsterTable $191: BeastNite
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5CA3::
-Data_00A_5CA3:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $15, $04, $09, $0E, $11, $15 ; limit for the random 0-127, then rising slot thresholds
+    db $15, $04, $09, $0e, $11, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0038 ; MonsterTable $038: Almiraj
-    dw $002B ; MonsterTable $02B: Yeti
-    dw $003B ; MonsterTable $03B: Saccer
+    dw $002b ; MonsterTable $02B: Yeti
+    dw $003b ; MonsterTable $03B: Saccer
     dw $0036 ; MonsterTable $036: Gulpple
-    dw $003C ; MonsterTable $03C: WingSlime
+    dw $003c ; MonsterTable $03C: WingSlime
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CB4::
-Data_00A_5CB4:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $09, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002A ; MonsterTable $02A: HammerMan
-    dw $002B ; MonsterTable $02B: Yeti
-    dw $003B ; MonsterTable $03B: Saccer
+    db $12, $05, $09, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002a ; MonsterTable $02A: HammerMan
+    dw $002b ; MonsterTable $02B: Yeti
+    dw $003b ; MonsterTable $03B: Saccer
     dw $0036 ; MonsterTable $036: Gulpple
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CC3::
-Data_00A_5CC3:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $04, $08, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002B ; MonsterTable $02B: Yeti
-    dw $003B ; MonsterTable $03B: Saccer
+    db $12, $04, $08, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002b ; MonsterTable $02B: Yeti
+    dw $003b ; MonsterTable $03B: Saccer
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0191 ; MonsterTable $191: BeastNite
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5CD2::
-Data_00A_5CD2:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $02, $07, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $02, $07, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0040 ; MonsterTable $040: SeaHorse
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0191 ; MonsterTable $191: BeastNite
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CDF::
-Data_00A_5CDF:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $10, $04, $09, $0D, $10, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002A ; MonsterTable $02A: HammerMan
-    dw $002D ; MonsterTable $02D: Gismo
+    db $10, $04, $09, $0d, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002a ; MonsterTable $02A: HammerMan
+    dw $002d ; MonsterTable $02D: Gismo
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0034 ; MonsterTable $034: Grizzly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CEE::
-Data_00A_5CEE:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $04, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $04, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0028 ; MonsterTable $028: SlimeNite
-    dw $002D ; MonsterTable $02D: Gismo
+    dw $002d ; MonsterTable $02D: Gismo
     dw $0034 ; MonsterTable $034: Grizzly
-    dw $003E ; MonsterTable $03E: CragDevil
+    dw $003e ; MonsterTable $03E: CragDevil
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5CFD::
-Data_00A_5CFD:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $15, $03, $07, $0D, $11, $15 ; limit for the random 0-127, then rising slot thresholds
+    db $15, $03, $07, $0d, $11, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0028 ; MonsterTable $028: SlimeNite
-    dw $002D ; MonsterTable $02D: Gismo
+    dw $002d ; MonsterTable $02D: Gismo
     dw $0038 ; MonsterTable $038: Almiraj
-    dw $003B ; MonsterTable $03B: Saccer
-    dw $003E ; MonsterTable $03E: CragDevil
+    dw $003b ; MonsterTable $03B: Saccer
+    dw $003e ; MonsterTable $03E: CragDevil
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D0E::
-Data_00A_5D0E:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $0A, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002C ; MonsterTable $02C: Orc
+    db $12, $05, $0a, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002c ; MonsterTable $02C: Orc
     dw $0037 ; MonsterTable $037: FoxFire
     dw $0034 ; MonsterTable $034: Grizzly
-    dw $003E ; MonsterTable $03E: CragDevil
+    dw $003e ; MonsterTable $03E: CragDevil
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5D1D::
-Data_00A_5D1D:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $15, $04, $07, $0B, $10, $15 ; limit for the random 0-127, then rising slot thresholds
+    db $15, $04, $07, $0b, $10, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0029 ; MonsterTable $029: LizardMan
     dw $0033 ; MonsterTable $033: RogueNite
     dw $0037 ; MonsterTable $037: FoxFire
     dw $0039 ; MonsterTable $039: LandOwl
     dw $0192 ; MonsterTable $192: Drygon
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D2E::
-Data_00A_5D2E:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $11, $03, $08, $0D, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $11, $03, $08, $0d, $11, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0033 ; MonsterTable $033: RogueNite
-    dw $003A ; MonsterTable $03A: Goategon
-    dw $003D ; MonsterTable $03D: BullBird
+    dw $003a ; MonsterTable $03A: Goategon
+    dw $003d ; MonsterTable $03D: BullBird
     dw $0192 ; MonsterTable $192: Drygon
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5D3D::
-Data_00A_5D3D:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $15, $05, $0A, $0E, $12, $15 ; limit for the random 0-127, then rising slot thresholds
-    dw $003F ; MonsterTable $03F: Starfish
+    db $15, $05, $0a, $0e, $12, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $003f ; MonsterTable $03F: Starfish
     dw $0040 ; MonsterTable $040: SeaHorse
     dw $0037 ; MonsterTable $037: FoxFire
     dw $0029 ; MonsterTable $029: LizardMan
     dw $0033 ; MonsterTable $033: RogueNite
 
-; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01
+; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
+; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
+; threshold (E-0202, C1)
 EncounterGroup_5D4E::
-Data_00A_5D4E:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $0A, $0F, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $05, $0a, $0f, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0040 ; MonsterTable $040: SeaHorse
     dw $0193 ; MonsterTable $193: Pumpoise
     dw $0194 ; MonsterTable $194: FishRider
     dw $0195 ; MonsterTable $195: WalrusMan
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_5D5D::
-Data_00A_5D5D:: ; address name
     dw EncounterGroup_5D7D ; id 0
     dw EncounterGroup_5D7D ; id 1
     dw EncounterGroup_5D7D ; id 2
@@ -4883,32 +4506,35 @@ Data_00A_5D5D:: ; address name
     dw EncounterGroup_5D7D ; id 14
     dw EncounterGroup_5D7D ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D7D::
-Data_00A_5D7D:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $04, $09, $0E, $13, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002E ; MonsterTable $02E: Droll
-    dw $002F ; MonsterTable $02F: Goopi
+    db $13, $04, $09, $0e, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002e ; MonsterTable $02E: Droll
+    dw $002f ; MonsterTable $02F: Goopi
     dw $0030 ; MonsterTable $030: Mummy
     dw $0031 ; MonsterTable $031: TreeBoy
 
-; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01
+; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
+; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
+; threshold (E-0202, C1)
 EncounterGroup_5D8C::
-Data_00A_5D8C:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $04, $09, $0E, $13, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $002E ; MonsterTable $02E: Droll
-    dw $002F ; MonsterTable $02F: Goopi
+    db $13, $04, $09, $0e, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002e ; MonsterTable $02E: Droll
+    dw $002f ; MonsterTable $02F: Goopi
     dw $0030 ; MonsterTable $030: Mummy
     dw $0031 ; MonsterTable $031: TreeBoy
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_5D9B::
-Data_00A_5D9B:: ; address name
     dw EncounterGroup_5DBB ; id 0
     dw EncounterGroup_5DBB ; id 1
     dw EncounterGroup_5DBB ; id 2
@@ -4926,21 +4552,23 @@ Data_00A_5D9B:: ; address name
     dw EncounterGroup_5DBB ; id 14
     dw EncounterGroup_5DBB ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5DBB::
-Data_00A_5DBB:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $10, $04, $08, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $10, $04, $08, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0041 ; MonsterTable $041: ManEater
     dw $0196 ; MonsterTable $196: Stubsuck
     dw $0197 ; MonsterTable $197: Shadow
     dw $0035 ; MonsterTable $035: Demonite
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 8 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 8 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5DCA::
-Data_00A_5DCA:: ; address name
     dw EncounterGroup_5DDA ; id 0
     dw EncounterGroup_5DDA ; id 1
     dw EncounterGroup_5DDA ; id 2
@@ -4950,86 +4578,71 @@ Data_00A_5DCA:: ; address name
     dw EncounterGroup_5DDA ; id 6
     dw EncounterGroup_5DDA ; id 7
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5DDA::
-Data_00A_5DDA:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0042 ; MonsterTable $042: StubBird
     dw $0043 ; MonsterTable $043: GiantMoth
     dw $0198 ; MonsterTable $198: WingTree
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 EncounterGrid_5DE7::
-Data_00A_5DE7:: ; address name
     dw EncounterGroup_5DFF ; id 0
     dw EncounterGroup_5DFF ; id 1
     dw EncounterGroup_5DFF ; id 2
     dw EncounterGroup_5DFF ; id 3
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5DEF::
-Data_00A_5DEF:: ; address name
     dw EncounterGroup_5DFF ; id 0
     dw EncounterGroup_5DFF ; id 1
     dw EncounterGroup_5DFF ; id 2
     dw EncounterGroup_5DFF ; id 3
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5DF7::
-Data_00A_5DF7:: ; address name
     dw EncounterGroup_5DFF ; id 0
     dw EncounterGroup_5DFF ; id 1
     dw EncounterGroup_5DFF ; id 2
     dw EncounterGroup_5DFF ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_5DFF::
-Data_00A_5DFF:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $09, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $019E ; MonsterTable $19E: AgDevil
-    dw $019F ; MonsterTable $19F: Puppetor
-    dw $01A0 ; MonsterTable $1A0: Golem
+    db $0c, $04, $09, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $019e ; MonsterTable $19E: AgDevil
+    dw $019f ; MonsterTable $19F: Puppetor
+    dw $01a0 ; MonsterTable $1A0: Golem
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5E0C::
-Data_00A_5E0C:: ; address name
     dw EncounterGroup_5E1C ; id 0
     dw EncounterGroup_5E1C ; id 1
     dw EncounterGroup_5E1C ; id 2
     dw EncounterGroup_5E1C ; id 3
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_5E14::
-Data_00A_5E14:: ; address name
     dw EncounterGroup_5E1C ; id 0
     dw EncounterGroup_5E1C ; id 1
     dw EncounterGroup_5E1C ; id 2
     dw EncounterGroup_5E1C ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5E1C::
-Data_00A_5E1C:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $01, $05, $0A, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $019D ; MonsterTable $19D: MetalDrak
-    dw $019E ; MonsterTable $19E: AgDevil
-    dw $019F ; MonsterTable $19F: Puppetor
-    dw $01A0 ; MonsterTable $1A0: Golem
+    db $0e, $01, $05, $0a, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $019d ; MonsterTable $19D: MetalDrak
+    dw $019e ; MonsterTable $19E: AgDevil
+    dw $019f ; MonsterTable $19F: Puppetor
+    dw $01a0 ; MonsterTable $1A0: Golem
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 144 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (12 per row): its encounter group
 EncounterGrid_5E2B::
-Data_00A_5E2B:: ; address name
     dw EncounterGroup_5F4B ; id 0
     dw EncounterGroup_600A ; id 1
     dw EncounterGroup_600A ; id 2
@@ -5055,8 +4668,7 @@ Data_00A_5E2B:: ; address name
     dw EncounterGroup_5F56 ; id 22
     dw EncounterGroup_5F56 ; id 23
     dw EncounterGroup_5F4B ; id 24
-PointerRun_0A_438D_Entry04:: ; heuristic: label inside a table; C0
-Data_00A_5E5D:: ; address name
+PointerRun_0A_438D_Entry04::
     dw EncounterGroup_6019 ; id 25
     dw EncounterGroup_5F4B ; id 26
     dw EncounterGroup_5F4B ; id 27
@@ -5177,271 +4789,225 @@ Data_00A_5E5D:: ; address name
     dw EncounterGroup_5FDF ; id 142
     dw EncounterGroup_5FDF ; id 143
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5F4B::
-Data_00A_5F4B:: ; address name
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5F56::
-Data_00A_5F56:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0048 ; MonsterTable $048: Emyu
     dw $0049 ; MonsterTable $049: FloraMan
     dw $0045 ; MonsterTable $045: FangSlime
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F63::
-Data_00A_5F63:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $10, $04, $08, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $10, $04, $08, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
-    dw $01A7 ; MonsterTable $1A7: FairyRat
-    dw $004A ; MonsterTable $04A: Slurperon
+    dw $01a7 ; MonsterTable $1A7: FairyRat
+    dw $004a ; MonsterTable $04A: Slurperon
     dw $0047 ; MonsterTable $047: MadRaven
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5F72::
-Data_00A_5F72:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $17, $05, $0A, $0F, $14, $17 ; limit for the random 0-127, then rising slot thresholds
+    db $17, $05, $0a, $0f, $14, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
-    dw $01A7 ; MonsterTable $1A7: FairyRat
-    dw $004A ; MonsterTable $04A: Slurperon
+    dw $01a7 ; MonsterTable $1A7: FairyRat
+    dw $004a ; MonsterTable $04A: Slurperon
     dw $0047 ; MonsterTable $047: MadRaven
     dw $0055 ; MonsterTable $055: WildApe
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F83::
-Data_00A_5F83:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $13, $06, $0C, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $13, $06, $0c, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
-    dw $004A ; MonsterTable $04A: Slurperon
+    dw $004a ; MonsterTable $04A: Slurperon
     dw $0052 ; MonsterTable $052: WarMantis
     dw $0058 ; MonsterTable $058: Metaly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F92::
-Data_00A_5F92:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $06, $0C, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005E ; MonsterTable $05E: Gigantes
-    dw $01A9 ; MonsterTable $1A9: Mommonja
+    db $14, $06, $0c, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005e ; MonsterTable $05E: Gigantes
+    dw $01a9 ; MonsterTable $1A9: Mommonja
     dw $0052 ; MonsterTable $052: WarMantis
     dw $0058 ; MonsterTable $058: Metaly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FA1::
-Data_00A_5FA1:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $10, $03, $06, $0B, $10, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005E ; MonsterTable $05E: Gigantes
-    dw $01A9 ; MonsterTable $1A9: Mommonja
-    dw $01A8 ; MonsterTable $1A8: Swordgon
-    dw $004D ; MonsterTable $04D: Dragon
+    db $10, $03, $06, $0b, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005e ; MonsterTable $05E: Gigantes
+    dw $01a9 ; MonsterTable $1A9: Mommonja
+    dw $01a8 ; MonsterTable $1A8: Swordgon
+    dw $004d ; MonsterTable $04D: Dragon
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FB0::
-Data_00A_5FB0:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $13, $06, $0C, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01A8 ; MonsterTable $1A8: Swordgon
-    dw $005C ; MonsterTable $05C: MadGoose
-    dw $004D ; MonsterTable $04D: Dragon
+    db $13, $06, $0c, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01a8 ; MonsterTable $1A8: Swordgon
+    dw $005c ; MonsterTable $05C: MadGoose
+    dw $004d ; MonsterTable $04D: Dragon
     dw $0053 ; MonsterTable $053: Phoenix
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FBF::
-Data_00A_5FBF:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $14, $06, $0C, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01A8 ; MonsterTable $1A8: Swordgon
-    dw $005C ; MonsterTable $05C: MadGoose
-    dw $004D ; MonsterTable $04D: Dragon
+    db $14, $06, $0c, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01a8 ; MonsterTable $1A8: Swordgon
+    dw $005c ; MonsterTable $05C: MadGoose
+    dw $004d ; MonsterTable $04D: Dragon
     dw $0058 ; MonsterTable $058: Metaly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5FCE::
-Data_00A_5FCE:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $16, $04, $09, $0E, $13, $16 ; limit for the random 0-127, then rising slot thresholds
+    db $16, $04, $09, $0e, $13, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $0055 ; MonsterTable $055: WildApe
-    dw $005D ; MonsterTable $05D: Bubblemon
-    dw $004D ; MonsterTable $04D: Dragon
-    dw $005C ; MonsterTable $05C: MadGoose
-    dw $01A8 ; MonsterTable $1A8: Swordgon
+    dw $005d ; MonsterTable $05D: Bubblemon
+    dw $004d ; MonsterTable $04D: Dragon
+    dw $005c ; MonsterTable $05C: MadGoose
+    dw $01a8 ; MonsterTable $1A8: Swordgon
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FDF::
-Data_00A_5FDF:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $0A, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01AA ; MonsterTable $1AA: KiteHawk
-    dw $006F ; MonsterTable $06F: Florajay
+    db $12, $05, $0a, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01aa ; MonsterTable $1AA: KiteHawk
+    dw $006f ; MonsterTable $06F: Florajay
     dw $0059 ; MonsterTable $059: GhosTree
     dw $0062 ; MonsterTable $062: MadSpirit
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5FEE::
-Data_00A_5FEE:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $006E ; MonsterTable $06E: Vampirus
-    dw $004C ; MonsterTable $04C: MadDragon
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $006e ; MonsterTable $06E: Vampirus
+    dw $004c ; MonsterTable $04C: MadDragon
     dw $0068 ; MonsterTable $068: CoilBird
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FFB::
-Data_00A_5FFB:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $06, $09, $0E, $14, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005B ; MonsterTable $05B: Lionex
+    db $14, $06, $09, $0e, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005b ; MonsterTable $05B: Lionex
     dw $0065 ; MonsterTable $065: Andreal
     dw $0054 ; MonsterTable $054: FireWeed
     dw $0046 ; MonsterTable $046: RockSlime
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_600A::
-Data_00A_600A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0F, $03, $08, $0D, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0f, $03, $08, $0d, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0065 ; MonsterTable $065: Andreal
     dw $0046 ; MonsterTable $046: RockSlime
     dw $0054 ; MonsterTable $054: FireWeed
     dw $0058 ; MonsterTable $058: Metaly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6019::
-Data_00A_6019:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0D, $02, $03, $0A, $0D, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0d, $02, $03, $0a, $0d, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0058 ; MonsterTable $058: Metaly
-    dw $004B ; MonsterTable $04B: Roboster
+    dw $004b ; MonsterTable $04B: Roboster
     dw $0051 ; MonsterTable $051: EvilBeast
-    dw $01AD ; MonsterTable $1AD: WingSnake
+    dw $01ad ; MonsterTable $1AD: WingSnake
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_6028::
-Data_00A_6028:: ; address name
     dw EncounterGroup_6030 ; id 0
     dw EncounterGroup_6030 ; id 1
     dw EncounterGroup_6030 ; id 2
     dw EncounterGroup_6030 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6030::
-Data_00A_6030:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $004E ; MonsterTable $04E: IronTurt
-    dw $004F ; MonsterTable $04F: MadMirror
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $004e ; MonsterTable $04E: IronTurt
+    dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_603D::
-Data_00A_603D:: ; address name
     dw EncounterGroup_6045 ; id 0
     dw EncounterGroup_6045 ; id 1
     dw EncounterGroup_6045 ; id 2
     dw EncounterGroup_6045 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6045::
-Data_00A_6045:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $004E ; MonsterTable $04E: IronTurt
-    dw $004F ; MonsterTable $04F: MadMirror
+    db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $004e ; MonsterTable $04E: IronTurt
+    dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_6052::
-Data_00A_6052:: ; address name
     dw EncounterGroup_605A ; id 0
     dw EncounterGroup_605A ; id 1
     dw EncounterGroup_605A ; id 2
     dw EncounterGroup_605A ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_605A::
-Data_00A_605A:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $16, $04, $08, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
-    dw $004E ; MonsterTable $04E: IronTurt
-    dw $004F ; MonsterTable $04F: MadMirror
+    db $16, $04, $08, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $004e ; MonsterTable $04E: IronTurt
+    dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
     dw $0057 ; MonsterTable $057: Belzebub
     dw $0066 ; MonsterTable $066: MadKnight
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_606B::
-Data_00A_606B:: ; address name
     dw EncounterGroup_6073 ; id 0
     dw EncounterGroup_6073 ; id 1
     dw EncounterGroup_6073 ; id 2
     dw EncounterGroup_6073 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_6073::
-Data_00A_6073:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $16, $04, $08, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
-    dw $004E ; MonsterTable $04E: IronTurt
-    dw $004F ; MonsterTable $04F: MadMirror
+    db $16, $04, $08, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $004e ; MonsterTable $04E: IronTurt
+    dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
     dw $0051 ; MonsterTable $051: EvilBeast
     dw $0057 ; MonsterTable $057: Belzebub
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 1 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (1 per row): its encounter group
 EncounterGrid_6084::
-Data_00A_6084:: ; address name
     dw EncounterGroup_6086 ; id 0
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_6086::
-Data_00A_6086:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
-    dw $01A1 ; MonsterTable $1A1: EvilSeed
-    dw $01A2 ; MonsterTable $1A2: EyeBall
-    dw $01A3 ; MonsterTable $1A3: Chamelgon
-    dw $01A4 ; MonsterTable $1A4: FooHero
-    dw $01A5 ; MonsterTable $1A5: BoxSlime
+    db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01a1 ; MonsterTable $1A1: EvilSeed
+    dw $01a2 ; MonsterTable $1A2: EyeBall
+    dw $01a3 ; MonsterTable $1A3: Chamelgon
+    dw $01a4 ; MonsterTable $1A4: FooHero
+    dw $01a5 ; MonsterTable $1A5: BoxSlime
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_6097::
-Data_00A_6097:: ; address name
     dw EncounterGroup_60A9 ; id 0
     dw EncounterGroup_60A9 ; id 1
     dw EncounterGroup_60A9 ; id 2
@@ -5452,22 +5018,19 @@ Data_00A_6097:: ; address name
     dw EncounterGroup_60A9 ; id 7
     dw EncounterGroup_60A9 ; id 8
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_60A9::
-Data_00A_60A9:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
-    dw $01A1 ; MonsterTable $1A1: EvilSeed
-    dw $01A2 ; MonsterTable $1A2: EyeBall
-    dw $01A3 ; MonsterTable $1A3: Chamelgon
-    dw $01A4 ; MonsterTable $1A4: FooHero
-    dw $01A5 ; MonsterTable $1A5: BoxSlime
+    db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01a1 ; MonsterTable $1A1: EvilSeed
+    dw $01a2 ; MonsterTable $1A2: EyeBall
+    dw $01a3 ; MonsterTable $1A3: Chamelgon
+    dw $01a4 ; MonsterTable $1A4: FooHero
+    dw $01a5 ; MonsterTable $1A5: BoxSlime
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
-; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_60BA::
-Data_00A_60BA:: ; address name
     dw EncounterGroup_60CC ; id 0
     dw EncounterGroup_60CC ; id 1
     dw EncounterGroup_60CC ; id 2
@@ -5478,102 +5041,85 @@ Data_00A_60BA:: ; address name
     dw EncounterGroup_60CC ; id 7
     dw EncounterGroup_60CC ; id 8
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_60CC::
-Data_00A_60CC:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
-    dw $01A1 ; MonsterTable $1A1: EvilSeed
-    dw $01A2 ; MonsterTable $1A2: EyeBall
-    dw $01A3 ; MonsterTable $1A3: Chamelgon
-    dw $01A4 ; MonsterTable $1A4: FooHero
-    dw $01A5 ; MonsterTable $1A5: BoxSlime
+    db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01a1 ; MonsterTable $1A1: EvilSeed
+    dw $01a2 ; MonsterTable $1A2: EyeBall
+    dw $01a3 ; MonsterTable $1A3: Chamelgon
+    dw $01a4 ; MonsterTable $1A4: FooHero
+    dw $01a5 ; MonsterTable $1A5: BoxSlime
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_60DD::
-Data_00A_60DD:: ; address name
     dw EncounterGroup_60E5 ; id 0
     dw EncounterGroup_60E5 ; id 1
     dw EncounterGroup_60E5 ; id 2
     dw EncounterGroup_60E5 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_60E5::
-Data_00A_60E5:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $05, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005F ; MonsterTable $05F: Exaucers
+    db $0e, $05, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005f ; MonsterTable $05F: Exaucers
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_60F2::
-Data_00A_60F2:: ; address name
     dw EncounterGroup_60FA ; id 0
     dw EncounterGroup_60FA ; id 1
     dw EncounterGroup_60FA ; id 2
     dw EncounterGroup_60FA ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_60FA::
-Data_00A_60FA:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $05, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005F ; MonsterTable $05F: Exaucers
+    db $0e, $05, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005f ; MonsterTable $05F: Exaucers
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_6107::
-Data_00A_6107:: ; address name
     dw EncounterGroup_610F ; id 0
     dw EncounterGroup_610F ; id 1
     dw EncounterGroup_610F ; id 2
     dw EncounterGroup_610F ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_610F::
-Data_00A_610F:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $17, $04, $09, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
-    dw $005F ; MonsterTable $05F: Exaucers
+    db $17, $04, $09, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $005f ; MonsterTable $05F: Exaucers
     dw $0067 ; MonsterTable $067: SkyDragon
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
-    dw $006A ; MonsterTable $06A: MadHornet
+    dw $006a ; MonsterTable $06A: MadHornet
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_6120::
-Data_00A_6120:: ; address name
     dw EncounterGroup_6128 ; id 0
     dw EncounterGroup_6128 ; id 1
     dw EncounterGroup_6128 ; id 2
     dw EncounterGroup_6128 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_6128::
-Data_00A_6128:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $17, $04, $09, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
-    dw $005F ; MonsterTable $05F: Exaucers
+    db $17, $04, $09, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $005f ; MonsterTable $05F: Exaucers
     dw $0067 ; MonsterTable $067: SkyDragon
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
-    dw $006A ; MonsterTable $06A: MadHornet
+    dw $006a ; MonsterTable $06A: MadHornet
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_6139::
-Data_00A_6139:: ; address name
     dw EncounterGroup_6151 ; id 0
     dw EncounterGroup_6151 ; id 1
     dw EncounterGroup_6151 ; id 2
@@ -5587,21 +5133,19 @@ Data_00A_6139:: ; address name
     dw EncounterGroup_6151 ; id 10
     dw EncounterGroup_6151 ; id 11
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6151::
-Data_00A_6151:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $05, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0059 ; MonsterTable $059: GhosTree
-    dw $005A ; MonsterTable $05A: Babble
+    dw $005a ; MonsterTable $05A: Babble
     dw $0060 ; MonsterTable $060: DeadNite
     dw $0062 ; MonsterTable $062: MadSpirit
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
-; record: one screen, row by row (3 per row): its encounter group
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
 EncounterGrid_6160::
-Data_00A_6160:: ; address name
     dw EncounterGroup_6172 ; id 0
     dw EncounterGroup_6172 ; id 1
     dw EncounterGroup_6172 ; id 2
@@ -5612,21 +5156,18 @@ Data_00A_6160:: ; address name
     dw EncounterGroup_6172 ; id 7
     dw EncounterGroup_6172 ; id 8
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_6172::
-Data_00A_6172:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $11, $04, $09, $0E, $11, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005A ; MonsterTable $05A: Babble
+    db $11, $04, $09, $0e, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005a ; MonsterTable $05A: Babble
     dw $0060 ; MonsterTable $060: DeadNite
     dw $0061 ; MonsterTable $061: GateGuard
     dw $0063 ; MonsterTable $063: Copycat
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
-; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_6181::
-Data_00A_6181:: ; address name
     dw EncounterGroup_6193 ; id 0
     dw EncounterGroup_6193 ; id 1
     dw EncounterGroup_6193 ; id 2
@@ -5637,21 +5178,19 @@ Data_00A_6181:: ; address name
     dw EncounterGroup_6193 ; id 7
     dw EncounterGroup_6193 ; id 8
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6193::
-Data_00A_6193:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $12, $05, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $12, $05, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0057 ; MonsterTable $057: Belzebub
     dw $0059 ; MonsterTable $059: GhosTree
     dw $0060 ; MonsterTable $060: DeadNite
     dw $0062 ; MonsterTable $062: MadSpirit
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 6 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_61A2::
-Data_00A_61A2:: ; address name
     dw EncounterGroup_61AE ; id 0
     dw EncounterGroup_61AE ; id 1
     dw EncounterGroup_61AE ; id 2
@@ -5659,21 +5198,20 @@ Data_00A_61A2:: ; address name
     dw EncounterGroup_61AE ; id 4
     dw EncounterGroup_61AE ; id 5
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_61AE::
-Data_00A_61AE:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $11, $04, $09, $0E, $11, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $005A ; MonsterTable $05A: Babble
+    db $11, $04, $09, $0e, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005a ; MonsterTable $05A: Babble
     dw $0060 ; MonsterTable $060: DeadNite
     dw $0061 ; MonsterTable $061: GateGuard
     dw $0063 ; MonsterTable $063: Copycat
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
 EncounterGrid_61BD::
-Data_00A_61BD:: ; address name
     dw EncounterGroup_61EC ; id 0
     dw EncounterGroup_61EC ; id 1
     dw EncounterGroup_61DD ; id 2
@@ -5691,32 +5229,30 @@ Data_00A_61BD:: ; address name
     dw EncounterGroup_61DD ; id 14
     dw EncounterGroup_61DD ; id 15
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_61DD::
-Data_00A_61DD:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $04, $07, $0B, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0e, $04, $07, $0b, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
     dw $0071 ; MonsterTable $071: ChopClown
     dw $0072 ; MonsterTable $072: MistyWing
-    dw $01AE ; MonsterTable $1AE: GreatDrak
+    dw $01ae ; MonsterTable $1AE: GreatDrak
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_61EC::
-Data_00A_61EC:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0E, $04, $07, $0B, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0e, $04, $07, $0b, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
     dw $0071 ; MonsterTable $071: ChopClown
     dw $0072 ; MonsterTable $072: MistyWing
-    dw $01AE ; MonsterTable $1AE: GreatDrak
+    dw $01ae ; MonsterTable $1AE: GreatDrak
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_61FB::
-Data_00A_61FB:: ; address name
     dw EncounterGroup_6213 ; id 0
     dw EncounterGroup_6213 ; id 1
     dw EncounterGroup_6213 ; id 2
@@ -5730,20 +5266,19 @@ Data_00A_61FB:: ; address name
     dw EncounterGroup_6213 ; id 10
     dw EncounterGroup_6213 ; id 11
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6213::
-Data_00A_6213:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $08, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0a, $04, $08, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
     dw $0071 ; MonsterTable $071: ChopClown
     dw $0265 ; MonsterTable $265: StoneMan
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 6 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 36 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 6
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 36 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (6 per row): its encounter group
 EncounterGrid_6220::
-Data_00A_6220:: ; address name
     dw EncounterGroup_6268 ; id 0
     dw EncounterGroup_6268 ; id 1
     dw EncounterGroup_6275 ; id 2
@@ -5781,61 +5316,53 @@ Data_00A_6220:: ; address name
     dw EncounterGroup_62A0 ; id 34
     dw EncounterGroup_62A0 ; id 35
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_6268::
-Data_00A_6268:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01D7 ; MonsterTable $1D7: Slabbit
-    dw $01D9 ; MonsterTable $1D9: FairyRat
-    dw $01DB ; MonsterTable $1DB: MadPlant
+    db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01d7 ; MonsterTable $1D7: Slabbit
+    dw $01d9 ; MonsterTable $1D9: FairyRat
+    dw $01db ; MonsterTable $1DB: MadPlant
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6275::
-Data_00A_6275:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $05, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01D7 ; MonsterTable $1D7: Slabbit
-    dw $01D8 ; MonsterTable $1D8: MultiEyes
-    dw $01D9 ; MonsterTable $1D9: FairyRat
-    dw $01DB ; MonsterTable $1DB: MadPlant
+    db $0a, $03, $05, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01d7 ; MonsterTable $1D7: Slabbit
+    dw $01d8 ; MonsterTable $1D8: MultiEyes
+    dw $01d9 ; MonsterTable $1D9: FairyRat
+    dw $01db ; MonsterTable $1DB: MadPlant
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6284::
-Data_00A_6284:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $05, $07, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01D8 ; MonsterTable $1D8: MultiEyes
-    dw $01DB ; MonsterTable $1DB: MadPlant
-    dw $01DD ; MonsterTable $1DD: Grendal
-    dw $01DE ; MonsterTable $1DE: GoHopper
+    db $0a, $03, $05, $07, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01d8 ; MonsterTable $1D8: MultiEyes
+    dw $01db ; MonsterTable $1DB: MadPlant
+    dw $01dd ; MonsterTable $1DD: Grendal
+    dw $01de ; MonsterTable $1DE: GoHopper
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6293::
-Data_00A_6293:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01DB ; MonsterTable $1DB: MadPlant
-    dw $01DC ; MonsterTable $1DC: Snapper
-    dw $01DD ; MonsterTable $1DD: Grendal
+    db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01db ; MonsterTable $1DB: MadPlant
+    dw $01dc ; MonsterTable $1DC: Snapper
+    dw $01dd ; MonsterTable $1DD: Grendal
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_62A0::
-Data_00A_62A0:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $0A, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01D8 ; MonsterTable $1D8: MultiEyes
-    dw $01DD ; MonsterTable $1DD: Grendal
+    db $0a, $04, $0a, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01d8 ; MonsterTable $1D8: MultiEyes
+    dw $01dd ; MonsterTable $1DD: Grendal
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
 EncounterGrid_62AB::
-Data_00A_62AB:: ; address name
     dw EncounterGroup_62C3 ; id 0
     dw EncounterGroup_62C3 ; id 1
     dw EncounterGroup_62C3 ; id 2
@@ -5849,21 +5376,22 @@ Data_00A_62AB:: ; address name
     dw EncounterGroup_62C3 ; id 10
     dw EncounterGroup_62C3 ; id 11
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_62C3::
-Data_00A_62C3:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $05, $07, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01DC ; MonsterTable $1DC: Snapper
-    dw $01DD ; MonsterTable $1DD: Grendal
-    dw $01E0 ; MonsterTable $1E0: StagBug
-    dw $01E1 ; MonsterTable $1E1: FireWeed
+    db $0a, $03, $05, $07, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01dc ; MonsterTable $1DC: Snapper
+    dw $01dd ; MonsterTable $1DD: Grendal
+    dw $01e0 ; MonsterTable $1E0: StagBug
+    dw $01e1 ; MonsterTable $1E1: FireWeed
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group).
-; record: one screen, row by row (3 per row): its encounter group
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 6 words, up to its first group (E-0202, C1)
 EncounterGrid_62D2::
-Data_00A_62D2:: ; address name
     dw EncounterGroup_62DE ; id 0
     dw EncounterGroup_62DE ; id 1
     dw EncounterGroup_62DE ; id 2
@@ -5871,39 +5399,39 @@ Data_00A_62D2:: ; address name
     dw EncounterGroup_62DE ; id 4
     dw EncounterGroup_62DE ; id 5
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_62DE::
-Data_00A_62DE:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01E3 ; MonsterTable $1E3: Grizzly
-    dw $01E4 ; MonsterTable $1E4: SkulRider
-    dw $01E5 ; MonsterTable $1E5: WalrusMan
+    db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01e3 ; MonsterTable $1E3: Grizzly
+    dw $01e4 ; MonsterTable $1E4: SkulRider
+    dw $01e5 ; MonsterTable $1E5: WalrusMan
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_62EB::
-Data_00A_62EB:: ; address name
     dw EncounterGroup_62F3 ; id 0
     dw EncounterGroup_62F3 ; id 1
     dw EncounterGroup_62F3 ; id 2
     dw EncounterGroup_62F3 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_62F3::
-Data_00A_62F3:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $06, $08, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01E6 ; MonsterTable $1E6: MadCandle
-    dw $01E7 ; MonsterTable $1E7: Reaper
-    dw $01E8 ; MonsterTable $1E8: ProtoMech
+    db $0a, $06, $08, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01e6 ; MonsterTable $1E6: MadCandle
+    dw $01e7 ; MonsterTable $1E7: Reaper
+    dw $01e8 ; MonsterTable $1E8: ProtoMech
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 5 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 25 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 5
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 25 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (5 per row): its encounter group
 EncounterGrid_6300::
-Data_00A_6300:: ; address name
     dw EncounterGroup_633F ; id 0
     dw EncounterGroup_633F ; id 1
     dw EncounterGroup_633F ; id 2
@@ -5930,159 +5458,139 @@ Data_00A_6300:: ; address name
     dw EncounterGroup_635D ; id 23
     dw EncounterGroup_635D ; id 24
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6332::
-Data_00A_6332:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01EF ; MonsterTable $1EF: Ogre
-    dw $01F2 ; MonsterTable $1F2: Lipsy
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ef ; MonsterTable $1EF: Ogre
+    dw $01f2 ; MonsterTable $1F2: Lipsy
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_633F::
-Data_00A_633F:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $06, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01EF ; MonsterTable $1EF: Ogre
-    dw $01F2 ; MonsterTable $1F2: Lipsy
-    dw $01F4 ; MonsterTable $1F4: Spikerous
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $03, $06, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ef ; MonsterTable $1EF: Ogre
+    dw $01f2 ; MonsterTable $1F2: Lipsy
+    dw $01f4 ; MonsterTable $1F4: Spikerous
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_634E::
-Data_00A_634E:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $06, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01ED ; MonsterTable $1ED: CatMage
-    dw $01EE ; MonsterTable $1EE: FaceTree
-    dw $01EF ; MonsterTable $1EF: Ogre
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $03, $06, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ed ; MonsterTable $1ED: CatMage
+    dw $01ee ; MonsterTable $1EE: FaceTree
+    dw $01ef ; MonsterTable $1EF: Ogre
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_635D::
-Data_00A_635D:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01ED ; MonsterTable $1ED: CatMage
-    dw $01EE ; MonsterTable $1EE: FaceTree
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ed ; MonsterTable $1ED: CatMage
+    dw $01ee ; MonsterTable $1EE: FaceTree
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_636A::
-Data_00A_636A:: ; address name
     db $02 ; entry 0: wEncounterKind + 1
-    db $0A, $06, $0A, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01F1 ; MonsterTable $1F1: Anemon
-    dw $01F2 ; MonsterTable $1F2: Lipsy
+    db $0a, $06, $0a, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01f1 ; MonsterTable $1F1: Anemon
+    dw $01f2 ; MonsterTable $1F2: Lipsy
 
-; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01
+; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
+; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
+; threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6375::
-Data_00A_6375:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $06, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    db $0a, $04, $06, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0216 ; MonsterTable $216: Scallopa
     dw $0217 ; MonsterTable $217: Snaily
     dw $0218 ; MonsterTable $218: Clawster
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 1 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (1 per row): its encounter group
 EncounterGrid_6382::
-Data_00A_6382:: ; address name
     dw EncounterGroup_6384 ; id 0
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6384::
-Data_00A_6384:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $02, $04, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01F0 ; MonsterTable $1F0: CurseLamp
-    dw $01F2 ; MonsterTable $1F2: Lipsy
-    dw $01F4 ; MonsterTable $1F4: Spikerous
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $02, $04, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01f0 ; MonsterTable $1F0: CurseLamp
+    dw $01f2 ; MonsterTable $1F2: Lipsy
+    dw $01f4 ; MonsterTable $1F4: Spikerous
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
+; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
+; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
+; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_6393::
-Data_00A_6393:: ; address name
     dw EncounterGroup_639B ; id 0
     dw EncounterGroup_639B ; id 1
     dw EncounterGroup_639B ; id 2
     dw EncounterGroup_639B ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_639B::
-Data_00A_639B:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $05, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01F0 ; MonsterTable $1F0: CurseLamp
-    dw $01F4 ; MonsterTable $1F4: Spikerous
-    dw $01F6 ; MonsterTable $1F6: Skulpent
-    dw $01F7 ; MonsterTable $1F7: Butterfly
+    db $0a, $03, $05, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01f0 ; MonsterTable $1F0: CurseLamp
+    dw $01f4 ; MonsterTable $1F4: Spikerous
+    dw $01f6 ; MonsterTable $1F6: Skulpent
+    dw $01f7 ; MonsterTable $1F7: Butterfly
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_63AA::
-Data_00A_63AA:: ; address name
     dw EncounterGroup_63B2 ; id 0
     dw EncounterGroup_63B2 ; id 1
     dw EncounterGroup_63B2 ; id 2
     dw EncounterGroup_63B2 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_63B2::
-Data_00A_63B2:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01F0 ; MonsterTable $1F0: CurseLamp
-    dw $01F5 ; MonsterTable $1F5: Skullgon
-    dw $01F6 ; MonsterTable $1F6: Skulpent
+    db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01f0 ; MonsterTable $1F0: CurseLamp
+    dw $01f5 ; MonsterTable $1F5: Skullgon
+    dw $01f6 ; MonsterTable $1F6: Skulpent
 
-; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
-; record: one screen, row by row (2 per row): its encounter group
 EncounterGrid_63BF::
-Data_00A_63BF:: ; address name
     dw EncounterGroup_63C7 ; id 0
     dw EncounterGroup_63C7 ; id 1
     dw EncounterGroup_63C7 ; id 2
     dw EncounterGroup_63C7 ; id 3
 
-; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
-; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
+; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
+; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
+; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 EncounterGroup_63C7::
-Data_00A_63C7:: ; address name
     db $03 ; entry 0: wEncounterKind + 1
-    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
-    dw $01EF ; MonsterTable $1EF: Ogre
-    dw $01F5 ; MonsterTable $1F5: Skullgon
-    dw $01F6 ; MonsterTable $1F6: Skulpent
-    ds $48D, $00
+    db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ef ; MonsterTable $1EF: Ogre
+    dw $01f5 ; MonsterTable $1F5: Skullgon
+    dw $01f6 ; MonsterTable $1F6: Skulpent
+    ds $48d, $00
 
-PointerRun_0A_438D_Entry06:: ; heuristic: target of a monotone pointer table; C0
-Data_00A_6861:: ; address name
-    ds $A10, $00
+PointerRun_0A_438D_Entry06::
+    ds $a10, $00
 
-PointerRun_0A_438D_Entry07:: ; heuristic: target of a monotone pointer table; C0
-Data_00A_7271:: ; address name
+PointerRun_0A_438D_Entry07::
     ds $707, $00
 
-PointerRun_0A_438D_Entry08:: ; heuristic: target of a monotone pointer table; C0
-Data_00A_7978:: ; address name
+PointerRun_0A_438D_Entry08::
     ds $404, $00
 
-PointerRun_0A_438D_Entry09:: ; heuristic: target of a monotone pointer table; C0
-Data_00A_7D7C:: ; address name
+PointerRun_0A_438D_Entry09::
     ds $202, $00
 
-PointerRun_0A_438D_Entry0A:: ; heuristic: target of a monotone pointer table; C0
-Data_00A_7F7E:: ; address name
+PointerRun_0A_438D_Entry0A::
     ds $82, $00

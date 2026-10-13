@@ -58,10 +58,10 @@ class SoundTables(unittest.TestCase):
         self.assertFalse(r[0] % 0x20 == 0 and r[0] < 0xC0 and 0x4000 <= (r[2] | (r[3] << 8)) < 0x8000)
 
 
-SRC = ROOT / "src" / "banks"
+SRC = ROOT / "build" / "listing"
 
 
-@unittest.skipUnless(SRC.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(SRC.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GeneratedTables(unittest.TestCase):
     def test_source_carries_every_layout(self):
         text = {f.name: f.read_text(encoding="utf-8") for f in SRC.glob("bank*.asm")}

@@ -1,10 +1,11 @@
 SECTION "Bank 38", ROMX[$4000], BANK[$38]
     db $38
 
-; E-0041 (C1: Func_000_1FE3 indexes it with the monster id and decompresses the stream to VRAM; the debug monster viewer shows the picture; every one of the 383 entries parses as a 576-byte stream; entry 0 is a placeholder). Each entry is a 3-byte far pointer: address, then bank.
+; E-0041 (C1: LoadMonsterPicture indexes it with the monster id and decompresses the stream to VRAM;
+; the debug monster viewer shows the picture; every one of the 383 entries parses as a 576-byte
+; stream; entry 0 is a placeholder). Each entry is a 3-byte far pointer: address, then bank.
 ; record: compressed picture stream (36 tiles, drawn 6 x 6); ROM bank of that data
 MonsterPictureTable::
-Data_038_4001:: ; address name
     dfar MonsterPic_DrakSlime ; id 0
     dfar MonsterPic_DrakSlime ; id 1 DrakSlime
     dfar MonsterPic_SpotSlime ; id 2 SpotSlime
@@ -389,10 +390,12 @@ Data_038_4001:: ; address name
     dfar MonsterPic_Dimensaur ; id 381 Dimensaur
     dfar MonsterPic_Kagebou ; id 382 Kagebou
 
-; E-0041 (C1: Func_000_2090 indexes it with the monster id; the 36 bytes it points at are added to hTemp0 and written to VRAM bank 1 as the picture's tile attributes). Far pointers: address, bank.
-; record: raw 6 x 6 attribute map for the picture (a zero entry selects a default); ROM bank of that data
+; E-0041 (C1: LoadMonsterPictureAttributes indexes it with the monster id; the 36 bytes it points at
+; are added to hTemp0 and written to VRAM bank 1 as the picture's tile attributes). Far pointers:
+; address, bank.
+; record: raw 6 x 6 attribute map for the picture (a zero entry selects a default); ROM bank of that
+; data
 MonsterAttributeMapTable::
-Data_038_447E:: ; address name
     dfar JumpTable ; id 0
     dfar JumpTable ; id 1 DrakSlime
     dfar JumpTable ; id 2 SpotSlime

@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BANKS = ROOT / "src/banks"
+BANKS = ROOT / "build/listing"
 sys.path.insert(0, str(ROOT / "tools"))
 import disasm_all  # noqa: E402
 
@@ -45,7 +45,7 @@ def operand_symbols(text: str) -> list[str]:
     return re.findall(r"\b[wsh][A-Z]\w*", text)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class LocalLabelClaims(unittest.TestCase):
     def test_every_shape_named_local_label_matches_its_instructions(self):
         banks = load_banks()
@@ -117,7 +117,7 @@ class LocalLabelClaims(unittest.TestCase):
         self.assertEqual(bad[:20], [], f"{len(bad)} of {checked} local labels do not match their instructions")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GlobalNameClaims(unittest.TestCase):
     def test_to_set_write_read_and_wait_names_match_their_code(self):
         banks = load_banks()

@@ -92,7 +92,7 @@ def quoted_labels() -> list[tuple[str, str]]:
     …MsgNNNN_<Words>, TalkScriptNNNN_<Words>): the quote comment within the label's first 12 lines must begin with
     those words. Returns [(name, words in lower case)]."""
     out = []
-    for p in sorted((ROOT / "src/banks").glob("bank*.asm")):
+    for p in sorted((ROOT / "build/listing").glob("bank*.asm")):
         lines = p.read_text(encoding="utf-8").split("\n")
         for i, ln in enumerate(lines):
             m = LABEL.match(ln)

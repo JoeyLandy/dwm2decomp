@@ -1,13 +1,10 @@
 SECTION "Bank 1B", ROMX[$4000], BANK[$1B]
-    db $1B
+    db $1b
 
-; unless wLinkStatus bit 7 is set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial transfer; 1-8: RunLinkSessionNExchange when wLinkMode is set and wLinkRole bit 0 is set); called from ComputeSpriteScrollOffsets (E-0259)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets)
-; reads: wLinkStatus, wLinkSession, wScreenStep, rSB, wTitleScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, ...
-; writes: wLinkStatus, wGlyphListPos, wScreenCounter, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
-; points at: wGameMode
+; unless wLinkStatus bit 7 is set (then it sets bit 6 and returns), runs the routine for
+; wLinkSession (0: wait for the serial transfer; 1-8: RunLinkSessionNExchange when wLinkMode is set
+; and wLinkRole bit 0 is set); called from ComputeSpriteScrollOffsets (E-0259)
 RunLinkSession::
-Func_01B_4001:: ; address name
     ld a, [wLinkStatus]
     bit 7, a
     jr z, .check_link_session
@@ -17,10 +14,10 @@ Func_01B_4001:: ; address name
 
 .check_link_session:
     ld a, [wLinkSession]
-    and a, a
+    and a
     jr z, RunLinkSession_WaitSerialTransferDone
     ld a, [wLinkSession]
-    rst $00
+    jumptable
     dw RunLinkSession_WaitSerialTransferDone
     dw RunLinkSession_1Exchange
     dw RunLinkSession_2Exchange
@@ -31,16 +28,10 @@ Func_01B_4001:: ; address name
     dw RunLinkSession_7Exchange
     dw RunLinkSession_8Exchange
 
-; entry 0 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, rSB, wTitleScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, wLinkRole, wMapType, ...
-; writes: wGlyphListPos, wScreenCounter, wLinkStatus, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
-; points at: wGameMode
 RunLinkSession_WaitSerialTransferDone::
-Jump_01B_402A:: ; address name
-    ld a, $FF
+    ld a, $ff
     ld [wGlyphListPos], a
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     ld [wGlyphListPos], a
     call WaitSerialTransferDone
@@ -48,26 +39,26 @@ Jump_01B_402A:: ; address name
     ld [wGlyphListPos], a
     ldh a, [rSB]
     ld b, a
-    cp a, $F1
+    cp $f1
     jp z, .call_link_check_screen_counter_state6
-    cp a, $F5
+    cp $f5
     jr z, .call_link_check_screen_counter_state
-    cp a, $F6
+    cp $f6
     jr z, .call_link_check_screen_counter_state2
-    cp a, $B7
+    cp $b7
     jr z, .call_link_check_screen_counter_state3
-    cp a, $E0
+    cp $e0
     jp z, .call_link_check_screen_counter_state4
-    cp a, $DC
+    cp $dc
     jp z, .call_link_check_screen_counter_state5
     jp .check_title_screen_sub_state
 
 .call_link_check_screen_counter_state:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     jr z, .read_link_role
     ld a, $02
     ld [wMenuOption], a
@@ -84,10 +75,10 @@ Jump_01B_402A:: ; address name
 
 .call_link_check_screen_counter_state2:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $03
+    cp $03
     jr z, .read_link_role2
     ld a, $03
     ld [wMenuOption], a
@@ -104,10 +95,10 @@ Jump_01B_402A:: ; address name
 
 .call_link_check_screen_counter_state3:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $04
+    cp $04
     jr z, .read_link_role3
     ld a, $04
     ld [wMenuOption], a
@@ -124,10 +115,10 @@ Jump_01B_402A:: ; address name
 
 .call_link_check_screen_counter_state4:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $06
+    cp $06
     jr z, .read_link_role4
     ld a, $06
     ld [wMenuOption], a
@@ -144,10 +135,10 @@ Jump_01B_402A:: ; address name
 
 .call_link_check_screen_counter_state5:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $05
+    cp $05
     jr z, .read_link_role5
     ld a, $05
     ld [wMenuOption], a
@@ -164,13 +155,13 @@ Jump_01B_402A:: ; address name
 
 .call_link_check_screen_counter_state6:
     call LinkCheckScreenCounterState
-    cp a, $FF
+    cp $ff
     jp z, .set_link_status_to_03
     ld a, [wMenuState]
-    cp a, $07
+    cp $07
     jr z, .read_link_role6
     ld a, [wLinkByte94]
-    or a, a
+    or a
     jp z, .set_link_status_to_03
     ld a, $07
     ld [wMenuOption], a
@@ -187,23 +178,23 @@ Jump_01B_402A:: ; address name
 
 .check_title_screen_sub_state:
     ld a, [wTitleScreenSubState]
-    cp a, $02
+    cp $02
     jr z, .check_link_timer_lo
     jp .set_link_status_to_03
 
 .check_link_timer_lo:
     ld a, [wLinkTimerLo]
-    cp a, b
+    cp b
     jp z, .set_link_status_to_03
     call ShortDelayLoop
     ld a, b
     ld [wScreenState], a
-    cp a, $F3
+    cp $f3
     jr nz, .cp_FA
     ld a, [wMenuState]
-    cp a, $07
+    cp $07
     jr z, .read_link_role7
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -217,12 +208,12 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect
 
 .cp_FA:
-    cp a, $FA
+    cp $fa
     jr nz, .cp_FB
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     jr z, .read_link_role8
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -236,12 +227,12 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect2
 
 .cp_FB:
-    cp a, $FB
+    cp $fb
     jr nz, .cp_FC
     ld a, [wMenuState]
-    cp a, $03
+    cp $03
     jr z, .read_link_role9
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -255,12 +246,12 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect3
 
 .cp_FC:
-    cp a, $FC
+    cp $fc
     jr nz, .cp_E1
     ld a, [wMenuState]
-    cp a, $04
+    cp $04
     jr z, .read_link_role10
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -274,12 +265,12 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect5
 
 .cp_E1:
-    cp a, $E1
+    cp $e1
     jr nz, .cp_DD
     ld a, [wMenuState]
-    cp a, $06
+    cp $06
     jr z, .read_link_role11
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -293,12 +284,12 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect6
 
 .cp_DD:
-    cp a, $DD
+    cp $dd
     jr nz, .set_sub_menu_cursor2_to_FF
     ld a, [wMenuState]
-    cp a, $05
+    cp $05
     jr z, .read_link_role12
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     ld a, [wGridCursorX]
     ld [wGridCursorY], a
@@ -312,10 +303,10 @@ Jump_01B_402A:: ; address name
     jp .call_queue_sound_effect4
 
 .set_sub_menu_cursor2_to_FF:
-    ld a, $FF
+    ld a, $ff
     ld [wSubMenuCursor2], a
     jp .set_link_status_to_03
-    db $3E, $FF, $EA, $70, $C4, $C3, $57, $43
+    db $3e, $ff, $ea, $70, $c4, $c3, $57, $43
 
 .call_queue_sound_effect:
     ld a, $69
@@ -335,9 +326,9 @@ Jump_01B_402A:: ; address name
     ei
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $02
-    ld [hl+], a
+    ld [hli], a
     ld a, $05
     ld [wLinkSession], a
     jp .clear_game_mode2_state
@@ -351,9 +342,9 @@ Jump_01B_402A:: ; address name
     ld [wLinkMode], a
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $02
-    ld [hl+], a
+    ld [hli], a
     ld a, $02
     ld [wLinkSession], a
     jr .clear_game_mode2_state
@@ -367,9 +358,9 @@ Jump_01B_402A:: ; address name
     ld [wLinkMode], a
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $03
-    ld [hl+], a
+    ld [hli], a
     ld a, $03
     ld [wLinkSession], a
     jr .clear_game_mode2_state
@@ -383,9 +374,9 @@ Jump_01B_402A:: ; address name
     ld [wLinkMode], a
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $07
-    ld [hl+], a
+    ld [hli], a
     ld a, $08
     ld [wLinkSession], a
     jr .clear_game_mode2_state
@@ -399,9 +390,9 @@ Jump_01B_402A:: ; address name
     ld [wLinkMode], a
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $04
-    ld [hl+], a
+    ld [hli], a
     ld a, $04
     ld [wLinkSession], a
     jr .clear_game_mode2_state
@@ -415,15 +406,15 @@ Jump_01B_402A:: ; address name
     ld [wLinkMode], a
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $06
-    ld [hl+], a
+    ld [hli], a
     ld a, $06
     ld [wLinkSession], a
     jr .clear_game_mode2_state
 
 .clear_game_mode2_state:
-    xor a, a
+    xor a
     ld [wGameMode2State], a
     ld [wGameMode2Arg], a
     ld [wLinkExchangeState], a
@@ -436,16 +427,14 @@ Jump_01B_402A:: ; address name
 .set_link_status_to_03:
     ld a, $03
     ld [wLinkStatus], a
-    ld a, $F8
+    ld a, $f8
     call SerialSendByte
     ret
 
-; zeroes the first two bytes of each of six $20-byte sound channel slots from wSoundChannelSlots (E-0118)
-; 1 call site from 1 routine (e.g. RunLinkSession_WaitSerialTransferDone)
-; writes: wSoundChannelSlots, wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
+; zeroes the first two bytes of each of six $20-byte sound channel slots from wSoundChannelSlots
+; (E-0118)
 ClearSoundChannelSlots::
-Func_01B_4362:: ; address name
-    xor a, a
+    xor a
     ld [wSoundChannelSlots], a
     ld [wSoundChannelSlots + $1], a
     ld [wSoundChannel1], a
@@ -461,9 +450,7 @@ Func_01B_4362:: ; address name
     ret
 
 ; busy-waits $80 iterations (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_WaitSerialTransferDone)
 ShortDelayLoop::
-Func_01B_4388:: ; address name
     push bc
     ld bc, $0100
 
@@ -471,62 +458,57 @@ Func_01B_4388:: ; address name
     dec bc
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     pop bc
     ret
 
-; A = 0 when the link state allows continuing (wTitleScreenSubState = 1 in mode 5 state 1 with wTitleScreenState and wLinkScreenFlag clear), else $FF; wScreenCounter = A on entry (E-0125)
-; 6 call sites from 1 routine (e.g. RunLinkSession_WaitSerialTransferDone)
-; reads: wLinkTimerLo, wTitleScreenSubState, wGameMode, wModeState, wTitleScreenState, wLinkScreenFlag
-; writes: wScreenCounter
+; A = 0 when the link state allows continuing (wTitleScreenSubState = 1 in mode 5 state 1 with
+; wTitleScreenState and wLinkScreenFlag clear), else $FF; wScreenCounter = A on entry (E-0125)
 LinkCheckScreenCounterState::
-Func_01B_4394:: ; address name
     ld [wScreenCounter], a
     ld c, a
     ld a, [wLinkTimerLo]
-    cp a, c
+    cp c
     jr nz, .check_game_mode
     ld a, [wTitleScreenSubState]
-    cp a, $01
+    cp $01
     jr z, .check_game_mode
     jr .return_FF
 
 .check_game_mode:
     ld a, [wGameMode]
-    cp a, $05
+    cp $05
     jr nz, .return_FF
     ld a, [wModeState]
-    cp a, $01
+    cp $01
     jr nz, .return_FF
     ld a, [wTitleScreenState]
-    or a, a
+    or a
     jr nz, .return_FF
     ld a, [wLinkScreenFlag]
-    or a, a
+    or a
     jr nz, .return_FF
     ld a, [wTitleScreenSubState]
-    cp a, $01
+    cp $01
     jr z, .return_0
     jr .return_FF
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
 .return_FF:
-    ld a, $FF
+    ld a, $ff
     ret
 
-; sends the byte at Data_01B_43E1 + (wMenuOption & $0F) through SerialSendByte (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wMenuOption
-SendLinkByteForMenuOption_Bank1B:: ; heuristic: follows a terminator; C0
-Func_01B_43CF:: ; address name
+; sends the byte at SendLinkByteForMenuOption_Bank1B_Data + (wMenuOption & $0F) through
+; SerialSendByte (E-0122)
+SendLinkByteForMenuOption_Bank1B::
     ld a, [wMenuOption]
     ld de, SendLinkByteForMenuOption_Bank1B_Data
-    and a, $0F
-    add a, e
+    and $0f
+    add e
     ld e, a
     jr nc, .call_serial_send_byte
     inc d
@@ -536,18 +518,12 @@ Func_01B_43CF:: ; address name
     call SerialSendByte
     ret
 
-; address loaded by SendLinkByteForMenuOption_Bank1B
-SendLinkByteForMenuOption_Bank1B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_43E1:: ; address name
-    db $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3
+SendLinkByteForMenuOption_Bank1B_Data::
+    db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
-; entry 1 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_1Exchange::
-Jump_01B_43E9:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -558,27 +534,17 @@ Jump_01B_43E9:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_1Exchange)
-; reads: wLinkExchangeState
 RunLinkSession1Exchange::
-Func_01B_43FA:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession1Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession1Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession1Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession1Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_4402:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession1Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession1Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_4406:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -590,13 +556,9 @@ Jump_01B_4406:: ; address name
     res 1, [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_2Exchange::
-Jump_01B_4420:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -607,27 +569,17 @@ Jump_01B_4420:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_2Exchange)
-; reads: wLinkExchangeState
 RunLinkSession2Exchange::
-Func_01B_4431:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession2Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession2Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession2Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession2Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_4439:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession2Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession2Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_443D:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -639,13 +591,9 @@ Jump_01B_443D:: ; address name
     res 1, [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_3Exchange::
-Jump_01B_4457:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -656,27 +604,17 @@ Jump_01B_4457:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_3Exchange)
-; reads: wLinkExchangeState
 RunLinkSession3Exchange::
-Func_01B_4468:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession3Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession3Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession3Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession3Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_4470:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession3Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession3Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_4474:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -688,13 +626,9 @@ Jump_01B_4474:: ; address name
     res 1, [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_4Exchange::
-Jump_01B_448E:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -705,27 +639,17 @@ Jump_01B_448E:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_4Exchange)
-; reads: wLinkExchangeState
 RunLinkSession4Exchange::
-Func_01B_449F:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession4Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession4Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession4Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession4Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_44A7:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession4Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession4Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_44AB:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -737,13 +661,9 @@ Jump_01B_44AB:: ; address name
     res 1, [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_5Exchange::
-Jump_01B_44C5:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -754,27 +674,17 @@ Jump_01B_44C5:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_5Exchange)
-; reads: wLinkExchangeState
 RunLinkSession5Exchange::
-Func_01B_44D6:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession5Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession5Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession5Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession5Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_44DE:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession5Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession5Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_44E2:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -786,13 +696,9 @@ Jump_01B_44E2:: ; address name
     res 1, [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_6Exchange::
-Jump_01B_44FC:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -803,27 +709,17 @@ Jump_01B_44FC:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_6Exchange)
-; reads: wLinkExchangeState
 RunLinkSession6Exchange::
-Func_01B_450D:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession6Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession6Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_4515:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession6Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession6Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_4519:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -835,13 +731,9 @@ Jump_01B_4519:: ; address name
     res 1, [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_7Exchange::
-Jump_01B_4533:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -852,27 +744,17 @@ Jump_01B_4533:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_7Exchange)
-; reads: wLinkExchangeState
 RunLinkSession7Exchange::
-Func_01B_4544:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession7Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession7Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession7Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession7Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_454C:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession7Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession7Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_4550:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -884,13 +766,9 @@ Jump_01B_4550:: ; address name
     res 1, [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunLinkSession
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole
 RunLinkSession_8Exchange::
-Jump_01B_456A:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .return
     ld a, [wLinkRole]
     bit 0, a
@@ -901,27 +779,17 @@ Jump_01B_456A:: ; address name
     ret
 
 ; runs the routine for wLinkExchangeState (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession_8Exchange)
-; reads: wLinkExchangeState
 RunLinkSession8Exchange::
-Func_01B_457B:: ; address name
     ld a, [wLinkExchangeState]
-    rst $00
+    jumptable
     dw RunLinkSession8Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession8Exchange_LinkReceiveStepWithBuffer
 
-; entry 0 of the `rst $00` table in RunLinkSession8Exchange
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession8Exchange_ToLinkSendStepWithBuffer::
-Jump_01B_4583:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession8Exchange
-; no direct call (reached through a table, a jump or a vector)
-; points at: wVBlankFlags
 RunLinkSession8Exchange_LinkReceiveStepWithBuffer::
-Jump_01B_4587:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
     bit 7, [hl]
@@ -933,19 +801,15 @@ Jump_01B_4587:: ; address name
     res 1, [hl]
     ret
 
-; link: sends $F9 when not connected; otherwise reads the received byte into wLinkJoypadHeld, polls the joypad and starts sending wJoypadHeld; with bit 1 of wVBlankFlags sends $F3 (E-0125)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkRole, wVBlankFlags, rSB, wLinkJoypadHeld, wSerialReceived, wJoypadHeld
-; writes: wLinkExchangeState, wSerialReceived, wLinkJoypadHeldPrev, wLinkJoypadHeld
-; points at: wVBlankFlags
-LinkExchangeJoypadByte:: ; heuristic: follows a terminator; C0
-Func_01B_45A1:: ; address name
+; link: sends $F9 when not connected; otherwise reads the received byte into wLinkJoypadHeld, polls
+; the joypad and starts sending wJoypadHeld; with bit 1 of wVBlankFlags sends $F3 (E-0125)
+LinkExchangeJoypadByte::
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .check_v_blank_flags
     ld a, $01
     ld [wLinkExchangeState], a
-    ld a, $F9
+    ld a, $f9
     jp SerialSendByte
 
 .check_v_blank_flags:
@@ -966,7 +830,6 @@ Func_01B_45A1:: ; address name
     jp StartSerialTransferInternalClock
 
 LinkExchangeJoypadByte_Skip::
-Jump_01B_45DB:: ; address name
     ld a, $20
 
 .loop:
@@ -976,25 +839,21 @@ Jump_01B_45DB:: ; address name
     set 2, [hl]
     ld a, $01
     ld [wLinkExchangeState], a
-    ld a, $F3
+    ld a, $f3
     jp StartSerialTransferInternalClock
 
-; link: reads the received byte into wLinkJoypadHeld and updates the joypad state; byte $F3 restores the saved joypad state and counts down wLinkTimeoutLo (E-0127)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkRole, wLinkReady, rSB, wLinkJoypadHeld, wSerialReceived, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkSendByte, ...
-; writes: wSerialReceived, wLinkJoypadHeldPrev, wLinkJoypadHeld, wLinkExchangeState, wJoypadHeld, wJoypadHeldPrev, wLinkTimeoutLo, wLinkTimeoutHi
-; points at: wVBlankFlags
-LinkReceiveJoypadByte:: ; heuristic: follows a terminator; C0
-Func_01B_45EF:: ; address name
+; link: reads the received byte into wLinkJoypadHeld and updates the joypad state; byte $F3 restores
+; the saved joypad state and counts down wLinkTimeoutLo (E-0127)
+LinkReceiveJoypadByte::
     ld a, [wLinkRole]
     bit 1, a
     jr nz, LinkHandshakeSendFAOrFB
     ld a, [wLinkReady]
-    or a, a
+    or a
     jr nz, .set_serial_received
     ldh a, [rSB]
     ld [wSerialReceived], a
-    cp a, $F3
+    cp $f3
     jp z, LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld
     jr .read_link_joypad_held
 
@@ -1011,48 +870,44 @@ Func_01B_45EF:: ; address name
     ld [wLinkJoypadHeld], a
     call UpdateJoypadPresses
     call RunFrameTickFadeAndCounter_Bank1B
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
 
 LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld::
-Jump_01B_462E:: ; address name
     ld a, [wLinkSavedJoypadHeld]
     ld [wJoypadHeld], a
     ld a, [wLinkSavedJoypadHeldPrev]
     ld [wJoypadHeldPrev], a
     ld a, [wLinkSendByte]
-    cp a, $FF
+    cp $ff
     jr nz, .clear_link_exchange_state
     ld a, [wLinkTimeoutLo]
-    sub a, $01
+    sub $01
     ld [wLinkTimeoutLo], a
     ld a, [wLinkTimeoutHi]
-    sbc a, $00
+    sbc $00
     ld [wLinkTimeoutHi], a
 
 .clear_link_exchange_state:
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
     ld hl, wVBlankFlags
     set 7, [hl]
     ret
 
-; link: with bit 2 of wVBlankFlags clear sends $FA and runs a frame; otherwise clears it, sends $FB and sets bit 7 (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkExchangeState
-; points at: wVBlankFlags
-LinkHandshakeSendFAOrFB:: ; heuristic: follows a terminator; C0
-Func_01B_465B:: ; address name
+; link: with bit 2 of wVBlankFlags clear sends $FA and runs a frame; otherwise clears it, sends $FB
+; and sets bit 7 (E-0124)
+LinkHandshakeSendFAOrFB::
     ld hl, wVBlankFlags
     bit 2, [hl]
     jr nz, LinkHandshakeSendFAOrFB_Skip
     set 1, [hl]
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
-    ld a, $FA
+    ld a, $fa
     call SerialSendByte
     call RunFrameTickFadeAndCounter_Bank1B
     ld hl, wVBlankFlags
@@ -1060,30 +915,25 @@ Func_01B_465B:: ; address name
     ret
 
 LinkHandshakeSendFAOrFB_Skip::
-Jump_01B_4676:: ; address name
     ld hl, wVBlankFlags
     res 2, [hl]
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
-    ld a, $FB
+    ld a, $fb
     call SerialSendByte
     ld hl, wVBlankFlags
     set 7, [hl]
     ret
 
-; link: sends $F9 when not connected; otherwise reads the received byte, polls the joypad and sends the queued byte or the next byte of the transfer buffer wLinkBufferPtrLo (E-0128)
-; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_ToLinkSendStepWithBuffer, RunLinkSession2Exchange_ToLinkSendStepWithBuffer, RunLinkSession3Exchange_ToLinkSendStepWithBuffer, RunLinkSession4Exchange_ToLinkSendStepWithBuffer, ...)
-; reads: wLinkRole, wVBlankFlags, wLinkSendByte, rSB, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, ...
-; writes: wLinkExchangeState, wSerialReceived, wLinkMessage, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, ...
-; points at: wLinkBufferCountLo, wVBlankFlags
+; link: sends $F9 when not connected; otherwise reads the received byte, polls the joypad and sends
+; the queued byte or the next byte of the transfer buffer wLinkBufferPtrLo (E-0128)
 LinkSendStepWithBuffer::
-Func_01B_468A:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .check_v_blank_flags
     ld a, $01
     ld [wLinkExchangeState], a
-    ld a, $F9
+    ld a, $f9
     jp SerialSendByte
 
 .check_v_blank_flags:
@@ -1091,7 +941,7 @@ Func_01B_468A:: ; address name
     bit 1, a
     jp nz, LinkExchangeJoypadByte_Skip
     ld a, [wLinkSendByte]
-    cp a, $FF
+    cp $ff
     jr z, .skip
     ldh a, [rSB]
     ld [wSerialReceived], a
@@ -1105,8 +955,8 @@ Func_01B_468A:: ; address name
 
 .skip:
     ld hl, wLinkBufferCountLo
-    ld a, [hl+]
-    or a, [hl]
+    ld a, [hli]
+    or [hl]
     jr z, .set_link_exchange_state_to_01
     ld a, [wLinkBufferPtrLo]
     ld l, a
@@ -1117,16 +967,16 @@ Func_01B_468A:: ; address name
     call PollJoypad
     call UpdateJoypadPresses
     ld a, [wLinkBufferPtrLo]
-    add a, $01
+    add $01
     ld [wLinkBufferPtrLo], a
     ld a, [wLinkBufferPtrHi]
-    adc a, $00
+    adc $00
     ld [wLinkBufferPtrHi], a
     ld a, [wLinkBufferCountLo]
-    sub a, $01
+    sub $01
     ld [wLinkBufferCountLo], a
     ld a, [wLinkBufferCountHi]
-    sbc a, $00
+    sbc $00
     ld [wLinkBufferCountHi], a
     ld a, [wLinkTimeoutLo]
     ld l, a
@@ -1134,10 +984,10 @@ Func_01B_468A:: ; address name
     ld h, a
     push hl
     ld a, [wLinkTimeoutLo]
-    add a, $01
+    add $01
     ld [wLinkTimeoutLo], a
     ld a, [wLinkTimeoutHi]
-    adc a, $00
+    adc $00
     ld [wLinkTimeoutHi], a
     pop hl
     ld a, $01
@@ -1153,25 +1003,21 @@ Func_01B_468A:: ; address name
     ld [wLinkMessage], a
     call PollJoypad
     call UpdateJoypadPresses
-    ld a, $F0
+    ld a, $f0
     jp StartSerialTransferInternalClock
 
-; link: reads the received byte; stores it in the transfer buffer wLinkBufferPtrLo while bytes remain, else as the remote joypad; handles the $F3 resync (E-0128)
-; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_LinkReceiveStepWithBuffer, RunLinkSession2Exchange_LinkReceiveStepWithBuffer, RunLinkSession3Exchange_LinkReceiveStepWithBuffer, RunLinkSession4Exchange_LinkReceiveStepWithBuffer, ...)
-; reads: wLinkRole, wLinkReady, rSB, wLinkSendByte, wSerialReceived, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, ...
-; writes: wSerialReceived, wLinkMessage, wLinkExchangeState, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, wJoypadHeld, ...
-; points at: wVBlankFlags, wLinkBufferCountLo
+; link: reads the received byte; stores it in the transfer buffer wLinkBufferPtrLo while bytes
+; remain, else as the remote joypad; handles the $F3 resync (E-0128)
 LinkReceiveStepWithBuffer::
-Func_01B_4736:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .skip2
     ld a, [wLinkReady]
-    or a, a
+    or a
     jr nz, .set_serial_received
     ldh a, [rSB]
     ld [wSerialReceived], a
-    cp a, $F3
+    cp $f3
     jp z, LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld
     jr .check_link_send_byte
 
@@ -1183,19 +1029,19 @@ Func_01B_4736:: ; address name
     ld hl, wVBlankFlags
     set 1, [hl]
     ld a, [wLinkSendByte]
-    cp a, $FF
+    cp $ff
     jr z, .skip
     ld a, [wSerialReceived]
     ld [wLinkMessage], a
     call UpdateJoypadPresses
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
     ret
 
 .skip:
     ld hl, wLinkBufferCountLo
-    ld a, [hl+]
-    or a, [hl]
+    ld a, [hli]
+    or [hl]
     jr z, .read_serial_received
     ld a, [wLinkBufferPtrLo]
     ld l, a
@@ -1205,18 +1051,18 @@ Func_01B_4736:: ; address name
     ld [hl], a
     call UpdateJoypadPresses
     ld a, [wLinkBufferPtrLo]
-    add a, $01
+    add $01
     ld [wLinkBufferPtrLo], a
     ld a, [wLinkBufferPtrHi]
-    adc a, $00
+    adc $00
     ld [wLinkBufferPtrHi], a
     ld a, [wLinkBufferCountLo]
-    sub a, $01
+    sub $01
     ld [wLinkBufferCountLo], a
     ld a, [wLinkBufferCountHi]
-    sbc a, $00
+    sbc $00
     ld [wLinkBufferCountHi], a
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
     ret
 
@@ -1224,7 +1070,7 @@ Func_01B_4736:: ; address name
     ld a, [wSerialReceived]
     ld [wLinkMessage], a
     call UpdateJoypadPresses
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
     ret
 
@@ -1233,42 +1079,36 @@ Func_01B_4736:: ; address name
     bit 2, [hl]
     jp nz, LinkHandshakeSendFAOrFB_Skip
     set 1, [hl]
-    xor a, a
+    xor a
     ld [wLinkExchangeState], a
-    ld a, $FA
+    ld a, $fa
     call SerialSendByte
     ret
 
-; calls Func_000_2620 when wTextFlags is non-zero, then StepFade; adds 1 to the 16-bit wFrameCounterLo/Hi and clears wLinkFrameCounterLo and wLinkFrameCounterHi (E-0073)
-; 10 call sites from 10 routines (e.g. RunLinkSession1Exchange_LinkReceiveStepWithBuffer, RunLinkSession2Exchange_LinkReceiveStepWithBuffer, RunLinkSession3Exchange_LinkReceiveStepWithBuffer, RunLinkSession4Exchange_LinkReceiveStepWithBuffer, ...)
-; reads: wTextFlags, wFrameCounterLo, wFrameCounterHi
-; writes: wFrameCounterLo, wFrameCounterHi, wLinkFrameCounterLo, wLinkFrameCounterHi
+; calls StepStringDisplayUntilDone when wTextFlags is non-zero, then StepFade; adds 1 to the 16-bit
+; wFrameCounterLo/Hi and clears wLinkFrameCounterLo and wLinkFrameCounterHi (E-0073)
 RunFrameTickFadeAndCounter_Bank1B::
-Func_01B_47CA:: ; address name
     ld a, [wTextFlags]
-    or a, a
+    or a
     jr z, .call_step_fade
     call StepStringDisplayUntilDone
 
 .call_step_fade:
     call StepFade
     ld a, [wFrameCounterLo]
-    add a, $01
+    add $01
     ld [wFrameCounterLo], a
     ld a, [wFrameCounterHi]
-    adc a, $00
+    adc $00
     ld [wFrameCounterHi], a
-    xor a, a
+    xor a
     ld [wLinkFrameCounterLo], a
     ld [wLinkFrameCounterHi], a
     ret
 
-; while a serial transfer is in progress (bit 7 of rSC), counts wScreenCounter/wGlyphListPos up; returns A = $FE once the count reaches $400, otherwise returns when the transfer ends (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: rSC, wScreenCounter, wGlyphListPos
-; writes: wScreenCounter, wGlyphListPos
-WaitSerialTransferWithTimeout:: ; heuristic: follows a terminator; C0
-Func_01B_47EE:: ; address name
+; while a serial transfer is in progress (bit 7 of rSC), counts wScreenCounter/wGlyphListPos up;
+; returns A = $FE once the count reaches $400, otherwise returns when the transfer ends (E-0122)
+WaitSerialTransferWithTimeout::
     ldh a, [rSC]
     bit 7, a
     jr nz, .read_screen_counter
@@ -1276,43 +1116,38 @@ Func_01B_47EE:: ; address name
 
 .read_screen_counter:
     ld a, [wScreenCounter]
-    add a, $01
+    add $01
     ld [wScreenCounter], a
     ld a, [wGlyphListPos]
-    adc a, $00
+    adc $00
     ld [wGlyphListPos], a
-    cp a, $04
+    cp $04
     jr c, WaitSerialTransferWithTimeout
-    ld a, $FE
+    ld a, $fe
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C, BeginString_Bank1B_Cat0, ShowStringA10_Bank1B, ...)
 BeginStringDisplay_Bank1B_480C::
-Func_01B_480C:: ; address name
     ld de, StringCategories_1B_4821
     call BeginStringDisplay
     ret
-    db $11, $21, $48, $CD, $FE, $25, $C9
+    db $11, $21, $48, $cd, $fe, $25, $c9
 
-; Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 12 call sites from 10 routines (e.g. LinkKeyTrade_BuildKeyListIndexListEntries, LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc, EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit, ...)
+; BeginStringDisplay_Bank1B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_Bank1B_481A::
-Func_01B_481A:: ; address name
     call BeginStringDisplay_Bank1B_480C
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_1B_4821::
-Data_01B_4821:: ; address name
     dw StringList_1B_4823 ; id 0
 
-; E-0217 (derived: category list of StringCategories_1B_4821; one pointer per wStringIndex)
+; category list of StringCategories_1B_4821; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_1B_4823::
-Data_01B_4823:: ; address name
     dw String_1B_4821_00_00 ; id 0
     dw String_1B_4821_00_00 ; id 1
     dw String_1B_4821_00_02 ; id 2
@@ -1354,258 +1189,180 @@ Data_01B_4823:: ; address name
     dw String_1B_4821_00_26 ; id 38
     dw String_1B_4821_00_27 ; id 39
 
-String_1B_4821_00_00:: ; heuristic: string; C0
-Data_01B_4873:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Starting key", $F1
-    db "trade", $A4, $FA, $F7
-    db $F0
+String_1B_4821_00_00::
+    db "Starting key", $f1
+    db "trade", $a4, $fa, $f7
+    db $f0
 
-String_1B_4821_00_02:: ; heuristic: string; C0
-Data_01B_4889:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You refused to", $F1
-    db "trade keys.", $FA, $F7
-    db $F0
+String_1B_4821_00_02::
+    db "You refused to", $f1
+    db "trade keys.", $fa, $f7
+    db $f0
 
-String_1B_4821_00_03:: ; heuristic: string; C0
-Data_01B_48A6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Your pal refused", $F1
-    db "to trade keys.", $FA, $F7
-    db $F0
+String_1B_4821_00_03::
+    db "Your pal refused", $f1
+    db "to trade keys.", $fa, $f7
+    db $f0
 
-String_1B_4821_00_04:: ; heuristic: string; C0
-Data_01B_48C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Is it OK to trade", $F1
-    db "this key?", $F0
+String_1B_4821_00_04::
+    db "Is it OK to trade", $f1
+    db "this key?", $f0
 
-String_1B_4821_00_05:: ; heuristic: string; C0
-Data_01B_48E4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "That key cannot be", $F1
-    db "traded.", $F7
-    db $F0
+String_1B_4821_00_05::
+    db "That key cannot be", $f1
+    db "traded.", $f7
+    db $f0
 
-String_1B_4821_00_06:: ; heuristic: string; C0
-Data_01B_4900:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Please choose the", $F1
-    db "key to trade.", $F0
+String_1B_4821_00_06::
+    db "Please choose the", $f1
+    db "key to trade.", $f0
 
-String_1B_4821_00_07:: ; heuristic: string; C0
-Data_01B_4920:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Please wait.", $F0
+String_1B_4821_00_07::
+    db "Please wait.", $f0
 
-String_1B_4821_00_08:: ; heuristic: string; C0
-Data_01B_492D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Keys can't have", $F1
-    db "the same name.", $F7
-    db $F0
+String_1B_4821_00_08::
+    db "Keys can't have", $f1
+    db "the same name.", $f7
+    db $f0
 
-String_1B_4821_00_09:: ; heuristic: string; C0
-Data_01B_494C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Is it OK to trade", $F1
-    db "keys?", $F0
+String_1B_4821_00_09::
+    db "Is it OK to trade", $f1
+    db "keys?", $f0
 
-String_1B_4821_00_0A:: ; heuristic: string; C0
-Data_01B_4964:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Is it OK to record", $F1
-    db "the results?", $F0
+String_1B_4821_00_0A::
+    db "Is it OK to record", $f1
+    db "the results?", $f0
 
-String_1B_4821_00_0B:: ; heuristic: string; C0
-Data_01B_4984:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Readying trade", $A4, $F1
-    db "Please wait.", $F0
+String_1B_4821_00_0B::
+    db "Readying trade", $a4, $f1
+    db "Please wait.", $f0
 
-String_1B_4821_00_0C:: ; heuristic: string; C0
-Data_01B_49A1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Keys will now be", $F1
-    db "traded.", $F7
-    db $F0
+String_1B_4821_00_0C::
+    db "Keys will now be", $f1
+    db "traded.", $f7
+    db $f0
 
-String_1B_4821_00_0D:: ; heuristic: string; C0
-Data_01B_49BB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Your pal has a key", $F1
-    db "of the same name.", $F7
-    db $F0
+String_1B_4821_00_0D::
+    db "Your pal has a key", $f1
+    db "of the same name.", $f7
+    db $f0
 
-String_1B_4821_00_0E:: ; heuristic: string; C0
-Data_01B_49E1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "TradeExit", $F0
+String_1B_4821_00_0E::
+    db "TradeExit", $f0
 
-String_1B_4821_00_0F:: ; heuristic: string; C0
-Data_01B_49EB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You can't hold any", $F1
-    db "more keys.", $F7
-    db $F0
+String_1B_4821_00_0F::
+    db "You can't hold any", $f1
+    db "more keys.", $f7
+    db $f0
 
-String_1B_4821_00_10:: ; heuristic: string; C0
-Data_01B_4A09:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Choose the members", $F1
-    db "for VS battle.", $F0
+String_1B_4821_00_10::
+    db "Choose the members", $f1
+    db "for VS battle.", $f0
 
-String_1B_4821_00_12:: ; heuristic: string; C0
-Data_01B_4A2B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Pick ", $F9, "0 for the", $F1
-    db "team?", $F0
+String_1B_4821_00_12::
+    db "Pick ", $f9, "0 for the", $f1
+    db "team?", $f0
 
-String_1B_4821_00_13:: ; heuristic: string; C0
-Data_01B_4A41:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Choose one more", $F1
-    db "member for battle?", $F0
+String_1B_4821_00_13::
+    db "Choose one more", $f1
+    db "member for battle?", $f0
 
-String_1B_4821_00_14:: ; heuristic: string; C0
-Data_01B_4A64:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Will you put up a", $F1
-    db "prize?", $F0
+String_1B_4821_00_14::
+    db "Will you put up a", $f1
+    db "prize?", $f0
 
-String_1B_4821_00_15:: ; heuristic: string; C0
-Data_01B_4A7D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You have no", $F1
-    db "monsters on the", $FA, $F7
-    db $EF, $EE, "farm to serve as", $EF, $EE, "the prize.", $F7
-    db $F0
+String_1B_4821_00_15::
+    db "You have no", $f1
+    db "monsters on the", $fa, $f7
+    db $ef, $ee, "farm to serve as", $ef, $ee, "the prize.", $f7
+    db $f0
 
-String_1B_4821_00_16:: ; heuristic: string; C0
-Data_01B_4ABA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Select a monster", $F1
-    db "as the prize.", $F0
+String_1B_4821_00_16::
+    db "Select a monster", $f1
+    db "as the prize.", $f0
 
-String_1B_4821_00_17:: ; heuristic: string; C0
-Data_01B_4AD9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Put up ", $F9, "0 as a", $F1
-    db "prize?", $F0
+String_1B_4821_00_17::
+    db "Put up ", $f9, "0 as a", $f1
+    db "prize?", $f0
 
-String_1B_4821_00_18:: ; heuristic: string; C0
-Data_01B_4AEF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Begin battle?", $F0
+String_1B_4821_00_18::
+    db "Begin battle?", $f0
 
-String_1B_4821_00_19:: ; heuristic: string; C0
-Data_01B_4AFD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Starting battle", $A4, $F0
+String_1B_4821_00_19::
+    db "Starting battle", $a4, $f0
 
-String_1B_4821_00_1A:: ; heuristic: string; C0
-Data_01B_4B0E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You refused to", $F1
-    db "battle.", $F0
+String_1B_4821_00_1A::
+    db "You refused to", $f1
+    db "battle.", $f0
 
-String_1B_4821_00_1B:: ; heuristic: string; C0
-Data_01B_4B25:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Your pal refused", $F1
-    db "to battle.", $F0
+String_1B_4821_00_1B::
+    db "Your pal refused", $f1
+    db "to battle.", $f0
 
-String_1B_4821_00_1C:: ; heuristic: string; C0
-Data_01B_4B41:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Please wait.", $F0
+String_1B_4821_00_1C::
+    db "Please wait.", $f0
 
-String_1B_4821_00_1D:: ; heuristic: string; C0
-Data_01B_4B4E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "InfoOKYesN", $F0
+String_1B_4821_00_1D::
+    db "InfoOKYesN", $f0
 
-String_1B_4821_00_1F:: ; heuristic: string; C0
-Data_01B_4B59:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "BattlePrizeExit", $F0
+String_1B_4821_00_1F::
+    db "BattlePrizeExit", $f0
 
-String_1B_4821_00_20:: ; heuristic: string; C0
-Data_01B_4B69:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "FightInfoEx", $F0
+String_1B_4821_00_20::
+    db "FightInfoEx", $f0
 
-String_1B_4821_00_21:: ; heuristic: string; C0
-Data_01B_4B75:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Monster level", $F1
-    db "limit exceeded.", $FA, $F7
-    db $EF, $EE, "Pick another", $EF, $EE, "monster please.", $F0
+String_1B_4821_00_21::
+    db "Monster level", $f1
+    db "limit exceeded.", $fa, $f7
+    db $ef, $ee, "Pick another", $ef, $ee, "monster please.", $f0
 
-String_1B_4821_00_22:: ; heuristic: string; C0
-Data_01B_4BB4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "That family is not", $F1
-    db "permitted.", $F0
+String_1B_4821_00_22::
+    db "That family is not", $f1
+    db "permitted.", $f0
 
-String_1B_4821_00_23:: ; heuristic: string; C0
-Data_01B_4BD2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You already chose", $F1
-    db "from that family.", $FA, $F7
-    db $EF, $EE, "Pick another", $EF, $EE, "monster please.", $F0
+String_1B_4821_00_23::
+    db "You already chose", $f1
+    db "from that family.", $fa, $f7
+    db $ef, $ee, "Pick another", $ef, $ee, "monster please.", $f0
 
-String_1B_4821_00_24:: ; heuristic: string; C0
-Data_01B_4C17:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "There is no prize", $F1
-    db "for this battle.", $F0
+String_1B_4821_00_24::
+    db "There is no prize", $f1
+    db "for this battle.", $f0
 
-String_1B_4821_00_25:: ; heuristic: string; C0
-Data_01B_4C3A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "There is no prize.", $F0
+String_1B_4821_00_25::
+    db "There is no prize.", $f0
 
-String_1B_4821_00_26:: ; heuristic: string; C0
-Data_01B_4C4D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Your pal's key ring", $F1
-    db "is full.", $FA, $F7
-    db $EF, $EE, "Keys can't be", $EF, $EE, "traded.", $F7
-    db $F0
+String_1B_4821_00_26::
+    db "Your pal's key ring", $f1
+    db "is full.", $fa, $f7
+    db $ef, $ee, "Keys can't be", $ef, $ee, "traded.", $f7
+    db $f0
 
-String_1B_4821_00_27:: ; heuristic: string; C0
-Data_01B_4C83:: ; address name
-    db $F9, $00, $F0
+String_1B_4821_00_27::
+    db $f9, $00, $f0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank1B_4C94, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86, BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep, BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc)
 BeginStringDisplay_Bank1B_4C86::
-Func_01B_4C86:: ; address name
     ld de, StringCategories_1B_4C9B
     call BeginStringDisplay
     ret
-    db $11, $9B, $4C, $CD, $FE, $25, $C9
+    db $11, $9b, $4c, $cd, $fe, $25, $c9
 
-; Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4, ShowSaveFileInfoWindow)
+; BeginStringDisplay_Bank1B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_Bank1B_4C94::
-Func_01B_4C94:: ; address name
     call BeginStringDisplay_Bank1B_4C86
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_1B_4C9B::
-Data_01B_4C9B:: ; address name
     dw StringList_1B_4C9D ; id 0
 
-; E-0217 (derived: category list of StringCategories_1B_4C9B; one pointer per wStringIndex)
+; category list of StringCategories_1B_4C9B; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_1B_4C9D::
-Data_01B_4C9D:: ; address name
     dw String_1B_4C9B_00_00 ; id 0
     dw String_1B_4C9B_00_00 ; id 1
     dw String_1B_4C9B_00_02 ; id 2
@@ -1649,370 +1406,295 @@ Data_01B_4C9D:: ; address name
     dw String_1B_4C9B_00_28 ; id 40
     dw Text_1B_5190 ; id 41
 
-String_1B_4C9B_00_00:: ; heuristic: string; C0
-Data_01B_4CF1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Welcome. What", $F1
-    db "would you like?", $F0
+String_1B_4C9B_00_00::
+    db $ea, "*: Welcome. What", $f1
+    db "would you like?", $f0
 
-String_1B_4C9B_00_02:: ; heuristic: string; C0
-Data_01B_4D12:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Which will be", $F1
-    db "the base monster?", $F0
+String_1B_4C9B_00_02::
+    db $ea, "*: Which will be", $f1
+    db "the base monster?", $f0
 
-String_1B_4C9B_00_03:: ; heuristic: string; C0
-Data_01B_4D35:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the one", $F1
-    db "you want?", $F0
+String_1B_4C9B_00_03::
+    db $ea, "*: This is the one", $f1
+    db "you want?", $f0
 
-String_1B_4C9B_00_04:: ; heuristic: string; C0
-Data_01B_4D52:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Is there", $F1
-    db "anything else?", $F0
+String_1B_4C9B_00_04::
+    db $ea, "*: Is there", $f1
+    db "anything else?", $f0
 
-String_1B_4C9B_00_05:: ; heuristic: string; C0
-Data_01B_4D6D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You won't have a", $F1
-    db "monster with you!", $F7
-    db $F0
+String_1B_4C9B_00_05::
+    db $ea, "*: You won't have a", $f1
+    db "monster with you!", $f7
+    db $f0
 
-String_1B_4C9B_00_06:: ; heuristic: string; C0
-Data_01B_4D93:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: That's too low", $F1
-    db "in level to breed.", $F7
-    db $F0
+String_1B_4C9B_00_06::
+    db $ea, "*: That's too low", $f1
+    db "in level to breed.", $f7
+    db $f0
 
-String_1B_4C9B_00_07:: ; heuristic: string; C0
-Data_01B_4DB8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: And what will", $F1
-    db "its mate be?", $F0
+String_1B_4C9B_00_07::
+    db $ea, "*: And what will", $f1
+    db "its mate be?", $f0
 
-String_1B_4C9B_00_08:: ; heuristic: string; C0
-Data_01B_4DD6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: There's no", $F1
-    db "potential mate.", $F7
-    db $F0
+String_1B_4C9B_00_08::
+    db $ea, "*: There's no", $f1
+    db "potential mate.", $f7
+    db $f0
 
-String_1B_4C9B_00_09:: ; heuristic: string; C0
-Data_01B_4DF4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: ", $F9, "0", $F1
-    db "will result from", $FA, $F7
-    db $EF, $EE, "this.", $EF, $EE, $F7
-    db $F0
+String_1B_4C9B_00_09::
+    db $ea, "*: ", $f9, "0", $f1
+    db "will result from", $fa, $f7
+    db $ef, $ee, "this.", $ef, $ee, $f7
+    db $f0
 
-String_1B_4C9B_00_0A:: ; heuristic: string; C0
-Data_01B_4E17:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: A great monster", $F1
-    db "will be born!", $F7
-    db $F0
+String_1B_4C9B_00_0A::
+    db $ea, "*: A great monster", $f1
+    db "will be born!", $f7
+    db $f0
 
-String_1B_4C9B_00_0B:: ; heuristic: string; C0
-Data_01B_4E39:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You already had", $F1
-    db "that monster.", $F7
-    db $F0
+String_1B_4C9B_00_0B::
+    db $ea, "*: You already had", $f1
+    db "that monster.", $f7
+    db $f0
 
-String_1B_4C9B_00_0C:: ; heuristic: string; C0
-Data_01B_4E5B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You've never had", $F1
-    db "that monster.", $F7
-    db $F0
+String_1B_4C9B_00_0C::
+    db $ea, "*: You've never had", $f1
+    db "that monster.", $f7
+    db $f0
 
-String_1B_4C9B_00_0D:: ; heuristic: string; C0
-Data_01B_4E7D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: OK to record in", $F1
-    db "your Journal?", $F0
+String_1B_4C9B_00_0D::
+    db $ea, "*: OK to record in", $f1
+    db "your Journal?", $f0
 
-String_1B_4C9B_00_0E:: ; heuristic: string; C0
-Data_01B_4E9E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Fine, fine!", $F1
-    db "I'll do it!", $F7
-    db $F0
+String_1B_4C9B_00_0E::
+    db $ea, "*: Fine, fine!", $f1
+    db "I'll do it!", $f7
+    db $f0
 
-String_1B_4C9B_00_0F:: ; heuristic: string; C0
-Data_01B_4EB9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hatching that", $F1
-    db "will cost ", $F9, "0G.", $FA, $F7
-    db $F2, "Should I hatch it", $F1
-    db "too?", $F0
+String_1B_4C9B_00_0F::
+    db $ea, "*: Hatching that", $f1
+    db "will cost ", $f9, "0G.", $fa, $f7
+    db $f2, "Should I hatch it", $f1
+    db "too?", $f0
 
-String_1B_4C9B_00_10:: ; heuristic: string; C0
-Data_01B_4EF2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'll hatch the", $F1
-    db "egg too, then.", $F7
-    db $F0
+String_1B_4C9B_00_10::
+    db $ea, "*: I'll hatch the", $f1
+    db "egg too, then.", $f7
+    db $f0
 
-String_1B_4C9B_00_11:: ; heuristic: string; C0
-Data_01B_4F13:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I won't hatch", $F1
-    db "the egg, then.", $F7
-    db $F0
+String_1B_4C9B_00_11::
+    db $ea, "*: I won't hatch", $f1
+    db "the egg, then.", $f7
+    db $f0
 
-String_1B_4C9B_00_12:: ; heuristic: string; C0
-Data_01B_4F33:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You don't have", $F1
-    db "enough gold, so", $FA, $F7
-    db $F2, "I'll just do the", $F1
-    db "breeding.", $F7
-    db $F0
+String_1B_4C9B_00_12::
+    db $ea, "*: You don't have", $f1
+    db "enough gold, so", $fa, $f7
+    db $f2, "I'll just do the", $f1
+    db "breeding.", $f7
+    db $f0
 
-String_1B_4C9B_00_13:: ; heuristic: string; C0
-Data_01B_4F71:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'll send the", $F1
-    db "egg to the farm.", $F7
-    db $F0
+String_1B_4C9B_00_13::
+    db $ea, "*: I'll send the", $f1
+    db "egg to the farm.", $f7
+    db $f0
 
-String_1B_4C9B_00_14:: ; heuristic: string; C0
-Data_01B_4F93:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Will you take", $F1
-    db $F9, "0 with you?", $F0
+String_1B_4C9B_00_14::
+    db $ea, "*: Will you take", $f1
+    db $f9, "0 with you?", $f0
 
-String_1B_4C9B_00_15:: ; heuristic: string; C0
-Data_01B_4FB1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Raise it with", $F1
-    db "love and care!", $F7
-    db $F0
+String_1B_4C9B_00_15::
+    db $ea, "*: Raise it with", $f1
+    db "love and care!", $f7
+    db $f0
 
-String_1B_4C9B_00_16:: ; heuristic: string; C0
-Data_01B_4FD2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'll send ", $F9, "0", $F1
-    db "to the farm, then.", $F7
-    db $F0
+String_1B_4C9B_00_16::
+    db $ea, "*: I'll send ", $f9, "0", $f1
+    db "to the farm, then.", $f7
+    db $f0
 
-String_1B_4C9B_00_17:: ; heuristic: string; C0
-Data_01B_4FF5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Which will go", $F1
-    db "back to the farm?", $F0
+String_1B_4C9B_00_17::
+    db $ea, "*: Which will go", $f1
+    db "back to the farm?", $f0
 
-String_1B_4C9B_00_18:: ; heuristic: string; C0
-Data_01B_5018:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Is this the one", $F1
-    db "to send home?", $F0
+String_1B_4C9B_00_18::
+    db $ea, "*: Is this the one", $f1
+    db "to send home?", $f0
 
-String_1B_4C9B_00_19:: ; heuristic: string; C0
-Data_01B_5039:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: ", $F9, "0 is", $F1
-    db "going to the farm.", $F7
-    db $F0
+String_1B_4C9B_00_19::
+    db $ea, "*: ", $f9, "0 is", $f1
+    db "going to the farm.", $f7
+    db $f0
 
-String_1B_4C9B_00_1A:: ; heuristic: string; C0
-Data_01B_5056:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Which egg should", $F1
-    db "I hatch?", $F0
+String_1B_4C9B_00_1A::
+    db $ea, "*: Which egg should", $f1
+    db "I hatch?", $f0
 
-String_1B_4C9B_00_1B:: ; heuristic: string; C0
-Data_01B_5073:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: That will cost", $F1
-    db $F9, "0G. OK?", $F0
+String_1B_4C9B_00_1B::
+    db $ea, "*: That will cost", $f1
+    db $f9, "0G. OK?", $f0
 
-String_1B_4C9B_00_1C:: ; heuristic: string; C0
-Data_01B_508E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: There isn't a", $F1
-    db "single egg here.", $F7
-    db $F0
+String_1B_4C9B_00_1C::
+    db $ea, "*: There isn't a", $f1
+    db "single egg here.", $f7
+    db $f0
 
-String_1B_4C9B_00_1D:: ; heuristic: string; C0
-Data_01B_50B0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You don't have", $F1
-    db "enough gold.", $F7
-    db $F0
+String_1B_4C9B_00_1D::
+    db $ea, "*: You don't have", $f1
+    db "enough gold.", $f7
+    db $f0
 
-String_1B_4C9B_00_1E:: ; heuristic: string; C0
-Data_01B_50CF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You got the egg", $F1
-    db "of ", $F9, "0.", $F7
-    db $F0
+String_1B_4C9B_00_1E::
+    db $ea, "*: You got the egg", $f1
+    db "of ", $f9, "0.", $f7
+    db $f0
 
-String_1B_4C9B_00_1F:: ; heuristic: string; C0
-Data_01B_50EA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Become a great", $F1
-    db "master!", $F7
-    db $F0
+String_1B_4C9B_00_1F::
+    db $ea, "*: Become a great", $f1
+    db "master!", $f7
+    db $f0
 
-String_1B_4C9B_00_21:: ; heuristic: string; C0
-Data_01B_5105:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Fine, fine.", $F1
-    db "Just wait here.", $F7
-    db $F0
+String_1B_4C9B_00_21::
+    db $ea, "*: Fine, fine.", $f1
+    db "Just wait here.", $f7
+    db $f0
 
-String_1B_4C9B_00_22:: ; heuristic: string; C0
-Data_01B_5125:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 hatched!", $F7
-    db $F0
+String_1B_4C9B_00_22::
+    db $f9, "0 hatched!", $f7
+    db $f0
 
-String_1B_4C9B_00_25:: ; heuristic: string; C0
-Data_01B_5132:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Please name it.", $F7
-    db $F0
+String_1B_4C9B_00_25::
+    db "Please name it.", $f7
+    db $f0
 
-String_1B_4C9B_00_26:: ; heuristic: string; C0
-Data_01B_5143:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 went", $F1
-    db "away quietly", $A4, $F7
-    db $F0
+String_1B_4C9B_00_26::
+    db $f9, "0 went", $f1
+    db "away quietly", $a4, $f7
+    db $f0
 
-String_1B_4C9B_00_27:: ; heuristic: string; C0
-Data_01B_515A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "RESULTS", $F1
-    db "DISPLAY", $F1
-    db $F1
-    db "Species", $F1
-    db "Gender", $F0
+String_1B_4C9B_00_27::
+    db "RESULTS", $f1
+    db "DISPLAY", $f1
+    db $f1
+    db "Species", $f1
+    db "Gender", $f0
 
-String_1B_4C9B_00_28:: ; heuristic: string; C0
-Data_01B_517A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Unused.", $F0, "No save data.", $F0
+String_1B_4C9B_00_28::
+    db "Unused.", $f0, "No save data.", $f0
 
-; E-0197 (C1: the last target of the bank-$1B message pointer table, laid out like its other entries: two control bytes, then text up to $F0).
+; the last target of the bank-$1B message pointer table, laid out like its other entries: two
+; control bytes, then text up to $F0 (E-0197, C1)
 ; record: $EA, $45 (window control bytes, as at the other entries of this pointer table); message
 Text_1B_5190::
-String_1B_4C9B_00_29:: ; heuristic: start of a structured table; C0
-Data_01B_5190:: ; address name
-    db $EA, $45 ; entry 0
-    db " Accessories will", $F1, "be in the Vault.", $F7, $F0
+String_1B_4C9B_00_29::
+    db $ea, $45 ; entry 0
+    db " Accessories will", $f1, "be in the Vault.", $f7, $f0
 
-; E-0197 (C1: no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with no padding; an unreferenced routine follows at $5352).
+; no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with
+; no padding; an unreferenced routine follows at $5352 (E-0197, C1)
 ; record: 84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding
 RejectedNameListCopy_1B::
-Data_01B_51B6:: ; address name
-    db "Ass", $F0 ; entry 0: word 0
-    db "ASS", $F0 ; word 1
-    db "Dink", $F0 ; word 2
-    db "DINK", $F0 ; word 3
-    db "Dork", $F0 ; word 4
-    db "DORK", $F0 ; word 5
-    db "Cunt", $F0 ; word 6
-    db "CUNT", $F0 ; word 7
-    db "Kunt", $F0 ; word 8
-    db "KUNT", $F0 ; word 9
-    db "Fuck", $F0 ; word 10
-    db "FUCK", $F0 ; word 11
-    db "Shit", $F0 ; word 12
-    db "SHIT", $F0 ; word 13
-    db "Sex", $F0 ; word 14
-    db "SEX", $F0 ; word 15
-    db "Poop", $F0 ; word 16
-    db "POOP", $F0 ; word 17
-    db "Dong", $F0 ; word 18
-    db "DONG", $F0 ; word 19
-    db "Pene", $F0 ; word 20
-    db "PENE", $F0 ; word 21
-    db "Clit", $F0 ; word 22
-    db "CLIT", $F0 ; word 23
-    db "Twat", $F0 ; word 24
-    db "TWAT", $F0 ; word 25
-    db "Snot", $F0 ; word 26
-    db "SNOT", $F0 ; word 27
-    db "Fag", $F0 ; word 28
-    db "FAG", $F0 ; word 29
-    db "Homo", $F0 ; word 30
-    db "HOMO", $F0 ; word 31
-    db "Poon", $F0 ; word 32
-    db "POON", $F0 ; word 33
-    db "Piss", $F0 ; word 34
-    db "PISS", $F0 ; word 35
-    db "Prick", $F0 ; word 36
-    db "PRICK", $F0 ; word 37
-    db "Fukk", $F0 ; word 38
-    db "FUKK", $F0 ; word 39
-    db "Coon", $F0 ; word 40
-    db "COON", $F0 ; word 41
-    db "Nazi", $F0 ; word 42
-    db "NAZI", $F0 ; word 43
-    db "Niga", $F0 ; word 44
-    db "NIGA", $F0 ; word 45
-    db "Nigga", $F0 ; word 46
-    db "NIGGA", $F0 ; word 47
-    db "Jap", $F0 ; word 48
-    db "JAP", $F0 ; word 49
-    db "Jew", $F0 ; word 50
-    db "JEW", $F0 ; word 51
-    db "Wop", $F0 ; word 52
-    db "WOP", $F0 ; word 53
-    db "Spic", $F0 ; word 54
-    db "SPIC", $F0 ; word 55
-    db "Butt", $F0 ; word 56
-    db "BUTT", $F0 ; word 57
-    db "Perv", $F0 ; word 58
-    db "PERV", $F0 ; word 59
-    db "Dumb", $F0 ; word 60
-    db "DUMB", $F0 ; word 61
-    db "Dolt", $F0 ; word 62
-    db "DOLT", $F0 ; word 63
-    db "Anus", $F0 ; word 64
-    db "ANUS", $F0 ; word 65
-    db "Anal", $F0 ; word 66
-    db "ANAL", $F0 ; word 67
-    db "Jerk", $F0 ; word 68
-    db "JERK", $F0 ; word 69
-    db "Puke", $F0 ; word 70
-    db "PUKE", $F0 ; word 71
-    db "Snot", $F0 ; word 72
-    db "SNOT", $F0 ; word 73
-    db "Barf", $F0 ; word 74
-    db "BARF", $F0 ; word 75
-    db "Pus", $F0 ; word 76
-    db "PUS", $F0 ; word 77
-    db "Pussy", $F0 ; word 78
-    db "PUSSY", $F0 ; word 79
-    db "Bung", $F0 ; word 80
-    db "BUNG", $F0 ; word 81
-    db "Suck", $F0 ; word 82
-    db "SUCK", $F0 ; word 83
+    db "Ass", $f0 ; entry 0: word 0
+    db "ASS", $f0 ; word 1
+    db "Dink", $f0 ; word 2
+    db "DINK", $f0 ; word 3
+    db "Dork", $f0 ; word 4
+    db "DORK", $f0 ; word 5
+    db "Cunt", $f0 ; word 6
+    db "CUNT", $f0 ; word 7
+    db "Kunt", $f0 ; word 8
+    db "KUNT", $f0 ; word 9
+    db "Fuck", $f0 ; word 10
+    db "FUCK", $f0 ; word 11
+    db "Shit", $f0 ; word 12
+    db "SHIT", $f0 ; word 13
+    db "Sex", $f0 ; word 14
+    db "SEX", $f0 ; word 15
+    db "Poop", $f0 ; word 16
+    db "POOP", $f0 ; word 17
+    db "Dong", $f0 ; word 18
+    db "DONG", $f0 ; word 19
+    db "Pene", $f0 ; word 20
+    db "PENE", $f0 ; word 21
+    db "Clit", $f0 ; word 22
+    db "CLIT", $f0 ; word 23
+    db "Twat", $f0 ; word 24
+    db "TWAT", $f0 ; word 25
+    db "Snot", $f0 ; word 26
+    db "SNOT", $f0 ; word 27
+    db "Fag", $f0 ; word 28
+    db "FAG", $f0 ; word 29
+    db "Homo", $f0 ; word 30
+    db "HOMO", $f0 ; word 31
+    db "Poon", $f0 ; word 32
+    db "POON", $f0 ; word 33
+    db "Piss", $f0 ; word 34
+    db "PISS", $f0 ; word 35
+    db "Prick", $f0 ; word 36
+    db "PRICK", $f0 ; word 37
+    db "Fukk", $f0 ; word 38
+    db "FUKK", $f0 ; word 39
+    db "Coon", $f0 ; word 40
+    db "COON", $f0 ; word 41
+    db "Nazi", $f0 ; word 42
+    db "NAZI", $f0 ; word 43
+    db "Niga", $f0 ; word 44
+    db "NIGA", $f0 ; word 45
+    db "Nigga", $f0 ; word 46
+    db "NIGGA", $f0 ; word 47
+    db "Jap", $f0 ; word 48
+    db "JAP", $f0 ; word 49
+    db "Jew", $f0 ; word 50
+    db "JEW", $f0 ; word 51
+    db "Wop", $f0 ; word 52
+    db "WOP", $f0 ; word 53
+    db "Spic", $f0 ; word 54
+    db "SPIC", $f0 ; word 55
+    db "Butt", $f0 ; word 56
+    db "BUTT", $f0 ; word 57
+    db "Perv", $f0 ; word 58
+    db "PERV", $f0 ; word 59
+    db "Dumb", $f0 ; word 60
+    db "DUMB", $f0 ; word 61
+    db "Dolt", $f0 ; word 62
+    db "DOLT", $f0 ; word 63
+    db "Anus", $f0 ; word 64
+    db "ANUS", $f0 ; word 65
+    db "Anal", $f0 ; word 66
+    db "ANAL", $f0 ; word 67
+    db "Jerk", $f0 ; word 68
+    db "JERK", $f0 ; word 69
+    db "Puke", $f0 ; word 70
+    db "PUKE", $f0 ; word 71
+    db "Snot", $f0 ; word 72
+    db "SNOT", $f0 ; word 73
+    db "Barf", $f0 ; word 74
+    db "BARF", $f0 ; word 75
+    db "Pus", $f0 ; word 76
+    db "PUS", $f0 ; word 77
+    db "Pussy", $f0 ; word 78
+    db "PUSSY", $f0 ; word 79
+    db "Bung", $f0 ; word 80
+    db "BUNG", $f0 ; word 81
+    db "Suck", $f0 ; word 82
+    db "SUCK", $f0 ; word 83
 
-; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress bank $46 $4001 to $8800, far-call F1:$4AA8, LoadPalette0FromData53C6, then wait on wTextWindowState and jp $077A
-; clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, waits on wTextWindowState and jumps to $077A; no caller found (E-0197)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextWindowState
-; writes: hScrollY, hScrollX, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode, wLCDCShadow
-; points at: wScreenState
+; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes
+; after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress
+; bank $46 $4001 to $8800, far-call F1:$4AA8, LoadPalette0FromData53C6, then wait on
+; wTextWindowState and jp $077A
+; clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and
+; LoadPalette0FromData53C6, waits on wTextWindowState and jumps to $077A; no caller found (E-0197)
 UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
-Func_01B_5352:: ; address name
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -2020,10 +1702,10 @@ Func_01B_5352:: ; address name
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
     call LoadPalette0FromData53C6
-    xor a, a
+    xor a
     ldh [hScrollY], a
     ldh [hScrollX], a
-    ld a, $FC
+    ld a, $fc
     call StartPaletteFade
     ld a, $01
     ld [wTextWindowState], a
@@ -2035,7 +1717,7 @@ Func_01B_5352:: ; address name
 .loop2:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     jr nz, .loop2
     ld hl, vTiles1
     ld de, $1202
@@ -2047,68 +1729,50 @@ Func_01B_5352:: ; address name
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; on CGB copies the 8-byte palette Data_01B_53C6 into wBGPaletteBuffer and sets wBGPaletteUploadRequest = $7F (E-0118)
-; 3 call sites from 3 routines (e.g. UnreferencedScreenInitFromBank46, GameMode6_Init, GameMode8_Init)
-; reads: wIsCGB
-; writes: wBGPaletteUploadRequest
-; points at: wBGPaletteBuffer
+; on CGB copies the 8-byte palette LoadPalette0FromData53C6_Data into wBGPaletteBuffer and sets
+; wBGPaletteUploadRequest = $7F (E-0118)
 LoadPalette0FromData53C6::
-Func_01B_53AF:: ; address name
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld de, LoadPalette0FromData53C6_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
 
-; address loaded by LoadPalette0FromData53C6
-LoadPalette0FromData53C6_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_53C6:: ; address name
-    db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
+LoadPalette0FromData53C6_Data::
+    db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
 ; unless a fade is running, runs the routine for wScreenState (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession3Exchange_LinkReceiveStepWithBuffer)
-; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_1B::
-Func_01B_53CE:: ; address name
     ld a, [wFadeState]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenState]
-    rst $00
+    jumptable
     dw LinkKeyTrade_Start
     dw LinkKeyTrade
 
 ; by wScreenStep: 'Starting key trade', 'Please wait.', 'Please choose the key to trade.'
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 LinkKeyTrade_Start::
-Jump_01B_53DB:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B
     dw LinkKeyTrade_Start_ShowStartingKeyTrade
     dw LinkKeyTrade_Start_ShowPleaseWait
     dw LinkKeyTrade_Start_WaitTextFlags
     dw LinkKeyTrade_Start_ShowPleaseChooseTheKey
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_Start
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wScreenStep
-; writes: wScreenStep
-; points at: wScreenTileBuffer, wScreenAttrBuffer
 LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B::
-Jump_01B_53E9:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
     call CopyBytesDEToHL_Bank1B
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .skip
     ld hl, wWindowAttrBuffer + $64
     ld de, wScreenAttrBuffer
@@ -2118,12 +1782,12 @@ Jump_01B_53E9:: ; address name
 .skip:
     ld de, Tiles1Plus4A0Tiles_1F_4AD0
     ld hl, vTiles2 + $700
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $710
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, [wScreenStep]
@@ -2131,32 +1795,21 @@ Jump_01B_53E9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_Start
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wLinkSendByte
-; points at: wTitleScreenState
 LinkKeyTrade_Start_ShowStartingKeyTrade::
-Jump_01B_5429:: ; address name
     ld a, $01 ; 'Starting key trade'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wTitleScreenState
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade_Start
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_Start_ShowPleaseWait::
-Jump_01B_543E:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
@@ -2165,14 +1818,9 @@ Jump_01B_543E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade_Start
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep, wLinkSendByte
 LinkKeyTrade_Start_WaitTextFlags::
-Jump_01B_5450:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenStep]
     inc a
@@ -2181,33 +1829,26 @@ Jump_01B_5450:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade_Start
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenState
-; writes: wLinkSendByte, wScreenStep, wScreenState
 LinkKeyTrade_Start_ShowPleaseChooseTheKey::
-Jump_01B_5462:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, $06 ; 'Please choose the key to trade.'
     call BeginString_Bank1B_Cat0
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; by wScreenStep: builds the key list, exchanges bytes and messages over the link (LinkSendByte, WaitLinkMessage) and saves (RunSaveGameSteps)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
+; by wScreenStep: builds the key list, exchanges bytes and messages over the link (LinkSendByte,
+; WaitLinkMessage) and saves (RunSaveGameSteps)
 LinkKeyTrade::
-Jump_01B_547D:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw LinkKeyTrade_BuildKeyListIndexListEntries
     dw LinkKeyTrade_FillTilesFromRequest
     dw LinkKeyTrade_ClampKeyListPageCursor
@@ -2246,23 +1887,18 @@ Jump_01B_547D:: ; address name
     dw LinkKeyTrade_WaitTextFlags_Case23
     dw LinkKeyTrade_WaitLinkMessage_Case24
 
-; entry 0 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListCursor, wListPageIndex, ...
 LinkKeyTrade_BuildKeyListIndexListEntries::
-Jump_01B_54CB:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld de, TileRect_1B_6483
-    ld hl, wWindowTileBuffer + $B4
-    ld bc, $0F09
+    ld hl, wWindowTileBuffer + $b4
+    ld bc, $0f09
     call CopyRectTo20ByteRows
     farcall BuildKeyListIndexListEntries
-    ld a, $0E
+    ld a, $0e
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld hl, vTiles2 + $500
     ld a, l
@@ -2286,10 +1922,10 @@ Jump_01B_54CB:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
-    xor a, a
+    xor a
     ld [wListCursor], a
     ld [wListPageIndex], a
     ld a, [wScreenStep]
@@ -2297,12 +1933,7 @@ Jump_01B_54CB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 LinkKeyTrade_FillTilesFromRequest::
-Jump_01B_5538:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2340,33 +1971,28 @@ Jump_01B_5538:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListPages, wListCursor, wScreenStep
-; writes: wArg5, wArg1, wArg2, wScreenStep
 LinkKeyTrade_ClampKeyListPageCursor::
-Jump_01B_5588:: ; address name
     ld de, TileRect_1B_650A
-    ld hl, wWindowTileBuffer + $C9
-    ld bc, $0D07
+    ld hl, wWindowTileBuffer + $c9
+    ld bc, $0d07
     call CopyRectTo20ByteRows
     ld a, $02
     ld [wArg5], a
     farcall ClampKeyListPageCursor
     ld a, [wListPages]
-    cp a, $02
+    cp $02
     jr c, .read_list_cursor
     ld de, $0189
     call DrawC5BEC6AtScrollOffsetDE_Bank1B
-    ld hl, wWindowTileBuffer + $15D
+    ld hl, wWindowTileBuffer + $15d
     call StoreC5BEC6AtHLStride2_Bank1B
-    ld de, $018A
+    ld de, $018a
     ld a, d
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
     farcall DrawPageOfPagesAtScrollOffset
-    ld hl, wWindowTileBuffer + $15E
+    ld hl, wWindowTileBuffer + $15e
     ld a, h
     ld [wArg1], a
     ld a, l
@@ -2375,24 +2001,19 @@ Jump_01B_5588:: ; address name
 
 .read_list_cursor:
     ld a, [wListCursor]
-    ld b, $BB
+    ld b, $bb
     ld hl, LinkKeyTrade_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wArg5, wScreenStep
 LinkKeyTrade_DrawKeyListPageNames::
-Jump_01B_55F3:: ; address name
     ld a, $02
     ld [wArg5], a
     farcall DrawKeyListPageNames
@@ -2404,18 +2025,13 @@ Jump_01B_55F3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListCursor, wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_BGMapAddressAtScroll_Bank1B::
-Jump_01B_5611:: ; address name
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
-    ld b, $C3
+    ld b, $c3
     ld hl, LinkKeyTrade_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
@@ -2423,19 +2039,14 @@ Jump_01B_5611:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep, wJoypadPressedRepeat, wMenuInputResult, wListCursor
-; writes: wScreenStep, wLinkSendByte, wMenuInputResult, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc::
-Jump_01B_5630:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .check_joypad_pressed_repeat
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld a, $FD
+    ld a, $fd
     ld [wLinkSendByte], a
     ret
 
@@ -2447,15 +2058,15 @@ Jump_01B_5630:: ; address name
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FB
+    cp $fb
     jr z, .read_screen_step
-    cp a, $FC
+    cp $fc
     jr z, .read_screen_step
-    cp a, $FE
+    cp $fe
     jr z, .check_screen_step
-    cp a, $FF
+    cp $ff
     jr z, .check_screen_step2
     ret
 
@@ -2464,7 +2075,7 @@ Jump_01B_5630:: ; address name
 
 .read_screen_step:
     ld a, [wScreenStep]
-    sub a, $04
+    sub $04
     ld [wScreenStep], a
     ret
 
@@ -2472,7 +2083,7 @@ Jump_01B_5630:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
@@ -2482,7 +2093,7 @@ Jump_01B_5630:: ; address name
     inc a
     ld [wScreenStep], a
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, LinkKeyTrade_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     ld hl, vTiles1
@@ -2500,31 +2111,23 @@ Jump_01B_5630:: ; address name
     ret
 
 ; by its step: 'Please wait.' and the partner's link message
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
 LinkKeyTrade_WaitForPartner::
-Jump_01B_56B7:: ; address name
     ld a, [wScreenSubStep]
-    rst $00
+    jumptable
     dw LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0
     dw LinkKeyTrade_WaitForPartner_ShowPleaseWait
     dw LinkKeyTrade_WaitForPartner_WaitTextFlags
     dw LinkKeyTrade_WaitForPartner_WaitLinkMessage
     dw LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wLinkSendByte, wLinkRole, wScreenSubStep
-; writes: wLinkSendByte, wScreenSubStep
 LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0::
-Jump_01B_56C5:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FD
+    cp $fd
     jr z, .clear_link_send_byte
-    cp a, $FE
+    cp $fe
     ret nz
     ld a, [wLinkSendByte]
-    cp a, $FD
+    cp $fd
     jr z, .skip
     ld a, [wLinkRole]
     bit 1, a
@@ -2539,7 +2142,7 @@ Jump_01B_56C5:: ; address name
     ld b, $02
 
 .clear_link_send_byte2:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, b
     call BeginString_Bank1B_Cat0
@@ -2548,14 +2151,9 @@ Jump_01B_56C5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenSubStep
-; writes: wScreenSubStep
 LinkKeyTrade_WaitForPartner_ShowPleaseWait::
-Jump_01B_56F5:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
@@ -2564,14 +2162,9 @@ Jump_01B_56F5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenSubStep
-; writes: wLinkSendByte, wScreenSubStep
 LinkKeyTrade_WaitForPartner_WaitTextFlags::
-Jump_01B_5707:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $01
     ld [wLinkSendByte], a
@@ -2580,41 +2173,30 @@ Jump_01B_5707:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenSubStep
-; writes: wLinkSendByte, wScreenSubStep
 LinkKeyTrade_WaitForPartner_WaitLinkMessage::
-Jump_01B_5719:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wGameMode, wModeState, wModeChangeRequest
-; points at: wScreenState
 LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04::
-Jump_01B_572B:: ; address name
     ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld a, $05
     ld [wGameMode], a
@@ -2624,55 +2206,45 @@ Jump_01B_572B:: ; address name
     ld [wModeChangeRequest], a
     ret
 
-; entry 7 of the `rst $00` table in LinkKeyTrade; also entry 21 of the table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wTwoChoiceCursor, wScreenStep
 LinkKeyTrade_QueueSoundEffect::
-Jump_01B_574E:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_65E9
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenStep
-; writes: wScreenStep, wLinkSendByte, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case08::
-Jump_01B_577C:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
     ld a, $06
     ld [wScreenStep], a
-    ld a, $FD
+    ld a, $fd
     ld [wLinkSendByte], a
     ret
 
 .call_update_two_choice_cursor_bank1_d:
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .loop
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
@@ -2694,10 +2266,10 @@ Jump_01B_577C:: ; address name
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    cp a, $01
+    cp $01
     jr z, .loop
     ld a, [wScreenStep]
-    add a, $03
+    add $03
     ld [wScreenStep], a
     ld hl, vTiles1
     ld a, l
@@ -2711,12 +2283,7 @@ Jump_01B_577C:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; entry 9 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_ShowPleaseChooseTheKey::
-Jump_01B_57E6:: ; address name
     call LinkKeyTrade_CopyRectTo20ByteRows
     ld a, $06 ; 'Please choose the key to trade.'
     call BeginString_Bank1B_Cat0
@@ -2725,14 +2292,9 @@ Jump_01B_57E6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wScreenStep
 LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B::
-Jump_01B_57F6:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld c, $04
     ld hl, LinkKeyTrade_ClampKeyListPageCursor_Data
@@ -2742,37 +2304,24 @@ Jump_01B_57F6:: ; address name
     ret
 
 ; by its step: 'That key cannot be traded.' and 'Please wait.'
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
 LinkKeyTrade_KeyCannotBeTraded::
-Jump_01B_5809:: ; address name
     ld a, [wScreenSubStep]
-    rst $00
+    jumptable
     dw LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4
     dw LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_KeyCannotBeTraded
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenSubStep, wScreenStep
 LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
-Jump_01B_5811:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
-    sub a, $02
+    sub $02
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_KeyCannotBeTraded
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep, hMapId, wScreenStep, wMapType, wKeyWorldSlot
-; writes: wScreenSubStep, wScreenStep
 LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4::
-Jump_01B_5823:: ; address name
     call KeyEntryAddressForListEntriesCell4
     push hl
     inc hl
@@ -2785,8 +2334,8 @@ Jump_01B_5823:: ; address name
     dec hl
     dec hl
     ld a, [hl]
-    and a, $0F
-    cp a, $07
+    and $0f
+    cp $07
     jr nc, .check_map_id
     pop hl
 
@@ -2801,7 +2350,7 @@ Jump_01B_5823:: ; address name
 .check_map_id:
     pop hl
     ldh a, [hMapId]
-    cp a, $A8
+    cp $a8
     jr c, .loop
     jr .skip
 
@@ -2813,8 +2362,8 @@ Jump_01B_5823:: ; address name
     ld a, [wKeyWorldSlot]
     ld b, a
     ld a, [hl]
-    and a, $3F
-    cp a, b
+    and $3f
+    cp b
     jr nz, .loop
     jr .call_begin_string_bank1_b_cat0
 
@@ -2827,56 +2376,56 @@ Jump_01B_5823:: ; address name
     ret
 
 .skip:
-    ld b, $A8
-    ld c, $B0
-    cp a, c
+    ld b, $a8
+    ld c, $b0
+    cp c
     jr nc, .skip2
-    cp a, b
+    cp b
     ccf
 
 .skip2:
     jr c, .skip8
-    ld b, $B0
-    ld c, $B7
-    cp a, c
+    ld b, $b0
+    ld c, $b7
+    cp c
     jr nc, .skip3
-    cp a, b
+    cp b
     ccf
 
 .skip3:
     jr c, .skip9
-    ld b, $B8
-    ld c, $C6
-    cp a, c
+    ld b, $b8
+    ld c, $c6
+    cp c
     jr nc, .skip4
-    cp a, b
+    cp b
     ccf
 
 .skip4:
     jr c, .skip10
-    ld b, $C8
-    ld c, $D1
-    cp a, c
+    ld b, $c8
+    ld c, $d1
+    cp c
     jr nc, .skip5
-    cp a, b
+    cp b
     ccf
 
 .skip5:
     jr c, .skip11
-    ld b, $D1
-    ld c, $DA
-    cp a, c
+    ld b, $d1
+    ld c, $da
+    cp c
     jr nc, .skip6
-    cp a, b
+    cp b
     ccf
 
 .skip6:
     jr c, .skip12
-    ld b, $DA
-    ld c, $E3
-    cp a, c
+    ld b, $da
+    ld c, $e3
+    cp c
     jr nc, .skip7
-    cp a, b
+    cp b
     ccf
 
 .skip7:
@@ -2885,48 +2434,43 @@ Jump_01B_5823:: ; address name
 
 .skip8:
     ld a, [hl]
-    cp a, $07
+    cp $07
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
 .skip9:
     ld a, [hl]
-    cp a, $08
+    cp $08
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
 .skip10:
     ld a, [hl]
-    cp a, $09
+    cp $09
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
 .skip11:
     ld a, [hl]
-    cp a, $0A
+    cp $0a
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
 .skip12:
     ld a, [hl]
-    cp a, $0B
+    cp $0b
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
 .skip13:
     ld a, [hl]
-    cp a, $0C
+    cp $0c
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
-; entry 12 of the `rst $00` table in LinkKeyTrade; also entry 25 of the table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep, wLinkSendByte
 LinkKeyTrade_WaitTextFlags::
-Jump_01B_58E6:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenStep]
     inc a
@@ -2935,14 +2479,9 @@ Jump_01B_58E6:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 28 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE::
-Jump_01B_58F8:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data
     call DrawThreeTilesAtBGMap20FFromDE
@@ -2953,59 +2492,48 @@ Jump_01B_58F8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in LinkKeyTrade; also entry 26 of the table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenStep, wLinkSendByte
 LinkKeyTrade_WriteScreenStepAndLinkSendByte::
-Jump_01B_5910:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     jr z, .clear_link_send_byte
-    cp a, $FE
+    cp $fe
     ret nz
     ld a, $06
     ld [wScreenStep], a
-    ld a, $FD
+    ld a, $fd
     ld [wLinkSendByte], a
     ret
 
 .clear_link_send_byte:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wLinkRecvBuffer, wKeyList, wLinkPartnerName
 LinkKeyTrade_KeyEntryAddressForListEntriesCell4::
-Jump_01B_5931:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     call KeyEntryAddressForListEntriesCell4
     ld de, wLinkRecvBuffer
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     push de
     call WordAddressForListEntriesCell4Item
     pop de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -3026,20 +2554,15 @@ Jump_01B_5931:: ; address name
     ld [wLinkBufferPtrLo], a
     ld a, h
     ld [wLinkBufferPtrHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
-; entry 35 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 LinkKeyTrade_WaitTextFlags_Case23::
-Jump_01B_5983:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $05
     ld [wLinkSendByte], a
@@ -3048,41 +2571,31 @@ Jump_01B_5983:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkSendByte, wLinkReady, wScreenStep
 LinkKeyTrade_WaitLinkMessage::
-Jump_01B_5995:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wLinkReady], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wSelectedRecord, wScreenSubStep
 LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc::
-Jump_01B_59AB:: ; address name
     call LinkKeyTrade_Case10_ReadRandomSeed2LoAndLinkPartnerNameEtc
-    cp a, $FF
+    cp $ff
     jr z, .check_screen_step2
     call LinkKeyTrade_Case10_ReadRandomSeed2Lo
     ld a, c
-    cp a, $14
+    cp $14
     jr z, .check_screen_step
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wSelectedRecord], a
     ret
 
@@ -3090,9 +2603,9 @@ Jump_01B_59AB:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wSelectedRecord], a
     ret
 
@@ -3100,18 +2613,13 @@ Jump_01B_59AB:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
-    ld a, $FF
+    ld a, $ff
     ld [wSelectedRecord], a
     ret
 
-; only called from LinkKeyTrade_Case10 (E-0047)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc)
-; reads: wRandomSeed2Lo, wLinkPartnerName, wLinkPartnerByte1, wLinkPartnerByte2
-; points at: wKeyList, wLinkPartnerName
 LinkKeyTrade_Case10_ReadRandomSeed2LoAndLinkPartnerNameEtc::
-Func_01B_59E8:: ; address name
     ld hl, wKeyList
     ld de, wLinkPartnerName
     ld b, $20
@@ -3119,9 +2627,9 @@ Func_01B_59E8:: ; address name
 .loop:
     push hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .restore
-    cp a, $FE
+    cp $fe
     jr z, .restore
     inc hl
     inc hl
@@ -3135,11 +2643,11 @@ Func_01B_59E8:: ; address name
     bit 7, a
     jr z, .restore
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ld a, [wLinkPartnerName]
-    and a, $0F
-    cp a, c
+    and $0f
+    cp c
     jr nz, .restore
     jr .done
 
@@ -3150,15 +2658,15 @@ Func_01B_59E8:: ; address name
     bit 7, a
     jr nz, .restore
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ld a, [wLinkPartnerByte1]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ld a, [wLinkPartnerByte2]
-    cp a, c
+    cp c
     jr nz, .restore
 
 .restore:
@@ -3169,34 +2677,29 @@ Func_01B_59E8:: ; address name
     inc hl
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ret
 
 .done:
     pop hl
-    ld a, $FF
+    ld a, $ff
     ret
 
-; only called from LinkKeyTrade_Case10 (E-0047)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc)
-; reads: wRandomSeed2Lo
-; points at: wKeyList
 LinkKeyTrade_Case10_ReadRandomSeed2Lo::
-Func_01B_5A41:: ; address name
     ld hl, wKeyList
     ld b, $20
     ld c, $00
 
 .loop:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .next2
-    cp a, $FE
+    cp $fe
     jr z, .next
     inc hl
     inc hl
     inc hl
-    ld a, [hl-]
+    ld a, [hld]
     dec hl
     dec hl
     bit 7, a
@@ -3213,7 +2716,7 @@ Func_01B_5A41:: ; address name
     dec b
     jr nz, .loop
     ld a, c
-    cp a, $14
+    cp $14
     ret c
     call KeyEntryAddressForListEntriesCell4
     inc hl
@@ -3236,29 +2739,22 @@ Func_01B_5A41:: ; address name
     jr nz, .loop2
     ret
 
-; by wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
+; by wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to
+; trade.'
 LinkKeyTrade_KeysSameName::
-Jump_01B_5A83:: ; address name
     ld a, [wScreenSubStep]
-    rst $00
+    jumptable
     dw LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep
     dw LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc
     dw LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep
     dw LinkKeyTrade_KeysSameName_WaitTextFlags
     dw LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_KeysSameName
-; no direct call (reached through a table, a jump or a vector)
-; reads: wSelectedRecord, wScreenSubStep
-; writes: wLinkSendByte, wScreenSubStep
 LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep::
-Jump_01B_5A91:: ; address name
     ld a, [wSelectedRecord]
-    and a, a
+    and a
     jr z, .set_link_send_byte_to_02
-    cp a, $FF
+    cp $ff
     jr z, .skip
     ld a, $04
     jr .set_link_send_byte
@@ -3277,45 +2773,35 @@ Jump_01B_5A91:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_KeysSameName
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenSubStep
-; writes: wItemGridX, wLinkSendByte, wScreenSubStep
 LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc::
-Jump_01B_5AB0:: ; address name
     ld a, [wLinkMessage]
-    cp a, $02
+    cp $02
     jr z, .set_item_grid_x
-    cp a, $03
+    cp $03
     jr z, .set_item_grid_x
-    cp a, $04
+    cp $04
     jr z, .set_item_grid_x
     ret
 
 .set_item_grid_x:
     ld [wItemGridX], a
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade_KeysSameName
-; no direct call (reached through a table, a jump or a vector)
-; reads: wItemGridX, wSelectedRecord, wScreenStep, wScreenSubStep
-; writes: wScreenSubStep, wScreenStep
 LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep::
-Jump_01B_5ACF:: ; address name
     ld a, [wItemGridX]
-    cp a, $03
+    cp $03
     jr z, .check_selected_record2
-    cp a, $04
+    cp $04
     jr z, .check_selected_record
     ld a, [wSelectedRecord]
-    and a, a
+    and a
     jr nz, .cp_FF
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
     inc a
@@ -3323,9 +2809,9 @@ Jump_01B_5ACF:: ; address name
     ret
 
 .cp_FF:
-    cp a, $FF
+    cp $ff
     jr z, .skip
-    ld a, $0F
+    ld a, $0f
     jr .call_begin_string_bank1_b_cat02
 
 .skip:
@@ -3334,20 +2820,20 @@ Jump_01B_5ACF:: ; address name
 
 .check_selected_record:
     ld a, [wSelectedRecord]
-    cp a, $FE
+    cp $fe
     jr z, .skip2
     ld a, $26
     jr .call_begin_string_bank1_b_cat02
 
 .skip2:
-    ld a, $0F
+    ld a, $0f
     jr .call_begin_string_bank1_b_cat02
 
 .check_selected_record2:
     ld a, [wSelectedRecord]
-    cp a, $FF
+    cp $ff
     jr z, .call_begin_string_bank1_b_cat0
-    ld a, $0D
+    ld a, $0d
     jr .call_begin_string_bank1_b_cat02
 
 .call_begin_string_bank1_b_cat0:
@@ -3360,56 +2846,42 @@ Jump_01B_5ACF:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade_KeysSameName
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenSubStep
-; writes: wScreenSubStep
 LinkKeyTrade_KeysSameName_WaitTextFlags::
-Jump_01B_5B1F:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade_KeysSameName
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenSubStep, wScreenStep
 LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
-Jump_01B_5B2C:: ; address name
     call LinkKeyTrade_CopyRectTo20ByteRows
     ld a, $06 ; 'Please choose the key to trade.'
     call BeginString_Bank1B_Cat0
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0a
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_ShowIsItOKTo::
-Jump_01B_5B3E:: ; address name
     call LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc
     ld de, TileRect_1B_6483
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0F01
+    ld bc, $0f01
     call CopyRectTo20ByteRows
     ld de, TileRect_1B_65CE
     ld hl, wWindowTileBuffer + $78
-    ld bc, $0F01
+    ld bc, $0f01
     call CopyRectTo20ByteRows
     ld de, LinkKeyTrade_ShowIsItOKTo_Data
-    ld hl, wWindowTileBuffer + $8C
-    ld bc, $0F01
+    ld hl, wWindowTileBuffer + $8c
+    ld bc, $0f01
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
     inc a
@@ -3418,40 +2890,30 @@ Jump_01B_5B3E:: ; address name
     call BeginString_Bank1B_Cat0
     ret
 
-; entry 19 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wTwoChoiceCursor, wScreenStep
 LinkKeyTrade_QueueSoundEffect_Case13::
-Jump_01B_5B7E:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_65A6
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 20 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep, wLinkSendByte
 LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc::
-Jump_01B_5BAC:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_b
     ld hl, vTiles1
     ld a, l
@@ -3465,18 +2927,18 @@ Jump_01B_5BAC:: ; address name
     ld [wTextWindowWidth], a
     ld a, $06
     ld [wScreenStep], a
-    ld a, $FD
+    ld a, $fd
     ld [wLinkSendByte], a
     ret
 
 .call_update_two_choice_cursor_bank1_b:
     call UpdateTwoChoiceCursor_Bank1B
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .loop
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
@@ -3493,16 +2955,16 @@ Jump_01B_5BAC:: ; address name
     ld [wTextWindowWidth], a
     ld a, $06
     ld [wScreenStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    cp a, $01
+    cp $01
     jr z, .loop
     ld a, [wTwoChoiceCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
@@ -3518,57 +2980,49 @@ Jump_01B_5BAC:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld a, $0A ; 'Is it OK to record the'
+    ld a, $0a ; 'Is it OK to record the'
     call BeginString_Bank1B_Cat0
     ret
 
-; when no text runs, copies box Data_01B_65E9 to wWindowTileBuffer + $112, draws it, clears wTwoChoiceCursor and wScreenStep += 1 (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wTwoChoiceCursor, wScreenStep
-ShowTwoChoiceBox65E9WhenTextIdle:: ; heuristic: follows a terminator; C0
-Func_01B_5C3B:: ; address name
+; when no text runs, copies box TileRect_1B_65E9 to wWindowTileBuffer + $112, draws it, clears
+; wTwoChoiceCursor and wScreenStep += 1 (E-0124)
+ShowTwoChoiceBox65E9WhenTextIdle::
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld de, TileRect_1B_65E9
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 22 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenStep
-; writes: wScreenStep, wLinkSendByte, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16::
-Jump_01B_5C64:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
     ld a, $06
     ld [wScreenStep], a
-    ld a, $FD
+    ld a, $fd
     ld [wLinkSendByte], a
     ret
 
 .call_update_two_choice_cursor_bank1_d:
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .loop
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
@@ -3592,10 +3046,10 @@ Jump_01B_5C64:: ; address name
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    cp a, $01
+    cp $01
     jr z, .loop
     ld a, [wScreenStep]
-    add a, $02
+    add $02
     ld [wScreenStep], a
     ld hl, vTiles1
     ld a, l
@@ -3609,36 +3063,26 @@ Jump_01B_5C64:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; entry 23 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_QueueSoundEffect_Case17::
-Jump_01B_5CD3:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_65A6
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
-    sub a, $03
+    sub $03
     ld [wScreenStep], a
     ret
 
-; entry 24 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
-Jump_01B_5CFE:: ; address name
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -3646,38 +3090,27 @@ Jump_01B_5CFE:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 27 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_Case1B::
-Jump_01B_5D0B:: ; address name
-    ld a, $0B ; 'Readying trade Please wait.'
+    ld a, $0b ; 'Readying trade Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 29 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenStep, wScreenCounter, wGlyphListStart, rRAMG2, rRAMB, wLinkTimeoutLo, wLinkTimeoutHi, wLinkSendByte
-; points at: wArenaEntry
 LinkKeyTrade_KeyEntryAddressForListEntriesCell4_Case1D::
-Jump_01B_5D18:: ; address name
     ld a, [wLinkMessage]
-    cp a, $02
+    cp $02
     ret nz
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     ld [wGlyphListStart], a
     call KeyEntryAddressForListEntriesCell4
     ld a, [hl]
-    cp a, $FE
+    cp $fe
     jr z, .skip
     inc hl
     inc hl
@@ -3691,23 +3124,23 @@ Jump_01B_5D18:: ; address name
     ld a, [hl]
     bit 7, a
     jr z, .skip
-    and a, $3F
+    and $3f
     ld bc, $0195
     call Multiply8By16
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $A0
+    adc $a0
     ld h, a
     ld de, wArenaEntry
     ld bc, $0195
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
     ld a, $02
     ld [rRAMB], a
     call CopyBytes
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     jr .set_link_timeout_lo
@@ -3715,7 +3148,7 @@ Jump_01B_5D18:: ; address name
 .skip:
     ld hl, wArenaEntry
     ld bc, $0195
-    xor a, a
+    xor a
     call FillBytes
 
 .set_link_timeout_lo:
@@ -3728,29 +3161,23 @@ Jump_01B_5D18:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 30 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenStep, wWorkBuf, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, wLinkReady
-; points at: wLinkExchangeBuffer
 LinkKeyTrade_RunScreenCounterStep_61A7::
-Jump_01B_5D8B:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     call RunScreenCounterStep_61A7
     ld hl, $0195
-    ld a, $1E
+    ld a, $1e
     call DivideHLByA
     ld [wWorkBuf + $2], a
     ld a, l
     ld [wWorkBuf], a
     ld a, h
     ld [wWorkBuf + $1], a
-    ld hl, $001E
+    ld hl, $001e
     ld a, l
     ld [wLinkBufferCountLo], a
     ld a, h
@@ -3760,20 +3187,15 @@ Jump_01B_5D8B:: ; address name
     ld [wLinkBufferPtrLo], a
     ld a, h
     ld [wLinkBufferPtrHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
-; entry 31 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkReady, wLinkSendByte, wScreenStep
 LinkKeyTrade_WaitLinkMessage_Case1F::
-Jump_01B_5DCF:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
     ld a, $00
     ld [wLinkReady], a
@@ -3784,37 +3206,32 @@ Jump_01B_5DCF:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 32 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wWorkBuf, wScreenStep
-; writes: wWorkBuf, wLinkBufferCountLo, wLinkBufferCountHi, wScreenStep, wLinkSendByte, wLinkReady
 LinkKeyTrade_WaitLinkMessage_Case20::
-Jump_01B_5DE7:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
     ld a, [wWorkBuf]
     ld l, a
     ld a, [wWorkBuf + $1]
     ld h, a
     ld a, h
-    or a, l
+    or l
     jr z, .check_work_buf
     dec hl
     ld a, l
     ld [wWorkBuf], a
     ld a, h
     ld [wWorkBuf + $1], a
-    ld hl, $001E
+    ld hl, $001e
     jr .set_link_buffer_count_lo
 
 .check_work_buf:
     ld a, [wWorkBuf + $2]
-    or a, a
+    or a
     jr z, .clear_link_send_byte
     ld l, a
     ld h, $00
-    xor a, a
+    xor a
     ld [wWorkBuf + $2], a
 
 .set_link_buffer_count_lo:
@@ -3826,40 +3243,34 @@ Jump_01B_5DE7:: ; address name
     dec a
     ld [wScreenStep], a
     call RunScreenCounterStep_61A7
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
 .clear_link_send_byte:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wLinkReady], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 33 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, wArg5, wArg6, wRandomSeed2Lo, wLinkPartnerName, wRandomSeed2Hi, wBattleSetupByteBC, hTemp0, ...
-; writes: wScreenStep, wSaveStep, wSaveRecordIndex, hTemp0, wLinkPartnerName, wLinkExchangeBuffer, rRAMG2, rRAMB, ...
-; points at: wKeyList, wLinkPartnerName, wKeySeeds, wLinkExchangeBuffer
 LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21::
-Jump_01B_5E41:: ; address name
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     call KeyEntryAddressForListEntriesCell4
     ld a, [hl]
-    cp a, $FE
+    cp $fe
     jr z, .loop
     inc hl
     inc hl
@@ -3870,19 +3281,19 @@ Jump_01B_5E41:: ; address name
     jr .next
 
 .loop:
-    ld a, $FF
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
+    ld a, $ff
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
     jr .skip2
 
 .skip:
-    ld a, $FF
-    ld [hl-], a
-    ld [hl-], a
-    ld [hl-], a
-    ld [hl-], a
+    ld a, $ff
+    ld [hld], a
+    ld [hld], a
+    ld [hld], a
+    ld [hld], a
     jr .skip2
 
 .next:
@@ -3907,13 +3318,13 @@ Jump_01B_5E41:: ; address name
 
 .loop2:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .check_random_seed2_lo
     ld a, $04
     add_a_to_hl
     inc c
     ld a, c
-    cp a, $20
+    cp $20
     jr c, .loop2
     ld a, [wScreenStep]
     inc a
@@ -3927,10 +3338,10 @@ Jump_01B_5E41:: ; address name
     bit 7, a
     jr z, .skip3
     ld a, [wLinkPartnerName]
-    and a, $0F
-    sub a, $07
+    and $0f
+    sub $07
     ld de, $0203
-    add a, e
+    add e
     ld e, a
     jr nc, .call_test_flag_bit
     inc d
@@ -3941,13 +3352,13 @@ Jump_01B_5E41:: ; address name
     call TestFlagBit
     jr c, .read_link_partner_name
     ld a, [wLinkPartnerName]
-    and a, $0F
+    and $0f
     jr .set_link_partner_name
 
 .read_link_partner_name:
     ld a, [wLinkPartnerName]
     set 6, a
-    and a, $4F
+    and $4f
 
 .set_link_partner_name:
     pop bc
@@ -3960,7 +3371,7 @@ Jump_01B_5E41:: ; address name
 
 .loop3:
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     inc de
     dec b
     jr nz, .loop3
@@ -3973,12 +3384,12 @@ Jump_01B_5E41:: ; address name
     ld de, wKeySeeds
     add hl, de
     ld a, [wRandomSeed2Hi]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wBattleSetupByteBC]
     ld [hl], a
     pop bc
     ld a, [wLinkPartnerName]
-    cp a, $FE
+    cp $fe
     jr z, .call_begin_string_bank1_b_cat0
     ld a, [wRandomSeed2Lo]
     bit 7, a
@@ -3990,34 +3401,34 @@ Jump_01B_5E41:: ; address name
     call ClearWD201Bit7AndFourSlots
     farcall FindSRAMSlotMarkerIndex
     ldh a, [hTemp0]
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wLinkExchangeBuffer]
-    and a, $50
-    or a, c
+    and $50
+    or c
     ld [wLinkExchangeBuffer], a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
     ld a, $02
     ld [rRAMB], a
-    xor a, a
+    xor a
     ldh [rSVBK], a
     ldh a, [hTemp0]
-    and a, $7F
+    and $7f
     ld bc, $0195
     call Multiply8By16
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $A0
+    adc $a0
     ld h, a
     ld e, l
     ld d, h
     ld hl, wLinkExchangeBuffer
     ld bc, $0195
     call CopyBytes
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     pop bc
@@ -4027,33 +3438,28 @@ Jump_01B_5E41:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ld a, [hl]
-    and a, $80
+    and $80
     ld b, a
     ldh a, [hTemp0]
-    or a, b
+    or b
     ld [hl], a
 
 .call_begin_string_bank1_b_cat0:
-    ld a, $0C ; 'Keys will now be traded.'
+    ld a, $0c ; 'Keys will now be traded.'
     call BeginString_Bank1B_Cat0
     ld a, $80
     ld [wGameFlags836], a
     ret
 
-; entry 34 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wSaveStep, wScreenStep
-; writes: wScreenStep, wScreenCounter
 LinkKeyTrade_ShowPleaseWait::
-Jump_01B_5F88:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -4062,35 +3468,29 @@ Jump_01B_5F88:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
     ret
 
-; entry 36 of the `rst $00` table in LinkKeyTrade
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, hDecompressLock, wGameMode, wModeState, wModeChangeRequest
-; points at: wScreenState
 LinkKeyTrade_WaitLinkMessage_Case24::
-Jump_01B_5FAA:: ; address name
     ld a, [wLinkMessage]
-    cp a, $05
+    cp $05
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
-    xor a, a
+    xor a
     ldh [hDecompressLock], a
     ld a, $05
     ld [wGameMode], a
@@ -4100,12 +3500,9 @@ Jump_01B_5FAA:: ; address name
     ld [wModeChangeRequest], a
     ret
 
-; clears bit 7 of wLinkExchangeBuffer + $1 and the bytes at wLinkExchangeBuffer + $1 + $177 + 4 * n for n = 0-3 (E-0122)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
-; reads: wLinkExchangeBuffer
-; writes: wLinkExchangeBuffer
+; clears bit 7 of wLinkExchangeBuffer + $1 and the bytes at wLinkExchangeBuffer + $1 + $177 + 4 * n
+; for n = 0-3 (E-0122)
 ClearWD201Bit7AndFourSlots::
-Func_01B_5FD4:: ; address name
     ld a, [wLinkExchangeBuffer + $1]
     res 7, a
     ld [wLinkExchangeBuffer + $1], a
@@ -4115,7 +3512,7 @@ Func_01B_5FD4:: ; address name
     ld b, $04
 
 .loop:
-    xor a, a
+    xor a
     ld [hl], a
     ld a, $04
     add_a_to_hl
@@ -4123,38 +3520,32 @@ Func_01B_5FD4:: ; address name
     jr nz, .loop
     ret
 
-; only called from LinkKeyTrade_Case12 (E-0047)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_ShowIsItOKTo)
-; reads: wLinkPartnerName, wRandomSeed2Lo, wLinkPartnerByte1, wLinkPartnerByte2, wDataBank
-; writes: wArg5, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDataBank, ...
-; points at: wNameGlyphBuf, wTextBuf0
 LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc::
-Func_01B_5FF2:: ; address name
     ld a, [wLinkPartnerName]
-    cp a, $FE
+    cp $fe
     jr nz, .check_random_seed2_lo
     ld hl, wNameGlyphBuf
     ld a, $16
-    ld [hl+], a
+    ld [hli], a
     ld a, $24
-    ld [hl+], a
-    ld a, $2A
-    ld [hl+], a
-    ld a, $2C
-    ld [hl+], a
+    ld [hli], a
+    ld a, $2a
+    ld [hli], a
+    ld a, $2c
+    ld [hli], a
     ld a, $26
-    ld [hl+], a
+    ld [hli], a
     ld a, $90
-    ld [hl+], a
+    ld [hli], a
     ld a, $14
-    ld [hl+], a
+    ld [hli], a
     ld a, $28
-    ld [hl+], a
-    ld a, $3C
-    ld [hl+], a
-    ld a, $5B
-    ld [hl+], a
-    ld a, $F0
+    ld [hli], a
+    ld a, $3c
+    ld [hli], a
+    ld a, $5b
+    ld [hli], a
+    ld a, $f0
     ld [hl], a
     ld a, $03
     ld [wArg5], a
@@ -4174,9 +3565,9 @@ Func_01B_5FF2:: ; address name
 
 .skip:
     ld a, [de]
-    cp a, $F0
+    cp $f0
     jr z, .set_data_bank_to_09
-    ld [hl+], a
+    ld [hli], a
     inc de
     jr .skip
 
@@ -4186,38 +3577,36 @@ Func_01B_5FF2:: ; address name
     ld [wDataBank], a
     ld a, [wLinkPartnerByte2]
     inc a
-    add a, $10
+    add $10
     call CopyDataBankString4078ToTextBuf0
     pop hl
     ld de, wTextBuf0
 
 .skip2:
     ld a, [de]
-    cp a, $F0
+    cp $f0
     jr z, LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc_Skip
-    ld [hl+], a
+    ld [hli], a
     inc de
     jr .skip2
 
 LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc_Skip::
-Jump_01B_6063:: ; address name
-    ld a, $5B
-    ld [hl+], a
-    ld a, $F0
+    ld a, $5b
+    ld [hli], a
+    ld a, $f0
     ld [hl], a
     ld a, $03
     ld [wArg5], a
 
 LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc_Skip2::
-Jump_01B_606E:: ; address name
     ld hl, wTextBuf0
     ld de, wNameGlyphBuf
 
 .skip:
     ld a, [de]
-    cp a, $F0
+    cp $f0
     jr z, .skip2
-    ld [hl+], a
+    ld [hli], a
     inc de
     jr .skip
 
@@ -4228,14 +3617,14 @@ Jump_01B_606E:: ; address name
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0B01
+    ld hl, $0b01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
     ld a, $27
     ld [wStringIndex], a ; '0'
-    xor a, a
+    xor a
     ld [wStringCategory], a
     farcall ShowString_Bank1B_481A
     ld hl, vTiles1
@@ -4250,11 +3639,9 @@ Jump_01B_606E:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; copies the 16-byte string named by the word table $4078 + 2 * A (in bank 9) to wTextBuf0; the next entry copies a key name word to wNameGlyphBuf (E-0127)
-; 2 call sites from 1 routine (e.g. LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc)
-; points at: wTextBuf0
+; copies the 16-byte string named by the word table $4078 + 2 * A (in bank 9) to wTextBuf0; the next
+; entry copies a key name word to wNameGlyphBuf (E-0127)
 CopyDataBankString4078ToTextBuf0::
-Func_01B_60BA:: ; address name
     sla a
     ld hl, $4078
     add_a_to_hl
@@ -4268,9 +3655,8 @@ Func_01B_60BA:: ; address name
     ret
 
 CopyDataBankString4078ToTextBuf0_CheckLinkPartnerName::
-Jump_01B_60D4:: ; address name
     ld a, [wLinkPartnerName]
-    and a, $3F
+    and $3f
     ld l, a
     ld h, $00
     push hl
@@ -4279,7 +3665,7 @@ Jump_01B_60D4:: ; address name
     ld a, $09
     ld [wDataBank], a
     ld hl, StringCategories_09_4016
-    ld a, $0C
+    ld a, $0c
     add_a_to_hl
     call ReadWordFromDataBank
     ld e, b
@@ -4302,27 +3688,25 @@ Jump_01B_60D4:: ; address name
     ld b, $09
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld a, $F0
-    ld [wNameGlyphBuf + $D], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $d], a
     ld hl, wNameGlyphBuf
 
 .skip:
-    ld a, [hl+]
-    cp a, $F0
+    ld a, [hli]
+    cp $f0
     jr z, .skip2
     jr .skip
 
 .skip2:
     jp LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc_Skip
-    db $21, $A1, $5D, $06, $1D, $D7, $FA, $F5, $D7, $67, $FA, $F6, $D7, $6F, $7E, $6F
-    db $26, $00, $29, $29, $7D, $C6, $07, $6F, $7C, $CE, $C7, $67, $7E, $E6, $7F, $01
-    db $95, $01, $CD, $AA, $16, $7D, $C6, $00, $6F, $7C, $CE, $A0, $67, $C9
+    db $21, $a1, $5d, $06, $1d, $d7, $fa, $f5, $d7, $67, $fa, $f6, $d7, $6f, $7e, $6f
+    db $26, $00, $29, $29, $7d, $c6, $07, $6f, $7c, $ce, $c7, $67, $7e, $e6, $7f, $01
+    db $95, $01, $cd, $aa, $16, $7d, $c6, $00, $6f, $7c, $ce, $a0, $67, $c9
 
-; far-calls SetArg5ToListEntriesCell4, reads the key slot stored there and returns HL = wKeyList + 4 * slot (= $C707 + 4 * slot) (E-0120)
-; 5 call sites from 5 routines (e.g. LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21, LinkKeyTrade_KeyEntryAddressForListEntriesCell4_Case1D, LinkKeyTrade_Case10_ReadRandomSeed2Lo, LinkKeyTrade_KeyEntryAddressForListEntriesCell4, ...)
-; reads: wArg5, wArg6
+; far-calls SetArg5ToListEntriesCell4, reads the key slot stored there and returns HL = wKeyList + 4
+; * slot (= $C707 + 4 * slot) (E-0120)
 KeyEntryAddressForListEntriesCell4::
-Func_01B_6153:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -4334,18 +3718,16 @@ Func_01B_6153:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ret
 
-; far-calls SetArg5ToListEntriesCell4, reads the byte at that address and returns HL = $C787 + 2 * that byte (E-0119)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_KeyEntryAddressForListEntriesCell4)
-; reads: wArg5, wArg6
+; far-calls SetArg5ToListEntriesCell4, reads the byte at that address and returns HL = $C787 + 2 *
+; that byte (E-0119)
 WordAddressForListEntriesCell4Item::
-Func_01B_6170:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -4356,28 +3738,27 @@ Func_01B_6170:: ; address name
     ld h, $00
     add hl, hl
     ld a, l
-    add a, $87
+    add $87
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ret
 
-; writes the three bytes at DE to vBGMap0 + $20F onward (WaitForVRAMAccess, interrupts off per byte) (E-0120)
-; 3 call sites from 3 routines (e.g. LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE, RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart)
+; writes the three bytes at DE to vBGMap0 + $20F onward (WaitForVRAMAccess, interrupts off per byte)
+; (E-0120)
 DrawThreeTilesAtBGMap20FFromDE::
-Func_01B_618C:: ; address name
-    ld hl, vBGMap0 + $20F
+    ld hl, vBGMap0 + $20f
     di
     call WaitForVRAMAccess
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     ei
     inc de
     di
     call WaitForVRAMAccess
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     ei
     inc de
     di
@@ -4387,13 +3768,11 @@ Func_01B_618C:: ; address name
     ei
     ret
 
-; runs the routine for wScreenCounter (jump table of six; steps 2 and 4 reuse 0, 3 reuses 1) (E-0122)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_WaitLinkMessage_Case20, LinkKeyTrade_RunScreenCounterStep_61A7)
-; reads: wScreenCounter
+; runs the routine for wScreenCounter (jump table of six; steps 2 and 4 reuse 0, 3 reuses 1)
+; (E-0122)
 RunScreenCounterStep_61A7::
-Func_01B_61A7:: ; address name
     ld a, [wScreenCounter]
-    rst $00
+    jumptable
     dw RunScreenCounterStep_61A7_WriteScreenCounter
     dw WriteTileBAtBGMap20FPlusGlyphListStartWithBBC
     dw RunScreenCounterStep_61A7_WriteScreenCounter
@@ -4401,30 +3780,17 @@ Func_01B_61A7:: ; address name
     dw RunScreenCounterStep_61A7_WriteScreenCounter
     dw RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart
 
-; entry 0 of the `rst $00` table in RunScreenCounterStep_61A7; also entries 2, 4 of the table in RunScreenCounterStep_61A7
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGlyphListStart, wScreenCounter
-; writes: wScreenCounter
 RunScreenCounterStep_61A7_WriteScreenCounter::
-Jump_01B_61B7:: ; address name
-    ld b, $C3
+    ld b, $c3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
 
-; entry 1 of the `rst $00` table in RunScreenCounterStep_61A7; also entry 3 of the table in RunScreenCounterStep_61A7
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGlyphListStart, wScreenCounter
-; writes: wScreenCounter
 WriteTileBAtBGMap20FPlusGlyphListStartWithBBC::
-Jump_01B_61BB:: ; address name
-    ld b, $BC
+    ld b, $bc
 
-; writes B at vBGMap0 + $20F + wGlyphListStart (WaitForVRAMAccess, interrupts off), then wScreenCounter += 1 (E-0118)
-; 1 call site from 1 routine (e.g. RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart)
-; reads: wGlyphListStart, wScreenCounter
-; writes: wScreenCounter
+; writes B at vBGMap0 + $20F + wGlyphListStart (WaitForVRAMAccess, interrupts off), then
+; wScreenCounter += 1 (E-0118)
 WriteTileBAtBGMap20FPlusGlyphListStart::
-Func_01B_61BD:: ; address name
-    ld hl, vBGMap0 + $20F
+    ld hl, vBGMap0 + $20f
     ld a, [wGlyphListStart]
     add_a_to_hl
     di
@@ -4437,48 +3803,36 @@ Func_01B_61BD:: ; address name
     ld [wScreenCounter], a
     ret
 
-; entry 5 of the `rst $00` table in RunScreenCounterStep_61A7
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGlyphListStart
-; writes: wScreenCounter, wGlyphListStart
 RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart::
-Jump_01B_61D7:: ; address name
-    ld b, $BB
+    ld b, $bb
     call WriteTileBAtBGMap20FPlusGlyphListStart
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     ld a, [wGlyphListStart]
     inc a
     ld [wGlyphListStart], a
-    cp a, $03
+    cp $03
     ret c
-    xor a, a
+    xor a
     ld [wGlyphListStart], a
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C
-; 18 call sites from 17 routines (e.g. LinkKeyTrade_Start_ShowPleaseChooseTheKey, LinkKeyTrade_Start_ShowPleaseWait, LinkKeyTrade_Start_ShowStartingKeyTrade, LinkKeyTrade_ShowPleaseWait, ...)
-; writes: wStringIndex, wStringCategory
 BeginString_Bank1B_Cat0::
-Func_01B_61F5:: ; address name
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-; only called from routines of LinkKeyTrade (E-0098)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_ShowPleaseChooseTheKey, LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey)
-; writes: wArg1, wArg2
 LinkKeyTrade_CopyRectTo20ByteRows::
-Func_01B_6203:: ; address name
     ld b, $00
     ld c, $05
-    ld hl, $027A
-    ld de, $00AE
-    xor a, a
+    ld hl, $027a
+    ld de, $00ae
+    xor a
     ld [wArg1], a
     ld a, $06
     ld [wArg2], a
@@ -4488,17 +3842,14 @@ Func_01B_6203:: ; address name
     ld bc, $0105
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ret
 
-; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0
-; 24 call sites from 18 routines (e.g. LinkKeyTrade_QueueSoundEffect_Case17, LinkKeyTrade_QueueSoundEffect_Case13, LinkKeyTrade_ShowIsItOKTo, LinkKeyTrade_CopyRectTo20ByteRows, ...)
-; reads: wIsCGB
-; writes: rSVBK
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
+; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0
 CopyRectTo20ByteRows::
-Func_01B_6232:: ; address name
     push hl
     push bc
 
@@ -4509,29 +3860,29 @@ Func_01B_6232:: ; address name
 .loop2:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop2
     pop bc
     pop hl
     ld a, l
-    add a, $14
+    add $14
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec c
     jp nz, .loop
     pop bc
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, l
-    add a, $68
+    add $68
     ld l, a
     ld a, h
-    adc a, $0E
+    adc $0e
     ld h, a
     ld a, $02
     ldh [rSVBK], a
@@ -4541,17 +3892,17 @@ Func_01B_6232:: ; address name
     push bc
 
 .loop4:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop4
     pop bc
     pop hl
     ld a, l
-    add a, $14
+    add $14
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec c
     jp nz, .loop3
@@ -4559,13 +3910,9 @@ Func_01B_6232:: ; address name
     ldh [rSVBK], a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 18 call sites from 17 routines (e.g. LinkKeyTrade_QueueSoundEffect_Case17, LinkKeyTrade_QueueSoundEffect_Case13, LinkKeyTrade_ShowIsItOKTo, LinkKeyTrade_CopyRectTo20ByteRows, ...)
-; reads: wIsCGB
-; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wScreenAttrBuffer
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL +
+; $1C1, and on CGB copies its attributes (E-0127)
 DrawScreenBufferRectToBGMap_1B::
-Func_01B_6277:: ; address name
     push de
     push bc
     push hl
@@ -4581,10 +3928,10 @@ Func_01B_6277:: ; address name
     pop hl
     push hl
     ld a, l
-    add a, $C1
+    add $c1
     ld l, a
     ld a, h
-    adc a, $01
+    adc $01
     ld h, a
     ld a, l
     ld [wTextCursorLo], a
@@ -4594,12 +3941,12 @@ Func_01B_6277:: ; address name
     pop bc
     pop de
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     push de
     call WaitForVRAMAccess
     push bc
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     pop bc
@@ -4618,19 +3965,17 @@ Func_01B_6277:: ; address name
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
-; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 20 call sites from 19 routines (e.g. LinkKeyTrade_QueueSoundEffect_Case17, UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap, LinkKeyTrade_QueueSoundEffect_Case13, LinkKeyTrade_ShowIsItOKTo, ...)
-; reads: hScrollY, hScrollX
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_Bank1B::
-Func_01B_62CB:: ; address name
     ld hl, vBGMap0
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -4645,48 +3990,44 @@ Func_01B_62CB:: ; address name
     add_a_to_hl
     ret
 
-; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
+; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
+; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_Bank1B::
-Func_01B_62EC:: ; address name
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, CopyBytesDEToHL_Bank1B
     ret
 
-; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
-; writes: rSVBK
+; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
+; 19 bytes appear in 5 banks)
 CopyLow3BitsToWRAMBank2_Bank1B::
-Func_01B_62F5:: ; address name
     ld a, $02
     ldh [rSVBK], a
 
 .loop:
     ld a, [de]
-    and a, $07
+    and $07
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 10 call sites from 9 routines (e.g. LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc, EraseCEntriesOfWordTable_Bank1B, LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc, LinkKeyTrade_BGMapAddressAtScroll_Bank1B, ...)
+; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
+; A, DE, HL (the same 16 bytes appear in 4 banks)
 StoreBAtWordTableEntry_Bank1B::
-Func_01B_6308:: ; address name
     push bc
     sla a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -4696,9 +4037,7 @@ Func_01B_6308:: ; address name
     ret
 
 ; stores tile $C3 at the addresses of entries 0 to C - 1 of the word table at HL (E-0122)
-; 3 call sites from 3 routines (e.g. LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B, EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B, EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B)
 EraseCEntriesOfWordTable_Bank1B::
-Func_01B_6318:: ; address name
     ld a, c
     ld b, a
     ld c, $00
@@ -4706,68 +4045,64 @@ Func_01B_6318:: ; address name
 .loop:
     ld a, c
     push bc
-    ld b, $C3
+    ld b, $c3
     push hl
     call StoreBAtWordTableEntry_Bank1B
     pop hl
     pop bc
     inc c
     ld a, c
-    cp a, b
+    cp b
     jr c, .loop
     ret
 
-; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (WaitForVRAMAccess, interrupts off) (E-0120)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_ClampKeyListPageCursor, DrawRecordListPageIndicators_1B)
+; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (WaitForVRAMAccess,
+; interrupts off) (E-0120)
 DrawC5BEC6AtScrollOffsetDE_Bank1B::
-Func_01B_632C:: ; address name
     push de
     call BGMapAddressAtScroll_Bank1B
     pop de
     add hl, de
     di
     call WaitForVRAMAccess
-    ld a, $C5
+    ld a, $c5
     ld [hl], a
     ei
     inc hl
     inc hl
     di
     call WaitForVRAMAccess
-    ld a, $BE
+    ld a, $be
     ld [hl], a
     ei
     inc hl
     inc hl
     di
     call WaitForVRAMAccess
-    ld a, $C6
+    ld a, $c6
     ld [hl], a
     ei
     ret
 
-; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. LinkKeyTrade_ClampKeyListPageCursor, DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection)
+; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
+; banks)
 StoreC5BEC6AtHLStride2_Bank1B::
-Func_01B_634F:: ; address name
-    ld a, $C5
+    ld a, $c5
     ld [hl], a
     inc hl
     inc hl
-    ld a, $BE
+    ld a, $be
     ld [hl], a
     inc hl
     inc hl
-    ld a, $C6
+    ld a, $c6
     ld [hl], a
     ret
 
-; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: rSTAT
-CopyTileBytesToVRAM_Bank1B:: ; heuristic: follows a terminator; C0
-Func_01B_635D:: ; address name
-    xor a, a
+; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
+; rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
+CopyTileBytesToVRAM_Bank1B::
+    xor a
 
 .loop:
     push af
@@ -4777,22 +4112,17 @@ Func_01B_635D:: ; address name
     ldh a, [rSTAT]
     bit 1, a
     jr nz, .loop2
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ei
     pop af
     inc a
-    cp a, $10
+    cp $10
     jr c, .loop
     ret
 
-; only called from LinkKeyTrade_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_CopyRectTo20ByteRows)
-; reads: wArg1, wArg2, wIsCGB
-; points at: wScreenTileBuffer, wScreenAttrBuffer
 LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B::
-Func_01B_6371:: ; address name
     push bc
     push hl
     push de
@@ -4816,7 +4146,7 @@ Func_01B_6371:: ; address name
     pop de
     pop hl
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .restore
     push hl
     push de
@@ -4845,7 +4175,7 @@ Func_01B_6371:: ; address name
     ld a, $14
     add_a_to_hl
     ld a, $14
-    add a, e
+    add e
     ld e, a
     jr nc, .next
     inc d
@@ -4853,16 +4183,17 @@ Func_01B_6371:: ; address name
 .next:
     inc b
     ld a, b
-    cp a, c
+    cp c
     jr c, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B
     ret
 
-; the same instructions as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks (wScreenCounter counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Its cursor positions come from this bank's own table and were not compared (E-0068)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
-; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
+; the same instructions as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers:
+; wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the
+; new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor
+; (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks
+; (wScreenCounter counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Its cursor
+; positions come from this bank's own table and were not compared (E-0068)
 UpdateTwoChoiceCursor_Bank1B::
-Func_01B_63CB:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, .call_update_two_choice_cursor_bank1_b_read
@@ -4874,14 +4205,14 @@ Func_01B_63CB:: ; address name
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
     call UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter
-    xor a, a
+    xor a
     ld [wMenuInputResult], a
     ret
 
 .call_update_two_choice_cursor_bank1_b_read:
     call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_Sub03
     ld a, [wTwoChoiceCursor]
-    and a, a
+    and a
     jr nz, .set_two_choice_cursor
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -4895,9 +4226,9 @@ Func_01B_63CB:: ; address name
 .call_update_two_choice_cursor_bank1_b_read2:
     call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_Sub03
     ld a, [wTwoChoiceCursor]
-    cp a, $01
+    cp $01
     jr c, .set_two_choice_cursor2
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     jr .clear_screen_counter
 
@@ -4906,12 +4237,12 @@ Func_01B_63CB:: ; address name
     ld [wTwoChoiceCursor], a
 
 .clear_screen_counter:
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     call UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
     ld a, $69
     call QueueSoundEffect
-    ld a, $FD
+    ld a, $fd
     ld [wMenuInputResult], a
     ret
 
@@ -4919,64 +4250,46 @@ Func_01B_63CB:: ; address name
     call UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap
     ld a, $69
     call QueueSoundEffect
-    ld a, $FF
+    ld a, $ff
     ld [wMenuInputResult], a
     ret
 
 .set_menu_input_result_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wMenuInputResult], a
     ret
 
-; only called from UpdateTwoChoiceCursor_Bank1B (E-0047)
-; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1B)
-; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
-; writes: wScreenCounter
 UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter::
-Func_01B_6439:: ; address name
     ld a, [wJoypadRepeatTimer]
-    cp a, $14
+    cp $14
     jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
-    cp a, $10
+    cp $10
     jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor
-    cp a, $18
+    cp $18
     jr c, UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_Sub03
-    xor a, a
+    xor a
     ld [wScreenCounter], a
 
-; only called from UpdateTwoChoiceCursor_Bank1B (E-0047)
-; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1B)
-; reads: wTwoChoiceCursor
 UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor::
-Func_01B_6453:: ; address name
-    ld b, $BB
+    ld b, $bb
     jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; only called from UpdateTwoChoiceCursor_Bank1B (E-0047)
-; 2 call sites from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1B)
-; reads: wTwoChoiceCursor
 UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_Sub03::
-Func_01B_6457:: ; address name
-    ld b, $C3
+    ld b, $c3
     jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; only called from UpdateTwoChoiceCursor_Bank1B (E-0047)
-; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1B)
-; reads: wTwoChoiceCursor
 UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap::
-Func_01B_645B:: ; address name
-    ld b, $BC
+    ld b, $bc
 
 UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
-Jump_01B_645D:: ; address name
     ld a, [wTwoChoiceCursor]
     sla a
     ld hl, UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -4992,112 +4305,87 @@ Jump_01B_645D:: ; address name
     ei
     ret
 
-; address loaded by UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap
-UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_647F:: ; address name
-    db $2D, $01, $6D, $01
+UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data::
+    db $2d, $01, $6d, $01
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 15 x 9 tiles, one row per line
 TileRect_1B_6483::
-Data_01B_6483:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
-LinkKeyTrade_ShowIsItOKTo_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_64FB:: ; address name
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
+LinkKeyTrade_ShowIsItOKTo_Data::
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 7 tiles, one row per line
 TileRect_1B_650A::
-Data_01B_650A:: ; address name
-    db $C3, $C3, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1A ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
-    db $C3, $C3, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A ; id 6
+    db $c3, $c3, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
+    db $c3, $c3, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 1 x 5 tiles, one row per line
 TileRect_1B_6565::
-Data_01B_6565:: ; address name
-    db $B7 ; id 0
-    db $B7 ; id 1
-    db $B7 ; id 2
-    db $B7 ; id 3
-    db $B5 ; id 4
-    db $B6, $C3, $C3, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1A, $B7, $B6
-    db $C3, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $B7, $B6, $C3
-    db $C3, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $B7, $B6, $C3, $C3
-    db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $B7
+    db $b7 ; id 0
+    db $b7 ; id 1
+    db $b7 ; id 2
+    db $b7 ; id 3
+    db $b5 ; id 4
+    db $b6, $c3, $c3, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $b7, $b6
+    db $c3, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $b7, $b6, $c3
+    db $c3, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $b7, $b6, $c3, $c3
+    db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $b7
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_1B_65A6::
-Data_01B_65A6:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $50, $51, $52, $53, $54, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $55, $56, $57, $58, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $50, $51, $52, $53, $54, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $55, $56, $57, $58, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 15 x 1 tiles, one row per line
 TileRect_1B_65CE::
-Data_01B_65CE:: ; address name
-    db $B6, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $C3, $B7 ; id 0
+    db $b6, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $c3, $b7 ; id 0
 
-; address loaded by LinkKeyTrade_ClampKeyListPageCursor, LinkKeyTrade_BGMapAddressAtScroll_Bank1B, LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc, LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B
-LinkKeyTrade_ClampKeyListPageCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_65DD:: ; address name
-    db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
+LinkKeyTrade_ClampKeyListPageCursor_Data::
+    db $ca, $c3, $f2, $c3, $1a, $c4, $42, $c4
 
-; address loaded by LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc
-LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_65E5:: ; address name
-    db $25, $C4, $4D, $C4
+LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc_Data::
+    db $25, $c4, $4d, $c4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_1B_65E9::
-Data_01B_65E9:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $A5, $71, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $a5, $71, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; address loaded by LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE, RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart
-LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_6607:: ; address name
-    db $BC, $BC, $BC
+LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data::
+    db $bc, $bc, $bc
 
-; address loaded by LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21
-LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_660A:: ; address name
-    db $A0, $A1, $A2
+LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_Data::
+    db $a0, $a1, $a2
 
-; only called from RunLinkSession4ScreenState_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_Case06_DecompressToVRAMAndStep)
-; reads: wTextWindowState
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
-; points at: wScreenState
 RunLinkSession4ScreenState_Case06_DecompressToVRAM::
-Func_01B_660D:: ; address name
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld b, $46
@@ -5126,17 +4414,15 @@ Func_01B_660D:: ; address name
 .loop2:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     jr nz, .loop2
     ret
 
-; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ShowSwitchWithWhich)
-; reads: wScreenState
+; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer
+; to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 EggServiceMenu_Bank1B::
-Func_01B_665E:: ; address name
     ld a, [wScreenState]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_ShowStringA10_Bank1B
     dw EggServiceMenu_Bank1B_WaitTextFlags
     dw EggServiceMenu_Bank1B_WaitForPartner
@@ -5154,15 +4440,10 @@ Func_01B_665E:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords
     dw EggServiceMenu_Bank1B_ListAvailableRecords2
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenState
-; writes: hSpriteHideTile, wStringCategory, wScreenState
 EggServiceMenu_Bank1B_ShowStringA10_Bank1B::
-Jump_01B_6682:: ; address name
-    ld a, $C0
+    ld a, $c0
     ldh [hSpriteHideTile], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     call ShowStringA10_Bank1B
     call ClearTileRowsFromPickCount
@@ -5171,14 +4452,9 @@ Jump_01B_6682:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenState
-; writes: wScreenState
 EggServiceMenu_Bank1B_WaitTextFlags::
-Jump_01B_6698:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenState]
     inc a
@@ -5187,58 +4463,40 @@ Jump_01B_6698:: ; address name
     ret
 
 ; by its step: 'Please wait.' and the partner's link message
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 EggServiceMenu_Bank1B_WaitForPartner::
-Jump_01B_66A6:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage
     dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
-Jump_01B_66B4:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
-Jump_01B_66C6:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
-Jump_01B_66D8:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $01
     ld [wLinkSendByte], a
@@ -5247,41 +4505,30 @@ Jump_01B_66D8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03::
-Jump_01B_66EA:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wGameMode, wModeState, wModeChangeRequest
-; points at: wScreenState
 EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04::
-Jump_01B_66FC:: ; address name
     ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld a, $05
     ld [wGameMode], a
@@ -5291,24 +4538,16 @@ Jump_01B_66FC:: ; address name
     ld [wModeChangeRequest], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenState
-; writes: wScreenState
 EggServiceMenu_Bank1B_AdvanceScreenState::
-Jump_01B_671F:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
 ; by wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 EggServiceMenu_Bank1B_PickRecords::
-Jump_01B_6727:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_PickRecords_BreedMenu
     dw EggServiceMenu_Bank1B_PickRecords_BreedMenu_Case01
     dw DrawRecordListPageIndicators_1B
@@ -5324,42 +4563,31 @@ Jump_01B_6727:: ; address name
     dw EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount
     dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords; also entry 3 of the table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
 EggServiceMenu_Bank1B_PickRecords_BreedMenu_Case01::
-Jump_01B_6747:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     farcall BreedMenu
     ret
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
 EggServiceMenu_Bank1B_PickRecords_BreedMenu::
-Jump_01B_6753:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     farcall BreedMenu
     ret
 
-; runs Func_01B_7399 and Func_01E_7163; with two or more pages draws the bracket and page-of-pages indicators; wScreenStep += 1 (E-0124)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02)
-; reads: wListPages, wScreenStep
-; writes: wArg1, wArg2, wScreenStep
+; runs ListAvailableRecordsForSelection and ClampRecordListPageCursor5; with two or more pages draws
+; the bracket and page-of-pages indicators; wScreenStep += 1 (E-0124)
 DrawRecordListPageIndicators_1B::
-Func_01B_675F:: ; address name
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
-    cp a, $02
+    cp $02
     jr c, .check_screen_step
     ld de, $0142
     call DrawC5BEC6AtScrollOffsetDE_Bank1B
-    ld hl, wWindowTileBuffer + $12E
+    ld hl, wWindowTileBuffer + $12e
     call StoreC5BEC6AtHLStride2_Bank1B
     ld de, $0143
     ld a, d
@@ -5367,7 +4595,7 @@ Func_01B_675F:: ; address name
     ld a, e
     ld [wArg2], a
     farcall DrawPageOfPagesAtScrollOffset
-    ld hl, wWindowTileBuffer + $12F
+    ld hl, wWindowTileBuffer + $12f
     ld a, h
     ld [wArg1], a
     ld a, l
@@ -5380,12 +4608,11 @@ Func_01B_675F:: ; address name
     ld [wScreenStep], a
     ret
 
-; for the record at WD789 cell 5: draws its graphics (Func_01B_7460 with wArg1 = $C7), copies two rectangles to wWindowTileBuffer + $134 and wWindowTileBuffer + $140, draws its details at wWindowTileBuffer + $143 (Func_01B_7487) and wScreenStep += 1 (E-0121)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel, CallDrawListEntriesCell5RecordPanel)
-; reads: wArg5, wArg6, wScreenStep
-; writes: wArg1, wArg2, wArg3, wScreenStep
+; for the record at WD789 cell 5: draws its graphics (LoadFamilyIconTileForRecordB_Bank1B with wArg1
+; = $C7), copies two rectangles to wWindowTileBuffer + $134 and wWindowTileBuffer + $140, draws its
+; details at wWindowTileBuffer + $143 (DrawListEntriesCell5RecordPanel_HLToDecimalDigits) and
+; wScreenStep += 1 (E-0121)
 DrawListEntriesCell5RecordPanel::
-Func_01B_67A5:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -5394,7 +4621,7 @@ Func_01B_67A5:: ; address name
     ld a, [hl]
     ld b, a
     push af
-    ld a, $C7
+    ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank1B
     ld de, TileRect_1B_7738
@@ -5403,7 +4630,7 @@ Func_01B_67A5:: ; address name
     call CopyRectTo20ByteRows
     ld de, TileRect_1B_773D
     ld hl, wWindowTileBuffer + $140
-    ld bc, $0D02
+    ld bc, $0d02
     call CopyRectTo20ByteRows
     pop af
     ld [wArg1], a
@@ -5418,12 +4645,9 @@ Func_01B_67A5:: ; address name
     ld [wScreenStep], a
     ret
 
-; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wScreenStep += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
+; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and
+; wScreenStep += 1 (E-0122)
 ClearAndDrawListEntriesCell5NameAtTiles1780::
-Func_01B_67F0:: ; address name
     ld hl, vTiles1 + $780
     ld a, l
     ld [wTextWindowTileLo], a
@@ -5441,25 +4665,22 @@ Func_01B_67F0:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies box Data_01B_7757 (10 x 7) or Data_01B_779D (10 x 9, when bit 7 of wLinkRules + $9 is set) to wWindowTileBuffer + $6E, then wScreenStep += 1 (E-0124)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7)
-; reads: wLinkRules, wScreenStep
-; writes: wScreenStep
+; copies box TileRect_1B_7757 (10 x 7) or TileRect_1B_779D (10 x 9, when bit 7 of wLinkRules + $9 is
+; set) to wWindowTileBuffer + $6E, then wScreenStep += 1 (E-0124)
 DrawRuleBoxByWD04CBit7::
-Func_01B_6814:: ; address name
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .skip
     ld de, TileRect_1B_7757
-    ld hl, wWindowTileBuffer + $6E
-    ld bc, $0A07
+    ld hl, wWindowTileBuffer + $6e
+    ld bc, $0a07
     call CopyRectTo20ByteRows
     jr .check_screen_step
 
 .skip:
     ld de, TileRect_1B_779D
-    ld hl, wWindowTileBuffer + $6E
-    ld bc, $0A09
+    ld hl, wWindowTileBuffer + $6e
+    ld bc, $0a09
     call CopyRectTo20ByteRows
 
 .check_screen_step:
@@ -5468,25 +4689,20 @@ Func_01B_6814:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wListCursor, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
-Jump_01B_683D:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wListCursor]
-    ld b, $BB
+    ld b, $bb
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
-    ld b, $C3
+    ld b, $c3
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call SetDefaultStringWindow_Bank1B
@@ -5495,62 +4711,57 @@ Jump_01B_683D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wListCursor, wScreenStep, wPickCount, wSelectedRecord
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wMenuInputResult, wPickCount, wListCursor, wListPageIndex
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
-Jump_01B_686F:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .clear_menu_input_result
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_menu_input_result:
-    xor a, a
+    xor a
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FB
+    cp $fb
     jr z, .read_screen_step
-    cp a, $FC
+    cp $fc
     jr z, .read_screen_step
-    cp a, $FD
+    cp $fd
     jr z, .read_screen_step2
-    cp a, $FE
+    cp $fe
     jr z, .check_pick_count
-    cp a, $FF
+    cp $ff
     jr z, .call_egg_service_menu_bank1_b_pick_records
     ret
 
 .read_screen_step:
     ld a, [wScreenStep]
-    sub a, $07
+    sub $07
     ld [wScreenStep], a
     ret
 
 .read_screen_step2:
     ld a, [wScreenStep]
-    sub a, $04
+    sub $04
     ld [wScreenStep], a
     ret
 
 .check_pick_count:
     ld a, [wPickCount]
-    and a, a
+    and a
     jr z, .set_screen_state_to_02
-    cp a, $03
+    cp $03
     jr c, .set_pick_count
     ld a, [wSelectedRecord]
     ld [wPickCount], a
@@ -5563,12 +4774,12 @@ Jump_01B_686F:: ; address name
 .set_pick_count:
     dec a
     ld [wPickCount], a
-    xor a, a
+    xor a
     call ShowStringA10_Bank1B
 
 .call_clear_tile_rows_from_pick_count:
     call ClearTileRowsFromPickCount
-    xor a, a
+    xor a
     ld [wListCursor], a
     ld [wListPageIndex], a
     ld a, $01
@@ -5578,25 +4789,25 @@ Jump_01B_686F:: ; address name
 .set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'You refused to battle.'
+    ld a, $0a ; 'You refused to battle.'
     call ShowStringA10_Bank1B
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_egg_service_menu_bank1_b_pick_records:
     call EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5
     call EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc
-    cp a, $FF
+    cp $ff
     jr z, .read_list_cursor
     ret
 
 .read_list_cursor:
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call CopyListEntriesCell5NameToTextBuf0
@@ -5604,7 +4815,7 @@ Jump_01B_686F:: ; address name
     inc a
     ld [wScreenStep], a
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr z, .call_show_string_a10_bank1_b
     ld a, $02 ; 'Pick 0 for the team?'
     call ShowStringA10_Bank1B
@@ -5615,39 +4826,34 @@ Jump_01B_686F:: ; address name
     call ShowStringA10_Bank1B
     ret
 
-; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
 EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
-Jump_01B_6940:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0C01
+    ld hl, $0c01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1E
+    ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_7847
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld hl, vTiles1
     ld a, l
@@ -5659,43 +4865,38 @@ Jump_01B_6940:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wArg5, wChoiceCursor, wScreenState, wScreenStep, wPickCount, wArg6
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wArg5, wScreenByteB2, wScreenByteB3, wLinkSceneByte4C, ...
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A::
-Jump_01B_69A9:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .clear_arg5
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_arg5:
-    xor a, a
+    xor a
     ld [wArg5], a
     farcall HandleTwoChoiceCursorInput_0D
     ld a, [wArg5]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .check_screen_step
-    cp a, $FF
+    cp $ff
     jr z, .check_choice_cursor
     ret
 
@@ -5707,26 +4908,26 @@ Jump_01B_69A9:: ; address name
 
 .check_choice_cursor:
     ld a, [wChoiceCursor]
-    and a, a
+    and a
     jr nz, .call_egg_service_menu_bank1_b_pick_records
     ld a, [wScreenState]
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
     ld [wScreenByteB3], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0C
+    ld a, $0c
     ld [wScreenState], a
     ret
 
 .call_egg_service_menu_bank1_b_pick_records:
     call EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr c, .check_screen_step2
     call EggServiceMenu_Bank1B_PickRecords_Case0A_SetArg5ToListEntriesCell5
-    cp a, $FF
+    cp $ff
     jr nz, .call_set_arg5_to_list_entries_cell5
     ret
 
@@ -5741,13 +4942,13 @@ Jump_01B_69A9:: ; address name
     ld a, $04
     ld [wPickCount], a
     call EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ret
 
@@ -5758,59 +4959,43 @@ Jump_01B_69A9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
-Jump_01B_6A4F:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld c, $05
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call EraseCEntriesOfWordTable_Bank1B
     jr EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B_CallEggServiceMenu_Bank1B_PickRecords_CopyRe
 
-; only called from EggServiceMenu_Bank1B_PickRecords_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A)
-; reads: wListCursor, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B::
-Func_01B_6A5E:: ; address name
     ld c, $05
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call EraseCEntriesOfWordTable_Bank1B
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
 
 EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B_CallEggServiceMenu_Bank1B_PickRecords_CopyRe::
-Jump_01B_6A71:: ; address name
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
-    sub a, $03
+    sub $03
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPickCount, wScreenStep
-; writes: wPickCount, wScreenStep
 EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount::
-Jump_01B_6A89:: ; address name
     call EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc
-    cp a, $FF
+    cp $ff
     ret nz
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wPickCount]
     inc a
@@ -5822,29 +5007,24 @@ Jump_01B_6A89:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenSubStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D::
-Jump_01B_6AB3:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .read_screen_sub_step
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowChooseOneMoreMember
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_QueueSoundEffect
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo
@@ -5854,18 +5034,13 @@ Jump_01B_6AB3:: ; address name
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_QueueSoundEffect
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo_Case07
 
-; entry 0 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPickCount, wListCount, wScreenSubStep
-; writes: wScreenSubStep
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowChooseOneMoreMember::
-Jump_01B_6AE5:: ; address name
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr z, .read_screen_sub_step
     call ListAvailableRecordsForSelection
     ld a, [wListCount]
-    and a, a
+    and a
     jr z, .read_screen_sub_step
     ld a, $03 ; 'Choose one more member for battle?'
     call ShowStringA10_Bank1B
@@ -5876,40 +5051,35 @@ Jump_01B_6AE5:: ; address name
 
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
-    add a, $04
+    add $04
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_01B_6A5E; also entry 6 of the table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenSubStep, wPickCount
-; writes: wTwoChoiceCursor, wScreenSubStep
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_QueueSoundEffect::
-Jump_01B_6B0B:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_78CB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenSubStep]
-    cp a, $01
+    cp $01
     jr z, .clear_two_choice_cursor
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr nz, .clear_two_choice_cursor
     ld a, $01
     jr .set_two_choice_cursor
 
 .clear_two_choice_cursor:
-    xor a, a
+    xor a
 
 .set_two_choice_cursor:
     ld [wTwoChoiceCursor], a
@@ -5918,80 +5088,65 @@ Jump_01B_6B0B:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenSubStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo::
-Jump_01B_6B4B:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_update_two_choice_cursor_bank1_d:
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .loop
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
 .loop:
     call DrawChoiceBoxByWD04CBit7
     ld a, [wScreenSubStep]
-    add a, $02
+    add $02
     ld [wScreenSubStep], a
     ret
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    and a, a
+    and a
     jr nz, .loop
     call DrawChoiceBoxByWD04CBit7
-    xor a, a
+    xor a
     call ShowStringA10_Bank1B
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wScreenStep, wScreenSubStep
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_WaitTextFlags::
-Jump_01B_6B9E:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkRules, wListCount, wScreenSubStep, wPickCount
-; writes: wScreenSubStep, wSelectedRecord, wPickCount, wTwoChoiceCursor
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait::
-Jump_01B_6BAB:: ; address name
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .call_list_records_state1_with_byte6_e_clear
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     call FinishPickedRecordsEntryAndAdvance
     ret
@@ -5999,7 +5154,7 @@ Jump_01B_6BAB:: ; address name
 .call_list_records_state1_with_byte6_e_clear:
     farcall ListRecordsState1WithByte6EClear
     ld a, [wListCount]
-    and a, a
+    and a
     jr nz, .call_show_string_a10_bank1_b
     call PadPickedRecordsWithFFToThree
     ld a, $05 ; 'You have no monsters on the'
@@ -6018,53 +5173,44 @@ Jump_01B_6BAB:: ; address name
     ld a, $03
     ld [wPickCount], a
     ld a, [wScreenSubStep]
-    add a, $02
+    add $02
     ld [wScreenSubStep], a
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ret
 
-; entry 5 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait_Case05::
-Jump_01B_6BF7:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     call FinishPickedRecordsEntryAndAdvance
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ret
 
-; entry 7 of the `rst $00` table in Func_01B_6A5E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenSubStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wPickCount, wPackWork
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo_Case07::
-Jump_01B_6C05:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_update_two_choice_cursor_bank1_d:
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .loop
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
@@ -6072,16 +5218,16 @@ Jump_01B_6C05:: ; address name
     call DrawChoiceBoxByWD04CBit7
     ld a, $04
     ld [wPickCount], a
-    ld a, $FF
+    ld a, $ff
     ld [wPackWork], a
     ld a, [wScreenSubStep]
-    sub a, $02
+    sub $02
     ld [wScreenSubStep], a
     ret
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    and a, a
+    and a
     jr nz, .loop
     call DrawChoiceBoxByWD04CBit7
     ld a, $06 ; 'Select a monster as the prize.'
@@ -6090,13 +5236,11 @@ Jump_01B_6C05:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; by wScreenStep: the picked records, 'Begin battle?', 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
+; by wScreenStep: the picked records, 'Begin battle?', 'Please wait.', 'Starting battle' or 'Your
+; pal refused to battle.' over the link
 EggServiceMenu_Bank1B_StartLinkBattle::
-Jump_01B_6C61:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons
     dw EggServiceMenu_Bank1B_StartLinkBattle_FillBytes
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
@@ -6120,12 +5264,7 @@ Jump_01B_6C61:: ; address name
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
     dw EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc
 
-; entry 17 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11::
-Jump_01B_6C91:: ; address name
     ld a, $09 ; 'Starting battle'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
@@ -6133,41 +5272,26 @@ Jump_01B_6C91:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
-Jump_01B_6C9E:: ; address name
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entry 18 of the table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A::
-Jump_01B_6CAB:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons::
-Jump_01B_6CB8:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     call DrawPickedRecordsRecordNamesAndIcons
     ld a, [wScreenStep]
@@ -6175,43 +5299,37 @@ Jump_01B_6CB8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPackWork, wScreenStep
-; writes: rRAMG2, rRAMB, wScreenStep
-; points at: wRecordBufA, sRecords
 EggServiceMenu_Bank1B_StartLinkBattle_FillBytes::
-Jump_01B_6CC8:: ; address name
     ld a, [wPackWork]
-    cp a, $FF
+    cp $ff
     jr nz, .call_multiply8
     ld hl, wRecordBufA
-    ld bc, $00A5
-    xor a, a
+    ld bc, $00a5
+    xor a
     call FillBytes
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
-    ld hl, sRecords + $F
+    ld hl, sRecords + $f
     ld de, wRecordBufA + MON_MASTER_NAME
-    ld b, $0A
+    ld b, $0a
     jr .loop
 
 .call_multiply8:
-    ld c, $A5
+    ld c, $a5
     call Multiply8
     ld de, sRecords
     add hl, de
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld de, wRecordBufA
-    ld b, $A5
+    ld b, $a5
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -6221,12 +5339,7 @@ Jump_01B_6CC8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entries 11, 14, 19 of the table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wLinkSendByte
 EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep::
-Jump_01B_6D11:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -6234,43 +5347,32 @@ Jump_01B_6D11:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entry 20 of the table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
-Jump_01B_6D1E:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     jr z, .clear_link_send_byte
-    cp a, $FE
+    cp $fe
     ret nz
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_link_send_byte:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wRecordBufA, wRecordBufB
 EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
-Jump_01B_6D4B:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -6279,7 +5381,7 @@ Jump_01B_6D4B:: ; address name
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, $00A5
+    ld hl, $00a5
     ld a, l
     ld [wLinkBufferCountLo], a
     ld a, h
@@ -6289,20 +5391,15 @@ Jump_01B_6D4B:: ; address name
     ld [wLinkBufferPtrLo], a
     ld a, h
     ld [wLinkBufferPtrHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
-; entry 16 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkReady, wLinkSendByte, wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_Case10::
-Jump_01B_6D7E:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
     ld a, $00
     ld [wLinkReady], a
@@ -6313,14 +5410,9 @@ Jump_01B_6D7E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkReady, wLinkSendByte, wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
-Jump_01B_6D96:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
     ld a, $00
     ld [wLinkReady], a
@@ -6333,102 +5425,92 @@ Jump_01B_6D96:: ; address name
     call ShowStringA10_Bank1B
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
-Jump_01B_6DB3:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0E01
+    ld hl, $0e01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1F
+    ld a, $1f
     ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B_481A
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_1B_78E9
-    ld hl, wWindowTileBuffer + $E7
+    ld hl, wWindowTileBuffer + $e7
     ld bc, $0907
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     call SetDefaultStringWindow_Bank1B
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wLinkRules, wScreenStep, wRecordBufB, wScreenState, wListCursor, ...
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, ...
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07::
-Jump_01B_6E09:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_handle_three_choice_cursor_input_f1:
     farcall HandleThreeChoiceCursorInput_F1
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .set_screen_state_to_02
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
 .set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'You refused to battle.'
+    ld a, $0a ; 'You refused to battle.'
     call ShowStringA10_Bank1B
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    and a, a
+    and a
     jr z, .read_screen_step
-    cp a, $01
+    cp $01
     jr z, .check_link_rules
     jr .set_screen_state_to_02
 
 .read_screen_step:
     ld a, [wScreenStep]
-    add a, $02
+    add $02
     ld [wScreenStep], a
     ret
 
@@ -6445,7 +5527,7 @@ Jump_01B_6E09:: ; address name
 
 .check_record_buf_b:
     ld a, [wRecordBufB]
-    and a, a
+    and a
     jr nz, .read_screen_state
     ld a, $15 ; 'There is no prize.'
     call ShowStringA10_Bank1B
@@ -6459,74 +5541,58 @@ Jump_01B_6E09:: ; address name
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
     ld [wScreenByteB3], a
-    ld a, $0D
+    ld a, $0d
     ld [wScreenState], a
     ld a, [wListCursor]
     ld [wItemGridX], a
     ld a, [wListPageIndex]
     ld [wItemGridY], a
-    xor a, a
+    xor a
     ld [wListCursor], a
     ld [wListPageIndex], a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
-Jump_01B_6EB9:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case0C::
-Jump_01B_6EC6:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     jr z, .clear_link_send_byte
-    cp a, $FE
+    cp $fe
     ret nz
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0B ; 'Your pal refused to battle.'
+    ld a, $0b ; 'Your pal refused to battle.'
     call ShowStringA10_Bank1B
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_link_send_byte:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkRole, wScreenStep
-; writes: wLinkSceneByte4B, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wScreenStep
-; points at: wBattlerRecords, wBattlerRecordSlot4
 EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc::
-Jump_01B_6EF3:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .set_link_scene_byte4_b_to_01
-    xor a, a
+    xor a
     ld [wLinkSceneByte4B], a
     call EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB
     ld hl, wBattlerRecords
@@ -6563,37 +5629,28 @@ Jump_01B_6EF3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wScreenStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkSendByte, wLinkReady
 EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
-Jump_01B_6F45:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld hl, $00EA
+    ld hl, $00ea
     ld a, l
     ld [wLinkBufferCountLo], a
     ld a, h
     ld [wLinkBufferCountHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
-; entry 21 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
-; no direct call (reached through a table, a jump or a vector)
-; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wModeChangeRequest, wLinkSession, wLinkExchangeState, wLinkSendByte, ...
 EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
-Jump_01B_6F68:: ; address name
     ld a, $04
     ld [wGameMode], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld [wGameMode2State], a
     ld [wGameMode2Arg], a
@@ -6603,39 +5660,29 @@ Jump_01B_6F68:: ; address name
     ld [wLinkSession], a
     ld a, $00
     ld [wLinkExchangeState], a
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wLinkMessage], a
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B; also entries 7, 8, 9, 10, 11, 12 of the table in EggServiceMenu_Bank1B
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, wScreenState
-; writes: wScreenStep, wScreenSubStep, wScreenState
 EggServiceMenu_Bank1B_SwapMonstersMenu::
-Jump_01B_6F8F:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
-    cp a, $0A
+    cp $0a
     ret nz
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ld a, [wScreenState]
-    add a, $03
+    add $03
     ld [wScreenState], a
     ret
 
-; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenState, wItemGridX, wItemGridY
-; writes: wListCursor, wListPageIndex
 EggServiceMenu_Bank1B_RunScreenStateWhenNotFading_F1::
-Jump_01B_6FAB:: ; address name
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
-    cp a, $0E
+    cp $0e
     ret nz
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -6643,13 +5690,11 @@ Jump_01B_6FAB:: ; address name
     ld [wListPageIndex], a
     ret
 
-; by wScreenStep: ListAvailableRecordsForSelection, the list page, the record panel and the 'Battle / Prize / Exit' window
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
+; by wScreenStep: ListAvailableRecordsForSelection, the list page, the record panel and the 'Battle
+; / Prize / Exit' window
 EggServiceMenu_Bank1B_ListAvailableRecords::
-Jump_01B_6FC4:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
@@ -6659,29 +5704,24 @@ Jump_01B_6FC4:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
 EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
-Jump_01B_6FD8:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0E01
+    ld hl, $0e01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1F
+    ld a, $1f
     ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B_481A
     ld de, TileRect_1B_78E9
-    ld hl, wWindowTileBuffer + $E7
+    ld hl, wWindowTileBuffer + $e7
     ld bc, $0907
     call CopyRectTo20ByteRows
     call SetDefaultStringWindow_Bank1B
@@ -6693,12 +5733,9 @@ Jump_01B_6FD8:: ; address name
     ret
 
 ; the EggServiceMenu_Bank1B_ListAvailableRecords steps again
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 EggServiceMenu_Bank1B_ListAvailableRecords2::
-Jump_01B_7019:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
@@ -6708,19 +5745,14 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 0 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListCursor, wScreenStep
-; writes: wScreenStep
 EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
-Jump_01B_702D:: ; address name
     call ClearRecordPanelTiles
     ld de, TileRect_1B_7928
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080B
+    ld bc, $080b
     call CopyRectTo20ByteRows
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
@@ -6728,20 +5760,15 @@ Jump_01B_702D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 1 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListPages, wScreenStep
-; writes: wArg1, wArg2, wScreenStep
 EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection::
-Jump_01B_704F:: ; address name
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
-    cp a, $02
+    cp $02
     jr c, .check_screen_step
-    ld hl, wWindowTileBuffer + $12E
+    ld hl, wWindowTileBuffer + $12e
     call StoreC5BEC6AtHLStride2_Bank1B
-    ld hl, wWindowTileBuffer + $12F
+    ld hl, wWindowTileBuffer + $12f
     ld a, h
     ld [wArg1], a
     ld a, l
@@ -6754,57 +5781,39 @@ Jump_01B_704F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 2 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
-; writes: wArg1
 EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
-Jump_01B_707E:: ; address name
     farcall DrawRecordListPageNames
-    xor a, a
+    xor a
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 3 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
-Jump_01B_708F:: ; address name
     call DrawListEntriesCell5RecordPanel
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 4 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780::
-Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 5 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7::
-Jump_01B_7097:: ; address name
     call DrawRuleBoxByWD04CBit7
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPickCount, wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
 EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
-Jump_01B_709B:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0C01
+    ld hl, $0c01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1E
+    ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
     call CopyListEntriesCell5NameToTextBuf0
@@ -6818,10 +5827,10 @@ Jump_01B_709B:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr c, .set_string_index_to_12
     ld a, $17
     jr .set_string_index
@@ -6836,32 +5845,27 @@ Jump_01B_709B:: ; address name
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows
-    xor a, a
+    xor a
     ld [wChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 7 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenByteB2, wScreenByteB3
-; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
-Jump_01B_710B:: ; address name
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     call BGMapAddressAtScroll_Bank1B
-    ld de, $01A0
+    ld de, $01a0
     add hl, de
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1B
     ld a, $70
     ldh [hSpriteHideTile], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenByteB2]
     ld [wScreenState], a
@@ -6879,13 +5883,7 @@ Jump_01B_710B:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from EggServiceMenu_Bank1B_StartLinkBattle_Case0D (E-0047)
-; 2 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc)
-; reads: wLinkRole
-; writes: rRAMG2, rRAMB
-; points at: wBattlerRecords, wBattlerRecordSlot4, wPickedRecords
 EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB::
-Func_01B_7152:: ; address name
     ld hl, wBattlerRecords
     ld a, [wLinkRole]
     bit 1, a
@@ -6900,7 +5898,7 @@ Func_01B_7152:: ; address name
     push hl
     ld a, c
     ld de, wPickedRecords
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -6908,11 +5906,11 @@ Func_01B_7152:: ; address name
 .skip2:
     push de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jp z, .restore
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [de]
     ld c, MON_NAME
@@ -6923,7 +5921,7 @@ Func_01B_7152:: ; address name
     pop hl
     push hl
     push de
-    ld e, $0E
+    ld e, $0e
     call CopyEBytesBCToHL
     pop de
     push de
@@ -6946,10 +5944,10 @@ Func_01B_7152:: ; address name
     ld b, h
     pop hl
     ld a, [bc]
-    ld [hl+], a
+    ld [hli], a
     inc bc
     ld a, [bc]
-    ld [hl+], a
+    ld [hli], a
     inc bc
     inc bc
     ld e, $15
@@ -6963,7 +5961,7 @@ Func_01B_7152:: ; address name
     ld c, l
     ld b, h
     pop hl
-    ld e, $1F
+    ld e, $1f
     call CopyEBytesBCToHL
     pop de
     push de
@@ -6975,8 +5973,8 @@ Func_01B_7152:: ; address name
     ld b, h
     pop hl
     ld a, [bc]
-    ld [hl+], a
-    ld a, $FF
+    ld [hli], a
+    ld a, $ff
     ld [hl], a
     jr .restore2
 
@@ -6985,8 +5983,8 @@ Func_01B_7152:: ; address name
     pop hl
     push hl
     push de
-    ld bc, $004E
-    xor a, a
+    ld bc, $004e
+    xor a
     call FillBytes
 
 .restore2:
@@ -6994,39 +5992,34 @@ Func_01B_7152:: ; address name
     pop hl
     pop bc
     inc c
-    ld a, $4E
+    ld a, $4e
     add_a_to_hl
     ld a, c
-    cp a, $03
+    cp $03
     jp c, .loop
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
 
 ; copies E bytes from BC to HL; BC and HL advance, E = 0 (E-0115)
-; 4 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB)
 CopyEBytesBCToHL::
-Func_01B_71FE:: ; address name
     ld a, [bc]
-    ld [hl+], a
+    ld [hli], a
     inc bc
     dec e
     jr nz, CopyEBytesBCToHL
     ret
 
-; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wPickCount = 0 and from the saved wPickCount (E-0127)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
-; reads: wPickCount
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wPickCount
+; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wPickCount =
+; 0 and from the saved wPickCount (E-0127)
 ClearRecordPanelTiles::
-Func_01B_7205:: ; address name
     ld hl, vTiles1 + $500
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0F01
+    ld hl, $0f01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
@@ -7060,7 +6053,7 @@ Func_01B_7205:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, vTiles1 + $4E0
+    ld hl, vTiles1 + $4e0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -7073,7 +6066,7 @@ Func_01B_7205:: ; address name
     call FillTilesFromRequest
     ld a, [wPickCount]
     push af
-    xor a, a
+    xor a
     ld [wPickCount], a
     call ClearTileRowsFromPickCount
     pop af
@@ -7081,12 +6074,7 @@ Func_01B_7205:: ; address name
     call DrawPickedRecordsRecordNamesAndIcons
     ret
 
-; only called from EggServiceMenu_Bank1B_PickRecords_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A)
-; reads: wArg5, wArg6, wPartyCount
-; points at: wPartyList
 EggServiceMenu_Bank1B_PickRecords_Case0A_SetArg5ToListEntriesCell5::
-Func_01B_728A:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -7099,74 +6087,60 @@ Func_01B_728A:: ; address name
     ld hl, wPartyList
 
 .loop:
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr z, .return_FF
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ret
 
 .return_FF:
-    ld a, $FF
+    ld a, $ff
     ret
 
-; fills wPickedRecords[wPickCount] to wPickedRecords[2] with $FF (does nothing when wPickCount = 3) (E-0122)
-; 3 call sites from 2 routines (e.g. FinishPickedRecordsEntryAndAdvance, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait)
-; reads: wPickCount
-; points at: wPickedRecords
+; fills wPickedRecords[wPickCount] to wPickedRecords[2] with $FF (does nothing when wPickCount = 3)
+; (E-0122)
 PadPickedRecordsWithFFToThree::
-Func_01B_72AD:: ; address name
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     ret z
     ld hl, wPickedRecords
     add_a_to_hl
     ld a, [wPickCount]
     ld b, a
     ld a, $03
-    sub a, b
+    sub b
     ld b, a
 
 .loop:
-    ld a, $FF
-    ld [hl+], a
+    ld a, $ff
+    ld [hli], a
     dec b
     jr nz, .loop
     ret
 
-; only called from routines of EggServiceMenu_Bank1B_PickRecords (E-0098)
-; 3 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc, EggServiceMenu_Bank1B_PickRecords_Shared02_WriteRAMG2AndRAMB)
-; writes: rRAMG2, rRAMB
-; points at: wPickedRecords
 EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte::
-Func_01B_72CA:: ; address name
     ld hl, wPickedRecords
     add_a_to_hl
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
     call LoadSRAMRecordByte
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
 
-; only called from EggServiceMenu_Bank1B_PickRecords_Shared02 (E-0047)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc)
-; reads: wPickCount, hTemp0
-; writes: rRAMG2, rRAMB
-; points at: wArg1, wPickedRecords
 EggServiceMenu_Bank1B_PickRecords_Shared02_WriteRAMG2AndRAMB::
-Func_01B_72E7:: ; address name
     ld a, [wPickCount]
-    and a, a
+    and a
     jr nz, .skip
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
 .skip:
@@ -7177,7 +6151,7 @@ Func_01B_72E7:: ; address name
 .loop:
     push bc
     ld a, c
-    ld c, $0D
+    ld c, $0d
     call EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte
     pop bc
     push bc
@@ -7185,7 +6159,7 @@ Func_01B_72E7:: ; address name
     ld a, c
     add_a_to_hl
     ldh a, [hTemp0]
-    and a, $0F
+    and $0f
     ld [hl], a
     pop bc
     inc c
@@ -7194,17 +6168,17 @@ Func_01B_72E7:: ; address name
     ld a, [wPickCount]
     ld hl, wPickedRecords
     add_a_to_hl
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
     ld c, MON_FAMILY
     call LoadSRAMRecordByte
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ldh a, [hTemp0]
-    and a, $0F
+    and $0f
     ld d, a
     ld a, [wPickCount]
     ld b, a
@@ -7213,7 +6187,7 @@ Func_01B_72E7:: ; address name
 .loop2:
     push hl
     ld a, [hl]
-    cp a, d
+    cp d
     jr z, .done
     pop hl
     inc hl
@@ -7223,14 +6197,12 @@ Func_01B_72E7:: ; address name
 
 .done:
     pop hl
-    ld a, $FF
+    ld a, $ff
     ret
 
-; copies box Data_01B_788F or Data_01B_78AD (by bit 7 of wLinkRules + $9) to wWindowTileBuffer + $112 and draws it at scroll + $1CC (E-0124)
-; 4 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo_Case07, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo)
-; reads: wLinkRules
+; copies box TileRect_1B_788F or TileRect_1B_78AD (by bit 7 of wLinkRules + $9) to wWindowTileBuffer
+; + $112 and draws it at scroll + $1CC (E-0124)
 DrawChoiceBoxByWD04CBit7::
-Func_01B_7349:: ; address name
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .skip
@@ -7248,16 +6220,12 @@ Func_01B_7349:: ; address name
 
 .call_bg_map_address_at_scroll_bank1_b:
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ret
 
-; only called from routines of EggServiceMenu_Bank1B_PickRecords (E-0098)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B)
-; reads: wLinkRules
 EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows::
-Func_01B_7377:: ; address name
     ld a, [wLinkRules + $9]
     bit 7, a
     jr nz, .skip
@@ -7276,34 +6244,30 @@ Func_01B_7377:: ; address name
 .return:
     ret
 
-; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
-; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowChooseOneMoreMember)
-; reads: wPickCount, wRecordsFlagged
-; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
+; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
+; clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ListAvailableRecordsForSelection::
-Func_01B_7399:: ; address name
     ld hl, wListEntries
-    ld b, $1E
+    ld b, $1e
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld hl, wListEntries2
-    ld b, $1E
+    ld b, $1e
 
 .loop2:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop2
-    xor a, a
+    xor a
     ld [wListCount], a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
     ld de, sRecords
@@ -7313,35 +6277,35 @@ Func_01B_7399:: ; address name
 
 .loop3:
     ld a, [de]
-    and a, a
+    and a
     jr z, .skip3
-    cp a, $01
+    cp $01
     jr z, .skip
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr z, .skip3
     ld a, [de]
-    cp a, $02
+    cp $02
     jr z, .skip
     jr .skip3
 
 .skip:
     push de
-    ld a, $6E
-    add a, e
+    ld a, $6e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
     ld a, [de]
-    and a, a
+    and a
     jr nz, .check_records_flagged
     pop de
     ld a, [wPickCount]
-    and a, a
+    and a
     jr z, .next
-    cp a, $03
+    cp $03
     jr nc, .next
     push hl
     push de
@@ -7352,8 +6316,8 @@ Func_01B_7399:: ; address name
     ld b, a
 
 .loop4:
-    ld a, [hl+]
-    cp a, d
+    ld a, [hli]
+    cp d
     jr z, .restore
     dec b
     jr nz, .loop4
@@ -7371,7 +6335,7 @@ Func_01B_7399:: ; address name
 .next:
     inc c
     ld a, b
-    ld [hl+], a
+    ld [hli], a
     jr .skip3
 
 .check_records_flagged:
@@ -7381,8 +6345,8 @@ Func_01B_7399:: ; address name
     ld [wRecordsFlagged], a
 
 .skip3:
-    ld a, $A5
-    add a, e
+    ld a, $a5
+    add e
     ld e, a
     jr nc, .next2
     inc d
@@ -7390,32 +6354,28 @@ Func_01B_7399:: ; address name
 .next2:
     inc b
     ld a, b
-    cp a, $1E
+    cp $1e
     jr c, .loop3
     ld a, c
     ld [wListCount], a
-    xor a, a
+    xor a
     ld [rRAMG2], a
     farcall MovePartyRecordsToFrontOfList
     ret
 
-; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)
-; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D, EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc, ...)
-; writes: wStringIndex, wStringCategory
+; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C
+; (E-0063)
 ShowStringA10_Bank1B::
-Func_01B_7439:: ; address name
-    add a, $10
+    add $10
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800), wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit, EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800),
+; wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 SetDefaultStringWindow_Bank1B::
-Func_01B_7449:: ; address name
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -7428,35 +6388,27 @@ Func_01B_7449:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then LoadFamilyIconTileForWorkBuf (E-0122)
-; 2 call sites from 2 routines (e.g. DrawPickedRecordsRecordNamesAndIcons, DrawListEntriesCell5RecordPanel)
-; reads: hTemp0, wArg1
-; writes: rRAMG2, rRAMB, wWorkBuf
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then
+; LoadFamilyIconTileForWorkBuf (E-0122)
 LoadFamilyIconTileForRecordB_Bank1B::
-Func_01B_7460:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, b
     ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
-    and a, $0F
+    and $0f
     ld [wWorkBuf], a
     ld a, [wArg1]
     ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWorkBuf
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ret
 
-; only called from DrawListEntriesCell5RecordPanel (E-0047)
-; 1 call site from 1 routine (e.g. DrawListEntriesCell5RecordPanel)
-; reads: wArg1, wArg2, wArg3, hTemp0, wDigits
-; writes: rRAMG2, rRAMB
 DrawListEntriesCell5RecordPanel_HLToDecimalDigits::
-Func_01B_7487:: ; address name
     ld a, [wArg1]
     ld b, a
     ld a, [wArg2]
@@ -7465,9 +6417,9 @@ Func_01B_7487:: ; address name
     ld h, a
     push bc
     push hl
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, b
     ld c, MON_LEVEL
@@ -7478,20 +6430,20 @@ Func_01B_7487:: ; address name
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F
     ld a, [wDigits + $1]
-    add a, $E0
+    add $e0
     pop hl
     push hl
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDigits + $2]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     pop hl
     pop bc
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     push hl
     ld a, b
@@ -7499,31 +6451,28 @@ Func_01B_7487:: ; address name
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
-    and a, $01
-    add a, $CC
+    and $01
+    add $cc
     pop hl
     ld [hl], a
     ret
 
-; clears the 6-tile rows of vTiles2 + $100-$220 from row wPickCount onward, then restores the default window (E-0127)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, ClearRecordPanelTiles, EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo)
-; reads: wPickCount
-; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
+; clears the 6-tile rows of vTiles2 + $100-$220 from row wPickCount onward, then restores the
+; default window (E-0127)
 ClearTileRowsFromPickCount::
-Func_01B_74DC:: ; address name
     ld hl, $0601
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
     ld a, [wPickCount]
-    and a, a
+    and a
     jr z, .set_text_window_tile_lo
-    cp a, $01
+    cp $01
     jr z, .set_text_window_tile_lo2
-    cp a, $02
+    cp $02
     jr z, .set_text_window_tile_lo3
-    cp a, $03
+    cp $03
     jr z, .set_text_window_tile_lo4
     jr .call_set_default_string_window_bank1_b
 
@@ -7544,7 +6493,7 @@ Func_01B_74DC:: ; address name
     call FillTilesFromRequest
 
 .set_text_window_tile_lo3:
-    ld hl, vTiles2 + $1C0
+    ld hl, vTiles2 + $1c0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -7563,21 +6512,18 @@ Func_01B_74DC:: ; address name
     call SetDefaultStringWindow_Bank1B
     ret
 
-; for up to wPickCount records listed at wPickedRecords draws each name at Data_01B_75A8[n] and loads its family icon into tile Data_01B_75B0[n] (E-0128)
-; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons)
-; reads: wPickCount
-; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1
-; points at: wPickedRecords
+; for up to wPickCount records listed at wPickedRecords draws each name at
+; DrawPickedRecordsRecordNamesAndIcons_Data_75A8[n] and loads its family icon into tile
+; DrawPickedRecordsRecordNamesAndIcons_Data_75B0[n] (E-0128)
 DrawPickedRecordsRecordNamesAndIcons::
-Func_01B_7537:: ; address name
     ld a, [wPickCount]
-    and a, a
+    and a
     jr z, .return
-    cp a, $01
+    cp $01
     jr z, .skip
-    cp a, $02
+    cp $02
     jr z, .skip2
-    cp a, $03
+    cp $03
     jr z, .skip3
     ld b, $04
     jr .skip4
@@ -7600,24 +6546,24 @@ Func_01B_7537:: ; address name
 .loop:
     push hl
     push bc
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .restore
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     pop bc
     push bc
     ld a, c
     sla a
     ld hl, DrawPickedRecordsRecordNamesAndIcons_Data_75A8
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -7646,49 +6592,37 @@ Func_01B_7537:: ; address name
 .return:
     ret
 
-; address loaded by DrawPickedRecordsRecordNamesAndIcons
-DrawPickedRecordsRecordNamesAndIcons_Data_75A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_75A8:: ; address name
-    db $10, $91, $70, $91, $D0, $91, $30, $92
+DrawPickedRecordsRecordNamesAndIcons_Data_75A8::
+    db $10, $91, $70, $91, $d0, $91, $30, $92
 
-; address loaded by DrawPickedRecordsRecordNamesAndIcons
-DrawPickedRecordsRecordNamesAndIcons_Data_75B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_75B0:: ; address name
-    db $10, $16, $1C, $22
+DrawPickedRecordsRecordNamesAndIcons_Data_75B0::
+    db $10, $16, $1c, $22
 
-; with SRAM bank 0 enabled, copies the name of the record stored at WD789 cell 5 (CopyRecordNameToNameGlyphBuf, C = 1) and draws its glyphs at vTiles1 + $780 (E-0120)
-; 1 call site from 1 routine (e.g. ClearAndDrawListEntriesCell5NameAtTiles1780)
-; reads: wArg5, wArg6
-; writes: rRAMG2, rRAMB, wNameGlyphBuf
+; with SRAM bank 0 enabled, copies the name of the record stored at WD789 cell 5
+; (CopyRecordNameToNameGlyphBuf, C = 1) and draws its glyphs at vTiles1 + $780 (E-0120)
 DrawListEntriesCell5RecordNameAtTiles1780::
-Func_01B_75B4:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
     ld l, a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
 
-; only called from routines of EggServiceMenu_Bank1B_PickRecords (E-0098)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo)
-; reads: wArg5, wArg6, wPickCount
-; points at: wPickedRecords
 EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5::
-Func_01B_75E4:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -7696,7 +6630,7 @@ Func_01B_75E4:: ; address name
     ld l, a
     ld de, wPickedRecords
     ld a, [wPickCount]
-    add a, e
+    add e
     ld e, a
     jr nc, .done
     inc d
@@ -7706,14 +6640,9 @@ Func_01B_75E4:: ; address name
     ld [de], a
     ret
 
-; only called from routines of EggServiceMenu_Bank1B_PickRecords (E-0098)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo)
-; reads: wPickCount, wLinkRules, hTemp0, wScreenStep, wArg5, wArg6
-; writes: wScreenStep, rRAMG2, rRAMB, rRAMG
 EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc::
-Func_01B_7600:: ; address name
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jp z, .return_FF
     ld a, [wLinkRules + $5]
     bit 7, a
@@ -7734,29 +6663,29 @@ Func_01B_7600:: ; address name
     call EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte
     pop de
     ldh a, [hTemp0]
-    add a, e
+    add e
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     pop bc
     inc c
     dec b
     jr nz, .loop
     ld a, [wLinkRules + $5]
-    and a, $01
+    and $01
     ld h, a
     ld a, [wLinkRules + $4]
     ld l, a
     ld a, h
-    cp a, d
+    cp d
     jr c, .call_show_string_a10_bank1_b
     jr z, .skip
     jr .check_link_rules
 
 .skip:
     ld a, l
-    cp a, e
+    cp e
     jr c, .call_show_string_a10_bank1_b
     jr .check_link_rules
 
@@ -7766,20 +6695,20 @@ Func_01B_7600:: ; address name
     ld h, a
     ld a, [wArg6]
     ld l, a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
     ld c, MON_LEVEL
     call LoadSRAMRecordByte
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMG], a
     ld a, [wLinkRules + $3]
     ld b, a
     ldh a, [hTemp0]
-    cp a, b
+    cp b
     jr c, .check_link_rules
     jr z, .check_link_rules
 
@@ -7789,7 +6718,7 @@ Func_01B_7600:: ; address name
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ret
 
 .check_link_rules:
@@ -7800,13 +6729,13 @@ Func_01B_7600:: ; address name
     bit 0, a
     jr nz, .call_egg_service_menu_bank1_b_pick_records
     ld a, [wPickCount]
-    ld c, $0D
+    ld c, $0d
     call EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte
     ldh a, [hTemp0]
-    and a, $0F
+    and $0f
     sla a
     ld de, EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -7819,11 +6748,11 @@ Func_01B_7600:: ; address name
     ld h, a
     ld bc, wLinkRules + $6
     ld a, [bc]
-    and a, h
+    and h
     jr nz, .call_show_string_a10_bank1_b2
     inc bc
     ld a, [bc]
-    and a, l
+    and l
     jr z, .return_FF
 
 .call_show_string_a10_bank1_b2:
@@ -7832,35 +6761,30 @@ Func_01B_7600:: ; address name
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ret
 
 .call_egg_service_menu_bank1_b_pick_records:
     call EggServiceMenu_Bank1B_PickRecords_Shared02_WriteRAMG2AndRAMB
-    cp a, $FF
+    cp $ff
     jr nz, .return_FF
     ld a, $13 ; 'You already chose from that family.'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
-    xor a, a
+    xor a
     ret
 
 .return_FF:
-    ld a, $FF
+    ld a, $ff
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wTextBuf0 (E-0124)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor)
-; reads: wArg5, wArg6
-; writes: rRAMG2, rRAMB, rRAMG
-; points at: wNameGlyphBuf, wTextBuf0
 CopyListEntriesCell5NameToTextBuf0::
-Func_01B_76E3:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -7872,33 +6796,30 @@ Func_01B_76E3:: ; address name
     call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
-    ld b, $0B
+    ld b, $0b
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld [rRAMG], a
     ret
 
-; pads wPickedRecords, wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, clears wScreenStep/wScreenSubStep and wScreenState += 1 (E-0122)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait_Case05, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait)
-; reads: wPickCount, wScreenState
-; writes: wSelectedRecord, wPackWork, wPickCount, wScreenStep, wScreenSubStep, wScreenState
+; pads wPickedRecords, wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, clears
+; wScreenStep/wScreenSubStep and wScreenState += 1 (E-0122)
 FinishPickedRecordsEntryAndAdvance::
-Func_01B_7716:: ; address name
     call PadPickedRecordsWithFFToThree
     ld a, [wPickCount]
     ld [wSelectedRecord], a
-    ld a, $FF
+    ld a, $ff
     ld [wPackWork], a
     ld a, $04
     ld [wPickCount], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ld a, [wScreenState]
@@ -7906,141 +6827,113 @@ Func_01B_7716:: ; address name
     ld [wScreenState], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 5 x 1 tiles, one row per line
 TileRect_1B_7738::
-Data_01B_7738:: ; address name
-    db $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $b1, $b1, $b1, $b1, $b2 ; id 0
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 2 tiles, one row per line
 TileRect_1B_773D::
-Data_01B_773D:: ; address name
-    db $B6, $EA, $ED, $C3, $C3, $F8, $F9, $FA, $FB, $FC, $C3, $C7, $B7 ; id 0
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 1
+    db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 7 tiles, one row per line
 TileRect_1B_7757::
-Data_01B_7757:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $E1, $ED, $11, $12, $13, $14, $15, $10, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $E2, $ED, $17, $18, $19, $1A, $1B, $16, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $E3, $ED, $1D, $1E, $1F, $20, $21, $1C, $B7 ; id 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $e1, $ed, $11, $12, $13, $14, $15, $10, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $e2, $ed, $17, $18, $19, $1a, $1b, $16, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $e3, $ed, $1d, $1e, $1f, $20, $21, $1c, $b7 ; id 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 9 tiles, one row per line
 TileRect_1B_779D::
-Data_01B_779D:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $E1, $ED, $11, $12, $13, $14, $15, $10, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $E2, $ED, $17, $18, $19, $1A, $1B, $16, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $E3, $ED, $1D, $1E, $1F, $20, $21, $1C, $B7 ; id 5
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 6
-    db $B6, $C3, $C3, $23, $24, $25, $26, $27, $22, $B7 ; id 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $e1, $ed, $11, $12, $13, $14, $15, $10, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $e2, $ed, $17, $18, $19, $1a, $1b, $16, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $e3, $ed, $1d, $1e, $1f, $20, $21, $1c, $b7 ; id 5
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 6
+    db $b6, $c3, $c3, $23, $24, $25, $26, $27, $22, $b7 ; id 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
 TileRect_1B_77F7::
-Data_01B_77F7:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $B2, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 5 tiles, one row per line
 TileRect_1B_781F::
-Data_01B_781F:: ; address name
-    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $B2, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 5 tiles, one row per line
 TileRect_1B_7847::
-Data_01B_7847:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $70, $71, $72, $73, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; address loaded by EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B, EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B and 1 more
-EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_786F:: ; address name
-    db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
+EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data::
+    db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
-; address loaded by EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc
-EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01B_7879:: ; address name
+EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc_Data::
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $80, $00
     db $40, $00, $20, $00, $10, $00
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_1B_788F::
-Data_01B_788F:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 5 tiles, one row per line
 TileRect_1B_78AD::
-Data_01B_78AD:: ; address name
-    db $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 5 tiles, one row per line
 TileRect_1B_78CB::
-Data_01B_78CB:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $76, $77, $78, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $79, $73, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $76, $77, $78, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $79, $73, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_1B_78E9::
-Data_01B_78E9:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $30, $31, $32, $33, $34, $35, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $36, $37, $38, $39, $3A, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $3B, $3C, $3D, $3E, $C3, $C3, $B7 ; id 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $36, $37, $38, $39, $3a, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $3b, $3c, $3d, $3e, $c3, $c3, $b7 ; id 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_1B_7928::
-Data_01B_7928:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7 ; id 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
     ds $680, $00

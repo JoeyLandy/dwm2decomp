@@ -1,497 +1,424 @@
 SECTION "Bank 7E", ROMX[$4000], BANK[$7E]
-    db $7E
+    db $7e
 
-; compressed sprite graphics number $50 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 214 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx50:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4001:: ; address name
+; compressed sprite graphics number $50 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 214 bytes that expand to 224 (E-0016, E-0017)
+FieldSpriteGfx50::
     INCBIN "dwm2-cobi-us.gbc", $1F8001, $D6
 
-; compressed sprite graphics number $51 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 218 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx51:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_40D7:: ; address name
+; compressed sprite graphics number $51 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 218 bytes that expand to 224 (E-0016, E-0017)
+FieldSpriteGfx51::
     INCBIN "dwm2-cobi-us.gbc", $1F80D7, $DA
 
-; compressed sprite graphics number $52 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 203 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx52:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_41B1:: ; address name
+; compressed sprite graphics number $52 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 203 bytes that expand to 224 (E-0016, E-0017)
+FieldSpriteGfx52::
     INCBIN "dwm2-cobi-us.gbc", $1F81B1, $CB
 
-; compressed sprite graphics number $53 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 215 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx53:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_427C:: ; address name
+; compressed sprite graphics number $53 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 215 bytes that expand to 256 (E-0016, E-0017)
+FieldSpriteGfx53::
     INCBIN "dwm2-cobi-us.gbc", $1F827C, $D7
 
-; compressed sprite graphics number $54 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 371 bytes expand to 416 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx54:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4353:: ; address name
+; compressed sprite graphics number $54 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 371 bytes that expand to 416 (E-0016, E-0017)
+FieldSpriteGfx54::
     INCBIN "dwm2-cobi-us.gbc", $1F8353, $173
 
-; compressed sprite graphics number $55 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 195 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx55:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_44C6:: ; address name
+; compressed sprite graphics number $55 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 195 bytes that expand to 256 (E-0016, E-0017)
+FieldSpriteGfx55::
     INCBIN "dwm2-cobi-us.gbc", $1F84C6, $C3
 
-; compressed sprite graphics number $56 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 90 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx56:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4589:: ; address name
+; compressed sprite graphics number $56 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 90 bytes that expand to 128 (E-0016, E-0017)
+FieldSpriteGfx56::
     INCBIN "dwm2-cobi-us.gbc", $1F8589, $5A
 
-; compressed sprite graphics number $57 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 182 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx57:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_45E3:: ; address name
+; compressed sprite graphics number $57 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 182 bytes that expand to 224 (E-0016, E-0017)
+FieldSpriteGfx57::
     INCBIN "dwm2-cobi-us.gbc", $1F85E3, $B6
 
-; compressed sprite graphics number $58 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx58:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4699:: ; address name
-    db $40, $00, $01, $01, $FF, $F0, $03, $03, $0F, $0C, $17, $18, $1E, $11, $29, $3F
-    db $3F, $26, $01, $FF, $F0, $C0, $C0, $B0, $70, $F8, $68, $38, $C8, $FC, $1C, $94
-    db $7C, $2D, $33, $38, $3F, $17, $1F, $1A, $1F, $0F, $0F, $03, $03, $01, $FF, $F0
-    db $BC, $E4, $FC, $FC, $C8, $F8, $78, $F8, $30, $F0, $C0, $C0, $01, $A0, $F0
+; compressed sprite graphics number $58 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 63 bytes that expand to 64 (E-0016, E-0017)
+FieldSpriteGfx58::
+    db $40, $00, $01, $01, $ff, $f0, $03, $03, $0f, $0c, $17, $18, $1e, $11, $29, $3f
+    db $3f, $26, $01, $ff, $f0, $c0, $c0, $b0, $70, $f8, $68, $38, $c8, $fc, $1c, $94
+    db $7c, $2d, $33, $38, $3f, $17, $1f, $1a, $1f, $0f, $0f, $03, $03, $01, $ff, $f0
+    db $bc, $e4, $fc, $fc, $c8, $f8, $78, $f8, $30, $f0, $c0, $c0, $01, $a0, $f0
 
-; compressed sprite graphics number $59 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 39 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx59:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_46D8:: ; address name
-    db $40, $00, $02, $01, $01, $1A, $1B, $24, $3F, $54, $7F, $70, $7F, $1F, $1F, $30
-    db $3F, $3F, $2F, $1F, $18, $1F, $17, $1F, $1D, $26, $3F, $27, $3F, $1D, $1F, $0F
-    db $0B, $1C, $1C, $02, $A0, $FF, $0D
+; compressed sprite graphics number $59 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 39 bytes that expand to 64 (E-0016, E-0017)
+FieldSpriteGfx59::
+    db $40, $00, $02, $01, $01, $1a, $1b, $24, $3f, $54, $7f, $70, $7f, $1f, $1f, $30
+    db $3f, $3f, $2f, $1f, $18, $1f, $17, $1f, $1d, $26, $3f, $27, $3f, $1d, $1f, $0f
+    db $0b, $1c, $1c, $02, $a0, $ff, $0d
 
-; compressed sprite graphics number $5A of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 53 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_46FF:: ; address name
-    db $40, $00, $00, $FF, $FF, $80, $FF, $D8, $A7, $F9, $86, $FF, $FE, $FF, $BF, $FF
-    db $BF, $FF, $80, $C4, $BB, $CE, $B1, $FB, $84, $F8, $87, $CC, $B3, $C6, $B9, $FF
-    db $80, $FF, $FF, $00, $00, $00, $DA, $A5, $DA, $A5, $D9, $A6, $FE, $81, $FD, $FE
-    db $FA, $87, $00, $10, $0C
+; compressed sprite graphics number $5A of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 53 bytes that expand to 64 (E-0016, E-0017)
+FieldSpriteGfx5A::
+    db $40, $00, $00, $ff, $ff, $80, $ff, $d8, $a7, $f9, $86, $ff, $fe, $ff, $bf, $ff
+    db $bf, $ff, $80, $c4, $bb, $ce, $b1, $fb, $84, $f8, $87, $cc, $b3, $c6, $b9, $ff
+    db $80, $ff, $ff, $00, $00, $00, $da, $a5, $da, $a5, $d9, $a6, $fe, $81, $fd, $fe
+    db $fa, $87, $00, $10, $0c
 
-; compressed sprite graphics number $5B of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5B:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4734:: ; address name
-    db $40, $00, $01, $01, $FF, $F0, $07, $07, $18, $1F, $2F, $3E, $5B, $7C, $B7, $EE
-    db $DA, $BF, $01, $FF, $F0, $E0, $E0, $18, $F8, $F4, $7C, $DA, $3E, $ED, $77, $5B
-    db $FD, $EF, $BE, $BA, $DF, $5E, $6F, $23, $3E, $1B, $1C, $07, $07, $01, $FF, $F0
-    db $F7, $7D, $5D, $FB, $7A, $F6, $C4, $7C, $D8, $38, $E0, $E0, $01, $A0, $F0
+; compressed sprite graphics number $5B of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 63 bytes that expand to 64 (E-0016, E-0017)
+FieldSpriteGfx5B::
+    db $40, $00, $01, $01, $ff, $f0, $07, $07, $18, $1f, $2f, $3e, $5b, $7c, $b7, $ee
+    db $da, $bf, $01, $ff, $f0, $e0, $e0, $18, $f8, $f4, $7c, $da, $3e, $ed, $77, $5b
+    db $fd, $ef, $be, $ba, $df, $5e, $6f, $23, $3e, $1b, $1c, $07, $07, $01, $ff, $f0
+    db $f7, $7d, $5d, $fb, $7a, $f6, $c4, $7c, $d8, $38, $e0, $e0, $01, $a0, $f0
 
-; compressed sprite graphics number $5C of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 191 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5C:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4773:: ; address name
+; compressed sprite graphics number $5C of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 191 bytes that expand to 224 (E-0016, E-0017)
+FieldSpriteGfx5C::
     INCBIN "dwm2-cobi-us.gbc", $1F8773, $BF
 
-; compressed sprite graphics number $5D of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 45 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4832:: ; address name
-    db $40, $00, $02, $02, $FF, $FA, $01, $01, $00, $00, $1C, $1C, $6E, $72, $BE, $EA
-    db $7A, $46, $5C, $6C, $B4, $FC, $48, $C8, $1A, $1B, $15, $1F, $6B, $6D, $56, $7A
-    db $2C, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $A0, $FA
+; compressed sprite graphics number $5D of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 45 bytes that expand to 64 (E-0016, E-0017)
+FieldSpriteGfx5D::
+    db $40, $00, $02, $02, $ff, $fa, $01, $01, $00, $00, $1c, $1c, $6e, $72, $be, $ea
+    db $7a, $46, $5c, $6c, $b4, $fc, $48, $c8, $1a, $1b, $15, $1f, $6b, $6d, $56, $7a
+    db $2c, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $a0, $fa
 
-; compressed sprite graphics number $5E of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 119 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_485F:: ; address name
+; compressed sprite graphics number $5E of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 119 bytes that expand to 128 (E-0016, E-0017)
+FieldSpriteGfx5E::
     INCBIN "dwm2-cobi-us.gbc", $1F885F, $77
 
-; compressed sprite graphics number $5F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; address loaded by DebugStaffRoll_Scene02_DecompressToVRAM
-; LZSS-compressed asset: 231 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx5F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_48D6:: ; address name
+; compressed sprite graphics number $5F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 231 bytes that expand to 256 (E-0016, E-0017)
+FieldSpriteGfx5F::
     INCBIN "dwm2-cobi-us.gbc", $1F88D6, $E7
 
-; compressed sprite graphics number $60 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 282 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx60:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_49BD:: ; address name
+; compressed sprite graphics number $60 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 282 bytes that expand to 512 (E-0016, E-0017)
+FieldSpriteGfx60::
     INCBIN "dwm2-cobi-us.gbc", $1F89BD, $11A
 
-; compressed sprite graphics number $61 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero)
-; LZSS-compressed asset: 62 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-FieldSpriteGfx61:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4AD7:: ; address name
-    db $00, $01, $01, $43, $43, $74, $77, $49, $7F, $97, $FE, $A3, $FF, $60, $7F, $93
-    db $FF, $97, $FF, $C2, $C2, $2E, $EE, $92, $FE, $E9, $7F, $C5, $FF, $16, $FE, $C9
-    db $FF, $E9, $FF, $6F, $6D, $05, $06, $7A, $7F, $3B, $3F, $24, $3C, $64, $7C, $82
-    db $FE, $FC, $FC, $01, $A0, $FF, $4D, $01, $8F, $0F, $4D, $01, $EF, $0C
+; compressed sprite graphics number $61 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
+; with hTemp2 non-zero)
+; LZSS-compressed: 62 bytes that expand to 256 (E-0016, E-0017)
+FieldSpriteGfx61::
+    db $00, $01, $01, $43, $43, $74, $77, $49, $7f, $97, $fe, $a3, $ff, $60, $7f, $93
+    db $ff, $97, $ff, $c2, $c2, $2e, $ee, $92, $fe, $e9, $7f, $c5, $ff, $16, $fe, $c9
+    db $ff, $e9, $ff, $6f, $6d, $05, $06, $7a, $7f, $3b, $3f, $24, $3c, $64, $7c, $82
+    db $fe, $fc, $fc, $01, $a0, $ff, $4d, $01, $8f, $0f, $4d, $01, $ef, $0c
 
-; E-0143 (C1: the palettes FieldSpritePaletteIndex selects; DecompressGraphicsTemp0ToTemp4 copies one to wOBJPaletteBuffer + 8 * hTemp3).
+; the palettes FieldSpritePaletteIndex selects; DecompressGraphicsTemp0ToTemp4 copies one to
+; wOBJPaletteBuffer + 8 * hTemp3 (E-0143, C1)
 ; record: one CGB OBJ palette: 4 BGR555 colours
 FieldSpritePalettes::
-Data_07E_4B15:: ; address name
-    dw $0000, $6BFF, $663F, $0800 ; id 0
-OBJPaletteBufferPlus28Data_7E_4B1D:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4B1D:: ; address name
-    dw $0000, $6BFF, $001F, $0800 ; id 1
-    dw $0000, $6BFF, $0553, $0800 ; id 2
-OBJPaletteBufferPlus10Data_7E_4B2D:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4B2D:: ; address name
-    dw $0000, $6BFF, $7000, $0800 ; id 3
-    dw $0000, $6BFF, $03E0, $0800 ; id 4
-    dw $0000, $6BFF, $5AB4, $0800 ; id 5
-OBJPaletteBufferPlus10Data_7E_4B45:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4B45:: ; address name
-    dw $0000, $6BFF, $6017, $0800 ; id 6
-OBJPaletteBufferPlus20Data_7E_4B4D:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4B4D:: ; address name
-    dw $0000, $6BFF, $027F, $0800 ; id 7
-    dw $0000, $6BFF, $662C, $0800 ; id 8
-    dw $0000, $6BFF, $031D, $0800 ; id 9
-    dw $0000, $037F, $0340, $0800 ; id 10
-    dw $0000, $7F1F, $027F, $0800 ; id 11
-    dw $0000, $035F, $026E, $0800 ; id 12
-    dw $0000, $767F, $3D58, $0800 ; id 13
-    dw $0000, $3AFD, $0533, $0800 ; id 14
-    dw $0000, $4F5D, $1415, $0000 ; id 15
-    dw $0000, $5EFD, $39B2, $0000 ; id 16
-    dw $0000, $6BFF, $6B2A, $0800 ; id 17
-OBJPaletteBufferData_7E_4BA5:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4BA5:: ; address name
-    dw $0000, $6BFF, $7DA0, $0000 ; id 18
-OBJPaletteBufferPlus8Data_7E_4BAD:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4BAD:: ; address name
-    dw $0000, $6BFF, $2E0A, $0000 ; id 19
-    dw $0000, $6BFF, $7EC5, $0800 ; id 20
+    dw $0000, $6bff, $663f, $0800 ; id 0
+OBJPaletteBufferPlus28Data_7E_4B1D::
+    dw $0000, $6bff, $001f, $0800 ; id 1
+    dw $0000, $6bff, $0553, $0800 ; id 2
+OBJPaletteBufferPlus10Data_7E_4B2D::
+    dw $0000, $6bff, $7000, $0800 ; id 3
+    dw $0000, $6bff, $03e0, $0800 ; id 4
+    dw $0000, $6bff, $5ab4, $0800 ; id 5
+OBJPaletteBufferPlus10Data_7E_4B45::
+    dw $0000, $6bff, $6017, $0800 ; id 6
+OBJPaletteBufferPlus20Data_7E_4B4D::
+    dw $0000, $6bff, $027f, $0800 ; id 7
+    dw $0000, $6bff, $662c, $0800 ; id 8
+    dw $0000, $6bff, $031d, $0800 ; id 9
+    dw $0000, $037f, $0340, $0800 ; id 10
+    dw $0000, $7f1f, $027f, $0800 ; id 11
+    dw $0000, $035f, $026e, $0800 ; id 12
+    dw $0000, $767f, $3d58, $0800 ; id 13
+    dw $0000, $3afd, $0533, $0800 ; id 14
+    dw $0000, $4f5d, $1415, $0000 ; id 15
+    dw $0000, $5efd, $39b2, $0000 ; id 16
+    dw $0000, $6bff, $6b2a, $0800 ; id 17
+OBJPaletteBufferData_7E_4BA5::
+    dw $0000, $6bff, $7da0, $0000 ; id 18
+OBJPaletteBufferPlus8Data_7E_4BAD::
+    dw $0000, $6bff, $2e0a, $0000 ; id 19
+    dw $0000, $6bff, $7ec5, $0800 ; id 20
 
-; E-0238 (C1: copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD + $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_Shared01 with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes).
-; record: one CGB OBJ palette: 4 BGR555 colours
+; copied 8 bytes at a time to wOBJPaletteBuffer slots by many loaders (bank $00 $22F0 with $4BBD +
+; $C8, bank $07, $12, $A1, $E0 with $4C0D, $4C65 and $4CAD; RunFieldCommandTemp0_Shared01 with $4BBD
+; + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes (E-0238, C1)
 ObjPalettes_7E_4BBD::
-OBJPaletteBufferData_7E_4BBD:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4BBD:: ; address name
-    dw $0000, $037F, $027F, $0000 ; id 0
-    dw $0000, $4F5D, $1415, $0000 ; id 1
-    dw $0000, $4F5D, $02B0, $0000 ; id 2
-    dw $0000, $4F5D, $662C, $0000 ; id 3
-    dw $0000, $4F5D, $01FC, $0000 ; id 4
-    dw $0000, $4F5D, $19B2, $0000 ; id 5
-    dw $0000, $4F5D, $00F4, $0000 ; id 6
-    dw $0000, $4F5D, $19B2, $0000 ; id 7
-    dw $0000, $4F5D, $4A6D, $0000 ; id 8
-    dw $0000, $4F5D, $01FC, $0000 ; id 9
-OBJPaletteBufferPlus18Data_7E_4C0D:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4C0D:: ; address name
-    dw $0000, $4F5D, $2DB0, $0000 ; id 10
-    dw $0000, $7FFF, $11AD, $0000 ; id 11
-    dw $0000, $037F, $021C, $0000 ; id 12
-    dw $0000, $7FFF, $7DAB, $0000 ; id 13
-    dw $0000, $5EFD, $39B2, $0000 ; id 14
-    dw $0000, $7B1F, $6513, $0000 ; id 15
-    dw $0000, $62F8, $3DCF, $0000 ; id 16
-    dw $0000, $037F, $021C, $0000 ; id 17
-    dw $0000, $6FB8, $7DAB, $0000 ; id 18
-    dw $0000, $027F, $001F, $0000 ; id 19
-    dw $0000, $7FFF, $316B, $0000 ; id 20
-OBJPaletteBufferPlus30Data_7E_4C65:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4C65:: ; address name
-    dw $0000, $7FFF, $316B, $0000 ; id 21
-    dw $0000, $5EB5, $3DAD, $0000 ; id 22
-    dw $0000, $673C, $3190, $0000 ; id 23
-    dw $0000, $6FB8, $7DAB, $0000 ; id 24
-    dw $0000, $7FFF, $7DAB, $0000 ; id 25
-    dw $0000, $027F, $001F, $0000 ; id 26
-    dw $0000, $0B5F, $15DF, $0800 ; id 27
-    dw $0000, $7FF5, $7CA0, $0800 ; id 28
-    dw $0000, $037F, $021C, $0000 ; id 29
-OBJPaletteBufferPlus8Data_7E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_4CAD:: ; address name
-    dw $0000, $7FFF, $021C, $0000 ; id 30
-    dw $0000, $6BFF, $035F, $0800 ; id 31
-    dw $0000, $6BFF, $035F, $0800 ; id 32
-    dw $0000, $5FBF, $2A3D, $0000 ; id 33
-    dw $0000, $6BFF, $6652, $0000 ; id 34
-    dw $0000, $4F5D, $19D3, $0000 ; id 35
-    dw $0000, $027F, $001F, $0000 ; id 36
-    dw $0000, $6BFF, $027F, $0000 ; id 37
+OBJPaletteBufferData_7E_4BBD::
+    dw $0000, $037f, $027f, $0000 ; id 0
+    dw $0000, $4f5d, $1415, $0000 ; id 1
+    dw $0000, $4f5d, $02b0, $0000 ; id 2
+    dw $0000, $4f5d, $662c, $0000 ; id 3
+    dw $0000, $4f5d, $01fc, $0000 ; id 4
+    dw $0000, $4f5d, $19b2, $0000 ; id 5
+    dw $0000, $4f5d, $00f4, $0000 ; id 6
+    dw $0000, $4f5d, $19b2, $0000 ; id 7
+    dw $0000, $4f5d, $4a6d, $0000 ; id 8
+    dw $0000, $4f5d, $01fc, $0000 ; id 9
+OBJPaletteBufferPlus18Data_7E_4C0D::
+    dw $0000, $4f5d, $2db0, $0000 ; id 10
+    dw $0000, $7fff, $11ad, $0000 ; id 11
+    dw $0000, $037f, $021c, $0000 ; id 12
+    dw $0000, $7fff, $7dab, $0000 ; id 13
+    dw $0000, $5efd, $39b2, $0000 ; id 14
+    dw $0000, $7b1f, $6513, $0000 ; id 15
+    dw $0000, $62f8, $3dcf, $0000 ; id 16
+    dw $0000, $037f, $021c, $0000 ; id 17
+    dw $0000, $6fb8, $7dab, $0000 ; id 18
+    dw $0000, $027f, $001f, $0000 ; id 19
+    dw $0000, $7fff, $316b, $0000 ; id 20
+OBJPaletteBufferPlus30Data_7E_4C65::
+    dw $0000, $7fff, $316b, $0000 ; id 21
+    dw $0000, $5eb5, $3dad, $0000 ; id 22
+    dw $0000, $673c, $3190, $0000 ; id 23
+    dw $0000, $6fb8, $7dab, $0000 ; id 24
+    dw $0000, $7fff, $7dab, $0000 ; id 25
+    dw $0000, $027f, $001f, $0000 ; id 26
+    dw $0000, $0b5f, $15df, $0800 ; id 27
+    dw $0000, $7ff5, $7ca0, $0800 ; id 28
+    dw $0000, $037f, $021c, $0000 ; id 29
+OBJPaletteBufferPlus8Data_7E_4CAD::
+    dw $0000, $7fff, $021c, $0000 ; id 30
+    dw $0000, $6bff, $035f, $0800 ; id 31
+    dw $0000, $6bff, $035f, $0800 ; id 32
+    dw $0000, $5fbf, $2a3d, $0000 ; id 33
+    dw $0000, $6bff, $6652, $0000 ; id 34
+    dw $0000, $4f5d, $19d3, $0000 ; id 35
+    dw $0000, $027f, $001f, $0000 ; id 36
+    dw $0000, $6bff, $027f, $0000 ; id 37
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM
-; LZSS-compressed asset: 45 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Gfx_7E_4CED:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_4CED:: ; address name
-    db $40, $00, $02, $02, $FF, $FA, $01, $01, $00, $00, $1C, $1C, $6E, $72, $BE, $EA
-    db $7A, $46, $5C, $6C, $B4, $FC, $48, $C8, $1A, $1B, $15, $1F, $6B, $6D, $56, $7A
-    db $2C, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $A0, $FA
+; LZSS-compressed: 45 bytes that expand to 64 (E-0016, E-0017)
+Tiles0Gfx_7E_4CED::
+    db $40, $00, $02, $02, $ff, $fa, $01, $01, $00, $00, $1c, $1c, $6e, $72, $be, $ea
+    db $7a, $46, $5c, $6c, $b4, $fc, $48, $c8, $1a, $1b, $15, $1f, $6b, $6d, $56, $7a
+    db $2c, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $a0, $fa
 
-; LZSS-compressed asset: 53 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4D1A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4D1A:: ; address name
-    db $40, $00, $00, $FF, $FF, $80, $FF, $D8, $A7, $F9, $86, $FF, $FE, $FF, $BF, $FF
-    db $BF, $FF, $80, $C4, $BB, $CE, $B1, $FB, $84, $F8, $87, $CC, $B3, $C6, $B9, $FF
-    db $80, $FF, $FF, $00, $00, $00, $DA, $A5, $DA, $A5, $D9, $A6, $FE, $81, $FD, $FE
-    db $FA, $87, $00, $10, $0C
+; LZSS-compressed: 53 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4D1A::
+    db $40, $00, $00, $ff, $ff, $80, $ff, $d8, $a7, $f9, $86, $ff, $fe, $ff, $bf, $ff
+    db $bf, $ff, $80, $c4, $bb, $ce, $b1, $fb, $84, $f8, $87, $cc, $b3, $c6, $b9, $ff
+    db $80, $ff, $ff, $00, $00, $00, $da, $a5, $da, $a5, $d9, $a6, $fe, $81, $fd, $fe
+    db $fa, $87, $00, $10, $0c
 
-; LZSS-compressed asset: 59 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4D4F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4D4F:: ; address name
-    db $40, $00, $01, $01, $FF, $F0, $0E, $00, $0F, $04, $1F, $06, $19, $0F, $1A, $0D
-    db $1E, $05, $01, $FF, $F0, $7C, $00, $FC, $38, $CC, $F8, $2C, $D8, $5C, $B0, $18
-    db $F0, $0C, $07, $0E, $03, $1F, $05, $3F, $08, $3C, $10, $38, $01, $FF, $F1, $38
-    db $E0, $DC, $30, $9C, $F8, $FC, $60, $F0, $01, $A0, $F3
+; LZSS-compressed: 59 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4D4F::
+    db $40, $00, $01, $01, $ff, $f0, $0e, $00, $0f, $04, $1f, $06, $19, $0f, $1a, $0d
+    db $1e, $05, $01, $ff, $f0, $7c, $00, $fc, $38, $cc, $f8, $2c, $d8, $5c, $b0, $18
+    db $f0, $0c, $07, $0e, $03, $1f, $05, $3f, $08, $3c, $10, $38, $01, $ff, $f1, $38
+    db $e0, $dc, $30, $9c, $f8, $fc, $60, $f0, $01, $a0, $f3
 
-; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4D8A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4D8A:: ; address name
+; LZSS-compressed: 66 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4D8A::
     INCBIN "dwm2-cobi-us.gbc", $1F8D8A, $42
 
-; LZSS-compressed asset: 58 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4DCC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4DCC:: ; address name
-    db $40, $00, $01, $01, $FF, $F6, $07, $00, $0F, $03, $7D, $06, $00, $00, $3C, $00
-    db $7E, $18, $76, $2C, $E6, $3C, $FE, $58, $FC, $A0, $70, $C0, $FB, $3C, $DF, $60
-    db $DE, $71, $BF, $69, $77, $3D, $79, $1F, $37, $0E, $0F, $00, $E0, $40, $60, $C0
-    db $E0, $80, $C0, $00, $80, $01, $37, $01, $00, $00
+; LZSS-compressed: 58 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4DCC::
+    db $40, $00, $01, $01, $ff, $f6, $07, $00, $0f, $03, $7d, $06, $00, $00, $3c, $00
+    db $7e, $18, $76, $2c, $e6, $3c, $fe, $58, $fc, $a0, $70, $c0, $fb, $3c, $df, $60
+    db $de, $71, $bf, $69, $77, $3d, $79, $1f, $37, $0e, $0f, $00, $e0, $40, $60, $c0
+    db $e0, $80, $c0, $00, $80, $01, $37, $01, $00, $00
 
-; LZSS-compressed asset: 49 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4E06:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4E06:: ; address name
-    db $40, $00, $01, $01, $FF, $F4, $07, $00, $0F, $03, $1C, $07, $3B, $0C, $01, $FF
-    db $F4, $C0, $00, $E0, $80, $70, $C0, $38, $E0, $34, $1B, $3A, $0D, $1C, $07, $0F
-    db $03, $07, $01, $FF, $F3, $58, $B0, $38, $E0, $70, $C0, $E0, $80, $C0, $01, $A0
-    db $F3
+; LZSS-compressed: 49 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4E06::
+    db $40, $00, $01, $01, $ff, $f4, $07, $00, $0f, $03, $1c, $07, $3b, $0c, $01, $ff
+    db $f4, $c0, $00, $e0, $80, $70, $c0, $38, $e0, $34, $1b, $3a, $0d, $1c, $07, $0f
+    db $03, $07, $01, $ff, $f3, $58, $b0, $38, $e0, $70, $c0, $e0, $80, $c0, $01, $a0
+    db $f3
 
-; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4E37:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4E37:: ; address name
+Gfx_7E_4E37::
     INCBIN "dwm2-cobi-us.gbc", $1F8E37, $42
 
-; LZSS-compressed asset: 58 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4E79:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4E79:: ; address name
-    db $40, $00, $02, $02, $FF, $F0, $01, $00, $03, $00, $03, $01, $03, $01, $03, $00
-    db $07, $00, $00, $00, $FC, $00, $FE, $78, $87, $FC, $23, $FE, $F3, $DE, $F3, $1E
-    db $E3, $FE, $1F, $03, $3C, $0F, $71, $1F, $67, $3E, $7F, $18, $3C, $02, $FF, $F1
-    db $07, $FC, $7E, $F8, $FC, $80, $C0, $02, $A0, $F5
+Gfx_7E_4E79::
+    db $40, $00, $02, $02, $ff, $f0, $01, $00, $03, $00, $03, $01, $03, $01, $03, $00
+    db $07, $00, $00, $00, $fc, $00, $fe, $78, $87, $fc, $23, $fe, $f3, $de, $f3, $1e
+    db $e3, $fe, $1f, $03, $3c, $0f, $71, $1f, $67, $3e, $7f, $18, $3c, $02, $ff, $f1
+    db $07, $fc, $7e, $f8, $fc, $80, $c0, $02, $a0, $f5
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04, RunGameMode2State_CopyScrollToHardware
-; LZSS-compressed asset: 62 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Gfx_7E_4EB3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_4EB3:: ; address name
-    db $40, $00, $02, $02, $FF, $F0, $03, $00, $07, $01, $0E, $03, $1F, $04, $1E, $09
-    db $1E, $09, $78, $00, $D4, $38, $7C, $E8, $EA, $9C, $EE, $34, $BA, $CC, $74, $B8
-    db $DC, $68, $1E, $09, $1C, $0B, $1C, $0B, $3D, $0B, $3A, $17, $3B, $16, $3F, $0C
-    db $1E, $00, $DC, $B0, $F8, $60, $B0, $C0, $C0, $00, $80, $02, $A0, $F3
+; LZSS-compressed: 62 bytes that expand to 64 (E-0016, E-0017)
+Tiles0Gfx_7E_4EB3::
+    db $40, $00, $02, $02, $ff, $f0, $03, $00, $07, $01, $0e, $03, $1f, $04, $1e, $09
+    db $1e, $09, $78, $00, $d4, $38, $7c, $e8, $ea, $9c, $ee, $34, $ba, $cc, $74, $b8
+    db $dc, $68, $1e, $09, $1c, $0b, $1c, $0b, $3d, $0b, $3a, $17, $3b, $16, $3f, $0c
+    db $1e, $00, $dc, $b0, $f8, $60, $b0, $c0, $c0, $00, $80, $02, $a0, $f3
 
-; LZSS-compressed asset: 49 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4EF1:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4EF1:: ; address name
-    db $40, $00, $01, $01, $FF, $F4, $07, $00, $0F, $03, $1F, $04, $1C, $0B, $01, $FF
-    db $F4, $E0, $00, $F0, $C0, $B8, $60, $58, $B0, $1D, $0A, $1C, $0B, $1F, $04, $0F
-    db $03, $07, $01, $FF, $F3, $D8, $30, $D8, $30, $B8, $60, $F0, $C0, $E0, $01, $A0
-    db $F3
+Gfx_7E_4EF1::
+    db $40, $00, $01, $01, $ff, $f4, $07, $00, $0f, $03, $1f, $04, $1c, $0b, $01, $ff
+    db $f4, $e0, $00, $f0, $c0, $b8, $60, $58, $b0, $1d, $0a, $1c, $0b, $1f, $04, $0f
+    db $03, $07, $01, $ff, $f3, $d8, $30, $d8, $30, $b8, $60, $f0, $c0, $e0, $01, $a0
+    db $f3
 
-; address loaded by DebugStaffRoll_Scene00_DecompressToVRAM
-; LZSS-compressed asset: 65 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus300Gfx_7E_4F22:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_4F22:: ; address name
+; LZSS-compressed: 65 bytes that expand to 64 (E-0016, E-0017)
+Tiles0Plus300Gfx_7E_4F22::
     INCBIN "dwm2-cobi-us.gbc", $1F8F22, $41
 
-; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4F63:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4F63:: ; address name
+; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4F63::
     INCBIN "dwm2-cobi-us.gbc", $1F8F63, $43
 
-; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4FA6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4FA6:: ; address name
+; LZSS-compressed: 66 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4FA6::
     INCBIN "dwm2-cobi-us.gbc", $1F8FA6, $42
 
-; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_4FE8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_4FE8:: ; address name
-    db $40, $00, $01, $01, $FF, $F0, $07, $07, $1D, $1A, $37, $2F, $73, $5C, $E6, $B9
-    db $AD, $F2, $01, $FF, $F0, $E0, $E0, $B8, $58, $EC, $F4, $7E, $8A, $EF, $15, $D5
-    db $2F, $BB, $E4, $F7, $A8, $7E, $51, $37, $2F, $1D, $1A, $07, $07, $01, $FF, $F0
-    db $A5, $5F, $47, $BD, $8E, $7A, $EC, $F4, $B8, $58, $E0, $E0, $01, $A0, $F0
+; LZSS-compressed: 63 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_4FE8::
+    db $40, $00, $01, $01, $ff, $f0, $07, $07, $1d, $1a, $37, $2f, $73, $5c, $e6, $b9
+    db $ad, $f2, $01, $ff, $f0, $e0, $e0, $b8, $58, $ec, $f4, $7e, $8a, $ef, $15, $d5
+    db $2f, $bb, $e4, $f7, $a8, $7e, $51, $37, $2f, $1d, $1a, $07, $07, $01, $ff, $f0
+    db $a5, $5f, $47, $bd, $8e, $7a, $ec, $f4, $b8, $58, $e0, $e0, $01, $a0, $f0
 
-; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5027:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5027:: ; address name
-    db $40, $00, $01, $01, $FF, $F0, $07, $07, $18, $1F, $2F, $3E, $5B, $7C, $B7, $EE
-    db $DA, $BF, $01, $FF, $F0, $E0, $E0, $18, $F8, $F4, $7C, $DA, $3E, $ED, $77, $5B
-    db $FD, $EF, $BE, $BA, $DF, $5E, $6F, $23, $3E, $1B, $1C, $07, $07, $01, $FF, $F0
-    db $F7, $7D, $5D, $FB, $7A, $F6, $C4, $7C, $D8, $38, $E0, $E0, $01, $A0, $F0
+Gfx_7E_5027::
+    db $40, $00, $01, $01, $ff, $f0, $07, $07, $18, $1f, $2f, $3e, $5b, $7c, $b7, $ee
+    db $da, $bf, $01, $ff, $f0, $e0, $e0, $18, $f8, $f4, $7c, $da, $3e, $ed, $77, $5b
+    db $fd, $ef, $be, $ba, $df, $5e, $6f, $23, $3e, $1b, $1c, $07, $07, $01, $ff, $f0
+    db $f7, $7d, $5d, $fb, $7a, $f6, $c4, $7c, $d8, $38, $e0, $e0, $01, $a0, $f0
 
-; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5066:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5066:: ; address name
+Gfx_7E_5066::
     INCBIN "dwm2-cobi-us.gbc", $1F9066, $43
 
-; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_50A9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_50A9:: ; address name
+Gfx_7E_50A9::
     INCBIN "dwm2-cobi-us.gbc", $1F90A9, $42
 
-; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_50EB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_50EB:: ; address name
-    db $40, $00, $02, $02, $FF, $F2, $1F, $1F, $17, $18, $0D, $0E, $0B, $0F, $05, $07
-    db $02, $FF, $F2, $80, $80, $60, $E0, $B0, $50, $68, $98, $B8, $C8, $03, $03, $01
-    db $01, $1C, $1C, $3E, $22, $7A, $4E, $47, $7F, $3B, $3A, $01, $01, $44, $FC, $E4
-    db $FC, $E8, $F8, $9B, $FB, $55, $77, $33, $33, $80, $80, $80, $80
+; LZSS-compressed: 61 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_50EB::
+    db $40, $00, $02, $02, $ff, $f2, $1f, $1f, $17, $18, $0d, $0e, $0b, $0f, $05, $07
+    db $02, $ff, $f2, $80, $80, $60, $e0, $b0, $50, $68, $98, $b8, $c8, $03, $03, $01
+    db $01, $1c, $1c, $3e, $22, $7a, $4e, $47, $7f, $3b, $3a, $01, $01, $44, $fc, $e4
+    db $fc, $e8, $f8, $9b, $fb, $55, $77, $33, $33, $80, $80, $80, $80
 
-; LZSS-compressed asset: 128 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5128:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5128:: ; address name
+; LZSS-compressed: 128 bytes that expand to 128 (E-0016, E-0017)
+Gfx_7E_5128::
     INCBIN "dwm2-cobi-us.gbc", $1F9128, $80
 
-; LZSS-compressed asset: 221 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_51A8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_51A8:: ; address name
+; LZSS-compressed: 221 bytes that expand to 256 (E-0016, E-0017)
+Gfx_7E_51A8::
     INCBIN "dwm2-cobi-us.gbc", $1F91A8, $DD
 
-; LZSS-compressed asset: 55 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5285:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5285:: ; address name
-    db $40, $00, $01, $00, $00, $1F, $1F, $3F, $20, $7F, $40, $01, $06, $01, $49, $7F
-    db $40, $00, $00, $F0, $F0, $F8, $08, $FC, $04, $01, $16, $01, $24, $FC, $04, $01
-    db $06, $00, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01, $FE, $F0, $01, $16, $00
-    db $F8, $08, $F0, $F0, $01, $A0, $F4
+; LZSS-compressed: 55 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_5285::
+    db $40, $00, $01, $00, $00, $1f, $1f, $3f, $20, $7f, $40, $01, $06, $01, $49, $7f
+    db $40, $00, $00, $f0, $f0, $f8, $08, $fc, $04, $01, $16, $01, $24, $fc, $04, $01
+    db $06, $00, $3f, $20, $1f, $13, $1c, $14, $18, $18, $01, $fe, $f0, $01, $16, $00
+    db $f8, $08, $f0, $f0, $01, $a0, $f4
 
-; address loaded by DebugStaffRoll_Scene03_DecompressToVRAM
-; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus600Gfx_7E_52BC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_52BC:: ; address name
-    db $40, $00, $01, $00, $00, $1F, $1F, $3F, $20, $7D, $43, $7F, $43, $7D, $43, $7F
-    db $41, $7F, $40, $00, $00, $F0, $F0, $F8, $08, $7C, $84, $FC, $84, $7C, $84, $FC
-    db $04, $FC, $04, $7D, $43, $7D, $43, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01
-    db $FE, $F0, $7C, $84, $7C, $84, $F8, $08, $F0, $F0, $01, $A0, $F4
+Tiles0Plus600Gfx_7E_52BC::
+    db $40, $00, $01, $00, $00, $1f, $1f, $3f, $20, $7d, $43, $7f, $43, $7d, $43, $7f
+    db $41, $7f, $40, $00, $00, $f0, $f0, $f8, $08, $7c, $84, $fc, $84, $7c, $84, $fc
+    db $04, $fc, $04, $7d, $43, $7d, $43, $3f, $20, $1f, $13, $1c, $14, $18, $18, $01
+    db $fe, $f0, $7c, $84, $7c, $84, $f8, $08, $f0, $f0, $01, $a0, $f4
 
-; LZSS-compressed asset: 119 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_52F9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_52F9:: ; address name
+; LZSS-compressed: 119 bytes that expand to 128 (E-0016, E-0017)
+Gfx_7E_52F9::
     INCBIN "dwm2-cobi-us.gbc", $1F92F9, $77
 
-; LZSS-compressed asset: 170 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5370:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5370:: ; address name
+; LZSS-compressed: 170 bytes that expand to 192 (E-0016, E-0017)
+Gfx_7E_5370::
     INCBIN "dwm2-cobi-us.gbc", $1F9370, $AA
 
-; LZSS-compressed asset: 68 bytes expand to 80 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_541A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_541A:: ; address name
+; LZSS-compressed: 68 bytes that expand to 80 (E-0016, E-0017)
+Gfx_7E_541A::
     INCBIN "dwm2-cobi-us.gbc", $1F941A, $44
 
-; address loaded by LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte
-; LZSS-compressed asset: 181 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_545E:: ; address name
+; LZSS-compressed: 181 bytes that expand to 192 (E-0016, E-0017)
+LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data::
     INCBIN "dwm2-cobi-us.gbc", $1F945E, $B5
 
-; LZSS-compressed asset: 130 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5513:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5513:: ; address name
+; LZSS-compressed: 130 bytes that expand to 128 (E-0016, E-0017)
+Gfx_7E_5513::
     INCBIN "dwm2-cobi-us.gbc", $1F9513, $82
 
-; address loaded by LoadSpriteGraphics7E5595ToTiles0
-; LZSS-compressed asset: 171 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus700Gfx_7E_5595:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5595:: ; address name
+; LZSS-compressed: 171 bytes that expand to 192 (E-0016, E-0017)
+Tiles0Plus700Gfx_7E_5595::
     INCBIN "dwm2-cobi-us.gbc", $1F9595, $AB
 
-; LZSS-compressed asset: 131 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5640:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5640:: ; address name
+; LZSS-compressed: 131 bytes that expand to 128 (E-0016, E-0017)
+Gfx_7E_5640::
     INCBIN "dwm2-cobi-us.gbc", $1F9640, $83
 
-; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_56C3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_56C3:: ; address name
+; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
+Gfx_7E_56C3::
     INCBIN "dwm2-cobi-us.gbc", $1F96C3, $43
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM
-; LZSS-compressed asset: 80 bytes expand to 96 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus100Gfx_7E_5706:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5706:: ; address name
+; LZSS-compressed: 80 bytes that expand to 96 (E-0016, E-0017)
+Tiles0Plus100Gfx_7E_5706::
     INCBIN "dwm2-cobi-us.gbc", $1F9706, $50
 
-; LZSS-compressed asset: 282 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5756:: ; heuristic: stream decompressed while the game ran on the emulator; C0
-Data_07E_5756:: ; address name
+; LZSS-compressed: 282 bytes that expand to 512 (E-0016, E-0017)
+Gfx_7E_5756::
     INCBIN "dwm2-cobi-us.gbc", $1F9756, $11A
 
-; LZSS-compressed asset: 143 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5870:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_07E_5870:: ; address name
+; LZSS-compressed: 143 bytes that expand to 512 (E-0016, E-0017)
+Gfx_7E_5870::
     INCBIN "dwm2-cobi-us.gbc", $1F9870, $8F
 
-; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, FieldScene01_Sub02_DecompressToVRAM
-; LZSS-compressed asset: 75 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus700Gfx_7E_58FF:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_58FF:: ; address name
+; LZSS-compressed: 75 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus700Gfx_7E_58FF::
     INCBIN "dwm2-cobi-us.gbc", $1F98FF, $4B
 
-; address loaded by FieldScene01_Sub03_DecompressToVRAM
-; LZSS-compressed asset: 74 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus700Gfx_7E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_594A:: ; address name
+; LZSS-compressed: 74 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus700Gfx_7E_594A::
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A
 
-; LZSS-compressed asset: 129 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5994:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5994:: ; address name
+; LZSS-compressed: 129 bytes that expand to 256 (E-0016, E-0017)
+Gfx_7E_5994::
     INCBIN "dwm2-cobi-us.gbc", $1F9994, $81
 
-; LZSS-compressed asset: 133 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_7E_5A15:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5A15:: ; address name
+; LZSS-compressed: 133 bytes that expand to 256 (E-0016, E-0017)
+Gfx_7E_5A15::
     INCBIN "dwm2-cobi-us.gbc", $1F9A15, $85
 
-; address loaded by SpawnScriptSpriteInFrontOfPlayer
-; LZSS-compressed asset: 92 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus700Gfx_7E_5A9A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5A9A:: ; address name
+; LZSS-compressed: 92 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus700Gfx_7E_5A9A::
     INCBIN "dwm2-cobi-us.gbc", $1F9A9A, $5C
 
-; E-0164 (derived: 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
+; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5AF6::
-OBJPaletteBufferPlus8Data_7E_5AF6:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_5AF6:: ; address name
-    dw $0000, $6BFF, $0279, $0000 ; id 0
-    dw $7C00, $7C00, $7C00, $7C00 ; id 1
-    db $00, $7C, $00, $7C, $00, $7C, $00, $7C
+OBJPaletteBufferPlus8Data_7E_5AF6::
+    dw $0000, $6bff, $0279, $0000 ; id 0
+    dw $7c00, $7c00, $7c00, $7c00 ; id 1
+    db $00, $7c, $00, $7c, $00, $7c, $00, $7c
 
-; address loaded by RunGameMode2State_CopyScrollToHardware
-; LZSS-compressed asset: 25 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus100Gfx_7E_5B0E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5B0E:: ; address name
-    db $00, $01, $01, $50, $50, $F8, $A8, $F8, $88, $F8, $A8, $D8, $D8, $01, $A0, $FF
-    db $4D, $01, $69, $0F, $4D, $01, $C9, $0F, $23
+; LZSS-compressed: 25 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus100Gfx_7E_5B0E::
+    db $00, $01, $01, $50, $50, $f8, $a8, $f8, $88, $f8, $a8, $d8, $d8, $01, $a0, $ff
+    db $4d, $01, $69, $0f, $4d, $01, $c9, $0f, $23
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
-; LZSS-compressed asset: 31 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus100Gfx_7E_5B27:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5B27:: ; address name
-    db $00, $01, $01, $10, $10, $38, $28, $7C, $44, $FE, $82, $FE, $82, $7C, $44, $38
-    db $28, $10, $10, $01, $A0, $FF, $4D, $01, $6F, $0F, $4D, $01, $CF, $0F, $1D
+; LZSS-compressed: 31 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus100Gfx_7E_5B27::
+    db $00, $01, $01, $10, $10, $38, $28, $7c, $44, $fe, $82, $fe, $82, $7c, $44, $38
+    db $28, $10, $10, $01, $a0, $ff, $4d, $01, $6f, $0f, $4d, $01, $cf, $0f, $1d
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
-; LZSS-compressed asset: 29 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Plus200Gfx_7E_5B46:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5B46:: ; address name
-    db $00, $01, $01, $D6, $D6, $FE, $AA, $FE, $82, $01, $04, $01, $BA, $EE, $AA, $EE
-    db $EE, $01, $A0, $FF, $4D, $01, $6F, $0F, $4D, $01, $CF, $0F, $1D
+; LZSS-compressed: 29 bytes that expand to 256 (E-0016, E-0017)
+Tiles0Plus200Gfx_7E_5B46::
+    db $00, $01, $01, $d6, $d6, $fe, $aa, $fe, $82, $01, $04, $01, $ba, $ee, $aa, $ee
+    db $ee, $01, $a0, $ff, $4d, $01, $6f, $0f, $4d, $01, $cf, $0f, $1d
 
-; address loaded by DrawTitleSaveSummaryScreen
-; LZSS-compressed asset: 85 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Tiles0Gfx_7E_5B63:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_07E_5B63:: ; address name
+; LZSS-compressed: 85 bytes that expand to 512 (E-0016, E-0017)
+Tiles0Gfx_7E_5B63::
     INCBIN "dwm2-cobi-us.gbc", $1F9B63, $55
 
-; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
+; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5BB8::
-OBJPaletteBufferData_7E_5BB8:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_07E_5BB8:: ; address name
-    dw $0000, $3D7D, $2011, $0000 ; id 0
+OBJPaletteBufferData_7E_5BB8::
+    dw $0000, $3d7d, $2011, $0000 ; id 0
     ds $2440, $00

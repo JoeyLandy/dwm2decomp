@@ -1,10 +1,11 @@
 SECTION "Bank 68", ROMX[$4000], BANK[$68]
     db $68
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
+; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup44::
-Data_068_4001:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
@@ -198,16 +199,12 @@ Data_068_4001:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
+; a permutation of the sub-chunk numbers (E-0146)
 ; record: sub-chunk order
 KeyWorldChunkGroup44Order::
-Data_068_4241:: ; address name
     db $04, $05, $03, $02, $00, $01 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup45::
-Data_068_4247:: ; address name
     dfar KeyWorldScreenHeader_66_5560 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -401,16 +398,10 @@ Data_068_4247:: ; address name
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup45Order::
-Data_068_4487:: ; address name
     db $00, $02, $01, $03, $04, $05 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup46::
-Data_068_448D:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_751D ; screen 2: 8-byte header, then the compressed tile map
@@ -604,16 +595,10 @@ Data_068_448D:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup46Order::
-Data_068_46CD:: ; address name
     db $05, $04, $03, $02, $01, $00 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup47::
-Data_068_46D3:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 2: 8-byte header, then the compressed tile map
@@ -807,16 +792,12 @@ Data_068_46D3:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup47Order::
-Data_068_4913:: ; address name
     db $01, $00, $02, $03, $05, $04 ; entry 0
 
-; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
 KeyWorldChunkGroup48::
-Data_068_4919:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -914,16 +895,10 @@ Data_068_4919:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup48Order::
-Data_068_4A39:: ; address name
     db $00, $01, $02 ; entry 0
 
-; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup49::
-Data_068_4A3C:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_77A4 ; screen 2: 8-byte header, then the compressed tile map
@@ -1021,16 +996,10 @@ Data_068_4A3C:: ; address name
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup49Order::
-Data_068_4B5C:: ; address name
     db $02, $01, $00 ; entry 0
 
-; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4A::
-Data_068_4B5F:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_751D ; screen 2: 8-byte header, then the compressed tile map
@@ -1128,16 +1097,10 @@ Data_068_4B5F:: ; address name
     dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup4AOrder::
-Data_068_4C7F:: ; address name
     db $01, $00, $02 ; entry 0
 
-; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4B::
-Data_068_4C82:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 2: 8-byte header, then the compressed tile map
@@ -1235,16 +1198,14 @@ Data_068_4C82:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup4BOrder::
-Data_068_4DA2:: ; address name
     db $02, $00, $01 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
+; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4C::
-Data_068_4DA5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -1438,16 +1399,12 @@ Data_068_4DA5:: ; address name
     dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
+; a permutation of the sub-chunk numbers (E-0146)
 ; record: sub-chunk order
 KeyWorldChunkGroup4COrder::
-Data_068_4FE5:: ; address name
     db $00, $02, $05, $01, $03, $04 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4D::
-Data_068_4FEB:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7641 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -1641,16 +1598,10 @@ Data_068_4FEB:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup4DOrder::
-Data_068_522B:: ; address name
     db $05, $02, $01, $04, $03, $00 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4E::
-Data_068_5231:: ; address name
     dfar KeyWorldScreenHeader_66_5658 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7641 ; screen 2: 8-byte header, then the compressed tile map
@@ -1844,16 +1795,10 @@ Data_068_5231:: ; address name
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup4EOrder::
-Data_068_5471:: ; address name
     db $01, $02, $05, $00, $03, $04 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4F::
-Data_068_5477:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -2047,16 +1992,10 @@ Data_068_5477:: ; address name
     dfar KeyWorld05_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup4FOrder::
-Data_068_56B7:: ; address name
     db $04, $03, $00, $05, $02, $01 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup50::
-Data_068_56BD:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
@@ -2250,16 +2189,10 @@ Data_068_56BD:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup50Order::
-Data_068_58FD:: ; address name
     db $01, $02, $05, $00, $03, $04 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup51::
-Data_068_5903:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_55DC ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -2453,16 +2386,10 @@ Data_068_5903:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup51Order::
-Data_068_5B43:: ; address name
     db $00, $03, $04, $01, $02, $05 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup52::
-Data_068_5B49:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -2656,16 +2583,10 @@ Data_068_5B49:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup52Order::
-Data_068_5D89:: ; address name
     db $05, $02, $01, $04, $03, $00 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup53::
-Data_068_5D8F:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5705 ; screen 2: 8-byte header, then the compressed tile map
@@ -2859,16 +2780,12 @@ Data_068_5D8F:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup53Order::
-Data_068_5FCF:: ; address name
     db $04, $03, $00, $05, $02, $01 ; entry 0
 
-; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
 KeyWorldChunkGroup54::
-Data_068_5FD5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_589C ; screen 2: 8-byte header, then the compressed tile map
@@ -3158,16 +3075,10 @@ Data_068_5FD5:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup54Order::
-Data_068_6335:: ; address name
     db $00, $02, $03, $01, $04, $07, $05, $06, $08 ; entry 0
 
-; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup55::
-Data_068_633E:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -3457,16 +3368,10 @@ Data_068_633E:: ; address name
     dfar KeyWorld08_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup55Order::
-Data_068_669E:: ; address name
     db $08, $07, $03, $06, $04, $02, $04, $01, $00 ; entry 0
 
-; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup56::
-Data_068_66A7:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -3756,16 +3661,10 @@ Data_068_66A7:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup56Order::
-Data_068_6A07:: ; address name
     db $03, $02, $00, $07, $04, $01, $08, $06, $05 ; entry 0
 
-; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup57::
-Data_068_6A10:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_589C ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
@@ -4055,35 +3954,29 @@ Data_068_6A10:: ; address name
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup57Order::
-Data_068_6D70:: ; address name
     db $05, $06, $08, $01, $04, $07, $00, $02, $03 ; entry 0
 
 ; compressed tileset of map $A2 (the first map record using it)
-; LZSS-compressed asset: 1435 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Tileset:: ; heuristic: map tileset stream; C0
-Data_068_6D79:: ; address name
+; LZSS-compressed: 1435 bytes that expand to 2048 (E-0016, E-0017)
+MapA2Tileset::
     INCBIN "dwm2-cobi-us.gbc", $1A2D79, $59B
 
-; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 MapA2Palettes::
-Data_068_7314:: ; address name
-    dw $7C01, $7FFF, $7FE1, $0000 ; entry 0
-    dw $05A4, $53DE, $0E29, $0084 ; entry 1
-    dw $386C, $53DE, $4593, $0000 ; entry 2
-    dw $012F, $035F, $01DA, $0000 ; entry 3
-    dw $0160, $5AB1, $4A2D, $0000 ; entry 4
-    dw $0152, $53DE, $025C, $0008 ; entry 5
+    dw $7c01, $7fff, $7fe1, $0000 ; entry 0
+    dw $05a4, $53de, $0e29, $0084 ; entry 1
+    dw $386c, $53de, $4593, $0000 ; entry 2
+    dw $012f, $035f, $01da, $0000 ; entry 3
+    dw $0160, $5ab1, $4a2d, $0000 ; entry 4
+    dw $0152, $53de, $025c, $0008 ; entry 5
     dw $0000, $0000, $0000, $0000 ; entry 6
     dw $0000, $0000, $0000, $0000 ; entry 7
 
-; E-0142 (derived: 12 screen far pointers, row by row)
+; 12 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapA2Screens0::
-Data_068_7354:: ; address name
     dfar MapA2Screens0_Y0X0 ; entry 0
     dfar MapA2Screens0_Y0X1 ; entry 1
     dfar MapA2Screens0_Y0X2 ; entry 2
@@ -4097,10 +3990,7 @@ Data_068_7354:: ; address name
     dfar MapA2Screens0_Y3X1 ; entry 10
     dfar MapA2Screens0_Y3X2 ; entry 11
 
-; E-0142 (derived: 12 screen far pointers, row by row)
-; record: compressed 20 x 18 screen; its ROM bank
 MapA2Attrs0::
-Data_068_7378:: ; address name
     dfar MapA2Attrs0_Y0X0 ; entry 0
     dfar MapA2Attrs0_Y0X1 ; entry 1
     dfar MapA2Attrs0_Y0X2 ; entry 2
@@ -4114,191 +4004,156 @@ Data_068_7378:: ; address name
     dfar MapA2Attrs0_Y3X1 ; entry 10
     dfar MapA2Attrs0_Y3X2 ; entry 11
 
-; LZSS-compressed asset: 246 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y0X0:: ; heuristic: map screen stream; C0
-Data_068_739C:: ; address name
+; LZSS-compressed: 246 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y0X0::
     INCBIN "dwm2-cobi-us.gbc", $1A339C, $F6
 
-; LZSS-compressed asset: 248 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y0X1:: ; heuristic: map screen stream; C0
-Data_068_7492:: ; address name
+; LZSS-compressed: 248 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y0X1::
     INCBIN "dwm2-cobi-us.gbc", $1A3492, $F8
 
-; LZSS-compressed asset: 248 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y0X2:: ; heuristic: map screen stream; C0
-Data_068_758A:: ; address name
+MapA2Screens0_Y0X2::
     INCBIN "dwm2-cobi-us.gbc", $1A358A, $F8
 
-; LZSS-compressed asset: 170 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y1X0:: ; heuristic: map screen stream; C0
-Data_068_7682:: ; address name
+; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y1X0::
     INCBIN "dwm2-cobi-us.gbc", $1A3682, $AA
 
-; LZSS-compressed asset: 232 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y1X1:: ; heuristic: map screen stream; C0
-Data_068_772C:: ; address name
+; LZSS-compressed: 232 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y1X1::
     INCBIN "dwm2-cobi-us.gbc", $1A372C, $E8
 
-; LZSS-compressed asset: 163 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y1X2:: ; heuristic: map screen stream; C0
-Data_068_7814:: ; address name
+; LZSS-compressed: 163 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y1X2::
     INCBIN "dwm2-cobi-us.gbc", $1A3814, $A3
 
-; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y2X0:: ; heuristic: map screen stream; C0
-Data_068_78B7:: ; address name
+; LZSS-compressed: 192 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y2X0::
     INCBIN "dwm2-cobi-us.gbc", $1A38B7, $C0
 
-; LZSS-compressed asset: 227 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y2X1:: ; heuristic: map screen stream; C0
-Data_068_7977:: ; address name
+; LZSS-compressed: 227 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y2X1::
     INCBIN "dwm2-cobi-us.gbc", $1A3977, $E3
 
-; LZSS-compressed asset: 194 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y2X2:: ; heuristic: map screen stream; C0
-Data_068_7A5A:: ; address name
+; LZSS-compressed: 194 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y2X2::
     INCBIN "dwm2-cobi-us.gbc", $1A3A5A, $C2
 
-; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y3X0:: ; heuristic: map screen stream; C0
-Data_068_7B1C:: ; address name
-    db $68, $01, $00, $02, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
-    db $00, $08, $1F, $34
+; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y3X0::
+    db $68, $01, $00, $02, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
+    db $00, $08, $1f, $34
 
-; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y3X1:: ; heuristic: map screen stream; C0
-Data_068_7B30:: ; address name
+; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
+MapA2Screens0_Y3X1::
     INCBIN "dwm2-cobi-us.gbc", $1A3B30, $55
 
-; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Screens0_Y3X2:: ; heuristic: map screen stream; C0
-Data_068_7B85:: ; address name
-    db $68, $01, $00, $02, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
-    db $00, $08, $1F, $34
+MapA2Screens0_Y3X2::
+    db $68, $01, $00, $02, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
+    db $00, $08, $1f, $34
 
-; LZSS-compressed asset: 63 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y0X0:: ; heuristic: map screen stream; C0
-Data_068_7B99:: ; address name
-    db $68, $01, $00, $04, $04, $02, $00, $02, $0D, $04, $00, $00, $0F, $00, $04, $00
-    db $14, $0F, $00, $00, $28, $0F, $2B, $01, $01, $02, $02, $01, $01, $00, $7A, $08
-    db $00, $78, $0F, $05, $00, $A2, $0C, $00, $A0, $0F, $2B, $00, $A0, $08, $00, $28
-    db $00, $00, $FE, $02, $00, $F4, $0F, $09, $00, $FE, $06, $00, $1A, $1F, $27
+; LZSS-compressed: 63 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y0X0::
+    db $68, $01, $00, $04, $04, $02, $00, $02, $0d, $04, $00, $00, $0f, $00, $04, $00
+    db $14, $0f, $00, $00, $28, $0f, $2b, $01, $01, $02, $02, $01, $01, $00, $7a, $08
+    db $00, $78, $0f, $05, $00, $a2, $0c, $00, $a0, $0f, $2b, $00, $a0, $08, $00, $28
+    db $00, $00, $fe, $02, $00, $f4, $0f, $09, $00, $fe, $06, $00, $1a, $1f, $27
 
-; LZSS-compressed asset: 61 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y0X1:: ; heuristic: map screen stream; C0
-Data_068_7BD8:: ; address name
-    db $68, $01, $00, $02, $00, $00, $0F, $3E, $01, $00, $4E, $01, $00, $57, $01, $00
-    db $4E, $07, $00, $55, $04, $00, $66, $02, $00, $64, $02, $00, $68, $08, $00, $55
-    db $02, $00, $7A, $0F, $01, $00, $66, $0C, $00, $9E, $0F, $07, $00, $C4, $0F, $11
-    db $04, $04, $00, $E0, $0E, $00, $F0, $0F, $03, $00, $16, $1F, $3B
+; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y0X1::
+    db $68, $01, $00, $02, $00, $00, $0f, $3e, $01, $00, $4e, $01, $00, $57, $01, $00
+    db $4e, $07, $00, $55, $04, $00, $66, $02, $00, $64, $02, $00, $68, $08, $00, $55
+    db $02, $00, $7a, $0f, $01, $00, $66, $0c, $00, $9e, $0f, $07, $00, $c4, $0f, $11
+    db $04, $04, $00, $e0, $0e, $00, $f0, $0f, $03, $00, $16, $1f, $3b
 
-; LZSS-compressed asset: 58 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y0X2:: ; heuristic: map screen stream; C0
-Data_068_7C15:: ; address name
-    db $68, $01, $00, $02, $00, $00, $0D, $04, $04, $00, $01, $0F, $00, $00, $13, $0D
-    db $04, $00, $25, $0F, $2C, $01, $01, $02, $02, $01, $01, $00, $78, $08, $00, $76
-    db $0F, $05, $00, $A0, $0C, $00, $9E, $0F, $2B, $00, $EE, $02, $00, $E4, $0E, $00
-    db $F4, $0F, $03, $00, $9E, $06, $00, $14, $1F, $2D
+; LZSS-compressed: 58 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y0X2::
+    db $68, $01, $00, $02, $00, $00, $0d, $04, $04, $00, $01, $0f, $00, $00, $13, $0d
+    db $04, $00, $25, $0f, $2c, $01, $01, $02, $02, $01, $01, $00, $78, $08, $00, $76
+    db $0f, $05, $00, $a0, $0c, $00, $9e, $0f, $2b, $00, $ee, $02, $00, $e4, $0e, $00
+    db $f4, $0f, $03, $00, $9e, $06, $00, $14, $1f, $2d
 
-; LZSS-compressed asset: 46 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y1X0:: ; heuristic: map screen stream; C0
-Data_068_7C4F:: ; address name
-    db $68, $01, $00, $04, $04, $04, $04, $01, $00, $04, $03, $00, $00, $00, $00, $0C
-    db $04, $00, $04, $0E, $00, $04, $04, $00, $1E, $0F, $3F, $00, $04, $06, $00, $7A
-    db $0F, $33, $00, $20, $0F, $33, $00, $02, $0F, $15, $00, $02, $0F, $13
+; LZSS-compressed: 46 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y1X0::
+    db $68, $01, $00, $04, $04, $04, $04, $01, $00, $04, $03, $00, $00, $00, $00, $0c
+    db $04, $00, $04, $0e, $00, $04, $04, $00, $1e, $0f, $3f, $00, $04, $06, $00, $7a
+    db $0f, $33, $00, $20, $0f, $33, $00, $02, $0f, $15, $00, $02, $0f, $13
 
-; LZSS-compressed asset: 51 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y1X1:: ; heuristic: map screen stream; C0
-Data_068_7C7D:: ; address name
-    db $68, $01, $00, $04, $00, $00, $0F, $18, $01, $00, $2C, $07, $00, $24, $0F, $07
-    db $00, $2C, $08, $00, $34, $04, $00, $52, $0E, $00, $52, $0C, $00, $78, $0F, $2D
-    db $00, $50, $0F, $15, $00, $28, $0F, $17, $00, $28, $08, $00, $20, $0F, $01, $00
-    db $26, $1F, $1B
+; LZSS-compressed: 51 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y1X1::
+    db $68, $01, $00, $04, $00, $00, $0f, $18, $01, $00, $2c, $07, $00, $24, $0f, $07
+    db $00, $2c, $08, $00, $34, $04, $00, $52, $0e, $00, $52, $0c, $00, $78, $0f, $2d
+    db $00, $50, $0f, $15, $00, $28, $0f, $17, $00, $28, $08, $00, $20, $0f, $01, $00
+    db $26, $1f, $1b
 
-; LZSS-compressed asset: 44 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y1X2:: ; heuristic: map screen stream; C0
-Data_068_7CB0:: ; address name
+; LZSS-compressed: 44 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y1X2::
     db $68, $01, $00, $04, $00, $00, $03, $01, $00, $08, $03, $00, $00, $04, $00, $04
-    db $0F, $0D, $00, $0E, $08, $00, $30, $0F, $21, $00, $30, $06, $00, $6E, $0F, $33
-    db $00, $28, $0F, $3D, $00, $00, $0F, $25, $00, $10, $0F, $05
+    db $0f, $0d, $00, $0e, $08, $00, $30, $0f, $21, $00, $30, $06, $00, $6e, $0f, $33
+    db $00, $28, $0f, $3d, $00, $00, $0f, $25, $00, $10, $0f, $05
 
-; LZSS-compressed asset: 56 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y2X0:: ; heuristic: map screen stream; C0
-Data_068_7CDC:: ; address name
-    db $68, $01, $00, $04, $04, $04, $04, $01, $00, $04, $03, $00, $00, $00, $00, $0C
-    db $04, $00, $04, $0F, $09, $00, $0A, $08, $00, $2C, $0F, $0B, $00, $06, $06, $00
-    db $54, $0F, $29, $00, $52, $0C, $00, $A0, $0F, $07, $00, $52, $0A, $00, $C8, $0F
-    db $09, $00, $F7, $0F, $4D, $00, $08, $1C
+; LZSS-compressed: 56 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y2X0::
+    db $68, $01, $00, $04, $04, $04, $04, $01, $00, $04, $03, $00, $00, $00, $00, $0c
+    db $04, $00, $04, $0f, $09, $00, $0a, $08, $00, $2c, $0f, $0b, $00, $06, $06, $00
+    db $54, $0f, $29, $00, $52, $0c, $00, $a0, $0f, $07, $00, $52, $0a, $00, $c8, $0f
+    db $09, $00, $f7, $0f, $4d, $00, $08, $1c
 
-; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y2X1:: ; heuristic: map screen stream; C0
-Data_068_7D14:: ; address name
+; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y2X1::
     db $68, $01, $00, $04, $00, $00, $01, $01, $00, $06, $03, $00, $00, $02, $00, $00
-    db $0F, $05, $00, $06, $04, $00, $0A, $08, $00, $2C, $0C, $00, $2C, $08, $00, $5B
-    db $0F, $4D, $00, $90, $0F, $21, $00, $4E, $0E, $00, $4C, $0F, $01, $00, $26, $0F
-    db $17, $00, $28, $0F, $15
+    db $0f, $05, $00, $06, $04, $00, $0a, $08, $00, $2c, $0c, $00, $2c, $08, $00, $5b
+    db $0f, $4d, $00, $90, $0f, $21, $00, $4e, $0e, $00, $4c, $0f, $01, $00, $26, $0f
+    db $17, $00, $28, $0f, $15
 
-; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y2X2:: ; heuristic: map screen stream; C0
-Data_068_7D49:: ; address name
+MapA2Attrs0_Y2X2::
     db $68, $01, $00, $04, $00, $00, $03, $01, $00, $08, $03, $00, $00, $04, $00, $04
-    db $0F, $03, $00, $08, $04, $00, $22, $0F, $07, $00, $2E, $06, $00, $46, $0F, $41
-    db $00, $28, $0C, $00, $AA, $0F, $03, $00, $26, $0E, $00, $0E, $0A, $00, $F3, $0F
-    db $4D, $00, $08, $1F, $01
+    db $0f, $03, $00, $08, $04, $00, $22, $0f, $07, $00, $2e, $06, $00, $46, $0f, $41
+    db $00, $28, $0c, $00, $aa, $0f, $03, $00, $26, $0e, $00, $0e, $0a, $00, $f3, $0f
+    db $4d, $00, $08, $1f, $01
 
-; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y3X0:: ; heuristic: map screen stream; C0
-Data_068_7D7E:: ; address name
-    db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
-    db $1F, $1F, $35
+; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y3X0::
+    db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
+    db $1f, $1f, $35
 
-; LZSS-compressed asset: 26 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y3X1:: ; heuristic: map screen stream; C0
-Data_068_7D91:: ; address name
-    db $68, $01, $02, $02, $FF, $F0, $01, $02, $04, $07, $02, $FC, $FF, $4D, $02, $5C
-    db $0F, $4D, $02, $BC, $0F, $4D, $02, $08, $1F, $25
+; LZSS-compressed: 26 bytes that expand to 360 (E-0016, E-0017)
+MapA2Attrs0_Y3X1::
+    db $68, $01, $02, $02, $ff, $f0, $01, $02, $04, $07, $02, $fc, $ff, $4d, $02, $5c
+    db $0f, $4d, $02, $bc, $0f, $4d, $02, $08, $1f, $25
 
-; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapA2Attrs0_Y3X2:: ; heuristic: map screen stream; C0
-Data_068_7DAB:: ; address name
-    db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
-    db $1F, $1F, $35
+MapA2Attrs0_Y3X2::
+    db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
+    db $1f, $1f, $35
 
-; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 MapX62F0Palettes::
-Data_068_7DBE:: ; address name
-    dw $396B, $7FFF, $5A94, $0000 ; entry 0
-    dw $012F, $035F, $01DA, $0000 ; entry 1
-    dw $48EC, $6BFF, $4A6F, $0000 ; entry 2
-    dw $1154, $53DE, $229A, $0084 ; entry 3
-    dw $218C, $4F18, $3A52, $0000 ; entry 4
-    dw $218C, $4F18, $3A52, $0000 ; entry 5
-    dw $218C, $4F18, $3A52, $0000 ; entry 6
-    dw $218C, $4F18, $3A52, $0000 ; entry 7
+    dw $396b, $7fff, $5a94, $0000 ; entry 0
+    dw $012f, $035f, $01da, $0000 ; entry 1
+    dw $48ec, $6bff, $4a6f, $0000 ; entry 2
+    dw $1154, $53de, $229a, $0084 ; entry 3
+    dw $218c, $4f18, $3a52, $0000 ; entry 4
+    dw $218c, $4f18, $3a52, $0000 ; entry 5
+    dw $218c, $4f18, $3a52, $0000 ; entry 6
+    dw $218c, $4f18, $3a52, $0000 ; entry 7
 
-; E-0142 (derived: 1 screen far pointers, row by row)
+; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapX62F0Screens0::
-Data_068_7DFE:: ; address name
     dfar MapX62F0Screens0_Y0X0 ; entry 0
 
-; E-0142 (derived: 1 screen far pointers, row by row)
-; record: compressed 20 x 18 screen; its ROM bank
 MapX62F0Attrs0::
-Data_068_7E01:: ; address name
     dfar MapX62F0Attrs0_Y0X0 ; entry 0
 
-; LZSS-compressed asset: 186 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapX62F0Screens0_Y0X0:: ; heuristic: map screen stream; C0
-Data_068_7E04:: ; address name
+; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
+MapX62F0Screens0_Y0X0::
     INCBIN "dwm2-cobi-us.gbc", $1A3E04, $BA
 
-; LZSS-compressed asset: 61 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MapX62F0Attrs0_Y0X0:: ; heuristic: map screen stream; C0
-Data_068_7EBE:: ; address name
-    db $68, $01, $04, $04, $FF, $F0, $02, $04, $04, $07, $04, $FC, $FF, $07, $04, $04
-    db $04, $01, $01, $04, $0A, $06, $04, $2A, $0F, $05, $03, $04, $56, $03, $04, $4A
-    db $0F, $0B, $04, $56, $04, $04, $5A, $02, $04, $76, $0F, $4D, $04, $AE, $0F, $1F
-    db $04, $54, $0F, $13, $04, $50, $06, $04, $0C, $0C, $04, $48, $18
+; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
+MapX62F0Attrs0_Y0X0::
+    db $68, $01, $04, $04, $ff, $f0, $02, $04, $04, $07, $04, $fc, $ff, $07, $04, $04
+    db $04, $01, $01, $04, $0a, $06, $04, $2a, $0f, $05, $03, $04, $56, $03, $04, $4a
+    db $0f, $0b, $04, $56, $04, $04, $5a, $02, $04, $76, $0f, $4d, $04, $ae, $0f, $1f
+    db $04, $54, $0f, $13, $04, $50, $06, $04, $0c, $0c, $04, $48, $18
     ds $105, $00

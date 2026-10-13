@@ -21,6 +21,12 @@ MACRO dfar
     db BANK(\1)
 ENDM
 
+; A jump through the word table that follows: `rst $00` (JumpTable) jumps to entry A of the
+; `dw` list right after it, keeping DE (E-0007). src/ writes it this way; the listing keeps `rst $00`.
+MACRO jumptable
+    rst $00
+ENDM
+
 ; Event script commands (E-0152). FetchScriptCommand (bank $10) reads one opcode byte and
 ; the inline bytes of the dedicated opcodes; any other opcode is a command type with no
 ; inline bytes. Relative targets are forward offsets from the byte after the offset

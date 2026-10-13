@@ -185,7 +185,7 @@ class SkillTableSource(unittest.TestCase):
 
     def test_228_records_of_17_bytes(self):
         import re
-        text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        text = (ROOT / "build/listing/bank1a.asm").read_text(encoding="utf-8")
         text = text[text.index("SkillTable::"):]
         text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
@@ -195,7 +195,7 @@ class SkillTableSource(unittest.TestCase):
     @unittest.skipUnless(ROM.is_file(), "reference ROM not present")
     def test_rows_equal_the_rom_bytes(self):
         import re
-        text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        text = (ROOT / "build/listing/bank1a.asm").read_text(encoding="utf-8")
         text = text[text.index("SkillTable::"):]
         text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
@@ -211,13 +211,13 @@ class StreamSources(unittest.TestCase):
     def test_asset_pack_banks_carry_stream_labels(self):
         import re
         for bank, minimum in (("7d", 80), ("20", 70), ("74", 50)):
-            text = (ROOT / f"src/banks/bank{bank}.asm").read_text(encoding="utf-8")
+            text = (ROOT / f"build/listing/bank{bank}.asm").read_text(encoding="utf-8")
             self.assertGreaterEqual(len(re.findall(r"^; LZSS-compressed asset", text, re.M)), minimum, bank)
 
     def test_chains_skip_the_monster_table(self):
         import json
         chains = json.loads((ROOT / "config/stream_chains.json").read_text(encoding="utf-8"))["chains"]
-        text = (ROOT / "src/banks/bank34.asm").read_text(encoding="utf-8")
+        text = (ROOT / "build/listing/bank34.asm").read_text(encoding="utf-8")
         self.assertIn("MonsterTable::", text)
         self.assertNotRegex(text.split("MonsterTable::")[1][:200000], r"LZSS-compressed asset")
         self.assertTrue(all(count >= 6 for runs in chains.values() for _, count in runs))
@@ -228,7 +228,7 @@ class DispatchCases(unittest.TestCase):
 
     def test_cases_are_named_after_their_table_owner(self):
         import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src/banks").glob("bank*.asm"))
+        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
         cases = re.findall(r"^(\w+)_Case([0-9A-F]{2})::", text, re.M)
         self.assertGreater(len(cases), 500)  # fewer as cases get descriptive names (E-0268, E-0302)
         self.assertIn("RunGameModeInit_Return", text)  # RunGameModeInit's cases now have shape names (E-0272)
@@ -268,7 +268,7 @@ class FamilyNamesAreApplied(unittest.TestCase):
     def test_every_family_name_is_defined_in_the_source(self):
         import json
         import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src/banks").glob("bank*.asm"))
+        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
         families = json.loads((ROOT / "config/name_families.json").read_text(encoding="utf-8"))["families"]
         self.assertGreater(len(families), 20)
         for fam in families:
@@ -277,7 +277,7 @@ class FamilyNamesAreApplied(unittest.TestCase):
 
     def test_copies_share_the_note_and_differ_in_bank_suffix(self):
         import re
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src/banks").glob("bank*.asm"))
+        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
         copies = re.findall(r"(?m)^AddDoubleAToHL_Bank[0-9A-F]{2}(?:_[0-9A-F]{4})?::", text)
         self.assertGreaterEqual(len(copies), 10)
         self.assertEqual(len(copies), len(set(copies)))

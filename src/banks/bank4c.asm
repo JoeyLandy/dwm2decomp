@@ -1,29 +1,26 @@
 SECTION "Bank 4C", ROMX[$4000], BANK[$4C]
-    db $4C
+    db $4c
 
 ; compressed tileset of map $48 (the first map record using it)
-; LZSS-compressed asset: 1404 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Tileset:: ; heuristic: map tileset stream; C0
-Data_04C_4001:: ; address name
+; LZSS-compressed: 1404 bytes that expand to 2048 (E-0016, E-0017)
+Map48Tileset::
     INCBIN "dwm2-cobi-us.gbc", $130001, $57C
 
-; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map48Palettes::
-Data_04C_457D:: ; address name
-    dw $7C01, $7FFF, $7FE1, $0000 ; entry 0
-    dw $01B5, $7FFF, $5652, $0006 ; entry 1
-    dw $0090, $7FFF, $199F, $0000 ; entry 2
-    dw $01C4, $7FFF, $5652, $0084 ; entry 3
-    dw $1415, $7FFF, $5652, $0000 ; entry 4
-    dw $014E, $131C, $0216, $0000 ; entry 5
-    dw $001F, $7FFF, $0348, $0000 ; entry 6
-    dw $014E, $4F18, $3A52, $0000 ; entry 7
+    dw $7c01, $7fff, $7fe1, $0000 ; entry 0
+    dw $01b5, $7fff, $5652, $0006 ; entry 1
+    dw $0090, $7fff, $199f, $0000 ; entry 2
+    dw $01c4, $7fff, $5652, $0084 ; entry 3
+    dw $1415, $7fff, $5652, $0000 ; entry 4
+    dw $014e, $131c, $0216, $0000 ; entry 5
+    dw $001f, $7fff, $0348, $0000 ; entry 6
+    dw $014e, $4f18, $3a52, $0000 ; entry 7
 
-; E-0142 (derived: 144 screen far pointers, row by row)
+; 144 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map48Screens0::
-Data_04C_45BD:: ; address name
     dfar Map48Screens0_Y0X0 ; entry 0
     dfar Map48Screens0_Y0X1 ; entry 1
     dfar Map48Screens0_Y0X2 ; entry 2
@@ -169,10 +166,7 @@ Data_04C_45BD:: ; address name
     dfar Map48Screens0_Y11X10 ; entry 142
     dfar Map48Screens0_Y11X11 ; entry 143
 
-; E-0142 (derived: 144 screen far pointers, row by row)
-; record: compressed 20 x 18 screen; its ROM bank
 Map48Screens2::
-Data_04C_476D:: ; address name
     dfar Map48Screens0_Y0X0 ; entry 0
     dfar Map48Screens0_Y0X1 ; entry 1
     dfar Map48Screens0_Y0X2 ; entry 2
@@ -318,790 +312,605 @@ Data_04C_476D:: ; address name
     dfar Map48Screens0_Y11X10 ; entry 142
     dfar Map48Screens0_Y11X11 ; entry 143
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X0:: ; heuristic: map screen stream; C0
-Data_04C_491D:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y0X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X1:: ; heuristic: map screen stream; C0
-Data_04C_493A:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X2:: ; heuristic: map screen stream; C0
-Data_04C_4957:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X3:: ; heuristic: map screen stream; C0
-Data_04C_4974:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 62 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X4:: ; heuristic: map screen stream; C0
-Data_04C_4991:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $3D, $44, $45, $44, $45, $00, $64, $0C, $54, $55, $54, $55
-    db $00, $CA, $0E, $00, $DA, $0C, $00, $EC, $00, $00, $EE, $0A, $00, $D8, $00, $42
-    db $43, $42, $43, $00, $E0, $0C, $52, $53, $52, $53, $00, $18, $1F, $15
+; LZSS-compressed: 62 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y0X4::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $3d, $44, $45, $44, $45, $00, $64, $0c, $54, $55, $54, $55
+    db $00, $ca, $0e, $00, $da, $0c, $00, $ec, $00, $00, $ee, $0a, $00, $d8, $00, $42
+    db $43, $42, $43, $00, $e0, $0c, $52, $53, $52, $53, $00, $18, $1f, $15
 
-; LZSS-compressed asset: 136 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X5:: ; heuristic: map screen stream; C0
-Data_04C_49CF:: ; address name
+; LZSS-compressed: 136 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y0X5::
     INCBIN "dwm2-cobi-us.gbc", $1309CF, $88
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X6:: ; heuristic: map screen stream; C0
-Data_04C_4A57:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X6::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X7:: ; heuristic: map screen stream; C0
-Data_04C_4A74:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X7::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X8:: ; heuristic: map screen stream; C0
-Data_04C_4A91:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X8::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X9:: ; heuristic: map screen stream; C0
-Data_04C_4AAE:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X9::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X10:: ; heuristic: map screen stream; C0
-Data_04C_4ACB:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X10::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y0X11:: ; heuristic: map screen stream; C0
-Data_04C_4AE8:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y0X11::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X0:: ; heuristic: map screen stream; C0
-Data_04C_4B05:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X1:: ; heuristic: map screen stream; C0
-Data_04C_4B22:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X2:: ; heuristic: map screen stream; C0
-Data_04C_4B3F:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X3:: ; heuristic: map screen stream; C0
-Data_04C_4B5C:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 110 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X4:: ; heuristic: map screen stream; C0
-Data_04C_4B79:: ; address name
+; LZSS-compressed: 110 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y1X4::
     INCBIN "dwm2-cobi-us.gbc", $130B79, $6E
 
-; LZSS-compressed asset: 139 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X5:: ; heuristic: map screen stream; C0
-Data_04C_4BE7:: ; address name
+; LZSS-compressed: 139 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y1X5::
     INCBIN "dwm2-cobi-us.gbc", $130BE7, $8B
 
-; LZSS-compressed asset: 132 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X6:: ; heuristic: map screen stream; C0
-Data_04C_4C72:: ; address name
+; LZSS-compressed: 132 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y1X6::
     INCBIN "dwm2-cobi-us.gbc", $130C72, $84
 
-; LZSS-compressed asset: 126 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X7:: ; heuristic: map screen stream; C0
-Data_04C_4CF6:: ; address name
+; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y1X7::
     INCBIN "dwm2-cobi-us.gbc", $130CF6, $7E
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X8:: ; heuristic: map screen stream; C0
-Data_04C_4D74:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y1X8::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X9:: ; heuristic: map screen stream; C0
-Data_04C_4D91:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X9::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X10:: ; heuristic: map screen stream; C0
-Data_04C_4DAE:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X10::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y1X11:: ; heuristic: map screen stream; C0
-Data_04C_4DCB:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y1X11::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X0:: ; heuristic: map screen stream; C0
-Data_04C_4DE8:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y2X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X1:: ; heuristic: map screen stream; C0
-Data_04C_4E05:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+Map48Screens0_Y2X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
-; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_4C_4E1D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_04C_4E1D:: ; address name
-    db $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
+Gfx_4C_4E1D::
+    db $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X2:: ; heuristic: map screen stream; C0
-Data_04C_4E22:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y2X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X3:: ; heuristic: map screen stream; C0
-Data_04C_4E3F:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y2X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 101 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X4:: ; heuristic: map screen stream; C0
-Data_04C_4E5C:: ; address name
+; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X4::
     INCBIN "dwm2-cobi-us.gbc", $130E5C, $65
 
-; LZSS-compressed asset: 134 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X5:: ; heuristic: map screen stream; C0
-Data_04C_4EC1:: ; address name
+; LZSS-compressed: 134 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X5::
     INCBIN "dwm2-cobi-us.gbc", $130EC1, $86
 
-; LZSS-compressed asset: 145 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X6:: ; heuristic: map screen stream; C0
-Data_04C_4F47:: ; address name
+; LZSS-compressed: 145 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X6::
     INCBIN "dwm2-cobi-us.gbc", $130F47, $91
 
-; LZSS-compressed asset: 160 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X7:: ; heuristic: map screen stream; C0
-Data_04C_4FD8:: ; address name
+; LZSS-compressed: 160 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X7::
     INCBIN "dwm2-cobi-us.gbc", $130FD8, $A0
 
-; LZSS-compressed asset: 140 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X8:: ; heuristic: map screen stream; C0
-Data_04C_5078:: ; address name
+; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X8::
     INCBIN "dwm2-cobi-us.gbc", $131078, $8C
 
-; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X9:: ; heuristic: map screen stream; C0
-Data_04C_5104:: ; address name
+; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X9::
     INCBIN "dwm2-cobi-us.gbc", $131104, $98
 
-; LZSS-compressed asset: 106 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X10:: ; heuristic: map screen stream; C0
-Data_04C_519C:: ; address name
+; LZSS-compressed: 106 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X10::
     INCBIN "dwm2-cobi-us.gbc", $13119C, $6A
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y2X11:: ; heuristic: map screen stream; C0
-Data_04C_5206:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y2X11::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X0:: ; heuristic: map screen stream; C0
-Data_04C_5223:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y3X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X1:: ; heuristic: map screen stream; C0
-Data_04C_5240:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y3X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X2:: ; heuristic: map screen stream; C0
-Data_04C_525D:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+Map48Screens0_Y3X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
-; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_4C_5275:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_04C_5275:: ; address name
-    db $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
+Gfx_4C_5275::
+    db $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X3:: ; heuristic: map screen stream; C0
-Data_04C_527A:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y3X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X4:: ; heuristic: map screen stream; C0
-Data_04C_5297:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y3X4::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 119 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X5:: ; heuristic: map screen stream; C0
-Data_04C_52B4:: ; address name
+; LZSS-compressed: 119 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X5::
     INCBIN "dwm2-cobi-us.gbc", $1312B4, $77
 
-; LZSS-compressed asset: 160 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X6:: ; heuristic: map screen stream; C0
-Data_04C_532B:: ; address name
+; LZSS-compressed: 160 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X6::
     INCBIN "dwm2-cobi-us.gbc", $13132B, $A0
 
-; LZSS-compressed asset: 157 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X7:: ; heuristic: map screen stream; C0
-Data_04C_53CB:: ; address name
+; LZSS-compressed: 157 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X7::
     INCBIN "dwm2-cobi-us.gbc", $1313CB, $9D
 
-; LZSS-compressed asset: 138 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X8:: ; heuristic: map screen stream; C0
-Data_04C_5468:: ; address name
+; LZSS-compressed: 138 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X8::
     INCBIN "dwm2-cobi-us.gbc", $131468, $8A
 
-; LZSS-compressed asset: 122 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X9:: ; heuristic: map screen stream; C0
-Data_04C_54F2:: ; address name
+; LZSS-compressed: 122 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X9::
     INCBIN "dwm2-cobi-us.gbc", $1314F2, $7A
 
-; LZSS-compressed asset: 115 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X10:: ; heuristic: map screen stream; C0
-Data_04C_556C:: ; address name
+; LZSS-compressed: 115 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X10::
     INCBIN "dwm2-cobi-us.gbc", $13156C, $73
 
-; LZSS-compressed asset: 88 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y3X11:: ; heuristic: map screen stream; C0
-Data_04C_55DF:: ; address name
+; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y3X11::
     INCBIN "dwm2-cobi-us.gbc", $1315DF, $58
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X0:: ; heuristic: map screen stream; C0
-Data_04C_5637:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X1:: ; heuristic: map screen stream; C0
-Data_04C_5654:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y4X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X2:: ; heuristic: map screen stream; C0
-Data_04C_5671:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+Map48Screens0_Y4X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
-; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_4C_5689:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_04C_5689:: ; address name
-    db $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
+Gfx_4C_5689::
+    db $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X3:: ; heuristic: map screen stream; C0
-Data_04C_568E:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y4X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X4:: ; heuristic: map screen stream; C0
-Data_04C_56AB:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y4X4::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 107 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X5:: ; heuristic: map screen stream; C0
-Data_04C_56C8:: ; address name
+; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X5::
     INCBIN "dwm2-cobi-us.gbc", $1316C8, $6B
 
-; LZSS-compressed asset: 126 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X6:: ; heuristic: map screen stream; C0
-Data_04C_5733:: ; address name
+; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X6::
     INCBIN "dwm2-cobi-us.gbc", $131733, $7E
 
-; LZSS-compressed asset: 108 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X7:: ; heuristic: map screen stream; C0
-Data_04C_57B1:: ; address name
+; LZSS-compressed: 108 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X7::
     INCBIN "dwm2-cobi-us.gbc", $1317B1, $6C
 
-; LZSS-compressed asset: 150 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X8:: ; heuristic: map screen stream; C0
-Data_04C_581D:: ; address name
+; LZSS-compressed: 150 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X8::
     INCBIN "dwm2-cobi-us.gbc", $13181D, $96
 
-; LZSS-compressed asset: 149 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X9:: ; heuristic: map screen stream; C0
-Data_04C_58B3:: ; address name
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X9::
     INCBIN "dwm2-cobi-us.gbc", $1318B3, $95
 
-; LZSS-compressed asset: 140 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y4X9:: ; heuristic: map screen stream; C0
-Data_04C_5948:: ; address name
+; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y4X9::
     INCBIN "dwm2-cobi-us.gbc", $131948, $8C
 
-; LZSS-compressed asset: 177 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X10:: ; heuristic: map screen stream; C0
-Data_04C_59D4:: ; address name
+; LZSS-compressed: 177 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X10::
     INCBIN "dwm2-cobi-us.gbc", $1319D4, $B1
 
-; LZSS-compressed asset: 175 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y4X10:: ; heuristic: map screen stream; C0
-Data_04C_5A85:: ; address name
+; LZSS-compressed: 175 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y4X10::
     INCBIN "dwm2-cobi-us.gbc", $131A85, $AF
 
-; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y4X11:: ; heuristic: map screen stream; C0
-Data_04C_5B34:: ; address name
+; LZSS-compressed: 151 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y4X11::
     INCBIN "dwm2-cobi-us.gbc", $131B34, $97
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X0:: ; heuristic: map screen stream; C0
-Data_04C_5BCB:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X1:: ; heuristic: map screen stream; C0
-Data_04C_5BE8:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F
+Map48Screens0_Y5X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
-; LZSS-compressed asset: 63 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_4C_5C00:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_04C_5C00:: ; address name
-    db $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
+Gfx_4C_5C00::
+    db $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X2:: ; heuristic: map screen stream; C0
-Data_04C_5C05:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y5X2::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X3:: ; heuristic: map screen stream; C0
-Data_04C_5C22:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y5X3::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 123 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X4:: ; heuristic: map screen stream; C0
-Data_04C_5C3F:: ; address name
+; LZSS-compressed: 123 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X4::
     INCBIN "dwm2-cobi-us.gbc", $131C3F, $7B
 
-; LZSS-compressed asset: 138 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X5:: ; heuristic: map screen stream; C0
-Data_04C_5CBA:: ; address name
+; LZSS-compressed: 138 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X5::
     INCBIN "dwm2-cobi-us.gbc", $131CBA, $8A
 
-; LZSS-compressed asset: 172 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X6:: ; heuristic: map screen stream; C0
-Data_04C_5D44:: ; address name
+; LZSS-compressed: 172 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X6::
     INCBIN "dwm2-cobi-us.gbc", $131D44, $AC
 
-; LZSS-compressed asset: 170 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y5X6:: ; heuristic: map screen stream; C0
-Data_04C_5DF0:: ; address name
+; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y5X6::
     INCBIN "dwm2-cobi-us.gbc", $131DF0, $AA
 
-; LZSS-compressed asset: 175 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X7:: ; heuristic: map screen stream; C0
-Data_04C_5E9A:: ; address name
+; LZSS-compressed: 175 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X7::
     INCBIN "dwm2-cobi-us.gbc", $131E9A, $AF
 
-; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y5X7:: ; heuristic: map screen stream; C0
-Data_04C_5F49:: ; address name
+; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y5X7::
     INCBIN "dwm2-cobi-us.gbc", $131F49, $98
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X8:: ; heuristic: map screen stream; C0
-Data_04C_5FE1:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X8::
     INCBIN "dwm2-cobi-us.gbc", $131FE1, $94
 
-; LZSS-compressed asset: 149 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y5X8:: ; heuristic: map screen stream; C0
-Data_04C_6075:: ; address name
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y5X8::
     INCBIN "dwm2-cobi-us.gbc", $132075, $95
 
-; LZSS-compressed asset: 133 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X9:: ; heuristic: map screen stream; C0
-Data_04C_610A:: ; address name
+; LZSS-compressed: 133 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X9::
     INCBIN "dwm2-cobi-us.gbc", $13210A, $85
 
-; LZSS-compressed asset: 139 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y5X9:: ; heuristic: map screen stream; C0
-Data_04C_618F:: ; address name
+; LZSS-compressed: 139 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y5X9::
     INCBIN "dwm2-cobi-us.gbc", $13218F, $8B
 
-; LZSS-compressed asset: 189 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X10:: ; heuristic: map screen stream; C0
-Data_04C_621A:: ; address name
+; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X10::
     INCBIN "dwm2-cobi-us.gbc", $13221A, $BD
 
-; LZSS-compressed asset: 102 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y5X11:: ; heuristic: map screen stream; C0
-Data_04C_62D7:: ; address name
+; LZSS-compressed: 102 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y5X11::
     INCBIN "dwm2-cobi-us.gbc", $1322D7, $66
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X0:: ; heuristic: map screen stream; C0
-Data_04C_633D:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 90 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X1:: ; heuristic: map screen stream; C0
-Data_04C_635A:: ; address name
+; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X1::
     INCBIN "dwm2-cobi-us.gbc", $13235A, $5A
 
-; LZSS-compressed asset: 136 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X2:: ; heuristic: map screen stream; C0
-Data_04C_63B4:: ; address name
+; LZSS-compressed: 136 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X2::
     INCBIN "dwm2-cobi-us.gbc", $1323B4, $88
 
-; LZSS-compressed asset: 124 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X3:: ; heuristic: map screen stream; C0
-Data_04C_643C:: ; address name
+; LZSS-compressed: 124 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X3::
     INCBIN "dwm2-cobi-us.gbc", $13243C, $7C
 
-; LZSS-compressed asset: 149 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X4:: ; heuristic: map screen stream; C0
-Data_04C_64B8:: ; address name
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X4::
     INCBIN "dwm2-cobi-us.gbc", $1324B8, $95
 
-; LZSS-compressed asset: 133 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X5:: ; heuristic: map screen stream; C0
-Data_04C_654D:: ; address name
+; LZSS-compressed: 133 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X5::
     INCBIN "dwm2-cobi-us.gbc", $13254D, $85
 
-; LZSS-compressed asset: 116 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X6:: ; heuristic: map screen stream; C0
-Data_04C_65D2:: ; address name
+; LZSS-compressed: 116 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X6::
     INCBIN "dwm2-cobi-us.gbc", $1325D2, $74
 
-; LZSS-compressed asset: 86 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X7:: ; heuristic: map screen stream; C0
-Data_04C_6646:: ; address name
+; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X7::
     INCBIN "dwm2-cobi-us.gbc", $132646, $56
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y6X7:: ; heuristic: map screen stream; C0
-Data_04C_669C:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
-    db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
+; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y6X7::
+    db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d
+    db $02, $5f, $0f, $4d, $02, $bf, $0f, $4d, $02, $f7, $0f, $0e
 
-; LZSS-compressed asset: 68 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X8:: ; heuristic: map screen stream; C0
-Data_04C_66B8:: ; address name
+; LZSS-compressed: 68 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X8::
     INCBIN "dwm2-cobi-us.gbc", $1326B8, $44
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y6X8:: ; heuristic: map screen stream; C0
-Data_04C_66FC:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
-    db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
+Map48Screens2_Y6X8::
+    db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d
+    db $02, $5f, $0f, $4d, $02, $bf, $0f, $4d, $02, $f7, $0f, $0e
 
-; LZSS-compressed asset: 155 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X9:: ; heuristic: map screen stream; C0
-Data_04C_6718:: ; address name
+; LZSS-compressed: 155 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X9::
     INCBIN "dwm2-cobi-us.gbc", $132718, $9B
 
-; LZSS-compressed asset: 135 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y6X9:: ; heuristic: map screen stream; C0
-Data_04C_67B3:: ; address name
+; LZSS-compressed: 135 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y6X9::
     INCBIN "dwm2-cobi-us.gbc", $1327B3, $87
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X10:: ; heuristic: map screen stream; C0
-Data_04C_683A:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X10::
     INCBIN "dwm2-cobi-us.gbc", $13283A, $94
 
-; LZSS-compressed asset: 83 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y6X11:: ; heuristic: map screen stream; C0
-Data_04C_68CE:: ; address name
+; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y6X11::
     INCBIN "dwm2-cobi-us.gbc", $1328CE, $53
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X0:: ; heuristic: map screen stream; C0
-Data_04C_6921:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 114 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X1:: ; heuristic: map screen stream; C0
-Data_04C_693E:: ; address name
+; LZSS-compressed: 114 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X1::
     INCBIN "dwm2-cobi-us.gbc", $13293E, $72
 
-; LZSS-compressed asset: 149 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X2:: ; heuristic: map screen stream; C0
-Data_04C_69B0:: ; address name
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X2::
     INCBIN "dwm2-cobi-us.gbc", $1329B0, $95
 
-; LZSS-compressed asset: 144 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X3:: ; heuristic: map screen stream; C0
-Data_04C_6A45:: ; address name
+; LZSS-compressed: 144 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X3::
     INCBIN "dwm2-cobi-us.gbc", $132A45, $90
 
-; LZSS-compressed asset: 158 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X4:: ; heuristic: map screen stream; C0
-Data_04C_6AD5:: ; address name
+; LZSS-compressed: 158 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X4::
     INCBIN "dwm2-cobi-us.gbc", $132AD5, $9E
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X5:: ; heuristic: map screen stream; C0
-Data_04C_6B73:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X5::
     INCBIN "dwm2-cobi-us.gbc", $132B73, $94
 
-; LZSS-compressed asset: 164 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X6:: ; heuristic: map screen stream; C0
-Data_04C_6C07:: ; address name
+; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X6::
     INCBIN "dwm2-cobi-us.gbc", $132C07, $A4
 
-; LZSS-compressed asset: 71 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X7:: ; heuristic: map screen stream; C0
-Data_04C_6CAB:: ; address name
+; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X7::
     INCBIN "dwm2-cobi-us.gbc", $132CAB, $47
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y7X7:: ; heuristic: map screen stream; C0
-Data_04C_6CF2:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
-    db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
+; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y7X7::
+    db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d
+    db $02, $5f, $0f, $4d, $02, $bf, $0f, $4d, $02, $f7, $0f, $0e
 
-; LZSS-compressed asset: 126 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X8:: ; heuristic: map screen stream; C0
-Data_04C_6D0E:: ; address name
+; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X8::
     INCBIN "dwm2-cobi-us.gbc", $132D0E, $7E
 
-; LZSS-compressed asset: 138 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y7X8:: ; heuristic: map screen stream; C0
-Data_04C_6D8C:: ; address name
+; LZSS-compressed: 138 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y7X8::
     INCBIN "dwm2-cobi-us.gbc", $132D8C, $8A
 
-; LZSS-compressed asset: 194 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X9:: ; heuristic: map screen stream; C0
-Data_04C_6E16:: ; address name
+; LZSS-compressed: 194 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X9::
     INCBIN "dwm2-cobi-us.gbc", $132E16, $C2
 
-; LZSS-compressed asset: 173 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y7X9:: ; heuristic: map screen stream; C0
-Data_04C_6ED8:: ; address name
+; LZSS-compressed: 173 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y7X9::
     INCBIN "dwm2-cobi-us.gbc", $132ED8, $AD
 
-; LZSS-compressed asset: 131 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X10:: ; heuristic: map screen stream; C0
-Data_04C_6F85:: ; address name
+; LZSS-compressed: 131 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X10::
     INCBIN "dwm2-cobi-us.gbc", $132F85, $83
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y7X11:: ; heuristic: map screen stream; C0
-Data_04C_7008:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y7X11::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X0:: ; heuristic: map screen stream; C0
-Data_04C_7025:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y8X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X1:: ; heuristic: map screen stream; C0
-Data_04C_7042:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y8X1::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 110 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X2:: ; heuristic: map screen stream; C0
-Data_04C_705F:: ; address name
+; LZSS-compressed: 110 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X2::
     INCBIN "dwm2-cobi-us.gbc", $13305F, $6E
 
-; LZSS-compressed asset: 149 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X3:: ; heuristic: map screen stream; C0
-Data_04C_70CD:: ; address name
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X3::
     INCBIN "dwm2-cobi-us.gbc", $1330CD, $95
 
-; LZSS-compressed asset: 135 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X4:: ; heuristic: map screen stream; C0
-Data_04C_7162:: ; address name
+; LZSS-compressed: 135 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X4::
     INCBIN "dwm2-cobi-us.gbc", $133162, $87
 
-; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X5:: ; heuristic: map screen stream; C0
-Data_04C_71E9:: ; address name
+; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X5::
     INCBIN "dwm2-cobi-us.gbc", $1331E9, $4D
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y8X5:: ; heuristic: map screen stream; C0
-Data_04C_7236:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
-    db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
+; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y8X5::
+    db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d
+    db $02, $5f, $0f, $4d, $02, $bf, $0f, $4d, $02, $f7, $0f, $0e
 
-; LZSS-compressed asset: 86 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X6:: ; heuristic: map screen stream; C0
-Data_04C_7252:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E
+; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X6::
+    db $68, $01, $02, $00, $01, $02, $00, $0e
 
-; LZSS-compressed asset: 225 bytes expand to 258 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_4C_725A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-Data_04C_725A:: ; address name
+; LZSS-compressed: 225 bytes that expand to 258 (E-0016, E-0017)
+Gfx_4C_725A::
     INCBIN "dwm2-cobi-us.gbc", $13325A, $4E
 
-; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y8X6:: ; heuristic: map screen stream; C0
-Data_04C_72A8:: ; address name
-    db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D
-    db $02, $5F, $0F, $4D, $02, $BF, $0F, $4D, $02, $F7, $0F, $0E
+Map48Screens2_Y8X6::
+    db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d
+    db $02, $5f, $0f, $4d, $02, $bf, $0f, $4d, $02, $f7, $0f, $0e
 
-; LZSS-compressed asset: 119 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X7:: ; heuristic: map screen stream; C0
-Data_04C_72C4:: ; address name
+; LZSS-compressed: 119 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X7::
     INCBIN "dwm2-cobi-us.gbc", $1332C4, $77
 
-; LZSS-compressed asset: 69 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y8X7:: ; heuristic: map screen stream; C0
-Data_04C_733B:: ; address name
+; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y8X7::
     INCBIN "dwm2-cobi-us.gbc", $13333B, $45
 
-; LZSS-compressed asset: 131 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X8:: ; heuristic: map screen stream; C0
-Data_04C_7380:: ; address name
+; LZSS-compressed: 131 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X8::
     INCBIN "dwm2-cobi-us.gbc", $133380, $83
 
-; LZSS-compressed asset: 78 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens2_Y8X8:: ; heuristic: map screen stream; C0
-Data_04C_7403:: ; address name
+; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens2_Y8X8::
     INCBIN "dwm2-cobi-us.gbc", $133403, $4E
 
-; LZSS-compressed asset: 143 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X9:: ; heuristic: map screen stream; C0
-Data_04C_7451:: ; address name
+; LZSS-compressed: 143 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X9::
     INCBIN "dwm2-cobi-us.gbc", $133451, $8F
 
-; LZSS-compressed asset: 88 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X10:: ; heuristic: map screen stream; C0
-Data_04C_74E0:: ; address name
+; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X10::
     INCBIN "dwm2-cobi-us.gbc", $1334E0, $58
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y8X11:: ; heuristic: map screen stream; C0
-Data_04C_7538:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+; LZSS-compressed: 29 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y8X11::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 29 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X0:: ; heuristic: map screen stream; C0
-Data_04C_7555:: ; address name
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D, $00, $F8, $0F, $0D
+Map48Screens0_Y9X0::
+    db $68, $01, $00, $2a, $2b, $00, $00, $0e, $3a, $3b, $00, $14, $0e, $00, $00, $0f
+    db $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d, $00, $f8, $0f, $0d
 
-; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X1:: ; heuristic: map screen stream; C0
-Data_04C_7572:: ; address name
+; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X1::
     INCBIN "dwm2-cobi-us.gbc", $133572, $4C
 
-; LZSS-compressed asset: 181 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X2:: ; heuristic: map screen stream; C0
-Data_04C_75BE:: ; address name
+; LZSS-compressed: 181 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X2::
     INCBIN "dwm2-cobi-us.gbc", $1335BE, $B5
 
-; LZSS-compressed asset: 164 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X3:: ; heuristic: map screen stream; C0
-Data_04C_7673:: ; address name
+; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X3::
     INCBIN "dwm2-cobi-us.gbc", $133673, $A4
 
-; LZSS-compressed asset: 221 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X4:: ; heuristic: map screen stream; C0
-Data_04C_7717:: ; address name
+; LZSS-compressed: 221 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X4::
     INCBIN "dwm2-cobi-us.gbc", $133717, $DD
 
-; LZSS-compressed asset: 143 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X5:: ; heuristic: map screen stream; C0
-Data_04C_77F4:: ; address name
+; LZSS-compressed: 143 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X5::
     INCBIN "dwm2-cobi-us.gbc", $1337F4, $8F
 
-; LZSS-compressed asset: 135 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X6:: ; heuristic: map screen stream; C0
-Data_04C_7883:: ; address name
+; LZSS-compressed: 135 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X6::
     INCBIN "dwm2-cobi-us.gbc", $133883, $87
 
-; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X7:: ; heuristic: map screen stream; C0
-Data_04C_790A:: ; address name
+; LZSS-compressed: 192 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X7::
     INCBIN "dwm2-cobi-us.gbc", $13390A, $C0
 
-; LZSS-compressed asset: 162 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X8:: ; heuristic: map screen stream; C0
-Data_04C_79CA:: ; address name
+; LZSS-compressed: 162 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X8::
     INCBIN "dwm2-cobi-us.gbc", $1339CA, $A2
 
-; LZSS-compressed asset: 187 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X9:: ; heuristic: map screen stream; C0
-Data_04C_7A6C:: ; address name
+; LZSS-compressed: 187 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X9::
     INCBIN "dwm2-cobi-us.gbc", $133A6C, $BB
 
-; LZSS-compressed asset: 148 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X10:: ; heuristic: map screen stream; C0
-Data_04C_7B27:: ; address name
+; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X10::
     INCBIN "dwm2-cobi-us.gbc", $133B27, $94
 
-; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y9X11:: ; heuristic: map screen stream; C0
-Data_04C_7BBB:: ; address name
+; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y9X11::
     INCBIN "dwm2-cobi-us.gbc", $133BBB, $55
 
-; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X0:: ; heuristic: map screen stream; C0
-Data_04C_7C10:: ; address name
+Map48Screens0_Y10X0::
     INCBIN "dwm2-cobi-us.gbc", $133C10, $55
 
-; LZSS-compressed asset: 173 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X1:: ; heuristic: map screen stream; C0
-Data_04C_7C65:: ; address name
+; LZSS-compressed: 173 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y10X1::
     INCBIN "dwm2-cobi-us.gbc", $133C65, $AD
 
-; LZSS-compressed asset: 184 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X2:: ; heuristic: map screen stream; C0
-Data_04C_7D12:: ; address name
+; LZSS-compressed: 184 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y10X2::
     INCBIN "dwm2-cobi-us.gbc", $133D12, $B8
 
-; LZSS-compressed asset: 191 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X3:: ; heuristic: map screen stream; C0
-Data_04C_7DCA:: ; address name
+; LZSS-compressed: 191 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y10X3::
     INCBIN "dwm2-cobi-us.gbc", $133DCA, $BF
 
-; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X4:: ; heuristic: map screen stream; C0
-Data_04C_7E89:: ; address name
+; LZSS-compressed: 192 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y10X4::
     INCBIN "dwm2-cobi-us.gbc", $133E89, $C0
 
-; LZSS-compressed asset: 119 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map48Screens0_Y10X5:: ; heuristic: map screen stream; C0
-Data_04C_7F49:: ; address name
+; LZSS-compressed: 119 bytes that expand to 360 (E-0016, E-0017)
+Map48Screens0_Y10X5::
     INCBIN "dwm2-cobi-us.gbc", $133F49, $77
     ds $40, $00

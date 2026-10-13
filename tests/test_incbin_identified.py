@@ -5,10 +5,10 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BANKS = ROOT / "src/banks"
+BANKS = ROOT / "build/listing"
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class IncbinIdentified(unittest.TestCase):
     def test_no_incbin_without_an_asset_comment(self):
         bad = []

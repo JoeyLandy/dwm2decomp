@@ -1,10 +1,10 @@
 SECTION "Bank 72", ROMX[$4000], BANK[$72]
     db $72
 
-; E-0141 (C1: LoadMapScreen_Sub03_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n).
+; LoadMapScreen_Sub03_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with
+; ReadByteInBank; every non-zero word is $4181 + $63 * n (E-0141, C1)
 ; record: room record in KeyWorldRooms ($0000 = none)
 KeyWorldRoomPointers::
-Data_072_4001:: ; address name
     dw KeyWorldRoom05 ; id 0
     dw KeyWorldRoom05 ; id 1
     dw KeyWorldRoom02 ; id 2
@@ -198,11 +198,14 @@ Data_072_4001:: ; address name
     dw $0000 ; id 190
     dw $0000 ; id 191
 
-; E-0141 (C1: LoadMapScreen_Sub03_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).
-; record: 3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16 far pointers to their attribute maps
+; LoadMapScreen_Sub03_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY
+; + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes
+; later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode
+; to 360 bytes (E-0141, C1)
+; record: 3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16
+; far pointers to their attribute maps
 KeyWorldRooms::
-KeyWorldRoom00:: ; heuristic: start of a structured table; C0
-Data_072_4181:: ; address name
+KeyWorldRoom00::
     db $00, $01, $02 ; id 0
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -236,7 +239,7 @@ Data_072_4181:: ; address name
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom01:: ; heuristic: string; C0
+KeyWorldRoom01::
     db $00, $01, $02 ; id 1
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -270,8 +273,7 @@ KeyWorldRoom01:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom02:: ; heuristic: key-world room record; C0
-Data_072_4247:: ; address name
+KeyWorldRoom02::
     db $00, $01, $02 ; id 2
     dfar KeyWorldRoom02_Y0X0_Tiles
     dfar KeyWorldRoom02_Y0X1_Tiles
@@ -305,7 +307,7 @@ Data_072_4247:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
-KeyWorldRoom03:: ; heuristic: string; C0
+KeyWorldRoom03::
     db $00, $01, $02 ; id 3
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom03_Y0X1_Tiles
@@ -339,8 +341,7 @@ KeyWorldRoom03:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom04:: ; heuristic: key-world room record; C0
-Data_072_430D:: ; address name
+KeyWorldRoom04::
     db $00, $01, $02 ; id 4
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom04_Y0X1_Tiles
@@ -374,8 +375,7 @@ Data_072_430D:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
-KeyWorldRoom05:: ; heuristic: key-world room record; C0
-Data_072_4370:: ; address name
+KeyWorldRoom05::
     db $00, $01, $02 ; id 5
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom05_Y0X1_Tiles
@@ -409,8 +409,7 @@ Data_072_4370:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom06:: ; heuristic: key-world room record; C0
-Data_072_43D3:: ; address name
+KeyWorldRoom06::
     db $00, $01, $02 ; id 6
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom06_Y0X1_Tiles
@@ -444,8 +443,7 @@ Data_072_43D3:: ; address name
     dfar KeyWorldRoom06_Y3X1_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom07:: ; heuristic: key-world room record; C0
-Data_072_4436:: ; address name
+KeyWorldRoom07::
     db $00, $01, $03 ; id 7
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -479,8 +477,7 @@ Data_072_4436:: ; address name
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom08:: ; heuristic: key-world room record; C0
-Data_072_4499:: ; address name
+KeyWorldRoom08::
     db $00, $01, $03 ; id 8
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom08_Y0X1_Tiles
@@ -514,7 +511,7 @@ Data_072_4499:: ; address name
     dfar KeyWorldRoom08_Y3X1_Attrs
     dfar KeyWorldRoom01_Y2X2_Attrs
     dfar KeyWorldRoom08_Y3X3_Attrs
-KeyWorldRoom09:: ; heuristic: string; C0
+KeyWorldRoom09::
     db $00, $01, $03 ; id 9
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -548,7 +545,7 @@ KeyWorldRoom09:: ; heuristic: string; C0
     dfar KeyWorldRoom09_Y3X1_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
-KeyWorldRoom0A:: ; heuristic: string; C0
+KeyWorldRoom0A::
     db $00, $01, $03 ; id 10
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom0A_Y0X1_Tiles
@@ -582,7 +579,7 @@ KeyWorldRoom0A:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
-KeyWorldRoom0B:: ; heuristic: string; C0
+KeyWorldRoom0B::
     db $00, $01, $03 ; id 11
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom03_Y1X2_Tiles
@@ -616,8 +613,7 @@ KeyWorldRoom0B:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X0_Attrs
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
-KeyWorldRoom0C:: ; heuristic: key-world room record; C0
-Data_072_4625:: ; address name
+KeyWorldRoom0C::
     db $00, $01, $03 ; id 12
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -651,8 +647,7 @@ Data_072_4625:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom0D:: ; heuristic: key-world room record; C0
-Data_072_4688:: ; address name
+KeyWorldRoom0D::
     db $00, $01, $03 ; id 13
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -686,8 +681,7 @@ Data_072_4688:: ; address name
     dfar KeyWorldRoom0D_Y3X1_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom0E:: ; heuristic: key-world room record; C0
-Data_072_46EB:: ; address name
+KeyWorldRoom0E::
     db $00, $01, $04 ; id 14
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X3_Tiles
@@ -721,7 +715,7 @@ Data_072_46EB:: ; address name
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom0F:: ; heuristic: string; C0
+KeyWorldRoom0F::
     db $00, $01, $04 ; id 15
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom00_Y0X3_Tiles
@@ -755,7 +749,7 @@ KeyWorldRoom0F:: ; heuristic: string; C0
     dfar KeyWorldRoom08_Y3X3_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom06_Y0X1_Attrs
-KeyWorldRoom10:: ; heuristic: string; C0
+KeyWorldRoom10::
     db $00, $01, $04 ; id 16
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom10_Y0X1_Tiles
@@ -789,7 +783,7 @@ KeyWorldRoom10:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom02_Y2X1_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
-KeyWorldRoom11:: ; heuristic: string; C0
+KeyWorldRoom11::
     db $00, $01, $04 ; id 17
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom09_Y1X2_Tiles
@@ -823,8 +817,7 @@ KeyWorldRoom11:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y2X1_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
-KeyWorldRoom12:: ; heuristic: key-world room record; C0
-Data_072_4877:: ; address name
+KeyWorldRoom12::
     db $00, $01, $04 ; id 18
     dfar KeyWorldRoom02_Y0X0_Tiles
     dfar KeyWorldRoom0B_Y0X2_Tiles
@@ -858,8 +851,7 @@ Data_072_4877:: ; address name
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
     dfar KeyWorldRoom12_Y3X3_Attrs
-KeyWorldRoom13:: ; heuristic: key-world room record; C0
-Data_072_48DA:: ; address name
+KeyWorldRoom13::
     db $00, $01, $04 ; id 19
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -893,8 +885,7 @@ Data_072_48DA:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom14:: ; heuristic: key-world room record; C0
-Data_072_493D:: ; address name
+KeyWorldRoom14::
     db $00, $01, $04 ; id 20
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -928,8 +919,7 @@ Data_072_493D:: ; address name
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom04_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom15:: ; heuristic: key-world room record; C0
-Data_072_49A0:: ; address name
+KeyWorldRoom15::
     db $00, $01, $05 ; id 21
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -963,8 +953,7 @@ Data_072_49A0:: ; address name
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom16:: ; heuristic: key-world room record; C0
-Data_072_4A03:: ; address name
+KeyWorldRoom16::
     db $00, $01, $05 ; id 22
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -998,7 +987,7 @@ Data_072_4A03:: ; address name
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom17:: ; heuristic: string; C0
+KeyWorldRoom17::
     db $00, $01, $05 ; id 23
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom10_Y2X3_Tiles
@@ -1032,7 +1021,7 @@ KeyWorldRoom17:: ; heuristic: string; C0
     dfar KeyWorldRoom09_Y3X1_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom18:: ; heuristic: string; C0
+KeyWorldRoom18::
     db $00, $01, $05 ; id 24
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom0A_Y2X0_Tiles
@@ -1066,7 +1055,7 @@ KeyWorldRoom18:: ; heuristic: string; C0
     dfar KeyWorldRoom02_Y3X3_Attrs
     dfar KeyWorldRoom02_Y3X0_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom19:: ; heuristic: string; C0
+KeyWorldRoom19::
     db $00, $01, $05 ; id 25
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom09_Y1X2_Tiles
@@ -1100,8 +1089,7 @@ KeyWorldRoom19:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom1A:: ; heuristic: key-world room record; C0
-Data_072_4B8F:: ; address name
+KeyWorldRoom1A::
     db $00, $01, $05 ; id 26
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -1135,8 +1123,7 @@ Data_072_4B8F:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom1B:: ; heuristic: key-world room record; C0
-Data_072_4BF2:: ; address name
+KeyWorldRoom1B::
     db $00, $01, $05 ; id 27
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom1B_Y0X1_Tiles
@@ -1170,8 +1157,7 @@ Data_072_4BF2:: ; address name
     dfar KeyWorldRoom1B_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom1C:: ; heuristic: key-world room record; C0
-Data_072_4C55:: ; address name
+KeyWorldRoom1C::
     db $00, $02, $03 ; id 28
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom02_Y0X0_Tiles
@@ -1205,7 +1191,7 @@ Data_072_4C55:: ; address name
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom1D:: ; heuristic: string; C0
+KeyWorldRoom1D::
     db $00, $02, $03 ; id 29
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom1D_Y0X1_Tiles
@@ -1239,7 +1225,7 @@ KeyWorldRoom1D:: ; heuristic: string; C0
     dfar KeyWorldRoom1D_Y3X1_Attrs
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
-KeyWorldRoom1E:: ; heuristic: string; C0
+KeyWorldRoom1E::
     db $00, $02, $03 ; id 30
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom1E_Y0X1_Tiles
@@ -1273,7 +1259,7 @@ KeyWorldRoom1E:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X0_Attrs
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom08_Y3X3_Attrs
-KeyWorldRoom1F:: ; heuristic: string; C0
+KeyWorldRoom1F::
     db $00, $02, $03 ; id 31
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -1307,8 +1293,7 @@ KeyWorldRoom1F:: ; heuristic: string; C0
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom09_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom20:: ; heuristic: key-world room record; C0
-Data_072_4DE1:: ; address name
+KeyWorldRoom20::
     db $00, $02, $03 ; id 32
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom03_Y0X1_Tiles
@@ -1342,8 +1327,7 @@ Data_072_4DE1:: ; address name
     dfar KeyWorldRoom19_Y0X2_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom04_Y2X2_Attrs
-KeyWorldRoom21:: ; heuristic: key-world room record; C0
-Data_072_4E44:: ; address name
+KeyWorldRoom21::
     db $00, $02, $03 ; id 33
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X3_Tiles
@@ -1377,8 +1361,7 @@ Data_072_4E44:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom22:: ; heuristic: key-world room record; C0
-Data_072_4EA7:: ; address name
+KeyWorldRoom22::
     db $00, $02, $03 ; id 34
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom02_Y3X2_Tiles
@@ -1412,8 +1395,7 @@ Data_072_4EA7:: ; address name
     dfar KeyWorldRoom02_Y3X0_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom23:: ; heuristic: key-world room record; C0
-Data_072_4F0A:: ; address name
+KeyWorldRoom23::
     db $00, $02, $04 ; id 35
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -1447,8 +1429,7 @@ Data_072_4F0A:: ; address name
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom24:: ; heuristic: key-world room record; C0
-Data_072_4F6D:: ; address name
+KeyWorldRoom24::
     db $00, $02, $04 ; id 36
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -1482,7 +1463,7 @@ Data_072_4F6D:: ; address name
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom08_Y1X3_Attrs
-KeyWorldRoom25:: ; heuristic: string; C0
+KeyWorldRoom25::
     db $00, $02, $04 ; id 37
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom25_Y0X1_Tiles
@@ -1516,7 +1497,7 @@ KeyWorldRoom25:: ; heuristic: string; C0
     dfar KeyWorldRoom12_Y3X3_Attrs
     dfar KeyWorldRoom03_Y3X0_Attrs
     dfar KeyWorldRoom08_Y3X3_Attrs
-KeyWorldRoom26:: ; heuristic: string; C0
+KeyWorldRoom26::
     db $00, $02, $04 ; id 38
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom08_Y0X2_Tiles
@@ -1550,7 +1531,7 @@ KeyWorldRoom26:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom27:: ; heuristic: string; C0
+KeyWorldRoom27::
     db $00, $02, $04 ; id 39
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -1584,8 +1565,7 @@ KeyWorldRoom27:: ; heuristic: string; C0
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom28:: ; heuristic: key-world room record; C0
-Data_072_50F9:: ; address name
+KeyWorldRoom28::
     db $00, $02, $04 ; id 40
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom12_Y2X3_Tiles
@@ -1619,8 +1599,7 @@ Data_072_50F9:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom29:: ; heuristic: key-world room record; C0
-Data_072_515C:: ; address name
+KeyWorldRoom29::
     db $00, $02, $04 ; id 41
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom04_Y0X2_Tiles
@@ -1654,8 +1633,7 @@ Data_072_515C:: ; address name
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom2A:: ; heuristic: key-world room record; C0
-Data_072_51BF:: ; address name
+KeyWorldRoom2A::
     db $00, $02, $05 ; id 42
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -1689,7 +1667,7 @@ Data_072_51BF:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom2B:: ; heuristic: string; C0
+KeyWorldRoom2B::
     db $00, $02, $05 ; id 43
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom06_Y0X1_Tiles
@@ -1723,7 +1701,7 @@ KeyWorldRoom2B:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom2C:: ; heuristic: string; C0
+KeyWorldRoom2C::
     db $00, $02, $05 ; id 44
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom16_Y2X3_Tiles
@@ -1757,8 +1735,7 @@ KeyWorldRoom2C:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom2D:: ; heuristic: key-world room record; C0
-Data_072_52E8:: ; address name
+KeyWorldRoom2D::
     db $00, $02, $05 ; id 45
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -1792,7 +1769,7 @@ Data_072_52E8:: ; address name
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom2E:: ; heuristic: string; C0
+KeyWorldRoom2E::
     db $00, $02, $05 ; id 46
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y3X2_Tiles
@@ -1826,8 +1803,7 @@ KeyWorldRoom2E:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom2F:: ; heuristic: key-world room record; C0
-Data_072_53AE:: ; address name
+KeyWorldRoom2F::
     db $00, $02, $05 ; id 47
     dfar KeyWorldRoom02_Y0X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -1861,8 +1837,7 @@ Data_072_53AE:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom30:: ; heuristic: key-world room record; C0
-Data_072_5411:: ; address name
+KeyWorldRoom30::
     db $00, $02, $05 ; id 48
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -1896,7 +1871,7 @@ Data_072_5411:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom31:: ; heuristic: string; C0
+KeyWorldRoom31::
     db $00, $03, $04 ; id 49
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -1930,7 +1905,7 @@ KeyWorldRoom31:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom32:: ; heuristic: string; C0
+KeyWorldRoom32::
     db $00, $03, $04 ; id 50
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -1964,8 +1939,7 @@ KeyWorldRoom32:: ; heuristic: string; C0
     dfar KeyWorldRoom02_Y3X3_Attrs
     dfar KeyWorldRoom01_Y3X0_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
-KeyWorldRoom33:: ; heuristic: key-world room record; C0
-Data_072_553A:: ; address name
+KeyWorldRoom33::
     db $00, $03, $04 ; id 51
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom08_Y0X2_Tiles
@@ -1999,7 +1973,7 @@ Data_072_553A:: ; address name
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom04_Y2X2_Attrs
-KeyWorldRoom34:: ; heuristic: string; C0
+KeyWorldRoom34::
     db $00, $03, $04 ; id 52
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom04_Y0X0_Tiles
@@ -2033,8 +2007,7 @@ KeyWorldRoom34:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom08_Y1X3_Attrs
-KeyWorldRoom35:: ; heuristic: key-world room record; C0
-Data_072_5600:: ; address name
+KeyWorldRoom35::
     db $00, $03, $04 ; id 53
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y3X2_Tiles
@@ -2068,8 +2041,7 @@ Data_072_5600:: ; address name
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom36:: ; heuristic: key-world room record; C0
-Data_072_5663:: ; address name
+KeyWorldRoom36::
     db $00, $03, $04 ; id 54
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -2103,8 +2075,7 @@ Data_072_5663:: ; address name
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom37:: ; heuristic: key-world room record; C0
-Data_072_56C6:: ; address name
+KeyWorldRoom37::
     db $00, $03, $04 ; id 55
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X3_Tiles
@@ -2138,8 +2109,7 @@ Data_072_56C6:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom38:: ; heuristic: key-world room record; C0
-Data_072_5729:: ; address name
+KeyWorldRoom38::
     db $00, $03, $05 ; id 56
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -2173,7 +2143,7 @@ Data_072_5729:: ; address name
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom39:: ; heuristic: string; C0
+KeyWorldRoom39::
     db $00, $03, $05 ; id 57
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom03_Y1X2_Tiles
@@ -2207,7 +2177,7 @@ KeyWorldRoom39:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom3A:: ; heuristic: string; C0
+KeyWorldRoom3A::
     db $00, $03, $05 ; id 58
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -2241,8 +2211,7 @@ KeyWorldRoom3A:: ; heuristic: string; C0
     dfar KeyWorldRoom3A_Y3X1_Attrs
     dfar KeyWorldRoom3A_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom3B:: ; heuristic: key-world room record; C0
-Data_072_5852:: ; address name
+KeyWorldRoom3B::
     db $00, $03, $05 ; id 59
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom10_Y2X3_Tiles
@@ -2276,7 +2245,7 @@ Data_072_5852:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom3C:: ; heuristic: string; C0
+KeyWorldRoom3C::
     db $00, $03, $05 ; id 60
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom0A_Y0X1_Tiles
@@ -2310,8 +2279,7 @@ KeyWorldRoom3C:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom3D:: ; heuristic: key-world room record; C0
-Data_072_5918:: ; address name
+KeyWorldRoom3D::
     db $00, $03, $05 ; id 61
     dfar KeyWorldRoom02_Y0X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -2345,8 +2313,7 @@ Data_072_5918:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom3E:: ; heuristic: key-world room record; C0
-Data_072_597B:: ; address name
+KeyWorldRoom3E::
     db $00, $03, $05 ; id 62
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom3E_Y0X1_Tiles
@@ -2380,7 +2347,7 @@ Data_072_597B:: ; address name
     dfar KeyWorldRoom14_Y1X1_Attrs
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom3F:: ; heuristic: string; C0
+KeyWorldRoom3F::
     db $00, $04, $05 ; id 63
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -2414,8 +2381,7 @@ KeyWorldRoom3F:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom40:: ; heuristic: key-world room record; C0
-Data_072_5A41:: ; address name
+KeyWorldRoom40::
     db $00, $04, $05 ; id 64
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -2449,8 +2415,7 @@ Data_072_5A41:: ; address name
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom02_Y2X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom41:: ; heuristic: key-world room record; C0
-Data_072_5AA4:: ; address name
+KeyWorldRoom41::
     db $00, $04, $05 ; id 65
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom0A_Y2X0_Tiles
@@ -2484,7 +2449,7 @@ Data_072_5AA4:: ; address name
     dfar KeyWorldRoom25_Y0X1_Attrs
     dfar KeyWorldRoom03_Y3X0_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom42:: ; heuristic: string; C0
+KeyWorldRoom42::
     db $00, $04, $05 ; id 66
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -2518,7 +2483,7 @@ KeyWorldRoom42:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom43:: ; heuristic: string; C0
+KeyWorldRoom43::
     db $00, $04, $05 ; id 67
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom03_Y0X2_Tiles
@@ -2552,8 +2517,7 @@ KeyWorldRoom43:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X0_Attrs
     dfar KeyWorldRoom09_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom44:: ; heuristic: key-world room record; C0
-Data_072_5BCD:: ; address name
+KeyWorldRoom44::
     db $00, $04, $05 ; id 68
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom44_Y0X1_Tiles
@@ -2587,8 +2551,7 @@ Data_072_5BCD:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom01_Y2X2_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom45:: ; heuristic: key-world room record; C0
-Data_072_5C30:: ; address name
+KeyWorldRoom45::
     db $00, $04, $05 ; id 69
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom06_Y2X3_Tiles
@@ -2622,8 +2585,7 @@ Data_072_5C30:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom46:: ; heuristic: key-world room record; C0
-Data_072_5C93:: ; address name
+KeyWorldRoom46::
     db $01, $02, $03 ; id 70
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X3_Tiles
@@ -2657,7 +2619,7 @@ Data_072_5C93:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom47:: ; heuristic: string; C0
+KeyWorldRoom47::
     db $01, $02, $03 ; id 71
     dfar KeyWorldRoom0A_Y2X0_Tiles
     dfar KeyWorldRoom11_Y2X1_Tiles
@@ -2691,8 +2653,7 @@ KeyWorldRoom47:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
-KeyWorldRoom48:: ; heuristic: key-world room record; C0
-Data_072_5D59:: ; address name
+KeyWorldRoom48::
     db $01, $02, $03 ; id 72
     dfar KeyWorldRoom0B_Y2X0_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -2726,7 +2687,7 @@ Data_072_5D59:: ; address name
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
     dfar KeyWorldRoom12_Y3X3_Attrs
-KeyWorldRoom49:: ; heuristic: string; C0
+KeyWorldRoom49::
     db $01, $02, $03 ; id 73
     dfar KeyWorldRoom0F_Y1X0_Tiles
     dfar KeyWorldRoom03_Y3X2_Tiles
@@ -2760,7 +2721,7 @@ KeyWorldRoom49:: ; heuristic: string; C0
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom4A:: ; heuristic: string; C0
+KeyWorldRoom4A::
     db $01, $02, $03 ; id 74
     dfar KeyWorldRoom0A_Y2X0_Tiles
     dfar KeyWorldRoom03_Y0X1_Tiles
@@ -2794,8 +2755,7 @@ KeyWorldRoom4A:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
-KeyWorldRoom4B:: ; heuristic: key-world room record; C0
-Data_072_5E82:: ; address name
+KeyWorldRoom4B::
     db $01, $02, $03 ; id 75
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -2829,8 +2789,7 @@ Data_072_5E82:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom4C:: ; heuristic: key-world room record; C0
-Data_072_5EE5:: ; address name
+KeyWorldRoom4C::
     db $01, $02, $03 ; id 76
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -2864,7 +2823,7 @@ Data_072_5EE5:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom4D:: ; heuristic: string; C0
+KeyWorldRoom4D::
     db $01, $02, $04 ; id 77
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -2898,8 +2857,7 @@ KeyWorldRoom4D:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom4E:: ; heuristic: key-world room record; C0
-Data_072_5FAB:: ; address name
+KeyWorldRoom4E::
     db $01, $02, $04 ; id 78
     dfar KeyWorldRoom19_Y0X2_Tiles
     dfar KeyWorldRoom03_Y1X2_Tiles
@@ -2933,7 +2891,7 @@ Data_072_5FAB:: ; address name
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom4F:: ; heuristic: string; C0
+KeyWorldRoom4F::
     db $01, $02, $04 ; id 79
     dfar KeyWorldRoom0B_Y0X2_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -2967,7 +2925,7 @@ KeyWorldRoom4F:: ; heuristic: string; C0
     dfar KeyWorldRoom08_Y1X3_Attrs
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
-KeyWorldRoom50:: ; heuristic: string; C0
+KeyWorldRoom50::
     db $01, $02, $04 ; id 80
     dfar KeyWorldRoom0B_Y2X0_Tiles
     dfar KeyWorldRoom09_Y1X2_Tiles
@@ -3001,8 +2959,7 @@ KeyWorldRoom50:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom09_Y3X1_Attrs
     dfar KeyWorldRoom08_Y3X3_Attrs
-KeyWorldRoom51:: ; heuristic: key-world room record; C0
-Data_072_60D4:: ; address name
+KeyWorldRoom51::
     db $01, $02, $04 ; id 81
     dfar KeyWorldRoom10_Y0X1_Tiles
     dfar KeyWorldRoom25_Y0X2_Tiles
@@ -3036,8 +2993,7 @@ Data_072_60D4:: ; address name
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom52:: ; heuristic: key-world room record; C0
-Data_072_6137:: ; address name
+KeyWorldRoom52::
     db $01, $02, $04 ; id 82
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3071,8 +3027,7 @@ Data_072_6137:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom53:: ; heuristic: key-world room record; C0
-Data_072_619A:: ; address name
+KeyWorldRoom53::
     db $01, $02, $04 ; id 83
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom45_Y1X3_Tiles
@@ -3106,7 +3061,7 @@ Data_072_619A:: ; address name
     dfar KeyWorldRoom04_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom54:: ; heuristic: string; C0
+KeyWorldRoom54::
     db $01, $02, $05 ; id 84
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -3140,8 +3095,7 @@ KeyWorldRoom54:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom55:: ; heuristic: key-world room record; C0
-Data_072_6260:: ; address name
+KeyWorldRoom55::
     db $01, $02, $05 ; id 85
     dfar KeyWorldRoom10_Y2X0_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -3175,7 +3129,7 @@ Data_072_6260:: ; address name
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom56:: ; heuristic: string; C0
+KeyWorldRoom56::
     db $01, $02, $05 ; id 86
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom04_Y0X2_Tiles
@@ -3209,8 +3163,7 @@ KeyWorldRoom56:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom57:: ; heuristic: key-world room record; C0
-Data_072_6326:: ; address name
+KeyWorldRoom57::
     db $01, $02, $05 ; id 87
     dfar KeyWorldRoom0B_Y0X2_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -3244,7 +3197,7 @@ Data_072_6326:: ; address name
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom58:: ; heuristic: string; C0
+KeyWorldRoom58::
     db $01, $02, $05 ; id 88
     dfar KeyWorldRoom0B_Y2X0_Tiles
     dfar KeyWorldRoom08_Y0X1_Tiles
@@ -3278,8 +3231,7 @@ KeyWorldRoom58:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom59:: ; heuristic: key-world room record; C0
-Data_072_63EC:: ; address name
+KeyWorldRoom59::
     db $01, $02, $05 ; id 89
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3313,8 +3265,7 @@ Data_072_63EC:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom02_Y3X0_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom5A:: ; heuristic: key-world room record; C0
-Data_072_644F:: ; address name
+KeyWorldRoom5A::
     db $01, $02, $05 ; id 90
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom37_Y0X2_Tiles
@@ -3348,7 +3299,7 @@ Data_072_644F:: ; address name
     dfar KeyWorldRoom06_Y3X1_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom5B:: ; heuristic: string; C0
+KeyWorldRoom5B::
     db $01, $03, $04 ; id 91
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -3382,7 +3333,7 @@ KeyWorldRoom5B:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom5C:: ; heuristic: string; C0
+KeyWorldRoom5C::
     db $01, $03, $04 ; id 92
     dfar KeyWorldRoom10_Y0X2_Tiles
     dfar KeyWorldRoom1D_Y0X3_Tiles
@@ -3416,7 +3367,7 @@ KeyWorldRoom5C:: ; heuristic: string; C0
     dfar KeyWorldRoom2D_Y0X3_Attrs
     dfar KeyWorldRoom04_Y2X1_Attrs
     dfar KeyWorldRoom04_Y3X3_Attrs
-KeyWorldRoom5D:: ; heuristic: string; C0
+KeyWorldRoom5D::
     db $01, $03, $04 ; id 93
     dfar KeyWorldRoom0F_Y1X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -3450,8 +3401,7 @@ KeyWorldRoom5D:: ; heuristic: string; C0
     dfar KeyWorldRoom32_Y0X3_Attrs
     dfar KeyWorldRoom08_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom5E:: ; heuristic: key-world room record; C0
-Data_072_65DB:: ; address name
+KeyWorldRoom5E::
     db $01, $03, $04 ; id 94
     dfar KeyWorldRoom0A_Y2X0_Tiles
     dfar KeyWorldRoom03_Y1X2_Tiles
@@ -3485,8 +3435,7 @@ Data_072_65DB:: ; address name
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom08_Y1X3_Attrs
-KeyWorldRoom5F:: ; heuristic: key-world room record; C0
-Data_072_663E:: ; address name
+KeyWorldRoom5F::
     db $01, $03, $04 ; id 95
     dfar KeyWorldRoom1B_Y3X1_Tiles
     dfar KeyWorldRoom11_Y2X1_Tiles
@@ -3520,8 +3469,7 @@ Data_072_663E:: ; address name
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X3_Attrs
-KeyWorldRoom60:: ; heuristic: key-world room record; C0
-Data_072_66A1:: ; address name
+KeyWorldRoom60::
     db $01, $03, $04 ; id 96
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3555,8 +3503,7 @@ Data_072_66A1:: ; address name
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom61:: ; heuristic: key-world room record; C0
-Data_072_6704:: ; address name
+KeyWorldRoom61::
     db $01, $03, $04 ; id 97
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3590,7 +3537,7 @@ Data_072_6704:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom61_Y3X2_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom62:: ; heuristic: string; C0
+KeyWorldRoom62::
     db $01, $03, $05 ; id 98
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -3624,7 +3571,7 @@ KeyWorldRoom62:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom63:: ; heuristic: string; C0
+KeyWorldRoom63::
     db $01, $03, $05 ; id 99
     dfar KeyWorldRoom0B_Y0X2_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -3658,8 +3605,7 @@ KeyWorldRoom63:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom64:: ; heuristic: key-world room record; C0
-Data_072_682D:: ; address name
+KeyWorldRoom64::
     db $01, $03, $05 ; id 100
     dfar KeyWorldRoom11_Y0X2_Tiles
     dfar KeyWorldRoom0B_Y2X0_Tiles
@@ -3693,7 +3639,7 @@ Data_072_682D:: ; address name
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom65:: ; heuristic: string; C0
+KeyWorldRoom65::
     db $01, $03, $05 ; id 101
     dfar KeyWorldRoom0F_Y0X2_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -3727,8 +3673,7 @@ KeyWorldRoom65:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom66:: ; heuristic: key-world room record; C0
-Data_072_68F3:: ; address name
+KeyWorldRoom66::
     db $01, $03, $05 ; id 102
     dfar KeyWorldRoom10_Y2X0_Tiles
     dfar KeyWorldRoom1D_Y0X1_Tiles
@@ -3762,8 +3707,7 @@ Data_072_68F3:: ; address name
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom67:: ; heuristic: key-world room record; C0
-Data_072_6956:: ; address name
+KeyWorldRoom67::
     db $01, $03, $05 ; id 103
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3797,8 +3741,7 @@ Data_072_6956:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom68:: ; heuristic: key-world room record; C0
-Data_072_69B9:: ; address name
+KeyWorldRoom68::
     db $01, $03, $05 ; id 104
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -3832,8 +3775,7 @@ Data_072_69B9:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom68_Y3X2_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom69:: ; heuristic: key-world room record; C0
-Data_072_6A1C:: ; address name
+KeyWorldRoom69::
     db $01, $04, $05 ; id 105
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -3867,8 +3809,7 @@ Data_072_6A1C:: ; address name
     dfar KeyWorldRoom00_Y3X2_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom6A:: ; heuristic: key-world room record; C0
-Data_072_6A7F:: ; address name
+KeyWorldRoom6A::
     db $01, $04, $05 ; id 106
     dfar KeyWorldRoom19_Y1X0_Tiles
     dfar KeyWorldRoom3A_Y3X2_Tiles
@@ -3902,7 +3843,7 @@ Data_072_6A7F:: ; address name
     dfar KeyWorldRoom08_Y1X3_Attrs
     dfar KeyWorldRoom04_Y1X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom6B:: ; heuristic: string; C0
+KeyWorldRoom6B::
     db $01, $04, $05 ; id 107
     dfar KeyWorldRoom1D_Y0X3_Tiles
     dfar KeyWorldRoom04_Y0X0_Tiles
@@ -3936,7 +3877,7 @@ KeyWorldRoom6B:: ; heuristic: string; C0
     dfar KeyWorldRoom06_Y0X1_Attrs
     dfar KeyWorldRoom11_Y2X2_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom6C:: ; heuristic: string; C0
+KeyWorldRoom6C::
     db $01, $04, $05 ; id 108
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -3970,7 +3911,7 @@ KeyWorldRoom6C:: ; heuristic: string; C0
     dfar KeyWorldRoom04_Y3X3_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom6D:: ; heuristic: string; C0
+KeyWorldRoom6D::
     db $01, $04, $05 ; id 109
     dfar KeyWorldRoom0B_Y2X0_Tiles
     dfar KeyWorldRoom08_Y0X2_Tiles
@@ -4004,8 +3945,7 @@ KeyWorldRoom6D:: ; heuristic: string; C0
     dfar KeyWorldRoom08_Y3X3_Attrs
     dfar KeyWorldRoom02_Y3X0_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom6E:: ; heuristic: key-world room record; C0
-Data_072_6C0B:: ; address name
+KeyWorldRoom6E::
     db $01, $04, $05 ; id 110
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4039,8 +3979,7 @@ Data_072_6C0B:: ; address name
     dfar KeyWorldRoom3D_Y1X1_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom6F:: ; heuristic: key-world room record; C0
-Data_072_6C6E:: ; address name
+KeyWorldRoom6F::
     db $01, $04, $05 ; id 111
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4074,7 +4013,7 @@ Data_072_6C6E:: ; address name
     dfar KeyWorldRoom03_Y3X0_Attrs
     dfar KeyWorldRoom3E_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom70:: ; heuristic: string; C0
+KeyWorldRoom70::
     db $02, $03, $04 ; id 112
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -4108,7 +4047,7 @@ KeyWorldRoom70:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom71:: ; heuristic: string; C0
+KeyWorldRoom71::
     db $02, $03, $04 ; id 113
     dfar KeyWorldRoom10_Y0X1_Tiles
     dfar KeyWorldRoom0F_Y1X0_Tiles
@@ -4142,7 +4081,7 @@ KeyWorldRoom71:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom2D_Y0X3_Attrs
-KeyWorldRoom72:: ; heuristic: string; C0
+KeyWorldRoom72::
     db $02, $03, $04 ; id 114
     dfar KeyWorldRoom10_Y2X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -4176,8 +4115,7 @@ KeyWorldRoom72:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom03_Y2X3_Attrs
     dfar KeyWorldRoom12_Y3X3_Attrs
-KeyWorldRoom73:: ; heuristic: key-world room record; C0
-Data_072_6DFA:: ; address name
+KeyWorldRoom73::
     db $02, $03, $04 ; id 115
     dfar KeyWorldRoom0A_Y2X0_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -4211,8 +4149,7 @@ Data_072_6DFA:: ; address name
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom04_Y2X2_Attrs
-KeyWorldRoom74:: ; heuristic: key-world room record; C0
-Data_072_6E5D:: ; address name
+KeyWorldRoom74::
     db $02, $03, $04 ; id 116
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom06_Y1X1_Tiles
@@ -4246,8 +4183,7 @@ Data_072_6E5D:: ; address name
     dfar KeyWorldRoom08_Y1X3_Attrs
     dfar KeyWorldRoom01_Y3X0_Attrs
     dfar KeyWorldRoom1E_Y0X1_Attrs
-KeyWorldRoom75:: ; heuristic: key-world room record; C0
-Data_072_6EC0:: ; address name
+KeyWorldRoom75::
     db $02, $03, $04 ; id 117
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4281,8 +4217,7 @@ Data_072_6EC0:: ; address name
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom76:: ; heuristic: key-world room record; C0
-Data_072_6F23:: ; address name
+KeyWorldRoom76::
     db $02, $03, $04 ; id 118
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom08_Y0X1_Tiles
@@ -4316,8 +4251,7 @@ Data_072_6F23:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
-KeyWorldRoom77:: ; heuristic: key-world room record; C0
-Data_072_6F86:: ; address name
+KeyWorldRoom77::
     db $02, $03, $05 ; id 119
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -4351,7 +4285,7 @@ Data_072_6F86:: ; address name
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom78:: ; heuristic: string; C0
+KeyWorldRoom78::
     db $02, $03, $05 ; id 120
     dfar KeyWorldRoom0F_Y1X0_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -4385,7 +4319,7 @@ KeyWorldRoom78:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom79:: ; heuristic: string; C0
+KeyWorldRoom79::
     db $02, $03, $05 ; id 121
     dfar KeyWorldRoom11_Y0X2_Tiles
     dfar KeyWorldRoom04_Y0X1_Tiles
@@ -4419,8 +4353,7 @@ KeyWorldRoom79:: ; heuristic: string; C0
     dfar KeyWorldRoom04_Y0X2_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom7A:: ; heuristic: key-world room record; C0
-Data_072_70AF:: ; address name
+KeyWorldRoom7A::
     db $02, $03, $05 ; id 122
     dfar KeyWorldRoom10_Y2X0_Tiles
     dfar KeyWorldRoom0A_Y0X2_Tiles
@@ -4454,7 +4387,7 @@ Data_072_70AF:: ; address name
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom7B:: ; heuristic: string; C0
+KeyWorldRoom7B::
     db $02, $03, $05 ; id 123
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom04_Y0X2_Tiles
@@ -4488,8 +4421,7 @@ KeyWorldRoom7B:: ; heuristic: string; C0
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom7C:: ; heuristic: key-world room record; C0
-Data_072_7175:: ; address name
+KeyWorldRoom7C::
     db $02, $03, $05 ; id 124
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4523,8 +4455,7 @@ Data_072_7175:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom7D:: ; heuristic: key-world room record; C0
-Data_072_71D8:: ; address name
+KeyWorldRoom7D::
     db $02, $03, $05 ; id 125
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4558,7 +4489,7 @@ Data_072_71D8:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom06_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom7E:: ; heuristic: string; C0
+KeyWorldRoom7E::
     db $02, $04, $05 ; id 126
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -4592,8 +4523,7 @@ KeyWorldRoom7E:: ; heuristic: string; C0
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom7F:: ; heuristic: key-world room record; C0
-Data_072_729E:: ; address name
+KeyWorldRoom7F::
     db $02, $04, $05 ; id 127
     dfar KeyWorldRoom0B_Y0X2_Tiles
     dfar KeyWorldRoom02_Y3X2_Tiles
@@ -4627,8 +4557,7 @@ Data_072_729E:: ; address name
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom80:: ; heuristic: key-world room record; C0
-Data_072_7301:: ; address name
+KeyWorldRoom80::
     db $02, $04, $05 ; id 128
     dfar KeyWorldRoom0B_Y2X0_Tiles
     dfar KeyWorldRoom03_Y3X1_Tiles
@@ -4662,7 +4591,7 @@ Data_072_7301:: ; address name
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom81:: ; heuristic: string; C0
+KeyWorldRoom81::
     db $02, $04, $05 ; id 129
     dfar KeyWorldRoom0F_Y1X0_Tiles
     dfar KeyWorldRoom09_Y0X1_Tiles
@@ -4696,7 +4625,7 @@ KeyWorldRoom81:: ; heuristic: string; C0
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom03_Y2X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom82:: ; heuristic: string; C0
+KeyWorldRoom82::
     db $02, $04, $05 ; id 130
     dfar KeyWorldRoom1D_Y0X3_Tiles
     dfar KeyWorldRoom04_Y2X1_Tiles
@@ -4730,8 +4659,7 @@ KeyWorldRoom82:: ; heuristic: string; C0
     dfar KeyWorldRoom0A_Y3X2_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom83:: ; heuristic: key-world room record; C0
-Data_072_742A:: ; address name
+KeyWorldRoom83::
     db $02, $04, $05 ; id 131
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4765,8 +4693,7 @@ Data_072_742A:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom84:: ; heuristic: key-world room record; C0
-Data_072_748D:: ; address name
+KeyWorldRoom84::
     db $02, $04, $05 ; id 132
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4800,7 +4727,7 @@ Data_072_748D:: ; address name
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom85:: ; heuristic: string; C0
+KeyWorldRoom85::
     db $03, $04, $05 ; id 133
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -4834,7 +4761,7 @@ KeyWorldRoom85:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom86:: ; heuristic: string; C0
+KeyWorldRoom86::
     db $03, $04, $05 ; id 134
     dfar KeyWorldRoom0A_Y2X0_Tiles
     dfar KeyWorldRoom08_Y0X1_Tiles
@@ -4868,8 +4795,7 @@ KeyWorldRoom86:: ; heuristic: string; C0
     dfar KeyWorldRoom02_Y2X2_Attrs
     dfar KeyWorldRoom02_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom87:: ; heuristic: key-world room record; C0
-Data_072_75B6:: ; address name
+KeyWorldRoom87::
     db $03, $04, $05 ; id 135
     dfar KeyWorldRoom3A_Y3X2_Tiles
     dfar KeyWorldRoom1D_Y0X1_Tiles
@@ -4903,8 +4829,7 @@ Data_072_75B6:: ; address name
     dfar KeyWorldRoom02_Y2X1_Attrs
     dfar KeyWorldRoom03_Y0X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom88:: ; heuristic: key-world room record; C0
-Data_072_7619:: ; address name
+KeyWorldRoom88::
     db $03, $04, $05 ; id 136
     dfar KeyWorldRoom0B_Y0X2_Tiles
     dfar KeyWorldRoom03_Y0X2_Tiles
@@ -4938,7 +4863,7 @@ Data_072_7619:: ; address name
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom03_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom89:: ; heuristic: string; C0
+KeyWorldRoom89::
     db $03, $04, $05 ; id 137
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4972,8 +4897,7 @@ KeyWorldRoom89:: ; heuristic: string; C0
     dfar KeyWorldRoom0D_Y3X1_Attrs
     dfar KeyWorldRoom05_Y1X0_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom8A:: ; heuristic: key-world room record; C0
-Data_072_76DF:: ; address name
+KeyWorldRoom8A::
     db $03, $04, $05 ; id 138
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -5007,8 +4931,7 @@ Data_072_76DF:: ; address name
     dfar KeyWorldRoom08_Y1X2_Attrs
     dfar KeyWorldRoom0A_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom8B:: ; heuristic: key-world room record; C0
-Data_072_7742:: ; address name
+KeyWorldRoom8B::
     db $03, $04, $05 ; id 139
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom44_Y0X1_Tiles
@@ -5042,8 +4965,7 @@ Data_072_7742:: ; address name
     dfar KeyWorldRoom8B_Y3X1_Attrs
     dfar KeyWorldRoom8B_Y3X2_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom8C:: ; heuristic: key-world room record; C0
-Data_072_77A5:: ; address name
+KeyWorldRoom8C::
     db $00, $01, $02 ; id 140
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y3X2_Tiles
@@ -5077,8 +4999,7 @@ Data_072_77A5:: ; address name
     dfar KeyWorldRoom8C_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom8D:: ; heuristic: key-world room record; C0
-Data_072_7808:: ; address name
+KeyWorldRoom8D::
     db $00, $01, $03 ; id 141
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -5112,8 +5033,7 @@ Data_072_7808:: ; address name
     dfar KeyWorldRoom8D_Y3X1_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom00_Y3X2_Attrs
-KeyWorldRoom8E:: ; heuristic: key-world room record; C0
-Data_072_786B:: ; address name
+KeyWorldRoom8E::
     db $00, $01, $04 ; id 142
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -5147,8 +5067,7 @@ Data_072_786B:: ; address name
     dfar KeyWorldRoom8E_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom8F:: ; heuristic: key-world room record; C0
-Data_072_78CE:: ; address name
+KeyWorldRoom8F::
     db $00, $01, $05 ; id 143
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom06_Y1X1_Tiles
@@ -5182,8 +5101,7 @@ Data_072_78CE:: ; address name
     dfar KeyWorldRoom8F_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom90:: ; heuristic: key-world room record; C0
-Data_072_7931:: ; address name
+KeyWorldRoom90::
     db $00, $02, $03 ; id 144
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -5217,8 +5135,7 @@ Data_072_7931:: ; address name
     dfar KeyWorldRoom8C_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom91:: ; heuristic: key-world room record; C0
-Data_072_7994:: ; address name
+KeyWorldRoom91::
     db $00, $02, $04 ; id 145
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -5252,8 +5169,7 @@ Data_072_7994:: ; address name
     dfar KeyWorldRoom91_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom92:: ; heuristic: key-world room record; C0
-Data_072_79F7:: ; address name
+KeyWorldRoom92::
     db $00, $02, $05 ; id 146
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -5287,8 +5203,7 @@ Data_072_79F7:: ; address name
     dfar KeyWorldRoom8C_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom93:: ; heuristic: key-world room record; C0
-Data_072_7A5A:: ; address name
+KeyWorldRoom93::
     db $00, $03, $04 ; id 147
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom06_Y1X1_Tiles
@@ -5322,8 +5237,7 @@ Data_072_7A5A:: ; address name
     dfar KeyWorldRoom8E_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom94:: ; heuristic: key-world room record; C0
-Data_072_7ABD:: ; address name
+KeyWorldRoom94::
     db $00, $03, $05 ; id 148
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -5357,8 +5271,7 @@ Data_072_7ABD:: ; address name
     dfar KeyWorldRoom8D_Y3X1_Attrs
     dfar KeyWorldRoom02_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom95:: ; heuristic: key-world room record; C0
-Data_072_7B20:: ; address name
+KeyWorldRoom95::
     db $00, $04, $05 ; id 149
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom0F_Y0X3_Tiles
@@ -5392,8 +5305,7 @@ Data_072_7B20:: ; address name
     dfar KeyWorldRoom91_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom96:: ; heuristic: key-world room record; C0
-Data_072_7B83:: ; address name
+KeyWorldRoom96::
     db $01, $02, $03 ; id 150
     dfar KeyWorldRoom04_Y1X1_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -5427,8 +5339,7 @@ Data_072_7B83:: ; address name
     dfar KeyWorldRoom96_Y3X1_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
-KeyWorldRoom97:: ; heuristic: key-world room record; C0
-Data_072_7BE6:: ; address name
+KeyWorldRoom97::
     db $01, $02, $04 ; id 151
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X2_Tiles
@@ -5462,8 +5373,7 @@ Data_072_7BE6:: ; address name
     dfar KeyWorldRoom8E_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X1_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom98:: ; heuristic: key-world room record; C0
-Data_072_7C49:: ; address name
+KeyWorldRoom98::
     db $01, $02, $05 ; id 152
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom02_Y0X1_Tiles
@@ -5497,8 +5407,7 @@ Data_072_7C49:: ; address name
     dfar KeyWorldRoom96_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom99:: ; heuristic: key-world room record; C0
-Data_072_7CAC:: ; address name
+KeyWorldRoom99::
     db $01, $03, $04 ; id 153
     dfar KeyWorldRoom02_Y0X0_Tiles
     dfar KeyWorldRoom04_Y0X0_Tiles
@@ -5532,8 +5441,7 @@ Data_072_7CAC:: ; address name
     dfar KeyWorldRoom99_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom9A:: ; heuristic: key-world room record; C0
-Data_072_7D0F:: ; address name
+KeyWorldRoom9A::
     db $01, $03, $05 ; id 154
     dfar KeyWorldRoom04_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X0_Tiles
@@ -5567,8 +5475,7 @@ Data_072_7D0F:: ; address name
     dfar KeyWorldRoom8D_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom9B:: ; heuristic: key-world room record; C0
-Data_072_7D72:: ; address name
+KeyWorldRoom9B::
     db $01, $04, $05 ; id 155
     dfar KeyWorldRoom02_Y0X1_Tiles
     dfar KeyWorldRoom02_Y1X1_Tiles
@@ -5602,8 +5509,7 @@ Data_072_7D72:: ; address name
     dfar KeyWorldRoom8E_Y3X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-KeyWorldRoom9C:: ; heuristic: key-world room record; C0
-Data_072_7DD5:: ; address name
+KeyWorldRoom9C::
     db $02, $03, $04 ; id 156
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom00_Y0X1_Tiles
@@ -5637,8 +5543,7 @@ Data_072_7DD5:: ; address name
     dfar KeyWorldRoom91_Y3X1_Attrs
     dfar KeyWorldRoom00_Y0X1_Attrs
     dfar KeyWorldRoom00_Y2X2_Attrs
-KeyWorldRoom9D:: ; heuristic: key-world room record; C0
-Data_072_7E38:: ; address name
+KeyWorldRoom9D::
     db $02, $03, $05 ; id 157
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom06_Y1X1_Tiles
@@ -5672,8 +5577,7 @@ Data_072_7E38:: ; address name
     dfar KeyWorldRoom96_Y3X1_Attrs
     dfar KeyWorldRoom04_Y3X0_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
-KeyWorldRoom9E:: ; heuristic: key-world room record; C0
-Data_072_7E9B:: ; address name
+KeyWorldRoom9E::
     db $02, $04, $05 ; id 158
     dfar KeyWorldRoom00_Y0X0_Tiles
     dfar KeyWorldRoom01_Y0X1_Tiles
@@ -5707,8 +5611,7 @@ Data_072_7E9B:: ; address name
     dfar KeyWorldRoom99_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X0_Attrs
     dfar KeyWorldRoom0F_Y0X3_Attrs
-KeyWorldRoom9F:: ; heuristic: key-world room record; C0
-Data_072_7EFE:: ; address name
+KeyWorldRoom9F::
     db $03, $04, $05 ; id 159
     dfar KeyWorldRoom01_Y0X0_Tiles
     dfar KeyWorldRoom06_Y1X1_Tiles
@@ -5742,4 +5645,4 @@ Data_072_7EFE:: ; address name
     dfar KeyWorldRoom99_Y3X1_Attrs
     dfar KeyWorldRoom00_Y3X3_Attrs
     dfar KeyWorldRoom05_Y1X1_Attrs
-    ds $9F, $00
+    ds $9f, $00

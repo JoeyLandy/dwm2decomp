@@ -1,40 +1,34 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
-; only called from GameMode4_Init (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init)
-; reads: wBattleKind, wDataBank, wLinkMode, wBattlerRecordSlot4, wBattlerRecordSlot5, wBattlerRecordSlot6
-; writes: wDataBankSave, wBattleKind, rRAMG, rRAMB, wFoeJoinClass1, wFoeJoinClass2, wFoeJoinClass3
-; points at: wEffectAnimState, wBattlePhase, wListPageSize, wWorkBuf
 GameMode4_Init_FillBytes::
-Func_019_4001:: ; address name
     ld a, [wBattleKind]
     push af
     ld hl, wEffectAnimState
     ld bc, $0303
-    xor a, a
+    xor a
     call FillBytes
     ld a, [wDataBank]
     ld [wDataBankSave], a
     ld hl, wBattlePhase
     ld bc, $0008
-    xor a, a
+    xor a
     call FillBytes
     ld hl, wListPageSize
     ld bc, $0008
-    xor a, a
+    xor a
     call FillBytes
     pop af
     ld [wBattleKind], a
     call GameMode4_Init_Sub01_FillBytes
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr nz, .call_game_mode4_init_sub01_write_species_id
     ld hl, wWorkBuf
     ld bc, $0200
-    xor a, a
+    xor a
     call FillBytes
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
@@ -58,21 +52,15 @@ Func_019_4001:: ; address name
     call GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wBattleKind, wLinkMode, wPartyCount, wEncounterKind, wBattleResultByte, wMenuSaveByte34, wLinkRole
-; writes: wBattleSetupD7, wEffectId, wQueuedActionId, wBattleByteAD, wBattleFlag92, wDebugValue3, wDebugState, wDebugSubState, ...
-; points at: wMenuState, wSlotMarks, wSideControl, wBattleSlotOut, wBattleMonsterId, wSlotNameBytes, wActionQueue
 GameMode4_Init_Sub01_FillBytes::
-Func_019_4079:: ; address name
     ld a, [wBattleKind]
-    cp a, $04
+    cp $04
     jr z, .set_battle_setup_d7_to_01
-    cp a, $05
+    cp $05
     jr z, .set_battle_setup_d7_to_01
-    cp a, $09
+    cp $09
     jr z, .set_battle_setup_d7_to_01
-    xor a, a
+    xor a
     jr .set_battle_setup_d7
 
 .set_battle_setup_d7_to_01:
@@ -80,22 +68,22 @@ Func_019_4079:: ; address name
 
 .set_battle_setup_d7:
     ld [wBattleSetupD7], a
-    ld a, $FF
+    ld a, $ff
     ld [wEffectId], a
     ld [wQueuedActionId], a
     ld [wBattleByteAD], a
     ld [wBattleFlag92], a
     ld hl, wMenuState
     ld bc, $0008
-    xor a, a
+    xor a
     call FillBytes
-    xor a, a
+    xor a
     ld [wDebugValue3], a
     ld [wDebugState], a
     ld [wDebugSubState], a
     ld hl, wSlotMarks
     ld bc, $0008
-    ld a, $FF
+    ld a, $ff
     call FillBytes
     ld hl, wSideControl
     ld bc, $0008
@@ -103,39 +91,39 @@ Func_019_4079:: ; address name
     call FillBytes
     ld hl, wBattleSlotOut
     ld bc, $0008
-    ld a, $FF
+    ld a, $ff
     call FillBytes
     ld hl, wBattleMonsterId
     ld bc, $0010
-    ld a, $FF
+    ld a, $ff
     call FillBytes
-    ld a, $FF
-    ld hl, wBattleSkills + $7F
+    ld a, $ff
+    ld hl, wBattleSkills + $7f
     ld bc, $0080
     call FillBytes
-    ld a, $FF
+    ld a, $ff
     ld hl, wSlotNameBytes
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld [hli], a
     ld [hl], a
-    ld a, $FF
+    ld a, $ff
     ld [wDisplaySlot], a
-    ld a, $0A
+    ld a, $0a
     ld [wBattleMeter], a
     ld hl, wActionQueue
-    ld bc, $000A
-    ld a, $FF
+    ld bc, $000a
+    ld a, $ff
     call FillBytes
-    xor a, a
+    xor a
     ld [wBattleTurn], a
     ld a, $00
     ld [wBattleScene], a
-    xor a, a
+    xor a
     ld [wBattleSetupD8], a
     ld [wBattleSetupD8 + $1], a
     ld [wBattleSetupD8 + $2], a
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr nz, .set_battle_kind_flags_to_03
     ld a, [wPartyCount]
     ld [wBattlePartyCount], a
@@ -177,25 +165,23 @@ Func_019_4079:: ; address name
     ld [wSide1Flag], a
 
 .clear_link_rule_work57:
-    xor a, a
+    xor a
     ld [wLinkRuleWork57], a
     ld [wBattleInitByte58], a
     ret
 
 ; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use
-; 4 call sites from 1 routine (e.g. GameMode4_Init_Sub01_FillBytes)
 GameMode4_Init_CountBattlerRecords::
-Func_019_4186:: ; address name
-    ld de, $004E
+    ld de, $004e
     ld c, $01
     add hl, de
     ld a, [hl]
-    or a, a
+    or a
     jr z, .done
     ld c, $02
     add hl, de
     ld a, [hl]
-    or a, a
+    or a
     jr z, .done
     ld c, $03
 
@@ -203,11 +189,7 @@ Func_019_4186:: ; address name
     ld a, c
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; writes: wBGPaletteUploadRequest
 GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31::
-Func_019_419B:: ; address name
     farcall GameMode4_Init_Sub01_Sub02_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
@@ -216,15 +198,11 @@ Func_019_419B:: ; address name
     farcall LoadBattleMonsterPictureAttributes
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0_Bank19
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wLinkRole, wBattleFoeCount
 GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03::
-Func_019_41CB:: ; address name
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
@@ -236,7 +214,7 @@ Func_019_41CB:: ; address name
     ld c, $01
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
-    cp a, $01
+    cp $01
     jr z, .return
     ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     ld a, [wLinkRole]
@@ -249,7 +227,7 @@ Func_019_41CB:: ; address name
     ld c, $03
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
-    cp a, $02
+    cp $02
     jr z, .return
     ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     ld a, [wLinkRole]
@@ -258,17 +236,14 @@ Func_019_41CB:: ; address name
     ld de, wBattlerRecordSlot2 + BATTLER_SPECIES
 
 .call_game_mode4_init_sub01_sub03_load_monster3:
-    ld hl, vTiles2 + $5C0
+    ld hl, vTiles2 + $5c0
     ld c, $05
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
 
 .return:
     ret
 
-; only called from GameMode4_Init_Sub01_Sub03 (E-0047)
-; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03)
 GameMode4_Init_Sub01_Sub03_LoadMonsterPicture::
-Func_019_4219:: ; address name
     ld a, [de]
     push af
     inc de
@@ -279,13 +254,7 @@ Func_019_4219:: ; address name
     call LoadMonsterPicture
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wBattlePartyCount, wLinkRole, wBattleFoeCount, wSpeciesRecord
-; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wSlotBodyFlags, wBattleSlotOut, wBattleMonsterId
 GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi::
-Func_019_4224:: ; address name
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -324,13 +293,13 @@ Func_019_4224:: ; address name
     ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .restore
     ld a, c
-    add a, a
+    add a
     ld hl, wBattleMonsterId
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
@@ -341,7 +310,7 @@ Func_019_4224:: ; address name
     ld h, a
     ld a, [wSpeciesRecord + SPECIES_UNTRIPPABLE]
     swap a
-    or a, h
+    or h
     ld [de], a
 
 .restore:
@@ -353,10 +322,7 @@ Func_019_4224:: ; address name
     ret
 
 ; wSlotAIMode[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
-; 8 call sites from 8 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
-; points at: wSlotAIMode, wBattleINT
 SetSlotAIModeFromINT::
-Func_019_4298:: ; address name
     push bc
     ld a, c
     ld hl, wSlotAIMode
@@ -364,35 +330,35 @@ Func_019_4298:: ; address name
     push hl
     ld a, c
     ld hl, wBattleINT
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
-    sub a, $1E
+    sub $1e
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     jr c, .skip4
     ld a, l
-    sub a, $46
+    sub $46
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     jr c, .skip3
     ld a, l
-    sub a, $C2
+    sub $c2
     ld l, a
     ld a, h
-    sbc a, $01
+    sbc $01
     ld h, a
     jr c, .skip2
     ld a, l
-    sub a, $5E
+    sub $5e
     ld l, a
     ld a, h
-    sbc a, $01
+    sbc $01
     ld h, a
     jr c, .skip
     ld a, $04
@@ -419,49 +385,45 @@ Func_019_4298:: ; address name
     pop bc
     ret
 
-; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
-; points at: wSpeciesRecord
+; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067)
+; (the same 15 bytes appear in 2 banks)
 ClearSpeciesRecordBuffer_Bank19::
-Func_019_42EE:: ; address name
     push bc
     push hl
     ld hl, wSpeciesRecord
-    ld bc, $002F
-    xor a, a
+    ld bc, $002f
+    xor a
     call FillBytes
     pop hl
     pop bc
     ret
 
-; outside link and special battles stores a random value between 80 and 100 percent of the word at HL into BC's target (E-0127)
-; 1 call site from 1 routine (e.g. LoadBattleSlotFromBattlerRecord_4CF8)
-; reads: wBattleKind, wLinkMode, wRandomLo, wRandomHi
+; outside link and special battles stores a random value between 80 and 100 percent of the word at
+; HL into BC's target (E-0127)
 RandomizeWordBetween80And100Percent::
-Func_019_42FD:: ; address name
     ld a, [wBattleKind]
-    cp a, $02
+    cp $02
     ret z
-    cp a, $03
+    cp $03
     ret z
-    cp a, $05
+    cp $05
     ret z
     ld a, [wLinkMode]
-    or a, a
+    or a
     ret nz
     push bc
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld h, [hl]
     ld b, h
     ld l, a
     ld c, a
     call ScaleHLToEightTenths_Bank19
     ld a, c
-    sub a, l
+    sub l
     ld c, a
     ld a, b
-    sbc a, h
+    sbc h
     ld b, a
     push hl
     push af
@@ -482,10 +444,10 @@ Func_019_42FD:: ; address name
     call CompareHLToBC
     jr c, .restore
     ld a, l
-    sub a, c
+    sub c
     ld l, a
     ld a, h
-    sbc a, b
+    sbc b
     ld h, a
     jr .call_compare_hl_to_bc
 
@@ -501,23 +463,14 @@ Func_019_42FD:: ; address name
     pop bc
     ret
 
-; C = wBattleArg0, then falls into Func_019_434D (E-0126)
-; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
-; reads: wBattleArg0, wBattleArg2, wBattleArg3
-; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-; points at: wBattleSkillsPrefix, wBattleSkills
+; C = wBattleArg0, then falls into LoadSlotSkillsFromBattlerRecord (E-0126)
 SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord::
-Func_019_4349:: ; address name
     ld a, [wBattleArg0]
     ld c, a
 
-; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wBattleArg0 = 3) (E-0130)
-; 6 call sites from 6 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
-; reads: wBattleArg0, wBattleArg2, wBattleArg3
-; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-; points at: wBattleSkillsPrefix, wBattleSkills
+; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads
+; each skill record (with wBattleArg0 = 3) (E-0130)
 LoadSlotSkillsFromBattlerRecord::
-Func_019_434D:: ; address name
     ld hl, wBattleSkillsPrefix
     ld a, c
     swap a
@@ -526,32 +479,32 @@ Func_019_434D:: ; address name
 
 .loop:
     ld a, $00
-    ld [hl+], a
-    ld a, $FF
-    ld [hl+], a
+    ld [hli], a
+    ld a, $ff
+    ld [hli], a
     dec b
     jr nz, .loop
     push bc
     ld a, c
-    cp a, $04
+    cp $04
     jr c, .call_multiply8
     dec a
     ld c, a
 
 .call_multiply8:
-    ld a, $4E
+    ld a, $4e
     call Multiply8
     pop bc
     ld a, l
-    add a, $E3
+    add $e3
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ld de, wBattleSkills
     ld a, c
     swap a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -560,14 +513,14 @@ Func_019_434D:: ; address name
     ld b, $08
 
 .loop2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     inc de
     ld a, [hl]
-    or a, a
+    or a
     jr z, .skip2
-    cp a, $FF
+    cp $ff
     jr z, .skip2
     dec b
     jr nz, .loop2
@@ -576,7 +529,7 @@ Func_019_434D:: ; address name
     ld a, c
     ld de, wBattleSkills
     swap a
-    add a, e
+    add e
     ld e, a
     jr nc, .read_battle_arg0
     inc d
@@ -585,12 +538,12 @@ Func_019_434D:: ; address name
     ld b, $08
     ld a, [wBattleArg0]
     push af
-    xor a, a
+    xor a
     ld [wRecordBuffer + $1], a
 
 .loop3:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .set_battle_arg0
     push bc
     ld a, [de]
@@ -612,7 +565,7 @@ Func_019_434D:: ; address name
     ld d, a
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ld [de], a
     pop de
     inc de
@@ -625,16 +578,13 @@ Func_019_434D:: ; address name
 .set_battle_arg0:
     pop af
     ld [wBattleArg0], a
-    or a, a
+    or a
     call nz, AdjustSkillsForBattleStart
     ret
 
-; replaces skill $8F by $AA for slots without wSlotNameSuffix set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
-; 2 call sites from 2 routines (e.g. LoadSlotSkillsFromBattlerRecord, GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi)
-; reads: wLinkMode
-; points at: wSlotNameSuffix, wBattleSkills
+; replaces skill $8F by $AA for slots without wSlotNameSuffix set; outside link battles marks skills
+; $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 AdjustSkillsForBattleStart::
-Func_019_43ED:: ; address name
     ld bc, $0800
     ld hl, wSlotNameSuffix
 
@@ -643,7 +593,7 @@ Func_019_43ED:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
     ld a, [hl]
-    or a, a
+    or a
     call z, ReplaceSkill8FWithAAInSlotC
 
 .next:
@@ -652,7 +602,7 @@ Func_019_43ED:: ; address name
     dec b
     jr nz, .loop
     ld a, [wLinkMode]
-    or a, a
+    or a
     ret nz
     ld bc, $0304
     ld hl, wBattleSkills + $40
@@ -665,15 +615,15 @@ Func_019_43ED:: ; address name
 
 .loop3:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .next3
-    cp a, $34
+    cp $34
     jr nz, .cp_35
     call StoreTileADAtHL
     jr .next2
 
 .cp_35:
-    cp a, $35
+    cp $35
     jr nz, .next2
     call StoreTileAEAtHL
 
@@ -694,10 +644,7 @@ Func_019_43ED:: ; address name
     ret
 
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
-; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
-; points at: wBattleSkills
 ReplaceSkill8FWithAAInSlotC::
-Func_019_4440:: ; address name
     push hl
     ld a, c
     ld hl, wBattleSkills
@@ -707,11 +654,11 @@ Func_019_4440:: ; address name
 
 .loop:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .done
-    cp a, $8F
+    cp $8f
     jr nz, .next
-    ld [hl], $AA
+    ld [hl], $aa
 
 .done:
     pop hl
@@ -726,29 +673,22 @@ Func_019_4440:: ; address name
     ret
 
 ; [HL] = $AD (E-0114)
-; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
 StoreTileADAtHL::
-Func_019_4462:: ; address name
-    ld [hl], $AD
+    ld [hl], $ad
     ret
 
 ; [HL] = $AE (E-0114)
-; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
 StoreTileAEAtHL::
-Func_019_4465:: ; address name
-    ld [hl], $AE
+    ld [hl], $ae
     ret
 
-; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wBattleKind = 4, the status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
-; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
-; reads: wBattleKind
-; points at: wBattleSlotOut, wBattleStatus
+; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wBattleKind = 4, the
+; status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
 InitSlotOutAndStatusFromRecordFlags::
-Func_019_4468:: ; address name
     push hl
     ld a, c
     ld de, wBattleSlotOut
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -764,15 +704,15 @@ Func_019_4468:: ; address name
     ld a, $00
     ld [de], a
     ld a, [wBattleKind]
-    cp a, $04
+    cp $04
     jr z, .done
     ld a, c
     ld de, wBattleStatus
-    add a, a
-    add a, a
-    add a, a
-    add a, c
-    add a, e
+    add a
+    add a
+    add a
+    add c
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -787,7 +727,7 @@ Func_019_4468:: ; address name
     bit 2, [hl]
     jr z, .done
     ld a, [de]
-    or a, $01
+    or $01
     ld [de], a
 
 .done:
@@ -795,44 +735,39 @@ Func_019_4468:: ; address name
     ret
 
 ; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
-; 10 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 StoreByteAtDEPlusC_Bank19::
-Func_019_44A3:: ; address name
     ld a, c
-    add a, e
+    add e
     ld e, a
     jr nc, .done
     inc d
 
 .done:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ret
 
-; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same 13 bytes appear in 2 banks)
-; 22 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
+; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same
+; 13 bytes appear in 2 banks)
 StoreWordAtDEPlus2C_Bank19::
-Func_019_44AC:: ; address name
     ld a, c
-    add a, a
-    add a, e
+    add a
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ret
 
-; HL = the word wBattleArg0, DE = the word wBattleArg2, then falls into Func_019_44C9 (E-0126)
-; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01, ActionEffect_TatsuCall_AddAx9ToHL, ...)
-; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
+; HL = the word wBattleArg0, DE = the word wBattleArg2, then falls into PackResistanceFieldsToDE
+; (E-0126)
 LoadBattleArg0PointersThenRunPackResistanceFieldsToDE::
-Func_019_44B9:: ; address name
     ld a, [wBattleArg0]
     ld l, a
     ld a, [wBattleArg1]
@@ -842,69 +777,65 @@ Func_019_44B9:: ; address name
     ld a, [wBattleArg3]
     ld d, a
 
-; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wSlotResistances-style record at DE (E-0127)
-; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
+; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wSlotResistances-style
+; record at DE (E-0127)
 PackResistanceFieldsToDE::
-Func_019_44C9:: ; address name
     push hl
-    ld a, $1A
+    ld a, $1a
     add_a_to_hl
     ld a, [hl]
-    and a, $03
+    and $03
     rrc a
     rrc a
     ld c, a
     pop hl
-    ld a, [hl+]
+    ld a, [hli]
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
-    or a, c
+    or c
     ld [de], a
     inc de
     ld b, $05
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
     ld [de], a
     inc de
     dec b
     jr nz, .loop
-    ld a, [hl+]
+    ld a, [hli]
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     inc hl
     sla a
     sla a
-    or a, [hl]
+    or [hl]
     sla a
     sla a
     ld [de], a
     ret
 
-; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (A0:42B2)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
-; points at: wScreenTileBuffer
+; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (CopyScreenTileBufferToVRAM_A0)
 CopyScreenTileBufferToVRAM_A0_Bank19::
-Func_019_4516:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
 
@@ -918,8 +849,8 @@ Func_019_4516:: ; address name
     call WriteVRAMByteInc
     dec b
     jr nz, .loop2
-    ld a, $0C
-    add a, e
+    ld a, $0c
+    add e
     ld e, a
     jr nc, .restore
     inc d
@@ -933,34 +864,29 @@ Func_019_4516:: ; address name
     jr nz, .loop
     ret
 
-; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept (E-0118)
-; 1 call site from 1 routine (e.g. RandomizeWordBetween80And100Percent)
+; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept
+; (E-0118)
 ScaleHLToEightTenths_Bank19::
-Func_019_4537:: ; address name
     push bc
     push de
     add hl, hl
     add hl, hl
     add hl, hl
-    ld a, $0A
+    ld a, $0a
     call DivideHLByA
     pop de
     pop bc
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wBattleKind
 GameMode4_Init_Sub01_QueueMusic::
-Func_019_4544:: ; address name
     ld a, [wBattleKind]
-    or a, a
+    or a
     jr z, .skip
     dec a
     jr nz, .call_queue_music
 
 .skip:
-    ld a, $0F
+    ld a, $0f
     jr .call_queue_music2
 
 .call_queue_music:
@@ -970,12 +896,7 @@ Func_019_4544:: ; address name
     call QueueMusic
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wBattlePartyCount
-; points at: wBattlerRecords
 GameMode4_Init_Sub01_ReadBattlePartyCount::
-Func_019_4557:: ; address name
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -990,150 +911,145 @@ Func_019_4557:: ; address name
     jr nz, .loop
     ret
 
-; only called from GameMode4_Init_Sub01_Sub06 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_ReadBattlePartyCount)
 GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped::
-Func_019_456A:: ; address name
     ld a, c
     ld c, MON_NAME
     call SRAMRecordAddressMapped
-    ld b, $0A
+    ld b, $0a
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, l
-    add a, $25
+    add $25
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld b, $08
 
 .loop2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop2
     ld a, l
-    add a, $19
+    add $19
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, l
-    add a, $01
+    add $01
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld b, $15
 
 .loop3:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop3
     ld a, l
-    add a, $02
+    add $02
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld b, $04
 
 .loop4:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop4
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld b, $1B
+    ld b, $1b
 
 .loop5:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop5
     ld a, l
-    add a, $16
+    add $16
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [hl]
     ld [de], a
     call ApplyIncrementOffsetRows19ForA0DTo13
     inc de
-    ld a, $FF
+    ld a, $ff
     ld [de], a
     inc de
     ret
 
-; for A in $0D-$13 increments (capped at 3) each byte listed in Data_019_4641 row A - $0D, relative to DE (E-0125)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped)
-; writes: hTemp0, hTemp1
+; for A in $0D-$13 increments (capped at 3) each byte listed in IncrementOffsetRows_19 row A - $0D,
+; relative to DE (E-0125)
 ApplyIncrementOffsetRows19ForA0DTo13::
-Func_019_4605:: ; address name
-    or a, a
+    or a
     ret z
-    cp a, $0D
+    cp $0d
     ret c
-    cp a, $14
+    cp $14
     ret nc
     push af
     ld a, e
@@ -1142,79 +1058,73 @@ Func_019_4605:: ; address name
     ldh [hTemp1], a
     pop af
     push de
-    sub a, $0D
+    sub $0d
     swap a
     ld de, IncrementOffsetRows_19
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    cp a, $80
+    cp $80
     jr nz, .call_increment_table_byte_capped_at3
     pop de
     ret
 
 .call_increment_table_byte_capped_at3:
     ld l, a
-    ld h, $FF
+    ld h, $ff
     call IncrementTableByteCappedAt3
     inc de
     jr .skip
 
 ; increments the byte at HL + the word hTemp0/hTemp1 unless it is already 3 or more (E-0118)
-; 1 call site from 1 routine (e.g. ApplyIncrementOffsetRows19ForA0DTo13)
-; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3::
-Func_019_4632:: ; address name
     ldh a, [hTemp0]
-    add a, l
+    add l
     ld l, a
     ldh a, [hTemp1]
-    adc a, h
+    adc h
     ld h, a
     ld a, [hl]
-    cp a, $03
+    cp $03
     ret nc
     inc a
     ld [hl], a
     ret
 
-; E-0236 (C1: ApplyIncrementOffsetRows19ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
-; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding
+; ApplyIncrementOffsetRows19ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each
+; byte before $80 increments the byte at DE + $FF00 + byte, capped at 3
+; (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical (E-0236, C1)
+; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then
+; zero padding
 IncrementOffsetRows_19::
-Data_019_4641:: ; address name
-    db $E5, $E6, $E7, $E8, $E9, $EA, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
-    db $F5, $F6, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
-    db $EC, $F0, $F7, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
-    db $EC, $F0, $F7, $F8, $F9, $EB, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
-    db $EC, $F0, $F7, $F8, $F9, $ED, $F3, $EB, $EF, $80, $00, $00, $00, $00, $00, $00 ; id 17
-    db $FF, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
-    db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
+    db $e5, $e6, $e7, $e8, $e9, $ea, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $f5, $f6, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $ec, $f0, $f7, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $ec, $f0, $f7, $f8, $f9, $eb, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $ec, $f0, $f7, $f8, $f9, $ed, $f3, $eb, $ef, $80, $00, $00, $00, $00, $00, $00 ; id 17
+    db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+    db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; only called from BattleEnd_Step3_Sub04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01)
-; reads: wDisplaySlot
-; points at: wBattlerRecordSlot5, wBattlerRecordSlot4
 BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC::
-Func_019_46B1:: ; address name
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
-    and a, $03
+    and $03
     ld c, a
-    cp a, $01
+    cp $01
     jr z, .skip
     ld de, wBattlerRecordSlot4
 
 .skip:
     push de
     ld a, e
-    add a, $0D
+    add $0d
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld a, [de]
     pop de
@@ -1223,29 +1133,24 @@ Func_019_46B1:: ; address name
     call LoadMonsterAndSpeciesForListEntryC
     pop de
     ld a, e
-    add a, $0D
+    add $0d
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     pop af
     ld [de], a
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wBattleFoeCount, wBattleKind
-; points at: wBattlerRecordSlot4
 GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC::
-Func_019_46DD:: ; address name
     ld a, [wBattleFoeCount]
     ld b, a
     ld c, $00
     ld de, wBattlerRecordSlot4
     ld a, [wBattleKind]
-    cp a, $05
+    cp $05
     jr z, .loop
-    and a, $01
+    and $01
     jr z, .loop
     jr .loop2
 
@@ -1264,26 +1169,24 @@ Func_019_46DD:: ; address name
     pop bc
     inc c
     ld a, e
-    add a, $4E
+    add $4e
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     dec b
     jr nz, .loop2
     ret
 
-; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC, BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC)
-; reads: wRecordBuffer
-; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
-; points at: wEncounterMonsters
+; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs
+; LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData, loads the species named in
+; wRecordBuffer, then runs LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc
+; (E-0121)
 LoadMonsterAndSpeciesForListEntryC::
-Func_019_470F:: ; address name
     push bc
     ld a, c
     ld hl, wEncounterMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -1314,13 +1217,7 @@ Func_019_470F:: ; address name
     pop bc
     ret
 
-; only called from GameMode4_Init_Sub01_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC)
-; reads: wBattleArg2, wBattleArg3, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, hTemp1
-; writes: wBattleArg2, wBattleArg3, wBattleArg1, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0, wBattleArg0
-; points at: wWildLevel, wEncounterMonsters
 GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc::
-Func_019_4752:: ; address name
     push bc
     ld a, e
     ld [wBattleArg2], a
@@ -1332,14 +1229,14 @@ Func_019_4752:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp1], a
-    or a, a
+    or a
     jr nz, .skip
     ld a, $01
     ldh [hTemp1], a
 
 .skip:
     ld a, c
-    add a, a
+    add a
     ld hl, wEncounterMonsters
     add_a_to_hl
     deref_hl
@@ -1349,41 +1246,41 @@ Func_019_4752:: ; address name
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wBattleArg2]
-    add a, $0A
+    add $0a
     ld l, a
     ld a, [wBattleArg3]
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wSpeciesIdLo]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesIdHi]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
-    ld [hl+], a
-    ld a, $FF
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld a, $ff
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_EXP]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_EXP + 1]
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     push hl
     ld a, [wSpeciesRecord + SPECIES_GROWTH]
     ldh [hTemp0], a
@@ -1432,31 +1329,31 @@ Func_019_4752:: ; address name
     farcall StatFromGrowthRow
     pop hl
     call ScaleStatAndCapByBattleKind
-    ld a, $E7
-    ld [hl+], a
+    ld a, $e7
+    ld [hli], a
     ld a, $03
-    ld [hl+], a
+    ld [hli], a
     call StoreRandomByte80ToFFAtHL
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
     call CopyWD01ARecordToHL_Bank19
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     push hl
     ld a, [wSpeciesIdLo]
     ld l, a
     ld a, [wSpeciesIdHi]
     ld h, a
     ld a, l
-    add a, $1C
+    add $1c
     ld l, a
     ld a, h
-    adc a, $74
+    adc $74
     ld h, a
     ld a, [hl]
     pop hl
-    ld [hl+], a
+    ld [hli], a
     call RollRecordField0DState
     call AccumulateGrowthForLevelsTemp1
     farcall CheckSkillsLearnableAtLevel
@@ -1467,11 +1364,9 @@ Func_019_4752:: ; address name
     pop bc
     ret
 
-; advances the random table (NextTableByte) and stores the new wRandomLo at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: wRandomLo
+; advances the random table (NextTableByte) and stores the new wRandomLo at HL; HL += 1; AF, BC, DE
+; kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 StoreRandomByteAtHL_Bank19::
-Func_019_488D:: ; address name
     push af
     push bc
     push de
@@ -1482,14 +1377,11 @@ Func_019_488D:: ; address name
     pop bc
     pop af
     ld a, [wRandomLo]
-    ld [hl+], a
+    ld [hli], a
     ret
 
 ; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: wRandomLo
 StoreRandomByte80ToFFAtHL::
-Func_019_489D:: ; address name
     push af
     push bc
     push de
@@ -1500,17 +1392,14 @@ Func_019_489D:: ; address name
     pop bc
     pop af
     ld a, [wRandomLo]
-    and a, $7F
-    add a, $80
-    ld [hl+], a
+    and $7f
+    add $80
+    ld [hli], a
     ret
 
-; scales the word hTemp2 by 101 percent and caps it at 999, 600 or 700 depending on wBattleArg0 and the battle kind wBattleKind, then stores it (E-0128)
-; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: hTemp2, hTemp3, wBattleKind, wBattleArg0, wBattleIntroFlag, wBattleArg1, wSpeciesRecord
-; writes: hTemp2, hTemp3
+; scales the word hTemp2 by 101 percent and caps it at 999, 600 or 700 depending on wBattleArg0 and
+; the battle kind wBattleKind, then stores it (E-0128)
 ScaleStatAndCapByBattleKind::
-Func_019_48B1:: ; address name
     push af
     push bc
     push de
@@ -1520,22 +1409,22 @@ Func_019_48B1:: ; address name
     ldh a, [hTemp3]
     ld b, a
     ld a, $01
-    add a, $64
+    add $64
     call Multiply8By16
     ld a, $64
     call Divide24ByA
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr nz, .check_battle_arg0
     ld a, [wBattleArg0]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_arg0
     ld a, [wBattleIntroFlag]
-    cp a, $01
+    cp $01
     ld a, $05
     jr z, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, [wBattleArg1]
-    cp a, $01
+    cp $01
     ld a, $02
     jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, $05
@@ -1543,79 +1432,73 @@ Func_019_48B1:: ; address name
 
 .check_battle_arg0:
     ld a, [wBattleArg0]
-    cp a, $02
+    cp $02
     jr z, .check_battle_kind
-    cp a, $03
+    cp $03
     jr z, .check_battle_kind2
-    ld bc, $03E7
+    ld bc, $03e7
     jr .skip2
 
 .check_battle_kind:
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr z, .skip
     ld bc, $0258
     jr .skip2
 
 .skip:
-    ld bc, $02BC
+    ld bc, $02bc
     jr .skip2
 
 .check_battle_kind2:
-    ld bc, $02BC
+    ld bc, $02bc
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr nz, .skip2
     ld a, [wSpeciesRecord + SPECIES_METAL]
-    or a, a
+    or a
     jr z, .skip2
-    ld bc, $03E7
+    ld bc, $03e7
 
 .skip2:
     ld a, e
-    or a, a
+    or a
     jr nz, ScaleWordBy6Or12Capped10000_Restore
     push bc
     ld a, c
-    sub a, l
+    sub l
     ld c, a
     ld a, b
-    sbc a, h
+    sbc h
     ld b, a
     bit 7, b
     jr nz, ScaleWordBy6Or12Capped10000_Restore
     pop bc
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
-; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleArg1, hTemp2, hTemp3
-; writes: hTemp2, hTemp3
-ScaleWordBy6Or12Capped10000:: ; heuristic: follows a terminator; C0
-Func_019_4931:: ; address name
+; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at
+; [HL+] (E-0127)
+ScaleWordBy6Or12Capped10000::
     ld a, [wBattleArg1]
-    cp a, $01
+    cp $01
     ld a, $06
     jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
-    ld a, $0C
+    ld a, $0c
 
 ScaleWordBy6Or12Capped10000_CallMultiply24By8::
-Jump_019_493C:: ; address name
     call Multiply24By8
     ld a, d
-    or a, e
+    or e
     jr z, ScaleWordBy6Or12Capped10000_SetTemp2
     ld hl, $2710
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
 ScaleWordBy6Or12Capped10000_Restore::
-Jump_019_4948:: ; address name
     pop bc
     ld l, c
     ld h, b
 
 ScaleWordBy6Or12Capped10000_SetTemp2::
-Jump_019_494B:: ; address name
     ld a, l
     ldh [hTemp2], a
     ld a, h
@@ -1625,56 +1508,50 @@ Jump_019_494B:: ; address name
     pop bc
     pop af
     ldh a, [hTemp2]
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp3]
-    ld [hl+], a
+    ld [hli], a
     ret
 
 ; stores hTemp2 then hTemp3 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: hTemp2, hTemp3
 StoreTemp2WordAtHL_Bank19::
-Func_019_495C:: ; address name
     ldh a, [hTemp2]
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp3]
-    ld [hl+], a
+    ld [hli], a
     ret
 
-; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
+; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE
+; (E-0065) (the same 12 bytes appear in 2 banks)
 CopyWD01ARecordToHL_Bank19::
-Func_019_4963:: ; address name
     ld de, wSpeciesRecord + SPECIES_RESISTANCES
-    ld b, $1B
+    ld b, $1b
 
 .loop:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop
     ret
 
-; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wNewRecordByte0D set bit 4 is cleared (E-0125)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: wBattleArg2, wBattleArg3, wRandomLo, wNewRecordByte0D
+; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and
+; become 1 or 0; with wNewRecordByte0D set bit 4 is cleared (E-0125)
 RollRecordField0DState::
-Func_019_496F:: ; address name
     ld a, [wBattleArg2]
-    add a, $0D
+    add $0d
     ld l, a
     ld a, [wBattleArg3]
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [hl]
-    or a, a
+    or a
     jr z, .check_new_record_byte0_d2
-    cp a, $01
+    cp $01
     jr z, .skip
-    cp a, $02
+    cp $02
     jr z, .skip2
-    ld b, $E6
+    ld b, $e6
     jr .skip3
 
 .skip:
@@ -1695,9 +1572,9 @@ Func_019_496F:: ; address name
     pop bc
     pop af
     ld a, [wRandomLo]
-    cp a, b
+    cp b
     jr c, .check_new_record_byte0_d
-    xor a, a
+    xor a
     jr .check_new_record_byte0_d2
 
 .check_new_record_byte0_d:
@@ -1706,27 +1583,24 @@ Func_019_496F:: ; address name
 .check_new_record_byte0_d2:
     ld [hl], a
     ld a, [wNewRecordByte0D]
-    or a, a
+    or a
     ret z
     res 4, a
     ld [hl], a
     ret
 
-; sums the stat word at record + $18 times each level 1..hTemp1 (with a /20 rounding term outside battle kind 3) into the 24-bit hTemp4-hTemp6 (E-0130)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
-; reads: wBattleArg2, wBattleArg3, hTemp1, hTemp7, hTemp8, wBattleKind, hTemp9, hTemp4, ...
-; writes: hTemp4, hTemp5, hTemp6, hTemp9, hTemp7, hTemp8
+; sums the stat word at record + $18 times each level 1..hTemp1 (with a /20 rounding term outside
+; battle kind 3) into the 24-bit hTemp4-hTemp6 (E-0130)
 AccumulateGrowthForLevelsTemp1::
-Func_019_49B1:: ; address name
     ld a, [wBattleArg2]
-    add a, $18
+    add $18
     ld l, a
     ld a, [wBattleArg3]
-    adc a, $00
+    adc $00
     ld h, a
     push de
     push hl
-    xor a, a
+    xor a
     ldh [hTemp4], a
     ldh [hTemp5], a
     ldh [hTemp6], a
@@ -1750,24 +1624,24 @@ Func_019_49B1:: ; address name
     ld a, c
     call Multiply24By8
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr z, .read_temp4
     ld a, $14
     call Divide24ByA
     ld c, a
     ldh a, [hTemp9]
-    add a, c
+    add c
     ldh [hTemp9], a
 
 .read_temp4:
     ldh a, [hTemp4]
-    add a, l
+    add l
     ldh [hTemp4], a
     ldh a, [hTemp5]
-    adc a, h
+    adc h
     ldh [hTemp5], a
     ldh a, [hTemp6]
-    adc a, e
+    adc e
     ldh [hTemp6], a
     pop bc
     inc c
@@ -1778,13 +1652,13 @@ Func_019_49B1:: ; address name
     ld a, $14
     call DivideBByA
     ldh a, [hTemp4]
-    add a, b
+    add b
     ldh [hTemp4], a
     ldh a, [hTemp5]
-    adc a, $00
+    adc $00
     ldh [hTemp5], a
     ldh a, [hTemp6]
-    adc a, $00
+    adc $00
     ldh [hTemp6], a
     push bc
     push de
@@ -1797,7 +1671,7 @@ Func_019_49B1:: ; address name
     ld a, $03
     call Divide24ByA
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr nz, .skip
     sra e
     rr h
@@ -1808,8 +1682,8 @@ Func_019_49B1:: ; address name
 
 .skip:
     ld a, e
-    or a, h
-    or a, l
+    or h
+    or l
     jr nz, .set_temp6
     ld hl, $0001
 
@@ -1829,9 +1703,9 @@ Func_019_49B1:: ; address name
     ldh a, [hTemp4]
     ld l, a
     ld a, d
-    or a, e
+    or e
     jr z, .restore
-    ld hl, $FFFF
+    ld hl, $ffff
 
 .restore:
     pop bc
@@ -1847,9 +1721,7 @@ Func_019_49B1:: ; address name
     ret
 
 ; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
-; 2 call sites from 2 routines (e.g. AccumulateGrowthForLevelsTemp1, ScaleWordBy6Or12Capped10000)
 Multiply24By8::
-Func_019_4A74:: ; address name
     push af
     push hl
     ld c, e
@@ -1867,29 +1739,24 @@ Func_019_4A74:: ; address name
     call Multiply8
     pop bc
     ld a, c
-    add a, h
+    add h
     ld h, a
     ld a, b
-    adc a, $00
+    adc $00
     ld e, a
     pop bc
     ld a, c
-    add a, e
+    add e
     ld e, a
     ld a, b
-    adc a, $00
+    adc $00
     ld d, a
     ret
 
-; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
-; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
-; reads: wRecordBuffer, wRecordBufferData
-; points at: wRecordBufferData
 LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
-Func_019_4A9A:: ; address name
     push bc
-    ld b, $0A
-    ld a, $FF
+    ld b, $0a
+    ld a, $ff
 
 .loop:
     ld [de], a
@@ -1908,12 +1775,12 @@ Func_019_4A9A:: ; address name
     ld hl, wRecordBufferData
 
 .loop2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop2
-    ld a, $FF
+    ld a, $ff
     ld b, $04
 
 .loop3:
@@ -1937,55 +1804,55 @@ Func_019_4A9A:: ; address name
     ld [de], a
     inc de
     ld hl, wRecordBufferData + $8
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl-]
+    ld a, [hld]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl-]
+    ld a, [hld]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, $E7
+    ld a, $e7
     ld [de], a
     inc de
     ld a, $03
@@ -2003,8 +1870,8 @@ Func_019_4A9A:: ; address name
     ld a, [wRecordBufferData + $16]
     ld [de], a
     inc de
-    ld a, $1C
-    add a, e
+    ld a, $1c
+    add e
     ld e, a
     jr nc, .read_record_buffer_data
     inc d
@@ -2015,13 +1882,9 @@ Func_019_4A9A:: ; address name
     pop bc
     ret
 
-; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
-; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
-; reads: wSpeciesRecord, wRandomLo, wNewRecordByte0D
 LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
-Func_019_4B37:: ; address name
-    ld a, $0C
-    add a, e
+    ld a, $0c
+    add e
     ld e, a
     jr nc, .read_species_record
     inc d
@@ -2031,13 +1894,13 @@ Func_019_4B37:: ; address name
     ld [de], a
     inc de
     ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
-    or a, a
+    or a
     jr z, .check_new_record_byte0_d2
-    cp a, $01
+    cp $01
     jr z, .skip
-    cp a, $02
+    cp $02
     jr z, .skip2
-    ld b, $E6
+    ld b, $e6
     jr .skip3
 
 .skip:
@@ -2058,9 +1921,9 @@ Func_019_4B37:: ; address name
     pop bc
     pop af
     ld a, [wRandomLo]
-    cp a, b
+    cp b
     jr c, .check_new_record_byte0_d
-    xor a, a
+    xor a
     jr .check_new_record_byte0_d2
 
 .check_new_record_byte0_d:
@@ -2069,24 +1932,24 @@ Func_019_4B37:: ; address name
 .check_new_record_byte0_d2:
     ld [de], a
     ld a, [wNewRecordByte0D]
-    or a, a
+    or a
     jr z, .skip4
     res 4, a
     ld [de], a
 
 .skip4:
     ld a, $24
-    add a, e
+    add e
     ld e, a
     jr nc, .skip5
     inc d
 
 .skip5:
-    ld b, $1B
+    ld b, $1b
     ld hl, wSpeciesRecord + SPECIES_RESISTANCES
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -2096,17 +1959,12 @@ Func_019_4B37:: ; address name
     pop bc
     ret
 
-; only called from GameMode4_Init_Sub01_Sub04 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi)
-; reads: wLinkMode, wBattleArg0, wLoadSlot
-; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wSlotLastTactic, wBattleSetupD8, wBattleLevel, wBattleMaxHP, wBattleMaxMP, ...
 GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8::
-Func_019_4B91:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr nz, LoadBattleSlotFromBattlerRecord_4BA8
     ld a, c
-    cp a, $04
+    cp $04
     jr nc, .call_load_battle_slot_from_battler_record_4
     call LoadBattleSlotFromBattlerRecord_4BA8
     jr .call_clear_species_record_buffer_bank19
@@ -2118,54 +1976,51 @@ Func_019_4B91:: ; address name
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
-; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and stats from its battler record into the battle arrays (E-0131)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
-; reads: wLinkMode, wBattleArg0, wLoadSlot
-; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wSlotLastTactic, wBattleSetupD8, wBattleLevel, wBattleMaxHP, wBattleMaxMP, ...
+; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and
+; stats from its battler record into the battle arrays (E-0131)
 LoadBattleSlotFromBattlerRecord_4BA8::
-Func_019_4BA8:: ; address name
     ld a, c
     push bc
     call BattlerRecordAddress_Bank19
     pop bc
     ld a, c
-    add a, a
+    add a
     ld de, wBattleMonsterId
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, l
-    add a, $0A
+    add $0a
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc hl
     ld a, c
     ld de, wSlotNameSuffix
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld [de], a
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .skip5
     ld a, c
     ld de, wSlotTactic
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -2175,7 +2030,7 @@ Func_019_4BA8:: ; address name
     ld [de], a
     ld a, c
     ld de, wSlotLastTactic
-    add a, e
+    add e
     ld e, a
     jr nc, .skip4
     inc d
@@ -2190,24 +2045,24 @@ Func_019_4BA8:: ; address name
 .skip5:
     ld a, c
     ld de, wSlotTactic
-    add a, e
+    add e
     ld e, a
     jr nc, .skip6
     inc d
 
 .skip6:
-    ld a, [hl+]
+    ld a, [hli]
     swap a
-    and a, $0F
+    and $0f
     push af
-    and a, $03
+    and $03
     ld [de], a
     pop af
     push af
     push af
     ld a, c
     ld de, wSlotLastTactic
-    add a, e
+    add e
     ld e, a
     jr nc, .restore
     inc d
@@ -2216,23 +2071,23 @@ Func_019_4BA8:: ; address name
     pop af
     rrca
     rrca
-    and a, $03
+    and $03
     ld [de], a
 
 .skip7:
     ld a, c
-    cp a, $04
+    cp $04
     jr nc, .restore3
     ld a, c
     ld de, wBattleSetupD8
-    add a, e
+    add e
     ld e, a
     jr nc, .restore2
     inc d
 
 .restore2:
     pop af
-    and a, $03
+    and $03
     ld [de], a
     jr .check_battle_arg0
 
@@ -2243,7 +2098,7 @@ Func_019_4BA8:: ; address name
     push hl
     push bc
     ld a, [wBattleArg0]
-    or a, a
+    or a
     jr nz, .call_set_c_from_battle_arg0_then_run_load
     call LoadSlotSkillsFromBattlerRecord
     jr .restore4
@@ -2255,13 +2110,13 @@ Func_019_4BA8:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $08
+    add $08
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wLoadSlot]
-    or a, a
+    or a
     call z, InitSlotOutAndStatusFromRecordFlags
     inc hl
     ld de, wBattleLevel
@@ -2270,7 +2125,7 @@ Func_019_4BA8:: ; address name
     inc hl
     inc hl
     ld a, [wLoadSlot]
-    or a, a
+    or a
     jr z, .call_store_word_at_de_plus2_c_bank19
     inc hl
     inc hl
@@ -2304,19 +2159,19 @@ Func_019_4BA8:: ; address name
     ld de, wBattleWordArray3F
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
-    or a, a
+    or a
     jr z, .call_store_byte_at_de_plus_c_bank19
     ld a, [wBattleArg0]
     push hl
     ld l, a
-    add a, a
-    add a, a
-    add a, a
-    add a, l
+    add a
+    add a
+    add a
+    add l
     ld hl, wBattleStatus1
     add_a_to_hl
     ld a, [hl]
-    and a, $30
+    and $30
     pop hl
     jr nz, .call_store_byte_at_de_plus_c_bank19
     inc hl
@@ -2337,12 +2192,12 @@ Func_019_4BA8:: ; address name
 
 .skip8:
     ld a, c
-    add a, a
-    add a, c
-    add a, a
-    add a, c
+    add a
+    add c
+    add a
+    add c
     ld de, wSlotResistances
-    add a, e
+    add e
     ld e, a
     jr nc, .call_pack_resistance_fields_to_de
     inc d
@@ -2354,49 +2209,46 @@ Func_019_4BA8:: ; address name
     call SetSlotAIModeFromINT
     ret
 
-; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle arrays and loads its skills (E-0131)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
-; reads: wBattleArg0, wLoadSlot
-; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wBattleLevel, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
+; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle
+; arrays and loads its skills (E-0131)
 LoadBattleSlotFromBattlerRecord_4CF8::
-Func_019_4CF8:: ; address name
     push bc
     call BattlerRecordAddress_Bank19
     pop bc
     ld a, c
-    add a, a
+    add a
     ld de, wBattleMonsterId
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, l
-    add a, $0A
+    add $0a
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc hl
     ld a, c
     ld de, wSlotNameSuffix
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ld a, c
     ld de, wSlotTactic
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -2407,7 +2259,7 @@ Func_019_4CF8:: ; address name
     push hl
     push bc
     ld a, [wBattleArg0]
-    or a, a
+    or a
     jr nz, .call_set_c_from_battle_arg0_then_run_load
     call LoadSlotSkillsFromBattlerRecord
     jr .restore
@@ -2419,13 +2271,13 @@ Func_019_4CF8:: ; address name
     pop bc
     pop hl
     ld a, l
-    add a, $08
+    add $08
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wLoadSlot]
-    or a, a
+    or a
     call z, InitSlotOutAndStatusFromRecordFlags
     inc hl
     ld de, wBattleLevel
@@ -2434,7 +2286,7 @@ Func_019_4CF8:: ; address name
     inc hl
     inc hl
     ld a, [wLoadSlot]
-    or a, a
+    or a
     jr z, .call_store_word_at_de_plus2_c_bank19
     inc hl
     inc hl
@@ -2452,10 +2304,10 @@ Func_019_4CF8:: ; address name
     push de
     push hl
     ld a, e
-    sub a, $01
+    sub $01
     ld l, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld h, a
     call RandomizeWordBetween80And100Percent
     pop hl
@@ -2479,19 +2331,19 @@ Func_019_4CF8:: ; address name
     ld de, wBattleWordArray3F
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
-    or a, a
+    or a
     jr z, .call_store_byte_at_de_plus_c_bank19
     ld a, [wBattleArg0]
     push hl
     ld l, a
-    add a, a
-    add a, a
-    add a, a
-    add a, l
+    add a
+    add a
+    add a
+    add l
     ld hl, wBattleStatus1
     add_a_to_hl
     ld a, [hl]
-    and a, $30
+    and $30
     pop hl
     jr nz, .call_store_byte_at_de_plus_c_bank19
     inc hl
@@ -2512,12 +2364,12 @@ Func_019_4CF8:: ; address name
 
 .skip4:
     ld a, c
-    add a, a
-    add a, c
-    add a, a
-    add a, c
+    add a
+    add c
+    add a
+    add c
     ld de, wSlotResistances
-    add a, e
+    add e
     ld e, a
     jr nc, .call_pack_resistance_fields_to_de
     inc d
@@ -2529,36 +2381,31 @@ Func_019_4CF8:: ; address name
     call SetSlotAIModeFromINT
     ret
 
-; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
+; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL =
+; wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the
+; field offset) (E-0067) (the same 23 bytes appear in 2 banks)
 BattlerRecordAddress_Bank19::
-Func_019_4E05:: ; address name
-    cp a, $03
+    cp $03
     jr c, .call_multiply8
     ret z
-    cp a, $07
+    cp $07
     ret z
     dec a
 
 .call_multiply8:
-    ld c, $4E
+    ld c, $4e
     call Multiply8
     ld a, l
-    add a, $D5
+    add $d5
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ret
 
-; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
-; reads: wLinkMode
-; points at: wSlotMarks
 GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
-Func_019_4E1C:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr nz, .skip2
     ld hl, wSlotMarks + $4
     ld bc, $0404
@@ -2571,7 +2418,7 @@ Func_019_4E1C:: ; address name
     jr .next
 
 .skip:
-    ld [hl], $FF
+    ld [hl], $ff
 
 .next:
     inc hl
@@ -2602,7 +2449,7 @@ Func_019_4E1C:: ; address name
     jr .next2
 
 .skip4:
-    ld [hl], $FF
+    ld [hl], $ff
 
 .next2:
     inc c
@@ -2611,10 +2458,12 @@ Func_019_4E1C:: ; address name
     jr nz, .loop2
     ret
 
-; E-0148 (C1: LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0).
+; LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3
+; * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and
+; DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0
+; (E-0148, C1)
 ; record: EXP needed for levels 1-99 (24-bit)
 ExpTable::
-Data_019_4E60:: ; address name
     d24 0, 2, 7, 15, 27, 45, 72, 113, 175, 268, 408 ; id 0
     d24 618, 933, 1327, 1820, 2436, 3206, 4169, 5373, 6878, 8759, 10875
     d24 13256, 15935, 18949, 22340, 26155, 30447, 35276, 40709, 46482, 52616, 59133
@@ -2905,11 +2754,7 @@ Data_019_4E60:: ; address name
     d24 6200812, 6300237, 6399740, 6499322, 6598984, 6698727, 6798552, 6898460, 6998452, 7098529, 7198692
 
 ; copies the 3 bytes at $4E60 + $129 * hTemp0 + 3 * hTemp1 into hTemp2-hTemp4 (E-0120)
-; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03, SwapMonstersMenu_ShowMonsterDetails_Case13_LoadRecordThreeBytesToTemp0, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
-; reads: hTemp0, hTemp1
-; writes: hTemp2, hTemp3, hTemp4
 LoadExpTableEntryToTemp2::
-Func_019_7380:: ; address name
     ld bc, $0129
     ldh a, [hTemp0]
     call Multiply8By16
@@ -2920,25 +2765,22 @@ Func_019_7380:: ; address name
     add hl, bc
     add hl, bc
     ld a, l
-    add a, $60
+    add $60
     ld l, a
     ld a, h
-    adc a, $4E
+    adc $4e
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp2], a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp3], a
     ld a, [hl]
     ldh [hTemp4], a
     ret
 
-; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121)
-; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, BattleEnd_Step3)
-; reads: wRecordBufA, wSpeciesExpCurve
-; writes: wSpeciesIdLo, wSpeciesIdHi
+; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry
+; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121)
 LoadTable4E60EntryForWC991ToWC9DE::
-Func_019_73A2:: ; address name
     ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufA + MON_SPECIES + 1]
@@ -2959,28 +2801,25 @@ Func_019_73A2:: ; address name
     add hl, bc
     add hl, bc
     ld a, l
-    add a, $60
+    add $60
     ld l, a
     ld a, h
-    adc a, $4E
+    adc $4e
     ld h, a
     ld de, wRecordBufA + MON_EXP
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
     ld [de], a
     ret
 
-; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121)
-; 1 call site from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
-; reads: wRecordBufB, wSpeciesExpCurve
-; writes: wSpeciesIdLo, wSpeciesIdHi
+; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry
+; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121)
 LoadTable4E60EntryForWCA36ToWCA83::
-Func_019_73DF:: ; address name
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufB + MON_SPECIES + 1]
@@ -3001,26 +2840,27 @@ Func_019_73DF:: ; address name
     add hl, bc
     add hl, bc
     ld a, l
-    add a, $60
+    add $60
     ld l, a
     ld a, h
-    adc a, $4E
+    adc $4e
     ld h, a
     ld de, wRecordBufB + MON_EXP
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
     ld [de], a
     ret
 
-; E-0208 (C1: while GameMode4_Init_Sub01_Sub07_Sub01 builds a new monster record, the code reads the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read).
+; while GameMode4_Init_Sub01_Sub07_Sub01 builds a new monster record, the code reads the byte at
+; $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the
+; copied name; 384 bytes, one per species, values 1-7; what the field means is not read (E-0208, C1)
 ; record: value 1-7 stored in a new monster record
 SpeciesNewRecordByteTable::
-Data_019_741C:: ; address name
     db $07 ; id 0
     db $03 ; id 1 DrakSlime
     db $01 ; id 2 SpotSlime
@@ -3405,4 +3245,4 @@ Data_019_741C:: ; address name
     db $07 ; id 381 Dimensaur
     db $07 ; id 382 Kagebou
     db $07 ; id 383 ?
-    ds $A64, $00
+    ds $a64, $00

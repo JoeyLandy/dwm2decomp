@@ -1,13 +1,11 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
-    db $11, $C9
+    db $11, $c9
 
-; unless a special mode is set (wMapType bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored
-; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
-; reads: wMapType, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestFacing, ...
-; writes: wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hPlayerStateFlags, ...
-; points at: wFieldInitStage
+; unless a special mode is set (wMapType bit 7 hands over to CheckWarpAtPlayer_ReadMapType): walks
+; the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its
+; screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's
+; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored
 CheckWarpAtPlayer::
-Func_011_4002:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, .read_map_id
@@ -21,7 +19,7 @@ Func_011_4002:: ; address name
     add hl, hl
     ld de, MapWarpTable
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -30,50 +28,50 @@ Func_011_4002:: ; address name
     push de
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr nz, .cp_FD
     pop de
     ld c, $00
     ret
 
 .cp_FD:
-    cp a, $FD
+    cp $fd
     jr z, .restore2
-    cp a, $FE
+    cp $fe
     jr z, .set_warp_dest_facing
-    cp a, $FF
+    cp $ff
     jr z, .set_warp_dest_facing
     ld c, a
     ldh a, [hPlayerFacing]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld [wWarpDestFacing], a
     push af
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
     pop af
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .restore2
     jr .set_warp_pending_to_01
 
@@ -84,13 +82,13 @@ Func_011_4002:: ; address name
     inc de
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore2
     jr .set_warp_pending_to_01
 
@@ -100,10 +98,10 @@ Func_011_4002:: ; address name
 .restore2:
     pop de
     ld a, e
-    add a, $09
+    add $09
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     jr .skip
 
@@ -117,23 +115,23 @@ Func_011_4002:: ; address name
     ldh [hMapId], a
     ld a, [de]
     inc de
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [de]
-    and a, $0F
+    and $0f
     inc de
     ldh [hMapScreenY], a
     ld a, [wWarpDestFacing]
-    cp a, $FF
+    cp $ff
     jr z, .skip2
     ld a, [de]
     inc de
     swap a
-    and a, $F0
+    and $f0
     ld [wWarpDestX], a
     ld a, [de]
     swap a
-    and a, $F0
+    and $f0
     ld [wWarpDestY], a
     dec de
     dec de
@@ -142,10 +140,10 @@ Func_011_4002:: ; address name
     bit 7, a
     jr z, .skip3
     ldh a, [hPlayerStateFlags]
-    or a, $40
+    or $40
     ldh [hPlayerStateFlags], a
     ld a, [wWarpDestY]
-    add a, $08
+    add $08
     ld [wWarpDestY], a
     jr .skip3
 
@@ -154,12 +152,12 @@ Func_011_4002:: ; address name
     inc de
     ld c, a
     ldh a, [hPlayerX]
-    add a, c
+    add c
     ld [wWarpDestX], a
     ld a, [de]
     ld c, a
     ldh a, [hPlayerY]
-    add a, c
+    add c
     ld [wWarpDestY], a
     dec de
     dec de
@@ -168,17 +166,17 @@ Func_011_4002:: ; address name
     bit 7, a
     jr z, .skip3
     ldh a, [hPlayerStateFlags]
-    or a, $40
+    or $40
     ldh [hPlayerStateFlags], a
     ld a, [wWarpDestY]
-    add a, $08
+    add $08
     ld [wWarpDestY], a
 
 .skip3:
     ld a, [de]
     swap a
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .next
     ld [wLastWarpIndex], a
 
@@ -186,7 +184,7 @@ Func_011_4002:: ; address name
     inc de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ld [wFieldTransitionKind], a
     ld a, $04
     call StartPaletteFade
@@ -194,23 +192,19 @@ Func_011_4002:: ; address name
     inc [hl]
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
     ld c, $01
     ret
 
-; special maps use CheckWarpsByMapType; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
-; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_FieldStateCommonUpdate, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
-; reads: wMapType, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestY
-; writes: hPlayerStateFlags, wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
-; points at: wFieldInitStage
+; special maps use CheckWarpsByMapType; otherwise checks the map exit table, then the warp list
+; MapWarpTable[hMapId] against the player position and warps on a match (E-0131)
 CheckWarpsAtPlayerPosition::
-Func_011_4130:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, .call_check_map_exit_table4480
@@ -227,7 +221,7 @@ Func_011_4130:: ; address name
     add hl, hl
     ld de, MapWarpTable
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -236,26 +230,26 @@ Func_011_4130:: ; address name
     push de
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr nz, .cp_FD
     pop de
     ldh a, [hPlayerStateFlags]
     bit 7, a
     jr z, .done
     ldh a, [hMapId]
-    cp a, $30
+    cp $30
     jr nz, .check_player_state_flags
     ldh a, [hMapScreenX]
-    cp a, $05
+    cp $05
     jr nz, .check_player_state_flags
     ldh a, [hMapScreenY]
-    cp a, $05
+    cp $05
     jr nz, .check_player_state_flags
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr nz, .check_player_state_flags
     ldh a, [hPlayerY]
-    cp a, $50
+    cp $50
     jr nz, .check_player_state_flags
     ld de, $0076
     call TestFlagBit
@@ -267,7 +261,7 @@ Func_011_4130:: ; address name
 
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
-    and a, $7F
+    and $7f
     ldh [hPlayerStateFlags], a
 
 .done:
@@ -275,7 +269,7 @@ Func_011_4130:: ; address name
     ret
 
 .cp_FD:
-    cp a, $FD
+    cp $fd
     jr z, .set_warp_dest_facing
     jr .restore2
 
@@ -285,31 +279,31 @@ Func_011_4130:: ; address name
     ld [wWarpDestFacing], a
     push af
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
     pop af
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr z, .check_player_state_flags2
-    add a, $F8
-    cp a, c
+    add $f8
+    cp c
     jr nz, .restore2
 
 .check_player_state_flags2:
@@ -329,10 +323,10 @@ Func_011_4130:: ; address name
 .restore2:
     pop de
     ld a, e
-    add a, $09
+    add $09
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     jp .skip
 
@@ -345,21 +339,21 @@ Func_011_4130:: ; address name
     inc de
     ldh [hMapId], a
     ld a, [de]
-    and a, $0F
+    and $0f
     inc de
     ldh [hMapScreenX], a
     ld a, [de]
-    and a, $0F
+    and $0f
     inc de
     ldh [hMapScreenY], a
     ld a, [de]
     inc de
     swap a
-    and a, $F0
+    and $f0
     ld [wWarpDestX], a
     ld a, [de]
     swap a
-    and a, $F0
+    and $f0
     ld [wWarpDestY], a
     dec de
     dec de
@@ -368,18 +362,18 @@ Func_011_4130:: ; address name
     bit 7, a
     jr z, .skip3
     ldh a, [hPlayerStateFlags]
-    or a, $40
+    or $40
     ldh [hPlayerStateFlags], a
     ld a, [wWarpDestY]
-    add a, $08
+    add $08
     ld [wWarpDestY], a
     jr .skip3
 
 .skip3:
     ld a, [de]
     swap a
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .next
     ld [wLastWarpIndex], a
 
@@ -387,35 +381,32 @@ Func_011_4130:: ; address name
     inc de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ld [wFieldTransitionKind], a
     ld a, $04
     call StartPaletteFade
     ld hl, wFieldInitStage
     inc [hl]
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
-    xor a, a
+    xor a
     ld [wJoypadPressed], a
     ld c, $01
     ret
 
-; unless bit 7 of wMapType is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wKeyWorldGoal when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
-; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoal, wKeyWorldGoalCell, wKeyWorldGoalPos, ...
-; writes: hMapId, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY
-; points at: wKeyWorldGoal
+; unless bit 7 of wMapType is set, looks hMapId up in WarpToLinkedMapForCurrentMap_Data_42AC; when
+; listed, sets the linked map from WarpToLinkedMapForCurrentMap_Data_42B8 and warps (using
+; wKeyWorldGoal when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
 WarpToLinkedMapForCurrentMap::
-Func_011_4268:: ; address name
     ld a, [wMapType]
     bit 7, a
     jp nz, WarpToLinkedMapForCurrentMap_Data_42B8_Cp87
@@ -425,14 +416,14 @@ Func_011_4268:: ; address name
     ld hl, WarpToLinkedMapForCurrentMap_Data_42AC
 
 .skip:
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr nz, .skip2
     ld c, $00
     ret
 
 .skip2:
-    cp a, c
+    cp c
     jr z, .skip3
     inc b
     jr .skip
@@ -440,9 +431,9 @@ Func_011_4268:: ; address name
 .skip3:
     ld a, b
     sla a
-    add a, b
+    add b
     ld de, WarpToLinkedMapForCurrentMap_Data_42B8
-    add a, e
+    add e
     ld e, a
     jr nc, .set_map_id
     inc d
@@ -452,11 +443,11 @@ Func_011_4268:: ; address name
     inc de
     ldh [hMapId], a
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .call_script_warp_to_map_from_bytes_at_de
     ld a, [wKeyWorldKey]
     dec a
-    cp a, b
+    cp b
     jr nz, .call_script_warp_to_map_from_bytes_at_de
     ld de, wKeyWorldGoal
 
@@ -465,50 +456,45 @@ Func_011_4268:: ; address name
     ld c, $01
     ret
 
-; address loaded by WarpToLinkedMapForCurrentMap
-WarpToLinkedMapForCurrentMap_Data_42AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_011_42AC:: ; address name
-    db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2, $FF
+WarpToLinkedMapForCurrentMap_Data_42AC::
+    db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2, $ff
 
-; address loaded by WarpToLinkedMapForCurrentMap
-WarpToLinkedMapForCurrentMap_Data_42B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_011_42B8:: ; address name
-    db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
-    db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
+WarpToLinkedMapForCurrentMap_Data_42B8::
+    db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
+    db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00
 
 WarpToLinkedMapForCurrentMap_Data_42B8_Cp87::
-Jump_011_42D9:: ; address name
-    cp a, $87
+    cp $87
     jr z, .check_key_world_active
     ld c, $00
     ret
 
 .check_key_world_active:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_key_world_goal_pos
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_key_world_goal_pos
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_key_world_goal_pos
     ld a, [wKeyWorldGoal]
-    and a, $F0
+    and $f0
     ld [wWarpDestX], a
     ld a, [wKeyWorldGoal]
-    and a, $0F
+    and $0f
     swap a
     ld [wWarpDestY], a
     ld a, [wKeyWorldGoalCell]
-    and a, $F0
+    and $f0
     swap a
     ldh [hMapScreenX], a
     ld a, [wKeyWorldGoalCell]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     call StartWarpTransition
     ld c, $01
@@ -520,41 +506,38 @@ Jump_011_42D9:: ; address name
     ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
     ld a, [wKeyWorldGoalScreen]
-    and a, $F0
+    and $f0
     swap a
     ldh [hMapScreenX], a
     ld a, [wKeyWorldGoalScreen]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     call StartWarpTransition
     ld c, $01
     ret
 
-; script command: plays sound $60 and reads a warp destination at DE (wWarpDestX/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wFieldInitStage += 1, wModeState = 4, updates hPlayerStateFlags and returns C = 1 (E-0121)
-; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
-; reads: hPlayerStateFlags
-; writes: wWarpPending, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
-; points at: wFieldInitStage
+; script command: plays sound $60 and reads a warp destination at DE (wWarpDestX/9 from the nibbles
+; of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wFieldInitStage += 1, wModeState =
+; 4, updates hPlayerStateFlags and returns C = 1 (E-0121)
 ScriptWarpToMapFromBytesAtDE::
-Func_011_4340:: ; address name
     ld a, $01
     ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
     ld a, [de]
-    and a, $F0
+    and $f0
     ld [wWarpDestX], a
     ld a, [de]
     swap a
-    and a, $F0
+    and $f0
     ld [wWarpDestY], a
     inc de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [de]
-    and a, $0F
+    and $0f
     inc de
     ldh [hMapScreenY], a
     ld a, $01
@@ -565,24 +548,21 @@ Func_011_4340:: ; address name
     inc [hl]
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $20
-    and a, $7F
+    or $20
+    and $7f
     ldh [hPlayerStateFlags], a
     farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
     ld c, $01
     ret
 
-; wWarpDestFacing = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wFieldTransitionStep, updates hPlayerStateFlags and sets wFieldTransitionKind = 1 (E-0124)
-; 2 call sites from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
-; reads: hPlayerStateFlags
-; writes: wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, wFieldTransitionKind
+; wWarpDestFacing = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears
+; wFieldTransitionStep, updates hPlayerStateFlags and sets wFieldTransitionKind = 1 (E-0124)
 StartWarpTransition::
-Func_011_438F:: ; address name
-    ld a, $F0
+    ld a, $f0
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -590,28 +570,25 @@ Func_011_438F:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $20
-    and a, $7F
+    or $20
+    and $7f
     ldh [hPlayerStateFlags], a
     ldh a, [hPlayerStateFlags]
-    and a, $FE
+    and $fe
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ret
 
-; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wKeyWorldGoal); unlisted maps clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125)
-; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
-; reads: hMapId, hPlayerStateFlags, wKeyWorldActive, wKeyWorldKey
-; writes: hPlayerStateFlags
-; points at: wKeyWorldGoal
+; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable4480_Data and runs
+; CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc with its entry (or wKeyWorldGoal); unlisted maps
+; clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125)
 CheckMapExitTable4480::
-Func_011_43BB:: ; address name
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     jr c, .check_player_state_flags
     ld c, a
     ld b, $00
@@ -619,18 +596,18 @@ Func_011_43BB:: ; address name
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .skip2
 
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
-    and a, $DF
+    and $df
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
 .skip2:
-    cp a, c
+    cp c
     jr z, .check_key_world_active
     inc b
     inc hl
@@ -641,11 +618,11 @@ Func_011_43BB:: ; address name
 
 .check_key_world_active:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .skip3
     ld a, [wKeyWorldKey]
     dec a
-    cp a, b
+    cp b
     jr nz, .skip3
     ld de, wKeyWorldGoal
     call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
@@ -658,33 +635,27 @@ Func_011_43BB:: ; address name
     call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
     ret
 
-; only called from CheckMapExitTable4480 (E-0047)
-; 2 call sites from 1 routine (e.g. CheckMapExitTable4480)
-; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wLastWarpIndex, wFieldTransitionKind, ...
-; points at: wFieldInitStage
 CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc::
-Func_011_43FA:: ; address name
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld c, a
     ldh a, [hPlayerY]
-    and a, $F0
+    and $f0
     swap a
-    or a, c
+    or c
     ld c, a
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .check_player_state_flags
     ldh a, [hMapScreenX]
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     inc de
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .check_player_state_flags
     ldh a, [hPlayerStateFlags]
     bit 5, a
@@ -694,7 +665,7 @@ Func_011_43FA:: ; address name
 
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
-    and a, $DF
+    and $df
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
@@ -711,14 +682,14 @@ Func_011_43FA:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld a, $80
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wLastWarpIndex], a
     ld a, $03
     ld [wFieldTransitionKind], a
@@ -726,35 +697,38 @@ Func_011_43FA:: ; address name
     call StartPaletteFade
     ld hl, wFieldInitStage
     inc [hl]
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $20
+    or $20
     ldh [hPlayerStateFlags], a
     farcall ClearPendingFieldEventIfBit7AndNot6
     ld c, $01
     ret
 
-; address loaded by CheckMapExitTable4480
-CheckMapExitTable4480_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_011_4480:: ; address name
-    db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $B4, $03, $70, $44, $B4, $04
-    db $A0, $44, $10, $05, $A8, $44, $00, $06, $B0, $44, $01, $07, $B8, $44, $44, $08
-    db $C8, $44, $01, $09, $D1, $44, $00, $0A, $DA, $44, $00, $0B, $FF
+CheckMapExitTable4480_Data::
+    db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $b4, $03, $70, $44, $b4, $04
+    db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08
+    db $c8, $44, $01, $09, $d1, $44, $00, $0a, $da, $44, $00, $0b, $ff
 
-; address loaded by CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
-CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_011_44AD:: ; address name
-    db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2
+CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data::
+    db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2
 
-; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000. E-0201: the complete map records at $59E4, $6248 and $62F0 (1 x 1 screens, found as trailing bytes of the records before them) have no entry here and are listed as extra records.
+; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (Map38Tileset) the game
+; decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where
+; the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for
+; map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game
+; starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far
+; pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the
+; tile map for $C198 and the attribute map for $D000. E-0201: the complete map records at $59E4,
+; $6248 and $62F0 (1 x 1 screens, found as trailing bytes of the records before them) have no entry
+; here and are listed as extra records.
 ; record: map record in this bank, indexed by the map number hMapId
 MapTable::
-Data_011_44B8:: ; address name
     dw MapRecord00 ; entry 0
     dw MapRecord01 ; entry 1
     dw MapRecord02 ; entry 2
@@ -1012,13 +986,14 @@ Data_011_44B8:: ; address name
     dw $0000 ; entry 254
     dw $0000 ; entry 255
 
-; E-0142 (derived: map record of map $00, 3 x 4 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $00, 3 x 4 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord00::
-Data_011_46B8:: ; address name
     dfar AreaTileset0 ; entry 0: tileset
     dfar AreaPalettes0 ; palettes
-    db $03, $04, $4E, $00, $01, $00, $00, $01, $10, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $04, $4e, $00, $01, $00, $00, $01, $10, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map00Screens0 ; variant 0 screens
     dfar Map00Attrs0 ; variant 0 attributes
@@ -1037,13 +1012,11 @@ Data_011_46B8:: ; address name
     dfar Map00Screens6 ; variant 7 screens
     dfar Map00Attrs6 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $01, 4 x 3 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $01, 4 x 3 screens, 8 decoded variant(s) (E-0142)
 MapRecord01::
-Data_011_46FA:: ; address name
     dfar Map01Tileset ; entry 0: tileset
     dfar Map01Palettes ; palettes
-    db $04, $03, $4F, $00, $01, $00, $00, $01, $0D, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $03, $4f, $00, $01, $00, $00, $01, $0d, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map01Screens0 ; variant 0 screens
     dfar Map01Attrs0 ; variant 0 attributes
@@ -1062,13 +1035,11 @@ Data_011_46FA:: ; address name
     dfar Map01Screens6 ; variant 7 screens
     dfar Map01Attrs6 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $02, 3 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $02, 3 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord02::
-Data_011_473C:: ; address name
     dfar Map02Tileset ; entry 0: tileset
     dfar Map02Palettes ; palettes
-    db $03, $01, $31, $00, $01, $00, $00, $01, $0D, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $31, $00, $01, $00, $00, $01, $0d, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map02Screens0 ; variant 0 screens
     dfar Map02Attrs0 ; variant 0 attributes
@@ -1087,13 +1058,11 @@ Data_011_473C:: ; address name
     dfar Map02Screens6 ; variant 7 screens
     dfar Map02Attrs6 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $03, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $03, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord03::
-Data_011_477E:: ; address name
     dfar Map03Tileset ; entry 0: tileset
     dfar Map03Palettes ; palettes
-    db $01, $01, $2F, $2C, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $2c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map03Screens0 ; variant 0 screens
     dfar Map03Attrs0 ; variant 0 attributes
@@ -1112,13 +1081,14 @@ Data_011_477E:: ; address name
     dfar Map03Screens0 ; variant 7 screens
     dfar Map03Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $04, 3 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $04, 3 x 1 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord04::
-Data_011_47C0:: ; address name
     dfar Map04Tileset ; entry 0: tileset
     dfar Map04Palettes ; palettes
-    db $03, $01, $2E, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $2e, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map04Screens0 ; variant 0 screens
     dfar Map04Attrs0 ; variant 0 attributes
@@ -1137,10 +1107,8 @@ Data_011_47C0:: ; address name
     dfar Map04Screens0 ; variant 7 screens
     dfar Map04Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $05, 3 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $05, 3 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord05::
-Data_011_4802:: ; address name
     dfar Map05Tileset ; entry 0: tileset
     dfar Map05Palettes ; palettes
     db $03, $01, $67, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1162,10 +1130,8 @@ Data_011_4802:: ; address name
     dfar Map05Screens7 ; variant 7 screens
     dfar Map05Attrs7 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $06, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $06, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord06::
-Data_011_4844:: ; address name
     dfar Map06Tileset ; entry 0: tileset
     dfar Map06Palettes ; palettes
     db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1187,13 +1153,11 @@ Data_011_4844:: ; address name
     dfar Map06Screens0 ; variant 7 screens
     dfar Map06Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $07, 1 x 2 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $07, 1 x 2 screens, 8 decoded variant(s) (E-0142)
 MapRecord07::
-Data_011_4886:: ; address name
     dfar AreaTileset1 ; entry 0: tileset
     dfar AreaPalettes1 ; palettes
-    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map07Screens0 ; variant 0 screens
     dfar Map07Attrs0 ; variant 0 attributes
@@ -1212,10 +1176,11 @@ Data_011_4886:: ; address name
     dfar Map07Screens7 ; variant 7 screens
     dfar Map07Attrs7 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $09, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $09, 1 x 1 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord09::
-Data_011_48C8:: ; address name
     dfar Map09Tileset ; entry 0: tileset
     dfar Map09Palettes ; palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1237,10 +1202,8 @@ Data_011_48C8:: ; address name
     dfar Map09Screens0 ; variant 7 screens
     dfar Map09Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $08, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $08, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord08::
-Data_011_490A:: ; address name
     dfar Map08Tileset ; entry 0: tileset
     dfar Map08Palettes ; palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1262,13 +1225,11 @@ Data_011_490A:: ; address name
     dfar Map08Screens0 ; variant 7 screens
     dfar Map08Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0A, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0A, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord0A::
-Data_011_494C:: ; address name
     dfar Map0ATileset ; entry 0: tileset
     dfar Map0APalettes ; palettes
-    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2a, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map0AScreens0 ; variant 0 screens
     dfar Map0AAttrs0 ; variant 0 attributes
@@ -1287,10 +1248,8 @@ Data_011_494C:: ; address name
     dfar Map0AScreens0 ; variant 7 screens
     dfar Map0AAttrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0B, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0B, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord0B::
-Data_011_498E:: ; address name
     dfar Map0BTileset ; entry 0: tileset
     dfar Map0BPalettes ; palettes
     db $01, $01, $00, $00, $07, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1312,13 +1271,14 @@ Data_011_498E:: ; address name
     dfar Map0BScreens0 ; variant 7 screens
     dfar Map0BAttrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0C, 2 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0C, 2 x 1 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord0C::
-Data_011_49D0:: ; address name
     dfar Map0CTileset ; entry 0: tileset
     dfar Map0CPalettes ; palettes
-    db $02, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map0CScreens0 ; variant 0 screens
     dfar Map0CAttrs0 ; variant 0 attributes
@@ -1337,13 +1297,11 @@ Data_011_49D0:: ; address name
     dfar Map0CScreens0 ; variant 7 screens
     dfar Map0CAttrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0D, 4 x 2 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0D, 4 x 2 screens, 8 decoded variant(s) (E-0142)
 MapRecord0D::
-Data_011_4A12:: ; address name
     dfar Map0DTileset ; entry 0: tileset
     dfar Map0DPalettes ; palettes
-    db $04, $02, $3F, $00, $0F, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $02, $3f, $00, $0f, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map0DScreens0 ; variant 0 screens
     dfar Map0DAttrs0 ; variant 0 attributes
@@ -1362,13 +1320,11 @@ Data_011_4A12:: ; address name
     dfar Map0DScreens7 ; variant 7 screens
     dfar Map0DAttrs7 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0E, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0E, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord0E::
-Data_011_4A54:: ; address name
     dfar Map0ETileset ; entry 0: tileset
     dfar Map0EPalettes ; palettes
-    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map0EScreens0 ; variant 0 screens
     dfar Map0EAttrs0 ; variant 0 attributes
@@ -1387,10 +1343,8 @@ Data_011_4A54:: ; address name
     dfar Map0EScreens0 ; variant 7 screens
     dfar Map0EAttrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $0F, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $0F, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord0F::
-Data_011_4A96:: ; address name
     dfar Map0FTileset ; entry 0: tileset
     dfar Map0FPalettes ; palettes
     db $01, $01, $50, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1412,10 +1366,11 @@ Data_011_4A96:: ; address name
     dfar Map0FScreens7 ; variant 7 screens
     dfar Map0FAttrs7 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $10, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $10, 1 x 1 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord10::
-Data_011_4AD8:: ; address name
     dfar Map10Tileset ; entry 0: tileset
     dfar Map10Palettes ; palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1437,10 +1392,8 @@ Data_011_4AD8:: ; address name
     dfar Map10Screens0 ; variant 7 screens
     dfar Map10Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $11, 1 x 2 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $11, 1 x 2 screens, 8 decoded variant(s) (E-0142)
 MapRecord11::
-Data_011_4B1A:: ; address name
     dfar Map11Tileset ; entry 0: tileset
     dfar Map11Palettes ; palettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1462,13 +1415,11 @@ Data_011_4B1A:: ; address name
     dfar Map11Screens0 ; variant 7 screens
     dfar Map11Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $12, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $12, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord12::
-Data_011_4B5C:: ; address name
     dfar Map12Tileset ; entry 0: tileset
     dfar Map12Palettes ; palettes
-    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map12Screens0 ; variant 0 screens
     dfar Map12Attrs0 ; variant 0 attributes
@@ -1487,10 +1438,8 @@ Data_011_4B5C:: ; address name
     dfar Map12Screens0 ; variant 7 screens
     dfar Map12Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $13, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $13, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord13::
-Data_011_4B9E:: ; address name
     dfar Map13Tileset ; entry 0: tileset
     dfar Map13Palettes ; palettes
     db $01, $01, $27, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1512,10 +1461,11 @@ Data_011_4B9E:: ; address name
     dfar Map13Screens0 ; variant 7 screens
     dfar Map13Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $14, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $14, 1 x 1 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord14::
-Data_011_4BE0:: ; address name
     dfar Map14Tileset ; entry 0: tileset
     dfar Map14Palettes ; palettes
     db $01, $01, $00, $00, $08, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1537,13 +1487,11 @@ Data_011_4BE0:: ; address name
     dfar Map14Screens0 ; variant 7 screens
     dfar Map14Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $15, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $15, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord15::
-Data_011_4C22:: ; address name
     dfar Map15Tileset ; entry 0: tileset
     dfar Map15Palettes ; palettes
-    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map15Screens0 ; variant 0 screens
     dfar Map15Attrs0 ; variant 0 attributes
@@ -1562,13 +1510,11 @@ Data_011_4C22:: ; address name
     dfar Map15Screens0 ; variant 7 screens
     dfar Map15Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $16, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $16, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord16::
-Data_011_4C64:: ; address name
     dfar Map16Tileset ; entry 0: tileset
     dfar Map16Palettes ; palettes
-    db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map16Screens0 ; variant 0 screens
     dfar Map16Attrs0 ; variant 0 attributes
@@ -1587,13 +1533,11 @@ Data_011_4C64:: ; address name
     dfar Map16Screens0 ; variant 7 screens
     dfar Map16Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $17, 1 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $17, 1 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord17::
-Data_011_4CA6:: ; address name
     dfar Map17Tileset ; entry 0: tileset
     dfar Map17Palettes ; palettes
-    db $01, $01, $3A, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3a, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map17Screens0 ; variant 0 screens
     dfar Map17Attrs0 ; variant 0 attributes
@@ -1612,10 +1556,11 @@ Data_011_4CA6:: ; address name
     dfar Map17Screens0 ; variant 7 screens
     dfar Map17Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $18, 3 x 2 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $18, 3 x 2 screens, 8 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord18::
-Data_011_4CE8:: ; address name
     dfar Map18Tileset ; entry 0: tileset
     dfar Map18Palettes ; palettes
     db $03, $02, $39, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1637,10 +1582,8 @@ Data_011_4CE8:: ; address name
     dfar Map18Screens0 ; variant 7 screens
     dfar Map18Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $19, 2 x 3 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $19, 2 x 3 screens, 8 decoded variant(s) (E-0142)
 MapRecord19::
-Data_011_4D2A:: ; address name
     dfar Map19Tileset ; entry 0: tileset
     dfar Map19Palettes ; palettes
     db $02, $03, $57, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1662,13 +1605,11 @@ Data_011_4D2A:: ; address name
     dfar Map19Screens0 ; variant 7 screens
     dfar Map19Attrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $1A, 3 x 1 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $1A, 3 x 1 screens, 8 decoded variant(s) (E-0142)
 MapRecord1A::
-Data_011_4D6C:: ; address name
     dfar Map1ATileset ; entry 0: tileset
     dfar Map1APalettes ; palettes
-    db $03, $01, $4B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $4b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map1AScreens0 ; variant 0 screens
     dfar Map1AAttrs0 ; variant 0 attributes
@@ -1687,13 +1628,11 @@ Data_011_4D6C:: ; address name
     dfar Map1AScreens5 ; variant 7 screens
     dfar Map1AAttrs5 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $1B, 1 x 3 screens, 8 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $1B, 1 x 3 screens, 8 decoded variant(s) (E-0142)
 MapRecord1B::
-Data_011_4DAE:: ; address name
     dfar Map1BTileset ; entry 0: tileset
     dfar Map1BPalettes ; palettes
-    db $01, $03, $1F, $00, $00, $00, $00, $02, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $1f, $00, $00, $00, $00, $02, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map1BScreens0 ; variant 0 screens
     dfar Map1BAttrs0 ; variant 0 attributes
@@ -1712,10 +1651,11 @@ Data_011_4DAE:: ; address name
     dfar Map1BScreens0 ; variant 7 screens
     dfar Map1BAttrs0 ; variant 7 attributes
 
-; E-0142 (derived: map record of map $1C, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $1C, 1 x 2 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord1C::
-Data_011_4DF0:: ; address name
     dfar Map1CTileset ; entry 0: tileset
     dfar Map1CPalettes ; palettes
     db $01, $02, $00, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1725,26 +1665,22 @@ Data_011_4DF0:: ; address name
     dfar Map1CScreens0 ; variant 1 screens
     dfar Map1CAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $1D, 2 x 1 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $1D, 2 x 1 screens, 2 decoded variant(s) (E-0142)
 MapRecord1D::
-Data_011_4E0E:: ; address name
     dfar Map1DTileset ; entry 0: tileset
     dfar Map1DPalettes ; palettes
-    db $02, $01, $37, $00, $0E, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $37, $00, $0e, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $60 ; variant flag byte
     dfar Map1DScreens0 ; variant 0 screens
     dfar Map1DAttrs0 ; variant 0 attributes
     dfar Map1DScreens0 ; variant 1 screens
     dfar Map1DAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $20, 8 x 8 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $20, 8 x 8 screens, 7 decoded variant(s) (E-0142)
 MapRecord20::
-Data_011_4E2C:: ; address name
     dfar Map20Tileset ; entry 0: tileset
     dfar Map20Palettes ; palettes
-    db $08, $08, $2B, $00, $00, $01, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $08, $08, $2b, $00, $00, $01, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map20Screens0 ; variant 0 screens
     dfar Map20Attrs0 ; variant 0 attributes
@@ -1761,13 +1697,11 @@ Data_011_4E2C:: ; address name
     dfar Map20Screens0 ; variant 6 screens
     dfar Map20Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $21, 2 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $21, 2 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord21::
-Data_011_4E68:: ; address name
     dfar Map21Tileset ; entry 0: tileset
     dfar Map21Palettes ; palettes
-    db $02, $01, $4E, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $4e, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map21Screens0 ; variant 0 screens
     dfar Map21Attrs0 ; variant 0 attributes
@@ -1784,10 +1718,11 @@ Data_011_4E68:: ; address name
     dfar Map21Screens0 ; variant 6 screens
     dfar Map21Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $22, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $22, 1 x 1 screens, 7 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord22::
-Data_011_4EA4:: ; address name
     dfar Map22Tileset ; entry 0: tileset
     dfar Map22Palettes ; palettes
     db $01, $01, $30, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1807,10 +1742,8 @@ Data_011_4EA4:: ; address name
     dfar Map22Screens0 ; variant 6 screens
     dfar Map22Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $23, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $23, 1 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord23::
-Data_011_4EE0:: ; address name
     dfar Map23Tileset ; entry 0: tileset
     dfar Map23Palettes ; palettes
     db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1830,10 +1763,8 @@ Data_011_4EE0:: ; address name
     dfar Map23Screens0 ; variant 6 screens
     dfar Map23Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $24, 2 x 2 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $24, 2 x 2 screens, 7 decoded variant(s) (E-0142)
 MapRecord24::
-Data_011_4F1C:: ; address name
     dfar Map24Tileset ; entry 0: tileset
     dfar Map24Palettes ; palettes
     db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1853,10 +1784,8 @@ Data_011_4F1C:: ; address name
     dfar Map24Screens0 ; variant 6 screens
     dfar Map24Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $25, 2 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $25, 2 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord25::
-Data_011_4F58:: ; address name
     dfar Map25Tileset ; entry 0: tileset
     dfar Map25Palettes ; palettes
     db $02, $01, $37, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1876,10 +1805,11 @@ Data_011_4F58:: ; address name
     dfar Map25Screens0 ; variant 6 screens
     dfar Map25Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $26, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $26, 1 x 1 screens, 7 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord26::
-Data_011_4F94:: ; address name
     dfar Map26Tileset ; entry 0: tileset
     dfar Map26Palettes ; palettes
     db $01, $01, $58, $00, $06, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -1899,13 +1829,11 @@ Data_011_4F94:: ; address name
     dfar Map26Screens1 ; variant 6 screens
     dfar Map26Attrs1 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $28, 1 x 2 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $28, 1 x 2 screens, 7 decoded variant(s) (E-0142)
 MapRecord28::
-Data_011_4FD0:: ; address name
     dfar Map28Tileset ; entry 0: tileset
     dfar Map28Palettes ; palettes
-    db $01, $02, $2F, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $2f, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map28Screens0 ; variant 0 screens
     dfar Map28Attrs0 ; variant 0 attributes
@@ -1922,13 +1850,11 @@ Data_011_4FD0:: ; address name
     dfar Map28Screens0 ; variant 6 screens
     dfar Map28Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $29, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $29, 1 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord29::
-Data_011_500C:: ; address name
     dfar Map29Tileset ; entry 0: tileset
     dfar Map29Palettes ; palettes
-    db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $32, $2c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map29Screens0 ; variant 0 screens
     dfar Map29Attrs0 ; variant 0 attributes
@@ -1945,13 +1871,11 @@ Data_011_500C:: ; address name
     dfar Map29Screens0 ; variant 6 screens
     dfar Map29Attrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $2A, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $2A, 1 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord2A::
-Data_011_5048:: ; address name
     dfar Map2ATileset ; entry 0: tileset
     dfar Map2APalettes ; palettes
-    db $01, $01, $27, $00, $01, $00, $00, $01, $0F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $27, $00, $01, $00, $00, $01, $0f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map2AScreens0 ; variant 0 screens
     dfar Map2AAttrs0 ; variant 0 attributes
@@ -1968,13 +1892,14 @@ Data_011_5048:: ; address name
     dfar Map2AScreens0 ; variant 6 screens
     dfar Map2AAttrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $2B, 4 x 4 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $2B, 4 x 4 screens, 7 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord2B::
-Data_011_5084:: ; address name
     dfar Map2BTileset ; entry 0: tileset
     dfar Map2BPalettes ; palettes
-    db $04, $04, $4F, $00, $01, $02, $00, $01, $0D, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $04, $4f, $00, $01, $02, $00, $01, $0d, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $61 ; variant flag byte
     dfar Map2BScreens0 ; variant 0 screens
     dfar Map2BAttrs0 ; variant 0 attributes
@@ -1991,10 +1916,8 @@ Data_011_5084:: ; address name
     dfar Map2BScreens2 ; variant 6 screens
     dfar Map2BAttrs2 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $2D, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $2D, 1 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord2D::
-Data_011_50C0:: ; address name
     dfar Map2DTileset ; entry 0: tileset
     dfar Map2DPalettes ; palettes
     db $01, $01, $21, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2014,10 +1937,8 @@ Data_011_50C0:: ; address name
     dfar Map2DScreens0 ; variant 6 screens
     dfar Map2DAttrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $2E, 1 x 1 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $2E, 1 x 1 screens, 7 decoded variant(s) (E-0142)
 MapRecord2E::
-Data_011_50FC:: ; address name
     dfar Map25Tileset ; entry 0: tileset
     dfar Map25Palettes ; palettes
     db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2037,10 +1958,8 @@ Data_011_50FC:: ; address name
     dfar Map2EScreens0 ; variant 6 screens
     dfar Map2EAttrs0 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $2F, 2 x 2 screens, 7 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $2F, 2 x 2 screens, 7 decoded variant(s) (E-0142)
 MapRecord2F::
-Data_011_5138:: ; address name
     dfar Map2FTileset ; entry 0: tileset
     dfar Map2FPalettes ; palettes
     db $02, $02, $37, $00, $01, $00, $00, $01, $09, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2060,13 +1979,14 @@ Data_011_5138:: ; address name
     dfar Map2FScreens5 ; variant 6 screens
     dfar Map2FAttrs5 ; variant 6 attributes
 
-; E-0142 (derived: map record of map $30, 8 x 8 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $30, 8 x 8 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord30::
-Data_011_5174:: ; address name
     dfar Map30Tileset ; entry 0: tileset
     dfar Map30Palettes ; palettes
-    db $08, $08, $3D, $00, $01, $03, $00, $01, $27, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $08, $08, $3d, $00, $01, $03, $00, $01, $27, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map30Screens0 ; variant 0 screens
     dfar Map30Attrs0 ; variant 0 attributes
@@ -2079,13 +1999,11 @@ Data_011_5174:: ; address name
     dfar Map30Screens2 ; variant 4 screens
     dfar Map30Attrs2 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $31, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $31, 1 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord31::
-Data_011_51A4:: ; address name
     dfar Map31Tileset ; entry 0: tileset
     dfar Map31Palettes ; palettes
-    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map31Screens0 ; variant 0 screens
     dfar Map31Attrs0 ; variant 0 attributes
@@ -2098,13 +2016,11 @@ Data_011_51A4:: ; address name
     dfar Map31Screens0 ; variant 4 screens
     dfar Map31Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $32, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $32, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord32::
-Data_011_51D4:: ; address name
     dfar Map32Tileset ; entry 0: tileset
     dfar Map32Palettes ; palettes
-    db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4b, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map32Screens0 ; variant 0 screens
     dfar Map32Attrs0 ; variant 0 attributes
@@ -2117,13 +2033,11 @@ Data_011_51D4:: ; address name
     dfar Map32Screens2 ; variant 4 screens
     dfar Map32Attrs2 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $33, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $33, 1 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord33::
-Data_011_5204:: ; address name
     dfar Map33Tileset ; entry 0: tileset
     dfar Map33Palettes ; palettes
-    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map33Screens0 ; variant 0 screens
     dfar Map33Attrs0 ; variant 0 attributes
@@ -2136,13 +2050,14 @@ Data_011_5204:: ; address name
     dfar Map33Screens0 ; variant 4 screens
     dfar Map33Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $34, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $34, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord34::
-Data_011_5234:: ; address name
     dfar Map34Tileset ; entry 0: tileset
     dfar Map34Palettes ; palettes
-    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2a, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map34Screens0 ; variant 0 screens
     dfar Map34Attrs0 ; variant 0 attributes
@@ -2155,13 +2070,11 @@ Data_011_5234:: ; address name
     dfar Map34Screens0 ; variant 4 screens
     dfar Map34Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $35, 4 x 4 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $35, 4 x 4 screens, 5 decoded variant(s) (E-0142)
 MapRecord35::
-Data_011_5264:: ; address name
     dfar Map35Tileset ; entry 0: tileset
     dfar Map35Palettes ; palettes
-    db $04, $04, $29, $00, $01, $04, $00, $01, $0F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $04, $29, $00, $01, $04, $00, $01, $0f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map35Screens0 ; variant 0 screens
     dfar Map35Attrs0 ; variant 0 attributes
@@ -2174,10 +2087,8 @@ Data_011_5264:: ; address name
     dfar Map35Screens0 ; variant 4 screens
     dfar Map35Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $36, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $36, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord36::
-Data_011_5294:: ; address name
     dfar Map36Tileset ; entry 0: tileset
     dfar Map36Palettes ; palettes
     db $01, $01, $23, $00, $01, $00, $00, $01, $09, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2193,13 +2104,11 @@ Data_011_5294:: ; address name
     dfar Map36Screens0 ; variant 4 screens
     dfar Map36Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $37, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $37, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord37::
-Data_011_52C4:: ; address name
     dfar Map37Tileset ; entry 0: tileset
     dfar Map37Palettes ; palettes
-    db $03, $01, $4F, $00, $01, $07, $00, $01, $0D, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $4f, $00, $01, $07, $00, $01, $0d, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map37Screens0 ; variant 0 screens
     dfar Map37Attrs0 ; variant 0 attributes
@@ -2212,13 +2121,14 @@ Data_011_52C4:: ; address name
     dfar Map37Screens0 ; variant 4 screens
     dfar Map37Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $38, 4 x 4 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $38, 4 x 4 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord38::
-Data_011_52F4:: ; address name
     dfar Map38Tileset ; entry 0: tileset
     dfar Map38Palettes ; palettes
-    db $04, $04, $3F, $00, $00, $05, $00, $00, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $04, $3f, $00, $00, $05, $00, $00, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map38Screens0 ; variant 0 screens
     dfar Map38Attrs0 ; variant 0 attributes
@@ -2231,13 +2141,11 @@ Data_011_52F4:: ; address name
     dfar Map38Screens0 ; variant 4 screens
     dfar Map38Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $39, 4 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $39, 4 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord39::
-Data_011_5324:: ; address name
     dfar Map38Tileset ; entry 0: tileset
     dfar Map38Palettes ; palettes
-    db $04, $03, $3F, $00, $00, $05, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $03, $3f, $00, $00, $05, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map39Screens0 ; variant 0 screens
     dfar Map39Attrs0 ; variant 0 attributes
@@ -2250,13 +2158,11 @@ Data_011_5324:: ; address name
     dfar Map39Screens3 ; variant 4 screens
     dfar Map39Attrs3 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3A, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3A, 3 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord3A::
-Data_011_5354:: ; address name
     dfar Map38Tileset ; entry 0: tileset
     dfar Map38Palettes ; palettes
-    db $03, $03, $3F, $00, $00, $05, $06, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $03, $3f, $00, $00, $05, $06, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3AScreens0 ; variant 0 screens
     dfar Map3AAttrs0 ; variant 0 attributes
@@ -2269,13 +2175,11 @@ Data_011_5354:: ; address name
     dfar Map3AScreens0 ; variant 4 screens
     dfar Map3AAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3B, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3B, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord3B::
-Data_011_5384:: ; address name
     dfar Map3BTileset ; entry 0: tileset
     dfar Map3BPalettes ; palettes
-    db $01, $01, $37, $2C, $00, $00, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $37, $2c, $00, $00, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3BScreens0 ; variant 0 screens
     dfar Map3BAttrs0 ; variant 0 attributes
@@ -2288,13 +2192,14 @@ Data_011_5384:: ; address name
     dfar Map3BScreens4 ; variant 4 screens
     dfar Map3BAttrs4 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3C, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3C, 3 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord3C::
-Data_011_53B4:: ; address name
     dfar Map3CTileset ; entry 0: tileset
     dfar Map3CPalettes ; palettes
-    db $03, $01, $3F, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $3f, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3CScreens0 ; variant 0 screens
     dfar Map3CAttrs0 ; variant 0 attributes
@@ -2307,13 +2212,11 @@ Data_011_53B4:: ; address name
     dfar Map3CScreens0 ; variant 4 screens
     dfar Map3CAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3D, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3D, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord3D::
-Data_011_53E4:: ; address name
     dfar Map3DTileset ; entry 0: tileset
     dfar Map3DPalettes ; palettes
-    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2a, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3DScreens0 ; variant 0 screens
     dfar Map3DAttrs0 ; variant 0 attributes
@@ -2326,13 +2229,11 @@ Data_011_53E4:: ; address name
     dfar Map3DScreens0 ; variant 4 screens
     dfar Map3DAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3E, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3E, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord3E::
-Data_011_5414:: ; address name
     dfar Map3ETileset ; entry 0: tileset
     dfar Map3EPalettes ; palettes
-    db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2f, $00, $01, $06, $00, $01, $0e, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3EScreens0 ; variant 0 screens
     dfar Map3EAttrs0 ; variant 0 attributes
@@ -2345,13 +2246,11 @@ Data_011_5414:: ; address name
     dfar Map3EScreens0 ; variant 4 screens
     dfar Map3EAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $3F, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $3F, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord3F::
-Data_011_5444:: ; address name
     dfar Map3ETileset ; entry 0: tileset
     dfar Map3EPalettes ; palettes
-    db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2f, $00, $01, $06, $00, $01, $0e, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map3FScreens0 ; variant 0 screens
     dfar Map3FAttrs0 ; variant 0 attributes
@@ -2364,13 +2263,14 @@ Data_011_5444:: ; address name
     dfar Map3FScreens0 ; variant 4 screens
     dfar Map3FAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $40, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $40, 1 x 2 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord40::
-Data_011_5474:: ; address name
     dfar Map40Tileset ; entry 0: tileset
     dfar Map40Palettes ; palettes
-    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map40Screens0 ; variant 0 screens
     dfar Map40Attrs0 ; variant 0 attributes
@@ -2383,13 +2283,11 @@ Data_011_5474:: ; address name
     dfar Map40Screens2 ; variant 4 screens
     dfar Map40Attrs2 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $41, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $41, 1 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord41::
-Data_011_54A4:: ; address name
     dfar Map41Tileset ; entry 0: tileset
     dfar Map41Palettes ; palettes
-    db $01, $02, $3B, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3b, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map41Screens0 ; variant 0 screens
     dfar Map41Attrs0 ; variant 0 attributes
@@ -2402,13 +2300,11 @@ Data_011_54A4:: ; address name
     dfar Map41Screens0 ; variant 4 screens
     dfar Map41Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $42, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $42, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord42::
-Data_011_54D4:: ; address name
     dfar Map37Tileset ; entry 0: tileset
     dfar Map37Palettes ; palettes
-    db $03, $01, $4F, $00, $01, $08, $00, $02, $10, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $4f, $00, $01, $08, $00, $02, $10, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map42Screens0 ; variant 0 screens
     dfar Map42Attrs0 ; variant 0 attributes
@@ -2421,13 +2317,11 @@ Data_011_54D4:: ; address name
     dfar Map42Screens0 ; variant 4 screens
     dfar Map42Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $43, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $43, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord43::
-Data_011_5504:: ; address name
     dfar Map43Tileset ; entry 0: tileset
     dfar Map43Palettes ; palettes
-    db $03, $01, $4F, $00, $0D, $08, $00, $02, $02, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $4f, $00, $0d, $08, $00, $02, $02, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map43Screens0 ; variant 0 screens
     dfar Map43Attrs0 ; variant 0 attributes
@@ -2440,13 +2334,14 @@ Data_011_5504:: ; address name
     dfar Map43Screens1 ; variant 4 screens
     dfar Map43Attrs1 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $44, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $44, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord44::
-Data_011_5534:: ; address name
     dfar Map44Tileset ; entry 0: tileset
     dfar Map44Palettes ; palettes
-    db $01, $01, $4F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $4f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $62 ; variant flag byte
     dfar Map44Screens0 ; variant 0 screens
     dfar Map44Attrs0 ; variant 0 attributes
@@ -2459,13 +2354,11 @@ Data_011_5534:: ; address name
     dfar Map44Screens0 ; variant 4 screens
     dfar Map44Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $48, 12 x 12 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $48, 12 x 12 screens, 3 decoded variant(s) (E-0142)
 MapRecord48::
-Data_011_5564:: ; address name
     dfar Map48Tileset ; entry 0: tileset
     dfar Map48Palettes ; palettes
-    db $0C, $0C, $2B, $00, $01, $09, $00, $01, $27, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $0c, $0c, $2b, $00, $01, $09, $00, $01, $27, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map48Screens0 ; variant 0 screens
     dfar Map48Attrs0 ; variant 0 attributes
@@ -2474,13 +2367,11 @@ Data_011_5564:: ; address name
     dfar Map48Screens2 ; variant 2 screens
     dfar Map48Attrs2 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $49, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $49, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord49::
-Data_011_5588:: ; address name
     dfar Map49Tileset ; entry 0: tileset
     dfar Map49Palettes ; palettes
-    db $01, $01, $2B, $00, $01, $00, $00, $01, $0A, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2b, $00, $01, $00, $00, $01, $0a, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map49Screens0 ; variant 0 screens
     dfar Map49Attrs0 ; variant 0 attributes
@@ -2489,13 +2380,11 @@ Data_011_5588:: ; address name
     dfar Map49Screens2 ; variant 2 screens
     dfar Map49Attrs2 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4A, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4A, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord4A::
-Data_011_55AC:: ; address name
     dfar Map4ATileset ; entry 0: tileset
     dfar Map4APalettes ; palettes
-    db $02, $02, $4C, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4c, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map4AScreens0 ; variant 0 screens
     dfar Map4AAttrs0 ; variant 0 attributes
@@ -2504,13 +2393,14 @@ Data_011_55AC:: ; address name
     dfar Map4AScreens0 ; variant 2 screens
     dfar Map4AAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4B, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4B, 1 x 1 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord4B::
-Data_011_55D0:: ; address name
     dfar Map4BTileset ; entry 0: tileset
     dfar Map4BPalettes ; palettes
-    db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map4BScreens0 ; variant 0 screens
     dfar Map4BAttrs0 ; variant 0 attributes
@@ -2519,10 +2409,8 @@ Data_011_55D0:: ; address name
     dfar Map4BScreens0 ; variant 2 screens
     dfar Map4BAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4C, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4C, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord4C::
-Data_011_55F4:: ; address name
     dfar Map4CTileset ; entry 0: tileset
     dfar Map4CPalettes ; palettes
     db $02, $02, $46, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2534,10 +2422,8 @@ Data_011_55F4:: ; address name
     dfar Map4CScreens0 ; variant 2 screens
     dfar Map4CAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4D, 1 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4D, 1 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord4D::
-Data_011_5618:: ; address name
     dfar Map4DTileset ; entry 0: tileset
     dfar Map4DPalettes ; palettes
     db $01, $02, $17, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2549,13 +2435,11 @@ Data_011_5618:: ; address name
     dfar Map4DScreens1 ; variant 2 screens
     dfar Map4DAttrs1 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4E, 1 x 3 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4E, 1 x 3 screens, 3 decoded variant(s) (E-0142)
 MapRecord4E::
-Data_011_563C:: ; address name
     dfar Map4ETileset ; entry 0: tileset
     dfar Map4EPalettes ; palettes
-    db $01, $03, $2F, $00, $09, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $2f, $00, $09, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map4EScreens0 ; variant 0 screens
     dfar Map4EAttrs0 ; variant 0 attributes
@@ -2564,10 +2448,11 @@ Data_011_563C:: ; address name
     dfar Map4EScreens0 ; variant 2 screens
     dfar Map4EAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $4F, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $4F, 2 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord4F::
-Data_011_5660:: ; address name
     dfar Map4FTileset ; entry 0: tileset
     dfar Map4FPalettes ; palettes
     db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2579,13 +2464,11 @@ Data_011_5660:: ; address name
     dfar Map4FScreens2 ; variant 2 screens
     dfar Map4FAttrs2 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $50, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $50, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord50::
-Data_011_5684:: ; address name
     dfar Map50Tileset ; entry 0: tileset
     dfar Map50Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map50Screens0 ; variant 0 screens
     dfar Map50Attrs0 ; variant 0 attributes
@@ -2594,13 +2477,11 @@ Data_011_5684:: ; address name
     dfar Map50Screens0 ; variant 2 screens
     dfar Map50Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $51, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $51, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord51::
-Data_011_56A8:: ; address name
     dfar Map50Tileset ; entry 0: tileset
     dfar Map50Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map51Screens0 ; variant 0 screens
     dfar Map51Attrs0 ; variant 0 attributes
@@ -2609,13 +2490,11 @@ Data_011_56A8:: ; address name
     dfar Map51Screens0 ; variant 2 screens
     dfar Map51Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $52, 3 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $52, 3 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord52::
-Data_011_56CC:: ; address name
     dfar Map52Tileset ; entry 0: tileset
     dfar Map52Palettes ; palettes
-    db $03, $02, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $02, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map52Screens0 ; variant 0 screens
     dfar Map52Attrs0 ; variant 0 attributes
@@ -2624,13 +2503,14 @@ Data_011_56CC:: ; address name
     dfar Map52Screens0 ; variant 2 screens
     dfar Map52Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $53, 4 x 4 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $53, 4 x 4 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord53::
-Data_011_56F0:: ; address name
     dfar Map53Tileset ; entry 0: tileset
     dfar Map53Palettes ; palettes
-    db $04, $04, $33, $00, $00, $0A, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $04, $33, $00, $00, $0a, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map53Screens0 ; variant 0 screens
     dfar Map53Attrs0 ; variant 0 attributes
@@ -2639,13 +2519,11 @@ Data_011_56F0:: ; address name
     dfar Map53Screens0 ; variant 2 screens
     dfar Map53Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $54, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $54, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord54::
-Data_011_5714:: ; address name
     dfar Map53Tileset ; entry 0: tileset
     dfar Map53Palettes ; palettes
-    db $01, $01, $33, $00, $00, $0B, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $33, $00, $00, $0b, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map54Screens0 ; variant 0 screens
     dfar Map54Attrs0 ; variant 0 attributes
@@ -2654,13 +2532,11 @@ Data_011_5714:: ; address name
     dfar Map54Screens0 ; variant 2 screens
     dfar Map54Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $55, 2 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $55, 2 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord55::
-Data_011_5738:: ; address name
     dfar Map53Tileset ; entry 0: tileset
     dfar Map53Palettes ; palettes
-    db $02, $01, $33, $00, $00, $0B, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $33, $00, $00, $0b, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map55Screens0 ; variant 0 screens
     dfar Map55Attrs0 ; variant 0 attributes
@@ -2669,13 +2545,11 @@ Data_011_5738:: ; address name
     dfar Map55Screens0 ; variant 2 screens
     dfar Map55Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $56, 1 x 3 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $56, 1 x 3 screens, 3 decoded variant(s) (E-0142)
 MapRecord56::
-Data_011_575C:: ; address name
     dfar Map53Tileset ; entry 0: tileset
     dfar Map53Palettes ; palettes
-    db $01, $03, $33, $00, $00, $0B, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $33, $00, $00, $0b, $00, $10, $30, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map56Screens0 ; variant 0 screens
     dfar Map56Attrs0 ; variant 0 attributes
@@ -2684,13 +2558,14 @@ Data_011_575C:: ; address name
     dfar Map56Screens0 ; variant 2 screens
     dfar Map56Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $57, 3 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $57, 3 x 1 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord57::
-Data_011_5780:: ; address name
     dfar Map57Tileset ; entry 0: tileset
     dfar Map57Palettes ; palettes
-    db $03, $01, $3F, $00, $00, $00, $00, $10, $2C, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $3f, $00, $00, $00, $00, $10, $2c, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map57Screens0 ; variant 0 screens
     dfar Map57Attrs0 ; variant 0 attributes
@@ -2699,10 +2574,8 @@ Data_011_5780:: ; address name
     dfar Map57Screens0 ; variant 2 screens
     dfar Map57Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $58, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $58, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord58::
-Data_011_57A4:: ; address name
     dfar Map58Tileset ; entry 0: tileset
     dfar Map58Palettes ; palettes
     db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2714,13 +2587,11 @@ Data_011_57A4:: ; address name
     dfar Map58Screens0 ; variant 2 screens
     dfar Map58Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $59, 2 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $59, 2 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord59::
-Data_011_57C8:: ; address name
     dfar Map59Tileset ; entry 0: tileset
     dfar Map59Palettes ; palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map59Screens0 ; variant 0 screens
     dfar Map59Attrs0 ; variant 0 attributes
@@ -2729,10 +2600,8 @@ Data_011_57C8:: ; address name
     dfar Map59Screens0 ; variant 2 screens
     dfar Map59Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5A, 2 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5A, 2 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecord5A::
-Data_011_57EC:: ; address name
     dfar Map5ATileset ; entry 0: tileset
     dfar Map5APalettes ; palettes
     db $02, $01, $21, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2744,10 +2613,11 @@ Data_011_57EC:: ; address name
     dfar Map5AScreens0 ; variant 2 screens
     dfar Map5AAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5B, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5B, 2 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord5B::
-Data_011_5810:: ; address name
     dfar Map5BTileset ; entry 0: tileset
     dfar Map5BPalettes ; palettes
     db $02, $02, $43, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2759,10 +2629,8 @@ Data_011_5810:: ; address name
     dfar Map5BScreens0 ; variant 2 screens
     dfar Map5BAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5C, 1 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5C, 1 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord5C::
-Data_011_5834:: ; address name
     dfar Map5CTileset ; entry 0: tileset
     dfar Map5CPalettes ; palettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2774,13 +2642,11 @@ Data_011_5834:: ; address name
     dfar Map5CScreens0 ; variant 2 screens
     dfar Map5CAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5D, 4 x 4 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5D, 4 x 4 screens, 3 decoded variant(s) (E-0142)
 MapRecord5D::
-Data_011_5858:: ; address name
     dfar Map5DTileset ; entry 0: tileset
     dfar Map5DPalettes ; palettes
-    db $04, $04, $11, $00, $00, $0C, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $04, $11, $00, $00, $0c, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map5DScreens0 ; variant 0 screens
     dfar Map5DAttrs0 ; variant 0 attributes
@@ -2789,13 +2655,11 @@ Data_011_5858:: ; address name
     dfar Map5DScreens0 ; variant 2 screens
     dfar Map5DAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5E, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5E, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord5E::
-Data_011_587C:: ; address name
     dfar Map5ETileset ; entry 0: tileset
     dfar Map5EPalettes ; palettes
-    db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4b, $00, $01, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map5EScreens0 ; variant 0 screens
     dfar Map5EAttrs0 ; variant 0 attributes
@@ -2804,13 +2668,14 @@ Data_011_587C:: ; address name
     dfar Map5EScreens0 ; variant 2 screens
     dfar Map5EAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $5F, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $5F, 1 x 1 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord5F::
-Data_011_58A0:: ; address name
     dfar Map5FTileset ; entry 0: tileset
     dfar Map5FPalettes ; palettes
-    db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $1f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map5FScreens0 ; variant 0 screens
     dfar Map5FAttrs0 ; variant 0 attributes
@@ -2819,10 +2684,8 @@ Data_011_58A0:: ; address name
     dfar Map5FScreens0 ; variant 2 screens
     dfar Map5FAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $60, 1 x 3 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $60, 1 x 3 screens, 3 decoded variant(s) (E-0142)
 MapRecord60::
-Data_011_58C4:: ; address name
     dfar Map60Tileset ; entry 0: tileset
     dfar Map60Palettes ; palettes
     db $01, $03, $31, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2834,10 +2697,8 @@ Data_011_58C4:: ; address name
     dfar Map60Screens0 ; variant 2 screens
     dfar Map60Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $61, 1 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $61, 1 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord61::
-Data_011_58E8:: ; address name
     dfar Map61Tileset ; entry 0: tileset
     dfar Map61Palettes ; palettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2849,13 +2710,11 @@ Data_011_58E8:: ; address name
     dfar Map61Screens0 ; variant 2 screens
     dfar Map61Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $62, 2 x 4 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $62, 2 x 4 screens, 3 decoded variant(s) (E-0142)
 MapRecord62::
-Data_011_590C:: ; address name
     dfar Map62Tileset ; entry 0: tileset
     dfar Map62Palettes ; palettes
-    db $02, $04, $32, $00, $00, $0D, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $04, $32, $00, $00, $0d, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map62Screens0 ; variant 0 screens
     dfar Map62Attrs0 ; variant 0 attributes
@@ -2864,13 +2723,14 @@ Data_011_590C:: ; address name
     dfar Map62Screens0 ; variant 2 screens
     dfar Map62Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $63, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $63, 2 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord63::
-Data_011_5930:: ; address name
     dfar Map63Tileset ; entry 0: tileset
     dfar Map63Palettes ; palettes
-    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $33, $00, $00, $0e, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map63Screens0 ; variant 0 screens
     dfar Map63Attrs0 ; variant 0 attributes
@@ -2879,13 +2739,11 @@ Data_011_5930:: ; address name
     dfar Map63Screens0 ; variant 2 screens
     dfar Map63Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $64, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $64, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord64::
-Data_011_5954:: ; address name
     dfar Map63Tileset ; entry 0: tileset
     dfar Map63Palettes ; palettes
-    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $33, $00, $00, $0e, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map64Screens0 ; variant 0 screens
     dfar Map64Attrs0 ; variant 0 attributes
@@ -2894,13 +2752,11 @@ Data_011_5954:: ; address name
     dfar Map64Screens0 ; variant 2 screens
     dfar Map64Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $65, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $65, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord65::
-Data_011_5978:: ; address name
     dfar Map63Tileset ; entry 0: tileset
     dfar Map63Palettes ; palettes
-    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $33, $00, $00, $0e, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map65Screens0 ; variant 0 screens
     dfar Map65Attrs0 ; variant 0 attributes
@@ -2909,13 +2765,11 @@ Data_011_5978:: ; address name
     dfar Map65Screens0 ; variant 2 screens
     dfar Map65Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $66, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $66, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecord66::
-Data_011_599C:: ; address name
     dfar Map63Tileset ; entry 0: tileset
     dfar Map63Palettes ; palettes
-    db $02, $02, $33, $00, $00, $0F, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $33, $00, $00, $0f, $07, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map66Screens0 ; variant 0 screens
     dfar Map66Attrs0 ; variant 0 attributes
@@ -2924,13 +2778,14 @@ Data_011_599C:: ; address name
     dfar Map66Screens0 ; variant 2 screens
     dfar Map66Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $67, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $67, 1 x 1 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord67::
-Data_011_59C0:: ; address name
     dfar Map63Tileset ; entry 0: tileset
     dfar Map63Palettes ; palettes
-    db $01, $01, $33, $00, $00, $0F, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $33, $00, $00, $0f, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar Map67Screens0 ; variant 0 screens
     dfar Map67Attrs0 ; variant 0 attributes
@@ -2939,13 +2794,11 @@ Data_011_59C0:: ; address name
     dfar Map67Screens0 ; variant 2 screens
     dfar Map67Attrs0 ; variant 2 attributes
 
-; E-0142, E-0201 (derived: map record that no MapTable entry points to, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record that no MapTable entry points to, 1 x 1 screens, 3 decoded variant(s) (E-0142, E-0201)
 MapRecordX59E4::
-Data_011_59E4:: ; address name
     dfar MapX59E4Tileset ; entry 0: tileset
     dfar MapX59E4Palettes ; palettes
-    db $01, $01, $1F, $1C, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $1f, $1c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
     dfar MapX59E4Screens0 ; variant 0 screens
     dfar MapX59E4Attrs0 ; variant 0 attributes
@@ -2954,13 +2807,11 @@ Data_011_59E4:: ; address name
     dfar MapX59E4Screens0 ; variant 2 screens
     dfar MapX59E4Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $70, 12 x 12 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $70, 12 x 12 screens, 5 decoded variant(s) (E-0142)
 MapRecord70::
-Data_011_5A08:: ; address name
     dfar Map70Tileset ; entry 0: tileset
     dfar Map70Palettes ; palettes
-    db $0C, $0C, $2D, $00, $00, $10, $00, $02, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $0c, $0c, $2d, $00, $00, $10, $00, $02, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map70Screens0 ; variant 0 screens
     dfar Map70Attrs0 ; variant 0 attributes
@@ -2973,10 +2824,8 @@ Data_011_5A08:: ; address name
     dfar Map70Screens0 ; variant 4 screens
     dfar Map70Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $71, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $71, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord71::
-Data_011_5A38:: ; address name
     dfar Map71Tileset ; entry 0: tileset
     dfar Map71Palettes ; palettes
     db $03, $01, $31, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -2992,10 +2841,11 @@ Data_011_5A38:: ; address name
     dfar Map71Screens0 ; variant 4 screens
     dfar Map71Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $72, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $72, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord72::
-Data_011_5A68:: ; address name
     dfar Map72Tileset ; entry 0: tileset
     dfar Map72Palettes ; palettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3011,13 +2861,11 @@ Data_011_5A68:: ; address name
     dfar Map72Screens0 ; variant 4 screens
     dfar Map72Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $73, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $73, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord73::
-Data_011_5A98:: ; address name
     dfar Map73Tileset ; entry 0: tileset
     dfar Map73Palettes ; palettes
-    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4f, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map73Screens0 ; variant 0 screens
     dfar Map73Attrs0 ; variant 0 attributes
@@ -3030,13 +2878,11 @@ Data_011_5A98:: ; address name
     dfar Map73Screens0 ; variant 4 screens
     dfar Map73Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $74, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $74, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord74::
-Data_011_5AC8:: ; address name
     dfar Map73Tileset ; entry 0: tileset
     dfar Map73Palettes ; palettes
-    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4f, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map74Screens0 ; variant 0 screens
     dfar Map74Attrs0 ; variant 0 attributes
@@ -3049,13 +2895,11 @@ Data_011_5AC8:: ; address name
     dfar Map74Screens0 ; variant 4 screens
     dfar Map74Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $75, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $75, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord75::
-Data_011_5AF8:: ; address name
     dfar Map73Tileset ; entry 0: tileset
     dfar Map73Palettes ; palettes
-    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4f, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map75Screens0 ; variant 0 screens
     dfar Map75Attrs0 ; variant 0 attributes
@@ -3068,13 +2912,14 @@ Data_011_5AF8:: ; address name
     dfar Map75Screens0 ; variant 4 screens
     dfar Map75Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $76, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $76, 2 x 2 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord76::
-Data_011_5B28:: ; address name
     dfar Map73Tileset ; entry 0: tileset
     dfar Map73Palettes ; palettes
-    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $4f, $00, $00, $11, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map76Screens0 ; variant 0 screens
     dfar Map76Attrs0 ; variant 0 attributes
@@ -3087,13 +2932,11 @@ Data_011_5B28:: ; address name
     dfar Map76Screens0 ; variant 4 screens
     dfar Map76Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $77, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $77, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord77::
-Data_011_5B58:: ; address name
     dfar Map77Tileset ; entry 0: tileset
     dfar Map77Palettes ; palettes
-    db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map77Screens0 ; variant 0 screens
     dfar Map77Attrs0 ; variant 0 attributes
@@ -3106,13 +2949,11 @@ Data_011_5B58:: ; address name
     dfar Map77Screens0 ; variant 4 screens
     dfar Map77Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $78, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $78, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord78::
-Data_011_5B88:: ; address name
     dfar Map78Tileset ; entry 0: tileset
     dfar Map78Palettes ; palettes
-    db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3d, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map78Screens0 ; variant 0 screens
     dfar Map78Attrs0 ; variant 0 attributes
@@ -3125,10 +2966,8 @@ Data_011_5B88:: ; address name
     dfar Map78Screens0 ; variant 4 screens
     dfar Map78Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $79, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $79, 1 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord79::
-Data_011_5BB8:: ; address name
     dfar Map79Tileset ; entry 0: tileset
     dfar Map79Palettes ; palettes
     db $01, $02, $45, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3144,13 +2983,14 @@ Data_011_5BB8:: ; address name
     dfar Map79Screens0 ; variant 4 screens
     dfar Map79Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7A, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7A, 1 x 2 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord7A::
-Data_011_5BE8:: ; address name
     dfar Map7ATileset ; entry 0: tileset
     dfar Map7APalettes ; palettes
-    db $01, $02, $4B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map7AScreens0 ; variant 0 screens
     dfar Map7AAttrs0 ; variant 0 attributes
@@ -3163,13 +3003,11 @@ Data_011_5BE8:: ; address name
     dfar Map7AScreens0 ; variant 4 screens
     dfar Map7AAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7B, 1 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7B, 1 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord7B::
-Data_011_5C18:: ; address name
     dfar Map7BTileset ; entry 0: tileset
     dfar Map7BPalettes ; palettes
-    db $01, $03, $1F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $1f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map7BScreens0 ; variant 0 screens
     dfar Map7BAttrs0 ; variant 0 attributes
@@ -3182,10 +3020,8 @@ Data_011_5C18:: ; address name
     dfar Map7BScreens0 ; variant 4 screens
     dfar Map7BAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7C, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7C, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord7C::
-Data_011_5C48:: ; address name
     dfar Map7CTileset ; entry 0: tileset
     dfar Map7CPalettes ; palettes
     db $02, $02, $45, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3201,13 +3037,11 @@ Data_011_5C48:: ; address name
     dfar Map7CScreens0 ; variant 4 screens
     dfar Map7CAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7D, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7D, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord7D::
-Data_011_5C78:: ; address name
     dfar Map7DTileset ; entry 0: tileset
     dfar Map7DPalettes ; palettes
-    db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map7DScreens0 ; variant 0 screens
     dfar Map7DAttrs0 ; variant 0 attributes
@@ -3220,13 +3054,14 @@ Data_011_5C78:: ; address name
     dfar Map7DScreens0 ; variant 4 screens
     dfar Map7DAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7E, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7E, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord7E::
-Data_011_5CA8:: ; address name
     dfar Map7DTileset ; entry 0: tileset
     dfar Map7DPalettes ; palettes
-    db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3b, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map7EScreens0 ; variant 0 screens
     dfar Map7EAttrs0 ; variant 0 attributes
@@ -3239,13 +3074,11 @@ Data_011_5CA8:: ; address name
     dfar Map7EScreens0 ; variant 4 screens
     dfar Map7EAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $7F, 1 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $7F, 1 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord7F::
-Data_011_5CD8:: ; address name
     dfar Map7FTileset ; entry 0: tileset
     dfar Map7FPalettes ; palettes
-    db $01, $02, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map7FScreens0 ; variant 0 screens
     dfar Map7FAttrs0 ; variant 0 attributes
@@ -3258,13 +3091,11 @@ Data_011_5CD8:: ; address name
     dfar Map7FScreens0 ; variant 4 screens
     dfar Map7FAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $80, 3 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $80, 3 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord80::
-Data_011_5D08:: ; address name
     dfar Map80Tileset ; entry 0: tileset
     dfar Map80Palettes ; palettes
-    db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map80Screens0 ; variant 0 screens
     dfar Map80Attrs0 ; variant 0 attributes
@@ -3277,13 +3108,11 @@ Data_011_5D08:: ; address name
     dfar Map80Screens0 ; variant 4 screens
     dfar Map80Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $81, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $81, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord81::
-Data_011_5D38:: ; address name
     dfar Map81Tileset ; entry 0: tileset
     dfar Map81Palettes ; palettes
-    db $01, $01, $2F, $00, $00, $12, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $12, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map81Screens0 ; variant 0 screens
     dfar Map81Attrs0 ; variant 0 attributes
@@ -3296,13 +3125,14 @@ Data_011_5D38:: ; address name
     dfar Map81Screens0 ; variant 4 screens
     dfar Map81Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $82, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $82, 3 x 3 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord82::
-Data_011_5D68:: ; address name
     dfar Map81Tileset ; entry 0: tileset
     dfar Map81Palettes ; palettes
-    db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $03, $2f, $00, $00, $13, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map82Screens0 ; variant 0 screens
     dfar Map82Attrs0 ; variant 0 attributes
@@ -3315,13 +3145,11 @@ Data_011_5D68:: ; address name
     dfar Map82Screens0 ; variant 4 screens
     dfar Map82Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $83, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $83, 3 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord83::
-Data_011_5D98:: ; address name
     dfar Map81Tileset ; entry 0: tileset
     dfar Map81Palettes ; palettes
-    db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $03, $2f, $00, $00, $13, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map83Screens0 ; variant 0 screens
     dfar Map83Attrs0 ; variant 0 attributes
@@ -3334,13 +3162,11 @@ Data_011_5D98:: ; address name
     dfar Map83Screens0 ; variant 4 screens
     dfar Map83Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $84, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $84, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord84::
-Data_011_5DC8:: ; address name
     dfar Map81Tileset ; entry 0: tileset
     dfar Map81Palettes ; palettes
-    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map84Screens0 ; variant 0 screens
     dfar Map84Attrs0 ; variant 0 attributes
@@ -3353,13 +3179,11 @@ Data_011_5DC8:: ; address name
     dfar Map84Screens0 ; variant 4 screens
     dfar Map84Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $85, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $85, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord85::
-Data_011_5DF8:: ; address name
     dfar Map85Tileset ; entry 0: tileset
     dfar Map85Palettes ; palettes
-    db $02, $02, $3F, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map85Screens0 ; variant 0 screens
     dfar Map85Attrs0 ; variant 0 attributes
@@ -3372,13 +3196,14 @@ Data_011_5DF8:: ; address name
     dfar Map85Screens0 ; variant 4 screens
     dfar Map85Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $86, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $86, 2 x 2 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord86::
-Data_011_5E28:: ; address name
     dfar Map85Tileset ; entry 0: tileset
     dfar Map85Palettes ; palettes
-    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2f, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map86Screens0 ; variant 0 screens
     dfar Map86Attrs0 ; variant 0 attributes
@@ -3391,13 +3216,11 @@ Data_011_5E28:: ; address name
     dfar Map86Screens0 ; variant 4 screens
     dfar Map86Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $87, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $87, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord87::
-Data_011_5E58:: ; address name
     dfar Map85Tileset ; entry 0: tileset
     dfar Map85Palettes ; palettes
-    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2f, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map87Screens0 ; variant 0 screens
     dfar Map87Attrs0 ; variant 0 attributes
@@ -3410,13 +3233,11 @@ Data_011_5E58:: ; address name
     dfar Map87Screens0 ; variant 4 screens
     dfar Map87Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $88, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $88, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord88::
-Data_011_5E88:: ; address name
     dfar Map85Tileset ; entry 0: tileset
     dfar Map85Palettes ; palettes
-    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2f, $00, $00, $14, $00, $02, $01, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map88Screens0 ; variant 0 screens
     dfar Map88Attrs0 ; variant 0 attributes
@@ -3429,10 +3250,8 @@ Data_011_5E88:: ; address name
     dfar Map88Screens0 ; variant 4 screens
     dfar Map88Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $89, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $89, 2 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord89::
-Data_011_5EB8:: ; address name
     dfar Map89Tileset ; entry 0: tileset
     dfar Map89Palettes ; palettes
     db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3448,10 +3267,11 @@ Data_011_5EB8:: ; address name
     dfar Map89Screens0 ; variant 4 screens
     dfar Map89Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8A, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8A, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord8A::
-Data_011_5EE8:: ; address name
     dfar Map8ATileset ; entry 0: tileset
     dfar Map8APalettes ; palettes
     db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3467,13 +3287,11 @@ Data_011_5EE8:: ; address name
     dfar Map8AScreens0 ; variant 4 screens
     dfar Map8AAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8B, 3 x 4 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8B, 3 x 4 screens, 5 decoded variant(s) (E-0142)
 MapRecord8B::
-Data_011_5F18:: ; address name
     dfar Map8BTileset ; entry 0: tileset
     dfar Map8BPalettes ; palettes
-    db $03, $04, $2D, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $04, $2d, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map8BScreens0 ; variant 0 screens
     dfar Map8BAttrs0 ; variant 0 attributes
@@ -3486,13 +3304,11 @@ Data_011_5F18:: ; address name
     dfar Map8BScreens0 ; variant 4 screens
     dfar Map8BAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8C, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8C, 3 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord8C::
-Data_011_5F48:: ; address name
     dfar Map8CTileset ; entry 0: tileset
     dfar Map8CPalettes ; palettes
-    db $03, $03, $4F, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $03, $4f, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map8CScreens0 ; variant 0 screens
     dfar Map8CAttrs0 ; variant 0 attributes
@@ -3505,13 +3321,11 @@ Data_011_5F48:: ; address name
     dfar Map8CScreens0 ; variant 4 screens
     dfar Map8CAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8D, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8D, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord8D::
-Data_011_5F78:: ; address name
     dfar Map8DTileset ; entry 0: tileset
     dfar Map8DPalettes ; palettes
-    db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2c, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map8DScreens0 ; variant 0 screens
     dfar Map8DAttrs0 ; variant 0 attributes
@@ -3524,10 +3338,11 @@ Data_011_5F78:: ; address name
     dfar Map8DScreens1 ; variant 4 screens
     dfar Map8DAttrs1 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8E, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8E, 3 x 3 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord8E::
-Data_011_5FA8:: ; address name
     dfar Map8ETileset ; entry 0: tileset
     dfar Map8EPalettes ; palettes
     db $03, $03, $53, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3543,13 +3358,11 @@ Data_011_5FA8:: ; address name
     dfar Map8EScreens3 ; variant 4 screens
     dfar Map8EAttrs3 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $8F, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $8F, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord8F::
-Data_011_5FD8:: ; address name
     dfar Map8FTileset ; entry 0: tileset
     dfar Map8FPalettes ; palettes
-    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map8FScreens0 ; variant 0 screens
     dfar Map8FAttrs0 ; variant 0 attributes
@@ -3562,13 +3375,11 @@ Data_011_5FD8:: ; address name
     dfar Map8FScreens2 ; variant 4 screens
     dfar Map8FAttrs2 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $90, 3 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $90, 3 x 2 screens, 5 decoded variant(s) (E-0142)
 MapRecord90::
-Data_011_6008:: ; address name
     dfar Map8CTileset ; entry 0: tileset
     dfar Map8CPalettes ; palettes
-    db $03, $02, $4F, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $02, $4f, $00, $00, $15, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map90Screens0 ; variant 0 screens
     dfar Map90Attrs0 ; variant 0 attributes
@@ -3581,13 +3392,11 @@ Data_011_6008:: ; address name
     dfar Map90Screens0 ; variant 4 screens
     dfar Map90Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $91, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $91, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord91::
-Data_011_6038:: ; address name
     dfar Map91Tileset ; entry 0: tileset
     dfar Map91Palettes ; palettes
-    db $01, $01, $3B, $00, $03, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3b, $00, $03, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map91Screens0 ; variant 0 screens
     dfar Map91Attrs0 ; variant 0 attributes
@@ -3600,10 +3409,11 @@ Data_011_6038:: ; address name
     dfar Map91Screens0 ; variant 4 screens
     dfar Map91Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $92, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $92, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord92::
-Data_011_6068:: ; address name
     dfar Map92Tileset ; entry 0: tileset
     dfar Map92Palettes ; palettes
     db $01, $01, $17, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3619,10 +3429,8 @@ Data_011_6068:: ; address name
     dfar Map92Screens0 ; variant 4 screens
     dfar Map92Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $93, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $93, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord93::
-Data_011_6098:: ; address name
     dfar Map93Tileset ; entry 0: tileset
     dfar Map93Palettes ; palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3638,13 +3446,11 @@ Data_011_6098:: ; address name
     dfar Map93Screens0 ; variant 4 screens
     dfar Map93Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $94, 3 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $94, 3 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord94::
-Data_011_60C8:: ; address name
     dfar Map94Tileset ; entry 0: tileset
     dfar Map94Palettes ; palettes
-    db $03, $03, $3F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $03, $3f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map94Screens0 ; variant 0 screens
     dfar Map94Attrs0 ; variant 0 attributes
@@ -3657,13 +3463,11 @@ Data_011_60C8:: ; address name
     dfar Map94Screens0 ; variant 4 screens
     dfar Map94Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $95, 2 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $95, 2 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord95::
-Data_011_60F8:: ; address name
     dfar Map94Tileset ; entry 0: tileset
     dfar Map94Palettes ; palettes
-    db $02, $03, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $03, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map95Screens0 ; variant 0 screens
     dfar Map95Attrs0 ; variant 0 attributes
@@ -3676,13 +3480,14 @@ Data_011_60F8:: ; address name
     dfar Map95Screens0 ; variant 4 screens
     dfar Map95Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $96, 2 x 2 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $96, 2 x 2 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord96::
-Data_011_6128:: ; address name
     dfar Map94Tileset ; entry 0: tileset
     dfar Map94Palettes ; palettes
-    db $02, $02, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map96Screens0 ; variant 0 screens
     dfar Map96Attrs0 ; variant 0 attributes
@@ -3695,13 +3500,11 @@ Data_011_6128:: ; address name
     dfar Map96Screens0 ; variant 4 screens
     dfar Map96Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $97, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $97, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord97::
-Data_011_6158:: ; address name
     dfar Map97Tileset ; entry 0: tileset
     dfar Map97Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $02, $1f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map97Screens0 ; variant 0 screens
     dfar Map97Attrs0 ; variant 0 attributes
@@ -3714,13 +3517,11 @@ Data_011_6158:: ; address name
     dfar Map97Screens0 ; variant 4 screens
     dfar Map97Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $98, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $98, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord98::
-Data_011_6188:: ; address name
     dfar Map97Tileset ; entry 0: tileset
     dfar Map97Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $02, $1f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map98Screens0 ; variant 0 screens
     dfar Map98Attrs0 ; variant 0 attributes
@@ -3733,13 +3534,11 @@ Data_011_6188:: ; address name
     dfar Map98Screens0 ; variant 4 screens
     dfar Map98Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $99, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $99, 1 x 1 screens, 5 decoded variant(s) (E-0142)
 MapRecord99::
-Data_011_61B8:: ; address name
     dfar Map97Tileset ; entry 0: tileset
     dfar Map97Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $02, $1f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map99Screens0 ; variant 0 screens
     dfar Map99Attrs0 ; variant 0 attributes
@@ -3752,13 +3551,14 @@ Data_011_61B8:: ; address name
     dfar Map99Screens0 ; variant 4 screens
     dfar Map99Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $9A, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $9A, 1 x 1 screens, 5 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecord9A::
-Data_011_61E8:: ; address name
     dfar Map97Tileset ; entry 0: tileset
     dfar Map97Palettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $00, $02, $1f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map9AScreens0 ; variant 0 screens
     dfar Map9AAttrs0 ; variant 0 attributes
@@ -3771,13 +3571,11 @@ Data_011_61E8:: ; address name
     dfar Map9AScreens0 ; variant 4 screens
     dfar Map9AAttrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $9B, 1 x 3 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $9B, 1 x 3 screens, 5 decoded variant(s) (E-0142)
 MapRecord9B::
-Data_011_6218:: ; address name
     dfar Map9BTileset ; entry 0: tileset
     dfar Map9BPalettes ; palettes
-    db $01, $03, $4F, $00, $00, $00, $00, $02, $0F, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $4f, $00, $00, $00, $00, $02, $0f, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar Map9BScreens0 ; variant 0 screens
     dfar Map9BAttrs0 ; variant 0 attributes
@@ -3790,13 +3588,11 @@ Data_011_6218:: ; address name
     dfar Map9BScreens4 ; variant 4 screens
     dfar Map9BAttrs4 ; variant 4 attributes
 
-; E-0142, E-0201 (derived: map record that no MapTable entry points to, 1 x 1 screens, 5 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record that no MapTable entry points to, 1 x 1 screens, 5 decoded variant(s) (E-0142, E-0201)
 MapRecordX6248::
-Data_011_6248:: ; address name
     dfar MapX6248Tileset ; entry 0: tileset
     dfar MapX6248Palettes ; palettes
-    db $01, $01, $1F, $1C, $00, $00, $00, $02, $06, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $1f, $1c, $00, $00, $00, $02, $06, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
     dfar MapX6248Screens0 ; variant 0 screens
     dfar MapX6248Attrs0 ; variant 0 attributes
@@ -3809,36 +3605,33 @@ Data_011_6248:: ; address name
     dfar MapX6248Screens0 ; variant 4 screens
     dfar MapX6248Attrs0 ; variant 4 attributes
 
-; E-0142 (derived: map record of map $A0, 4 x 3 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A0, 4 x 3 screens, 2 decoded variant(s) (E-0142)
 MapRecordA0::
-Data_011_6278:: ; address name
     dfar MapA0Tileset ; entry 0: tileset
     dfar MapA0Palettes ; palettes
-    db $04, $03, $3F, $00, $01, $16, $00, $02, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $04, $03, $3f, $00, $01, $16, $00, $02, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $65 ; variant flag byte
     dfar MapA0Screens0 ; variant 0 screens
     dfar MapA0Attrs0 ; variant 0 attributes
     dfar MapA0Screens1 ; variant 1 screens
     dfar MapA0Attrs1 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $A1, 1 x 3 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A1, 1 x 3 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordA1::
-Data_011_6296:: ; address name
     dfar MapA1Tileset ; entry 0: tileset
     dfar MapA1Palettes ; palettes
-    db $01, $03, $5F, $00, $05, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $03, $5f, $00, $05, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $65 ; variant flag byte
     dfar MapA1Screens0 ; variant 0 screens
     dfar MapA1Attrs0 ; variant 0 attributes
     dfar MapA1Screens1 ; variant 1 screens
     dfar MapA1Attrs1 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $A2, 3 x 4 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A2, 3 x 4 screens, 2 decoded variant(s) (E-0142)
 MapRecordA2::
-Data_011_62B4:: ; address name
     dfar MapA2Tileset ; entry 0: tileset
     dfar MapA2Palettes ; palettes
     db $03, $04, $55, $00, $01, $17, $00, $02, $07, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3848,80 +3641,72 @@ Data_011_62B4:: ; address name
     dfar MapA2Screens0 ; variant 1 screens
     dfar MapA2Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $A3, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A3, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordA3::
-Data_011_62D2:: ; address name
     dfar MapA3Tileset ; entry 0: tileset
     dfar MapA3Palettes ; palettes
-    db $01, $02, $68, $00, $0A, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $68, $00, $0a, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $65 ; variant flag byte
     dfar MapA3Screens0 ; variant 0 screens
     dfar MapA3Attrs0 ; variant 0 attributes
     dfar MapA3Screens0 ; variant 1 screens
     dfar MapA3Attrs0 ; variant 1 attributes
 
-; E-0142, E-0201 (derived: map record that no MapTable entry points to, 1 x 1 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record that no MapTable entry points to, 1 x 1 screens, 2 decoded variant(s) (E-0142, E-0201)
 MapRecordX62F0::
-Data_011_62F0:: ; address name
     dfar MapX62F0Tileset ; entry 0: tileset
     dfar MapX62F0Palettes ; palettes
-    db $01, $01, $1F, $1C, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $1f, $1c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $65 ; variant flag byte
     dfar MapX62F0Screens0 ; variant 0 screens
     dfar MapX62F0Attrs0 ; variant 0 attributes
     dfar MapX62F0Screens0 ; variant 1 screens
     dfar MapX62F0Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $A8, 6 x 6 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A8, 6 x 6 screens, 1 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordA8::
-Data_011_630E:: ; address name
     dfar MapA8Tileset ; entry 0: tileset
     dfar MapA8Palettes ; palettes
-    db $06, $06, $3B, $00, $00, $18, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $06, $06, $3b, $00, $00, $18, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapA8Screens0 ; variant 0 screens
     dfar MapA8Attrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $A9, 2 x 2 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $A9, 2 x 2 screens, 1 decoded variant(s) (E-0142)
 MapRecordA9::
-Data_011_6326:: ; address name
     dfar MapA9Tileset ; entry 0: tileset
     dfar MapA9Palettes ; palettes
-    db $02, $02, $2D, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $2d, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapA9Screens0 ; variant 0 screens
     dfar MapA9Attrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $AA, 1 x 2 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $AA, 1 x 2 screens, 1 decoded variant(s) (E-0142)
 MapRecordAA::
-Data_011_633E:: ; address name
     dfar MapA9Tileset ; entry 0: tileset
     dfar MapA9Palettes ; palettes
-    db $01, $02, $2D, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $2d, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapAAScreens0 ; variant 0 screens
     dfar MapAAAttrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $AB, 1 x 1 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $AB, 1 x 1 screens, 1 decoded variant(s) (E-0142)
 MapRecordAB::
-Data_011_6356:: ; address name
     dfar MapA9Tileset ; entry 0: tileset
     dfar MapA9Palettes ; palettes
-    db $01, $01, $2D, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2d, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapABScreens0 ; variant 0 screens
     dfar MapABAttrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $AC, 1 x 1 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $AC, 1 x 1 screens, 1 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordAC::
-Data_011_636E:: ; address name
     dfar MapACTileset ; entry 0: tileset
     dfar MapACPalettes ; palettes
     db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3929,45 +3714,40 @@ Data_011_636E:: ; address name
     dfar MapACScreens0 ; variant 0 screens
     dfar MapACAttrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $AD, 3 x 4 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $AD, 3 x 4 screens, 1 decoded variant(s) (E-0142)
 MapRecordAD::
-Data_011_6386:: ; address name
     dfar MapADTileset ; entry 0: tileset
     dfar MapADPalettes ; palettes
-    db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $04, $3f, $00, $00, $19, $01, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapADScreens0 ; variant 0 screens
     dfar MapADAttrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $AE, 3 x 4 screens, 1 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $AE, 3 x 4 screens, 1 decoded variant(s) (E-0142)
 MapRecordAE::
-Data_011_639E:: ; address name
     dfar MapADTileset ; entry 0: tileset
     dfar MapADPalettes ; palettes
-    db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $04, $3f, $00, $00, $19, $01, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $66 ; variant flag byte
     dfar MapAEScreens0 ; variant 0 screens
     dfar MapAEAttrs0 ; variant 0 attributes
 
-; E-0142 (derived: map record of map $B0, 3 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B0, 3 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordB0::
-Data_011_63B6:: ; address name
     dfar MapB0Tileset ; entry 0: tileset
     dfar MapB0Palettes ; palettes
-    db $03, $02, $3F, $00, $00, $1A, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $03, $02, $3f, $00, $00, $1a, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $67 ; variant flag byte
     dfar MapB0Screens0 ; variant 0 screens
     dfar MapB0Attrs0 ; variant 0 attributes
     dfar MapB0Screens0 ; variant 1 screens
     dfar MapB0Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B1, 1 x 1 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B1, 1 x 1 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordB1::
-Data_011_63D4:: ; address name
     dfar MapB1Tileset ; entry 0: tileset
     dfar MapB1Palettes ; palettes
     db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -3977,65 +3757,58 @@ Data_011_63D4:: ; address name
     dfar MapB1Screens0 ; variant 1 screens
     dfar MapB1Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B3, 2 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B3, 2 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordB3::
-Data_011_63F2:: ; address name
     dfar MapB3Tileset ; entry 0: tileset
     dfar MapB3Palettes ; palettes
-    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $1f, $00, $00, $1b, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $67 ; variant flag byte
     dfar MapB3Screens0 ; variant 0 screens
     dfar MapB3Attrs0 ; variant 0 attributes
     dfar MapB3Screens0 ; variant 1 screens
     dfar MapB3Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B4, 2 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B4, 2 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordB4::
-Data_011_6410:: ; address name
     dfar MapB3Tileset ; entry 0: tileset
     dfar MapB3Palettes ; palettes
-    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $1f, $00, $00, $1b, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $67 ; variant flag byte
     dfar MapB4Screens0 ; variant 0 screens
     dfar MapB4Attrs0 ; variant 0 attributes
     dfar MapB4Screens0 ; variant 1 screens
     dfar MapB4Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B5, 2 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B5, 2 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordB5::
-Data_011_642E:: ; address name
     dfar MapB3Tileset ; entry 0: tileset
     dfar MapB3Palettes ; palettes
-    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $1f, $00, $00, $1b, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $67 ; variant flag byte
     dfar MapB5Screens0 ; variant 0 screens
     dfar MapB5Attrs0 ; variant 0 attributes
     dfar MapB5Screens0 ; variant 1 screens
     dfar MapB5Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B6, 1 x 1 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B6, 1 x 1 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordB6::
-Data_011_644C:: ; address name
     dfar MapB3Tileset ; entry 0: tileset
     dfar MapB3Palettes ; palettes
-    db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $1f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $67 ; variant flag byte
     dfar MapB6Screens0 ; variant 0 screens
     dfar MapB6Attrs0 ; variant 0 attributes
     dfar MapB6Screens0 ; variant 1 screens
     dfar MapB6Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $B8, 5 x 5 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B8, 5 x 5 screens, 3 decoded variant(s) (E-0142)
 MapRecordB8::
-Data_011_646A:: ; address name
     dfar MapB8Tileset ; entry 0: tileset
     dfar MapB8Palettes ; palettes
-    db $05, $05, $3F, $00, $01, $1C, $00, $01, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $05, $05, $3f, $00, $01, $1c, $00, $01, $29, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapB8Screens0 ; variant 0 screens
     dfar MapB8Attrs0 ; variant 0 attributes
@@ -4044,13 +3817,11 @@ Data_011_646A:: ; address name
     dfar MapB8Screens0 ; variant 2 screens
     dfar MapB8Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $B9, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $B9, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecordB9::
-Data_011_648E:: ; address name
     dfar MapB9Tileset ; entry 0: tileset
     dfar MapB9Palettes ; palettes
-    db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3d, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapB9Screens0 ; variant 0 screens
     dfar MapB9Attrs0 ; variant 0 attributes
@@ -4059,10 +3830,8 @@ Data_011_648E:: ; address name
     dfar MapB9Screens0 ; variant 2 screens
     dfar MapB9Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BA, 1 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BA, 1 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecordBA::
-Data_011_64B2:: ; address name
     dfar MapBATileset ; entry 0: tileset
     dfar MapBAPalettes ; palettes
     db $01, $02, $39, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
@@ -4074,13 +3843,14 @@ Data_011_64B2:: ; address name
     dfar MapBAScreens0 ; variant 2 screens
     dfar MapBAAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BB, 1 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BB, 1 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordBB::
-Data_011_64D6:: ; address name
     dfar MapBBTileset ; entry 0: tileset
     dfar MapBBPalettes ; palettes
-    db $01, $02, $0F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $0f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapBBScreens0 ; variant 0 screens
     dfar MapBBAttrs0 ; variant 0 attributes
@@ -4089,13 +3859,11 @@ Data_011_64D6:: ; address name
     dfar MapBBScreens1 ; variant 2 screens
     dfar MapBBAttrs1 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BC, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BC, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecordBC::
-Data_011_64FA:: ; address name
     dfar MapBCTileset ; entry 0: tileset
     dfar MapBCPalettes ; palettes
-    db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $2c, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapBCScreens0 ; variant 0 screens
     dfar MapBCAttrs0 ; variant 0 attributes
@@ -4104,13 +3872,11 @@ Data_011_64FA:: ; address name
     dfar MapBCScreens0 ; variant 2 screens
     dfar MapBCAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BD, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BD, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecordBD::
-Data_011_651E:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapBDScreens0 ; variant 0 screens
     dfar MapBDAttrs0 ; variant 0 attributes
@@ -4119,13 +3885,11 @@ Data_011_651E:: ; address name
     dfar MapBDScreens0 ; variant 2 screens
     dfar MapBDAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BE, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BE, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecordBE::
-Data_011_6542:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $01, $01, $3F, $00, $00, $1D, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $1d, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapBEScreens0 ; variant 0 screens
     dfar MapBEAttrs0 ; variant 0 attributes
@@ -4134,13 +3898,14 @@ Data_011_6542:: ; address name
     dfar MapBEScreens0 ; variant 2 screens
     dfar MapBEAttrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $BF, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $BF, 2 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordBF::
-Data_011_6566:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $02, $02, $3F, $00, $00, $1E, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $1e, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapBFScreens0 ; variant 0 screens
     dfar MapBFAttrs0 ; variant 0 attributes
@@ -4149,13 +3914,11 @@ Data_011_6566:: ; address name
     dfar MapBFScreens2 ; variant 2 screens
     dfar MapBFAttrs2 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C0, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C0, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecordC0::
-Data_011_658A:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $1f, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapC0Screens0 ; variant 0 screens
     dfar MapC0Attrs0 ; variant 0 attributes
@@ -4164,13 +3927,11 @@ Data_011_658A:: ; address name
     dfar MapC0Screens0 ; variant 2 screens
     dfar MapC0Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C1, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C1, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecordC1::
-Data_011_65AE:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $1f, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapC1Screens0 ; variant 0 screens
     dfar MapC1Attrs0 ; variant 0 attributes
@@ -4179,13 +3940,11 @@ Data_011_65AE:: ; address name
     dfar MapC1Screens0 ; variant 2 screens
     dfar MapC1Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C2, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C2, 2 x 2 screens, 3 decoded variant(s) (E-0142)
 MapRecordC2::
-Data_011_65D2:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $20, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapC2Screens0 ; variant 0 screens
     dfar MapC2Attrs0 ; variant 0 attributes
@@ -4194,13 +3953,14 @@ Data_011_65D2:: ; address name
     dfar MapC2Screens0 ; variant 2 screens
     dfar MapC2Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C3, 2 x 2 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C3, 2 x 2 screens, 3 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordC3::
-Data_011_65F6:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $02, $3f, $00, $00, $20, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapC3Screens0 ; variant 0 screens
     dfar MapC3Attrs0 ; variant 0 attributes
@@ -4209,13 +3969,11 @@ Data_011_65F6:: ; address name
     dfar MapC3Screens0 ; variant 2 screens
     dfar MapC3Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C4, 1 x 1 screens, 3 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C4, 1 x 1 screens, 3 decoded variant(s) (E-0142)
 MapRecordC4::
-Data_011_661A:: ; address name
     dfar MapBDTileset ; entry 0: tileset
     dfar MapBDPalettes ; palettes
-    db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $01, $3f, $00, $00, $00, $03, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $68 ; variant flag byte
     dfar MapC4Screens0 ; variant 0 screens
     dfar MapC4Attrs0 ; variant 0 attributes
@@ -4224,166 +3982,156 @@ Data_011_661A:: ; address name
     dfar MapC4Screens0 ; variant 2 screens
     dfar MapC4Attrs0 ; variant 2 attributes
 
-; E-0142 (derived: map record of map $C8, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C8, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordC8::
-Data_011_663E:: ; address name
     dfar MapC8Tileset ; entry 0: tileset
     dfar MapC8Palettes ; palettes
-    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapC8Screens0 ; variant 0 screens
     dfar MapC8Attrs0 ; variant 0 attributes
     dfar MapC8Screens0 ; variant 1 screens
     dfar MapC8Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $C9, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $C9, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordC9::
-Data_011_665C:: ; address name
     dfar MapC9Tileset ; entry 0: tileset
     dfar MapC9Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapC9Screens0 ; variant 0 screens
     dfar MapC9Attrs0 ; variant 0 attributes
     dfar MapC9Screens0 ; variant 1 screens
     dfar MapC9Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $CA, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $CA, 1 x 2 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordCA::
-Data_011_667A:: ; address name
     dfar MapC9Tileset ; entry 0: tileset
     dfar MapC9Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapCAScreens0 ; variant 0 screens
     dfar MapCAAttrs0 ; variant 0 attributes
     dfar MapCAScreens0 ; variant 1 screens
     dfar MapCAAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $CE, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $CE, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordCE::
-Data_011_6698:: ; address name
     dfar MapC9Tileset ; entry 0: tileset
     dfar MapC9Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapCEScreens0 ; variant 0 screens
     dfar MapCEAttrs0 ; variant 0 attributes
     dfar MapCEScreens0 ; variant 1 screens
     dfar MapCEAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $D1, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $D1, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordD1::
-Data_011_66B6:: ; address name
     dfar MapD1Tileset ; entry 0: tileset
     dfar MapD1Palettes ; palettes
-    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapD1Screens0 ; variant 0 screens
     dfar MapD1Attrs0 ; variant 0 attributes
     dfar MapD1Screens0 ; variant 1 screens
     dfar MapD1Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $D2, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $D2, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordD2::
-Data_011_66D4:: ; address name
     dfar MapD2Tileset ; entry 0: tileset
     dfar MapD2Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapC9Screens0 ; variant 0 screens
     dfar MapC9Attrs0 ; variant 0 attributes
     dfar MapC9Screens0 ; variant 1 screens
     dfar MapC9Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $D3, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $D3, 1 x 2 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordD3::
-Data_011_66F2:: ; address name
     dfar MapD2Tileset ; entry 0: tileset
     dfar MapD2Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapCAScreens0 ; variant 0 screens
     dfar MapCAAttrs0 ; variant 0 attributes
     dfar MapCAScreens0 ; variant 1 screens
     dfar MapCAAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $D7, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $D7, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordD7::
-Data_011_6710:: ; address name
     dfar MapD2Tileset ; entry 0: tileset
     dfar MapD2Palettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapD7Screens0 ; variant 0 screens
     dfar MapD7Attrs0 ; variant 0 attributes
     dfar MapD7Screens0 ; variant 1 screens
     dfar MapD7Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $DA, 2 x 1 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $DA, 2 x 1 screens, 2 decoded variant(s) (E-0142)
 MapRecordDA::
-Data_011_672E:: ; address name
     dfar MapDATileset ; entry 0: tileset
     dfar MapDAPalettes ; palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapDAScreens0 ; variant 0 screens
     dfar MapDAAttrs0 ; variant 0 attributes
     dfar MapDAScreens0 ; variant 1 screens
     dfar MapDAAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $DB, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $DB, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordDB::
-Data_011_674C:: ; address name
     dfar MapDBTileset ; entry 0: tileset
     dfar MapDBPalettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapC9Screens0 ; variant 0 screens
     dfar MapC9Attrs0 ; variant 0 attributes
     dfar MapC9Screens0 ; variant 1 screens
     dfar MapC9Attrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $DC, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $DC, 1 x 2 screens, 2 decoded variant(s) (E-0142)
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind,
+; encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen
+; array, attribute array
 MapRecordDC::
-Data_011_676A:: ; address name
     dfar MapDBTileset ; entry 0: tileset
     dfar MapDBPalettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapCAScreens0 ; variant 0 screens
     dfar MapCAAttrs0 ; variant 0 attributes
     dfar MapCAScreens0 ; variant 1 screens
     dfar MapCAAttrs0 ; variant 1 attributes
 
-; E-0142 (derived: map record of map $E0, 1 x 2 screens, 2 decoded variant(s))
-; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+; map record of map $E0, 1 x 2 screens, 2 decoded variant(s) (E-0142)
 MapRecordE0::
-Data_011_6788:: ; address name
     dfar MapDBTileset ; entry 0: tileset
     dfar MapDBPalettes ; palettes
-    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
+    db $01, $02, $4f, $00, $04, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $69 ; variant flag byte
     dfar MapE0Screens0 ; variant 0 screens
     dfar MapE0Attrs0 ; variant 0 attributes
     dfar MapE0Screens0 ; variant 1 screens
     dfar MapE0Attrs0 ; variant 1 attributes
 
-; E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table). E-0231: the lists are laid out as 9-byte entries ending with $80 (CheckWarpAtPlayer: a facing byte, $FD = skip, $FE/$FF = any facing, then screen and position matched against the player).
-; record: list of warps for this map number (hMapId); a list ends with $80; maps without warps share one empty list
+; CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's
+; facing and position, and a match queues sound effect $60 and loads a new map number and position;
+; all 256 words point into the bank; the first list starts at $69A6, directly after the table).
+; E-0231: the lists are laid out as 9-byte entries ending with $80 (CheckWarpAtPlayer: a facing
+; byte, $FD = skip, $FE/$FF = any facing, then screen and position matched against the player
+; (E-0036, C1)
+; record: list of warps for this map number (hMapId); a list ends with $80; maps without warps share
+; one empty list
 MapWarpTable::
-Data_011_67A6:: ; address name
     dw MapWarps00 ; entry 0
     dw MapWarps01 ; entry 1
     dw MapWarps02 ; entry 2
@@ -4641,1663 +4389,1381 @@ Data_011_67A6:: ; address name
     dw MapWarps0B ; entry 254
     dw MapWarps0B ; entry 255
 
-; E-0157 (derived: list for entry $0B of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0B of MapWarpTable; 0 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps0B::
     db $80 ; end
 
-; E-0157 (derived: list for entry $00 of MapWarpTable; 5 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $00 of MapWarpTable; 5 record(s), then $80 (E-0157)
 MapWarps00::
-Data_011_69A7:: ; address name
-    db $FD, $02, $40, $40, $06, $00, $00, $04, $08 ; id 0
-    db $FF, $00, $00, $01, $02, $02, $00, $90, $00 ; id 1
+    db $fd, $02, $40, $40, $06, $00, $00, $04, $08 ; id 0
+    db $ff, $00, $00, $01, $02, $02, $00, $90, $00 ; id 1
     db $02, $10, $40, $00, $01, $03, $02, $04, $08 ; id 2
-    db $FF, $00, $01, $00, $01, $03, $02, $90, $00 ; id 3
-    db $FD, $21, $60, $30, $07, $00, $10, $06, $03 ; id 4
+    db $ff, $00, $01, $00, $01, $03, $02, $90, $00 ; id 3
+    db $fd, $21, $60, $30, $07, $00, $10, $06, $03 ; id 4
     db $80 ; end
 
-; E-0157 (derived: list for entry $01 of MapWarpTable; 15 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $01 of MapWarpTable; 15 record(s), then $80 (E-0157)
 MapWarps01::
-Data_011_69D5:: ; address name
-    db $FD, $22, $50, $50, $05, $02, $30, $05, $00 ; id 0
-    db $FD, $00, $50, $50, $15, $00, $00, $05, $08 ; id 1
-    db $FD, $10, $30, $40, $17, $00, $00, $05, $08 ; id 2
-    db $FD, $10, $50, $00, $19, $01, $01, $05, $08 ; id 3
-    db $FD, $01, $40, $50, $11, $00, $01, $04, $08 ; id 4
-    db $FD, $01, $50, $50, $11, $00, $01, $05, $08 ; id 5
-    db $FD, $11, $30, $40, $09, $00, $00, $03, $08 ; id 6
-    db $FD, $11, $20, $10, $13, $00, $00, $02, $08 ; id 7
-    db $FD, $21, $50, $50, $0A, $00, $00, $05, $08 ; id 8
-    db $FD, $02, $40, $40, $08, $00, $00, $04, $08 ; id 9
-    db $FD, $02, $60, $10, $16, $00, $00, $06, $08 ; id 10
-    db $FF, $00, $00, $03, $02, $00, $00, $00, $80 ; id 11
-    db $FD, $12, $20, $30, $0C, $01, $00, $03, $08 ; id 12
-    db $FF, $00, $04, $02, $00, $02, $00, $70, $00 ; id 13
-    db $FF, $00, $03, $03, $00, $01, $01, $00, $80 ; id 14
+    db $fd, $22, $50, $50, $05, $02, $30, $05, $00 ; id 0
+    db $fd, $00, $50, $50, $15, $00, $00, $05, $08 ; id 1
+    db $fd, $10, $30, $40, $17, $00, $00, $05, $08 ; id 2
+    db $fd, $10, $50, $00, $19, $01, $01, $05, $08 ; id 3
+    db $fd, $01, $40, $50, $11, $00, $01, $04, $08 ; id 4
+    db $fd, $01, $50, $50, $11, $00, $01, $05, $08 ; id 5
+    db $fd, $11, $30, $40, $09, $00, $00, $03, $08 ; id 6
+    db $fd, $11, $20, $10, $13, $00, $00, $02, $08 ; id 7
+    db $fd, $21, $50, $50, $0a, $00, $00, $05, $08 ; id 8
+    db $fd, $02, $40, $40, $08, $00, $00, $04, $08 ; id 9
+    db $fd, $02, $60, $10, $16, $00, $00, $06, $08 ; id 10
+    db $ff, $00, $00, $03, $02, $00, $00, $00, $80 ; id 11
+    db $fd, $12, $20, $30, $0c, $01, $00, $03, $08 ; id 12
+    db $ff, $00, $04, $02, $00, $02, $00, $70, $00 ; id 13
+    db $ff, $00, $03, $03, $00, $01, $01, $00, $80 ; id 14
     db $80 ; end
 
-; E-0157 (derived: list for entry $02 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $02 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps02::
-Data_011_6A5D:: ; address name
-    db $FF, $00, $00, $FF, $01, $00, $02, $00, $80 ; id 0
-    db $FF, $00, $03, $00, $00, $01, $01, $70, $00 ; id 1
+    db $ff, $00, $00, $ff, $01, $00, $02, $00, $80 ; id 0
+    db $ff, $00, $03, $00, $00, $01, $01, $70, $00 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $03 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $03 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps03::
-Data_011_6A70:: ; address name
-    db $FD, $00, $50, $50, $05, $00, $10, $05, $05 ; id 0
+    db $fd, $00, $50, $50, $05, $00, $10, $05, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $04 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $04 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps04::
-Data_011_6A7A:: ; address name
-    db $FD, $20, $40, $40, $0C, $01, $10, $04, $04 ; id 0
-    db $FF, $00, $02, $01, $18, $82, $00, $00, $A0 ; id 1
-    db $FF, $00, $01, $01, $18, $81, $00, $00, $80 ; id 2
+    db $fd, $20, $40, $40, $0c, $01, $10, $04, $04 ; id 0
+    db $ff, $00, $02, $01, $18, $82, $00, $00, $a0 ; id 1
+    db $ff, $00, $01, $01, $18, $81, $00, $00, $80 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $05 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $05 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps05::
-Data_011_6A96:: ; address name
-    db $FE, $00, $02, $FF, $01, $02, $12, $05, $05 ; id 0
-    db $FD, $00, $50, $50, $03, $00, $10, $05, $05 ; id 1
-    db $FD, $00, $50, $10, $0D, $00, $31, $05, $08 ; id 2
+    db $fe, $00, $02, $ff, $01, $02, $12, $05, $05 ; id 0
+    db $fd, $00, $50, $50, $03, $00, $10, $05, $05 ; id 1
+    db $fd, $00, $50, $10, $0d, $00, $31, $05, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $06 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $06 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps06::
-Data_011_6AB2:: ; address name
-    db $FE, $00, $00, $01, $00, $80, $02, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $00, $80, $02, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $07 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $07 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps07::
-Data_011_6ABC:: ; address name
-    db $FD, $00, $60, $30, $00, $02, $11, $06, $03 ; id 0
-    db $FD, $00, $50, $00, $0D, $03, $31, $05, $08 ; id 1
+    db $fd, $00, $60, $30, $00, $02, $11, $06, $03 ; id 0
+    db $fd, $00, $50, $00, $0d, $03, $31, $05, $08 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $08 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $08 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps08::
-Data_011_6ACF:: ; address name
-    db $FE, $00, $00, $01, $01, $80, $02, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $01, $80, $02, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $09 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $09 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps09::
-Data_011_6AD9:: ; address name
-    db $FE, $00, $00, $01, $01, $81, $01, $03, $04 ; id 0
+    db $fe, $00, $00, $01, $01, $81, $01, $03, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $0A of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0A of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps0A::
-Data_011_6AE3:: ; address name
-    db $FE, $00, $00, $01, $01, $82, $01, $05, $05 ; id 0
-    db $FD, $00, $80, $40, $0D, $01, $11, $08, $04 ; id 1
+    db $fe, $00, $00, $01, $01, $82, $01, $05, $05 ; id 0
+    db $fd, $00, $80, $40, $0d, $01, $11, $08, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $0C of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0C of MapWarpTable; 4 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps0C::
-Data_011_6AF6:: ; address name
-    db $FE, $00, $01, $01, $01, $81, $02, $02, $03 ; id 0
-    db $FD, $10, $40, $40, $04, $02, $10, $04, $04 ; id 1
-    db $FD, $00, $30, $40, $0E, $00, $00, $03, $08 ; id 2
-    db $FD, $00, $70, $40, $12, $00, $00, $07, $08 ; id 3
+    db $fe, $00, $01, $01, $01, $81, $02, $02, $03 ; id 0
+    db $fd, $10, $40, $40, $04, $02, $10, $04, $04 ; id 1
+    db $fd, $00, $30, $40, $0e, $00, $00, $03, $08 ; id 2
+    db $fd, $00, $70, $40, $12, $00, $00, $07, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $0D of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0D of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps0D::
-Data_011_6B1B:: ; address name
-    db $FD, $11, $80, $40, $0A, $00, $10, $08, $04 ; id 0
-    db $FE, $00, $00, $02, $05, $80, $10, $05, $01 ; id 1
-    db $FE, $00, $03, $02, $07, $80, $10, $05, $00 ; id 2
+    db $fd, $11, $80, $40, $0a, $00, $10, $08, $04 ; id 0
+    db $fe, $00, $00, $02, $05, $80, $10, $05, $01 ; id 1
+    db $fe, $00, $03, $02, $07, $80, $10, $05, $00 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $0E of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0E of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps0E::
-Data_011_6B37:: ; address name
-    db $FE, $00, $00, $01, $0C, $80, $00, $03, $04 ; id 0
+    db $fe, $00, $00, $01, $0c, $80, $00, $03, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $0F of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $0F of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps0F::
-Data_011_6B41:: ; address name
-    db $00, $00, $40, $80, $0C, $80, $00, $02, $01 ; id 0
-    db $00, $00, $20, $80, $0C, $80, $00, $02, $01 ; id 1
-    db $00, $00, $70, $80, $0C, $80, $00, $07, $01 ; id 2
+    db $00, $00, $40, $80, $0c, $80, $00, $02, $01 ; id 0
+    db $00, $00, $20, $80, $0c, $80, $00, $02, $01 ; id 1
+    db $00, $00, $70, $80, $0c, $80, $00, $07, $01 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $10 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $10 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps10::
-Data_011_6B5D:: ; address name
-    db $FE, $00, $00, $01, $0C, $80, $00, $07, $01 ; id 0
+    db $fe, $00, $00, $01, $0c, $80, $00, $07, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $11 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $11 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps11::
-Data_011_6B67:: ; address name
-    db $FF, $00, $00, $02, $01, $80, $01, $00, $D0 ; id 0
+    db $ff, $00, $00, $02, $01, $80, $01, $00, $d0 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $12 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $12 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps12::
-Data_011_6B71:: ; address name
-    db $FE, $00, $00, $01, $0C, $80, $00, $07, $04 ; id 0
+    db $fe, $00, $00, $01, $0c, $80, $00, $07, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $13 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $13 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps13::
-Data_011_6B7B:: ; address name
-    db $FE, $00, $00, $01, $01, $81, $01, $02, $01 ; id 0
+    db $fe, $00, $00, $01, $01, $81, $01, $02, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $15 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $15 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps15::
-Data_011_6B85:: ; address name
-    db $FE, $00, $00, $01, $01, $80, $00, $05, $05 ; id 0
+    db $fe, $00, $00, $01, $01, $80, $00, $05, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $16 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $16 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps16::
-Data_011_6B8F:: ; address name
-    db $FE, $00, $00, $01, $01, $80, $02, $06, $01 ; id 0
+    db $fe, $00, $00, $01, $01, $80, $02, $06, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $17 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $17 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps17::
-Data_011_6B99:: ; address name
-    db $FE, $00, $00, $01, $01, $81, $00, $03, $04 ; id 0
+    db $fe, $00, $00, $01, $01, $81, $00, $03, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $18 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $18 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps18::
-Data_011_6BA3:: ; address name
-    db $FD, $20, $40, $20, $04, $02, $00, $04, $08 ; id 0
-    db $FD, $20, $50, $20, $04, $02, $00, $05, $08 ; id 1
-    db $FD, $10, $40, $00, $04, $01, $00, $04, $08 ; id 2
-    db $FD, $10, $50, $00, $04, $01, $00, $05, $08 ; id 3
+    db $fd, $20, $40, $20, $04, $02, $00, $04, $08 ; id 0
+    db $fd, $20, $50, $20, $04, $02, $00, $05, $08 ; id 1
+    db $fd, $10, $40, $00, $04, $01, $00, $04, $08 ; id 2
+    db $fd, $10, $50, $00, $04, $01, $00, $05, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $19 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $19 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps19::
-Data_011_6BC8:: ; address name
-    db $FE, $00, $01, $02, $01, $81, $00, $05, $00 ; id 0
-    db $FD, $11, $50, $40, $1A, $01, $10, $05, $04 ; id 1
+    db $fe, $00, $01, $02, $01, $81, $00, $05, $00 ; id 0
+    db $fd, $11, $50, $40, $1a, $01, $10, $05, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $1A of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $1A of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps1A::
-Data_011_6BDB:: ; address name
-    db $FD, $10, $50, $40, $19, $01, $11, $05, $04 ; id 0
-    db $FD, $20, $40, $30, $1B, $00, $10, $04, $03 ; id 1
+    db $fd, $10, $50, $40, $19, $01, $11, $05, $04 ; id 0
+    db $fd, $20, $40, $30, $1b, $00, $10, $04, $03 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $1B of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $1B of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps1B::
-Data_011_6BEE:: ; address name
-    db $FD, $00, $40, $30, $1A, $02, $10, $04, $03 ; id 0
+    db $fd, $00, $40, $30, $1a, $02, $10, $04, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $20 of MapWarpTable; 6 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $20 of MapWarpTable; 6 record(s), then $80 (E-0157)
 MapWarps20::
-Data_011_6BF8:: ; address name
-    db $FD, $21, $40, $40, $21, $00, $30, $05, $08 ; id 0
-    db $FD, $21, $50, $40, $21, $00, $30, $05, $08 ; id 1
-    db $FD, $25, $40, $40, $24, $00, $31, $05, $08 ; id 2
-    db $FD, $25, $50, $40, $24, $00, $31, $05, $08 ; id 3
-    db $FD, $55, $40, $40, $2F, $00, $31, $06, $08 ; id 4
-    db $FD, $55, $50, $40, $2F, $00, $31, $06, $08 ; id 5
+    db $fd, $21, $40, $40, $21, $00, $30, $05, $08 ; id 0
+    db $fd, $21, $50, $40, $21, $00, $30, $05, $08 ; id 1
+    db $fd, $25, $40, $40, $24, $00, $31, $05, $08 ; id 2
+    db $fd, $25, $50, $40, $24, $00, $31, $05, $08 ; id 3
+    db $fd, $55, $40, $40, $2f, $00, $31, $06, $08 ; id 4
+    db $fd, $55, $50, $40, $2f, $00, $31, $06, $08 ; id 5
     db $80 ; end
 
-; E-0157 (derived: list for entry $21 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $21 of MapWarpTable; 4 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps21::
-Data_011_6C2F:: ; address name
-    db $FE, $00, $00, $01, $20, $02, $11, $04, $04 ; id 0
-    db $FE, $00, $02, $00, $20, $02, $11, $04, $04 ; id 1
-    db $FD, $00, $50, $10, $22, $00, $00, $05, $08 ; id 2
-    db $FD, $10, $20, $20, $2A, $00, $00, $02, $08 ; id 3
+    db $fe, $00, $00, $01, $20, $02, $11, $04, $04 ; id 0
+    db $fe, $00, $02, $00, $20, $02, $11, $04, $04 ; id 1
+    db $fd, $00, $50, $10, $22, $00, $00, $05, $08 ; id 2
+    db $fd, $10, $20, $20, $2a, $00, $00, $02, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $22 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $22 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps22::
-Data_011_6C54:: ; address name
-    db $FE, $00, $00, $01, $21, $80, $00, $05, $01 ; id 0
+    db $fe, $00, $00, $01, $21, $80, $00, $05, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $23 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $23 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps23::
-Data_011_6C5E:: ; address name
-    db $FE, $00, $00, $01, $24, $81, $01, $03, $02 ; id 0
+    db $fe, $00, $00, $01, $24, $81, $01, $03, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $24 of MapWarpTable; 7 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $24 of MapWarpTable; 7 record(s), then $80 (E-0157)
 MapWarps24::
-Data_011_6C68:: ; address name
-    db $FE, $00, $FF, $00, $20, $02, $15, $04, $04 ; id 0
-    db $FE, $00, $02, $01, $20, $02, $15, $04, $04 ; id 1
-    db $FE, $00, $00, $02, $20, $02, $15, $04, $04 ; id 2
-    db $FD, $00, $40, $00, $25, $00, $00, $04, $08 ; id 3
-    db $FD, $00, $50, $00, $25, $00, $00, $05, $08 ; id 4
-    db $FD, $11, $30, $20, $23, $00, $00, $04, $08 ; id 5
-    db $FD, $11, $20, $50, $2B, $23, $33, $02, $00 ; id 6
+    db $fe, $00, $ff, $00, $20, $02, $15, $04, $04 ; id 0
+    db $fe, $00, $02, $01, $20, $02, $15, $04, $04 ; id 1
+    db $fe, $00, $00, $02, $20, $02, $15, $04, $04 ; id 2
+    db $fd, $00, $40, $00, $25, $00, $00, $04, $08 ; id 3
+    db $fd, $00, $50, $00, $25, $00, $00, $05, $08 ; id 4
+    db $fd, $11, $30, $20, $23, $00, $00, $04, $08 ; id 5
+    db $fd, $11, $20, $50, $2b, $23, $33, $02, $00 ; id 6
     db $80 ; end
 
-; E-0157 (derived: list for entry $25 of MapWarpTable; 5 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $25 of MapWarpTable; 5 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps25::
-Data_011_6CA8:: ; address name
-    db $FF, $00, $00, $01, $24, $80, $00, $00, $80 ; id 0
-    db $FD, $00, $40, $00, $26, $00, $00, $04, $08 ; id 1
-    db $FD, $00, $50, $00, $26, $00, $00, $05, $08 ; id 2
-    db $FD, $00, $20, $60, $2E, $00, $10, $02, $06 ; id 3
-    db $FD, $10, $80, $30, $2D, $00, $10, $08, $03 ; id 4
+    db $ff, $00, $00, $01, $24, $80, $00, $00, $80 ; id 0
+    db $fd, $00, $40, $00, $26, $00, $00, $04, $08 ; id 1
+    db $fd, $00, $50, $00, $26, $00, $00, $05, $08 ; id 2
+    db $fd, $00, $20, $60, $2e, $00, $10, $02, $06 ; id 3
+    db $fd, $10, $80, $30, $2d, $00, $10, $08, $03 ; id 4
     db $80 ; end
 
-; E-0157 (derived: list for entry $26 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $26 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps26::
-Data_011_6CD6:: ; address name
-    db $FF, $00, $00, $01, $25, $80, $00, $00, $80 ; id 0
+    db $ff, $00, $00, $01, $25, $80, $00, $00, $80 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $28 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $28 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps28::
-Data_011_6CE0:: ; address name
-    db $FE, $00, $00, $02, $2F, $81, $10, $04, $03 ; id 0
+    db $fe, $00, $00, $02, $2f, $81, $10, $04, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $29 of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $29 of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarps29::
     db $80 ; end
 
-; E-0157 (derived: list for entry $2A of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $2A of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps2A::
-Data_011_6CEB:: ; address name
-    db $FE, $00, $00, $01, $21, $81, $00, $02, $02 ; id 0
-    db $FD, $00, $10, $20, $2B, $11, $10, $01, $02 ; id 1
+    db $fe, $00, $00, $01, $21, $81, $00, $02, $02 ; id 0
+    db $fd, $00, $10, $20, $2b, $11, $10, $01, $02 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $2B of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $2B of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps2B::
-Data_011_6CFE:: ; address name
-    db $FD, $10, $10, $20, $2A, $00, $10, $01, $02 ; id 0
-    db $FE, $00, $03, $02, $24, $01, $11, $02, $05 ; id 1
+    db $fd, $10, $10, $20, $2a, $00, $10, $01, $02 ; id 0
+    db $fe, $00, $03, $02, $24, $01, $11, $02, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $2D of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $2D of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps2D::
-Data_011_6D11:: ; address name
-    db $FD, $00, $80, $30, $25, $01, $10, $08, $03 ; id 0
+    db $fd, $00, $80, $30, $25, $01, $10, $08, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $2E of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $2E of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps2E::
-Data_011_6D1B:: ; address name
-    db $FD, $00, $20, $60, $25, $00, $10, $02, $06 ; id 0
+    db $fd, $00, $20, $60, $25, $00, $10, $02, $06 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $2F of MapWarpTable; 8 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $2F of MapWarpTable; 8 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps2F::
-Data_011_6D25:: ; address name
-    db $FE, $00, $FF, $00, $20, $05, $15, $04, $04 ; id 0
-    db $FE, $00, $FF, $01, $20, $05, $15, $04, $04 ; id 1
-    db $FE, $00, $00, $FF, $20, $05, $15, $04, $04 ; id 2
-    db $FE, $00, $01, $FF, $20, $05, $15, $04, $04 ; id 3
-    db $FE, $00, $02, $00, $20, $05, $15, $04, $04 ; id 4
-    db $FE, $00, $02, $01, $20, $05, $15, $04, $04 ; id 5
-    db $FE, $00, $00, $02, $20, $05, $15, $04, $04 ; id 6
-    db $FE, $00, $01, $02, $20, $05, $15, $04, $04 ; id 7
+    db $fe, $00, $ff, $00, $20, $05, $15, $04, $04 ; id 0
+    db $fe, $00, $ff, $01, $20, $05, $15, $04, $04 ; id 1
+    db $fe, $00, $00, $ff, $20, $05, $15, $04, $04 ; id 2
+    db $fe, $00, $01, $ff, $20, $05, $15, $04, $04 ; id 3
+    db $fe, $00, $02, $00, $20, $05, $15, $04, $04 ; id 4
+    db $fe, $00, $02, $01, $20, $05, $15, $04, $04 ; id 5
+    db $fe, $00, $00, $02, $20, $05, $15, $04, $04 ; id 6
+    db $fe, $00, $01, $02, $20, $05, $15, $04, $04 ; id 7
     db $80 ; end
 
-; E-0157 (derived: list for entry $30 of MapWarpTable; 9 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $30 of MapWarpTable; 9 record(s), then $80 (E-0157)
 MapWarps30::
-Data_011_6D6E:: ; address name
-    db $FD, $56, $40, $40, $31, $00, $31, $04, $08 ; id 0
-    db $FD, $56, $50, $40, $31, $00, $31, $04, $08 ; id 1
-    db $FD, $42, $40, $40, $32, $00, $10, $06, $00 ; id 2
-    db $FD, $42, $50, $40, $32, $00, $10, $06, $00 ; id 3
-    db $FD, $24, $40, $40, $3C, $01, $30, $04, $08 ; id 4
-    db $FD, $24, $50, $40, $3C, $01, $30, $04, $08 ; id 5
-    db $FD, $03, $40, $40, $35, $01, $33, $04, $08 ; id 6
-    db $FD, $62, $40, $40, $3E, $00, $31, $04, $08 ; id 7
-    db $FD, $53, $40, $40, $38, $02, $33, $04, $08 ; id 8
+    db $fd, $56, $40, $40, $31, $00, $31, $04, $08 ; id 0
+    db $fd, $56, $50, $40, $31, $00, $31, $04, $08 ; id 1
+    db $fd, $42, $40, $40, $32, $00, $10, $06, $00 ; id 2
+    db $fd, $42, $50, $40, $32, $00, $10, $06, $00 ; id 3
+    db $fd, $24, $40, $40, $3c, $01, $30, $04, $08 ; id 4
+    db $fd, $24, $50, $40, $3c, $01, $30, $04, $08 ; id 5
+    db $fd, $03, $40, $40, $35, $01, $33, $04, $08 ; id 6
+    db $fd, $62, $40, $40, $3e, $00, $31, $04, $08 ; id 7
+    db $fd, $53, $40, $40, $38, $02, $33, $04, $08 ; id 8
     db $80 ; end
 
-; E-0157 (derived: list for entry $31 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $31 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps31::
-Data_011_6DC0:: ; address name
-    db $FE, $00, $00, $02, $30, $05, $16, $04, $04 ; id 0
+    db $fe, $00, $00, $02, $30, $05, $16, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $32 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $32 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps32::
-Data_011_6DCA:: ; address name
-    db $FE, $00, $00, $FF, $30, $04, $12, $04, $04 ; id 0
-    db $FE, $00, $02, $00, $30, $04, $12, $04, $04 ; id 1
-    db $FD, $10, $40, $10, $33, $00, $01, $04, $08 ; id 2
-    db $FD, $11, $40, $20, $34, $00, $00, $04, $08 ; id 3
+    db $fe, $00, $00, $ff, $30, $04, $12, $04, $04 ; id 0
+    db $fe, $00, $02, $00, $30, $04, $12, $04, $04 ; id 1
+    db $fd, $10, $40, $10, $33, $00, $01, $04, $08 ; id 2
+    db $fd, $11, $40, $20, $34, $00, $00, $04, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $33 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $33 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps33::
-Data_011_6DEF:: ; address name
-    db $FE, $00, $00, $02, $32, $81, $00, $04, $01 ; id 0
+    db $fe, $00, $00, $02, $32, $81, $00, $04, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $34 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $34 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps34::
-Data_011_6DF9:: ; address name
-    db $FE, $00, $00, $01, $32, $81, $01, $04, $02 ; id 0
+    db $fe, $00, $00, $01, $32, $81, $01, $04, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $35 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $35 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps35::
-Data_011_6E03:: ; address name
-    db $FE, $00, $01, $04, $30, $00, $13, $04, $04 ; id 0
+    db $fe, $00, $01, $04, $30, $00, $13, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $36 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $36 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps36::
-Data_011_6E0D:: ; address name
-    db $FD, $00, $40, $20, $37, $02, $30, $04, $08 ; id 0
-    db $FD, $00, $50, $20, $37, $02, $30, $04, $08 ; id 1
-    db $FE, $00, $00, $01, $30, $05, $15, $04, $05 ; id 2
+    db $fd, $00, $40, $20, $37, $02, $30, $04, $08 ; id 0
+    db $fd, $00, $50, $20, $37, $02, $30, $04, $08 ; id 1
+    db $fe, $00, $00, $01, $30, $05, $15, $04, $05 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $37 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $37 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps37::
-Data_011_6E29:: ; address name
-    db $FE, $00, $02, $01, $36, $80, $10, $04, $02 ; id 0
-    db $FD, $20, $20, $50, $42, $02, $10, $02, $05 ; id 1
+    db $fe, $00, $02, $01, $36, $80, $10, $04, $02 ; id 0
+    db $fd, $20, $20, $50, $42, $02, $10, $02, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $38 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $38 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps38::
-Data_011_6E3C:: ; address name
-    db $FE, $00, $02, $04, $30, $05, $13, $04, $04 ; id 0
-    db $FD, $01, $40, $40, $39, $00, $10, $04, $04 ; id 1
-    db $FD, $31, $40, $40, $39, $03, $10, $04, $04 ; id 2
+    db $fe, $00, $02, $04, $30, $05, $13, $04, $04 ; id 0
+    db $fd, $01, $40, $40, $39, $00, $10, $04, $04 ; id 1
+    db $fd, $31, $40, $40, $39, $03, $10, $04, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $39 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $39 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps39::
-Data_011_6E58:: ; address name
-    db $FD, $00, $40, $40, $38, $00, $11, $04, $04 ; id 0
-    db $FD, $30, $40, $40, $38, $03, $11, $04, $04 ; id 1
-    db $FD, $02, $40, $40, $3A, $02, $11, $04, $04 ; id 2
+    db $fd, $00, $40, $40, $38, $00, $11, $04, $04 ; id 0
+    db $fd, $30, $40, $40, $38, $03, $11, $04, $04 ; id 1
+    db $fd, $02, $40, $40, $3a, $02, $11, $04, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $3A of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3A of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps3A::
-Data_011_6E74:: ; address name
-    db $FF, $00, $01, $03, $3B, $80, $00, $00, $80 ; id 0
-    db $FD, $21, $40, $40, $39, $00, $12, $04, $04 ; id 1
+    db $ff, $00, $01, $03, $3b, $80, $00, $00, $80 ; id 0
+    db $fd, $21, $40, $40, $39, $00, $12, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $3B of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3B of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps3B::
-Data_011_6E87:: ; address name
-    db $FF, $00, $00, $FF, $3A, $01, $02, $00, $80 ; id 0
+    db $ff, $00, $00, $ff, $3a, $01, $02, $00, $80 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $3C of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3C of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps3C::
-Data_011_6E91:: ; address name
-    db $FE, $00, $01, $01, $30, $02, $14, $04, $04 ; id 0
-    db $FD, $10, $70, $20, $3D, $00, $30, $07, $08 ; id 1
+    db $fe, $00, $01, $01, $30, $02, $14, $04, $04 ; id 0
+    db $fd, $10, $70, $20, $3d, $00, $30, $07, $08 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $3D of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3D of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps3D::
-Data_011_6EA4:: ; address name
-    db $FE, $00, $00, $01, $3C, $81, $10, $07, $02 ; id 0
+    db $fe, $00, $00, $01, $3c, $81, $10, $07, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $3E of MapWarpTable; 5 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3E of MapWarpTable; 5 record(s), then $80 (E-0157)
 MapWarps3E::
-Data_011_6EAE:: ; address name
-    db $FE, $00, $00, $02, $30, $06, $12, $04, $04 ; id 0
-    db $FD, $00, $60, $30, $3E, $01, $10, $06, $03 ; id 1
-    db $FD, $10, $60, $30, $3E, $00, $10, $06, $03 ; id 2
-    db $FD, $10, $30, $30, $3F, $00, $10, $03, $03 ; id 3
-    db $FD, $11, $10, $60, $3F, $00, $11, $01, $06 ; id 4
+    db $fe, $00, $00, $02, $30, $06, $12, $04, $04 ; id 0
+    db $fd, $00, $60, $30, $3e, $01, $10, $06, $03 ; id 1
+    db $fd, $10, $60, $30, $3e, $00, $10, $06, $03 ; id 2
+    db $fd, $10, $30, $30, $3f, $00, $10, $03, $03 ; id 3
+    db $fd, $11, $10, $60, $3f, $00, $11, $01, $06 ; id 4
     db $80 ; end
 
-; E-0157 (derived: list for entry $3F of MapWarpTable; 9 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $3F of MapWarpTable; 9 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps3F::
-Data_011_6EDC:: ; address name
-    db $FD, $00, $30, $30, $3E, $01, $10, $03, $03 ; id 0
-    db $FD, $01, $10, $60, $3E, $01, $11, $01, $06 ; id 1
-    db $FD, $00, $60, $30, $3F, $01, $10, $06, $03 ; id 2
-    db $FD, $10, $60, $30, $3F, $00, $10, $06, $03 ; id 3
-    db $FD, $10, $20, $30, $3F, $01, $11, $02, $03 ; id 4
-    db $FD, $11, $20, $30, $3F, $01, $10, $02, $03 ; id 5
-    db $FD, $10, $60, $70, $3F, $01, $11, $06, $07 ; id 6
-    db $FD, $11, $60, $70, $3F, $01, $10, $06, $07 ; id 7
-    db $FD, $11, $40, $40, $40, $00, $11, $04, $04 ; id 8
+    db $fd, $00, $30, $30, $3e, $01, $10, $03, $03 ; id 0
+    db $fd, $01, $10, $60, $3e, $01, $11, $01, $06 ; id 1
+    db $fd, $00, $60, $30, $3f, $01, $10, $06, $03 ; id 2
+    db $fd, $10, $60, $30, $3f, $00, $10, $06, $03 ; id 3
+    db $fd, $10, $20, $30, $3f, $01, $11, $02, $03 ; id 4
+    db $fd, $11, $20, $30, $3f, $01, $10, $02, $03 ; id 5
+    db $fd, $10, $60, $70, $3f, $01, $11, $06, $07 ; id 6
+    db $fd, $11, $60, $70, $3f, $01, $10, $06, $07 ; id 7
+    db $fd, $11, $40, $40, $40, $00, $11, $04, $04 ; id 8
     db $80 ; end
 
-; E-0157 (derived: list for entry $40 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $40 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps40::
-Data_011_6F2E:: ; address name
-    db $FD, $01, $40, $40, $3F, $01, $11, $04, $04 ; id 0
+    db $fd, $01, $40, $40, $3f, $01, $11, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $41 of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $41 of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarps41::
     db $80 ; end
 
-; E-0157 (derived: list for entry $42 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $42 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps42::
-Data_011_6F39:: ; address name
-    db $FD, $20, $20, $50, $37, $02, $10, $02, $05 ; id 0
-    db $FD, $00, $80, $10, $43, $00, $10, $08, $02 ; id 1
-    db $FD, $00, $50, $40, $43, $00, $10, $05, $04 ; id 2
+    db $fd, $20, $20, $50, $37, $02, $10, $02, $05 ; id 0
+    db $fd, $00, $80, $10, $43, $00, $10, $08, $02 ; id 1
+    db $fd, $00, $50, $40, $43, $00, $10, $05, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $43 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $43 of MapWarpTable; 3 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps43::
-Data_011_6F55:: ; address name
-    db $FD, $00, $80, $20, $42, $00, $10, $08, $01 ; id 0
-    db $FD, $00, $50, $40, $42, $00, $10, $05, $04 ; id 1
-    db $FD, $20, $40, $40, $44, $00, $30, $04, $08 ; id 2
+    db $fd, $00, $80, $20, $42, $00, $10, $08, $01 ; id 0
+    db $fd, $00, $50, $40, $42, $00, $10, $05, $04 ; id 1
+    db $fd, $20, $40, $40, $44, $00, $30, $04, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $44 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $44 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps44::
-Data_011_6F71:: ; address name
-    db $FE, $00, $00, $01, $43, $82, $10, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $43, $82, $10, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $45 of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $45 of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarps45::
     db $80 ; end
 
-; E-0157 (derived: list for entry $48 of MapWarpTable; 20 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $48 of MapWarpTable; 20 record(s), then $80 (E-0157)
 MapWarps48::
-Data_011_6F7C:: ; address name
-    db $FD, $82, $40, $40, $4A, $00, $31, $05, $08 ; id 0
-    db $FD, $82, $50, $40, $4A, $00, $31, $05, $08 ; id 1
-    db $FD, $73, $40, $40, $4E, $10, $10, $04, $04 ; id 2
-    db $FD, $74, $40, $40, $4E, $20, $12, $04, $04 ; id 3
-    db $FD, $75, $40, $40, $4F, $00, $10, $00, $06 ; id 4
-    db $FD, $75, $50, $40, $4F, $00, $10, $00, $06 ; id 5
-    db $FD, $46, $40, $40, $52, $00, $30, $04, $08 ; id 6
-    db $FD, $46, $60, $40, $52, $02, $30, $04, $08 ; id 7
-    db $FD, $48, $40, $40, $58, $00, $31, $04, $08 ; id 8
-    db $FD, $48, $50, $40, $58, $00, $31, $04, $08 ; id 9
-    db $FD, $29, $40, $40, $5A, $01, $30, $04, $08 ; id 10
-    db $FD, $29, $50, $40, $5A, $01, $30, $04, $08 ; id 11
-    db $FD, $5A, $40, $30, $5D, $02, $10, $04, $00 ; id 12
-    db $FD, $5A, $50, $30, $5D, $02, $10, $04, $00 ; id 13
-    db $FD, $99, $40, $40, $5E, $01, $31, $04, $08 ; id 14
-    db $FD, $99, $50, $40, $5E, $01, $31, $04, $08 ; id 15
-    db $FD, $A5, $40, $40, $62, $01, $33, $04, $08 ; id 16
-    db $FD, $87, $40, $40, $63, $00, $10, $04, $00 ; id 17
-    db $FD, $50, $40, $40, $49, $00, $30, $04, $08 ; id 18
-    db $FD, $50, $50, $40, $49, $00, $30, $04, $08 ; id 19
+    db $fd, $82, $40, $40, $4a, $00, $31, $05, $08 ; id 0
+    db $fd, $82, $50, $40, $4a, $00, $31, $05, $08 ; id 1
+    db $fd, $73, $40, $40, $4e, $10, $10, $04, $04 ; id 2
+    db $fd, $74, $40, $40, $4e, $20, $12, $04, $04 ; id 3
+    db $fd, $75, $40, $40, $4f, $00, $10, $00, $06 ; id 4
+    db $fd, $75, $50, $40, $4f, $00, $10, $00, $06 ; id 5
+    db $fd, $46, $40, $40, $52, $00, $30, $04, $08 ; id 6
+    db $fd, $46, $60, $40, $52, $02, $30, $04, $08 ; id 7
+    db $fd, $48, $40, $40, $58, $00, $31, $04, $08 ; id 8
+    db $fd, $48, $50, $40, $58, $00, $31, $04, $08 ; id 9
+    db $fd, $29, $40, $40, $5a, $01, $30, $04, $08 ; id 10
+    db $fd, $29, $50, $40, $5a, $01, $30, $04, $08 ; id 11
+    db $fd, $5a, $40, $30, $5d, $02, $10, $04, $00 ; id 12
+    db $fd, $5a, $50, $30, $5d, $02, $10, $04, $00 ; id 13
+    db $fd, $99, $40, $40, $5e, $01, $31, $04, $08 ; id 14
+    db $fd, $99, $50, $40, $5e, $01, $31, $04, $08 ; id 15
+    db $fd, $a5, $40, $40, $62, $01, $33, $04, $08 ; id 16
+    db $fd, $87, $40, $40, $63, $00, $10, $04, $00 ; id 17
+    db $fd, $50, $40, $40, $49, $00, $30, $04, $08 ; id 18
+    db $fd, $50, $50, $40, $49, $00, $30, $04, $08 ; id 19
     db $80 ; end
 
-; E-0157 (derived: list for entry $49 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $49 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps49::
-Data_011_7031:: ; address name
-    db $FE, $00, $00, $01, $48, $05, $10, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $48, $05, $10, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $4A of MapWarpTable; 6 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4A of MapWarpTable; 6 record(s), then $80 (E-0157)
 MapWarps4A::
-Data_011_703B:: ; address name
-    db $FE, $00, $02, $00, $48, $08, $12, $04, $04 ; id 0
-    db $FE, $00, $00, $02, $48, $08, $12, $04, $04 ; id 1
-    db $FE, $00, $01, $02, $48, $08, $12, $04, $04 ; id 2
-    db $FD, $10, $70, $40, $4B, $00, $30, $07, $08 ; id 3
-    db $FD, $00, $40, $00, $4C, $00, $01, $04, $08 ; id 4
-    db $FD, $00, $50, $00, $4C, $00, $01, $05, $08 ; id 5
+    db $fe, $00, $02, $00, $48, $08, $12, $04, $04 ; id 0
+    db $fe, $00, $00, $02, $48, $08, $12, $04, $04 ; id 1
+    db $fe, $00, $01, $02, $48, $08, $12, $04, $04 ; id 2
+    db $fd, $10, $70, $40, $4b, $00, $30, $07, $08 ; id 3
+    db $fd, $00, $40, $00, $4c, $00, $01, $04, $08 ; id 4
+    db $fd, $00, $50, $00, $4c, $00, $01, $05, $08 ; id 5
     db $80 ; end
 
-; E-0157 (derived: list for entry $4B of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4B of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps4B::
-Data_011_7072:: ; address name
-    db $FE, $00, $00, $01, $4A, $81, $10, $07, $04 ; id 0
+    db $fe, $00, $00, $01, $4a, $81, $10, $07, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $4C of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4C of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps4C::
-Data_011_707C:: ; address name
-    db $FF, $00, $00, $02, $4A, $80, $10, $00, $80 ; id 0
+    db $ff, $00, $00, $02, $4a, $80, $10, $00, $80 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $4D of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4D of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps4D::
-Data_011_7086:: ; address name
-    db $FD, $00, $60, $20, $4C, $00, $10, $06, $01 ; id 0
+    db $fd, $00, $60, $20, $4c, $00, $10, $06, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $4E of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4E of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps4E::
-Data_011_7090:: ; address name
-    db $FD, $00, $40, $40, $48, $07, $13, $04, $04 ; id 0
-    db $FD, $02, $40, $40, $48, $07, $14, $04, $04 ; id 1
+    db $fd, $00, $40, $40, $48, $07, $13, $04, $04 ; id 0
+    db $fd, $02, $40, $40, $48, $07, $14, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $4F of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $4F of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps4F::
-Data_011_70A3:: ; address name
-    db $FE, $00, $01, $FF, $48, $07, $15, $04, $04 ; id 0
-    db $FE, $00, $FF, $00, $48, $07, $15, $04, $04 ; id 1
-    db $FD, $00, $20, $40, $50, $00, $30, $03, $08 ; id 2
+    db $fe, $00, $01, $ff, $48, $07, $15, $04, $04 ; id 0
+    db $fe, $00, $ff, $00, $48, $07, $15, $04, $04 ; id 1
+    db $fd, $00, $20, $40, $50, $00, $30, $03, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $50 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $50 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps50::
-Data_011_70BF:: ; address name
-    db $FE, $00, $00, $01, $4F, $80, $10, $02, $04 ; id 0
-    db $FD, $00, $50, $10, $51, $00, $10, $05, $01 ; id 1
+    db $fe, $00, $00, $01, $4f, $80, $10, $02, $04 ; id 0
+    db $fd, $00, $50, $10, $51, $00, $10, $05, $01 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $51 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $51 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps51::
-Data_011_70D2:: ; address name
-    db $FD, $00, $50, $10, $50, $00, $10, $05, $01 ; id 0
+    db $fd, $00, $50, $10, $50, $00, $10, $05, $01 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $52 of MapWarpTable; 6 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $52 of MapWarpTable; 6 record(s), then $80 (E-0157)
 MapWarps52::
-Data_011_70DC:: ; address name
-    db $FE, $00, $00, $01, $48, $04, $16, $04, $04 ; id 0
-    db $FE, $00, $02, $01, $48, $04, $16, $06, $04 ; id 1
-    db $FD, $00, $40, $00, $53, $20, $33, $04, $08 ; id 2
-    db $FD, $00, $50, $00, $53, $20, $33, $05, $08 ; id 3
-    db $FD, $20, $40, $00, $53, $12, $33, $04, $08 ; id 4
-    db $FD, $20, $50, $00, $53, $12, $33, $05, $08 ; id 5
+    db $fe, $00, $00, $01, $48, $04, $16, $04, $04 ; id 0
+    db $fe, $00, $02, $01, $48, $04, $16, $06, $04 ; id 1
+    db $fd, $00, $40, $00, $53, $20, $33, $04, $08 ; id 2
+    db $fd, $00, $50, $00, $53, $20, $33, $05, $08 ; id 3
+    db $fd, $20, $40, $00, $53, $12, $33, $04, $08 ; id 4
+    db $fd, $20, $50, $00, $53, $12, $33, $05, $08 ; id 5
     db $80 ; end
 
-; E-0157 (derived: list for entry $53 of MapWarpTable; 9 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $53 of MapWarpTable; 9 record(s), then $80 (E-0157)
 MapWarps53::
-Data_011_7113:: ; address name
-    db $FE, $00, $00, $04, $52, $B0, $00, $04, $00 ; id 0
-    db $FE, $00, $02, $04, $52, $B2, $00, $04, $00 ; id 1
-    db $FD, $02, $20, $40, $54, $30, $10, $02, $04 ; id 2
-    db $FD, $31, $60, $30, $55, $31, $10, $06, $03 ; id 3
-    db $FD, $11, $70, $20, $56, $30, $12, $07, $02 ; id 4
-    db $FD, $00, $20, $00, $57, $30, $30, $02, $08 ; id 5
-    db $FD, $00, $30, $00, $57, $30, $30, $03, $08 ; id 6
-    db $FD, $20, $60, $00, $57, $32, $30, $06, $08 ; id 7
-    db $FD, $20, $70, $00, $57, $32, $30, $07, $08 ; id 8
+    db $fe, $00, $00, $04, $52, $b0, $00, $04, $00 ; id 0
+    db $fe, $00, $02, $04, $52, $b2, $00, $04, $00 ; id 1
+    db $fd, $02, $20, $40, $54, $30, $10, $02, $04 ; id 2
+    db $fd, $31, $60, $30, $55, $31, $10, $06, $03 ; id 3
+    db $fd, $11, $70, $20, $56, $30, $12, $07, $02 ; id 4
+    db $fd, $00, $20, $00, $57, $30, $30, $02, $08 ; id 5
+    db $fd, $00, $30, $00, $57, $30, $30, $03, $08 ; id 6
+    db $fd, $20, $60, $00, $57, $32, $30, $06, $08 ; id 7
+    db $fd, $20, $70, $00, $57, $32, $30, $07, $08 ; id 8
     db $80 ; end
 
-; E-0157 (derived: list for entry $54 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $54 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps54::
-Data_011_7165:: ; address name
-    db $FD, $00, $20, $40, $53, $30, $12, $02, $04 ; id 0
+    db $fd, $00, $20, $40, $53, $30, $12, $02, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $55 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $55 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps55::
-Data_011_716F:: ; address name
-    db $FD, $10, $60, $30, $53, $33, $11, $06, $03 ; id 0
+    db $fd, $10, $60, $30, $53, $33, $11, $06, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $56 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $56 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps56::
-Data_011_7179:: ; address name
-    db $FD, $02, $70, $20, $53, $31, $11, $07, $02 ; id 0
-    db $FD, $00, $40, $70, $57, $31, $10, $04, $07 ; id 1
+    db $fd, $02, $70, $20, $53, $31, $11, $07, $02 ; id 0
+    db $fd, $00, $40, $70, $57, $31, $10, $04, $07 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $57 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $57 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps57::
-Data_011_718C:: ; address name
-    db $FD, $10, $40, $70, $56, $30, $10, $04, $07 ; id 0
-    db $FF, $00, $00, $01, $53, $B0, $00, $00, $80 ; id 1
-    db $FF, $00, $02, $01, $53, $B2, $00, $00, $80 ; id 2
+    db $fd, $10, $40, $70, $56, $30, $10, $04, $07 ; id 0
+    db $ff, $00, $00, $01, $53, $b0, $00, $00, $80 ; id 1
+    db $ff, $00, $02, $01, $53, $b2, $00, $00, $80 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $58 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $58 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps58::
-Data_011_71A8:: ; address name
-    db $FE, $00, $FF, $00, $48, $04, $18, $04, $04 ; id 0
-    db $FE, $00, $FF, $01, $48, $04, $18, $04, $04 ; id 1
-    db $FE, $00, $00, $02, $48, $04, $18, $04, $04 ; id 2
-    db $FD, $01, $80, $40, $59, $00, $30, $08, $08 ; id 3
+    db $fe, $00, $ff, $00, $48, $04, $18, $04, $04 ; id 0
+    db $fe, $00, $ff, $01, $48, $04, $18, $04, $04 ; id 1
+    db $fe, $00, $00, $02, $48, $04, $18, $04, $04 ; id 2
+    db $fd, $01, $80, $40, $59, $00, $30, $08, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $59 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $59 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps59::
-Data_011_71CD:: ; address name
-    db $FE, $00, $00, $01, $58, $80, $11, $08, $04 ; id 0
+    db $fe, $00, $00, $01, $58, $80, $11, $08, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $5A of MapWarpTable; 7 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5A of MapWarpTable; 7 record(s), then $80 (E-0157)
 MapWarps5A::
-Data_011_71D7:: ; address name
-    db $FE, $00, $FF, $00, $48, $02, $19, $04, $04 ; id 0
-    db $FE, $00, $00, $01, $48, $02, $19, $04, $04 ; id 1
-    db $FE, $00, $02, $00, $48, $02, $19, $04, $04 ; id 2
-    db $FE, $00, $01, $01, $48, $02, $19, $04, $04 ; id 3
-    db $FD, $10, $30, $30, $5B, $01, $31, $04, $08 ; id 4
-    db $FD, $10, $40, $30, $5B, $01, $31, $05, $08 ; id 5
-    db $FD, $00, $40, $10, $5C, $00, $31, $03, $08 ; id 6
+    db $fe, $00, $ff, $00, $48, $02, $19, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $48, $02, $19, $04, $04 ; id 1
+    db $fe, $00, $02, $00, $48, $02, $19, $04, $04 ; id 2
+    db $fe, $00, $01, $01, $48, $02, $19, $04, $04 ; id 3
+    db $fd, $10, $30, $30, $5b, $01, $31, $04, $08 ; id 4
+    db $fd, $10, $40, $30, $5b, $01, $31, $05, $08 ; id 5
+    db $fd, $00, $40, $10, $5c, $00, $31, $03, $08 ; id 6
     db $80 ; end
 
-; E-0157 (derived: list for entry $5B of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5B of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps5B::
-Data_011_7217:: ; address name
-    db $FF, $00, $01, $02, $5A, $81, $10, $F0, $B0 ; id 0
-    db $FD, $00, $70, $20, $5C, $00, $10, $07, $03 ; id 1
+    db $ff, $00, $01, $02, $5a, $81, $10, $f0, $b0 ; id 0
+    db $fd, $00, $70, $20, $5c, $00, $10, $07, $03 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $5C of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5C of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps5C::
-Data_011_722A:: ; address name
-    db $FD, $00, $70, $30, $5B, $00, $10, $07, $02 ; id 0
-    db $FE, $00, $00, $02, $5A, $80, $30, $04, $01 ; id 1
+    db $fd, $00, $70, $30, $5b, $00, $10, $07, $02 ; id 0
+    db $fe, $00, $00, $02, $5a, $80, $30, $04, $01 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $5D of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5D of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps5D::
-Data_011_723D:: ; address name
-    db $FE, $00, $02, $FF, $48, $05, $1A, $04, $03 ; id 0
+    db $fe, $00, $02, $ff, $48, $05, $1a, $04, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $5E of MapWarpTable; 6 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5E of MapWarpTable; 6 record(s), then $80 (E-0157)
 MapWarps5E::
-Data_011_7247:: ; address name
-    db $FE, $00, $FF, $01, $48, $09, $19, $04, $04 ; id 0
-    db $FE, $00, $01, $02, $48, $09, $19, $04, $04 ; id 1
-    db $FE, $00, $02, $01, $48, $09, $19, $04, $04 ; id 2
-    db $FD, $11, $20, $20, $5F, $00, $30, $02, $08 ; id 3
-    db $FD, $10, $40, $00, $60, $00, $32, $04, $08 ; id 4
-    db $FD, $10, $50, $00, $60, $00, $32, $05, $08 ; id 5
+    db $fe, $00, $ff, $01, $48, $09, $19, $04, $04 ; id 0
+    db $fe, $00, $01, $02, $48, $09, $19, $04, $04 ; id 1
+    db $fe, $00, $02, $01, $48, $09, $19, $04, $04 ; id 2
+    db $fd, $11, $20, $20, $5f, $00, $30, $02, $08 ; id 3
+    db $fd, $10, $40, $00, $60, $00, $32, $04, $08 ; id 4
+    db $fd, $10, $50, $00, $60, $00, $32, $05, $08 ; id 5
     db $80 ; end
 
-; E-0157 (derived: list for entry $5F of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $5F of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps5F::
-Data_011_727E:: ; address name
-    db $FE, $00, $00, $01, $5E, $81, $11, $02, $02 ; id 0
+    db $fe, $00, $00, $01, $5e, $81, $11, $02, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $60 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $60 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps60::
-Data_011_7288:: ; address name
-    db $FF, $00, $00, $03, $5E, $81, $00, $00, $80 ; id 0
-    db $FD, $01, $80, $60, $61, $00, $11, $08, $06 ; id 1
+    db $ff, $00, $00, $03, $5e, $81, $00, $00, $80 ; id 0
+    db $fd, $01, $80, $60, $61, $00, $11, $08, $06 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $61 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $61 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps61::
-Data_011_729B:: ; address name
-    db $FD, $01, $80, $60, $60, $00, $11, $08, $06 ; id 0
+    db $fd, $01, $80, $60, $60, $00, $11, $08, $06 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $62 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $62 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps62::
-Data_011_72A5:: ; address name
-    db $FE, $00, $01, $04, $48, $0A, $15, $04, $04 ; id 0
+    db $fe, $00, $01, $04, $48, $0a, $15, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $63 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $63 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps63::
-Data_011_72AF:: ; address name
-    db $FE, $00, $00, $FF, $48, $08, $17, $04, $04 ; id 0
-    db $FD, $11, $10, $70, $64, $01, $11, $01, $07 ; id 1
+    db $fe, $00, $00, $ff, $48, $08, $17, $04, $04 ; id 0
+    db $fd, $11, $10, $70, $64, $01, $11, $01, $07 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $64 of MapWarpTable; 9 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $64 of MapWarpTable; 9 record(s), then $80 (E-0157)
 MapWarps64::
-Data_011_72C2:: ; address name
-    db $FD, $11, $10, $70, $63, $01, $11, $01, $07 ; id 0
-    db $FD, $10, $80, $20, $65, $01, $10, $08, $02 ; id 1
-    db $FD, $10, $60, $40, $65, $01, $10, $06, $04 ; id 2
-    db $FD, $10, $40, $60, $65, $01, $10, $04, $06 ; id 3
-    db $FD, $01, $40, $20, $65, $00, $11, $04, $02 ; id 4
-    db $FD, $01, $60, $40, $65, $00, $11, $06, $04 ; id 5
-    db $FD, $01, $80, $60, $65, $00, $11, $08, $06 ; id 6
-    db $FD, $11, $80, $20, $65, $01, $11, $08, $02 ; id 7
-    db $FD, $11, $80, $70, $65, $01, $11, $08, $07 ; id 8
+    db $fd, $11, $10, $70, $63, $01, $11, $01, $07 ; id 0
+    db $fd, $10, $80, $20, $65, $01, $10, $08, $02 ; id 1
+    db $fd, $10, $60, $40, $65, $01, $10, $06, $04 ; id 2
+    db $fd, $10, $40, $60, $65, $01, $10, $04, $06 ; id 3
+    db $fd, $01, $40, $20, $65, $00, $11, $04, $02 ; id 4
+    db $fd, $01, $60, $40, $65, $00, $11, $06, $04 ; id 5
+    db $fd, $01, $80, $60, $65, $00, $11, $08, $06 ; id 6
+    db $fd, $11, $80, $20, $65, $01, $11, $08, $02 ; id 7
+    db $fd, $11, $80, $70, $65, $01, $11, $08, $07 ; id 8
     db $80 ; end
 
-; E-0157 (derived: list for entry $65 of MapWarpTable; 10 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $65 of MapWarpTable; 10 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps65::
-Data_011_7314:: ; address name
-    db $FD, $10, $80, $20, $64, $01, $10, $08, $02 ; id 0
-    db $FD, $10, $60, $40, $64, $01, $10, $06, $04 ; id 1
-    db $FD, $10, $40, $60, $64, $01, $10, $04, $06 ; id 2
-    db $FD, $01, $40, $20, $64, $00, $11, $04, $02 ; id 3
-    db $FD, $01, $60, $40, $64, $00, $11, $06, $04 ; id 4
-    db $FD, $01, $80, $60, $64, $00, $11, $08, $06 ; id 5
-    db $FD, $11, $80, $20, $64, $01, $11, $08, $02 ; id 6
-    db $FD, $11, $80, $70, $64, $01, $11, $08, $07 ; id 7
-    db $FD, $00, $10, $20, $66, $00, $10, $01, $02 ; id 8
-    db $FD, $01, $10, $60, $66, $00, $11, $01, $06 ; id 9
+    db $fd, $10, $80, $20, $64, $01, $10, $08, $02 ; id 0
+    db $fd, $10, $60, $40, $64, $01, $10, $06, $04 ; id 1
+    db $fd, $10, $40, $60, $64, $01, $10, $04, $06 ; id 2
+    db $fd, $01, $40, $20, $64, $00, $11, $04, $02 ; id 3
+    db $fd, $01, $60, $40, $64, $00, $11, $06, $04 ; id 4
+    db $fd, $01, $80, $60, $64, $00, $11, $08, $06 ; id 5
+    db $fd, $11, $80, $20, $64, $01, $11, $08, $02 ; id 6
+    db $fd, $11, $80, $70, $64, $01, $11, $08, $07 ; id 7
+    db $fd, $00, $10, $20, $66, $00, $10, $01, $02 ; id 8
+    db $fd, $01, $10, $60, $66, $00, $11, $01, $06 ; id 9
     db $80 ; end
 
-; E-0157 (derived: list for entry $66 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $66 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps66::
-Data_011_736F:: ; address name
-    db $FD, $00, $10, $20, $65, $00, $10, $01, $02 ; id 0
-    db $FD, $01, $10, $60, $65, $00, $11, $01, $06 ; id 1
-    db $FD, $10, $40, $40, $67, $00, $10, $04, $04 ; id 2
+    db $fd, $00, $10, $20, $65, $00, $10, $01, $02 ; id 0
+    db $fd, $01, $10, $60, $65, $00, $11, $01, $06 ; id 1
+    db $fd, $10, $40, $40, $67, $00, $10, $04, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $67 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $67 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps67::
-Data_011_738B:: ; address name
-    db $FD, $00, $40, $40, $66, $01, $10, $04, $04 ; id 0
+    db $fd, $00, $40, $40, $66, $01, $10, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $68 of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $68 of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarps68::
     db $80 ; end
 
-; E-0157 (derived: list for entry $70 of MapWarpTable; 19 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $70 of MapWarpTable; 19 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps70::
-Data_011_7396:: ; address name
-    db $FD, $B1, $40, $40, $71, $01, $30, $04, $08 ; id 0
-    db $FD, $A4, $40, $40, $77, $12, $30, $04, $08 ; id 1
-    db $FD, $94, $40, $40, $77, $20, $30, $04, $08 ; id 2
-    db $FD, $56, $40, $40, $78, $00, $31, $04, $08 ; id 3
-    db $FD, $56, $50, $40, $78, $00, $31, $04, $08 ; id 4
-    db $FD, $04, $40, $40, $7A, $00, $31, $04, $08 ; id 5
-    db $FD, $36, $40, $40, $7B, $10, $10, $04, $04 ; id 6
-    db $FD, $37, $40, $40, $7B, $20, $12, $04, $04 ; id 7
-    db $FD, $59, $40, $40, $7C, $01, $31, $05, $08 ; id 8
-    db $FD, $59, $50, $40, $7C, $01, $31, $05, $08 ; id 9
-    db $FD, $89, $40, $40, $80, $10, $30, $04, $08 ; id 10
-    db $FD, $99, $40, $40, $80, $22, $30, $04, $08 ; id 11
-    db $FD, $5B, $40, $40, $81, $00, $10, $04, $04 ; id 12
-    db $FD, $1B, $40, $40, $85, $00, $31, $04, $08 ; id 13
-    db $FD, $BA, $40, $40, $8A, $00, $30, $04, $08 ; id 14
-    db $FD, $BA, $50, $40, $8A, $00, $30, $04, $08 ; id 15
-    db $FD, $52, $40, $40, $92, $00, $30, $04, $08 ; id 16
-    db $FD, $41, $40, $40, $93, $00, $30, $04, $08 ; id 17
-    db $FD, $41, $50, $40, $93, $00, $30, $04, $08 ; id 18
+    db $fd, $b1, $40, $40, $71, $01, $30, $04, $08 ; id 0
+    db $fd, $a4, $40, $40, $77, $12, $30, $04, $08 ; id 1
+    db $fd, $94, $40, $40, $77, $20, $30, $04, $08 ; id 2
+    db $fd, $56, $40, $40, $78, $00, $31, $04, $08 ; id 3
+    db $fd, $56, $50, $40, $78, $00, $31, $04, $08 ; id 4
+    db $fd, $04, $40, $40, $7a, $00, $31, $04, $08 ; id 5
+    db $fd, $36, $40, $40, $7b, $10, $10, $04, $04 ; id 6
+    db $fd, $37, $40, $40, $7b, $20, $12, $04, $04 ; id 7
+    db $fd, $59, $40, $40, $7c, $01, $31, $05, $08 ; id 8
+    db $fd, $59, $50, $40, $7c, $01, $31, $05, $08 ; id 9
+    db $fd, $89, $40, $40, $80, $10, $30, $04, $08 ; id 10
+    db $fd, $99, $40, $40, $80, $22, $30, $04, $08 ; id 11
+    db $fd, $5b, $40, $40, $81, $00, $10, $04, $04 ; id 12
+    db $fd, $1b, $40, $40, $85, $00, $31, $04, $08 ; id 13
+    db $fd, $ba, $40, $40, $8a, $00, $30, $04, $08 ; id 14
+    db $fd, $ba, $50, $40, $8a, $00, $30, $04, $08 ; id 15
+    db $fd, $52, $40, $40, $92, $00, $30, $04, $08 ; id 16
+    db $fd, $41, $40, $40, $93, $00, $30, $04, $08 ; id 17
+    db $fd, $41, $50, $40, $93, $00, $30, $04, $08 ; id 18
     db $80 ; end
 
-; E-0157 (derived: list for entry $71 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $71 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps71::
-Data_011_7442:: ; address name
-    db $FE, $00, $00, $01, $70, $0B, $11, $04, $04 ; id 0
-    db $FE, $00, $01, $01, $70, $0B, $11, $04, $04 ; id 1
-    db $FD, $20, $20, $20, $72, $00, $30, $03, $08 ; id 2
-    db $FE, $00, $01, $FF, $89, $00, $31, $04, $08 ; id 3
+    db $fe, $00, $00, $01, $70, $0b, $11, $04, $04 ; id 0
+    db $fe, $00, $01, $01, $70, $0b, $11, $04, $04 ; id 1
+    db $fd, $20, $20, $20, $72, $00, $30, $03, $08 ; id 2
+    db $fe, $00, $01, $ff, $89, $00, $31, $04, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $72 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $72 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps72::
-Data_011_7467:: ; address name
-    db $FE, $00, $00, $01, $71, $82, $10, $02, $02 ; id 0
+    db $fe, $00, $00, $01, $71, $82, $10, $02, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $73 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $73 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps73::
-Data_011_7471:: ; address name
-    db $FE, $00, $00, $02, $89, $00, $11, $05, $06 ; id 0
-    db $FD, $00, $40, $40, $74, $00, $10, $04, $04 ; id 1
-    db $FD, $01, $60, $20, $74, $00, $11, $06, $02 ; id 2
-    db $FD, $11, $50, $50, $74, $01, $11, $05, $05 ; id 3
+    db $fe, $00, $00, $02, $89, $00, $11, $05, $06 ; id 0
+    db $fd, $00, $40, $40, $74, $00, $10, $04, $04 ; id 1
+    db $fd, $01, $60, $20, $74, $00, $11, $06, $02 ; id 2
+    db $fd, $11, $50, $50, $74, $01, $11, $05, $05 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $74 of MapWarpTable; 6 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $74 of MapWarpTable; 6 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps74::
-Data_011_7496:: ; address name
-    db $FD, $00, $40, $40, $73, $00, $10, $04, $04 ; id 0
-    db $FD, $01, $60, $20, $73, $00, $11, $06, $02 ; id 1
-    db $FD, $11, $50, $50, $73, $01, $11, $05, $05 ; id 2
-    db $FD, $10, $50, $40, $75, $01, $10, $05, $04 ; id 3
-    db $FD, $01, $40, $50, $75, $00, $11, $04, $05 ; id 4
-    db $FD, $11, $30, $20, $75, $01, $11, $03, $02 ; id 5
+    db $fd, $00, $40, $40, $73, $00, $10, $04, $04 ; id 0
+    db $fd, $01, $60, $20, $73, $00, $11, $06, $02 ; id 1
+    db $fd, $11, $50, $50, $73, $01, $11, $05, $05 ; id 2
+    db $fd, $10, $50, $40, $75, $01, $10, $05, $04 ; id 3
+    db $fd, $01, $40, $50, $75, $00, $11, $04, $05 ; id 4
+    db $fd, $11, $30, $20, $75, $01, $11, $03, $02 ; id 5
     db $80 ; end
 
-; E-0157 (derived: list for entry $75 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $75 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps75::
-Data_011_74CD:: ; address name
-    db $FD, $10, $50, $40, $74, $01, $10, $05, $04 ; id 0
-    db $FD, $01, $40, $50, $74, $00, $11, $04, $05 ; id 1
-    db $FD, $11, $30, $20, $74, $01, $11, $03, $02 ; id 2
-    db $FD, $01, $40, $20, $76, $00, $11, $04, $02 ; id 3
+    db $fd, $10, $50, $40, $74, $01, $10, $05, $04 ; id 0
+    db $fd, $01, $40, $50, $74, $00, $11, $04, $05 ; id 1
+    db $fd, $11, $30, $20, $74, $01, $11, $03, $02 ; id 2
+    db $fd, $01, $40, $20, $76, $00, $11, $04, $02 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $76 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $76 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps76::
-Data_011_74F2:: ; address name
-    db $FD, $01, $40, $20, $75, $00, $11, $04, $02 ; id 0
+    db $fd, $01, $40, $20, $75, $00, $11, $04, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $77 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $77 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps77::
-Data_011_74FC:: ; address name
-    db $FE, $00, $02, $01, $70, $0A, $14, $04, $04 ; id 0
-    db $FE, $00, $00, $01, $70, $09, $14, $04, $04 ; id 1
+    db $fe, $00, $02, $01, $70, $0a, $14, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $70, $09, $14, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $78 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $78 of MapWarpTable; 3 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps78::
-Data_011_750F:: ; address name
-    db $FE, $00, $00, $02, $70, $05, $16, $04, $04 ; id 0
-    db $FE, $00, $02, $01, $70, $05, $16, $04, $04 ; id 1
-    db $FD, $11, $60, $30, $79, $00, $11, $06, $03 ; id 2
+    db $fe, $00, $00, $02, $70, $05, $16, $04, $04 ; id 0
+    db $fe, $00, $02, $01, $70, $05, $16, $04, $04 ; id 1
+    db $fd, $11, $60, $30, $79, $00, $11, $06, $03 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $79 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $79 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps79::
-Data_011_752B:: ; address name
-    db $FD, $01, $60, $30, $78, $01, $11, $06, $03 ; id 0
+    db $fd, $01, $60, $30, $78, $01, $11, $06, $03 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $7A of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7A of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps7A::
-Data_011_7535:: ; address name
-    db $FE, $00, $00, $02, $70, $00, $14, $04, $04 ; id 0
+    db $fe, $00, $00, $02, $70, $00, $14, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $7B of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7B of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps7B::
-Data_011_753F:: ; address name
-    db $FD, $00, $40, $40, $70, $03, $16, $04, $04 ; id 0
-    db $FD, $02, $40, $40, $70, $03, $17, $04, $04 ; id 1
+    db $fd, $00, $40, $40, $70, $03, $16, $04, $04 ; id 0
+    db $fd, $02, $40, $40, $70, $03, $17, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $7C of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7C of MapWarpTable; 4 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps7C::
-Data_011_7552:: ; address name
-    db $FE, $00, $01, $02, $70, $05, $19, $04, $04 ; id 0
-    db $FD, $11, $20, $40, $7D, $00, $30, $02, $08 ; id 1
-    db $FD, $00, $40, $40, $7F, $00, $31, $04, $08 ; id 2
-    db $FD, $00, $50, $40, $7F, $00, $31, $05, $08 ; id 3
+    db $fe, $00, $01, $02, $70, $05, $19, $04, $04 ; id 0
+    db $fd, $11, $20, $40, $7d, $00, $30, $02, $08 ; id 1
+    db $fd, $00, $40, $40, $7f, $00, $31, $04, $08 ; id 2
+    db $fd, $00, $50, $40, $7f, $00, $31, $05, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $7D of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7D of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps7D::
-Data_011_7577:: ; address name
-    db $FE, $00, $00, $01, $7C, $81, $11, $02, $04 ; id 0
-    db $FD, $00, $10, $60, $7E, $00, $10, $01, $06 ; id 1
+    db $fe, $00, $00, $01, $7c, $81, $11, $02, $04 ; id 0
+    db $fd, $00, $10, $60, $7e, $00, $10, $01, $06 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $7E of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7E of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps7E::
-Data_011_758A:: ; address name
-    db $FD, $00, $10, $60, $7D, $00, $10, $01, $06 ; id 0
+    db $fd, $00, $10, $60, $7d, $00, $10, $01, $06 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $7F of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $7F of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps7F::
-Data_011_7594:: ; address name
-    db $FF, $00, $00, $02, $7C, $80, $10, $00, $C0 ; id 0
+    db $ff, $00, $00, $02, $7c, $80, $10, $00, $c0 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $80 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $80 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps80::
-Data_011_759E:: ; address name
-    db $FE, $00, $00, $01, $70, $08, $19, $04, $04 ; id 0
-    db $FE, $00, $02, $01, $70, $09, $19, $04, $04 ; id 1
+    db $fe, $00, $00, $01, $70, $08, $19, $04, $04 ; id 0
+    db $fe, $00, $02, $01, $70, $09, $19, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $81 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $81 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps81::
-Data_011_75B1:: ; address name
-    db $FD, $00, $40, $40, $70, $05, $1B, $04, $04 ; id 0
-    db $FD, $00, $40, $20, $82, $01, $32, $04, $08 ; id 1
+    db $fd, $00, $40, $40, $70, $05, $1b, $04, $04 ; id 0
+    db $fd, $00, $40, $20, $82, $01, $32, $04, $08 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $82 of MapWarpTable; 9 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $82 of MapWarpTable; 9 record(s), then $80 (E-0157)
 MapWarps82::
-Data_011_75C4:: ; address name
-    db $FE, $00, $01, $03, $81, $00, $10, $04, $03 ; id 0
-    db $FD, $00, $60, $60, $83, $00, $10, $06, $06 ; id 1
-    db $FD, $10, $30, $60, $83, $01, $10, $03, $06 ; id 2
-    db $FD, $20, $40, $60, $83, $02, $10, $04, $06 ; id 3
-    db $FD, $01, $70, $20, $83, $00, $11, $07, $02 ; id 4
-    db $FD, $01, $40, $60, $83, $00, $11, $04, $06 ; id 5
-    db $FD, $21, $20, $20, $83, $02, $11, $02, $02 ; id 6
-    db $FD, $22, $70, $60, $83, $02, $12, $07, $06 ; id 7
-    db $FD, $02, $20, $50, $84, $00, $10, $02, $05 ; id 8
+    db $fe, $00, $01, $03, $81, $00, $10, $04, $03 ; id 0
+    db $fd, $00, $60, $60, $83, $00, $10, $06, $06 ; id 1
+    db $fd, $10, $30, $60, $83, $01, $10, $03, $06 ; id 2
+    db $fd, $20, $40, $60, $83, $02, $10, $04, $06 ; id 3
+    db $fd, $01, $70, $20, $83, $00, $11, $07, $02 ; id 4
+    db $fd, $01, $40, $60, $83, $00, $11, $04, $06 ; id 5
+    db $fd, $21, $20, $20, $83, $02, $11, $02, $02 ; id 6
+    db $fd, $22, $70, $60, $83, $02, $12, $07, $06 ; id 7
+    db $fd, $02, $20, $50, $84, $00, $10, $02, $05 ; id 8
     db $80 ; end
 
-; E-0157 (derived: list for entry $83 of MapWarpTable; 7 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $83 of MapWarpTable; 7 record(s), then $80 (E-0157)
 MapWarps83::
-Data_011_7616:: ; address name
-    db $FD, $00, $60, $60, $82, $00, $10, $06, $06 ; id 0
-    db $FD, $10, $30, $60, $82, $01, $10, $03, $06 ; id 1
-    db $FD, $20, $40, $60, $82, $02, $10, $04, $06 ; id 2
-    db $FD, $01, $70, $20, $82, $00, $11, $07, $02 ; id 3
-    db $FD, $01, $40, $60, $82, $00, $11, $04, $06 ; id 4
-    db $FD, $21, $20, $20, $82, $02, $11, $02, $02 ; id 5
-    db $FD, $22, $70, $60, $82, $02, $12, $07, $06 ; id 6
+    db $fd, $00, $60, $60, $82, $00, $10, $06, $06 ; id 0
+    db $fd, $10, $30, $60, $82, $01, $10, $03, $06 ; id 1
+    db $fd, $20, $40, $60, $82, $02, $10, $04, $06 ; id 2
+    db $fd, $01, $70, $20, $82, $00, $11, $07, $02 ; id 3
+    db $fd, $01, $40, $60, $82, $00, $11, $04, $06 ; id 4
+    db $fd, $21, $20, $20, $82, $02, $11, $02, $02 ; id 5
+    db $fd, $22, $70, $60, $82, $02, $12, $07, $06 ; id 6
     db $80 ; end
 
-; E-0157 (derived: list for entry $84 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $84 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps84::
-Data_011_7656:: ; address name
-    db $FD, $00, $20, $50, $82, $00, $12, $02, $05 ; id 0
+    db $fd, $00, $20, $50, $82, $00, $12, $02, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $85 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $85 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps85::
-Data_011_7660:: ; address name
-    db $FE, $00, $00, $02, $70, $01, $1B, $04, $04 ; id 0
-    db $FD, $00, $20, $30, $86, $00, $10, $02, $03 ; id 1
-    db $FD, $10, $80, $50, $86, $01, $10, $08, $05 ; id 2
+    db $fe, $00, $00, $02, $70, $01, $1b, $04, $04 ; id 0
+    db $fd, $00, $20, $30, $86, $00, $10, $02, $03 ; id 1
+    db $fd, $10, $80, $50, $86, $01, $10, $08, $05 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $86 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $86 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps86::
-Data_011_767C:: ; address name
-    db $FD, $00, $20, $30, $85, $00, $10, $02, $03 ; id 0
-    db $FD, $10, $80, $50, $85, $01, $10, $08, $05 ; id 1
-    db $FD, $10, $60, $20, $87, $01, $10, $06, $02 ; id 2
-    db $FD, $10, $80, $30, $87, $01, $10, $08, $03 ; id 3
+    db $fd, $00, $20, $30, $85, $00, $10, $02, $03 ; id 0
+    db $fd, $10, $80, $50, $85, $01, $10, $08, $05 ; id 1
+    db $fd, $10, $60, $20, $87, $01, $10, $06, $02 ; id 2
+    db $fd, $10, $80, $30, $87, $01, $10, $08, $03 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $87 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $87 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps87::
-Data_011_76A1:: ; address name
-    db $FD, $10, $60, $20, $86, $01, $10, $06, $02 ; id 0
-    db $FD, $10, $80, $30, $86, $01, $10, $08, $03 ; id 1
-    db $FD, $10, $80, $50, $88, $01, $10, $08, $05 ; id 2
-    db $FD, $01, $20, $60, $88, $00, $11, $02, $06 ; id 3
+    db $fd, $10, $60, $20, $86, $01, $10, $06, $02 ; id 0
+    db $fd, $10, $80, $30, $86, $01, $10, $08, $03 ; id 1
+    db $fd, $10, $80, $50, $88, $01, $10, $08, $05 ; id 2
+    db $fd, $01, $20, $60, $88, $00, $11, $02, $06 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $88 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $88 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps88::
-Data_011_76C6:: ; address name
-    db $FD, $10, $80, $50, $87, $01, $10, $08, $05 ; id 0
-    db $FD, $01, $20, $60, $87, $00, $11, $02, $06 ; id 1
+    db $fd, $10, $80, $50, $87, $01, $10, $08, $05 ; id 0
+    db $fd, $01, $20, $60, $87, $00, $11, $02, $06 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $89 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $89 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps89::
-Data_011_76D9:: ; address name
-    db $FE, $00, $00, $02, $71, $01, $10, $04, $00 ; id 0
-    db $FD, $01, $50, $50, $73, $00, $31, $05, $08 ; id 1
+    db $fe, $00, $00, $02, $71, $01, $10, $04, $00 ; id 0
+    db $fd, $01, $50, $50, $73, $00, $31, $05, $08 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $8A of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8A of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps8A::
-Data_011_76EC:: ; address name
-    db $FE, $00, $00, $01, $70, $0B, $1A, $04, $04 ; id 0
-    db $FD, $00, $40, $40, $8B, $01, $33, $04, $08 ; id 1
-    db $FD, $00, $50, $40, $8B, $01, $33, $05, $08 ; id 2
+    db $fe, $00, $00, $01, $70, $0b, $1a, $04, $04 ; id 0
+    db $fd, $00, $40, $40, $8b, $01, $33, $04, $08 ; id 1
+    db $fd, $00, $50, $40, $8b, $01, $33, $05, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $8B of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8B of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarps8B::
-Data_011_7708:: ; address name
-    db $FF, $00, $01, $04, $8A, $80, $10, $00, $C0 ; id 0
-    db $FD, $01, $20, $60, $8C, $00, $11, $02, $06 ; id 1
-    db $FD, $21, $70, $60, $8C, $02, $11, $07, $06 ; id 2
-    db $FD, $21, $60, $10, $8D, $00, $30, $04, $08 ; id 3
+    db $ff, $00, $01, $04, $8a, $80, $10, $00, $c0 ; id 0
+    db $fd, $01, $20, $60, $8c, $00, $11, $02, $06 ; id 1
+    db $fd, $21, $70, $60, $8c, $02, $11, $07, $06 ; id 2
+    db $fd, $21, $60, $10, $8d, $00, $30, $04, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $8C of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8C of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps8C::
-Data_011_772D:: ; address name
-    db $FD, $01, $20, $60, $8B, $00, $11, $02, $06 ; id 0
-    db $FD, $21, $70, $60, $8B, $02, $11, $07, $06 ; id 1
+    db $fd, $01, $20, $60, $8b, $00, $11, $02, $06 ; id 0
+    db $fd, $21, $70, $60, $8b, $02, $11, $07, $06 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $8D of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8D of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps8D::
-Data_011_7740:: ; address name
-    db $FE, $00, $00, $01, $8B, $82, $11, $06, $01 ; id 0
-    db $FD, $00, $40, $10, $8E, $02, $32, $04, $08 ; id 1
-    db $FD, $00, $50, $10, $8E, $02, $32, $05, $08 ; id 2
+    db $fe, $00, $00, $01, $8b, $82, $11, $06, $01 ; id 0
+    db $fd, $00, $40, $10, $8e, $02, $32, $04, $08 ; id 1
+    db $fd, $00, $50, $10, $8e, $02, $32, $05, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $8E of MapWarpTable; 5 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8E of MapWarpTable; 5 record(s), then $80 (E-0157)
 MapWarps8E::
-Data_011_775C:: ; address name
-    db $FF, $00, $02, $03, $8D, $80, $10, $00, $90 ; id 0
-    db $FD, $00, $10, $10, $8F, $00, $10, $01, $07 ; id 1
-    db $FD, $10, $50, $60, $90, $01, $11, $05, $06 ; id 2
-    db $FD, $10, $40, $10, $91, $00, $30, $04, $08 ; id 3
-    db $FD, $10, $50, $10, $91, $00, $30, $05, $08 ; id 4
+    db $ff, $00, $02, $03, $8d, $80, $10, $00, $90 ; id 0
+    db $fd, $00, $10, $10, $8f, $00, $10, $01, $07 ; id 1
+    db $fd, $10, $50, $60, $90, $01, $11, $05, $06 ; id 2
+    db $fd, $10, $40, $10, $91, $00, $30, $04, $08 ; id 3
+    db $fd, $10, $50, $10, $91, $00, $30, $05, $08 ; id 4
     db $80 ; end
 
-; E-0157 (derived: list for entry $8F of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $8F of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps8F::
-Data_011_778A:: ; address name
-    db $FD, $00, $10, $70, $8E, $00, $10, $01, $01 ; id 0
-    db $FD, $00, $10, $00, $90, $00, $31, $01, $08 ; id 1
-    db $FD, $00, $20, $00, $90, $00, $31, $02, $08 ; id 2
+    db $fd, $00, $10, $70, $8e, $00, $10, $01, $01 ; id 0
+    db $fd, $00, $10, $00, $90, $00, $31, $01, $08 ; id 1
+    db $fd, $00, $20, $00, $90, $00, $31, $02, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $90 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $90 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps90::
-Data_011_77A6:: ; address name
-    db $FF, $00, $00, $02, $8F, $80, $10, $00, $80 ; id 0
-    db $FD, $11, $50, $60, $8E, $01, $10, $05, $06 ; id 1
+    db $ff, $00, $00, $02, $8f, $80, $10, $00, $80 ; id 0
+    db $fd, $11, $50, $60, $8e, $01, $10, $05, $06 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $91 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $91 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps91::
-Data_011_77B9:: ; address name
-    db $FF, $00, $00, $01, $8E, $81, $10, $00, $90 ; id 0
+    db $ff, $00, $00, $01, $8e, $81, $10, $00, $90 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $92 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $92 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps92::
-Data_011_77C3:: ; address name
-    db $FE, $00, $00, $01, $70, $05, $12, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $70, $05, $12, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $93 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $93 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps93::
-Data_011_77CD:: ; address name
-    db $FE, $00, $00, $01, $70, $04, $11, $04, $04 ; id 0
-    db $FD, $00, $40, $20, $94, $00, $32, $04, $08 ; id 1
-    db $FD, $00, $50, $20, $94, $00, $32, $05, $08 ; id 2
+    db $fe, $00, $00, $01, $70, $04, $11, $04, $04 ; id 0
+    db $fd, $00, $40, $20, $94, $00, $32, $04, $08 ; id 1
+    db $fd, $00, $50, $20, $94, $00, $32, $05, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $94 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $94 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps94::
-Data_011_77E9:: ; address name
-    db $FF, $00, $00, $03, $93, $80, $10, $00, $A0 ; id 0
-    db $FD, $10, $40, $40, $95, $00, $10, $04, $04 ; id 1
+    db $ff, $00, $00, $03, $93, $80, $10, $00, $a0 ; id 0
+    db $fd, $10, $40, $40, $95, $00, $10, $04, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $95 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $95 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps95::
-Data_011_77FC:: ; address name
-    db $FD, $00, $40, $40, $94, $01, $10, $04, $04 ; id 0
-    db $FD, $01, $40, $40, $96, $00, $11, $04, $04 ; id 1
-    db $FD, $11, $40, $40, $96, $01, $11, $04, $04 ; id 2
+    db $fd, $00, $40, $40, $94, $01, $10, $04, $04 ; id 0
+    db $fd, $01, $40, $40, $96, $00, $11, $04, $04 ; id 1
+    db $fd, $11, $40, $40, $96, $01, $11, $04, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $96 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $96 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarps96::
-Data_011_7818:: ; address name
-    db $FD, $01, $40, $40, $95, $00, $11, $04, $04 ; id 0
-    db $FD, $11, $40, $40, $95, $01, $11, $04, $04 ; id 1
-    db $FD, $01, $10, $70, $97, $00, $10, $01, $07 ; id 2
+    db $fd, $01, $40, $40, $95, $00, $11, $04, $04 ; id 0
+    db $fd, $11, $40, $40, $95, $01, $11, $04, $04 ; id 1
+    db $fd, $01, $10, $70, $97, $00, $10, $01, $07 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $97 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $97 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps97::
-Data_011_7834:: ; address name
-    db $FD, $00, $10, $70, $96, $00, $11, $01, $07 ; id 0
-    db $FD, $00, $80, $70, $98, $00, $10, $08, $07 ; id 1
+    db $fd, $00, $10, $70, $96, $00, $11, $01, $07 ; id 0
+    db $fd, $00, $80, $70, $98, $00, $10, $08, $07 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $98 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $98 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps98::
-Data_011_7847:: ; address name
-    db $FD, $00, $80, $70, $97, $00, $10, $08, $07 ; id 0
-    db $FD, $00, $80, $10, $99, $00, $10, $08, $01 ; id 1
+    db $fd, $00, $80, $70, $97, $00, $10, $08, $07 ; id 0
+    db $fd, $00, $80, $10, $99, $00, $10, $08, $01 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $99 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $99 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps99::
-Data_011_785A:: ; address name
-    db $FD, $00, $80, $10, $98, $00, $10, $08, $01 ; id 0
-    db $FD, $00, $10, $10, $9A, $00, $10, $01, $01 ; id 1
+    db $fd, $00, $80, $10, $98, $00, $10, $08, $01 ; id 0
+    db $fd, $00, $10, $10, $9a, $00, $10, $01, $01 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $9A of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $9A of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarps9A::
-Data_011_786D:: ; address name
-    db $FD, $00, $10, $10, $99, $00, $10, $01, $01 ; id 0
-    db $FD, $00, $10, $70, $9B, $00, $12, $01, $07 ; id 1
+    db $fd, $00, $10, $10, $99, $00, $10, $01, $01 ; id 0
+    db $fd, $00, $10, $70, $9b, $00, $12, $01, $07 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $9B of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $9B of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarps9B::
-Data_011_7880:: ; address name
-    db $FD, $02, $10, $70, $9A, $00, $10, $01, $07 ; id 0
+    db $fd, $02, $10, $70, $9a, $00, $10, $01, $07 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $9D of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $9D of MapWarpTable; 0 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarps9D::
     db $80 ; end
 
-; E-0157 (derived: list for entry $A0 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A0 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsA0::
-Data_011_788B:: ; address name
-    db $FD, $12, $40, $40, $A1, $00, $32, $04, $08 ; id 0
+    db $fd, $12, $40, $40, $a1, $00, $32, $04, $08 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $A1 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A1 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsA1::
-Data_011_7895:: ; address name
-    db $FE, $00, $00, $03, $A0, $01, $12, $04, $04 ; id 0
-    db $FF, $00, $00, $FF, $A2, $01, $32, $00, $80 ; id 1
+    db $fe, $00, $00, $03, $a0, $01, $12, $04, $04 ; id 0
+    db $ff, $00, $00, $ff, $a2, $01, $32, $00, $80 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $A2 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A2 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarpsA2::
-Data_011_78A8:: ; address name
-    db $FF, $00, $01, $03, $A1, $00, $10, $00, $80 ; id 0
-    db $FD, $10, $40, $10, $A3, $00, $31, $04, $08 ; id 1
-    db $FD, $10, $50, $10, $A3, $00, $31, $05, $08 ; id 2
+    db $ff, $00, $01, $03, $a1, $00, $10, $00, $80 ; id 0
+    db $fd, $10, $40, $10, $a3, $00, $31, $04, $08 ; id 1
+    db $fd, $10, $50, $10, $a3, $00, $31, $05, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $A3 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A3 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsA3::
-Data_011_78C4:: ; address name
-    db $FF, $00, $00, $02, $A2, $81, $10, $00, $90 ; id 0
+    db $ff, $00, $00, $02, $a2, $81, $10, $00, $90 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $A4 of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A4 of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarpsA4::
     db $80 ; end
 
-; E-0157 (derived: list for entry $A8 of MapWarpTable; 5 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A8 of MapWarpTable; 5 record(s), then $80 (E-0157)
 MapWarpsA8::
-Data_011_78CF:: ; address name
-    db $FD, $24, $40, $40, $A9, $00, $31, $04, $08 ; id 0
-    db $FD, $24, $50, $40, $A9, $00, $31, $04, $08 ; id 1
-    db $FD, $11, $40, $40, $AA, $00, $31, $04, $08 ; id 2
-    db $FD, $43, $40, $40, $AB, $00, $30, $04, $08 ; id 3
-    db $FD, $51, $40, $40, $AD, $01, $33, $04, $08 ; id 4
+    db $fd, $24, $40, $40, $a9, $00, $31, $04, $08 ; id 0
+    db $fd, $24, $50, $40, $a9, $00, $31, $04, $08 ; id 1
+    db $fd, $11, $40, $40, $aa, $00, $31, $04, $08 ; id 2
+    db $fd, $43, $40, $40, $ab, $00, $30, $04, $08 ; id 3
+    db $fd, $51, $40, $40, $ad, $01, $33, $04, $08 ; id 4
     db $80 ; end
 
-; E-0157 (derived: list for entry $A9 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $A9 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarpsA9::
-Data_011_78FD:: ; address name
-    db $FE, $01, $00, $02, $A8, $02, $14, $04, $04 ; id 0
-    db $FE, $10, $02, $00, $A8, $02, $14, $04, $04 ; id 1
-    db $FE, $11, $01, $02, $A8, $02, $14, $04, $04 ; id 2
+    db $fe, $01, $00, $02, $a8, $02, $14, $04, $04 ; id 0
+    db $fe, $10, $02, $00, $a8, $02, $14, $04, $04 ; id 1
+    db $fe, $11, $01, $02, $a8, $02, $14, $04, $04 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $AA of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AA of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsAA::
-Data_011_7919:: ; address name
-    db $FE, $01, $00, $02, $A8, $01, $11, $04, $04 ; id 0
+    db $fe, $01, $00, $02, $a8, $01, $11, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $AB of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AB of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsAB::
-Data_011_7923:: ; address name
-    db $FE, $00, $00, $01, $A8, $04, $13, $04, $04 ; id 0
+    db $fe, $00, $00, $01, $a8, $04, $13, $04, $04 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $AC of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AC of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsAC::
-Data_011_792D:: ; address name
-    db $FE, $00, $00, $01, $AE, $01, $00, $04, $00 ; id 0
+    db $fe, $00, $00, $01, $ae, $01, $00, $04, $00 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $AD of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AD of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsAD::
-Data_011_7937:: ; address name
-    db $FE, $00, $01, $04, $A8, $05, $11, $04, $04 ; id 0
-    db $FF, $00, $02, $FF, $AE, $02, $03, $00, $80 ; id 1
+    db $fe, $00, $01, $04, $a8, $05, $11, $04, $04 ; id 0
+    db $ff, $00, $02, $ff, $ae, $02, $03, $00, $80 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $AE of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AE of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsAE::
-Data_011_794A:: ; address name
-    db $FE, $00, $01, $FF, $AC, $00, $30, $04, $08 ; id 0
-    db $FF, $00, $02, $04, $AD, $02, $00, $00, $80 ; id 1
+    db $fe, $00, $01, $ff, $ac, $00, $30, $04, $08 ; id 0
+    db $ff, $00, $02, $04, $ad, $02, $00, $00, $80 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $AF of MapWarpTable; 0 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $AF of MapWarpTable; 0 record(s), then $80 (E-0157)
 MapWarpsAF::
     db $80 ; end
 
-; E-0157 (derived: list for entry $B0 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B0 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsB0::
-Data_011_795E:: ; address name
-    db $FD, $10, $40, $40, $B1, $00, $30, $04, $08 ; id 0
+    db $fd, $10, $40, $40, $b1, $00, $30, $04, $08 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $B1 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B1 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsB1::
-Data_011_7968:: ; address name
-    db $FE, $00, $00, $01, $B0, $01, $10, $04, $04 ; id 0
-    db $FD, $00, $10, $30, $B3, $00, $11, $01, $03 ; id 1
+    db $fe, $00, $00, $01, $b0, $01, $10, $04, $04 ; id 0
+    db $fd, $00, $10, $30, $b3, $00, $11, $01, $03 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $B3 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B3 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsB3::
-Data_011_797B:: ; address name
-    db $FD, $01, $10, $30, $B1, $00, $10, $01, $03 ; id 0
-    db $FD, $11, $50, $40, $B4, $01, $11, $05, $04 ; id 1
+    db $fd, $01, $10, $30, $b1, $00, $10, $01, $03 ; id 0
+    db $fd, $11, $50, $40, $b4, $01, $11, $05, $04 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $B4 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B4 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsB4::
-Data_011_798E:: ; address name
-    db $FD, $11, $50, $40, $B3, $01, $11, $05, $04 ; id 0
-    db $FD, $01, $20, $50, $B5, $00, $11, $02, $05 ; id 1
+    db $fd, $11, $50, $40, $b3, $01, $11, $05, $04 ; id 0
+    db $fd, $01, $20, $50, $b5, $00, $11, $02, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $B5 of MapWarpTable; 3 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B5 of MapWarpTable; 3 record(s), then $80 (E-0157)
 MapWarpsB5::
-Data_011_79A1:: ; address name
-    db $FD, $01, $20, $50, $B4, $00, $11, $02, $05 ; id 0
-    db $FD, $11, $40, $00, $B6, $00, $30, $04, $08 ; id 1
-    db $FD, $11, $50, $00, $B6, $00, $30, $04, $08 ; id 2
+    db $fd, $01, $20, $50, $b4, $00, $11, $02, $05 ; id 0
+    db $fd, $11, $40, $00, $b6, $00, $30, $04, $08 ; id 1
+    db $fd, $11, $50, $00, $b6, $00, $30, $04, $08 ; id 2
     db $80 ; end
 
-; E-0157 (derived: list for entry $B6 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B6 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsB6::
-Data_011_79BD:: ; address name
-    db $FF, $00, $00, $01, $B5, $81, $11, $00, $80 ; id 0
+    db $ff, $00, $00, $01, $b5, $81, $11, $00, $80 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $B8 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B8 of MapWarpTable; 4 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsB8::
-Data_011_79C7:: ; address name
-    db $FD, $43, $40, $40, $B9, $00, $31, $04, $08 ; id 0
-    db $FD, $43, $50, $40, $B9, $00, $31, $04, $08 ; id 1
-    db $FD, $11, $30, $50, $BA, $00, $31, $03, $08 ; id 2
-    db $FD, $40, $40, $40, $BB, $00, $31, $04, $08 ; id 3
+    db $fd, $43, $40, $40, $b9, $00, $31, $04, $08 ; id 0
+    db $fd, $43, $50, $40, $b9, $00, $31, $04, $08 ; id 1
+    db $fd, $11, $30, $50, $ba, $00, $31, $03, $08 ; id 2
+    db $fd, $40, $40, $40, $bb, $00, $31, $04, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $B9 of MapWarpTable; 4 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $B9 of MapWarpTable; 4 record(s), then $80 (E-0157)
 MapWarpsB9::
-Data_011_79EC:: ; address name
-    db $FE, $00, $00, $FF, $B8, $04, $13, $04, $04 ; id 0
-    db $FE, $00, $00, $02, $B8, $04, $13, $04, $04 ; id 1
-    db $FE, $00, $01, $02, $B8, $04, $13, $04, $04 ; id 2
-    db $FD, $11, $50, $20, $BC, $00, $30, $05, $08 ; id 3
+    db $fe, $00, $00, $ff, $b8, $04, $13, $04, $04 ; id 0
+    db $fe, $00, $00, $02, $b8, $04, $13, $04, $04 ; id 1
+    db $fe, $00, $01, $02, $b8, $04, $13, $04, $04 ; id 2
+    db $fd, $11, $50, $20, $bc, $00, $30, $05, $08 ; id 3
     db $80 ; end
 
-; E-0157 (derived: list for entry $BA of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BA of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsBA::
-Data_011_7A11:: ; address name
-    db $FE, $00, $00, $02, $B8, $01, $11, $03, $05 ; id 0
+    db $fe, $00, $00, $02, $b8, $01, $11, $03, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $BB of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BB of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsBB::
-Data_011_7A1B:: ; address name
-    db $FE, $01, $00, $02, $B8, $04, $10, $04, $04 ; id 0
-    db $FD, $00, $40, $00, $BE, $00, $00, $04, $08 ; id 1
+    db $fe, $01, $00, $02, $b8, $04, $10, $04, $04 ; id 0
+    db $fd, $00, $40, $00, $be, $00, $00, $04, $08 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $BC of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BC of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsBC::
-Data_011_7A2E:: ; address name
-    db $FE, $00, $00, $01, $B9, $81, $11, $05, $02 ; id 0
+    db $fe, $00, $00, $01, $b9, $81, $11, $05, $02 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $BD of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BD of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsBD::
-Data_011_7A38:: ; address name
-    db $FD, $00, $50, $70, $C4, $00, $10, $05, $07 ; id 0
+    db $fd, $00, $50, $70, $c4, $00, $10, $05, $07 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $BE of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BE of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsBE::
-Data_011_7A42:: ; address name
-    db $FE, $00, $00, $01, $BB, $80, $00, $04, $00 ; id 0
-    db $FD, $00, $40, $30, $BF, $00, $10, $04, $03 ; id 1
+    db $fe, $00, $00, $01, $bb, $80, $00, $04, $00 ; id 0
+    db $fd, $00, $40, $30, $bf, $00, $10, $04, $03 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $BF of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $BF of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsBF::
-Data_011_7A55:: ; address name
-    db $FD, $00, $40, $30, $BE, $00, $10, $04, $03 ; id 0
-    db $FD, $11, $50, $50, $C0, $01, $11, $05, $05 ; id 1
+    db $fd, $00, $40, $30, $be, $00, $10, $04, $03 ; id 0
+    db $fd, $11, $50, $50, $c0, $01, $11, $05, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C0 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C0 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsC0::
-Data_011_7A68:: ; address name
-    db $FD, $11, $50, $50, $BF, $01, $11, $05, $05 ; id 0
-    db $FD, $10, $70, $20, $C1, $01, $10, $07, $02 ; id 1
+    db $fd, $11, $50, $50, $bf, $01, $11, $05, $05 ; id 0
+    db $fd, $10, $70, $20, $c1, $01, $10, $07, $02 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C1 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C1 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsC1::
-Data_011_7A7B:: ; address name
-    db $FD, $10, $70, $20, $C0, $01, $10, $07, $02 ; id 0
-    db $FD, $00, $70, $20, $C2, $00, $10, $07, $02 ; id 1
+    db $fd, $10, $70, $20, $c0, $01, $10, $07, $02 ; id 0
+    db $fd, $00, $70, $20, $c2, $00, $10, $07, $02 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C2 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C2 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsC2::
-Data_011_7A8E:: ; address name
-    db $FD, $00, $70, $20, $C1, $00, $10, $07, $02 ; id 0
-    db $FD, $10, $40, $50, $C3, $01, $10, $04, $05 ; id 1
+    db $fd, $00, $70, $20, $c1, $00, $10, $07, $02 ; id 0
+    db $fd, $10, $40, $50, $c3, $01, $10, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C3 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C3 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsC3::
-Data_011_7AA1:: ; address name
-    db $FD, $10, $40, $50, $C2, $01, $10, $04, $05 ; id 0
-    db $FD, $00, $70, $20, $C4, $00, $10, $07, $02 ; id 1
+    db $fd, $10, $40, $50, $c2, $01, $10, $04, $05 ; id 0
+    db $fd, $00, $70, $20, $c4, $00, $10, $07, $02 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C4 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C4 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsC4::
-Data_011_7AB4:: ; address name
-    db $FD, $00, $70, $20, $C3, $00, $10, $07, $02 ; id 0
-    db $FD, $00, $50, $70, $BD, $00, $10, $05, $07 ; id 1
+    db $fd, $00, $70, $20, $c3, $00, $10, $07, $02 ; id 0
+    db $fd, $00, $50, $70, $bd, $00, $10, $05, $07 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $C8 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C8 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsC8::
-Data_011_7AC7:: ; address name
-    db $FD, $00, $40, $40, $C9, $00, $31, $04, $08 ; id 0
+    db $fd, $00, $40, $40, $c9, $00, $31, $04, $08 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $C9 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $C9 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsC9::
-Data_011_7AD1:: ; address name
-    db $FE, $00, $00, $02, $C8, $00, $10, $04, $04 ; id 0
-    db $FD, $00, $40, $50, $CA, $00, $11, $04, $05 ; id 1
+    db $fe, $00, $00, $02, $c8, $00, $10, $04, $04 ; id 0
+    db $fd, $00, $40, $50, $ca, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $CA of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $CA of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsCA::
-Data_011_7AE4:: ; address name
-    db $FD, $01, $40, $50, $C9, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $CB, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $c9, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $cb, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $CB of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $CB of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsCB::
-Data_011_7AF7:: ; address name
-    db $FD, $01, $40, $50, $CA, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $CC, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $ca, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $cc, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $CC of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $CC of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsCC::
-Data_011_7B0A:: ; address name
-    db $FD, $01, $40, $50, $CB, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $CD, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $cb, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $cd, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $CD of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $CD of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsCD::
-Data_011_7B1D:: ; address name
-    db $FD, $01, $40, $50, $CC, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $CE, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $cc, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $ce, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $CE of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $CE of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsCE::
-Data_011_7B30:: ; address name
-    db $FD, $01, $40, $50, $CD, $00, $10, $04, $05 ; id 0
+    db $fd, $01, $40, $50, $cd, $00, $10, $04, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $D1 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D1 of MapWarpTable; 1 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsD1::
-Data_011_7B3A:: ; address name
-    db $FD, $01, $40, $40, $D2, $00, $31, $04, $08 ; id 0
+    db $fd, $01, $40, $40, $d2, $00, $31, $04, $08 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $D2 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D2 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsD2::
-Data_011_7B44:: ; address name
-    db $FE, $00, $00, $02, $D1, $00, $11, $04, $04 ; id 0
-    db $FD, $00, $40, $50, $D3, $00, $11, $04, $05 ; id 1
+    db $fe, $00, $00, $02, $d1, $00, $11, $04, $04 ; id 0
+    db $fd, $00, $40, $50, $d3, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $D3 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D3 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsD3::
-Data_011_7B57:: ; address name
-    db $FD, $01, $40, $50, $D2, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $D4, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $d2, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $d4, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $D4 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D4 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsD4::
-Data_011_7B6A:: ; address name
-    db $FD, $01, $40, $50, $D3, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $D5, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $d3, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $d5, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $D5 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D5 of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsD5::
-Data_011_7B7D:: ; address name
-    db $FD, $01, $40, $50, $D4, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $D6, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $d4, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $d6, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $D6 of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D6 of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsD6::
-Data_011_7B90:: ; address name
-    db $FD, $01, $40, $50, $D5, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $D7, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $d5, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $d7, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $D7 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $D7 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsD7::
-Data_011_7BA3:: ; address name
-    db $FD, $01, $40, $50, $D6, $00, $10, $04, $05 ; id 0
+    db $fd, $01, $40, $50, $d6, $00, $10, $04, $05 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $DA of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DA of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsDA::
-Data_011_7BAD:: ; address name
-    db $FD, $10, $40, $40, $DB, $00, $31, $04, $08 ; id 0
+    db $fd, $10, $40, $40, $db, $00, $31, $04, $08 ; id 0
     db $80 ; end
 
-; E-0157 (derived: list for entry $DB of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DB of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsDB::
-Data_011_7BB7:: ; address name
-    db $FE, $00, $00, $02, $DA, $01, $10, $04, $04 ; id 0
-    db $FD, $00, $40, $50, $DC, $00, $11, $04, $05 ; id 1
+    db $fe, $00, $00, $02, $da, $01, $10, $04, $04 ; id 0
+    db $fd, $00, $40, $50, $dc, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $DC of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DC of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsDC::
-Data_011_7BCA:: ; address name
-    db $FD, $01, $40, $50, $DB, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $DD, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $db, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $dd, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $DD of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DD of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsDD::
-Data_011_7BDD:: ; address name
-    db $FD, $01, $40, $50, $DC, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $DE, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $dc, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $de, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $DE of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DE of MapWarpTable; 2 record(s), then $80 (E-0157)
 MapWarpsDE::
-Data_011_7BF0:: ; address name
-    db $FD, $01, $40, $50, $DD, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $DF, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $dd, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $df, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $DF of MapWarpTable; 2 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $DF of MapWarpTable; 2 record(s), then $80 (E-0157)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y;
+; then destination map, screen and position bytes
 MapWarpsDF::
-Data_011_7C03:: ; address name
-    db $FD, $01, $40, $50, $DE, $00, $10, $04, $05 ; id 0
-    db $FD, $00, $40, $50, $E0, $00, $11, $04, $05 ; id 1
+    db $fd, $01, $40, $50, $de, $00, $10, $04, $05 ; id 0
+    db $fd, $00, $40, $50, $e0, $00, $11, $04, $05 ; id 1
     db $80 ; end
 
-; E-0157 (derived: list for entry $E0 of MapWarpTable; 1 record(s), then $80)
-; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+; list for entry $E0 of MapWarpTable; 1 record(s), then $80 (E-0157)
 MapWarpsE0::
-Data_011_7C16:: ; address name
-    db $FD, $01, $40, $50, $DF, $00, $10, $04, $05 ; id 0
+    db $fd, $01, $40, $50, $df, $00, $10, $04, $05 ; id 0
     db $80 ; end
-    ds $3E0, $00
+    ds $3e0, $00

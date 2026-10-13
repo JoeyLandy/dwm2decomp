@@ -53,7 +53,7 @@ def shot(gb: GameBoy, tag: str, scale: int = 2) -> None:
 def function_table() -> dict[int, tuple[list[int], dict[int, str]]]:
     """bank -> (sorted function addresses, address -> label) read from the generated source."""
     table = {}
-    for path in (ROOT / "src/banks").glob("bank*.asm"):
+    for path in (ROOT / "build/listing").glob("bank*.asm"):
         bank = int(path.stem[4:], 16)
         lines = path.read_text(encoding="utf-8").split("\n")
         ents: dict[int, str] = {}

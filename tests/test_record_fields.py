@@ -54,7 +54,7 @@ class RecordFields(unittest.TestCase):
         consts = [v["const"] for v in cfg["fields"].values()]
         self.assertEqual(len(consts), len(set(consts)))
         self.assertTrue(all(v.get("evidence") for v in cfg["fields"].values()))
-        banks = ROOT / "src/banks"
+        banks = ROOT / "build/listing"
         if banks.is_dir():
             text = "".join(f.read_text(encoding="utf-8") for f in banks.glob("bank*.asm"))
             missing = [c for c in cfg["callees"] if f"\n{c}::" not in text]

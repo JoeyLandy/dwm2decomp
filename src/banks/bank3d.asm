@@ -1,20 +1,14 @@
 SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
-    db $3D
+    db $3d
 
-; only called from DrawEffectSpriteForEffectTileOffsetRange (E-0047)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange)
-; reads: wEffectTileOffset, wBattleFoeCount, wBattleTarget, wEffectSpriteX, wEffectSpriteAttrXor
-; writes: wLoadSlot, wBattleArg0
-; points at: wLoadSlot, wBattleArg0, hSpriteOriginX
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty::
-Func_03D_4001:: ; address name
     ld a, [wEffectTileOffset]
-    cp a, $2C
+    cp $2c
     jr nz, DrawEffectSpriteAtEffectSpriteX_Bank3D
     ld a, [wBattleFoeCount]
     ld [wLoadSlot], a
     ld a, [wBattleTarget]
-    and a, $04
+    and $04
     ld [wBattleArg0], a
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .skip
@@ -25,7 +19,7 @@ Func_03D_4001:: ; address name
     ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
-    or a, a
+    or a
     ret z
     ld hl, wBattleArg0
     inc [hl]
@@ -39,7 +33,7 @@ Func_03D_4001:: ; address name
     ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
-    or a, a
+    or a
     ret z
     ld hl, wBattleArg0
     inc [hl]
@@ -48,36 +42,34 @@ Func_03D_4001:: ; address name
     ret c
     farcall SetEffectSpriteXForTargets
 
-; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
-; 2 call sites from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty)
-; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
-; points at: hSpriteOriginX
+; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR
+; = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
 DrawEffectSpriteAtEffectSpriteX_Bank3D::
-Func_03D_4054:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wEffectSpriteX]
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ld a, $68
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ld a, [wEffectTileOffset]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wEffectSpriteAttrXor]
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld [hli], a
     ld de, MetaSprites3D_4077Table
     call BuildOamFromSpriteTable_Bank3D
     ret
 
-; E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3D passes DE = $3D:4077; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 45 words, up to the next code or data).
+; the caller of BuildOamFromSpriteTable_Bank3D passes DE = $MetaSprites3D_4077Table; the builder
+; takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as
+; the frame; 45 words, up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
 MetaSprites3D_4077Table::
-Data_03D_4077:: ; address name
     dw MetaSprites3D_4077Set00 ; id 0
     dw MetaSprites3D_4077Set00 ; id 1
     dw MetaSprites3D_4077Set00 ; id 2
@@ -124,14 +116,13 @@ Data_03D_4077:: ; address name
     dw MetaSprites3D_4077Set2B ; id 43
     dw MetaSprites3D_4077Set2C ; id 44
 
-; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteAtEffectSpriteX_Bank3D)
-; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
-; writes: hOamNextEntry
+; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
+; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
+; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
+; (40 entries) (the same 81 bytes appear in 5 banks)
 BuildOamFromSpriteTable_Bank3D::
-Func_03D_40D1:: ; address name
     ldh a, [hOamNextEntry]
-    cp a, $28
+    cp $28
     jr nc, .return
     ldh a, [hSpriteSetIndex]
     ld l, a
@@ -153,50 +144,50 @@ Func_03D_40D1:: ; address name
     sla a
     sla a
     ld l, a
-    ld h, $C0
+    ld h, $c0
 
 .loop:
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr z, .return
     ld b, a
     ldh a, [hSpriteOriginY]
-    add a, b
-    add a, $10
-    ld [hl+], a
+    add b
+    add $10
+    ld [hli], a
     ld a, [de]
     inc de
     ld b, a
     ldh a, [hSpriteOriginX]
-    add a, b
-    add a, $08
-    ld [hl+], a
+    add b
+    add $08
+    ld [hli], a
     ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [de]
     inc de
-    add a, b
-    ld [hl+], a
+    add b
+    ld [hli], a
     ld a, [de]
     inc de
     ld b, a
     ldh a, [hSpriteAttrXor]
-    xor a, b
-    ld [hl+], a
+    xor b
+    ld [hli], a
     ldh a, [hOamNextEntry]
     inc a
     ldh [hOamNextEntry], a
-    cp a, $28
+    cp $28
     jr c, .loop
 
 .return:
     ret
 
-; E-0147 (derived: meta-sprite set 0 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 0 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set00::
-Data_03D_4122:: ; address name
     dw MetaSprites3D_4077Set00Frame0 ; entry 0
     dw MetaSprites3D_4077Set00Frame1 ; entry 1
     dw MetaSprites3D_4077Set00Frame2 ; entry 2
@@ -230,491 +221,445 @@ Data_03D_4122:: ; address name
     dw MetaSprites3D_4077Set00Frame26 ; entry 30
     dw MetaSprites3D_4077Set00Frame26 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set00; ends with $80)
+; frame 0 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame0::
-Data_03D_4162:: ; address name
-    db $D8, $03, $20, $00 ; entry 0
-    db $D8, $0B, $21, $00 ; entry 1
-    db $D0, $03, $22, $00 ; entry 2
-    db $D0, $0B, $23, $00 ; entry 3
+    db $d8, $03, $20, $00 ; entry 0
+    db $d8, $0b, $21, $00 ; entry 1
+    db $d0, $03, $22, $00 ; entry 2
+    db $d0, $0b, $23, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame1::
-Data_03D_4173:: ; address name
-    db $DC, $00, $20, $00 ; entry 0
-    db $DC, $08, $21, $00 ; entry 1
-    db $E4, $F8, $20, $60 ; entry 2
-    db $E4, $F0, $21, $60 ; entry 3
-    db $D0, $03, $2F, $00 ; entry 4
-    db $D4, $00, $22, $00 ; entry 5
-    db $D4, $08, $23, $00 ; entry 6
-    db $F0, $F5, $2F, $60 ; entry 7
-    db $EC, $F8, $22, $60 ; entry 8
-    db $EC, $F0, $23, $60 ; entry 9
+    db $dc, $00, $20, $00 ; entry 0
+    db $dc, $08, $21, $00 ; entry 1
+    db $e4, $f8, $20, $60 ; entry 2
+    db $e4, $f0, $21, $60 ; entry 3
+    db $d0, $03, $2f, $00 ; entry 4
+    db $d4, $00, $22, $00 ; entry 5
+    db $d4, $08, $23, $00 ; entry 6
+    db $f0, $f5, $2f, $60 ; entry 7
+    db $ec, $f8, $22, $60 ; entry 8
+    db $ec, $f0, $23, $60 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame2::
-Data_03D_419C:: ; address name
-    db $D8, $FC, $26, $00 ; entry 0
-    db $D8, $04, $27, $00 ; entry 1
-    db $D8, $0C, $28, $00 ; entry 2
-    db $F0, $F4, $2E, $00 ; entry 3
-    db $F8, $EF, $2F, $00 ; entry 4
-    db $D0, $00, $24, $00 ; entry 5
-    db $D0, $08, $25, $00 ; entry 6
-    db $E0, $F8, $29, $00 ; entry 7
-    db $E0, $00, $2A, $00 ; entry 8
-    db $E0, $08, $2B, $00 ; entry 9
-    db $E8, $F8, $2C, $00 ; entry 10
-    db $E8, $00, $2D, $00 ; entry 11
+    db $d8, $fc, $26, $00 ; entry 0
+    db $d8, $04, $27, $00 ; entry 1
+    db $d8, $0c, $28, $00 ; entry 2
+    db $f0, $f4, $2e, $00 ; entry 3
+    db $f8, $ef, $2f, $00 ; entry 4
+    db $d0, $00, $24, $00 ; entry 5
+    db $d0, $08, $25, $00 ; entry 6
+    db $e0, $f8, $29, $00 ; entry 7
+    db $e0, $00, $2a, $00 ; entry 8
+    db $e0, $08, $2b, $00 ; entry 9
+    db $e8, $f8, $2c, $00 ; entry 10
+    db $e8, $00, $2d, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame3::
-Data_03D_41CD:: ; address name
-    db $E0, $F7, $26, $00 ; entry 0
-    db $E0, $FF, $27, $00 ; entry 1
-    db $E0, $07, $28, $00 ; entry 2
-    db $F8, $EF, $2E, $00 ; entry 3
-    db $D8, $FB, $24, $00 ; entry 4
-    db $D8, $03, $25, $00 ; entry 5
-    db $E8, $F3, $29, $00 ; entry 6
-    db $E8, $FB, $2A, $00 ; entry 7
-    db $E8, $03, $2B, $00 ; entry 8
-    db $F0, $F3, $2C, $00 ; entry 9
-    db $F0, $FB, $2D, $00 ; entry 10
-    db $D0, $09, $2F, $00 ; entry 11
+    db $e0, $f7, $26, $00 ; entry 0
+    db $e0, $ff, $27, $00 ; entry 1
+    db $e0, $07, $28, $00 ; entry 2
+    db $f8, $ef, $2e, $00 ; entry 3
+    db $d8, $fb, $24, $00 ; entry 4
+    db $d8, $03, $25, $00 ; entry 5
+    db $e8, $f3, $29, $00 ; entry 6
+    db $e8, $fb, $2a, $00 ; entry 7
+    db $e8, $03, $2b, $00 ; entry 8
+    db $f0, $f3, $2c, $00 ; entry 9
+    db $f0, $fb, $2d, $00 ; entry 10
+    db $d0, $09, $2f, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set00; ends with $80)
+; frame 4 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame4::
-Data_03D_41FE:: ; address name
-    db $D0, $09, $2E, $00 ; entry 0
-    db $D8, $04, $2E, $00 ; entry 1
-    db $E0, $FF, $2E, $00 ; entry 2
-    db $E8, $F9, $2E, $00 ; entry 3
-    db $F8, $F5, $29, $60 ; entry 4
-    db $F8, $ED, $2A, $60 ; entry 5
-    db $F8, $E5, $2B, $60 ; entry 6
-    db $F0, $F5, $2C, $60 ; entry 7
-    db $F0, $ED, $2D, $60 ; entry 8
+    db $d0, $09, $2e, $00 ; entry 0
+    db $d8, $04, $2e, $00 ; entry 1
+    db $e0, $ff, $2e, $00 ; entry 2
+    db $e8, $f9, $2e, $00 ; entry 3
+    db $f8, $f5, $29, $60 ; entry 4
+    db $f8, $ed, $2a, $60 ; entry 5
+    db $f8, $e5, $2b, $60 ; entry 6
+    db $f0, $f5, $2c, $60 ; entry 7
+    db $f0, $ed, $2d, $60 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame5::
-Data_03D_4223:: ; address name
-    db $F8, $EF, $2E, $00 ; entry 0
-    db $F0, $F4, $2E, $00 ; entry 1
-    db $E8, $F9, $2E, $00 ; entry 2
-    db $E0, $FF, $2F, $00 ; entry 3
-    db $D8, $04, $2F, $00 ; entry 4
+    db $f8, $ef, $2e, $00 ; entry 0
+    db $f0, $f4, $2e, $00 ; entry 1
+    db $e8, $f9, $2e, $00 ; entry 2
+    db $e0, $ff, $2f, $00 ; entry 3
+    db $d8, $04, $2f, $00 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame6::
-Data_03D_4238:: ; address name
-    db $F8, $EF, $2F, $00 ; entry 0
-    db $F0, $F4, $2F, $00 ; entry 1
-    db $E8, $F9, $2F, $00 ; entry 2
+    db $f8, $ef, $2f, $00 ; entry 0
+    db $f0, $f4, $2f, $00 ; entry 1
+    db $e8, $f9, $2f, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame7::
-Data_03D_4245:: ; address name
-    db $DC, $F4, $02, $00 ; entry 0
-    db $DC, $FC, $03, $00 ; entry 1
-    db $EE, $F4, $00, $00 ; entry 2
-    db $EE, $FC, $01, $00 ; entry 3
-    db $E3, $F5, $04, $00 ; entry 4
-    db $E3, $FD, $05, $00 ; entry 5
-    db $E3, $05, $06, $00 ; entry 6
-    db $EA, $ED, $07, $00 ; entry 7
-    db $EB, $F5, $08, $00 ; entry 8
+    db $dc, $f4, $02, $00 ; entry 0
+    db $dc, $fc, $03, $00 ; entry 1
+    db $ee, $f4, $00, $00 ; entry 2
+    db $ee, $fc, $01, $00 ; entry 3
+    db $e3, $f5, $04, $00 ; entry 4
+    db $e3, $fd, $05, $00 ; entry 5
+    db $e3, $05, $06, $00 ; entry 6
+    db $ea, $ed, $07, $00 ; entry 7
+    db $eb, $f5, $08, $00 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set00; ends with $80)
+; frame 8 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame8::
-Data_03D_426A:: ; address name
-    db $DE, $F4, $00, $00 ; entry 0
-    db $DE, $FC, $01, $00 ; entry 1
-    db $F0, $F0, $0C, $00 ; entry 2
-    db $F0, $F8, $0D, $00 ; entry 3
-    db $F0, $00, $0E, $00 ; entry 4
-    db $E2, $F6, $09, $00 ; entry 5
-    db $E2, $FE, $0A, $00 ; entry 6
-    db $E2, $06, $0B, $00 ; entry 7
+    db $de, $f4, $00, $00 ; entry 0
+    db $de, $fc, $01, $00 ; entry 1
+    db $f0, $f0, $0c, $00 ; entry 2
+    db $f0, $f8, $0d, $00 ; entry 3
+    db $f0, $00, $0e, $00 ; entry 4
+    db $e2, $f6, $09, $00 ; entry 5
+    db $e2, $fe, $0a, $00 ; entry 6
+    db $e2, $06, $0b, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame9::
-Data_03D_428B:: ; address name
-    db $DD, $F0, $0C, $00 ; entry 0
-    db $DD, $F8, $0D, $00 ; entry 1
-    db $DD, $00, $0E, $00 ; entry 2
-    db $F0, $F0, $04, $00 ; entry 3
-    db $F0, $F8, $05, $00 ; entry 4
-    db $F0, $00, $06, $00 ; entry 5
-    db $F8, $F0, $08, $00 ; entry 6
-    db $F7, $E8, $07, $00 ; entry 7
-    db $EA, $F8, $1C, $00 ; entry 8
-    db $EA, $00, $1D, $00 ; entry 9
-    db $E2, $F8, $1B, $00 ; entry 10
-    db $E6, $08, $1E, $00 ; entry 11
-    db $E6, $10, $1F, $00 ; entry 12
+    db $dd, $f0, $0c, $00 ; entry 0
+    db $dd, $f8, $0d, $00 ; entry 1
+    db $dd, $00, $0e, $00 ; entry 2
+    db $f0, $f0, $04, $00 ; entry 3
+    db $f0, $f8, $05, $00 ; entry 4
+    db $f0, $00, $06, $00 ; entry 5
+    db $f8, $f0, $08, $00 ; entry 6
+    db $f7, $e8, $07, $00 ; entry 7
+    db $ea, $f8, $1c, $00 ; entry 8
+    db $ea, $00, $1d, $00 ; entry 9
+    db $e2, $f8, $1b, $00 ; entry 10
+    db $e6, $08, $1e, $00 ; entry 11
+    db $e6, $10, $1f, $00 ; entry 12
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame10::
-Data_03D_42C0:: ; address name
-    db $DA, $F1, $04, $00 ; entry 0
-    db $DA, $F9, $05, $00 ; entry 1
-    db $DA, $01, $06, $00 ; entry 2
-    db $E2, $F1, $08, $00 ; entry 3
-    db $E1, $E9, $07, $00 ; entry 4
-    db $F2, $EE, $0C, $00 ; entry 5
-    db $F2, $F6, $0D, $00 ; entry 6
-    db $F2, $FE, $0E, $00 ; entry 7
-    db $E2, $F8, $0F, $00 ; entry 8
-    db $E2, $00, $10, $00 ; entry 9
-    db $E2, $08, $11, $00 ; entry 10
-    db $E2, $10, $12, $00 ; entry 11
-    db $EA, $F8, $13, $00 ; entry 12
-    db $EA, $00, $14, $00 ; entry 13
-    db $EA, $0C, $15, $00 ; entry 14
+    db $da, $f1, $04, $00 ; entry 0
+    db $da, $f9, $05, $00 ; entry 1
+    db $da, $01, $06, $00 ; entry 2
+    db $e2, $f1, $08, $00 ; entry 3
+    db $e1, $e9, $07, $00 ; entry 4
+    db $f2, $ee, $0c, $00 ; entry 5
+    db $f2, $f6, $0d, $00 ; entry 6
+    db $f2, $fe, $0e, $00 ; entry 7
+    db $e2, $f8, $0f, $00 ; entry 8
+    db $e2, $00, $10, $00 ; entry 9
+    db $e2, $08, $11, $00 ; entry 10
+    db $e2, $10, $12, $00 ; entry 11
+    db $ea, $f8, $13, $00 ; entry 12
+    db $ea, $00, $14, $00 ; entry 13
+    db $ea, $0c, $15, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame11::
-Data_03D_42FD:: ; address name
-    db $E2, $00, $16, $00 ; entry 0
-    db $EA, $00, $19, $00 ; entry 1
-    db $E9, $0E, $15, $00 ; entry 2
-    db $E2, $10, $18, $00 ; entry 3
-    db $E2, $08, $17, $00 ; entry 4
-    db $EA, $08, $1A, $00 ; entry 5
-    db $E0, $E8, $1C, $00 ; entry 6
-    db $E0, $F0, $1D, $00 ; entry 7
-    db $D8, $E8, $1B, $00 ; entry 8
-    db $DA, $F3, $09, $00 ; entry 9
-    db $DA, $FB, $0A, $00 ; entry 10
-    db $DA, $03, $0B, $00 ; entry 11
-    db $DC, $F8, $1E, $00 ; entry 12
-    db $DC, $00, $1F, $00 ; entry 13
+    db $e2, $00, $16, $00 ; entry 0
+    db $ea, $00, $19, $00 ; entry 1
+    db $e9, $0e, $15, $00 ; entry 2
+    db $e2, $10, $18, $00 ; entry 3
+    db $e2, $08, $17, $00 ; entry 4
+    db $ea, $08, $1a, $00 ; entry 5
+    db $e0, $e8, $1c, $00 ; entry 6
+    db $e0, $f0, $1d, $00 ; entry 7
+    db $d8, $e8, $1b, $00 ; entry 8
+    db $da, $f3, $09, $00 ; entry 9
+    db $da, $fb, $0a, $00 ; entry 10
+    db $da, $03, $0b, $00 ; entry 11
+    db $dc, $f8, $1e, $00 ; entry 12
+    db $dc, $00, $1f, $00 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set00; ends with $80)
+; frame 12 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame12::
-Data_03D_4336:: ; address name
-    db $D8, $F0, $10, $00 ; entry 0
-    db $D8, $F8, $11, $00 ; entry 1
-    db $D8, $00, $12, $00 ; entry 2
-    db $D8, $E8, $0F, $00 ; entry 3
-    db $E0, $E8, $13, $00 ; entry 4
-    db $E0, $F0, $14, $00 ; entry 5
-    db $E0, $FC, $15, $00 ; entry 6
-    db $E9, $F6, $0C, $00 ; entry 7
-    db $E9, $FE, $0D, $00 ; entry 8
-    db $E9, $06, $0E, $00 ; entry 9
-    db $D0, $00, $00, $00 ; entry 10
-    db $D0, $08, $01, $00 ; entry 11
+    db $d8, $f0, $10, $00 ; entry 0
+    db $d8, $f8, $11, $00 ; entry 1
+    db $d8, $00, $12, $00 ; entry 2
+    db $d8, $e8, $0f, $00 ; entry 3
+    db $e0, $e8, $13, $00 ; entry 4
+    db $e0, $f0, $14, $00 ; entry 5
+    db $e0, $fc, $15, $00 ; entry 6
+    db $e9, $f6, $0c, $00 ; entry 7
+    db $e9, $fe, $0d, $00 ; entry 8
+    db $e9, $06, $0e, $00 ; entry 9
+    db $d0, $00, $00, $00 ; entry 10
+    db $d0, $08, $01, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 13 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame13::
-Data_03D_4367:: ; address name
-    db $E8, $FC, $00, $00 ; entry 0
-    db $E8, $04, $01, $00 ; entry 1
-    db $F0, $F4, $04, $00 ; entry 2
-    db $F0, $FC, $05, $00 ; entry 3
-    db $F0, $04, $06, $00 ; entry 4
-    db $F8, $F4, $08, $00 ; entry 5
-    db $F7, $EC, $07, $00 ; entry 6
-    db $D8, $F0, $16, $00 ; entry 7
-    db $E0, $F0, $19, $00 ; entry 8
-    db $DF, $FE, $15, $00 ; entry 9
-    db $E0, $F8, $1A, $00 ; entry 10
-    db $D8, $F8, $17, $00 ; entry 11
-    db $D8, $00, $18, $00 ; entry 12
-    db $D0, $FE, $09, $00 ; entry 13
-    db $D0, $06, $0A, $00 ; entry 14
-    db $D0, $0E, $0B, $00 ; entry 15
+    db $e8, $fc, $00, $00 ; entry 0
+    db $e8, $04, $01, $00 ; entry 1
+    db $f0, $f4, $04, $00 ; entry 2
+    db $f0, $fc, $05, $00 ; entry 3
+    db $f0, $04, $06, $00 ; entry 4
+    db $f8, $f4, $08, $00 ; entry 5
+    db $f7, $ec, $07, $00 ; entry 6
+    db $d8, $f0, $16, $00 ; entry 7
+    db $e0, $f0, $19, $00 ; entry 8
+    db $df, $fe, $15, $00 ; entry 9
+    db $e0, $f8, $1a, $00 ; entry 10
+    db $d8, $f8, $17, $00 ; entry 11
+    db $d8, $00, $18, $00 ; entry 12
+    db $d0, $fe, $09, $00 ; entry 13
+    db $d0, $06, $0a, $00 ; entry 14
+    db $d0, $0e, $0b, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame14::
-Data_03D_43A8:: ; address name
-    db $EE, $F3, $0C, $00 ; entry 0
-    db $E5, $FC, $05, $00 ; entry 1
-    db $E5, $04, $06, $00 ; entry 2
-    db $D8, $F8, $1C, $00 ; entry 3
-    db $D8, $00, $1D, $00 ; entry 4
-    db $D4, $08, $1E, $00 ; entry 5
-    db $D4, $10, $1F, $00 ; entry 6
-    db $D0, $F8, $1B, $00 ; entry 7
-    db $E5, $F4, $04, $00 ; entry 8
-    db $ED, $F4, $08, $00 ; entry 9
-    db $EC, $EC, $07, $00 ; entry 10
-    db $F0, $10, $0B, $00 ; entry 11
-    db $EE, $FB, $0D, $00 ; entry 12
-    db $EE, $03, $0E, $00 ; entry 13
-    db $F0, $00, $09, $00 ; entry 14
-    db $F0, $08, $0A, $00 ; entry 15
+    db $ee, $f3, $0c, $00 ; entry 0
+    db $e5, $fc, $05, $00 ; entry 1
+    db $e5, $04, $06, $00 ; entry 2
+    db $d8, $f8, $1c, $00 ; entry 3
+    db $d8, $00, $1d, $00 ; entry 4
+    db $d4, $08, $1e, $00 ; entry 5
+    db $d4, $10, $1f, $00 ; entry 6
+    db $d0, $f8, $1b, $00 ; entry 7
+    db $e5, $f4, $04, $00 ; entry 8
+    db $ed, $f4, $08, $00 ; entry 9
+    db $ec, $ec, $07, $00 ; entry 10
+    db $f0, $10, $0b, $00 ; entry 11
+    db $ee, $fb, $0d, $00 ; entry 12
+    db $ee, $03, $0e, $00 ; entry 13
+    db $f0, $00, $09, $00 ; entry 14
+    db $f0, $08, $0a, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame15::
-Data_03D_43E9:: ; address name
-    db $E4, $F5, $09, $00 ; entry 0
-    db $E4, $FD, $0A, $00 ; entry 1
-    db $E4, $05, $0B, $00 ; entry 2
-    db $D0, $00, $10, $00 ; entry 3
-    db $D0, $08, $11, $00 ; entry 4
-    db $D0, $10, $12, $00 ; entry 5
-    db $D0, $F8, $0F, $00 ; entry 6
-    db $D8, $F8, $13, $00 ; entry 7
-    db $D8, $00, $14, $00 ; entry 8
-    db $D8, $0C, $15, $00 ; entry 9
-    db $F8, $EE, $1C, $00 ; entry 10
-    db $F8, $F6, $1D, $00 ; entry 11
-    db $F4, $FE, $1E, $00 ; entry 12
-    db $F4, $06, $1F, $00 ; entry 13
-    db $F0, $EE, $1B, $00 ; entry 14
+    db $e4, $f5, $09, $00 ; entry 0
+    db $e4, $fd, $0a, $00 ; entry 1
+    db $e4, $05, $0b, $00 ; entry 2
+    db $d0, $00, $10, $00 ; entry 3
+    db $d0, $08, $11, $00 ; entry 4
+    db $d0, $10, $12, $00 ; entry 5
+    db $d0, $f8, $0f, $00 ; entry 6
+    db $d8, $f8, $13, $00 ; entry 7
+    db $d8, $00, $14, $00 ; entry 8
+    db $d8, $0c, $15, $00 ; entry 9
+    db $f8, $ee, $1c, $00 ; entry 10
+    db $f8, $f6, $1d, $00 ; entry 11
+    db $f4, $fe, $1e, $00 ; entry 12
+    db $f4, $06, $1f, $00 ; entry 13
+    db $f0, $ee, $1b, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3D_4077Set00; ends with $80)
+; frame 16 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame16::
-Data_03D_4426:: ; address name
-    db $E6, $F3, $0C, $00 ; entry 0
-    db $E6, $FB, $0D, $00 ; entry 1
-    db $E6, $03, $0E, $00 ; entry 2
-    db $D0, $00, $16, $00 ; entry 3
-    db $D8, $00, $19, $00 ; entry 4
-    db $D7, $0E, $15, $00 ; entry 5
-    db $D0, $08, $17, $00 ; entry 6
-    db $D8, $08, $1A, $00 ; entry 7
-    db $D0, $10, $18, $00 ; entry 8
-    db $F0, $F6, $10, $00 ; entry 9
-    db $F0, $FE, $11, $00 ; entry 10
-    db $F0, $06, $12, $00 ; entry 11
-    db $F0, $EE, $0F, $00 ; entry 12
-    db $F8, $EE, $13, $00 ; entry 13
-    db $F8, $F6, $14, $00 ; entry 14
-    db $F8, $02, $15, $00 ; entry 15
+    db $e6, $f3, $0c, $00 ; entry 0
+    db $e6, $fb, $0d, $00 ; entry 1
+    db $e6, $03, $0e, $00 ; entry 2
+    db $d0, $00, $16, $00 ; entry 3
+    db $d8, $00, $19, $00 ; entry 4
+    db $d7, $0e, $15, $00 ; entry 5
+    db $d0, $08, $17, $00 ; entry 6
+    db $d8, $08, $1a, $00 ; entry 7
+    db $d0, $10, $18, $00 ; entry 8
+    db $f0, $f6, $10, $00 ; entry 9
+    db $f0, $fe, $11, $00 ; entry 10
+    db $f0, $06, $12, $00 ; entry 11
+    db $f0, $ee, $0f, $00 ; entry 12
+    db $f8, $ee, $13, $00 ; entry 13
+    db $f8, $f6, $14, $00 ; entry 14
+    db $f8, $02, $15, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 17 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 17 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame17::
-Data_03D_4467:: ; address name
-    db $F0, $F6, $16, $00 ; entry 0
-    db $F8, $F6, $19, $00 ; entry 1
-    db $F7, $04, $15, $00 ; entry 2
-    db $F0, $FE, $17, $00 ; entry 3
-    db $F8, $FE, $1A, $00 ; entry 4
-    db $F0, $06, $18, $00 ; entry 5
-    db $E8, $F0, $09, $00 ; entry 6
-    db $E8, $F8, $0A, $00 ; entry 7
-    db $E8, $00, $0B, $00 ; entry 8
-    db $D8, $F0, $0C, $00 ; entry 9
-    db $D8, $F8, $0D, $00 ; entry 10
-    db $D8, $00, $0E, $00 ; entry 11
-    db $DC, $04, $02, $00 ; entry 12
-    db $DC, $0C, $03, $00 ; entry 13
+    db $f0, $f6, $16, $00 ; entry 0
+    db $f8, $f6, $19, $00 ; entry 1
+    db $f7, $04, $15, $00 ; entry 2
+    db $f0, $fe, $17, $00 ; entry 3
+    db $f8, $fe, $1a, $00 ; entry 4
+    db $f0, $06, $18, $00 ; entry 5
+    db $e8, $f0, $09, $00 ; entry 6
+    db $e8, $f8, $0a, $00 ; entry 7
+    db $e8, $00, $0b, $00 ; entry 8
+    db $d8, $f0, $0c, $00 ; entry 9
+    db $d8, $f8, $0d, $00 ; entry 10
+    db $d8, $00, $0e, $00 ; entry 11
+    db $dc, $04, $02, $00 ; entry 12
+    db $dc, $0c, $03, $00 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 18 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 18 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame18::
-Data_03D_44A0:: ; address name
-    db $F0, $E8, $1C, $00 ; entry 0
-    db $F0, $F0, $1D, $00 ; entry 1
-    db $E8, $E8, $1B, $00 ; entry 2
-    db $EC, $F8, $1E, $00 ; entry 3
-    db $EC, $00, $1F, $00 ; entry 4
-    db $F8, $F0, $0C, $00 ; entry 5
-    db $F8, $F8, $0D, $00 ; entry 6
-    db $F8, $00, $0E, $00 ; entry 7
-    db $DC, $00, $09, $00 ; entry 8
-    db $DC, $08, $0A, $00 ; entry 9
-    db $DC, $10, $0B, $00 ; entry 10
+    db $f0, $e8, $1c, $00 ; entry 0
+    db $f0, $f0, $1d, $00 ; entry 1
+    db $e8, $e8, $1b, $00 ; entry 2
+    db $ec, $f8, $1e, $00 ; entry 3
+    db $ec, $00, $1f, $00 ; entry 4
+    db $f8, $f0, $0c, $00 ; entry 5
+    db $f8, $f8, $0d, $00 ; entry 6
+    db $f8, $00, $0e, $00 ; entry 7
+    db $dc, $00, $09, $00 ; entry 8
+    db $dc, $08, $0a, $00 ; entry 9
+    db $dc, $10, $0b, $00 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 19 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 19 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame19::
-Data_03D_44CD:: ; address name
-    db $E8, $F0, $10, $00 ; entry 0
-    db $E8, $F8, $11, $00 ; entry 1
-    db $E8, $00, $12, $00 ; entry 2
-    db $E8, $E8, $0F, $00 ; entry 3
-    db $F0, $E8, $13, $00 ; entry 4
-    db $F0, $F0, $14, $00 ; entry 5
-    db $F0, $FC, $15, $00 ; entry 6
-    db $F2, $FF, $0C, $00 ; entry 7
-    db $F2, $07, $0D, $00 ; entry 8
-    db $F2, $0F, $0E, $00 ; entry 9
-    db $E0, $F8, $1C, $00 ; entry 10
-    db $E0, $00, $1D, $00 ; entry 11
-    db $DC, $08, $1E, $00 ; entry 12
-    db $DC, $10, $1F, $00 ; entry 13
-    db $D8, $F8, $1B, $00 ; entry 14
-    db $D6, $EB, $02, $00 ; entry 15
-    db $D6, $F3, $03, $00 ; entry 16
+    db $e8, $f0, $10, $00 ; entry 0
+    db $e8, $f8, $11, $00 ; entry 1
+    db $e8, $00, $12, $00 ; entry 2
+    db $e8, $e8, $0f, $00 ; entry 3
+    db $f0, $e8, $13, $00 ; entry 4
+    db $f0, $f0, $14, $00 ; entry 5
+    db $f0, $fc, $15, $00 ; entry 6
+    db $f2, $ff, $0c, $00 ; entry 7
+    db $f2, $07, $0d, $00 ; entry 8
+    db $f2, $0f, $0e, $00 ; entry 9
+    db $e0, $f8, $1c, $00 ; entry 10
+    db $e0, $00, $1d, $00 ; entry 11
+    db $dc, $08, $1e, $00 ; entry 12
+    db $dc, $10, $1f, $00 ; entry 13
+    db $d8, $f8, $1b, $00 ; entry 14
+    db $d6, $eb, $02, $00 ; entry 15
+    db $d6, $f3, $03, $00 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 20 of MetaSprites3D_4077Set00; ends with $80)
+; frame 20 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame20::
-Data_03D_4512:: ; address name
-    db $E8, $F0, $16, $00 ; entry 0
-    db $F0, $F0, $19, $00 ; entry 1
-    db $EF, $FE, $15, $00 ; entry 2
-    db $F0, $F8, $1A, $00 ; entry 3
-    db $E8, $F8, $17, $00 ; entry 4
-    db $E8, $00, $18, $00 ; entry 5
-    db $F0, $00, $04, $00 ; entry 6
-    db $F0, $08, $05, $00 ; entry 7
-    db $F0, $10, $06, $00 ; entry 8
-    db $F8, $00, $08, $00 ; entry 9
-    db $F7, $F8, $07, $00 ; entry 10
-    db $D0, $F4, $09, $00 ; entry 11
-    db $D0, $FC, $0A, $00 ; entry 12
-    db $D0, $04, $0B, $00 ; entry 13
-    db $D8, $00, $10, $00 ; entry 14
-    db $D8, $08, $11, $00 ; entry 15
-    db $D8, $10, $12, $00 ; entry 16
-    db $D8, $F8, $0F, $00 ; entry 17
-    db $E0, $F8, $13, $00 ; entry 18
-    db $E0, $00, $14, $00 ; entry 19
-    db $E0, $0C, $15, $00 ; entry 20
+    db $e8, $f0, $16, $00 ; entry 0
+    db $f0, $f0, $19, $00 ; entry 1
+    db $ef, $fe, $15, $00 ; entry 2
+    db $f0, $f8, $1a, $00 ; entry 3
+    db $e8, $f8, $17, $00 ; entry 4
+    db $e8, $00, $18, $00 ; entry 5
+    db $f0, $00, $04, $00 ; entry 6
+    db $f0, $08, $05, $00 ; entry 7
+    db $f0, $10, $06, $00 ; entry 8
+    db $f8, $00, $08, $00 ; entry 9
+    db $f7, $f8, $07, $00 ; entry 10
+    db $d0, $f4, $09, $00 ; entry 11
+    db $d0, $fc, $0a, $00 ; entry 12
+    db $d0, $04, $0b, $00 ; entry 13
+    db $d8, $00, $10, $00 ; entry 14
+    db $d8, $08, $11, $00 ; entry 15
+    db $d8, $10, $12, $00 ; entry 16
+    db $d8, $f8, $0f, $00 ; entry 17
+    db $e0, $f8, $13, $00 ; entry 18
+    db $e0, $00, $14, $00 ; entry 19
+    db $e0, $0c, $15, $00 ; entry 20
     db $80 ; end
 
-; E-0147 (derived: frame 21 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 21 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame21::
-Data_03D_4567:: ; address name
-    db $F0, $10, $0B, $00 ; entry 0
-    db $F0, $00, $09, $00 ; entry 1
-    db $F0, $08, $0A, $00 ; entry 2
-    db $D8, $E8, $1C, $00 ; entry 3
-    db $D8, $F0, $1D, $00 ; entry 4
-    db $D4, $F8, $1E, $00 ; entry 5
-    db $D4, $00, $1F, $00 ; entry 6
-    db $D0, $E8, $1B, $00 ; entry 7
-    db $D8, $00, $16, $00 ; entry 8
-    db $E0, $00, $19, $00 ; entry 9
-    db $DF, $0E, $15, $00 ; entry 10
-    db $D8, $08, $17, $00 ; entry 11
-    db $E0, $08, $1A, $00 ; entry 12
-    db $D8, $10, $18, $00 ; entry 13
-    db $F0, $E8, $0C, $00 ; entry 14
-    db $F0, $F0, $0D, $00 ; entry 15
-    db $F0, $F8, $0E, $00 ; entry 16
-    db $E8, $F8, $02, $00 ; entry 17
-    db $E8, $00, $03, $00 ; entry 18
+    db $f0, $10, $0b, $00 ; entry 0
+    db $f0, $00, $09, $00 ; entry 1
+    db $f0, $08, $0a, $00 ; entry 2
+    db $d8, $e8, $1c, $00 ; entry 3
+    db $d8, $f0, $1d, $00 ; entry 4
+    db $d4, $f8, $1e, $00 ; entry 5
+    db $d4, $00, $1f, $00 ; entry 6
+    db $d0, $e8, $1b, $00 ; entry 7
+    db $d8, $00, $16, $00 ; entry 8
+    db $e0, $00, $19, $00 ; entry 9
+    db $df, $0e, $15, $00 ; entry 10
+    db $d8, $08, $17, $00 ; entry 11
+    db $e0, $08, $1a, $00 ; entry 12
+    db $d8, $10, $18, $00 ; entry 13
+    db $f0, $e8, $0c, $00 ; entry 14
+    db $f0, $f0, $0d, $00 ; entry 15
+    db $f0, $f8, $0e, $00 ; entry 16
+    db $e8, $f8, $02, $00 ; entry 17
+    db $e8, $00, $03, $00 ; entry 18
     db $80 ; end
 
-; E-0147 (derived: frame 22 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 22 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame22::
-Data_03D_45B4:: ; address name
-    db $E0, $F5, $09, $00 ; entry 0
-    db $E0, $FD, $0A, $00 ; entry 1
-    db $E0, $05, $0B, $00 ; entry 2
-    db $D0, $00, $10, $00 ; entry 3
-    db $D0, $08, $11, $00 ; entry 4
-    db $D0, $10, $12, $00 ; entry 5
-    db $D0, $F8, $0F, $00 ; entry 6
-    db $D8, $F8, $13, $00 ; entry 7
-    db $D8, $00, $14, $00 ; entry 8
-    db $D8, $0C, $15, $00 ; entry 9
-    db $F4, $EE, $1C, $00 ; entry 10
-    db $F4, $F6, $1D, $00 ; entry 11
-    db $F0, $FE, $1E, $00 ; entry 12
-    db $F0, $06, $1F, $00 ; entry 13
-    db $EC, $EE, $1B, $00 ; entry 14
+    db $e0, $f5, $09, $00 ; entry 0
+    db $e0, $fd, $0a, $00 ; entry 1
+    db $e0, $05, $0b, $00 ; entry 2
+    db $d0, $00, $10, $00 ; entry 3
+    db $d0, $08, $11, $00 ; entry 4
+    db $d0, $10, $12, $00 ; entry 5
+    db $d0, $f8, $0f, $00 ; entry 6
+    db $d8, $f8, $13, $00 ; entry 7
+    db $d8, $00, $14, $00 ; entry 8
+    db $d8, $0c, $15, $00 ; entry 9
+    db $f4, $ee, $1c, $00 ; entry 10
+    db $f4, $f6, $1d, $00 ; entry 11
+    db $f0, $fe, $1e, $00 ; entry 12
+    db $f0, $06, $1f, $00 ; entry 13
+    db $ec, $ee, $1b, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 23 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 23 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame23::
-Data_03D_45F1:: ; address name
-    db $E2, $F3, $0C, $00 ; entry 0
-    db $E2, $FB, $0D, $00 ; entry 1
-    db $E2, $03, $0E, $00 ; entry 2
-    db $D0, $00, $16, $00 ; entry 3
-    db $D8, $00, $19, $00 ; entry 4
-    db $D7, $0E, $15, $00 ; entry 5
-    db $D0, $08, $17, $00 ; entry 6
-    db $D8, $08, $1A, $00 ; entry 7
-    db $D0, $10, $18, $00 ; entry 8
-    db $EC, $F6, $10, $00 ; entry 9
-    db $EC, $FE, $11, $00 ; entry 10
-    db $EC, $06, $12, $00 ; entry 11
-    db $EC, $EE, $0F, $00 ; entry 12
-    db $F4, $EE, $13, $00 ; entry 13
-    db $F4, $F6, $14, $00 ; entry 14
-    db $F4, $02, $15, $00 ; entry 15
+    db $e2, $f3, $0c, $00 ; entry 0
+    db $e2, $fb, $0d, $00 ; entry 1
+    db $e2, $03, $0e, $00 ; entry 2
+    db $d0, $00, $16, $00 ; entry 3
+    db $d8, $00, $19, $00 ; entry 4
+    db $d7, $0e, $15, $00 ; entry 5
+    db $d0, $08, $17, $00 ; entry 6
+    db $d8, $08, $1a, $00 ; entry 7
+    db $d0, $10, $18, $00 ; entry 8
+    db $ec, $f6, $10, $00 ; entry 9
+    db $ec, $fe, $11, $00 ; entry 10
+    db $ec, $06, $12, $00 ; entry 11
+    db $ec, $ee, $0f, $00 ; entry 12
+    db $f4, $ee, $13, $00 ; entry 13
+    db $f4, $f6, $14, $00 ; entry 14
+    db $f4, $02, $15, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 24 of MetaSprites3D_4077Set00; ends with $80)
+; frame 24 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set00Frame24::
-Data_03D_4632:: ; address name
-    db $EC, $EE, $16, $00 ; entry 0
-    db $F4, $EE, $19, $00 ; entry 1
-    db $F3, $FC, $15, $00 ; entry 2
-    db $EC, $F6, $17, $00 ; entry 3
-    db $F4, $F6, $1A, $00 ; entry 4
-    db $EC, $FE, $18, $00 ; entry 5
-    db $E0, $FD, $00, $00 ; entry 6
-    db $E0, $05, $01, $00 ; entry 7
-    db $D8, $F0, $0C, $00 ; entry 8
-    db $D8, $F8, $0D, $00 ; entry 9
-    db $D8, $00, $0E, $00 ; entry 10
+    db $ec, $ee, $16, $00 ; entry 0
+    db $f4, $ee, $19, $00 ; entry 1
+    db $f3, $fc, $15, $00 ; entry 2
+    db $ec, $f6, $17, $00 ; entry 3
+    db $f4, $f6, $1a, $00 ; entry 4
+    db $ec, $fe, $18, $00 ; entry 5
+    db $e0, $fd, $00, $00 ; entry 6
+    db $e0, $05, $01, $00 ; entry 7
+    db $d8, $f0, $0c, $00 ; entry 8
+    db $d8, $f8, $0d, $00 ; entry 9
+    db $d8, $00, $0e, $00 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 25 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 25 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame25::
-Data_03D_465F:: ; address name
-    db $E0, $FD, $02, $00 ; entry 0
-    db $E0, $05, $03, $00 ; entry 1
-    db $D4, $FB, $00, $00 ; entry 2
-    db $D4, $03, $01, $00 ; entry 3
-    db $F4, $E8, $0C, $00 ; entry 4
-    db $F4, $F0, $0D, $00 ; entry 5
-    db $F4, $F8, $0E, $00 ; entry 6
+    db $e0, $fd, $02, $00 ; entry 0
+    db $e0, $05, $03, $00 ; entry 1
+    db $d4, $fb, $00, $00 ; entry 2
+    db $d4, $03, $01, $00 ; entry 3
+    db $f4, $e8, $0c, $00 ; entry 4
+    db $f4, $f0, $0d, $00 ; entry 5
+    db $f4, $f8, $0e, $00 ; entry 6
     db $80 ; end
 
-; E-0147 (derived: frame 26 of MetaSprites3D_4077Set00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 26 of MetaSprites3D_4077Set00; ends with $80 (E-0147)
 MetaSprites3D_4077Set00Frame26::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 33 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 33 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set21::
-Data_03D_467D:: ; address name
     dw MetaSprites3D_4077Set21Frame0 ; entry 0
     dw MetaSprites3D_4077Set21Frame1 ; entry 1
     dw MetaSprites3D_4077Set21Frame2 ; entry 2
@@ -748,211 +693,190 @@ Data_03D_467D:: ; address name
     dw MetaSprites3D_4077Set21Frame12 ; entry 30
     dw MetaSprites3D_4077Set21Frame12 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set21; ends with $80)
+; frame 0 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set21Frame0::
-Data_03D_46BD:: ; address name
-    db $D8, $03, $20, $00 ; entry 0
-    db $D8, $0B, $21, $00 ; entry 1
-    db $D0, $03, $22, $00 ; entry 2
-    db $D0, $0B, $23, $00 ; entry 3
+    db $d8, $03, $20, $00 ; entry 0
+    db $d8, $0b, $21, $00 ; entry 1
+    db $d0, $03, $22, $00 ; entry 2
+    db $d0, $0b, $23, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame1::
-Data_03D_46CE:: ; address name
-    db $DC, $00, $20, $00 ; entry 0
-    db $DC, $08, $21, $00 ; entry 1
-    db $D4, $00, $22, $00 ; entry 2
-    db $D4, $08, $23, $00 ; entry 3
-    db $E4, $F8, $20, $60 ; entry 4
-    db $E4, $F0, $21, $60 ; entry 5
-    db $EC, $F8, $22, $60 ; entry 6
-    db $EC, $F0, $23, $60 ; entry 7
+    db $dc, $00, $20, $00 ; entry 0
+    db $dc, $08, $21, $00 ; entry 1
+    db $d4, $00, $22, $00 ; entry 2
+    db $d4, $08, $23, $00 ; entry 3
+    db $e4, $f8, $20, $60 ; entry 4
+    db $e4, $f0, $21, $60 ; entry 5
+    db $ec, $f8, $22, $60 ; entry 6
+    db $ec, $f0, $23, $60 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame2::
-Data_03D_46EF:: ; address name
-    db $F0, $F4, $2C, $00 ; entry 0
-    db $F8, $F0, $2D, $00 ; entry 1
-    db $E8, $F8, $2A, $00 ; entry 2
-    db $E8, $00, $2B, $00 ; entry 3
-    db $D0, $04, $24, $00 ; entry 4
-    db $D0, $0C, $25, $00 ; entry 5
-    db $D8, $00, $26, $00 ; entry 6
-    db $D8, $08, $27, $00 ; entry 7
-    db $E0, $FB, $28, $00 ; entry 8
-    db $E0, $03, $29, $00 ; entry 9
+    db $f0, $f4, $2c, $00 ; entry 0
+    db $f8, $f0, $2d, $00 ; entry 1
+    db $e8, $f8, $2a, $00 ; entry 2
+    db $e8, $00, $2b, $00 ; entry 3
+    db $d0, $04, $24, $00 ; entry 4
+    db $d0, $0c, $25, $00 ; entry 5
+    db $d8, $00, $26, $00 ; entry 6
+    db $d8, $08, $27, $00 ; entry 7
+    db $e0, $fb, $28, $00 ; entry 8
+    db $e0, $03, $29, $00 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame3::
-Data_03D_4718:: ; address name
-    db $F8, $F0, $2C, $00 ; entry 0
-    db $F0, $EC, $2E, $00 ; entry 1
-    db $D8, $08, $25, $00 ; entry 2
-    db $D0, $0C, $2E, $00 ; entry 3
-    db $D0, $04, $24, $00 ; entry 4
-    db $D8, $00, $28, $40 ; entry 5
-    db $E0, $FC, $26, $00 ; entry 6
-    db $E0, $04, $27, $00 ; entry 7
-    db $E8, $F7, $28, $00 ; entry 8
-    db $E8, $FF, $29, $00 ; entry 9
-    db $F0, $F4, $2A, $00 ; entry 10
-    db $F0, $FC, $2B, $00 ; entry 11
+    db $f8, $f0, $2c, $00 ; entry 0
+    db $f0, $ec, $2e, $00 ; entry 1
+    db $d8, $08, $25, $00 ; entry 2
+    db $d0, $0c, $2e, $00 ; entry 3
+    db $d0, $04, $24, $00 ; entry 4
+    db $d8, $00, $28, $40 ; entry 5
+    db $e0, $fc, $26, $00 ; entry 6
+    db $e0, $04, $27, $00 ; entry 7
+    db $e8, $f7, $28, $00 ; entry 8
+    db $e8, $ff, $29, $00 ; entry 9
+    db $f0, $f4, $2a, $00 ; entry 10
+    db $f0, $fc, $2b, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set21; ends with $80)
+; frame 4 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set21Frame4::
-Data_03D_4749:: ; address name
-    db $F8, $EE, $2E, $00 ; entry 0
-    db $F0, $F3, $2E, $00 ; entry 1
-    db $E8, $F8, $2E, $00 ; entry 2
-    db $E0, $FE, $2E, $00 ; entry 3
-    db $D8, $03, $2E, $00 ; entry 4
-    db $D0, $08, $2E, $00 ; entry 5
-    db $E0, $F6, $24, $00 ; entry 6
+    db $f8, $ee, $2e, $00 ; entry 0
+    db $f0, $f3, $2e, $00 ; entry 1
+    db $e8, $f8, $2e, $00 ; entry 2
+    db $e0, $fe, $2e, $00 ; entry 3
+    db $d8, $03, $2e, $00 ; entry 4
+    db $d0, $08, $2e, $00 ; entry 5
+    db $e0, $f6, $24, $00 ; entry 6
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame5::
-Data_03D_4766:: ; address name
-    db $F8, $EE, $2E, $00 ; entry 0
-    db $F0, $F3, $2E, $00 ; entry 1
-    db $E8, $F8, $2E, $00 ; entry 2
-    db $E0, $FE, $2F, $00 ; entry 3
-    db $D8, $03, $2F, $00 ; entry 4
-    db $F8, $E6, $24, $00 ; entry 5
+    db $f8, $ee, $2e, $00 ; entry 0
+    db $f0, $f3, $2e, $00 ; entry 1
+    db $e8, $f8, $2e, $00 ; entry 2
+    db $e0, $fe, $2f, $00 ; entry 3
+    db $d8, $03, $2f, $00 ; entry 4
+    db $f8, $e6, $24, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame6::
-Data_03D_477F:: ; address name
-    db $F8, $F0, $2F, $00 ; entry 0
-    db $F0, $F5, $2F, $00 ; entry 1
-    db $E8, $FA, $2F, $00 ; entry 2
+    db $f8, $f0, $2f, $00 ; entry 0
+    db $f0, $f5, $2f, $00 ; entry 1
+    db $e8, $fa, $2f, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame7::
-Data_03D_478C:: ; address name
-    db $F8, $F8, $1C, $00 ; entry 0
-    db $F8, $00, $1E, $00 ; entry 1
-    db $F0, $FD, $1F, $00 ; entry 2
+    db $f8, $f8, $1c, $00 ; entry 0
+    db $f8, $00, $1e, $00 ; entry 1
+    db $f0, $fd, $1f, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set21; ends with $80)
+; frame 8 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set21Frame8::
-Data_03D_4799:: ; address name
-    db $F8, $FC, $1D, $00 ; entry 0
-    db $F8, $04, $1E, $00 ; entry 1
-    db $F0, $FC, $1A, $00 ; entry 2
-    db $F0, $04, $1B, $00 ; entry 3
-    db $F8, $F4, $1C, $00 ; entry 4
-    db $F0, $F4, $19, $00 ; entry 5
-    db $EA, $FA, $00, $20 ; entry 6
+    db $f8, $fc, $1d, $00 ; entry 0
+    db $f8, $04, $1e, $00 ; entry 1
+    db $f0, $fc, $1a, $00 ; entry 2
+    db $f0, $04, $1b, $00 ; entry 3
+    db $f8, $f4, $1c, $00 ; entry 4
+    db $f0, $f4, $19, $00 ; entry 5
+    db $ea, $fa, $00, $20 ; entry 6
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame9::
-Data_03D_47B6:: ; address name
-    db $F8, $FC, $0E, $00 ; entry 0
-    db $E8, $FC, $1A, $20 ; entry 1
-    db $E8, $F4, $1B, $20 ; entry 2
-    db $F0, $FC, $1D, $20 ; entry 3
-    db $F8, $F4, $14, $00 ; entry 4
-    db $F8, $04, $16, $00 ; entry 5
-    db $F0, $0C, $19, $20 ; entry 6
-    db $F8, $0C, $1C, $20 ; entry 7
-    db $F0, $EC, $1B, $20 ; entry 8
-    db $F8, $EC, $1E, $20 ; entry 9
-    db $E2, $FE, $00, $00 ; entry 10
-    db $E8, $04, $0C, $00 ; entry 11
-    db $F0, $04, $1E, $00 ; entry 12
-    db $F0, $F4, $0E, $00 ; entry 13
+    db $f8, $fc, $0e, $00 ; entry 0
+    db $e8, $fc, $1a, $20 ; entry 1
+    db $e8, $f4, $1b, $20 ; entry 2
+    db $f0, $fc, $1d, $20 ; entry 3
+    db $f8, $f4, $14, $00 ; entry 4
+    db $f8, $04, $16, $00 ; entry 5
+    db $f0, $0c, $19, $20 ; entry 6
+    db $f8, $0c, $1c, $20 ; entry 7
+    db $f0, $ec, $1b, $20 ; entry 8
+    db $f8, $ec, $1e, $20 ; entry 9
+    db $e2, $fe, $00, $00 ; entry 10
+    db $e8, $04, $0c, $00 ; entry 11
+    db $f0, $04, $1e, $00 ; entry 12
+    db $f0, $f4, $0e, $00 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame10::
-Data_03D_47EF:: ; address name
-    db $D0, $F8, $00, $20 ; entry 0
-    db $D8, $00, $01, $20 ; entry 1
-    db $D8, $F8, $02, $20 ; entry 2
-    db $E0, $00, $04, $20 ; entry 3
-    db $E0, $F8, $05, $20 ; entry 4
-    db $E0, $F0, $06, $20 ; entry 5
-    db $E8, $10, $07, $20 ; entry 6
-    db $E8, $08, $08, $20 ; entry 7
-    db $E8, $00, $09, $20 ; entry 8
-    db $E8, $F8, $0A, $20 ; entry 9
-    db $E8, $F0, $0B, $20 ; entry 10
-    db $E8, $E8, $0C, $20 ; entry 11
-    db $F0, $10, $0D, $20 ; entry 12
-    db $F0, $08, $0E, $20 ; entry 13
-    db $F0, $00, $0F, $20 ; entry 14
-    db $F0, $F8, $10, $20 ; entry 15
-    db $F0, $F0, $11, $20 ; entry 16
-    db $F0, $E8, $12, $20 ; entry 17
-    db $F8, $10, $13, $20 ; entry 18
-    db $F8, $08, $14, $20 ; entry 19
-    db $F8, $00, $15, $20 ; entry 20
-    db $F8, $F8, $16, $20 ; entry 21
-    db $F8, $F0, $17, $20 ; entry 22
-    db $F8, $E8, $18, $20 ; entry 23
-    db $E0, $0C, $03, $20 ; entry 24
+    db $d0, $f8, $00, $20 ; entry 0
+    db $d8, $00, $01, $20 ; entry 1
+    db $d8, $f8, $02, $20 ; entry 2
+    db $e0, $00, $04, $20 ; entry 3
+    db $e0, $f8, $05, $20 ; entry 4
+    db $e0, $f0, $06, $20 ; entry 5
+    db $e8, $10, $07, $20 ; entry 6
+    db $e8, $08, $08, $20 ; entry 7
+    db $e8, $00, $09, $20 ; entry 8
+    db $e8, $f8, $0a, $20 ; entry 9
+    db $e8, $f0, $0b, $20 ; entry 10
+    db $e8, $e8, $0c, $20 ; entry 11
+    db $f0, $10, $0d, $20 ; entry 12
+    db $f0, $08, $0e, $20 ; entry 13
+    db $f0, $00, $0f, $20 ; entry 14
+    db $f0, $f8, $10, $20 ; entry 15
+    db $f0, $f0, $11, $20 ; entry 16
+    db $f0, $e8, $12, $20 ; entry 17
+    db $f8, $10, $13, $20 ; entry 18
+    db $f8, $08, $14, $20 ; entry 19
+    db $f8, $00, $15, $20 ; entry 20
+    db $f8, $f8, $16, $20 ; entry 21
+    db $f8, $f0, $17, $20 ; entry 22
+    db $f8, $e8, $18, $20 ; entry 23
+    db $e0, $0c, $03, $20 ; entry 24
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set21; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 MetaSprites3D_4077Set21Frame11::
-Data_03D_4854:: ; address name
-    db $D0, $00, $00, $00 ; entry 0
-    db $D8, $F8, $01, $00 ; entry 1
-    db $D8, $00, $02, $00 ; entry 2
-    db $E0, $F8, $04, $00 ; entry 3
-    db $E0, $00, $05, $00 ; entry 4
-    db $E0, $08, $06, $00 ; entry 5
-    db $E8, $E8, $07, $00 ; entry 6
-    db $E8, $F0, $08, $00 ; entry 7
-    db $E8, $F8, $09, $00 ; entry 8
-    db $E8, $00, $0A, $00 ; entry 9
-    db $E8, $08, $0B, $00 ; entry 10
-    db $E8, $10, $0C, $00 ; entry 11
-    db $F0, $E8, $0D, $00 ; entry 12
-    db $F0, $F0, $0E, $00 ; entry 13
-    db $F0, $F8, $0F, $00 ; entry 14
-    db $F0, $00, $10, $00 ; entry 15
-    db $F0, $08, $11, $00 ; entry 16
-    db $F0, $10, $12, $00 ; entry 17
-    db $F8, $E8, $13, $00 ; entry 18
-    db $F8, $F0, $14, $00 ; entry 19
-    db $F8, $F8, $15, $00 ; entry 20
-    db $F8, $00, $16, $00 ; entry 21
-    db $F8, $08, $17, $00 ; entry 22
-    db $F8, $10, $18, $00 ; entry 23
-    db $E0, $EC, $03, $00 ; entry 24
+    db $d0, $00, $00, $00 ; entry 0
+    db $d8, $f8, $01, $00 ; entry 1
+    db $d8, $00, $02, $00 ; entry 2
+    db $e0, $f8, $04, $00 ; entry 3
+    db $e0, $00, $05, $00 ; entry 4
+    db $e0, $08, $06, $00 ; entry 5
+    db $e8, $e8, $07, $00 ; entry 6
+    db $e8, $f0, $08, $00 ; entry 7
+    db $e8, $f8, $09, $00 ; entry 8
+    db $e8, $00, $0a, $00 ; entry 9
+    db $e8, $08, $0b, $00 ; entry 10
+    db $e8, $10, $0c, $00 ; entry 11
+    db $f0, $e8, $0d, $00 ; entry 12
+    db $f0, $f0, $0e, $00 ; entry 13
+    db $f0, $f8, $0f, $00 ; entry 14
+    db $f0, $00, $10, $00 ; entry 15
+    db $f0, $08, $11, $00 ; entry 16
+    db $f0, $10, $12, $00 ; entry 17
+    db $f8, $e8, $13, $00 ; entry 18
+    db $f8, $f0, $14, $00 ; entry 19
+    db $f8, $f8, $15, $00 ; entry 20
+    db $f8, $00, $16, $00 ; entry 21
+    db $f8, $08, $17, $00 ; entry 22
+    db $f8, $10, $18, $00 ; entry 23
+    db $e0, $ec, $03, $00 ; entry 24
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set21; ends with $80)
+; frame 12 of MetaSprites3D_4077Set21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set21Frame12::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 34 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 34 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set22::
-Data_03D_48BA:: ; address name
     dw MetaSprites3D_4077Set22Frame0 ; entry 0
     dw MetaSprites3D_4077Set22Frame1 ; entry 1
     dw MetaSprites3D_4077Set22Frame2 ; entry 2
@@ -986,95 +910,84 @@ Data_03D_48BA:: ; address name
     dw MetaSprites3D_4077Set22Frame6 ; entry 30
     dw MetaSprites3D_4077Set22Frame6 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set22; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 0 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 MetaSprites3D_4077Set22Frame0::
-Data_03D_48FA:: ; address name
-    db $D0, $F8, $04, $00 ; entry 0
-    db $D0, $00, $05, $00 ; entry 1
+    db $d0, $f8, $04, $00 ; entry 0
+    db $d0, $00, $05, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set22; ends with $80)
+; frame 1 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set22Frame1::
-Data_03D_4903:: ; address name
-    db $E0, $F8, $04, $00 ; entry 0
-    db $E0, $00, $05, $00 ; entry 1
-    db $D8, $F8, $02, $00 ; entry 2
-    db $D8, $00, $03, $00 ; entry 3
-    db $D0, $F8, $00, $00 ; entry 4
-    db $D0, $00, $01, $00 ; entry 5
+    db $e0, $f8, $04, $00 ; entry 0
+    db $e0, $00, $05, $00 ; entry 1
+    db $d8, $f8, $02, $00 ; entry 2
+    db $d8, $00, $03, $00 ; entry 3
+    db $d0, $f8, $00, $00 ; entry 4
+    db $d0, $00, $01, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set22; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 MetaSprites3D_4077Set22Frame2::
-Data_03D_491C:: ; address name
-    db $DC, $F8, $17, $00 ; entry 0
-    db $DC, $00, $17, $20 ; entry 1
-    db $E4, $F0, $15, $00 ; entry 2
-    db $E4, $F8, $16, $00 ; entry 3
-    db $E4, $08, $15, $20 ; entry 4
-    db $E4, $00, $16, $20 ; entry 5
+    db $dc, $f8, $17, $00 ; entry 0
+    db $dc, $00, $17, $20 ; entry 1
+    db $e4, $f0, $15, $00 ; entry 2
+    db $e4, $f8, $16, $00 ; entry 3
+    db $e4, $08, $15, $20 ; entry 4
+    db $e4, $00, $16, $20 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set22; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 MetaSprites3D_4077Set22Frame3::
-Data_03D_4935:: ; address name
-    db $E4, $00, $07, $00 ; entry 0
-    db $E4, $08, $08, $00 ; entry 1
-    db $E4, $F8, $07, $20 ; entry 2
-    db $E4, $F0, $08, $20 ; entry 3
-    db $DC, $F8, $00, $00 ; entry 4
-    db $DC, $00, $01, $00 ; entry 5
+    db $e4, $00, $07, $00 ; entry 0
+    db $e4, $08, $08, $00 ; entry 1
+    db $e4, $f8, $07, $20 ; entry 2
+    db $e4, $f0, $08, $20 ; entry 3
+    db $dc, $f8, $00, $00 ; entry 4
+    db $dc, $00, $01, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set22; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 4 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 MetaSprites3D_4077Set22Frame4::
-Data_03D_494E:: ; address name
-    db $D4, $F8, $0D, $20 ; entry 0
-    db $D4, $F0, $0E, $20 ; entry 1
-    db $D4, $00, $0D, $00 ; entry 2
-    db $D4, $08, $0E, $00 ; entry 3
-    db $DC, $00, $0F, $00 ; entry 4
-    db $DC, $08, $10, $00 ; entry 5
-    db $DC, $10, $11, $00 ; entry 6
-    db $DC, $F0, $10, $20 ; entry 7
-    db $DC, $E8, $11, $20 ; entry 8
-    db $DC, $F8, $0F, $20 ; entry 9
-    db $E4, $F8, $12, $20 ; entry 10
-    db $E4, $F0, $13, $20 ; entry 11
-    db $E4, $E8, $14, $20 ; entry 12
-    db $E4, $00, $12, $00 ; entry 13
-    db $E4, $08, $13, $00 ; entry 14
-    db $E4, $10, $14, $00 ; entry 15
+    db $d4, $f8, $0d, $20 ; entry 0
+    db $d4, $f0, $0e, $20 ; entry 1
+    db $d4, $00, $0d, $00 ; entry 2
+    db $d4, $08, $0e, $00 ; entry 3
+    db $dc, $00, $0f, $00 ; entry 4
+    db $dc, $08, $10, $00 ; entry 5
+    db $dc, $10, $11, $00 ; entry 6
+    db $dc, $f0, $10, $20 ; entry 7
+    db $dc, $e8, $11, $20 ; entry 8
+    db $dc, $f8, $0f, $20 ; entry 9
+    db $e4, $f8, $12, $20 ; entry 10
+    db $e4, $f0, $13, $20 ; entry 11
+    db $e4, $e8, $14, $20 ; entry 12
+    db $e4, $00, $12, $00 ; entry 13
+    db $e4, $08, $13, $00 ; entry 14
+    db $e4, $10, $14, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set22; ends with $80)
+; frame 5 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set22Frame5::
-Data_03D_498F:: ; address name
-    db $DC, $F8, $09, $20 ; entry 0
-    db $DC, $F0, $0A, $20 ; entry 1
-    db $DC, $00, $09, $00 ; entry 2
-    db $DC, $08, $0A, $00 ; entry 3
-    db $E4, $F8, $0B, $20 ; entry 4
-    db $E4, $F0, $0C, $20 ; entry 5
-    db $E4, $00, $0B, $00 ; entry 6
-    db $E4, $08, $0C, $00 ; entry 7
+    db $dc, $f8, $09, $20 ; entry 0
+    db $dc, $f0, $0a, $20 ; entry 1
+    db $dc, $00, $09, $00 ; entry 2
+    db $dc, $08, $0a, $00 ; entry 3
+    db $e4, $f8, $0b, $20 ; entry 4
+    db $e4, $f0, $0c, $20 ; entry 5
+    db $e4, $00, $0b, $00 ; entry 6
+    db $e4, $08, $0c, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set22; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set22; ends with $80 (E-0147)
 MetaSprites3D_4077Set22Frame6::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 35 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 35 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set23::
-Data_03D_49B1:: ; address name
     dw MetaSprites3D_4077Set23Frame0 ; entry 0
     dw MetaSprites3D_4077Set23Frame1 ; entry 1
     dw MetaSprites3D_4077Set23Frame2 ; entry 2
@@ -1108,115 +1021,102 @@ Data_03D_49B1:: ; address name
     dw MetaSprites3D_4077Set23Frame7 ; entry 30
     dw MetaSprites3D_4077Set23Frame7 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set23; ends with $80)
+; frame 0 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set23Frame0::
-Data_03D_49F1:: ; address name
-    db $F8, $F0, $00, $60 ; entry 0
-    db $F8, $E8, $01, $60 ; entry 1
+    db $f8, $f0, $00, $60 ; entry 0
+    db $f8, $e8, $01, $60 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame1::
-Data_03D_49FA:: ; address name
-    db $F7, $F5, $00, $60 ; entry 0
-    db $F7, $ED, $01, $60 ; entry 1
-    db $F1, $FD, $00, $00 ; entry 2
-    db $F1, $05, $01, $00 ; entry 3
+    db $f7, $f5, $00, $60 ; entry 0
+    db $f7, $ed, $01, $60 ; entry 1
+    db $f1, $fd, $00, $00 ; entry 2
+    db $f1, $05, $01, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame2::
-Data_03D_4A0B:: ; address name
-    db $F8, $F0, $0B, $00 ; entry 0
-    db $F8, $F8, $0C, $00 ; entry 1
-    db $F0, $FC, $09, $00 ; entry 2
-    db $F0, $04, $0A, $00 ; entry 3
-    db $E0, $08, $05, $00 ; entry 4
-    db $E0, $10, $06, $00 ; entry 5
-    db $E8, $04, $07, $00 ; entry 6
-    db $E8, $0C, $08, $00 ; entry 7
-    db $D8, $10, $04, $00 ; entry 8
-    db $D0, $08, $02, $00 ; entry 9
-    db $D0, $10, $03, $00 ; entry 10
+    db $f8, $f0, $0b, $00 ; entry 0
+    db $f8, $f8, $0c, $00 ; entry 1
+    db $f0, $fc, $09, $00 ; entry 2
+    db $f0, $04, $0a, $00 ; entry 3
+    db $e0, $08, $05, $00 ; entry 4
+    db $e0, $10, $06, $00 ; entry 5
+    db $e8, $04, $07, $00 ; entry 6
+    db $e8, $0c, $08, $00 ; entry 7
+    db $d8, $10, $04, $00 ; entry 8
+    db $d0, $08, $02, $00 ; entry 9
+    db $d0, $10, $03, $00 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame3::
-Data_03D_4A38:: ; address name
-    db $F8, $F0, $0B, $00 ; entry 0
-    db $F8, $F8, $0C, $00 ; entry 1
-    db $F0, $FC, $09, $00 ; entry 2
-    db $F0, $04, $0A, $00 ; entry 3
-    db $E8, $04, $07, $00 ; entry 4
-    db $E8, $0C, $08, $00 ; entry 5
-    db $E0, $08, $0D, $00 ; entry 6
-    db $E0, $10, $0E, $00 ; entry 7
-    db $D8, $08, $0F, $00 ; entry 8
-    db $D8, $10, $10, $00 ; entry 9
-    db $D0, $FC, $11, $00 ; entry 10
-    db $D0, $04, $12, $00 ; entry 11
-    db $D0, $0C, $13, $00 ; entry 12
-    db $D8, $EE, $14, $00 ; entry 13
-    db $D8, $F6, $15, $00 ; entry 14
-    db $E0, $E8, $16, $00 ; entry 15
+    db $f8, $f0, $0b, $00 ; entry 0
+    db $f8, $f8, $0c, $00 ; entry 1
+    db $f0, $fc, $09, $00 ; entry 2
+    db $f0, $04, $0a, $00 ; entry 3
+    db $e8, $04, $07, $00 ; entry 4
+    db $e8, $0c, $08, $00 ; entry 5
+    db $e0, $08, $0d, $00 ; entry 6
+    db $e0, $10, $0e, $00 ; entry 7
+    db $d8, $08, $0f, $00 ; entry 8
+    db $d8, $10, $10, $00 ; entry 9
+    db $d0, $fc, $11, $00 ; entry 10
+    db $d0, $04, $12, $00 ; entry 11
+    db $d0, $0c, $13, $00 ; entry 12
+    db $d8, $ee, $14, $00 ; entry 13
+    db $d8, $f6, $15, $00 ; entry 14
+    db $e0, $e8, $16, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set23; ends with $80)
+; frame 4 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set23Frame4::
-Data_03D_4A79:: ; address name
-    db $F8, $F0, $0B, $00 ; entry 0
-    db $F8, $F8, $0C, $00 ; entry 1
-    db $D0, $FC, $17, $00 ; entry 2
-    db $D0, $04, $18, $00 ; entry 3
-    db $D0, $0C, $19, $00 ; entry 4
-    db $D8, $EC, $1A, $00 ; entry 5
-    db $D8, $F4, $1B, $00 ; entry 6
-    db $D8, $FC, $1C, $00 ; entry 7
-    db $D8, $08, $1D, $00 ; entry 8
-    db $D8, $10, $1E, $00 ; entry 9
-    db $E0, $E8, $1F, $00 ; entry 10
-    db $E0, $10, $20, $00 ; entry 11
-    db $E8, $0C, $28, $00 ; entry 12
-    db $F0, $FC, $29, $00 ; entry 13
-    db $F0, $04, $2A, $00 ; entry 14
+    db $f8, $f0, $0b, $00 ; entry 0
+    db $f8, $f8, $0c, $00 ; entry 1
+    db $d0, $fc, $17, $00 ; entry 2
+    db $d0, $04, $18, $00 ; entry 3
+    db $d0, $0c, $19, $00 ; entry 4
+    db $d8, $ec, $1a, $00 ; entry 5
+    db $d8, $f4, $1b, $00 ; entry 6
+    db $d8, $fc, $1c, $00 ; entry 7
+    db $d8, $08, $1d, $00 ; entry 8
+    db $d8, $10, $1e, $00 ; entry 9
+    db $e0, $e8, $1f, $00 ; entry 10
+    db $e0, $10, $20, $00 ; entry 11
+    db $e8, $0c, $28, $00 ; entry 12
+    db $f0, $fc, $29, $00 ; entry 13
+    db $f0, $04, $2a, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame5::
-Data_03D_4AB6:: ; address name
-    db $E0, $E8, $1F, $00 ; entry 0
-    db $E0, $10, $27, $00 ; entry 1
-    db $D8, $10, $26, $00 ; entry 2
-    db $D0, $FC, $21, $00 ; entry 3
-    db $D0, $04, $22, $00 ; entry 4
-    db $D0, $0C, $23, $00 ; entry 5
-    db $D8, $EE, $24, $00 ; entry 6
-    db $D8, $F6, $25, $00 ; entry 7
+    db $e0, $e8, $1f, $00 ; entry 0
+    db $e0, $10, $27, $00 ; entry 1
+    db $d8, $10, $26, $00 ; entry 2
+    db $d0, $fc, $21, $00 ; entry 3
+    db $d0, $04, $22, $00 ; entry 4
+    db $d0, $0c, $23, $00 ; entry 5
+    db $d8, $ee, $24, $00 ; entry 6
+    db $d8, $f6, $25, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame6::
-Data_03D_4AD7:: ; address name
-    db $E0, $E8, $1F, $00 ; entry 0
-    db $D8, $EE, $24, $00 ; entry 1
+    db $e0, $e8, $1f, $00 ; entry 0
+    db $d8, $ee, $24, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set23; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set23; ends with $80 (E-0147)
 MetaSprites3D_4077Set23Frame7::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 36 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 36 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set24::
-Data_03D_4AE1:: ; address name
     dw MetaSprites3D_4077Set24Frame0 ; entry 0
     dw MetaSprites3D_4077Set24Frame1 ; entry 1
     dw MetaSprites3D_4077Set24Frame2 ; entry 2
@@ -1250,154 +1150,141 @@ Data_03D_4AE1:: ; address name
     dw MetaSprites3D_4077Set24Frame7 ; entry 30
     dw MetaSprites3D_4077Set24Frame7 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set24; ends with $80)
+; frame 0 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set24Frame0::
-Data_03D_4B21:: ; address name
-    db $D8, $FC, $00, $00 ; entry 0
-    db $D0, $FC, $01, $00 ; entry 1
+    db $d8, $fc, $00, $00 ; entry 0
+    db $d0, $fc, $01, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame1::
-Data_03D_4B2A:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F8, $08, $00 ; entry 1
-    db $E0, $FC, $01, $00 ; entry 2
-    db $D0, $FC, $03, $00 ; entry 3
-    db $D8, $FC, $02, $00 ; entry 4
-    db $E8, $FC, $0B, $00 ; entry 5
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f8, $08, $00 ; entry 1
+    db $e0, $fc, $01, $00 ; entry 2
+    db $d0, $fc, $03, $00 ; entry 3
+    db $d8, $fc, $02, $00 ; entry 4
+    db $e8, $fc, $0b, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame2::
-Data_03D_4B43:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F0, $07, $00 ; entry 1
-    db $D8, $F8, $08, $00 ; entry 2
-    db $D8, $E8, $06, $00 ; entry 3
-    db $F8, $FC, $00, $00 ; entry 4
-    db $F0, $FC, $01, $00 ; entry 5
-    db $D8, $FC, $04, $00 ; entry 6
-    db $D0, $FC, $04, $00 ; entry 7
-    db $E8, $FC, $0F, $00 ; entry 8
-    db $E0, $FC, $0D, $00 ; entry 9
-    db $E0, $F4, $0C, $00 ; entry 10
-    db $E8, $F4, $0E, $00 ; entry 11
-    db $E0, $03, $0C, $20 ; entry 12
-    db $E8, $03, $0E, $20 ; entry 13
-    db $E0, $E8, $06, $40 ; entry 14
-    db $E0, $F0, $07, $40 ; entry 15
-    db $E0, $F8, $08, $40 ; entry 16
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f0, $07, $00 ; entry 1
+    db $d8, $f8, $08, $00 ; entry 2
+    db $d8, $e8, $06, $00 ; entry 3
+    db $f8, $fc, $00, $00 ; entry 4
+    db $f0, $fc, $01, $00 ; entry 5
+    db $d8, $fc, $04, $00 ; entry 6
+    db $d0, $fc, $04, $00 ; entry 7
+    db $e8, $fc, $0f, $00 ; entry 8
+    db $e0, $fc, $0d, $00 ; entry 9
+    db $e0, $f4, $0c, $00 ; entry 10
+    db $e8, $f4, $0e, $00 ; entry 11
+    db $e0, $03, $0c, $20 ; entry 12
+    db $e8, $03, $0e, $20 ; entry 13
+    db $e0, $e8, $06, $40 ; entry 14
+    db $e0, $f0, $07, $40 ; entry 15
+    db $e0, $f8, $08, $40 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame3::
-Data_03D_4B88:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F0, $07, $00 ; entry 1
-    db $D8, $F8, $08, $00 ; entry 2
-    db $D8, $E8, $06, $00 ; entry 3
-    db $E0, $E8, $06, $40 ; entry 4
-    db $E0, $F0, $07, $40 ; entry 5
-    db $E0, $F8, $08, $40 ; entry 6
-    db $F0, $FC, $04, $00 ; entry 7
-    db $E0, $FC, $04, $00 ; entry 8
-    db $D8, $FC, $04, $00 ; entry 9
-    db $D0, $FC, $04, $00 ; entry 10
-    db $F8, $FC, $03, $00 ; entry 11
-    db $F8, $00, $0A, $20 ; entry 12
-    db $E8, $FC, $0B, $00 ; entry 13
-    db $E8, $F8, $09, $00 ; entry 14
-    db $F0, $F8, $09, $00 ; entry 15
-    db $F8, $F8, $0A, $00 ; entry 16
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f0, $07, $00 ; entry 1
+    db $d8, $f8, $08, $00 ; entry 2
+    db $d8, $e8, $06, $00 ; entry 3
+    db $e0, $e8, $06, $40 ; entry 4
+    db $e0, $f0, $07, $40 ; entry 5
+    db $e0, $f8, $08, $40 ; entry 6
+    db $f0, $fc, $04, $00 ; entry 7
+    db $e0, $fc, $04, $00 ; entry 8
+    db $d8, $fc, $04, $00 ; entry 9
+    db $d0, $fc, $04, $00 ; entry 10
+    db $f8, $fc, $03, $00 ; entry 11
+    db $f8, $00, $0a, $20 ; entry 12
+    db $e8, $fc, $0b, $00 ; entry 13
+    db $e8, $f8, $09, $00 ; entry 14
+    db $f0, $f8, $09, $00 ; entry 15
+    db $f8, $f8, $0a, $00 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set24; ends with $80)
+; frame 4 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set24Frame4::
-Data_03D_4BCD:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F0, $07, $00 ; entry 1
-    db $D8, $F8, $08, $00 ; entry 2
-    db $D8, $E8, $06, $00 ; entry 3
-    db $E0, $E8, $06, $40 ; entry 4
-    db $E0, $F0, $07, $40 ; entry 5
-    db $F8, $FC, $04, $00 ; entry 6
-    db $F0, $FC, $04, $00 ; entry 7
-    db $E8, $FC, $04, $00 ; entry 8
-    db $E0, $F8, $08, $40 ; entry 9
-    db $E8, $F8, $09, $00 ; entry 10
-    db $F0, $F8, $09, $00 ; entry 11
-    db $F8, $F8, $0A, $00 ; entry 12
-    db $E0, $00, $08, $60 ; entry 13
-    db $E8, $00, $09, $20 ; entry 14
-    db $F0, $00, $09, $20 ; entry 15
-    db $F8, $00, $0A, $20 ; entry 16
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f0, $07, $00 ; entry 1
+    db $d8, $f8, $08, $00 ; entry 2
+    db $d8, $e8, $06, $00 ; entry 3
+    db $e0, $e8, $06, $40 ; entry 4
+    db $e0, $f0, $07, $40 ; entry 5
+    db $f8, $fc, $04, $00 ; entry 6
+    db $f0, $fc, $04, $00 ; entry 7
+    db $e8, $fc, $04, $00 ; entry 8
+    db $e0, $f8, $08, $40 ; entry 9
+    db $e8, $f8, $09, $00 ; entry 10
+    db $f0, $f8, $09, $00 ; entry 11
+    db $f8, $f8, $0a, $00 ; entry 12
+    db $e0, $00, $08, $60 ; entry 13
+    db $e8, $00, $09, $20 ; entry 14
+    db $f0, $00, $09, $20 ; entry 15
+    db $f8, $00, $0a, $20 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame5::
-Data_03D_4C12:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F0, $07, $00 ; entry 1
-    db $D8, $F8, $08, $00 ; entry 2
-    db $D8, $E8, $06, $00 ; entry 3
-    db $E0, $E8, $06, $40 ; entry 4
-    db $E0, $F0, $07, $40 ; entry 5
-    db $E0, $F8, $08, $40 ; entry 6
-    db $E8, $F8, $09, $00 ; entry 7
-    db $F0, $F8, $09, $00 ; entry 8
-    db $F8, $F8, $0A, $00 ; entry 9
-    db $E8, $00, $09, $20 ; entry 10
-    db $F0, $00, $09, $20 ; entry 11
-    db $F8, $00, $0A, $20 ; entry 12
-    db $D8, $08, $07, $20 ; entry 13
-    db $D8, $10, $06, $20 ; entry 14
-    db $E0, $10, $06, $60 ; entry 15
-    db $E0, $08, $07, $60 ; entry 16
-    db $E0, $00, $08, $60 ; entry 17
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f0, $07, $00 ; entry 1
+    db $d8, $f8, $08, $00 ; entry 2
+    db $d8, $e8, $06, $00 ; entry 3
+    db $e0, $e8, $06, $40 ; entry 4
+    db $e0, $f0, $07, $40 ; entry 5
+    db $e0, $f8, $08, $40 ; entry 6
+    db $e8, $f8, $09, $00 ; entry 7
+    db $f0, $f8, $09, $00 ; entry 8
+    db $f8, $f8, $0a, $00 ; entry 9
+    db $e8, $00, $09, $20 ; entry 10
+    db $f0, $00, $09, $20 ; entry 11
+    db $f8, $00, $0a, $20 ; entry 12
+    db $d8, $08, $07, $20 ; entry 13
+    db $d8, $10, $06, $20 ; entry 14
+    db $e0, $10, $06, $60 ; entry 15
+    db $e0, $08, $07, $60 ; entry 16
+    db $e0, $00, $08, $60 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame6::
-Data_03D_4C5B:: ; address name
-    db $D0, $F8, $05, $00 ; entry 0
-    db $D8, $F0, $07, $00 ; entry 1
-    db $D8, $F8, $08, $00 ; entry 2
-    db $D8, $E8, $06, $00 ; entry 3
-    db $E0, $E8, $06, $40 ; entry 4
-    db $E0, $F0, $07, $40 ; entry 5
-    db $E0, $F8, $08, $40 ; entry 6
-    db $E8, $F8, $09, $00 ; entry 7
-    db $F0, $F8, $09, $00 ; entry 8
-    db $F8, $F8, $0A, $00 ; entry 9
-    db $E8, $00, $09, $20 ; entry 10
-    db $F0, $00, $09, $20 ; entry 11
-    db $F8, $00, $0A, $20 ; entry 12
-    db $D0, $00, $05, $20 ; entry 13
-    db $D8, $08, $07, $20 ; entry 14
-    db $D8, $00, $08, $20 ; entry 15
-    db $D8, $10, $06, $20 ; entry 16
-    db $E0, $10, $06, $60 ; entry 17
-    db $E0, $08, $07, $60 ; entry 18
-    db $E0, $00, $08, $60 ; entry 19
+    db $d0, $f8, $05, $00 ; entry 0
+    db $d8, $f0, $07, $00 ; entry 1
+    db $d8, $f8, $08, $00 ; entry 2
+    db $d8, $e8, $06, $00 ; entry 3
+    db $e0, $e8, $06, $40 ; entry 4
+    db $e0, $f0, $07, $40 ; entry 5
+    db $e0, $f8, $08, $40 ; entry 6
+    db $e8, $f8, $09, $00 ; entry 7
+    db $f0, $f8, $09, $00 ; entry 8
+    db $f8, $f8, $0a, $00 ; entry 9
+    db $e8, $00, $09, $20 ; entry 10
+    db $f0, $00, $09, $20 ; entry 11
+    db $f8, $00, $0a, $20 ; entry 12
+    db $d0, $00, $05, $20 ; entry 13
+    db $d8, $08, $07, $20 ; entry 14
+    db $d8, $00, $08, $20 ; entry 15
+    db $d8, $10, $06, $20 ; entry 16
+    db $e0, $10, $06, $60 ; entry 17
+    db $e0, $08, $07, $60 ; entry 18
+    db $e0, $00, $08, $60 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set24; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set24; ends with $80 (E-0147)
 MetaSprites3D_4077Set24Frame7::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 37 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 37 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set25::
-Data_03D_4CAD:: ; address name
     dw MetaSprites3D_4077Set25Frame0 ; entry 0
     dw MetaSprites3D_4077Set25Frame1 ; entry 1
     dw MetaSprites3D_4077Set25Frame2 ; entry 2
@@ -1431,157 +1318,141 @@ Data_03D_4CAD:: ; address name
     dw MetaSprites3D_4077Set25Frame9 ; entry 30
     dw MetaSprites3D_4077Set25Frame9 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set25; ends with $80)
+; frame 0 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set25Frame0::
-Data_03D_4CED:: ; address name
-    db $D8, $FC, $00, $00 ; entry 0
-    db $D0, $FC, $01, $00 ; entry 1
+    db $d8, $fc, $00, $00 ; entry 0
+    db $d0, $fc, $01, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame1::
-Data_03D_4CF6:: ; address name
-    db $E8, $FC, $00, $00 ; entry 0
-    db $E0, $FC, $01, $00 ; entry 1
-    db $D0, $FC, $03, $00 ; entry 2
-    db $D8, $FC, $02, $00 ; entry 3
-    db $E4, $F4, $06, $20 ; entry 4
-    db $E4, $03, $06, $00 ; entry 5
+    db $e8, $fc, $00, $00 ; entry 0
+    db $e0, $fc, $01, $00 ; entry 1
+    db $d0, $fc, $03, $00 ; entry 2
+    db $d8, $fc, $02, $00 ; entry 3
+    db $e4, $f4, $06, $20 ; entry 4
+    db $e4, $03, $06, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame2::
-Data_03D_4D0F:: ; address name
-    db $F8, $FC, $00, $00 ; entry 0
-    db $F0, $FC, $01, $00 ; entry 1
-    db $E0, $FC, $03, $00 ; entry 2
-    db $E8, $FC, $02, $00 ; entry 3
-    db $D8, $FC, $04, $00 ; entry 4
-    db $D0, $FC, $05, $00 ; entry 5
-    db $DC, $03, $07, $00 ; entry 6
-    db $DC, $0B, $08, $00 ; entry 7
-    db $E4, $03, $09, $00 ; entry 8
-    db $E4, $F4, $09, $20 ; entry 9
-    db $DC, $F4, $07, $20 ; entry 10
-    db $DC, $EC, $08, $20 ; entry 11
+    db $f8, $fc, $00, $00 ; entry 0
+    db $f0, $fc, $01, $00 ; entry 1
+    db $e0, $fc, $03, $00 ; entry 2
+    db $e8, $fc, $02, $00 ; entry 3
+    db $d8, $fc, $04, $00 ; entry 4
+    db $d0, $fc, $05, $00 ; entry 5
+    db $dc, $03, $07, $00 ; entry 6
+    db $dc, $0b, $08, $00 ; entry 7
+    db $e4, $03, $09, $00 ; entry 8
+    db $e4, $f4, $09, $20 ; entry 9
+    db $dc, $f4, $07, $20 ; entry 10
+    db $dc, $ec, $08, $20 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame3::
-Data_03D_4D40:: ; address name
-    db $D0, $FC, $05, $00 ; entry 0
-    db $F8, $FC, $03, $00 ; entry 1
-    db $F0, $FC, $04, $00 ; entry 2
-    db $E8, $FC, $05, $00 ; entry 3
-    db $E0, $FC, $05, $00 ; entry 4
-    db $D8, $FC, $05, $00 ; entry 5
-    db $D4, $03, $0A, $00 ; entry 6
-    db $D4, $0B, $0B, $00 ; entry 7
-    db $DC, $03, $0C, $00 ; entry 8
-    db $DC, $0B, $0D, $00 ; entry 9
-    db $E4, $03, $0E, $00 ; entry 10
-    db $E4, $0B, $0F, $00 ; entry 11
-    db $D4, $F4, $0A, $20 ; entry 12
-    db $D4, $EC, $0B, $20 ; entry 13
-    db $DC, $F4, $0C, $20 ; entry 14
-    db $DC, $EC, $0D, $20 ; entry 15
-    db $E4, $F4, $0E, $20 ; entry 16
-    db $E4, $EC, $0F, $20 ; entry 17
+    db $d0, $fc, $05, $00 ; entry 0
+    db $f8, $fc, $03, $00 ; entry 1
+    db $f0, $fc, $04, $00 ; entry 2
+    db $e8, $fc, $05, $00 ; entry 3
+    db $e0, $fc, $05, $00 ; entry 4
+    db $d8, $fc, $05, $00 ; entry 5
+    db $d4, $03, $0a, $00 ; entry 6
+    db $d4, $0b, $0b, $00 ; entry 7
+    db $dc, $03, $0c, $00 ; entry 8
+    db $dc, $0b, $0d, $00 ; entry 9
+    db $e4, $03, $0e, $00 ; entry 10
+    db $e4, $0b, $0f, $00 ; entry 11
+    db $d4, $f4, $0a, $20 ; entry 12
+    db $d4, $ec, $0b, $20 ; entry 13
+    db $dc, $f4, $0c, $20 ; entry 14
+    db $dc, $ec, $0d, $20 ; entry 15
+    db $e4, $f4, $0e, $20 ; entry 16
+    db $e4, $ec, $0f, $20 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set25; ends with $80)
+; frame 4 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set25Frame4::
-Data_03D_4D89:: ; address name
-    db $D0, $FC, $10, $00 ; entry 0
-    db $D8, $FC, $10, $00 ; entry 1
-    db $E0, $FC, $10, $00 ; entry 2
-    db $E8, $FC, $10, $00 ; entry 3
-    db $F0, $FC, $10, $00 ; entry 4
-    db $F8, $FC, $10, $00 ; entry 5
-    db $E4, $F4, $09, $20 ; entry 6
-    db $DC, $F4, $07, $20 ; entry 7
-    db $DC, $EC, $08, $20 ; entry 8
-    db $DC, $04, $07, $00 ; entry 9
-    db $DC, $0C, $08, $00 ; entry 10
-    db $E4, $03, $09, $00 ; entry 11
+    db $d0, $fc, $10, $00 ; entry 0
+    db $d8, $fc, $10, $00 ; entry 1
+    db $e0, $fc, $10, $00 ; entry 2
+    db $e8, $fc, $10, $00 ; entry 3
+    db $f0, $fc, $10, $00 ; entry 4
+    db $f8, $fc, $10, $00 ; entry 5
+    db $e4, $f4, $09, $20 ; entry 6
+    db $dc, $f4, $07, $20 ; entry 7
+    db $dc, $ec, $08, $20 ; entry 8
+    db $dc, $04, $07, $00 ; entry 9
+    db $dc, $0c, $08, $00 ; entry 10
+    db $e4, $03, $09, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame5::
-Data_03D_4DBA:: ; address name
-    db $D0, $FC, $10, $00 ; entry 0
-    db $D8, $FC, $10, $00 ; entry 1
-    db $E0, $FC, $10, $00 ; entry 2
-    db $E8, $FC, $10, $00 ; entry 3
-    db $F0, $FC, $10, $00 ; entry 4
-    db $F8, $FC, $10, $00 ; entry 5
-    db $D4, $F4, $0A, $20 ; entry 6
-    db $D4, $EC, $0B, $20 ; entry 7
-    db $DC, $F4, $0C, $20 ; entry 8
-    db $DC, $EC, $0D, $20 ; entry 9
-    db $E4, $F4, $0E, $20 ; entry 10
-    db $E4, $EC, $0F, $20 ; entry 11
-    db $D4, $03, $0A, $00 ; entry 12
-    db $D4, $0B, $0B, $00 ; entry 13
-    db $DC, $03, $0C, $00 ; entry 14
-    db $DC, $0B, $0D, $00 ; entry 15
-    db $E4, $03, $0E, $00 ; entry 16
-    db $E4, $0B, $0F, $00 ; entry 17
+    db $d0, $fc, $10, $00 ; entry 0
+    db $d8, $fc, $10, $00 ; entry 1
+    db $e0, $fc, $10, $00 ; entry 2
+    db $e8, $fc, $10, $00 ; entry 3
+    db $f0, $fc, $10, $00 ; entry 4
+    db $f8, $fc, $10, $00 ; entry 5
+    db $d4, $f4, $0a, $20 ; entry 6
+    db $d4, $ec, $0b, $20 ; entry 7
+    db $dc, $f4, $0c, $20 ; entry 8
+    db $dc, $ec, $0d, $20 ; entry 9
+    db $e4, $f4, $0e, $20 ; entry 10
+    db $e4, $ec, $0f, $20 ; entry 11
+    db $d4, $03, $0a, $00 ; entry 12
+    db $d4, $0b, $0b, $00 ; entry 13
+    db $dc, $03, $0c, $00 ; entry 14
+    db $dc, $0b, $0d, $00 ; entry 15
+    db $e4, $03, $0e, $00 ; entry 16
+    db $e4, $0b, $0f, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame6::
-Data_03D_4E03:: ; address name
-    db $D0, $FB, $10, $20 ; entry 0
-    db $D8, $FB, $10, $20 ; entry 1
-    db $E0, $FB, $10, $20 ; entry 2
-    db $E8, $FB, $10, $20 ; entry 3
-    db $F0, $FB, $10, $20 ; entry 4
-    db $F8, $FB, $10, $20 ; entry 5
-    db $E4, $F4, $06, $20 ; entry 6
-    db $E4, $03, $06, $00 ; entry 7
+    db $d0, $fb, $10, $20 ; entry 0
+    db $d8, $fb, $10, $20 ; entry 1
+    db $e0, $fb, $10, $20 ; entry 2
+    db $e8, $fb, $10, $20 ; entry 3
+    db $f0, $fb, $10, $20 ; entry 4
+    db $f8, $fb, $10, $20 ; entry 5
+    db $e4, $f4, $06, $20 ; entry 6
+    db $e4, $03, $06, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame7::
-Data_03D_4E24:: ; address name
-    db $D0, $FC, $11, $00 ; entry 0
-    db $D8, $FC, $11, $00 ; entry 1
-    db $E0, $FC, $11, $00 ; entry 2
-    db $E8, $FC, $11, $00 ; entry 3
-    db $F0, $FC, $11, $00 ; entry 4
-    db $F8, $FC, $11, $00 ; entry 5
+    db $d0, $fc, $11, $00 ; entry 0
+    db $d8, $fc, $11, $00 ; entry 1
+    db $e0, $fc, $11, $00 ; entry 2
+    db $e8, $fc, $11, $00 ; entry 3
+    db $f0, $fc, $11, $00 ; entry 4
+    db $f8, $fc, $11, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set25; ends with $80)
+; frame 8 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set25Frame8::
-Data_03D_4E3D:: ; address name
-    db $D0, $FB, $11, $20 ; entry 0
-    db $D8, $FB, $11, $20 ; entry 1
-    db $E0, $FB, $11, $20 ; entry 2
-    db $E8, $FB, $11, $20 ; entry 3
-    db $F0, $FB, $11, $20 ; entry 4
-    db $F8, $FB, $11, $20 ; entry 5
+    db $d0, $fb, $11, $20 ; entry 0
+    db $d8, $fb, $11, $20 ; entry 1
+    db $e0, $fb, $11, $20 ; entry 2
+    db $e8, $fb, $11, $20 ; entry 3
+    db $f0, $fb, $11, $20 ; entry 4
+    db $f8, $fb, $11, $20 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set25; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set25; ends with $80 (E-0147)
 MetaSprites3D_4077Set25Frame9::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 38 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 38 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set26::
-Data_03D_4E57:: ; address name
     dw MetaSprites3D_4077Set26Frame0 ; entry 0
     dw MetaSprites3D_4077Set26Frame1 ; entry 1
     dw MetaSprites3D_4077Set26Frame2 ; entry 2
@@ -1615,244 +1486,223 @@ Data_03D_4E57:: ; address name
     dw MetaSprites3D_4077Set26Frame12 ; entry 30
     dw MetaSprites3D_4077Set26Frame12 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set26; ends with $80)
+; frame 0 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set26Frame0::
-Data_03D_4E97:: ; address name
-    db $D8, $03, $00, $00 ; entry 0
-    db $D8, $0B, $01, $00 ; entry 1
-    db $D0, $03, $02, $00 ; entry 2
-    db $D0, $0B, $03, $00 ; entry 3
+    db $d8, $03, $00, $00 ; entry 0
+    db $d8, $0b, $01, $00 ; entry 1
+    db $d0, $03, $02, $00 ; entry 2
+    db $d0, $0b, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame1::
-Data_03D_4EA8:: ; address name
-    db $DC, $FF, $00, $00 ; entry 0
-    db $DC, $07, $01, $00 ; entry 1
-    db $D4, $FF, $02, $00 ; entry 2
-    db $D4, $07, $03, $00 ; entry 3
-    db $E4, $F9, $00, $60 ; entry 4
-    db $E4, $F1, $01, $60 ; entry 5
-    db $EC, $F9, $02, $60 ; entry 6
-    db $EC, $F1, $03, $60 ; entry 7
+    db $dc, $ff, $00, $00 ; entry 0
+    db $dc, $07, $01, $00 ; entry 1
+    db $d4, $ff, $02, $00 ; entry 2
+    db $d4, $07, $03, $00 ; entry 3
+    db $e4, $f9, $00, $60 ; entry 4
+    db $e4, $f1, $01, $60 ; entry 5
+    db $ec, $f9, $02, $60 ; entry 6
+    db $ec, $f1, $03, $60 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame2::
-Data_03D_4EC9:: ; address name
-    db $E0, $FE, $11, $00 ; entry 0
-    db $E0, $06, $12, $00 ; entry 1
-    db $D8, $0E, $10, $00 ; entry 2
-    db $D8, $FE, $0E, $00 ; entry 3
-    db $D8, $06, $0F, $00 ; entry 4
-    db $D0, $02, $0B, $00 ; entry 5
-    db $D0, $0A, $0C, $00 ; entry 6
-    db $D0, $12, $0D, $00 ; entry 7
+    db $e0, $fe, $11, $00 ; entry 0
+    db $e0, $06, $12, $00 ; entry 1
+    db $d8, $0e, $10, $00 ; entry 2
+    db $d8, $fe, $0e, $00 ; entry 3
+    db $d8, $06, $0f, $00 ; entry 4
+    db $d0, $02, $0b, $00 ; entry 5
+    db $d0, $0a, $0c, $00 ; entry 6
+    db $d0, $12, $0d, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame3::
-Data_03D_4EEA:: ; address name
-    db $F0, $F5, $11, $00 ; entry 0
-    db $F0, $FD, $12, $00 ; entry 1
-    db $D0, $02, $06, $00 ; entry 2
-    db $D0, $0A, $07, $00 ; entry 3
-    db $D8, $01, $09, $00 ; entry 4
-    db $D8, $09, $0A, $00 ; entry 5
-    db $E0, $09, $0D, $00 ; entry 6
-    db $E8, $05, $10, $00 ; entry 7
-    db $D8, $F9, $08, $00 ; entry 8
-    db $D8, $F7, $19, $00 ; entry 9
-    db $E8, $F0, $1D, $00 ; entry 10
-    db $E8, $F8, $1E, $00 ; entry 11
-    db $E8, $00, $1F, $00 ; entry 12
-    db $E0, $F9, $1B, $00 ; entry 13
-    db $E0, $01, $1C, $00 ; entry 14
+    db $f0, $f5, $11, $00 ; entry 0
+    db $f0, $fd, $12, $00 ; entry 1
+    db $d0, $02, $06, $00 ; entry 2
+    db $d0, $0a, $07, $00 ; entry 3
+    db $d8, $01, $09, $00 ; entry 4
+    db $d8, $09, $0a, $00 ; entry 5
+    db $e0, $09, $0d, $00 ; entry 6
+    db $e8, $05, $10, $00 ; entry 7
+    db $d8, $f9, $08, $00 ; entry 8
+    db $d8, $f7, $19, $00 ; entry 9
+    db $e8, $f0, $1d, $00 ; entry 10
+    db $e8, $f8, $1e, $00 ; entry 11
+    db $e8, $00, $1f, $00 ; entry 12
+    db $e0, $f9, $1b, $00 ; entry 13
+    db $e0, $01, $1c, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set26; ends with $80)
+; frame 4 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set26Frame4::
-Data_03D_4F27:: ; address name
-    db $E0, $F8, $22, $00 ; entry 0
-    db $E0, $00, $23, $00 ; entry 1
-    db $E0, $08, $24, $00 ; entry 2
-    db $D8, $F3, $20, $00 ; entry 3
-    db $E8, $02, $26, $00 ; entry 4
-    db $F0, $0A, $29, $00 ; entry 5
-    db $F8, $EA, $0B, $00 ; entry 6
-    db $F8, $F2, $0C, $00 ; entry 7
-    db $F8, $FA, $0D, $00 ; entry 8
-    db $F0, $EA, $08, $00 ; entry 9
-    db $F0, $F2, $09, $00 ; entry 10
-    db $F0, $FA, $0A, $00 ; entry 11
-    db $E8, $F4, $06, $00 ; entry 12
-    db $E8, $FA, $25, $00 ; entry 13
-    db $D0, $09, $13, $00 ; entry 14
-    db $D8, $04, $13, $00 ; entry 15
+    db $e0, $f8, $22, $00 ; entry 0
+    db $e0, $00, $23, $00 ; entry 1
+    db $e0, $08, $24, $00 ; entry 2
+    db $d8, $f3, $20, $00 ; entry 3
+    db $e8, $02, $26, $00 ; entry 4
+    db $f0, $0a, $29, $00 ; entry 5
+    db $f8, $ea, $0b, $00 ; entry 6
+    db $f8, $f2, $0c, $00 ; entry 7
+    db $f8, $fa, $0d, $00 ; entry 8
+    db $f0, $ea, $08, $00 ; entry 9
+    db $f0, $f2, $09, $00 ; entry 10
+    db $f0, $fa, $0a, $00 ; entry 11
+    db $e8, $f4, $06, $00 ; entry 12
+    db $e8, $fa, $25, $00 ; entry 13
+    db $d0, $09, $13, $00 ; entry 14
+    db $d8, $04, $13, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame5::
-Data_03D_4F68:: ; address name
-    db $F0, $F4, $13, $00 ; entry 0
-    db $F8, $EF, $13, $00 ; entry 1
-    db $D8, $04, $14, $00 ; entry 2
-    db $EC, $F0, $1D, $00 ; entry 3
-    db $EC, $F8, $1E, $00 ; entry 4
-    db $EC, $00, $1F, $00 ; entry 5
-    db $DC, $09, $1A, $00 ; entry 6
-    db $DC, $F8, $19, $00 ; entry 7
-    db $E0, $FF, $14, $00 ; entry 8
-    db $E4, $F9, $1B, $00 ; entry 9
-    db $E4, $01, $1C, $00 ; entry 10
+    db $f0, $f4, $13, $00 ; entry 0
+    db $f8, $ef, $13, $00 ; entry 1
+    db $d8, $04, $14, $00 ; entry 2
+    db $ec, $f0, $1d, $00 ; entry 3
+    db $ec, $f8, $1e, $00 ; entry 4
+    db $ec, $00, $1f, $00 ; entry 5
+    db $dc, $09, $1a, $00 ; entry 6
+    db $dc, $f8, $19, $00 ; entry 7
+    db $e0, $ff, $14, $00 ; entry 8
+    db $e4, $f9, $1b, $00 ; entry 9
+    db $e4, $01, $1c, $00 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame6::
-Data_03D_4F95:: ; address name
-    db $DC, $F4, $2E, $00 ; entry 0
-    db $E4, $F4, $2F, $40 ; entry 1
-    db $DC, $FC, $2D, $20 ; entry 2
-    db $DC, $04, $2E, $20 ; entry 3
-    db $E4, $04, $2F, $60 ; entry 4
-    db $E4, $FC, $04, $00 ; entry 5
-    db $F8, $EF, $14, $00 ; entry 6
-    db $F0, $F4, $14, $00 ; entry 7
-    db $EC, $FC, $2D, $60 ; entry 8
-    db $EC, $04, $2E, $60 ; entry 9
-    db $EC, $F4, $2E, $40 ; entry 10
+    db $dc, $f4, $2e, $00 ; entry 0
+    db $e4, $f4, $2f, $40 ; entry 1
+    db $dc, $fc, $2d, $20 ; entry 2
+    db $dc, $04, $2e, $20 ; entry 3
+    db $e4, $04, $2f, $60 ; entry 4
+    db $e4, $fc, $04, $00 ; entry 5
+    db $f8, $ef, $14, $00 ; entry 6
+    db $f0, $f4, $14, $00 ; entry 7
+    db $ec, $fc, $2d, $60 ; entry 8
+    db $ec, $04, $2e, $60 ; entry 9
+    db $ec, $f4, $2e, $40 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame7::
-Data_03D_4FC2:: ; address name
-    db $D0, $E8, $2B, $00 ; entry 0
-    db $D0, $F0, $2C, $00 ; entry 1
-    db $D0, $F8, $2D, $00 ; entry 2
-    db $E0, $E8, $2F, $00 ; entry 3
-    db $E0, $F0, $2A, $00 ; entry 4
-    db $D8, $F8, $2A, $00 ; entry 5
-    db $D8, $E8, $2E, $00 ; entry 6
-    db $D0, $10, $2B, $20 ; entry 7
-    db $D0, $08, $2C, $20 ; entry 8
-    db $D0, $00, $2D, $20 ; entry 9
-    db $E0, $10, $2F, $20 ; entry 10
-    db $E0, $08, $2A, $20 ; entry 11
-    db $D8, $00, $2A, $20 ; entry 12
-    db $D8, $10, $2E, $20 ; entry 13
-    db $F8, $E8, $2B, $40 ; entry 14
-    db $F8, $F0, $2C, $40 ; entry 15
-    db $F8, $F8, $2D, $40 ; entry 16
-    db $E8, $E8, $2F, $40 ; entry 17
-    db $E8, $F0, $2A, $40 ; entry 18
-    db $F0, $F8, $2A, $40 ; entry 19
-    db $F0, $E8, $2E, $40 ; entry 20
-    db $F8, $10, $2B, $60 ; entry 21
-    db $F8, $08, $2C, $60 ; entry 22
-    db $F8, $00, $2D, $60 ; entry 23
-    db $E8, $10, $2F, $60 ; entry 24
-    db $E8, $08, $2A, $60 ; entry 25
-    db $F0, $00, $2A, $60 ; entry 26
-    db $F0, $10, $2E, $60 ; entry 27
-    db $E0, $00, $04, $60 ; entry 28
-    db $E8, $00, $04, $20 ; entry 29
-    db $E8, $F8, $04, $00 ; entry 30
-    db $E0, $F8, $04, $40 ; entry 31
-    db $D8, $08, $04, $00 ; entry 32
-    db $D8, $F0, $04, $20 ; entry 33
-    db $F0, $08, $04, $40 ; entry 34
-    db $F0, $F0, $04, $60 ; entry 35
+    db $d0, $e8, $2b, $00 ; entry 0
+    db $d0, $f0, $2c, $00 ; entry 1
+    db $d0, $f8, $2d, $00 ; entry 2
+    db $e0, $e8, $2f, $00 ; entry 3
+    db $e0, $f0, $2a, $00 ; entry 4
+    db $d8, $f8, $2a, $00 ; entry 5
+    db $d8, $e8, $2e, $00 ; entry 6
+    db $d0, $10, $2b, $20 ; entry 7
+    db $d0, $08, $2c, $20 ; entry 8
+    db $d0, $00, $2d, $20 ; entry 9
+    db $e0, $10, $2f, $20 ; entry 10
+    db $e0, $08, $2a, $20 ; entry 11
+    db $d8, $00, $2a, $20 ; entry 12
+    db $d8, $10, $2e, $20 ; entry 13
+    db $f8, $e8, $2b, $40 ; entry 14
+    db $f8, $f0, $2c, $40 ; entry 15
+    db $f8, $f8, $2d, $40 ; entry 16
+    db $e8, $e8, $2f, $40 ; entry 17
+    db $e8, $f0, $2a, $40 ; entry 18
+    db $f0, $f8, $2a, $40 ; entry 19
+    db $f0, $e8, $2e, $40 ; entry 20
+    db $f8, $10, $2b, $60 ; entry 21
+    db $f8, $08, $2c, $60 ; entry 22
+    db $f8, $00, $2d, $60 ; entry 23
+    db $e8, $10, $2f, $60 ; entry 24
+    db $e8, $08, $2a, $60 ; entry 25
+    db $f0, $00, $2a, $60 ; entry 26
+    db $f0, $10, $2e, $60 ; entry 27
+    db $e0, $00, $04, $60 ; entry 28
+    db $e8, $00, $04, $20 ; entry 29
+    db $e8, $f8, $04, $00 ; entry 30
+    db $e0, $f8, $04, $40 ; entry 31
+    db $d8, $08, $04, $00 ; entry 32
+    db $d8, $f0, $04, $20 ; entry 33
+    db $f0, $08, $04, $40 ; entry 34
+    db $f0, $f0, $04, $60 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set26; ends with $80)
+; frame 8 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set26Frame8::
-Data_03D_5053:: ; address name
-    db $D0, $05, $15, $00 ; entry 0
-    db $D0, $0D, $16, $00 ; entry 1
-    db $D8, $00, $15, $00 ; entry 2
-    db $D8, $08, $16, $00 ; entry 3
-    db $E0, $FB, $15, $00 ; entry 4
-    db $E0, $03, $16, $00 ; entry 5
-    db $E8, $F5, $15, $00 ; entry 6
-    db $E8, $FD, $16, $00 ; entry 7
-    db $F0, $F0, $15, $00 ; entry 8
-    db $F0, $F8, $16, $00 ; entry 9
-    db $F8, $EB, $15, $00 ; entry 10
-    db $F8, $F3, $16, $00 ; entry 11
+    db $d0, $05, $15, $00 ; entry 0
+    db $d0, $0d, $16, $00 ; entry 1
+    db $d8, $00, $15, $00 ; entry 2
+    db $d8, $08, $16, $00 ; entry 3
+    db $e0, $fb, $15, $00 ; entry 4
+    db $e0, $03, $16, $00 ; entry 5
+    db $e8, $f5, $15, $00 ; entry 6
+    db $e8, $fd, $16, $00 ; entry 7
+    db $f0, $f0, $15, $00 ; entry 8
+    db $f0, $f8, $16, $00 ; entry 9
+    db $f8, $eb, $15, $00 ; entry 10
+    db $f8, $f3, $16, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame9::
-Data_03D_5084:: ; address name
-    db $D0, $0D, $15, $60 ; entry 0
-    db $D0, $05, $16, $60 ; entry 1
-    db $D8, $08, $15, $60 ; entry 2
-    db $D8, $00, $16, $60 ; entry 3
-    db $E0, $03, $15, $60 ; entry 4
-    db $E0, $FB, $16, $60 ; entry 5
-    db $E8, $FD, $15, $60 ; entry 6
-    db $E8, $F5, $16, $60 ; entry 7
-    db $F0, $F8, $15, $60 ; entry 8
-    db $F0, $F0, $16, $60 ; entry 9
-    db $F8, $F3, $15, $60 ; entry 10
-    db $F8, $EB, $16, $60 ; entry 11
+    db $d0, $0d, $15, $60 ; entry 0
+    db $d0, $05, $16, $60 ; entry 1
+    db $d8, $08, $15, $60 ; entry 2
+    db $d8, $00, $16, $60 ; entry 3
+    db $e0, $03, $15, $60 ; entry 4
+    db $e0, $fb, $16, $60 ; entry 5
+    db $e8, $fd, $15, $60 ; entry 6
+    db $e8, $f5, $16, $60 ; entry 7
+    db $f0, $f8, $15, $60 ; entry 8
+    db $f0, $f0, $16, $60 ; entry 9
+    db $f8, $f3, $15, $60 ; entry 10
+    db $f8, $eb, $16, $60 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame10::
-Data_03D_50B5:: ; address name
-    db $D0, $05, $17, $00 ; entry 0
-    db $D0, $0D, $18, $00 ; entry 1
-    db $D8, $00, $17, $00 ; entry 2
-    db $D8, $08, $18, $00 ; entry 3
-    db $E0, $FB, $17, $00 ; entry 4
-    db $E0, $03, $18, $00 ; entry 5
-    db $E8, $F5, $17, $00 ; entry 6
-    db $E8, $FD, $18, $00 ; entry 7
-    db $F0, $F0, $17, $00 ; entry 8
-    db $F0, $F8, $18, $00 ; entry 9
-    db $F8, $EB, $17, $00 ; entry 10
-    db $F8, $F3, $18, $00 ; entry 11
+    db $d0, $05, $17, $00 ; entry 0
+    db $d0, $0d, $18, $00 ; entry 1
+    db $d8, $00, $17, $00 ; entry 2
+    db $d8, $08, $18, $00 ; entry 3
+    db $e0, $fb, $17, $00 ; entry 4
+    db $e0, $03, $18, $00 ; entry 5
+    db $e8, $f5, $17, $00 ; entry 6
+    db $e8, $fd, $18, $00 ; entry 7
+    db $f0, $f0, $17, $00 ; entry 8
+    db $f0, $f8, $18, $00 ; entry 9
+    db $f8, $eb, $17, $00 ; entry 10
+    db $f8, $f3, $18, $00 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set26; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 MetaSprites3D_4077Set26Frame11::
-Data_03D_50E6:: ; address name
-    db $D0, $0D, $17, $60 ; entry 0
-    db $D0, $05, $18, $60 ; entry 1
-    db $D8, $08, $17, $60 ; entry 2
-    db $D8, $00, $18, $60 ; entry 3
-    db $E0, $03, $17, $60 ; entry 4
-    db $E0, $FB, $18, $60 ; entry 5
-    db $E8, $FD, $17, $60 ; entry 6
-    db $E8, $F5, $18, $60 ; entry 7
-    db $F0, $F8, $17, $60 ; entry 8
-    db $F0, $F0, $18, $60 ; entry 9
-    db $F8, $F3, $17, $60 ; entry 10
-    db $F8, $EB, $18, $60 ; entry 11
+    db $d0, $0d, $17, $60 ; entry 0
+    db $d0, $05, $18, $60 ; entry 1
+    db $d8, $08, $17, $60 ; entry 2
+    db $d8, $00, $18, $60 ; entry 3
+    db $e0, $03, $17, $60 ; entry 4
+    db $e0, $fb, $18, $60 ; entry 5
+    db $e8, $fd, $17, $60 ; entry 6
+    db $e8, $f5, $18, $60 ; entry 7
+    db $f0, $f8, $17, $60 ; entry 8
+    db $f0, $f0, $18, $60 ; entry 9
+    db $f8, $f3, $17, $60 ; entry 10
+    db $f8, $eb, $18, $60 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set26; ends with $80)
+; frame 12 of MetaSprites3D_4077Set26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set26Frame12::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 39 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 39 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set27::
-Data_03D_5118:: ; address name
     dw MetaSprites3D_4077Set27Frame0 ; entry 0
     dw MetaSprites3D_4077Set27Frame1 ; entry 1
     dw MetaSprites3D_4077Set27Frame2 ; entry 2
@@ -1886,419 +1736,394 @@ Data_03D_5118:: ; address name
     dw MetaSprites3D_4077Set27Frame14 ; entry 30
     dw MetaSprites3D_4077Set27Frame14 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 0 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame0::
-Data_03D_5158:: ; address name
-    db $E8, $B0, $1C, $10 ; entry 0
-    db $E8, $C0, $1E, $10 ; entry 1
-    db $E8, $C8, $1F, $10 ; entry 2
-    db $E6, $B8, $1D, $10 ; entry 3
-    db $E2, $BF, $22, $10 ; entry 4
+    db $e8, $b0, $1c, $10 ; entry 0
+    db $e8, $c0, $1e, $10 ; entry 1
+    db $e8, $c8, $1f, $10 ; entry 2
+    db $e6, $b8, $1d, $10 ; entry 3
+    db $e2, $bf, $22, $10 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set27; ends with $80)
+; frame 1 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set27Frame1::
-Data_03D_516D:: ; address name
-    db $E8, $B0, $1C, $10 ; entry 0
-    db $E8, $B8, $1C, $10 ; entry 1
-    db $E8, $C0, $1C, $10 ; entry 2
-    db $E8, $D0, $1E, $10 ; entry 3
-    db $E8, $D8, $1F, $10 ; entry 4
-    db $E6, $C8, $1D, $10 ; entry 5
-    db $DC, $BA, $22, $10 ; entry 6
-    db $E2, $C2, $22, $10 ; entry 7
+    db $e8, $b0, $1c, $10 ; entry 0
+    db $e8, $b8, $1c, $10 ; entry 1
+    db $e8, $c0, $1c, $10 ; entry 2
+    db $e8, $d0, $1e, $10 ; entry 3
+    db $e8, $d8, $1f, $10 ; entry 4
+    db $e6, $c8, $1d, $10 ; entry 5
+    db $dc, $ba, $22, $10 ; entry 6
+    db $e2, $c2, $22, $10 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame2::
-Data_03D_518E:: ; address name
-    db $E8, $B0, $1C, $10 ; entry 0
-    db $E8, $B8, $1C, $10 ; entry 1
-    db $E8, $C0, $1C, $10 ; entry 2
-    db $E8, $C8, $1C, $10 ; entry 3
-    db $E8, $D0, $1C, $10 ; entry 4
-    db $E8, $E0, $1E, $10 ; entry 5
-    db $E8, $E8, $1F, $10 ; entry 6
-    db $D9, $F3, $12, $10 ; entry 7
-    db $E6, $D8, $1D, $10 ; entry 8
-    db $D0, $03, $22, $10 ; entry 9
-    db $D1, $F2, $22, $10 ; entry 10
-    db $DD, $C6, $22, $10 ; entry 11
-    db $DA, $BB, $22, $10 ; entry 12
-    db $D0, $FA, $23, $10 ; entry 13
-    db $D8, $FA, $24, $10 ; entry 14
-    db $E0, $FA, $25, $10 ; entry 15
+    db $e8, $b0, $1c, $10 ; entry 0
+    db $e8, $b8, $1c, $10 ; entry 1
+    db $e8, $c0, $1c, $10 ; entry 2
+    db $e8, $c8, $1c, $10 ; entry 3
+    db $e8, $d0, $1c, $10 ; entry 4
+    db $e8, $e0, $1e, $10 ; entry 5
+    db $e8, $e8, $1f, $10 ; entry 6
+    db $d9, $f3, $12, $10 ; entry 7
+    db $e6, $d8, $1d, $10 ; entry 8
+    db $d0, $03, $22, $10 ; entry 9
+    db $d1, $f2, $22, $10 ; entry 10
+    db $dd, $c6, $22, $10 ; entry 11
+    db $da, $bb, $22, $10 ; entry 12
+    db $d0, $fa, $23, $10 ; entry 13
+    db $d8, $fa, $24, $10 ; entry 14
+    db $e0, $fa, $25, $10 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame3::
-Data_03D_51CF:: ; address name
-    db $E8, $D8, $1C, $10 ; entry 0
-    db $E8, $E0, $1C, $10 ; entry 1
-    db $DC, $DF, $12, $10 ; entry 2
-    db $D7, $F2, $12, $10 ; entry 3
-    db $DB, $03, $12, $30 ; entry 4
-    db $D0, $FC, $1B, $10 ; entry 5
-    db $E8, $F8, $1F, $10 ; entry 6
-    db $D8, $C0, $22, $10 ; entry 7
-    db $DD, $D0, $22, $10 ; entry 8
-    db $D1, $F2, $22, $10 ; entry 9
-    db $D0, $03, $22, $10 ; entry 10
-    db $D8, $FA, $23, $10 ; entry 11
-    db $E8, $B0, $20, $10 ; entry 12
-    db $E8, $BB, $21, $10 ; entry 13
-    db $E8, $C6, $1C, $10 ; entry 14
-    db $E8, $CF, $1C, $10 ; entry 15
-    db $E0, $FA, $24, $10 ; entry 16
-    db $E8, $FA, $25, $10 ; entry 17
-    db $E0, $E8, $29, $10 ; entry 18
-    db $E0, $F0, $2A, $10 ; entry 19
-    db $E8, $E8, $2B, $10 ; entry 20
-    db $E8, $F0, $2C, $10 ; entry 21
+    db $e8, $d8, $1c, $10 ; entry 0
+    db $e8, $e0, $1c, $10 ; entry 1
+    db $dc, $df, $12, $10 ; entry 2
+    db $d7, $f2, $12, $10 ; entry 3
+    db $db, $03, $12, $30 ; entry 4
+    db $d0, $fc, $1b, $10 ; entry 5
+    db $e8, $f8, $1f, $10 ; entry 6
+    db $d8, $c0, $22, $10 ; entry 7
+    db $dd, $d0, $22, $10 ; entry 8
+    db $d1, $f2, $22, $10 ; entry 9
+    db $d0, $03, $22, $10 ; entry 10
+    db $d8, $fa, $23, $10 ; entry 11
+    db $e8, $b0, $20, $10 ; entry 12
+    db $e8, $bb, $21, $10 ; entry 13
+    db $e8, $c6, $1c, $10 ; entry 14
+    db $e8, $cf, $1c, $10 ; entry 15
+    db $e0, $fa, $24, $10 ; entry 16
+    db $e8, $fa, $25, $10 ; entry 17
+    db $e0, $e8, $29, $10 ; entry 18
+    db $e0, $f0, $2a, $10 ; entry 19
+    db $e8, $e8, $2b, $10 ; entry 20
+    db $e8, $f0, $2c, $10 ; entry 21
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 4 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame4::
-Data_03D_5228:: ; address name
-    db $E8, $DD, $1C, $10 ; entry 0
-    db $E8, $E5, $1C, $10 ; entry 1
-    db $E8, $ED, $1C, $10 ; entry 2
-    db $E8, $F5, $1C, $10 ; entry 3
-    db $E8, $D3, $1C, $10 ; entry 4
-    db $D0, $FC, $19, $10 ; entry 5
-    db $E8, $FC, $1B, $10 ; entry 6
-    db $DC, $D2, $12, $10 ; entry 7
-    db $E8, $C8, $20, $10 ; entry 8
-    db $F0, $FA, $24, $10 ; entry 9
-    db $F8, $FA, $25, $10 ; entry 10
-    db $D4, $F5, $22, $10 ; entry 11
-    db $D8, $E0, $22, $10 ; entry 12
-    db $D2, $03, $22, $30 ; entry 13
-    db $DB, $01, $26, $10 ; entry 14
-    db $D9, $06, $27, $10 ; entry 15
-    db $D9, $F8, $27, $10 ; entry 16
-    db $E0, $02, $29, $10 ; entry 17
-    db $E0, $0A, $2A, $10 ; entry 18
-    db $E0, $F6, $28, $10 ; entry 19
-    db $E8, $02, $2D, $10 ; entry 20
-    db $E8, $0A, $2E, $10 ; entry 21
-    db $E6, $12, $2F, $10 ; entry 22
+    db $e8, $dd, $1c, $10 ; entry 0
+    db $e8, $e5, $1c, $10 ; entry 1
+    db $e8, $ed, $1c, $10 ; entry 2
+    db $e8, $f5, $1c, $10 ; entry 3
+    db $e8, $d3, $1c, $10 ; entry 4
+    db $d0, $fc, $19, $10 ; entry 5
+    db $e8, $fc, $1b, $10 ; entry 6
+    db $dc, $d2, $12, $10 ; entry 7
+    db $e8, $c8, $20, $10 ; entry 8
+    db $f0, $fa, $24, $10 ; entry 9
+    db $f8, $fa, $25, $10 ; entry 10
+    db $d4, $f5, $22, $10 ; entry 11
+    db $d8, $e0, $22, $10 ; entry 12
+    db $d2, $03, $22, $30 ; entry 13
+    db $db, $01, $26, $10 ; entry 14
+    db $d9, $06, $27, $10 ; entry 15
+    db $d9, $f8, $27, $10 ; entry 16
+    db $e0, $02, $29, $10 ; entry 17
+    db $e0, $0a, $2a, $10 ; entry 18
+    db $e0, $f6, $28, $10 ; entry 19
+    db $e8, $02, $2d, $10 ; entry 20
+    db $e8, $0a, $2e, $10 ; entry 21
+    db $e6, $12, $2f, $10 ; entry 22
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set27; ends with $80)
+; frame 5 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set27Frame5::
-Data_03D_5285:: ; address name
-    db $E8, $EF, $1C, $10 ; entry 0
-    db $E8, $F7, $1C, $10 ; entry 1
-    db $E8, $FF, $1C, $10 ; entry 2
-    db $E8, $07, $1C, $10 ; entry 3
-    db $E8, $0F, $1C, $10 ; entry 4
-    db $E8, $27, $1F, $10 ; entry 5
-    db $DA, $05, $12, $10 ; entry 6
-    db $CF, $F2, $12, $10 ; entry 7
-    db $F7, $03, $12, $30 ; entry 8
-    db $F0, $FC, $19, $10 ; entry 9
-    db $D0, $FC, $18, $10 ; entry 10
-    db $D8, $FC, $22, $30 ; entry 11
-    db $DC, $E8, $22, $10 ; entry 12
-    db $D8, $11, $22, $10 ; entry 13
-    db $F0, $F3, $22, $10 ; entry 14
-    db $F8, $FA, $23, $10 ; entry 15
-    db $DE, $FC, $27, $10 ; entry 16
-    db $E0, $08, $26, $10 ; entry 17
-    db $E8, $DF, $20, $10 ; entry 18
-    db $E8, $E7, $21, $10 ; entry 19
-    db $E0, $0F, $28, $10 ; entry 20
-    db $E1, $16, $29, $10 ; entry 21
-    db $E0, $1E, $2A, $10 ; entry 22
-    db $E8, $17, $2B, $10 ; entry 23
-    db $E8, $1F, $2C, $10 ; entry 24
+    db $e8, $ef, $1c, $10 ; entry 0
+    db $e8, $f7, $1c, $10 ; entry 1
+    db $e8, $ff, $1c, $10 ; entry 2
+    db $e8, $07, $1c, $10 ; entry 3
+    db $e8, $0f, $1c, $10 ; entry 4
+    db $e8, $27, $1f, $10 ; entry 5
+    db $da, $05, $12, $10 ; entry 6
+    db $cf, $f2, $12, $10 ; entry 7
+    db $f7, $03, $12, $30 ; entry 8
+    db $f0, $fc, $19, $10 ; entry 9
+    db $d0, $fc, $18, $10 ; entry 10
+    db $d8, $fc, $22, $30 ; entry 11
+    db $dc, $e8, $22, $10 ; entry 12
+    db $d8, $11, $22, $10 ; entry 13
+    db $f0, $f3, $22, $10 ; entry 14
+    db $f8, $fa, $23, $10 ; entry 15
+    db $de, $fc, $27, $10 ; entry 16
+    db $e0, $08, $26, $10 ; entry 17
+    db $e8, $df, $20, $10 ; entry 18
+    db $e8, $e7, $21, $10 ; entry 19
+    db $e0, $0f, $28, $10 ; entry 20
+    db $e1, $16, $29, $10 ; entry 21
+    db $e0, $1e, $2a, $10 ; entry 22
+    db $e8, $17, $2b, $10 ; entry 23
+    db $e8, $1f, $2c, $10 ; entry 24
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame6::
-Data_03D_52EA:: ; address name
-    db $D0, $FC, $18, $10 ; entry 0
-    db $E0, $FC, $18, $10 ; entry 1
-    db $F8, $FC, $18, $10 ; entry 2
-    db $F0, $FC, $19, $10 ; entry 3
-    db $D8, $FC, $19, $10 ; entry 4
-    db $D4, $06, $12, $10 ; entry 5
-    db $DA, $DE, $12, $10 ; entry 6
-    db $E8, $07, $1C, $10 ; entry 7
-    db $E8, $0F, $1C, $10 ; entry 8
-    db $E8, $17, $1C, $10 ; entry 9
-    db $E8, $1F, $1C, $10 ; entry 10
-    db $E8, $2F, $1E, $10 ; entry 11
-    db $E8, $37, $1F, $10 ; entry 12
-    db $E6, $27, $1D, $10 ; entry 13
-    db $E0, $25, $26, $10 ; entry 14
-    db $DE, $04, $26, $10 ; entry 15
-    db $DD, $0F, $22, $10 ; entry 16
-    db $DD, $EE, $22, $10 ; entry 17
-    db $E8, $EB, $20, $10 ; entry 18
-    db $E8, $F5, $20, $10 ; entry 19
-    db $E8, $FF, $21, $10 ; entry 20
-    db $DE, $19, $28, $10 ; entry 21
+    db $d0, $fc, $18, $10 ; entry 0
+    db $e0, $fc, $18, $10 ; entry 1
+    db $f8, $fc, $18, $10 ; entry 2
+    db $f0, $fc, $19, $10 ; entry 3
+    db $d8, $fc, $19, $10 ; entry 4
+    db $d4, $06, $12, $10 ; entry 5
+    db $da, $de, $12, $10 ; entry 6
+    db $e8, $07, $1c, $10 ; entry 7
+    db $e8, $0f, $1c, $10 ; entry 8
+    db $e8, $17, $1c, $10 ; entry 9
+    db $e8, $1f, $1c, $10 ; entry 10
+    db $e8, $2f, $1e, $10 ; entry 11
+    db $e8, $37, $1f, $10 ; entry 12
+    db $e6, $27, $1d, $10 ; entry 13
+    db $e0, $25, $26, $10 ; entry 14
+    db $de, $04, $26, $10 ; entry 15
+    db $dd, $0f, $22, $10 ; entry 16
+    db $dd, $ee, $22, $10 ; entry 17
+    db $e8, $eb, $20, $10 ; entry 18
+    db $e8, $f5, $20, $10 ; entry 19
+    db $e8, $ff, $21, $10 ; entry 20
+    db $de, $19, $28, $10 ; entry 21
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame7::
-Data_03D_5343:: ; address name
-    db $E8, $1F, $1C, $10 ; entry 0
-    db $E8, $27, $1C, $10 ; entry 1
-    db $E8, $37, $1E, $10 ; entry 2
-    db $E8, $3F, $1F, $10 ; entry 3
-    db $DB, $FA, $12, $10 ; entry 4
-    db $E6, $2F, $1D, $10 ; entry 5
-    db $DE, $D6, $22, $10 ; entry 6
-    db $DB, $1D, $22, $10 ; entry 7
-    db $E8, $F1, $20, $10 ; entry 8
-    db $E8, $04, $20, $10 ; entry 9
-    db $E8, $0D, $20, $10 ; entry 10
-    db $E8, $15, $21, $10 ; entry 11
-    db $E2, $27, $26, $10 ; entry 12
+    db $e8, $1f, $1c, $10 ; entry 0
+    db $e8, $27, $1c, $10 ; entry 1
+    db $e8, $37, $1e, $10 ; entry 2
+    db $e8, $3f, $1f, $10 ; entry 3
+    db $db, $fa, $12, $10 ; entry 4
+    db $e6, $2f, $1d, $10 ; entry 5
+    db $de, $d6, $22, $10 ; entry 6
+    db $db, $1d, $22, $10 ; entry 7
+    db $e8, $f1, $20, $10 ; entry 8
+    db $e8, $04, $20, $10 ; entry 9
+    db $e8, $0d, $20, $10 ; entry 10
+    db $e8, $15, $21, $10 ; entry 11
+    db $e2, $27, $26, $10 ; entry 12
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 8 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame8::
-Data_03D_5378:: ; address name
-    db $E0, $3D, $12, $10 ; entry 0
-    db $E8, $15, $20, $10 ; entry 1
-    db $E8, $20, $20, $10 ; entry 2
-    db $E8, $29, $20, $10 ; entry 3
-    db $E8, $3A, $20, $10 ; entry 4
-    db $E0, $2D, $22, $10 ; entry 5
-    db $E8, $32, $21, $10 ; entry 6
-    db $E8, $4A, $21, $10 ; entry 7
-    db $E8, $B8, $20, $10 ; entry 8
-    db $E8, $D4, $20, $10 ; entry 9
-    db $E8, $F4, $22, $10 ; entry 10
+    db $e0, $3d, $12, $10 ; entry 0
+    db $e8, $15, $20, $10 ; entry 1
+    db $e8, $20, $20, $10 ; entry 2
+    db $e8, $29, $20, $10 ; entry 3
+    db $e8, $3a, $20, $10 ; entry 4
+    db $e0, $2d, $22, $10 ; entry 5
+    db $e8, $32, $21, $10 ; entry 6
+    db $e8, $4a, $21, $10 ; entry 7
+    db $e8, $b8, $20, $10 ; entry 8
+    db $e8, $d4, $20, $10 ; entry 9
+    db $e8, $f4, $22, $10 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set27; ends with $80)
+; frame 9 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set27Frame9::
-Data_03D_53A5:: ; address name
-    db $E8, $4A, $20, $10 ; entry 0
-    db $E8, $20, $20, $10 ; entry 1
-    db $E8, $3E, $22, $10 ; entry 2
-    db $E8, $2E, $21, $10 ; entry 3
-    db $E8, $0D, $21, $10 ; entry 4
-    db $E8, $02, $22, $10 ; entry 5
-    db $E8, $DC, $22, $10 ; entry 6
-    db $E8, $EA, $20, $10 ; entry 7
-    db $E8, $BB, $22, $10 ; entry 8
+    db $e8, $4a, $20, $10 ; entry 0
+    db $e8, $20, $20, $10 ; entry 1
+    db $e8, $3e, $22, $10 ; entry 2
+    db $e8, $2e, $21, $10 ; entry 3
+    db $e8, $0d, $21, $10 ; entry 4
+    db $e8, $02, $22, $10 ; entry 5
+    db $e8, $dc, $22, $10 ; entry 6
+    db $e8, $ea, $20, $10 ; entry 7
+    db $e8, $bb, $22, $10 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame10::
-Data_03D_53CA:: ; address name
-    db $E8, $B1, $20, $10 ; entry 0
-    db $E8, $D2, $20, $10 ; entry 1
-    db $E8, $F8, $20, $10 ; entry 2
-    db $E8, $E0, $21, $10 ; entry 3
-    db $E8, $BF, $22, $10 ; entry 4
-    db $E8, $0B, $22, $10 ; entry 5
-    db $E8, $13, $20, $10 ; entry 6
-    db $E8, $34, $20, $10 ; entry 7
-    db $E8, $1C, $21, $10 ; entry 8
-    db $E8, $40, $21, $10 ; entry 9
+    db $e8, $b1, $20, $10 ; entry 0
+    db $e8, $d2, $20, $10 ; entry 1
+    db $e8, $f8, $20, $10 ; entry 2
+    db $e8, $e0, $21, $10 ; entry 3
+    db $e8, $bf, $22, $10 ; entry 4
+    db $e8, $0b, $22, $10 ; entry 5
+    db $e8, $13, $20, $10 ; entry 6
+    db $e8, $34, $20, $10 ; entry 7
+    db $e8, $1c, $21, $10 ; entry 8
+    db $e8, $40, $21, $10 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame11::
-Data_03D_53F3:: ; address name
-    db $E8, $03, $11, $30 ; entry 0
-    db $E8, $0D, $11, $30 ; entry 1
-    db $E8, $16, $03, $30 ; entry 2
-    db $DD, $17, $03, $70 ; entry 3
-    db $E8, $27, $07, $50 ; entry 4
-    db $D5, $28, $02, $70 ; entry 5
-    db $DD, $28, $07, $10 ; entry 6
-    db $E8, $1E, $15, $30 ; entry 7
-    db $D6, $20, $01, $10 ; entry 8
-    db $DD, $1F, $15, $70 ; entry 9
-    db $CD, $30, $17, $70 ; entry 10
-    db $F8, $31, $17, $30 ; entry 11
-    db $F0, $28, $02, $30 ; entry 12
-    db $F0, $17, $02, $30 ; entry 13
-    db $F0, $20, $01, $50 ; entry 14
-    db $F0, $03, $11, $30 ; entry 15
-    db $DD, $0D, $1A, $70 ; entry 16
-    db $D0, $0C, $02, $10 ; entry 17
-    db $D4, $14, $02, $10 ; entry 18
-    db $E8, $F5, $11, $10 ; entry 19
-    db $E8, $EB, $11, $10 ; entry 20
-    db $E8, $E2, $03, $10 ; entry 21
-    db $DD, $E1, $03, $50 ; entry 22
-    db $E8, $D1, $07, $70 ; entry 23
-    db $D5, $D0, $02, $50 ; entry 24
-    db $DD, $D0, $07, $30 ; entry 25
-    db $E8, $DA, $15, $10 ; entry 26
-    db $D6, $D8, $01, $30 ; entry 27
-    db $DD, $D9, $15, $50 ; entry 28
-    db $CD, $C8, $17, $50 ; entry 29
-    db $F0, $E1, $02, $10 ; entry 30
-    db $F0, $D8, $01, $70 ; entry 31
-    db $F0, $F5, $11, $10 ; entry 32
-    db $D0, $EC, $02, $30 ; entry 33
-    db $D4, $E4, $02, $30 ; entry 34
-    db $F1, $D0, $02, $10 ; entry 35
-    db $F8, $C8, $17, $10 ; entry 36
-    db $DD, $EB, $1A, $50 ; entry 37
-    db $F8, $03, $11, $30 ; entry 38
-    db $F8, $F5, $11, $10 ; entry 39
-    db $D8, $F5, $11, $50 ; entry 40
-    db $DD, $F5, $11, $50 ; entry 41
-    db $D0, $F5, $11, $50 ; entry 42
-    db $D0, $03, $11, $70 ; entry 43
-    db $DD, $03, $11, $70 ; entry 44
-    db $D8, $03, $11, $70 ; entry 45
-    db $F8, $DF, $02, $10 ; entry 46
-    db $F8, $19, $02, $30 ; entry 47
+    db $e8, $03, $11, $30 ; entry 0
+    db $e8, $0d, $11, $30 ; entry 1
+    db $e8, $16, $03, $30 ; entry 2
+    db $dd, $17, $03, $70 ; entry 3
+    db $e8, $27, $07, $50 ; entry 4
+    db $d5, $28, $02, $70 ; entry 5
+    db $dd, $28, $07, $10 ; entry 6
+    db $e8, $1e, $15, $30 ; entry 7
+    db $d6, $20, $01, $10 ; entry 8
+    db $dd, $1f, $15, $70 ; entry 9
+    db $cd, $30, $17, $70 ; entry 10
+    db $f8, $31, $17, $30 ; entry 11
+    db $f0, $28, $02, $30 ; entry 12
+    db $f0, $17, $02, $30 ; entry 13
+    db $f0, $20, $01, $50 ; entry 14
+    db $f0, $03, $11, $30 ; entry 15
+    db $dd, $0d, $1a, $70 ; entry 16
+    db $d0, $0c, $02, $10 ; entry 17
+    db $d4, $14, $02, $10 ; entry 18
+    db $e8, $f5, $11, $10 ; entry 19
+    db $e8, $eb, $11, $10 ; entry 20
+    db $e8, $e2, $03, $10 ; entry 21
+    db $dd, $e1, $03, $50 ; entry 22
+    db $e8, $d1, $07, $70 ; entry 23
+    db $d5, $d0, $02, $50 ; entry 24
+    db $dd, $d0, $07, $30 ; entry 25
+    db $e8, $da, $15, $10 ; entry 26
+    db $d6, $d8, $01, $30 ; entry 27
+    db $dd, $d9, $15, $50 ; entry 28
+    db $cd, $c8, $17, $50 ; entry 29
+    db $f0, $e1, $02, $10 ; entry 30
+    db $f0, $d8, $01, $70 ; entry 31
+    db $f0, $f5, $11, $10 ; entry 32
+    db $d0, $ec, $02, $30 ; entry 33
+    db $d4, $e4, $02, $30 ; entry 34
+    db $f1, $d0, $02, $10 ; entry 35
+    db $f8, $c8, $17, $10 ; entry 36
+    db $dd, $eb, $1a, $50 ; entry 37
+    db $f8, $03, $11, $30 ; entry 38
+    db $f8, $f5, $11, $10 ; entry 39
+    db $d8, $f5, $11, $50 ; entry 40
+    db $dd, $f5, $11, $50 ; entry 41
+    db $d0, $f5, $11, $50 ; entry 42
+    db $d0, $03, $11, $70 ; entry 43
+    db $dd, $03, $11, $70 ; entry 44
+    db $d8, $03, $11, $70 ; entry 45
+    db $f8, $df, $02, $10 ; entry 46
+    db $f8, $19, $02, $30 ; entry 47
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 12 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame12::
-Data_03D_54B4:: ; address name
-    db $F8, $E8, $1A, $10 ; entry 0
-    db $D0, $E8, $1A, $50 ; entry 1
-    db $F0, $28, $14, $30 ; entry 2
-    db $F8, $10, $1A, $30 ; entry 3
-    db $D8, $28, $14, $70 ; entry 4
-    db $D0, $10, $1A, $70 ; entry 5
-    db $F0, $20, $13, $30 ; entry 6
-    db $D8, $20, $13, $70 ; entry 7
-    db $E8, $24, $13, $30 ; entry 8
-    db $E0, $24, $13, $70 ; entry 9
-    db $EA, $2C, $16, $50 ; entry 10
-    db $DE, $2C, $16, $10 ; entry 11
-    db $D0, $19, $11, $10 ; entry 12
-    db $F8, $19, $11, $30 ; entry 13
-    db $E0, $1B, $06, $70 ; entry 14
-    db $E8, $1B, $06, $30 ; entry 15
-    db $F0, $40, $06, $30 ; entry 16
-    db $F8, $34, $06, $30 ; entry 17
-    db $D8, $40, $06, $70 ; entry 18
-    db $D0, $34, $06, $70 ; entry 19
-    db $EA, $F5, $11, $10 ; entry 20
-    db $EA, $03, $11, $30 ; entry 21
-    db $DE, $F5, $11, $50 ; entry 22
-    db $DE, $03, $11, $70 ; entry 23
-    db $F0, $D0, $14, $10 ; entry 24
-    db $D8, $D0, $14, $50 ; entry 25
-    db $F0, $D8, $13, $10 ; entry 26
-    db $D8, $D8, $13, $50 ; entry 27
-    db $E0, $D4, $13, $50 ; entry 28
-    db $D0, $DF, $11, $30 ; entry 29
-    db $F8, $DF, $11, $10 ; entry 30
-    db $E0, $DD, $06, $50 ; entry 31
-    db $E8, $DD, $06, $10 ; entry 32
-    db $F8, $C4, $06, $10 ; entry 33
-    db $D0, $C4, $06, $50 ; entry 34
-    db $F0, $F5, $11, $10 ; entry 35
-    db $E8, $D4, $13, $10 ; entry 36
-    db $F8, $F5, $1A, $10 ; entry 37
-    db $E8, $CC, $16, $70 ; entry 38
-    db $E0, $CC, $16, $30 ; entry 39
-    db $D8, $F5, $11, $50 ; entry 40
-    db $D0, $F5, $1A, $50 ; entry 41
-    db $DE, $ED, $11, $50 ; entry 42
-    db $EA, $ED, $11, $10 ; entry 43
-    db $DE, $0B, $11, $70 ; entry 44
-    db $EA, $0B, $11, $30 ; entry 45
-    db $D8, $03, $11, $70 ; entry 46
-    db $D0, $03, $1A, $70 ; entry 47
-    db $F0, $03, $11, $30 ; entry 48
-    db $F8, $03, $1A, $30 ; entry 49
-    db $F8, $48, $06, $30 ; entry 50
-    db $D0, $48, $06, $70 ; entry 51
+    db $f8, $e8, $1a, $10 ; entry 0
+    db $d0, $e8, $1a, $50 ; entry 1
+    db $f0, $28, $14, $30 ; entry 2
+    db $f8, $10, $1a, $30 ; entry 3
+    db $d8, $28, $14, $70 ; entry 4
+    db $d0, $10, $1a, $70 ; entry 5
+    db $f0, $20, $13, $30 ; entry 6
+    db $d8, $20, $13, $70 ; entry 7
+    db $e8, $24, $13, $30 ; entry 8
+    db $e0, $24, $13, $70 ; entry 9
+    db $ea, $2c, $16, $50 ; entry 10
+    db $de, $2c, $16, $10 ; entry 11
+    db $d0, $19, $11, $10 ; entry 12
+    db $f8, $19, $11, $30 ; entry 13
+    db $e0, $1b, $06, $70 ; entry 14
+    db $e8, $1b, $06, $30 ; entry 15
+    db $f0, $40, $06, $30 ; entry 16
+    db $f8, $34, $06, $30 ; entry 17
+    db $d8, $40, $06, $70 ; entry 18
+    db $d0, $34, $06, $70 ; entry 19
+    db $ea, $f5, $11, $10 ; entry 20
+    db $ea, $03, $11, $30 ; entry 21
+    db $de, $f5, $11, $50 ; entry 22
+    db $de, $03, $11, $70 ; entry 23
+    db $f0, $d0, $14, $10 ; entry 24
+    db $d8, $d0, $14, $50 ; entry 25
+    db $f0, $d8, $13, $10 ; entry 26
+    db $d8, $d8, $13, $50 ; entry 27
+    db $e0, $d4, $13, $50 ; entry 28
+    db $d0, $df, $11, $30 ; entry 29
+    db $f8, $df, $11, $10 ; entry 30
+    db $e0, $dd, $06, $50 ; entry 31
+    db $e8, $dd, $06, $10 ; entry 32
+    db $f8, $c4, $06, $10 ; entry 33
+    db $d0, $c4, $06, $50 ; entry 34
+    db $f0, $f5, $11, $10 ; entry 35
+    db $e8, $d4, $13, $10 ; entry 36
+    db $f8, $f5, $1a, $10 ; entry 37
+    db $e8, $cc, $16, $70 ; entry 38
+    db $e0, $cc, $16, $30 ; entry 39
+    db $d8, $f5, $11, $50 ; entry 40
+    db $d0, $f5, $1a, $50 ; entry 41
+    db $de, $ed, $11, $50 ; entry 42
+    db $ea, $ed, $11, $10 ; entry 43
+    db $de, $0b, $11, $70 ; entry 44
+    db $ea, $0b, $11, $30 ; entry 45
+    db $d8, $03, $11, $70 ; entry 46
+    db $d0, $03, $1a, $70 ; entry 47
+    db $f0, $03, $11, $30 ; entry 48
+    db $f8, $03, $1a, $30 ; entry 49
+    db $f8, $48, $06, $30 ; entry 50
+    db $d0, $48, $06, $70 ; entry 51
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3D_4077Set27; ends with $80)
+; frame 13 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set27Frame13::
-Data_03D_5585:: ; address name
-    db $E8, $F8, $0D, $10 ; entry 0
-    db $E0, $F8, $0D, $50 ; entry 1
-    db $D0, $F0, $10, $50 ; entry 2
-    db $F0, $F8, $0E, $10 ; entry 3
-    db $F8, $F8, $0E, $10 ; entry 4
-    db $D8, $F8, $0E, $50 ; entry 5
-    db $D0, $F8, $0E, $50 ; entry 6
-    db $D0, $B1, $06, $50 ; entry 7
-    db $D8, $D2, $0A, $50 ; entry 8
-    db $D8, $E7, $0B, $50 ; entry 9
-    db $D0, $D9, $0C, $50 ; entry 10
-    db $D0, $CA, $07, $50 ; entry 11
-    db $F8, $F0, $10, $10 ; entry 12
-    db $F8, $B1, $06, $10 ; entry 13
-    db $F0, $D2, $0A, $10 ; entry 14
-    db $F0, $E7, $0B, $10 ; entry 15
-    db $F8, $D9, $0C, $10 ; entry 16
-    db $F8, $CA, $07, $10 ; entry 17
-    db $F0, $BD, $04, $70 ; entry 18
-    db $E9, $B4, $00, $10 ; entry 19
-    db $D8, $BC, $04, $30 ; entry 20
-    db $DF, $B4, $00, $50 ; entry 21
-    db $E8, $00, $0D, $30 ; entry 22
-    db $E0, $00, $0D, $70 ; entry 23
-    db $D0, $08, $10, $70 ; entry 24
-    db $F0, $00, $0E, $30 ; entry 25
-    db $F8, $00, $0E, $30 ; entry 26
-    db $D8, $00, $0E, $70 ; entry 27
-    db $D0, $00, $0E, $70 ; entry 28
-    db $D0, $47, $06, $70 ; entry 29
-    db $D8, $26, $0A, $70 ; entry 30
-    db $D8, $11, $0B, $70 ; entry 31
-    db $D0, $1F, $0C, $70 ; entry 32
-    db $D0, $2E, $07, $70 ; entry 33
-    db $F8, $08, $10, $30 ; entry 34
-    db $F8, $47, $06, $30 ; entry 35
-    db $F0, $26, $0A, $30 ; entry 36
-    db $F0, $11, $0B, $30 ; entry 37
-    db $F8, $1F, $0C, $30 ; entry 38
-    db $F8, $2E, $07, $30 ; entry 39
-    db $F0, $3B, $04, $50 ; entry 40
-    db $E9, $44, $00, $30 ; entry 41
-    db $D8, $3C, $04, $10 ; entry 42
-    db $DF, $44, $00, $70 ; entry 43
-    db $E0, $DC, $00, $50 ; entry 44
-    db $E8, $DC, $00, $10 ; entry 45
-    db $E0, $1C, $00, $70 ; entry 46
-    db $E8, $1C, $00, $30 ; entry 47
-    db $E0, $10, $08, $70 ; entry 48
-    db $E8, $10, $08, $30 ; entry 49
-    db $E0, $E8, $08, $50 ; entry 50
-    db $E8, $E8, $08, $10 ; entry 51
-    db $E8, $F0, $0F, $10 ; entry 52
-    db $E8, $08, $0F, $10 ; entry 53
-    db $E0, $08, $0F, $50 ; entry 54
-    db $E0, $F0, $0F, $50 ; entry 55
+    db $e8, $f8, $0d, $10 ; entry 0
+    db $e0, $f8, $0d, $50 ; entry 1
+    db $d0, $f0, $10, $50 ; entry 2
+    db $f0, $f8, $0e, $10 ; entry 3
+    db $f8, $f8, $0e, $10 ; entry 4
+    db $d8, $f8, $0e, $50 ; entry 5
+    db $d0, $f8, $0e, $50 ; entry 6
+    db $d0, $b1, $06, $50 ; entry 7
+    db $d8, $d2, $0a, $50 ; entry 8
+    db $d8, $e7, $0b, $50 ; entry 9
+    db $d0, $d9, $0c, $50 ; entry 10
+    db $d0, $ca, $07, $50 ; entry 11
+    db $f8, $f0, $10, $10 ; entry 12
+    db $f8, $b1, $06, $10 ; entry 13
+    db $f0, $d2, $0a, $10 ; entry 14
+    db $f0, $e7, $0b, $10 ; entry 15
+    db $f8, $d9, $0c, $10 ; entry 16
+    db $f8, $ca, $07, $10 ; entry 17
+    db $f0, $bd, $04, $70 ; entry 18
+    db $e9, $b4, $00, $10 ; entry 19
+    db $d8, $bc, $04, $30 ; entry 20
+    db $df, $b4, $00, $50 ; entry 21
+    db $e8, $00, $0d, $30 ; entry 22
+    db $e0, $00, $0d, $70 ; entry 23
+    db $d0, $08, $10, $70 ; entry 24
+    db $f0, $00, $0e, $30 ; entry 25
+    db $f8, $00, $0e, $30 ; entry 26
+    db $d8, $00, $0e, $70 ; entry 27
+    db $d0, $00, $0e, $70 ; entry 28
+    db $d0, $47, $06, $70 ; entry 29
+    db $d8, $26, $0a, $70 ; entry 30
+    db $d8, $11, $0b, $70 ; entry 31
+    db $d0, $1f, $0c, $70 ; entry 32
+    db $d0, $2e, $07, $70 ; entry 33
+    db $f8, $08, $10, $30 ; entry 34
+    db $f8, $47, $06, $30 ; entry 35
+    db $f0, $26, $0a, $30 ; entry 36
+    db $f0, $11, $0b, $30 ; entry 37
+    db $f8, $1f, $0c, $30 ; entry 38
+    db $f8, $2e, $07, $30 ; entry 39
+    db $f0, $3b, $04, $50 ; entry 40
+    db $e9, $44, $00, $30 ; entry 41
+    db $d8, $3c, $04, $10 ; entry 42
+    db $df, $44, $00, $70 ; entry 43
+    db $e0, $dc, $00, $50 ; entry 44
+    db $e8, $dc, $00, $10 ; entry 45
+    db $e0, $1c, $00, $70 ; entry 46
+    db $e8, $1c, $00, $30 ; entry 47
+    db $e0, $10, $08, $70 ; entry 48
+    db $e8, $10, $08, $30 ; entry 49
+    db $e0, $e8, $08, $50 ; entry 50
+    db $e8, $e8, $08, $10 ; entry 51
+    db $e8, $f0, $0f, $10 ; entry 52
+    db $e8, $08, $0f, $10 ; entry 53
+    db $e0, $08, $0f, $50 ; entry 54
+    db $e0, $f0, $0f, $50 ; entry 55
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3D_4077Set27; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3D_4077Set27; ends with $80 (E-0147)
 MetaSprites3D_4077Set27Frame14::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 40 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 40 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set28::
-Data_03D_5667:: ; address name
     dw MetaSprites3D_4077Set28Frame0 ; entry 0
     dw MetaSprites3D_4077Set28Frame1 ; entry 1
     dw MetaSprites3D_4077Set28Frame2 ; entry 2
@@ -2332,192 +2157,181 @@ Data_03D_5667:: ; address name
     dw MetaSprites3D_4077Set28Frame6 ; entry 30
     dw MetaSprites3D_4077Set28Frame6 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set28; ends with $80)
+; frame 0 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set28Frame0::
-Data_03D_56A7:: ; address name
-    db $E4, $02, $0F, $10 ; entry 0
-    db $EC, $02, $1F, $10 ; entry 1
-    db $F8, $F2, $2F, $10 ; entry 2
-    db $F8, $FF, $21, $10 ; entry 3
-    db $F8, $F7, $26, $10 ; entry 4
-    db $F0, $FF, $29, $50 ; entry 5
-    db $E5, $EF, $19, $10 ; entry 6
-    db $E9, $F4, $2A, $70 ; entry 7
-    db $F0, $F7, $20, $10 ; entry 8
-    db $E9, $FC, $29, $50 ; entry 9
-    db $E3, $FB, $17, $10 ; entry 10
+    db $e4, $02, $0f, $10 ; entry 0
+    db $ec, $02, $1f, $10 ; entry 1
+    db $f8, $f2, $2f, $10 ; entry 2
+    db $f8, $ff, $21, $10 ; entry 3
+    db $f8, $f7, $26, $10 ; entry 4
+    db $f0, $ff, $29, $50 ; entry 5
+    db $e5, $ef, $19, $10 ; entry 6
+    db $e9, $f4, $2a, $70 ; entry 7
+    db $f0, $f7, $20, $10 ; entry 8
+    db $e9, $fc, $29, $50 ; entry 9
+    db $e3, $fb, $17, $10 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set28; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 MetaSprites3D_4077Set28Frame1::
-Data_03D_56D4:: ; address name
-    db $D5, $0D, $04, $10 ; entry 0
-    db $D0, $05, $14, $10 ; entry 1
-    db $DA, $05, $12, $10 ; entry 2
-    db $E8, $EE, $18, $30 ; entry 3
-    db $F8, $FE, $1A, $50 ; entry 4
-    db $F8, $06, $1A, $30 ; entry 5
-    db $D0, $FA, $19, $30 ; entry 6
-    db $E8, $FE, $21, $10 ; entry 7
-    db $D8, $F2, $21, $30 ; entry 8
-    db $F0, $06, $20, $70 ; entry 9
-    db $E0, $F0, $20, $10 ; entry 10
-    db $E0, $F8, $20, $70 ; entry 11
-    db $E0, $FD, $18, $10 ; entry 12
-    db $E8, $F6, $20, $10 ; entry 13
-    db $F0, $FC, $21, $70 ; entry 14
-    db $F0, $FE, $00, $10 ; entry 15
-    db $F0, $EE, $1F, $10 ; entry 16
-    db $F8, $EC, $0F, $70 ; entry 17
-    db $D0, $F2, $29, $70 ; entry 18
-    db $F8, $F3, $12, $50 ; entry 19
+    db $d5, $0d, $04, $10 ; entry 0
+    db $d0, $05, $14, $10 ; entry 1
+    db $da, $05, $12, $10 ; entry 2
+    db $e8, $ee, $18, $30 ; entry 3
+    db $f8, $fe, $1a, $50 ; entry 4
+    db $f8, $06, $1a, $30 ; entry 5
+    db $d0, $fa, $19, $30 ; entry 6
+    db $e8, $fe, $21, $10 ; entry 7
+    db $d8, $f2, $21, $30 ; entry 8
+    db $f0, $06, $20, $70 ; entry 9
+    db $e0, $f0, $20, $10 ; entry 10
+    db $e0, $f8, $20, $70 ; entry 11
+    db $e0, $fd, $18, $10 ; entry 12
+    db $e8, $f6, $20, $10 ; entry 13
+    db $f0, $fc, $21, $70 ; entry 14
+    db $f0, $fe, $00, $10 ; entry 15
+    db $f0, $ee, $1f, $10 ; entry 16
+    db $f8, $ec, $0f, $70 ; entry 17
+    db $d0, $f2, $29, $70 ; entry 18
+    db $f8, $f3, $12, $50 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set28; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 MetaSprites3D_4077Set28Frame2::
-Data_03D_5725:: ; address name
-    db $E2, $F3, $17, $10 ; entry 0
-    db $F8, $00, $03, $50 ; entry 1
-    db $D0, $04, $0F, $10 ; entry 2
-    db $D0, $FC, $1C, $10 ; entry 3
-    db $D8, $F8, $19, $10 ; entry 4
-    db $F8, $F0, $2F, $10 ; entry 5
-    db $F8, $08, $20, $30 ; entry 6
-    db $D8, $04, $1F, $10 ; entry 7
-    db $E1, $00, $20, $10 ; entry 8
-    db $F0, $EF, $0F, $70 ; entry 9
-    db $E8, $EF, $0F, $30 ; entry 10
-    db $F2, $F7, $12, $50 ; entry 11
-    db $F8, $F8, $26, $10 ; entry 12
-    db $F0, $00, $25, $10 ; entry 13
-    db $F0, $08, $24, $10 ; entry 14
-    db $E8, $08, $23, $10 ; entry 15
-    db $E0, $08, $22, $10 ; entry 16
-    db $D0, $F3, $2A, $10 ; entry 17
-    db $D9, $FF, $15, $70 ; entry 18
+    db $e2, $f3, $17, $10 ; entry 0
+    db $f8, $00, $03, $50 ; entry 1
+    db $d0, $04, $0f, $10 ; entry 2
+    db $d0, $fc, $1c, $10 ; entry 3
+    db $d8, $f8, $19, $10 ; entry 4
+    db $f8, $f0, $2f, $10 ; entry 5
+    db $f8, $08, $20, $30 ; entry 6
+    db $d8, $04, $1f, $10 ; entry 7
+    db $e1, $00, $20, $10 ; entry 8
+    db $f0, $ef, $0f, $70 ; entry 9
+    db $e8, $ef, $0f, $30 ; entry 10
+    db $f2, $f7, $12, $50 ; entry 11
+    db $f8, $f8, $26, $10 ; entry 12
+    db $f0, $00, $25, $10 ; entry 13
+    db $f0, $08, $24, $10 ; entry 14
+    db $e8, $08, $23, $10 ; entry 15
+    db $e0, $08, $22, $10 ; entry 16
+    db $d0, $f3, $2a, $10 ; entry 17
+    db $d9, $ff, $15, $70 ; entry 18
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set28; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 MetaSprites3D_4077Set28Frame3::
-Data_03D_5772:: ; address name
-    db $E8, $F8, $00, $10 ; entry 0
-    db $F8, $00, $00, $10 ; entry 1
-    db $EC, $E8, $13, $10 ; entry 2
-    db $DE, $F2, $12, $30 ; entry 3
-    db $D3, $F2, $14, $30 ; entry 4
-    db $D8, $EA, $04, $30 ; entry 5
-    db $E8, $F0, $05, $10 ; entry 6
-    db $F0, $F0, $15, $10 ; entry 7
-    db $F0, $F8, $16, $10 ; entry 8
-    db $E5, $06, $1C, $10 ; entry 9
-    db $E5, $0E, $0F, $10 ; entry 10
-    db $ED, $0E, $1F, $10 ; entry 11
-    db $F8, $F8, $1A, $10 ; entry 12
-    db $F8, $F1, $2F, $10 ; entry 13
-    db $D0, $F8, $2F, $50 ; entry 14
-    db $E8, $FD, $1A, $70 ; entry 15
-    db $D8, $01, $1A, $10 ; entry 16
-    db $F0, $00, $20, $70 ; entry 17
-    db $F0, $07, $2E, $10 ; entry 18
-    db $F8, $07, $1A, $70 ; entry 19
-    db $D8, $08, $28, $10 ; entry 20
-    db $D0, $00, $2A, $10 ; entry 21
-    db $E2, $02, $20, $30 ; entry 22
-    db $E0, $00, $00, $10 ; entry 23
-    db $E0, $F8, $2B, $10 ; entry 24
-    db $E0, $08, $29, $10 ; entry 25
+    db $e8, $f8, $00, $10 ; entry 0
+    db $f8, $00, $00, $10 ; entry 1
+    db $ec, $e8, $13, $10 ; entry 2
+    db $de, $f2, $12, $30 ; entry 3
+    db $d3, $f2, $14, $30 ; entry 4
+    db $d8, $ea, $04, $30 ; entry 5
+    db $e8, $f0, $05, $10 ; entry 6
+    db $f0, $f0, $15, $10 ; entry 7
+    db $f0, $f8, $16, $10 ; entry 8
+    db $e5, $06, $1c, $10 ; entry 9
+    db $e5, $0e, $0f, $10 ; entry 10
+    db $ed, $0e, $1f, $10 ; entry 11
+    db $f8, $f8, $1a, $10 ; entry 12
+    db $f8, $f1, $2f, $10 ; entry 13
+    db $d0, $f8, $2f, $50 ; entry 14
+    db $e8, $fd, $1a, $70 ; entry 15
+    db $d8, $01, $1a, $10 ; entry 16
+    db $f0, $00, $20, $70 ; entry 17
+    db $f0, $07, $2e, $10 ; entry 18
+    db $f8, $07, $1a, $70 ; entry 19
+    db $d8, $08, $28, $10 ; entry 20
+    db $d0, $00, $2a, $10 ; entry 21
+    db $e2, $02, $20, $30 ; entry 22
+    db $e0, $00, $00, $10 ; entry 23
+    db $e0, $f8, $2b, $10 ; entry 24
+    db $e0, $08, $29, $10 ; entry 25
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set28; ends with $80)
+; frame 4 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set28Frame4::
-Data_03D_57DB:: ; address name
-    db $D8, $FC, $00, $10 ; entry 0
-    db $E8, $FC, $00, $10 ; entry 1
-    db $F0, $FC, $00, $10 ; entry 2
-    db $F8, $F4, $00, $10 ; entry 3
-    db $D0, $FC, $00, $10 ; entry 4
-    db $F8, $FC, $06, $10 ; entry 5
-    db $F8, $00, $0B, $10 ; entry 6
-    db $F8, $08, $0C, $10 ; entry 7
-    db $E0, $F4, $01, $10 ; entry 8
-    db $E0, $FC, $02, $10 ; entry 9
-    db $E8, $F4, $11, $10 ; entry 10
-    db $F0, $EE, $12, $70 ; entry 11
-    db $ED, $10, $04, $10 ; entry 12
-    db $E8, $ED, $04, $30 ; entry 13
-    db $F8, $E8, $14, $30 ; entry 14
-    db $F0, $08, $17, $10 ; entry 15
-    db $D0, $E8, $0F, $30 ; entry 16
-    db $D8, $E8, $1F, $30 ; entry 17
-    db $D0, $F0, $1C, $30 ; entry 18
-    db $F0, $F4, $1A, $10 ; entry 19
-    db $F8, $F0, $1A, $10 ; entry 20
-    db $D0, $0A, $20, $30 ; entry 21
-    db $F0, $04, $21, $10 ; entry 22
-    db $D8, $F4, $21, $30 ; entry 23
-    db $E0, $EE, $20, $50 ; entry 24
-    db $D0, $03, $00, $10 ; entry 25
-    db $D8, $04, $00, $10 ; entry 26
-    db $D8, $06, $21, $10 ; entry 27
-    db $E0, $04, $20, $30 ; entry 28
-    db $D0, $F7, $20, $50 ; entry 29
-    db $E8, $03, $2C, $30 ; entry 30
-    db $E8, $08, $14, $10 ; entry 31
-    db $D0, $13, $2D, $10 ; entry 32
-    db $D0, $0B, $17, $10 ; entry 33
+    db $d8, $fc, $00, $10 ; entry 0
+    db $e8, $fc, $00, $10 ; entry 1
+    db $f0, $fc, $00, $10 ; entry 2
+    db $f8, $f4, $00, $10 ; entry 3
+    db $d0, $fc, $00, $10 ; entry 4
+    db $f8, $fc, $06, $10 ; entry 5
+    db $f8, $00, $0b, $10 ; entry 6
+    db $f8, $08, $0c, $10 ; entry 7
+    db $e0, $f4, $01, $10 ; entry 8
+    db $e0, $fc, $02, $10 ; entry 9
+    db $e8, $f4, $11, $10 ; entry 10
+    db $f0, $ee, $12, $70 ; entry 11
+    db $ed, $10, $04, $10 ; entry 12
+    db $e8, $ed, $04, $30 ; entry 13
+    db $f8, $e8, $14, $30 ; entry 14
+    db $f0, $08, $17, $10 ; entry 15
+    db $d0, $e8, $0f, $30 ; entry 16
+    db $d8, $e8, $1f, $30 ; entry 17
+    db $d0, $f0, $1c, $30 ; entry 18
+    db $f0, $f4, $1a, $10 ; entry 19
+    db $f8, $f0, $1a, $10 ; entry 20
+    db $d0, $0a, $20, $30 ; entry 21
+    db $f0, $04, $21, $10 ; entry 22
+    db $d8, $f4, $21, $30 ; entry 23
+    db $e0, $ee, $20, $50 ; entry 24
+    db $d0, $03, $00, $10 ; entry 25
+    db $d8, $04, $00, $10 ; entry 26
+    db $d8, $06, $21, $10 ; entry 27
+    db $e0, $04, $20, $30 ; entry 28
+    db $d0, $f7, $20, $50 ; entry 29
+    db $e8, $03, $2c, $30 ; entry 30
+    db $e8, $08, $14, $10 ; entry 31
+    db $d0, $13, $2d, $10 ; entry 32
+    db $d0, $0b, $17, $10 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set28; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 MetaSprites3D_4077Set28Frame5::
-Data_03D_5864:: ; address name
-    db $E0, $FF, $00, $10 ; entry 0
-    db $E0, $07, $00, $10 ; entry 1
-    db $E8, $08, $00, $10 ; entry 2
-    db $F8, $F8, $00, $10 ; entry 3
-    db $E8, $F8, $07, $10 ; entry 4
-    db $E8, $00, $08, $10 ; entry 5
-    db $D8, $FF, $1D, $10 ; entry 6
-    db $D8, $07, $1E, $10 ; entry 7
-    db $D0, $00, $0D, $10 ; entry 8
-    db $D0, $07, $0E, $10 ; entry 9
-    db $E0, $F3, $1B, $10 ; entry 10
-    db $F8, $00, $00, $10 ; entry 11
-    db $F0, $00, $09, $10 ; entry 12
-    db $F0, $08, $0A, $10 ; entry 13
-    db $F8, $08, $10, $10 ; entry 14
-    db $F7, $10, $18, $70 ; entry 15
-    db $D8, $F7, $03, $30 ; entry 16
-    db $E9, $EB, $0F, $30 ; entry 17
-    db $F1, $EB, $1F, $30 ; entry 18
-    db $E9, $F3, $1C, $30 ; entry 19
-    db $E0, $FB, $1A, $50 ; entry 20
-    db $D0, $F0, $20, $10 ; entry 21
-    db $D0, $F8, $1D, $10 ; entry 22
-    db $E8, $0F, $1A, $70 ; entry 23
-    db $D8, $EF, $19, $10 ; entry 24
-    db $F0, $F8, $20, $50 ; entry 25
-    db $F0, $F1, $2E, $30 ; entry 26
-    db $E0, $0F, $24, $10 ; entry 27
-    db $DA, $10, $2E, $10 ; entry 28
-    db $F0, $10, $29, $10 ; entry 29
-    db $F8, $F0, $2B, $50 ; entry 30
+    db $e0, $ff, $00, $10 ; entry 0
+    db $e0, $07, $00, $10 ; entry 1
+    db $e8, $08, $00, $10 ; entry 2
+    db $f8, $f8, $00, $10 ; entry 3
+    db $e8, $f8, $07, $10 ; entry 4
+    db $e8, $00, $08, $10 ; entry 5
+    db $d8, $ff, $1d, $10 ; entry 6
+    db $d8, $07, $1e, $10 ; entry 7
+    db $d0, $00, $0d, $10 ; entry 8
+    db $d0, $07, $0e, $10 ; entry 9
+    db $e0, $f3, $1b, $10 ; entry 10
+    db $f8, $00, $00, $10 ; entry 11
+    db $f0, $00, $09, $10 ; entry 12
+    db $f0, $08, $0a, $10 ; entry 13
+    db $f8, $08, $10, $10 ; entry 14
+    db $f7, $10, $18, $70 ; entry 15
+    db $d8, $f7, $03, $30 ; entry 16
+    db $e9, $eb, $0f, $30 ; entry 17
+    db $f1, $eb, $1f, $30 ; entry 18
+    db $e9, $f3, $1c, $30 ; entry 19
+    db $e0, $fb, $1a, $50 ; entry 20
+    db $d0, $f0, $20, $10 ; entry 21
+    db $d0, $f8, $1d, $10 ; entry 22
+    db $e8, $0f, $1a, $70 ; entry 23
+    db $d8, $ef, $19, $10 ; entry 24
+    db $f0, $f8, $20, $50 ; entry 25
+    db $f0, $f1, $2e, $30 ; entry 26
+    db $e0, $0f, $24, $10 ; entry 27
+    db $da, $10, $2e, $10 ; entry 28
+    db $f0, $10, $29, $10 ; entry 29
+    db $f8, $f0, $2b, $50 ; entry 30
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set28; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set28; ends with $80 (E-0147)
 MetaSprites3D_4077Set28Frame6::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 41 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 41 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set29::
-Data_03D_58E2:: ; address name
     dw MetaSprites3D_4077Set29Frame0 ; entry 0
     dw MetaSprites3D_4077Set29Frame1 ; entry 1
     dw MetaSprites3D_4077Set29Frame2 ; entry 2
@@ -2551,777 +2365,742 @@ Data_03D_58E2:: ; address name
     dw MetaSprites3D_4077Set29Frame20 ; entry 30
     dw MetaSprites3D_4077Set29Frame20 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set29; ends with $80)
+; frame 0 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame0::
-Data_03D_5922:: ; address name
-    db $F8, $F8, $1B, $00 ; entry 0
-    db $F8, $00, $1B, $20 ; entry 1
+    db $f8, $f8, $1b, $00 ; entry 0
+    db $f8, $00, $1b, $20 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame1::
-Data_03D_592B:: ; address name
-    db $F0, $F0, $1C, $00 ; entry 0
-    db $F0, $F8, $1D, $00 ; entry 1
-    db $F0, $08, $1C, $20 ; entry 2
-    db $F0, $00, $1D, $20 ; entry 3
-    db $F8, $F0, $1E, $00 ; entry 4
-    db $F8, $F8, $1F, $00 ; entry 5
-    db $F8, $08, $1E, $20 ; entry 6
-    db $F8, $00, $1F, $20 ; entry 7
+    db $f0, $f0, $1c, $00 ; entry 0
+    db $f0, $f8, $1d, $00 ; entry 1
+    db $f0, $08, $1c, $20 ; entry 2
+    db $f0, $00, $1d, $20 ; entry 3
+    db $f8, $f0, $1e, $00 ; entry 4
+    db $f8, $f8, $1f, $00 ; entry 5
+    db $f8, $08, $1e, $20 ; entry 6
+    db $f8, $00, $1f, $20 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame2::
-Data_03D_594C:: ; address name
-    db $E0, $E8, $20, $00 ; entry 0
-    db $E0, $F0, $21, $00 ; entry 1
-    db $E0, $F8, $22, $00 ; entry 2
-    db $E8, $E0, $23, $00 ; entry 3
-    db $E8, $E8, $24, $00 ; entry 4
-    db $F0, $E0, $25, $00 ; entry 5
-    db $F8, $E0, $26, $00 ; entry 6
-    db $E8, $18, $23, $20 ; entry 7
-    db $E8, $10, $24, $20 ; entry 8
-    db $F0, $18, $25, $20 ; entry 9
-    db $F8, $18, $26, $20 ; entry 10
-    db $E0, $10, $20, $20 ; entry 11
-    db $E0, $08, $21, $20 ; entry 12
-    db $E0, $00, $22, $20 ; entry 13
-    db $E8, $F0, $1F, $20 ; entry 14
-    db $E8, $F8, $1F, $20 ; entry 15
-    db $E8, $00, $1F, $20 ; entry 16
-    db $E8, $08, $1F, $20 ; entry 17
-    db $F0, $10, $1F, $20 ; entry 18
-    db $F8, $10, $1F, $20 ; entry 19
-    db $F8, $E8, $1F, $20 ; entry 20
-    db $F0, $E8, $1F, $20 ; entry 21
-    db $F0, $F0, $1F, $20 ; entry 22
-    db $F8, $F0, $1F, $20 ; entry 23
-    db $F8, $F8, $1F, $20 ; entry 24
-    db $F0, $F8, $1F, $20 ; entry 25
-    db $F0, $00, $1F, $20 ; entry 26
-    db $F8, $00, $1F, $20 ; entry 27
-    db $F8, $08, $1F, $20 ; entry 28
-    db $F0, $08, $1F, $20 ; entry 29
+    db $e0, $e8, $20, $00 ; entry 0
+    db $e0, $f0, $21, $00 ; entry 1
+    db $e0, $f8, $22, $00 ; entry 2
+    db $e8, $e0, $23, $00 ; entry 3
+    db $e8, $e8, $24, $00 ; entry 4
+    db $f0, $e0, $25, $00 ; entry 5
+    db $f8, $e0, $26, $00 ; entry 6
+    db $e8, $18, $23, $20 ; entry 7
+    db $e8, $10, $24, $20 ; entry 8
+    db $f0, $18, $25, $20 ; entry 9
+    db $f8, $18, $26, $20 ; entry 10
+    db $e0, $10, $20, $20 ; entry 11
+    db $e0, $08, $21, $20 ; entry 12
+    db $e0, $00, $22, $20 ; entry 13
+    db $e8, $f0, $1f, $20 ; entry 14
+    db $e8, $f8, $1f, $20 ; entry 15
+    db $e8, $00, $1f, $20 ; entry 16
+    db $e8, $08, $1f, $20 ; entry 17
+    db $f0, $10, $1f, $20 ; entry 18
+    db $f8, $10, $1f, $20 ; entry 19
+    db $f8, $e8, $1f, $20 ; entry 20
+    db $f0, $e8, $1f, $20 ; entry 21
+    db $f0, $f0, $1f, $20 ; entry 22
+    db $f8, $f0, $1f, $20 ; entry 23
+    db $f8, $f8, $1f, $20 ; entry 24
+    db $f0, $f8, $1f, $20 ; entry 25
+    db $f0, $00, $1f, $20 ; entry 26
+    db $f8, $00, $1f, $20 ; entry 27
+    db $f8, $08, $1f, $20 ; entry 28
+    db $f0, $08, $1f, $20 ; entry 29
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame3::
-Data_03D_59C5:: ; address name
-    db $D6, $DC, $20, $00 ; entry 0
-    db $E0, $D2, $23, $00 ; entry 1
-    db $D5, $E8, $29, $00 ; entry 2
-    db $D4, $F4, $2A, $00 ; entry 3
-    db $EC, $D1, $2D, $00 ; entry 4
-    db $F8, $D0, $2E, $00 ; entry 5
-    db $F8, $ED, $27, $00 ; entry 6
-    db $F8, $F8, $27, $00 ; entry 7
-    db $F0, $F8, $27, $00 ; entry 8
-    db $EF, $EE, $27, $00 ; entry 9
-    db $F5, $DA, $28, $00 ; entry 10
-    db $F0, $E4, $28, $00 ; entry 11
-    db $E7, $E5, $28, $00 ; entry 12
-    db $E9, $DB, $28, $00 ; entry 13
-    db $DF, $DC, $28, $00 ; entry 14
-    db $DE, $E6, $28, $00 ; entry 15
-    db $DD, $F2, $28, $00 ; entry 16
-    db $E6, $EE, $28, $00 ; entry 17
-    db $DD, $FC, $28, $00 ; entry 18
-    db $E6, $F7, $27, $00 ; entry 19
-    db $D6, $1C, $20, $20 ; entry 20
-    db $E0, $26, $23, $20 ; entry 21
-    db $D5, $10, $29, $20 ; entry 22
-    db $D4, $04, $2A, $20 ; entry 23
-    db $EC, $27, $2D, $20 ; entry 24
-    db $F8, $28, $2E, $20 ; entry 25
-    db $F8, $0B, $27, $20 ; entry 26
-    db $F8, $00, $27, $20 ; entry 27
-    db $F0, $00, $27, $20 ; entry 28
-    db $EF, $0A, $27, $20 ; entry 29
-    db $F5, $1E, $28, $20 ; entry 30
-    db $F0, $14, $28, $20 ; entry 31
-    db $E7, $13, $28, $20 ; entry 32
-    db $E9, $1D, $28, $20 ; entry 33
-    db $DF, $1C, $28, $20 ; entry 34
-    db $DE, $12, $28, $20 ; entry 35
-    db $DD, $06, $28, $20 ; entry 36
-    db $E6, $0A, $28, $20 ; entry 37
-    db $E6, $01, $27, $20 ; entry 38
+    db $d6, $dc, $20, $00 ; entry 0
+    db $e0, $d2, $23, $00 ; entry 1
+    db $d5, $e8, $29, $00 ; entry 2
+    db $d4, $f4, $2a, $00 ; entry 3
+    db $ec, $d1, $2d, $00 ; entry 4
+    db $f8, $d0, $2e, $00 ; entry 5
+    db $f8, $ed, $27, $00 ; entry 6
+    db $f8, $f8, $27, $00 ; entry 7
+    db $f0, $f8, $27, $00 ; entry 8
+    db $ef, $ee, $27, $00 ; entry 9
+    db $f5, $da, $28, $00 ; entry 10
+    db $f0, $e4, $28, $00 ; entry 11
+    db $e7, $e5, $28, $00 ; entry 12
+    db $e9, $db, $28, $00 ; entry 13
+    db $df, $dc, $28, $00 ; entry 14
+    db $de, $e6, $28, $00 ; entry 15
+    db $dd, $f2, $28, $00 ; entry 16
+    db $e6, $ee, $28, $00 ; entry 17
+    db $dd, $fc, $28, $00 ; entry 18
+    db $e6, $f7, $27, $00 ; entry 19
+    db $d6, $1c, $20, $20 ; entry 20
+    db $e0, $26, $23, $20 ; entry 21
+    db $d5, $10, $29, $20 ; entry 22
+    db $d4, $04, $2a, $20 ; entry 23
+    db $ec, $27, $2d, $20 ; entry 24
+    db $f8, $28, $2e, $20 ; entry 25
+    db $f8, $0b, $27, $20 ; entry 26
+    db $f8, $00, $27, $20 ; entry 27
+    db $f0, $00, $27, $20 ; entry 28
+    db $ef, $0a, $27, $20 ; entry 29
+    db $f5, $1e, $28, $20 ; entry 30
+    db $f0, $14, $28, $20 ; entry 31
+    db $e7, $13, $28, $20 ; entry 32
+    db $e9, $1d, $28, $20 ; entry 33
+    db $df, $1c, $28, $20 ; entry 34
+    db $de, $12, $28, $20 ; entry 35
+    db $dd, $06, $28, $20 ; entry 36
+    db $e6, $0a, $28, $20 ; entry 37
+    db $e6, $01, $27, $20 ; entry 38
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set29; ends with $80)
+; frame 4 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame4::
-Data_03D_5A62:: ; address name
-    db $D8, $33, $23, $20 ; entry 0
-    db $D8, $0C, $27, $20 ; entry 1
-    db $D8, $EC, $27, $00 ; entry 2
-    db $D8, $C5, $23, $00 ; entry 3
-    db $E8, $BE, $2B, $00 ; entry 4
-    db $E8, $3A, $2B, $20 ; entry 5
-    db $F0, $F0, $1C, $00 ; entry 6
-    db $F0, $F8, $1D, $00 ; entry 7
-    db $F0, $08, $1C, $20 ; entry 8
-    db $F0, $00, $1D, $20 ; entry 9
-    db $F8, $F0, $1E, $00 ; entry 10
-    db $F8, $08, $1E, $20 ; entry 11
-    db $F8, $F8, $1F, $00 ; entry 12
-    db $F8, $00, $1F, $00 ; entry 13
-    db $F8, $B8, $2D, $00 ; entry 14
-    db $F8, $40, $2D, $20 ; entry 15
-    db $E0, $C6, $28, $00 ; entry 16
-    db $D8, $CD, $28, $00 ; entry 17
-    db $F0, $BD, $28, $00 ; entry 18
-    db $D8, $2B, $28, $20 ; entry 19
-    db $E0, $32, $28, $20 ; entry 20
-    db $F0, $3B, $28, $20 ; entry 21
-    db $E8, $32, $28, $20 ; entry 22
-    db $F8, $38, $28, $20 ; entry 23
-    db $F8, $C0, $28, $00 ; entry 24
-    db $E8, $C6, $28, $00 ; entry 25
-    db $F0, $C5, $28, $00 ; entry 26
-    db $F0, $33, $28, $20 ; entry 27
-    db $E0, $CE, $28, $00 ; entry 28
-    db $E0, $2A, $28, $20 ; entry 29
-    db $D8, $23, $28, $20 ; entry 30
-    db $D8, $D5, $28, $00 ; entry 31
-    db $EC, $D6, $27, $00 ; entry 32
-    db $EC, $22, $27, $20 ; entry 33
-    db $E2, $E1, $27, $00 ; entry 34
-    db $F8, $D0, $27, $00 ; entry 35
-    db $E2, $17, $27, $20 ; entry 36
-    db $F8, $28, $27, $20 ; entry 37
+    db $d8, $33, $23, $20 ; entry 0
+    db $d8, $0c, $27, $20 ; entry 1
+    db $d8, $ec, $27, $00 ; entry 2
+    db $d8, $c5, $23, $00 ; entry 3
+    db $e8, $be, $2b, $00 ; entry 4
+    db $e8, $3a, $2b, $20 ; entry 5
+    db $f0, $f0, $1c, $00 ; entry 6
+    db $f0, $f8, $1d, $00 ; entry 7
+    db $f0, $08, $1c, $20 ; entry 8
+    db $f0, $00, $1d, $20 ; entry 9
+    db $f8, $f0, $1e, $00 ; entry 10
+    db $f8, $08, $1e, $20 ; entry 11
+    db $f8, $f8, $1f, $00 ; entry 12
+    db $f8, $00, $1f, $00 ; entry 13
+    db $f8, $b8, $2d, $00 ; entry 14
+    db $f8, $40, $2d, $20 ; entry 15
+    db $e0, $c6, $28, $00 ; entry 16
+    db $d8, $cd, $28, $00 ; entry 17
+    db $f0, $bd, $28, $00 ; entry 18
+    db $d8, $2b, $28, $20 ; entry 19
+    db $e0, $32, $28, $20 ; entry 20
+    db $f0, $3b, $28, $20 ; entry 21
+    db $e8, $32, $28, $20 ; entry 22
+    db $f8, $38, $28, $20 ; entry 23
+    db $f8, $c0, $28, $00 ; entry 24
+    db $e8, $c6, $28, $00 ; entry 25
+    db $f0, $c5, $28, $00 ; entry 26
+    db $f0, $33, $28, $20 ; entry 27
+    db $e0, $ce, $28, $00 ; entry 28
+    db $e0, $2a, $28, $20 ; entry 29
+    db $d8, $23, $28, $20 ; entry 30
+    db $d8, $d5, $28, $00 ; entry 31
+    db $ec, $d6, $27, $00 ; entry 32
+    db $ec, $22, $27, $20 ; entry 33
+    db $e2, $e1, $27, $00 ; entry 34
+    db $f8, $d0, $27, $00 ; entry 35
+    db $e2, $17, $27, $20 ; entry 36
+    db $f8, $28, $27, $20 ; entry 37
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame5::
-Data_03D_5AFB:: ; address name
-    db $E0, $E8, $20, $00 ; entry 0
-    db $E8, $E0, $23, $00 ; entry 1
-    db $E0, $10, $20, $20 ; entry 2
-    db $E8, $18, $23, $20 ; entry 3
-    db $E0, $F0, $29, $00 ; entry 4
-    db $F8, $E0, $2E, $00 ; entry 5
-    db $F0, $E0, $2D, $00 ; entry 6
-    db $E8, $E8, $2C, $00 ; entry 7
-    db $E0, $F8, $2A, $00 ; entry 8
-    db $E0, $08, $29, $20 ; entry 9
-    db $E0, $00, $2A, $20 ; entry 10
-    db $E8, $10, $2C, $20 ; entry 11
-    db $F0, $18, $2D, $20 ; entry 12
-    db $F8, $18, $2E, $20 ; entry 13
-    db $E8, $F0, $28, $60 ; entry 14
-    db $F0, $08, $28, $40 ; entry 15
-    db $E8, $08, $28, $40 ; entry 16
-    db $EC, $24, $28, $20 ; entry 17
-    db $F4, $34, $28, $20 ; entry 18
-    db $E0, $20, $28, $20 ; entry 19
-    db $D2, $14, $28, $20 ; entry 20
-    db $E0, $D8, $28, $00 ; entry 21
-    db $D2, $E4, $28, $00 ; entry 22
-    db $D0, $F4, $28, $00 ; entry 23
-    db $D0, $04, $28, $20 ; entry 24
-    db $F8, $E8, $28, $20 ; entry 25
-    db $F8, $10, $28, $00 ; entry 26
-    db $F0, $F0, $28, $60 ; entry 27
-    db $E8, $00, $28, $40 ; entry 28
-    db $F8, $08, $28, $40 ; entry 29
-    db $F8, $00, $28, $40 ; entry 30
-    db $E8, $F8, $28, $60 ; entry 31
-    db $F8, $F0, $28, $60 ; entry 32
-    db $F8, $F8, $28, $60 ; entry 33
-    db $EC, $D4, $28, $00 ; entry 34
-    db $F4, $C4, $28, $00 ; entry 35
-    db $F0, $00, $28, $40 ; entry 36
-    db $F0, $F8, $28, $60 ; entry 37
-    db $F0, $E8, $28, $60 ; entry 38
-    db $F0, $10, $28, $00 ; entry 39
+    db $e0, $e8, $20, $00 ; entry 0
+    db $e8, $e0, $23, $00 ; entry 1
+    db $e0, $10, $20, $20 ; entry 2
+    db $e8, $18, $23, $20 ; entry 3
+    db $e0, $f0, $29, $00 ; entry 4
+    db $f8, $e0, $2e, $00 ; entry 5
+    db $f0, $e0, $2d, $00 ; entry 6
+    db $e8, $e8, $2c, $00 ; entry 7
+    db $e0, $f8, $2a, $00 ; entry 8
+    db $e0, $08, $29, $20 ; entry 9
+    db $e0, $00, $2a, $20 ; entry 10
+    db $e8, $10, $2c, $20 ; entry 11
+    db $f0, $18, $2d, $20 ; entry 12
+    db $f8, $18, $2e, $20 ; entry 13
+    db $e8, $f0, $28, $60 ; entry 14
+    db $f0, $08, $28, $40 ; entry 15
+    db $e8, $08, $28, $40 ; entry 16
+    db $ec, $24, $28, $20 ; entry 17
+    db $f4, $34, $28, $20 ; entry 18
+    db $e0, $20, $28, $20 ; entry 19
+    db $d2, $14, $28, $20 ; entry 20
+    db $e0, $d8, $28, $00 ; entry 21
+    db $d2, $e4, $28, $00 ; entry 22
+    db $d0, $f4, $28, $00 ; entry 23
+    db $d0, $04, $28, $20 ; entry 24
+    db $f8, $e8, $28, $20 ; entry 25
+    db $f8, $10, $28, $00 ; entry 26
+    db $f0, $f0, $28, $60 ; entry 27
+    db $e8, $00, $28, $40 ; entry 28
+    db $f8, $08, $28, $40 ; entry 29
+    db $f8, $00, $28, $40 ; entry 30
+    db $e8, $f8, $28, $60 ; entry 31
+    db $f8, $f0, $28, $60 ; entry 32
+    db $f8, $f8, $28, $60 ; entry 33
+    db $ec, $d4, $28, $00 ; entry 34
+    db $f4, $c4, $28, $00 ; entry 35
+    db $f0, $00, $28, $40 ; entry 36
+    db $f0, $f8, $28, $60 ; entry 37
+    db $f0, $e8, $28, $60 ; entry 38
+    db $f0, $10, $28, $00 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame6::
-Data_03D_5B9C:: ; address name
-    db $D7, $DC, $20, $00 ; entry 0
-    db $E0, $D1, $23, $00 ; entry 1
-    db $E0, $27, $23, $20 ; entry 2
-    db $D7, $1C, $20, $20 ; entry 3
-    db $F8, $DC, $27, $00 ; entry 4
-    db $EC, $DC, $27, $00 ; entry 5
-    db $E0, $E8, $27, $00 ; entry 6
-    db $E0, $F4, $27, $00 ; entry 7
-    db $EB, $E7, $27, $00 ; entry 8
-    db $EC, $1C, $27, $20 ; entry 9
-    db $EB, $11, $27, $20 ; entry 10
-    db $F8, $1C, $27, $20 ; entry 11
-    db $E0, $10, $27, $20 ; entry 12
-    db $E0, $04, $27, $20 ; entry 13
-    db $F5, $F1, $28, $00 ; entry 14
-    db $E0, $DC, $27, $00 ; entry 15
-    db $E0, $1C, $27, $20 ; entry 16
-    db $D6, $E8, $29, $00 ; entry 17
-    db $D5, $F4, $2A, $00 ; entry 18
-    db $D6, $10, $29, $20 ; entry 19
-    db $D5, $04, $2A, $20 ; entry 20
-    db $EC, $D0, $2D, $00 ; entry 21
-    db $F8, $CF, $2E, $00 ; entry 22
-    db $F8, $29, $2E, $20 ; entry 23
-    db $EC, $28, $2D, $20 ; entry 24
-    db $F5, $07, $28, $20 ; entry 25
-    db $EB, $07, $28, $20 ; entry 26
-    db $F5, $11, $28, $20 ; entry 27
-    db $EB, $F1, $28, $00 ; entry 28
-    db $F5, $E7, $28, $00 ; entry 29
-    db $F0, $B8, $2D, $00 ; entry 30
-    db $E0, $C1, $2B, $00 ; entry 31
-    db $D0, $D4, $2C, $00 ; entry 32
-    db $D0, $28, $2C, $20 ; entry 33
-    db $E0, $37, $2B, $20 ; entry 34
-    db $F0, $40, $2D, $20 ; entry 35
-    db $F0, $C4, $28, $00 ; entry 36
-    db $F0, $34, $28, $20 ; entry 37
-    db $EA, $FC, $28, $00 ; entry 38
-    db $F4, $FC, $28, $20 ; entry 39
+    db $d7, $dc, $20, $00 ; entry 0
+    db $e0, $d1, $23, $00 ; entry 1
+    db $e0, $27, $23, $20 ; entry 2
+    db $d7, $1c, $20, $20 ; entry 3
+    db $f8, $dc, $27, $00 ; entry 4
+    db $ec, $dc, $27, $00 ; entry 5
+    db $e0, $e8, $27, $00 ; entry 6
+    db $e0, $f4, $27, $00 ; entry 7
+    db $eb, $e7, $27, $00 ; entry 8
+    db $ec, $1c, $27, $20 ; entry 9
+    db $eb, $11, $27, $20 ; entry 10
+    db $f8, $1c, $27, $20 ; entry 11
+    db $e0, $10, $27, $20 ; entry 12
+    db $e0, $04, $27, $20 ; entry 13
+    db $f5, $f1, $28, $00 ; entry 14
+    db $e0, $dc, $27, $00 ; entry 15
+    db $e0, $1c, $27, $20 ; entry 16
+    db $d6, $e8, $29, $00 ; entry 17
+    db $d5, $f4, $2a, $00 ; entry 18
+    db $d6, $10, $29, $20 ; entry 19
+    db $d5, $04, $2a, $20 ; entry 20
+    db $ec, $d0, $2d, $00 ; entry 21
+    db $f8, $cf, $2e, $00 ; entry 22
+    db $f8, $29, $2e, $20 ; entry 23
+    db $ec, $28, $2d, $20 ; entry 24
+    db $f5, $07, $28, $20 ; entry 25
+    db $eb, $07, $28, $20 ; entry 26
+    db $f5, $11, $28, $20 ; entry 27
+    db $eb, $f1, $28, $00 ; entry 28
+    db $f5, $e7, $28, $00 ; entry 29
+    db $f0, $b8, $2d, $00 ; entry 30
+    db $e0, $c1, $2b, $00 ; entry 31
+    db $d0, $d4, $2c, $00 ; entry 32
+    db $d0, $28, $2c, $20 ; entry 33
+    db $e0, $37, $2b, $20 ; entry 34
+    db $f0, $40, $2d, $20 ; entry 35
+    db $f0, $c4, $28, $00 ; entry 36
+    db $f0, $34, $28, $20 ; entry 37
+    db $ea, $fc, $28, $00 ; entry 38
+    db $f4, $fc, $28, $20 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame7::
-Data_03D_5C3D:: ; address name
-    db $E0, $F0, $15, $00 ; entry 0
-    db $E0, $F8, $16, $00 ; entry 1
-    db $E0, $00, $17, $00 ; entry 2
-    db $E0, $08, $18, $00 ; entry 3
-    db $D8, $F5, $11, $00 ; entry 4
-    db $D8, $FD, $12, $00 ; entry 5
-    db $E8, $08, $15, $60 ; entry 6
-    db $E8, $00, $16, $60 ; entry 7
-    db $E8, $F8, $17, $60 ; entry 8
-    db $E8, $F0, $18, $60 ; entry 9
-    db $F0, $03, $11, $60 ; entry 10
-    db $F0, $FB, $12, $60 ; entry 11
-    db $E0, $E8, $0F, $40 ; entry 12
-    db $D8, $E7, $0E, $20 ; entry 13
-    db $D8, $DF, $0F, $20 ; entry 14
-    db $E0, $E0, $0E, $40 ; entry 15
-    db $D0, $E7, $0B, $20 ; entry 16
-    db $D0, $DF, $0C, $20 ; entry 17
-    db $D8, $D8, $10, $20 ; entry 18
-    db $E0, $D8, $0D, $40 ; entry 19
-    db $F0, $EB, $07, $00 ; entry 20
-    db $F0, $F3, $08, $00 ; entry 21
-    db $F8, $EB, $09, $00 ; entry 22
-    db $F8, $F3, $0A, $00 ; entry 23
-    db $E0, $21, $0F, $40 ; entry 24
-    db $E0, $29, $10, $40 ; entry 25
-    db $D8, $20, $0E, $20 ; entry 26
-    db $D8, $18, $0F, $20 ; entry 27
-    db $D8, $10, $10, $20 ; entry 28
-    db $D8, $28, $0D, $20 ; entry 29
-    db $D0, $18, $0C, $20 ; entry 30
-    db $D0, $20, $0B, $20 ; entry 31
-    db $E0, $19, $0E, $40 ; entry 32
-    db $E0, $11, $0D, $40 ; entry 33
-    db $F0, $20, $07, $60 ; entry 34
-    db $F0, $18, $08, $60 ; entry 35
-    db $E8, $20, $09, $60 ; entry 36
-    db $E8, $18, $0A, $60 ; entry 37
-    db $E8, $E0, $0B, $40 ; entry 38
-    db $E8, $E8, $0C, $40 ; entry 39
+    db $e0, $f0, $15, $00 ; entry 0
+    db $e0, $f8, $16, $00 ; entry 1
+    db $e0, $00, $17, $00 ; entry 2
+    db $e0, $08, $18, $00 ; entry 3
+    db $d8, $f5, $11, $00 ; entry 4
+    db $d8, $fd, $12, $00 ; entry 5
+    db $e8, $08, $15, $60 ; entry 6
+    db $e8, $00, $16, $60 ; entry 7
+    db $e8, $f8, $17, $60 ; entry 8
+    db $e8, $f0, $18, $60 ; entry 9
+    db $f0, $03, $11, $60 ; entry 10
+    db $f0, $fb, $12, $60 ; entry 11
+    db $e0, $e8, $0f, $40 ; entry 12
+    db $d8, $e7, $0e, $20 ; entry 13
+    db $d8, $df, $0f, $20 ; entry 14
+    db $e0, $e0, $0e, $40 ; entry 15
+    db $d0, $e7, $0b, $20 ; entry 16
+    db $d0, $df, $0c, $20 ; entry 17
+    db $d8, $d8, $10, $20 ; entry 18
+    db $e0, $d8, $0d, $40 ; entry 19
+    db $f0, $eb, $07, $00 ; entry 20
+    db $f0, $f3, $08, $00 ; entry 21
+    db $f8, $eb, $09, $00 ; entry 22
+    db $f8, $f3, $0a, $00 ; entry 23
+    db $e0, $21, $0f, $40 ; entry 24
+    db $e0, $29, $10, $40 ; entry 25
+    db $d8, $20, $0e, $20 ; entry 26
+    db $d8, $18, $0f, $20 ; entry 27
+    db $d8, $10, $10, $20 ; entry 28
+    db $d8, $28, $0d, $20 ; entry 29
+    db $d0, $18, $0c, $20 ; entry 30
+    db $d0, $20, $0b, $20 ; entry 31
+    db $e0, $19, $0e, $40 ; entry 32
+    db $e0, $11, $0d, $40 ; entry 33
+    db $f0, $20, $07, $60 ; entry 34
+    db $f0, $18, $08, $60 ; entry 35
+    db $e8, $20, $09, $60 ; entry 36
+    db $e8, $18, $0a, $60 ; entry 37
+    db $e8, $e0, $0b, $40 ; entry 38
+    db $e8, $e8, $0c, $40 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set29; ends with $80)
+; frame 8 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame8::
-Data_03D_5CDE:: ; address name
-    db $E0, $25, $0F, $00 ; entry 0
-    db $E0, $2D, $10, $00 ; entry 1
-    db $E8, $24, $0E, $60 ; entry 2
-    db $E8, $1C, $0F, $60 ; entry 3
-    db $E8, $14, $10, $60 ; entry 4
-    db $E8, $2C, $0D, $60 ; entry 5
-    db $F0, $1C, $0C, $60 ; entry 6
-    db $E0, $1D, $0E, $00 ; entry 7
-    db $E0, $15, $0D, $00 ; entry 8
-    db $E5, $FA, $08, $20 ; entry 9
-    db $ED, $02, $09, $20 ; entry 10
-    db $ED, $FA, $0A, $20 ; entry 11
-    db $D0, $0C, $07, $20 ; entry 12
-    db $D0, $04, $08, $20 ; entry 13
-    db $D8, $0C, $09, $20 ; entry 14
-    db $D8, $04, $0A, $20 ; entry 15
-    db $F0, $24, $09, $20 ; entry 16
-    db $E5, $02, $07, $20 ; entry 17
-    db $E8, $E6, $0F, $20 ; entry 18
-    db $E8, $DE, $10, $20 ; entry 19
-    db $F0, $E7, $0E, $40 ; entry 20
-    db $F0, $EF, $0F, $40 ; entry 21
-    db $F0, $F7, $10, $40 ; entry 22
-    db $F0, $DF, $0D, $40 ; entry 23
-    db $E8, $EE, $0E, $20 ; entry 24
-    db $E8, $F6, $0D, $20 ; entry 25
-    db $F8, $E7, $0B, $40 ; entry 26
-    db $F8, $EF, $0C, $40 ; entry 27
-    db $E0, $EE, $0B, $20 ; entry 28
-    db $E0, $E6, $0C, $20 ; entry 29
-    db $D0, $2C, $07, $20 ; entry 30
-    db $D0, $24, $08, $20 ; entry 31
-    db $D8, $2C, $09, $20 ; entry 32
-    db $D8, $24, $0A, $20 ; entry 33
-    db $D8, $1E, $0C, $20 ; entry 34
+    db $e0, $25, $0f, $00 ; entry 0
+    db $e0, $2d, $10, $00 ; entry 1
+    db $e8, $24, $0e, $60 ; entry 2
+    db $e8, $1c, $0f, $60 ; entry 3
+    db $e8, $14, $10, $60 ; entry 4
+    db $e8, $2c, $0d, $60 ; entry 5
+    db $f0, $1c, $0c, $60 ; entry 6
+    db $e0, $1d, $0e, $00 ; entry 7
+    db $e0, $15, $0d, $00 ; entry 8
+    db $e5, $fa, $08, $20 ; entry 9
+    db $ed, $02, $09, $20 ; entry 10
+    db $ed, $fa, $0a, $20 ; entry 11
+    db $d0, $0c, $07, $20 ; entry 12
+    db $d0, $04, $08, $20 ; entry 13
+    db $d8, $0c, $09, $20 ; entry 14
+    db $d8, $04, $0a, $20 ; entry 15
+    db $f0, $24, $09, $20 ; entry 16
+    db $e5, $02, $07, $20 ; entry 17
+    db $e8, $e6, $0f, $20 ; entry 18
+    db $e8, $de, $10, $20 ; entry 19
+    db $f0, $e7, $0e, $40 ; entry 20
+    db $f0, $ef, $0f, $40 ; entry 21
+    db $f0, $f7, $10, $40 ; entry 22
+    db $f0, $df, $0d, $40 ; entry 23
+    db $e8, $ee, $0e, $20 ; entry 24
+    db $e8, $f6, $0d, $20 ; entry 25
+    db $f8, $e7, $0b, $40 ; entry 26
+    db $f8, $ef, $0c, $40 ; entry 27
+    db $e0, $ee, $0b, $20 ; entry 28
+    db $e0, $e6, $0c, $20 ; entry 29
+    db $d0, $2c, $07, $20 ; entry 30
+    db $d0, $24, $08, $20 ; entry 31
+    db $d8, $2c, $09, $20 ; entry 32
+    db $d8, $24, $0a, $20 ; entry 33
+    db $d8, $1e, $0c, $20 ; entry 34
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame9::
-Data_03D_5D6B:: ; address name
-    db $D4, $2A, $01, $00 ; entry 0
-    db $DC, $22, $02, $00 ; entry 1
-    db $DC, $2A, $03, $00 ; entry 2
-    db $D4, $22, $00, $00 ; entry 3
-    db $E7, $11, $01, $20 ; entry 4
-    db $EF, $11, $03, $20 ; entry 5
-    db $EF, $21, $02, $20 ; entry 6
-    db $E7, $19, $04, $00 ; entry 7
-    db $EF, $19, $05, $00 ; entry 8
-    db $E7, $21, $01, $00 ; entry 9
-    db $DB, $09, $00, $20 ; entry 10
-    db $DB, $01, $01, $20 ; entry 11
-    db $E3, $09, $02, $20 ; entry 12
-    db $E3, $01, $03, $20 ; entry 13
-    db $F7, $27, $02, $00 ; entry 14
-    db $F7, $2F, $03, $00 ; entry 15
-    db $EF, $27, $00, $00 ; entry 16
-    db $EF, $2F, $01, $00 ; entry 17
-    db $F0, $FB, $00, $00 ; entry 18
-    db $F0, $03, $01, $00 ; entry 19
-    db $F8, $FB, $02, $00 ; entry 20
-    db $F8, $03, $03, $00 ; entry 21
-    db $E3, $3C, $07, $20 ; entry 22
-    db $E3, $34, $08, $20 ; entry 23
-    db $EB, $3C, $09, $20 ; entry 24
-    db $EB, $34, $0A, $20 ; entry 25
-    db $DB, $19, $07, $20 ; entry 26
-    db $DB, $11, $08, $20 ; entry 27
-    db $E3, $19, $09, $20 ; entry 28
-    db $E3, $11, $0A, $20 ; entry 29
+    db $d4, $2a, $01, $00 ; entry 0
+    db $dc, $22, $02, $00 ; entry 1
+    db $dc, $2a, $03, $00 ; entry 2
+    db $d4, $22, $00, $00 ; entry 3
+    db $e7, $11, $01, $20 ; entry 4
+    db $ef, $11, $03, $20 ; entry 5
+    db $ef, $21, $02, $20 ; entry 6
+    db $e7, $19, $04, $00 ; entry 7
+    db $ef, $19, $05, $00 ; entry 8
+    db $e7, $21, $01, $00 ; entry 9
+    db $db, $09, $00, $20 ; entry 10
+    db $db, $01, $01, $20 ; entry 11
+    db $e3, $09, $02, $20 ; entry 12
+    db $e3, $01, $03, $20 ; entry 13
+    db $f7, $27, $02, $00 ; entry 14
+    db $f7, $2f, $03, $00 ; entry 15
+    db $ef, $27, $00, $00 ; entry 16
+    db $ef, $2f, $01, $00 ; entry 17
+    db $f0, $fb, $00, $00 ; entry 18
+    db $f0, $03, $01, $00 ; entry 19
+    db $f8, $fb, $02, $00 ; entry 20
+    db $f8, $03, $03, $00 ; entry 21
+    db $e3, $3c, $07, $20 ; entry 22
+    db $e3, $34, $08, $20 ; entry 23
+    db $eb, $3c, $09, $20 ; entry 24
+    db $eb, $34, $0a, $20 ; entry 25
+    db $db, $19, $07, $20 ; entry 26
+    db $db, $11, $08, $20 ; entry 27
+    db $e3, $19, $09, $20 ; entry 28
+    db $e3, $11, $0a, $20 ; entry 29
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame10::
-Data_03D_5DE4:: ; address name
-    db $EC, $34, $0E, $40 ; entry 0
-    db $EC, $3C, $0F, $40 ; entry 1
-    db $EC, $44, $10, $40 ; entry 2
-    db $EC, $2C, $0D, $40 ; entry 3
-    db $F4, $3C, $0C, $40 ; entry 4
-    db $F4, $34, $09, $00 ; entry 5
-    db $F4, $19, $07, $40 ; entry 6
-    db $F4, $21, $08, $40 ; entry 7
-    db $EC, $19, $09, $40 ; entry 8
-    db $EC, $21, $0A, $40 ; entry 9
-    db $F0, $04, $07, $00 ; entry 10
-    db $F0, $0C, $08, $00 ; entry 11
-    db $F8, $04, $09, $00 ; entry 12
-    db $F8, $0C, $0A, $00 ; entry 13
-    db $EC, $13, $11, $60 ; entry 14
-    db $EC, $0B, $12, $60 ; entry 15
-    db $D4, $04, $11, $00 ; entry 16
-    db $D4, $0C, $12, $00 ; entry 17
-    db $D4, $18, $14, $00 ; entry 18
-    db $DC, $00, $15, $00 ; entry 19
-    db $DC, $08, $16, $00 ; entry 20
-    db $DC, $10, $17, $00 ; entry 21
-    db $DC, $18, $18, $00 ; entry 22
-    db $E4, $18, $15, $60 ; entry 23
-    db $E4, $10, $16, $60 ; entry 24
-    db $E4, $08, $17, $60 ; entry 25
-    db $E4, $00, $18, $60 ; entry 26
-    db $DC, $28, $07, $20 ; entry 27
-    db $DC, $20, $08, $20 ; entry 28
-    db $E4, $28, $09, $20 ; entry 29
-    db $E4, $20, $0A, $20 ; entry 30
-    db $E4, $3B, $0E, $20 ; entry 31
-    db $E4, $33, $0F, $20 ; entry 32
-    db $E4, $43, $0D, $20 ; entry 33
-    db $DC, $3B, $0B, $20 ; entry 34
-    db $DC, $33, $0C, $20 ; entry 35
+    db $ec, $34, $0e, $40 ; entry 0
+    db $ec, $3c, $0f, $40 ; entry 1
+    db $ec, $44, $10, $40 ; entry 2
+    db $ec, $2c, $0d, $40 ; entry 3
+    db $f4, $3c, $0c, $40 ; entry 4
+    db $f4, $34, $09, $00 ; entry 5
+    db $f4, $19, $07, $40 ; entry 6
+    db $f4, $21, $08, $40 ; entry 7
+    db $ec, $19, $09, $40 ; entry 8
+    db $ec, $21, $0a, $40 ; entry 9
+    db $f0, $04, $07, $00 ; entry 10
+    db $f0, $0c, $08, $00 ; entry 11
+    db $f8, $04, $09, $00 ; entry 12
+    db $f8, $0c, $0a, $00 ; entry 13
+    db $ec, $13, $11, $60 ; entry 14
+    db $ec, $0b, $12, $60 ; entry 15
+    db $d4, $04, $11, $00 ; entry 16
+    db $d4, $0c, $12, $00 ; entry 17
+    db $d4, $18, $14, $00 ; entry 18
+    db $dc, $00, $15, $00 ; entry 19
+    db $dc, $08, $16, $00 ; entry 20
+    db $dc, $10, $17, $00 ; entry 21
+    db $dc, $18, $18, $00 ; entry 22
+    db $e4, $18, $15, $60 ; entry 23
+    db $e4, $10, $16, $60 ; entry 24
+    db $e4, $08, $17, $60 ; entry 25
+    db $e4, $00, $18, $60 ; entry 26
+    db $dc, $28, $07, $20 ; entry 27
+    db $dc, $20, $08, $20 ; entry 28
+    db $e4, $28, $09, $20 ; entry 29
+    db $e4, $20, $0a, $20 ; entry 30
+    db $e4, $3b, $0e, $20 ; entry 31
+    db $e4, $33, $0f, $20 ; entry 32
+    db $e4, $43, $0d, $20 ; entry 33
+    db $dc, $3b, $0b, $20 ; entry 34
+    db $dc, $33, $0c, $20 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame11::
-Data_03D_5E75:: ; address name
-    db $D8, $08, $02, $00 ; entry 0
-    db $D8, $10, $03, $00 ; entry 1
-    db $D0, $08, $00, $00 ; entry 2
-    db $E3, $21, $01, $00 ; entry 3
-    db $EB, $21, $03, $00 ; entry 4
-    db $EB, $11, $02, $00 ; entry 5
-    db $E3, $19, $04, $20 ; entry 6
-    db $EB, $19, $05, $20 ; entry 7
-    db $E3, $11, $01, $20 ; entry 8
-    db $F3, $0B, $02, $20 ; entry 9
-    db $F3, $03, $03, $20 ; entry 10
-    db $EB, $03, $01, $20 ; entry 11
-    db $F0, $26, $07, $20 ; entry 12
-    db $F0, $1E, $08, $20 ; entry 13
-    db $F8, $26, $09, $20 ; entry 14
-    db $F8, $1E, $0A, $20 ; entry 15
-    db $D3, $2D, $00, $00 ; entry 16
-    db $D3, $35, $01, $00 ; entry 17
-    db $DB, $2D, $02, $00 ; entry 18
-    db $DB, $35, $03, $00 ; entry 19
-    db $D7, $20, $07, $20 ; entry 20
-    db $D7, $18, $08, $20 ; entry 21
-    db $DF, $20, $09, $20 ; entry 22
-    db $DF, $18, $0A, $20 ; entry 23
-    db $EA, $29, $02, $00 ; entry 24
-    db $E2, $31, $04, $00 ; entry 25
-    db $E8, $39, $05, $00 ; entry 26
-    db $E0, $39, $04, $00 ; entry 27
-    db $EB, $0B, $0C, $00 ; entry 28
-    db $D0, $10, $07, $20 ; entry 29
-    db $E2, $29, $00, $00 ; entry 30
-    db $E0, $41, $01, $00 ; entry 31
-    db $EA, $31, $05, $00 ; entry 32
-    db $E8, $41, $03, $00 ; entry 33
+    db $d8, $08, $02, $00 ; entry 0
+    db $d8, $10, $03, $00 ; entry 1
+    db $d0, $08, $00, $00 ; entry 2
+    db $e3, $21, $01, $00 ; entry 3
+    db $eb, $21, $03, $00 ; entry 4
+    db $eb, $11, $02, $00 ; entry 5
+    db $e3, $19, $04, $20 ; entry 6
+    db $eb, $19, $05, $20 ; entry 7
+    db $e3, $11, $01, $20 ; entry 8
+    db $f3, $0b, $02, $20 ; entry 9
+    db $f3, $03, $03, $20 ; entry 10
+    db $eb, $03, $01, $20 ; entry 11
+    db $f0, $26, $07, $20 ; entry 12
+    db $f0, $1e, $08, $20 ; entry 13
+    db $f8, $26, $09, $20 ; entry 14
+    db $f8, $1e, $0a, $20 ; entry 15
+    db $d3, $2d, $00, $00 ; entry 16
+    db $d3, $35, $01, $00 ; entry 17
+    db $db, $2d, $02, $00 ; entry 18
+    db $db, $35, $03, $00 ; entry 19
+    db $d7, $20, $07, $20 ; entry 20
+    db $d7, $18, $08, $20 ; entry 21
+    db $df, $20, $09, $20 ; entry 22
+    db $df, $18, $0a, $20 ; entry 23
+    db $ea, $29, $02, $00 ; entry 24
+    db $e2, $31, $04, $00 ; entry 25
+    db $e8, $39, $05, $00 ; entry 26
+    db $e0, $39, $04, $00 ; entry 27
+    db $eb, $0b, $0c, $00 ; entry 28
+    db $d0, $10, $07, $20 ; entry 29
+    db $e2, $29, $00, $00 ; entry 30
+    db $e0, $41, $01, $00 ; entry 31
+    db $ea, $31, $05, $00 ; entry 32
+    db $e8, $41, $03, $00 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set29; ends with $80)
+; frame 12 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame12::
-Data_03D_5EFE:: ; address name
-    db $DC, $3C, $0E, $00 ; entry 0
-    db $DC, $44, $0F, $00 ; entry 1
-    db $DC, $34, $0D, $00 ; entry 2
-    db $D4, $44, $0C, $00 ; entry 3
-    db $E4, $43, $0E, $60 ; entry 4
-    db $E4, $3B, $0F, $60 ; entry 5
-    db $EC, $43, $0B, $60 ; entry 6
-    db $EC, $3B, $0C, $60 ; entry 7
-    db $D4, $3C, $0B, $00 ; entry 8
-    db $E0, $2C, $11, $20 ; entry 9
-    db $E0, $24, $12, $20 ; entry 10
-    db $F8, $1D, $11, $40 ; entry 11
-    db $F8, $25, $12, $40 ; entry 12
-    db $F8, $31, $14, $40 ; entry 13
-    db $F0, $19, $15, $40 ; entry 14
-    db $F0, $21, $16, $40 ; entry 15
-    db $F0, $29, $17, $40 ; entry 16
-    db $F0, $31, $18, $40 ; entry 17
-    db $E8, $31, $15, $20 ; entry 18
-    db $E8, $29, $16, $20 ; entry 19
-    db $E8, $21, $17, $20 ; entry 20
-    db $E8, $19, $18, $20 ; entry 21
-    db $D8, $20, $07, $40 ; entry 22
-    db $D8, $28, $08, $40 ; entry 23
-    db $D0, $20, $09, $40 ; entry 24
-    db $D0, $28, $0A, $40 ; entry 25
-    db $F0, $09, $07, $40 ; entry 26
-    db $F0, $11, $08, $40 ; entry 27
-    db $E8, $09, $09, $40 ; entry 28
-    db $E8, $11, $0A, $40 ; entry 29
-    db $F0, $43, $07, $20 ; entry 30
-    db $F0, $3B, $08, $20 ; entry 31
-    db $F8, $43, $09, $20 ; entry 32
-    db $F8, $3B, $0A, $20 ; entry 33
+    db $dc, $3c, $0e, $00 ; entry 0
+    db $dc, $44, $0f, $00 ; entry 1
+    db $dc, $34, $0d, $00 ; entry 2
+    db $d4, $44, $0c, $00 ; entry 3
+    db $e4, $43, $0e, $60 ; entry 4
+    db $e4, $3b, $0f, $60 ; entry 5
+    db $ec, $43, $0b, $60 ; entry 6
+    db $ec, $3b, $0c, $60 ; entry 7
+    db $d4, $3c, $0b, $00 ; entry 8
+    db $e0, $2c, $11, $20 ; entry 9
+    db $e0, $24, $12, $20 ; entry 10
+    db $f8, $1d, $11, $40 ; entry 11
+    db $f8, $25, $12, $40 ; entry 12
+    db $f8, $31, $14, $40 ; entry 13
+    db $f0, $19, $15, $40 ; entry 14
+    db $f0, $21, $16, $40 ; entry 15
+    db $f0, $29, $17, $40 ; entry 16
+    db $f0, $31, $18, $40 ; entry 17
+    db $e8, $31, $15, $20 ; entry 18
+    db $e8, $29, $16, $20 ; entry 19
+    db $e8, $21, $17, $20 ; entry 20
+    db $e8, $19, $18, $20 ; entry 21
+    db $d8, $20, $07, $40 ; entry 22
+    db $d8, $28, $08, $40 ; entry 23
+    db $d0, $20, $09, $40 ; entry 24
+    db $d0, $28, $0a, $40 ; entry 25
+    db $f0, $09, $07, $40 ; entry 26
+    db $f0, $11, $08, $40 ; entry 27
+    db $e8, $09, $09, $40 ; entry 28
+    db $e8, $11, $0a, $40 ; entry 29
+    db $f0, $43, $07, $20 ; entry 30
+    db $f0, $3b, $08, $20 ; entry 31
+    db $f8, $43, $09, $20 ; entry 32
+    db $f8, $3b, $0a, $20 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 13 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame13::
-Data_03D_5F87:: ; address name
-    db $D0, $3F, $11, $20 ; entry 0
-    db $D0, $37, $12, $20 ; entry 1
-    db $E8, $30, $11, $40 ; entry 2
-    db $E8, $38, $12, $40 ; entry 3
-    db $E8, $44, $14, $40 ; entry 4
-    db $E0, $2C, $15, $40 ; entry 5
-    db $E0, $34, $16, $40 ; entry 6
-    db $E0, $3C, $17, $40 ; entry 7
-    db $E0, $44, $18, $40 ; entry 8
-    db $D8, $44, $15, $20 ; entry 9
-    db $D8, $3C, $16, $20 ; entry 10
-    db $D8, $34, $17, $20 ; entry 11
-    db $D8, $2C, $18, $20 ; entry 12
-    db $E1, $20, $0E, $00 ; entry 13
-    db $E1, $28, $0F, $00 ; entry 14
-    db $E9, $27, $0E, $60 ; entry 15
-    db $E9, $1F, $0F, $60 ; entry 16
-    db $F1, $27, $0B, $60 ; entry 17
-    db $F1, $1F, $0C, $60 ; entry 18
-    db $D9, $20, $0B, $00 ; entry 19
-    db $E0, $18, $0D, $00 ; entry 20
-    db $E0, $14, $07, $20 ; entry 21
-    db $E0, $0C, $08, $20 ; entry 22
-    db $E8, $14, $09, $20 ; entry 23
-    db $E8, $0C, $0A, $20 ; entry 24
-    db $D0, $24, $07, $40 ; entry 25
-    db $D0, $2C, $08, $40 ; entry 26
-    db $F8, $26, $09, $40 ; entry 27
-    db $F8, $2E, $0A, $40 ; entry 28
-    db $D8, $08, $0E, $40 ; entry 29
-    db $D8, $10, $0F, $40 ; entry 30
-    db $D0, $0F, $0E, $20 ; entry 31
-    db $D0, $07, $0F, $20 ; entry 32
+    db $d0, $3f, $11, $20 ; entry 0
+    db $d0, $37, $12, $20 ; entry 1
+    db $e8, $30, $11, $40 ; entry 2
+    db $e8, $38, $12, $40 ; entry 3
+    db $e8, $44, $14, $40 ; entry 4
+    db $e0, $2c, $15, $40 ; entry 5
+    db $e0, $34, $16, $40 ; entry 6
+    db $e0, $3c, $17, $40 ; entry 7
+    db $e0, $44, $18, $40 ; entry 8
+    db $d8, $44, $15, $20 ; entry 9
+    db $d8, $3c, $16, $20 ; entry 10
+    db $d8, $34, $17, $20 ; entry 11
+    db $d8, $2c, $18, $20 ; entry 12
+    db $e1, $20, $0e, $00 ; entry 13
+    db $e1, $28, $0f, $00 ; entry 14
+    db $e9, $27, $0e, $60 ; entry 15
+    db $e9, $1f, $0f, $60 ; entry 16
+    db $f1, $27, $0b, $60 ; entry 17
+    db $f1, $1f, $0c, $60 ; entry 18
+    db $d9, $20, $0b, $00 ; entry 19
+    db $e0, $18, $0d, $00 ; entry 20
+    db $e0, $14, $07, $20 ; entry 21
+    db $e0, $0c, $08, $20 ; entry 22
+    db $e8, $14, $09, $20 ; entry 23
+    db $e8, $0c, $0a, $20 ; entry 24
+    db $d0, $24, $07, $40 ; entry 25
+    db $d0, $2c, $08, $40 ; entry 26
+    db $f8, $26, $09, $40 ; entry 27
+    db $f8, $2e, $0a, $40 ; entry 28
+    db $d8, $08, $0e, $40 ; entry 29
+    db $d8, $10, $0f, $40 ; entry 30
+    db $d0, $0f, $0e, $20 ; entry 31
+    db $d0, $07, $0f, $20 ; entry 32
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame14::
-Data_03D_600C:: ; address name
-    db $E0, $D4, $0F, $20 ; entry 0
-    db $E0, $CC, $10, $20 ; entry 1
-    db $E8, $D5, $0E, $40 ; entry 2
-    db $E8, $DD, $0F, $40 ; entry 3
-    db $E8, $E5, $10, $40 ; entry 4
-    db $E8, $CD, $0D, $40 ; entry 5
-    db $F0, $DD, $0C, $40 ; entry 6
-    db $E0, $DC, $0E, $20 ; entry 7
-    db $E0, $E4, $0D, $20 ; entry 8
-    db $E5, $FF, $08, $00 ; entry 9
-    db $ED, $F7, $09, $00 ; entry 10
-    db $ED, $FF, $0A, $00 ; entry 11
-    db $D0, $ED, $07, $00 ; entry 12
-    db $D0, $F5, $08, $00 ; entry 13
-    db $D8, $ED, $09, $00 ; entry 14
-    db $D8, $F5, $0A, $00 ; entry 15
-    db $F0, $D5, $09, $00 ; entry 16
-    db $E5, $F7, $07, $00 ; entry 17
-    db $E8, $13, $0F, $00 ; entry 18
-    db $E8, $1B, $10, $00 ; entry 19
-    db $F0, $12, $0E, $60 ; entry 20
-    db $F0, $0A, $0F, $60 ; entry 21
-    db $F0, $02, $10, $60 ; entry 22
-    db $F0, $1A, $0D, $60 ; entry 23
-    db $E8, $0B, $0E, $00 ; entry 24
-    db $E8, $03, $0D, $00 ; entry 25
-    db $F8, $12, $0B, $60 ; entry 26
-    db $F8, $0A, $0C, $60 ; entry 27
-    db $E0, $0B, $0B, $00 ; entry 28
-    db $E0, $13, $0C, $00 ; entry 29
-    db $D0, $CD, $07, $00 ; entry 30
-    db $D0, $D5, $08, $00 ; entry 31
-    db $D8, $CD, $09, $00 ; entry 32
-    db $D8, $D5, $0A, $00 ; entry 33
-    db $D8, $DB, $0C, $00 ; entry 34
+    db $e0, $d4, $0f, $20 ; entry 0
+    db $e0, $cc, $10, $20 ; entry 1
+    db $e8, $d5, $0e, $40 ; entry 2
+    db $e8, $dd, $0f, $40 ; entry 3
+    db $e8, $e5, $10, $40 ; entry 4
+    db $e8, $cd, $0d, $40 ; entry 5
+    db $f0, $dd, $0c, $40 ; entry 6
+    db $e0, $dc, $0e, $20 ; entry 7
+    db $e0, $e4, $0d, $20 ; entry 8
+    db $e5, $ff, $08, $00 ; entry 9
+    db $ed, $f7, $09, $00 ; entry 10
+    db $ed, $ff, $0a, $00 ; entry 11
+    db $d0, $ed, $07, $00 ; entry 12
+    db $d0, $f5, $08, $00 ; entry 13
+    db $d8, $ed, $09, $00 ; entry 14
+    db $d8, $f5, $0a, $00 ; entry 15
+    db $f0, $d5, $09, $00 ; entry 16
+    db $e5, $f7, $07, $00 ; entry 17
+    db $e8, $13, $0f, $00 ; entry 18
+    db $e8, $1b, $10, $00 ; entry 19
+    db $f0, $12, $0e, $60 ; entry 20
+    db $f0, $0a, $0f, $60 ; entry 21
+    db $f0, $02, $10, $60 ; entry 22
+    db $f0, $1a, $0d, $60 ; entry 23
+    db $e8, $0b, $0e, $00 ; entry 24
+    db $e8, $03, $0d, $00 ; entry 25
+    db $f8, $12, $0b, $60 ; entry 26
+    db $f8, $0a, $0c, $60 ; entry 27
+    db $e0, $0b, $0b, $00 ; entry 28
+    db $e0, $13, $0c, $00 ; entry 29
+    db $d0, $cd, $07, $00 ; entry 30
+    db $d0, $d5, $08, $00 ; entry 31
+    db $d8, $cd, $09, $00 ; entry 32
+    db $d8, $d5, $0a, $00 ; entry 33
+    db $d8, $db, $0c, $00 ; entry 34
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame15::
-Data_03D_6099:: ; address name
-    db $D4, $CE, $01, $20 ; entry 0
-    db $DC, $D6, $02, $20 ; entry 1
-    db $DC, $CE, $03, $20 ; entry 2
-    db $D4, $D6, $00, $20 ; entry 3
-    db $E7, $E7, $01, $00 ; entry 4
-    db $EF, $E7, $03, $00 ; entry 5
-    db $EF, $D7, $02, $00 ; entry 6
-    db $E7, $DF, $04, $20 ; entry 7
-    db $EF, $DF, $05, $20 ; entry 8
-    db $E7, $D7, $01, $20 ; entry 9
-    db $DB, $EF, $00, $00 ; entry 10
-    db $DB, $F7, $01, $00 ; entry 11
-    db $E3, $EF, $02, $00 ; entry 12
-    db $E3, $F7, $03, $00 ; entry 13
-    db $F7, $D1, $02, $20 ; entry 14
-    db $F7, $C9, $03, $20 ; entry 15
-    db $EF, $D1, $00, $20 ; entry 16
-    db $EF, $C9, $01, $20 ; entry 17
-    db $F0, $FD, $00, $20 ; entry 18
-    db $F0, $F5, $01, $20 ; entry 19
-    db $F8, $FD, $02, $20 ; entry 20
-    db $F8, $F5, $03, $20 ; entry 21
-    db $E3, $BC, $07, $00 ; entry 22
-    db $E3, $C4, $08, $00 ; entry 23
-    db $EB, $BC, $09, $00 ; entry 24
-    db $EB, $C4, $0A, $00 ; entry 25
-    db $DB, $DF, $07, $00 ; entry 26
-    db $DB, $E7, $08, $00 ; entry 27
-    db $E3, $DF, $09, $00 ; entry 28
-    db $E3, $E7, $0A, $00 ; entry 29
+    db $d4, $ce, $01, $20 ; entry 0
+    db $dc, $d6, $02, $20 ; entry 1
+    db $dc, $ce, $03, $20 ; entry 2
+    db $d4, $d6, $00, $20 ; entry 3
+    db $e7, $e7, $01, $00 ; entry 4
+    db $ef, $e7, $03, $00 ; entry 5
+    db $ef, $d7, $02, $00 ; entry 6
+    db $e7, $df, $04, $20 ; entry 7
+    db $ef, $df, $05, $20 ; entry 8
+    db $e7, $d7, $01, $20 ; entry 9
+    db $db, $ef, $00, $00 ; entry 10
+    db $db, $f7, $01, $00 ; entry 11
+    db $e3, $ef, $02, $00 ; entry 12
+    db $e3, $f7, $03, $00 ; entry 13
+    db $f7, $d1, $02, $20 ; entry 14
+    db $f7, $c9, $03, $20 ; entry 15
+    db $ef, $d1, $00, $20 ; entry 16
+    db $ef, $c9, $01, $20 ; entry 17
+    db $f0, $fd, $00, $20 ; entry 18
+    db $f0, $f5, $01, $20 ; entry 19
+    db $f8, $fd, $02, $20 ; entry 20
+    db $f8, $f5, $03, $20 ; entry 21
+    db $e3, $bc, $07, $00 ; entry 22
+    db $e3, $c4, $08, $00 ; entry 23
+    db $eb, $bc, $09, $00 ; entry 24
+    db $eb, $c4, $0a, $00 ; entry 25
+    db $db, $df, $07, $00 ; entry 26
+    db $db, $e7, $08, $00 ; entry 27
+    db $e3, $df, $09, $00 ; entry 28
+    db $e3, $e7, $0a, $00 ; entry 29
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3D_4077Set29; ends with $80)
+; frame 16 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame16::
-Data_03D_6112:: ; address name
-    db $EC, $C6, $0E, $60 ; entry 0
-    db $EC, $BE, $0F, $60 ; entry 1
-    db $EC, $B6, $10, $60 ; entry 2
-    db $EC, $CE, $0D, $60 ; entry 3
-    db $F4, $BE, $0C, $60 ; entry 4
-    db $F4, $C6, $09, $20 ; entry 5
-    db $F4, $E1, $07, $60 ; entry 6
-    db $F4, $D9, $08, $60 ; entry 7
-    db $EC, $E1, $09, $60 ; entry 8
-    db $EC, $D9, $0A, $60 ; entry 9
-    db $F0, $F6, $07, $20 ; entry 10
-    db $F0, $EE, $08, $20 ; entry 11
-    db $F8, $F6, $09, $20 ; entry 12
-    db $F8, $EE, $0A, $20 ; entry 13
-    db $EC, $E7, $11, $40 ; entry 14
-    db $EC, $EF, $12, $40 ; entry 15
-    db $D4, $F6, $11, $20 ; entry 16
-    db $D4, $EE, $12, $20 ; entry 17
-    db $D4, $E2, $14, $20 ; entry 18
-    db $DC, $FA, $15, $20 ; entry 19
-    db $DC, $F2, $16, $20 ; entry 20
-    db $DC, $EA, $17, $20 ; entry 21
-    db $DC, $E2, $18, $20 ; entry 22
-    db $E4, $E2, $15, $40 ; entry 23
-    db $E4, $EA, $16, $40 ; entry 24
-    db $E4, $F2, $17, $40 ; entry 25
-    db $E4, $FA, $18, $40 ; entry 26
-    db $DC, $D2, $07, $00 ; entry 27
-    db $DC, $DA, $08, $00 ; entry 28
-    db $E4, $D2, $09, $00 ; entry 29
-    db $E4, $DA, $0A, $00 ; entry 30
-    db $E4, $BF, $0E, $00 ; entry 31
-    db $E4, $C7, $0F, $00 ; entry 32
-    db $E4, $B7, $0D, $00 ; entry 33
-    db $DC, $BF, $0B, $00 ; entry 34
-    db $DC, $C7, $0C, $00 ; entry 35
+    db $ec, $c6, $0e, $60 ; entry 0
+    db $ec, $be, $0f, $60 ; entry 1
+    db $ec, $b6, $10, $60 ; entry 2
+    db $ec, $ce, $0d, $60 ; entry 3
+    db $f4, $be, $0c, $60 ; entry 4
+    db $f4, $c6, $09, $20 ; entry 5
+    db $f4, $e1, $07, $60 ; entry 6
+    db $f4, $d9, $08, $60 ; entry 7
+    db $ec, $e1, $09, $60 ; entry 8
+    db $ec, $d9, $0a, $60 ; entry 9
+    db $f0, $f6, $07, $20 ; entry 10
+    db $f0, $ee, $08, $20 ; entry 11
+    db $f8, $f6, $09, $20 ; entry 12
+    db $f8, $ee, $0a, $20 ; entry 13
+    db $ec, $e7, $11, $40 ; entry 14
+    db $ec, $ef, $12, $40 ; entry 15
+    db $d4, $f6, $11, $20 ; entry 16
+    db $d4, $ee, $12, $20 ; entry 17
+    db $d4, $e2, $14, $20 ; entry 18
+    db $dc, $fa, $15, $20 ; entry 19
+    db $dc, $f2, $16, $20 ; entry 20
+    db $dc, $ea, $17, $20 ; entry 21
+    db $dc, $e2, $18, $20 ; entry 22
+    db $e4, $e2, $15, $40 ; entry 23
+    db $e4, $ea, $16, $40 ; entry 24
+    db $e4, $f2, $17, $40 ; entry 25
+    db $e4, $fa, $18, $40 ; entry 26
+    db $dc, $d2, $07, $00 ; entry 27
+    db $dc, $da, $08, $00 ; entry 28
+    db $e4, $d2, $09, $00 ; entry 29
+    db $e4, $da, $0a, $00 ; entry 30
+    db $e4, $bf, $0e, $00 ; entry 31
+    db $e4, $c7, $0f, $00 ; entry 32
+    db $e4, $b7, $0d, $00 ; entry 33
+    db $dc, $bf, $0b, $00 ; entry 34
+    db $dc, $c7, $0c, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 17 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 17 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame17::
-Data_03D_61A3:: ; address name
-    db $D8, $F0, $02, $20 ; entry 0
-    db $D8, $E8, $03, $20 ; entry 1
-    db $D0, $F0, $00, $20 ; entry 2
-    db $E3, $D7, $01, $20 ; entry 3
-    db $EB, $D7, $03, $20 ; entry 4
-    db $EB, $E7, $02, $20 ; entry 5
-    db $E3, $DF, $04, $00 ; entry 6
-    db $EB, $DF, $05, $00 ; entry 7
-    db $E3, $E7, $01, $00 ; entry 8
-    db $F3, $ED, $02, $00 ; entry 9
-    db $F3, $F5, $03, $00 ; entry 10
-    db $EB, $F5, $01, $00 ; entry 11
-    db $F0, $D2, $07, $00 ; entry 12
-    db $F0, $DA, $08, $00 ; entry 13
-    db $F8, $D2, $09, $00 ; entry 14
-    db $F8, $DA, $0A, $00 ; entry 15
-    db $D3, $CB, $00, $20 ; entry 16
-    db $D3, $C3, $01, $20 ; entry 17
-    db $DB, $CB, $02, $20 ; entry 18
-    db $DB, $C3, $03, $20 ; entry 19
-    db $D7, $D8, $07, $00 ; entry 20
-    db $D7, $E0, $08, $00 ; entry 21
-    db $DF, $D8, $09, $00 ; entry 22
-    db $DF, $E0, $0A, $00 ; entry 23
-    db $EA, $CF, $02, $20 ; entry 24
-    db $E2, $C7, $04, $20 ; entry 25
-    db $E8, $BF, $05, $20 ; entry 26
-    db $E0, $BF, $04, $20 ; entry 27
-    db $EB, $ED, $0C, $20 ; entry 28
-    db $D0, $E8, $07, $00 ; entry 29
-    db $E8, $B7, $03, $20 ; entry 30
-    db $E0, $B7, $00, $00 ; entry 31
-    db $EA, $C7, $05, $00 ; entry 32
-    db $E2, $CF, $01, $00 ; entry 33
+    db $d8, $f0, $02, $20 ; entry 0
+    db $d8, $e8, $03, $20 ; entry 1
+    db $d0, $f0, $00, $20 ; entry 2
+    db $e3, $d7, $01, $20 ; entry 3
+    db $eb, $d7, $03, $20 ; entry 4
+    db $eb, $e7, $02, $20 ; entry 5
+    db $e3, $df, $04, $00 ; entry 6
+    db $eb, $df, $05, $00 ; entry 7
+    db $e3, $e7, $01, $00 ; entry 8
+    db $f3, $ed, $02, $00 ; entry 9
+    db $f3, $f5, $03, $00 ; entry 10
+    db $eb, $f5, $01, $00 ; entry 11
+    db $f0, $d2, $07, $00 ; entry 12
+    db $f0, $da, $08, $00 ; entry 13
+    db $f8, $d2, $09, $00 ; entry 14
+    db $f8, $da, $0a, $00 ; entry 15
+    db $d3, $cb, $00, $20 ; entry 16
+    db $d3, $c3, $01, $20 ; entry 17
+    db $db, $cb, $02, $20 ; entry 18
+    db $db, $c3, $03, $20 ; entry 19
+    db $d7, $d8, $07, $00 ; entry 20
+    db $d7, $e0, $08, $00 ; entry 21
+    db $df, $d8, $09, $00 ; entry 22
+    db $df, $e0, $0a, $00 ; entry 23
+    db $ea, $cf, $02, $20 ; entry 24
+    db $e2, $c7, $04, $20 ; entry 25
+    db $e8, $bf, $05, $20 ; entry 26
+    db $e0, $bf, $04, $20 ; entry 27
+    db $eb, $ed, $0c, $20 ; entry 28
+    db $d0, $e8, $07, $00 ; entry 29
+    db $e8, $b7, $03, $20 ; entry 30
+    db $e0, $b7, $00, $00 ; entry 31
+    db $ea, $c7, $05, $00 ; entry 32
+    db $e2, $cf, $01, $00 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 18 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 18 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame18::
-Data_03D_622C:: ; address name
-    db $DC, $BC, $0E, $20 ; entry 0
-    db $DC, $B4, $0F, $20 ; entry 1
-    db $DC, $C4, $0D, $20 ; entry 2
-    db $D4, $B4, $0C, $20 ; entry 3
-    db $E4, $B5, $0E, $40 ; entry 4
-    db $E4, $BD, $0F, $40 ; entry 5
-    db $EC, $B5, $0B, $40 ; entry 6
-    db $EC, $BD, $0C, $40 ; entry 7
-    db $D4, $BC, $0B, $20 ; entry 8
-    db $E0, $CC, $11, $00 ; entry 9
-    db $E0, $D4, $12, $00 ; entry 10
-    db $F8, $DB, $11, $60 ; entry 11
-    db $F8, $D3, $12, $60 ; entry 12
-    db $F8, $C7, $14, $60 ; entry 13
-    db $F0, $DF, $15, $60 ; entry 14
-    db $F0, $D7, $16, $60 ; entry 15
-    db $F0, $CF, $17, $60 ; entry 16
-    db $F0, $C7, $18, $60 ; entry 17
-    db $E8, $C7, $15, $00 ; entry 18
-    db $E8, $CF, $16, $00 ; entry 19
-    db $E8, $D7, $17, $00 ; entry 20
-    db $E8, $DF, $18, $00 ; entry 21
-    db $D8, $D8, $07, $60 ; entry 22
-    db $D8, $D0, $08, $60 ; entry 23
-    db $D0, $D8, $09, $60 ; entry 24
-    db $D0, $D0, $0A, $60 ; entry 25
-    db $F0, $EF, $07, $60 ; entry 26
-    db $F0, $E7, $08, $60 ; entry 27
-    db $E8, $EF, $09, $60 ; entry 28
-    db $E8, $E7, $0A, $60 ; entry 29
-    db $F0, $B5, $07, $00 ; entry 30
-    db $F0, $BD, $08, $00 ; entry 31
-    db $F8, $B5, $09, $00 ; entry 32
-    db $F8, $BD, $0A, $00 ; entry 33
+    db $dc, $bc, $0e, $20 ; entry 0
+    db $dc, $b4, $0f, $20 ; entry 1
+    db $dc, $c4, $0d, $20 ; entry 2
+    db $d4, $b4, $0c, $20 ; entry 3
+    db $e4, $b5, $0e, $40 ; entry 4
+    db $e4, $bd, $0f, $40 ; entry 5
+    db $ec, $b5, $0b, $40 ; entry 6
+    db $ec, $bd, $0c, $40 ; entry 7
+    db $d4, $bc, $0b, $20 ; entry 8
+    db $e0, $cc, $11, $00 ; entry 9
+    db $e0, $d4, $12, $00 ; entry 10
+    db $f8, $db, $11, $60 ; entry 11
+    db $f8, $d3, $12, $60 ; entry 12
+    db $f8, $c7, $14, $60 ; entry 13
+    db $f0, $df, $15, $60 ; entry 14
+    db $f0, $d7, $16, $60 ; entry 15
+    db $f0, $cf, $17, $60 ; entry 16
+    db $f0, $c7, $18, $60 ; entry 17
+    db $e8, $c7, $15, $00 ; entry 18
+    db $e8, $cf, $16, $00 ; entry 19
+    db $e8, $d7, $17, $00 ; entry 20
+    db $e8, $df, $18, $00 ; entry 21
+    db $d8, $d8, $07, $60 ; entry 22
+    db $d8, $d0, $08, $60 ; entry 23
+    db $d0, $d8, $09, $60 ; entry 24
+    db $d0, $d0, $0a, $60 ; entry 25
+    db $f0, $ef, $07, $60 ; entry 26
+    db $f0, $e7, $08, $60 ; entry 27
+    db $e8, $ef, $09, $60 ; entry 28
+    db $e8, $e7, $0a, $60 ; entry 29
+    db $f0, $b5, $07, $00 ; entry 30
+    db $f0, $bd, $08, $00 ; entry 31
+    db $f8, $b5, $09, $00 ; entry 32
+    db $f8, $bd, $0a, $00 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 19 of MetaSprites3D_4077Set29; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 19 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 MetaSprites3D_4077Set29Frame19::
-Data_03D_62B5:: ; address name
-    db $DC, $BC, $0E, $20 ; entry 0
-    db $DC, $B4, $0F, $20 ; entry 1
-    db $DC, $C4, $0D, $20 ; entry 2
-    db $D4, $B4, $0C, $20 ; entry 3
-    db $E4, $B5, $0E, $40 ; entry 4
-    db $E4, $BD, $0F, $40 ; entry 5
-    db $EC, $B5, $0B, $40 ; entry 6
-    db $EC, $BD, $0C, $40 ; entry 7
-    db $D4, $BC, $0B, $20 ; entry 8
-    db $E0, $CC, $11, $00 ; entry 9
-    db $E0, $D4, $12, $00 ; entry 10
-    db $F8, $DB, $11, $60 ; entry 11
-    db $F8, $D3, $12, $60 ; entry 12
-    db $F8, $C7, $14, $60 ; entry 13
-    db $F0, $DF, $15, $60 ; entry 14
-    db $F0, $D7, $16, $60 ; entry 15
-    db $F0, $CF, $17, $60 ; entry 16
-    db $F0, $C7, $18, $60 ; entry 17
-    db $E8, $C7, $15, $00 ; entry 18
-    db $E8, $CF, $16, $00 ; entry 19
-    db $E8, $D7, $17, $00 ; entry 20
-    db $E8, $DF, $18, $00 ; entry 21
-    db $D8, $D8, $07, $60 ; entry 22
-    db $D8, $D0, $08, $60 ; entry 23
-    db $D0, $D8, $09, $60 ; entry 24
-    db $D0, $D0, $0A, $60 ; entry 25
-    db $F0, $EF, $07, $60 ; entry 26
-    db $F0, $E7, $08, $60 ; entry 27
-    db $E8, $EF, $09, $60 ; entry 28
-    db $E8, $E7, $0A, $60 ; entry 29
-    db $F0, $B5, $07, $00 ; entry 30
-    db $F0, $BD, $08, $00 ; entry 31
-    db $F8, $B5, $09, $00 ; entry 32
-    db $F8, $BD, $0A, $00 ; entry 33
+    db $dc, $bc, $0e, $20 ; entry 0
+    db $dc, $b4, $0f, $20 ; entry 1
+    db $dc, $c4, $0d, $20 ; entry 2
+    db $d4, $b4, $0c, $20 ; entry 3
+    db $e4, $b5, $0e, $40 ; entry 4
+    db $e4, $bd, $0f, $40 ; entry 5
+    db $ec, $b5, $0b, $40 ; entry 6
+    db $ec, $bd, $0c, $40 ; entry 7
+    db $d4, $bc, $0b, $20 ; entry 8
+    db $e0, $cc, $11, $00 ; entry 9
+    db $e0, $d4, $12, $00 ; entry 10
+    db $f8, $db, $11, $60 ; entry 11
+    db $f8, $d3, $12, $60 ; entry 12
+    db $f8, $c7, $14, $60 ; entry 13
+    db $f0, $df, $15, $60 ; entry 14
+    db $f0, $d7, $16, $60 ; entry 15
+    db $f0, $cf, $17, $60 ; entry 16
+    db $f0, $c7, $18, $60 ; entry 17
+    db $e8, $c7, $15, $00 ; entry 18
+    db $e8, $cf, $16, $00 ; entry 19
+    db $e8, $d7, $17, $00 ; entry 20
+    db $e8, $df, $18, $00 ; entry 21
+    db $d8, $d8, $07, $60 ; entry 22
+    db $d8, $d0, $08, $60 ; entry 23
+    db $d0, $d8, $09, $60 ; entry 24
+    db $d0, $d0, $0a, $60 ; entry 25
+    db $f0, $ef, $07, $60 ; entry 26
+    db $f0, $e7, $08, $60 ; entry 27
+    db $e8, $ef, $09, $60 ; entry 28
+    db $e8, $e7, $0a, $60 ; entry 29
+    db $f0, $b5, $07, $00 ; entry 30
+    db $f0, $bd, $08, $00 ; entry 31
+    db $f8, $b5, $09, $00 ; entry 32
+    db $f8, $bd, $0a, $00 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 20 of MetaSprites3D_4077Set29; ends with $80)
+; frame 20 of MetaSprites3D_4077Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set29Frame20::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 42 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 42 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set2A::
-Data_03D_633F:: ; address name
     dw MetaSprites3D_4077Set2AFrame0 ; entry 0
     dw MetaSprites3D_4077Set2AFrame1 ; entry 1
     dw MetaSprites3D_4077Set2AFrame2 ; entry 2
@@ -3355,931 +3134,888 @@ Data_03D_633F:: ; address name
     dw MetaSprites3D_4077Set2AFrame24 ; entry 30
     dw MetaSprites3D_4077Set2AFrame24 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 0 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame0::
-Data_03D_637F:: ; address name
-    db $F8, $C0, $00, $00 ; entry 0
-    db $F0, $C0, $00, $00 ; entry 1
-    db $E8, $C0, $00, $00 ; entry 2
-    db $F8, $E0, $00, $00 ; entry 3
-    db $F0, $E0, $00, $00 ; entry 4
-    db $F8, $F0, $00, $00 ; entry 5
-    db $F0, $F0, $00, $00 ; entry 6
-    db $E8, $F0, $00, $00 ; entry 7
-    db $E0, $F0, $00, $00 ; entry 8
-    db $D8, $F0, $00, $00 ; entry 9
-    db $F8, $00, $00, $00 ; entry 10
-    db $F0, $00, $00, $00 ; entry 11
-    db $E8, $00, $00, $00 ; entry 12
-    db $F8, $20, $00, $00 ; entry 13
-    db $F0, $20, $00, $00 ; entry 14
-    db $E8, $20, $00, $00 ; entry 15
-    db $E0, $20, $00, $00 ; entry 16
-    db $D8, $20, $00, $00 ; entry 17
-    db $F8, $30, $00, $00 ; entry 18
-    db $F0, $30, $00, $00 ; entry 19
-    db $E0, $00, $00, $00 ; entry 20
-    db $D8, $00, $00, $00 ; entry 21
-    db $D0, $00, $00, $00 ; entry 22
+    db $f8, $c0, $00, $00 ; entry 0
+    db $f0, $c0, $00, $00 ; entry 1
+    db $e8, $c0, $00, $00 ; entry 2
+    db $f8, $e0, $00, $00 ; entry 3
+    db $f0, $e0, $00, $00 ; entry 4
+    db $f8, $f0, $00, $00 ; entry 5
+    db $f0, $f0, $00, $00 ; entry 6
+    db $e8, $f0, $00, $00 ; entry 7
+    db $e0, $f0, $00, $00 ; entry 8
+    db $d8, $f0, $00, $00 ; entry 9
+    db $f8, $00, $00, $00 ; entry 10
+    db $f0, $00, $00, $00 ; entry 11
+    db $e8, $00, $00, $00 ; entry 12
+    db $f8, $20, $00, $00 ; entry 13
+    db $f0, $20, $00, $00 ; entry 14
+    db $e8, $20, $00, $00 ; entry 15
+    db $e0, $20, $00, $00 ; entry 16
+    db $d8, $20, $00, $00 ; entry 17
+    db $f8, $30, $00, $00 ; entry 18
+    db $f0, $30, $00, $00 ; entry 19
+    db $e0, $00, $00, $00 ; entry 20
+    db $d8, $00, $00, $00 ; entry 21
+    db $d0, $00, $00, $00 ; entry 22
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 1 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame1::
-Data_03D_63DC:: ; address name
-    db $E8, $C0, $01, $00 ; entry 0
-    db $E0, $C0, $01, $00 ; entry 1
-    db $D0, $C0, $01, $00 ; entry 2
-    db $D8, $C0, $01, $00 ; entry 3
-    db $F8, $E0, $01, $00 ; entry 4
-    db $F0, $E0, $01, $00 ; entry 5
-    db $E8, $E0, $01, $00 ; entry 6
-    db $E0, $E0, $01, $00 ; entry 7
-    db $D0, $E0, $01, $00 ; entry 8
-    db $D8, $E0, $01, $00 ; entry 9
-    db $F8, $F0, $01, $00 ; entry 10
-    db $F0, $F0, $01, $00 ; entry 11
-    db $E8, $F0, $01, $00 ; entry 12
-    db $E0, $F0, $01, $00 ; entry 13
-    db $D0, $F0, $01, $00 ; entry 14
-    db $D8, $F0, $01, $00 ; entry 15
-    db $F8, $00, $01, $00 ; entry 16
-    db $F0, $00, $01, $00 ; entry 17
-    db $E8, $00, $01, $00 ; entry 18
-    db $E0, $00, $01, $00 ; entry 19
-    db $D0, $00, $01, $00 ; entry 20
-    db $D8, $00, $01, $00 ; entry 21
-    db $F8, $20, $01, $00 ; entry 22
-    db $F0, $20, $01, $00 ; entry 23
-    db $E8, $20, $01, $00 ; entry 24
-    db $E0, $20, $01, $00 ; entry 25
-    db $D0, $20, $01, $00 ; entry 26
-    db $D8, $20, $01, $00 ; entry 27
-    db $F8, $30, $01, $00 ; entry 28
-    db $F0, $30, $01, $00 ; entry 29
-    db $E8, $30, $01, $00 ; entry 30
-    db $E0, $30, $01, $00 ; entry 31
-    db $D0, $30, $01, $00 ; entry 32
-    db $D8, $30, $01, $00 ; entry 33
-    db $F8, $C0, $01, $00 ; entry 34
-    db $F0, $C0, $01, $00 ; entry 35
+    db $e8, $c0, $01, $00 ; entry 0
+    db $e0, $c0, $01, $00 ; entry 1
+    db $d0, $c0, $01, $00 ; entry 2
+    db $d8, $c0, $01, $00 ; entry 3
+    db $f8, $e0, $01, $00 ; entry 4
+    db $f0, $e0, $01, $00 ; entry 5
+    db $e8, $e0, $01, $00 ; entry 6
+    db $e0, $e0, $01, $00 ; entry 7
+    db $d0, $e0, $01, $00 ; entry 8
+    db $d8, $e0, $01, $00 ; entry 9
+    db $f8, $f0, $01, $00 ; entry 10
+    db $f0, $f0, $01, $00 ; entry 11
+    db $e8, $f0, $01, $00 ; entry 12
+    db $e0, $f0, $01, $00 ; entry 13
+    db $d0, $f0, $01, $00 ; entry 14
+    db $d8, $f0, $01, $00 ; entry 15
+    db $f8, $00, $01, $00 ; entry 16
+    db $f0, $00, $01, $00 ; entry 17
+    db $e8, $00, $01, $00 ; entry 18
+    db $e0, $00, $01, $00 ; entry 19
+    db $d0, $00, $01, $00 ; entry 20
+    db $d8, $00, $01, $00 ; entry 21
+    db $f8, $20, $01, $00 ; entry 22
+    db $f0, $20, $01, $00 ; entry 23
+    db $e8, $20, $01, $00 ; entry 24
+    db $e0, $20, $01, $00 ; entry 25
+    db $d0, $20, $01, $00 ; entry 26
+    db $d8, $20, $01, $00 ; entry 27
+    db $f8, $30, $01, $00 ; entry 28
+    db $f0, $30, $01, $00 ; entry 29
+    db $e8, $30, $01, $00 ; entry 30
+    db $e0, $30, $01, $00 ; entry 31
+    db $d0, $30, $01, $00 ; entry 32
+    db $d8, $30, $01, $00 ; entry 33
+    db $f8, $c0, $01, $00 ; entry 34
+    db $f0, $c0, $01, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame2::
-Data_03D_646D:: ; address name
-    db $F0, $C8, $02, $00 ; entry 0
-    db $E8, $C8, $02, $00 ; entry 1
-    db $E0, $C8, $02, $00 ; entry 2
-    db $D8, $C8, $02, $00 ; entry 3
-    db $D0, $C8, $02, $00 ; entry 4
-    db $F8, $D8, $02, $00 ; entry 5
-    db $F0, $D8, $02, $00 ; entry 6
-    db $E8, $D8, $02, $00 ; entry 7
-    db $E0, $D8, $02, $00 ; entry 8
-    db $D8, $D8, $02, $00 ; entry 9
-    db $D0, $D8, $02, $00 ; entry 10
-    db $F8, $F8, $02, $00 ; entry 11
-    db $F0, $F8, $02, $00 ; entry 12
-    db $E8, $F8, $02, $00 ; entry 13
-    db $E0, $F8, $02, $00 ; entry 14
-    db $D8, $F8, $02, $00 ; entry 15
-    db $D0, $F8, $02, $00 ; entry 16
-    db $F8, $08, $02, $00 ; entry 17
-    db $F0, $08, $02, $00 ; entry 18
-    db $E8, $08, $02, $00 ; entry 19
-    db $E0, $08, $02, $00 ; entry 20
-    db $D8, $08, $02, $00 ; entry 21
-    db $D0, $08, $02, $00 ; entry 22
-    db $F8, $18, $02, $00 ; entry 23
-    db $F0, $18, $02, $00 ; entry 24
-    db $E8, $18, $02, $00 ; entry 25
-    db $E0, $18, $02, $00 ; entry 26
-    db $D8, $18, $02, $00 ; entry 27
-    db $D0, $18, $02, $00 ; entry 28
-    db $F8, $38, $02, $00 ; entry 29
-    db $F0, $38, $02, $00 ; entry 30
-    db $E8, $38, $02, $00 ; entry 31
-    db $E0, $38, $02, $00 ; entry 32
-    db $D8, $38, $02, $00 ; entry 33
-    db $D0, $38, $02, $00 ; entry 34
-    db $F8, $C8, $02, $00 ; entry 35
+    db $f0, $c8, $02, $00 ; entry 0
+    db $e8, $c8, $02, $00 ; entry 1
+    db $e0, $c8, $02, $00 ; entry 2
+    db $d8, $c8, $02, $00 ; entry 3
+    db $d0, $c8, $02, $00 ; entry 4
+    db $f8, $d8, $02, $00 ; entry 5
+    db $f0, $d8, $02, $00 ; entry 6
+    db $e8, $d8, $02, $00 ; entry 7
+    db $e0, $d8, $02, $00 ; entry 8
+    db $d8, $d8, $02, $00 ; entry 9
+    db $d0, $d8, $02, $00 ; entry 10
+    db $f8, $f8, $02, $00 ; entry 11
+    db $f0, $f8, $02, $00 ; entry 12
+    db $e8, $f8, $02, $00 ; entry 13
+    db $e0, $f8, $02, $00 ; entry 14
+    db $d8, $f8, $02, $00 ; entry 15
+    db $d0, $f8, $02, $00 ; entry 16
+    db $f8, $08, $02, $00 ; entry 17
+    db $f0, $08, $02, $00 ; entry 18
+    db $e8, $08, $02, $00 ; entry 19
+    db $e0, $08, $02, $00 ; entry 20
+    db $d8, $08, $02, $00 ; entry 21
+    db $d0, $08, $02, $00 ; entry 22
+    db $f8, $18, $02, $00 ; entry 23
+    db $f0, $18, $02, $00 ; entry 24
+    db $e8, $18, $02, $00 ; entry 25
+    db $e0, $18, $02, $00 ; entry 26
+    db $d8, $18, $02, $00 ; entry 27
+    db $d0, $18, $02, $00 ; entry 28
+    db $f8, $38, $02, $00 ; entry 29
+    db $f0, $38, $02, $00 ; entry 30
+    db $e8, $38, $02, $00 ; entry 31
+    db $e0, $38, $02, $00 ; entry 32
+    db $d8, $38, $02, $00 ; entry 33
+    db $d0, $38, $02, $00 ; entry 34
+    db $f8, $c8, $02, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame3::
-Data_03D_64FE:: ; address name
-    db $F8, $BC, $02, $00 ; entry 0
-    db $F0, $BC, $02, $00 ; entry 1
-    db $E8, $BC, $02, $00 ; entry 2
-    db $E0, $BC, $02, $00 ; entry 3
-    db $D8, $BC, $02, $00 ; entry 4
-    db $D0, $BC, $02, $00 ; entry 5
-    db $F8, $DA, $02, $00 ; entry 6
-    db $F0, $DA, $02, $00 ; entry 7
-    db $E8, $DA, $02, $00 ; entry 8
-    db $E0, $DA, $02, $00 ; entry 9
-    db $D8, $DA, $02, $00 ; entry 10
-    db $D0, $DA, $02, $00 ; entry 11
-    db $F8, $F0, $02, $00 ; entry 12
-    db $F0, $F0, $02, $00 ; entry 13
-    db $E8, $F0, $02, $00 ; entry 14
-    db $E0, $F0, $02, $00 ; entry 15
-    db $D8, $F0, $02, $00 ; entry 16
-    db $D0, $F0, $02, $00 ; entry 17
-    db $F8, $FC, $02, $00 ; entry 18
-    db $F0, $FC, $02, $00 ; entry 19
-    db $E8, $FC, $02, $00 ; entry 20
-    db $E0, $FC, $02, $00 ; entry 21
-    db $D8, $FC, $02, $00 ; entry 22
-    db $D0, $FC, $02, $00 ; entry 23
-    db $F8, $20, $02, $00 ; entry 24
-    db $F0, $20, $02, $00 ; entry 25
-    db $E8, $20, $02, $00 ; entry 26
-    db $E0, $20, $02, $00 ; entry 27
-    db $D8, $20, $02, $00 ; entry 28
-    db $D0, $20, $02, $00 ; entry 29
-    db $F8, $40, $02, $00 ; entry 30
-    db $F0, $40, $02, $00 ; entry 31
-    db $E8, $40, $02, $00 ; entry 32
-    db $E0, $40, $02, $00 ; entry 33
-    db $D8, $40, $02, $00 ; entry 34
-    db $D0, $40, $02, $00 ; entry 35
+    db $f8, $bc, $02, $00 ; entry 0
+    db $f0, $bc, $02, $00 ; entry 1
+    db $e8, $bc, $02, $00 ; entry 2
+    db $e0, $bc, $02, $00 ; entry 3
+    db $d8, $bc, $02, $00 ; entry 4
+    db $d0, $bc, $02, $00 ; entry 5
+    db $f8, $da, $02, $00 ; entry 6
+    db $f0, $da, $02, $00 ; entry 7
+    db $e8, $da, $02, $00 ; entry 8
+    db $e0, $da, $02, $00 ; entry 9
+    db $d8, $da, $02, $00 ; entry 10
+    db $d0, $da, $02, $00 ; entry 11
+    db $f8, $f0, $02, $00 ; entry 12
+    db $f0, $f0, $02, $00 ; entry 13
+    db $e8, $f0, $02, $00 ; entry 14
+    db $e0, $f0, $02, $00 ; entry 15
+    db $d8, $f0, $02, $00 ; entry 16
+    db $d0, $f0, $02, $00 ; entry 17
+    db $f8, $fc, $02, $00 ; entry 18
+    db $f0, $fc, $02, $00 ; entry 19
+    db $e8, $fc, $02, $00 ; entry 20
+    db $e0, $fc, $02, $00 ; entry 21
+    db $d8, $fc, $02, $00 ; entry 22
+    db $d0, $fc, $02, $00 ; entry 23
+    db $f8, $20, $02, $00 ; entry 24
+    db $f0, $20, $02, $00 ; entry 25
+    db $e8, $20, $02, $00 ; entry 26
+    db $e0, $20, $02, $00 ; entry 27
+    db $d8, $20, $02, $00 ; entry 28
+    db $d0, $20, $02, $00 ; entry 29
+    db $f8, $40, $02, $00 ; entry 30
+    db $f0, $40, $02, $00 ; entry 31
+    db $e8, $40, $02, $00 ; entry 32
+    db $e0, $40, $02, $00 ; entry 33
+    db $d8, $40, $02, $00 ; entry 34
+    db $d0, $40, $02, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 4 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame4::
-Data_03D_658F:: ; address name
-    db $F8, $26, $03, $00 ; entry 0
-    db $F0, $26, $03, $00 ; entry 1
-    db $E8, $26, $03, $00 ; entry 2
-    db $E0, $26, $03, $00 ; entry 3
-    db $D8, $26, $03, $00 ; entry 4
-    db $D0, $26, $03, $00 ; entry 5
-    db $F8, $F8, $03, $00 ; entry 6
-    db $F0, $F8, $03, $00 ; entry 7
-    db $E8, $F8, $03, $00 ; entry 8
-    db $E0, $F8, $03, $00 ; entry 9
-    db $D8, $F8, $03, $00 ; entry 10
-    db $D0, $F8, $03, $00 ; entry 11
-    db $F8, $B8, $03, $00 ; entry 12
-    db $F0, $B8, $03, $00 ; entry 13
-    db $E8, $B8, $03, $00 ; entry 14
-    db $E0, $B8, $03, $00 ; entry 15
-    db $D8, $B8, $03, $00 ; entry 16
-    db $D0, $B8, $03, $00 ; entry 17
-    db $F8, $C0, $03, $20 ; entry 18
-    db $F0, $C0, $03, $20 ; entry 19
-    db $E8, $C0, $03, $20 ; entry 20
-    db $E0, $C0, $03, $20 ; entry 21
-    db $D8, $C0, $03, $20 ; entry 22
-    db $D0, $C0, $03, $20 ; entry 23
-    db $F8, $00, $03, $20 ; entry 24
-    db $F0, $00, $03, $20 ; entry 25
-    db $E8, $00, $03, $20 ; entry 26
-    db $E0, $00, $03, $20 ; entry 27
-    db $D8, $00, $03, $20 ; entry 28
-    db $D0, $00, $03, $20 ; entry 29
-    db $F8, $2E, $03, $20 ; entry 30
-    db $F0, $2E, $03, $20 ; entry 31
-    db $E8, $2E, $03, $20 ; entry 32
-    db $E0, $2E, $03, $20 ; entry 33
-    db $D8, $2E, $03, $20 ; entry 34
-    db $D0, $2E, $03, $20 ; entry 35
+    db $f8, $26, $03, $00 ; entry 0
+    db $f0, $26, $03, $00 ; entry 1
+    db $e8, $26, $03, $00 ; entry 2
+    db $e0, $26, $03, $00 ; entry 3
+    db $d8, $26, $03, $00 ; entry 4
+    db $d0, $26, $03, $00 ; entry 5
+    db $f8, $f8, $03, $00 ; entry 6
+    db $f0, $f8, $03, $00 ; entry 7
+    db $e8, $f8, $03, $00 ; entry 8
+    db $e0, $f8, $03, $00 ; entry 9
+    db $d8, $f8, $03, $00 ; entry 10
+    db $d0, $f8, $03, $00 ; entry 11
+    db $f8, $b8, $03, $00 ; entry 12
+    db $f0, $b8, $03, $00 ; entry 13
+    db $e8, $b8, $03, $00 ; entry 14
+    db $e0, $b8, $03, $00 ; entry 15
+    db $d8, $b8, $03, $00 ; entry 16
+    db $d0, $b8, $03, $00 ; entry 17
+    db $f8, $c0, $03, $20 ; entry 18
+    db $f0, $c0, $03, $20 ; entry 19
+    db $e8, $c0, $03, $20 ; entry 20
+    db $e0, $c0, $03, $20 ; entry 21
+    db $d8, $c0, $03, $20 ; entry 22
+    db $d0, $c0, $03, $20 ; entry 23
+    db $f8, $00, $03, $20 ; entry 24
+    db $f0, $00, $03, $20 ; entry 25
+    db $e8, $00, $03, $20 ; entry 26
+    db $e0, $00, $03, $20 ; entry 27
+    db $d8, $00, $03, $20 ; entry 28
+    db $d0, $00, $03, $20 ; entry 29
+    db $f8, $2e, $03, $20 ; entry 30
+    db $f0, $2e, $03, $20 ; entry 31
+    db $e8, $2e, $03, $20 ; entry 32
+    db $e0, $2e, $03, $20 ; entry 33
+    db $d8, $2e, $03, $20 ; entry 34
+    db $d0, $2e, $03, $20 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 5 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame5::
-Data_03D_6620:: ; address name
-    db $F8, $D0, $03, $00 ; entry 0
-    db $F0, $D0, $03, $00 ; entry 1
-    db $E8, $D0, $03, $00 ; entry 2
-    db $E0, $D0, $03, $00 ; entry 3
-    db $D8, $D0, $03, $00 ; entry 4
-    db $D0, $D0, $03, $00 ; entry 5
-    db $F8, $D8, $03, $20 ; entry 6
-    db $F0, $D8, $03, $20 ; entry 7
-    db $E8, $D8, $03, $20 ; entry 8
-    db $E0, $D8, $03, $20 ; entry 9
-    db $D8, $D8, $03, $20 ; entry 10
-    db $D0, $D8, $03, $20 ; entry 11
-    db $F8, $3C, $03, $00 ; entry 12
-    db $F0, $3C, $03, $00 ; entry 13
-    db $E8, $3C, $03, $00 ; entry 14
-    db $E0, $3C, $03, $00 ; entry 15
-    db $D8, $3C, $03, $00 ; entry 16
-    db $D0, $3C, $03, $00 ; entry 17
-    db $F8, $44, $03, $20 ; entry 18
-    db $F0, $44, $03, $20 ; entry 19
-    db $E8, $44, $03, $20 ; entry 20
-    db $E0, $44, $03, $20 ; entry 21
-    db $D8, $44, $03, $20 ; entry 22
-    db $D0, $44, $03, $20 ; entry 23
-    db $F8, $10, $03, $00 ; entry 24
-    db $F0, $10, $03, $00 ; entry 25
-    db $E8, $10, $03, $00 ; entry 26
-    db $E0, $10, $03, $00 ; entry 27
-    db $D8, $10, $03, $00 ; entry 28
-    db $D0, $10, $03, $00 ; entry 29
-    db $F8, $18, $03, $20 ; entry 30
-    db $F0, $18, $03, $20 ; entry 31
-    db $E8, $18, $03, $20 ; entry 32
-    db $E0, $18, $03, $20 ; entry 33
-    db $D8, $18, $03, $20 ; entry 34
-    db $D0, $18, $03, $20 ; entry 35
+    db $f8, $d0, $03, $00 ; entry 0
+    db $f0, $d0, $03, $00 ; entry 1
+    db $e8, $d0, $03, $00 ; entry 2
+    db $e0, $d0, $03, $00 ; entry 3
+    db $d8, $d0, $03, $00 ; entry 4
+    db $d0, $d0, $03, $00 ; entry 5
+    db $f8, $d8, $03, $20 ; entry 6
+    db $f0, $d8, $03, $20 ; entry 7
+    db $e8, $d8, $03, $20 ; entry 8
+    db $e0, $d8, $03, $20 ; entry 9
+    db $d8, $d8, $03, $20 ; entry 10
+    db $d0, $d8, $03, $20 ; entry 11
+    db $f8, $3c, $03, $00 ; entry 12
+    db $f0, $3c, $03, $00 ; entry 13
+    db $e8, $3c, $03, $00 ; entry 14
+    db $e0, $3c, $03, $00 ; entry 15
+    db $d8, $3c, $03, $00 ; entry 16
+    db $d0, $3c, $03, $00 ; entry 17
+    db $f8, $44, $03, $20 ; entry 18
+    db $f0, $44, $03, $20 ; entry 19
+    db $e8, $44, $03, $20 ; entry 20
+    db $e0, $44, $03, $20 ; entry 21
+    db $d8, $44, $03, $20 ; entry 22
+    db $d0, $44, $03, $20 ; entry 23
+    db $f8, $10, $03, $00 ; entry 24
+    db $f0, $10, $03, $00 ; entry 25
+    db $e8, $10, $03, $00 ; entry 26
+    db $e0, $10, $03, $00 ; entry 27
+    db $d8, $10, $03, $00 ; entry 28
+    db $d0, $10, $03, $00 ; entry 29
+    db $f8, $18, $03, $20 ; entry 30
+    db $f0, $18, $03, $20 ; entry 31
+    db $e8, $18, $03, $20 ; entry 32
+    db $e0, $18, $03, $20 ; entry 33
+    db $d8, $18, $03, $20 ; entry 34
+    db $d0, $18, $03, $20 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame6::
-Data_03D_66B1:: ; address name
-    db $F8, $3C, $03, $20 ; entry 0
-    db $F0, $3C, $03, $20 ; entry 1
-    db $E8, $3C, $03, $20 ; entry 2
-    db $E0, $3C, $03, $20 ; entry 3
-    db $D8, $3C, $03, $20 ; entry 4
-    db $D0, $3C, $03, $20 ; entry 5
-    db $F8, $2C, $03, $00 ; entry 6
-    db $F0, $2C, $03, $00 ; entry 7
-    db $E8, $2C, $03, $00 ; entry 8
-    db $E0, $2C, $03, $00 ; entry 9
-    db $D8, $2C, $03, $00 ; entry 10
-    db $D0, $2C, $03, $00 ; entry 11
-    db $F8, $34, $04, $00 ; entry 12
-    db $F0, $34, $04, $00 ; entry 13
-    db $E8, $34, $04, $00 ; entry 14
-    db $E0, $34, $04, $00 ; entry 15
-    db $D8, $34, $04, $00 ; entry 16
-    db $D0, $34, $04, $00 ; entry 17
-    db $F8, $D0, $03, $20 ; entry 18
-    db $F0, $D0, $03, $20 ; entry 19
-    db $E8, $D0, $03, $20 ; entry 20
-    db $E0, $D0, $03, $20 ; entry 21
-    db $D8, $D0, $03, $20 ; entry 22
-    db $D0, $D0, $03, $20 ; entry 23
-    db $F8, $C0, $03, $00 ; entry 24
-    db $F0, $C0, $03, $00 ; entry 25
-    db $E8, $C0, $03, $00 ; entry 26
-    db $E0, $C0, $03, $00 ; entry 27
-    db $D8, $C0, $03, $00 ; entry 28
-    db $D0, $C0, $03, $00 ; entry 29
-    db $F8, $C8, $04, $00 ; entry 30
-    db $F0, $C8, $04, $00 ; entry 31
-    db $E8, $C8, $04, $00 ; entry 32
-    db $E0, $C8, $04, $00 ; entry 33
-    db $D8, $C8, $04, $00 ; entry 34
-    db $D0, $C8, $04, $00 ; entry 35
+    db $f8, $3c, $03, $20 ; entry 0
+    db $f0, $3c, $03, $20 ; entry 1
+    db $e8, $3c, $03, $20 ; entry 2
+    db $e0, $3c, $03, $20 ; entry 3
+    db $d8, $3c, $03, $20 ; entry 4
+    db $d0, $3c, $03, $20 ; entry 5
+    db $f8, $2c, $03, $00 ; entry 6
+    db $f0, $2c, $03, $00 ; entry 7
+    db $e8, $2c, $03, $00 ; entry 8
+    db $e0, $2c, $03, $00 ; entry 9
+    db $d8, $2c, $03, $00 ; entry 10
+    db $d0, $2c, $03, $00 ; entry 11
+    db $f8, $34, $04, $00 ; entry 12
+    db $f0, $34, $04, $00 ; entry 13
+    db $e8, $34, $04, $00 ; entry 14
+    db $e0, $34, $04, $00 ; entry 15
+    db $d8, $34, $04, $00 ; entry 16
+    db $d0, $34, $04, $00 ; entry 17
+    db $f8, $d0, $03, $20 ; entry 18
+    db $f0, $d0, $03, $20 ; entry 19
+    db $e8, $d0, $03, $20 ; entry 20
+    db $e0, $d0, $03, $20 ; entry 21
+    db $d8, $d0, $03, $20 ; entry 22
+    db $d0, $d0, $03, $20 ; entry 23
+    db $f8, $c0, $03, $00 ; entry 24
+    db $f0, $c0, $03, $00 ; entry 25
+    db $e8, $c0, $03, $00 ; entry 26
+    db $e0, $c0, $03, $00 ; entry 27
+    db $d8, $c0, $03, $00 ; entry 28
+    db $d0, $c0, $03, $00 ; entry 29
+    db $f8, $c8, $04, $00 ; entry 30
+    db $f0, $c8, $04, $00 ; entry 31
+    db $e8, $c8, $04, $00 ; entry 32
+    db $e0, $c8, $04, $00 ; entry 33
+    db $d8, $c8, $04, $00 ; entry 34
+    db $d0, $c8, $04, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame7::
-Data_03D_6742:: ; address name
-    db $F8, $20, $03, $20 ; entry 0
-    db $F0, $20, $03, $20 ; entry 1
-    db $E8, $20, $03, $20 ; entry 2
-    db $E0, $20, $03, $20 ; entry 3
-    db $D8, $20, $03, $20 ; entry 4
-    db $D0, $20, $03, $20 ; entry 5
-    db $F8, $10, $03, $00 ; entry 6
-    db $F0, $10, $03, $00 ; entry 7
-    db $E8, $10, $03, $00 ; entry 8
-    db $E0, $10, $03, $00 ; entry 9
-    db $D8, $10, $03, $00 ; entry 10
-    db $D0, $10, $03, $00 ; entry 11
-    db $F8, $18, $04, $00 ; entry 12
-    db $F0, $18, $04, $00 ; entry 13
-    db $E8, $18, $04, $00 ; entry 14
-    db $E0, $18, $04, $00 ; entry 15
-    db $D8, $18, $04, $00 ; entry 16
-    db $D0, $18, $04, $00 ; entry 17
-    db $F8, $F0, $03, $20 ; entry 18
-    db $F0, $F0, $03, $20 ; entry 19
-    db $E8, $F0, $03, $20 ; entry 20
-    db $E0, $F0, $03, $20 ; entry 21
-    db $D8, $F0, $03, $20 ; entry 22
-    db $D0, $F0, $03, $20 ; entry 23
-    db $F8, $E0, $03, $00 ; entry 24
-    db $F0, $E0, $03, $00 ; entry 25
-    db $E8, $E0, $03, $00 ; entry 26
-    db $E0, $E0, $03, $00 ; entry 27
-    db $D8, $E0, $03, $00 ; entry 28
-    db $D0, $E0, $03, $00 ; entry 29
-    db $F8, $E8, $04, $00 ; entry 30
-    db $F0, $E8, $04, $00 ; entry 31
-    db $E8, $E8, $04, $00 ; entry 32
-    db $E0, $E8, $04, $00 ; entry 33
-    db $D8, $E8, $04, $00 ; entry 34
-    db $D0, $E8, $04, $00 ; entry 35
+    db $f8, $20, $03, $20 ; entry 0
+    db $f0, $20, $03, $20 ; entry 1
+    db $e8, $20, $03, $20 ; entry 2
+    db $e0, $20, $03, $20 ; entry 3
+    db $d8, $20, $03, $20 ; entry 4
+    db $d0, $20, $03, $20 ; entry 5
+    db $f8, $10, $03, $00 ; entry 6
+    db $f0, $10, $03, $00 ; entry 7
+    db $e8, $10, $03, $00 ; entry 8
+    db $e0, $10, $03, $00 ; entry 9
+    db $d8, $10, $03, $00 ; entry 10
+    db $d0, $10, $03, $00 ; entry 11
+    db $f8, $18, $04, $00 ; entry 12
+    db $f0, $18, $04, $00 ; entry 13
+    db $e8, $18, $04, $00 ; entry 14
+    db $e0, $18, $04, $00 ; entry 15
+    db $d8, $18, $04, $00 ; entry 16
+    db $d0, $18, $04, $00 ; entry 17
+    db $f8, $f0, $03, $20 ; entry 18
+    db $f0, $f0, $03, $20 ; entry 19
+    db $e8, $f0, $03, $20 ; entry 20
+    db $e0, $f0, $03, $20 ; entry 21
+    db $d8, $f0, $03, $20 ; entry 22
+    db $d0, $f0, $03, $20 ; entry 23
+    db $f8, $e0, $03, $00 ; entry 24
+    db $f0, $e0, $03, $00 ; entry 25
+    db $e8, $e0, $03, $00 ; entry 26
+    db $e0, $e0, $03, $00 ; entry 27
+    db $d8, $e0, $03, $00 ; entry 28
+    db $d0, $e0, $03, $00 ; entry 29
+    db $f8, $e8, $04, $00 ; entry 30
+    db $f0, $e8, $04, $00 ; entry 31
+    db $e8, $e8, $04, $00 ; entry 32
+    db $e0, $e8, $04, $00 ; entry 33
+    db $d8, $e8, $04, $00 ; entry 34
+    db $d0, $e8, $04, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 8 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame8::
-Data_03D_67D3:: ; address name
-    db $F8, $E8, $03, $00 ; entry 0
-    db $F0, $E8, $03, $00 ; entry 1
-    db $E8, $E8, $03, $00 ; entry 2
-    db $E0, $E8, $03, $00 ; entry 3
-    db $D8, $E8, $03, $00 ; entry 4
-    db $D0, $E8, $03, $00 ; entry 5
-    db $F8, $F0, $04, $00 ; entry 6
-    db $F0, $F0, $04, $00 ; entry 7
-    db $E8, $F0, $04, $00 ; entry 8
-    db $E0, $F0, $04, $00 ; entry 9
-    db $D8, $F0, $04, $00 ; entry 10
-    db $D0, $F0, $04, $00 ; entry 11
-    db $F8, $10, $03, $20 ; entry 12
-    db $F0, $10, $03, $20 ; entry 13
-    db $E8, $10, $03, $20 ; entry 14
-    db $E0, $10, $03, $20 ; entry 15
-    db $D8, $10, $03, $20 ; entry 16
-    db $D0, $10, $03, $20 ; entry 17
-    db $F8, $08, $04, $00 ; entry 18
-    db $F0, $08, $04, $00 ; entry 19
-    db $E8, $08, $04, $00 ; entry 20
-    db $E0, $08, $04, $00 ; entry 21
-    db $D8, $08, $04, $00 ; entry 22
-    db $D0, $08, $04, $00 ; entry 23
-    db $F8, $00, $04, $00 ; entry 24
-    db $F0, $00, $04, $00 ; entry 25
-    db $E8, $00, $04, $00 ; entry 26
-    db $E0, $00, $04, $00 ; entry 27
-    db $D8, $00, $04, $00 ; entry 28
-    db $D0, $00, $04, $00 ; entry 29
-    db $F8, $F8, $04, $00 ; entry 30
-    db $F0, $F8, $04, $00 ; entry 31
-    db $E8, $F8, $04, $00 ; entry 32
-    db $E0, $F8, $04, $00 ; entry 33
-    db $D8, $F8, $04, $00 ; entry 34
-    db $D0, $F8, $04, $00 ; entry 35
+    db $f8, $e8, $03, $00 ; entry 0
+    db $f0, $e8, $03, $00 ; entry 1
+    db $e8, $e8, $03, $00 ; entry 2
+    db $e0, $e8, $03, $00 ; entry 3
+    db $d8, $e8, $03, $00 ; entry 4
+    db $d0, $e8, $03, $00 ; entry 5
+    db $f8, $f0, $04, $00 ; entry 6
+    db $f0, $f0, $04, $00 ; entry 7
+    db $e8, $f0, $04, $00 ; entry 8
+    db $e0, $f0, $04, $00 ; entry 9
+    db $d8, $f0, $04, $00 ; entry 10
+    db $d0, $f0, $04, $00 ; entry 11
+    db $f8, $10, $03, $20 ; entry 12
+    db $f0, $10, $03, $20 ; entry 13
+    db $e8, $10, $03, $20 ; entry 14
+    db $e0, $10, $03, $20 ; entry 15
+    db $d8, $10, $03, $20 ; entry 16
+    db $d0, $10, $03, $20 ; entry 17
+    db $f8, $08, $04, $00 ; entry 18
+    db $f0, $08, $04, $00 ; entry 19
+    db $e8, $08, $04, $00 ; entry 20
+    db $e0, $08, $04, $00 ; entry 21
+    db $d8, $08, $04, $00 ; entry 22
+    db $d0, $08, $04, $00 ; entry 23
+    db $f8, $00, $04, $00 ; entry 24
+    db $f0, $00, $04, $00 ; entry 25
+    db $e8, $00, $04, $00 ; entry 26
+    db $e0, $00, $04, $00 ; entry 27
+    db $d8, $00, $04, $00 ; entry 28
+    db $d0, $00, $04, $00 ; entry 29
+    db $f8, $f8, $04, $00 ; entry 30
+    db $f0, $f8, $04, $00 ; entry 31
+    db $e8, $f8, $04, $00 ; entry 32
+    db $e0, $f8, $04, $00 ; entry 33
+    db $d8, $f8, $04, $00 ; entry 34
+    db $d0, $f8, $04, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 9 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame9::
-Data_03D_6864:: ; address name
-    db $D8, $18, $07, $00 ; entry 0
-    db $E4, $F8, $12, $00 ; entry 1
-    db $E4, $00, $13, $00 ; entry 2
-    db $F8, $40, $0C, $00 ; entry 3
-    db $F8, $48, $0D, $00 ; entry 4
-    db $F0, $30, $05, $00 ; entry 5
-    db $F8, $E8, $05, $00 ; entry 6
-    db $F0, $10, $07, $00 ; entry 7
+    db $d8, $18, $07, $00 ; entry 0
+    db $e4, $f8, $12, $00 ; entry 1
+    db $e4, $00, $13, $00 ; entry 2
+    db $f8, $40, $0c, $00 ; entry 3
+    db $f8, $48, $0d, $00 ; entry 4
+    db $f0, $30, $05, $00 ; entry 5
+    db $f8, $e8, $05, $00 ; entry 6
+    db $f0, $10, $07, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame10::
-Data_03D_6885:: ; address name
-    db $D0, $FC, $10, $40 ; entry 0
-    db $F8, $08, $1F, $20 ; entry 1
-    db $F8, $00, $20, $20 ; entry 2
-    db $F8, $F8, $21, $20 ; entry 3
-    db $F0, $F8, $05, $40 ; entry 4
-    db $E8, $40, $0C, $00 ; entry 5
-    db $E8, $48, $0D, $00 ; entry 6
-    db $F0, $40, $0E, $00 ; entry 7
-    db $F0, $48, $0F, $00 ; entry 8
-    db $E0, $30, $05, $40 ; entry 9
-    db $F0, $28, $05, $00 ; entry 10
-    db $F4, $1C, $12, $20 ; entry 11
-    db $F4, $14, $13, $20 ; entry 12
-    db $E8, $E8, $05, $40 ; entry 13
-    db $F0, $B0, $06, $00 ; entry 14
-    db $D8, $10, $06, $40 ; entry 15
+    db $d0, $fc, $10, $40 ; entry 0
+    db $f8, $08, $1f, $20 ; entry 1
+    db $f8, $00, $20, $20 ; entry 2
+    db $f8, $f8, $21, $20 ; entry 3
+    db $f0, $f8, $05, $40 ; entry 4
+    db $e8, $40, $0c, $00 ; entry 5
+    db $e8, $48, $0d, $00 ; entry 6
+    db $f0, $40, $0e, $00 ; entry 7
+    db $f0, $48, $0f, $00 ; entry 8
+    db $e0, $30, $05, $40 ; entry 9
+    db $f0, $28, $05, $00 ; entry 10
+    db $f4, $1c, $12, $20 ; entry 11
+    db $f4, $14, $13, $20 ; entry 12
+    db $e8, $e8, $05, $40 ; entry 13
+    db $f0, $b0, $06, $00 ; entry 14
+    db $d8, $10, $06, $40 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame11::
-Data_03D_68C6:: ; address name
-    db $E8, $F8, $1F, $00 ; entry 0
-    db $E8, $00, $20, $00 ; entry 1
-    db $E8, $08, $21, $00 ; entry 2
-    db $F0, $F8, $22, $00 ; entry 3
-    db $F0, $00, $23, $00 ; entry 4
-    db $F0, $08, $24, $00 ; entry 5
-    db $F8, $F8, $25, $00 ; entry 6
-    db $F8, $00, $26, $00 ; entry 7
-    db $F8, $08, $27, $00 ; entry 8
-    db $E0, $C0, $1B, $00 ; entry 9
-    db $E0, $C8, $1C, $00 ; entry 10
-    db $E0, $D0, $1D, $00 ; entry 11
-    db $E0, $D8, $1E, $00 ; entry 12
-    db $D8, $C0, $17, $00 ; entry 13
-    db $D8, $C8, $18, $00 ; entry 14
-    db $D8, $D0, $19, $00 ; entry 15
-    db $D8, $D8, $1A, $00 ; entry 16
-    db $D0, $C1, $14, $00 ; entry 17
-    db $D0, $C9, $15, $00 ; entry 18
-    db $D0, $D1, $16, $00 ; entry 19
-    db $D8, $40, $08, $00 ; entry 20
-    db $D8, $48, $09, $00 ; entry 21
-    db $E0, $40, $0A, $00 ; entry 22
-    db $E0, $48, $0B, $00 ; entry 23
-    db $F0, $28, $07, $00 ; entry 24
-    db $E0, $B0, $06, $00 ; entry 25
-    db $E0, $F8, $05, $20 ; entry 26
-    db $F0, $D8, $06, $20 ; entry 27
-    db $D0, $30, $05, $00 ; entry 28
-    db $F8, $C8, $07, $20 ; entry 29
-    db $E8, $18, $11, $00 ; entry 30
-    db $E0, $18, $10, $00 ; entry 31
-    db $F8, $B8, $11, $00 ; entry 32
-    db $F0, $B8, $10, $00 ; entry 33
-    db $F0, $30, $0C, $00 ; entry 34
-    db $F0, $38, $0D, $00 ; entry 35
-    db $F8, $30, $0E, $00 ; entry 36
-    db $F8, $38, $0F, $00 ; entry 37
-    db $D8, $E8, $05, $00 ; entry 38
-    db $E0, $28, $05, $40 ; entry 39
+    db $e8, $f8, $1f, $00 ; entry 0
+    db $e8, $00, $20, $00 ; entry 1
+    db $e8, $08, $21, $00 ; entry 2
+    db $f0, $f8, $22, $00 ; entry 3
+    db $f0, $00, $23, $00 ; entry 4
+    db $f0, $08, $24, $00 ; entry 5
+    db $f8, $f8, $25, $00 ; entry 6
+    db $f8, $00, $26, $00 ; entry 7
+    db $f8, $08, $27, $00 ; entry 8
+    db $e0, $c0, $1b, $00 ; entry 9
+    db $e0, $c8, $1c, $00 ; entry 10
+    db $e0, $d0, $1d, $00 ; entry 11
+    db $e0, $d8, $1e, $00 ; entry 12
+    db $d8, $c0, $17, $00 ; entry 13
+    db $d8, $c8, $18, $00 ; entry 14
+    db $d8, $d0, $19, $00 ; entry 15
+    db $d8, $d8, $1a, $00 ; entry 16
+    db $d0, $c1, $14, $00 ; entry 17
+    db $d0, $c9, $15, $00 ; entry 18
+    db $d0, $d1, $16, $00 ; entry 19
+    db $d8, $40, $08, $00 ; entry 20
+    db $d8, $48, $09, $00 ; entry 21
+    db $e0, $40, $0a, $00 ; entry 22
+    db $e0, $48, $0b, $00 ; entry 23
+    db $f0, $28, $07, $00 ; entry 24
+    db $e0, $b0, $06, $00 ; entry 25
+    db $e0, $f8, $05, $20 ; entry 26
+    db $f0, $d8, $06, $20 ; entry 27
+    db $d0, $30, $05, $00 ; entry 28
+    db $f8, $c8, $07, $20 ; entry 29
+    db $e8, $18, $11, $00 ; entry 30
+    db $e0, $18, $10, $00 ; entry 31
+    db $f8, $b8, $11, $00 ; entry 32
+    db $f0, $b8, $10, $00 ; entry 33
+    db $f0, $30, $0c, $00 ; entry 34
+    db $f0, $38, $0d, $00 ; entry 35
+    db $f8, $30, $0e, $00 ; entry 36
+    db $f8, $38, $0f, $00 ; entry 37
+    db $d8, $e8, $05, $00 ; entry 38
+    db $e0, $28, $05, $40 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 12 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame12::
-Data_03D_6967:: ; address name
-    db $D8, $F8, $1F, $00 ; entry 0
-    db $D8, $00, $20, $00 ; entry 1
-    db $D8, $08, $21, $00 ; entry 2
-    db $E0, $F8, $22, $00 ; entry 3
-    db $E0, $00, $23, $00 ; entry 4
-    db $E0, $08, $24, $00 ; entry 5
-    db $E8, $F8, $25, $00 ; entry 6
-    db $E8, $00, $26, $00 ; entry 7
-    db $E8, $08, $27, $00 ; entry 8
-    db $D0, $D8, $1B, $20 ; entry 9
-    db $D0, $D0, $1C, $20 ; entry 10
-    db $D0, $C8, $1D, $20 ; entry 11
-    db $D0, $C0, $1E, $20 ; entry 12
-    db $D0, $48, $0A, $20 ; entry 13
-    db $D0, $40, $0B, $20 ; entry 14
-    db $E0, $28, $07, $20 ; entry 15
-    db $D0, $B0, $06, $20 ; entry 16
-    db $D0, $F8, $05, $20 ; entry 17
-    db $E0, $D8, $06, $00 ; entry 18
-    db $E8, $C8, $07, $00 ; entry 19
-    db $D8, $14, $11, $20 ; entry 20
-    db $D0, $14, $10, $20 ; entry 21
-    db $E8, $B4, $11, $20 ; entry 22
-    db $E0, $B4, $10, $20 ; entry 23
-    db $E0, $38, $0C, $20 ; entry 24
-    db $E0, $30, $0D, $20 ; entry 25
-    db $E8, $38, $0E, $20 ; entry 26
-    db $E8, $30, $0F, $20 ; entry 27
-    db $D0, $28, $05, $20 ; entry 28
-    db $F0, $FA, $28, $00 ; entry 29
-    db $F0, $02, $29, $00 ; entry 30
-    db $F8, $2F, $14, $00 ; entry 31
-    db $F8, $37, $15, $00 ; entry 32
-    db $F8, $3F, $16, $00 ; entry 33
-    db $F0, $48, $05, $00 ; entry 34
-    db $F8, $18, $07, $00 ; entry 35
-    db $F0, $E8, $06, $00 ; entry 36
-    db $F8, $D8, $05, $00 ; entry 37
-    db $F8, $B8, $12, $00 ; entry 38
-    db $F8, $C0, $13, $00 ; entry 39
+    db $d8, $f8, $1f, $00 ; entry 0
+    db $d8, $00, $20, $00 ; entry 1
+    db $d8, $08, $21, $00 ; entry 2
+    db $e0, $f8, $22, $00 ; entry 3
+    db $e0, $00, $23, $00 ; entry 4
+    db $e0, $08, $24, $00 ; entry 5
+    db $e8, $f8, $25, $00 ; entry 6
+    db $e8, $00, $26, $00 ; entry 7
+    db $e8, $08, $27, $00 ; entry 8
+    db $d0, $d8, $1b, $20 ; entry 9
+    db $d0, $d0, $1c, $20 ; entry 10
+    db $d0, $c8, $1d, $20 ; entry 11
+    db $d0, $c0, $1e, $20 ; entry 12
+    db $d0, $48, $0a, $20 ; entry 13
+    db $d0, $40, $0b, $20 ; entry 14
+    db $e0, $28, $07, $20 ; entry 15
+    db $d0, $b0, $06, $20 ; entry 16
+    db $d0, $f8, $05, $20 ; entry 17
+    db $e0, $d8, $06, $00 ; entry 18
+    db $e8, $c8, $07, $00 ; entry 19
+    db $d8, $14, $11, $20 ; entry 20
+    db $d0, $14, $10, $20 ; entry 21
+    db $e8, $b4, $11, $20 ; entry 22
+    db $e0, $b4, $10, $20 ; entry 23
+    db $e0, $38, $0c, $20 ; entry 24
+    db $e0, $30, $0d, $20 ; entry 25
+    db $e8, $38, $0e, $20 ; entry 26
+    db $e8, $30, $0f, $20 ; entry 27
+    db $d0, $28, $05, $20 ; entry 28
+    db $f0, $fa, $28, $00 ; entry 29
+    db $f0, $02, $29, $00 ; entry 30
+    db $f8, $2f, $14, $00 ; entry 31
+    db $f8, $37, $15, $00 ; entry 32
+    db $f8, $3f, $16, $00 ; entry 33
+    db $f0, $48, $05, $00 ; entry 34
+    db $f8, $18, $07, $00 ; entry 35
+    db $f0, $e8, $06, $00 ; entry 36
+    db $f8, $d8, $05, $00 ; entry 37
+    db $f8, $b8, $12, $00 ; entry 38
+    db $f8, $c0, $13, $00 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 13 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame13::
-Data_03D_6A08:: ; address name
-    db $D0, $08, $22, $20 ; entry 0
-    db $D0, $00, $23, $20 ; entry 1
-    db $D0, $F8, $24, $20 ; entry 2
-    db $D8, $08, $25, $20 ; entry 3
-    db $D8, $00, $26, $20 ; entry 4
-    db $D8, $F8, $27, $20 ; entry 5
-    db $D0, $28, $07, $00 ; entry 6
-    db $D0, $D8, $06, $40 ; entry 7
-    db $D8, $C8, $07, $40 ; entry 8
-    db $D0, $B4, $11, $60 ; entry 9
-    db $D8, $B4, $10, $60 ; entry 10
-    db $D8, $30, $0C, $40 ; entry 11
-    db $D8, $38, $0D, $40 ; entry 12
-    db $D0, $30, $0E, $40 ; entry 13
-    db $D0, $38, $0F, $40 ; entry 14
-    db $E0, $06, $28, $20 ; entry 15
-    db $E0, $FE, $29, $20 ; entry 16
-    db $E0, $48, $05, $40 ; entry 17
-    db $E8, $18, $07, $40 ; entry 18
-    db $E0, $E8, $06, $00 ; entry 19
-    db $E8, $D8, $05, $40 ; entry 20
-    db $F0, $BC, $11, $00 ; entry 21
-    db $E8, $BC, $10, $00 ; entry 22
-    db $E8, $2F, $14, $00 ; entry 23
-    db $E8, $37, $15, $00 ; entry 24
-    db $E8, $3F, $16, $00 ; entry 25
-    db $F0, $2E, $17, $00 ; entry 26
-    db $F0, $36, $18, $00 ; entry 27
-    db $F0, $3E, $19, $00 ; entry 28
-    db $F0, $46, $1A, $00 ; entry 29
-    db $F8, $2E, $1B, $00 ; entry 30
-    db $F8, $36, $1C, $00 ; entry 31
-    db $F8, $3E, $1D, $00 ; entry 32
-    db $F8, $46, $1E, $00 ; entry 33
-    db $F0, $F8, $10, $00 ; entry 34
-    db $F8, $F8, $11, $00 ; entry 35
-    db $F0, $D0, $08, $00 ; entry 36
-    db $F0, $D8, $09, $00 ; entry 37
-    db $F8, $D0, $0A, $00 ; entry 38
-    db $F8, $D8, $0B, $00 ; entry 39
+    db $d0, $08, $22, $20 ; entry 0
+    db $d0, $00, $23, $20 ; entry 1
+    db $d0, $f8, $24, $20 ; entry 2
+    db $d8, $08, $25, $20 ; entry 3
+    db $d8, $00, $26, $20 ; entry 4
+    db $d8, $f8, $27, $20 ; entry 5
+    db $d0, $28, $07, $00 ; entry 6
+    db $d0, $d8, $06, $40 ; entry 7
+    db $d8, $c8, $07, $40 ; entry 8
+    db $d0, $b4, $11, $60 ; entry 9
+    db $d8, $b4, $10, $60 ; entry 10
+    db $d8, $30, $0c, $40 ; entry 11
+    db $d8, $38, $0d, $40 ; entry 12
+    db $d0, $30, $0e, $40 ; entry 13
+    db $d0, $38, $0f, $40 ; entry 14
+    db $e0, $06, $28, $20 ; entry 15
+    db $e0, $fe, $29, $20 ; entry 16
+    db $e0, $48, $05, $40 ; entry 17
+    db $e8, $18, $07, $40 ; entry 18
+    db $e0, $e8, $06, $00 ; entry 19
+    db $e8, $d8, $05, $40 ; entry 20
+    db $f0, $bc, $11, $00 ; entry 21
+    db $e8, $bc, $10, $00 ; entry 22
+    db $e8, $2f, $14, $00 ; entry 23
+    db $e8, $37, $15, $00 ; entry 24
+    db $e8, $3f, $16, $00 ; entry 25
+    db $f0, $2e, $17, $00 ; entry 26
+    db $f0, $36, $18, $00 ; entry 27
+    db $f0, $3e, $19, $00 ; entry 28
+    db $f0, $46, $1a, $00 ; entry 29
+    db $f8, $2e, $1b, $00 ; entry 30
+    db $f8, $36, $1c, $00 ; entry 31
+    db $f8, $3e, $1d, $00 ; entry 32
+    db $f8, $46, $1e, $00 ; entry 33
+    db $f0, $f8, $10, $00 ; entry 34
+    db $f8, $f8, $11, $00 ; entry 35
+    db $f0, $d0, $08, $00 ; entry 36
+    db $f0, $d8, $09, $00 ; entry 37
+    db $f8, $d0, $0a, $00 ; entry 38
+    db $f8, $d8, $0b, $00 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame14::
-Data_03D_6AA9:: ; address name
-    db $D0, $FA, $28, $00 ; entry 0
-    db $D0, $02, $29, $00 ; entry 1
-    db $D0, $48, $05, $60 ; entry 2
-    db $D8, $18, $07, $00 ; entry 3
-    db $D0, $E8, $06, $00 ; entry 4
-    db $D8, $D8, $05, $00 ; entry 5
-    db $E8, $45, $14, $60 ; entry 6
-    db $E8, $3D, $15, $60 ; entry 7
-    db $E8, $35, $16, $60 ; entry 8
-    db $E0, $46, $17, $60 ; entry 9
-    db $E0, $3E, $18, $60 ; entry 10
-    db $E0, $36, $19, $60 ; entry 11
-    db $E0, $2E, $1A, $60 ; entry 12
-    db $D8, $46, $1B, $60 ; entry 13
-    db $D8, $3E, $1C, $60 ; entry 14
-    db $D8, $36, $1D, $60 ; entry 15
-    db $D8, $2E, $1E, $60 ; entry 16
-    db $E8, $D0, $08, $40 ; entry 17
-    db $E8, $D8, $09, $40 ; entry 18
-    db $E0, $D0, $0A, $40 ; entry 19
-    db $E0, $D8, $0B, $40 ; entry 20
-    db $E4, $F8, $12, $00 ; entry 21
-    db $E4, $00, $13, $00 ; entry 22
-    db $DC, $B8, $12, $40 ; entry 23
-    db $DC, $C0, $13, $40 ; entry 24
-    db $F0, $D7, $14, $20 ; entry 25
-    db $F0, $CF, $15, $20 ; entry 26
-    db $F0, $C7, $16, $20 ; entry 27
-    db $F8, $D8, $17, $20 ; entry 28
-    db $F8, $D0, $18, $20 ; entry 29
-    db $F8, $C8, $19, $20 ; entry 30
-    db $F8, $C0, $1A, $20 ; entry 31
-    db $F8, $40, $0C, $00 ; entry 32
-    db $F8, $48, $0D, $00 ; entry 33
-    db $F0, $30, $05, $00 ; entry 34
-    db $F8, $E8, $05, $00 ; entry 35
-    db $F0, $10, $07, $00 ; entry 36
+    db $d0, $fa, $28, $00 ; entry 0
+    db $d0, $02, $29, $00 ; entry 1
+    db $d0, $48, $05, $60 ; entry 2
+    db $d8, $18, $07, $00 ; entry 3
+    db $d0, $e8, $06, $00 ; entry 4
+    db $d8, $d8, $05, $00 ; entry 5
+    db $e8, $45, $14, $60 ; entry 6
+    db $e8, $3d, $15, $60 ; entry 7
+    db $e8, $35, $16, $60 ; entry 8
+    db $e0, $46, $17, $60 ; entry 9
+    db $e0, $3e, $18, $60 ; entry 10
+    db $e0, $36, $19, $60 ; entry 11
+    db $e0, $2e, $1a, $60 ; entry 12
+    db $d8, $46, $1b, $60 ; entry 13
+    db $d8, $3e, $1c, $60 ; entry 14
+    db $d8, $36, $1d, $60 ; entry 15
+    db $d8, $2e, $1e, $60 ; entry 16
+    db $e8, $d0, $08, $40 ; entry 17
+    db $e8, $d8, $09, $40 ; entry 18
+    db $e0, $d0, $0a, $40 ; entry 19
+    db $e0, $d8, $0b, $40 ; entry 20
+    db $e4, $f8, $12, $00 ; entry 21
+    db $e4, $00, $13, $00 ; entry 22
+    db $dc, $b8, $12, $40 ; entry 23
+    db $dc, $c0, $13, $40 ; entry 24
+    db $f0, $d7, $14, $20 ; entry 25
+    db $f0, $cf, $15, $20 ; entry 26
+    db $f0, $c7, $16, $20 ; entry 27
+    db $f8, $d8, $17, $20 ; entry 28
+    db $f8, $d0, $18, $20 ; entry 29
+    db $f8, $c8, $19, $20 ; entry 30
+    db $f8, $c0, $1a, $20 ; entry 31
+    db $f8, $40, $0c, $00 ; entry 32
+    db $f8, $48, $0d, $00 ; entry 33
+    db $f0, $30, $05, $00 ; entry 34
+    db $f8, $e8, $05, $00 ; entry 35
+    db $f0, $10, $07, $00 ; entry 36
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame15::
-Data_03D_6B3E:: ; address name
-    db $D8, $2F, $14, $40 ; entry 0
-    db $D8, $37, $15, $40 ; entry 1
-    db $D8, $3F, $16, $40 ; entry 2
-    db $D0, $2E, $17, $40 ; entry 3
-    db $D0, $36, $18, $40 ; entry 4
-    db $D0, $3E, $19, $40 ; entry 5
-    db $D0, $46, $1A, $40 ; entry 6
-    db $D8, $D0, $08, $40 ; entry 7
-    db $D8, $D8, $09, $40 ; entry 8
-    db $D0, $D0, $0A, $40 ; entry 9
-    db $D0, $D8, $0B, $40 ; entry 10
-    db $F0, $D7, $14, $60 ; entry 11
-    db $F0, $CF, $15, $60 ; entry 12
-    db $F0, $C7, $16, $60 ; entry 13
-    db $E8, $D8, $17, $60 ; entry 14
-    db $E8, $D0, $18, $60 ; entry 15
-    db $E8, $C8, $19, $60 ; entry 16
-    db $E8, $C0, $1A, $60 ; entry 17
-    db $E0, $D8, $1B, $60 ; entry 18
-    db $E0, $D0, $1C, $60 ; entry 19
-    db $E0, $C8, $1D, $60 ; entry 20
-    db $E0, $C0, $1E, $60 ; entry 21
-    db $D0, $FC, $10, $40 ; entry 22
-    db $F8, $08, $1F, $20 ; entry 23
-    db $F8, $00, $20, $20 ; entry 24
-    db $F8, $F8, $21, $20 ; entry 25
-    db $F0, $F8, $05, $40 ; entry 26
-    db $E8, $40, $0C, $00 ; entry 27
-    db $E8, $48, $0D, $00 ; entry 28
-    db $F0, $40, $0E, $00 ; entry 29
-    db $F0, $48, $0F, $00 ; entry 30
-    db $E0, $30, $05, $40 ; entry 31
-    db $F0, $28, $05, $00 ; entry 32
-    db $F4, $1C, $12, $20 ; entry 33
-    db $F4, $14, $13, $20 ; entry 34
-    db $E8, $E8, $05, $40 ; entry 35
-    db $F0, $B0, $06, $00 ; entry 36
-    db $D8, $10, $06, $40 ; entry 37
+    db $d8, $2f, $14, $40 ; entry 0
+    db $d8, $37, $15, $40 ; entry 1
+    db $d8, $3f, $16, $40 ; entry 2
+    db $d0, $2e, $17, $40 ; entry 3
+    db $d0, $36, $18, $40 ; entry 4
+    db $d0, $3e, $19, $40 ; entry 5
+    db $d0, $46, $1a, $40 ; entry 6
+    db $d8, $d0, $08, $40 ; entry 7
+    db $d8, $d8, $09, $40 ; entry 8
+    db $d0, $d0, $0a, $40 ; entry 9
+    db $d0, $d8, $0b, $40 ; entry 10
+    db $f0, $d7, $14, $60 ; entry 11
+    db $f0, $cf, $15, $60 ; entry 12
+    db $f0, $c7, $16, $60 ; entry 13
+    db $e8, $d8, $17, $60 ; entry 14
+    db $e8, $d0, $18, $60 ; entry 15
+    db $e8, $c8, $19, $60 ; entry 16
+    db $e8, $c0, $1a, $60 ; entry 17
+    db $e0, $d8, $1b, $60 ; entry 18
+    db $e0, $d0, $1c, $60 ; entry 19
+    db $e0, $c8, $1d, $60 ; entry 20
+    db $e0, $c0, $1e, $60 ; entry 21
+    db $d0, $fc, $10, $40 ; entry 22
+    db $f8, $08, $1f, $20 ; entry 23
+    db $f8, $00, $20, $20 ; entry 24
+    db $f8, $f8, $21, $20 ; entry 25
+    db $f0, $f8, $05, $40 ; entry 26
+    db $e8, $40, $0c, $00 ; entry 27
+    db $e8, $48, $0d, $00 ; entry 28
+    db $f0, $40, $0e, $00 ; entry 29
+    db $f0, $48, $0f, $00 ; entry 30
+    db $e0, $30, $05, $40 ; entry 31
+    db $f0, $28, $05, $00 ; entry 32
+    db $f4, $1c, $12, $20 ; entry 33
+    db $f4, $14, $13, $20 ; entry 34
+    db $e8, $e8, $05, $40 ; entry 35
+    db $f0, $b0, $06, $00 ; entry 36
+    db $d8, $10, $06, $40 ; entry 37
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 16 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame16::
-Data_03D_6BD7:: ; address name
-    db $F0, $38, $07, $00 ; entry 0
-    db $E0, $08, $05, $20 ; entry 1
-    db $F0, $E8, $06, $20 ; entry 2
-    db $D0, $40, $05, $00 ; entry 3
-    db $E8, $28, $11, $00 ; entry 4
-    db $E0, $28, $10, $00 ; entry 5
-    db $E0, $38, $05, $40 ; entry 6
-    db $E8, $10, $1B, $60 ; entry 7
-    db $E8, $08, $1C, $60 ; entry 8
-    db $E8, $00, $1D, $60 ; entry 9
-    db $E8, $F8, $1E, $60 ; entry 10
-    db $F0, $10, $17, $60 ; entry 11
-    db $F0, $08, $18, $60 ; entry 12
-    db $F0, $00, $19, $60 ; entry 13
-    db $F0, $F8, $1A, $60 ; entry 14
-    db $F8, $0F, $14, $60 ; entry 15
-    db $F8, $07, $15, $60 ; entry 16
-    db $F8, $FF, $16, $60 ; entry 17
-    db $E0, $B0, $06, $00 ; entry 18
-    db $E0, $40, $0C, $40 ; entry 19
-    db $E0, $48, $0D, $40 ; entry 20
-    db $D8, $40, $0E, $40 ; entry 21
-    db $D8, $48, $0F, $40 ; entry 22
-    db $D8, $E8, $05, $00 ; entry 23
-    db $E0, $C0, $1B, $00 ; entry 24
-    db $E0, $C8, $1C, $00 ; entry 25
-    db $E0, $D0, $1D, $00 ; entry 26
-    db $E0, $D8, $1E, $00 ; entry 27
-    db $D8, $C0, $17, $00 ; entry 28
-    db $D8, $C8, $18, $00 ; entry 29
-    db $D8, $D0, $19, $00 ; entry 30
-    db $D8, $D8, $1A, $00 ; entry 31
-    db $D0, $C1, $14, $00 ; entry 32
-    db $D0, $C9, $15, $00 ; entry 33
-    db $D0, $D1, $16, $00 ; entry 34
-    db $F8, $20, $05, $00 ; entry 35
-    db $F0, $C0, $08, $00 ; entry 36
-    db $F0, $C8, $09, $00 ; entry 37
-    db $F8, $C0, $0A, $00 ; entry 38
-    db $F8, $C8, $0B, $00 ; entry 39
+    db $f0, $38, $07, $00 ; entry 0
+    db $e0, $08, $05, $20 ; entry 1
+    db $f0, $e8, $06, $20 ; entry 2
+    db $d0, $40, $05, $00 ; entry 3
+    db $e8, $28, $11, $00 ; entry 4
+    db $e0, $28, $10, $00 ; entry 5
+    db $e0, $38, $05, $40 ; entry 6
+    db $e8, $10, $1b, $60 ; entry 7
+    db $e8, $08, $1c, $60 ; entry 8
+    db $e8, $00, $1d, $60 ; entry 9
+    db $e8, $f8, $1e, $60 ; entry 10
+    db $f0, $10, $17, $60 ; entry 11
+    db $f0, $08, $18, $60 ; entry 12
+    db $f0, $00, $19, $60 ; entry 13
+    db $f0, $f8, $1a, $60 ; entry 14
+    db $f8, $0f, $14, $60 ; entry 15
+    db $f8, $07, $15, $60 ; entry 16
+    db $f8, $ff, $16, $60 ; entry 17
+    db $e0, $b0, $06, $00 ; entry 18
+    db $e0, $40, $0c, $40 ; entry 19
+    db $e0, $48, $0d, $40 ; entry 20
+    db $d8, $40, $0e, $40 ; entry 21
+    db $d8, $48, $0f, $40 ; entry 22
+    db $d8, $e8, $05, $00 ; entry 23
+    db $e0, $c0, $1b, $00 ; entry 24
+    db $e0, $c8, $1c, $00 ; entry 25
+    db $e0, $d0, $1d, $00 ; entry 26
+    db $e0, $d8, $1e, $00 ; entry 27
+    db $d8, $c0, $17, $00 ; entry 28
+    db $d8, $c8, $18, $00 ; entry 29
+    db $d8, $d0, $19, $00 ; entry 30
+    db $d8, $d8, $1a, $00 ; entry 31
+    db $d0, $c1, $14, $00 ; entry 32
+    db $d0, $c9, $15, $00 ; entry 33
+    db $d0, $d1, $16, $00 ; entry 34
+    db $f8, $20, $05, $00 ; entry 35
+    db $f0, $c0, $08, $00 ; entry 36
+    db $f0, $c8, $09, $00 ; entry 37
+    db $f8, $c0, $0a, $00 ; entry 38
+    db $f8, $c8, $0b, $00 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 17 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 17 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame17::
-Data_03D_6C78:: ; address name
-    db $E0, $38, $07, $20 ; entry 0
-    db $D0, $08, $05, $00 ; entry 1
-    db $E0, $E8, $06, $00 ; entry 2
-    db $D8, $28, $11, $20 ; entry 3
-    db $D0, $28, $10, $20 ; entry 4
-    db $D0, $38, $05, $60 ; entry 5
-    db $E8, $10, $1B, $20 ; entry 6
-    db $E8, $08, $1C, $20 ; entry 7
-    db $E8, $00, $1D, $20 ; entry 8
-    db $E8, $F8, $1E, $20 ; entry 9
-    db $E0, $10, $17, $20 ; entry 10
-    db $E0, $08, $18, $20 ; entry 11
-    db $E0, $00, $19, $20 ; entry 12
-    db $E0, $F8, $1A, $20 ; entry 13
-    db $D8, $0F, $14, $20 ; entry 14
-    db $D8, $07, $15, $20 ; entry 15
-    db $D8, $FF, $16, $20 ; entry 16
-    db $D0, $B0, $06, $00 ; entry 17
-    db $D0, $48, $0C, $60 ; entry 18
-    db $D0, $40, $0D, $60 ; entry 19
-    db $D0, $D8, $1B, $20 ; entry 20
-    db $D0, $D0, $1C, $20 ; entry 21
-    db $D0, $C8, $1D, $20 ; entry 22
-    db $D0, $C0, $1E, $20 ; entry 23
-    db $E8, $20, $05, $20 ; entry 24
-    db $E8, $C0, $08, $40 ; entry 25
-    db $E8, $C8, $09, $40 ; entry 26
-    db $E0, $C0, $0A, $40 ; entry 27
-    db $E0, $C8, $0B, $40 ; entry 28
-    db $F8, $20, $1F, $00 ; entry 29
-    db $F8, $28, $20, $00 ; entry 30
-    db $F8, $30, $21, $00 ; entry 31
-    db $F8, $F0, $06, $00 ; entry 32
-    db $F8, $B8, $07, $00 ; entry 33
-    db $F4, $3C, $12, $00 ; entry 34
-    db $F4, $44, $13, $00 ; entry 35
+    db $e0, $38, $07, $20 ; entry 0
+    db $d0, $08, $05, $00 ; entry 1
+    db $e0, $e8, $06, $00 ; entry 2
+    db $d8, $28, $11, $20 ; entry 3
+    db $d0, $28, $10, $20 ; entry 4
+    db $d0, $38, $05, $60 ; entry 5
+    db $e8, $10, $1b, $20 ; entry 6
+    db $e8, $08, $1c, $20 ; entry 7
+    db $e8, $00, $1d, $20 ; entry 8
+    db $e8, $f8, $1e, $20 ; entry 9
+    db $e0, $10, $17, $20 ; entry 10
+    db $e0, $08, $18, $20 ; entry 11
+    db $e0, $00, $19, $20 ; entry 12
+    db $e0, $f8, $1a, $20 ; entry 13
+    db $d8, $0f, $14, $20 ; entry 14
+    db $d8, $07, $15, $20 ; entry 15
+    db $d8, $ff, $16, $20 ; entry 16
+    db $d0, $b0, $06, $00 ; entry 17
+    db $d0, $48, $0c, $60 ; entry 18
+    db $d0, $40, $0d, $60 ; entry 19
+    db $d0, $d8, $1b, $20 ; entry 20
+    db $d0, $d0, $1c, $20 ; entry 21
+    db $d0, $c8, $1d, $20 ; entry 22
+    db $d0, $c0, $1e, $20 ; entry 23
+    db $e8, $20, $05, $20 ; entry 24
+    db $e8, $c0, $08, $40 ; entry 25
+    db $e8, $c8, $09, $40 ; entry 26
+    db $e0, $c0, $0a, $40 ; entry 27
+    db $e0, $c8, $0b, $40 ; entry 28
+    db $f8, $20, $1f, $00 ; entry 29
+    db $f8, $28, $20, $00 ; entry 30
+    db $f8, $30, $21, $00 ; entry 31
+    db $f8, $f0, $06, $00 ; entry 32
+    db $f8, $b8, $07, $00 ; entry 33
+    db $f4, $3c, $12, $00 ; entry 34
+    db $f4, $44, $13, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 18 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 18 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame18::
-Data_03D_6D09:: ; address name
-    db $D0, $38, $07, $20 ; entry 0
-    db $D0, $E8, $06, $00 ; entry 1
-    db $D8, $10, $1B, $20 ; entry 2
-    db $D8, $08, $1C, $20 ; entry 3
-    db $D8, $00, $1D, $20 ; entry 4
-    db $D8, $F8, $1E, $20 ; entry 5
-    db $D0, $10, $17, $20 ; entry 6
-    db $D0, $08, $18, $20 ; entry 7
-    db $D0, $00, $19, $20 ; entry 8
-    db $D0, $F8, $1A, $20 ; entry 9
-    db $D8, $20, $05, $20 ; entry 10
-    db $D8, $C0, $08, $40 ; entry 11
-    db $D8, $C8, $09, $40 ; entry 12
-    db $D0, $C0, $0A, $40 ; entry 13
-    db $D0, $C8, $0B, $40 ; entry 14
-    db $E8, $30, $1F, $20 ; entry 15
-    db $E8, $28, $20, $20 ; entry 16
-    db $E8, $20, $21, $20 ; entry 17
-    db $E8, $F0, $06, $00 ; entry 18
-    db $E8, $B8, $07, $00 ; entry 19
-    db $E4, $3C, $12, $00 ; entry 20
-    db $E4, $44, $13, $00 ; entry 21
-    db $F0, $30, $22, $20 ; entry 22
-    db $F0, $28, $23, $20 ; entry 23
-    db $F0, $20, $24, $20 ; entry 24
-    db $F8, $30, $25, $20 ; entry 25
-    db $F8, $28, $26, $20 ; entry 26
-    db $F8, $20, $27, $20 ; entry 27
-    db $F0, $D0, $08, $00 ; entry 28
-    db $F0, $D8, $09, $00 ; entry 29
-    db $F8, $D0, $0A, $00 ; entry 30
-    db $F8, $D8, $0B, $00 ; entry 31
-    db $F0, $F8, $10, $00 ; entry 32
-    db $F8, $F8, $11, $00 ; entry 33
-    db $F8, $BC, $10, $00 ; entry 34
+    db $d0, $38, $07, $20 ; entry 0
+    db $d0, $e8, $06, $00 ; entry 1
+    db $d8, $10, $1b, $20 ; entry 2
+    db $d8, $08, $1c, $20 ; entry 3
+    db $d8, $00, $1d, $20 ; entry 4
+    db $d8, $f8, $1e, $20 ; entry 5
+    db $d0, $10, $17, $20 ; entry 6
+    db $d0, $08, $18, $20 ; entry 7
+    db $d0, $00, $19, $20 ; entry 8
+    db $d0, $f8, $1a, $20 ; entry 9
+    db $d8, $20, $05, $20 ; entry 10
+    db $d8, $c0, $08, $40 ; entry 11
+    db $d8, $c8, $09, $40 ; entry 12
+    db $d0, $c0, $0a, $40 ; entry 13
+    db $d0, $c8, $0b, $40 ; entry 14
+    db $e8, $30, $1f, $20 ; entry 15
+    db $e8, $28, $20, $20 ; entry 16
+    db $e8, $20, $21, $20 ; entry 17
+    db $e8, $f0, $06, $00 ; entry 18
+    db $e8, $b8, $07, $00 ; entry 19
+    db $e4, $3c, $12, $00 ; entry 20
+    db $e4, $44, $13, $00 ; entry 21
+    db $f0, $30, $22, $20 ; entry 22
+    db $f0, $28, $23, $20 ; entry 23
+    db $f0, $20, $24, $20 ; entry 24
+    db $f8, $30, $25, $20 ; entry 25
+    db $f8, $28, $26, $20 ; entry 26
+    db $f8, $20, $27, $20 ; entry 27
+    db $f0, $d0, $08, $00 ; entry 28
+    db $f0, $d8, $09, $00 ; entry 29
+    db $f8, $d0, $0a, $00 ; entry 30
+    db $f8, $d8, $0b, $00 ; entry 31
+    db $f0, $f8, $10, $00 ; entry 32
+    db $f8, $f8, $11, $00 ; entry 33
+    db $f8, $bc, $10, $00 ; entry 34
     db $80 ; end
 
-; E-0147 (derived: frame 19 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 19 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame19::
-Data_03D_6D96:: ; address name
-    db $D8, $20, $1F, $00 ; entry 0
-    db $D8, $28, $20, $00 ; entry 1
-    db $D8, $30, $21, $00 ; entry 2
-    db $D8, $F0, $06, $00 ; entry 3
-    db $D8, $B8, $07, $00 ; entry 4
-    db $D4, $3C, $12, $00 ; entry 5
-    db $D4, $44, $13, $00 ; entry 6
-    db $E0, $20, $22, $00 ; entry 7
-    db $E0, $28, $23, $00 ; entry 8
-    db $E0, $30, $24, $00 ; entry 9
-    db $E8, $20, $25, $00 ; entry 10
-    db $E8, $28, $26, $00 ; entry 11
-    db $E8, $30, $27, $00 ; entry 12
-    db $E0, $D0, $08, $00 ; entry 13
-    db $E0, $D8, $09, $00 ; entry 14
-    db $E8, $D0, $0A, $00 ; entry 15
-    db $E8, $D8, $0B, $00 ; entry 16
-    db $E8, $BC, $10, $00 ; entry 17
-    db $F0, $22, $28, $00 ; entry 18
-    db $F0, $2A, $29, $00 ; entry 19
-    db $F0, $D7, $14, $20 ; entry 20
-    db $F0, $CF, $15, $20 ; entry 21
-    db $F0, $C7, $16, $20 ; entry 22
-    db $F8, $D8, $17, $20 ; entry 23
-    db $F8, $D0, $18, $20 ; entry 24
-    db $F8, $C8, $19, $20 ; entry 25
-    db $F8, $C0, $1A, $20 ; entry 26
-    db $F8, $40, $0C, $00 ; entry 27
-    db $F8, $48, $0D, $00 ; entry 28
-    db $F0, $10, $07, $00 ; entry 29
-    db $E4, $F4, $12, $00 ; entry 30
-    db $E4, $FC, $13, $00 ; entry 31
-    db $F8, $E8, $05, $00 ; entry 32
+    db $d8, $20, $1f, $00 ; entry 0
+    db $d8, $28, $20, $00 ; entry 1
+    db $d8, $30, $21, $00 ; entry 2
+    db $d8, $f0, $06, $00 ; entry 3
+    db $d8, $b8, $07, $00 ; entry 4
+    db $d4, $3c, $12, $00 ; entry 5
+    db $d4, $44, $13, $00 ; entry 6
+    db $e0, $20, $22, $00 ; entry 7
+    db $e0, $28, $23, $00 ; entry 8
+    db $e0, $30, $24, $00 ; entry 9
+    db $e8, $20, $25, $00 ; entry 10
+    db $e8, $28, $26, $00 ; entry 11
+    db $e8, $30, $27, $00 ; entry 12
+    db $e0, $d0, $08, $00 ; entry 13
+    db $e0, $d8, $09, $00 ; entry 14
+    db $e8, $d0, $0a, $00 ; entry 15
+    db $e8, $d8, $0b, $00 ; entry 16
+    db $e8, $bc, $10, $00 ; entry 17
+    db $f0, $22, $28, $00 ; entry 18
+    db $f0, $2a, $29, $00 ; entry 19
+    db $f0, $d7, $14, $20 ; entry 20
+    db $f0, $cf, $15, $20 ; entry 21
+    db $f0, $c7, $16, $20 ; entry 22
+    db $f8, $d8, $17, $20 ; entry 23
+    db $f8, $d0, $18, $20 ; entry 24
+    db $f8, $c8, $19, $20 ; entry 25
+    db $f8, $c0, $1a, $20 ; entry 26
+    db $f8, $40, $0c, $00 ; entry 27
+    db $f8, $48, $0d, $00 ; entry 28
+    db $f0, $10, $07, $00 ; entry 29
+    db $e4, $f4, $12, $00 ; entry 30
+    db $e4, $fc, $13, $00 ; entry 31
+    db $f8, $e8, $05, $00 ; entry 32
     db $80 ; end
 
-; E-0147 (derived: frame 20 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 20 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame20::
-Data_03D_6E1B:: ; address name
-    db $D0, $20, $22, $00 ; entry 0
-    db $D0, $28, $23, $00 ; entry 1
-    db $D0, $30, $24, $00 ; entry 2
-    db $D8, $20, $25, $00 ; entry 3
-    db $D8, $28, $26, $00 ; entry 4
-    db $D8, $30, $27, $00 ; entry 5
-    db $D0, $D0, $08, $00 ; entry 6
-    db $D0, $D8, $09, $00 ; entry 7
-    db $D8, $D0, $0A, $00 ; entry 8
-    db $D8, $D8, $0B, $00 ; entry 9
-    db $D8, $BC, $10, $00 ; entry 10
-    db $E0, $22, $28, $00 ; entry 11
-    db $E0, $2A, $29, $00 ; entry 12
-    db $E8, $40, $0C, $00 ; entry 13
-    db $E8, $48, $0D, $00 ; entry 14
-    db $E0, $10, $07, $00 ; entry 15
-    db $D4, $F4, $12, $00 ; entry 16
-    db $D4, $FC, $13, $00 ; entry 17
-    db $E8, $E8, $05, $00 ; entry 18
-    db $F8, $08, $1F, $20 ; entry 19
-    db $F8, $00, $20, $20 ; entry 20
-    db $F8, $F8, $21, $20 ; entry 21
-    db $F0, $F8, $05, $40 ; entry 22
-    db $F0, $40, $0E, $00 ; entry 23
-    db $F0, $48, $0F, $00 ; entry 24
-    db $F0, $28, $05, $00 ; entry 25
-    db $F4, $1D, $12, $20 ; entry 26
-    db $F4, $15, $13, $20 ; entry 27
-    db $F0, $B0, $06, $00 ; entry 28
-    db $F0, $D7, $14, $60 ; entry 29
-    db $F0, $CF, $15, $60 ; entry 30
-    db $F0, $C7, $16, $60 ; entry 31
-    db $E8, $D8, $17, $60 ; entry 32
-    db $E8, $D0, $18, $60 ; entry 33
-    db $E8, $C8, $19, $60 ; entry 34
-    db $E8, $C0, $1A, $60 ; entry 35
-    db $E0, $D8, $1B, $60 ; entry 36
-    db $E0, $D0, $1C, $60 ; entry 37
-    db $E0, $C8, $1D, $60 ; entry 38
-    db $E0, $C0, $1E, $60 ; entry 39
+    db $d0, $20, $22, $00 ; entry 0
+    db $d0, $28, $23, $00 ; entry 1
+    db $d0, $30, $24, $00 ; entry 2
+    db $d8, $20, $25, $00 ; entry 3
+    db $d8, $28, $26, $00 ; entry 4
+    db $d8, $30, $27, $00 ; entry 5
+    db $d0, $d0, $08, $00 ; entry 6
+    db $d0, $d8, $09, $00 ; entry 7
+    db $d8, $d0, $0a, $00 ; entry 8
+    db $d8, $d8, $0b, $00 ; entry 9
+    db $d8, $bc, $10, $00 ; entry 10
+    db $e0, $22, $28, $00 ; entry 11
+    db $e0, $2a, $29, $00 ; entry 12
+    db $e8, $40, $0c, $00 ; entry 13
+    db $e8, $48, $0d, $00 ; entry 14
+    db $e0, $10, $07, $00 ; entry 15
+    db $d4, $f4, $12, $00 ; entry 16
+    db $d4, $fc, $13, $00 ; entry 17
+    db $e8, $e8, $05, $00 ; entry 18
+    db $f8, $08, $1f, $20 ; entry 19
+    db $f8, $00, $20, $20 ; entry 20
+    db $f8, $f8, $21, $20 ; entry 21
+    db $f0, $f8, $05, $40 ; entry 22
+    db $f0, $40, $0e, $00 ; entry 23
+    db $f0, $48, $0f, $00 ; entry 24
+    db $f0, $28, $05, $00 ; entry 25
+    db $f4, $1d, $12, $20 ; entry 26
+    db $f4, $15, $13, $20 ; entry 27
+    db $f0, $b0, $06, $00 ; entry 28
+    db $f0, $d7, $14, $60 ; entry 29
+    db $f0, $cf, $15, $60 ; entry 30
+    db $f0, $c7, $16, $60 ; entry 31
+    db $e8, $d8, $17, $60 ; entry 32
+    db $e8, $d0, $18, $60 ; entry 33
+    db $e8, $c8, $19, $60 ; entry 34
+    db $e8, $c0, $1a, $60 ; entry 35
+    db $e0, $d8, $1b, $60 ; entry 36
+    db $e0, $d0, $1c, $60 ; entry 37
+    db $e0, $c8, $1d, $60 ; entry 38
+    db $e0, $c0, $1e, $60 ; entry 39
     db $80 ; end
 
-; E-0147 (derived: frame 21 of MetaSprites3D_4077Set2A; ends with $80)
+; frame 21 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2AFrame21::
-Data_03D_6EBC:: ; address name
-    db $E8, $F8, $1F, $00 ; entry 0
-    db $E8, $00, $20, $00 ; entry 1
-    db $E8, $08, $21, $00 ; entry 2
-    db $F0, $F8, $22, $00 ; entry 3
-    db $F0, $00, $23, $00 ; entry 4
-    db $F0, $08, $24, $00 ; entry 5
-    db $F8, $F8, $25, $00 ; entry 6
-    db $F8, $00, $26, $00 ; entry 7
-    db $F8, $08, $27, $00 ; entry 8
-    db $E0, $C0, $1B, $00 ; entry 9
-    db $E0, $C8, $1C, $00 ; entry 10
-    db $E0, $D0, $1D, $00 ; entry 11
-    db $E0, $D8, $1E, $00 ; entry 12
-    db $D8, $C0, $17, $00 ; entry 13
-    db $D8, $C8, $18, $00 ; entry 14
-    db $D8, $D0, $19, $00 ; entry 15
-    db $D8, $D8, $1A, $00 ; entry 16
-    db $D0, $C1, $14, $00 ; entry 17
-    db $D0, $C9, $15, $00 ; entry 18
-    db $D0, $D1, $16, $00 ; entry 19
-    db $D8, $40, $08, $00 ; entry 20
-    db $D8, $48, $09, $00 ; entry 21
-    db $E0, $40, $0A, $00 ; entry 22
-    db $E0, $48, $0B, $00 ; entry 23
-    db $E0, $B0, $06, $00 ; entry 24
-    db $E0, $F8, $05, $20 ; entry 25
-    db $D0, $30, $05, $00 ; entry 26
-    db $E8, $18, $11, $00 ; entry 27
-    db $E0, $18, $10, $00 ; entry 28
-    db $D8, $E8, $05, $00 ; entry 29
-    db $E0, $28, $05, $40 ; entry 30
+    db $e8, $f8, $1f, $00 ; entry 0
+    db $e8, $00, $20, $00 ; entry 1
+    db $e8, $08, $21, $00 ; entry 2
+    db $f0, $f8, $22, $00 ; entry 3
+    db $f0, $00, $23, $00 ; entry 4
+    db $f0, $08, $24, $00 ; entry 5
+    db $f8, $f8, $25, $00 ; entry 6
+    db $f8, $00, $26, $00 ; entry 7
+    db $f8, $08, $27, $00 ; entry 8
+    db $e0, $c0, $1b, $00 ; entry 9
+    db $e0, $c8, $1c, $00 ; entry 10
+    db $e0, $d0, $1d, $00 ; entry 11
+    db $e0, $d8, $1e, $00 ; entry 12
+    db $d8, $c0, $17, $00 ; entry 13
+    db $d8, $c8, $18, $00 ; entry 14
+    db $d8, $d0, $19, $00 ; entry 15
+    db $d8, $d8, $1a, $00 ; entry 16
+    db $d0, $c1, $14, $00 ; entry 17
+    db $d0, $c9, $15, $00 ; entry 18
+    db $d0, $d1, $16, $00 ; entry 19
+    db $d8, $40, $08, $00 ; entry 20
+    db $d8, $48, $09, $00 ; entry 21
+    db $e0, $40, $0a, $00 ; entry 22
+    db $e0, $48, $0b, $00 ; entry 23
+    db $e0, $b0, $06, $00 ; entry 24
+    db $e0, $f8, $05, $20 ; entry 25
+    db $d0, $30, $05, $00 ; entry 26
+    db $e8, $18, $11, $00 ; entry 27
+    db $e0, $18, $10, $00 ; entry 28
+    db $d8, $e8, $05, $00 ; entry 29
+    db $e0, $28, $05, $40 ; entry 30
     db $80 ; end
 
-; E-0147 (derived: frame 22 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 22 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame22::
-Data_03D_6F39:: ; address name
-    db $D8, $F8, $1F, $00 ; entry 0
-    db $D8, $00, $20, $00 ; entry 1
-    db $D8, $08, $21, $00 ; entry 2
-    db $E0, $F8, $22, $00 ; entry 3
-    db $E0, $00, $23, $00 ; entry 4
-    db $E0, $08, $24, $00 ; entry 5
-    db $E8, $F8, $25, $00 ; entry 6
-    db $E8, $00, $26, $00 ; entry 7
-    db $E8, $08, $27, $00 ; entry 8
-    db $D0, $D8, $1B, $20 ; entry 9
-    db $D0, $D0, $1C, $20 ; entry 10
-    db $D0, $C8, $1D, $20 ; entry 11
-    db $D0, $C0, $1E, $20 ; entry 12
-    db $D0, $48, $0A, $20 ; entry 13
-    db $D0, $40, $0B, $20 ; entry 14
-    db $D0, $B0, $06, $20 ; entry 15
-    db $D0, $F8, $05, $20 ; entry 16
-    db $D8, $14, $11, $20 ; entry 17
-    db $D0, $14, $10, $20 ; entry 18
-    db $D0, $28, $05, $20 ; entry 19
-    db $F0, $FA, $28, $00 ; entry 20
-    db $F0, $02, $29, $00 ; entry 21
+    db $d8, $f8, $1f, $00 ; entry 0
+    db $d8, $00, $20, $00 ; entry 1
+    db $d8, $08, $21, $00 ; entry 2
+    db $e0, $f8, $22, $00 ; entry 3
+    db $e0, $00, $23, $00 ; entry 4
+    db $e0, $08, $24, $00 ; entry 5
+    db $e8, $f8, $25, $00 ; entry 6
+    db $e8, $00, $26, $00 ; entry 7
+    db $e8, $08, $27, $00 ; entry 8
+    db $d0, $d8, $1b, $20 ; entry 9
+    db $d0, $d0, $1c, $20 ; entry 10
+    db $d0, $c8, $1d, $20 ; entry 11
+    db $d0, $c0, $1e, $20 ; entry 12
+    db $d0, $48, $0a, $20 ; entry 13
+    db $d0, $40, $0b, $20 ; entry 14
+    db $d0, $b0, $06, $20 ; entry 15
+    db $d0, $f8, $05, $20 ; entry 16
+    db $d8, $14, $11, $20 ; entry 17
+    db $d0, $14, $10, $20 ; entry 18
+    db $d0, $28, $05, $20 ; entry 19
+    db $f0, $fa, $28, $00 ; entry 20
+    db $f0, $02, $29, $00 ; entry 21
     db $80 ; end
 
-; E-0147 (derived: frame 23 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 23 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame23::
-Data_03D_6F92:: ; address name
-    db $D0, $08, $25, $20 ; entry 0
-    db $D0, $00, $26, $20 ; entry 1
-    db $D0, $F8, $27, $20 ; entry 2
-    db $D8, $06, $28, $20 ; entry 3
-    db $D8, $FE, $29, $20 ; entry 4
+    db $d0, $08, $25, $20 ; entry 0
+    db $d0, $00, $26, $20 ; entry 1
+    db $d0, $f8, $27, $20 ; entry 2
+    db $d8, $06, $28, $20 ; entry 3
+    db $d8, $fe, $29, $20 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 24 of MetaSprites3D_4077Set2A; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 24 of MetaSprites3D_4077Set2A; ends with $80 (E-0147)
 MetaSprites3D_4077Set2AFrame24::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 43 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 43 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set2B::
-Data_03D_6FA8:: ; address name
     dw MetaSprites3D_4077Set2BFrame0 ; entry 0
     dw MetaSprites3D_4077Set2BFrame1 ; entry 1
     dw MetaSprites3D_4077Set2BFrame2 ; entry 2
@@ -4313,471 +4049,455 @@ Data_03D_6FA8:: ; address name
     dw MetaSprites3D_4077Set2BFrame9 ; entry 30
     dw MetaSprites3D_4077Set2BFrame9 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set2B; ends with $80)
+; frame 0 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2BFrame0::
-Data_03D_6FE8:: ; address name
-    db $F0, $F0, $1F, $10 ; entry 0
-    db $F8, $F8, $21, $10 ; entry 1
-    db $F5, $EB, $1F, $10 ; entry 2
-    db $E8, $EC, $1E, $10 ; entry 3
-    db $EC, $F8, $13, $10 ; entry 4
-    db $D8, $F0, $1F, $50 ; entry 5
-    db $D0, $F8, $21, $50 ; entry 6
-    db $D3, $EB, $1F, $50 ; entry 7
-    db $E0, $EC, $1E, $50 ; entry 8
-    db $E0, $F5, $13, $50 ; entry 9
-    db $D8, $F9, $0F, $30 ; entry 10
-    db $DC, $F8, $13, $50 ; entry 11
-    db $F0, $09, $1F, $30 ; entry 12
-    db $F8, $01, $21, $30 ; entry 13
-    db $F5, $0E, $1F, $30 ; entry 14
-    db $E8, $0D, $1E, $30 ; entry 15
-    db $E8, $04, $13, $30 ; entry 16
-    db $F0, $00, $0F, $50 ; entry 17
-    db $EC, $01, $13, $30 ; entry 18
-    db $D8, $09, $1F, $70 ; entry 19
-    db $D0, $01, $21, $70 ; entry 20
-    db $D3, $0E, $1F, $70 ; entry 21
-    db $E0, $0D, $1E, $70 ; entry 22
-    db $E0, $04, $13, $70 ; entry 23
-    db $DC, $01, $13, $70 ; entry 24
-    db $E8, $F5, $13, $10 ; entry 25
-    db $F0, $F9, $0F, $70 ; entry 26
-    db $D8, $00, $0F, $10 ; entry 27
+    db $f0, $f0, $1f, $10 ; entry 0
+    db $f8, $f8, $21, $10 ; entry 1
+    db $f5, $eb, $1f, $10 ; entry 2
+    db $e8, $ec, $1e, $10 ; entry 3
+    db $ec, $f8, $13, $10 ; entry 4
+    db $d8, $f0, $1f, $50 ; entry 5
+    db $d0, $f8, $21, $50 ; entry 6
+    db $d3, $eb, $1f, $50 ; entry 7
+    db $e0, $ec, $1e, $50 ; entry 8
+    db $e0, $f5, $13, $50 ; entry 9
+    db $d8, $f9, $0f, $30 ; entry 10
+    db $dc, $f8, $13, $50 ; entry 11
+    db $f0, $09, $1f, $30 ; entry 12
+    db $f8, $01, $21, $30 ; entry 13
+    db $f5, $0e, $1f, $30 ; entry 14
+    db $e8, $0d, $1e, $30 ; entry 15
+    db $e8, $04, $13, $30 ; entry 16
+    db $f0, $00, $0f, $50 ; entry 17
+    db $ec, $01, $13, $30 ; entry 18
+    db $d8, $09, $1f, $70 ; entry 19
+    db $d0, $01, $21, $70 ; entry 20
+    db $d3, $0e, $1f, $70 ; entry 21
+    db $e0, $0d, $1e, $70 ; entry 22
+    db $e0, $04, $13, $70 ; entry 23
+    db $dc, $01, $13, $70 ; entry 24
+    db $e8, $f5, $13, $10 ; entry 25
+    db $f0, $f9, $0f, $70 ; entry 26
+    db $d8, $00, $0f, $10 ; entry 27
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame1::
-Data_03D_7059:: ; address name
-    db $EE, $E8, $18, $10 ; entry 0
-    db $F6, $F8, $1B, $10 ; entry 1
-    db $E6, $E4, $14, $10 ; entry 2
-    db $F6, $F0, $18, $10 ; entry 3
-    db $DA, $E8, $18, $50 ; entry 4
-    db $D2, $F8, $1B, $50 ; entry 5
-    db $E2, $E4, $14, $50 ; entry 6
-    db $D2, $F0, $18, $50 ; entry 7
-    db $EE, $10, $18, $30 ; entry 8
-    db $F6, $00, $1B, $30 ; entry 9
-    db $E6, $14, $14, $30 ; entry 10
-    db $F6, $08, $18, $30 ; entry 11
-    db $DA, $10, $18, $70 ; entry 12
-    db $D2, $00, $1B, $70 ; entry 13
-    db $E2, $14, $14, $70 ; entry 14
-    db $D2, $08, $18, $70 ; entry 15
-    db $E2, $0C, $13, $10 ; entry 16
-    db $DA, $08, $13, $10 ; entry 17
-    db $DA, $F0, $13, $30 ; entry 18
-    db $DA, $F8, $13, $30 ; entry 19
-    db $E6, $EC, $13, $70 ; entry 20
-    db $EE, $F0, $13, $70 ; entry 21
-    db $EE, $08, $13, $50 ; entry 22
-    db $EE, $00, $13, $50 ; entry 23
-    db $DA, $00, $13, $10 ; entry 24
-    db $EE, $F8, $13, $70 ; entry 25
-    db $E2, $EC, $13, $30 ; entry 26
-    db $EA, $0C, $13, $10 ; entry 27
-    db $E4, $F4, $0A, $10 ; entry 28
-    db $E4, $04, $0A, $30 ; entry 29
-    db $F3, $E3, $09, $10 ; entry 30
-    db $F3, $15, $09, $30 ; entry 31
-    db $D5, $15, $09, $70 ; entry 32
-    db $D5, $E3, $09, $50 ; entry 33
+    db $ee, $e8, $18, $10 ; entry 0
+    db $f6, $f8, $1b, $10 ; entry 1
+    db $e6, $e4, $14, $10 ; entry 2
+    db $f6, $f0, $18, $10 ; entry 3
+    db $da, $e8, $18, $50 ; entry 4
+    db $d2, $f8, $1b, $50 ; entry 5
+    db $e2, $e4, $14, $50 ; entry 6
+    db $d2, $f0, $18, $50 ; entry 7
+    db $ee, $10, $18, $30 ; entry 8
+    db $f6, $00, $1b, $30 ; entry 9
+    db $e6, $14, $14, $30 ; entry 10
+    db $f6, $08, $18, $30 ; entry 11
+    db $da, $10, $18, $70 ; entry 12
+    db $d2, $00, $1b, $70 ; entry 13
+    db $e2, $14, $14, $70 ; entry 14
+    db $d2, $08, $18, $70 ; entry 15
+    db $e2, $0c, $13, $10 ; entry 16
+    db $da, $08, $13, $10 ; entry 17
+    db $da, $f0, $13, $30 ; entry 18
+    db $da, $f8, $13, $30 ; entry 19
+    db $e6, $ec, $13, $70 ; entry 20
+    db $ee, $f0, $13, $70 ; entry 21
+    db $ee, $08, $13, $50 ; entry 22
+    db $ee, $00, $13, $50 ; entry 23
+    db $da, $00, $13, $10 ; entry 24
+    db $ee, $f8, $13, $70 ; entry 25
+    db $e2, $ec, $13, $30 ; entry 26
+    db $ea, $0c, $13, $10 ; entry 27
+    db $e4, $f4, $0a, $10 ; entry 28
+    db $e4, $04, $0a, $30 ; entry 29
+    db $f3, $e3, $09, $10 ; entry 30
+    db $f3, $15, $09, $30 ; entry 31
+    db $d5, $15, $09, $70 ; entry 32
+    db $d5, $e3, $09, $50 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame2::
-Data_03D_70E2:: ; address name
-    db $F0, $F0, $19, $10 ; entry 0
-    db $F8, $F0, $1B, $10 ; entry 1
-    db $F0, $E0, $14, $10 ; entry 2
-    db $F8, $E0, $17, $10 ; entry 3
-    db $D8, $F0, $19, $50 ; entry 4
-    db $D0, $F0, $1B, $50 ; entry 5
-    db $D8, $E0, $14, $50 ; entry 6
-    db $D0, $E0, $17, $50 ; entry 7
-    db $F8, $08, $1B, $30 ; entry 8
-    db $F0, $18, $14, $30 ; entry 9
-    db $F8, $18, $17, $30 ; entry 10
-    db $D0, $08, $1B, $70 ; entry 11
-    db $D8, $18, $14, $70 ; entry 12
-    db $D0, $18, $17, $70 ; entry 13
-    db $F0, $08, $86, $30 ; entry 14
-    db $D8, $08, $86, $70 ; entry 15
-    db $D8, $00, $0D, $70 ; entry 16
-    db $D0, $F8, $0E, $50 ; entry 17
-    db $D0, $00, $0E, $50 ; entry 18
-    db $F0, $F8, $0D, $10 ; entry 19
-    db $F0, $00, $0D, $30 ; entry 20
-    db $F8, $F8, $0E, $10 ; entry 21
-    db $F8, $00, $0E, $10 ; entry 22
-    db $D8, $10, $04, $10 ; entry 23
-    db $D8, $E8, $04, $30 ; entry 24
-    db $F0, $10, $04, $30 ; entry 25
-    db $F0, $E8, $04, $10 ; entry 26
-    db $F8, $E8, $1F, $10 ; entry 27
-    db $F8, $10, $1F, $30 ; entry 28
-    db $D0, $10, $1F, $10 ; entry 29
-    db $D0, $E8, $1F, $30 ; entry 30
-    db $EA, $F6, $08, $10 ; entry 31
-    db $DE, $F6, $08, $50 ; entry 32
-    db $DE, $02, $08, $70 ; entry 33
-    db $EA, $02, $08, $30 ; entry 34
-    db $E0, $E7, $00, $50 ; entry 35
-    db $E8, $E2, $01, $10 ; entry 36
-    db $E4, $E0, $0B, $10 ; entry 37
-    db $E8, $11, $00, $30 ; entry 38
-    db $E0, $11, $00, $70 ; entry 39
-    db $E8, $16, $01, $30 ; entry 40
-    db $E0, $16, $01, $70 ; entry 41
-    db $E4, $18, $0B, $30 ; entry 42
-    db $D8, $F8, $0D, $50 ; entry 43
-    db $E8, $E7, $00, $10 ; entry 44
-    db $E0, $E2, $01, $50 ; entry 45
+    db $f0, $f0, $19, $10 ; entry 0
+    db $f8, $f0, $1b, $10 ; entry 1
+    db $f0, $e0, $14, $10 ; entry 2
+    db $f8, $e0, $17, $10 ; entry 3
+    db $d8, $f0, $19, $50 ; entry 4
+    db $d0, $f0, $1b, $50 ; entry 5
+    db $d8, $e0, $14, $50 ; entry 6
+    db $d0, $e0, $17, $50 ; entry 7
+    db $f8, $08, $1b, $30 ; entry 8
+    db $f0, $18, $14, $30 ; entry 9
+    db $f8, $18, $17, $30 ; entry 10
+    db $d0, $08, $1b, $70 ; entry 11
+    db $d8, $18, $14, $70 ; entry 12
+    db $d0, $18, $17, $70 ; entry 13
+    db $f0, $08, $86, $30 ; entry 14
+    db $d8, $08, $86, $70 ; entry 15
+    db $d8, $00, $0d, $70 ; entry 16
+    db $d0, $f8, $0e, $50 ; entry 17
+    db $d0, $00, $0e, $50 ; entry 18
+    db $f0, $f8, $0d, $10 ; entry 19
+    db $f0, $00, $0d, $30 ; entry 20
+    db $f8, $f8, $0e, $10 ; entry 21
+    db $f8, $00, $0e, $10 ; entry 22
+    db $d8, $10, $04, $10 ; entry 23
+    db $d8, $e8, $04, $30 ; entry 24
+    db $f0, $10, $04, $30 ; entry 25
+    db $f0, $e8, $04, $10 ; entry 26
+    db $f8, $e8, $1f, $10 ; entry 27
+    db $f8, $10, $1f, $30 ; entry 28
+    db $d0, $10, $1f, $10 ; entry 29
+    db $d0, $e8, $1f, $30 ; entry 30
+    db $ea, $f6, $08, $10 ; entry 31
+    db $de, $f6, $08, $50 ; entry 32
+    db $de, $02, $08, $70 ; entry 33
+    db $ea, $02, $08, $30 ; entry 34
+    db $e0, $e7, $00, $50 ; entry 35
+    db $e8, $e2, $01, $10 ; entry 36
+    db $e4, $e0, $0b, $10 ; entry 37
+    db $e8, $11, $00, $30 ; entry 38
+    db $e0, $11, $00, $70 ; entry 39
+    db $e8, $16, $01, $30 ; entry 40
+    db $e0, $16, $01, $70 ; entry 41
+    db $e4, $18, $0b, $30 ; entry 42
+    db $d8, $f8, $0d, $50 ; entry 43
+    db $e8, $e7, $00, $10 ; entry 44
+    db $e0, $e2, $01, $50 ; entry 45
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame3::
-Data_03D_719B:: ; address name
-    db $F0, $DC, $14, $10 ; entry 0
-    db $F0, $E4, $15, $10 ; entry 1
-    db $F8, $DC, $17, $10 ; entry 2
-    db $F8, $EC, $1A, $10 ; entry 3
-    db $F3, $F1, $19, $10 ; entry 4
-    db $F8, $F8, $10, $10 ; entry 5
-    db $D8, $DC, $14, $50 ; entry 6
-    db $D8, $E4, $15, $50 ; entry 7
-    db $D0, $DC, $17, $50 ; entry 8
-    db $D0, $EC, $1A, $50 ; entry 9
-    db $D5, $F1, $19, $50 ; entry 10
-    db $D0, $F8, $10, $50 ; entry 11
-    db $F0, $1C, $14, $30 ; entry 12
-    db $F0, $14, $15, $30 ; entry 13
-    db $F8, $1C, $17, $30 ; entry 14
-    db $F8, $0C, $1A, $30 ; entry 15
-    db $F3, $07, $19, $30 ; entry 16
-    db $F8, $00, $10, $30 ; entry 17
-    db $D8, $1C, $14, $70 ; entry 18
-    db $D8, $14, $15, $70 ; entry 19
-    db $D0, $1C, $17, $70 ; entry 20
-    db $D0, $0C, $1A, $70 ; entry 21
-    db $D5, $07, $19, $70 ; entry 22
-    db $D0, $00, $10, $70 ; entry 23
-    db $F8, $E4, $1F, $10 ; entry 24
-    db $D0, $E4, $1F, $30 ; entry 25
-    db $D0, $14, $1F, $10 ; entry 26
-    db $F8, $14, $1F, $30 ; entry 27
-    db $EF, $FC, $0D, $10 ; entry 28
-    db $D9, $FC, $0D, $50 ; entry 29
-    db $E0, $DB, $01, $50 ; entry 30
-    db $E8, $DB, $01, $10 ; entry 31
-    db $E8, $E3, $11, $10 ; entry 32
-    db $E0, $E3, $11, $50 ; entry 33
-    db $E9, $ED, $02, $10 ; entry 34
-    db $DF, $ED, $02, $50 ; entry 35
-    db $E0, $1D, $01, $70 ; entry 36
-    db $E8, $1D, $01, $30 ; entry 37
-    db $E8, $15, $11, $30 ; entry 38
-    db $E0, $15, $11, $70 ; entry 39
-    db $E9, $0B, $02, $30 ; entry 40
-    db $DF, $0B, $02, $70 ; entry 41
+    db $f0, $dc, $14, $10 ; entry 0
+    db $f0, $e4, $15, $10 ; entry 1
+    db $f8, $dc, $17, $10 ; entry 2
+    db $f8, $ec, $1a, $10 ; entry 3
+    db $f3, $f1, $19, $10 ; entry 4
+    db $f8, $f8, $10, $10 ; entry 5
+    db $d8, $dc, $14, $50 ; entry 6
+    db $d8, $e4, $15, $50 ; entry 7
+    db $d0, $dc, $17, $50 ; entry 8
+    db $d0, $ec, $1a, $50 ; entry 9
+    db $d5, $f1, $19, $50 ; entry 10
+    db $d0, $f8, $10, $50 ; entry 11
+    db $f0, $1c, $14, $30 ; entry 12
+    db $f0, $14, $15, $30 ; entry 13
+    db $f8, $1c, $17, $30 ; entry 14
+    db $f8, $0c, $1a, $30 ; entry 15
+    db $f3, $07, $19, $30 ; entry 16
+    db $f8, $00, $10, $30 ; entry 17
+    db $d8, $1c, $14, $70 ; entry 18
+    db $d8, $14, $15, $70 ; entry 19
+    db $d0, $1c, $17, $70 ; entry 20
+    db $d0, $0c, $1a, $70 ; entry 21
+    db $d5, $07, $19, $70 ; entry 22
+    db $d0, $00, $10, $70 ; entry 23
+    db $f8, $e4, $1f, $10 ; entry 24
+    db $d0, $e4, $1f, $30 ; entry 25
+    db $d0, $14, $1f, $10 ; entry 26
+    db $f8, $14, $1f, $30 ; entry 27
+    db $ef, $fc, $0d, $10 ; entry 28
+    db $d9, $fc, $0d, $50 ; entry 29
+    db $e0, $db, $01, $50 ; entry 30
+    db $e8, $db, $01, $10 ; entry 31
+    db $e8, $e3, $11, $10 ; entry 32
+    db $e0, $e3, $11, $50 ; entry 33
+    db $e9, $ed, $02, $10 ; entry 34
+    db $df, $ed, $02, $50 ; entry 35
+    db $e0, $1d, $01, $70 ; entry 36
+    db $e8, $1d, $01, $30 ; entry 37
+    db $e8, $15, $11, $30 ; entry 38
+    db $e0, $15, $11, $70 ; entry 39
+    db $e9, $0b, $02, $30 ; entry 40
+    db $df, $0b, $02, $70 ; entry 41
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set2B; ends with $80)
+; frame 4 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2BFrame4::
-Data_03D_7244:: ; address name
-    db $F8, $F4, $20, $10 ; entry 0
-    db $F0, $D8, $15, $10 ; entry 1
-    db $F8, $D0, $17, $10 ; entry 2
-    db $EE, $EB, $1F, $10 ; entry 3
-    db $F8, $E8, $1A, $10 ; entry 4
-    db $D0, $F4, $20, $50 ; entry 5
-    db $D8, $D8, $15, $50 ; entry 6
-    db $D0, $D0, $17, $50 ; entry 7
-    db $DA, $EB, $1F, $50 ; entry 8
-    db $D0, $E8, $1A, $50 ; entry 9
-    db $F8, $DF, $1F, $10 ; entry 10
-    db $D0, $DF, $1F, $50 ; entry 11
-    db $EA, $F6, $1F, $10 ; entry 12
-    db $DE, $F6, $1F, $50 ; entry 13
-    db $F0, $D0, $02, $10 ; entry 14
-    db $D8, $D0, $02, $50 ; entry 15
-    db $E8, $D7, $03, $10 ; entry 16
-    db $E0, $D7, $03, $50 ; entry 17
-    db $E8, $DE, $01, $70 ; entry 18
-    db $E0, $DE, $01, $30 ; entry 19
-    db $F0, $E1, $02, $10 ; entry 20
-    db $D8, $E1, $02, $30 ; entry 21
-    db $F8, $04, $20, $30 ; entry 22
-    db $F0, $20, $15, $30 ; entry 23
-    db $F8, $28, $17, $30 ; entry 24
-    db $EE, $0D, $1F, $30 ; entry 25
-    db $F8, $10, $1A, $30 ; entry 26
-    db $D0, $04, $20, $70 ; entry 27
-    db $D8, $20, $15, $70 ; entry 28
-    db $D0, $28, $17, $70 ; entry 29
-    db $DA, $0D, $1F, $70 ; entry 30
-    db $D0, $10, $1A, $70 ; entry 31
-    db $F8, $19, $1F, $30 ; entry 32
-    db $D0, $19, $1F, $70 ; entry 33
-    db $EA, $02, $1F, $30 ; entry 34
-    db $DE, $02, $1F, $70 ; entry 35
-    db $F0, $28, $02, $30 ; entry 36
-    db $D8, $28, $02, $70 ; entry 37
-    db $E8, $21, $03, $30 ; entry 38
-    db $E0, $21, $03, $70 ; entry 39
-    db $E8, $1A, $01, $50 ; entry 40
-    db $E0, $1A, $01, $10 ; entry 41
-    db $F0, $17, $02, $30 ; entry 42
-    db $D8, $17, $02, $10 ; entry 43
-    db $E0, $28, $07, $10 ; entry 44
-    db $E8, $28, $07, $50 ; entry 45
-    db $E0, $D0, $07, $30 ; entry 46
-    db $E8, $D0, $07, $70 ; entry 47
+    db $f8, $f4, $20, $10 ; entry 0
+    db $f0, $d8, $15, $10 ; entry 1
+    db $f8, $d0, $17, $10 ; entry 2
+    db $ee, $eb, $1f, $10 ; entry 3
+    db $f8, $e8, $1a, $10 ; entry 4
+    db $d0, $f4, $20, $50 ; entry 5
+    db $d8, $d8, $15, $50 ; entry 6
+    db $d0, $d0, $17, $50 ; entry 7
+    db $da, $eb, $1f, $50 ; entry 8
+    db $d0, $e8, $1a, $50 ; entry 9
+    db $f8, $df, $1f, $10 ; entry 10
+    db $d0, $df, $1f, $50 ; entry 11
+    db $ea, $f6, $1f, $10 ; entry 12
+    db $de, $f6, $1f, $50 ; entry 13
+    db $f0, $d0, $02, $10 ; entry 14
+    db $d8, $d0, $02, $50 ; entry 15
+    db $e8, $d7, $03, $10 ; entry 16
+    db $e0, $d7, $03, $50 ; entry 17
+    db $e8, $de, $01, $70 ; entry 18
+    db $e0, $de, $01, $30 ; entry 19
+    db $f0, $e1, $02, $10 ; entry 20
+    db $d8, $e1, $02, $30 ; entry 21
+    db $f8, $04, $20, $30 ; entry 22
+    db $f0, $20, $15, $30 ; entry 23
+    db $f8, $28, $17, $30 ; entry 24
+    db $ee, $0d, $1f, $30 ; entry 25
+    db $f8, $10, $1a, $30 ; entry 26
+    db $d0, $04, $20, $70 ; entry 27
+    db $d8, $20, $15, $70 ; entry 28
+    db $d0, $28, $17, $70 ; entry 29
+    db $da, $0d, $1f, $70 ; entry 30
+    db $d0, $10, $1a, $70 ; entry 31
+    db $f8, $19, $1f, $30 ; entry 32
+    db $d0, $19, $1f, $70 ; entry 33
+    db $ea, $02, $1f, $30 ; entry 34
+    db $de, $02, $1f, $70 ; entry 35
+    db $f0, $28, $02, $30 ; entry 36
+    db $d8, $28, $02, $70 ; entry 37
+    db $e8, $21, $03, $30 ; entry 38
+    db $e0, $21, $03, $70 ; entry 39
+    db $e8, $1a, $01, $50 ; entry 40
+    db $e0, $1a, $01, $10 ; entry 41
+    db $f0, $17, $02, $30 ; entry 42
+    db $d8, $17, $02, $10 ; entry 43
+    db $e0, $28, $07, $10 ; entry 44
+    db $e8, $28, $07, $50 ; entry 45
+    db $e0, $d0, $07, $30 ; entry 46
+    db $e8, $d0, $07, $70 ; entry 47
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame5::
-Data_03D_7305:: ; address name
-    db $F0, $F8, $1B, $10 ; entry 0
-    db $E8, $F0, $14, $10 ; entry 1
-    db $F0, $DD, $1C, $10 ; entry 2
-    db $F0, $F0, $1D, $10 ; entry 3
-    db $F8, $E1, $18, $10 ; entry 4
-    db $F8, $C2, $17, $10 ; entry 5
-    db $F8, $D3, $17, $10 ; entry 6
-    db $D8, $F8, $1B, $50 ; entry 7
-    db $E0, $F0, $14, $50 ; entry 8
-    db $D8, $DD, $1C, $50 ; entry 9
-    db $D8, $F0, $1D, $50 ; entry 10
-    db $D0, $E1, $18, $50 ; entry 11
-    db $D0, $C2, $17, $50 ; entry 12
-    db $D0, $D3, $17, $50 ; entry 13
-    db $F8, $EF, $20, $10 ; entry 14
-    db $E8, $F8, $12, $10 ; entry 15
-    db $E0, $F8, $12, $50 ; entry 16
-    db $F8, $FC, $0D, $10 ; entry 17
-    db $D0, $EF, $20, $50 ; entry 18
-    db $D0, $FC, $0D, $70 ; entry 19
-    db $E0, $D7, $00, $30 ; entry 20
-    db $E8, $D7, $00, $70 ; entry 21
-    db $D8, $C8, $02, $30 ; entry 22
-    db $F0, $C8, $02, $70 ; entry 23
-    db $E8, $C8, $06, $10 ; entry 24
-    db $E0, $C8, $06, $50 ; entry 25
-    db $F0, $D0, $00, $70 ; entry 26
-    db $D8, $D0, $00, $30 ; entry 27
-    db $E8, $CF, $03, $10 ; entry 28
-    db $E0, $CF, $03, $50 ; entry 29
-    db $F0, $00, $1B, $30 ; entry 30
-    db $E8, $08, $14, $30 ; entry 31
-    db $F0, $1B, $1C, $30 ; entry 32
-    db $F0, $08, $1D, $30 ; entry 33
-    db $F8, $17, $18, $30 ; entry 34
-    db $F8, $36, $17, $30 ; entry 35
-    db $F8, $25, $17, $30 ; entry 36
-    db $D8, $00, $1B, $70 ; entry 37
-    db $E0, $08, $14, $70 ; entry 38
-    db $D8, $1B, $1C, $70 ; entry 39
-    db $D8, $08, $1D, $70 ; entry 40
-    db $D0, $17, $18, $70 ; entry 41
-    db $D0, $36, $17, $70 ; entry 42
-    db $D0, $25, $17, $70 ; entry 43
-    db $F8, $09, $20, $30 ; entry 44
-    db $E8, $00, $12, $30 ; entry 45
-    db $E0, $00, $12, $70 ; entry 46
-    db $D0, $09, $20, $70 ; entry 47
-    db $E0, $21, $00, $10 ; entry 48
-    db $E8, $21, $00, $50 ; entry 49
-    db $D8, $30, $02, $10 ; entry 50
-    db $F0, $30, $02, $50 ; entry 51
-    db $E8, $30, $06, $30 ; entry 52
-    db $E0, $30, $06, $70 ; entry 53
-    db $F0, $28, $00, $50 ; entry 54
-    db $D8, $28, $00, $10 ; entry 55
-    db $E8, $29, $03, $30 ; entry 56
-    db $E0, $29, $03, $70 ; entry 57
+    db $f0, $f8, $1b, $10 ; entry 0
+    db $e8, $f0, $14, $10 ; entry 1
+    db $f0, $dd, $1c, $10 ; entry 2
+    db $f0, $f0, $1d, $10 ; entry 3
+    db $f8, $e1, $18, $10 ; entry 4
+    db $f8, $c2, $17, $10 ; entry 5
+    db $f8, $d3, $17, $10 ; entry 6
+    db $d8, $f8, $1b, $50 ; entry 7
+    db $e0, $f0, $14, $50 ; entry 8
+    db $d8, $dd, $1c, $50 ; entry 9
+    db $d8, $f0, $1d, $50 ; entry 10
+    db $d0, $e1, $18, $50 ; entry 11
+    db $d0, $c2, $17, $50 ; entry 12
+    db $d0, $d3, $17, $50 ; entry 13
+    db $f8, $ef, $20, $10 ; entry 14
+    db $e8, $f8, $12, $10 ; entry 15
+    db $e0, $f8, $12, $50 ; entry 16
+    db $f8, $fc, $0d, $10 ; entry 17
+    db $d0, $ef, $20, $50 ; entry 18
+    db $d0, $fc, $0d, $70 ; entry 19
+    db $e0, $d7, $00, $30 ; entry 20
+    db $e8, $d7, $00, $70 ; entry 21
+    db $d8, $c8, $02, $30 ; entry 22
+    db $f0, $c8, $02, $70 ; entry 23
+    db $e8, $c8, $06, $10 ; entry 24
+    db $e0, $c8, $06, $50 ; entry 25
+    db $f0, $d0, $00, $70 ; entry 26
+    db $d8, $d0, $00, $30 ; entry 27
+    db $e8, $cf, $03, $10 ; entry 28
+    db $e0, $cf, $03, $50 ; entry 29
+    db $f0, $00, $1b, $30 ; entry 30
+    db $e8, $08, $14, $30 ; entry 31
+    db $f0, $1b, $1c, $30 ; entry 32
+    db $f0, $08, $1d, $30 ; entry 33
+    db $f8, $17, $18, $30 ; entry 34
+    db $f8, $36, $17, $30 ; entry 35
+    db $f8, $25, $17, $30 ; entry 36
+    db $d8, $00, $1b, $70 ; entry 37
+    db $e0, $08, $14, $70 ; entry 38
+    db $d8, $1b, $1c, $70 ; entry 39
+    db $d8, $08, $1d, $70 ; entry 40
+    db $d0, $17, $18, $70 ; entry 41
+    db $d0, $36, $17, $70 ; entry 42
+    db $d0, $25, $17, $70 ; entry 43
+    db $f8, $09, $20, $30 ; entry 44
+    db $e8, $00, $12, $30 ; entry 45
+    db $e0, $00, $12, $70 ; entry 46
+    db $d0, $09, $20, $70 ; entry 47
+    db $e0, $21, $00, $10 ; entry 48
+    db $e8, $21, $00, $50 ; entry 49
+    db $d8, $30, $02, $10 ; entry 50
+    db $f0, $30, $02, $50 ; entry 51
+    db $e8, $30, $06, $30 ; entry 52
+    db $e0, $30, $06, $70 ; entry 53
+    db $f0, $28, $00, $50 ; entry 54
+    db $d8, $28, $00, $10 ; entry 55
+    db $e8, $29, $03, $30 ; entry 56
+    db $e0, $29, $03, $70 ; entry 57
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame6::
-Data_03D_73EE:: ; address name
-    db $F8, $D6, $18, $10 ; entry 0
-    db $F0, $F4, $11, $10 ; entry 1
-    db $F0, $EC, $18, $10 ; entry 2
-    db $E8, $E5, $14, $10 ; entry 3
-    db $E8, $ED, $13, $10 ; entry 4
-    db $F8, $F7, $1B, $10 ; entry 5
-    db $D0, $D6, $18, $50 ; entry 6
-    db $D8, $F4, $11, $50 ; entry 7
-    db $D8, $EC, $18, $50 ; entry 8
-    db $E0, $E5, $14, $50 ; entry 9
-    db $E0, $ED, $13, $50 ; entry 10
-    db $D0, $F7, $1B, $50 ; entry 11
-    db $F8, $C8, $1C, $10 ; entry 12
-    db $D0, $C8, $1C, $50 ; entry 13
-    db $F8, $B8, $17, $10 ; entry 14
-    db $D0, $B8, $17, $50 ; entry 15
-    db $F8, $ED, $1F, $10 ; entry 16
-    db $D0, $E6, $1F, $30 ; entry 17
-    db $F0, $E4, $1C, $10 ; entry 18
-    db $D8, $DF, $1C, $50 ; entry 19
-    db $EA, $BC, $14, $10 ; entry 20
-    db $DE, $BC, $14, $50 ; entry 21
-    db $F0, $CD, $05, $10 ; entry 22
-    db $D8, $CB, $05, $50 ; entry 23
-    db $F8, $22, $18, $30 ; entry 24
-    db $F0, $04, $11, $30 ; entry 25
-    db $F0, $0C, $18, $30 ; entry 26
-    db $E8, $13, $14, $30 ; entry 27
-    db $E8, $0B, $13, $30 ; entry 28
-    db $F8, $01, $1B, $30 ; entry 29
-    db $D0, $22, $18, $70 ; entry 30
-    db $D8, $04, $11, $70 ; entry 31
-    db $D8, $0C, $18, $70 ; entry 32
-    db $E0, $13, $14, $70 ; entry 33
-    db $E0, $0B, $13, $70 ; entry 34
-    db $D0, $01, $1B, $70 ; entry 35
-    db $F8, $30, $1C, $30 ; entry 36
-    db $D0, $30, $1C, $70 ; entry 37
-    db $F8, $40, $17, $30 ; entry 38
-    db $D0, $40, $17, $70 ; entry 39
-    db $F8, $0B, $1F, $30 ; entry 40
-    db $D0, $12, $1F, $10 ; entry 41
-    db $F0, $14, $1C, $30 ; entry 42
-    db $D8, $19, $1C, $70 ; entry 43
-    db $EA, $3C, $14, $30 ; entry 44
-    db $DE, $3C, $14, $70 ; entry 45
-    db $F0, $2B, $05, $30 ; entry 46
-    db $D8, $2D, $05, $70 ; entry 47
-    db $E0, $35, $00, $70 ; entry 48
-    db $E8, $35, $00, $30 ; entry 49
-    db $E0, $C3, $00, $50 ; entry 50
-    db $E8, $C3, $00, $10 ; entry 51
-    db $E8, $CB, $04, $10 ; entry 52
-    db $E0, $CB, $04, $50 ; entry 53
-    db $E0, $2D, $04, $70 ; entry 54
-    db $E8, $2D, $04, $30 ; entry 55
+    db $f8, $d6, $18, $10 ; entry 0
+    db $f0, $f4, $11, $10 ; entry 1
+    db $f0, $ec, $18, $10 ; entry 2
+    db $e8, $e5, $14, $10 ; entry 3
+    db $e8, $ed, $13, $10 ; entry 4
+    db $f8, $f7, $1b, $10 ; entry 5
+    db $d0, $d6, $18, $50 ; entry 6
+    db $d8, $f4, $11, $50 ; entry 7
+    db $d8, $ec, $18, $50 ; entry 8
+    db $e0, $e5, $14, $50 ; entry 9
+    db $e0, $ed, $13, $50 ; entry 10
+    db $d0, $f7, $1b, $50 ; entry 11
+    db $f8, $c8, $1c, $10 ; entry 12
+    db $d0, $c8, $1c, $50 ; entry 13
+    db $f8, $b8, $17, $10 ; entry 14
+    db $d0, $b8, $17, $50 ; entry 15
+    db $f8, $ed, $1f, $10 ; entry 16
+    db $d0, $e6, $1f, $30 ; entry 17
+    db $f0, $e4, $1c, $10 ; entry 18
+    db $d8, $df, $1c, $50 ; entry 19
+    db $ea, $bc, $14, $10 ; entry 20
+    db $de, $bc, $14, $50 ; entry 21
+    db $f0, $cd, $05, $10 ; entry 22
+    db $d8, $cb, $05, $50 ; entry 23
+    db $f8, $22, $18, $30 ; entry 24
+    db $f0, $04, $11, $30 ; entry 25
+    db $f0, $0c, $18, $30 ; entry 26
+    db $e8, $13, $14, $30 ; entry 27
+    db $e8, $0b, $13, $30 ; entry 28
+    db $f8, $01, $1b, $30 ; entry 29
+    db $d0, $22, $18, $70 ; entry 30
+    db $d8, $04, $11, $70 ; entry 31
+    db $d8, $0c, $18, $70 ; entry 32
+    db $e0, $13, $14, $70 ; entry 33
+    db $e0, $0b, $13, $70 ; entry 34
+    db $d0, $01, $1b, $70 ; entry 35
+    db $f8, $30, $1c, $30 ; entry 36
+    db $d0, $30, $1c, $70 ; entry 37
+    db $f8, $40, $17, $30 ; entry 38
+    db $d0, $40, $17, $70 ; entry 39
+    db $f8, $0b, $1f, $30 ; entry 40
+    db $d0, $12, $1f, $10 ; entry 41
+    db $f0, $14, $1c, $30 ; entry 42
+    db $d8, $19, $1c, $70 ; entry 43
+    db $ea, $3c, $14, $30 ; entry 44
+    db $de, $3c, $14, $70 ; entry 45
+    db $f0, $2b, $05, $30 ; entry 46
+    db $d8, $2d, $05, $70 ; entry 47
+    db $e0, $35, $00, $70 ; entry 48
+    db $e8, $35, $00, $30 ; entry 49
+    db $e0, $c3, $00, $50 ; entry 50
+    db $e8, $c3, $00, $10 ; entry 51
+    db $e8, $cb, $04, $10 ; entry 52
+    db $e0, $cb, $04, $50 ; entry 53
+    db $e0, $2d, $04, $70 ; entry 54
+    db $e8, $2d, $04, $30 ; entry 55
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame7::
-Data_03D_74CF:: ; address name
-    db $F0, $CB, $15, $10 ; entry 0
-    db $F8, $EC, $1A, $10 ; entry 1
-    db $F3, $F1, $19, $10 ; entry 2
-    db $F0, $E6, $04, $10 ; entry 3
-    db $E8, $E3, $15, $10 ; entry 4
-    db $F0, $B8, $14, $10 ; entry 5
-    db $F8, $C5, $09, $10 ; entry 6
-    db $F8, $F8, $0D, $10 ; entry 7
-    db $ED, $C1, $16, $70 ; entry 8
-    db $E4, $DA, $0C, $70 ; entry 9
-    db $F0, $2E, $15, $30 ; entry 10
-    db $F8, $0D, $1A, $30 ; entry 11
-    db $F3, $08, $19, $30 ; entry 12
-    db $F0, $13, $04, $30 ; entry 13
-    db $E8, $16, $15, $30 ; entry 14
-    db $F0, $41, $14, $30 ; entry 15
-    db $F8, $34, $09, $30 ; entry 16
-    db $F8, $01, $0D, $30 ; entry 17
-    db $ED, $38, $16, $50 ; entry 18
-    db $E4, $1F, $0C, $50 ; entry 19
-    db $D8, $CB, $15, $50 ; entry 20
-    db $D0, $EC, $1A, $50 ; entry 21
-    db $D5, $F1, $19, $50 ; entry 22
-    db $D8, $E6, $04, $50 ; entry 23
-    db $E0, $E3, $15, $50 ; entry 24
-    db $D8, $B8, $14, $50 ; entry 25
-    db $D0, $C5, $09, $50 ; entry 26
-    db $D0, $F8, $0D, $50 ; entry 27
-    db $DB, $C1, $16, $30 ; entry 28
-    db $D8, $2E, $15, $70 ; entry 29
-    db $D0, $0D, $1A, $70 ; entry 30
-    db $D5, $08, $19, $70 ; entry 31
-    db $D8, $13, $04, $70 ; entry 32
-    db $E0, $16, $15, $70 ; entry 33
-    db $D8, $41, $14, $70 ; entry 34
-    db $D0, $34, $09, $70 ; entry 35
-    db $D0, $01, $0D, $70 ; entry 36
-    db $DB, $38, $16, $10 ; entry 37
-    db $F8, $E4, $06, $10 ; entry 38
-    db $D0, $E4, $06, $50 ; entry 39
-    db $D0, $15, $06, $10 ; entry 40
-    db $F8, $15, $06, $50 ; entry 41
+    db $f0, $cb, $15, $10 ; entry 0
+    db $f8, $ec, $1a, $10 ; entry 1
+    db $f3, $f1, $19, $10 ; entry 2
+    db $f0, $e6, $04, $10 ; entry 3
+    db $e8, $e3, $15, $10 ; entry 4
+    db $f0, $b8, $14, $10 ; entry 5
+    db $f8, $c5, $09, $10 ; entry 6
+    db $f8, $f8, $0d, $10 ; entry 7
+    db $ed, $c1, $16, $70 ; entry 8
+    db $e4, $da, $0c, $70 ; entry 9
+    db $f0, $2e, $15, $30 ; entry 10
+    db $f8, $0d, $1a, $30 ; entry 11
+    db $f3, $08, $19, $30 ; entry 12
+    db $f0, $13, $04, $30 ; entry 13
+    db $e8, $16, $15, $30 ; entry 14
+    db $f0, $41, $14, $30 ; entry 15
+    db $f8, $34, $09, $30 ; entry 16
+    db $f8, $01, $0d, $30 ; entry 17
+    db $ed, $38, $16, $50 ; entry 18
+    db $e4, $1f, $0c, $50 ; entry 19
+    db $d8, $cb, $15, $50 ; entry 20
+    db $d0, $ec, $1a, $50 ; entry 21
+    db $d5, $f1, $19, $50 ; entry 22
+    db $d8, $e6, $04, $50 ; entry 23
+    db $e0, $e3, $15, $50 ; entry 24
+    db $d8, $b8, $14, $50 ; entry 25
+    db $d0, $c5, $09, $50 ; entry 26
+    db $d0, $f8, $0d, $50 ; entry 27
+    db $db, $c1, $16, $30 ; entry 28
+    db $d8, $2e, $15, $70 ; entry 29
+    db $d0, $0d, $1a, $70 ; entry 30
+    db $d5, $08, $19, $70 ; entry 31
+    db $d8, $13, $04, $70 ; entry 32
+    db $e0, $16, $15, $70 ; entry 33
+    db $d8, $41, $14, $70 ; entry 34
+    db $d0, $34, $09, $70 ; entry 35
+    db $d0, $01, $0d, $70 ; entry 36
+    db $db, $38, $16, $10 ; entry 37
+    db $f8, $e4, $06, $10 ; entry 38
+    db $d0, $e4, $06, $50 ; entry 39
+    db $d0, $15, $06, $10 ; entry 40
+    db $f8, $15, $06, $50 ; entry 41
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set2B; ends with $80)
+; frame 8 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2BFrame8::
-Data_03D_7578:: ; address name
-    db $F8, $F4, $20, $10 ; entry 0
-    db $F0, $D0, $14, $10 ; entry 1
-    db $F8, $E8, $1A, $10 ; entry 2
-    db $D0, $F4, $20, $50 ; entry 3
-    db $D8, $D0, $14, $50 ; entry 4
-    db $D0, $E8, $1A, $50 ; entry 5
-    db $F0, $E5, $1F, $10 ; entry 6
-    db $D8, $E5, $1F, $50 ; entry 7
-    db $F0, $D8, $13, $10 ; entry 8
-    db $D8, $D8, $13, $50 ; entry 9
-    db $E8, $D4, $13, $10 ; entry 10
-    db $E0, $D4, $13, $50 ; entry 11
-    db $EA, $CC, $16, $70 ; entry 12
-    db $DE, $CC, $16, $30 ; entry 13
-    db $D0, $DF, $11, $30 ; entry 14
-    db $F8, $DF, $11, $10 ; entry 15
-    db $E0, $DD, $06, $50 ; entry 16
-    db $E8, $DD, $06, $10 ; entry 17
-    db $F8, $B0, $09, $10 ; entry 18
-    db $F0, $B8, $06, $10 ; entry 19
-    db $F8, $C4, $06, $10 ; entry 20
-    db $F8, $04, $20, $30 ; entry 21
-    db $F0, $28, $14, $30 ; entry 22
-    db $F8, $10, $1A, $30 ; entry 23
-    db $D0, $04, $20, $70 ; entry 24
-    db $D8, $28, $14, $70 ; entry 25
-    db $D0, $10, $1A, $70 ; entry 26
-    db $F0, $13, $1F, $30 ; entry 27
-    db $D8, $13, $1F, $70 ; entry 28
-    db $F0, $20, $13, $30 ; entry 29
-    db $D8, $20, $13, $70 ; entry 30
-    db $E8, $24, $13, $30 ; entry 31
-    db $E0, $24, $13, $70 ; entry 32
-    db $EA, $2C, $16, $50 ; entry 33
-    db $DE, $2C, $16, $10 ; entry 34
-    db $D0, $19, $11, $10 ; entry 35
-    db $F8, $19, $11, $30 ; entry 36
-    db $E0, $1B, $06, $70 ; entry 37
-    db $E8, $1B, $06, $30 ; entry 38
-    db $F8, $48, $09, $30 ; entry 39
-    db $F0, $40, $06, $30 ; entry 40
-    db $F8, $34, $06, $30 ; entry 41
-    db $D0, $48, $09, $70 ; entry 42
-    db $D8, $40, $06, $70 ; entry 43
-    db $D0, $34, $06, $70 ; entry 44
-    db $D0, $B0, $09, $50 ; entry 45
-    db $D8, $B8, $06, $50 ; entry 46
-    db $D0, $C4, $06, $50 ; entry 47
+    db $f8, $f4, $20, $10 ; entry 0
+    db $f0, $d0, $14, $10 ; entry 1
+    db $f8, $e8, $1a, $10 ; entry 2
+    db $d0, $f4, $20, $50 ; entry 3
+    db $d8, $d0, $14, $50 ; entry 4
+    db $d0, $e8, $1a, $50 ; entry 5
+    db $f0, $e5, $1f, $10 ; entry 6
+    db $d8, $e5, $1f, $50 ; entry 7
+    db $f0, $d8, $13, $10 ; entry 8
+    db $d8, $d8, $13, $50 ; entry 9
+    db $e8, $d4, $13, $10 ; entry 10
+    db $e0, $d4, $13, $50 ; entry 11
+    db $ea, $cc, $16, $70 ; entry 12
+    db $de, $cc, $16, $30 ; entry 13
+    db $d0, $df, $11, $30 ; entry 14
+    db $f8, $df, $11, $10 ; entry 15
+    db $e0, $dd, $06, $50 ; entry 16
+    db $e8, $dd, $06, $10 ; entry 17
+    db $f8, $b0, $09, $10 ; entry 18
+    db $f0, $b8, $06, $10 ; entry 19
+    db $f8, $c4, $06, $10 ; entry 20
+    db $f8, $04, $20, $30 ; entry 21
+    db $f0, $28, $14, $30 ; entry 22
+    db $f8, $10, $1a, $30 ; entry 23
+    db $d0, $04, $20, $70 ; entry 24
+    db $d8, $28, $14, $70 ; entry 25
+    db $d0, $10, $1a, $70 ; entry 26
+    db $f0, $13, $1f, $30 ; entry 27
+    db $d8, $13, $1f, $70 ; entry 28
+    db $f0, $20, $13, $30 ; entry 29
+    db $d8, $20, $13, $70 ; entry 30
+    db $e8, $24, $13, $30 ; entry 31
+    db $e0, $24, $13, $70 ; entry 32
+    db $ea, $2c, $16, $50 ; entry 33
+    db $de, $2c, $16, $10 ; entry 34
+    db $d0, $19, $11, $10 ; entry 35
+    db $f8, $19, $11, $30 ; entry 36
+    db $e0, $1b, $06, $70 ; entry 37
+    db $e8, $1b, $06, $30 ; entry 38
+    db $f8, $48, $09, $30 ; entry 39
+    db $f0, $40, $06, $30 ; entry 40
+    db $f8, $34, $06, $30 ; entry 41
+    db $d0, $48, $09, $70 ; entry 42
+    db $d8, $40, $06, $70 ; entry 43
+    db $d0, $34, $06, $70 ; entry 44
+    db $d0, $b0, $09, $50 ; entry 45
+    db $d8, $b8, $06, $50 ; entry 46
+    db $d0, $c4, $06, $50 ; entry 47
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set2B; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set2B; ends with $80 (E-0147)
 MetaSprites3D_4077Set2BFrame9::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 44 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 44 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3D_4077Set2C::
-Data_03D_763A:: ; address name
     dw MetaSprites3D_4077Set2CFrame0 ; entry 0
     dw MetaSprites3D_4077Set2CFrame1 ; entry 1
     dw MetaSprites3D_4077Set2CFrame2 ; entry 2
@@ -4811,108 +4531,90 @@ Data_03D_763A:: ; address name
     dw MetaSprites3D_4077Set2CFrame10 ; entry 30
     dw MetaSprites3D_4077Set2CFrame10 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3D_4077Set2C; ends with $80)
+; frame 0 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2CFrame0::
-Data_03D_767A:: ; address name
-    db $DF, $01, $00, $00 ; entry 0
-    db $DF, $09, $01, $00 ; entry 1
-    db $E7, $01, $02, $00 ; entry 2
-    db $E7, $09, $03, $00 ; entry 3
+    db $df, $01, $00, $00 ; entry 0
+    db $df, $09, $01, $00 ; entry 1
+    db $e7, $01, $02, $00 ; entry 2
+    db $e7, $09, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame1::
-Data_03D_768B:: ; address name
-    db $DC, $05, $00, $00 ; entry 0
-    db $DC, $0D, $01, $00 ; entry 1
-    db $E4, $05, $02, $00 ; entry 2
-    db $E4, $0D, $03, $00 ; entry 3
+    db $dc, $05, $00, $00 ; entry 0
+    db $dc, $0d, $01, $00 ; entry 1
+    db $e4, $05, $02, $00 ; entry 2
+    db $e4, $0d, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame2::
-Data_03D_769C:: ; address name
-    db $DA, $FE, $00, $00 ; entry 0
-    db $DA, $06, $01, $00 ; entry 1
-    db $E2, $FE, $02, $00 ; entry 2
-    db $E2, $06, $03, $00 ; entry 3
+    db $da, $fe, $00, $00 ; entry 0
+    db $da, $06, $01, $00 ; entry 1
+    db $e2, $fe, $02, $00 ; entry 2
+    db $e2, $06, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame3::
-Data_03D_76AD:: ; address name
-    db $D6, $02, $00, $00 ; entry 0
-    db $D6, $0A, $01, $00 ; entry 1
-    db $DE, $02, $02, $00 ; entry 2
-    db $DE, $0A, $03, $00 ; entry 3
+    db $d6, $02, $00, $00 ; entry 0
+    db $d6, $0a, $01, $00 ; entry 1
+    db $de, $02, $02, $00 ; entry 2
+    db $de, $0a, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3D_4077Set2C; ends with $80)
+; frame 4 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2CFrame4::
-Data_03D_76BE:: ; address name
-    db $D5, $07, $00, $00 ; entry 0
-    db $D5, $0F, $01, $00 ; entry 1
-    db $DD, $07, $02, $00 ; entry 2
-    db $DD, $0F, $03, $00 ; entry 3
+    db $d5, $07, $00, $00 ; entry 0
+    db $d5, $0f, $01, $00 ; entry 1
+    db $dd, $07, $02, $00 ; entry 2
+    db $dd, $0f, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame5::
-Data_03D_76CF:: ; address name
-    db $D4, $0B, $00, $00 ; entry 0
-    db $D4, $13, $01, $00 ; entry 1
-    db $DC, $0B, $02, $00 ; entry 2
-    db $DC, $13, $03, $00 ; entry 3
+    db $d4, $0b, $00, $00 ; entry 0
+    db $d4, $13, $01, $00 ; entry 1
+    db $dc, $0b, $02, $00 ; entry 2
+    db $dc, $13, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame6::
-Data_03D_76E0:: ; address name
-    db $D2, $0A, $00, $00 ; entry 0
-    db $D2, $12, $01, $00 ; entry 1
-    db $DA, $0A, $02, $00 ; entry 2
-    db $DA, $12, $03, $00 ; entry 3
+    db $d2, $0a, $00, $00 ; entry 0
+    db $d2, $12, $01, $00 ; entry 1
+    db $da, $0a, $02, $00 ; entry 2
+    db $da, $12, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame7::
-Data_03D_76F1:: ; address name
-    db $D1, $08, $00, $00 ; entry 0
-    db $D1, $10, $01, $00 ; entry 1
-    db $D9, $08, $02, $00 ; entry 2
-    db $D9, $10, $03, $00 ; entry 3
+    db $d1, $08, $00, $00 ; entry 0
+    db $d1, $10, $01, $00 ; entry 1
+    db $d9, $08, $02, $00 ; entry 2
+    db $d9, $10, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3D_4077Set2C; ends with $80)
+; frame 8 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3D_4077Set2CFrame8::
-Data_03D_7702:: ; address name
-    db $D0, $0A, $00, $00 ; entry 0
-    db $D0, $12, $01, $00 ; entry 1
-    db $D8, $0A, $02, $00 ; entry 2
-    db $D8, $12, $03, $00 ; entry 3
+    db $d0, $0a, $00, $00 ; entry 0
+    db $d0, $12, $01, $00 ; entry 1
+    db $d8, $0a, $02, $00 ; entry 2
+    db $d8, $12, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame9::
-Data_03D_7713:: ; address name
-    db $D0, $0C, $00, $00 ; entry 0
-    db $D0, $14, $01, $00 ; entry 1
-    db $D8, $0C, $02, $00 ; entry 2
-    db $D8, $14, $03, $00 ; entry 3
+    db $d0, $0c, $00, $00 ; entry 0
+    db $d0, $14, $01, $00 ; entry 1
+    db $d8, $0c, $02, $00 ; entry 2
+    db $d8, $14, $03, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3D_4077Set2C; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3D_4077Set2C; ends with $80 (E-0147)
 MetaSprites3D_4077Set2CFrame10::
     db $80 ; end
-    ds $8DB, $00
+    ds $8db, $00

@@ -1,13 +1,11 @@
 SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
-; if wStringIndex < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001
-; 5 call sites from 5 routines (e.g. ShowString_Bank28, DebugMessageTest_Update_ToBeginStringDisplay_Bank28, ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank28, ShowMessageHL_ToBeginStringDisplay_Bank28, ...)
-; reads: wStringIndex
+; if wStringIndex < $DA, BeginStringDisplay with this bank's table; otherwise far-calls
+; BeginStringDisplay_Bank28_BeginStringDisplay
 BeginStringDisplay_Bank28::
-Func_028_4001:: ; address name
     ld a, [wStringIndex]
-    cp a, $DA
+    cp $da
     jr c, .call_begin_string_display
     farcall BeginStringDisplay_Bank28_BeginStringDisplay
     ret
@@ -17,13 +15,11 @@ Func_028_4001:: ; address name
     call BeginStringDisplay
     ret
 
-; message bank $28: when wStringIndex < $DA, CopyStringToBuffer with this bank's table Data_028_4032; otherwise far-calls Func_097_4010 (E-0080)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wStringIndex
-CopyStringToBuffer_Bank28:: ; heuristic: follows a terminator; C0
-Func_028_4016:: ; address name
+; message bank $28: when wStringIndex < $DA, CopyStringToBuffer with this bank's table
+; MessageStrings_Bank28; otherwise far-calls CopyStringToBuffer_Bank28_Overflow (E-0080)
+CopyStringToBuffer_Bank28::
     ld a, [wStringIndex]
-    cp a, $DA
+    cp $da
     jr c, .call_copy_string_to_buffer
     farcall CopyStringToBuffer_Bank28_Overflow
     ret
@@ -33,25 +29,22 @@ Func_028_4016:: ; address name
     call CopyStringToBuffer
     ret
 
-; Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 1 call site from 1 routine (e.g. SceneHomecoming_ShowTHEEND)
+; BeginStringDisplay_Bank28 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_Bank28::
-Func_028_402B:: ; address name
     call BeginStringDisplay_Bank28
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_28_4032::
-MessageStrings_Bank28:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_028_4032:: ; address name
+MessageStrings_Bank28::
     dw StringList_28_4034 ; id 0
 
-; E-0217 (derived: category list of StringCategories_28_4032; one pointer per wStringIndex)
+; category list of StringCategories_28_4032; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_28_4034::
-Data_028_4034:: ; address name
     dw Message_00_00 ; id 0
     dw Message_00_01 ; id 1
     dw Message_00_02 ; id 2
@@ -271,1517 +264,1167 @@ Data_028_4034:: ; address name
     dw Message_00_D8 ; id 216
     dw Message_00_D9 ; id 217
 
-Message_00_00:: ; heuristic: string; C0
-Data_028_41E8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "In the middle of", $F1
-    db "the sea in the", $FA, $F7
-    db $EF, $EE, "south floats the", $EF, $EE, "island GreatLog.", $FA, $F7
-    db $EF, $EE, "To this eternally", $EF, $EE, "warm and natural", $FA, $F7
-    db $EF, $EE, "setting, a family", $EF, $EE, "of monster farmers", $FA, $F7
-    db $EF, $EE, "was headed to", $EF, $EE, "start a new life", $A4, $F7
-    db $F0
-
-Message_00_01:: ; heuristic: string; C0
-Data_028_42A3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: ", $F9, "0!", $F1
-    db "Papa's calling.", $FA, $F7
-    db $EF, $EE, "He's at the stern.", $EF, $EE, "Hustle, hustle!", $F7
-    db $F0
-
-Message_00_02:: ; heuristic: string; C0
-Data_028_42E4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: There you", $F1
-    db "are, big brother!", $FA, $F7
-    db $EF, $EE, "Papa's calling at", $EF, $EE, "the stern.", $FA, $F7
-    db $EF, $EE, "You", $44, " better go", $EF, $EE, "right away!", $F7
-    db $F0
-
-Message_00_03:: ; heuristic: string; C0
-Data_028_4347:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: What's wrong,", $F1
-    db $F9, "0?", $FA, $F7
-    db $EF, $EE, "Papa's calling for", $EF, $EE, "you!", $F7
-    db $F0
-
-Message_00_04:: ; heuristic: string; C0
-Data_028_437B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Hurry! Papa", $F1
-    db "will be angry!", $F7
-    db $F0
-
-Message_00_05:: ; heuristic: string; C0
-Data_028_439E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You folks run a", $F1
-    db "monster farm?", $FA, $F7
-    db $EF, $EE, "We've never had", $EF, $EE, "monsters on our", $FA, $F7
-    db $EF, $EE, "ship before this.", $EF, $EE, "It's amazing!", $F7
-    db $F0
-
-Message_00_06:: ; heuristic: string; C0
-Data_028_4406:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: There's a spirit", $F1
-    db "in GreatLog that's", $FA, $F7
-    db $EF, $EE, "famous for getting", $EF, $EE, "into mischief.", $FA, $F7
-    db $EF, $EE, "It's named", $A4, $EF, $EE, "Waru something.", $F7
-    db $F0
-
-Message_00_07:: ; heuristic: string; C0
-Data_028_4471:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Sailing is sure", $EF, $EE, "exhilarating. ", $FA, $F7
-    db $EF, $EE, "Right?", $EF, $EE, $FF, $F0
-
-Message_00_08:: ; heuristic: string; C0
-Data_028_44A1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Good. That's", $F1
-    db "good to hear!", $FA, $F7
-    db $EF, $EE, "You have got", $EF, $EE, "potential!", $F7
-    db $F0
-
-Message_00_09:: ; heuristic: string; C0
-Data_028_44DB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Is that so?", $F1
-    db "Too bad!", $FA, $F7
-    db $EF, $EE, "You'll get used to", $EF, $EE, "it someday.", $F7
-    db $F0
-
-Message_00_0A:: ; heuristic: string; C0
-Data_028_4516:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: We'll soon be", $F1
-    db "reaching GreatLog.", $FA, $F7
-    db $EF, $EE, "I wonder, what", $EF, $EE, "will it be like?", $FA, $F7
-    db $EF, $EE, "Isn't it exciting", $EF, $EE, "my dear child?", $F7
-    db $F0
-
-Message_00_0B:: ; heuristic: string; C0
-Data_028_4582:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: GreatLog's King", $F1
-    db "asked us to settle", $FA, $F7
-    db $EF, $EE, "in the kingdom and", $EF, $EE, "run our farm.", $FA, $F7
-    db $EF, $EE, "He recognizes our", $EF, $EE, "worth, wahahah!", $FA, $F7
-    db $EF, $EE, "This will be our", $EF, $EE, "new life.", $FA, $F7
-    db $EF, $EE, "You're a growing", $EF, $EE, "boy, so I'll need", $FA, $F7
-    db $EF, $EE, "you to be reliable", $EF, $EE, "and responsible.", $FA, $F7
-    db $EF, $EE, "Do we have an", $EF, $EE, "understanding?", $FA, $F7
-    db $EF, $EE, "Good. Stay with", $EF, $EE, "Tara, will you?", $F7
-    db $F0
-
-Message_00_0C:: ; heuristic: string; C0
-Data_028_46A4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: GreatLog's King", $F1
-    db "asked us to settle", $FA, $F7
-    db $EF, $EE, "in the kingdom and", $EF, $EE, "run our farm.", $FA, $F7
-    db $EF, $EE, "He recognizes our", $EF, $EE, "worth, wahahah!", $FA, $F7
-    db $EF, $EE, "This will be our", $EF, $EE, "new life.", $FA, $F7
-    db $EF, $EE, "You're growing up,", $EF, $EE, "so you can't be a", $FA, $F7
-    db $EF, $EE, "little baby", $EF, $EE, "anymore.", $FA, $F7
-    db $EF, $EE, "Do we have an", $EF, $EE, "understanding?", $FA, $F7
-    db $EF, $EE, "Good. Play with", $EF, $EE, "Cobi, will you?", $F7
-    db $F0
-
-Message_00_0D:: ; heuristic: string; C0
-Data_028_47B9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: When our farm", $F1
-    db "gets established", $FA, $F7
-    db $EF, $EE, "in the new land,", $EF, $EE, "I'll make life", $FA, $F7
-    db $EF, $EE, "easier for mother", $EF, $EE, "and you two.", $FA, $F7
-    db $EF, $EE, "We should be in", $EF, $EE, "GreatLog soon.", $F7
-    db $F0
-
-Message_00_0E:: ; heuristic: string; C0
-Data_028_4845:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Worried about", $F1
-    db "your monsters?", $FA, $F7
-    db $EF, $EE, "Don't be! They're", $EF, $EE, "being quiet.", $F7
-    db $F0
-
-Message_00_0F:: ; heuristic: string; C0
-Data_028_4887:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the barrel.", $FA, $F7
-    db $EF, $EE, "It was filled with", $EF, $EE, "clean water.", $F7
-    db $F0
-
-Message_00_10:: ; heuristic: string; C0
-Data_028_48C7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, "Freshly caught", $EF, $EE, "fish were inside.", $F7
-    db $F0
-
-Message_00_11:: ; heuristic: string; C0
-Data_028_4906:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: ", $F9, "0!", $F1
-    db "They said GreatLog", $FA, $F7
-    db $EF, $EE, "will be in sight", $EF, $EE, "soon.", $F7
-    db $F0
-
-Message_00_12:: ; heuristic: string; C0
-Data_028_4940:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Land ho!", $F1
-    db "There's GreatLog!", $F7
-    db $F0
-
-Message_00_13:: ; heuristic: string; C0
-Data_028_495E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Big brother!", $F1
-    db $FA, $F7
-    db $EF, $EE, $F3, "GreatLog will be", $EF, $EE, "in sight soon.", $F7
-    db $F0
-
-Message_00_14:: ; heuristic: string; C0
-Data_028_4999:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "This is a tale of", $F1
-    db "children who came", $FA, $F7
-    db $EF, $EE, "to the Kingdom of", $EF, $EE, "GreatLog", $A4, $F7
-    db $F0
-
-Message_00_15:: ; heuristic: string; C0
-Data_028_49DE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Listen you two!", $F1
-    db $FA, $F7
-    db $EF, $EE, $F3, "Quit your horsing", $EF, $EE, "around and go", $FA, $F7
-    db $EF, $EE, "help your mother.", $EF, $EE, "Do you hear me?", $F7
-    db $F0
-
-Message_00_16:: ; heuristic: string; C0
-Data_028_4A3E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: It seems to me", $F1
-    db "that the people", $FA, $F7
-    db $EF, $EE, "here aren't very", $EF, $EE, "used to seeing", $FA, $F7
-    db $EF, $EE, "monsters. We'll", $EF, $EE, "have to make sure", $FA, $F7
-    db $EF, $EE, "that they don't go", $EF, $EE, "wander off on", $FA, $F7
-    db $EF, $EE, "their own. Anyway,", $EF, $EE, "go help your", $FA, $F7
-    db $EF, $EE, "mother.", $EF, $EE, $F7
-    db $F0
-
-Message_00_17:: ; heuristic: string; C0
-Data_028_4AFE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Yo, did you", $F1
-    db "enjoy the voyage?", $FA, $F7
-    db $EF, $EE, "The name's Slash,", $EF, $EE, "glad to know you!", $FA, $F7
-    db $EF, $EE, "Slash: I guard the", $EF, $EE, "farm here.", $FA, $F7
-    db $EF, $EE, "You can consider", $EF, $EE, "me the boss!", $FA, $F7
-    db $EF, $EE, "If you need any", $EF, $EE, "advice, I'm here!", $F7
-    db $F0
-
-Message_00_18:: ; heuristic: string; C0
-Data_028_4BB0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: If you're", $F1
-    db "in need of advice,", $FA, $F7
-    db $EF, $EE, "think of me!", $EF, $EE, "I'm the one!", $F7
-    db $F0
-
-Message_00_19:: ; heuristic: string; C0
-Data_028_4BF2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: There aren't many", $F1
-    db "friends here.", $FA, $F7
-    db $EF, $EE, "It's lonely for an", $EF, $EE, "ant like me", $A4, $F7
-    db $F0
-
-Message_00_1A:: ; heuristic: string; C0
-Data_028_4C38:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I accidentally", $F1
-    db "went outside.", $FA, $F7
-    db $EF, $EE, "People gave me the", $EF, $EE, "eye. Whoopsy.", $F7
-    db $F0
-
-Message_00_1B:: ; heuristic: string; C0
-Data_028_4C7E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This hay is", $F1
-    db "pretty good.", $FA, $F7
-    db $EF, $EE, "Maybe I can use", $EF, $EE, "this", $A4, $F7
-    db $F0
-
-Message_00_1C:: ; heuristic: string; C0
-Data_028_4CB5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "pump.", $FA, $F7
-    db $EF, $EE, "It's rusted and", $EF, $EE, "old, but it looks", $FA, $F7
-    db $EF, $EE, "to be in working", $EF, $EE, "condition.", $F7
-    db $F0
-
-Message_00_1D:: ; heuristic: string; C0
-Data_028_4D10:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the barrel.", $FA, $F7
-    db $EF, $EE, "It is full of", $EF, $EE, "dried hay.", $F7
-    db $F0
-
-Message_00_1E:: ; heuristic: string; C0
-Data_028_4D49:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You've come at", $F1
-    db "the right time.", $FA, $F7
-    db $EF, $EE, "Grandma sent her", $EF, $EE, "homemade nut pie", $FA, $F7
-    db $EF, $EE, "for us to enjoy at", $EF, $EE, "our new homestead.", $FA, $F7
-    db $EF, $EE, "I'm too busy to go", $EF, $EE, "get it right now,", $FA, $F7
-    db $EF, $EE, "so can the two of", $EF, $EE, "you go instead?", $F7
-    db $F0
-
-Message_00_1F:: ; heuristic: string; C0
-Data_028_4E09:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Sure, Mama!", $F1
-    db "We'll be fine.", $F7
-    db $F0
-
-Message_00_20:: ; heuristic: string; C0
-Data_028_4E2B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Good, that's", $F1
-    db "settled then.", $FA, $F7
-    db $EF, $EE, "The Vault is west", $EF, $EE, "of the Farm.", $FA, $F7
-    db $EF, $EE, "Don't dawdle, and", $EF, $EE, "be careful.", $F7
-    db $F0
-
-Message_00_21:: ; heuristic: string; C0
-Data_028_4E8D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: We'll be OK!", $F1
-    db "I'm going too.", $F7
-    db $F0
-
-Message_00_22:: ; heuristic: string; C0
-Data_028_4EAF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Go to the Vault", $F1
-    db "and pick up the", $FA, $F7
-    db $EF, $EE, "nut pie that", $EF, $EE, "Grandma sent.", $FA, $F7
-    db $EF, $EE, "The Vault is west", $EF, $EE, "of the Farm.", $F7
-    db $F0
-
-Message_00_23:: ; heuristic: string; C0
-Data_028_4F15:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "bookshelf.", $FA, $F7
-    db $EF, $EE, "'Behavior of Wild", $EF, $EE, "Monsters", $A4, $FA, $F7
-    db $EF, $EE, "Wild monsters are", $EF, $EE, "dangerous, but", $FA, $F7
-    db $EF, $EE, "they can be tamed", $EF, $EE, "and trained.", $95, $F7
-    db $F0
-
-Message_00_24:: ; heuristic: string; C0
-Data_028_4F99:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "dresser.", $FA, $F7
-    db $EF, $EE, "Children's clothes", $EF, $EE, "were inside.", $F7
-    db $F0
-
-Message_00_25:: ; heuristic: string; C0
-Data_028_4FD5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "dresser.", $FA, $F7
-    db $EF, $EE, "It smelled of sun-", $EF, $EE, "dried laundry.", $F7
-    db $F0
-
-Message_00_26:: ; heuristic: string; C0
-Data_028_5014:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "oven.", $FA, $F7
-    db $EF, $EE, "It smelled of", $EF, $EE, "fresh bread.", $F7
-    db $F0
-
-Message_00_27:: ; heuristic: string; C0
-Data_028_5049:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, "It was full of", $EF, $EE, "clear water.", $F7
-    db $F0
-
-Message_00_28:: ; heuristic: string; C0
-Data_028_5083:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I've heard that", $F1
-    db "there are monster", $FA, $F7
-    db $EF, $EE, "masters in this", $EF, $EE, "kingdom.", $FA, $F7
-    db $EF, $EE, "Have I told you", $EF, $EE, "about them?", $FF, $F0
-
-Message_00_29:: ; heuristic: string; C0
-Data_028_50E5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Oh? Well, that's", $F1
-    db "fine then.", $FA, $F7
-    db $EF, $EE, "Go on, run your", $EF, $EE, "mother's errand.", $F7
-    db $F0
-
-Message_00_2A:: ; heuristic: string; C0
-Data_028_5128:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Monster masters", $F1
-    db "are those people", $FA, $F7
-    db $EF, $EE, "who tame and train", $EF, $EE, "monsters.", $FA, $F7
-    db $EF, $EE, "They commune with", $EF, $EE, "them and the", $FA, $F7
-    db $EF, $EE, "monsters grow.", $EF, $EE, $F7
-    db $F0
-
-Message_00_2B:: ; heuristic: string; C0
-Data_028_51A5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Hahah! ", $F9, "0", $F1
-    db "won't last a day!", $F7
-    db $F0
-
-Message_00_2C:: ; heuristic: string; C0
-Data_028_51C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I aspired to be", $F1
-    db "one long ago", $A4, $FA, $F7
-    db $EF, $EE, "Ahem! Go help your", $EF, $EE, "mother now.", $F7
-    db $F0
-
-Message_00_2D:: ; heuristic: string; C0
-Data_028_520D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Big brother", $F1
-    db "can't do it then.", $F7
-    db $F0
-
-Message_00_2E:: ; heuristic: string; C0
-Data_028_5232:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Go help your", $F1
-    db "mother now.", $F7
-    db $F0
-
-Message_00_2F:: ; heuristic: string; C0
-Data_028_524F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If some monster", $F1
-    db "masters keep their", $FA, $F7
-    db $EF, $EE, "monsters with us,", $EF, $EE, "the Farm is sure", $FA, $F7
-    db $EF, $EE, "to become busier", $EF, $EE, "and lively.", $F7
-    db $F0
-
-Message_00_30:: ; heuristic: string; C0
-Data_028_52BE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Heh, so these", $F1
-    db "are the newcomers?", $FA, $F7
-    db $EF, $EE, "Hehehe, this is", $EF, $EE, "going to be fun", $A4, $F7
-    db $F0
-
-Message_00_31:: ; heuristic: string; C0
-Data_028_5308:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: C'mon, Warubou!", $F1
-    db $F7
-    db $F0
-
-Message_00_32:: ; heuristic: string; C0
-Data_028_531C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hello, there!", $F1
-    db $FA, $F7
-    db $EF, $EE, $F3, "You must be the", $EF, $EE, "farm kids!", $FA, $F7
-    db $EF, $EE, "The Vault is west,", $EF, $EE, "then a bit north.", $F7
-    db $F0
-
-Message_00_33:: ; heuristic: string; C0
-Data_028_5378:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh", $A4, " It's", $A4, " all", $F1
-    db "spinning around", $A4, $FA, $F7
-    db $EF, $EE, "That rotten little", $EF, $EE, "Prince and that", $FA, $F7
-    db $EF, $EE, "elemental sidekick", $EF, $EE, "of his!", $F7
-    db $F0
-
-Message_00_34:: ; heuristic: string; C0
-Data_028_53E0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The horrid", $F1
-    db "Prince and that", $FA, $F7
-    db $EF, $EE, "elemental sidekick", $EF, $EE, "of his!", $F7
-    db $F0
-
-Message_00_35:: ; heuristic: string; C0
-Data_028_541E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The King is too", $F1
-    db "lenient on Prince", $FA, $F7
-    db $EF, $EE, "Kameha, his only", $EF, $EE, "son.", $FA, $F7
-    db $EF, $EE, "That's why we can't", $EF, $EE, "complain about all", $FA, $F7
-    db $EF, $EE, "the trouble he", $EF, $EE, "causes.", $F7
-    db $F0
-
-Message_00_36:: ; heuristic: string; C0
-Data_028_54A2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: There were many", $F1
-    db "wild monsters in", $FA, $F7
-    db $EF, $EE, "this world in the", $EF, $EE, "past.", $FA, $F7
-    db $EF, $EE, "The elemental", $EF, $EE, "spirits decided to", $FA, $F7
-    db $EF, $EE, "send the monsters", $EF, $EE, "to other worlds", $FA, $F7
-    db $EF, $EE, "until they were", $EF, $EE, "sure that humans", $FA, $F7
-    db $EF, $EE, "could live safely", $EF, $EE, "with monsters.", $F7
-    db $F0
-
-Message_00_37:: ; heuristic: string; C0
-Data_028_5578:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 tried to", $F1
-    db "open the chest.", $FA, $F7
-    db $EF, $EE, "But the chest was", $EF, $EE, "locked tight.", $F7
-    db $F0
-
-Message_00_38:: ; heuristic: string; C0
-Data_028_55B9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, "A large, salted", $EF, $EE, "fish was inside.", $F7
-    db $F0
-
-Message_00_39:: ; heuristic: string; C0
-Data_028_55F8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hey! You brats!", $F1
-    db "Scram!", $FA, $F7
-    db $EF, $EE, "Hands off my", $EF, $EE, "merchandise!", $F7
-    db $F0
-
-Message_00_3A:: ; heuristic: string; C0
-Data_028_5631:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: That weird ape", $F1
-    db "thing is Warubou,", $FA, $F7
-    db $EF, $EE, "GreatLog's", $EF, $EE, "elemental spirit.", $FA, $F7
-    db $EF, $EE, "It's always up to", $EF, $EE, "mischief with", $FA, $F7
-    db $EF, $EE, "Prince Kameha.", $EF, $EE, "What a pair!", $F7
-    db $F0
-
-Message_00_3B:: ; heuristic: string; C0
-Data_028_56B9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: This palm tree", $F1
-    db "is GreatLog.", $FA, $F7
-    db $EF, $EE, "We've bored out", $EF, $EE, "the inside of this", $FA, $F7
-    db $EF, $EE, "enormous tree and", $EF, $EE, "made it our home.", $F7
-    db $F0
-
-Message_00_3C:: ; heuristic: string; C0
-Data_028_5727:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You're the kids", $F1
-    db "from the new farm.", $FA, $F7
-    db $EF, $EE, "I'm a monster", $EF, $EE, "master myself.", $FA, $F7
-    db $EF, $EE, "I'll have to use", $EF, $EE, "your farm soon.", $F7
-    db $F0
-
-Message_00_3D:: ; heuristic: string; C0
-Data_028_5791:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: We live inside", $F1
-    db "here.", $FA, $F7
-    db $EF, $EE, "I'm keeping my eyes", $EF, $EE, "out for Prince", $FA, $F7
-    db $EF, $EE, "Kameha and his", $EF, $EE, "sidekick.", $F7
-    db $F0
-
-Message_00_3E:: ; heuristic: string; C0
-Data_028_57ED:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: GreatLog's major", $F1
-    db "facilities are", $FA, $F7
-    db $EF, $EE, "situated above", $EF, $EE, "here.", $FA, $F7
-    db $EF, $EE, "They're no place", $EF, $EE, "for kids. Shoo!", $F7
-    db $F0
-
-Message_00_3F:: ; heuristic: string; C0
-Data_028_584D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Inside the well", $F1
-    db "is the Log's Navel.", $FA, $F7
-    db $EF, $EE, "It's said to be", $EF, $EE, "the center of", $FA, $F7
-    db $EF, $EE, "GreatLog.", $EF, $EE, "But it's not safe.", $FA, $F7
-    db $EF, $EE, "Don't go in there.", $EF, $EE, $F7
-    db $F0
-
-Message_00_40:: ; heuristic: string; C0
-Data_028_58CC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: On this island,", $F1
-    db "every day goes by", $FA, $F7
-    db $EF, $EE, "without anything", $EF, $EE, "being different.", $FA, $F7
-    db $EF, $EE, "But it's never", $EF, $EE, "boring.", $FA, $F7
-    db $EF, $EE, "I consider it", $EF, $EE, "heavenly luxury!", $F7
-    db $F0
-
-Message_00_41:: ; heuristic: string; C0
-Data_028_5955:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Warubou is the", $F1
-    db "island's spirit.", $FA, $F7
-    db $EF, $EE, "So we can't really", $EF, $EE, "complain about", $FA, $F7
-    db $EF, $EE, "all the mischief", $EF, $EE, "it gets into", $A4, $F7
-    db $F0
-
-Message_00_42:: ; heuristic: string; C0
-Data_028_59C0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 read the", $F1
-    db "sign.", $FA, $F7
-    db $EF, $EE, "'Danger!", $EF, $EE, "Stay clear!", $95, $F7
-    db $F0
-
-Message_00_43:: ; heuristic: string; C0
-Data_028_59ED:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "odd object.", $FA, $F7
-    db $EF, $EE, "It appears to be", $EF, $EE, "plugging a hole", $A4, $F7
-    db $F0
-
-Message_00_44:: ; heuristic: string; C0
-Data_028_5A2F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "peculiar door.", $FA, $F7
-    db $EF, $EE, "It has an oddly", $EF, $EE, "shaped keyhole", $A4, $F7
-    db $F0
-
-Message_00_45:: ; heuristic: string; C0
-Data_028_5A72:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You must be the", $F1
-    db "farm kids.", $FA, $F7
-    db $EF, $EE, "Your grandma sent", $EF, $EE, "a package for you.", $FA, $F7
-    db $EF, $EE, "It smells really", $EF, $EE, "delicious!", $FA, $F7
-    db $EF, $EE, "Here you go! Be", $EF, $EE, "careful with it!", $F7
-    db $F0
-
-Message_00_46:: ; heuristic: string; C0
-Data_028_5AFF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Thanks for", $F1
-    db "coming by.", $FA, $F7
-    db $EF, $EE, "I'll always be", $EF, $EE, "here to serve you!", $F7
-    db $F0
-
-Message_00_47:: ; heuristic: string; C0
-Data_028_5B3E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 read the", $F1
-    db "notice.", $FA, $F7
-    db $EF, $EE, "'We guarantee the", $EF, $EE, "safekeeping of", $FA, $F7
-    db $EF, $EE, "your precious", $EF, $EE, "items and money!", $95, $F7
-    db $F0
-
-Message_00_48:: ; heuristic: string; C0
-Data_028_5B9C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'm Prince Kameha", $EF, $EE, "of GreatLog!", $FA, $F7
-    db $EF, $EE, "You may not pass,", $EF, $EE, "peasants!", $F7
-    db $F0
-
-Message_00_49:: ; heuristic: string; C0
-Data_028_5BDF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Kameha: Wahahah!", $F1
-    db "No going by me!", $F7
-    db $F0
-
-Message_00_4A:: ; heuristic: string; C0
-Data_028_5C02:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'm Warubou,", $F1
-    db "GreatLog's spirit!", $FA, $F7
-    db $EF, $EE, "Warooh, wa-hey!", $EF, $EE, $F7
-    db $F0
-
-Message_00_4B:: ; heuristic: string; C0
-Data_028_5C39:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: It's a", $F1
-    db "dead end, warooh!", $FA, $F7
-    db $EF, $EE, "Look for another", $EF, $EE, "way, wa-hey!", $F7
-    db $F0
-
-Message_00_4C:: ; heuristic: string; C0
-Data_028_5C7E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Have you heard", $F1
-    db "about Magic Keys?", $FF, $F0
-
-Message_00_4D:: ; heuristic: string; C0
-Data_028_5CA3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Wow, you kids", $F1
-    db "sure learn quick!", $F7
-    db $F0
-
-Message_00_4E:: ; heuristic: string; C0
-Data_028_5CC7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You need Magic", $F1
-    db "Keys to open the", $FA, $F7
-    db $EF, $EE, "magical door to", $EF, $EE, "other worlds.", $FA, $F7
-    db $EF, $EE, "That's where I get", $EF, $EE, "my monsters.", $F7
-    db $F0
-
-Message_00_4F:: ; heuristic: string; C0
-Data_028_5D30:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "Give me something!", $FA, $F7
-    db $EF, $EE, "Then, I'll let you", $EF, $EE, "pass, warooh!", $F7
-    db $F0
-
-Message_00_50:: ; heuristic: string; C0
-Data_028_5D7A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wha", $A4, "?", $F1
-    db "I smell something!", $FA, $F7
-    db $EF, $EE, "I smell something", $EF, $EE, "tasty.", $F7
-    db $F0
-
-Message_00_51:: ; heuristic: string; C0
-Data_028_5DBB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: What is", $F1
-    db "this? Food?", $FA, $F7
-    db $EF, $EE, "Perfect! I was", $EF, $EE, "hungry, wa-hey!", $F7
-    db $F0
-
-Message_00_52:: ; heuristic: string; C0
-Data_028_5DFD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh my, the well", $F1
-    db "isn't safe!", $FA, $F7
-    db $EF, $EE, "Don't be like", $EF, $EE, "Warubou!", $F7
-    db $F0
-
-Message_00_53:: ; heuristic: string; C0
-Data_028_5E36:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "I'm starving!", $F7
-    db $F0
-
-Message_00_54:: ; heuristic: string; C0
-Data_028_5E56:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Kameha: Gimme it!", $F1
-    db "You just ate!", $FA, $F7
-    db $EF, $EE, "You grubby little", $EF, $EE, "elemental!", $F7
-    db $F0
-
-Message_00_55:: ; heuristic: string; C0
-Data_028_5E99:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "Some prince!", $FA, $F7
-    db $EF, $EE, "Dirty mouth!", $EF, $EE, "Come on, warooh!", $F7
-    db $F0
-
-Message_00_56:: ; heuristic: string; C0
-Data_028_5EDB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: That's ours!", $F1
-    db "Give it back!", $F7
-    db $F0
-
-Message_00_59:: ; heuristic: string; C0
-Data_028_5EFD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-wa-wa-", $F1
-    db "wa-wa-hey!", $FA, $F7
-    db $EF, $EE, "The Log's Navel's", $EF, $EE, "breached, warooh!", $F7
-    db $F0
-
-Message_00_5A:: ; heuristic: string; C0
-Data_028_5F43:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Kameha: I", $A4, " It", $A4, $F1
-    db "It's not my fault!", $F7
-    db $F0
-
-Message_00_5B:: ; heuristic: string; C0
-Data_028_5F66:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "It's the only way!", $F7
-    db $F0
-
-Message_00_5C:: ; heuristic: string; C0
-Data_028_5F8B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Warooh!", $F1
-    db "Will it hold?", $FA, $F7
-    db $EF, $EE, "You two, come here", $EF, $EE, "now, warooh!", $F7
-    db $F0
-
-Message_00_5D:: ; heuristic: string; C0
-Data_028_5FD0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Calm down", $F1
-    db "and listen!", $FA, $F7
-    db $EF, $EE, "What came out of", $EF, $EE, "the hole now, that", $FA, $F7
-    db $EF, $EE, "was the life force", $EF, $EE, "of GreatLog's tree.", $FA, $F7
-    db $EF, $EE, "GreatLog is an", $EF, $EE, "island kept afloat", $FA, $F7
-    db $EF, $EE, "by the palm tree,", $EF, $EE, "do you see?", $FA, $F7
-    db $EF, $EE, "If the palm tree", $EF, $EE, "dies, the island", $FA, $F7
-    db $EF, $EE, "sinks into the", $EF, $EE, "deep, deep ocean.", $FA, $F7
-    db $EF, $EE, "A plug! That is", $EF, $EE, "what we need!", $FA, $F7
-    db $EF, $EE, "A plug to plug the", $EF, $EE, "Log's Navel!", $FA, $F7
-    db $EF, $EE, "Hurry, go fetch a", $EF, $EE, "monster master!", $F7
-    db $F0
-
-Message_00_5E:: ; heuristic: string; C0
-Data_028_6141:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: That's ours!", $F1
-    db "Give it back!", $F7
-    db $F0
-
-Message_00_5F:: ; heuristic: string; C0
-Data_028_6163:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: A new", $F1
-    db "plug for the", $FA, $F7
-    db $EF, $EE, "Log's Navel needs", $EF, $EE, "a monster master", $FA, $F7
-    db $EF, $EE, "to find, yes it", $EF, $EE, "does, warooh!", $FA, $F7
-    db $EF, $EE, "Quick, fetch a", $EF, $EE, "monster master!", $F7
-    db $F0
-
-Message_00_60:: ; heuristic: string; C0
-Data_028_61EC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hah? The island's", $F1
-    db "going to sink?", $FA, $F7
-    db $EF, $EE, "You shouldn't lie", $EF, $EE, "like that ", $F9, "0.", $F7
-    db $F0
-
-Message_00_61:: ; heuristic: string; C0
-Data_028_6233:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Why won't you", $F1
-    db "believe us?", $FA, $F7
-    db $EF, $EE, "You stubborn old", $EF, $EE, "goat!", $F7
-    db $F0
-
-Message_00_62:: ; heuristic: string; C0
-Data_028_626F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Look, an island", $F1
-    db "just doesn't sink.", $FA, $F7
-    db $EF, $EE, "Listen to yourself", $EF, $EE, "for a moment.", $FA, $F7
-    db $EF, $EE, "Anyway, did you", $EF, $EE, "run Mom's errand?", $F7
-    db $F0
-
-Message_00_63:: ; heuristic: string; C0
-Data_028_62DF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Why aren't", $F1
-    db "you listening?", $FA, $F7
-    db $EF, $EE, "Papa, you're such", $EF, $EE, "a blockhead!", $F7
-    db $F0
-
-Message_00_64:: ; heuristic: string; C0
-Data_028_6322:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The island's", $F1
-    db "sinking, right.", $FA, $F7
-    db $EF, $EE, "Not you too.", $EF, $EE, "Look, I'm busy.", $FA, $F7
-    db $EF, $EE, "Warubou and the", $EF, $EE, "Prince are just", $FA, $F7
-    db $EF, $EE, "pulling your legs,", $EF, $EE, "I'm sure of it.", $F7
-    db $F0
-
-Message_00_65:: ; heuristic: string; C0
-Data_028_63AC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: The island's", $F1
-    db "going to sink?", $FA, $F7
-    db $EF, $EE, "That's a genuine", $EF, $EE, "crisis!", $FA, $F7
-    db $EF, $EE, "I'm right here if", $EF, $EE, "you need any help!", $F7
-    db $F0
-
-Message_00_66:: ; heuristic: string; C0
-Data_028_6414:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This island is", $F1
-    db "going to sink?", $FA, $F7
-    db $EF, $EE, "I", $A4, " The tide seems", $EF, $EE, "to be higher!", $F7
-    db $F0
-
-Message_00_67:: ; heuristic: string; C0
-Data_028_645A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: We're going to", $F1
-    db "sink?", $FA, $F7
-    db $EF, $EE, "I can't swim!", $EF, $EE, "What should I do?", $F7
-    db $F0
-
-Message_00_68:: ; heuristic: string; C0
-Data_028_6495:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Huh? The island", $F1
-    db "is going to sink?", $FA, $F7
-    db $EF, $EE, "Are you in Prince", $EF, $EE, "Kameha's gang?", $F7
-    db $F0
-
-Message_00_69:: ; heuristic: string; C0
-Data_028_64DF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Prince Kameha", $F1
-    db "was saying the", $FA, $F7
-    db $EF, $EE, "same thing a", $EF, $EE, "little while ago.", $F7
-    db $F0
-
-Message_00_6A:: ; heuristic: string; C0
-Data_028_6523:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Did you get", $F1
-    db "the package", $FA, $F7
-    db $EF, $EE, "from grandma?", $EF, $EE, $F7
-    db $F0
-
-Message_00_6B:: ; heuristic: string; C0
-Data_028_6552:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh goodness,", $F1
-    db "you're filthy!", $FA, $F7
-    db $EF, $EE, "What happened to", $EF, $EE, "you two?", $FA, $F7
-    db $EF, $EE, $A4, "Giggle", $A4, " You were", $EF, $EE, "tricked by that", $FA, $F7
-    db $EF, $EE, "silly Warubou.", $EF, $EE, "Don't worry.", $FA, $F7
-    db $EF, $EE, "The island won't", $EF, $EE, "sink that easily.", $F7
-    db $F0
-
-Message_00_6C:: ; heuristic: string; C0
-Data_028_65FA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You can go out,", $F1
-    db "but not too late!", $F7
-    db $F0
-
-Message_00_6D:: ; heuristic: string; C0
-Data_028_6620:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The island's", $EF, $EE, "going to sink?", $FA, $F7
-    db $EF, $EE, "I know, you were", $EF, $EE, "fooled by Warubou.", $FA, $F7
-    db $EF, $EE, "Last time he was", $EF, $EE, "yelling about the", $FA, $F7
-    db $EF, $EE, "great King of", $EF, $EE, "Terror from the", $FA, $F7
-    db $EF, $EE, "sky", $A4, $EF, $EE, $F7
-    db $F0
-
-Message_00_6E:: ; heuristic: string; C0
-Data_028_66BB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The island is", $F1
-    db "sinking?", $FA, $F7
-    db $EF, $EE, "Prince Kameha put", $EF, $EE, "you up to this.", $F7
-    db $F0
-
-Message_00_6F:: ; heuristic: string; C0
-Data_028_66FC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh, you kids!", $F1
-    db $FA, $F7
-    db $EF, $EE, $F3, "You shouldn't be", $EF, $EE, "in the well.", $FA, $F7
-    db $EF, $EE, "What? The Log's", $EF, $EE, "Navel is broken?", $FA, $F7
-    db $EF, $EE, "But why is that", $EF, $EE, "important?", $F7
-    db $F0
-
-Message_00_70:: ; heuristic: string; C0
-Data_028_6774:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The island isn't", $F1
-    db "sinking.", $FA, $F7
-    db $EF, $EE, "If you lie, your", $EF, $EE, "nose will grow!", $F7
-    db $F0
-
-Message_00_71:: ; heuristic: string; C0
-Data_028_67B6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Looking for a", $F1
-    db "monster master?", $FA, $F7
-    db $EF, $EE, "I have no time for", $EF, $EE, "child's play!", $F7
-    db $F0
-
-Message_00_72:: ; heuristic: string; C0
-Data_028_67FC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This island is", $F1
-    db "sinking?", $FA, $F7
-    db $EF, $EE, "If that's true,", $EF, $EE, "it's a disaster", $A4, $FA, $F7
-    db $EF, $EE, "But I haven't", $EF, $EE, "heard anything", $FA, $F7
-    db $EF, $EE, "about it!", $EF, $EE, $F7
-    db $F0
-
-Message_00_73:: ; heuristic: string; C0
-Data_028_686A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hm? Warubou", $F1
-    db "wants you to find", $FA, $F7
-    db $EF, $EE, "a monster master", $EF, $EE, "for him?", $FA, $F7
-    db $EF, $EE, "Well I am one but", $EF, $EE, "I don't want to", $FA, $F7
-    db $EF, $EE, "have anything to", $EF, $EE, "do with Warubou.", $FA, $F7
-    db $EF, $EE, "Sorry, but can you", $EF, $EE, "try someone else?", $F7
-    db $F0
-
-Message_00_74:: ; heuristic: string; C0
-Data_028_691E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You're after a", $F1
-    db "monster master?", $FA, $F7
-    db $EF, $EE, "I saw one lolling", $EF, $EE, "around the Vault.", $F7
-    db $F0
-
-Message_00_75:: ; heuristic: string; C0
-Data_028_6968:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The island's", $F1
-    db "going to sink?", $FA, $F7
-    db $EF, $EE, "Don't spread silly", $EF, $EE, "rumors like that.", $FA, $F7
-    db $EF, $EE, "What if it scares", $EF, $EE, "off customers?", $F7
-    db $F0
-
-Message_00_76:: ; heuristic: string; C0
-Data_028_69D4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The island is", $F1
-    db "sinking?", $FA, $F7
-    db $EF, $EE, "Hahah, no worries!", $EF, $EE, "We can all escape", $FA, $F7
-    db $EF, $EE, "to another world.", $EF, $EE, "Wait a sec", $A4, " How", $FA, $F7
-    db $EF, $EE, "would we get", $EF, $EE, "there?", $F7
-    db $F0
-
-Message_00_77:: ; heuristic: string; C0
-Data_028_6A56:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The island's", $F1
-    db "sinking?", $FA, $F7
-    db $EF, $EE, "That's hard to", $EF, $EE, "believe, but", $A4, $FA, $F7
-    db $EF, $EE, "You don't look like", $EF, $EE, "a liar", $A4, $FA, $F7
-    db $EF, $EE, "I was going to", $EF, $EE, "open a shop here,", $FA, $F7
-    db $EF, $EE, "but I guess I'll", $EF, $EE, "hit the road.", $F7
-    db $F0
-
-Message_00_78:: ; heuristic: string; C0
-Data_028_6AF5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: It's pointless", $F1
-    db "if you're dead.", $FA, $F7
-    db $EF, $EE, "I'm going to leave", $EF, $EE, "again.", $F7
-    db $F0
-
-Message_00_79:: ; heuristic: string; C0
-Data_028_6B33:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You say the", $F1
-    db "island will sink?", $FA, $F7
-    db $EF, $EE, "Sorry, but I can't", $EF, $EE, "believe that.", $F7
-    db $F0
-
-Message_00_7A:: ; heuristic: string; C0
-Data_028_6B79:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "Good, you're back.", $FA, $F7
-    db $EF, $EE, "You told everyone", $EF, $EE, "GreatLog'll sink?", $FA, $F7
-    db $EF, $EE, "So, where is the", $EF, $EE, "monster master?", $FA, $F7
-    db $EF, $EE, $A4, "What? Nobody", $EF, $EE, "believed you?", $FA, $F7
-    db $EF, $EE, "Warooh, they are", $EF, $EE, "so complacent!", $FA, $F7
-    db $EF, $EE, "Wa-hey, it can't", $EF, $EE, "be helped now.", $FA, $F7
-    db $EF, $EE, "You go instead.", $EF, $EE, "No other way!", $F7
-    db $F0
-
-Message_00_7B:: ; heuristic: string; C0
-Data_028_6C73:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: No time", $F1
-    db "to waste, warooh!", $FA, $F7
-    db $EF, $EE, "If you don't go,", $EF, $EE, "GreatLog goes to", $FA, $F7
-    db $EF, $EE, "the bottom of the", $EF, $EE, "sea soon enough!", $FA, $F7
-    db $EF, $EE, "You will go find a", $EF, $EE, "new plug for the", $FA, $F7
-    db $EF, $EE, "Log's Navel,", $EF, $EE, "wa-hey?", $FF, $F0
-
-Message_00_7C:: ; heuristic: string; C0
-Data_028_6D24:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: No?", $F1
-    db "Then find someone!", $F7
-    db $F0
-
-Message_00_7D:: ; heuristic: string; C0
-Data_028_6D46:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey?", $F1
-    db "No one believed!", $FA, $F7
-    db $EF, $EE, "You have to go, no", $EF, $EE, "choice about it!", $F7
-    db $F0
-
-Message_00_7E:: ; heuristic: string; C0
-Data_028_6D92:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "No more dawdling!", $FA, $F7
-    db $EF, $EE, "GreatLog will sink", $EF, $EE, "into the sea!", $FA, $F7
-    db $EF, $EE, "You have to go, no", $EF, $EE, "choice about it!", $FF, $F0
-
-Message_00_7F:: ; heuristic: string; C0
-Data_028_6E04:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "Good, good, good!", $FA, $F7
-    db $EF, $EE, "In you, I saw the", $EF, $EE, "potential, warooh!", $FA, $F7
-    db $EF, $EE, "A good idea I have", $EF, $EE, "for plugging up", $FA, $F7
-    db $EF, $EE, "the Log's Navel,", $EF, $EE, "yes I do, warooh.", $FA, $F7
-    db $EF, $EE, "I'm an elemental", $EF, $EE, "so I know such!", $FA, $F7
-    db $EF, $EE, "Here, take this,", $EF, $EE, "you, warooh.", $F7
-    db $F0
-
-Message_00_80:: ; heuristic: string; C0
-Data_028_6EE5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: This here", $F1
-    db "is a Magic Key.", $FA, $F7
-    db $EF, $EE, "It opens the door", $EF, $EE, "to other worlds.", $FA, $F7
-    db $EF, $EE, "Specially made it", $EF, $EE, "is, by elemental", $FA, $F7
-    db $EF, $EE, "power, making it", $EF, $EE, "magic, warooh.", $FA, $F7
-    db $EF, $EE, "Use to open the", $EF, $EE, "magic door ahead.", $FA, $F7
-    db $EF, $EE, "It takes you to", $EF, $EE, "another world.", $FA, $F7
-    db $EF, $EE, "Another world, it", $EF, $EE, "might be, warooh,", $FA, $F7
-    db $EF, $EE, "but it is not much", $EF, $EE, "different.", $FA, $F7
-    db $EF, $EE, "Only difference is", $EF, $EE, "monsters.", $FA, $F7
-    db $EF, $EE, "Monsters live in", $EF, $EE, "other worlds.", $FA, $F7
-    db $EF, $EE, "But a monster", $EF, $EE, "master needs to", $FA, $F7
-    db $EF, $EE, "fear not a thing,", $EF, $EE, "warooh.", $FA, $F7
-    db $EF, $EE, "I see you have", $EF, $EE, "great potential.", $FA, $F7
-    db $EF, $EE, "You go to other", $EF, $EE, "worlds, and bring", $FA, $F7
-    db $EF, $EE, "back a plug for", $EF, $EE, "the Log's Navel.", $FA, $F7
-    db $EF, $EE, "That something, I", $EF, $EE, "don't know what.", $FA, $F7
-    db $EF, $EE, "But you will know", $EF, $EE, "when you find it!", $FA, $F7
-    db $EF, $EE, "Now, warooh, take", $EF, $EE, "this!", $F7
-    db $F0
-
-Message_00_81:: ; heuristic: string; C0
-Data_028_716B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 received the", $F1
-    db "Oasis Key.", $E5, $58, $F7
-    db $E9, $FF, $F0
-
-Message_00_82:: ; heuristic: string; C0
-Data_028_718B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "I trust you! Go!", $F7
-    db $F0
-
-Message_00_83:: ; heuristic: string; C0
-Data_028_71AF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Wa-hey!", $F1
-    db "Forgot something!", $F7
-    db $F0
-
-Message_00_84:: ; heuristic: string; C0
-Data_028_71D4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: This you", $F1
-    db "use to come back", $FA, $F7
-    db $EF, $EE, "to GreatLog from", $EF, $EE, "other worlds.", $F7
-    db $F0
-
-Message_00_85:: ; heuristic: string; C0
-Data_028_721C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 received the", $F1
-    db "GreatLog Key.", $E5, $58, $F7
-    db $E9, $FF, $F0
-
-Message_00_86:: ; heuristic: string; C0
-Data_028_723F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Warubou: Dangerous", $F1
-    db "are other worlds!", $FA, $F7
-    db $EF, $EE, "So you take", $EF, $EE, "monsters, warooh.", $FA, $F7
-    db $EF, $EE, "Wa-hey, I'm", $EF, $EE, "GreatLog's spirit.", $FA, $F7
-    db $EF, $EE, "One with the", $EF, $EE, "island I am.", $FA, $F7
-    db $EF, $EE, "If you can't stop", $EF, $EE, "the island from", $FA, $F7
-    db $EF, $EE, "sinking, so ends", $EF, $EE, "my life, warooh.", $FA, $F7
-    db $EF, $EE, "Not just me, but", $EF, $EE, "everyone here.", $FA, $F7
-    db $EF, $EE, "So, you must!", $EF, $EE, "Must find a plug!", $F7
-    db $F0
-
-Message_00_87:: ; heuristic: string; C0
-Data_028_735A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: This is bad.", $F1
-    db "What'll we do?", $FA, $F7
-    db $EF, $EE, "Let's go home and", $EF, $EE, "talk about it.", $F7
-    db $F0
-
-Message_00_88:: ; heuristic: string; C0
-Data_028_73A1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Oh, wow.", $F1
-    db "This is terrible.", $FA, $F7
-    db $EF, $EE, "We should talk", $EF, $EE, "about it at home.", $F7
-    db $F0
-
-Message_00_89:: ; heuristic: string; C0
-Data_028_73E9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: If we don't", $F1
-    db "find a plug for", $FA, $F7
-    db $EF, $EE, "the Log's Navel,", $EF, $EE, "the island sinks.", $FA, $F7
-    db $EF, $EE, "Our house and the", $EF, $EE, "farm too.", $FA, $F7
-    db $EF, $EE, "We have to go look", $EF, $EE, "ourselves, right?", $F7
-    db $F0
-
-Message_00_8A:: ; heuristic: string; C0
-Data_028_747B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: But if we", $F1
-    db "both go to other", $FA, $F7
-    db $EF, $EE, "worlds, Mama will", $EF, $EE, "be worried.", $F7
-    db $F0
-
-Message_00_8B:: ; heuristic: string; C0
-Data_028_74C0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: That's true", $A4, $F1
-    db "If we both went to", $FA, $F7
-    db $EF, $EE, "other worlds, Mama", $EF, $EE, "would be worried.", $F7
-    db $F0
-
-Message_00_8C:: ; heuristic: string; C0
-Data_028_7510:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: Hey, why", $F1
-    db "the long faces?", $FA, $F7
-    db $EF, $EE, "I couldn't help", $EF, $EE, "overhearing you.", $FA, $F7
-    db $EF, $EE, "I'll go with you", $EF, $EE, "to other worlds.", $FA, $F7
-    db $EF, $EE, "That way, one of", $EF, $EE, "you can stay here.", $FA, $F7
-    db $EF, $EE, "That solves your", $EF, $EE, "little problem!", $F7
-    db $F0
-
-Message_00_8D:: ; heuristic: string; C0
-Data_028_75C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: That's true.", $F1
-    db "What to do", $A4, $FA, $F7
-    db $EF, $EE, "Huh? ", $F9, "0?", $EF, $EE, "Do you want to go?", $FF, $F0
-
-Message_00_8E:: ; heuristic: string; C0
-Data_028_7608:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Don't waste", $F1
-    db "your time lying.", $FA, $F7
-    db $EF, $EE, "I can see it in", $EF, $EE, "your eyes.", $FA, $F7
-    db $EF, $EE, "You really want to", $EF, $EE, "go, don't you?", $FF, $F0
-
-Message_00_8F:: ; heuristic: string; C0
-Data_028_7670:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Fine. But", $F1
-    db $F9, "0, by", $FA, $F7
-    db $EF, $EE, "yourself", $A4, $F7
-    db $F0
-
-Message_00_90:: ; heuristic: string; C0
-Data_028_7696:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: Don't worry!", $F1
-    db "I'm riding along!", $F7
-    db $F0
-
-Message_00_91:: ; heuristic: string; C0
-Data_028_76BC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: And ", $F9, "0", $F1
-    db "has potential,", $FA, $F7
-    db $EF, $EE, "I think, to be a", $EF, $EE, "monster master.", $FA, $F7
-    db $EF, $EE, "We'll need the", $EF, $EE, "help of monsters", $FA, $F7
-    db $EF, $EE, "when we go to", $EF, $EE, "other worlds.", $FA, $F7
-    db $EF, $EE, "So that potential", $EF, $EE, "will help a lot!", $F7
-    db $F0
-
-Message_00_92:: ; heuristic: string; C0
-Data_028_776A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Fine, ", $F9, "0.", $F1
-    db "It's up to you.", $FA, $F7
-    db $EF, $EE, "You do your best", $EF, $EE, "and save us!", $F7
-    db $F0
-
-Message_00_93:: ; heuristic: string; C0
-Data_028_77AD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Slash: That's", $F1
-    db "settled, then!", $FA, $F7
-    db $EF, $EE, "We'll leave", $EF, $EE, "tomorrow morning.", $FA, $F7
-    db $EF, $EE, "Get plenty of rest", $EF, $EE, "tonight!", $F7
-    db $F0
-
-Message_00_94:: ; heuristic: string; C0
-Data_028_780C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: If we don't", $F1
-    db "go find something", $FA, $F7
-    db $EF, $EE, "to put in the Log's", $EF, $EE, "Navel, this house,", $FA, $F7
-    db $EF, $EE, "the farm and", $EF, $EE, "everything else", $FA, $F7
-    db $EF, $EE, "will sink with the", $EF, $EE, "island.", $FA, $F7
-    db $EF, $EE, "So we have to go", $EF, $EE, "to other worlds,", $FA, $F7
-    db $EF, $EE, "right?", $FF, $F0
-
-Message_00_95:: ; heuristic: string; C0
-Data_028_78CB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: But if we", $F1
-    db "both went, Mama", $FA, $F7
-    db $EF, $EE, "would be really", $EF, $EE, "worried about us.", $F7
-    db $F0
-
-Message_00_96:: ; heuristic: string; C0
-Data_028_7913:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Oh", $A4, " If we", $F1
-    db "both went, Mama", $FA, $F7
-    db $EF, $EE, "would be really", $EF, $EE, "worried about us.", $F7
-    db $F0
-
-Message_00_97:: ; heuristic: string; C0
-Data_028_795B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: ", $F9, "0, you", $F1
-    db "want to go.", $FA, $F7
-    db $EF, $EE, $F9, "0, do you want", $EF, $EE, "me to stay home?", $FF, $F0
-
-Message_00_98:: ; heuristic: string; C0
-Data_028_799C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: You don't", $F1
-    db "have to lie.", $FA, $F7
-    db $EF, $EE, "We'll be all right", $EF, $EE, "here.", $FA, $F7
-    db $EF, $EE, "You do really want", $EF, $EE, "to go, right?", $FF, $F0
-
-Message_00_99:: ; heuristic: string; C0
-Data_028_79FB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: But ", $F9, "0,", $F1
-    db "what about your", $FA, $F7
-    db $EF, $EE, "terrible sense of", $EF, $EE, "direction?", $F7
-    db $F0
-
-Message_00_9A:: ; heuristic: string; C0
-Data_028_7A3C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Then it's", $F1
-    db "your job, ", $F9, "0!", $FA, $F7
-    db $EF, $EE, "Make me proud, big", $EF, $EE, "brother!", $F7
-    db $F0
-
-Message_00_9B:: ; heuristic: string; C0
-Data_028_7A7B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 opened the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, $F9, "0 obtained the", $EF, $EE, $F9, "Y.", $F7
-    db $F0
-
-Message_00_A1:: ; heuristic: string; C0
-Data_028_7AB2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, "But it was empty", $A4, $EF, $EE, $F7
-    db $F0
-
-Message_00_A2:: ; heuristic: string; C0
-Data_028_7AE9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 opened the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, $F9, "0 found the", $EF, $EE, $F9, "Y.", $FA, $F7
-    db $EF, $EE, "But there is no", $EF, $EE, "room for it.", $FA, $F7
-    db $EF, $EE, $F9, "0 put the", $EF, $EE, $F9, "Y back.", $F7
-    db $F0
-
-Message_00_A3:: ; heuristic: string; C0
-Data_028_7B56:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, $F9, "0 obtained the", $EF, $EE, $F9, "Y.", $F7
-    db $F0
-
-Message_00_A4:: ; heuristic: string; C0
-Data_028_7B88:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, "But it was empty.", $EF, $EE, $F7
-    db $F0
-
-Message_00_A5:: ; heuristic: string; C0
-Data_028_7BB9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, $F9, "0 found the", $EF, $EE, $F9, "Y.", $FA, $F7
-    db $EF, $EE, "But there is no", $EF, $EE, "room for it.", $FA, $F7
-    db $EF, $EE, $F9, "0 put the", $EF, $EE, $F9, "Y back.", $F7
-    db $F0
-
-Message_00_A6:: ; heuristic: string; C0
-Data_028_7C21:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the barrel.", $FA, $F7
-    db $EF, $EE, $F9, "0 obtained the", $EF, $EE, $F9, "Y.", $F7
-    db $F0
-
-Message_00_A7:: ; heuristic: string; C0
-Data_028_7C55:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the barrel.", $FA, $F7
-    db $EF, $EE, "But it was empty.", $EF, $EE, $F7
-    db $F0
-
-Message_00_A8:: ; heuristic: string; C0
-Data_028_7C88:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the barrel.", $FA, $F7
-    db $EF, $EE, $F9, "0 found the", $EF, $EE, $F9, "Y.", $FA, $F7
-    db $EF, $EE, "But there is no", $EF, $EE, "room for it.", $FA, $F7
-    db $EF, $EE, $F9, "0 put the", $EF, $EE, $F9, "Y back.", $F7
-    db $F0
-
-Message_00_A9:: ; heuristic: string; C0
-Data_028_7CF2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 opened the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, $F9, "0 obtained a", $EF, $EE, "Magic Key.", $E5, $58, $F7
-    db $E9, $FF, $F0
-
-Message_00_AA:: ; heuristic: string; C0
-Data_028_7D32:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, "But it was empty", $A4, $EF, $EE, $F7
-    db $F0
-
-Message_00_AB:: ; heuristic: string; C0
-Data_028_7D69:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 opened the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, $F9, "0 found a", $EF, $EE, "Magic Key.", $FA, $F7
-    db $EF, $EE, "But the key ring", $EF, $EE, "is full.", $FA, $F7
-    db $EF, $EE, $F9, "0 put the", $EF, $EE, "Magic Key back.", $F7
-    db $F0
-
-Message_00_AC:: ; heuristic: string; C0
-Data_028_7DDF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Let's see how", $F1
-    db "good you are!", $F7
-    db $F0
-
-Message_00_D1:: ; heuristic: string; C0
-Data_028_7DFE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You think you", $F1
-    db "could win?", $FA, $F7
-    db $EF, $EE, "Dream on, you", $EF, $EE, "insolent fools!", $F7
-    db $F0
-
-Message_00_D2:: ; heuristic: string; C0
-Data_028_7E3D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Well, I", $44, " never", $F1
-    db "expected you here.", $FA, $F7
-    db $EF, $EE, "But this shall be", $EF, $EE, "your tomb!", $F7
-    db $F0
-
-Message_00_D3:: ; heuristic: string; C0
-Data_028_7E84:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Prepare to be", $F1
-    db "overwhelmed!", $F7
-    db $F0
-
-Message_00_D4:: ; heuristic: string; C0
-Data_028_7EA3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Those monsters", $F1
-    db "are my foes?", $FA, $F7
-    db $EF, $EE, "Fwahahaha!", $EF, $EE, "How ludicrous!", $F7
-    db $F0
-
-Message_00_D5:: ; heuristic: string; C0
-Data_028_7EE1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If you win, you", $F1
-    db "can be the boss!", $F7
-    db $F0
-
-Message_00_D6:: ; heuristic: string; C0
-Data_028_7F06:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'll show you how", $F1
-    db "small you are in", $FA, $F7
-    db $EF, $EE, "the grand scheme", $EF, $EE, "of things!", $F7
-    db $F0
-
-Message_00_D7:: ; heuristic: string; C0
-Data_028_7F4C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hm? My rival is", $F1
-    db "here? Come on!", $F7
-    db $F0
-
-Message_00_D8:: ; heuristic: string; C0
-Data_028_7F6F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Finally, someone", $F1
-    db "to ignite my soul!", $F7
-    db $F0
-
-Message_00_D9:: ; heuristic: string; C0
-Data_028_7F97:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I feel your", $F1
-    db "strength", $A4, $FA, $F7
-    db $EF, $EE, "This will be a", $EF, $EE, "long battle.", $F7
-    db $F0
-    ds $2F, $00
+Message_00_00::
+    db "In the middle of", $f1
+    db "the sea in the", $fa, $f7
+    db $ef, $ee, "south floats the", $ef, $ee, "island GreatLog.", $fa, $f7
+    db $ef, $ee, "To this eternally", $ef, $ee, "warm and natural", $fa, $f7
+    db $ef, $ee, "setting, a family", $ef, $ee, "of monster farmers", $fa, $f7
+    db $ef, $ee, "was headed to", $ef, $ee, "start a new life", $a4, $f7
+    db $f0
+
+Message_00_01::
+    db $ea, "Cobi: ", $f9, "0!", $f1
+    db "Papa's calling.", $fa, $f7
+    db $ef, $ee, "He's at the stern.", $ef, $ee, "Hustle, hustle!", $f7
+    db $f0
+
+Message_00_02::
+    db $eb, "Tara: There you", $f1
+    db "are, big brother!", $fa, $f7
+    db $ef, $ee, "Papa's calling at", $ef, $ee, "the stern.", $fa, $f7
+    db $ef, $ee, "You", $44, " better go", $ef, $ee, "right away!", $f7
+    db $f0
+
+Message_00_03::
+    db $ea, "Cobi: What's wrong,", $f1
+    db $f9, "0?", $fa, $f7
+    db $ef, $ee, "Papa's calling for", $ef, $ee, "you!", $f7
+    db $f0
+
+Message_00_04::
+    db $eb, "Tara: Hurry! Papa", $f1
+    db "will be angry!", $f7
+    db $f0
+
+Message_00_05::
+    db $ea, "*: You folks run a", $f1
+    db "monster farm?", $fa, $f7
+    db $ef, $ee, "We've never had", $ef, $ee, "monsters on our", $fa, $f7
+    db $ef, $ee, "ship before this.", $ef, $ee, "It's amazing!", $f7
+    db $f0
+
+Message_00_06::
+    db $ea, "*: There's a spirit", $f1
+    db "in GreatLog that's", $fa, $f7
+    db $ef, $ee, "famous for getting", $ef, $ee, "into mischief.", $fa, $f7
+    db $ef, $ee, "It's named", $a4, $ef, $ee, "Waru something.", $f7
+    db $f0
+
+Message_00_07::
+    db $ea, "*: Sailing is sure", $ef, $ee, "exhilarating. ", $fa, $f7
+    db $ef, $ee, "Right?", $ef, $ee, $ff, $f0
+
+Message_00_08::
+    db $ea, "*: Good. That's", $f1
+    db "good to hear!", $fa, $f7
+    db $ef, $ee, "You have got", $ef, $ee, "potential!", $f7
+    db $f0
+
+Message_00_09::
+    db $ea, "*: Is that so?", $f1
+    db "Too bad!", $fa, $f7
+    db $ef, $ee, "You'll get used to", $ef, $ee, "it someday.", $f7
+    db $f0
+
+Message_00_0A::
+    db $eb, "*: We'll soon be", $f1
+    db "reaching GreatLog.", $fa, $f7
+    db $ef, $ee, "I wonder, what", $ef, $ee, "will it be like?", $fa, $f7
+    db $ef, $ee, "Isn't it exciting", $ef, $ee, "my dear child?", $f7
+    db $f0
+
+Message_00_0B::
+    db $ea, "*: GreatLog's King", $f1
+    db "asked us to settle", $fa, $f7
+    db $ef, $ee, "in the kingdom and", $ef, $ee, "run our farm.", $fa, $f7
+    db $ef, $ee, "He recognizes our", $ef, $ee, "worth, wahahah!", $fa, $f7
+    db $ef, $ee, "This will be our", $ef, $ee, "new life.", $fa, $f7
+    db $ef, $ee, "You're a growing", $ef, $ee, "boy, so I'll need", $fa, $f7
+    db $ef, $ee, "you to be reliable", $ef, $ee, "and responsible.", $fa, $f7
+    db $ef, $ee, "Do we have an", $ef, $ee, "understanding?", $fa, $f7
+    db $ef, $ee, "Good. Stay with", $ef, $ee, "Tara, will you?", $f7
+    db $f0
+
+Message_00_0C::
+    db $ea, "*: GreatLog's King", $f1
+    db "asked us to settle", $fa, $f7
+    db $ef, $ee, "in the kingdom and", $ef, $ee, "run our farm.", $fa, $f7
+    db $ef, $ee, "He recognizes our", $ef, $ee, "worth, wahahah!", $fa, $f7
+    db $ef, $ee, "This will be our", $ef, $ee, "new life.", $fa, $f7
+    db $ef, $ee, "You're growing up,", $ef, $ee, "so you can't be a", $fa, $f7
+    db $ef, $ee, "little baby", $ef, $ee, "anymore.", $fa, $f7
+    db $ef, $ee, "Do we have an", $ef, $ee, "understanding?", $fa, $f7
+    db $ef, $ee, "Good. Play with", $ef, $ee, "Cobi, will you?", $f7
+    db $f0
+
+Message_00_0D::
+    db $ea, "*: When our farm", $f1
+    db "gets established", $fa, $f7
+    db $ef, $ee, "in the new land,", $ef, $ee, "I'll make life", $fa, $f7
+    db $ef, $ee, "easier for mother", $ef, $ee, "and you two.", $fa, $f7
+    db $ef, $ee, "We should be in", $ef, $ee, "GreatLog soon.", $f7
+    db $f0
+
+Message_00_0E::
+    db $eb, "*: Worried about", $f1
+    db "your monsters?", $fa, $f7
+    db $ef, $ee, "Don't be! They're", $ef, $ee, "being quiet.", $f7
+    db $f0
+
+Message_00_0F::
+    db $f9, "0 peered into", $f1
+    db "the barrel.", $fa, $f7
+    db $ef, $ee, "It was filled with", $ef, $ee, "clean water.", $f7
+    db $f0
+
+Message_00_10::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, "Freshly caught", $ef, $ee, "fish were inside.", $f7
+    db $f0
+
+Message_00_11::
+    db $ea, "Cobi: ", $f9, "0!", $f1
+    db "They said GreatLog", $fa, $f7
+    db $ef, $ee, "will be in sight", $ef, $ee, "soon.", $f7
+    db $f0
+
+Message_00_12::
+    db $ea, "*: Land ho!", $f1
+    db "There's GreatLog!", $f7
+    db $f0
+
+Message_00_13::
+    db $eb, "Tara: Big brother!", $f1
+    db $fa, $f7
+    db $ef, $ee, $f3, "GreatLog will be", $ef, $ee, "in sight soon.", $f7
+    db $f0
+
+Message_00_14::
+    db "This is a tale of", $f1
+    db "children who came", $fa, $f7
+    db $ef, $ee, "to the Kingdom of", $ef, $ee, "GreatLog", $a4, $f7
+    db $f0
+
+Message_00_15::
+    db $ea, "*: Listen you two!", $f1
+    db $fa, $f7
+    db $ef, $ee, $f3, "Quit your horsing", $ef, $ee, "around and go", $fa, $f7
+    db $ef, $ee, "help your mother.", $ef, $ee, "Do you hear me?", $f7
+    db $f0
+
+Message_00_16::
+    db $ea, "*: It seems to me", $f1
+    db "that the people", $fa, $f7
+    db $ef, $ee, "here aren't very", $ef, $ee, "used to seeing", $fa, $f7
+    db $ef, $ee, "monsters. We'll", $ef, $ee, "have to make sure", $fa, $f7
+    db $ef, $ee, "that they don't go", $ef, $ee, "wander off on", $fa, $f7
+    db $ef, $ee, "their own. Anyway,", $ef, $ee, "go help your", $fa, $f7
+    db $ef, $ee, "mother.", $ef, $ee, $f7
+    db $f0
+
+Message_00_17::
+    db $ea, "*: Yo, did you", $f1
+    db "enjoy the voyage?", $fa, $f7
+    db $ef, $ee, "The name's Slash,", $ef, $ee, "glad to know you!", $fa, $f7
+    db $ef, $ee, "Slash: I guard the", $ef, $ee, "farm here.", $fa, $f7
+    db $ef, $ee, "You can consider", $ef, $ee, "me the boss!", $fa, $f7
+    db $ef, $ee, "If you need any", $ef, $ee, "advice, I'm here!", $f7
+    db $f0
+
+Message_00_18::
+    db $ea, "Slash: If you're", $f1
+    db "in need of advice,", $fa, $f7
+    db $ef, $ee, "think of me!", $ef, $ee, "I'm the one!", $f7
+    db $f0
+
+Message_00_19::
+    db $ea, "*: There aren't many", $f1
+    db "friends here.", $fa, $f7
+    db $ef, $ee, "It's lonely for an", $ef, $ee, "ant like me", $a4, $f7
+    db $f0
+
+Message_00_1A::
+    db $ea, "*: I accidentally", $f1
+    db "went outside.", $fa, $f7
+    db $ef, $ee, "People gave me the", $ef, $ee, "eye. Whoopsy.", $f7
+    db $f0
+
+Message_00_1B::
+    db $ea, "*: This hay is", $f1
+    db "pretty good.", $fa, $f7
+    db $ef, $ee, "Maybe I can use", $ef, $ee, "this", $a4, $f7
+    db $f0
+
+Message_00_1C::
+    db $f9, "0 checked the", $f1
+    db "pump.", $fa, $f7
+    db $ef, $ee, "It's rusted and", $ef, $ee, "old, but it looks", $fa, $f7
+    db $ef, $ee, "to be in working", $ef, $ee, "condition.", $f7
+    db $f0
+
+Message_00_1D::
+    db $f9, "0 peered into", $f1
+    db "the barrel.", $fa, $f7
+    db $ef, $ee, "It is full of", $ef, $ee, "dried hay.", $f7
+    db $f0
+
+Message_00_1E::
+    db $eb, "*: You've come at", $f1
+    db "the right time.", $fa, $f7
+    db $ef, $ee, "Grandma sent her", $ef, $ee, "homemade nut pie", $fa, $f7
+    db $ef, $ee, "for us to enjoy at", $ef, $ee, "our new homestead.", $fa, $f7
+    db $ef, $ee, "I'm too busy to go", $ef, $ee, "get it right now,", $fa, $f7
+    db $ef, $ee, "so can the two of", $ef, $ee, "you go instead?", $f7
+    db $f0
+
+Message_00_1F::
+    db $ea, "Cobi: Sure, Mama!", $f1
+    db "We'll be fine.", $f7
+    db $f0
+
+Message_00_20::
+    db $eb, "*: Good, that's", $f1
+    db "settled then.", $fa, $f7
+    db $ef, $ee, "The Vault is west", $ef, $ee, "of the Farm.", $fa, $f7
+    db $ef, $ee, "Don't dawdle, and", $ef, $ee, "be careful.", $f7
+    db $f0
+
+Message_00_21::
+    db $eb, "Tara: We'll be OK!", $f1
+    db "I'm going too.", $f7
+    db $f0
+
+Message_00_22::
+    db $eb, "*: Go to the Vault", $f1
+    db "and pick up the", $fa, $f7
+    db $ef, $ee, "nut pie that", $ef, $ee, "Grandma sent.", $fa, $f7
+    db $ef, $ee, "The Vault is west", $ef, $ee, "of the Farm.", $f7
+    db $f0
+
+Message_00_23::
+    db $f9, "0 checked the", $f1
+    db "bookshelf.", $fa, $f7
+    db $ef, $ee, "'Behavior of Wild", $ef, $ee, "Monsters", $a4, $fa, $f7
+    db $ef, $ee, "Wild monsters are", $ef, $ee, "dangerous, but", $fa, $f7
+    db $ef, $ee, "they can be tamed", $ef, $ee, "and trained.", $95, $f7
+    db $f0
+
+Message_00_24::
+    db $f9, "0 checked the", $f1
+    db "dresser.", $fa, $f7
+    db $ef, $ee, "Children's clothes", $ef, $ee, "were inside.", $f7
+    db $f0
+
+Message_00_25::
+    db $f9, "0 checked the", $f1
+    db "dresser.", $fa, $f7
+    db $ef, $ee, "It smelled of sun-", $ef, $ee, "dried laundry.", $f7
+    db $f0
+
+Message_00_26::
+    db $f9, "0 checked the", $f1
+    db "oven.", $fa, $f7
+    db $ef, $ee, "It smelled of", $ef, $ee, "fresh bread.", $f7
+    db $f0
+
+Message_00_27::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, "It was full of", $ef, $ee, "clear water.", $f7
+    db $f0
+
+Message_00_28::
+    db $ea, "*: I've heard that", $f1
+    db "there are monster", $fa, $f7
+    db $ef, $ee, "masters in this", $ef, $ee, "kingdom.", $fa, $f7
+    db $ef, $ee, "Have I told you", $ef, $ee, "about them?", $ff, $f0
+
+Message_00_29::
+    db $ea, "*: Oh? Well, that's", $f1
+    db "fine then.", $fa, $f7
+    db $ef, $ee, "Go on, run your", $ef, $ee, "mother's errand.", $f7
+    db $f0
+
+Message_00_2A::
+    db $ea, "*: Monster masters", $f1
+    db "are those people", $fa, $f7
+    db $ef, $ee, "who tame and train", $ef, $ee, "monsters.", $fa, $f7
+    db $ef, $ee, "They commune with", $ef, $ee, "them and the", $fa, $f7
+    db $ef, $ee, "monsters grow.", $ef, $ee, $f7
+    db $f0
+
+Message_00_2B::
+    db $ea, "Cobi: Hahah! ", $f9, "0", $f1
+    db "won't last a day!", $f7
+    db $f0
+
+Message_00_2C::
+    db $ea, "*: I aspired to be", $f1
+    db "one long ago", $a4, $fa, $f7
+    db $ef, $ee, "Ahem! Go help your", $ef, $ee, "mother now.", $f7
+    db $f0
+
+Message_00_2D::
+    db $eb, "Tara: Big brother", $f1
+    db "can't do it then.", $f7
+    db $f0
+
+Message_00_2E::
+    db $ea, "*: Go help your", $f1
+    db "mother now.", $f7
+    db $f0
+
+Message_00_2F::
+    db $ea, "*: If some monster", $f1
+    db "masters keep their", $fa, $f7
+    db $ef, $ee, "monsters with us,", $ef, $ee, "the Farm is sure", $fa, $f7
+    db $ef, $ee, "to become busier", $ef, $ee, "and lively.", $f7
+    db $f0
+
+Message_00_30::
+    db $ea, "*: Heh, so these", $f1
+    db "are the newcomers?", $fa, $f7
+    db $ef, $ee, "Hehehe, this is", $ef, $ee, "going to be fun", $a4, $f7
+    db $f0
+
+Message_00_31::
+    db $ea, "*: C'mon, Warubou!", $f1
+    db $f7
+    db $f0
+
+Message_00_32::
+    db $ea, "*: Hello, there!", $f1
+    db $fa, $f7
+    db $ef, $ee, $f3, "You must be the", $ef, $ee, "farm kids!", $fa, $f7
+    db $ef, $ee, "The Vault is west,", $ef, $ee, "then a bit north.", $f7
+    db $f0
+
+Message_00_33::
+    db $eb, "*: Oh", $a4, " It's", $a4, " all", $f1
+    db "spinning around", $a4, $fa, $f7
+    db $ef, $ee, "That rotten little", $ef, $ee, "Prince and that", $fa, $f7
+    db $ef, $ee, "elemental sidekick", $ef, $ee, "of his!", $f7
+    db $f0
+
+Message_00_34::
+    db $eb, "*: The horrid", $f1
+    db "Prince and that", $fa, $f7
+    db $ef, $ee, "elemental sidekick", $ef, $ee, "of his!", $f7
+    db $f0
+
+Message_00_35::
+    db $ea, "*: The King is too", $f1
+    db "lenient on Prince", $fa, $f7
+    db $ef, $ee, "Kameha, his only", $ef, $ee, "son.", $fa, $f7
+    db $ef, $ee, "That's why we can't", $ef, $ee, "complain about all", $fa, $f7
+    db $ef, $ee, "the trouble he", $ef, $ee, "causes.", $f7
+    db $f0
+
+Message_00_36::
+    db $ea, "*: There were many", $f1
+    db "wild monsters in", $fa, $f7
+    db $ef, $ee, "this world in the", $ef, $ee, "past.", $fa, $f7
+    db $ef, $ee, "The elemental", $ef, $ee, "spirits decided to", $fa, $f7
+    db $ef, $ee, "send the monsters", $ef, $ee, "to other worlds", $fa, $f7
+    db $ef, $ee, "until they were", $ef, $ee, "sure that humans", $fa, $f7
+    db $ef, $ee, "could live safely", $ef, $ee, "with monsters.", $f7
+    db $f0
+
+Message_00_37::
+    db $f9, "0 tried to", $f1
+    db "open the chest.", $fa, $f7
+    db $ef, $ee, "But the chest was", $ef, $ee, "locked tight.", $f7
+    db $f0
+
+Message_00_38::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, "A large, salted", $ef, $ee, "fish was inside.", $f7
+    db $f0
+
+Message_00_39::
+    db $ea, "*: Hey! You brats!", $f1
+    db "Scram!", $fa, $f7
+    db $ef, $ee, "Hands off my", $ef, $ee, "merchandise!", $f7
+    db $f0
+
+Message_00_3A::
+    db $ea, "*: That weird ape", $f1
+    db "thing is Warubou,", $fa, $f7
+    db $ef, $ee, "GreatLog's", $ef, $ee, "elemental spirit.", $fa, $f7
+    db $ef, $ee, "It's always up to", $ef, $ee, "mischief with", $fa, $f7
+    db $ef, $ee, "Prince Kameha.", $ef, $ee, "What a pair!", $f7
+    db $f0
+
+Message_00_3B::
+    db $eb, "*: This palm tree", $f1
+    db "is GreatLog.", $fa, $f7
+    db $ef, $ee, "We've bored out", $ef, $ee, "the inside of this", $fa, $f7
+    db $ef, $ee, "enormous tree and", $ef, $ee, "made it our home.", $f7
+    db $f0
+
+Message_00_3C::
+    db $ea, "*: You're the kids", $f1
+    db "from the new farm.", $fa, $f7
+    db $ef, $ee, "I'm a monster", $ef, $ee, "master myself.", $fa, $f7
+    db $ef, $ee, "I'll have to use", $ef, $ee, "your farm soon.", $f7
+    db $f0
+
+Message_00_3D::
+    db $eb, "*: We live inside", $f1
+    db "here.", $fa, $f7
+    db $ef, $ee, "I'm keeping my eyes", $ef, $ee, "out for Prince", $fa, $f7
+    db $ef, $ee, "Kameha and his", $ef, $ee, "sidekick.", $f7
+    db $f0
+
+Message_00_3E::
+    db $ea, "*: GreatLog's major", $f1
+    db "facilities are", $fa, $f7
+    db $ef, $ee, "situated above", $ef, $ee, "here.", $fa, $f7
+    db $ef, $ee, "They're no place", $ef, $ee, "for kids. Shoo!", $f7
+    db $f0
+
+Message_00_3F::
+    db $eb, "*: Inside the well", $f1
+    db "is the Log's Navel.", $fa, $f7
+    db $ef, $ee, "It's said to be", $ef, $ee, "the center of", $fa, $f7
+    db $ef, $ee, "GreatLog.", $ef, $ee, "But it's not safe.", $fa, $f7
+    db $ef, $ee, "Don't go in there.", $ef, $ee, $f7
+    db $f0
+
+Message_00_40::
+    db $ea, "*: On this island,", $f1
+    db "every day goes by", $fa, $f7
+    db $ef, $ee, "without anything", $ef, $ee, "being different.", $fa, $f7
+    db $ef, $ee, "But it's never", $ef, $ee, "boring.", $fa, $f7
+    db $ef, $ee, "I consider it", $ef, $ee, "heavenly luxury!", $f7
+    db $f0
+
+Message_00_41::
+    db $eb, "*: Warubou is the", $f1
+    db "island's spirit.", $fa, $f7
+    db $ef, $ee, "So we can't really", $ef, $ee, "complain about", $fa, $f7
+    db $ef, $ee, "all the mischief", $ef, $ee, "it gets into", $a4, $f7
+    db $f0
+
+Message_00_42::
+    db $f9, "0 read the", $f1
+    db "sign.", $fa, $f7
+    db $ef, $ee, "'Danger!", $ef, $ee, "Stay clear!", $95, $f7
+    db $f0
+
+Message_00_43::
+    db $f9, "0 checked the", $f1
+    db "odd object.", $fa, $f7
+    db $ef, $ee, "It appears to be", $ef, $ee, "plugging a hole", $a4, $f7
+    db $f0
+
+Message_00_44::
+    db $f9, "0 checked the", $f1
+    db "peculiar door.", $fa, $f7
+    db $ef, $ee, "It has an oddly", $ef, $ee, "shaped keyhole", $a4, $f7
+    db $f0
+
+Message_00_45::
+    db $ea, "*: You must be the", $f1
+    db "farm kids.", $fa, $f7
+    db $ef, $ee, "Your grandma sent", $ef, $ee, "a package for you.", $fa, $f7
+    db $ef, $ee, "It smells really", $ef, $ee, "delicious!", $fa, $f7
+    db $ef, $ee, "Here you go! Be", $ef, $ee, "careful with it!", $f7
+    db $f0
+
+Message_00_46::
+    db $ea, "*: Thanks for", $f1
+    db "coming by.", $fa, $f7
+    db $ef, $ee, "I'll always be", $ef, $ee, "here to serve you!", $f7
+    db $f0
+
+Message_00_47::
+    db $f9, "0 read the", $f1
+    db "notice.", $fa, $f7
+    db $ef, $ee, "'We guarantee the", $ef, $ee, "safekeeping of", $fa, $f7
+    db $ef, $ee, "your precious", $ef, $ee, "items and money!", $95, $f7
+    db $f0
+
+Message_00_48::
+    db $ea, "*: I'm Prince Kameha", $ef, $ee, "of GreatLog!", $fa, $f7
+    db $ef, $ee, "You may not pass,", $ef, $ee, "peasants!", $f7
+    db $f0
+
+Message_00_49::
+    db $ea, "Kameha: Wahahah!", $f1
+    db "No going by me!", $f7
+    db $f0
+
+Message_00_4A::
+    db $ea, "*: I'm Warubou,", $f1
+    db "GreatLog's spirit!", $fa, $f7
+    db $ef, $ee, "Warooh, wa-hey!", $ef, $ee, $f7
+    db $f0
+
+Message_00_4B::
+    db $ea, "Warubou: It's a", $f1
+    db "dead end, warooh!", $fa, $f7
+    db $ef, $ee, "Look for another", $ef, $ee, "way, wa-hey!", $f7
+    db $f0
+
+Message_00_4C::
+    db $ea, "*: Have you heard", $f1
+    db "about Magic Keys?", $ff, $f0
+
+Message_00_4D::
+    db $ea, "*: Wow, you kids", $f1
+    db "sure learn quick!", $f7
+    db $f0
+
+Message_00_4E::
+    db $ea, "*: You need Magic", $f1
+    db "Keys to open the", $fa, $f7
+    db $ef, $ee, "magical door to", $ef, $ee, "other worlds.", $fa, $f7
+    db $ef, $ee, "That's where I get", $ef, $ee, "my monsters.", $f7
+    db $f0
+
+Message_00_4F::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "Give me something!", $fa, $f7
+    db $ef, $ee, "Then, I'll let you", $ef, $ee, "pass, warooh!", $f7
+    db $f0
+
+Message_00_50::
+    db $ea, "Warubou: Wha", $a4, "?", $f1
+    db "I smell something!", $fa, $f7
+    db $ef, $ee, "I smell something", $ef, $ee, "tasty.", $f7
+    db $f0
+
+Message_00_51::
+    db $ea, "Warubou: What is", $f1
+    db "this? Food?", $fa, $f7
+    db $ef, $ee, "Perfect! I was", $ef, $ee, "hungry, wa-hey!", $f7
+    db $f0
+
+Message_00_52::
+    db $eb, "*: Oh my, the well", $f1
+    db "isn't safe!", $fa, $f7
+    db $ef, $ee, "Don't be like", $ef, $ee, "Warubou!", $f7
+    db $f0
+
+Message_00_53::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "I'm starving!", $f7
+    db $f0
+
+Message_00_54::
+    db $ea, "Kameha: Gimme it!", $f1
+    db "You just ate!", $fa, $f7
+    db $ef, $ee, "You grubby little", $ef, $ee, "elemental!", $f7
+    db $f0
+
+Message_00_55::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "Some prince!", $fa, $f7
+    db $ef, $ee, "Dirty mouth!", $ef, $ee, "Come on, warooh!", $f7
+    db $f0
+
+Message_00_56::
+    db $ea, "Cobi: That's ours!", $f1
+    db "Give it back!", $f7
+    db $f0
+
+Message_00_59::
+    db $ea, "Warubou: Wa-wa-wa-", $f1
+    db "wa-wa-hey!", $fa, $f7
+    db $ef, $ee, "The Log's Navel's", $ef, $ee, "breached, warooh!", $f7
+    db $f0
+
+Message_00_5A::
+    db $ea, "Kameha: I", $a4, " It", $a4, $f1
+    db "It's not my fault!", $f7
+    db $f0
+
+Message_00_5B::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "It's the only way!", $f7
+    db $f0
+
+Message_00_5C::
+    db $ea, "Warubou: Warooh!", $f1
+    db "Will it hold?", $fa, $f7
+    db $ef, $ee, "You two, come here", $ef, $ee, "now, warooh!", $f7
+    db $f0
+
+Message_00_5D::
+    db $ea, "Warubou: Calm down", $f1
+    db "and listen!", $fa, $f7
+    db $ef, $ee, "What came out of", $ef, $ee, "the hole now, that", $fa, $f7
+    db $ef, $ee, "was the life force", $ef, $ee, "of GreatLog's tree.", $fa, $f7
+    db $ef, $ee, "GreatLog is an", $ef, $ee, "island kept afloat", $fa, $f7
+    db $ef, $ee, "by the palm tree,", $ef, $ee, "do you see?", $fa, $f7
+    db $ef, $ee, "If the palm tree", $ef, $ee, "dies, the island", $fa, $f7
+    db $ef, $ee, "sinks into the", $ef, $ee, "deep, deep ocean.", $fa, $f7
+    db $ef, $ee, "A plug! That is", $ef, $ee, "what we need!", $fa, $f7
+    db $ef, $ee, "A plug to plug the", $ef, $ee, "Log's Navel!", $fa, $f7
+    db $ef, $ee, "Hurry, go fetch a", $ef, $ee, "monster master!", $f7
+    db $f0
+
+Message_00_5E::
+    db $eb, "Tara: That's ours!", $f1
+    db "Give it back!", $f7
+    db $f0
+
+Message_00_5F::
+    db $ea, "Warubou: A new", $f1
+    db "plug for the", $fa, $f7
+    db $ef, $ee, "Log's Navel needs", $ef, $ee, "a monster master", $fa, $f7
+    db $ef, $ee, "to find, yes it", $ef, $ee, "does, warooh!", $fa, $f7
+    db $ef, $ee, "Quick, fetch a", $ef, $ee, "monster master!", $f7
+    db $f0
+
+Message_00_60::
+    db $ea, "*: Hah? The island's", $f1
+    db "going to sink?", $fa, $f7
+    db $ef, $ee, "You shouldn't lie", $ef, $ee, "like that ", $f9, "0.", $f7
+    db $f0
+
+Message_00_61::
+    db $ea, "Cobi: Why won't you", $f1
+    db "believe us?", $fa, $f7
+    db $ef, $ee, "You stubborn old", $ef, $ee, "goat!", $f7
+    db $f0
+
+Message_00_62::
+    db $ea, "*: Look, an island", $f1
+    db "just doesn't sink.", $fa, $f7
+    db $ef, $ee, "Listen to yourself", $ef, $ee, "for a moment.", $fa, $f7
+    db $ef, $ee, "Anyway, did you", $ef, $ee, "run Mom's errand?", $f7
+    db $f0
+
+Message_00_63::
+    db $eb, "Tara: Why aren't", $f1
+    db "you listening?", $fa, $f7
+    db $ef, $ee, "Papa, you're such", $ef, $ee, "a blockhead!", $f7
+    db $f0
+
+Message_00_64::
+    db $ea, "*: The island's", $f1
+    db "sinking, right.", $fa, $f7
+    db $ef, $ee, "Not you too.", $ef, $ee, "Look, I'm busy.", $fa, $f7
+    db $ef, $ee, "Warubou and the", $ef, $ee, "Prince are just", $fa, $f7
+    db $ef, $ee, "pulling your legs,", $ef, $ee, "I'm sure of it.", $f7
+    db $f0
+
+Message_00_65::
+    db $ea, "Slash: The island's", $f1
+    db "going to sink?", $fa, $f7
+    db $ef, $ee, "That's a genuine", $ef, $ee, "crisis!", $fa, $f7
+    db $ef, $ee, "I'm right here if", $ef, $ee, "you need any help!", $f7
+    db $f0
+
+Message_00_66::
+    db $ea, "*: This island is", $f1
+    db "going to sink?", $fa, $f7
+    db $ef, $ee, "I", $a4, " The tide seems", $ef, $ee, "to be higher!", $f7
+    db $f0
+
+Message_00_67::
+    db $ea, "*: We're going to", $f1
+    db "sink?", $fa, $f7
+    db $ef, $ee, "I can't swim!", $ef, $ee, "What should I do?", $f7
+    db $f0
+
+Message_00_68::
+    db $ea, "*: Huh? The island", $f1
+    db "is going to sink?", $fa, $f7
+    db $ef, $ee, "Are you in Prince", $ef, $ee, "Kameha's gang?", $f7
+    db $f0
+
+Message_00_69::
+    db $ea, "*: Prince Kameha", $f1
+    db "was saying the", $fa, $f7
+    db $ef, $ee, "same thing a", $ef, $ee, "little while ago.", $f7
+    db $f0
+
+Message_00_6A::
+    db $eb, "*: Did you get", $f1
+    db "the package", $fa, $f7
+    db $ef, $ee, "from grandma?", $ef, $ee, $f7
+    db $f0
+
+Message_00_6B::
+    db $eb, "*: Oh goodness,", $f1
+    db "you're filthy!", $fa, $f7
+    db $ef, $ee, "What happened to", $ef, $ee, "you two?", $fa, $f7
+    db $ef, $ee, $a4, "Giggle", $a4, " You were", $ef, $ee, "tricked by that", $fa, $f7
+    db $ef, $ee, "silly Warubou.", $ef, $ee, "Don't worry.", $fa, $f7
+    db $ef, $ee, "The island won't", $ef, $ee, "sink that easily.", $f7
+    db $f0
+
+Message_00_6C::
+    db $eb, "*: You can go out,", $f1
+    db "but not too late!", $f7
+    db $f0
+
+Message_00_6D::
+    db $eb, "*: The island's", $ef, $ee, "going to sink?", $fa, $f7
+    db $ef, $ee, "I know, you were", $ef, $ee, "fooled by Warubou.", $fa, $f7
+    db $ef, $ee, "Last time he was", $ef, $ee, "yelling about the", $fa, $f7
+    db $ef, $ee, "great King of", $ef, $ee, "Terror from the", $fa, $f7
+    db $ef, $ee, "sky", $a4, $ef, $ee, $f7
+    db $f0
+
+Message_00_6E::
+    db $eb, "*: The island is", $f1
+    db "sinking?", $fa, $f7
+    db $ef, $ee, "Prince Kameha put", $ef, $ee, "you up to this.", $f7
+    db $f0
+
+Message_00_6F::
+    db $eb, "*: Oh, you kids!", $f1
+    db $fa, $f7
+    db $ef, $ee, $f3, "You shouldn't be", $ef, $ee, "in the well.", $fa, $f7
+    db $ef, $ee, "What? The Log's", $ef, $ee, "Navel is broken?", $fa, $f7
+    db $ef, $ee, "But why is that", $ef, $ee, "important?", $f7
+    db $f0
+
+Message_00_70::
+    db $eb, "*: The island isn't", $f1
+    db "sinking.", $fa, $f7
+    db $ef, $ee, "If you lie, your", $ef, $ee, "nose will grow!", $f7
+    db $f0
+
+Message_00_71::
+    db $ea, "*: Looking for a", $f1
+    db "monster master?", $fa, $f7
+    db $ef, $ee, "I have no time for", $ef, $ee, "child's play!", $f7
+    db $f0
+
+Message_00_72::
+    db $ea, "*: This island is", $f1
+    db "sinking?", $fa, $f7
+    db $ef, $ee, "If that's true,", $ef, $ee, "it's a disaster", $a4, $fa, $f7
+    db $ef, $ee, "But I haven't", $ef, $ee, "heard anything", $fa, $f7
+    db $ef, $ee, "about it!", $ef, $ee, $f7
+    db $f0
+
+Message_00_73::
+    db $ea, "*: Hm? Warubou", $f1
+    db "wants you to find", $fa, $f7
+    db $ef, $ee, "a monster master", $ef, $ee, "for him?", $fa, $f7
+    db $ef, $ee, "Well I am one but", $ef, $ee, "I don't want to", $fa, $f7
+    db $ef, $ee, "have anything to", $ef, $ee, "do with Warubou.", $fa, $f7
+    db $ef, $ee, "Sorry, but can you", $ef, $ee, "try someone else?", $f7
+    db $f0
+
+Message_00_74::
+    db $eb, "*: You're after a", $f1
+    db "monster master?", $fa, $f7
+    db $ef, $ee, "I saw one lolling", $ef, $ee, "around the Vault.", $f7
+    db $f0
+
+Message_00_75::
+    db $ea, "*: The island's", $f1
+    db "going to sink?", $fa, $f7
+    db $ef, $ee, "Don't spread silly", $ef, $ee, "rumors like that.", $fa, $f7
+    db $ef, $ee, "What if it scares", $ef, $ee, "off customers?", $f7
+    db $f0
+
+Message_00_76::
+    db $ea, "*: The island is", $f1
+    db "sinking?", $fa, $f7
+    db $ef, $ee, "Hahah, no worries!", $ef, $ee, "We can all escape", $fa, $f7
+    db $ef, $ee, "to another world.", $ef, $ee, "Wait a sec", $a4, " How", $fa, $f7
+    db $ef, $ee, "would we get", $ef, $ee, "there?", $f7
+    db $f0
+
+Message_00_77::
+    db $ea, "*: The island's", $f1
+    db "sinking?", $fa, $f7
+    db $ef, $ee, "That's hard to", $ef, $ee, "believe, but", $a4, $fa, $f7
+    db $ef, $ee, "You don't look like", $ef, $ee, "a liar", $a4, $fa, $f7
+    db $ef, $ee, "I was going to", $ef, $ee, "open a shop here,", $fa, $f7
+    db $ef, $ee, "but I guess I'll", $ef, $ee, "hit the road.", $f7
+    db $f0
+
+Message_00_78::
+    db $ea, "*: It's pointless", $f1
+    db "if you're dead.", $fa, $f7
+    db $ef, $ee, "I'm going to leave", $ef, $ee, "again.", $f7
+    db $f0
+
+Message_00_79::
+    db $ea, "*: You say the", $f1
+    db "island will sink?", $fa, $f7
+    db $ef, $ee, "Sorry, but I can't", $ef, $ee, "believe that.", $f7
+    db $f0
+
+Message_00_7A::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "Good, you're back.", $fa, $f7
+    db $ef, $ee, "You told everyone", $ef, $ee, "GreatLog'll sink?", $fa, $f7
+    db $ef, $ee, "So, where is the", $ef, $ee, "monster master?", $fa, $f7
+    db $ef, $ee, $a4, "What? Nobody", $ef, $ee, "believed you?", $fa, $f7
+    db $ef, $ee, "Warooh, they are", $ef, $ee, "so complacent!", $fa, $f7
+    db $ef, $ee, "Wa-hey, it can't", $ef, $ee, "be helped now.", $fa, $f7
+    db $ef, $ee, "You go instead.", $ef, $ee, "No other way!", $f7
+    db $f0
+
+Message_00_7B::
+    db $ea, "Warubou: No time", $f1
+    db "to waste, warooh!", $fa, $f7
+    db $ef, $ee, "If you don't go,", $ef, $ee, "GreatLog goes to", $fa, $f7
+    db $ef, $ee, "the bottom of the", $ef, $ee, "sea soon enough!", $fa, $f7
+    db $ef, $ee, "You will go find a", $ef, $ee, "new plug for the", $fa, $f7
+    db $ef, $ee, "Log's Navel,", $ef, $ee, "wa-hey?", $ff, $f0
+
+Message_00_7C::
+    db $ea, "Warubou: No?", $f1
+    db "Then find someone!", $f7
+    db $f0
+
+Message_00_7D::
+    db $ea, "Warubou: Wa-hey?", $f1
+    db "No one believed!", $fa, $f7
+    db $ef, $ee, "You have to go, no", $ef, $ee, "choice about it!", $f7
+    db $f0
+
+Message_00_7E::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "No more dawdling!", $fa, $f7
+    db $ef, $ee, "GreatLog will sink", $ef, $ee, "into the sea!", $fa, $f7
+    db $ef, $ee, "You have to go, no", $ef, $ee, "choice about it!", $ff, $f0
+
+Message_00_7F::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "Good, good, good!", $fa, $f7
+    db $ef, $ee, "In you, I saw the", $ef, $ee, "potential, warooh!", $fa, $f7
+    db $ef, $ee, "A good idea I have", $ef, $ee, "for plugging up", $fa, $f7
+    db $ef, $ee, "the Log's Navel,", $ef, $ee, "yes I do, warooh.", $fa, $f7
+    db $ef, $ee, "I'm an elemental", $ef, $ee, "so I know such!", $fa, $f7
+    db $ef, $ee, "Here, take this,", $ef, $ee, "you, warooh.", $f7
+    db $f0
+
+Message_00_80::
+    db $ea, "Warubou: This here", $f1
+    db "is a Magic Key.", $fa, $f7
+    db $ef, $ee, "It opens the door", $ef, $ee, "to other worlds.", $fa, $f7
+    db $ef, $ee, "Specially made it", $ef, $ee, "is, by elemental", $fa, $f7
+    db $ef, $ee, "power, making it", $ef, $ee, "magic, warooh.", $fa, $f7
+    db $ef, $ee, "Use to open the", $ef, $ee, "magic door ahead.", $fa, $f7
+    db $ef, $ee, "It takes you to", $ef, $ee, "another world.", $fa, $f7
+    db $ef, $ee, "Another world, it", $ef, $ee, "might be, warooh,", $fa, $f7
+    db $ef, $ee, "but it is not much", $ef, $ee, "different.", $fa, $f7
+    db $ef, $ee, "Only difference is", $ef, $ee, "monsters.", $fa, $f7
+    db $ef, $ee, "Monsters live in", $ef, $ee, "other worlds.", $fa, $f7
+    db $ef, $ee, "But a monster", $ef, $ee, "master needs to", $fa, $f7
+    db $ef, $ee, "fear not a thing,", $ef, $ee, "warooh.", $fa, $f7
+    db $ef, $ee, "I see you have", $ef, $ee, "great potential.", $fa, $f7
+    db $ef, $ee, "You go to other", $ef, $ee, "worlds, and bring", $fa, $f7
+    db $ef, $ee, "back a plug for", $ef, $ee, "the Log's Navel.", $fa, $f7
+    db $ef, $ee, "That something, I", $ef, $ee, "don't know what.", $fa, $f7
+    db $ef, $ee, "But you will know", $ef, $ee, "when you find it!", $fa, $f7
+    db $ef, $ee, "Now, warooh, take", $ef, $ee, "this!", $f7
+    db $f0
+
+Message_00_81::
+    db $f9, "0 received the", $f1
+    db "Oasis Key.", $e5, $58, $f7
+    db $e9, $ff, $f0
+
+Message_00_82::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "I trust you! Go!", $f7
+    db $f0
+
+Message_00_83::
+    db $ea, "Warubou: Wa-hey!", $f1
+    db "Forgot something!", $f7
+    db $f0
+
+Message_00_84::
+    db $ea, "Warubou: This you", $f1
+    db "use to come back", $fa, $f7
+    db $ef, $ee, "to GreatLog from", $ef, $ee, "other worlds.", $f7
+    db $f0
+
+Message_00_85::
+    db $f9, "0 received the", $f1
+    db "GreatLog Key.", $e5, $58, $f7
+    db $e9, $ff, $f0
+
+Message_00_86::
+    db $ea, "Warubou: Dangerous", $f1
+    db "are other worlds!", $fa, $f7
+    db $ef, $ee, "So you take", $ef, $ee, "monsters, warooh.", $fa, $f7
+    db $ef, $ee, "Wa-hey, I'm", $ef, $ee, "GreatLog's spirit.", $fa, $f7
+    db $ef, $ee, "One with the", $ef, $ee, "island I am.", $fa, $f7
+    db $ef, $ee, "If you can't stop", $ef, $ee, "the island from", $fa, $f7
+    db $ef, $ee, "sinking, so ends", $ef, $ee, "my life, warooh.", $fa, $f7
+    db $ef, $ee, "Not just me, but", $ef, $ee, "everyone here.", $fa, $f7
+    db $ef, $ee, "So, you must!", $ef, $ee, "Must find a plug!", $f7
+    db $f0
+
+Message_00_87::
+    db $ea, "Cobi: This is bad.", $f1
+    db "What'll we do?", $fa, $f7
+    db $ef, $ee, "Let's go home and", $ef, $ee, "talk about it.", $f7
+    db $f0
+
+Message_00_88::
+    db $eb, "Tara: Oh, wow.", $f1
+    db "This is terrible.", $fa, $f7
+    db $ef, $ee, "We should talk", $ef, $ee, "about it at home.", $f7
+    db $f0
+
+Message_00_89::
+    db $ea, "Cobi: If we don't", $f1
+    db "find a plug for", $fa, $f7
+    db $ef, $ee, "the Log's Navel,", $ef, $ee, "the island sinks.", $fa, $f7
+    db $ef, $ee, "Our house and the", $ef, $ee, "farm too.", $fa, $f7
+    db $ef, $ee, "We have to go look", $ef, $ee, "ourselves, right?", $f7
+    db $f0
+
+Message_00_8A::
+    db $ea, "Cobi: But if we", $f1
+    db "both go to other", $fa, $f7
+    db $ef, $ee, "worlds, Mama will", $ef, $ee, "be worried.", $f7
+    db $f0
+
+Message_00_8B::
+    db $ea, "Cobi: That's true", $a4, $f1
+    db "If we both went to", $fa, $f7
+    db $ef, $ee, "other worlds, Mama", $ef, $ee, "would be worried.", $f7
+    db $f0
+
+Message_00_8C::
+    db $ea, "Slash: Hey, why", $f1
+    db "the long faces?", $fa, $f7
+    db $ef, $ee, "I couldn't help", $ef, $ee, "overhearing you.", $fa, $f7
+    db $ef, $ee, "I'll go with you", $ef, $ee, "to other worlds.", $fa, $f7
+    db $ef, $ee, "That way, one of", $ef, $ee, "you can stay here.", $fa, $f7
+    db $ef, $ee, "That solves your", $ef, $ee, "little problem!", $f7
+    db $f0
+
+Message_00_8D::
+    db $ea, "Cobi: That's true.", $f1
+    db "What to do", $a4, $fa, $f7
+    db $ef, $ee, "Huh? ", $f9, "0?", $ef, $ee, "Do you want to go?", $ff, $f0
+
+Message_00_8E::
+    db $ea, "Cobi: Don't waste", $f1
+    db "your time lying.", $fa, $f7
+    db $ef, $ee, "I can see it in", $ef, $ee, "your eyes.", $fa, $f7
+    db $ef, $ee, "You really want to", $ef, $ee, "go, don't you?", $ff, $f0
+
+Message_00_8F::
+    db $ea, "Cobi: Fine. But", $f1
+    db $f9, "0, by", $fa, $f7
+    db $ef, $ee, "yourself", $a4, $f7
+    db $f0
+
+Message_00_90::
+    db $ea, "Slash: Don't worry!", $f1
+    db "I'm riding along!", $f7
+    db $f0
+
+Message_00_91::
+    db $ea, "Slash: And ", $f9, "0", $f1
+    db "has potential,", $fa, $f7
+    db $ef, $ee, "I think, to be a", $ef, $ee, "monster master.", $fa, $f7
+    db $ef, $ee, "We'll need the", $ef, $ee, "help of monsters", $fa, $f7
+    db $ef, $ee, "when we go to", $ef, $ee, "other worlds.", $fa, $f7
+    db $ef, $ee, "So that potential", $ef, $ee, "will help a lot!", $f7
+    db $f0
+
+Message_00_92::
+    db $ea, "Cobi: Fine, ", $f9, "0.", $f1
+    db "It's up to you.", $fa, $f7
+    db $ef, $ee, "You do your best", $ef, $ee, "and save us!", $f7
+    db $f0
+
+Message_00_93::
+    db $ea, "Slash: That's", $f1
+    db "settled, then!", $fa, $f7
+    db $ef, $ee, "We'll leave", $ef, $ee, "tomorrow morning.", $fa, $f7
+    db $ef, $ee, "Get plenty of rest", $ef, $ee, "tonight!", $f7
+    db $f0
+
+Message_00_94::
+    db $eb, "Tara: If we don't", $f1
+    db "go find something", $fa, $f7
+    db $ef, $ee, "to put in the Log's", $ef, $ee, "Navel, this house,", $fa, $f7
+    db $ef, $ee, "the farm and", $ef, $ee, "everything else", $fa, $f7
+    db $ef, $ee, "will sink with the", $ef, $ee, "island.", $fa, $f7
+    db $ef, $ee, "So we have to go", $ef, $ee, "to other worlds,", $fa, $f7
+    db $ef, $ee, "right?", $ff, $f0
+
+Message_00_95::
+    db $eb, "Tara: But if we", $f1
+    db "both went, Mama", $fa, $f7
+    db $ef, $ee, "would be really", $ef, $ee, "worried about us.", $f7
+    db $f0
+
+Message_00_96::
+    db $eb, "Tara: Oh", $a4, " If we", $f1
+    db "both went, Mama", $fa, $f7
+    db $ef, $ee, "would be really", $ef, $ee, "worried about us.", $f7
+    db $f0
+
+Message_00_97::
+    db $eb, "Tara: ", $f9, "0, you", $f1
+    db "want to go.", $fa, $f7
+    db $ef, $ee, $f9, "0, do you want", $ef, $ee, "me to stay home?", $ff, $f0
+
+Message_00_98::
+    db $eb, "Tara: You don't", $f1
+    db "have to lie.", $fa, $f7
+    db $ef, $ee, "We'll be all right", $ef, $ee, "here.", $fa, $f7
+    db $ef, $ee, "You do really want", $ef, $ee, "to go, right?", $ff, $f0
+
+Message_00_99::
+    db $eb, "Tara: But ", $f9, "0,", $f1
+    db "what about your", $fa, $f7
+    db $ef, $ee, "terrible sense of", $ef, $ee, "direction?", $f7
+    db $f0
+
+Message_00_9A::
+    db $eb, "Tara: Then it's", $f1
+    db "your job, ", $f9, "0!", $fa, $f7
+    db $ef, $ee, "Make me proud, big", $ef, $ee, "brother!", $f7
+    db $f0
+
+Message_00_9B::
+    db $f9, "0 opened the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, $f9, "0 obtained the", $ef, $ee, $f9, "Y.", $f7
+    db $f0
+
+Message_00_A1::
+    db $f9, "0 checked the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, "But it was empty", $a4, $ef, $ee, $f7
+    db $f0
+
+Message_00_A2::
+    db $f9, "0 opened the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, $f9, "0 found the", $ef, $ee, $f9, "Y.", $fa, $f7
+    db $ef, $ee, "But there is no", $ef, $ee, "room for it.", $fa, $f7
+    db $ef, $ee, $f9, "0 put the", $ef, $ee, $f9, "Y back.", $f7
+    db $f0
+
+Message_00_A3::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, $f9, "0 obtained the", $ef, $ee, $f9, "Y.", $f7
+    db $f0
+
+Message_00_A4::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, "But it was empty.", $ef, $ee, $f7
+    db $f0
+
+Message_00_A5::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, $f9, "0 found the", $ef, $ee, $f9, "Y.", $fa, $f7
+    db $ef, $ee, "But there is no", $ef, $ee, "room for it.", $fa, $f7
+    db $ef, $ee, $f9, "0 put the", $ef, $ee, $f9, "Y back.", $f7
+    db $f0
+
+Message_00_A6::
+    db $f9, "0 peered into", $f1
+    db "the barrel.", $fa, $f7
+    db $ef, $ee, $f9, "0 obtained the", $ef, $ee, $f9, "Y.", $f7
+    db $f0
+
+Message_00_A7::
+    db $f9, "0 peered into", $f1
+    db "the barrel.", $fa, $f7
+    db $ef, $ee, "But it was empty.", $ef, $ee, $f7
+    db $f0
+
+Message_00_A8::
+    db $f9, "0 peered into", $f1
+    db "the barrel.", $fa, $f7
+    db $ef, $ee, $f9, "0 found the", $ef, $ee, $f9, "Y.", $fa, $f7
+    db $ef, $ee, "But there is no", $ef, $ee, "room for it.", $fa, $f7
+    db $ef, $ee, $f9, "0 put the", $ef, $ee, $f9, "Y back.", $f7
+    db $f0
+
+Message_00_A9::
+    db $f9, "0 opened the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, $f9, "0 obtained a", $ef, $ee, "Magic Key.", $e5, $58, $f7
+    db $e9, $ff, $f0
+
+Message_00_AA::
+    db $f9, "0 checked the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, "But it was empty", $a4, $ef, $ee, $f7
+    db $f0
+
+Message_00_AB::
+    db $f9, "0 opened the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, $f9, "0 found a", $ef, $ee, "Magic Key.", $fa, $f7
+    db $ef, $ee, "But the key ring", $ef, $ee, "is full.", $fa, $f7
+    db $ef, $ee, $f9, "0 put the", $ef, $ee, "Magic Key back.", $f7
+    db $f0
+
+Message_00_AC::
+    db $ea, "*: Let's see how", $f1
+    db "good you are!", $f7
+    db $f0
+
+Message_00_D1::
+    db $ea, "*: You think you", $f1
+    db "could win?", $fa, $f7
+    db $ef, $ee, "Dream on, you", $ef, $ee, "insolent fools!", $f7
+    db $f0
+
+Message_00_D2::
+    db $ea, "*: Well, I", $44, " never", $f1
+    db "expected you here.", $fa, $f7
+    db $ef, $ee, "But this shall be", $ef, $ee, "your tomb!", $f7
+    db $f0
+
+Message_00_D3::
+    db $ea, "*: Prepare to be", $f1
+    db "overwhelmed!", $f7
+    db $f0
+
+Message_00_D4::
+    db $ea, "*: Those monsters", $f1
+    db "are my foes?", $fa, $f7
+    db $ef, $ee, "Fwahahaha!", $ef, $ee, "How ludicrous!", $f7
+    db $f0
+
+Message_00_D5::
+    db $ea, "*: If you win, you", $f1
+    db "can be the boss!", $f7
+    db $f0
+
+Message_00_D6::
+    db $ea, "*: I'll show you how", $f1
+    db "small you are in", $fa, $f7
+    db $ef, $ee, "the grand scheme", $ef, $ee, "of things!", $f7
+    db $f0
+
+Message_00_D7::
+    db $ea, "*: Hm? My rival is", $f1
+    db "here? Come on!", $f7
+    db $f0
+
+Message_00_D8::
+    db $ea, "*: Finally, someone", $f1
+    db "to ignite my soul!", $f7
+    db $f0
+
+Message_00_D9::
+    db $ea, "*: I feel your", $f1
+    db "strength", $a4, $fa, $f7
+    db $ef, $ee, "This will be a", $ef, $ee, "long battle.", $f7
+    db $f0
+    ds $2f, $00

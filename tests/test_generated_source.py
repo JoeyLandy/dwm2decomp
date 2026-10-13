@@ -11,14 +11,14 @@ import re
 import unittest
 from pathlib import Path
 
-BANKS = Path(__file__).resolve().parents[1] / "src" / "banks"
+BANKS = Path(__file__).resolve().parents[1] / "build" / "listing"
 LD_HL = re.compile(r"\s+ld hl, (?:(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})|\$([0-9A-F]{4}))$")
 LD_B = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
 CALL = re.compile(r"\s+(?:rst \$10|call \$0010)$")
 TERMINATOR = re.compile(r"\s+(?:ret|reti|jp |jr |jp$)")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GeneratedSource(unittest.TestCase):
     def test_banked_call_labels_name_the_target_bank(self):
         wrong, checked, macros = [], 0, 0
@@ -49,7 +49,7 @@ class GeneratedSource(unittest.TestCase):
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} banked-call labels name the wrong bank")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class Annotations(unittest.TestCase):
     def test_every_annotation_appears_above_its_label(self):
         import json
@@ -69,7 +69,7 @@ class Annotations(unittest.TestCase):
         self.assertEqual(missing, [], "annotation not emitted directly above its label")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class SymbolicOperands(unittest.TestCase):
     """Instruction operands name hardware and RAM instead of repeating addresses."""
 
@@ -161,11 +161,11 @@ class SymbolicOperands(unittest.TestCase):
         self.assertEqual(bad[:5], [], f"{len(bad)} operands still use a raw hardware/RAM address")
 
     def test_includes_define_every_symbol_the_banks_use(self):
-        main = (BANKS.parent / "main.asm").read_text(encoding="utf-8").splitlines()
+        main = (BANKS.parents[1] / "src" / "main.asm").read_text(encoding="utf-8").splitlines()
         self.assertEqual(main[:3], ['INCLUDE "hardware.inc"', 'INCLUDE "ram.asm"', 'INCLUDE "macros.inc"'])
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class RoutineNames(unittest.TestCase):
     def test_every_configured_name_is_a_label_with_its_address_alias(self):
         import json
@@ -192,7 +192,7 @@ class RoutineNames(unittest.TestCase):
         self.assertNotIn("call Func_000_0949", text)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class CrossReferences(unittest.TestCase):
     def test_header_call_counts_match_the_call_sites_in_the_source(self):
         import json
@@ -225,7 +225,7 @@ class CrossReferences(unittest.TestCase):
                     self.assertNotRegex(line, r"\b(hl|bc|de|af)\b", line)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class BankSwitchingCallSites(unittest.TestCase):
     """For every call to a routine that takes a bank in B and a pointer in HL/DE/BC, a pointer
     spelled as a Data_ label in the same straight-line setup must name that bank."""
@@ -269,7 +269,7 @@ class BankSwitchingCallSites(unittest.TestCase):
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} pointer labels disagree with ld b")
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class DecompressCallSites(unittest.TestCase):
     def test_literal_decompress_arguments_name_a_stream(self):
         stream_labels = set()
@@ -452,7 +452,7 @@ class EventScripts(unittest.TestCase):
         """E-0188: $E4 has as many offsets as menu options; the first target follows them."""
         text = (BANKS / "bank10.asm").read_text(encoding="utf-8")
         self.assertIn("    script_choice_jump Script_668F, Script_6688, Script_6685\nScript_6685::", text)
-        macros = (BANKS.parent / "macros.inc").read_text(encoding="utf-8")
+        macros = (BANKS.parents[1] / "src" / "macros.inc").read_text(encoding="utf-8")
         self.assertIn("    REPT _NARG\n", macros[macros.index("MACRO script_choice_jump"):])
 
     def test_data_bank_jumps_name_their_target(self):

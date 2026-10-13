@@ -1,277 +1,237 @@
 SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
-    db $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $1f, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; E-0169 (C1: GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is the character code; 259 glyphs up to SendSGBPacketSet at $5040).
+; GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph
+; from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number
+; is the character code; 259 glyphs up to SendSGBPacketSet at $5040 (E-0169, C1)
 ; record: glyph tile (2bpp, 16 bytes)
 GlyphFont::
-Data_01F_4010:: ; address name
-    db $FF, $7C, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 0 '0'
-    db $FF, $10, $FF, $30, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 1 '1'
-    db $FF, $7C, $FF, $82, $FF, $02, $FF, $0C, $FF, $30, $FF, $40, $FF, $FE, $FF, $00 ; id 2 '2'
-    db $FF, $7C, $FF, $82, $FF, $02, $FF, $3C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 3 '3'
-    db $FF, $0C, $FF, $14, $FF, $24, $FF, $44, $FF, $84, $FF, $FE, $FF, $04, $FF, $00 ; id 4 '4'
-    db $FF, $FC, $FF, $80, $FF, $80, $FF, $FC, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 5 '5'
-    db $FF, $7C, $FF, $82, $FF, $80, $FF, $FC, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 6 '6'
-    db $FF, $7E, $FF, $82, $FF, $02, $FF, $04, $FF, $04, $FF, $08, $FF, $08, $FF, $00 ; id 7 '7'
-    db $FF, $7C, $FF, $82, $FF, $82, $FF, $7C, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 8 '8'
-    db $FF, $7C, $FF, $82, $FF, $82, $FF, $7E, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 9 '9'
-    db $FF, $10, $FF, $28, $FF, $28, $FF, $44, $FF, $7C, $FF, $82, $FF, $82, $FF, $00 ; id 10 'A'
-    db $FF, $F8, $FF, $84, $FF, $84, $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $00 ; id 11 'B'
-    db $FF, $3C, $FF, $42, $FF, $80, $FF, $80, $FF, $80, $FF, $42, $FF, $3C, $FF, $00 ; id 12 'C'
-Tiles1Plus260Tiles_1F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_40E0:: ; address name
-    db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00 ; id 13 'D'
-    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 14 'E'
-    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 15 'F'
-Tiles2Plus7F0Tiles_1F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4110:: ; address name
-    db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00 ; id 16 'G'
-Tiles1Plus710Tiles_1F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4120:: ; address name
-    db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 17 'H'
-Tiles2Plus210Tiles_1F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4130:: ; address name
-    db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 18 'I'
-    db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00 ; id 19 'J'
-    db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00 ; id 20 'K'
-Tiles2Plus200Tiles_1F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4160:: ; address name
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 21 'L'
-Tiles2Plus240Tiles_1F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4170:: ; address name
-    db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 22 'M'
-Tiles1Plus6E0Tiles_1F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4180:: ; address name
-    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00 ; id 23 'N'
-Tiles2Plus230Tiles_1F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4190:: ; address name
-    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00 ; id 24 'O'
-Tiles1Plus770Tiles_1F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_41A0:: ; address name
-    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 25 'P'
-    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00 ; id 26 'Q'
-    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00 ; id 27 'R'
-Tiles2Plus250Tiles_1F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_41D0:: ; address name
-    db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 28 'S'
-    db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 29 'T'
-    db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 30 'U'
-    db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00 ; id 31 'V'
-Tiles1Plus700Tiles_1F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4210:: ; address name
-    db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00 ; id 32 'W'
-    db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00 ; id 33 'X'
-Tiles2Plus700Tiles_1F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4230:: ; address name
-    db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 34 'Y'
-    db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00 ; id 35 'Z'
-Tiles1Plus2F0Tiles_1F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4250:: ; address name
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00 ; id 36 'a'
-Tiles1Plus4F0Tiles_1F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4260:: ; address name
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00 ; id 37 'b'
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00 ; id 38 'c'
-Tiles1Plus2E0Tiles_1F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4280:: ; address name
-    db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00 ; id 39 'd'
-Tiles2Plus710Tiles_1F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4290:: ; address name
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00 ; id 40 'e'
-    db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00 ; id 41 'f'
-    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 42 'g'
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 43 'h'
-Tiles1Plus2E0Tiles_1F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_42D0:: ; address name
-    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 44 'i'
-    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60 ; id 45 'j'
-    db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00 ; id 46 'k'
-Tiles1Plus7C0Tiles_1F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4300:: ; address name
-    db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 47 'l'
-Tiles2Plus7B0Tiles_1F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4310:: ; address name
-    db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00 ; id 48 'm'
-Tiles2Plus710Tiles_1F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4320:: ; address name
-    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 49 'n'
-Tiles1Plus6F0Tiles_1F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4330:: ; address name
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 50 'o'
-Tiles1Plus250Tiles_1F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4340:: ; address name
-    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80 ; id 51 'p'
-    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04 ; id 52 'q'
-    db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00 ; id 53 'r'
-Tiles2Plus720Tiles_1F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4370:: ; address name
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $80, $FF, $78, $FF, $04, $FF, $F8, $FF, $00 ; id 54 's'
-    db $FF, $00, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $1C, $FF, $00 ; id 55 't'
-    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 56 'u'
-    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $48, $FF, $30, $FF, $00 ; id 57 'v'
-    db $FF, $00, $FF, $00, $FF, $82, $FF, $92, $FF, $92, $FF, $AA, $FF, $44, $FF, $00 ; id 58 'w'
-Tiles1Plus2D0Tiles_1F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_43C0:: ; address name
-    db $FF, $00, $FF, $00, $FF, $84, $FF, $48, $FF, $30, $FF, $48, $FF, $84, $FF, $00 ; id 59 'x'
-    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 60 'y'
-    db $FF, $00, $FF, $00, $FF, $FC, $FF, $08, $FF, $30, $FF, $40, $FF, $FC, $FF, $00 ; id 61 'z'
-    db $FF, $80, $FF, $80, $FF, $3C, $FF, $40, $FF, $3C, $FF, $02, $FF, $7C, $FF, $00 ; id 62 ''s'
-    db $FF, $80, $FF, $80, $FF, $76, $FF, $49, $FF, $49, $FF, $49, $FF, $49, $FF, $00 ; id 63 ''m'
-    db $FF, $80, $FF, $80, $FF, $0E, $FF, $50, $FF, $60, $FF, $40, $FF, $40, $FF, $00 ; id 64 ''r'
-    db $FF, $80, $FF, $90, $FF, $7E, $FF, $10, $FF, $10, $FF, $10, $FF, $0E, $FF, $00 ; id 65 ''t'
-    db $FF, $80, $FF, $80, $FF, $00, $FF, $42, $FF, $42, $FF, $24, $FF, $18, $FF, $00 ; id 66 ''v'
-    db $FF, $88, $FF, $88, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00 ; id 67 ''l'
-Tiles1Plus6F0Tiles_1F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4450:: ; address name
-    db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00 ; id 68
-    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00 ; id 69 '*:'
-    db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00 ; id 70
-Tiles1Plus7B0Tiles_1F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4480:: ; address name
-    db $FF, $F8, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $F8, $FF, $00 ; id 71
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 72
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 73
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 74
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 75
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 76
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 77
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 78
-Tiles1Plus4C0Tiles_1F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4500:: ; address name
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 79
-Tiles1Plus6E0Tiles_1F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4510:: ; address name
-    db $FF, $00, $FF, $EE, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $D6, $FF, $FE ; id 80
-    db $FF, $0E, $FF, $1B, $FF, $11, $FF, $1B, $FF, $3E, $FF, $70, $FF, $E0, $FF, $C0 ; id 81
-    db $FF, $0C, $FF, $1E, $FF, $65, $FF, $B9, $FF, $C9, $FF, $7F, $FF, $4A, $FF, $4E ; id 82
-    db $FF, $03, $FF, $05, $FF, $CA, $FF, $74, $FF, $28, $FF, $78, $FF, $EC, $FF, $C4 ; id 83
-    db $FF, $00, $FF, $FF, $FF, $4E, $FF, $2C, $FF, $18, $FF, $3C, $FF, $6E, $FF, $FF ; id 84
-    db $FF, $18, $FF, $24, $FF, $7E, $FF, $C3, $FF, $81, $FF, $81, $FF, $42, $FF, $3C ; id 85
-    db $FF, $06, $FF, $0A, $FF, $12, $FF, $12, $FF, $62, $FF, $BF, $FF, $81, $FF, $7E ; id 86
-    db $FF, $3C, $FF, $7E, $FF, $FF, $FF, $FF, $FF, $81, $FF, $A5, $FF, $85, $FF, $FF ; id 87
-    db $FF, $1C, $FF, $10, $FF, $D6, $FF, $BA, $FF, $82, $FF, $BA, $FF, $AA, $FF, $EE ; id 88
-    db $FF, $38, $FF, $6C, $FF, $C6, $FF, $EE, $FF, $82, $FF, $FE, $FF, $AA, $FF, $EE ; id 89
-    db $FF, $3C, $FF, $42, $FF, $99, $FF, $BD, $FF, $BD, $FF, $A5, $FF, $BD, $FF, $C3 ; id 90
-    db $FF, $0E, $FF, $11, $FF, $15, $FF, $19, $FF, $2E, $FF, $58, $FF, $A0, $FF, $E0 ; id 91
-    db $FF, $3C, $FF, $7E, $FF, $B9, $FF, $99, $FF, $D1, $FF, $46, $FF, $3C, $FF, $00 ; id 92
-    db $FF, $36, $FF, $2A, $FF, $22, $FF, $2A, $FF, $22, $FF, $2A, $FF, $5D, $FF, $55 ; id 93
-    db $FF, $7F, $FF, $41, $FF, $7F, $FF, $49, $FF, $7F, $FF, $49, $FF, $2A, $FF, $1C ; id 94
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 95
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 96
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 97
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 98
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 99
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 100
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 101
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 102
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 103
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 104
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 105
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 106
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 107
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 108
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 109
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 110
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 111
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 112
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 113
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 114
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 115
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 116
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 117
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 118
-Tiles1Plus7C0Tiles_1F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4780:: ; address name
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 119
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 120
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 121
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 122
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 123
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 124
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 125
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 126
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 127
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 128
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 129
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 130
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 131
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 132
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 133
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 134
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 135
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 136
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 137
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 138
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 139
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 140
-RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_48E0:: ; address name
-    db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 141
-DebugResultsDisplay_Init_Data:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_48F0:: ; address name
-    db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 142
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30 ; id 143
-Tiles2Plus710Tiles_1F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4910:: ; address name
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 144 ' '
-    db $FF, $00, $EB, $08, $ED, $70, $FF, $82, $B7, $CA, $8B, $FE, $F7, $74, $FF, $00 ; id 145
-    db $FF, $00, $FF, $24, $FF, $54, $FF, $58, $FF, $2A, $FF, $15, $FF, $15, $FF, $22 ; id 146
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $66, $FF, $66, $FF, $00 ; id 147
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $00, $FF, $60, $FF, $20, $FF, $40 ; id 148
-    db $FF, $60, $FF, $60, $FF, $20, $FF, $40, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 149 '''
-    db $FF, $00, $FF, $0E, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00, $FF, $00 ; id 150
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $E0 ; id 151
-Tiles2Plus420Tiles_1F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4990:: ; address name
-    db $FF, $00, $FF, $3C, $FF, $66, $FF, $66, $FF, $0C, $FF, $18, $FF, $00, $FF, $18 ; id 152 '?'
-    db $FF, $00, $FF, $0C, $FF, $0C, $FF, $0C, $FF, $08, $FF, $08, $FF, $00, $FF, $18 ; id 153 '!'
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $40, $FF, $60, $FF, $60 ; id 154
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $00 ; id 155
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FE, $FF, $00, $FF, $00, $FF, $00 ; id 156 '-'
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $92, $FF, $0C, $FF, $00, $FF, $00 ; id 157
-    db $FF, $00, $FF, $02, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $80 ; id 158
-    db $FF, $00, $FF, $10, $FF, $92, $FF, $54, $FF, $38, $FF, $54, $FF, $92, $FF, $10 ; id 159
-    db $FF, $00, $FF, $08, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $08 ; id 160
-    db $FF, $00, $FF, $10, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $10 ; id 161
-    db $FF, $00, $FF, $00, $FF, $10, $FF, $10, $FF, $7C, $FF, $10, $FF, $10, $FF, $00 ; id 162
-Tiles1Plus7D0Tiles_1F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4A40:: ; address name
-    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00 ; id 163 ':'
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00 ; id 164
-Tiles1Plus6A0Tiles_1F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4A60:: ; address name
-    db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4 ; id 165
-Tiles1Plus7F0Tiles_1F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4A70:: ; address name
-    db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA ; id 166
-Tiles1Plus7E0Tiles_1F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4A80:: ; address name
-    db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60 ; id 167
-Tiles1Plus7F0Tiles_1F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4A90:: ; address name
-    db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10 ; id 168
-Tiles2Plus20Tiles_1F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4AA0:: ; address name
-    db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38 ; id 169
-    db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00 ; id 170
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40 ; id 171 ','
-Tiles1Plus4A0Tiles_1F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4AD0:: ; address name
-    db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6 ; id 172
-Tiles2Plus30Tiles_1F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
-Data_01F_4AE0:: ; address name
-    db $FF, $38, $FF, $38, $FF, $38, $FF, $FE, $FF, $7C, $FF, $38, $FF, $10, $FF, $00 ; id 173
-    db $FF, $00, $FF, $10, $FF, $30, $FF, $7E, $FF, $FE, $FF, $7E, $FF, $30, $FF, $10 ; id 174
-    db $FF, $00, $FF, $10, $FF, $18, $FF, $FC, $FF, $FE, $FF, $FC, $FF, $18, $FF, $10 ; id 175
-    db $FF, $00, $FF, $7C, $FF, $78, $FF, $7C, $FF, $7E, $FF, $5C, $FF, $08, $FF, $00 ; id 176
-    db $FF, $00, $FF, $3E, $FF, $1E, $FF, $3E, $FF, $7E, $FF, $3A, $FF, $10, $FF, $00 ; id 177
-    db $FF, $00, $FF, $08, $FF, $5C, $FF, $7E, $FF, $7C, $FF, $78, $FF, $7C, $FF, $00 ; id 178
-    db $FF, $00, $FF, $10, $FF, $3A, $FF, $7E, $FF, $3E, $FF, $1E, $FF, $3E, $FF, $00 ; id 179
-    db $FF, $F0, $FF, $20, $FF, $40, $FF, $F0, $FF, $0F, $FF, $02, $FF, $04, $FF, $0F ; id 180
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $18, $FF, $18 ; id 181 '.'
-    db $FF, $00, $FF, $20, $FF, $50, $FF, $50, $FF, $20, $FF, $54, $FF, $8C, $FF, $72 ; id 182
-    db $FF, $00, $FF, $06, $FF, $06, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 183
-    db $FF, $00, $FF, $38, $FF, $44, $FF, $BA, $FF, $A2, $FF, $BA, $FF, $44, $FF, $38 ; id 184
+    db $ff, $7c, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 0 '0'
+    db $ff, $10, $ff, $30, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $7c, $ff, $00 ; id 1 '1'
+    db $ff, $7c, $ff, $82, $ff, $02, $ff, $0c, $ff, $30, $ff, $40, $ff, $fe, $ff, $00 ; id 2 '2'
+    db $ff, $7c, $ff, $82, $ff, $02, $ff, $3c, $ff, $02, $ff, $82, $ff, $7c, $ff, $00 ; id 3 '3'
+    db $ff, $0c, $ff, $14, $ff, $24, $ff, $44, $ff, $84, $ff, $fe, $ff, $04, $ff, $00 ; id 4 '4'
+    db $ff, $fc, $ff, $80, $ff, $80, $ff, $fc, $ff, $02, $ff, $82, $ff, $7c, $ff, $00 ; id 5 '5'
+    db $ff, $7c, $ff, $82, $ff, $80, $ff, $fc, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 6 '6'
+    db $ff, $7e, $ff, $82, $ff, $02, $ff, $04, $ff, $04, $ff, $08, $ff, $08, $ff, $00 ; id 7 '7'
+    db $ff, $7c, $ff, $82, $ff, $82, $ff, $7c, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 8 '8'
+    db $ff, $7c, $ff, $82, $ff, $82, $ff, $7e, $ff, $02, $ff, $82, $ff, $7c, $ff, $00 ; id 9 '9'
+    db $ff, $10, $ff, $28, $ff, $28, $ff, $44, $ff, $7c, $ff, $82, $ff, $82, $ff, $00 ; id 10 'A'
+    db $ff, $f8, $ff, $84, $ff, $84, $ff, $fc, $ff, $82, $ff, $82, $ff, $fc, $ff, $00 ; id 11 'B'
+    db $ff, $3c, $ff, $42, $ff, $80, $ff, $80, $ff, $80, $ff, $42, $ff, $3c, $ff, $00 ; id 12 'C'
+Tiles1Plus260Tiles_1F_40E0::
+    db $ff, $f8, $ff, $84, $ff, $82, $ff, $82, $ff, $82, $ff, $84, $ff, $f8, $ff, $00 ; id 13 'D'
+    db $ff, $fe, $ff, $80, $ff, $80, $ff, $fc, $ff, $80, $ff, $80, $ff, $fe, $ff, $00 ; id 14 'E'
+    db $ff, $fe, $ff, $80, $ff, $80, $ff, $fc, $ff, $80, $ff, $80, $ff, $80, $ff, $00 ; id 15 'F'
+Tiles2Plus7F0Tiles_1F_4110::
+    db $ff, $3c, $ff, $42, $ff, $80, $ff, $9e, $ff, $82, $ff, $42, $ff, $3c, $ff, $00 ; id 16 'G'
+Tiles1Plus710Tiles_1F_4120::
+    db $ff, $82, $ff, $82, $ff, $82, $ff, $fe, $ff, $82, $ff, $82, $ff, $82, $ff, $00 ; id 17 'H'
+Tiles2Plus210Tiles_1F_4130::
+    db $ff, $7c, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $7c, $ff, $00 ; id 18 'I'
+    db $ff, $7e, $ff, $08, $ff, $08, $ff, $08, $ff, $88, $ff, $88, $ff, $70, $ff, $00 ; id 19 'J'
+    db $ff, $84, $ff, $88, $ff, $90, $ff, $b0, $ff, $c8, $ff, $84, $ff, $82, $ff, $00 ; id 20 'K'
+Tiles2Plus200Tiles_1F_4160::
+    db $ff, $80, $ff, $80, $ff, $80, $ff, $80, $ff, $80, $ff, $80, $ff, $fe, $ff, $00 ; id 21 'L'
+Tiles2Plus240Tiles_1F_4170::
+    db $ff, $82, $ff, $c6, $ff, $aa, $ff, $92, $ff, $82, $ff, $82, $ff, $82, $ff, $00 ; id 22 'M'
+Tiles1Plus6E0Tiles_1F_4180::
+    db $ff, $82, $ff, $c2, $ff, $a2, $ff, $92, $ff, $8a, $ff, $86, $ff, $82, $ff, $00 ; id 23 'N'
+Tiles2Plus230Tiles_1F_4190::
+    db $ff, $38, $ff, $44, $ff, $82, $ff, $82, $ff, $82, $ff, $44, $ff, $38, $ff, $00 ; id 24 'O'
+Tiles1Plus770Tiles_1F_41A0::
+    db $ff, $fc, $ff, $82, $ff, $82, $ff, $fc, $ff, $80, $ff, $80, $ff, $80, $ff, $00 ; id 25 'P'
+    db $ff, $38, $ff, $44, $ff, $82, $ff, $82, $ff, $8a, $ff, $44, $ff, $3a, $ff, $00 ; id 26 'Q'
+    db $ff, $fc, $ff, $82, $ff, $82, $ff, $fc, $ff, $88, $ff, $84, $ff, $82, $ff, $00 ; id 27 'R'
+Tiles2Plus250Tiles_1F_41D0::
+    db $ff, $78, $ff, $84, $ff, $80, $ff, $7c, $ff, $02, $ff, $82, $ff, $7c, $ff, $00 ; id 28 'S'
+    db $ff, $fe, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $00 ; id 29 'T'
+    db $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 30 'U'
+    db $ff, $82, $ff, $82, $ff, $44, $ff, $44, $ff, $28, $ff, $28, $ff, $10, $ff, $00 ; id 31 'V'
+Tiles1Plus700Tiles_1F_4210::
+    db $ff, $82, $ff, $92, $ff, $aa, $ff, $aa, $ff, $c6, $ff, $c6, $ff, $82, $ff, $00 ; id 32 'W'
+    db $ff, $c6, $ff, $44, $ff, $28, $ff, $10, $ff, $28, $ff, $44, $ff, $c6, $ff, $00 ; id 33 'X'
+Tiles2Plus700Tiles_1F_4230::
+    db $ff, $82, $ff, $44, $ff, $28, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $00 ; id 34 'Y'
+    db $ff, $fe, $ff, $04, $ff, $08, $ff, $10, $ff, $20, $ff, $40, $ff, $fe, $ff, $00 ; id 35 'Z'
+Tiles1Plus2F0Tiles_1F_4250::
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $04, $ff, $7c, $ff, $84, $ff, $7e, $ff, $00 ; id 36 'a'
+Tiles1Plus4F0Tiles_1F_4260::
+    db $ff, $80, $ff, $80, $ff, $80, $ff, $f8, $ff, $84, $ff, $84, $ff, $f8, $ff, $00 ; id 37 'b'
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $84, $ff, $80, $ff, $84, $ff, $78, $ff, $00 ; id 38 'c'
+Tiles1Plus2E0Tiles_1F_4280::
+    db $ff, $04, $ff, $04, $ff, $04, $ff, $7c, $ff, $84, $ff, $84, $ff, $7c, $ff, $00 ; id 39 'd'
+Tiles2Plus710Tiles_1F_4290::
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $84, $ff, $fc, $ff, $80, $ff, $7c, $ff, $00 ; id 40 'e'
+    db $ff, $18, $ff, $24, $ff, $20, $ff, $fc, $ff, $20, $ff, $20, $ff, $20, $ff, $00 ; id 41 'f'
+    db $ff, $00, $ff, $00, $ff, $7c, $ff, $84, $ff, $84, $ff, $7c, $ff, $04, $ff, $f8 ; id 42 'g'
+    db $ff, $80, $ff, $80, $ff, $80, $ff, $f8, $ff, $84, $ff, $84, $ff, $84, $ff, $00 ; id 43 'h'
+Tiles1Plus2E0Tiles_1F_42D0::
+    db $ff, $00, $ff, $10, $ff, $00, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $00 ; id 44 'i'
+    db $ff, $00, $ff, $10, $ff, $00, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $60 ; id 45 'j'
+    db $ff, $80, $ff, $80, $ff, $8c, $ff, $b0, $ff, $c0, $ff, $b0, $ff, $8c, $ff, $00 ; id 46 'k'
+Tiles1Plus7C0Tiles_1F_4300::
+    db $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $00 ; id 47 'l'
+Tiles2Plus7B0Tiles_1F_4310::
+    db $ff, $00, $ff, $00, $ff, $ec, $ff, $92, $ff, $92, $ff, $92, $ff, $92, $ff, $00 ; id 48 'm'
+Tiles2Plus710Tiles_1F_4320::
+    db $ff, $00, $ff, $00, $ff, $f8, $ff, $84, $ff, $84, $ff, $84, $ff, $84, $ff, $00 ; id 49 'n'
+Tiles1Plus6F0Tiles_1F_4330::
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $84, $ff, $84, $ff, $84, $ff, $78, $ff, $00 ; id 50 'o'
+Tiles1Plus250Tiles_1F_4340::
+    db $ff, $00, $ff, $00, $ff, $f8, $ff, $84, $ff, $84, $ff, $f8, $ff, $80, $ff, $80 ; id 51 'p'
+    db $ff, $00, $ff, $00, $ff, $7c, $ff, $84, $ff, $84, $ff, $7c, $ff, $04, $ff, $04 ; id 52 'q'
+    db $ff, $00, $ff, $00, $ff, $9c, $ff, $a0, $ff, $c0, $ff, $80, $ff, $80, $ff, $00 ; id 53 'r'
+Tiles2Plus720Tiles_1F_4370::
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $80, $ff, $78, $ff, $04, $ff, $f8, $ff, $00 ; id 54 's'
+    db $ff, $00, $ff, $20, $ff, $fc, $ff, $20, $ff, $20, $ff, $20, $ff, $1c, $ff, $00 ; id 55 't'
+    db $ff, $00, $ff, $00, $ff, $84, $ff, $84, $ff, $84, $ff, $84, $ff, $78, $ff, $00 ; id 56 'u'
+    db $ff, $00, $ff, $00, $ff, $84, $ff, $84, $ff, $84, $ff, $48, $ff, $30, $ff, $00 ; id 57 'v'
+    db $ff, $00, $ff, $00, $ff, $82, $ff, $92, $ff, $92, $ff, $aa, $ff, $44, $ff, $00 ; id 58 'w'
+Tiles1Plus2D0Tiles_1F_43C0::
+    db $ff, $00, $ff, $00, $ff, $84, $ff, $48, $ff, $30, $ff, $48, $ff, $84, $ff, $00 ; id 59 'x'
+    db $ff, $00, $ff, $00, $ff, $84, $ff, $84, $ff, $84, $ff, $7c, $ff, $04, $ff, $f8 ; id 60 'y'
+    db $ff, $00, $ff, $00, $ff, $fc, $ff, $08, $ff, $30, $ff, $40, $ff, $fc, $ff, $00 ; id 61 'z'
+    db $ff, $80, $ff, $80, $ff, $3c, $ff, $40, $ff, $3c, $ff, $02, $ff, $7c, $ff, $00 ; id 62 ''s'
+    db $ff, $80, $ff, $80, $ff, $76, $ff, $49, $ff, $49, $ff, $49, $ff, $49, $ff, $00 ; id 63 ''m'
+    db $ff, $80, $ff, $80, $ff, $0e, $ff, $50, $ff, $60, $ff, $40, $ff, $40, $ff, $00 ; id 64 ''r'
+    db $ff, $80, $ff, $90, $ff, $7e, $ff, $10, $ff, $10, $ff, $10, $ff, $0e, $ff, $00 ; id 65 ''t'
+    db $ff, $80, $ff, $80, $ff, $00, $ff, $42, $ff, $42, $ff, $24, $ff, $18, $ff, $00 ; id 66 ''v'
+    db $ff, $88, $ff, $88, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $00 ; id 67 ''l'
+Tiles1Plus6F0Tiles_1F_4450::
+    db $ff, $82, $ff, $82, $ff, $02, $ff, $3e, $ff, $42, $ff, $42, $ff, $3e, $ff, $00 ; id 68
+    db $ff, $00, $ff, $20, $ff, $a8, $ff, $72, $ff, $70, $ff, $a8, $ff, $22, $ff, $00 ; id 69 '*:'
+    db $ff, $70, $ff, $20, $ff, $20, $ff, $20, $ff, $20, $ff, $20, $ff, $70, $ff, $00 ; id 70
+Tiles1Plus7B0Tiles_1F_4480::
+    db $ff, $f8, $ff, $50, $ff, $50, $ff, $50, $ff, $50, $ff, $50, $ff, $f8, $ff, $00 ; id 71
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 72
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 73
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 74
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 75
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 76
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 77
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 78
+Tiles1Plus4C0Tiles_1F_4500::
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 79
+Tiles1Plus6E0Tiles_1F_4510::
+    db $ff, $00, $ff, $ee, $ff, $92, $ff, $92, $ff, $92, $ff, $92, $ff, $d6, $ff, $fe ; id 80
+    db $ff, $0e, $ff, $1b, $ff, $11, $ff, $1b, $ff, $3e, $ff, $70, $ff, $e0, $ff, $c0 ; id 81
+    db $ff, $0c, $ff, $1e, $ff, $65, $ff, $b9, $ff, $c9, $ff, $7f, $ff, $4a, $ff, $4e ; id 82
+    db $ff, $03, $ff, $05, $ff, $ca, $ff, $74, $ff, $28, $ff, $78, $ff, $ec, $ff, $c4 ; id 83
+    db $ff, $00, $ff, $ff, $ff, $4e, $ff, $2c, $ff, $18, $ff, $3c, $ff, $6e, $ff, $ff ; id 84
+    db $ff, $18, $ff, $24, $ff, $7e, $ff, $c3, $ff, $81, $ff, $81, $ff, $42, $ff, $3c ; id 85
+    db $ff, $06, $ff, $0a, $ff, $12, $ff, $12, $ff, $62, $ff, $bf, $ff, $81, $ff, $7e ; id 86
+    db $ff, $3c, $ff, $7e, $ff, $ff, $ff, $ff, $ff, $81, $ff, $a5, $ff, $85, $ff, $ff ; id 87
+    db $ff, $1c, $ff, $10, $ff, $d6, $ff, $ba, $ff, $82, $ff, $ba, $ff, $aa, $ff, $ee ; id 88
+    db $ff, $38, $ff, $6c, $ff, $c6, $ff, $ee, $ff, $82, $ff, $fe, $ff, $aa, $ff, $ee ; id 89
+    db $ff, $3c, $ff, $42, $ff, $99, $ff, $bd, $ff, $bd, $ff, $a5, $ff, $bd, $ff, $c3 ; id 90
+    db $ff, $0e, $ff, $11, $ff, $15, $ff, $19, $ff, $2e, $ff, $58, $ff, $a0, $ff, $e0 ; id 91
+    db $ff, $3c, $ff, $7e, $ff, $b9, $ff, $99, $ff, $d1, $ff, $46, $ff, $3c, $ff, $00 ; id 92
+    db $ff, $36, $ff, $2a, $ff, $22, $ff, $2a, $ff, $22, $ff, $2a, $ff, $5d, $ff, $55 ; id 93
+    db $ff, $7f, $ff, $41, $ff, $7f, $ff, $49, $ff, $7f, $ff, $49, $ff, $2a, $ff, $1c ; id 94
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 95
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 96
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 97
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 98
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 99
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 100
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 101
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 102
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 103
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 104
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 105
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 106
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 107
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 108
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 109
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 110
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 111
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 112
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 113
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 114
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 115
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 116
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 117
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 118
+Tiles1Plus7C0Tiles_1F_4780::
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 119
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 120
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 121
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 122
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 123
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 124
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 125
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 126
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 127
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 128
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 129
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 130
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 131
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 132
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 133
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 134
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 135
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 136
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 137
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 138
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 139
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 140
+RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data::
+    db $ff, $05, $ff, $05, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 141
+DebugResultsDisplay_Init_Data::
+    db $ff, $02, $ff, $05, $ff, $02, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 142
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $30, $ff, $48, $ff, $48, $ff, $30 ; id 143
+Tiles2Plus710Tiles_1F_4910::
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 144 ' '
+    db $ff, $00, $eb, $08, $ed, $70, $ff, $82, $b7, $ca, $8b, $fe, $f7, $74, $ff, $00 ; id 145
+    db $ff, $00, $ff, $24, $ff, $54, $ff, $58, $ff, $2a, $ff, $15, $ff, $15, $ff, $22 ; id 146
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $66, $ff, $66, $ff, $00 ; id 147
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $00, $ff, $60, $ff, $20, $ff, $40 ; id 148
+    db $ff, $60, $ff, $60, $ff, $20, $ff, $40, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 149 '''
+    db $ff, $00, $ff, $0e, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $00, $ff, $00 ; id 150
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $20, $ff, $20, $ff, $20, $ff, $20, $ff, $e0 ; id 151
+Tiles2Plus420Tiles_1F_4990::
+    db $ff, $00, $ff, $3c, $ff, $66, $ff, $66, $ff, $0c, $ff, $18, $ff, $00, $ff, $18 ; id 152 '?'
+    db $ff, $00, $ff, $0c, $ff, $0c, $ff, $0c, $ff, $08, $ff, $08, $ff, $00, $ff, $18 ; id 153 '!'
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $40, $ff, $60, $ff, $60 ; id 154
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $18, $ff, $18, $ff, $00, $ff, $00, $ff, $00 ; id 155
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $fe, $ff, $00, $ff, $00, $ff, $00 ; id 156 '-'
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $92, $ff, $0c, $ff, $00, $ff, $00 ; id 157
+    db $ff, $00, $ff, $02, $ff, $04, $ff, $08, $ff, $10, $ff, $20, $ff, $40, $ff, $80 ; id 158
+    db $ff, $00, $ff, $10, $ff, $92, $ff, $54, $ff, $38, $ff, $54, $ff, $92, $ff, $10 ; id 159
+    db $ff, $00, $ff, $08, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $08 ; id 160
+    db $ff, $00, $ff, $10, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $10 ; id 161
+    db $ff, $00, $ff, $00, $ff, $10, $ff, $10, $ff, $7c, $ff, $10, $ff, $10, $ff, $00 ; id 162
+Tiles1Plus7D0Tiles_1F_4A40::
+    db $ff, $00, $ff, $18, $ff, $18, $ff, $00, $ff, $00, $ff, $18, $ff, $18, $ff, $00 ; id 163 ':'
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $92, $ff, $00 ; id 164
+Tiles1Plus6A0Tiles_1F_4A60::
+    db $ff, $00, $ff, $80, $ff, $80, $ff, $80, $ff, $8a, $ff, $8a, $ff, $84, $ff, $f4 ; id 165
+Tiles1Plus7F0Tiles_1F_4A70::
+    db $ff, $00, $ff, $e0, $ff, $80, $ff, $80, $ff, $ea, $ff, $84, $ff, $84, $ff, $ea ; id 166
+Tiles1Plus7E0Tiles_1F_4A80::
+    db $ff, $00, $ff, $1e, $ff, $06, $ff, $0a, $ff, $72, $ff, $90, $ff, $90, $ff, $60 ; id 167
+Tiles1Plus7F0Tiles_1F_4A90::
+    db $ff, $00, $ff, $38, $ff, $44, $ff, $44, $ff, $38, $ff, $10, $ff, $7c, $ff, $10 ; id 168
+Tiles2Plus20Tiles_1F_4AA0::
+    db $ff, $00, $ff, $10, $ff, $38, $ff, $7c, $ff, $fe, $ff, $38, $ff, $38, $ff, $38 ; id 169
+    db $ff, $00, $ff, $6c, $ff, $6c, $ff, $24, $ff, $48, $ff, $00, $ff, $00, $ff, $00 ; id 170
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $60, $ff, $20, $ff, $40 ; id 171 ','
+Tiles1Plus4A0Tiles_1F_4AD0::
+    db $ff, $00, $ff, $10, $ff, $10, $ff, $fe, $ff, $7c, $ff, $38, $ff, $7c, $ff, $c6 ; id 172
+Tiles2Plus30Tiles_1F_4AE0::
+    db $ff, $38, $ff, $38, $ff, $38, $ff, $fe, $ff, $7c, $ff, $38, $ff, $10, $ff, $00 ; id 173
+    db $ff, $00, $ff, $10, $ff, $30, $ff, $7e, $ff, $fe, $ff, $7e, $ff, $30, $ff, $10 ; id 174
+    db $ff, $00, $ff, $10, $ff, $18, $ff, $fc, $ff, $fe, $ff, $fc, $ff, $18, $ff, $10 ; id 175
+    db $ff, $00, $ff, $7c, $ff, $78, $ff, $7c, $ff, $7e, $ff, $5c, $ff, $08, $ff, $00 ; id 176
+    db $ff, $00, $ff, $3e, $ff, $1e, $ff, $3e, $ff, $7e, $ff, $3a, $ff, $10, $ff, $00 ; id 177
+    db $ff, $00, $ff, $08, $ff, $5c, $ff, $7e, $ff, $7c, $ff, $78, $ff, $7c, $ff, $00 ; id 178
+    db $ff, $00, $ff, $10, $ff, $3a, $ff, $7e, $ff, $3e, $ff, $1e, $ff, $3e, $ff, $00 ; id 179
+    db $ff, $f0, $ff, $20, $ff, $40, $ff, $f0, $ff, $0f, $ff, $02, $ff, $04, $ff, $0f ; id 180
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $18, $ff, $18 ; id 181 '.'
+    db $ff, $00, $ff, $20, $ff, $50, $ff, $50, $ff, $20, $ff, $54, $ff, $8c, $ff, $72 ; id 182
+    db $ff, $00, $ff, $06, $ff, $06, $ff, $02, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 183
+    db $ff, $00, $ff, $38, $ff, $44, $ff, $ba, $ff, $a2, $ff, $ba, $ff, $44, $ff, $38 ; id 184
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 185
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 186
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 187
@@ -343,21 +303,20 @@ Data_01F_4AE0:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 253
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 254
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 255
-    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00 ; id 256
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 257
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 258
+    db $ff, $82, $ff, $c2, $ff, $a2, $ff, $92, $ff, $8a, $ff, $86, $ff, $82, $ff, $00 ; id 256
+    db $ff, $00, $ff, $00, $ff, $78, $ff, $84, $ff, $84, $ff, $84, $ff, $78, $ff, $00 ; id 257
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 258
 
-; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
-; 25 call sites from 10 routines (e.g. BootAndMainLoop, DetectSGB, SGBTransferCompressed, SGBTransferRaw, ...)
-; reads: wSGBActive, wSGBPacketIndex
-; points at: wSGBPacketBuffer
+; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex
+; ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count
+; is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse,
+; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
 SendSGBPacketSet::
-Func_01F_5040:: ; address name
     ld a, [wSGBActive]
-    or a, a
+    or a
     ret z
     ld a, [wSGBPacketIndex]
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     ld hl, wSGBPacketBuffer
     jr .skip2
@@ -376,7 +335,7 @@ Func_01F_5040:: ; address name
 
 .skip2:
     ld a, [hl]
-    and a, $07
+    and $07
     ret z
     ld b, a
     ld c, $00
@@ -391,7 +350,7 @@ Func_01F_5040:: ; address name
 
 .loop:
     ld e, $08
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
 
 .loop2:
@@ -419,10 +378,10 @@ Func_01F_5040:: ; address name
     call SpinDelay
     jr .skip3
 
-; E-0179 (C1: SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead) and sends byte-0 & 7 packets of 16 bytes from there through the joypad register).
+; SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead)
+; and sends byte-0 & 7 packets of 16 bytes from there through the joypad register (E-0179, C1)
 ; record: first 16-byte SGB packet of this set
 SGBPacketSetTable::
-Data_01F_5094:: ; address name
     dw SgbMaskEn_1F_513E ; id 0
     dw SgbMaskEn_1F_514E ; id 1
     dw SGBPackets ; id 2
@@ -445,92 +404,69 @@ Data_01F_5094:: ; address name
     dw SgbIconEn_1F_51EE ; id 19
     dw SgbMaskEn_1F_51FE ; id 20
 
-; E-0179 (C1: the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E).
+; the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E
+; (E-0179, C1)
 ; record: SGB packet (byte 0 = command * 8 + packet count)
 SGBPackets::
-SgbDataSnd_1F_50BE:: ; heuristic: SGB packet; C0
-Data_01F_50BE:: ; address name
-    db $79, $5D, $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
-SgbDataSnd_1F_50CE:: ; heuristic: SGB packet; C0
-Data_01F_50CE:: ; address name
-    db $79, $52, $08, $00, $0B, $A9, $E7, $9F, $01, $C0, $7E, $E8, $E8, $E8, $E8, $E0 ; id 1
-SgbDataSnd_1F_50DE:: ; heuristic: SGB packet; C0
-Data_01F_50DE:: ; address name
-    db $79, $47, $08, $00, $0B, $C4, $D0, $16, $A5, $CB, $C9, $05, $D0, $10, $A2, $28 ; id 2
-SgbDataSnd_1F_50EE:: ; heuristic: SGB packet; C0
-Data_01F_50EE:: ; address name
-    db $79, $3C, $08, $00, $0B, $F0, $12, $A5, $C9, $C9, $C8, $D0, $1C, $A5, $CA, $C9 ; id 3
-SgbDataSnd_1F_50FE:: ; heuristic: SGB packet; C0
-Data_01F_50FE:: ; address name
-    db $79, $31, $08, $00, $0B, $0C, $A5, $CA, $C9, $7E, $D0, $06, $A5, $CB, $C9, $7E ; id 4
-SgbDataSnd_1F_510E:: ; heuristic: SGB packet; C0
-Data_01F_510E:: ; address name
-    db $79, $26, $08, $00, $0B, $39, $CD, $48, $0C, $D0, $34, $A5, $C9, $C9, $80, $D0 ; id 5
-SgbDataSnd_1F_511E:: ; heuristic: SGB packet; C0
-Data_01F_511E:: ; address name
-    db $79, $1B, $08, $00, $0B, $EA, $EA, $EA, $EA, $EA, $A9, $01, $CD, $4F, $0C, $D0 ; id 6
-SgbDataSnd_1F_512E:: ; heuristic: SGB packet; C0
-Data_01F_512E:: ; address name
-    db $79, $10, $08, $00, $0B, $4C, $20, $08, $EA, $EA, $EA, $EA, $EA, $60, $EA, $EA ; id 7
-SgbMaskEn_1F_513E:: ; heuristic: SGB packet; C0
-Data_01F_513E:: ; address name
-    db $B9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
-SgbMaskEn_1F_514E:: ; heuristic: SGB packet; C0
-Data_01F_514E:: ; address name
-    db $B9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
-SgbMltReq_1F_515E:: ; heuristic: SGB packet; C0
-Data_01F_515E:: ; address name
+SgbDataSnd_1F_50BE::
+    db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
+SgbDataSnd_1F_50CE::
+    db $79, $52, $08, $00, $0b, $a9, $e7, $9f, $01, $c0, $7e, $e8, $e8, $e8, $e8, $e0 ; id 1
+SgbDataSnd_1F_50DE::
+    db $79, $47, $08, $00, $0b, $c4, $d0, $16, $a5, $cb, $c9, $05, $d0, $10, $a2, $28 ; id 2
+SgbDataSnd_1F_50EE::
+    db $79, $3c, $08, $00, $0b, $f0, $12, $a5, $c9, $c9, $c8, $d0, $1c, $a5, $ca, $c9 ; id 3
+SgbDataSnd_1F_50FE::
+    db $79, $31, $08, $00, $0b, $0c, $a5, $ca, $c9, $7e, $d0, $06, $a5, $cb, $c9, $7e ; id 4
+SgbDataSnd_1F_510E::
+    db $79, $26, $08, $00, $0b, $39, $cd, $48, $0c, $d0, $34, $a5, $c9, $c9, $80, $d0 ; id 5
+SgbDataSnd_1F_511E::
+    db $79, $1b, $08, $00, $0b, $ea, $ea, $ea, $ea, $ea, $a9, $01, $cd, $4f, $0c, $d0 ; id 6
+SgbDataSnd_1F_512E::
+    db $79, $10, $08, $00, $0b, $4c, $20, $08, $ea, $ea, $ea, $ea, $ea, $60, $ea, $ea ; id 7
+SgbMaskEn_1F_513E::
+    db $b9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
+SgbMaskEn_1F_514E::
+    db $b9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+SgbMltReq_1F_515E::
     db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
-SgbMltReq_1F_516E:: ; heuristic: SGB packet; C0
-Data_01F_516E:: ; address name
+SgbMltReq_1F_516E::
     db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
-SgbPalTrn_1F_517E:: ; heuristic: SGB packet; C0
-Data_01F_517E:: ; address name
+SgbPalTrn_1F_517E::
     db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
-SgbAttrTrn_1F_518E:: ; heuristic: SGB packet; C0
-Data_01F_518E:: ; address name
-    db $A9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
-SgbPalSet_1F_519E:: ; heuristic: SGB packet; C0
-Data_01F_519E:: ; address name
-    db $51, $00, $00, $01, $00, $02, $00, $03, $00, $C0, $00, $00, $00, $00, $00, $00 ; id 14
-SgbPctTrn_1F_51AE:: ; heuristic: SGB packet; C0
-Data_01F_51AE:: ; address name
-    db $A1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
-SgbChrTrn_1F_51BE:: ; heuristic: SGB packet; C0
-Data_01F_51BE:: ; address name
+SgbAttrTrn_1F_518E::
+    db $a9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+SgbPalSet_1F_519E::
+    db $51, $00, $00, $01, $00, $02, $00, $03, $00, $c0, $00, $00, $00, $00, $00, $00 ; id 14
+SgbPctTrn_1F_51AE::
+    db $a1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+SgbChrTrn_1F_51BE::
     db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
-SgbChrTrn_1F_51CE:: ; heuristic: SGB packet; C0
-Data_01F_51CE:: ; address name
+SgbChrTrn_1F_51CE::
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
-SGBPackets_12:: ; heuristic: SGB packet; C0
-Data_01F_51DE:: ; address name
-    db $C9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
-SgbIconEn_1F_51EE:: ; heuristic: SGB packet; C0
-Data_01F_51EE:: ; address name
+SGBPackets_12::
+    db $c9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+SgbIconEn_1F_51EE::
     db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
-SgbMaskEn_1F_51FE:: ; heuristic: SGB packet; C0
-Data_01F_51FE:: ; address name
-    db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
+SgbMaskEn_1F_51FE::
+    db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1F)
 BeginStringDisplay_Bank1F::
-Func_01F_520E:: ; address name
     ld de, StringCategories_1F_5223
     call BeginStringDisplay
     ret
-    db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9
+    db $11, $23, $52, $cd, $fe, $25, $c9, $cd, $0e, $52, $cd, $11, $26, $c9
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_1F_5223::
-Data_01F_5223:: ; address name
     dw StringList_1F_5225 ; id 0
 
-; E-0217 (derived: category list of StringCategories_1F_5223; one pointer per wStringIndex)
+; category list of StringCategories_1F_5223; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_1F_5225::
-Data_01F_5225:: ; address name
     dw String_1F_00_00 ; id 0
     dw String_1F_00_00 ; id 1
     dw String_1F_00_02 ; id 2
@@ -596,689 +532,572 @@ Data_01F_5225:: ; address name
     dw Script_1F_5A3A ; id 62
     dw Script_1F_5A3A ; id 63
 
-String_1F_00_00:: ; heuristic: string; C0
-Data_01F_52A5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Is your", $F1
-    db "adventure done?", $FA, $F7
-    db $EF, $EE, "Or do you need", $EF, $EE, "something?", $F7
-    db $F0
+String_1F_00_00::
+    db $ea, "Cobi: Is your", $f1
+    db "adventure done?", $fa, $f7
+    db $ef, $ee, "Or do you need", $ef, $ee, "something?", $f7
+    db $f0
 
-String_1F_00_02:: ; heuristic: string; C0
-Data_01F_52E3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which one's", $F1
-    db "staying here?", $F0
+String_1F_00_02::
+    db $ea, "Cobi: Which one's", $f1
+    db "staying here?", $f0
 
-String_1F_00_03:: ; heuristic: string; C0
-Data_01F_5303:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: So this one", $F1
-    db "is staying here?", $F0
+String_1F_00_03::
+    db $ea, "Cobi: So this one", $f1
+    db "is staying here?", $f0
 
-String_1F_00_04:: ; heuristic: string; C0
-Data_01F_5327:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Check up on", $F1
-    db "the others too.", $F7
-    db $F0
+String_1F_00_04::
+    db $ea, "Cobi: Check up on", $f1
+    db "the others too.", $f7
+    db $f0
 
-String_1F_00_05:: ; heuristic: string; C0
-Data_01F_534B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Do you need", $F1
-    db "anything else?", $F0
+String_1F_00_05::
+    db $ea, "Cobi: Do you need", $f1
+    db "anything else?", $f0
 
-String_1F_00_06:: ; heuristic: string; C0
-Data_01F_536D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: No, you can't", $F1
-    db "go off all alone.", $F7
-    db $F0
+String_1F_00_06::
+    db $ea, "Cobi: No, you can't", $f1
+    db "go off all alone.", $f7
+    db $f0
 
-String_1F_00_07:: ; heuristic: string; C0
-Data_01F_5394:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Switch with", $F1
-    db "one on the farm?", $F0
+String_1F_00_07::
+    db $ea, "Cobi: Switch with", $f1
+    db "one on the farm?", $f0
 
-String_1F_00_08:: ; heuristic: string; C0
-Data_01F_53B8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: What'll you", $F1
-    db "switch it with?", $F0
+String_1F_00_08::
+    db $ea, "Cobi: What'll you", $f1
+    db "switch it with?", $f0
 
-String_1F_00_09:: ; heuristic: string; C0
-Data_01F_53DA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: So you'll", $F1
-    db "take this one?", $F0
+String_1F_00_09::
+    db $ea, "Cobi: So you'll", $f1
+    db "take this one?", $f0
 
-String_1F_00_0A:: ; heuristic: string; C0
-Data_01F_53F9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: I switched", $F1
-    db $F9, "0.", $F7
-    db $F0
+String_1F_00_0A::
+    db $ea, "Cobi: I switched", $f1
+    db $f9, "0.", $f7
+    db $f0
 
-String_1F_00_0B:: ; heuristic: string; C0
-Data_01F_5410:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: The farm has", $F1
-    db "no more room.", $F7
-    db $F0
+String_1F_00_0B::
+    db $ea, "Cobi: The farm has", $f1
+    db "no more room.", $f7
+    db $f0
 
-String_1F_00_0C:: ; heuristic: string; C0
-Data_01F_5433:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: What'll you", $F1
-    db "switch it with?", $F0
+String_1F_00_0C::
+    db $ea, "Cobi: What'll you", $f1
+    db "switch it with?", $f0
 
-String_1F_00_0D:: ; heuristic: string; C0
-Data_01F_5455:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which one", $F1
-    db "will you take?", $F0
+String_1F_00_0D::
+    db $ea, "Cobi: Which one", $f1
+    db "will you take?", $f0
 
-String_1F_00_0E:: ; heuristic: string; C0
-Data_01F_5475:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Is this the", $F1
-    db "one you'll take?", $F0
+String_1F_00_0E::
+    db $ea, "Cobi: Is this the", $f1
+    db "one you'll take?", $f0
 
-String_1F_00_0F:: ; heuristic: string; C0
-Data_01F_5498:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: It's eager", $F1
-    db "to go, ", $F9, "0.", $F7
-    db $F0
+String_1F_00_0F::
+    db $ea, "Cobi: It's eager", $f1
+    db "to go, ", $f9, "0.", $f7
+    db $f0
 
-String_1F_00_10:: ; heuristic: string; C0
-Data_01F_54B5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: You haven't", $F1
-    db "left any here.", $F7
-    db $F0
+String_1F_00_10::
+    db $ea, "Cobi: You haven't", $f1
+    db "left any here.", $f7
+    db $f0
 
-String_1F_00_11:: ; heuristic: string; C0
-Data_01F_54D7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: You can't", $F1
-    db "take any more.", $F7
-    db $F0
+String_1F_00_11::
+    db $ea, "Cobi: You can't", $f1
+    db "take any more.", $f7
+    db $f0
 
-String_1F_00_12:: ; heuristic: string; C0
-Data_01F_54F7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: What do you", $F1
-    db "want to check?", $F0
+String_1F_00_12::
+    db $ea, "Cobi: What do you", $f1
+    db "want to check?", $f0
 
-String_1F_00_13:: ; heuristic: string; C0
-Data_01F_5519:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: We don't have", $F1
-    db "any of your eggs.", $F7
-    db $F0
+String_1F_00_13::
+    db $ea, "Cobi: We don't have", $f1
+    db "any of your eggs.", $f7
+    db $f0
 
-String_1F_00_14:: ; heuristic: string; C0
-Data_01F_5540:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which one", $F1
-    db "will you check?", $F0
+String_1F_00_14::
+    db $ea, "Cobi: Which one", $f1
+    db "will you check?", $f0
 
-String_1F_00_16:: ; heuristic: string; C0
-Data_01F_5561:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which egg", $F1
-    db "will you check?", $F0
+String_1F_00_16::
+    db $ea, "Cobi: Which egg", $f1
+    db "will you check?", $f0
 
-String_1F_00_17:: ; heuristic: string; C0
-Data_01F_5582:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: What  do you", $F1
-    db "want to release?", $F0
+String_1F_00_17::
+    db $ea, "Cobi: What  do you", $f1
+    db "want to release?", $f0
 
-String_1F_00_18:: ; heuristic: string; C0
-Data_01F_55A7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which one", $F1
-    db "will you release?", $F0
+String_1F_00_18::
+    db $ea, "Cobi: Which one", $f1
+    db "will you release?", $f0
 
-String_1F_00_19:: ; heuristic: string; C0
-Data_01F_55CA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Which egg", $F1
-    db "will you release?", $F0
+String_1F_00_19::
+    db $ea, "Cobi: Which egg", $f1
+    db "will you release?", $f0
 
-String_1F_00_1A:: ; heuristic: string; C0
-Data_01F_55ED:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: It'll be gone", $F1
-    db "forever. Sure?", $F0
+String_1F_00_1A::
+    db $ea, "Cobi: It'll be gone", $f1
+    db "forever. Sure?", $f0
 
-String_1F_00_1B:: ; heuristic: string; C0
-Data_01F_5610:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "The egg was", $F1
-    db "released.", $F7
-    db $F0
+String_1F_00_1B::
+    db "The egg was", $f1
+    db "released.", $f7
+    db $f0
 
-String_1F_00_1C:: ; heuristic: string; C0
-Data_01F_5627:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 was released", $F1
-    db "in the wild.", $F0
+String_1F_00_1C::
+    db $f9, "0 was released", $f1
+    db "in the wild.", $f0
 
-String_1F_00_1D:: ; heuristic: string; C0
-Data_01F_5644:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi: Come back", $F1
-    db "anytime, sis!", $F7
-    db $F0
+String_1F_00_1D::
+    db $ea, "Cobi: Come back", $f1
+    db "anytime, sis!", $f7
+    db $f0
 
-String_1F_00_1E:: ; heuristic: string; C0
-Data_01F_5664:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Hi, big", $F1
-    db "brother!", $FA, $F7
-    db $EF, $EE, "Do you need", $EF, $EE, "anything?", $F0
+String_1F_00_1E::
+    db $eb, "Tara: Hi, big", $f1
+    db "brother!", $fa, $f7
+    db $ef, $ee, "Do you need", $ef, $ee, "anything?", $f0
 
-String_1F_00_22:: ; heuristic: string; C0
-Data_01F_5696:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which one's", $F1
-    db "staying here?", $F0
+String_1F_00_22::
+    db $eb, "Tara: Which one's", $f1
+    db "staying here?", $f0
 
-String_1F_00_23:: ; heuristic: string; C0
-Data_01F_56B6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: So this one", $F1
-    db "is staying here?", $F0
+String_1F_00_23::
+    db $eb, "Tara: So this one", $f1
+    db "is staying here?", $f0
 
-String_1F_00_24:: ; heuristic: string; C0
-Data_01F_56DA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Say bye to", $F1
-    db $F9, "0 for a while.", $F7
-    db $F0
+String_1F_00_24::
+    db $eb, "Tara: Say bye to", $f1
+    db $f9, "0 for a while.", $f7
+    db $f0
 
-String_1F_00_25:: ; heuristic: string; C0
-Data_01F_56FD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Do you need", $F1
-    db "anything else?", $F0
+String_1F_00_25::
+    db $eb, "Tara: Do you need", $f1
+    db "anything else?", $f0
 
-String_1F_00_26:: ; heuristic: string; C0
-Data_01F_571F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: You'll be", $F1
-    db "left all alone!", $F7
-    db $F0
+String_1F_00_26::
+    db $eb, "Tara: You'll be", $f1
+    db "left all alone!", $f7
+    db $f0
 
-String_1F_00_27:: ; heuristic: string; C0
-Data_01F_5740:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Switch with", $F1
-    db "one on the farm?", $F0
+String_1F_00_27::
+    db $eb, "Tara: Switch with", $f1
+    db "one on the farm?", $f0
 
-String_1F_00_28:: ; heuristic: string; C0
-Data_01F_5764:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: What'll you", $F1
-    db "switch it with?", $F0
+String_1F_00_28::
+    db $eb, "Tara: What'll you", $f1
+    db "switch it with?", $f0
 
-String_1F_00_29:: ; heuristic: string; C0
-Data_01F_5786:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: So you'll", $F1
-    db "take this one?", $F0
+String_1F_00_29::
+    db $eb, "Tara: So you'll", $f1
+    db "take this one?", $f0
 
-String_1F_00_2A:: ; heuristic: string; C0
-Data_01F_57A5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: I switched", $F1
-    db $F9, "0.", $F7
-    db $F0
+String_1F_00_2A::
+    db $eb, "Tara: I switched", $f1
+    db $f9, "0.", $f7
+    db $f0
 
-String_1F_00_2B:: ; heuristic: string; C0
-Data_01F_57BC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: The farm is", $F1
-    db "out of room.", $F7
-    db $F0
+String_1F_00_2B::
+    db $eb, "Tara: The farm is", $f1
+    db "out of room.", $f7
+    db $f0
 
-String_1F_00_2C:: ; heuristic: string; C0
-Data_01F_57DD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: What'll you", $F1
-    db "switch it with?", $F0
+String_1F_00_2C::
+    db $eb, "Tara: What'll you", $f1
+    db "switch it with?", $f0
 
-String_1F_00_2D:: ; heuristic: string; C0
-Data_01F_57FF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which one", $F1
-    db "will you take?", $F0
+String_1F_00_2D::
+    db $eb, "Tara: Which one", $f1
+    db "will you take?", $f0
 
-String_1F_00_2E:: ; heuristic: string; C0
-Data_01F_581F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Is this the", $F1
-    db "one you'll take?", $F0
+String_1F_00_2E::
+    db $eb, "Tara: Is this the", $f1
+    db "one you'll take?", $f0
 
-String_1F_00_2F:: ; heuristic: string; C0
-Data_01F_5842:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: ", $F9, "0, it", $F1
-    db "really missed you.", $F7
-    db $F0
+String_1F_00_2F::
+    db $eb, "Tara: ", $f9, "0, it", $f1
+    db "really missed you.", $f7
+    db $f0
 
-String_1F_00_30:: ; heuristic: string; C0
-Data_01F_5864:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: You haven't", $F1
-    db "left any here.", $F7
-    db $F0
+String_1F_00_30::
+    db $eb, "Tara: You haven't", $f1
+    db "left any here.", $f7
+    db $f0
 
-String_1F_00_31:: ; heuristic: string; C0
-Data_01F_5886:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: You can't", $F1
-    db "take any more.", $F7
-    db $F0
+String_1F_00_31::
+    db $eb, "Tara: You can't", $f1
+    db "take any more.", $f7
+    db $f0
 
-String_1F_00_32:: ; heuristic: string; C0
-Data_01F_58A6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: What do you", $F1
-    db "want to check?", $F0
+String_1F_00_32::
+    db $eb, "Tara: What do you", $f1
+    db "want to check?", $f0
 
-String_1F_00_33:: ; heuristic: string; C0
-Data_01F_58C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: We don't have", $F1
-    db "any of your eggs.", $F7
-    db $F0
+String_1F_00_33::
+    db $eb, "Tara: We don't have", $f1
+    db "any of your eggs.", $f7
+    db $f0
 
-String_1F_00_34:: ; heuristic: string; C0
-Data_01F_58EF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which one", $F1
-    db "will you check?", $F0
+String_1F_00_34::
+    db $eb, "Tara: Which one", $f1
+    db "will you check?", $f0
 
-String_1F_00_36:: ; heuristic: string; C0
-Data_01F_5910:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which egg", $F1
-    db "will you check?", $F0
+String_1F_00_36::
+    db $eb, "Tara: Which egg", $f1
+    db "will you check?", $f0
 
-String_1F_00_37:: ; heuristic: string; C0
-Data_01F_5931:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: What  do you", $F1
-    db "want to release?", $F0
+String_1F_00_37::
+    db $eb, "Tara: What  do you", $f1
+    db "want to release?", $f0
 
-String_1F_00_38:: ; heuristic: string; C0
-Data_01F_5956:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which one", $F1
-    db "will you release?", $F0
+String_1F_00_38::
+    db $eb, "Tara: Which one", $f1
+    db "will you release?", $f0
 
-String_1F_00_39:: ; heuristic: string; C0
-Data_01F_5979:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Which egg", $F1
-    db "will you release?", $F0
+String_1F_00_39::
+    db $eb, "Tara: Which egg", $f1
+    db "will you release?", $f0
 
-String_1F_00_3A:: ; heuristic: string; C0
-Data_01F_599C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: It'll be gone", $F1
-    db "forever. OK?", $F0
+String_1F_00_3A::
+    db $eb, "Tara: It'll be gone", $f1
+    db "forever. OK?", $f0
 
-String_1F_00_3B:: ; heuristic: string; C0
-Data_01F_59BD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "The egg was", $F1
-    db "released.", $F7
-    db $F0
+String_1F_00_3B::
+    db "The egg was", $f1
+    db "released.", $f7
+    db $f0
 
-String_1F_00_3C:: ; heuristic: string; C0
-Data_01F_59D4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 was released", $F1
-    db "in the wild.", $F7
-    db $F0
+String_1F_00_3C::
+    db $f9, "0 was released", $f1
+    db "in the wild.", $f7
+    db $f0
 
-String_1F_00_3D:: ; heuristic: string; C0
-Data_01F_59F2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara: Please tell", $F1
-    db "me about your", $FA, $F7
-    db $EF, $EE, "adventure next", $EF, $EE, "time, big brother!", $F7
-    db $F0
+String_1F_00_3D::
+    db $eb, "Tara: Please tell", $f1
+    db "me about your", $fa, $f7
+    db $ef, $ee, "adventure next", $ef, $ee, "time, big brother!", $f7
+    db $f0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_1F_5A3A:: ; heuristic: event script entry or jump target; C0
-Data_01F_5A3A:: ; address name
+Script_1F_5A3A::
     script_command SCRIPT_SWAP_MONSTERS
-Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A3B::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A51, Script_1F_5A4E, Script_1F_5A4B, Script_1F_5A48, Script_1F_5A42
-Script_1F_5A42:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A42::
     script_command SCRIPT_MENU_CLOSE
-    script_message_unless_flag0 $801D ; flag 0 set: 'Cobi: Come back anytime, sis!'
+    script_message_unless_flag0 $801d ; flag 0 set: 'Cobi: Come back anytime, sis!'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_1F_5A48:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A48::
     script_jump Script_1F_5B96
-Script_1F_5A4B:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A4B::
     script_jump Script_1F_5B61
-Script_1F_5A4E:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A4E::
     script_jump Script_1F_5AC5
-Script_1F_5A51:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A51::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A55, Script_1F_5A58
-Script_1F_5A55:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A55::
     script_jump Script_1F_5A80
-Script_1F_5A58:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi: Which one's staying here?'
-Script_1F_5A5B:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A58::
+    script_message_unless_flag0 $c002 ; flag 0 set: 'Cobi: Which one's staying here?'
+Script_1F_5A5B::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A66, Script_1F_5A5F
-Script_1F_5A5F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5A5F::
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A3B
-Script_1F_5A66:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi: So this one is staying'
-Script_1F_5A69:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A66::
+    script_message_unless_flag0 $c003 ; flag 0 set: 'Cobi: So this one is staying'
+Script_1F_5A69::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A7C, Script_1F_5A75, Script_1F_5A6E
-Script_1F_5A6E:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi: Which one's staying here?'
+Script_1F_5A6E::
+    script_message_unless_flag0 $c002 ; flag 0 set: 'Cobi: Which one's staying here?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5B
-Script_1F_5A75:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C004 ; flag 0 set: 'Cobi: Check up on the others'
+Script_1F_5A75::
+    script_message_unless_flag0 $c004 ; flag 0 set: 'Cobi: Check up on the others'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5F
-Script_1F_5A7C:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A7C::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A69
-Script_1F_5A80:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
+Script_1F_5A80::
+    script_message_unless_flag0 $c006 ; flag 0 set: 'Cobi: No, you can't go off'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A87, Script_1F_5A8D
-Script_1F_5A87:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5A87::
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5A8D:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
-Script_1F_5A90:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A8D::
+    script_message_unless_flag0 $c007 ; flag 0 set: 'Cobi: Switch with one on the'
+Script_1F_5A90::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A9A, Script_1F_5A94
-Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5A94::
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5A9A:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
-Script_1F_5A9D:: ; heuristic: event script entry or jump target; C0
+Script_1F_5A9A::
+    script_message_unless_flag0 $c008 ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5A9D::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AA7, Script_1F_5AA1
-Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
+Script_1F_5AA1::
+    script_message_unless_flag0 $c007 ; flag 0 set: 'Cobi: Switch with one on the'
     script_jump Script_1F_5A90
-Script_1F_5AA7:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C009 ; flag 0 set: 'Cobi: So you'll take this one?'
-Script_1F_5AAA:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AA7::
+    script_message_unless_flag0 $c009 ; flag 0 set: 'Cobi: So you'll take this one?'
+Script_1F_5AAA::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AC1, Script_1F_5AB6, Script_1F_5AAF
-Script_1F_5AAF:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5AAF::
+    script_message_unless_flag0 $c008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A9D
-Script_1F_5AB6:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AB6::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi: I switched 0.'
+    script_message_unless_flag0 $c00a ; flag 0 set: 'Cobi: I switched 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5AC1:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AC1::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AAA
-Script_1F_5AC5:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AC5::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5ACA, Script_1F_5AD3, Script_1F_5AD6
-Script_1F_5ACA:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C010 ; flag 0 set: 'Cobi: You haven't left any here.'
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5ACA::
+    script_message_unless_flag0 $c010 ; flag 0 set: 'Cobi: You haven't left any here.'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5AD3:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AD3::
     script_jump Script_1F_5B01
-Script_1F_5AD6:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi: Which one will you take?'
-Script_1F_5AD9:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AD6::
+    script_message_unless_flag0 $c00d ; flag 0 set: 'Cobi: Which one will you take?'
+Script_1F_5AD9::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AE3, Script_1F_5ADD
-Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5ADD::
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5AE3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi: Is this the one you'll'
-Script_1F_5AE6:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AE3::
+    script_message_unless_flag0 $c00e ; flag 0 set: 'Cobi: Is this the one you'll'
+Script_1F_5AE6::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AFD, Script_1F_5AF2, Script_1F_5AEB
-Script_1F_5AEB:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi: Which one will you take?'
+Script_1F_5AEB::
+    script_message_unless_flag0 $c00d ; flag 0 set: 'Cobi: Which one will you take?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AD9
-Script_1F_5AF2:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AF2::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00F ; flag 0 set: 'Cobi: It's eager to go, 0.'
+    script_message_unless_flag0 $c00f ; flag 0 set: 'Cobi: It's eager to go, 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5AFD:: ; heuristic: event script entry or jump target; C0
+Script_1F_5AFD::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AE6
-Script_1F_5B01:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C011 ; flag 0 set: 'Cobi: You can't take any more.'
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
-Script_1F_5B07:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B01::
+    script_message_unless_flag0 $c011 ; flag 0 set: 'Cobi: You can't take any more.'
+    script_message_unless_flag0 $c007 ; flag 0 set: 'Cobi: Switch with one on the'
+Script_1F_5B07::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B11, Script_1F_5B0B
-Script_1F_5B0B:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+Script_1F_5B0B::
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5B11:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
-Script_1F_5B14:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B11::
+    script_message_unless_flag0 $c00c ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5B14::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B1F, Script_1F_5B18
-Script_1F_5B18:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B18::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
+    script_message_unless_flag0 $c007 ; flag 0 set: 'Cobi: Switch with one on the'
     script_jump Script_1F_5B07
-Script_1F_5B1F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi: So this one is staying'
-Script_1F_5B22:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B1F::
+    script_message_unless_flag0 $c003 ; flag 0 set: 'Cobi: So this one is staying'
+Script_1F_5B22::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B35, Script_1F_5B2E, Script_1F_5B27
-Script_1F_5B27:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5B27::
+    script_message_unless_flag0 $c00c ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B14
-Script_1F_5B2E:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B2E::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
+    script_message_unless_flag0 $c008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_jump Script_1F_5B39
-Script_1F_5B35:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B35::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B22
-Script_1F_5B39:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B39::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B43, Script_1F_5B3D
-Script_1F_5B3D:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5B3D::
+    script_message_unless_flag0 $c00c ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_jump Script_1F_5B14
-Script_1F_5B43:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi: Is this the one you'll'
-Script_1F_5B46:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B43::
+    script_message_unless_flag0 $c00e ; flag 0 set: 'Cobi: Is this the one you'll'
+Script_1F_5B46::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B5D, Script_1F_5B52, Script_1F_5B4B
-Script_1F_5B4B:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
+Script_1F_5B4B::
+    script_message_unless_flag0 $c008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B39
-Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B52::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi: I switched 0.'
+    script_message_unless_flag0 $c00a ; flag 0 set: 'Cobi: I switched 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B5D::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B46
-Script_1F_5B61:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B61::
     script_command SCRIPT_SWAP_MONSTERS
-Script_1F_5B62:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C012 ; flag 0 set: 'Cobi: What do you want to'
+Script_1F_5B62::
+    script_message_unless_flag0 $c012 ; flag 0 set: 'Cobi: What do you want to'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B6B, Script_1F_5B6E, Script_1F_5B71, Script_1F_5B7E
-Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B6B::
     script_jump Script_1F_5B81
-Script_1F_5B6E:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B6E::
     script_jump Script_1F_5B8F
-Script_1F_5B71:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi: We don't have any of'
+Script_1F_5B71::
+    script_message_unless_flag0 $c013 ; flag 0 set: 'Cobi: We don't have any of'
     script_jump Script_1F_5B62
-Script_1F_5B77:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B77::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B7E::
     script_jump Script_1F_5B77
-Script_1F_5B81:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C015 ; flag 0 set: 'Cobi: Which one will you check?'
-Script_1F_5B84:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B81::
+    script_message_unless_flag0 $c015 ; flag 0 set: 'Cobi: Which one will you check?'
+Script_1F_5B84::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B8B, Script_1F_5B88
-Script_1F_5B88:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B88::
     script_jump Script_1F_5B62
-Script_1F_5B8B:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B8B::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B84
-Script_1F_5B8F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C016 ; flag 0 set: 'Cobi: Which egg will you check?'
+Script_1F_5B8F::
+    script_message_unless_flag0 $c016 ; flag 0 set: 'Cobi: Which egg will you check?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B62
-Script_1F_5B96:: ; heuristic: event script entry or jump target; C0
+Script_1F_5B96::
     script_command SCRIPT_SWAP_MONSTERS
-Script_1F_5B97:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C017 ; flag 0 set: 'Cobi: What do you want to'
+Script_1F_5B97::
+    script_message_unless_flag0 $c017 ; flag 0 set: 'Cobi: What do you want to'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BA7, Script_1F_5BAA, Script_1F_5BAD, Script_1F_5BBA, Script_1F_5BA1
-Script_1F_5BA1:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
+Script_1F_5BA1::
+    script_message_unless_flag0 $c006 ; flag 0 set: 'Cobi: No, you can't go off'
     script_jump Script_1F_5B97
-Script_1F_5BA7:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BA7::
     script_jump Script_1F_5BBD
-Script_1F_5BAA:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BAA::
     script_jump Script_1F_5BE9
-Script_1F_5BAD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi: We don't have any of'
+Script_1F_5BAD::
+    script_message_unless_flag0 $c013 ; flag 0 set: 'Cobi: We don't have any of'
     script_jump Script_1F_5B97
-Script_1F_5BB3:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BB3::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BBA::
     script_jump Script_1F_5BB3
-Script_1F_5BBD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi: Which one will you release?'
-Script_1F_5BC0:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BBD::
+    script_message_unless_flag0 $c018 ; flag 0 set: 'Cobi: Which one will you release?'
+Script_1F_5BC0::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BC7, Script_1F_5BC4
-Script_1F_5BC4:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BC4::
     script_jump Script_1F_5B97
-Script_1F_5BC7:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
-Script_1F_5BCA:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BC7::
+    script_message_unless_flag0 $c01a ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
+Script_1F_5BCA::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BE5, Script_1F_5BDA, Script_1F_5BD3, Script_1F_5BD0
-Script_1F_5BD0:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
-Script_1F_5BD3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi: Which one will you release?'
+Script_1F_5BD0::
+    script_message_unless_flag0 $c006 ; flag 0 set: 'Cobi: No, you can't go off'
+Script_1F_5BD3::
+    script_message_unless_flag0 $c018 ; flag 0 set: 'Cobi: Which one will you release?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BC0
-Script_1F_5BDA:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BDA::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C01C ; flag 0 set: '0 was released in the wild.'
+    script_message_unless_flag0 $c01c ; flag 0 set: '0 was released in the wild.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5BE5:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BE5::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BCA
-Script_1F_5BE9:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi: Which egg will you release?'
-Script_1F_5BEC:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BE9::
+    script_message_unless_flag0 $c019 ; flag 0 set: 'Cobi: Which egg will you release?'
+Script_1F_5BEC::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BF3, Script_1F_5BF0
-Script_1F_5BF0:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BF0::
     script_jump Script_1F_5B97
-Script_1F_5BF3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
-Script_1F_5BF6:: ; heuristic: event script entry or jump target; C0
+Script_1F_5BF3::
+    script_message_unless_flag0 $c01a ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
+Script_1F_5BF6::
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5C11, Script_1F_5C06, Script_1F_5BFF, Script_1F_5BFC
-Script_1F_5BFC:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
-Script_1F_5BFF:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi: Which egg will you release?'
+Script_1F_5BFC::
+    script_message_unless_flag0 $c006 ; flag 0 set: 'Cobi: No, you can't go off'
+Script_1F_5BFF::
+    script_message_unless_flag0 $c019 ; flag 0 set: 'Cobi: Which egg will you release?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BEC
-Script_1F_5C06:: ; heuristic: event script entry or jump target; C0
+Script_1F_5C06::
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C01B ; flag 0 set: 'The egg was released.'
+    script_message_unless_flag0 $c01b ; flag 0 set: 'The egg was released.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
+    script_message_unless_flag0 $c005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
-Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
+Script_1F_5C11::
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BF6
 
-; for the visible entries of record-list page wListPageIndex draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. HibernateMenu_ChooseRecords_ToDrawRecordListPageNames, BreedMenu_ChooseParents_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames, ...)
-; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
-; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
-; points at: wListEntries
+; for the visible entries of record-list page wListPageIndex draws each record name at
+; DrawRecordListPageNames_Data[n] (the fifth through the mark-overlay drawer) (E-0128)
 DrawRecordListPageNames::
-Func_01F_5C15:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld hl, wListEntries
     ld a, [wListPageIndex]
     ld b, a
-    add a, a
-    add a, a
-    add a, b
+    add a
+    add a
+    add b
     add_a_to_hl
     ld c, $00
 
 .loop:
     ld a, [wListLastRow]
-    cp a, $04
+    cp $04
     jr c, .check_list_pages
     ld a, [wListCount]
     jr .read_list_page_index
 
 .check_list_pages:
     ld a, [wListPages]
-    cp a, $01
+    cp $01
     jr nz, .read_list_count
     ld a, [wListCount]
     jr .read_list_page_index
@@ -1291,31 +1110,31 @@ Func_01F_5C15:: ; address name
     ld a, [wListPageIndex]
     push bc
     ld c, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add c
     pop bc
-    add a, c
-    cp a, b
+    add c
+    cp b
     jr nc, .check_screen_step
     push hl
     push bc
     ld a, [hl]
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     pop bc
     push bc
     ld a, c
-    cp a, $04
+    cp $04
     jr nz, .skip
     call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F
     jr .restore
 
 .skip:
     ld a, c
-    add a, a
+    add a
     ld hl, DrawRecordListPageNames_Data
     add_a_to_hl
     ld e, [hl]
@@ -1329,33 +1148,27 @@ Func_01F_5C15:: ; address name
     inc hl
     inc c
     ld a, [wListCount]
-    cp a, c
+    cp c
     jr z, .check_screen_step
     ld a, c
-    cp a, $05
+    cp $05
     jr c, .loop
 
 .check_screen_step:
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; address loaded by DrawRecordListPageNames
-DrawRecordListPageNames_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01F_5C9C:: ; address name
-    db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
+DrawRecordListPageNames_Data::
+    db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
-; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
-; 1 call site from 1 routine (e.g. DrawRecordListPageNames)
-; reads: wGlyphListPos, wGlyphListStart
-; writes: wGlyphListPos, wGlyphListStart
-; points at: wNameGlyphBuf
+; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the
+; previous tile (E-0125)
 DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F::
-Func_01F_5CA6:: ; address name
-    xor a, a
+    xor a
     ld [wGlyphListPos], a
     ld [wGlyphListStart], a
     ld hl, wNameGlyphBuf
@@ -1365,11 +1178,11 @@ Func_01F_5CA6:: ; address name
     push hl
     add_a_to_hl
     ld a, [hl]
-    cp a, $F0
+    cp $f0
     jp z, .clear_glyph_list_start
-    cp a, $8D
+    cp $8d
     jr z, .check_glyph_list_start
-    cp a, $8E
+    cp $8e
     jr z, .check_glyph_list_start
     call GlyphCopyArgsForA
     call CopyFromBankWaitVRAM
@@ -1396,22 +1209,20 @@ Func_01F_5CA6:: ; address name
 
 .clear_glyph_list_start:
     pop hl
-    xor a, a
+    xor a
     ld [wGlyphListStart], a
     ld [wGlyphListPos], a
     ret
 
-; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wGlyphListStart, B = $1F (bank), C = 16 (bytes) (E-0120)
-; 2 call sites from 1 routine (e.g. DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F)
-; reads: wGlyphListStart
+; DE = GlyphFont + 16 * A (the glyph's tile), HL = the VRAM address from GlyphCopyArgsForA_Data + 2
+; * wGlyphListStart, B = $1F (bank), C = 16 (bytes) (E-0120)
 GlyphCopyArgsForA::
-Func_01F_5CF8:: ; address name
     swap a
     ld d, a
-    and a, $F0
+    and $f0
     ld e, a
     ld a, d
-    and a, $0F
+    and $0f
     ld d, a
     ld hl, GlyphFont
     add hl, de
@@ -1427,22 +1238,18 @@ Func_01F_5CF8:: ; address name
     ld h, [hl]
     ld l, e
     pop de
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     ret
 
-; address loaded by GlyphCopyArgsForA
-GlyphCopyArgsForA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01F_5D20:: ; address name
-    db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
+GlyphCopyArgsForA_Data::
+    db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
-; parameters wArg1/wArg2 = source (high, low), wArg3 = width, wArg4 = rows, wArg5/wArg6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; 25 call sites from 18 routines (e.g. DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ClearTilesAndDrawRects6C5FAnd6D37, ...)
-; reads: wArg6, rSTAT, wIsCGB, wArg7
-; writes: rVBK
-; points at: wArg1
+; parameters wArg1/wArg2 = source (high, low), wArg3 = width, wArg4 = rows, wArg5/wArg6 = BG map
+; destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT
+; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
+; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
 DrawTileRectFromArg1Params::
-Func_01F_5D2A:: ; address name
     ld hl, wArg1
     ld d, [hl]
     inc hl
@@ -1469,16 +1276,16 @@ Func_01F_5D2A:: ; address name
     bit 1, a
     jr nz, .loop3
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     ei
     ld a, l
-    and a, $1F
+    and $1f
     jr nz, .next
     ld a, l
-    sub a, $20
+    sub $20
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
 
 .next:
@@ -1490,10 +1297,10 @@ Func_01F_5D2A:: ; address name
     push hl
     push bc
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .restore
     ld a, [wArg7]
-    and a, a
+    and a
     jr nz, .restore
     ld a, $01
     ldh [rVBK], a
@@ -1505,23 +1312,23 @@ Func_01F_5D2A:: ; address name
     ldh a, [rSTAT]
     bit 1, a
     jr nz, .loop5
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     ei
     ld a, l
-    and a, $1F
+    and $1f
     jr nz, .next2
     ld a, l
-    sub a, $20
+    sub $20
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
 
 .next2:
     dec b
     jr nz, .loop4
-    xor a, a
+    xor a
     ldh [rVBK], a
 
 .restore:
@@ -1530,18 +1337,17 @@ Func_01F_5D2A:: ; address name
     ld a, $20
     add_a_to_hl
     ld a, h
-    and a, $9B
+    and $9b
     ld h, a
     dec c
     jr nz, .loop
     ret
 
-; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB, unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186, correcting E-0129)
-; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, ...)
-; reads: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, rSTAT, wIsCGB, ...
-; writes: rVBK
+; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with
+; the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB,
+; unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186,
+; correcting E-0129)
 FillTileRectWithArg1Tile::
-Func_01F_5D9A:: ; address name
     ld a, [wArg1]
     ld d, a
     ld a, [wArg2]
@@ -1567,16 +1373,16 @@ Func_01F_5D9A:: ; address name
     bit 1, a
     jr nz, .loop3
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     ei
     ld a, l
-    and a, $1F
+    and $1f
     jr nz, .next
     ld a, l
-    sub a, $20
+    sub $20
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
 
 .next:
@@ -1587,10 +1393,10 @@ Func_01F_5D9A:: ; address name
     push hl
     push bc
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .restore
     ld a, [wArg7]
-    and a, a
+    and a
     jr nz, .restore
     ld a, $01
     ldh [rVBK], a
@@ -1602,23 +1408,23 @@ Func_01F_5D9A:: ; address name
     ldh a, [rSTAT]
     bit 1, a
     jr nz, .loop5
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     ei
     ld a, l
-    and a, $1F
+    and $1f
     jr nz, .next2
     ld a, l
-    sub a, $20
+    sub $20
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
 
 .next2:
     dec b
     jr nz, .loop4
-    xor a, a
+    xor a
     ldh [rVBK], a
 
 .restore:
@@ -1627,537 +1433,472 @@ Func_01F_5D9A:: ; address name
     ld a, $20
     add_a_to_hl
     ld a, h
-    and a, $9B
+    and $9b
     ld h, a
     dec c
     ld a, c
-    and a, a
+    and a
     jr nz, .loop
     ret
 
-; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
-; address loaded by LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, BreedMenu_RestoreScreen_FillTileRectWithArg1Tile and 6 more
-BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithArg1Tile; C0
-Data_01F_5E12:: ; address name
-    db $C3
+; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten
+; callers pass this address (E-0186)
+BGFillTile::
+    db $c3
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 3 tiles, one row per line
 TileRect_1F_5E13::
-Data_01F_5E13:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_5E37::
-Data_01F_5E37:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $02, $bf, $09, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0a, $0b, $03, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0c, $09, $05, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 11
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 12
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 13
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 14
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
-; record: 20 x 18 tiles, one row per line
+; the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18;
+; the four screens are contiguous, 360 bytes each; no reader of this one was found (E-0187, C1)
 TileScreen_1F_5F9F::
-Data_01F_5F9F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0: row 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
-    db $B6, $15, $1F, $1B, $1C, $1D, $ED, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 11
+    db $b6, $15, $1f, $1b, $1c, $1d, $ed, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 15
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
-; record: 20 x 18 tiles, one row per line
 TileScreen_1F_6107::
-Data_01F_6107:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0: row 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7 ; row 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $B7 ; row 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $B7 ; row 11
-    db $B6, $15, $1F, $1B, $1C, $1D, $ED, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $B7 ; row 13
-    db $B6, $68, $69, $6A, $6B, $6C, $6D, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $B7 ; row 15
-    db $B6, $6E, $6F, $70, $71, $72, $73, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $b7 ; row 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $b7 ; row 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $b7 ; row 11
+    db $b6, $15, $1f, $1b, $1c, $1d, $ed, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $b7 ; row 13
+    db $b6, $68, $69, $6a, $6b, $6c, $6d, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $b7 ; row 15
+    db $b6, $6e, $6f, $70, $71, $72, $73, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
-; record: 20 x 18 tiles, one row per line
 TileScreen_1F_626F::
-Data_01F_626F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0: row 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $14, $10, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $13, $14, $15, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $14, $10, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 11
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 13
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 14
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_63D7::
-Data_01F_63D7:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $6C, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $0D, $0D, $ED, $2F, $30, $31, $32, $33, $C3, $C3, $B7 ; id 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 9
-    db $B6, $0D, $14, $10, $0E, $ED, $34, $35, $36, $37, $38, $B7 ; id 10
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
-    db $B6, $6D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
-    db $B6, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $B7 ; id 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $B6, $0D, $0D, $ED, $43, $44, $45, $46, $47, $C3, $C3, $B7 ; id 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $6c, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $0d, $0d, $ed, $2f, $30, $31, $32, $33, $c3, $c3, $b7 ; id 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 9
+    db $b6, $0d, $14, $10, $0e, $ed, $34, $35, $36, $37, $38, $b7 ; id 10
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 11
+    db $b6, $6d, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
+    db $b6, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $b7 ; id 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_64AF::
-Data_01F_64AF:: ; address name
     db $20, $21, $22, $23, $24, $25 ; id 0
-    db $26, $27, $28, $29, $2A, $2B ; id 1
-    db $2C, $2D, $2E, $2F, $30, $31 ; id 2
+    db $26, $27, $28, $29, $2a, $2b ; id 1
+    db $2c, $2d, $2e, $2f, $30, $31 ; id 2
     db $32, $33, $34, $35, $36, $37 ; id 3
-    db $38, $39, $3A, $3B, $3C, $3D ; id 4
-    db $3E, $3F, $40, $41, $42, $43 ; id 5
+    db $38, $39, $3a, $3b, $3c, $3d ; id 4
+    db $3e, $3f, $40, $41, $42, $43 ; id 5
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 6 tiles, one row per line
 TileRect_1F_64D3::
-Data_01F_64D3:: ; address name
     db $02, $03, $04, $05, $06, $07 ; id 0
-    db $08, $09, $0A, $0B, $0C, $0D ; id 1
-    db $0E, $0F, $10, $11, $12, $13 ; id 2
+    db $08, $09, $0a, $0b, $0c, $0d ; id 1
+    db $0e, $0f, $10, $11, $12, $13 ; id 2
     db $14, $15, $16, $17, $18, $19 ; id 3
-    db $1A, $1B, $1C, $1D, $1E, $1F ; id 4
+    db $1a, $1b, $1c, $1d, $1e, $1f ; id 4
     db $20, $21, $22, $23, $24, $25 ; id 5
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 6 tiles, one row per line
 TileRect_1F_64F7::
-Data_01F_64F7:: ; address name
-    db $48, $49, $4A, $4B, $4C, $4D ; id 0
-    db $4E, $4F, $50, $51, $52, $53 ; id 1
+    db $48, $49, $4a, $4b, $4c, $4d ; id 0
+    db $4e, $4f, $50, $51, $52, $53 ; id 1
     db $54, $55, $56, $57, $58, $59 ; id 2
-    db $5A, $5B, $5C, $5D, $5E, $5F ; id 3
+    db $5a, $5b, $5c, $5d, $5e, $5f ; id 3
     db $60, $61, $62, $63, $64, $65 ; id 4
-    db $66, $67, $68, $69, $6A, $6B ; id 5
+    db $66, $67, $68, $69, $6a, $6b ; id 5
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 6 tiles, one row per line
 TileRect_1F_651B::
-Data_01F_651B:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_653F::
-Data_01F_653F:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 15 tiles, one row per line
 TileRect_1F_6577::
-Data_01F_6577:: ; address name
-    db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $C3, $B7 ; id 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $C3, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $0D, $0D, $ED, $29, $2A, $2B, $2C, $2D, $C3, $C3, $B7 ; id 6
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 7
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 8
-    db $B6, $FF, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 10
-    db $B6, $0B, $0E, $0F, $10, $C3, $09, $0E, $11, $0E, $12, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $FF, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 14
+    db $b6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $c3, $b7 ; id 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $c3, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $0d, $0d, $ed, $29, $2a, $2b, $2c, $2d, $c3, $c3, $b7 ; id 6
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 7
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 8
+    db $b6, $ff, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 9
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 10
+    db $b6, $0b, $0e, $0f, $10, $c3, $09, $0e, $11, $0e, $12, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $ff, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 12 x 15 tiles, one row per line
 TileRect_1F_662B::
-Data_01F_662B:: ; address name
-    db $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
-    db $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 8
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 9
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 10
-    db $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 13
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 14
+    db $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $02, $bf, $09, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $0a, $0b, $03, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
+    db $b6, $c3, $0c, $09, $05, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 8
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 9
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 10
+    db $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 13
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 7 tiles, one row per line
 TileRect_1F_66DF::
-Data_01F_66DF:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 1
-    db $B6, $32, $33, $34, $35, $36, $37, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $38, $39, $3A, $3B, $3C, $3D, $B7 ; id 4
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 1
+    db $b6, $32, $33, $34, $35, $36, $37, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $38, $39, $3a, $3b, $3c, $3d, $b7 ; id 4
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_6717::
-Data_01F_6717:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $b7, $b6, $c3, $02, $bf, $09, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7, $b6, $c3, $0a, $0b, $03, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0c, $09, $05, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 11
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 12
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 13
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 14
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 20 x 18 tiles, one row per line
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 TileRect_1F_687F::
-Data_01F_687F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $02, $bf, $09, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0a, $0b, $03, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0c, $09, $05, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 11
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 12
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 13
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 14
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 20 x 18 tiles, one row per line
 TileRect_1F_69E7::
-Data_01F_69E7:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7, $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7, $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $b7, $b6, $c3, $02, $bf, $09, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0a, $0b, $03, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $0c, $09, $05, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 11
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 12
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 13
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 14
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6B4F::
-Data_01F_6B4F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6C27::
-Data_01F_6C27:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 12 x 18 tiles, one row per line
 TileRect_1F_6C5F::
-Data_01F_6C5F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $B7 ; id 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $B6, $C3, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $C3, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $B7 ; id 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
-    db $B6, $C3, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $B7 ; id 15
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $c3, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $b7 ; id 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $b6, $c3, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $c3, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $b7 ; id 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 14
+    db $b6, $c3, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $b7 ; id 15
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 7 tiles, one row per line
 TileRect_1F_6D37::
-Data_01F_6D37:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 12 x 18 tiles, one row per line
 TileRect_1F_6D6F::
-Data_01F_6D6F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 9
-    db $B6, $0D, $14, $10, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $13, $14, $15, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 9
+    db $b6, $0d, $14, $10, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 7 tiles, one row per line
 TileRect_1F_6E47::
-Data_01F_6E47:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3 ; id 1
-    db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3 ; id 2
-    db $C3, $C3, $C3, $6F, $7E, $C3, $C3, $C3 ; id 3
-    db $C3, $C3, $C3, $C3, $7D, $C3, $C3, $C3 ; id 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3 ; id 1
+    db $c3, $c3, $c3, $6e, $7e, $c3, $c3, $c3 ; id 2
+    db $c3, $c3, $c3, $6f, $7e, $c3, $c3, $c3 ; id 3
+    db $c3, $c3, $c3, $c3, $7d, $c3, $c3, $c3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 20 x 18 tiles, one row per line
 TileRect_1F_6E7F::
-Data_01F_6E7F:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
-    db $C3, $48, $49, $4A, $4B, $4C, $4D, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $C3, $4E, $4F, $50, $51, $52, $53, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
-    db $C3, $54, $55, $56, $57, $58, $59, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $C3, $5A, $5B, $5C, $5D, $5E, $5F, $C3, $B6, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $B7 ; id 5
-    db $C3, $60, $61, $62, $63, $64, $65, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $C3, $66, $67, $68, $69, $6A, $6B, $C3, $B6, $0D, $0D, $ED, $2F, $30, $31, $32, $33, $C3, $C3, $B7 ; id 7
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 9
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $14, $10, $0E, $ED, $34, $35, $36, $37, $38, $B7 ; id 10
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
-    db $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
-    db $C3, $C3, $C3, $6F, $7E, $C3, $C3, $C3, $B6, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $B7 ; id 14
-    db $C3, $C3, $C3, $C3, $7D, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $43, $44, $45, $46, $47, $C3, $C3, $B7 ; id 16
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
+    db $c3, $48, $49, $4a, $4b, $4c, $4d, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $c3, $4e, $4f, $50, $51, $52, $53, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
+    db $c3, $54, $55, $56, $57, $58, $59, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $c3, $5a, $5b, $5c, $5d, $5e, $5f, $c3, $b6, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $b7 ; id 5
+    db $c3, $60, $61, $62, $63, $64, $65, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $c3, $66, $67, $68, $69, $6a, $6b, $c3, $b6, $0d, $0d, $ed, $2f, $30, $31, $32, $33, $c3, $c3, $b7 ; id 7
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 9
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $14, $10, $0e, $ed, $34, $35, $36, $37, $38, $b7 ; id 10
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 11
+    db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $c3, $c3, $c3, $6e, $7e, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
+    db $c3, $c3, $c3, $6f, $7e, $c3, $c3, $c3, $b6, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $b7 ; id 14
+    db $c3, $c3, $c3, $c3, $7d, $c3, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 15
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 20 x 18 tiles, one row per line
 TileRect_1F_6FE7::
-Data_01F_6FE7:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
-    db $C3, $00, $00, $C3, $C3, $B6, $C3, $50, $51, $52, $53, $54, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
-    db $C3, $00, $00, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
-    db $C3, $00, $00, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 4
-    db $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28, $C3, $C3, $C3, $C3, $B7 ; id 5
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 6
-    db $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3, $0F, $10, $11, $12, $B7 ; id 7
-RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_Case07_Data:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-Data_01F_7087:: ; address name
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3, $20, $21, $22, $23, $B7 ; id 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
-    db $B6, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $C3, $31, $32, $33, $34, $B7 ; id 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
-    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $C3, $42, $43, $44, $45, $B7 ; id 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
-    db $B6, $46, $47, $48, $49, $4A, $4B, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $06, $13, $05, $C3, $B7 ; id 15
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+    db $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
+    db $c3, $00, $00, $c3, $c3, $b6, $c3, $50, $51, $52, $53, $54, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
+    db $c3, $00, $00, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
+    db $c3, $00, $00, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 4
+    db $b6, $c3, $c3, $c3, $c3, $06, $35, $3b, $28, $39, $c3, $13, $24, $30, $28, $c3, $c3, $c3, $c3, $b7 ; id 5
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 6
+    db $b6, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $c3, $0f, $10, $11, $12, $b7 ; id 7
+RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_Case07_Data::
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $c3, $20, $21, $22, $23, $b7 ; id 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 10
+    db $b6, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $c3, $31, $32, $33, $34, $b7 ; id 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 12
+    db $b6, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $c3, $42, $43, $44, $45, $b7 ; id 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 14
+    db $b6, $46, $47, $48, $49, $4a, $4b, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $06, $13, $05, $c3, $b7 ; id 15
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_1F_714F::
-Data_01F_714F:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
-RunNameEntryStateWhenNotFading_Case02_DrawTileRectFromArg1Params_Data:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-Data_01F_7177:: ; address name
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
+RunNameEntryStateWhenNotFading_Case02_DrawTileRectFromArg1Params_Data::
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $6e, $6f, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 3 tiles, one row per line
 TileRect_1F_71B3::
-Data_01F_71B3:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
 TileRect_1F_71EF::
-Data_01F_71EF:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $13, $36, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $13, $36, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; E-0187 (C1: GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24 sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375).
+; GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24 sets wArg1/wArg2 = $720D +
+; (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls
+; DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375 (E-0187, C1)
 ; record: one 20 x 6 tile panel (wScreenByteBD selects it)
 TileRect_1F_720D::
-Data_01F_720D:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $00, $01, $02, $03, $04, $05, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1: row 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $06, $07, $08, $09, $0A, $0B, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 1
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $0C, $0D, $0E, $0F, $10, $11, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $12, $13, $14, $15, $16, $17, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $18, $19, $1A, $1B, $1C, $1D, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $1E, $1F, $20, $21, $22, $23, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 5
-    db $C3, $C3, $C3, $C3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $C3, $C3, $C3, $C3 ; id 2: row 0
-    db $C3, $C3, $C3, $C3, $06, $07, $08, $09, $0A, $0B, $2A, $2B, $2C, $2D, $2E, $2F, $C3, $C3, $C3, $C3 ; row 1
-    db $C3, $C3, $C3, $C3, $0C, $0D, $0E, $0F, $10, $11, $30, $31, $32, $33, $34, $35, $C3, $C3, $C3, $C3 ; row 2
-    db $C3, $C3, $C3, $C3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3A, $3B, $C3, $C3, $C3, $C3 ; row 3
-    db $C3, $C3, $C3, $C3, $18, $19, $1A, $1B, $1C, $1D, $3C, $3D, $3E, $3F, $40, $41, $C3, $C3, $C3, $C3 ; row 4
-    db $C3, $C3, $C3, $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $C3, $C3, $C3, $C3 ; row 5
-    db $C3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $48, $49, $4A, $4B, $4C, $4D, $C3 ; id 3: row 0
-    db $C3, $06, $07, $08, $09, $0A, $0B, $2A, $2B, $2C, $2D, $2E, $2F, $4E, $4F, $50, $51, $52, $53, $C3 ; row 1
-    db $C3, $0C, $0D, $0E, $0F, $10, $11, $30, $31, $32, $33, $34, $35, $54, $55, $56, $57, $58, $59, $C3 ; row 2
-    db $C3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3A, $3B, $5A, $5B, $5C, $5D, $5E, $5F, $C3 ; row 3
-    db $C3, $18, $19, $1A, $1B, $1C, $1D, $3C, $3D, $3E, $3F, $40, $41, $60, $61, $62, $63, $64, $65, $C3 ; row 4
-    db $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6A, $6B, $C3 ; row 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $00, $01, $02, $03, $04, $05, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1: row 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $06, $07, $08, $09, $0a, $0b, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 1
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $0c, $0d, $0e, $0f, $10, $11, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $12, $13, $14, $15, $16, $17, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $18, $19, $1a, $1b, $1c, $1d, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $1e, $1f, $20, $21, $22, $23, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 5
+    db $c3, $c3, $c3, $c3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $c3, $c3, $c3, $c3 ; id 2: row 0
+    db $c3, $c3, $c3, $c3, $06, $07, $08, $09, $0a, $0b, $2a, $2b, $2c, $2d, $2e, $2f, $c3, $c3, $c3, $c3 ; row 1
+    db $c3, $c3, $c3, $c3, $0c, $0d, $0e, $0f, $10, $11, $30, $31, $32, $33, $34, $35, $c3, $c3, $c3, $c3 ; row 2
+    db $c3, $c3, $c3, $c3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3a, $3b, $c3, $c3, $c3, $c3 ; row 3
+    db $c3, $c3, $c3, $c3, $18, $19, $1a, $1b, $1c, $1d, $3c, $3d, $3e, $3f, $40, $41, $c3, $c3, $c3, $c3 ; row 4
+    db $c3, $c3, $c3, $c3, $1e, $1f, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $c3, $c3, $c3, $c3 ; row 5
+    db $c3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $48, $49, $4a, $4b, $4c, $4d, $c3 ; id 3: row 0
+    db $c3, $06, $07, $08, $09, $0a, $0b, $2a, $2b, $2c, $2d, $2e, $2f, $4e, $4f, $50, $51, $52, $53, $c3 ; row 1
+    db $c3, $0c, $0d, $0e, $0f, $10, $11, $30, $31, $32, $33, $34, $35, $54, $55, $56, $57, $58, $59, $c3 ; row 2
+    db $c3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3a, $3b, $5a, $5b, $5c, $5d, $5e, $5f, $c3 ; row 3
+    db $c3, $18, $19, $1a, $1b, $1c, $1d, $3c, $3d, $3e, $3f, $40, $41, $60, $61, $62, $63, $64, $65, $c3 ; row 4
+    db $c3, $1e, $1f, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6a, $6b, $c3 ; row 5
 
-; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep)
+; copies 16 glyph tiles (LoadSixteenGlyphTilesFromTable73BC_Data_73BC) from bank $1F to the VRAM
+; addresses in LoadSixteenGlyphTilesFromTable73BC_Data_73CC (E-0127)
 LoadSixteenGlyphTilesFromTable73BC::
-Func_01F_7375:: ; address name
     ld c, $00
 
 .loop:
     push bc
     ld a, c
     ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73BC
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -2182,7 +1923,7 @@ Func_01F_7375:: ; address name
     ld a, c
     sla a
     ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73CC
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -2194,35 +1935,28 @@ Func_01F_7375:: ; address name
     ld a, [de]
     ld h, a
     pop de
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     pop bc
     inc c
     ld a, c
-    cp a, $10
+    cp $10
     jr c, .loop
     ret
 
-; address loaded by LoadSixteenGlyphTilesFromTable73BC
-LoadSixteenGlyphTilesFromTable73BC_Data_73BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01F_73BC:: ; address name
-    db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
+LoadSixteenGlyphTilesFromTable73BC_Data_73BC::
+    db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
-; address loaded by LoadSixteenGlyphTilesFromTable73BC
-LoadSixteenGlyphTilesFromTable73BC_Data_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_01F_73CC:: ; address name
-    db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
-    db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
+LoadSixteenGlyphTilesFromTable73BC_Data_73CC::
+    db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
+    db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawWCA36MonsterPictureInTwoSteps, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawWCA36MonsterPictureInTwoSteps)
-; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
+; first call: draws the 6 x 6 frame TileRect_1F_651B and loads the picture of species wRecordBufB +
+; $B at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
 DrawWCA36MonsterPictureInTwoSteps::
-Func_01F_73EC:: ; address name
     ld a, [wScreenSubStep]
-    and a, a
+    and a
     jp nz, .check_is_cgb
     call BGMapAddressAtScroll_Bank1F
     ld de, $0161
@@ -2240,7 +1974,7 @@ Func_01F_73EC:: ; address name
     ld [wArg3], a
     ld a, $06
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ld a, [wRecordBufB + MON_SPECIES]
@@ -2257,14 +1991,14 @@ Func_01F_73EC:: ; address name
 
 .check_is_cgb:
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .call_bg_map_address_at_scroll_bank1_f
     ld a, [wRecordBufB + MON_SPECIES]
     ld e, a
     ld a, [wRecordBufB + MON_SPECIES + 1]
     ld d, a
     push de
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
     ld a, $01
@@ -2295,18 +2029,17 @@ Func_01F_73EC:: ; address name
     ld a, $01
     ld [wArg7], a
     call DrawTileRectFromArg1Params
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map: E-0186)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToClearBGMapAndLoadFrameTilesAndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearBGMapAndLoadFrameTiles)
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
+; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three
+; tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map:
+; E-0186)
 ClearBGMapAndLoadFrameTiles::
-Func_01F_7494:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld a, h
     ld [wArg5], a
@@ -2321,31 +2054,29 @@ Func_01F_7494:: ; address name
     ld [wArg3], a
     ld a, $20
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call FillTileRectWithArg1Tile
     ld de, Tiles1Plus2F0Tiles_1F_4250
-    ld hl, vTiles1 + $7E0
-    ld b, $1F
+    ld hl, vTiles1 + $7e0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles_1F_4A70
-    ld hl, vTiles1 + $7F0
-    ld b, $1F
+    ld hl, vTiles1 + $7f0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus4A0Tiles_1F_4AD0
-    ld hl, vTiles2 + $6F0
-    ld b, $1F
+    ld hl, vTiles2 + $6f0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
 
-; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case15, RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case15)
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
+; draws the tile rectangles TileRect_1F_662B (12 x 15 at scroll + $68) and TileRect_1F_653F (8 x 7
+; at scroll + $160) (E-0121)
 DrawRects662BAnd653F::
-Func_01F_74E3:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0068
     add hl, de
@@ -2358,11 +2089,11 @@ Func_01F_74E3:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    ld a, $0C
+    ld a, $0c
     ld [wArg3], a
-    ld a, $0F
+    ld a, $0f
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
@@ -2381,16 +2112,14 @@ Func_01F_74E3:: ; address name
     ld [wArg3], a
     ld a, $07
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
 
-; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep)
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
+; draws the tile rectangles TileRect_1F_6B4F (12 x 18 at scroll + 8) and TileRect_1F_6C27 (8 x 7 at
+; scroll + $160) (E-0121)
 DrawRects6B4FAnd6C27::
-Func_01F_753A:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -2403,11 +2132,11 @@ Func_01F_753A:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    ld a, $0C
+    ld a, $0c
     ld [wArg3], a
     ld a, $12
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
@@ -2426,16 +2155,14 @@ Func_01F_753A:: ; address name
     ld [wArg3], a
     ld a, $07
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
 
-; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37, RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
+; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles TileRect_1F_6C5F (12 x 18) and
+; TileRect_1F_6D37 (8 x 7) (E-0127)
 ClearTilesAndDrawRects6C5FAnd6D37::
-Func_01F_7591:: ; address name
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2459,11 +2186,11 @@ Func_01F_7591:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    ld a, $0C
+    ld a, $0c
     ld [wArg3], a
     ld a, $12
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
@@ -2482,22 +2209,18 @@ Func_01F_7591:: ; address name
     ld [wArg3], a
     ld a, $07
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
 
-; shows the eight skill names of the record at wRecordBufB (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone, RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone)
-; reads: wRecordBufB
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
-; points at: wRecordBufB
+; shows the eight skill names of the record at wRecordBufB (field $34) in rows from vTiles2 + $200,
+; or string $0E of category 8 when it has none (E-0129)
 ShowRecordBufBSkillNamesOrNone::
-Func_01F_7601:: ; address name
     ld a, [wRecordBufB + MON_SKILLS]
-    cp a, $FF
+    cp $ff
     jr z, .set_text_window_tile_lo
-    and a, a
+    and a
     jr z, .set_text_window_tile_lo
     jr .skip
 
@@ -2525,7 +2248,7 @@ Func_01F_7601:: ; address name
     ld [wTextWindowWidth], a
     ld a, $08
     ld [wStringCategory], a
-    ld a, $0E
+    ld a, $0e
     ld [wStringIndex], a
     farcall ShowString_Bank08
     jr .set_text_window_tile_lo2
@@ -2551,9 +2274,9 @@ Func_01F_7601:: ; address name
     ld a, c
     add_a_to_hl
     ld a, [hl]
-    and a, a
+    and a
     jr z, .call_fill_tiles_from_request
-    cp a, $FF
+    cp $ff
     jr z, .call_fill_tiles_from_request
     jr .set_string_index
 
@@ -2570,10 +2293,10 @@ Func_01F_7601:: ; address name
 .restore:
     pop hl
     ld a, l
-    add a, $90
+    add $90
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     pop bc
     inc c
@@ -2593,11 +2316,9 @@ Func_01F_7601:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; draws the tile rectangles Data_01F_6E47 and Data_01F_6D6F, clears tile rows and sets up the summary text window (E-0128)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B, RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B)
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wTextWindowTileLo, ...
+; draws the tile rectangles TileRect_1F_6E47 and TileRect_1F_6D6F, clears tile rows and sets up the
+; summary text window (E-0128)
 DrawSummaryFrames6E47And6D6F::
-Func_01F_76B5:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -2614,10 +2335,10 @@ Func_01F_76B5:: ; address name
     ld [wArg3], a
     ld a, $07
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
-    ld hl, vTiles2 + $6C0
+    ld hl, vTiles2 + $6c0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -2640,11 +2361,11 @@ Func_01F_76B5:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    ld a, $0C
+    ld a, $0c
     ld [wArg3], a
     ld a, $12
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ld hl, vTiles2 + $200
@@ -2670,11 +2391,9 @@ Func_01F_76B5:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF)
-; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
+; draws the tile rectangles TileRect_1F_5E13 (12 x 3 at scroll + 8) and TileRect_1F_66DF (8 x 7 at
+; scroll + $160) (E-0121)
 DrawRects5E13And66DF::
-Func_01F_7754:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
     add hl, de
@@ -2687,11 +2406,11 @@ Func_01F_7754:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    ld a, $0C
+    ld a, $0c
     ld [wArg3], a
     ld a, $03
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
@@ -2710,18 +2429,16 @@ Func_01F_7754:: ; address name
     ld [wArg3], a
     ld a, $07
     ld [wArg4], a
-    xor a, a
+    xor a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
     ret
 
-; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 14 call sites from 7 routines (e.g. ClearBGMapAndLoadFrameTiles, DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
-; reads: hScrollY, hScrollX
+; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
+; clobbers A, DE (the same 41 bytes appear in 3 banks)
 BGMapAddressAtScroll_Bank1F::
-Func_01F_77AB:: ; address name
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -2729,16 +2446,16 @@ Func_01F_77AB:: ; address name
     sla e
     rl d
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $98
+    adc $98
     ld d, a
     ldh a, [hScrollX]
     srl a
     srl a
     srl a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -2751,131 +2468,131 @@ Func_01F_77AB:: ; address name
     ret
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_1F_77D4:: ; heuristic: event script entry or jump target; C0
+Script_1F_77D4::
     script_command SCRIPT_PRIEST
-Script_1F_77D5:: ; heuristic: event script entry or jump target; C0
+Script_1F_77D5::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_77F4, Script_1F_77EE, Script_1F_77E8, Script_1F_77E2, Script_1F_77DC
-Script_1F_77DC:: ; heuristic: event script entry or jump target; C0
+Script_1F_77DC::
     script_command SCRIPT_BREED_CLOSE
     script_message $8005 ; '*: May the gods go with'
     script_command SCRIPT_BREED_CLOSE
     script_end
-Script_1F_77E2:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; '*: But none appear to be'
+Script_1F_77E2::
+    script_message $c003 ; '*: But none appear to be'
     script_jump Script_1F_77F7
-Script_1F_77E8:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; '*: Oh? But no one is'
+Script_1F_77E8::
+    script_message $c002 ; '*: Oh? But no one is'
     script_jump Script_1F_77F7
-Script_1F_77EE:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; '*: Oh? But none appear to'
+Script_1F_77EE::
+    script_message $c001 ; '*: Oh? But none appear to'
     script_jump Script_1F_77F7
-Script_1F_77F4:: ; heuristic: event script entry or jump target; C0
+Script_1F_77F4::
     script_jump Script_1F_77FD
-Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; '*: Do you need any other'
+Script_1F_77F7::
+    script_message $c004 ; '*: Do you need any other'
     script_jump Script_1F_77D5
-Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
+Script_1F_77FD::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_780E, Script_1F_7808, Script_1F_7802
-Script_1F_7802:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; '*: Who should be freed of'
+Script_1F_7802::
+    script_message $c008 ; '*: Who should be freed of'
     script_jump Script_1F_7811
-Script_1F_7808:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; '*: Who should be cured of'
+Script_1F_7808::
+    script_message $c007 ; '*: Who should be cured of'
     script_jump Script_1F_7811
-Script_1F_780E:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; '*: Which monster should be revived?'
-Script_1F_7811:: ; heuristic: event script entry or jump target; C0
+Script_1F_780E::
+    script_message $c006 ; '*: Which monster should be revived?'
+Script_1F_7811::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7819, Script_1F_7815
-Script_1F_7815:: ; heuristic: event script entry or jump target; C0
+Script_1F_7815::
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
-Script_1F_7819:: ; heuristic: event script entry or jump target; C0
+Script_1F_7819::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7831, Script_1F_782B, Script_1F_7825, Script_1F_781F
-Script_1F_781F:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; '*: But that monster is not'
+Script_1F_781F::
+    script_message $c00b ; '*: But that monster is not'
     script_jump Script_1F_77FD
-Script_1F_7825:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; '*: But that monster is not'
+Script_1F_7825::
+    script_message $c00a ; '*: But that monster is not'
     script_jump Script_1F_77FD
-Script_1F_782B:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; '*: Surely you jest. That one'
+Script_1F_782B::
+    script_message $c009 ; '*: Surely you jest. That one'
     script_jump Script_1F_77FD
-Script_1F_7831:: ; heuristic: event script entry or jump target; C0
+Script_1F_7831::
     script_command SCRIPT_PRIEST
-    script_message $C00C ; '*: I must ask for a'
+    script_message $c00c ; '*: I must ask for a'
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7845, Script_1F_783E, Script_1F_783A
-Script_1F_783A:: ; heuristic: event script entry or jump target; C0
+Script_1F_783A::
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77FD
-Script_1F_783E:: ; heuristic: event script entry or jump target; C0
-    script_message $C014 ; '*: Oh, my, my How deplorable!'
+Script_1F_783E::
+    script_message $c014 ; '*: Oh, my, my How deplorable!'
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
-Script_1F_7845:: ; heuristic: event script entry or jump target; C0
+Script_1F_7845::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7856, Script_1F_7850, Script_1F_784A
-Script_1F_784A:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; '*: Gods, I beg you, free'
+Script_1F_784A::
+    script_message $c00f ; '*: Gods, I beg you, free'
     script_jump Script_1F_7859
-Script_1F_7850:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; '*: Gods, I beg you, purify'
+Script_1F_7850::
+    script_message $c00e ; '*: Gods, I beg you, purify'
     script_jump Script_1F_7859
-Script_1F_7856:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; '*: Gods, the spirits of earth!'
-Script_1F_7859:: ; heuristic: event script entry or jump target; C0
+Script_1F_7856::
+    script_message $c00d ; '*: Gods, the spirits of earth!'
+Script_1F_7859::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_786A, Script_1F_7864, Script_1F_785E
-Script_1F_785E:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; '0 was freed from the curse.'
+Script_1F_785E::
+    script_message $c012 ; '0 was freed from the curse.'
     script_jump Script_1F_786D
-Script_1F_7864:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; '0 was cleansed of poison.'
+Script_1F_7864::
+    script_message $c011 ; '0 was cleansed of poison.'
     script_jump Script_1F_786D
-Script_1F_786A:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; '0 was revived!'
-Script_1F_786D:: ; heuristic: event script entry or jump target; C0
+Script_1F_786A::
+    script_message $c010 ; '0 was revived!'
+Script_1F_786D::
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7877, Script_1F_7871
-Script_1F_7871:: ; heuristic: event script entry or jump target; C0
+Script_1F_7871::
     script_command SCRIPT_BREED_CLOSE
     script_message $8013 ; 'No one else seems to need'
     script_command SCRIPT_BREED_CLOSE
     script_end
-Script_1F_7877:: ; heuristic: event script entry or jump target; C0
+Script_1F_7877::
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
-Script_1F_787B:: ; heuristic: event script entry or jump target; C0
+Script_1F_787B::
     script_command SCRIPT_LIBRARY
-Script_1F_787C:: ; heuristic: event script entry or jump target; C0
+Script_1F_787C::
     script_command SCRIPT_LIBRARY
     script_choice_jump Script_1F_7890, Script_1F_7887, Script_1F_7881
-Script_1F_7881:: ; heuristic: event script entry or jump target; C0
+Script_1F_7881::
     script_command SCRIPT_LIBRARY
     script_message $8002 ; '*: Come back if you need'
     script_command SCRIPT_LIBRARY
     script_end
-Script_1F_7887:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; '*: That family is a mystery'
-    script_message $C004 ; '*: Which family will you check?'
+Script_1F_7887::
+    script_message $c005 ; '*: That family is a mystery'
+    script_message $c004 ; '*: Which family will you check?'
     script_jump Script_1F_787C
-Script_1F_7890:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; '*: Which species will you check?'
-Script_1F_7893:: ; heuristic: event script entry or jump target; C0
+Script_1F_7890::
+    script_message $c003 ; '*: Which species will you check?'
+Script_1F_7893::
     script_command SCRIPT_LIBRARY
     script_choice_jump Script_1F_789F, Script_1F_7897
-Script_1F_7897:: ; heuristic: event script entry or jump target; C0
+Script_1F_7897::
     script_command SCRIPT_LIBRARY
-    script_message $C004 ; '*: Which family will you check?'
+    script_message $c004 ; '*: Which family will you check?'
     script_command SCRIPT_LIBRARY
     script_jump Script_1F_787C
-Script_1F_789F:: ; heuristic: event script entry or jump target; C0
+Script_1F_789F::
     script_command SCRIPT_LIBRARY
-    script_message $C003 ; '*: Which species will you check?'
+    script_message $c003 ; '*: Which species will you check?'
     script_command SCRIPT_LIBRARY
     script_jump Script_1F_7893
     ds $759, $00

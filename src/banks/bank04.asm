@@ -1,25 +1,21 @@
 SECTION "Bank 04", ROMX[$4000], BANK[$04]
     db $04
 
-; runs Func_004_4BB0 and Func_004_44CE; shared by the field mode states (E-0122)
-; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_DrawFieldSprites, FieldModeStateDispatch_RunBattleTransitionStep, ...)
+; runs AdvancePlayerAnimCounterAndRunPlayerSpriteMode and UpdateAndDrawSpriteSlots; shared by the
+; field mode states (E-0122)
 FieldStateCommonUpdate::
-Func_004_4001:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     call UpdateAndDrawSpriteSlots
     ret
 
-; when wSaveStateFlag bit 7 is set: clears wSaveStateFlag, wSpriteSlotCount = wSpriteSnapshotCount and the $50 bytes at wSpriteSnapshot go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
-; 2 call sites from 1 routine (e.g. LoadMapObjectsForScreen)
-; reads: wSaveStateFlag, wSpriteSnapshotCount
-; writes: wSaveStateFlag, wSpriteSlotCount
-; points at: wSpriteSnapshot, wSpriteSlots
+; when wSaveStateFlag bit 7 is set: clears wSaveStateFlag, wSpriteSlotCount = wSpriteSnapshotCount
+; and the $50 bytes at wSpriteSnapshot go back to wSpriteSlots (undoes SnapshotSpritesForSave)
+; (E-0117)
 RestoreSpriteSnapshot::
-Func_004_4008:: ; address name
     ld a, [wSaveStateFlag]
     bit 7, a
     ret z
-    xor a, a
+    xor a
     ld [wSaveStateFlag], a
     ld a, [wSpriteSnapshotCount]
     ld [wSpriteSlotCount], a
@@ -29,44 +25,40 @@ Func_004_4008:: ; address name
     call CopyBytes
     ret
 
-; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wKeyWorldFloorInfo + $1/wKeyWorldFloorState entries (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapObjectsForScreen)
-; reads: wMapType, wKeyWorldFloor, wKeyWorldByte06, wKeyWorldFlags, wKeyWorldGoalKind, wKeyWorldObjFlag
-; writes: wKeyWorldObjFlag, hTemp9, wSpriteSlotCount
-; points at: wKeyWorldFloorState
+; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the
+; wKeyWorldFloorInfo + $1/wKeyWorldFloorState entries (E-0130)
 SetupKeyWorldObjectsForMapType::
-Func_004_4025:: ; address name
-    xor a, a
+    xor a
     ld [wKeyWorldObjFlag], a
     ld a, [wMapType]
-    and a, $07
-    cp a, $03
+    and $07
+    cp $03
     jr z, .read_key_world_floor
-    cp a, $04
+    cp $04
     jr z, .clear_temp9
-    cp a, $06
+    cp $06
     jp z, .read_key_world_floor3
-    cp a, $02
+    cp $02
     jp z, .clear_temp92
     ret
 
 .read_key_world_floor:
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
-    xor a, a
+    xor a
     ldh [hTemp9], a
     ld a, [hl]
-    cp a, $06
+    cp $06
     jr z, .check_key_world_flags
-    cp a, $02
+    cp $02
     jr c, .skip
-    cp a, $04
+    cp $04
     jr nc, .skip
     push af
-    cp a, $02
+    cp $02
     jr nz, .read_key_world_floor2
     ld a, $01
     ld [wKeyWorldObjFlag], a
@@ -84,14 +76,14 @@ Func_004_4025:: ; address name
 
 .restore:
     pop af
-    add a, $08
+    add $08
     jr .skip
 
 .check_key_world_flags:
     ld a, [wKeyWorldFlags]
     bit 7, a
     jr z, .set_temp9_to_01
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ret
 
@@ -102,24 +94,24 @@ Func_004_4025:: ; address name
 
 .skip:
     dec a
-    add a, a
+    add a
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Multiply8
     ld a, [wKeyWorldObjFlag]
-    or a, a
+    or a
     ret z
     call PlaceObjectCB86ForKeyWorldGoalKind
     ret
 
 .clear_temp9:
-    xor a, a
+    xor a
     ldh [hTemp9], a
     ld c, $06
     ld a, [wKeyWorldGoalKind]
-    cp a, $07
+    cp $07
     jr nz, .skip2
-    ld c, $0E
+    ld c, $0e
 
 .skip2:
     ld a, c
@@ -134,13 +126,13 @@ Func_004_4025:: ; address name
     ld hl, wKeyWorldFloorState + $3
     add_a_to_hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .loop
-    and a, $01
+    and $01
     jr z, .check_key_world_flags2
 
 .loop:
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ret
 
@@ -157,88 +149,82 @@ Func_004_4025:: ; address name
     ret
 
 .clear_temp92:
-    xor a, a
+    xor a
     ldh [hTemp9], a
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldEncounterTable + $3
     add_a_to_hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .clear_sprite_slot_count
     ld a, [wKeyWorldByte06]
-    or a, a
+    or a
     jr z, .set_temp9_to_02
 
 .clear_sprite_slot_count:
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ret
 
 .set_temp9_to_02:
     ld a, $02
     ldh [hTemp9], a
-    ld a, $0C
+    ld a, $0c
     ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Multiply8
     ret
 
-; only called from SetupKeyWorldObjectsForMapType (E-0047)
-; 4 call sites from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
-; reads: wMapWidthScreens, hMapScreenY, hMapScreenX, hTemp9, hTemp2, hTemp0, wKeyWorldGoalKind, hTempA, ...
-; writes: wSpriteSlotCount, hTempA, hTemp4, hTemp5, hTemp2, hTemp0, hTemp1, hTemp3, ...
-; points at: wSpriteSlots, wKeyWorldEncounterTable
 SetupKeyWorldObjectsForMapType_Multiply8::
-Func_004_4129:: ; address name
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     ld a, [wMapWidthScreens]
-    add a, a
+    add a
     ld c, a
     ldh a, [hMapScreenY]
     call Multiply8
     ldh a, [hMapScreenX]
-    add a, a
+    add a
     add_a_to_hl
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
-    or a, e
+    or e
     ret z
     ld a, [hl]
     ld d, a
     ld l, e
     ld h, d
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     ld a, e
-    cp a, $FF
+    cp $ff
     jr nz, .cp_FE
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ret
 
 .cp_FE:
-    cp a, $FE
+    cp $fe
     jr z, .skip
 
 .skip:
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     ld l, e
     ld h, d
-    ld a, [hl+]
+    ld a, [hli]
     ld [wSpriteSlotCount], a
     ld b, a
     ld de, wSpriteSlots
@@ -247,23 +233,23 @@ Func_004_4129:: ; address name
     push bc
     ld a, b
     ldh [hTempA], a
-    xor a, a
+    xor a
     ldh [hTemp4], a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp5], a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp2], a
     inc de
     ld [de], a
     inc de
     ldh a, [hTemp9]
-    or a, a
+    or a
     jr nz, .skip2
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp1], a
     ld [de], a
     inc de
@@ -289,12 +275,12 @@ Func_004_4129:: ; address name
     inc hl
     push hl
     ld a, [wKeyWorldFloor]
-    and a, $0F
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
     ld hl, wKeyWorldEncounterTable
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     ld [de], a
     inc de
@@ -306,10 +292,10 @@ Func_004_4129:: ; address name
 
 .check_temp2:
     ldh a, [hTemp2]
-    or a, a
+    or a
     jr z, .skip3
     ldh a, [hTemp0]
-    cp a, $09
+    cp $09
     jr nc, .skip3
     push hl
     swap a
@@ -329,25 +315,25 @@ Func_004_4129:: ; address name
 .skip3:
     push de
     ld a, e
-    sub a, $04
+    sub $04
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     pop de
     ld a, [hl]
     ld [de], a
     push de
     ld a, $07
-    add a, e
+    add e
     ld e, a
     jr nc, .skip4
     inc d
 
 .skip4:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     pop de
     inc de
@@ -355,39 +341,39 @@ Func_004_4129:: ; address name
     ld [de], a
     push de
     ld a, $07
-    add a, e
+    add e
     ld e, a
     jr nc, .skip5
     inc d
 
 .skip5:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     pop de
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp3], a
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ldh a, [hTempA]
-    and a, $03
+    and $03
     ld [de], a
-    xor a, a
-    inc de
-    ld [de], a
-    inc de
-    inc de
+    xor a
     inc de
     ld [de], a
     inc de
     inc de
-    ld a, [hl+]
+    inc de
+    ld [de], a
+    inc de
+    inc de
+    ld a, [hli]
     ld [de], a
     inc de
     push hl
@@ -398,85 +384,82 @@ Func_004_4129:: ; address name
     pop bc
     dec b
     jp nz, .loop
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; E-0221 (C1: SetupKeyWorldObjectsForMapType_Sub01, for an object whose graphics number (hTemp0) is below 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9 rows end at the code at $42CD).
+; SetupKeyWorldObjectsForMapType_Sub01, for an object whose graphics number (hTemp0) is below 9 and
+; whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9
+; rows end at the code at $42CD (E-0221, C1)
 ; record: replacement graphics number for each goal kind 0-9, then six zero bytes
 KeyWorldGoalGraphicsTable::
-Data_004_423D:: ; address name
-    db $0E, $0E, $0E, $0E, $0E, $0E, $0E, $44, $0E, $0E, $00, $00, $00, $00, $00, $00 ; id 0
-    db $10, $52, $52, $4D, $10, $10, $10, $44, $10, $10, $00, $00, $00, $00, $00, $00 ; id 1
-    db $08, $08, $2E, $24, $08, $08, $37, $44, $3C, $33, $00, $00, $00, $00, $00, $00 ; id 2
-    db $09, $09, $2F, $25, $09, $09, $38, $44, $1B, $34, $00, $00, $00, $00, $00, $00 ; id 3
-    db $0C, $0C, $30, $26, $0C, $0C, $39, $44, $1E, $35, $00, $00, $00, $00, $00, $00 ; id 4
-    db $06, $06, $2D, $23, $06, $06, $36, $44, $18, $31, $00, $00, $00, $00, $00, $00 ; id 5
+    db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $44, $0e, $0e, $00, $00, $00, $00, $00, $00 ; id 0
+    db $10, $52, $52, $4d, $10, $10, $10, $44, $10, $10, $00, $00, $00, $00, $00, $00 ; id 1
+    db $08, $08, $2e, $24, $08, $08, $37, $44, $3c, $33, $00, $00, $00, $00, $00, $00 ; id 2
+    db $09, $09, $2f, $25, $09, $09, $38, $44, $1b, $34, $00, $00, $00, $00, $00, $00 ; id 3
+    db $0c, $0c, $30, $26, $0c, $0c, $39, $44, $1e, $35, $00, $00, $00, $00, $00, $00 ; id 4
+    db $06, $06, $2d, $23, $06, $06, $36, $44, $18, $31, $00, $00, $00, $00, $00, $00 ; id 5
     db $12, $12, $12, $12, $12, $12, $12, $44, $12, $12, $00, $00, $00, $00, $00, $00 ; id 6
     db $15, $15, $15, $15, $15, $15, $15, $44, $15, $15, $00, $00, $00, $00, $00, $00 ; id 7
     db $00, $16, $00, $00, $00, $00, $00, $44, $16, $33, $00, $00, $00, $00, $00, $00 ; id 8
 
-; on map screen (0, 0) or (1, 0) sets wSpriteSlots + $B/wSpriteSlots + $C and wSpriteSlots + $7 for wKeyWorldGoalKind values 1, 7, 8 or 9 (E-0125)
-; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
-; reads: hMapScreenY, hMapScreenX, wKeyWorldGoalKind
-; writes: wSpriteSlots
+; on map screen (0, 0) or (1, 0) sets wSpriteSlots + $B/wSpriteSlots + $C and wSpriteSlots + $7 for
+; wKeyWorldGoalKind values 1, 7, 8 or 9 (E-0125)
 PlaceObjectCB86ForKeyWorldGoalKind::
-Func_004_42CD:: ; address name
     ldh a, [hMapScreenY]
-    or a, a
+    or a
     ret nz
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr nz, .check_key_world_goal_kind
     ld a, $20
-    ld [wSpriteSlots + $C], a
+    ld [wSpriteSlots + $c], a
     ld a, [wKeyWorldGoalKind]
-    cp a, $01
+    cp $01
     jr nz, .cp_07
     ld a, $20
-    ld [wSpriteSlots + $B], a
+    ld [wSpriteSlots + $b], a
     ld a, $01
     ld [wSpriteSlots + $7], a
     ret
 
 .cp_07:
-    cp a, $07
+    cp $07
     jr nz, .cp_08
     ld a, $20
-    ld [wSpriteSlots + $B], a
+    ld [wSpriteSlots + $b], a
     ld a, $01
     ld [wSpriteSlots + $7], a
     ret
 
 .cp_08:
-    cp a, $08
+    cp $08
     ret nz
     ld a, $30
-    ld [wSpriteSlots + $B], a
-    xor a, a
+    ld [wSpriteSlots + $b], a
+    xor a
     ld [wSpriteSlots + $7], a
     ret
 
 .check_key_world_goal_kind:
     ld a, [wKeyWorldGoalKind]
-    cp a, $09
+    cp $09
     ret nz
     ld a, $70
-    ld [wSpriteSlots + $B], a
+    ld [wSpriteSlots + $b], a
     ld a, $10
-    ld [wSpriteSlots + $C], a
+    ld [wSpriteSlots + $c], a
     ld a, $03
     ld [wSpriteSlots + $7], a
     ret
 
-; hTemp0/hTemp1 = graphics number, hTemp4/hTemp5 = VRAM destination: with hTemp2 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
-; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Multiply8, SceneExplosion_QueueSoundEffect, ...)
-; reads: hTemp2, hTemp0, hTemp1, hTemp4, hTemp5, wIsCGB, hTemp3
-; points at: wOBJPaletteBuffer
+; hTemp0/hTemp1 = graphics number, hTemp4/hTemp5 = VRAM destination: with hTemp2 = 0 the source and
+; bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank
+; $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not
+; read) (E-0093)
 DecompressGraphicsTemp0ToTemp4::
-Func_004_431F:: ; address name
     ldh a, [hTemp2]
-    or a, a
+    or a
     jr nz, .read_temp0
     ld de, MonsterSpriteTable
     push de
@@ -490,9 +473,9 @@ Func_004_431F:: ; address name
     add hl, de
     pop de
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
     ld a, [hl]
     ld b, a
@@ -506,13 +489,13 @@ Func_004_431F:: ; address name
     ld h, a
     add hl, hl
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld b, $7D
+    ld b, $7d
     ldh a, [hTemp0]
-    cp a, $50
+    cp $50
     jr c, .read_temp4
     inc b
 
@@ -523,10 +506,10 @@ Func_004_431F:: ; address name
     ld h, a
     call DecompressToVRAM
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ldh a, [hTemp2]
-    or a, a
+    or a
     jr nz, .read_temp02
     ldh a, [hTemp0]
     ld l, a
@@ -536,10 +519,10 @@ Func_004_431F:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $28
+    add $28
     ld l, a
     ld a, h
-    adc a, $73
+    adc $73
     ld h, a
     ld e, l
     ld d, h
@@ -549,24 +532,24 @@ Func_004_431F:: ; address name
 .read_temp02:
     ldh a, [hTemp0]
     ld de, FieldSpritePaletteIndex
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    add a, a
-    add a, a
-    add a, a
-    ld de, $4B15
-    add a, e
+    add a
+    add a
+    add a
+    ld de, $4b15
+    add e
     ld e, a
     jr nc, .read_temp3
     inc d
 
 .read_temp3:
-    ld b, $7E
+    ld b, $7e
 
 .read_temp32:
     ldh a, [hTemp3]
@@ -579,10 +562,11 @@ Func_004_431F:: ; address name
     call CopyFromBank
     ret
 
-; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
+; DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank
+; $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode
+; (E-0143, C1)
 ; record: compressed sprite graphics in bank $7D
 FieldSpriteGraphicsTable::
-Data_004_43AC:: ; address name
     dw FieldSpriteGfx00 ; id 0
     dw FieldSpriteGfx01 ; id 1
     dw FieldSpriteGfx02 ; id 2
@@ -664,10 +648,11 @@ Data_004_43AC:: ; address name
     dw FieldSpriteGfx4E ; id 78
     dw FieldSpriteGfx4F ; id 79
 
-; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
+; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 *
+; hTemp0/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98
+; entries decode); numbers $50-$61.
 ; record: compressed sprite graphics in bank $7E
 FieldSpriteGraphicsTable50::
-Data_004_444C:: ; address name
     dw FieldSpriteGfx50 ; id 80
     dw FieldSpriteGfx51 ; id 81
     dw FieldSpriteGfx52 ; id 82
@@ -687,70 +672,61 @@ Data_004_444C:: ; address name
     dw FieldSpriteGfx60 ; id 96
     dw FieldSpriteGfx61 ; id 97
 
-; sets bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
-; 11 call sites from 11 routines (e.g. OpenFieldMenuOnA, ScriptCommand09_SetBit1OfPlayerAndObjectFlags, RunMessageBox_Bank12_SetBit1OfPlayerAndObjectFlags, RunMessageBoxStateIfActive_Bank12_SetBit1OfPlayerAndObjectFlags, ...)
-; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
-; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
+; sets bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object
+; entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a
+; message) (E-0120)
 SetBit1OfPlayerAndObjectFlags::
-Func_004_4470:: ; address name
     ldh a, [hPlayerStateFlags]
-    or a, $02
+    or $02
     ldh [hPlayerStateFlags], a
-    ld a, [wSpriteSlots + $D]
-    or a, $02
-    ld [wSpriteSlots + $D], a
+    ld a, [wSpriteSlots + $d]
+    or $02
+    ld [wSpriteSlots + $d], a
     ld a, [wObject1 + OBJ_FLAGS]
-    or a, $02
+    or $02
     ld [wObject1 + OBJ_FLAGS], a
     ld a, [wObject2 + OBJ_FLAGS]
-    or a, $02
+    or $02
     ld [wObject2 + OBJ_FLAGS], a
     ld a, [wObject3 + OBJ_FLAGS]
-    or a, $02
+    or $02
     ld [wObject3 + OBJ_FLAGS], a
     ld a, [wObject4 + OBJ_FLAGS]
-    or a, $02
+    or $02
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
-; clears bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags, RunGameMode5Case01SubStates_Case02_Case00_RunSaveSteps, ArenaMenu_Case1A_DispatchTalkEvent, ArenaMenu_DispatchTalkEvent, ...)
-; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
-; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
+; clears bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object
+; entries 0-4 (E-0072)
 ClearBit1OfPlayerAndObjectFlags::
-Func_004_449F:: ; address name
     ldh a, [hPlayerStateFlags]
-    and a, $FD
+    and $fd
     ldh [hPlayerStateFlags], a
-    ld a, [wSpriteSlots + $D]
-    and a, $FD
-    ld [wSpriteSlots + $D], a
+    ld a, [wSpriteSlots + $d]
+    and $fd
+    ld [wSpriteSlots + $d], a
     ld a, [wObject1 + OBJ_FLAGS]
-    and a, $FD
+    and $fd
     ld [wObject1 + OBJ_FLAGS], a
     ld a, [wObject2 + OBJ_FLAGS]
-    and a, $FD
+    and $fd
     ld [wObject2 + OBJ_FLAGS], a
     ld a, [wObject3 + OBJ_FLAGS]
-    and a, $FD
+    and $fd
     ld [wObject3 + OBJ_FLAGS], a
     ld a, [wObject4 + OBJ_FLAGS]
-    and a, $FD
+    and $fd
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
-; unless bit 7 of wFieldActionRequest is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
-; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots, ...)
-; reads: wFieldActionRequest, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
-; writes: hTemp0, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
-; points at: wSpriteSlots
+; unless bit 7 of wFieldActionRequest is set: updates the sprite slots, then draws each slot's
+; metasprite at its position relative to the scroll (E-0129)
 UpdateAndDrawSpriteSlots::
-Func_004_44CE:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ld a, [wSpriteSlotCount]
-    or a, a
+    or a
     ret z
     call UpdateSpriteSlots
     ld a, [wSpriteSlotCount]
@@ -760,38 +736,38 @@ Func_004_44CE:: ; address name
 .loop:
     push hl
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     push hl
     inc hl
     inc hl
     inc hl
     inc hl
-    ld a, [hl+]
-    and a, $07
+    ld a, [hli]
+    and $07
     ldh [hSpriteAttrXor], a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hSpriteTileOffset], a
     inc hl
     inc hl
-    ld a, [hl+]
-    add a, $08
+    ld a, [hli]
+    add $08
     ld d, a
     ldh a, [hScrollX]
-    add a, d
+    add d
     ldh [hSpriteOriginX], a
     ldh a, [hScrollXHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginXHi], a
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld d, a
     ldh a, [hScrollY]
-    add a, d
+    add d
     ldh [hSpriteOriginY], a
     ldh a, [hScrollYHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginYHi], a
     inc hl
     ld a, [hl]
@@ -799,23 +775,23 @@ Func_004_44CE:: ; address name
     jr z, .set_sprite_sub_index
     push af
     ldh a, [hSpriteAttrXor]
-    or a, $20
+    or $20
     ldh [hSpriteAttrXor], a
     pop af
-    and a, $7F
+    and $7f
 
 .set_sprite_sub_index:
     ldh [hSpriteSubIndex], a
     pop hl
     push bc
     ldh a, [hTemp0]
-    or a, a
+    or a
     jr nz, .set_sprite_set_index
-    ld a, [hl+]
-    and a, $7F
+    ld a, [hli]
+    and $7f
     ldh [hSpriteSetIndex], a
-    ld a, [hl-]
-    or a, a
+    ld a, [hld]
+    or a
     jr nz, .call_draw_meta_sprite_set_bank27
     ld a, [hl]
     bit 7, a
@@ -832,7 +808,7 @@ Func_004_44CE:: ; address name
     jr .restore
 
 .set_sprite_set_index:
-    ld a, [hl+]
+    ld a, [hli]
     inc hl
     ldh [hSpriteSetIndex], a
     farcall DrawMetaSprite4008
@@ -846,23 +822,19 @@ Func_004_44CE:: ; address name
     jp nz, .loop
     ret
 
-; for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for its type byte (jump table of six) (E-0124)
-; 1 call site from 1 routine (e.g. UpdateAndDrawSpriteSlots)
-; reads: wSpriteSlotCount
-; points at: wSpriteSlots
+; for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for its type byte
+; (jump table of six) (E-0124)
 UpdateSpriteSlots::
-Func_004_456D:: ; address name
     ld a, [wSpriteSlotCount]
     ld b, a
     ld hl, wSpriteSlots
 
 UpdateSpriteSlots_Loop::
-Jump_004_4574:: ; address name
     push bc
     push hl
     push hl
     ld a, [hl]
-    rst $00
+    jumptable
     dw UpdateSpriteSlots_RestoreRegisters
     dw UpdateSpriteSlots_Return
     dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
@@ -871,7 +843,6 @@ Jump_004_4574:: ; address name
     dw UpdateSpriteSlots_WriteTemp0AndTemp1_Case05
 
 UpdateSpriteSlots_Restore::
-Jump_004_4585:: ; address name
     pop hl
     pop bc
     ld a, $10
@@ -880,12 +851,9 @@ Jump_004_4585:: ; address name
     jr nz, UpdateSpriteSlots_Loop
     ret
 
-; entry 0 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
 UpdateSpriteSlots_RestoreRegisters::
-Jump_004_4592:: ; address name
     pop hl
-    ld a, $0D
+    ld a, $0d
     add_a_to_hl
     ld a, [hl]
     dec hl
@@ -902,7 +870,6 @@ Jump_004_4592:: ; address name
     ld a, [hl]
 
 UpdateSpriteSlots_RestoreRegisters_Skip::
-Jump_004_45A7:: ; address name
     ld c, a
     inc hl
     inc hl
@@ -915,7 +882,7 @@ Jump_004_45A7:: ; address name
     srl a
     srl a
     srl a
-    and a, $01
+    and $01
     ld c, a
     jr .skip2
 
@@ -923,21 +890,21 @@ Jump_004_45A7:: ; address name
     ld a, c
     swap a
     srl a
-    and a, $01
+    and $01
     ld c, a
 
 .skip2:
     ld a, l
-    sub a, $06
+    sub $06
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld a, [hl]
-    cp a, $03
+    cp $03
     jr nz, .skip3
     ld a, $82
-    add a, c
+    add c
     push af
     ld a, $07
     add_a_to_hl
@@ -952,8 +919,8 @@ Jump_004_45A7:: ; address name
     ret
 
 .skip3:
-    add a, a
-    add a, c
+    add a
+    add c
     push af
     ld a, $07
     add_a_to_hl
@@ -967,14 +934,10 @@ Jump_004_45A7:: ; address name
     jp nz, UpdateSpriteSlots_Loop
     ret
 
-; entry 2 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptRunning, wRandomLo
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
-Jump_004_4606:: ; address name
     pop hl
     push hl
-    ld a, $0D
+    ld a, $0d
     add_a_to_hl
     ld a, [hl]
     dec hl
@@ -989,7 +952,7 @@ Jump_004_4606:: ; address name
 .skip:
     ld a, [hl]
     inc a
-    ld [hl+], a
+    ld [hli], a
     ld a, [hl]
 
 .skip2:
@@ -1003,10 +966,10 @@ Jump_004_4606:: ; address name
     dec a
     ld [hl], a
     ld a, l
-    sub a, $04
+    sub $04
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $03
     jr .next
@@ -1016,10 +979,10 @@ Jump_004_4606:: ; address name
     inc a
     ld [hl], a
     ld a, l
-    sub a, $04
+    sub $04
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $01
 
@@ -1030,64 +993,64 @@ Jump_004_4606:: ; address name
     ld a, [hl]
     inc a
     ld [hl], a
-    and a, $0F
+    and $0f
     jp nz, .restore2
-    xor a, a
+    xor a
     ld [hl], a
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    and a, $FB
+    and $fb
     ld [hl], a
     jp .restore2
 
 .check_script_running:
     ld a, [wScriptRunning]
-    or a, a
+    or a
     jp nz, .restore2
     dec hl
     ld a, [hl]
-    cp a, $70
+    cp $70
     jp nz, .restore2
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     call NextTableByte
     ld a, [wRandomLo]
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip4
-    and a, $01
+    and $01
     jr z, .restore2
     push hl
     inc hl
     ld a, [hl]
-    or a, a
+    or a
     jr z, .restore
     ld a, l
-    sub a, $07
+    sub $07
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld a, [hl]
     ld c, a
     ld a, $07
     add_a_to_hl
     ld a, [hl]
-    sub a, c
-    cp a, $E0
+    sub c
+    cp $e0
     jr z, .restore
-    ld a, [hl+]
-    sub a, $10
+    ld a, [hli]
+    sub $10
     ld b, a
     ld a, [hl]
     ld c, a
     call IsTileUnderCellBlocking
-    cp a, $01
+    cp $01
     jr z, .restore
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jr nz, .restore
     pop hl
     ld [hl], $80
@@ -1096,7 +1059,7 @@ Jump_004_4606:: ; address name
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore2
 
@@ -1104,41 +1067,41 @@ Jump_004_4606:: ; address name
     push hl
     inc hl
     ld a, [hl]
-    cp a, $90
+    cp $90
     jr z, .restore
     ld a, l
-    sub a, $07
+    sub $07
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld a, [hl]
     ld c, a
     ld a, $07
     add_a_to_hl
     ld a, [hl]
-    sub a, c
-    cp a, $20
+    sub c
+    cp $20
     jr z, .restore
-    ld a, [hl+]
-    add a, $11
+    ld a, [hli]
+    add $11
     ld b, a
     ld a, [hl]
     ld c, a
     call IsTileUnderCellBlocking
-    cp a, $01
+    cp $01
     jr z, .restore
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jr nz, .restore
     pop hl
-    ld [hl], $C0
+    ld [hl], $c0
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore2
 
@@ -1152,20 +1115,13 @@ Jump_004_4606:: ; address name
     ld a, [hl]
     jp UpdateSpriteSlots_RestoreRegisters_Skip
 
-; entry 1 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
 UpdateSpriteSlots_Return::
-Jump_004_4704:: ; address name
     ret
 
-; entry 3 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptRunning, wRandomLo
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03::
-Jump_004_4705:: ; address name
     pop hl
     push hl
-    ld a, $0D
+    ld a, $0d
     add_a_to_hl
     ld a, [hl]
     dec hl
@@ -1180,7 +1136,7 @@ Jump_004_4705:: ; address name
 .skip:
     ld a, [hl]
     inc a
-    ld [hl+], a
+    ld [hli], a
     ld a, [hl]
 
 .skip2:
@@ -1191,7 +1147,7 @@ Jump_004_4705:: ; address name
     inc hl
     swap a
     srl a
-    and a, $03
+    and $03
     jr z, .next2
     dec a
     jr z, .skip3
@@ -1201,10 +1157,10 @@ Jump_004_4705:: ; address name
     dec a
     ld [hl], a
     ld a, l
-    sub a, $04
+    sub $04
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $03
     jr .restore
@@ -1214,10 +1170,10 @@ Jump_004_4705:: ; address name
     inc a
     ld [hl], a
     ld a, l
-    sub a, $04
+    sub $04
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $01
     jr .restore
@@ -1228,10 +1184,10 @@ Jump_004_4705:: ; address name
     dec a
     ld [hl], a
     ld a, l
-    sub a, $05
+    sub $05
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $02
     jr .restore
@@ -1242,10 +1198,10 @@ Jump_004_4705:: ; address name
     inc a
     ld [hl], a
     ld a, l
-    sub a, $05
+    sub $05
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld [hl], $00
 
@@ -1254,31 +1210,31 @@ Jump_004_4705:: ; address name
     ld a, [hl]
     inc a
     ld [hl], a
-    and a, $0F
+    and $0f
     jp nz, .restore3
-    xor a, a
+    xor a
     ld [hl], a
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    and a, $FB
+    and $fb
     ld [hl], a
     jp .restore3
 
 .check_script_running:
     ld a, [wScriptRunning]
-    or a, a
+    or a
     jp nz, .restore3
     dec hl
     ld a, [hl]
-    cp a, $E0
+    cp $e0
     jp nz, .restore3
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     call NextTableByte
     ld a, [wRandomLo]
-    and a, $03
+    and $03
     jr z, .skip6
     dec a
     jr z, .skip4
@@ -1287,27 +1243,27 @@ Jump_004_4705:: ; address name
     push hl
     inc hl
     ld a, [hl]
-    or a, a
+    or a
     jp z, .restore2
-    ld a, [hl+]
-    sub a, $10
+    ld a, [hli]
+    sub $10
     ld b, a
     ld a, [hl]
     ld c, a
     call RunPendingFieldEventType0AOrOther
-    cp a, $01
+    cp $01
     jp z, .restore2
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jp nz, .restore2
     pop hl
-    ld [hl], $E0
+    ld [hl], $e0
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore3
 
@@ -1315,27 +1271,27 @@ Jump_004_4705:: ; address name
     push hl
     inc hl
     ld a, [hl]
-    cp a, $90
+    cp $90
     jr z, .restore2
-    ld a, [hl+]
-    add a, $11
+    ld a, [hli]
+    add $11
     ld b, a
     ld a, [hl]
     ld c, a
     call RunPendingFieldEventType0AOrOther
-    cp a, $01
+    cp $01
     jr z, .restore2
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jr nz, .restore2
     pop hl
-    ld [hl], $A0
+    ld [hl], $a0
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore3
 
@@ -1344,28 +1300,28 @@ Jump_004_4705:: ; address name
     inc hl
     inc hl
     ld a, [hl]
-    or a, a
+    or a
     jr z, .restore2
     dec hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
-    sub a, $10
+    sub $10
     ld c, a
     call RunPendingFieldEventType0AOrOther
-    cp a, $01
+    cp $01
     jr z, .restore2
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jr nz, .restore2
     pop hl
-    ld [hl], $C0
+    ld [hl], $c0
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore3
 
@@ -1374,19 +1330,19 @@ Jump_004_4705:: ; address name
     inc hl
     inc hl
     ld a, [hl]
-    cp a, $80
+    cp $80
     jr z, .restore2
     dec hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
-    add a, $11
+    add $11
     ld c, a
     call RunPendingFieldEventType0AOrOther
-    cp a, $01
+    cp $01
     jr z, .restore2
     call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
-    or a, a
+    or a
     jr nz, .restore2
     pop hl
     ld [hl], $80
@@ -1395,7 +1351,7 @@ Jump_004_4705:: ; address name
     inc hl
     inc hl
     ld a, [hl]
-    or a, $04
+    or $04
     ld [hl], a
     jr .restore3
 
@@ -1409,14 +1365,12 @@ Jump_004_4705:: ; address name
     ld a, [hl]
     jp UpdateSpriteSlots_RestoreRegisters_Skip
 
-; runs Func_004_495A when wPendingFieldEvent & $0F = $0A, else Func_004_4904 (E-0122)
-; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03)
-; reads: wPendingFieldEvent
+; runs RunPendingFieldEventType0AOrOther_ReadMapTallTileMin when wPendingFieldEvent & $0F = $0A,
+; else IsTileUnderCellBlocking (E-0122)
 RunPendingFieldEventType0AOrOther::
-Func_004_4852:: ; address name
     ld a, [wPendingFieldEvent]
-    and a, $0F
-    cp a, $0A
+    and $0f
+    cp $0a
     jr z, .call_run_pending_field_event_type0_a_or_other
     call IsTileUnderCellBlocking
     ret
@@ -1425,35 +1379,24 @@ Func_004_4852:: ; address name
     call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
     ret
 
-; entry 4 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, hTemp1
-; writes: hTemp0, hTemp1
 UpdateSpriteSlots_WriteTemp0AndTemp1::
-Jump_004_4863:: ; address name
-    ld hl, $48D6
+    ld hl, $48d6
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
     jr UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_Restore
 
-; entry 5 of the `rst $00` table in UpdateSpriteSlots
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, hTemp1
-; writes: hTemp0, hTemp1
 UpdateSpriteSlots_WriteTemp0AndTemp1_Case05::
-Jump_004_486E:: ; address name
-    ld hl, $48FA
+    ld hl, $48fa
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
 UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_Restore::
-Jump_004_4877:: ; address name
     pop hl
-    ld a, $0D
+    ld a, $0d
     add_a_to_hl
     ld a, [hl]
     dec hl
@@ -1475,14 +1418,14 @@ Jump_004_4877:: ; address name
     inc de
     ld a, [hl]
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .read_temp0
     dec hl
     ld [hl], $00
@@ -1496,14 +1439,14 @@ Jump_004_4877:: ; address name
     inc a
     ld [hl], a
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr nz, .read_temp0
     ld [hl], $00
 
@@ -1516,7 +1459,7 @@ Jump_004_4877:: ; address name
     inc hl
     ld a, [hl]
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -1529,16 +1472,13 @@ Jump_004_4877:: ; address name
     inc hl
     ld [hl], a
     jp UpdateSpriteSlots_Restore
-    db $00, $0E, $03, $0A, $04, $0E, $05, $0A, $00, $0E, $03, $0A, $04, $0E, $05, $0A
-    db $00, $10, $01, $0E, $02, $0E, $01, $0E, $02, $0E, $00, $20, $06, $0E, $07, $20
-    db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
+    db $00, $0e, $03, $0a, $04, $0e, $05, $0a, $00, $0e, $03, $0a, $04, $0e, $05, $0a
+    db $00, $10, $01, $0e, $02, $0e, $01, $0e, $02, $0e, $00, $20, $06, $0e, $07, $20
+    db $06, $0e, $ff, $ff, $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
 
-; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
-; 3 call sites from 2 routines (e.g. RunPendingFieldEventType0AOrOther, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
-; reads: wMaxBlockingTile
-; points at: wScreenTileBuffer, wTilesUnderPoint
+; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A
+; = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
 IsTileUnderCellBlocking::
-Func_004_4904:: ; address name
     push bc
     push de
     ld a, c
@@ -1560,7 +1500,7 @@ Func_004_4904:: ; address name
     ld de, wScreenTileBuffer
     add hl, de
     ld de, wTilesUnderPoint
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -1568,7 +1508,7 @@ Func_004_4904:: ; address name
     ld a, $13
     inc de
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -1583,14 +1523,14 @@ Func_004_4904:: ; address name
     inc de
     ld c, a
     ld a, [wMaxBlockingTile]
-    cp a, c
+    cp c
     jr c, .next
     jr .skip
 
 .next:
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     pop de
     pop bc
     ret
@@ -1601,12 +1541,7 @@ Func_004_4904:: ; address name
     pop bc
     ret
 
-; only called from RunPendingFieldEventType0AOrOther (E-0047)
-; 1 call site from 1 routine (e.g. RunPendingFieldEventType0AOrOther)
-; reads: wMapTallTileMin
-; points at: wScreenTileBuffer, wTilesUnderPoint
 RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
-Func_004_495A:: ; address name
     push bc
     push de
     ld a, c
@@ -1628,7 +1563,7 @@ Func_004_495A:: ; address name
     ld de, wScreenTileBuffer
     add hl, de
     ld de, wTilesUnderPoint
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -1636,7 +1571,7 @@ Func_004_495A:: ; address name
     ld a, $13
     inc de
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -1651,7 +1586,7 @@ Func_004_495A:: ; address name
     inc de
     ld c, a
     ld a, [wMapTallTileMin]
-    cp a, c
+    cp c
     jr c, .next
     jr .skip
 
@@ -1664,57 +1599,52 @@ Func_004_495A:: ; address name
     ret
 
 .skip:
-    xor a, a
+    xor a
     pop de
     pop bc
     ret
 
-; only called from routines of UpdateSpriteSlots (E-0098)
-; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
-; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wPartyCount
-; writes: hTemp0, hTemp1
 UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01::
-Func_004_49B0:: ; address name
     push bc
     ld a, c
     swap a
-    and a, $0F
+    and $0f
     ldh [hTemp0], a
     ld a, b
     swap a
-    and a, $0F
+    and $0f
     ldh [hTemp1], a
     ldh a, [hPlayerX]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr z, .read_player_y
     ldh a, [hPlayerX]
-    add a, $0F
+    add $0f
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr nz, .check_party_count
 
 .read_player_y:
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr z, .done
     ldh a, [hPlayerY]
-    add a, $0F
+    add $0f
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr nz, .check_party_count
 
 .done:
@@ -1724,7 +1654,7 @@ Func_004_49B0:: ; address name
 
 .check_party_count:
     ld a, [wPartyCount]
-    or a, a
+    or a
     jr z, .done2
     ld b, a
     ld hl, wFollowerRecords + $1
@@ -1733,36 +1663,36 @@ Func_004_49B0:: ; address name
     push hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr z, .next
     ld a, [hl]
-    add a, $0F
+    add $0f
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr nz, .restore2
 
 .next:
     inc hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr z, .restore
     ld a, [hl]
-    add a, $0F
+    add $0f
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hTemp0]
-    cp a, c
+    cp c
     jr nz, .restore2
 
 .restore:
@@ -1779,14 +1709,15 @@ Func_004_49B0:: ; address name
     jr nz, .loop
 
 .done2:
-    xor a, a
+    xor a
     pop bc
     ret
 
-; E-0143 (C1: on CGB, with hTemp2 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hTemp0 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hTemp3; values 0-20).
+; on CGB, with hTemp2 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hTemp0 in bank
+; $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hTemp3; values 0-20 (E-0143,
+; C1)
 ; record: palette number in FieldSpritePalettes
 FieldSpritePaletteIndex::
-Data_004_4A46:: ; address name
     db $12 ; id 0
     db $13 ; id 1
     db $06 ; id 2
@@ -1858,8 +1789,8 @@ Data_004_4A46:: ; address name
     db $05 ; id 68
     db $07 ; id 69
     db $11 ; id 70
-    db $0A ; id 71
-    db $0B ; id 72
+    db $0a ; id 71
+    db $0b ; id 72
     db $06 ; id 73
     db $05 ; id 74
     db $01 ; id 75
@@ -1871,13 +1802,13 @@ Data_004_4A46:: ; address name
     db $02 ; id 81
     db $03 ; id 82
     db $06 ; id 83
-    db $0C ; id 84
-    db $0D ; id 85
-    db $0E ; id 86
+    db $0c ; id 84
+    db $0d ; id 85
+    db $0e ; id 86
     db $02 ; id 87
     db $09 ; id 88
     db $04 ; id 89
-    db $0F ; id 90
+    db $0f ; id 90
     db $10 ; id 91
     db $02 ; id 92
     db $00 ; id 93
@@ -1886,15 +1817,12 @@ Data_004_4A46:: ; address name
     db $00 ; id 96
     db $14 ; id 97
 
-; hPlayerSpriteMode = sprite mode from story flags $19F, $25 and 2 and bit 3 of hPlayerStateFlags, then loads the matching player and follower sprite graphics (E-0128)
-; 34 call sites from 34 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, ResetLeadRecordFields55And5B, LibraryMenu_LoadMapHeader, ...)
-; reads: hPlayerStateFlags, hPlayerSpriteMode
-; writes: hPlayerSpriteMode, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
+; hPlayerSpriteMode = sprite mode from story flags $19F, $25 and 2 and bit 3 of hPlayerStateFlags,
+; then loads the matching player and follower sprite graphics (E-0128)
 LoadPlayerAndFollowerSpriteGraphics::
-Func_004_4AA8:: ; address name
     ld a, $00
     ldh [hPlayerSpriteMode], a
-    ld de, $019F
+    ld de, $019f
     call TestFlagBit
     jr nc, .call_test_flag_bit
     ld de, $0025
@@ -1919,7 +1847,7 @@ Func_004_4AA8:: ; address name
 
 .check_player_sprite_mode:
     ldh a, [hPlayerSpriteMode]
-    or a, a
+    or a
     jr nz, .skip
     call LoadPlayerSpriteGraphics
     call LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte
@@ -1936,11 +1864,11 @@ Func_004_4AA8:: ; address name
     jr .set_temp0
 
 .clear_temp0:
-    xor a, a
+    xor a
 
 .set_temp0:
     ldh [hTemp0], a
-    xor a, a
+    xor a
     ldh [hTemp1], a
     inc a
     ldh [hTemp2], a
@@ -1953,7 +1881,7 @@ Func_004_4AA8:: ; address name
     call DecompressGraphicsTemp0ToTemp4
     ld a, $04
     ldh [hTemp0], a
-    xor a, a
+    xor a
     ldh [hTemp1], a
     ld a, $01
     ldh [hTemp2], a
@@ -1973,19 +1901,17 @@ Func_004_4AA8:: ; address name
     call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
-; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hPlayerSpriteStreamLo/hPlayerSpriteStreamHi when bit 7 of hPlayerSpriteOverride is set (E-0127)
-; 5 call sites from 3 routines (e.g. LoadPlayerAndFollowerSpriteGraphics, PlayerSpriteFlash_LoadPlayerSpriteGraphics, PlayerSpriteMessage_LoadPlayerSpriteGraphics)
-; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
-; writes: hTemp0, hPlayerSpriteVariant, hTemp1, hTemp3, hTemp2, hTemp4, hTemp5
+; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream
+; named by hPlayerSpriteStreamLo/hPlayerSpriteStreamHi when bit 7 of hPlayerSpriteOverride is set
+; (E-0127)
 LoadPlayerSpriteGraphics::
-Func_004_4B2D:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr nz, .set_temp2
     ld de, $0000
     call TestFlagBit
     jr c, .set_temp0_to_01
-    xor a, a
+    xor a
     ldh [hTemp0], a
     ldh [hPlayerSpriteVariant], a
     jr .clear_temp1
@@ -1996,7 +1922,7 @@ Func_004_4B2D:: ; address name
     ldh [hPlayerSpriteVariant], a
 
 .clear_temp1:
-    xor a, a
+    xor a
     ldh [hTemp1], a
     ldh [hTemp3], a
     ld a, $01
@@ -2010,7 +1936,7 @@ Func_004_4B2D:: ; address name
     ret
 
 .set_temp2:
-    and a, $01
+    and $01
     ldh [hTemp2], a
     ldh a, [hPlayerSpriteStreamLo]
     ld l, a
@@ -2020,7 +1946,7 @@ Func_004_4B2D:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    xor a, a
+    xor a
     ldh [hTemp3], a
     ld hl, vTiles0
     ld a, l
@@ -2030,44 +1956,37 @@ Func_004_4B2D:: ; address name
     call DecompressGraphicsTemp0ToTemp4
     ret
 
-; when hPlayerStateFlags bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wOBJPaletteUploadRequest = $7F) (E-0120)
-; 1 call site from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
-; reads: hPlayerStateFlags
-; writes: wOBJPaletteUploadRequest
-; points at: wOBJPaletteBuffer
+; when hPlayerStateFlags bit 3 is set: decompresses Tiles0Plus700Gfx_7E_58FF (bank $7E) to vTiles0 +
+; $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer
+; (wOBJPaletteUploadRequest = $7F) (E-0120)
 LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
-Func_004_4B7E:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     ret z
     ld de, Tiles0Plus700Gfx_7E_58FF
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
-    ld de, $4BBD
+    ld de, $4bbd
     ld a, e
-    add a, $08
+    add $08
     ld e, a
     ld a, d
-    adc a, $01
+    adc $01
     ld d, a
-    ld b, $7E
+    ld b, $7e
     ld a, $38
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld c, $08
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; unless bit 1 of hPlayerStateFlags is set, hPlayerAnimCounter += 1 (+3 more with bit 2); then runs the routine for hPlayerSpriteMode (jump table of three) (E-0124)
-; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_Case04)
-; reads: hPlayerStateFlags, hPlayerAnimCounter, hPlayerSpriteMode
-; writes: hPlayerAnimCounter
-; points at: hPlayerAnimCounter
+; unless bit 1 of hPlayerStateFlags is set, hPlayerAnimCounter += 1 (+3 more with bit 2); then runs
+; the routine for hPlayerSpriteMode (jump table of three) (E-0124)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
-Func_004_4BB0:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 1, a
     jr nz, .read_player_sprite_mode
@@ -2077,46 +1996,34 @@ Func_004_4BB0:: ; address name
     bit 2, a
     jr z, .read_player_sprite_mode
     ldh a, [hPlayerAnimCounter]
-    add a, $03
+    add $03
     ldh [hPlayerAnimCounter], a
 
 .read_player_sprite_mode:
     ldh a, [hPlayerSpriteMode]
-    rst $00
+    jumptable
     dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites
     dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B
     dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22
 
-; entry 0 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
-; no direct call (reached through a table, a jump or a vector)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites::
-Jump_004_4BCF:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawPartyFollowerSprites
     ret
 
-; entry 1 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
-; no direct call (reached through a table, a jump or a vector)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B::
-Jump_004_4BD6:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawFollowerSpriteIfFlag1B
     ret
 
-; entry 2 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
-; no direct call (reached through a table, a jump or a vector)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22::
-Jump_004_4BDD:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawPlayerOverlaySprite21Or22
     ret
 
-; moves the sprite origin down 8, sets tile offset $70 and palette 7, then draws meta-sprite set $21 (hPlayerStateFlags bit 3 set) or $22 with DrawMetaSprite (E-0175)
-; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22)
-; reads: hSpriteOriginY, hSpriteOriginYHi, hSpriteAttrXor, hPlayerStateFlags
-; writes: hSpriteOriginY, hSpriteOriginYHi, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
+; moves the sprite origin down 8, sets tile offset $70 and palette 7, then draws meta-sprite set $21
+; (hPlayerStateFlags bit 3 set) or $22 with DrawMetaSprite (E-0175)
 DrawPlayerOverlaySprite21Or22::
-Func_004_4BE4:: ; address name
     ldh a, [hSpriteOriginY]
     ld l, a
     ldh a, [hSpriteOriginYHi]
@@ -2130,15 +2037,15 @@ Func_004_4BE4:: ; address name
     ld a, $70
     ldh [hSpriteTileOffset], a
     ldh a, [hSpriteAttrXor]
-    and a, $F8
-    or a, $07
+    and $f8
+    or $07
     ldh [hSpriteAttrXor], a
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr z, .set_sprite_set_index_to_22
     ld a, $21
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
     farcall DrawMetaSprite
     ret
@@ -2146,26 +2053,24 @@ Func_004_4BE4:: ; address name
 .set_sprite_set_index_to_22:
     ld a, $22
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
     farcall DrawMetaSprite
     ret
 
-; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when IsFadingAtMap5AScreen00Y80) (E-0175)
-; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B)
-; reads: hFieldDrawFlags, hPlayerSpriteVariant, wFollowerRecords, hPlayerAnimCounter, hScrollX, hScrollXHi, hScrollY, hScrollYHi
-; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
+; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower
+; sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when
+; IsFadingAtMap5AScreen00Y80) (E-0175)
 DrawFollowerSpriteIfFlag1B::
-Func_004_4C25:: ; address name
     ldh a, [hFieldDrawFlags]
     bit 1, a
     ret nz
-    ld de, $001B
+    ld de, $001b
     call TestFlagBit
     ret nc
     ldh a, [hPlayerSpriteVariant]
     inc a
-    and a, $01
+    and $01
     ldh [hSpriteSetIndex], a
     ld a, $01
     ldh [hSpriteAttrXor], a
@@ -2174,14 +2079,14 @@ Func_004_4C25:: ; address name
     ld a, [wFollowerRecords + $2]
     ld c, a
     call IsFadingAtMap5AScreen00Y80
-    or a, a
+    or a
     jr z, .check_follower_records
     ld a, $02
     jr .read_player_anim_counter
 
 .check_follower_records:
     ld a, [wFollowerRecords]
-    cp a, $03
+    cp $03
     jr nz, .read_player_anim_counter
     ld a, $21
     ldh [hSpriteAttrXor], a
@@ -2193,38 +2098,33 @@ Func_004_4C25:: ; address name
     ldh a, [hPlayerAnimCounter]
     swap a
     srl a
-    and a, $01
-    add a, c
+    and $01
+    add c
     ldh [hSpriteSubIndex], a
     ld a, $10
     ldh [hSpriteTileOffset], a
     ld a, [wFollowerRecords + $1]
-    add a, $08
+    add $08
     ld l, a
     ldh a, [hScrollX]
-    add a, l
+    add l
     ldh [hSpriteOriginX], a
     ldh a, [hScrollXHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginXHi], a
     ld a, [wFollowerRecords + $2]
-    add a, $10
+    add $10
     ld l, a
     ldh a, [hScrollY]
-    add a, l
+    add l
     ldh [hSpriteOriginY], a
     ldh a, [hScrollYHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite4008
     ret
 
-; only called from routines of AdvancePlayerAnimCounterAndRunPlayerSpriteMode (E-0098)
-; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites)
-; reads: hFieldDrawFlags, hPlayerSpriteVariant, hPlayerX, hPlayerY, hPlayerAnimCounter, hScrollX, hScrollXHi, hScrollY, ...
-; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
-Func_004_4C96:: ; address name
     ldh a, [hFieldDrawFlags]
     bit 0, a
     ret nz
@@ -2237,58 +2137,58 @@ Func_004_4C96:: ; address name
     ldh a, [hPlayerY]
     ld c, a
     call IsFadingAtMap5AScreen00Y80
-    or a, a
+    or a
     jr z, .check_player_facing
     ld a, $02
     jr .read_player_anim_counter
 
 .check_player_facing:
     ldh a, [hPlayerFacing]
-    cp a, $03
+    cp $03
     jr nz, .read_player_anim_counter
     ld a, $20
     ldh [hSpriteAttrXor], a
     ld a, $01
 
 .read_player_anim_counter:
-    add a, a
+    add a
     ld c, a
     ldh a, [hPlayerAnimCounter]
     swap a
     srl a
-    and a, $01
-    add a, c
+    and $01
+    add c
     ldh [hSpriteSubIndex], a
     ld a, $00
     ldh [hSpriteTileOffset], a
     ldh a, [hPlayerX]
-    add a, $08
+    add $08
     ld l, a
     ldh a, [hScrollX]
-    add a, l
+    add l
     ldh [hSpriteOriginX], a
     ldh a, [hScrollXHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginXHi], a
     ldh a, [hPlayerY]
-    add a, $10
+    add $10
     ld l, a
     ldh a, [hScrollY]
-    add a, l
+    add l
     ldh [hSpriteOriginY], a
     ld l, a
     ldh a, [hScrollYHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginYHi], a
     ld h, a
     ldh a, [hPlayerSpriteMode]
-    cp a, $02
+    cp $02
     jr nz, .check_player_sprite_override
     ld a, l
-    sub a, $08
+    sub $08
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld a, l
     ldh [hSpriteOriginY], a
@@ -2305,7 +2205,7 @@ Func_004_4C96:: ; address name
     ret
 
 .skip:
-    and a, $01
+    and $01
     jr z, .check_player_sprite_stream_lo
     ldh a, [hPlayerSpriteStreamLo]
     ldh [hSpriteSetIndex], a
@@ -2313,10 +2213,10 @@ Func_004_4C96:: ; address name
 
 .check_player_sprite_stream_lo:
     ldh a, [hPlayerSpriteStreamLo]
-    and a, $7F
+    and $7f
     ldh [hSpriteSetIndex], a
     ldh a, [hPlayerSpriteStreamHi]
-    or a, a
+    or a
     jr nz, .call_draw_meta_sprite_set_bank27
     ldh a, [hPlayerSpriteStreamLo]
     bit 7, a
@@ -2332,17 +2232,13 @@ Func_004_4C96:: ; address name
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-; for each party member (wPartyCount) walks wFollowerRecords and wPartyList and draws its follower sprite unless the matching hFieldDrawFlags bit is set (E-0175)
-; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites)
-; reads: wPartyCount, hTemp9, hFieldDrawFlags, hPlayerAnimCounter, hTemp0, hScrollX, hScrollXHi, hScrollY, ...
-; writes: hTemp9, hTemp0, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
-; points at: wFollowerRecords
+; for each party member (wPartyCount) walks wFollowerRecords and wPartyList and draws its follower
+; sprite unless the matching hFieldDrawFlags bit is set (E-0175)
 DrawPartyFollowerSprites::
-Func_004_4D43:: ; address name
     ld a, $02
     ldh [hTemp9], a
     ld a, [wPartyCount]
-    or a, a
+    or a
     ret z
     ld b, a
     ld hl, wFollowerRecords
@@ -2357,69 +2253,69 @@ Func_004_4D43:: ; address name
     ldh a, [hTemp9]
     ld c, a
     ldh a, [hFieldDrawFlags]
-    and a, c
+    and c
     jp nz, .read_temp0
     ld a, $03
-    sub a, b
+    sub b
     inc a
     ldh [hSpriteAttrXor], a
     push bc
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
-    ld a, [hl-]
+    ld a, [hld]
     ld c, a
     dec hl
     call IsFadingAtMap5AScreen00Y80
     pop bc
-    or a, a
+    or a
     jr z, .skip
     ld a, $02
     inc hl
     jr .read_player_anim_counter
 
 .skip:
-    ld a, [hl+]
-    cp a, $03
+    ld a, [hli]
+    cp $03
     jr nz, .read_player_anim_counter
     ldh a, [hSpriteAttrXor]
-    or a, $20
+    or $20
     ldh [hSpriteAttrXor], a
     ld a, $01
 
 .read_player_anim_counter:
-    add a, a
+    add a
     ld c, a
     ldh a, [hPlayerAnimCounter]
     swap a
     srl a
-    and a, $01
-    add a, c
+    and $01
+    add c
     ldh [hSpriteSubIndex], a
     ldh a, [hTemp0]
     ldh [hSpriteTileOffset], a
-    ld a, [hl+]
-    add a, $08
+    ld a, [hli]
+    add $08
     ld c, a
     ldh a, [hScrollX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ldh a, [hScrollXHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginXHi], a
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld c, a
     ldh a, [hScrollY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ldh a, [hScrollYHi]
-    adc a, $00
+    adc $00
     ldh [hSpriteOriginYHi], a
     inc de
     ld a, [de]
     dec de
-    cp a, $FF
+    cp $ff
     jr nz, .set_sprite_set_index
     ld a, $19
     ldh [hSpriteSetIndex], a
@@ -2428,11 +2324,11 @@ Func_004_4D43:: ; address name
 
 .set_sprite_set_index:
     ld a, [de]
-    and a, $7F
+    and $7f
     ldh [hSpriteSetIndex], a
     inc de
     ld a, [de]
-    or a, a
+    or a
     jr nz, .call_draw_meta_sprite_set_bank27
     dec de
     ld a, [de]
@@ -2450,7 +2346,7 @@ Func_004_4D43:: ; address name
 
 .read_temp0:
     ldh a, [hTemp0]
-    add a, $10
+    add $10
     ldh [hTemp0], a
     ldh a, [hTemp9]
     rlca
@@ -2467,75 +2363,72 @@ Func_004_4D43:: ; address name
     ret
 
 ; A = 1 while a fade runs on map $5A, screen (0, 0), with hPlayerY = $80; otherwise A = 0 (E-0175)
-; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80, DrawFollowerSpriteIfFlag1B, DrawPartyFollowerSprites)
-; reads: wFadeState, hMapId, hMapScreenX, hMapScreenY, hPlayerY
 IsFadingAtMap5AScreen00Y80::
-Func_004_4E0F:: ; address name
     ld a, [wFadeState]
-    or a, a
+    or a
     jr z, .skip
     ldh a, [hMapId]
-    cp a, $5A
+    cp $5a
     jr nz, .return_0
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr nz, .return_0
     ldh a, [hMapScreenY]
-    or a, a
+    or a
     jr nz, .return_0
     ldh a, [hPlayerY]
-    cp a, $80
+    cp $80
     jr nz, .return_0
     ld a, $01
     ret
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
 .skip:
     push hl
     push de
-    ld hl, $4E73
+    ld hl, $4e73
 
 .skip2:
     push hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .read_map_id
     pop hl
     pop de
     pop hl
-    xor a, a
+    xor a
     ret
 
 .read_map_id:
     ldh a, [hMapId]
     ld e, a
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .restore
     ldh a, [hMapScreenX]
     ld e, a
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .restore
     ldh a, [hMapScreenY]
     ld e, a
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .restore
-    ld a, [hl+]
-    cp a, b
+    ld a, [hli]
+    cp b
     jr nz, .restore
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jr z, .skip3
     jr nc, .restore
 
 .skip3:
     ld a, [hl]
-    cp a, c
+    cp c
     jr c, .restore
     pop hl
     pop de
@@ -2548,15 +2441,15 @@ Func_004_4E0F:: ; address name
     ld a, $06
     add_a_to_hl
     jr .skip2
-    db $05, $02, $00, $50, $00, $28, $2B, $03, $03, $20, $00, $18, $5A, $00, $00, $40
-    db $10, $48, $5A, $00, $00, $70, $30, $48, $5C, $00, $01, $30, $78, $90, $7A, $00
-    db $00, $40, $58, $80, $7A, $00, $01, $40, $00, $28, $7A, $00, $01, $50, $10, $28
-    db $7A, $00, $01, $30, $38, $48, $FF
+    db $05, $02, $00, $50, $00, $28, $2b, $03, $03, $20, $00, $18, $5a, $00, $00, $40
+    db $10, $48, $5a, $00, $00, $70, $30, $48, $5c, $00, $01, $30, $78, $90, $7a, $00
+    db $00, $40, $58, $80, $7a, $00, $01, $40, $00, $28, $7a, $00, $01, $50, $10, $28
+    db $7a, $00, $01, $30, $38, $48, $ff
 
-; E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 + $200; all 384 entries parse). Far pointers: address, bank.
+; E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 +
+; $200; all 384 entries parse). Far pointers: address, bank.
 ; record: compressed small-sprite stream (32 or 256 bytes); ROM bank of that data
 MonsterSpriteTable::
-Data_004_4EAA:: ; address name
     dfar MonsterSprite_DrakSlime ; id 0
     dfar MonsterSprite_DrakSlime ; id 1 DrakSlime
     dfar MonsterSprite_SpotSlime ; id 2 SpotSlime
@@ -2941,10 +2834,11 @@ Data_004_4EAA:: ; address name
     dfar MonsterSprite_Dimensaur ; id 381 Dimensaur
     dfar MonsterSprite_Kagebou ; id 382 Kagebou
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the goal room, to SetupKeyWorldObjectsForMapType_Sub01; it follows MonsterSpriteTable, which therefore has 383 entries, not 384).
+; SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the
+; goal room, to SetupKeyWorldObjectsForMapType_Sub01; it follows MonsterSpriteTable, which therefore
+; has 383 entries, not 384 (E-0196, C1)
 ; record: object grid for this map kind
 KeyWorldObjectGridTable::
-Data_004_5327:: ; address name
     dw KeyWorldObjectGrid_5347 ; id 0
     dw KeyWorldObjectGrid_538C ; id 1
     dw KeyWorldObjectGrid_54C1 ; id 2
@@ -2962,372 +2856,336 @@ Data_004_5327:: ; address name
     dw KeyWorldObjectGrid_55A9 ; id 14
     dw KeyWorldObjectGrid_5573 ; id 15
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5347::
-Data_004_5347:: ; address name
     dw KeyWorldScreenObjects_534B ; id 0
     dw KeyWorldScreenObjects_5366 ; id 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_534B::
-Data_004_534B:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_534F
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_534F::
-Data_004_534F:: ; address name
     db $02 ; entry 0: object count
     db $85, $01, $00, $00, $00, $40, $20, $05, $00, $50, $00 ; object 0
     db $86, $01, $01, $00, $00, $60, $50, $06, $03, $60, $01 ; object 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5366::
-Data_004_5366:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_536A
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_536A::
-Data_004_536A:: ; address name
     db $03 ; entry 0: object count
     db $85, $01, $01, $00, $00, $30, $20, $05, $00, $50, $02 ; object 0
     db $86, $01, $01, $00, $00, $60, $60, $06, $00, $60, $03 ; object 1
-    db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $FA ; object 2
+    db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $fa ; object 2
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_538C::
-Data_004_538C:: ; address name
     dw KeyWorldScreenObjects_5394 ; id 0
     dw KeyWorldScreenObjects_53AF ; id 1
     dw KeyWorldScreenObjects_53E0 ; id 2
     dw KeyWorldScreenObjects_53F0 ; id 3
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5394::
-Data_004_5394:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5398
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5398::
-Data_004_5398:: ; address name
     db $02 ; entry 0: object count
-    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $85, $01, $08, $00, $00, $e0, $e0, $05, $00, $50, $fc ; object 0
     db $86, $01, $02, $00, $00, $20, $40, $06, $00, $60, $00 ; object 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_53AF::
-Data_004_53AF:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_53B3
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_53B3::
-Data_004_53B3:: ; address name
     db $04 ; entry 0: object count
-    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $85, $01, $02, $00, $00, $e0, $e0, $05, $00, $50, $fc ; object 0
     db $86, $01, $03, $00, $02, $40, $20, $06, $01, $60, $01 ; object 1
     db $87, $01, $04, $00, $00, $60, $50, $07, $00, $70, $02 ; object 2
     db $84, $01, $05, $00, $00, $20, $60, $04, $01, $40, $03 ; object 3
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_53E0::
-Data_004_53E0:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_53E4
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_53E4::
-Data_004_53E4:: ; address name
     db $01 ; entry 0
     db $85, $01, $04, $00, $00, $70, $50, $05, $00, $50, $04
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_53F0::
-Data_004_53F0:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_53F4
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_53F4::
-Data_004_53F4:: ; address name
     db $04 ; entry 0: object count
     db $85, $01, $03, $00, $00, $20, $40, $05, $03, $50, $05 ; object 0
     db $86, $01, $05, $00, $02, $40, $70, $06, $01, $60, $06 ; object 1
     db $87, $01, $02, $00, $00, $50, $30, $07, $00, $70, $07 ; object 2
-    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA ; object 3
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $fa ; object 3
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5421::
-Data_004_5421:: ; address name
     dw KeyWorldScreenObjects_5429 ; id 0
     dw KeyWorldScreenObjects_5444 ; id 1
     dw KeyWorldScreenObjects_5475 ; id 2
     dw KeyWorldScreenObjects_5490 ; id 3
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5429::
-Data_004_5429:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_542D
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_542D::
-Data_004_542D:: ; address name
     db $02 ; entry 0: object count
-    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $85, $01, $08, $00, $00, $e0, $e0, $05, $00, $50, $fc ; object 0
     db $86, $01, $04, $00, $00, $20, $40, $06, $00, $60, $04 ; object 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5444::
-Data_004_5444:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5448
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5448::
-Data_004_5448:: ; address name
     db $04 ; entry 0: object count
-    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $85, $01, $02, $00, $00, $e0, $e0, $05, $00, $50, $fc ; object 0
     db $86, $01, $03, $00, $00, $70, $50, $06, $01, $60, $05 ; object 1
     db $87, $01, $02, $00, $02, $30, $60, $07, $01, $70, $07 ; object 2
-    db $84, $01, $07, $00, $00, $40, $20, $04, $00, $40, $FD ; object 3
+    db $84, $01, $07, $00, $00, $40, $20, $04, $00, $40, $fd ; object 3
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5475::
-Data_004_5475:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5479
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5479::
-Data_004_5479:: ; address name
     db $02 ; entry 0: object count
     db $85, $01, $03, $00, $00, $70, $50, $05, $01, $50, $01 ; object 0
     db $86, $01, $05, $00, $02, $30, $60, $06, $01, $60, $06 ; object 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5490::
-Data_004_5490:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5494
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5494::
-Data_004_5494:: ; address name
     db $04 ; entry 0: object count
     db $85, $01, $02, $00, $00, $70, $30, $05, $00, $50, $00 ; object 0
     db $86, $01, $04, $00, $00, $40, $70, $06, $02, $60, $02 ; object 1
     db $87, $01, $05, $00, $02, $40, $40, $07, $01, $70, $03 ; object 2
-    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA ; object 3
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $fa ; object 3
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_54C1::
-Data_004_54C1:: ; address name
     dw KeyWorldScreenObjects_54C5 ; id 0
     dw KeyWorldScreenObjects_54E0 ; id 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_54C5::
-Data_004_54C5:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_54C9
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_54C9::
-Data_004_54C9:: ; address name
     db $02 ; entry 0: object count
-    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD ; object 0
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $fd ; object 0
     db $86, $01, $04, $00, $00, $60, $70, $06, $03, $60, $00 ; object 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_54E0::
-Data_004_54E0:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_54E4
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_54E4::
-Data_004_54E4:: ; address name
     db $04 ; entry 0: object count
     db $85, $01, $03, $00, $00, $60, $30, $05, $03, $50, $01 ; object 0
     db $86, $01, $02, $00, $00, $20, $60, $06, $02, $60, $02 ; object 1
     db $87, $01, $05, $00, $02, $40, $70, $07, $01, $70, $03 ; object 2
-    db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $FA ; object 3
+    db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $fa ; object 3
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5511::
-Data_004_5511:: ; address name
     dw KeyWorldScreenObjects_5515 ; id 0
     dw KeyWorldScreenObjects_553B ; id 1
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5515::
-Data_004_5515:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5519
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5519::
-Data_004_5519:: ; address name
     db $03 ; entry 0: object count
-    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD ; object 0
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $fd ; object 0
     db $86, $01, $02, $00, $00, $30, $60, $06, $00, $60, $02 ; object 1
     db $87, $01, $05, $00, $00, $60, $70, $07, $00, $70, $03 ; object 2
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
-; record: marker word; pointer to the object list
 KeyWorldScreenObjects_553B::
-Data_004_553B:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_553F
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
-; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_553F::
-Data_004_553F:: ; address name
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $02, $60, $60, $05, $01, $50, $01 ; object 0
     db $86, $01, $04, $00, $00, $60, $30, $06, $00, $60, $00 ; object 1
-    db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $FA ; object 2
+    db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $fa ; object 2
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5561::
-Data_004_5561:: ; address name
     dw KeyWorldScreenObjects_5563 ; id 0
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5563::
-Data_004_5563:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5567
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5567::
-Data_004_5567:: ; address name
     db $01 ; entry 0
-    db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $FC
+    db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $fc
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5573::
-Data_004_5573:: ; address name
     dw KeyWorldScreenObjects_5575 ; id 0
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5575::
-Data_004_5575:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_5579
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5579::
-Data_004_5579:: ; address name
     db $01 ; entry 0
-    db $85, $01, $44, $00, $00, $30, $20, $05, $00, $50, $FC
+    db $85, $01, $44, $00, $00, $30, $20, $05, $00, $50, $fc
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5585::
-Data_004_5585:: ; address name
     dw KeyWorldScreenObjects_5587 ; id 0
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5587::
-Data_004_5587:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_558B
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_558B::
-Data_004_558B:: ; address name
     db $01 ; entry 0
-    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $FE
+    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $fe
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_5597::
-Data_004_5597:: ; address name
     dw KeyWorldScreenObjects_5599 ; id 0
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_5599::
-Data_004_5599:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_559D
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_559D::
-Data_004_559D:: ; address name
     db $01 ; entry 0
-    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $FE
+    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $fe
 
-; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY *
+; wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure (E-0196, C1)
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
 KeyWorldObjectGrid_55A9::
-Data_004_55A9:: ; address name
     dw KeyWorldScreenObjects_55AB ; id 0
 
-; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list (E-0196, C1)
 ; record: marker word; pointer to the object list
 KeyWorldScreenObjects_55AB::
-Data_004_55AB:: ; address name
-    dw $FFFE ; entry 0
+    dw $fffe ; entry 0
     dw KeyWorldObjectList_55AF
 
-; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object
+; record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world
+; encounter when hTemp9 is set (E-0196, C1)
 ; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_55AF::
-Data_004_55AF:: ; address name
     db $01 ; entry 0
-    db $85, $00, $28, $00, $00, $40, $50, $05, $00, $50, $FB
+    db $85, $00, $28, $00, $00, $40, $50, $05, $00, $50, $fb
 
-; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
-; 357 call sites from 201 routines (e.g. IfFlag00D1Msg0D3A_ToBeHonestI, IfFlag00D1Msg0D39_AhGreatLogsMightyHero, IfFlag00D1Msg0D38_JustImagineIfYou, IfFlag00D1Msg0D37_InsteadOfStandingAround, ...)
-; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
+; starts a message through script command $09 (message word HL, shown by the same group dispatch as
+; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
+; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
 StartMessageCommand09HL_B04::
-Func_004_55BB:: ; address name
     ld a, l
     ld [wScriptParam0], a
     ld a, h
@@ -3340,16 +3198,16 @@ Func_004_55BB:: ; address name
     ld [wScriptCommandType], a
     ld a, $01
     ld [wScriptRunning], a
-    xor a, a
+    xor a
     ld [wScriptStartRequest], a
     ld [wScriptStep], a
     ret
 
-; starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 (E-0269)
-; 102 call sites from 102 routines (e.g. ChestItem_LoveWater_Flag01FA, ChestItem_Starry, ChestItem_Fight, ChestItem_Herb_Flag01F7, ...)
-; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
+; starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in
+; wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a
+; message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep =
+; 0 (E-0269)
 StartTreasureFlagDE_B04::
-Func_004_55DF:: ; address name
     ld a, e
     ld [wMessageIndex], a
     ld a, d
@@ -3358,20 +3216,18 @@ Func_004_55DF:: ; address name
     ld [wScriptStartRequest], a
     ld a, $01
     ld [wModeState], a
-    ld a, $0A
+    ld a, $0a
     ld [wScriptCommandType], a
     ld a, $01
     ld [wScriptRunning], a
-    xor a, a
+    xor a
     ld [wScriptStartRequest], a
     ld [wScriptStep], a
     ret
 
-; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, ReadableTalkEvents_TestFlagBit_Case0A, TalkScript5441_HeroCheckedThePedestalIts, Talk0046_ThanksForComingBy, ...)
-; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
+; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the
+; script engine starts fetching at HL (E-0082)
 StartScriptAtHL_B04::
-Func_004_5603:: ; address name
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
@@ -3383,12 +3239,9 @@ Func_004_5603:: ; address name
     ret
 
 ; talk category $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf")
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToReadableTalkEvents)
-; reads: wTalkEventGroup
 ReadableTalkEvents::
-Func_004_5616:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw ReadableTalkEvents_TestFlagBit
     dw TalkScript4F54_HehSoTheseAreTheNewcomers
     dw TalkScript5111_ListenYouTwoQuitYourHorsing
@@ -3425,11 +3278,8 @@ Func_004_5616:: ; address name
     dw IfFlag00D1Msg0D39_AhGreatLogsMightyHero
     dw IfFlag00D1Msg0D3A_ToBeHonestI
 
-; entry 0 of the `rst $00` table in ReadableTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5063: 'In the middle of the sea'
 ReadableTalkEvents_TestFlagBit::
-Jump_004_5660:: ; address name
     ld de, $0001
     call TestFlagBit
     jr nc, .call_start_script_at_hl_b04
@@ -3442,42 +3292,36 @@ Jump_004_5660:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts Script_4F54 (StartScriptAtHL); its first message begins 'Heh, so these are the newcomers?' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case01)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_4F54 (StartScriptAtHL); its first message begins 'Heh, so these are the newcomers?'
+; (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case01)
 ; starts Script_4F54: '*: Heh, so these are the'
 TalkScript4F54_HehSoTheseAreTheNewcomers::
-Jump_004_5676:: ; address name
     ld hl, Script_4F54
     call StartScriptAtHL_B04
     ret
 
-; starts Script_5111 (StartScriptAtHL); its first message begins 'Listen you two! Quit your horsing' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case02)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5111 (StartScriptAtHL); its first message begins 'Listen you two! Quit your horsing'
+; (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case02)
 ; starts Script_5111: '*: Listen you two! Quit your'
 TalkScript5111_ListenYouTwoQuitYourHorsing::
-Jump_004_567D:: ; address name
     ld hl, Script_5111
     call StartScriptAtHL_B04
     ret
-    db $21, $44, $00, $CD, $BB, $55, $C9
+    db $21, $44, $00, $cd, $bb, $55, $c9
 
 ; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_4F73: '*: Oh It's all spinning around'
 StartScript4F73AndSetFlag5::
-Jump_004_568B:: ; address name
     ld hl, Script_4F73
     call StartScriptAtHL_B04
     ld de, $0005
     call SetFlagBit
     ret
 
-; map event: starts script $4F7C, runs Func_012_6B98 with hTemp0 = 0 and sets story flag 6 (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0
+; map event: starts script $4F7C, runs RunFieldCommandTemp0 with hTemp0 = 0 and sets story flag 6
+; (E-0122)
 ; starts Script_4F7C
 StartScript4F7CAndSetFlag06::
-Jump_004_5698:: ; address name
     ld hl, Script_4F7C
     call StartScriptAtHL_B04
     ld a, $00
@@ -3488,29 +3332,26 @@ Jump_004_5698:: ; address name
     ret
 
 ; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_4F9D: 'Warubou: Calm down and listen! What'
 IfFlag000AStartScript4F9D::
-Jump_004_56AF:: ; address name
-    ld de, $000A
+    ld de, $000a
     call TestFlagBit
     ret nc
     ld hl, Script_4F9D
     call StartScriptAtHL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0046, whose string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0, wDataBank
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
+; constant message(s) depending on story flags and state; the first one in the code is $0046, whose
+; string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
 Talk0046_ThanksForComingBy::
-Jump_004_56BD:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, .set_data_bank_to_102
     ld de, $0002
     call TestFlagBit
     jr c, .set_data_bank_to_10
-    ld de, $000C
+    ld de, $000c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0007
@@ -3560,43 +3401,37 @@ Jump_004_56BD:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts message $0047 through StartMessageCommand09HL (script command $09); that string begins '0 read the notice. We guarantee the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0047 through StartMessageCommand09HL (script command $09); that string begins '0
+; read the notice. We guarantee the' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case08)
 ; starts Script_5441: '0 checked the pedestal. It's the'
 TalkMsg0047_HeroReadTheNoticeWeGuarantee::
-Jump_004_5731:: ; address name
     ld hl, $0047 ; '0 read the notice. 'We guarantee'
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_5441 (StartScriptAtHL); its first message begins '0 checked the pedestal. It's the' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case09)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5441 (StartScriptAtHL); its first message begins '0 checked the pedestal. It's the'
+; (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case09)
 ; starts Script_5441: '0 checked the pedestal. It's the'
 TalkScript5441_HeroCheckedThePedestalIts::
-Jump_004_5738:: ; address name
     ld hl, Script_5441
     call StartScriptAtHL_B04
     ret
 
-; entry 10 of the `rst $00` table in ReadableTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX, hTemp1, hTemp0
-; writes: wSpriteSlots, wDataBank
 ReadableTalkEvents_TestFlagBit_Case0A::
-Jump_004_573F:: ; address name
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .clear_sprite_slots
     ld a, $03
     ld [wSpriteSlots + $7], a
     jr .set_data_bank_to_1F
 
 .clear_sprite_slots:
-    xor a, a
+    xor a
     ld [wSpriteSlots + $7], a
 
 .set_data_bank_to_1F:
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
     ld de, $0025
     call TestFlagBit
@@ -3616,15 +3451,15 @@ Jump_004_573F:: ; address name
 .call_total_species_flagged_or_listed:
     farcall TotalSpeciesFlaggedOrListed
     ldh a, [hTemp1]
-    or a, a
+    or a
     jr z, .loop2
     ldh a, [hTemp0]
-    cp a, $38
+    cp $38
     jr c, .loop2
     jr .call_test_flag_bit
 
 .loop2:
-    ld de, $002D
+    ld de, $002d
     call TestFlagBit
     jr c, .loop
     ld hl, Script_545F
@@ -3632,113 +3467,110 @@ Jump_004_573F:: ; address name
     ret
 
 .call_test_flag_bit:
-    ld de, $019E
+    ld de, $019e
     call TestFlagBit
     jr c, .loop2
     ld hl, Script_5469
     call StartScriptAtHL_B04
     ret
 
-; starts message $0233 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Monster Skills Every' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case0B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0233 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Monster Skills Every' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case0B)
 TalkMsg0233_HeroCheckedTheBookshelfMonster::
-Jump_004_57A4:: ; address name
     ld hl, $0233 ; '0 checked the bookshelf. 'Monster Skills'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0234 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Monster Growth By' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case0C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0234 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Monster Growth By' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case0C)
 TalkMsg0234_HeroCheckedTheBookshelfMonster::
-Jump_004_57AB:: ; address name
     ld hl, $0234 ; '0 checked the bookshelf. 'Monster Growth'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0235 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Personalities of Monsters' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case0D)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0235 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Personalities of Monsters' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case0D)
 TalkMsg0235_HeroCheckedTheBookshelfPersonalities::
-Jump_004_57B2:: ; address name
     ld hl, $0235 ; '0 checked the bookshelf. 'Personalities of'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0236 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Nuts and Seeds' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case0E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0236 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Nuts and Seeds' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case0E)
 TalkMsg0236_HeroCheckedTheBookshelfNuts::
-Jump_004_57B9:: ; address name
     ld hl, $0236 ; '0 checked the bookshelf. 'Nuts and'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0237 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. WorldLeaf An indispensable' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case0F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0237 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. WorldLeaf An indispensable' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case0F)
 TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf::
-Jump_004_57C0:: ; address name
     ld hl, $0237 ; '0 checked the bookshelf. 'WorldLeaf An'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0238 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case10)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0238 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case10)
 TalkMsg0238_HeroCheckedTheBookshelfMagic::
-Jump_004_57C7:: ; address name
     ld hl, $0238 ; '0 checked the bookshelf. 'Magic Key'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0239 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case11)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0239 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case11)
 TalkMsg0239_HeroCheckedTheBookshelfMagic::
-Jump_004_57CE:: ; address name
     ld hl, $0239 ; '0 checked the bookshelf. 'Magic Key'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $023A through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Starry Shrine A' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case12)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $023A through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Starry Shrine A' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case12)
 TalkMsg023A_HeroCheckedTheBookshelfStarry::
-Jump_004_57D5:: ; address name
-    ld hl, $023A ; '0 checked the bookshelf. 'Starry Shrine'
+    ld hl, $023a ; '0 checked the bookshelf. 'Starry Shrine'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $023B through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Egg Evaluators Those' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case13)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $023B through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Egg Evaluators Those' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case13)
 TalkMsg023B_HeroCheckedTheBookshelfEgg::
-Jump_004_57DC:: ; address name
-    ld hl, $023B ; '0 checked the bookshelf. 'Egg Evaluators'
+    ld hl, $023b ; '0 checked the bookshelf. 'Egg Evaluators'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $023C through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Accessory Guide A' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case14)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $023C through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Accessory Guide A' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case14)
 TalkMsg023C_HeroCheckedTheBookshelfAccessory::
-Jump_004_57E3:: ; address name
-    ld hl, $023C ; '0 checked the bookshelf. 'Accessory Guide'
+    ld hl, $023c ; '0 checked the bookshelf. 'Accessory Guide'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $023D through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Hidden Abilities Monsters' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case15)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $023D through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. Hidden Abilities Monsters' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case15)
 TalkMsg023D_HeroCheckedTheBookshelfHidden::
-Jump_004_57EA:: ; address name
-    ld hl, $023D ; '0 checked the bookshelf. 'Hidden Abilities'
+    ld hl, $023d ; '0 checked the bookshelf. 'Hidden Abilities'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $023E through StartMessageCommand09HL (script command $09); that string begins '0 read the notice. Please return books' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case16)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $023E through StartMessageCommand09HL (script command $09); that string begins '0
+; read the notice. Please return books' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case16)
 TalkMsg023E_HeroReadTheNoticePleaseReturn::
-Jump_004_57F1:: ; address name
-    ld hl, $023E ; '0 read the notice. 'Please return'
+    ld hl, $023e ; '0 read the notice. 'Please return'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 23 of the `rst $00` table in ReadableTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ReadableTalkEvents_TestFlagBit_Case17::
-Jump_004_57F8:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -3751,29 +3583,26 @@ Jump_004_57F8:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0010 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. Freshly caught' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case18)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0010 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. Freshly caught' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case18)
 TalkMsg0010_HeroPeeredIntoTheVaseFreshly::
-Jump_004_580E:: ; address name
     ld hl, $0010 ; '0 peered into the vase. Freshly'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $000F through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case0A_Sub01_Case19)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $000F through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case0A_Sub01_Case19)
 TalkMsg000F_HeroPeeredIntoTheBarrelIt::
-Jump_004_5815:: ; address name
-    ld hl, $000F ; '0 peered into the barrel. It'
+    ld hl, $000f ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
 
-; with story flag $1A set: counts keys twice (Func_012_6955 with hTemp1 = 1 and 2), sets bit 7 of wGameFlags836 and starts script $5039 (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: hTemp1, wGameFlags836
+; with story flag $1A set: counts keys twice (WriteKeyEntryTemp0 with hTemp1 = 1 and 2), sets bit 7
+; of wGameFlags836 and starts script $5039 (E-0124)
 MapEventCountKeysAndStartScript5039::
-Jump_004_581C:: ; address name
-    ld de, $001A
+    ld de, $001a
     call TestFlagBit
     ret nc
     farcall CountKeysOrFull
@@ -3791,101 +3620,99 @@ Jump_004_581C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D33 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'You saved us all by yourself.' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D33 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'You saved
+; us all by yourself.' (E-0082)
 IfFlag00D1Msg0D33_YouSavedUsAll::
-Jump_004_5852:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D33 ; '*: You saved us all by'
+    ld hl, $0d33 ; '*: You saved us all by'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D34 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Please, eat up, eat up! Don't' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D34 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Please,
+; eat up, eat up! Don't' (E-0082)
 IfFlag00D1Msg0D34_PleaseEatUpEat::
-Jump_004_5860:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D34 ; '*: Please, eat up, eat up!'
+    ld hl, $0d34 ; '*: Please, eat up, eat up!'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D35 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Hm? I saw your family. They' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D35 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Hm? I saw
+; your family. They' (E-0082)
 IfFlag00D1Msg0D35_HmISawYour::
-Jump_004_586E:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D35 ; '*: Hm? I saw your family.'
+    ld hl, $0d35 ; '*: Hm? I saw your family.'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D36 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'The Kingdom is rejoicing!' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D36 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'The
+; Kingdom is rejoicing!' (E-0082)
 IfFlag00D1Msg0D36_TheKingdomIsRejoicing::
-Jump_004_587C:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D36 ; '*: The Kingdom is rejoicing!'
+    ld hl, $0d36 ; '*: The Kingdom is rejoicing!'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D37 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Instead of standing around, you should' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D37 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Instead
+; of standing around, you should' (E-0082)
 IfFlag00D1Msg0D37_InsteadOfStandingAround::
-Jump_004_588A:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D37 ; '*: Instead of standing around, you'
+    ld hl, $0d37 ; '*: Instead of standing around, you'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D38 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Just imagine if you weren't here.' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D38 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Just
+; imagine if you weren't here.' (E-0082)
 IfFlag00D1Msg0D38_JustImagineIfYou::
-Jump_004_5898:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D38 ; '*: Just imagine if you weren't'
+    ld hl, $0d38 ; '*: Just imagine if you weren't'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D39 through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Ah, GreatLog's mighty hero! I hope' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D39 through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Ah,
+; GreatLog's mighty hero! I hope' (E-0082)
 IfFlag00D1Msg0D39_AhGreatLogsMightyHero::
-Jump_004_58A6:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D39 ; '*: Ah, GreatLog's mighty hero! I'
+    ld hl, $0d39 ; '*: Ah, GreatLog's mighty hero! I'
     call StartMessageCommand09HL_B04
     ret
 
-; when story flag $00D1 is set (TestFlagBit), starts message $0D3A through StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'To be honest, I was getting' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; when story flag $00D1 is set (TestFlagBit), starts message $0D3A through
+; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'To be
+; honest, I was getting' (E-0082)
 IfFlag00D1Msg0D3A_ToBeHonestI::
-Jump_004_58B4:: ; address name
-    ld de, $00D1
+    ld de, $00d1
     call TestFlagBit
     ret nc
-    ld hl, $0D3A ; '*: To be honest, I was'
+    ld hl, $0d3a ; '*: To be honest, I was'
     call StartMessageCommand09HL_B04
     ret
 
-; talk category 3: jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToYoldTalkEvents)
-; reads: wTalkEventGroup
+; talk category 3: jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz
+; (messages $0800-$088F)
 YoldTalkEvents::
-Func_004_58C2:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw TalkMsg0800_ThisIsTheVillageOfYold
     dw TalkMsg0801_InTheNorthwestIsAVillage
     dw TalkMsg0802_AroundThesePartsItsFaster
@@ -3997,35 +3824,36 @@ Func_004_58C2:: ; address name
     dw TalkScript5D44_ThickSuctionCuppedTentacles
     dw YoldTalkEvents_TestFlagBit_Case6D
 
-; starts message $0800 through StartMessageCommand09HL (script command $09); that string begins 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case00)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0800 through StartMessageCommand09HL (script command $09); that string begins
+; 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case00)
 TalkMsg0800_ThisIsTheVillageOfYold::
-Jump_004_59A2:: ; address name
     ld hl, $0800 ; '*: This is the village of'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0801 through StartMessageCommand09HL (script command $09); that string begins 'In the northwest is a village that' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case01)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0801 through StartMessageCommand09HL (script command $09); that string begins 'In
+; the northwest is a village that' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case01)
 TalkMsg0801_InTheNorthwestIsAVillage::
-Jump_004_59A9:: ; address name
     ld hl, $0801 ; '*: In the northwest is a'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0802 through StartMessageCommand09HL (script command $09); that string begins 'Around these parts it's faster to travel' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case02)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0802 through StartMessageCommand09HL (script command $09); that string begins
+; 'Around these parts it's faster to travel' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case02)
 TalkMsg0802_AroundThesePartsItsFaster::
-Jump_004_59B0:: ; address name
     ld hl, $0802 ; '*: Around these parts it's faster'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0803_ISawAHauntedShipIn.call_start_message_command09_hl_b04); starts message $0803 through StartMessageCommand09HL (script command $09); that string begins 'I saw a haunted ship in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case03)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0803_ISawAHauntedShipIn.call_start_message_command09_hl_b04); starts message $0803 through
+; StartMessageCommand09HL (script command $09); that string begins 'I saw a haunted ship in the'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case03)
 TalkMsg0803_ISawAHauntedShipIn::
-Jump_004_59B7:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0803 ; '*: I saw a haunted ship'
@@ -4037,11 +3865,13 @@ Jump_004_59B7:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0804_TheVolcanicIslandOffTheCoast.call_start_message_command09_hl_b04); starts message $0804 through StartMessageCommand09HL (script command $09); that string begins 'The volcanic island off the coast appears' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case04)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0804_TheVolcanicIslandOffTheCoast.call_start_message_command09_hl_b04); starts message
+; $0804 through StartMessageCommand09HL (script command $09); that string begins 'The volcanic
+; island off the coast appears' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case04)
 TalkMsg0804_TheVolcanicIslandOffTheCoast::
-Jump_004_59CD:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0804 ; '*: The volcanic island off the'
@@ -4053,11 +3883,12 @@ Jump_004_59CD:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0805_MermaidsLivedInTheSeaIn.call_start_message_command09_hl_b04); starts message $0805 through StartMessageCommand09HL (script command $09); that string begins 'Mermaids lived in the sea in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case05)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0805_MermaidsLivedInTheSeaIn.call_start_message_command09_hl_b04); starts message $0805
+; through StartMessageCommand09HL (script command $09); that string begins 'Mermaids lived in the
+; sea in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case05)
 TalkMsg0805_MermaidsLivedInTheSeaIn::
-Jump_004_59E3:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0805 ; '*: Mermaids lived in the sea'
@@ -4069,11 +3900,8 @@ Jump_004_59E3:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 6 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 YoldTalkEvents_TestFlagBit::
-Jump_004_59F9:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0060
@@ -4095,11 +3923,7 @@ Jump_004_59F9:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 7 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenTableIndex, wDataBank
 YoldTalkEvents_StartScriptAtHL_B04::
-Jump_004_5A24:: ; address name
     ld a, $04
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4108,40 +3932,40 @@ Jump_004_5A24:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts message $080A through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. A folded' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $080A through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. A folded' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case08)
 TalkMsg080A_HeroPeeredIntoTheBarrelA::
-Jump_004_5A35:: ; address name
-    ld hl, $080A ; '0 peered into the barrel. A'
+    ld hl, $080a ; '0 peered into the barrel. A'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $080B through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case09)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $080B through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case09)
 TalkMsg080B_HeroPeeredIntoTheBarrelIt::
-Jump_004_5A3C:: ; address name
-    ld hl, $080B ; '0 peered into the barrel. It'
+    ld hl, $080b ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story flag $0061 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case0A)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
+; flag $0061 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case0A)
 BarrelItem_TinyMedal::
-Jump_004_5A43:: ; address name
     ld a, $02
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
     ld de, $0061
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $28, story flag $0062 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case0B)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $28, story
+; flag $0062 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A6
+; of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case0B)
 BarrelItem_Warp::
-Jump_004_5A54:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $28
@@ -4150,46 +3974,47 @@ Jump_004_5A54:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $088A through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case0C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $088A through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case0C)
 TalkMsg088A_HeroPeeredIntoTheVaseIt::
-Jump_004_5A65:: ; address name
-    ld hl, $088A ; '0 peered into the vase. It'
+    ld hl, $088a ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0889 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It smelled' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case0D)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0889 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the oven. It smelled' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case0D)
 TalkMsg0889_HeroPeeredIntoTheOvenIt::
-Jump_004_5A6C:: ; address name
     ld hl, $0889 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case0E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0
+; tried to open the chest. But' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case0E)
 TalkMsg0037_HeroTriedToOpenTheChest::
-Jump_004_5A73:: ; address name
     ld hl, $0037 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $080C through StartMessageCommand09HL (script command $09); that string begins 'Welcome to Polona. It's a tourist resort' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case0F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $080C through StartMessageCommand09HL (script command $09); that string begins
+; 'Welcome to Polona. It's a tourist resort' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case0F)
 TalkMsg080C_WelcomeToPolonaItsATourist::
-Jump_004_5A7A:: ; address name
-    ld hl, $080C ; '*: Welcome to Polona. It's a'
+    ld hl, $080c ; '*: Welcome to Polona. It's a'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg080D_YouCouldMeetMermaidsHere.call_start_message_command09_hl_b04); starts message $080D through StartMessageCommand09HL (script command $09); that string begins 'You could meet mermaids here in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case10)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg080D_YouCouldMeetMermaidsHere.call_start_message_command09_hl_b04); starts message $080D
+; through StartMessageCommand09HL (script command $09); that string begins 'You could meet mermaids
+; here in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case10)
 TalkMsg080D_YouCouldMeetMermaidsHere::
-Jump_004_5A81:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $080D ; '*: You could meet mermaids here'
+    ld hl, $080d ; '*: You could meet mermaids here'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4198,30 +4023,24 @@ Jump_004_5A81:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $080E through StartMessageCommand09HL (script command $09); that string begins 'I'm from the port in the northeast.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case11)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $080E through StartMessageCommand09HL (script command $09); that string begins 'I'm
+; from the port in the northeast.' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case11)
 TalkMsg080E_ImFromThePortInThe::
-Jump_004_5A97:: ; address name
-    ld hl, $080E ; '*: I'm from the port in'
+    ld hl, $080e ; '*: I'm from the port in'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $080F through StartMessageCommand09HL (script command $09); that string begins 'You're not supposed to go near the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case12)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $080F through StartMessageCommand09HL (script command $09); that string begins
+; 'You're not supposed to go near the' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case12)
 TalkMsg080F_YoureNotSupposedToGoNear::
-Jump_004_5A9E:: ; address name
-    ld hl, $080F ; '*: You're not supposed to go'
+    ld hl, $080f ; '*: You're not supposed to go'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 19 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp1, wStepArrived, hTemp2
-; writes: rRAMG
-; points at: wPartyList, wNameGlyphBuf
 YoldTalkEvents_TestFlagBit_Case13::
-Jump_004_5AA5:: ; address name
-    ld de, $006F
+    ld de, $006f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     farcall FindPartyMemberWithSkill76To7DOr92
@@ -4235,14 +4054,14 @@ Jump_004_5AA5:: ; address name
 .call_set_w_step_arrived_if_party_has_field55:
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
-    or a, a
+    or a
     jr z, .read_temp1
     ld hl, Script_5C5C
     call StartScriptAtHL_B04
     ret
 
 .read_temp1:
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ldh a, [hTemp1]
     ld hl, wPartyList
@@ -4250,16 +4069,16 @@ Jump_004_5AA5:: ; address name
     ld a, [hl]
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
-    xor a, a
+    xor a
     ld [rRAMG], a
     ld hl, wNameGlyphBuf
     ld de, wTextBuf1 + $7
-    ld bc, $000B
+    ld bc, $000b
     call CopyBytes
     ldh a, [hTemp2]
     ld de, wTextBuf2 + $2
     call ReadBank08Table4558WordForA
-    ld de, $006D
+    ld de, $006d
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5C40
@@ -4272,47 +4091,43 @@ Jump_004_5AA5:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $084A ; '*: I'm astonished. Mermaids exist.'
+    ld hl, $084a ; '*: I'm astonished. Mermaids exist.'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 20 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 ; starts Script_5B94: '*: Welcome to our inn!'
 YoldTalkEvents_StartScriptAtHL_B04_Case14::
-Jump_004_5B1D:: ; address name
     ld hl, Script_5B94
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
 
-; starts Script_5B9B (StartScriptAtHL); its first message begins 'Have you heard the legend about' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case15)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5B9B (StartScriptAtHL); its first message begins 'Have you heard the legend about'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case15)
 ; starts Script_5B9B: '*: Have you heard the legend'
 TalkScript5B9B_HaveYouHeardTheLegendAbout::
-Jump_004_5B29:: ; address name
     ld hl, Script_5B9B
     call StartScriptAtHL_B04
     ret
 
-; starts message $081B through StartMessageCommand09HL (script command $09); that string begins 'Ahh This is heavenly! It makes me' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case16)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $081B through StartMessageCommand09HL (script command $09); that string begins 'Ahh
+; This is heavenly! It makes me' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case16)
 TalkMsg081B_AhhThisIsHeavenlyItMakes::
-Jump_004_5B30:: ; address name
-    ld hl, $081B ; '*: Ahh This is heavenly! It'
+    ld hl, $081b ; '*: Ahh This is heavenly! It'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg081C_ICameFromFarAwayTo.call_start_message_command09_hl_b04); starts message $081C through StartMessageCommand09HL (script command $09); that string begins 'I came from far away to see' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case17)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg081C_ICameFromFarAwayTo.call_start_message_command09_hl_b04); starts message $081C through
+; StartMessageCommand09HL (script command $09); that string begins 'I came from far away to see'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case17)
 TalkMsg081C_ICameFromFarAwayTo::
-Jump_004_5B37:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $081C ; '*: I came from far away'
+    ld hl, $081c ; '*: I came from far away'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4321,87 +4136,81 @@ Jump_004_5B37:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $088B through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. Welcome to the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case18)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $088B through StartMessageCommand09HL (script command $09); that string begins '0
+; read the sign. Welcome to the' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case18)
 TalkMsg088B_HeroReadTheSignWelcomeTo::
-Jump_004_5B4D:: ; address name
-    ld hl, $088B ; '0 read the sign. 'Welcome to'
+    ld hl, $088b ; '0 read the sign. 'Welcome to'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0889 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It smelled' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case19)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0889 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the oven. It smelled' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case19)
 TalkMsg0889_HeroPeeredIntoTheOvenIt_045B54::
-Jump_004_5B54:: ; address name
     ld hl, $0889 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $081D through StartMessageCommand09HL (script command $09); that string begins 'This is Port Ritz, where ships gather' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1A)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $081D through StartMessageCommand09HL (script command $09); that string begins
+; 'This is Port Ritz, where ships gather' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case1A)
 TalkMsg081D_ThisIsPortRitzWhereShips::
-Jump_004_5B5B:: ; address name
-    ld hl, $081D ; '*: This is Port Ritz, where'
+    ld hl, $081d ; '*: This is Port Ritz, where'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 007A then jr c, TalkMsg081E_ThePiratesWereSwallowedBy.call_start_message_command09_hl_b04); starts message $081E through StartMessageCommand09HL (script command $09); that string begins 'The pirates were swallowed by the sea' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1B)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 007A then jr c,
+; TalkMsg081E_ThePiratesWereSwallowedBy.call_start_message_command09_hl_b04); starts message $081E
+; through StartMessageCommand09HL (script command $09); that string begins 'The pirates were
+; swallowed by the sea' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1B)
 TalkMsg081E_ThePiratesWereSwallowedBy::
-Jump_004_5B62:: ; address name
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $081E ; '*: The pirates were swallowed by'
+    ld hl, $081e ; '*: The pirates were swallowed by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087A ; '*: The pirates hid their loot'
+    ld hl, $087a ; '*: The pirates hid their loot'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $081F through StartMessageCommand09HL (script command $09); that string begins 'There's this old sailor man in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $081F through StartMessageCommand09HL (script command $09); that string begins
+; 'There's this old sailor man in the' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case1C)
 TalkMsg081F_TheresThisOldSailorManIn::
-Jump_004_5B78:: ; address name
-    ld hl, $081F ; '*: There's this old sailor man'
+    ld hl, $081f ; '*: There's this old sailor man'
     call StartMessageCommand09HL_B04
     ret
 
-; sets wDataBank = $1F, then starts Script_5BA8 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case1D)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
+; sets wDataBank = $1F, then starts Script_5BA8 (StartScriptAtHL); its first message begins 'How may
+; our church serve you?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case1D)
 ; starts Script_5BA8: '*: How may our church serve'
 TalkScript5BA8_HowMayOurChurchServeYou::
-Jump_004_5B7F:: ; address name
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
     ld hl, Script_5BA8
     call StartScriptAtHL_B04
     ret
 
-; starts message $0821 through StartMessageCommand09HL (script command $09); that string begins 'All sorts of people come here from' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0821 through StartMessageCommand09HL (script command $09); that string begins 'All
+; sorts of people come here from' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case1E)
 TalkMsg0821_AllSortsOfPeopleComeHere::
-Jump_004_5B8B:: ; address name
     ld hl, $0821 ; '*: All sorts of people come'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0822 through StartMessageCommand09HL (script command $09); that string begins 'I went to Polona a while back' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0822 through StartMessageCommand09HL (script command $09); that string begins 'I
+; went to Polona a while back' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case1F)
 TalkMsg0822_IWentToPolonaAWhile::
-Jump_004_5B92:: ; address name
     ld hl, $0822 ; '*: I went to Polona a'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 32 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenTableIndex, wDataBank
 YoldTalkEvents_StartScriptAtHL_B04_Case20::
-Jump_004_5B99:: ; address name
     ld a, $06
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4410,11 +4219,12 @@ Jump_004_5B99:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0824_ThereIsALighthouseToThe.call_start_message_command09_hl_b04); starts message $0824 through StartMessageCommand09HL (script command $09); that string begins 'There is a lighthouse to the east,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case21)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0824_ThereIsALighthouseToThe.call_start_message_command09_hl_b04); starts message $0824
+; through StartMessageCommand09HL (script command $09); that string begins 'There is a lighthouse to
+; the east,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case21)
 TalkMsg0824_ThereIsALighthouseToThe::
-Jump_004_5BAA:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0824 ; '*: There is a lighthouse to'
@@ -4422,31 +4232,32 @@ Jump_004_5BAA:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D13 ; '*: The lighthouse is out east.'
+    ld hl, $0d13 ; '*: The lighthouse is out east.'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0825 through StartMessageCommand09HL (script command $09); that string begins 'My ship sank in the eastern sea.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case22)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0825 through StartMessageCommand09HL (script command $09); that string begins 'My
+; ship sank in the eastern sea.' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case22)
 TalkMsg0825_MyShipSankInTheEastern::
-Jump_004_5BC0:: ; address name
     ld hl, $0825 ; '*: My ship sank in the'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0826 through StartMessageCommand09HL (script command $09); that string begins 'The old man in the tavern's neat!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case23)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0826 through StartMessageCommand09HL (script command $09); that string begins 'The
+; old man in the tavern's neat!' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case23)
 TalkMsg0826_TheOldManInTheTaverns::
-Jump_004_5BC7:: ; address name
     ld hl, $0826 ; '*: The old man in the'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0827_ThisPortUsedToBeLively.call_start_message_command09_hl_b04); starts message $0827 through StartMessageCommand09HL (script command $09); that string begins 'This port used to be lively in' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case24)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0827_ThisPortUsedToBeLively.call_start_message_command09_hl_b04); starts message $0827
+; through StartMessageCommand09HL (script command $09); that string begins 'This port used to be
+; lively in' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case24)
 TalkMsg0827_ThisPortUsedToBeLively::
-Jump_004_5BCE:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0827 ; '*: This port used to be'
@@ -4454,15 +4265,16 @@ Jump_004_5BCE:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087B ; '*: The sea around here is'
+    ld hl, $087b ; '*: The sea around here is'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0829_TheLighthouseHadTheMoonRock.call_start_message_command09_hl_b04); starts message $0829 through StartMessageCommand09HL (script command $09); that string begins 'The lighthouse had the MoonRock installed at' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case25)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0829_TheLighthouseHadTheMoonRock.call_start_message_command09_hl_b04); starts message $0829
+; through StartMessageCommand09HL (script command $09); that string begins 'The lighthouse had the
+; MoonRock installed at' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case25)
 TalkMsg0829_TheLighthouseHadTheMoonRock::
-Jump_004_5BE4:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0829 ; '*: The lighthouse had the MoonRock'
@@ -4470,127 +4282,124 @@ Jump_004_5BE4:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087C ; '*: The MoonRock glows at night'
+    ld hl, $087c ; '*: The MoonRock glows at night'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 007A then jr c, TalkMsg082A_TheSeasLevelHasGoneDown.call_start_message_command09_hl_b04); starts message $082A through StartMessageCommand09HL (script command $09); that string begins 'The sea's level has gone down. Many' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case26)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 007A then jr c,
+; TalkMsg082A_TheSeasLevelHasGoneDown.call_start_message_command09_hl_b04); starts message $082A
+; through StartMessageCommand09HL (script command $09); that string begins 'The sea's level has gone
+; down. Many' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case26)
 TalkMsg082A_TheSeasLevelHasGoneDown::
-Jump_004_5BFA:: ; address name
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $082A ; '*: The sea's level has gone'
+    ld hl, $082a ; '*: The sea's level has gone'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087D ; '*: The sea's level has risen.'
+    ld hl, $087d ; '*: The sea's level has risen.'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $082B through StartMessageCommand09HL (script command $09); that string begins 'Listen, did you know? Mermaids appear to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case27)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $082B through StartMessageCommand09HL (script command $09); that string begins
+; 'Listen, did you know? Mermaids appear to' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case27)
 TalkMsg082B_ListenDidYouKnowMermaids::
-Jump_004_5C10:: ; address name
-    ld hl, $082B ; '*: Listen, did you know? Mermaids'
+    ld hl, $082b ; '*: Listen, did you know? Mermaids'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $088D through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. Two shiny' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case28)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $088D through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the oven. Two shiny' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case28)
 ; starts Script_5BB6: '0 tried to check the chest.'
 TalkMsg088D_HeroPeeredIntoTheOvenTwo::
-Jump_004_5C17:: ; address name
-    ld hl, $088D ; '0 peered into the oven. Two'
+    ld hl, $088d ; '0 peered into the oven. Two'
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_5BB6 (StartScriptAtHL); its first message begins '0 tried to check the chest.' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case29)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5BB6 (StartScriptAtHL); its first message begins '0 tried to check the chest.'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case29)
 ; starts Script_5BB6: '0 tried to check the chest.'
 TalkScript5BB6_HeroTriedToCheckTheChest::
-Jump_004_5C1E:: ; address name
     ld hl, Script_5BB6
     call StartScriptAtHL_B04
     ret
 
-; starts message $082E through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case2A)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $082E through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case2A)
 TalkMsg082E_HeroPeeredIntoTheBarrelIt::
-Jump_004_5C25:: ; address name
-    ld hl, $082E ; '0 peered into the barrel. It'
+    ld hl, $082e ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story flag $0063 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case2B)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
+; flag $0063 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case2B)
 BarrelItem_TinyMedal_Flag0063::
-Jump_004_5C2C:: ; address name
     ld a, $02
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
     ld de, $0063
     call StartTreasureFlagDE_B04
     ret
 
-; entry 44 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 ; starts Script_5BBD: '*: Welcome to our inn!'
 YoldTalkEvents_StartScriptAtHL_B04_Case2C::
-Jump_004_5C3D:: ; address name
     ld hl, Script_5BBD
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
 
-; tests story flags (flag 007A then jr c, TalkMsg082F_ThisAreaWasALotMore.call_start_message_command09_hl_b04); starts message $082F through StartMessageCommand09HL (script command $09); that string begins 'This area was a lot more lively' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case2D)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 007A then jr c,
+; TalkMsg082F_ThisAreaWasALotMore.call_start_message_command09_hl_b04); starts message $082F through
+; StartMessageCommand09HL (script command $09); that string begins 'This area was a lot more lively'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case2D)
 TalkMsg082F_ThisAreaWasALotMore::
-Jump_004_5C49:: ; address name
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $082F ; '*: This area was a lot'
+    ld hl, $082f ; '*: This area was a lot'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087E ; '*: For some reason, the shoals'
+    ld hl, $087e ; '*: For some reason, the shoals'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0830 through StartMessageCommand09HL (script command $09); that string begins 'When you're out at sea, you get' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case2E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0830 through StartMessageCommand09HL (script command $09); that string begins
+; 'When you're out at sea, you get' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case2E)
 ; starts Script_5BC4
 TalkMsg0830_WhenYoureOutAtSeaYou::
-Jump_004_5C5F:: ; address name
     ld hl, $0830 ; '*: When you're out at sea,'
     call StartMessageCommand09HL_B04
     ret
 
 ; starts Script_5BC4 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case2F)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5BC4
 TalkScript5BC4::
-Jump_004_5C66:: ; address name
     ld hl, Script_5BC4
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b042; flag 006D then jr c, TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b04); starts message $0834 through StartMessageCommand09HL (script command $09); that string begins 'When that old man gets grogged You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case30)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b042; flag 006D then jr c,
+; TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b04); starts message $0834
+; through StartMessageCommand09HL (script command $09); that string begins 'When that old man gets
+; grogged You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case30)
 TalkMsg0834_WhenThatOldManGetsGrogged::
-Jump_004_5C6D:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $006D
+    ld de, $006d
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0834 ; '*: When that old man gets'
@@ -4603,18 +4412,20 @@ Jump_004_5C6D:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0D14 ; '*: Another master was here with'
+    ld hl, $0d14 ; '*: Another master was here with'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005F then jr c, TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b042; flag 007A then jr c, TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b04); starts message $0835 through StartMessageCommand09HL (script command $09); that string begins 'The old fellow there, the instant he' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case31)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005F then jr c,
+; TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b042; flag 007A then jr c,
+; TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b04); starts message $0835
+; through StartMessageCommand09HL (script command $09); that string begins 'The old fellow there,
+; the instant he' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case31)
 TalkMsg0835_TheOldFellowThereTheInstant::
-Jump_004_5C92:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0835 ; '*: The old fellow there, the'
@@ -4622,35 +4433,31 @@ Jump_004_5C92:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0DC3 ; '*: The shoals that ringed the'
+    ld hl, $0dc3 ; '*: The shoals that ringed the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $087F ; '*: Did you hear? Pirates hid'
+    ld hl, $087f ; '*: Did you hear? Pirates hid'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0836 through StartMessageCommand09HL (script command $09); that string begins 'The volcanic island off the coast is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case32)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0836 through StartMessageCommand09HL (script command $09); that string begins 'The
+; volcanic island off the coast is' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case32)
 TalkMsg0836_TheVolcanicIslandOffTheCoast::
-Jump_004_5CB7:: ; address name
     ld hl, $0836 ; '*: The volcanic island off the'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 51 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wObject3
 YoldTalkEvents_ShowHnnnrHicGnnZzz::
-Jump_004_5CBE:: ; address name
-    ld de, $005F
+    ld de, $005f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_party_has_species_lo3_c_to5_b_with_hi
-    ld de, $006D
+    ld de, $006d
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     call PartyHasSpeciesLo3CTo5BWithHiSet
@@ -4690,50 +4497,43 @@ Jump_004_5CBE:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
-; 2 call sites from 1 routine (e.g. YoldTalkEvents_ShowHnnnrHicGnnZzz)
-; reads: wPartyCount, hTemp1, hTemp0
-; writes: rRAMG
-; points at: wPartyList
+; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B
+; (E-0124)
 PartyHasSpeciesLo3CTo5BWithHiSet::
-Func_004_5D14:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp1]
-    or a, a
+    or a
     jr z, .next
     ldh a, [hTemp0]
-    cp a, $3C
+    cp $3c
     jr c, .next
-    cp a, $5C
+    cp $5c
     jr c, .skip
 
 .next:
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [rRAMG], a
-    sub a, a
+    sub a
     ret
 
 .skip:
-    xor a, a
+    xor a
     ld [rRAMG], a
     scf
     ret
 
-; entry 52 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 YoldTalkEvents_TestFlagBit_Case34::
-Jump_004_5D44:: ; address name
     ld de, $0066
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
@@ -4756,24 +4556,24 @@ Jump_004_5D44:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $1B, story flag $0067 in DE: when the flag is clear it gives item $1B (Rib) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case35)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $1B, story flag $0067 in DE: when the flag is clear it gives item $1B (Rib) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case35)
 ChestItem_Rib::
-Jump_004_5D6F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $1B
+    ld a, $1b
     ld [wScriptParam1], a
     ld de, $0067
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $0068 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case36)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $0068 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case36)
 ChestItem_LoveWater::
-Jump_004_5D80:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
@@ -4782,11 +4582,11 @@ Jump_004_5D80:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $0069 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case37)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $0069 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case37)
 ChestItem_LoveWater_Flag0069::
-Jump_004_5D91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
@@ -4795,83 +4595,76 @@ Jump_004_5D91:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $006A in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case38)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $006A in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case38)
 ChestItem_ExitBell::
-Jump_004_5DA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $006A
+    ld de, $006a
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $46, story flag $006B in DE: when the flag is clear it gives item $46 (MermScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case39)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $46, story flag $006B in DE: when the flag is clear it gives item $46 (MermScale) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case39)
 ChestItem_MermScale::
-Jump_004_5DB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $46
     ld [wScriptParam1], a
-    ld de, $006B
+    ld de, $006b
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $28, story flag $006C in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case3A)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $28, story flag $006C in DE: when the flag is clear it gives item $28 (Warp) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case3A)
 ChestItem_Warp::
-Jump_004_5DC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
-    ld de, $006C
+    ld de, $006c
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0843 through StartMessageCommand09HL (script command $09); that string begins 'I saw a child cross the sea' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0843 through StartMessageCommand09HL (script command $09); that string begins 'I
+; saw a child cross the sea' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3B)
 TalkMsg0843_ISawAChildCrossThe::
-Jump_004_5DD5:: ; address name
     ld hl, $0843 ; '*: I saw a child cross'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0844 through StartMessageCommand09HL (script command $09); that string begins 'Watch me dance, and you'll want to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0844 through StartMessageCommand09HL (script command $09); that string begins
+; 'Watch me dance, and you'll want to' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case3C)
 TalkMsg0844_WatchMeDanceAndYoullWant::
-Jump_004_5DDC:: ; address name
     ld hl, $0844 ; '*: Watch me dance, and you'll'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 61 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C69: '*: Do you want to go'
 YoldTalkEvents_TestFlagBit_Case3D::
-Jump_004_5DE3:: ; address name
-    ld de, $006F
+    ld de, $006f
     call TestFlagBit
     ret nc
     ld hl, Script_5C69
     call StartScriptAtHL_B04
     ret
 
-; entry 62 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 YoldTalkEvents_ShowThisIsTheMermaid::
-Jump_004_5DF1:: ; address name
-    ld de, $00F1
+    ld de, $00f1
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $084E ; '*: This is the mermaid kingdom.'
+    ld hl, $084e ; '*: This is the mermaid kingdom.'
     call StartMessageCommand09HL_B04
-    ld de, $00F1
+    ld de, $00f1
     call SetFlagBit
     ret
 
@@ -4880,14 +4673,15 @@ Jump_004_5DF1:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 0076 then jr c, TalkMsg084F_IKnowNotAllHumansAre.call_start_message_command09_hl_b04); starts message $084F through StartMessageCommand09HL (script command $09); that string begins 'I know not all humans are bad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3F)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0076 then jr c,
+; TalkMsg084F_IKnowNotAllHumansAre.call_start_message_command09_hl_b04); starts message $084F
+; through StartMessageCommand09HL (script command $09); that string begins 'I know not all humans
+; are bad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3F)
 TalkMsg084F_IKnowNotAllHumansAre::
-Jump_004_5E0D:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $084F ; '*: I know not all humans'
+    ld hl, $084f ; '*: I know not all humans'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4896,10 +4690,11 @@ Jump_004_5E0D:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0076 then jr c, TalkMsg0850_ThePiratesCaughtUsInNets.call_start_message_command09_hl_b04); starts message $0850 through StartMessageCommand09HL (script command $09); that string begins 'The pirates caught us in nets and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case40)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0076 then jr c,
+; TalkMsg0850_ThePiratesCaughtUsInNets.call_start_message_command09_hl_b04); starts message $0850
+; through StartMessageCommand09HL (script command $09); that string begins 'The pirates caught us in
+; nets and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case40)
 TalkMsg0850_ThePiratesCaughtUsInNets::
-Jump_004_5E23:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -4912,26 +4707,27 @@ Jump_004_5E23:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0851 through StartMessageCommand09HL (script command $09); that string begins 'The HarMirror was exquisite. It was so' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case41)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0851 through StartMessageCommand09HL (script command $09); that string begins 'The
+; HarMirror was exquisite. It was so' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case41)
 TalkMsg0851_TheHarMirrorWasExquisite::
-Jump_004_5E39:: ; address name
     ld hl, $0851 ; '*: The HarMirror was exquisite. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0852 through StartMessageCommand09HL (script command $09); that string begins 'The MoonRock fell from the sky. It' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case42)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0852 through StartMessageCommand09HL (script command $09); that string begins 'The
+; MoonRock fell from the sky. It' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case42)
 TalkMsg0852_TheMoonRockFellFromTheSky::
-Jump_004_5E40:: ; address name
     ld hl, $0852 ; '*: The MoonRock fell from the'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0076 then jr c, TalkMsg0853_ThePiratesSankWithTheirShip.call_start_message_command09_hl_b04); starts message $0853 through StartMessageCommand09HL (script command $09); that string begins 'The pirates sank with their ship. However,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case43)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0076 then jr c,
+; TalkMsg0853_ThePiratesSankWithTheirShip.call_start_message_command09_hl_b04); starts message $0853
+; through StartMessageCommand09HL (script command $09); that string begins 'The pirates sank with
+; their ship. However,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case43)
 TalkMsg0853_ThePiratesSankWithTheirShip::
-Jump_004_5E47:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -4944,10 +4740,11 @@ Jump_004_5E47:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0076 then jr c, TalkMsg0854_WeMermaidsArePeacefulBeings.call_start_message_command09_hl_b04); starts message $0854 through StartMessageCommand09HL (script command $09); that string begins 'We mermaids are peaceful beings. We shy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case44)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0076 then jr c,
+; TalkMsg0854_WeMermaidsArePeacefulBeings.call_start_message_command09_hl_b04); starts message $0854
+; through StartMessageCommand09HL (script command $09); that string begins 'We mermaids are peaceful
+; beings. We shy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case44)
 TalkMsg0854_WeMermaidsArePeacefulBeings::
-Jump_004_5E5D:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -4960,13 +4757,8 @@ Jump_004_5E5D:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 69 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: wGameFlags836
 YoldTalkEvents_TestFlagBit_Case45::
-Jump_004_5E73:: ; address name
-    ld de, $005E
+    ld de, $005e
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0076
@@ -4987,12 +4779,12 @@ Jump_004_5E73:: ; address name
 .call_inventory_has_free_slot_check:
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
-    ld hl, $0DC7 ; '*: Welcome, my young hero! No'
+    ld hl, $0dc7 ; '*: Welcome, my young hero! No'
     call StartMessageCommand09HL_B04
     ret
 
 .read_game_flags836:
-    ld [hl], $5F
+    ld [hl], $5f
     ld a, [wGameFlags836]
     set 6, a
     ld [wGameFlags836], a
@@ -5006,46 +4798,38 @@ Jump_004_5E73:: ; address name
     ret
 
 ; starts Script_5C88 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case46)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C88
 TalkScript5C88::
-Jump_004_5EBD:: ; address name
     ld hl, Script_5C88
     call StartScriptAtHL_B04
     ret
 
-; starts Script_5C8A (StartScriptAtHL); its first message begins 'How could we die before enjoying' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case47)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5C8A (StartScriptAtHL); its first message begins 'How could we die before enjoying'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case47)
 ; starts Script_5C8A: '*: How could we die before'
 TalkScript5C8A_HowCouldWeDieBeforeEnjoying::
-Jump_004_5EC4:: ; address name
     ld hl, Script_5C8A
     call StartScriptAtHL_B04
     ret
 
-; starts Script_5C94 (StartScriptAtHL); its first message begins 'The treasures are ours No one' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case48)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5C94 (StartScriptAtHL); its first message begins 'The treasures are ours No one'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case48)
 ; starts Script_5C94: '*: The treasures are ours No'
 TalkScript5C94_TheTreasuresAreOursNoOne::
-Jump_004_5ECB:: ; address name
     ld hl, Script_5C94
     call StartScriptAtHL_B04
     ret
 
-; starts Script_5C9E (StartScriptAtHL); its first message begins 'It nags and nags that we' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case49)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5C9E (StartScriptAtHL); its first message begins 'It nags and nags that we' (E-0271;
+; was DispatchTalkEvent_Case03_Sub01_Case49)
 ; starts Script_5C9E: '*: It nags and nags that'
 TalkScript5C9E_ItNagsAndNagsThatWe::
-Jump_004_5ED2:: ; address name
     ld hl, Script_5C9E
     call StartScriptAtHL_B04
     ret
 
-; entry 74 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CA8: '*: Who disturbs us in our'
 YoldTalkEvents_TestFlagBit_Case4A::
-Jump_004_5ED9:: ; address name
     ld de, $0074
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -5060,12 +4844,7 @@ Jump_004_5ED9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 75 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: wGameFlags836
 YoldTalkEvents_ShowHeroCheckedTheTreasure::
-Jump_004_5EF5:: ; address name
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
     ld hl, $0888 ; '0 checked the treasure chest. There'
@@ -5081,46 +4860,34 @@ Jump_004_5EF5:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 76 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CCA: '0 checked the crate. There was'
 YoldTalkEvents_StartScriptAtHL_B04_Case4C::
-Jump_004_5F12:: ; address name
     ld hl, Script_5CCA
     call StartScriptAtHL_B04
     ld de, $0077
     call SetFlagBit
     ret
 
-; entry 77 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wSpriteSlots
 YoldTalkEvents_SetSpriteSlotsPlus7::
-Jump_004_5F1F:: ; address name
-    xor a, a
+    xor a
     ld [wSpriteSlots + $7], a
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2E, story flag $0079 in DE: when the flag is clear it gives item $2E (LogTwig) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case4E)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2E, story flag $0079 in DE: when the flag is clear it gives item $2E (LogTwig) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case4E)
 ChestItem_LogTwig::
-Jump_004_5F24:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2E
+    ld a, $2e
     ld [wScriptParam1], a
     ld de, $0079
     call StartTreasureFlagDE_B04
     ret
 
-; entry 79 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0
-; writes: hTemp0
 YoldTalkEvents_ShowHeroCheckedThePedestal::
-Jump_004_5F35:: ; address name
-    ld de, $007A
+    ld de, $007a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld a, $31
@@ -5138,362 +4905,343 @@ Jump_004_5F35:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 80 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, hPlayerX
-; writes: wSpriteSlots, wObject1, wObject2
 YoldTalkEvents_SetFlagBit::
-Jump_004_5F5A:: ; address name
     ldh a, [hPlayerY]
-    cp a, $30
+    cp $30
     ret nz
-    ld de, $007B
+    ld de, $007b
     call SetFlagBit
     ld hl, Script_5CD1
     call StartScriptAtHL_B04
     ldh a, [hPlayerX]
-    cp a, $50
+    cp $50
     ret nz
     ld a, $40
-    ld [wSpriteSlots + $B], a
+    ld [wSpriteSlots + $b], a
     ld [wObject1 + OBJ_X], a
     ld [wObject2 + OBJ_X], a
     ret
 
-; starts Script_5CDD (StartScriptAtHL); its first message begins 'Kameha Urk! How you catch up?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case51)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5CDD (StartScriptAtHL); its first message begins 'Kameha Urk! How you catch up?'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case51)
 ; starts Script_5CDD: 'Kameha: Urk! How you catch up?'
 TalkScript5CDD_KamehaUrkHowYouCatchUp::
-Jump_004_5F7C:: ; address name
     ld hl, Script_5CDD
     call StartScriptAtHL_B04
     ret
 
-; starts Script_5D1C (StartScriptAtHL); its first message begins 'Kameha Arrrrh, clear the way! I'm' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case52)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5D1C (StartScriptAtHL); its first message begins 'Kameha Arrrrh, clear the way! I'm'
+; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case52)
 ; starts Script_5D1C: 'Kameha: Arrrrh, clear the way! I'm'
 TalkScript5D1C_KamehaArrrrhClearTheWayIm::
-Jump_004_5F83:: ; address name
     ld hl, Script_5D1C
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5D2F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case53)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D2F
 TalkScript5D2F::
-Jump_004_5F8A:: ; address name
     ld hl, Script_5D2F
     call StartScriptAtHL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $20, story flag $00E0 in DE: when the flag is clear it gives item $20 (Repellent) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case54)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $20, story flag $00E0 in DE: when the flag is clear it gives item $20 (Repellent) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case54)
 ChestItem_Repellent::
-Jump_004_5F91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $20
     ld [wScriptParam1], a
-    ld de, $00E0
+    ld de, $00e0
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $28, story flag $00E1 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case55)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $28, story flag $00E1 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case55)
 ChestItem_Warp_Flag00E1::
-Jump_004_5FA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
-    ld de, $00E1
+    ld de, $00e1
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0C, story flag $00E2 in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case56)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0C, story flag $00E2 in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case56)
 ChestItem_WorldLeaf::
-Jump_004_5FB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0C
+    ld a, $0c
     ld [wScriptParam1], a
-    ld de, $00E2
+    ld de, $00e2
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $11, story flag $00E3 in DE: when the flag is clear it gives item $11 (LifeAcorn) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case57)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $11, story flag $00E3 in DE: when the flag is clear it gives item $11 (LifeAcorn) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case57)
 ChestItem_LifeAcorn::
-Jump_004_5FC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $11
     ld [wScriptParam1], a
-    ld de, $00E3
+    ld de, $00e3
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0E, story flag $00E4 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case58)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0E, story flag $00E4 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case58)
 ChestItem_DEFseed::
-Jump_004_5FD5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0E
+    ld a, $0e
     ld [wScriptParam1], a
-    ld de, $00E4
+    ld de, $00e4
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $088C through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. There were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case59)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $088C through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. There were' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case59)
 TalkMsg088C_HeroPeeredIntoTheVaseThere::
-Jump_004_5FE6:: ; address name
-    ld hl, $088C ; '0 peered into the vase. There'
+    ld hl, $088c ; '0 peered into the vase. There'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $00E5 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5A)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $03, story flag $00E5 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case5A)
 ChestItem_WorldDew::
-Jump_004_5FED:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
-    ld de, $00E5
+    ld de, $00e5
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5C, story flag $00E6 in DE: when the flag is clear it gives item $5C (War) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5B)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5C, story flag $00E6 in DE: when the flag is clear it gives item $5C (War) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case5B)
 ChestItem_War::
-Jump_004_5FFE:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5C
+    ld a, $5c
     ld [wScriptParam1], a
-    ld de, $00E6
+    ld de, $00e6
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story flag $00E7 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5C)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story
+; flag $00E7 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case5C)
 VaseItem_Antidote::
-Jump_004_600F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
-    ld de, $00E7
+    ld de, $00e7
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $02, story flag $00E8 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5D)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $02, story
+; flag $00E8 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case5D)
 VaseItem_LoveWater::
-Jump_004_6020:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $00E8
+    ld de, $00e8
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $28, story flag $00F2 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5E)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $28, story
+; flag $00F2 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A3
+; of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case5E)
 VaseItem_Warp::
-Jump_004_6031:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
-    ld de, $00F2
+    ld de, $00f2
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0861 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. A mummified' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case5F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0861 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. A mummified' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case5F)
 TalkMsg0861_HeroPeeredIntoTheBarrelA::
-Jump_004_6042:: ; address name
     ld hl, $0861 ; '0 peered into the barrel. A'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1D, story flag $00E9 in DE: when the flag is clear it gives item $1D (BadMeat) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case60)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1D, story
+; flag $00E9 in DE: when the flag is clear it gives item $1D (BadMeat) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case60)
 BarrelItem_BadMeat::
-Jump_004_6049:: ; address name
     ld a, $02
     ld [wScriptParam0], a
-    ld a, $1D
+    ld a, $1d
     ld [wScriptParam1], a
-    ld de, $00E9
+    ld de, $00e9
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1A, story flag $00EA in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case61)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1A, story
+; flag $00EA in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case61)
 BarrelItem_PorkChop::
-Jump_004_605A:: ; address name
     ld a, $02
     ld [wScriptParam0], a
-    ld a, $1A
+    ld a, $1a
     ld [wScriptParam1], a
-    ld de, $00EA
+    ld de, $00ea
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $51, story flag $00EB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case62)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $51, story flag $00EB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case62)
 ChestItem_OrcaCape::
-Jump_004_606B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $51
     ld [wScriptParam1], a
-    ld de, $00EB
+    ld de, $00eb
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $20, story flag $00EC in DE: when the flag is clear it gives item $20 (Repellent) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case63)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $20, story flag $00EC in DE: when the flag is clear it gives item $20 (Repellent) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case63)
 ChestItem_Repellent_Flag00EC::
-Jump_004_607C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $20
     ld [wScriptParam1], a
-    ld de, $00EC
+    ld de, $00ec
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0C, story flag $00ED in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case64)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0C, story flag $00ED in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case03_Sub01_Case64)
 ChestItem_WorldLeaf_Flag00ED::
-Jump_004_608D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0C
+    ld a, $0c
     ld [wScriptParam1], a
-    ld de, $00ED
+    ld de, $00ed
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0F, story flag $00EE in DE: when the flag is clear it gives item $0F (AGLseed) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case65)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0F, story flag $00EE in DE: when the flag is clear it gives item $0F (AGLseed) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case65)
 ChestItem_AGLseed::
-Jump_004_609E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0F
+    ld a, $0f
     ld [wScriptParam1], a
-    ld de, $00EE
+    ld de, $00ee
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $04, story flag $00EF in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case66)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $04, story
+; flag $00EF in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A6
+; of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case66)
 BarrelItem_Potion::
-Jump_004_60AF:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $04
     ld [wScriptParam1], a
-    ld de, $00EF
+    ld de, $00ef
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $10, story flag $00F0 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case67)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $10, story
+; flag $00F0 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case03_Sub01_Case67)
 BarrelItem_INTseed::
-Jump_004_60C0:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $10
     ld [wScriptParam1], a
-    ld de, $00F0
+    ld de, $00f0
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0862 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. There were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case68)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0862 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. There were' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case68)
 TalkMsg0862_HeroPeeredIntoTheBarrelThere::
-Jump_004_60D1:: ; address name
     ld hl, $0862 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0864 through StartMessageCommand09HL (script command $09); that string begins '0 checked the ledger. Voyage Log Sunrise' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case69)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0864 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the ledger. Voyage Log Sunrise' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case03_Sub01_Case69)
 ; starts Script_5CCF
 TalkMsg0864_HeroCheckedTheLedgerVoyage::
-Jump_004_60D8:: ; address name
     ld hl, $0864 ; '0 checked the ledger. 'Voyage Log'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 106 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0
 ; starts Script_5CCF
 YoldTalkEvents_StartScriptAtHL_B04_Case6A::
-Jump_004_60DF:: ; address name
     ld hl, Script_5CCF
     call StartScriptAtHL_B04
     ld a, $31
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
-    ld de, $007A
+    ld de, $007a
     call SetFlagBit
     ret
 
-; starts message $00FF through StartMessageCommand09HL (script command $09); that string begins 'Composing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case6B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $00FF through StartMessageCommand09HL (script command $09); that string begins
+; 'Composing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case6B)
 ; starts Script_5D44: 'Thick, suction- cupped tentacles snaked out'
 TalkMsg00FF_Composing::
-Jump_004_60FC:: ; address name
-    ld hl, $00FF ; 'Composing'
+    ld hl, $00ff ; 'Composing'
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_5D44 (StartScriptAtHL); its first message begins 'Thick, suction- cupped tentacles snaked out' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case6C)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_5D44 (StartScriptAtHL); its first message begins 'Thick, suction- cupped tentacles
+; snaked out' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case6C)
 ; starts Script_5D44: 'Thick, suction- cupped tentacles snaked out'
 TalkScript5D44_ThickSuctionCuppedTentacles::
-Jump_004_6103:: ; address name
     ld hl, Script_5D44
     call StartScriptAtHL_B04
     ret
 
-; entry 109 of the `rst $00` table in YoldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 YoldTalkEvents_TestFlagBit_Case6D::
-Jump_004_610A:: ; address name
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
     ld de, $0202
     call TestFlagBit
@@ -5509,13 +5257,11 @@ Jump_004_610A:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; talk category 2: jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToKalkaTalkEvents)
-; reads: wTalkEventGroup
+; talk category 2: jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages
+; $0130-$01CF)
 KalkaTalkEvents::
-Func_004_612B:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw TalkMsg0130_ThisIsKalkaAnOasisVillage
     dw TalkMsg0131_AThievingBandRunsAmokHere
     dw TalkMsg0132_PardonAPlugForANavel
@@ -5587,19 +5333,20 @@ Func_004_612B:: ; address name
     dw KalkaTalkEvents_WaitStoryFlagsPlus61
     dw KalkaTalkEvents_TestFlagBit_Case45
 
-; starts message $0130 through StartMessageCommand09HL (script command $09); that string begins 'This is Kalka, an oasis village.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case00)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0130 through StartMessageCommand09HL (script command $09); that string begins
+; 'This is Kalka, an oasis village.' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case00)
 TalkMsg0130_ThisIsKalkaAnOasisVillage::
-Jump_004_61BB:: ; address name
     ld hl, $0130 ; '*: This is Kalka, an oasis'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0131_AThievingBandRunsAmokHere.call_start_message_command09_hl_b04); starts message $0131 through StartMessageCommand09HL (script command $09); that string begins 'A thieving band runs amok here. It's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case01)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0131_AThievingBandRunsAmokHere.call_start_message_command09_hl_b04); starts message $0131
+; through StartMessageCommand09HL (script command $09); that string begins 'A thieving band runs
+; amok here. It's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case01)
 TalkMsg0131_AThievingBandRunsAmokHere::
-Jump_004_61C2:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0131 ; '*: A thieving band runs amok'
@@ -5607,15 +5354,16 @@ Jump_004_61C2:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A3 ; '*: The King caught the thieves!'
+    ld hl, $01a3 ; '*: The King caught the thieves!'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0132_PardonAPlugForANavel.call_start_message_command09_hl_b04); starts message $0132 through StartMessageCommand09HL (script command $09); that string begins 'Pardon? A plug for a navel? Sorry,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case02)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0132_PardonAPlugForANavel.call_start_message_command09_hl_b04); starts message $0132
+; through StartMessageCommand09HL (script command $09); that string begins 'Pardon? A plug for a
+; navel? Sorry,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case02)
 TalkMsg0132_PardonAPlugForANavel::
-Jump_004_61D8:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0132 ; '*: Pardon? A plug for a'
@@ -5623,23 +5371,24 @@ Jump_004_61D8:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A4 ; '*: The last king was a'
+    ld hl, $01a4 ; '*: The last king was a'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0133 through StartMessageCommand09HL (script command $09); that string begins 'The oasis water travels through an underground' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case03)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0133 through StartMessageCommand09HL (script command $09); that string begins 'The
+; oasis water travels through an underground' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case03)
 TalkMsg0133_TheOasisWaterTravelsThrough::
-Jump_004_61EE:: ; address name
     ld hl, $0133 ; '*: The oasis' water travels through'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0134_TheLeaderOfTheThievesIs.call_start_message_command09_hl_b04); starts message $0134 through StartMessageCommand09HL (script command $09); that string begins 'The leader of the thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case04)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0134_TheLeaderOfTheThievesIs.call_start_message_command09_hl_b04); starts message $0134
+; through StartMessageCommand09HL (script command $09); that string begins 'The leader of the
+; thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case04)
 TalkMsg0134_TheLeaderOfTheThievesIs::
-Jump_004_61F5:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0134 ; '*: The leader of the thieves'
@@ -5647,15 +5396,16 @@ Jump_004_61F5:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A5 ; '*: We recovered everything that was'
+    ld hl, $01a5 ; '*: We recovered everything that was'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0135_TheLogsNavelWhatIsThat.call_start_script_at_hl_b04); starts message $0135 through StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? What is that? I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case05)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0135_TheLogsNavelWhatIsThat.call_start_script_at_hl_b04); starts message $0135 through
+; StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? What is that?
+; I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case05)
 TalkMsg0135_TheLogsNavelWhatIsThat::
-Jump_004_620B:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, $0135 ; '*: The Log's Navel? What is'
@@ -5667,11 +5417,12 @@ Jump_004_620B:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0136_TheLogsNavelLetMeThink.call_start_message_command09_hl_b04); starts message $0136 through StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? Let me think Perhaps' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case06)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0136_TheLogsNavelLetMeThink.call_start_message_command09_hl_b04); starts message $0136
+; through StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? Let me
+; think Perhaps' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case06)
 TalkMsg0136_TheLogsNavelLetMeThink::
-Jump_004_6221:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0136 ; '*: The Log's Navel? Let me'
@@ -5679,23 +5430,23 @@ Jump_004_6221:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D07 ; '*: The shortage of water has'
+    ld hl, $0d07 ; '*: The shortage of water has'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0137 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. A sharp, spicy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case07)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0137 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the oven. A sharp, spicy' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case07)
 TalkMsg0137_HeroCheckedTheOvenASharp::
-Jump_004_6237:: ; address name
     ld hl, $0137 ; '0 checked the oven. A sharp,'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story flag $0046 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story
+; flag $0046 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3
+; of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case08)
 VaseItem_Herb::
-Jump_004_623E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $01
@@ -5704,17 +5455,20 @@ Jump_004_623E:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b043; flag 0053 then jr c, TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b042; flag 004A then jr c, TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b04); starts message $0138 through StartMessageCommand09HL (script command $09); that string begins 'The underground canal is ahead. The last' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case09)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b043; flag 0053 then jr c,
+; TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b042; flag 004A then jr c,
+; TalkMsg0138_TheUndergroundCanalIsAhead.call_start_message_command09_hl_b04); starts message $0138
+; through StartMessageCommand09HL (script command $09); that string begins 'The underground canal is
+; ahead. The last' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case09)
 TalkMsg0138_TheUndergroundCanalIsAhead::
-Jump_004_624F:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $004A
+    ld de, $004a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0138 ; '*: The underground canal is ahead.'
@@ -5727,23 +5481,18 @@ Jump_004_624F:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $017A ; '*: Oh? You say that a'
+    ld hl, $017a ; '*: Oh? You say that a'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0D08 ; '*: Oh, it's you lot. We'
+    ld hl, $0d08 ; '*: Oh, it's you lot. We'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 10 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX
-; writes: wSpriteSlots, wDataBank
 KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
-Jump_004_6283:: ; address name
     ldh a, [hPlayerX]
-    cp a, $30
+    cp $30
     jr nz, .set_sprite_slots_to_01
     ld a, $02
     jp .set_sprite_slots
@@ -5759,11 +5508,12 @@ Jump_004_6283:: ; address name
     ld [wDataBank], a
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0139_TheKingCalledACircusTroupe.call_start_message_command09_hl_b04); starts message $0139 through StartMessageCommand09HL (script command $09); that string begins 'The King called a circus troupe to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0B)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0139_TheKingCalledACircusTroupe.call_start_message_command09_hl_b04); starts message $0139
+; through StartMessageCommand09HL (script command $09); that string begins 'The King called a circus
+; troupe to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0B)
 TalkMsg0139_TheKingCalledACircusTroupe::
-Jump_004_629F:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0139 ; '*: The King called a circus'
@@ -5771,55 +5521,61 @@ Jump_004_629F:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A6 ; '*: The circus has moved onto'
+    ld hl, $01a6 ; '*: The circus has moved onto'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $013A through StartMessageCommand09HL (script command $09); that string begins 'This is Asiya, the desert flower.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $013A through StartMessageCommand09HL (script command $09); that string begins
+; 'This is Asiya, the desert flower.' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case0C)
 TalkMsg013A_ThisIsAsiyaTheDesertFlower::
-Jump_004_62B5:: ; address name
-    ld hl, $013A ; '*: This is Asiya, the desert'
+    ld hl, $013a ; '*: This is Asiya, the desert'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg013B_OurKingCameIntoAnEnormous.call_start_message_command09_hl_b04); starts message $013B through StartMessageCommand09HL (script command $09); that string begins 'Our King came into an enormous inheritance.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0D)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg013B_OurKingCameIntoAnEnormous.call_start_message_command09_hl_b04); starts message $013B
+; through StartMessageCommand09HL (script command $09); that string begins 'Our King came into an
+; enormous inheritance.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0D)
 TalkMsg013B_OurKingCameIntoAnEnormous::
-Jump_004_62BC:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013B ; '*: Our King came into an'
+    ld hl, $013b ; '*: Our King came into an'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D0B ; '*: The King gave away his'
+    ld hl, $0d0b ; '*: The King gave away his'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg013C_ISawALakeLikeA.call_start_message_command09_hl_b04); starts message $013C through StartMessageCommand09HL (script command $09); that string begins 'I saw a lake like a mirage.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0E)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg013C_ISawALakeLikeA.call_start_message_command09_hl_b04); starts message $013C through
+; StartMessageCommand09HL (script command $09); that string begins 'I saw a lake like a mirage.'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0E)
 TalkMsg013C_ISawALakeLikeA::
-Jump_004_62D2:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013C ; '*: I saw a lake like'
+    ld hl, $013c ; '*: I saw a lake like'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D0A ; '*: The band of thieves made'
+    ld hl, $0d0a ; '*: The band of thieves made'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b044; flag 0053 then jr c, TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b043; flag 0048 then jr c, TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b042; flag 0045 then jr c, TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b04); starts message $013D through StartMessageCommand09HL (script command $09); that string begins 'Strong monsters are in the well. You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0F)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b044; flag 0053 then jr c,
+; TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b043; flag 0048 then jr c,
+; TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b042; flag 0045 then jr c,
+; TalkMsg013D_StrongMonstersAreInTheWell.call_start_message_command09_hl_b04); starts message $013D
+; through StartMessageCommand09HL (script command $09); that string begins 'Strong monsters are in
+; the well. You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0F)
 TalkMsg013D_StrongMonstersAreInTheWell::
-Jump_004_62E8:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
     ld de, $0053
@@ -5831,7 +5587,7 @@ Jump_004_62E8:: ; address name
     ld de, $0045
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013D ; '*: Strong monsters are in the'
+    ld hl, $013d ; '*: Strong monsters are in the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5848,44 +5604,40 @@ Jump_004_62E8:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $017B ; '*: The well has ample water'
+    ld hl, $017b ; '*: The well has ample water'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $0D09 ; '*: The well filled up with'
+    ld hl, $0d09 ; '*: The well filled up with'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $013E through StartMessageCommand09HL (script command $09); that string begins 'Our King has been a fan of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case10)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $013E through StartMessageCommand09HL (script command $09); that string begins 'Our
+; King has been a fan of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case10)
 TalkMsg013E_OurKingHasBeenAFan::
-Jump_004_6331:: ; address name
-    ld hl, $013E ; '*: Our King has been a'
+    ld hl, $013e ; '*: Our King has been a'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg013F_TheCircusMasterWasTrying.call_start_message_command09_hl_b04); starts message $013F through StartMessageCommand09HL (script command $09); that string begins 'The circus master was trying to recruit' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case11)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg013F_TheCircusMasterWasTrying.call_start_message_command09_hl_b04); starts message $013F
+; through StartMessageCommand09HL (script command $09); that string begins 'The circus master was
+; trying to recruit' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case11)
 TalkMsg013F_TheCircusMasterWasTrying::
-Jump_004_6338:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013F ; '*: The circus master was trying'
+    ld hl, $013f ; '*: The circus master was trying'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A7 ; '*: His Majesty's popularity has been'
+    ld hl, $01a7 ; '*: His Majesty's popularity has been'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 18 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenTableIndex, wDataBank
 KalkaTalkEvents_TestFlagBit::
-Jump_004_634E:: ; address name
     ld a, $03
     ld [wScreenTableIndex], a
     ld a, $10
@@ -5904,10 +5656,11 @@ Jump_004_634E:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 0043 then jr c, TalkMsg0140_NoOneEntersTheCastleWithout.call_start_message_command09_hl_b04); starts message $0140 through StartMessageCommand09HL (script command $09); that string begins 'No one enters the castle without a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case13)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0043 then jr c,
+; TalkMsg0140_NoOneEntersTheCastleWithout.call_start_message_command09_hl_b04); starts message $0140
+; through StartMessageCommand09HL (script command $09); that string begins 'No one enters the castle
+; without a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case13)
 TalkMsg0140_NoOneEntersTheCastleWithout::
-Jump_004_6374:: ; address name
     ld de, $0043
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -5916,14 +5669,16 @@ Jump_004_6374:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $016A ; '*: The King has given permission'
+    ld hl, $016a ; '*: The King has given permission'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0053 then jr c, TalkMsg0141_IfYouWantToGetIn.call_start_message_command09_hl_b042; flag 0043 then jr c, TalkMsg0141_IfYouWantToGetIn.call_start_message_command09_hl_b04); starts message $0141 through StartMessageCommand09HL (script command $09); that string begins 'If you want to get in that' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case14)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0053 then jr c,
+; TalkMsg0141_IfYouWantToGetIn.call_start_message_command09_hl_b042; flag 0043 then jr c,
+; TalkMsg0141_IfYouWantToGetIn.call_start_message_command09_hl_b04); starts message $0141 through
+; StartMessageCommand09HL (script command $09); that string begins 'If you want to get in that'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case14)
 TalkMsg0141_IfYouWantToGetIn::
-Jump_004_638A:: ; address name
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -5935,19 +5690,20 @@ Jump_004_638A:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $016B ; '*: The King is so frivolous.'
+    ld hl, $016b ; '*: The King is so frivolous.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $017C ; '*: We have heard from his'
+    ld hl, $017c ; '*: We have heard from his'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0053 then jr c, TalkMsg0142_DidYouWantSomethingHoney.call_start_message_command09_hl_b04); starts message $0142 through StartMessageCommand09HL (script command $09); that string begins 'Did you want something, honey? A plug' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case15)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0053 then jr c,
+; TalkMsg0142_DidYouWantSomethingHoney.call_start_message_command09_hl_b04); starts message $0142
+; through StartMessageCommand09HL (script command $09); that string begins 'Did you want something,
+; honey? A plug' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case15)
 TalkMsg0142_DidYouWantSomethingHoney::
-Jump_004_63AF:: ; address name
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -5956,24 +5712,19 @@ Jump_004_63AF:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017D ; '*: Hi! Did you hear the'
+    ld hl, $017d ; '*: Hi! Did you hear the'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0143 through StartMessageCommand09HL (script command $09); that string begins 'When we get a hot spell, I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case16)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0143 through StartMessageCommand09HL (script command $09); that string begins
+; 'When we get a hot spell, I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case16)
 TalkMsg0143_WhenWeGetAHotSpell::
-Jump_004_63C5:: ; address name
     ld hl, $0143 ; '*: When we get a hot'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 23 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 KalkaTalkEvents_TestFlagBit_Case17::
-Jump_004_63CC:: ; address name
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
     ld de, $0041
     call TestFlagBit
@@ -5989,20 +5740,16 @@ Jump_004_63CC:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 24 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPartyCount, wStepArrived
 KalkaTalkEvents_TestFlagBit_Case18::
-Jump_004_63ED:: ; address name
     ld de, $0042
     call TestFlagBit
     jr c, .check_party_count
     ld a, [wPartyCount]
-    cp a, $03
+    cp $03
     jr nz, .call_start_script_at_hl_b04
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
-    or a, a
+    or a
     jr nz, .call_start_script_at_hl_b042
     ld hl, Script_59DD
     call StartScriptAtHL_B04
@@ -6020,34 +5767,34 @@ Jump_004_63ED:: ; address name
 
 .check_party_count:
     ld a, [wPartyCount]
-    cp a, $03
+    cp $03
     jr nz, .call_start_message_command09_hl_b04
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
-    or a, a
+    or a
     jr nz, .call_start_message_command09_hl_b04
     ld hl, Script_5A17
     call StartScriptAtHL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $014E ; '*: Oh, you need a trio'
+    ld hl, $014e ; '*: Oh, you need a trio'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $014F through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case19)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $014F through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case19)
 TalkMsg014F_HeroPeeredIntoTheVaseIt::
-Jump_004_643E:: ; address name
-    ld hl, $014F ; '0 peered into the vase. It'
+    ld hl, $014f ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story flag $0047 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case1A)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story
+; flag $0047 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case1A)
 VaseItem_Antidote_Flag0047::
-Jump_004_6445:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $06
@@ -6056,59 +5803,56 @@ Jump_004_6445:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0137 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. A sharp, spicy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0137 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the oven. A sharp, spicy' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case1B)
 TalkMsg0137_HeroCheckedTheOvenASharp_046456::
-Jump_004_6456:: ; address name
     ld hl, $0137 ; '0 checked the oven. A sharp,'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0056 then ret nc); starts message $018F through StartMessageCommand09HL (script command $09); that string begins 'We didn't help the thieves! One of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1C)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0056 then ret nc); starts message $018F through StartMessageCommand09HL
+; (script command $09); that string begins 'We didn't help the thieves! One of' (E-0268, the E-0082
+; shape; was DispatchTalkEvent_Case02_Sub01_Case1C)
 IfFlag056Msg018F_WeDidntHelpTheThievesOne::
-Jump_004_645D:: ; address name
     ld de, $0056
     call TestFlagBit
     ret nc
-    ld hl, $018F ; '*: We didn't help the thieves!'
+    ld hl, $018f ; '*: We didn't help the thieves!'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $01BE through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. There was a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1D)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01BE through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the dresser. There was a' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case1D)
 TalkMsg01BE_HeroCheckedTheDresserThere::
-Jump_004_646B:: ; address name
-    ld hl, $01BE ; '0 checked the dresser. There was'
+    ld hl, $01be ; '0 checked the dresser. There was'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0
+; tried to open the chest. But' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case1E)
 ; starts Script_5A25: '*: Welcome to our inn!'
 TalkMsg0037_HeroTriedToOpenTheChest_046472::
-Jump_004_6472:: ; address name
     ld hl, $0037 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 31 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 ; starts Script_5A25: '*: Welcome to our inn!'
 KalkaTalkEvents_StartScriptAtHL_B04::
-Jump_004_6479:: ; address name
     ld hl, Script_5A25
     call StartScriptAtHL_B04
     ld a, $10
     ld [wDataBank], a
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0150_IHeardThatTheThievesDisappear.call_start_message_command09_hl_b04); starts message $0150 through StartMessageCommand09HL (script command $09); that string begins 'I heard that the thieves disappear as' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case20)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0150_IHeardThatTheThievesDisappear.call_start_message_command09_hl_b04); starts message
+; $0150 through StartMessageCommand09HL (script command $09); that string begins 'I heard that the
+; thieves disappear as' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case20)
 TalkMsg0150_IHeardThatTheThievesDisappear::
-Jump_004_6485:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0150 ; '*: I heard that the thieves'
@@ -6116,15 +5860,16 @@ Jump_004_6485:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A8 ; '*: Making a hideout in Mirage'
+    ld hl, $01a8 ; '*: Making a hideout in Mirage'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0154_SeveralOfOurMembersCameBack.call_start_message_command09_hl_b04); starts message $0154 through StartMessageCommand09HL (script command $09); that string begins 'Several of our members came back. We' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case21)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0154_SeveralOfOurMembersCameBack.call_start_message_command09_hl_b04); starts message $0154
+; through StartMessageCommand09HL (script command $09); that string begins 'Several of our members
+; came back. We' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case21)
 TalkMsg0154_SeveralOfOurMembersCameBack::
-Jump_004_649B:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0154 ; '*: Several of our members came'
@@ -6132,15 +5877,16 @@ Jump_004_649B:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A9 ; '*: They let us out when'
+    ld hl, $01a9 ; '*: They let us out when'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0155_WhenTheThievesRaidedUsWe.call_start_message_command09_hl_b04); starts message $0155 through StartMessageCommand09HL (script command $09); that string begins 'When the thieves raided us, we ran.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case22)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0155_WhenTheThievesRaidedUsWe.call_start_message_command09_hl_b04); starts message $0155
+; through StartMessageCommand09HL (script command $09); that string begins 'When the thieves raided
+; us, we ran.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case22)
 TalkMsg0155_WhenTheThievesRaidedUsWe::
-Jump_004_64B1:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0155 ; '*: When the thieves raided us,'
@@ -6148,15 +5894,16 @@ Jump_004_64B1:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01AA ; '*: Come back and join the'
+    ld hl, $01aa ; '*: Come back and join the'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0156_IWonderIfTheOthersAre.call_start_message_command09_hl_b04); starts message $0156 through StartMessageCommand09HL (script command $09); that string begins 'I wonder if the others are safe' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case23)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0156_IWonderIfTheOthersAre.call_start_message_command09_hl_b04); starts message $0156
+; through StartMessageCommand09HL (script command $09); that string begins 'I wonder if the others
+; are safe' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case23)
 TalkMsg0156_IWonderIfTheOthersAre::
-Jump_004_64C7:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0156 ; '*: I wonder if the others'
@@ -6164,23 +5911,25 @@ Jump_004_64C7:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01AB ; '*: The troupe'll reform! We'll recruit'
+    ld hl, $01ab ; '*: The troupe'll reform! We'll recruit'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0157 through StartMessageCommand09HL (script command $09); that string begins 'Heh, did you see the looks I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case24)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0157 through StartMessageCommand09HL (script command $09); that string begins
+; 'Heh, did you see the looks I' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case24)
 TalkMsg0157_HehDidYouSeeTheLooks::
-Jump_004_64DD:: ; address name
     ld hl, $0157 ; '*: Heh, did you see the'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0158_ThisIsTheKingsTreasuryNo.call_start_message_command09_hl_b042; flag 0056 then jr c, TalkMsg0158_ThisIsTheKingsTreasuryNo.call_start_message_command09_hl_b04); starts message $0158 through StartMessageCommand09HL (script command $09); that string begins 'This is the King's treasury! No one,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case25)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0158_ThisIsTheKingsTreasuryNo.call_start_message_command09_hl_b042; flag 0056 then jr c,
+; TalkMsg0158_ThisIsTheKingsTreasuryNo.call_start_message_command09_hl_b04); starts message $0158
+; through StartMessageCommand09HL (script command $09); that string begins 'This is the King's
+; treasury! No one,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case25)
 TalkMsg0158_ThisIsTheKingsTreasuryNo::
-Jump_004_64E4:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0056
@@ -6196,15 +5945,18 @@ Jump_004_64E4:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $01AC ; '*: We're more vigilant now! No'
+    ld hl, $01ac ; '*: We're more vigilant now! No'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b043; flag 0056 then jr c, TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b042; flag 0053 then jr c, TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b04); starts message $0159 through StartMessageCommand09HL (script command $09); that string begins 'What? See his Majesty's treasure? What foolishness!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case26)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b043; flag 0056 then jr c,
+; TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b042; flag 0053 then jr c,
+; TalkMsg0159_WhatSeeHisMajestysTreasure.call_start_message_command09_hl_b04); starts message $0159
+; through StartMessageCommand09HL (script command $09); that string begins 'What? See his Majesty's
+; treasure? What foolishness!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case26)
 TalkMsg0159_WhatSeeHisMajestysTreasure::
-Jump_004_6509:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
     ld de, $0056
@@ -6218,7 +5970,7 @@ Jump_004_6509:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017E ; '*: The King solved our water'
+    ld hl, $017e ; '*: The King solved our water'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6228,15 +5980,12 @@ Jump_004_6509:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $01AD ; '*: I will do my best'
+    ld hl, $01ad ; '*: I will do my best'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 39 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 KalkaTalkEvents_TestFlagBit_Case27::
-Jump_004_653D:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0053
@@ -6247,26 +5996,28 @@ Jump_004_653D:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017F ; '*: Our King worked to save'
+    ld hl, $017f ; '*: Our King worked to save'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $01AE ; '*: Welcome, our honored guests! The'
+    ld hl, $01ae ; '*: Welcome, our honored guests! The'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0053 then jr c, TalkMsg015A_HisMajestyIsHonestAndMost.call_start_message_command09_hl_b042; flag 0049 then jr c, TalkMsg015A_HisMajestyIsHonestAndMost.call_start_message_command09_hl_b04); starts message $015A through StartMessageCommand09HL (script command $09); that string begins 'His Majesty is honest and most certainly' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case28)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0053 then jr c,
+; TalkMsg015A_HisMajestyIsHonestAndMost.call_start_message_command09_hl_b042; flag 0049 then jr c,
+; TalkMsg015A_HisMajestyIsHonestAndMost.call_start_message_command09_hl_b04); starts message $015A
+; through StartMessageCommand09HL (script command $09); that string begins 'His Majesty is honest
+; and most certainly' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case28)
 TalkMsg015A_HisMajestyIsHonestAndMost::
-Jump_004_6562:: ; address name
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0049
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $015A ; '*: His Majesty is honest and'
+    ld hl, $015a ; '*: His Majesty is honest and'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6280,12 +6031,8 @@ Jump_004_6562:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 41 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wStoryFlags
 ; starts Script_5B71
 KalkaTalkEvents_StartScriptAtHL_B04_Case29::
-Jump_004_6587:: ; address name
     ld a, [wStoryFlags + $61]
     bit 3, a
     ret nz
@@ -6293,19 +6040,16 @@ Jump_004_6587:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts message $015F through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. There were neatly' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2A)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $015F through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the dresser. There were neatly' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case2A)
 TalkMsg015F_HeroCheckedTheDresserThere::
-Jump_004_6594:: ; address name
-    ld hl, $015F ; '0 checked the dresser. There were'
+    ld hl, $015f ; '0 checked the dresser. There were'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 43 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 KalkaTalkEvents_TestFlagBit_Case2B::
-Jump_004_659B:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
     ld de, $0056
@@ -6361,15 +6105,16 @@ Jump_004_659B:: ; address name
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $01B0 ; 'King: Ah, good of you to'
+    ld hl, $01b0 ; 'King: Ah, good of you to'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0166_ThatFoolIsATerribleSwindler.call_start_message_command09_hl_b04); starts message $0166 through StartMessageCommand09HL (script command $09); that string begins 'That fool is a terrible swindler. I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2C)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0166_ThatFoolIsATerribleSwindler.call_start_message_command09_hl_b04); starts message $0166
+; through StartMessageCommand09HL (script command $09); that string begins 'That fool is a terrible
+; swindler. I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2C)
 TalkMsg0166_ThatFoolIsATerribleSwindler::
-Jump_004_660B:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0166 ; '*: That fool is a terrible'
@@ -6377,14 +6122,15 @@ Jump_004_660B:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B1 ; '*: The dungeon is full of'
+    ld hl, $01b1 ; '*: The dungeon is full of'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0056 then jr c, TalkMsg0167_HumphAMirageLakeHeSays.call_start_message_command09_hl_b04); starts message $0167 through StartMessageCommand09HL (script command $09); that string begins 'Humph! A mirage lake, he says! No' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2D)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0056 then jr c,
+; TalkMsg0167_HumphAMirageLakeHeSays.call_start_message_command09_hl_b04); starts message $0167
+; through StartMessageCommand09HL (script command $09); that string begins 'Humph! A mirage lake, he
+; says! No' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2D)
 TalkMsg0167_HumphAMirageLakeHeSays::
-Jump_004_6621:: ; address name
     ld de, $0056
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -6397,90 +6143,87 @@ Jump_004_6621:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 46 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5A95: '*: What? Open the Canal Gate'
 KalkaTalkEvents_TestFlagBit_Case2E::
-Jump_004_6637:: ; address name
     ld de, $0049
     call TestFlagBit
     ret nc
     ld hl, Script_5A95
     call StartScriptAtHL_B04
-    ld de, $004A
+    ld de, $004a
     call SetFlagBit
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story flag $004B in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case2F)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story
+; flag $004B in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3
+; of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case2F)
 VaseItem_Herb_Flag004B::
-Jump_004_664B:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
-    ld de, $004B
+    ld de, $004b
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $1A, story flag $004C in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case30)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $1A, story
+; flag $004C in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case30)
 VaseItem_PorkChop::
-Jump_004_665C:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $1A
+    ld a, $1a
     ld [wScriptParam1], a
-    ld de, $004C
+    ld de, $004c
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $004D in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case31)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
+; flag $004D in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case31)
 VaseItem_TinyMedal::
-Jump_004_666D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $004D
+    ld de, $004d
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2B, story flag $004E in DE: when the flag is clear it gives item $2B (Bookmark) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case32)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2B, story
+; flag $004E in DE: when the flag is clear it gives item $2B (Bookmark) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case32)
 VaseItem_Bookmark::
-Jump_004_667E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $2B
+    ld a, $2b
     ld [wScriptParam1], a
-    ld de, $004E
+    ld de, $004e
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $004F in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case33)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $004F in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case33)
 ChestItem_ExitBell_Flag004F::
-Jump_004_668F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $004F
+    ld de, $004f
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $24, story flag $0050 in DE: when the flag is clear it gives item $24 (Wind) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case34)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $24, story flag $0050 in DE: when the flag is clear it gives item $24 (Wind) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case34)
 ChestItem_Wind::
-Jump_004_66A0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $24
@@ -6489,11 +6232,11 @@ Jump_004_66A0:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $29, story flag $0051 in DE: when the flag is clear it gives item $29 (WarpWing) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case35)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $29, story flag $0051 in DE: when the flag is clear it gives item $29 (WarpWing) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case35)
 ChestItem_WarpWing::
-Jump_004_66B1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $29
@@ -6502,11 +6245,11 @@ Jump_004_66B1:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $48, story flag $0052 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case36)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $48, story flag $0052 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case36)
 ChestItem_AGL::
-Jump_004_66C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $48
@@ -6515,12 +6258,9 @@ Jump_004_66C2:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 55 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5AAB: '*: I'm making a new home'
 KalkaTalkEvents_TestFlagBit_Case37::
-Jump_004_66D3:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5AAB
@@ -6532,12 +6272,7 @@ Jump_004_66D3:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 56 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0
-; writes: hTemp0
 KalkaTalkEvents_TestFlagBit_Case38::
-Jump_004_66E9:: ; address name
     ld de, $0056
     call TestFlagBit
     ret nc
@@ -6550,19 +6285,19 @@ Jump_004_66E9:: ; address name
     ldh a, [hTemp0]
     bit 7, a
     jr z, .call_start_script_at_hl_b04
-    ld a, $1A
+    ld a, $1a
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, .call_start_script_at_hl_b04
-    ld a, $1B
+    ld a, $1b
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, .call_start_script_at_hl_b04
-    ld a, $1C
+    ld a, $1c
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
@@ -6578,17 +6313,12 @@ Jump_004_66E9:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $018E ; '*: Don't chase what runs from'
+    ld hl, $018e ; '*: Don't chase what runs from'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 57 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wStoryFlags
-; writes: wStoryFlags, hTemp0
 ; starts Script_5B37
 KalkaTalkEvents_StartScriptAtHL_B04_Case39::
-Jump_004_674D:: ; address name
     ld a, [wStoryFlags + $61]
     set 4, a
     ld [wStoryFlags + $61], a
@@ -6600,11 +6330,12 @@ Jump_004_674D:: ; address name
     farcall RemoveInventorySlotShiftDown
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0194_ThievesDroveUsFromOurHomes.call_start_message_command09_hl_b04); starts message $0194 through StartMessageCommand09HL (script command $09); that string begins 'Thieves drove us from our homes!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3A)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0194_ThievesDroveUsFromOurHomes.call_start_message_command09_hl_b04); starts message $0194
+; through StartMessageCommand09HL (script command $09); that string begins 'Thieves drove us from
+; our homes!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3A)
 TalkMsg0194_ThievesDroveUsFromOurHomes::
-Jump_004_676C:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0194 ; '*: Thieves drove us from our'
@@ -6612,15 +6343,16 @@ Jump_004_676C:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B2 ; '*: Cooh, our home come back'
+    ld hl, $01b2 ; '*: Cooh, our home come back'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 005A then jr c, TalkMsg0195_TheLeaderOfTheThievesIs.call_start_message_command09_hl_b04); starts message $0195 through StartMessageCommand09HL (script command $09); that string begins 'The leader of the thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3B)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 005A then jr c,
+; TalkMsg0195_TheLeaderOfTheThievesIs.call_start_message_command09_hl_b04); starts message $0195
+; through StartMessageCommand09HL (script command $09); that string begins 'The leader of the
+; thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3B)
 TalkMsg0195_TheLeaderOfTheThievesIs::
-Jump_004_6782:: ; address name
-    ld de, $005A
+    ld de, $005a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0195 ; '*: The leader of the thieves'
@@ -6628,15 +6360,11 @@ Jump_004_6782:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B4 ; '*: Cooh! This bed perfect for'
+    ld hl, $01b4 ; '*: Cooh! This bed perfect for'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 60 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0
 KalkaTalkEvents_RunFieldCommandTemp0::
-Jump_004_6798:: ; address name
     ld a, $03
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -6652,64 +6380,61 @@ Jump_004_6798:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts message $01B5 through StartMessageCommand09HL (script command $09); that string begins 'Kyooh! Swimming in a desert This is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3D)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01B5 through StartMessageCommand09HL (script command $09); that string begins
+; 'Kyooh! Swimming in a desert This is' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case3D)
 TalkMsg01B5_KyoohSwimmingInADesertThis::
-Jump_004_67B8:: ; address name
-    ld hl, $01B5 ; '*: Kyooh! Swimming in a desert'
+    ld hl, $01b5 ; '*: Kyooh! Swimming in a desert'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $01BC through StartMessageCommand09HL (script command $09); that string begins '0 checked the treasure chest. Thieves have' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3E)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01BC through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the treasure chest. Thieves have' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case3E)
 TalkMsg01BC_HeroCheckedTheTreasureChest::
-Jump_004_67BF:: ; address name
-    ld hl, $01BC ; '0 checked the treasure chest. Thieves'
+    ld hl, $01bc ; '0 checked the treasure chest. Thieves'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $01BD through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01BD through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case3F)
 TalkMsg01BD_HeroPeeredIntoTheVaseIt::
-Jump_004_67C6:: ; address name
-    ld hl, $01BD ; '0 peered into the vase. It'
+    ld hl, $01bd ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $01C0 through StartMessageCommand09HL (script command $09); that string begins '0 checked the treasure chest. But it' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case40)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01C0 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the treasure chest. But it' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case40)
 TalkMsg01C0_HeroCheckedTheTreasureChest::
-Jump_004_67CD:: ; address name
-    ld hl, $01C0 ; '0 checked the treasure chest. But'
+    ld hl, $01c0 ; '0 checked the treasure chest. But'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $01BF through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. The prisoners' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case41)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $01BF through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. The prisoners' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case02_Sub01_Case41)
 TalkMsg01BF_HeroPeeredIntoTheVaseThe::
-Jump_004_67D4:: ; address name
-    ld hl, $01BF ; '0 peered into the vase. The'
+    ld hl, $01bf ; '0 peered into the vase. The'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $19, story flag $005B in DE: when the flag is clear it gives item $19 (BeefJerky) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case42)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $19, story
+; flag $005B in DE: when the flag is clear it gives item $19 (BeefJerky) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case02_Sub01_Case42)
 VaseItem_BeefJerky::
-Jump_004_67DB:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $19
     ld [wScriptParam1], a
-    ld de, $005B
+    ld de, $005b
     call StartTreasureFlagDE_B04
     ret
 
-; entry 67 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5B53
 KalkaTalkEvents_TestFlagBit_Case43::
-Jump_004_67EC:: ; address name
     ld de, $0058
     call TestFlagBit
     ret nc
@@ -6717,32 +6442,23 @@ Jump_004_67EC:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 68 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wStoryFlags
-; writes: wStoryFlags
 KalkaTalkEvents_WaitStoryFlagsPlus61::
-Jump_004_67FA:: ; address name
     ld a, [wStoryFlags + $61]
     bit 4, a
     ret nz
-    and a, $F7
+    and $f7
     ld [wStoryFlags + $61], a
     ret
 
-; entry 69 of the `rst $00` table in KalkaTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
 KalkaTalkEvents_TestFlagBit_Case45::
-Jump_004_6806:: ; address name
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
-    ld de, $005D
+    ld de, $005d
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5B76
     call StartScriptAtHL_B04
-    ld de, $005D
+    ld de, $005d
     call SetFlagBit
     ret
 
@@ -6751,23 +6467,16 @@ Jump_004_6806:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; talk category 6: two flag-tested handlers that start Darck's scripts ("Darck Fawahahah! You chased your treasures")
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToDarckTalkEvents)
-; reads: wTalkEventGroup
+; talk category 6: two flag-tested handlers that start Darck's scripts ("Darck Fawahahah! You chased
+; your treasures")
 DarckTalkEvents::
-Func_004_6827:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw DarckTalkEvents_TestFlagBit
     dw DarckTalkEvents_TestFlagBit_Case01
 
-; entry 0 of the `rst $00` table in DarckTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0
-; writes: hTemp0
 DarckTalkEvents_TestFlagBit::
-Jump_004_682F:: ; address name
-    ld de, $00D2
+    ld de, $00d2
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     ld a, $36
@@ -6802,12 +6511,9 @@ Jump_004_682F:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in DarckTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_61E9: 'Darck: Fawahahah! You chased your treasures'
 DarckTalkEvents_TestFlagBit_Case01::
-Jump_004_687C:: ; address name
-    ld de, $00D0
+    ld de, $00d0
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_61E9
@@ -6819,13 +6525,11 @@ Jump_004_687C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; talk category 0: jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToFieldTalkEvents)
-; reads: wTalkEventGroup
+; talk category 0: jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1,
+; E-0286)
 FieldTalkEvents::
-Func_004_6892:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw FieldTalkEvents_Return
     dw TalkScript512F
     dw TalkScript5131
@@ -6868,27 +6572,20 @@ Func_004_6892:: ; address name
     dw FieldTalkEvents_Return
 
 ; starts Script_5173 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1E)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5173
 TalkScript5173::
-Jump_004_68E6:: ; address name
     ld hl, Script_5173
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5171 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1D)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5171
 TalkScript5171::
-Jump_004_68ED:: ; address name
     ld hl, Script_5171
     call StartScriptAtHL_B04
     ret
 
-; entry 28 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 FieldTalkEvents_TestFlagBit_Case1C::
-Jump_004_68F4:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6899,10 +6596,7 @@ Jump_004_68F4:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 27 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 FieldTalkEvents_TestFlagBit::
-Jump_004_6904:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6914,114 +6608,86 @@ Jump_004_6904:: ; address name
     ret
 
 ; starts Script_516B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1A)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_516B
 TalkScript516B::
-Jump_004_6914:: ; address name
     ld hl, Script_516B
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5169 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case19)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5169
 TalkScript5169::
-Jump_004_691B:: ; address name
     ld hl, Script_5169
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_515F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case18)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515F
 TalkScript515F::
-Jump_004_6922:: ; address name
     ld hl, Script_515F
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5164 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1F)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5164
 TalkScript5164::
-Jump_004_6929:: ; address name
     ld hl, Script_5164
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5155 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case15)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5155
 TalkScript5155::
-Jump_004_6930:: ; address name
     ld hl, Script_5155
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5157 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case16)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5157
 TalkScript5157::
-Jump_004_6937:: ; address name
     ld hl, Script_5157
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5159 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case17)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5159
 TalkScript5159::
-Jump_004_693E:: ; address name
     ld hl, Script_5159
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_515B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case20)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515B
 TalkScript515B::
-Jump_004_6945:: ; address name
     ld hl, Script_515B
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_515D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case21)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515D
 TalkScript515D::
-Jump_004_694C:: ; address name
     ld hl, Script_515D
     call StartScriptAtHL_B04
     ret
 
-; entry 34 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFollowerDelay, hPlayerFacing
-; writes: wFollowerRecords, wScriptParam1
 FieldTalkEvents_StartScriptAtHL_B04::
-Jump_004_6953:: ; address name
     ld a, [wFollowerDelay]
-    or a, a
+    or a
     ret z
     ldh a, [hPlayerFacing]
     inc a
     inc a
-    and a, $03
+    and $03
     ld [wFollowerRecords], a
-    xor a, a
+    xor a
     ld [wScriptParam1], a
     ld hl, Script_57E1
     call StartScriptAtHL_B04
     ret
 
-; entry 35 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFollowerDelay, wPartyCount, hPlayerFacing
-; writes: wFollowerRecords, wScriptParam1
 FieldTalkEvents_StartScriptAtHL_B04_Case23::
-Jump_004_696C:: ; address name
     ld a, [wFollowerDelay]
-    or a, a
+    or a
     ret z
     ld a, [wPartyCount]
     dec a
@@ -7029,7 +6695,7 @@ Jump_004_696C:: ; address name
     ldh a, [hPlayerFacing]
     inc a
     inc a
-    and a, $03
+    and $03
     ld [wFollowerRecords + $5], a
     ld a, $01
     ld [wScriptParam1], a
@@ -7037,14 +6703,9 @@ Jump_004_696C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 36 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFollowerDelay, wPartyCount, hPlayerFacing
-; writes: wFollowerRecords, wScriptParam1
 FieldTalkEvents_StartScriptAtHL_B04_Case24::
-Jump_004_698B:: ; address name
     ld a, [wFollowerDelay]
-    or a, a
+    or a
     ret z
     ld a, [wPartyCount]
     dec a
@@ -7054,204 +6715,157 @@ Jump_004_698B:: ; address name
     ldh a, [hPlayerFacing]
     inc a
     inc a
-    and a, $03
-    ld [wFollowerRecords + $A], a
+    and $03
+    ld [wFollowerRecords + $a], a
     ld a, $02
     ld [wScriptParam1], a
     ld hl, Script_57E1
     call StartScriptAtHL_B04
     ret
 
-; entry 37 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFollowerDelay
 ; starts Script_57DC
 FieldTalkEvents_StartScriptAtHL_B04_Case25::
-Jump_004_69AC:: ; address name
     ld a, [wFollowerDelay]
-    or a, a
+    or a
     ret nz
     ld hl, Script_57DC
     call StartScriptAtHL_B04
     ret
 
-; entry 38 of the `rst $00` table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wFollowerDelay
 ; starts Script_514B
 FieldTalkEvents_SetFollowerDelay::
-Jump_004_69B8:: ; address name
-    xor a, a
+    xor a
     ld [wFollowerDelay], a
     ret
 
 ; starts Script_514B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case10)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514B
 TalkScript514B::
-Jump_004_69BD:: ; address name
     ld hl, Script_514B
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_514D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case11)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514D
 TalkScript514D::
-Jump_004_69C4:: ; address name
     ld hl, Script_514D
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_514F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case12)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514F
 TalkScript514F::
-Jump_004_69CB:: ; address name
     ld hl, Script_514F
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5151 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case13)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5151
 TalkScript5151::
-Jump_004_69D2:: ; address name
     ld hl, Script_5151
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5153 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case14)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5153
 TalkScript5153::
-Jump_004_69D9:: ; address name
     ld hl, Script_5153
     call StartScriptAtHL_B04
     ret
 
-; entry 0 of the `rst $00` table in FieldTalkEvents; also entries 3, 39 of the table in FieldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
 FieldTalkEvents_Return::
-Jump_004_69E0:: ; address name
     ret
 
 ; starts Script_512F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case01)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
 TalkScript512F::
-Jump_004_69E1:: ; address name
     ld hl, Script_512F
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5131 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case02)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5131
 TalkScript5131::
-Jump_004_69E8:: ; address name
     ld hl, Script_5131
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5137 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case04)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5137
 TalkScript5137::
-Jump_004_69EF:: ; address name
     ld hl, Script_5137
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5139 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case05)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5139
 TalkScript5139::
-Jump_004_69F6:: ; address name
     ld hl, Script_5139
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_513B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case06)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513B
 TalkScript513B::
-Jump_004_69FD:: ; address name
     ld hl, Script_513B
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_513D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case07)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513D
 TalkScript513D::
-Jump_004_6A04:: ; address name
     ld hl, Script_513D
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_513F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513F
 TalkScript513F::
-Jump_004_6A0B:: ; address name
     ld hl, Script_513F
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5141 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case09)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5141
 TalkScript5141::
-Jump_004_6A12:: ; address name
     ld hl, Script_5141
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5143 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0A)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5143
 TalkScript5143::
-Jump_004_6A19:: ; address name
     ld hl, Script_5143
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5145 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0B)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5145
 TalkScript5145::
-Jump_004_6A20:: ; address name
     ld hl, Script_5145
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5147 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0E)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5147
 TalkScript5147::
-Jump_004_6A27:: ; address name
     ld hl, Script_5147
     call StartScriptAtHL_B04
     ret
 
 ; starts Script_5149 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0F)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5149
 TalkScript5149::
-Jump_004_6A2E:: ; address name
     ld hl, Script_5149
     call StartScriptAtHL_B04
     ret
 
-; talk category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages $0700-$07BF, $0C00-$0CFF)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToElvenVillageTalkEvents)
-; reads: wTalkEventGroup
+; talk category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world
+; (messages $0700-$07BF, $0C00-$0CFF)
 ElvenVillageTalkEvents::
-Func_004_6A35:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw ElvenVillageTalkEvents_TestFlagBit
     dw ElvenVillageTalkEvents_ShowYoureAHumanHow
     dw ElvenVillageTalkEvents_TestFlagBit_Case02
@@ -7438,11 +7052,8 @@ Func_004_6A35:: ; address name
     dw ChestItem_LoveWater_Flag01FA
     ds $10, $00
 
-; entry 0 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6200
 ElvenVillageTalkEvents_TestFlagBit::
-Jump_004_6BB9:: ; address name
     ld de, $0140
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -7461,17 +7072,14 @@ Jump_004_6BB9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_ShowYoureAHumanHow::
-Jump_004_6BDD:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $014F
+    ld de, $014f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014B
+    ld de, $014b
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     ld de, $0146
@@ -7529,10 +7137,7 @@ Jump_004_6BDD:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 2 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_TestFlagBit_Case02::
-Jump_004_6C59:: ; address name
     ld de, $0152
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
@@ -7573,14 +7178,17 @@ Jump_004_6C59:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b04); starts message $0708 through StartMessageCommand09HL (script command $09); that string begins 'Hello, munchkin. Enjoy your stay!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case03)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b043; flag 014C then jr c,
+; TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b042; flag 0147 then jr c,
+; TalkMsg0708_HelloMunchkinEnjoyYourStay.call_start_message_command09_hl_b04); starts message $0708
+; through StartMessageCommand09HL (script command $09); that string begins 'Hello, munchkin. Enjoy
+; your stay!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case03)
 TalkMsg0708_HelloMunchkinEnjoyYourStay::
-Jump_004_6CA8:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0147
@@ -7605,10 +7213,12 @@ Jump_004_6CA8:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg0709_AHumanHereItsBeenSeveral.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg0709_AHumanHereItsBeenSeveral.call_start_message_command09_hl_b04); starts message $0709 through StartMessageCommand09HL (script command $09); that string begins 'A human here? It's been several centuries' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case04)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg0709_AHumanHereItsBeenSeveral.call_start_message_command09_hl_b042; flag 0147 then jr c,
+; TalkMsg0709_AHumanHereItsBeenSeveral.call_start_message_command09_hl_b04); starts message $0709
+; through StartMessageCommand09HL (script command $09); that string begins 'A human here? It's been
+; several centuries' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case04)
 TalkMsg0709_AHumanHereItsBeenSeveral::
-Jump_004_6CDC:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -7625,114 +7235,126 @@ Jump_004_6CDC:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $074A ; '*: Thanks to you, we can'
+    ld hl, $074a ; '*: Thanks to you, we can'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg070A_YoureNotLikeUsYouScare.call_start_message_command09_hl_b04); starts message $070A through StartMessageCommand09HL (script command $09); that string begins 'You're not like us. You scare me' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case05)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg070A_YoureNotLikeUsYouScare.call_start_message_command09_hl_b04); starts message $070A
+; through StartMessageCommand09HL (script command $09); that string begins 'You're not like us. You
+; scare me' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case05)
 TalkMsg070A_YoureNotLikeUsYouScare::
-Jump_004_6D01:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070A ; '*: You're not like us. You'
+    ld hl, $070a ; '*: You're not like us. You'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $074B ; '*: You look kind and caring.'
+    ld hl, $074b ; '*: You look kind and caring.'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b04); starts message $070B through StartMessageCommand09HL (script command $09); that string begins 'Hey there! I'm a talking horse. Glad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case06)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b043; flag 014C then jr c,
+; TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b042; flag 0147 then jr c,
+; TalkMsg070B_HeyThereImATalkingHorse.call_start_message_command09_hl_b04); starts message $070B
+; through StartMessageCommand09HL (script command $09); that string begins 'Hey there! I'm a talking
+; horse. Glad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case06)
 TalkMsg070B_HeyThereImATalkingHorse::
-Jump_004_6D17:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070B ; '*: Hey there! I'm a talking'
+    ld hl, $070b ; '*: Hey there! I'm a talking'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071A ; '*: Cyal's parents were attacked by'
+    ld hl, $071a ; '*: Cyal's parents were attacked by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072C ; '*: AgDevil is a total terror.'
+    ld hl, $072c ; '*: AgDevil is a total terror.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074C ; '*: Brave human, hear this. The'
+    ld hl, $074c ; '*: Brave human, hear this. The'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg070C_ThisHorseWasHereBeforeUs.call_start_message_command09_hl_b04); starts message $070C through StartMessageCommand09HL (script command $09); that string begins 'This horse was here before us.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case07)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg070C_ThisHorseWasHereBeforeUs.call_start_message_command09_hl_b04); starts message $070C
+; through StartMessageCommand09HL (script command $09); that string begins 'This horse was here
+; before us.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case07)
 TalkMsg070C_ThisHorseWasHereBeforeUs::
-Jump_004_6D4B:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070C ; '*: This horse was here before'
+    ld hl, $070c ; '*: This horse was here before'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $074D ; '*: The talking horse came from'
+    ld hl, $074d ; '*: The talking horse came from'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b04); starts message $070D through StartMessageCommand09HL (script command $09); that string begins 'This is Elven village. You're a human,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b043; flag 014C then jr c,
+; TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b042; flag 0147 then jr c,
+; TalkMsg070D_ThisIsElvenVillageYoureA.call_start_message_command09_hl_b04); starts message $070D
+; through StartMessageCommand09HL (script command $09); that string begins 'This is Elven village.
+; You're a human,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case08)
 TalkMsg070D_ThisIsElvenVillageYoureA::
-Jump_004_6D61:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070D ; '*: This is Elven village. You're'
+    ld hl, $070d ; '*: This is Elven village. You're'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071B ; '*: I think Cyal's looking forward'
+    ld hl, $071b ; '*: I think Cyal's looking forward'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072D ; '*: Cyal was taken away by'
+    ld hl, $072d ; '*: Cyal was taken away by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074E ; '*: You put down that fiend?'
+    ld hl, $074e ; '*: You put down that fiend?'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b043; flag 014C then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b042; flag 0147 then jr c, TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b04); starts message $0752 through StartMessageCommand09HL (script command $09); that string begins 'I've heard that humans are wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case09) (E-0324: was TalkMsg0752_IEHeardThatHumansAre; read before $42 was known as 'v)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b043; flag 014C then jr c,
+; TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b042; flag 0147 then jr c,
+; TalkMsg0752_IveHeardThatHumansAre.call_start_message_command09_hl_b04); starts message $0752
+; through StartMessageCommand09HL (script command $09); that string begins 'I've heard that humans
+; are wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case09) (E-0324: was
+; TalkMsg0752_IEHeardThatHumansAre; read before $42 was known as 'v)
 TalkMsg0752_IveHeardThatHumansAre::
-Jump_004_6D95:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0147
@@ -7743,25 +7365,21 @@ Jump_004_6D95:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071C ; '*: Humans can't be trusted, but'
+    ld hl, $071c ; '*: Humans can't be trusted, but'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072E ; '*: Didn't I ask you to'
+    ld hl, $072e ; '*: Didn't I ask you to'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074F ; '*: You You're a savage but'
+    ld hl, $074f ; '*: You You're a savage but'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 10 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenTableIndex, wDataBank
 ElvenVillageTalkEvents_StartScriptAtHL_B04::
-Jump_004_6DC9:: ; address name
     ld a, $10
     ld [wScreenTableIndex], a
     ld a, $10
@@ -7770,17 +7388,14 @@ Jump_004_6DC9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 11 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_ShowWellWellItIs::
-Jump_004_6DDA:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $014D
+    ld de, $014d
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0146
@@ -7792,7 +7407,7 @@ Jump_004_6DDA:: ; address name
     ld de, $0145
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $070F ; '*: Well, well It is a'
+    ld hl, $070f ; '*: Well, well It is a'
     call StartMessageCommand09HL_B04
     ld de, $0144
     call SetFlagBit
@@ -7822,14 +7437,14 @@ Jump_004_6DDA:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072A ; '*: AgDevil killed Rolt's parents. Rolt'
+    ld hl, $072a ; '*: AgDevil killed Rolt's parents. Rolt'
     call StartMessageCommand09HL_B04
-    ld de, $014D
+    ld de, $014d
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $072B ; '*: AgDevil appears to come from'
+    ld hl, $072b ; '*: AgDevil appears to come from'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7838,11 +7453,8 @@ Jump_004_6DDA:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 12 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_626A: '*: Master AgDevil, a human, ruff!'
 ElvenVillageTalkEvents_TestFlagBit_Case0C::
-Jump_004_6E56:: ; address name
     ld de, $0148
     call TestFlagBit
     ret nc
@@ -7850,11 +7462,12 @@ Jump_004_6E56:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 014A then jr c, TalkMsg0723_TchWeHaveToEatThe.call_start_message_command09_hl_b04); starts message $0723 through StartMessageCommand09HL (script command $09); that string begins 'Tch, we have to eat the lousy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0D)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 014A then jr c,
+; TalkMsg0723_TchWeHaveToEatThe.call_start_message_command09_hl_b04); starts message $0723 through
+; StartMessageCommand09HL (script command $09); that string begins 'Tch, we have to eat the lousy'
+; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0D)
 TalkMsg0723_TchWeHaveToEatThe::
-Jump_004_6E64:: ; address name
-    ld de, $014A
+    ld de, $014a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0723 ; '*: Tch, we have to eat'
@@ -7866,12 +7479,9 @@ Jump_004_6E64:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 14 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6290: '*: That's what we'll do, kid.'
 ElvenVillageTalkEvents_TestFlagBit_Case0E::
-Jump_004_6E7A:: ; address name
-    ld de, $014A
+    ld de, $014a
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_6290
@@ -7883,27 +7493,30 @@ Jump_004_6E7A:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b043; flag 014E then jr c, TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b042; flag 014C then jr c, TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b04); starts message $072F through StartMessageCommand09HL (script command $09); that string begins 'This is Elven's lookout post. We stand' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0F)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b043; flag 014E then jr c,
+; TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b042; flag 014C then jr c,
+; TalkMsg072F_ThisIsElvensLookoutPostWe.call_start_message_command09_hl_b04); starts message $072F
+; through StartMessageCommand09HL (script command $09); that string begins 'This is Elven's lookout
+; post. We stand' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0F)
 TalkMsg072F_ThisIsElvensLookoutPostWe::
-Jump_004_6E90:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014E
+    ld de, $014e
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $072F ; '*: This is Elven's lookout post.'
+    ld hl, $072f ; '*: This is Elven's lookout post.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
     ld hl, $0731 ; '*: This is the lookout post.'
     call StartMessageCommand09HL_B04
-    ld de, $014E
+    ld de, $014e
     call SetFlagBit
     ret
 
@@ -7917,14 +7530,16 @@ Jump_004_6E90:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags (flag 0151 then jr c, TalkMsg0730_HorridMonstersThatAttack.call_start_message_command09_hl_b042; flag 014C then jr c, TalkMsg0730_HorridMonstersThatAttack.call_start_message_command09_hl_b04); starts message $0730 through StartMessageCommand09HL (script command $09); that string begins 'Horrid monsters that attack elves appear often' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case10)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags (flag 0151 then jr c,
+; TalkMsg0730_HorridMonstersThatAttack.call_start_message_command09_hl_b042; flag 014C then jr c,
+; TalkMsg0730_HorridMonstersThatAttack.call_start_message_command09_hl_b04); starts message $0730
+; through StartMessageCommand09HL (script command $09); that string begins 'Horrid monsters that
+; attack elves appear often' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case10)
 TalkMsg0730_HorridMonstersThatAttack::
-Jump_004_6ECA:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0730 ; '*: Horrid monsters that attack elves'
@@ -7941,11 +7556,8 @@ Jump_004_6ECA:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 17 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_62BD: '*: The human in the forest'
 ElvenVillageTalkEvents_TestFlagBit_Case11::
-Jump_004_6EEF:: ; address name
     ld de, $0150
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -7960,12 +7572,9 @@ Jump_004_6EEF:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 18 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6369: 'Rolt: I've found you at last!'
 ElvenVillageTalkEvents_TestFlagBit_Case12::
-Jump_004_6F0B:: ; address name
-    ld de, $014C
+    ld de, $014c
     call TestFlagBit
     ret nc
     ld hl, Script_6369
@@ -7974,24 +7583,24 @@ Jump_004_6F0B:: ; address name
     call SetFlagBit
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $0153 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case13)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
+; flag $0153 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case13)
 VaseItem_TinyMedal_Flag0153::
-Jump_004_6F1F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
     ld de, $0153
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $10, story flag $0154 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case14)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $10, story
+; flag $0154 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case14)
 VaseItem_INTseed::
-Jump_004_6F30:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $10
@@ -8000,11 +7609,11 @@ Jump_004_6F30:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story flag $0155 in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case15)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story
+; flag $0155 in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3
+; of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case15)
 VaseItem_Potion::
-Jump_004_6F41:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $04
@@ -8013,27 +7622,27 @@ Jump_004_6F41:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0756 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case16)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0756 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. It was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case16)
 TalkMsg0756_HeroPeeredIntoTheVaseIt::
-Jump_004_6F52:: ; address name
     ld hl, $0756 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0758 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. Stew simmered and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case17)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0758 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the oven. Stew simmered and' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case17)
 TalkMsg0758_HeroCheckedTheOvenStewSimmered::
-Jump_004_6F59:: ; address name
     ld hl, $0758 ; '0 checked the oven. Stew simmered'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $0156 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case18)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $03, story flag $0156 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case18)
 ChestItem_WorldDew_Flag0156::
-Jump_004_6F60:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
@@ -8042,24 +7651,24 @@ Jump_004_6F60:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $0157 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case19)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $0157 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case19)
 ChestItem_ExitBell_Flag0157::
-Jump_004_6F71:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
     ld de, $0157
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $12, story flag $0158 in DE: when the flag is clear it gives item $12 (MysticNut) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case1A)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $12, story flag $0158 in DE: when the flag is clear it gives item $12 (MysticNut) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was DispatchTalkEvent_Case07_Sub01_Case1A)
 ChestItem_MysticNut::
-Jump_004_6F82:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $12
@@ -8068,20 +7677,18 @@ Jump_004_6F82:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0757 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. A sharp aroma' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case1B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0757 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the oven. A sharp aroma' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case1B)
 TalkMsg0757_HeroCheckedTheOvenASharp::
-Jump_004_6F93:: ; address name
     ld hl, $0757 ; '0 checked the oven. A sharp'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 7 constant message(s) depending on story flags and state; the first one in the code is $075F, whose string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, wGameFlags836
-; writes: hTemp0, wGameFlags836
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 7
+; constant message(s) depending on story flags and state; the first one in the code is $075F, whose
+; string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
 Talk075F_KiralFetchMeMy::
-Jump_004_6F9A:: ; address name
     ld de, $0167
     call TestFlagBit
     jp c, .call_test_flag_bit2
@@ -8094,10 +7701,10 @@ Jump_004_6F9A:: ; address name
     ld de, $0162
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $015F
+    ld de, $015f
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $015A
+    ld de, $015a
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld de, $0159
@@ -8113,7 +7720,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $075F ; 'Kiral: Fetch me my treasure from'
+    ld hl, $075f ; 'Kiral: Fetch me my treasure from'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8128,7 +7735,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .set_temp0_to_3C:
-    ld a, $3C
+    ld a, $3c
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
@@ -8148,7 +7755,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $077D ; 'Kiral: Ah! Back! Is Rob-N Did'
+    ld hl, $077d ; 'Kiral: Ah! Back! Is Rob-N Did'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8178,24 +7785,23 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b045:
-    ld hl, $078A ; 'Kiral: Roboster2's skills are simply exceptional.'
+    ld hl, $078a ; 'Kiral: Roboster2's skills are simply exceptional.'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $075A, whose string begins 'Pii Ggzz Piiiiii'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wObject1
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
+; constant message(s) depending on story flags and state; the first one in the code is $075A, whose
+; string begins 'Pii Ggzz Piiiiii'; the branching is not interpreted (E-0097)
 Talk075A_PiiGgzzPiiiiii::
-Jump_004_706A:: ; address name
     ld de, $0167
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0165
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    xor a, a
+    xor a
     ld [wObject1 + OBJ_STATE], a
-    ld hl, $075A ; '*: Pii Ggzz Piiiiii'
+    ld hl, $075a ; '*: Pii Ggzz Piiiiii'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8205,98 +7811,98 @@ Jump_004_706A:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $078B ; '*: MY NAME IS LEO. THE'
+    ld hl, $078b ; '*: MY NAME IS LEO. THE'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0760 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. A recent diary' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case22)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0760 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. A recent diary' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case22)
 TalkMsg0760_HeroCheckedTheBookshelfA::
-Jump_004_7093:: ; address name
     ld hl, $0760 ; '0 checked the bookshelf. A recent'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0761 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. A very old' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case23)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0761 through StartMessageCommand09HL (script command $09); that string begins '0
+; checked the bookshelf. A very old' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case23)
 TalkMsg0761_HeroCheckedTheBookshelfA::
-Jump_004_709A:: ; address name
     ld hl, $0761 ; '0 checked the bookshelf. A very'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $015B in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case24)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
+; flag $015B in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case24)
 VaseItem_TinyMedal_Flag015B::
-Jump_004_70A1:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $015B
+    ld de, $015b
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0762 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. Rolled blueprints' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case25)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0762 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. Rolled blueprints' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case25)
 TalkMsg0762_HeroPeeredIntoTheVaseRolled::
-Jump_004_70B2:: ; address name
     ld hl, $0762 ; '0 peered into the vase. Rolled'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0763 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It faintly' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case26)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0763 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. It faintly' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case26)
 TalkMsg0763_HeroPeeredIntoTheBarrelIt::
-Jump_004_70B9:: ; address name
     ld hl, $0763 ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0764 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. There were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case27)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0764 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. There were' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case27)
 TalkMsg0764_HeroPeeredIntoTheBarrelThere::
-Jump_004_70C0:: ; address name
     ld hl, $0764 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0765 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. There was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case28)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0765 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. There was' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case28)
 TalkMsg0765_HeroPeeredIntoTheBarrelThere::
-Jump_004_70C7:: ; address name
     ld hl, $0765 ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $03, story flag $015C in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case29)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $03, story
+; flag $015C in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message
+; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case29)
 BarrelItem_WorldDew::
-Jump_004_70CE:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
-    ld de, $015C
+    ld de, $015c
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0766 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. A quite' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case2A)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0766 through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the barrel. A quite' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case2A)
 TalkMsg0766_HeroPeeredIntoTheBarrelA::
-Jump_004_70DF:: ; address name
     ld hl, $0766 ; '0 peered into the barrel. A'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0768, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $0768, whose
+; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; starts Script_63DB: '0 peered into the barrel. A'
 Talk0768_HeroPeeredIntoThe::
-Jump_004_70E6:: ; address name
-    ld de, $015D
+    ld de, $015d
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_63DB
@@ -8308,12 +7914,12 @@ Jump_004_70E6:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0768, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $0768, whose
+; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; starts Script_63E4: '0 peered into the barrel. A'
 Talk0768_HeroPeeredIntoThe_70FC::
-Jump_004_70FC:: ; address name
-    ld de, $015E
+    ld de, $015e
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_63E4
@@ -8325,10 +7931,10 @@ Jump_004_70FC:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $078E, whose string begins 'Roboster stopped moving entirely'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
+; constant message(s) depending on story flags and state; the first one in the code is $078E, whose
+; string begins 'Roboster stopped moving entirely'; the branching is not interpreted (E-0097)
 Talk078E_RobosterStoppedMovingEntirely::
-Jump_004_7112:: ; address name
     ld de, $0167
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -8341,7 +7947,7 @@ Jump_004_7112:: ; address name
     ld de, $0160
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $015F
+    ld de, $015f
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_63ED
@@ -8364,21 +7970,19 @@ Jump_004_7112:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $078E ; 'Roboster stopped moving entirely'
+    ld hl, $078e ; 'Roboster stopped moving entirely'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $078C ; '*: WELCOME. I AM ROB-N. I'
+    ld hl, $078c ; '*: WELCOME. I AM ROB-N. I'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $077B, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: wGameFlags836
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
+; constant message(s) depending on story flags and state; the first one in the code is $077B, whose
+; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 Talk077B_HeroPeeredIntoThe::
-Jump_004_7164:: ; address name
     ld de, $0164
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -8392,58 +7996,61 @@ Jump_004_7164:: ; address name
 .call_inventory_has_free_slot_check:
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
-    ld hl, $077B ; '0 peered into the barrel. There'
+    ld hl, $077b ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
 
 .read_game_flags836:
-    ld [hl], $3C
+    ld [hl], $3c
     ld a, [wGameFlags836]
     set 6, a
     ld [wGameFlags836], a
-    ld hl, $077A ; '0 peered into the barrel. There'
+    ld hl, $077a ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ld de, $0164
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $077C ; '0 peered into the barrel. There'
+    ld hl, $077c ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $07B7 through StartMessageCommand09HL (script command $09); that string begins 'The tower's entry is sealed tight.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case2F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $07B7 through StartMessageCommand09HL (script command $09); that string begins 'The
+; tower's entry is sealed tight.' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case2F)
 TalkMsg07B7_TheTowersEntryIsSealedTight::
-Jump_004_71A5:: ; address name
-    ld hl, $07B7 ; 'The tower's entry is sealed tight.'
+    ld hl, $07b7 ; 'The tower's entry is sealed tight.'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg078F_ThisIsTheTown.call_start_message_command09_hl_b04); when none of them branches, starts message $078F through StartMessageCommand09HL_B04 (script command $09); that string begins 'This is the town of Miagen.' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg078F_ThisIsTheTown.call_start_message_command09_hl_b04); when none of them branches, starts
+; message $078F through StartMessageCommand09HL_B04 (script command $09); that string begins 'This
+; is the town of Miagen.' (E-0082)
 TalkMsg078F_ThisIsTheTown::
-Jump_004_71AC:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $078F ; '*: This is the town of'
+    ld hl, $078f ; '*: This is the town of'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE2 ; '*: Welcome to the town of'
+    ld hl, $0ce2 ; '*: Welcome to the town of'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0790_AreYouFriendsWith.call_start_message_command09_hl_b042; flag $01BC set: jr to TalkMsg0790_AreYouFriendsWith.call_start_message_command09_hl_b04); when none of them branches, starts message $0790 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Are you friends with monsters? You're' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0790_AreYouFriendsWith.call_start_message_command09_hl_b042; flag $01BC set: jr to
+; TalkMsg0790_AreYouFriendsWith.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $0790 through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Are you friends with monsters? You're' (E-0082)
 TalkMsg0790_AreYouFriendsWith::
-Jump_004_71C2:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BC
+    ld de, $01bc
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0790 ; '*: Are you friends with monsters?'
@@ -8451,20 +8058,21 @@ Jump_004_71C2:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C6 ; '*: Are you Milayou's friend? The'
+    ld hl, $07c6 ; '*: Are you Milayou's friend? The'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE3 ; '*: So you defeated the evildoer?'
+    ld hl, $0ce3 ; '*: So you defeated the evildoer?'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0791_WowYouHaveMonsters.call_start_message_command09_hl_b04); when none of them branches, starts message $0791 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Wow! You have monsters! Neat! Are' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0791_WowYouHaveMonsters.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $0791 through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Wow! You have monsters! Neat! Are' (E-0082)
 TalkMsg0791_WowYouHaveMonsters::
-Jump_004_71E7:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0791 ; '*: Wow! You have monsters! Neat!'
@@ -8472,15 +8080,16 @@ Jump_004_71E7:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE4 ; '*: Wow, you have monsters! Wicked!'
+    ld hl, $0ce4 ; '*: Wow, you have monsters! Wicked!'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0792_AreYourMonstersGood.call_start_message_command09_hl_b04); when none of them branches, starts message $0792 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Are your monsters good? I don't' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0792_AreYourMonstersGood.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $0792 through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Are your monsters good? I don't' (E-0082)
 TalkMsg0792_AreYourMonstersGood::
-Jump_004_71FD:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0792 ; '*: Are your monsters good? I'
@@ -8488,18 +8097,20 @@ Jump_004_71FD:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE5 ; '*: Your monsters are good, it's'
+    ld hl, $0ce5 ; '*: Your monsters are good, it's'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0793_MonstersCanBeGood.call_start_message_command09_hl_b042; flag $01BC set: jr to TalkMsg0793_MonstersCanBeGood.call_start_message_command09_hl_b04); when none of them branches, starts message $0793 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters can be good or bad.' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0793_MonstersCanBeGood.call_start_message_command09_hl_b042; flag $01BC set: jr to
+; TalkMsg0793_MonstersCanBeGood.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $0793 through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Monsters can be good or bad.' (E-0082)
 TalkMsg0793_MonstersCanBeGood::
-Jump_004_7213:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BC
+    ld de, $01bc
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0793 ; '*: Monsters can be good or'
@@ -8507,20 +8118,21 @@ Jump_004_7213:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C7 ; '*: If a monster could be'
+    ld hl, $07c7 ; '*: If a monster could be'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE6 ; '*: So there are evil masters'
+    ld hl, $0ce6 ; '*: So there are evil masters'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0794_YouAppearToHave.call_start_message_command09_hl_b04); when none of them branches, starts message $0794 through StartMessageCommand09HL_B04 (script command $09); that string begins 'You appear to have the power' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0794_YouAppearToHave.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $0794 through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'You appear to have the power' (E-0082)
 TalkMsg0794_YouAppearToHave::
-Jump_004_7238:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0794 ; '*: You appear to have the'
@@ -8528,26 +8140,24 @@ Jump_004_7238:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE7 ; '*: Controlling monsters is no easy'
+    ld hl, $0ce7 ; '*: Controlling monsters is no easy'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4 constant message(s) depending on story flags and state; the first one in the code is $07A4, whose string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0
-; writes: hTemp0
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
+; constant message(s) depending on story flags and state; the first one in the code is $07A4, whose
+; string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
 Talk07A4_CouldYouHumorThis::
-Jump_004_724E:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $01BC
+    ld de, $01bc
     call TestFlagBit
     jr c, .set_temp0_to_3D
-    ld de, $01B1
+    ld de, $01b1
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, Script_6430
@@ -8555,22 +8165,22 @@ Jump_004_724E:: ; address name
     ret
 
 .call_test_flag_bit:
-    ld de, $01B2
+    ld de, $01b2
     call TestFlagBit
     jr c, .loop
-    ld hl, $07A4 ; '*: Could you humor this old'
+    ld hl, $07a4 ; '*: Could you humor this old'
     call StartMessageCommand09HL_B04
-    ld de, $01B2
+    ld de, $01b2
     call SetFlagBit
     ret
 
 .loop:
-    ld hl, $07A5 ; '*: My daughter wedded a man'
+    ld hl, $07a5 ; '*: My daughter wedded a man'
     call StartMessageCommand09HL_B04
     ret
 
 .set_temp0_to_3D:
-    ld a, $3D
+    ld a, $3d
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
@@ -8582,31 +8192,29 @@ Jump_004_724E:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07CE ; '*: Things haven't been good for'
+    ld hl, $07ce ; '*: Things haven't been good for'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE8 ; '*: I thank you in all'
+    ld hl, $0ce8 ; '*: I thank you in all'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07A6, whose string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: wGameFlags836
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
+; constant message(s) depending on story flags and state; the first one in the code is $07A6, whose
+; string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
 Talk07A6_OurDaughtersOnlyMemento::
-Jump_004_72BC:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01BF
+    ld de, $01bf
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check
-    ld de, $01B1
+    ld de, $01b1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_6437
@@ -8614,7 +8222,7 @@ Jump_004_72BC:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A6 ; '*: Our daughter's only memento was'
+    ld hl, $07a6 ; '*: Our daughter's only memento was'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8626,7 +8234,7 @@ Jump_004_72BC:: ; address name
     ret
 
 .read_game_flags836:
-    ld [hl], $0B
+    ld [hl], $0b
     ld a, [wGameFlags836]
     set 6, a
     ld [wGameFlags836], a
@@ -8635,26 +8243,29 @@ Jump_004_72BC:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D3 ; '*: We are grateful that you'
+    ld hl, $07d3 ; '*: We are grateful that you'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CE9 ; '*: The atmosphere has cheered up,'
+    ld hl, $0ce9 ; '*: The atmosphere has cheered up,'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b043; flag $01BE set: jr to TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b042; flag $01B1 set: jr to TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b04); when none of them branches, starts message $0799 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters raided this house within the' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b043; flag $01BE set: jr to
+; TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b042; flag $01B1 set: jr to
+; TalkMsg0799_MonstersRaidedThisHouse.call_start_message_command09_hl_b04); when none of them
+; branches, starts message $0799 through StartMessageCommand09HL_B04 (script command $09); that
+; string begins 'Monsters raided this house within the' (E-0082)
 TalkMsg0799_MonstersRaidedThisHouse::
-Jump_004_7315:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01B1
+    ld de, $01b1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0799 ; '*: Monsters raided this house within'
@@ -8662,105 +8273,109 @@ Jump_004_7315:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A7 ; '*: It doesn't look like the'
+    ld hl, $07a7 ; '*: It doesn't look like the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D4 ; '*: The old couple look happy'
+    ld hl, $07d4 ; '*: The old couple look happy'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CEA ; '*: I long to have a'
+    ld hl, $0cea ; '*: I long to have a'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b043; flag $01BE set: jr to TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b042; flag $01B1 set: jr to TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b04); when none of them branches, starts message $079A through StartMessageCommand09HL_B04 (script command $09); that string begins 'The old people across the way' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b043; flag $01BE set: jr to
+; TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b042; flag $01B1 set: jr to
+; TalkMsg079A_TheOldPeopleAcross.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $079A through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'The old people across the way' (E-0082)
 TalkMsg079A_TheOldPeopleAcross::
-Jump_004_7349:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01B1
+    ld de, $01b1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079A ; '*: The old people across the'
+    ld hl, $079a ; '*: The old people across the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A8 ; '*: The old couple across the'
+    ld hl, $07a8 ; '*: The old couple across the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D5 ; '*: I'm so glad the people'
+    ld hl, $07d5 ; '*: I'm so glad the people'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CEB ; '*: Old people say that a'
+    ld hl, $0ceb ; '*: Old people say that a'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg079B_MonstersHaveTakenTo.call_start_message_command09_hl_b042; flag $01BC set: jr to TalkMsg079B_MonstersHaveTakenTo.call_start_message_command09_hl_b04); when none of them branches, starts message $079B through StartMessageCommand09HL_B04 (script command $09); that string begins 'Monsters have taken to attacking the' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg079B_MonstersHaveTakenTo.call_start_message_command09_hl_b042; flag $01BC set: jr to
+; TalkMsg079B_MonstersHaveTakenTo.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $079B through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Monsters have taken to attacking the' (E-0082)
 TalkMsg079B_MonstersHaveTakenTo::
-Jump_004_737D:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BC
+    ld de, $01bc
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079B ; '*: Monsters have taken to attacking'
+    ld hl, $079b ; '*: Monsters have taken to attacking'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C8 ; '*: Don't you think it's odd'
+    ld hl, $07c8 ; '*: Don't you think it's odd'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CEC ; '*: Monsters can be good or'
+    ld hl, $0cec ; '*: Monsters can be good or'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg079C_GrrrrImSoAngry.call_start_message_command09_hl_b042; flag $01BC set: jr to TalkMsg079C_GrrrrImSoAngry.call_start_message_command09_hl_b04); when none of them branches, starts message $079C through StartMessageCommand09HL_B04 (script command $09); that string begins 'Grrrr! I'm so angry! Monsters stole' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg079C_GrrrrImSoAngry.call_start_message_command09_hl_b042; flag $01BC set: jr to
+; TalkMsg079C_GrrrrImSoAngry.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $079C through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'Grrrr! I'm so angry! Monsters stole' (E-0082)
 TalkMsg079C_GrrrrImSoAngry::
-Jump_004_73A2:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BC
+    ld de, $01bc
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079C ; '*: Grrrr! I'm so angry! Monsters'
+    ld hl, $079c ; '*: Grrrr! I'm so angry! Monsters'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C9 ; '*: Arrrgh! This is so infuriating!'
+    ld hl, $07c9 ; '*: Arrrgh! This is so infuriating!'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CED ; '*: The thief was selling what'
+    ld hl, $0ced ; '*: The thief was selling what'
     call StartMessageCommand09HL_B04
     ret
 
-; wScreenTableIndex = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Data_010_643E (E-0119)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScreenTableIndex, wDataBank
+; wScreenTableIndex = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Script_643E (E-0119)
 StartScript643EInBank10::
-Jump_004_73C7:: ; address name
     ld a, $11
     ld [wScreenTableIndex], a
     ld a, $10
@@ -8769,16 +8384,13 @@ Jump_004_73C7:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; map event: wSpriteSlots + $7 = 0 if hPlayerX = $30 else 1, starts script $6445 and sets wDataBank = $10 (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerX
-; writes: wSpriteSlots, wDataBank
+; map event: wSpriteSlots + $7 = 0 if hPlayerX = $30 else 1, starts script $6445 and sets wDataBank
+; = $10 (E-0122)
 StartScript6445ByPlayerX30::
-Jump_004_73D8:: ; address name
-    xor a, a
+    xor a
     ld [wSpriteSlots + $7], a
     ldh a, [hPlayerX]
-    cp a, $30
+    cp $30
     jr z, .call_start_script_at_hl_b04
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -8790,53 +8402,55 @@ Jump_004_73D8:: ; address name
     ld [wDataBank], a
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg079F_IfYouTravelWest.call_start_message_command09_hl_b042; flag $01BE set: jr to TalkMsg079F_IfYouTravelWest.call_start_message_command09_hl_b04); when none of them branches, starts message $079F through StartMessageCommand09HL_B04 (script command $09); that string begins 'If you travel west along the' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg079F_IfYouTravelWest.call_start_message_command09_hl_b042; flag $01BE set: jr to
+; TalkMsg079F_IfYouTravelWest.call_start_message_command09_hl_b04); when none of them branches,
+; starts message $079F through StartMessageCommand09HL_B04 (script command $09); that string begins
+; 'If you travel west along the' (E-0082)
 TalkMsg079F_IfYouTravelWest::
-Jump_004_73F3:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079F ; '*: If you travel west along'
+    ld hl, $079f ; '*: If you travel west along'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07D6 ; '*: What do those monsters do'
+    ld hl, $07d6 ; '*: What do those monsters do'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CEE ; '*: It sure was a thrilling'
+    ld hl, $0cee ; '*: It sure was a thrilling'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07D7, whose string begins 'Milayou I've been checking around,'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
+; constant message(s) depending on story flags and state; the first one in the code is $07D7, whose
+; string begins 'Milayou I've been checking around,'; the branching is not interpreted (E-0097)
 Talk07D7_MilayouIEBeen::
-Jump_004_7418:: ; address name
-    ld de, $01C5
+    ld de, $01c5
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld de, $01C4
+    ld de, $01c4
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_script_at_hl_b043
-    ld de, $01C1
+    ld de, $01c1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01C0
+    ld de, $01c0
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $01B0
+    ld de, $01b0
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_644C
@@ -8849,7 +8463,7 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07D7 ; 'Milayou: I've been checking around, and'
+    ld hl, $07d7 ; 'Milayou: I've been checking around, and'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8859,7 +8473,7 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07DD ; 'Milayou: Please defeat the dark master'
+    ld hl, $07dd ; 'Milayou: Please defeat the dark master'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8869,12 +8483,12 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF1 ; 'Milayou: You've inspired me to try'
+    ld hl, $0cf1 ; 'Milayou: You've inspired me to try'
     call StartMessageCommand09HL_B04
     ret
 
 .call_test_flag_bit:
-    ld de, $01C6
+    ld de, $01c6
     call TestFlagBit
     jr c, .call_start_script_at_hl_b044
     ld hl, Script_6558
@@ -8886,57 +8500,60 @@ Jump_004_7418:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; starts message $07A9 through StartMessageCommand09HL (script command $09); that string begins 'This is the traveler's hut. Stay and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case40)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $07A9 through StartMessageCommand09HL (script command $09); that string begins
+; 'This is the traveler's hut. Stay and' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case40)
 TalkMsg07A9_ThisIsTheTravelersHutStay::
-Jump_004_7497:: ; address name
-    ld hl, $07A9 ; '*: This is the traveler's hut.'
+    ld hl, $07a9 ; '*: This is the traveler's hut.'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b043; flag $01BE set: jr to TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b042; flag $01BB set: jr to TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b04); when none of them branches, starts message $07AA through StartMessageCommand09HL_B04 (script command $09); that string begins 'That dealer, how expensive! Nobody can' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b043; flag $01BE set: jr to
+; TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b042; flag $01BB set: jr to
+; TalkMsg07AA_ThatDealerHowExpensive.call_start_message_command09_hl_b04); when none of them
+; branches, starts message $07AA through StartMessageCommand09HL_B04 (script command $09); that
+; string begins 'That dealer, how expensive! Nobody can' (E-0082)
 TalkMsg07AA_ThatDealerHowExpensive::
-Jump_004_749E:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BB
+    ld de, $01bb
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07AA ; '*: That dealer, how expensive! Nobody'
+    ld hl, $07aa ; '*: That dealer, how expensive! Nobody'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C0 ; '*: I dug deep in my'
+    ld hl, $07c0 ; '*: I dug deep in my'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D8 ; '*: I dug deep in my'
+    ld hl, $07d8 ; '*: I dug deep in my'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF2 ; '*: That merchant, he was a'
+    ld hl, $0cf2 ; '*: That merchant, he was a'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07C1, whose string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
+; constant message(s) depending on story flags and state; the first one in the code is $07C1, whose
+; string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
 Talk07C1_WhatMonstersAttackedYou::
-Jump_004_74D2:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BB
+    ld de, $01bb
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_6481
@@ -8944,136 +8561,137 @@ Jump_004_74D2:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C1 ; '*: What? Monsters attacked you in'
+    ld hl, $07c1 ; '*: What? Monsters attacked you in'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D9 ; '*: The thieving monsters had a'
+    ld hl, $07d9 ; '*: The thieving monsters had a'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF3 ; '*: People say you can't judge'
+    ld hl, $0cf3 ; '*: People say you can't judge'
     call StartMessageCommand09HL_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b043; flag $01C0 set: jr to TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b042; flag $01BB set: jr to TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b04); when none of them branches, starts message $07AE through StartMessageCommand09HL_B04 (script command $09); that string begins 'That dealer's wares Could he sell' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to
+; TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b043; flag $01C0 set: jr to
+; TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b042; flag $01BB set: jr to
+; TalkMsg07AE_ThatDealersWaresCould.call_start_message_command09_hl_b04); when none of them
+; branches, starts message $07AE through StartMessageCommand09HL_B04 (script command $09); that
+; string begins 'That dealer's wares Could he sell' (E-0082)
 TalkMsg07AE_ThatDealersWaresCould::
-Jump_004_7506:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01C0
+    ld de, $01c0
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01BB
+    ld de, $01bb
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07AE ; '*: That dealer's wares Could he'
+    ld hl, $07ae ; '*: That dealer's wares Could he'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C2 ; '*: That dealer is a greedy'
+    ld hl, $07c2 ; '*: That dealer is a greedy'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07DB ; '*: That greedhound dealer scuttled off'
+    ld hl, $07db ; '*: That greedhound dealer scuttled off'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF4 ; '*: That greedy hound of a'
+    ld hl, $0cf4 ; '*: That greedy hound of a'
     call StartMessageCommand09HL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 8 constant message(s) depending on story flags and state; the first one in the code is $07AF, whose string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wStoryFlags
-; writes: wStoryFlags
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 8
+; constant message(s) depending on story flags and state; the first one in the code is $07AF, whose
+; string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
 Talk07AF_HowDoesThisOrnament::
-Jump_004_753A:: ; address name
-    ld de, $01BE
+    ld de, $01be
     call TestFlagBit
     jp c, .call_start_script_at_hl_b042
-    ld de, $01BD
+    ld de, $01bd
     call TestFlagBit
     jp c, .call_start_message_command09_hl_b04
-    ld de, $01BB
+    ld de, $01bb
     call TestFlagBit
     jp c, .call_start_script_at_hl_b04
-    ld de, $01B1
+    ld de, $01b1
     call TestFlagBit
     jr c, .call_test_flag_bit3
-    ld de, $01B3
+    ld de, $01b3
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld hl, $07AF ; '*: How does this ornament look?'
+    ld hl, $07af ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
-    ld de, $01B3
+    ld de, $01b3
     call SetFlagBit
     ret
 
 .call_test_flag_bit:
-    ld de, $01B4
+    ld de, $01b4
     call TestFlagBit
     jr c, .call_test_flag_bit2
-    ld hl, $07B0 ; '*: How does this jewelry look?'
+    ld hl, $07b0 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
-    ld de, $01B4
+    ld de, $01b4
     call SetFlagBit
     ret
 
 .call_test_flag_bit2:
-    ld de, $01B5
+    ld de, $01b5
     call TestFlagBit
     jr c, .loop
-    ld hl, $07B1 ; '*: How does this grand vase'
+    ld hl, $07b1 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
-    ld de, $01B5
+    ld de, $01b5
     call SetFlagBit
     ret
 
 .loop:
-    ld hl, $07B2 ; '*: I've no use for the'
+    ld hl, $07b2 ; '*: I've no use for the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_test_flag_bit3:
-    ld de, $01B6
+    ld de, $01b6
     call TestFlagBit
     jr c, .call_test_flag_bit4
-    ld hl, $07B3 ; '*: How does this ornament look?'
+    ld hl, $07b3 ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
-    ld de, $01B6
+    ld de, $01b6
     call SetFlagBit
     ret
 
 .call_test_flag_bit4:
-    ld de, $01B7
+    ld de, $01b7
     call TestFlagBit
     jr c, .call_test_flag_bit5
-    ld hl, $07B4 ; '*: How does this jewelry look?'
+    ld hl, $07b4 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
-    ld de, $01B7
+    ld de, $01b7
     call SetFlagBit
     ret
 
 .call_test_flag_bit5:
-    ld de, $01B8
+    ld de, $01b8
     call TestFlagBit
     jr c, .call_test_flag_bit6
-    ld hl, $07B5 ; '*: How does this grand vase'
+    ld hl, $07b5 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
-    ld de, $01B8
+    ld de, $01b8
     call SetFlagBit
     ret
 
 .call_test_flag_bit6:
-    ld de, $01B9
+    ld de, $01b9
     call TestFlagBit
     jr c, .loop
     ld hl, Script_648E
@@ -9086,7 +8704,7 @@ Jump_004_753A:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C5 ; '*: You defeated the monsters You're'
+    ld hl, $07c5 ; '*: You defeated the monsters You're'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9098,28 +8716,27 @@ Jump_004_753A:: ; address name
     ld [wStoryFlags + $68], a
     ret
 
-; tests story flags in turn (flag $01BA set: jr to TalkMsg07B8_WhoAreYou.call_start_message_command09_hl_b04); when none of them branches, starts message $07B8 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Who are you? You shouldn't be' (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01BA set: jr to
+; TalkMsg07B8_WhoAreYou.call_start_message_command09_hl_b04); when none of them branches, starts
+; message $07B8 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Who
+; are you? You shouldn't be' (E-0082)
 TalkMsg07B8_WhoAreYou::
-Jump_004_760E:: ; address name
-    ld de, $01BA
+    ld de, $01ba
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07B8 ; '*: Who are you? You shouldn't'
+    ld hl, $07b8 ; '*: Who are you? You shouldn't'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07BA ; '*: What, not you again!'
+    ld hl, $07ba ; '*: What, not you again!'
     call StartMessageCommand09HL_B04
     ret
 
 ; map event: starts script $64A6 if story flag $1BA is set, else $6496 (E-0122)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6496: '*: You're going to regret seeing'
 StartScript6496Or64A6ByFlag1BA::
-Jump_004_7624:: ; address name
-    ld de, $01BA
+    ld de, $01ba
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_6496
@@ -9131,20 +8748,18 @@ Jump_004_7624:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $07BF, whose string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wGameFlags836
-; writes: wGameFlags836
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $07BF, whose
+; string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
 Talk07BF_HeroFoundThePretty::
-Jump_004_763A:: ; address name
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
-    ld hl, $07BF ; '0 found the Pretty Ring. But'
+    ld hl, $07bf ; '0 found the Pretty Ring. But'
     call StartMessageCommand09HL_B04
     ret
 
 .read_game_flags836:
-    ld [hl], $3D
+    ld [hl], $3d
     ld a, [wGameFlags836]
     set 6, a
     ld [wGameFlags836], a
@@ -9153,11 +8768,9 @@ Jump_004_763A:: ; address name
     ret
 
 ; map event: starts script $652C if story flag $1C2 is set, else $6509 (E-0122)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6509: '*: What is it, you little'
 StartScript6509Or652CByFlag1C2::
-Jump_004_7657:: ; address name
-    ld de, $01C2
+    ld de, $01c2
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_6509
@@ -9169,203 +8782,197 @@ Jump_004_7657:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $0E, story flag $01C8 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was Msg01C8_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $0E, story
+; flag $01C8 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; Msg01C8_ThisIsAGreat)
 VaseItem_DEFseed::
-Jump_004_766D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $0E
+    ld a, $0e
     ld [wScriptParam1], a
-    ld de, $01C8
+    ld de, $01c8
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $01C9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was Msg01C9_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story
+; flag $01C9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
+; $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; Msg01C9_ThisIsAGreat)
 VaseItem_TinyMedal_Flag01C9::
-Jump_004_767E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $01C9
+    ld de, $01c9
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0CFB through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4B)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0CFB through StartMessageCommand09HL (script command $09); that string begins '0
+; tried to open the chest. But' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case4B)
 TalkMsg0CFB_HeroTriedToOpenTheChest::
-Jump_004_768F:: ; address name
-    ld hl, $0CFB ; '0 tried to open the chest.'
+    ld hl, $0cfb ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0CFA through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. A tantalizing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4C)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0CFA through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the oven. A tantalizing' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case4C)
 TalkMsg0CFA_HeroPeeredIntoTheOvenA::
-Jump_004_7696:: ; address name
-    ld hl, $0CFA ; '0 peered into the oven. A'
+    ld hl, $0cfa ; '0 peered into the oven. A'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0CFC through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. Cold water' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4D)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0CFC through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the vase. Cold water' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case4D)
 TalkMsg0CFC_HeroPeeredIntoTheVaseCold::
-Jump_004_769D:: ; address name
-    ld hl, $0CFC ; '0 peered into the vase. Cold'
+    ld hl, $0cfc ; '0 peered into the vase. Cold'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story flag $01CA in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case4E)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story
+; flag $01CA in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3
+; of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was
+; DispatchTalkEvent_Case07_Sub01_Case4E)
 VaseItem_Potion_Flag01CA::
-Jump_004_76A4:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $04
     ld [wScriptParam1], a
-    ld de, $01CA
+    ld de, $01ca
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0CFD through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. Meat sizzled' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4F)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0CFD through StartMessageCommand09HL (script command $09); that string begins '0
+; peered into the oven. Meat sizzled' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case4F)
 TalkMsg0CFD_HeroPeeredIntoTheOvenMeat::
-Jump_004_76B5:: ; address name
-    ld hl, $0CFD ; '0 peered into the oven. Meat'
+    ld hl, $0cfd ; '0 peered into the oven. Meat'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $08, story flag $01CB in DE: when the flag is clear it gives item $08 (Laurel) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CB_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $08, story flag $01CB in DE: when the flag is clear it gives item $08 (Laurel) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01CB_ThisIsAGreat)
 ChestItem_Laurel::
-Jump_004_76BC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $08
     ld [wScriptParam1], a
-    ld de, $01CB
+    ld de, $01cb
     call StartTreasureFlagDE_B04
     ret
 
-; tests story flags in turn (flag $01C3 set: jr to TalkMsg0CFE.call_start_message_command09_hl_b04); when none of them branches, starts message $0CFE through StartMessageCommand09HL_B04 (script command $09); that string is empty (E-0082)
-; no direct call (reached through a table, a jump or a vector)
+; tests story flags in turn (flag $01C3 set: jr to TalkMsg0CFE.call_start_message_command09_hl_b04);
+; when none of them branches, starts message $0CFE through StartMessageCommand09HL_B04 (script
+; command $09); that string is empty (E-0082)
 TalkMsg0CFE::
-Jump_004_76CD:: ; address name
-    ld de, $01C3
+    ld de, $01c3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0CFE ; '0 opened the treasure chest. It'
+    ld hl, $0cfe ; '0 opened the treasure chest. It'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $00A1 ; '0 checked the treasure chest. But'
+    ld hl, $00a1 ; '0 checked the treasure chest. But'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $01CC in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CC_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $01CC in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01CC_ThisIsAGreat)
 ChestItem_ExitBell_Flag01CC::
-Jump_004_76E3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $01CC
+    ld de, $01cc
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $01CD in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CD_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2C, story flag $01CD in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01CD_ThisIsAGreat)
 ChestItem_TinyMedal::
-Jump_004_76F4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $01CD
+    ld de, $01cd
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $23, story flag $01CE in DE: when the flag is clear it gives item $23 (Friend) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CE_ThisIsAGreat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $23, story flag $01CE in DE: when the flag is clear it gives item $23 (Friend) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01CE_ThisIsAGreat)
 ChestItem_Friend::
-Jump_004_7705:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $23
     ld [wScriptParam1], a
-    ld de, $01CE
+    ld de, $01ce
     call StartTreasureFlagDE_B04
     ret
 
-; starts Script_6595 (StartScriptAtHL); its first message begins '0 checked the treasure chest. The' (E-0271; was DispatchTalkEvent_Case07_Sub01_Case55)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_6595 (StartScriptAtHL); its first message begins '0 checked the treasure chest. The'
+; (E-0271; was DispatchTalkEvent_Case07_Sub01_Case55)
 ; starts Script_6595: '0 checked the treasure chest. The'
 TalkScript6595_HeroCheckedTheTreasureChest::
-Jump_004_7716:: ; address name
     ld hl, Script_6595
     call StartScriptAtHL_B04
     ret
 
-; starts message $0C03 through StartMessageCommand09HL (script command $09); that string begins 'The Tower's many treasures are heavily guarded' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case60)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C03 through StartMessageCommand09HL (script command $09); that string begins 'The
+; Tower's many treasures are heavily guarded' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case60)
 TalkMsg0C03_TheTowersManyTreasuresAre::
-Jump_004_771D:: ; address name
-    ld hl, $0C03 ; '*: The Tower's many treasures are'
+    ld hl, $0c03 ; '*: The Tower's many treasures are'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0C02 through StartMessageCommand09HL (script command $09); that string begins 'Only a handful of masters have made' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case61)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C02 through StartMessageCommand09HL (script command $09); that string begins
+; 'Only a handful of masters have made' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case61)
 TalkMsg0C02_OnlyAHandfulOfMastersHave::
-Jump_004_7724:: ; address name
-    ld hl, $0C02 ; '*: Only a handful of masters'
+    ld hl, $0c02 ; '*: Only a handful of masters'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 98 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_ShowThisIsThePower::
-Jump_004_772B:: ; address name
-    ld de, $01D3
+    ld de, $01d3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C00 ; '*: This is the Power Tower.'
+    ld hl, $0c00 ; '*: This is the Power Tower.'
     call StartMessageCommand09HL_B04
-    ld de, $01D3
+    ld de, $01d3
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C01 ; '*: If you win, you'll earn'
+    ld hl, $0c01 ; '*: If you win, you'll earn'
     call StartMessageCommand09HL_B04
     ret
 
 ; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_Case63)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
 TalkScript659C::
-Jump_004_7747:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C17, an empty string on the normal path; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $0C17, an
+; empty string on the normal path; the branching is not interpreted (E-0097)
 ; starts Script_659C
 Talk0C17::
-Jump_004_774E:: ; address name
-    ld de, $016E
+    ld de, $016e
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_659C
@@ -9373,119 +8980,119 @@ Jump_004_774E:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C17 ; '*: You've conquered the Power Tower.'
+    ld hl, $0c17 ; '*: You've conquered the Power Tower.'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $01D5 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D5)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2C, story flag $01D5 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01D5)
 ChestItem_TinyMedal_Flag01D5::
-Jump_004_7764:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $01D5
+    ld de, $01d5
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $48, story flag $01D6 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D6)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $48, story flag $01D6 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01D6)
 ChestItem_AGL_Flag01D6::
-Jump_004_7775:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $48
     ld [wScriptParam1], a
-    ld de, $01D6
+    ld de, $01d6
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0A, story flag $01D8 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D8)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0A, story flag $01D8 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01D8)
 ChestItem_SkyBell::
-Jump_004_7786:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0A
+    ld a, $0a
     ld [wScriptParam1], a
-    ld de, $01D8
+    ld de, $01d8
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $01DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DA)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $01DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01DA)
 ChestItem_Herb::
-Jump_004_7797:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
-    ld de, $01DA
+    ld de, $01da
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $51, story flag $01DB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DB)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $51, story flag $01DB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01DB)
 ChestItem_OrcaCape_Flag01DB::
-Jump_004_77A8:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $51
     ld [wScriptParam1], a
-    ld de, $01DB
+    ld de, $01db
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01DC in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DC)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $01DC in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01DC)
 ChestItem_LoveWater_Flag01DC::
-Jump_004_77B9:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $01DC
+    ld de, $01dc
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01DE in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DE)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $01DE in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01DE)
 ChestItem_LoveWater_Flag01DE::
-Jump_004_77CA:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $01DE
+    ld de, $01de
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $44, story flag $01DF in DE: when the flag is clear it gives item $44 (StoneFang) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DF)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $44, story flag $01DF in DE: when the flag is clear it gives item $44 (StoneFang) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01DF)
 ChestItem_StoneFang::
-Jump_004_77DB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $44
     ld [wScriptParam1], a
-    ld de, $01DF
+    ld de, $01df
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0169 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0169_WereWorriedAboutThe)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $0169 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0169_WereWorriedAboutThe)
 ChestItem_Herb_Flag0169::
-Jump_004_77EC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
@@ -9494,76 +9101,76 @@ Jump_004_77EC:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $016B in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016B_TheKingIsSo)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $016B in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg016B_TheKingIsSo)
 ChestItem_LoveWater_Flag016B::
-Jump_004_77FD:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $016B
+    ld de, $016b
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5F, story flag $016C in DE: when the flag is clear it gives item $5F (Sailor) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016C_SoHaveYouDiscovered)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5F, story flag $016C in DE: when the flag is clear it gives item $5F (Sailor) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg016C_SoHaveYouDiscovered)
 ChestItem_Sailor::
-Jump_004_780E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5F
+    ld a, $5f
     ld [wScriptParam1], a
-    ld de, $016C
+    ld de, $016c
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4E, story flag $016D in DE: when the flag is clear it gives item $4E (SilvrCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016D_KingTheCanalIs)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4E, story flag $016D in DE: when the flag is clear it gives item $4E (SilvrCape) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg016D_KingTheCanalIs)
 ChestItem_SilvrCape::
-Jump_004_781F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4E
+    ld a, $4e
     ld [wScriptParam1], a
-    ld de, $016D
+    ld de, $016d
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4C, story flag $016F in DE: when the flag is clear it gives item $4C (MagicCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016F_KingWhatNeverMind)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4C, story flag $016F in DE: when the flag is clear it gives item $4C (MagicCape) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg016F_KingWhatNeverMind)
 ChestItem_MagicCape::
-Jump_004_7830:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4C
+    ld a, $4c
     ld [wScriptParam1], a
-    ld de, $016F
+    ld de, $016f
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4D, story flag $0170 in DE: when the flag is clear it gives item $4D (DracoCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0170_IFeelBadlyFor)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4D, story flag $0170 in DE: when the flag is clear it gives item $4D (DracoCape) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg0170_IFeelBadlyFor)
 ChestItem_DracoCape::
-Jump_004_7841:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4D
+    ld a, $4d
     ld [wScriptParam1], a
     ld de, $0170
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0171 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0171_WhatOpenTheCanal)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $0171 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0171_WhatOpenTheCanal)
 ChestItem_Herb_Flag0171::
-Jump_004_7852:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
@@ -9572,77 +9179,71 @@ Jump_004_7852:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $0172 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0172_KingArrghIKnow)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2C, story flag $0172 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg0172_KingArrghIKnow)
 ChestItem_TinyMedal_Flag0172::
-Jump_004_7863:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
     ld de, $0172
     call StartTreasureFlagDE_B04
     ret
 
-; starts Script_659E (StartScriptAtHL); its first message begins '0 checked the treasure chest. It' (E-0271; was DispatchTalkEvent_Case07_Sub01_Case78)
-; no direct call (reached through a table, a jump or a vector)
+; starts Script_659E (StartScriptAtHL); its first message begins '0 checked the treasure chest. It'
+; (E-0271; was DispatchTalkEvent_Case07_Sub01_Case78)
 ; starts Script_659E: '0 checked the treasure chest. It'
 TalkScript659E_HeroCheckedTheTreasureChest::
-Jump_004_7874:: ; address name
     ld hl, Script_659E
     call StartScriptAtHL_B04
     ret
 
-; starts message $0C1B through StartMessageCommand09HL (script command $09); that string begins 'It's not that easy to win here' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case80)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C1B through StartMessageCommand09HL (script command $09); that string begins
+; 'It's not that easy to win here' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case80)
 TalkMsg0C1B_ItsNotThatEasyToWin::
-Jump_004_787B:: ; address name
-    ld hl, $0C1B ; '*: It's not that easy to'
+    ld hl, $0c1b ; '*: It's not that easy to'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0C1A through StartMessageCommand09HL (script command $09); that string begins 'In this Tower, your opponents come at' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case81)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C1A through StartMessageCommand09HL (script command $09); that string begins 'In
+; this Tower, your opponents come at' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_Case81)
 TalkMsg0C1A_InThisTowerYourOpponents::
-Jump_004_7882:: ; address name
-    ld hl, $0C1A ; '*: In this Tower, your opponents'
+    ld hl, $0c1a ; '*: In this Tower, your opponents'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 130 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_ShowThisIsTheBaffle::
-Jump_004_7889:: ; address name
     ld de, $0173
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C18 ; '*: This is the Baffle Tower.'
+    ld hl, $0c18 ; '*: This is the Baffle Tower.'
     call StartMessageCommand09HL_B04
     ld de, $0173
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C19 ; '*: If you win, you'll earn'
+    ld hl, $0c19 ; '*: If you win, you'll earn'
     call StartMessageCommand09HL_B04
     ret
 
 ; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_Case83)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
 TalkScript659C_0478A5::
-Jump_004_78A5:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C2F, an empty string on the normal path; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $0C2F, an
+; empty string on the normal path; the branching is not interpreted (E-0097)
 ; starts Script_659C
 Talk0C2F::
-Jump_004_78AC:: ; address name
-    ld de, $00D9
+    ld de, $00d9
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_659C
@@ -9650,54 +9251,54 @@ Jump_004_78AC:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C2F ; '*: You've conquered the Baffle Tower.'
+    ld hl, $0c2f ; '*: You've conquered the Baffle Tower.'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0A, story flag $0175 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0175_ImMakingANew)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $0A, story flag $0175 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0175_ImMakingANew)
 ChestItem_SkyBell_Flag0175::
-Jump_004_78C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $0A
+    ld a, $0a
     ld [wScriptParam1], a
     ld de, $0175
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4A, story flag $0176 in DE: when the flag is clear it gives item $4A (Smart) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0176_GaahYoureTooStrong)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4A, story flag $0176 in DE: when the flag is clear it gives item $4A (Smart) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0176_GaahYoureTooStrong)
 ChestItem_Smart::
-Jump_004_78D3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4A
+    ld a, $4a
     ld [wScriptParam1], a
     ld de, $0176
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $0177 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0177_KingWhatSoThats)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $0177 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0177_KingWhatSoThats)
 ChestItem_ExitBell_Flag0177::
-Jump_004_78E4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
     ld de, $0177
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0179 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0179_KingThisShouldSolve)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $0179 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg0179_KingThisShouldSolve)
 ChestItem_Herb_Flag0179::
-Jump_004_78F5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
@@ -9706,211 +9307,206 @@ Jump_004_78F5:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $09, story flag $017A in DE: when the flag is clear it gives item $09 (AwakeSand) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017A_OhYouSayThat)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $09, story flag $017A in DE: when the flag is clear it gives item $09 (AwakeSand) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg017A_OhYouSayThat)
 ChestItem_AwakeSand::
-Jump_004_7906:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $09
     ld [wScriptParam1], a
-    ld de, $017A
+    ld de, $017a
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $61, story flag $017B in DE: when the flag is clear it gives item $61 (Cleric) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017B_TheWellHasAmple)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $61, story flag $017B in DE: when the flag is clear it gives item $61 (Cleric) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg017B_TheWellHasAmple)
 ChestItem_Cleric::
-Jump_004_7917:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $61
     ld [wScriptParam1], a
-    ld de, $017B
+    ld de, $017b
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $017D in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017D_HiDidYouHear)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $017D in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg017D_HiDidYouHear)
 ChestItem_ExitBell_Flag017D::
-Jump_004_7928:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $017D
+    ld de, $017d
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $52, story flag $017E in DE: when the flag is clear it gives item $52 (BraveCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017E_TheKingSolvedOur)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $52, story flag $017E in DE: when the flag is clear it gives item $52 (BraveCape) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg017E_TheKingSolvedOur)
 ChestItem_BraveCape::
-Jump_004_7939:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $52
     ld [wScriptParam1], a
-    ld de, $017E
+    ld de, $017e
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $07, story flag $017F in DE: when the flag is clear it gives item $07 (MoonHerb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017F_OurKingWorkedTo)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $07, story flag $017F in DE: when the flag is clear it gives item $07 (MoonHerb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg017F_OurKingWorkedTo)
 ChestItem_MoonHerb::
-Jump_004_794A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $07
     ld [wScriptParam1], a
-    ld de, $017F
+    ld de, $017f
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $46, story flag $00D6 in DE: when the flag is clear it gives item $46 (MermScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D6_IllShowYouHow)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $46, story flag $00D6 in DE: when the flag is clear it gives item $46 (MermScale) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg00D6_IllShowYouHow)
 ChestItem_MermScale_Flag00D6::
-Jump_004_795B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $46
     ld [wScriptParam1], a
-    ld de, $00D6
+    ld de, $00d6
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $00D7 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D7_HmMyRivalIs)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $00D7 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg00D7_HmMyRivalIs)
 ChestItem_LoveWater_Flag00D7::
-Jump_004_796C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $00D7
+    ld de, $00d7
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $60, story flag $00D8 in DE: when the flag is clear it gives item $60 (Thief) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D8_FinallySomeoneToIgnite)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $60, story flag $00D8 in DE: when the flag is clear it gives item $60 (Thief) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00D8_FinallySomeoneToIgnite)
 ChestItem_Thief::
-Jump_004_797D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $60
     ld [wScriptParam1], a
-    ld de, $00D8
+    ld de, $00d8
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $00DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DA_YouHaveRaisedYour)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $00DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00DA_YouHaveRaisedYour)
 ChestItem_Herb_Flag00DA::
-Jump_004_798E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
-    ld de, $00DA
+    ld de, $00da
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4F, story flag $00DB in DE: when the flag is clear it gives item $4F (GoldCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DB_WhatHowDidYou)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4F, story flag $00DB in DE: when the flag is clear it gives item $4F (GoldCape) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00DB_WhatHowDidYou)
 ChestItem_GoldCape::
-Jump_004_799F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4F
+    ld a, $4f
     ld [wScriptParam1], a
-    ld de, $00DB
+    ld de, $00db
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5D, story flag $00DC in DE: when the flag is clear it gives item $5D (Mage) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DC_AllThoseWhoStood)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5D, story flag $00DC in DE: when the flag is clear it gives item $5D (Mage) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00DC_AllThoseWhoStood)
 ChestItem_Mage::
-Jump_004_79B0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5D
+    ld a, $5d
     ld [wScriptParam1], a
-    ld de, $00DC
+    ld de, $00dc
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $06, story flag $00DD in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DD_LetMeShowYou)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $06, story flag $00DD in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00DD_LetMeShowYou)
 ChestItem_Antidote::
-Jump_004_79C1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
-    ld de, $00DD
+    ld de, $00dd
     call StartTreasureFlagDE_B04
     ret
 
-; starts message $0C33 through StartMessageCommand09HL (script command $09); that string begins 'It's brutal up ahead. I wouldn't push' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_CaseA0)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C33 through StartMessageCommand09HL (script command $09); that string begins
+; 'It's brutal up ahead. I wouldn't push' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_CaseA0)
 TalkMsg0C33_ItsBrutalUpAheadIWouldnt::
-Jump_004_79D2:: ; address name
-    ld hl, $0C33 ; '*: It's brutal up ahead. I'
+    ld hl, $0c33 ; '*: It's brutal up ahead. I'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0C32 through StartMessageCommand09HL (script command $09); that string begins 'The monsters here are awful. I'm losing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_CaseA1)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0C32 through StartMessageCommand09HL (script command $09); that string begins 'The
+; monsters here are awful. I'm losing' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case07_Sub01_CaseA1)
 TalkMsg0C32_TheMonstersHereAreAwfulIm::
-Jump_004_79D9:: ; address name
-    ld hl, $0C32 ; '*: The monsters here are awful.'
+    ld hl, $0c32 ; '*: The monsters here are awful.'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 162 of the `rst $00` table in ElvenVillageTalkEvents
-; no direct call (reached through a table, a jump or a vector)
 ElvenVillageTalkEvents_ShowIfYouveMadeIt::
-Jump_004_79E0:: ; address name
-    ld de, $00DE
+    ld de, $00de
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C30 ; '*: If you've made it to'
+    ld hl, $0c30 ; '*: If you've made it to'
     call StartMessageCommand09HL_B04
-    ld de, $00DE
+    ld de, $00de
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C31 ; '*: This Tower is terribly tough.'
+    ld hl, $0c31 ; '*: This Tower is terribly tough.'
     call StartMessageCommand09HL_B04
     ret
 
 ; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_CaseA3)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
 TalkScript659C_0479FC::
-Jump_004_79FC:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
     ret
 
-; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0C47, an empty string on the normal path; the branching is not interpreted (E-0097)
-; no direct call (reached through a table, a jump or a vector)
+; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
+; constant message(s) depending on story flags and state; the first one in the code is $0C47, an
+; empty string on the normal path; the branching is not interpreted (E-0097)
 ; starts Script_659C
 Talk0C47::
-Jump_004_7A03:: ; address name
-    ld de, $01F6
+    ld de, $01f6
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_659C
@@ -9918,225 +9514,223 @@ Jump_004_7A03:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C47 ; '*: You've conquered the Soul Tower.'
+    ld hl, $0c47 ; '*: You've conquered the Soul Tower.'
     call StartMessageCommand09HL_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $00F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F5_ItIsAnItem)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $00F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00F5_ItIsAnItem)
 ChestItem_ExitBell_Flag00F5::
-Jump_004_7A19:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $00F5
+    ld de, $00f5
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5C, story flag $00F6 in DE: when the flag is clear it gives item $5C (War) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F6_HelloWhatCanI)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5C, story flag $00F6 in DE: when the flag is clear it gives item $5C (War) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00F6_HelloWhatCanI)
 ChestItem_War_Flag00F6::
-Jump_004_7A2A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5C
+    ld a, $5c
     ld [wScriptParam1], a
-    ld de, $00F6
+    ld de, $00f6
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $00F7 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F7_HelloWhatCanI)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $03, story flag $00F7 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00F7_HelloWhatCanI)
 ChestItem_WorldDew_Flag00F7::
-Jump_004_7A3B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
-    ld de, $00F7
+    ld de, $00f7
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $00F9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F9_HelloWhatCanI)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2C, story flag $00F9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg00F9_HelloWhatCanI)
 ChestItem_TinyMedal_Flag00F9::
-Jump_004_7A4C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2C
+    ld a, $2c
     ld [wScriptParam1], a
-    ld de, $00F9
+    ld de, $00f9
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $45, story flag $00FA in DE: when the flag is clear it gives item $45 (SteelFang) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FA_HelloWhatCanI)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $45, story flag $00FA in DE: when the flag is clear it gives item $45 (SteelFang) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg00FA_HelloWhatCanI)
 ChestItem_SteelFang::
-Jump_004_7A5D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $45
     ld [wScriptParam1], a
-    ld de, $00FA
+    ld de, $00fa
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $47, story flag $00FB in DE: when the flag is clear it gives item $47 (DrakScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FB_THEEND)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $47, story flag $00FB in DE: when the flag is clear it gives item $47 (DrakScale) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg00FB_THEEND)
 ChestItem_DrakScale::
-Jump_004_7A6E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $47
     ld [wScriptParam1], a
-    ld de, $00FB
+    ld de, $00fb
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5A, story flag $00FD in DE: when the flag is clear it gives item $5A (Life) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FD_HeyThatsMine0)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5A, story flag $00FD in DE: when the flag is clear it gives item $5A (Life) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00FD_HeyThatsMine0)
 ChestItem_Life::
-Jump_004_7A7F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5A
+    ld a, $5a
     ld [wScriptParam1], a
-    ld de, $00FD
+    ld de, $00fd
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5B, story flag $00FE in DE: when the flag is clear it gives item $5B (Divine) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FE_TerryHereJustTake)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5B, story flag $00FE in DE: when the flag is clear it gives item $5B (Divine) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00FE_TerryHereJustTake)
 ChestItem_Divine::
-Jump_004_7A90:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5B
+    ld a, $5b
     ld [wScriptParam1], a
-    ld de, $00FE
+    ld de, $00fe
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $00FF in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FF_Composing)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $00FF in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg00FF_Composing)
 ChestItem_Herb_Flag00FF::
-Jump_004_7AA1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
-    ld de, $00FF
+    ld de, $00ff
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $50, story flag $01F3 in DE: when the flag is clear it gives item $50 (PltnmCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F3)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $50, story flag $01F3 in DE: when the flag is clear it gives item $50 (PltnmCape) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01F3)
 ChestItem_PltnmCape::
-Jump_004_7AB2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $50
     ld [wScriptParam1], a
-    ld de, $01F3
+    ld de, $01f3
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4B, story flag $01F4 in DE: when the flag is clear it gives item $4B (Wise) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F4)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $4B, story flag $01F4 in DE: when the flag is clear it gives item $4B (Wise) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01F4)
 ChestItem_Wise::
-Jump_004_7AC3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $4B
+    ld a, $4b
     ld [wScriptParam1], a
-    ld de, $01F4
+    ld de, $01f4
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $01F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F5)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $2A, story flag $01F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01F5)
 ChestItem_ExitBell_Flag01F5::
-Jump_004_7AD4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $2A
+    ld a, $2a
     ld [wScriptParam1], a
-    ld de, $01F5
+    ld de, $01f5
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $01F7 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F7)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $01, story flag $01F7 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01F7)
 ChestItem_Herb_Flag01F7::
-Jump_004_7AE5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
-    ld de, $01F7
+    ld de, $01f7
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5E, story flag $01F8 in DE: when the flag is clear it gives item $5E (Fight) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F8)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $5E, story flag $01F8 in DE: when the flag is clear it gives item $5E (Fight) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01F8)
 ChestItem_Fight::
-Jump_004_7AF6:: ; address name
     ld a, $00
     ld [wScriptParam0], a
-    ld a, $5E
+    ld a, $5e
     ld [wScriptParam1], a
-    ld de, $01F8
+    ld de, $01f8
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $49, story flag $01F9 in DE: when the flag is clear it gives item $49 (Starry) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F9)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $49, story flag $01F9 in DE: when the flag is clear it gives item $49 (Starry) and sets the flag
+; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
+; Msg01F9)
 ChestItem_Starry::
-Jump_004_7B07:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $49
     ld [wScriptParam1], a
-    ld de, $01F9
+    ld de, $01f9
     call StartTreasureFlagDE_B04
     ret
 
-; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01FA in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01FA)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wScriptParam0, wScriptParam1
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
+; $02, story flag $01FA in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
+; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
+; (E-0269; was Msg01FA)
 ChestItem_LoveWater_Flag01FA::
-Jump_004_7B18:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
-    ld de, $01FA
+    ld de, $01fa
     call StartTreasureFlagDE_B04
     ret
 
-; talk category 9: the key-world events (Warubou's messages, KeyWorldBossBattle, KeyWorldFloorBattle; E-0286)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToKeyWorldTalkEvents)
-; reads: wTalkEventGroup
+; talk category 9: the key-world events (Warubou's messages, KeyWorldBossBattle,
+; KeyWorldFloorBattle; E-0286)
 KeyWorldTalkEvents::
-Func_004_7B29:: ; address name
     ld a, [wTalkEventGroup]
-    rst $00
+    jumptable
     dw TalkScript5133
     dw KeyWorldTalkEvents_StartScriptAtHL_B04
     dw KeyWorldTalkEvents_StartScriptAtHL_B04_Case02
@@ -10148,34 +9742,26 @@ Func_004_7B29:: ; address name
     dw TalkScript65B8_WarubouWaheySoThisIsIt
 
 ; starts Script_5133 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case09_Sub01_Case00)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5133
 TalkScript5133::
-Jump_004_7B3F:: ; address name
     ld hl, Script_5133
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in KeyWorldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: wDataBank, wScreenTableIndex
-; points at: wKeyWorldFloorState
 KeyWorldTalkEvents_StartScriptAtHL_B04::
-Jump_004_7B46:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     push af
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
-    cp a, $03
+    cp $03
     jr nz, .restore
     pop af
-    ld a, $0F
+    ld a, $0f
     ld [wScreenTableIndex], a
     ld hl, Script_65A3
     call StartScriptAtHL_B04
@@ -10183,7 +9769,7 @@ Jump_004_7B46:: ; address name
 
 .restore:
     pop af
-    add a, a
+    add a
     ld hl, wKeyWorldFloorState
     ld a, $12
     bit 7, [hl]
@@ -10196,15 +9782,10 @@ Jump_004_7B46:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 2 of the `rst $00` table in KeyWorldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wMapType, hPlayerFacing
-; writes: wSpriteSlots, wDataBank
 ; starts Script_65AA: 'Warubou: Wa-hey! You did it, 0!'
 KeyWorldTalkEvents_StartScriptAtHL_B04_Case02::
-Jump_004_7B82:: ; address name
     ld a, [wMapType]
-    cp a, $84
+    cp $84
     jr nz, .call_is_player_at_key_world_goal_kind_trigger
     ld hl, Script_65AA
     call StartScriptAtHL_B04
@@ -10212,7 +9793,7 @@ Jump_004_7B82:: ; address name
 
 .call_is_player_at_key_world_goal_kind_trigger:
     call IsPlayerAtKeyWorldGoalKindTriggerColumn
-    or a, a
+    or a
     ret z
     ld hl, Script_65B1
     call StartScriptAtHL_B04
@@ -10221,59 +9802,57 @@ Jump_004_7B82:: ; address name
     ldh a, [hPlayerFacing]
     inc a
     inc a
-    and a, $03
+    and $03
     ld [wSpriteSlots + $7], a
     ld a, $10
     ld [wDataBank], a
     ret
 
-; A = 1 when the player stands on one of the trigger columns for wKeyWorldGoalKind (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
-; 1 call site from 1 routine (e.g. KeyWorldTalkEvents_StartScriptAtHL_B04_Case02)
-; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
+; A = 1 when the player stands on one of the trigger columns for wKeyWorldGoalKind (1, 7, 8 or 9) on
+; the matching map screen, else 0 (E-0127)
 IsPlayerAtKeyWorldGoalKindTriggerColumn::
-Func_004_7BAB:: ; address name
     ld a, [wKeyWorldGoalKind]
-    cp a, $01
+    cp $01
     jr nz, .cp_07
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr nz, .return_0
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .return_01
-    cp a, $20
+    cp $20
     jr z, .return_01
     jr .return_0
 
 .cp_07:
-    cp a, $07
+    cp $07
     jr nz, .cp_08
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr nz, .return_0
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .return_01
     jr .return_0
 
 .cp_08:
-    cp a, $08
+    cp $08
     jr nz, .cp_09
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr nz, .return_0
     ldh a, [hPlayerX]
-    cp a, $10
+    cp $10
     jr z, .return_01
-    cp a, $30
+    cp $30
     jr z, .return_01
     jr .return_0
 
 .cp_09:
-    cp a, $09
+    cp $09
     jr nz, .return_0
     ldh a, [hMapScreenX]
-    or a, a
+    or a
     jr z, .return_0
 
 .return_01:
@@ -10281,86 +9860,73 @@ Func_004_7BAB:: ; address name
     ret
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
 ; starts Script_5135 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case09_Sub01_Case03)
-; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5135
 TalkScript5135::
-Jump_004_7BF7:: ; address name
     ld hl, Script_5135
     call StartScriptAtHL_B04
     ret
 
-; starts message $0120 through StartMessageCommand09HL (script command $09); that string begins 'Warubou Quit dawdling, warooh!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case09_Sub01_Case04)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0120 through StartMessageCommand09HL (script command $09); that string begins
+; 'Warubou Quit dawdling, warooh!' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case09_Sub01_Case04)
 TalkMsg0120_WarubouQuitDawdlingWarooh::
-Jump_004_7BFE:: ; address name
     ld hl, $0120 ; 'Warubou: Quit dawdling, warooh!'
     call StartMessageCommand09HL_B04
     ret
 
-; starts message $0122 through StartMessageCommand09HL (script command $09); that string begins 'Warubou Wa-hey! You did it, 0! I'll' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case09_Sub01_Case05)
-; no direct call (reached through a table, a jump or a vector)
+; starts message $0122 through StartMessageCommand09HL (script command $09); that string begins
+; 'Warubou Wa-hey! You did it, 0! I'll' (E-0268, the E-0082 shape; was
+; DispatchTalkEvent_Case09_Sub01_Case05)
 TalkMsg0122_WarubouWaheyYouDidItHero::
-Jump_004_7C05:: ; address name
     ld hl, $0122 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageCommand09HL_B04
     ret
 
-; entry 6 of the `rst $00` table in KeyWorldTalkEvents
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldGoalKind
 KeyWorldTalkEvents_ShowWarubouUseAMagic::
-Jump_004_7C0C:: ; address name
     ld a, [wKeyWorldGoalKind]
-    cp a, $05
+    cp $05
     ret z
-    cp a, $07
+    cp $07
     ret z
-    cp a, $08
+    cp $08
     ret z
     ld hl, $0121 ; 'Warubou: Use a Magic Key and'
     call StartMessageCommand09HL_B04
     ret
 
-; sets wDataBank = $10, then starts Script_65AA (StartScriptAtHL); its first message begins 'Warubou Wa-hey! You did it, 0!' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case07)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
+; sets wDataBank = $10, then starts Script_65AA (StartScriptAtHL); its first message begins 'Warubou
+; Wa-hey! You did it, 0!' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case07)
 ; starts Script_65AA: 'Warubou: Wa-hey! You did it, 0!'
 TalkScript65AA_WarubouWaheyYouDidItHero::
-Jump_004_7C1F:: ; address name
     ld a, $10
     ld [wDataBank], a
     ld hl, Script_65AA
     call StartScriptAtHL_B04
     ret
 
-; sets wDataBank = $1F, then starts Script_65B8 (StartScriptAtHL); its first message begins 'Warubou Wa-hey! So, this is it?' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case08)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBank
+; sets wDataBank = $1F, then starts Script_65B8 (StartScriptAtHL); its first message begins 'Warubou
+; Wa-hey! So, this is it?' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case08)
 ; starts Script_65B8: 'Warubou: Wa-hey! So, this is it?'
 TalkScript65B8_WarubouWaheySoThisIsIt::
-Jump_004_7C2B:: ; address name
-    ld a, $1F
+    ld a, $1f
     ld [wDataBank], a
     ld hl, Script_65B8
     call StartScriptAtHL_B04
     ret
 
-; A = 0 unless wInventory + $17 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and returns carry (E-0124)
-; 6 call sites from 6 routines (e.g. Talk07BF_HeroFoundThePretty, Talk07A6_OurDaughtersOnlyMemento, Talk077B_HeroPeeredIntoThe, Talk075F_KiralFetchMeMy, ...)
-; reads: wInventory
-; points at: wInventory
+; A = 0 unless wInventory + $17 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and
+; returns carry (E-0124)
 InventoryHasFreeSlotCheck::
-Func_004_7C37:: ; address name
     ld a, [wInventory + $17]
-    cp a, $FF
+    cp $ff
     jr z, .skip
-    or a, a
+    or a
     jr z, .skip
-    sub a, a
+    sub a
     ret
 
 .skip:
@@ -10368,9 +9934,9 @@ Func_004_7C37:: ; address name
 
 .skip2:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .return_carry
-    or a, a
+    or a
     jr z, .return_carry
     inc hl
     jr .skip2
@@ -10378,4 +9944,4 @@ Func_004_7C37:: ; address name
 .return_carry:
     scf
     ret
-    ds $3AD, $00
+    ds $3ad, $00

@@ -1,112 +1,88 @@
 SECTION "Bank A3", ROMX[$4000], BANK[$A3]
-    db $A3
+    db $a3
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleATK
-GetBattleATK_BankA3:: ; heuristic: follows a terminator; C0
-Func_0A3_4001:: ; address name
+GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleMP_BankA3_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleDEF
-GetBattleDEF_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
-Func_0A3_4006:: ; address name
+GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA3_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMaxHP
-GetBattleMaxHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
-Func_0A3_400B:: ; address name
+GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA3_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMaxMP
-GetBattleMaxMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
-Func_0A3_4010:: ; address name
+GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA3_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleHP
-GetBattleHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
-Func_0A3_4015:: ; address name
+GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleMP_BankA3_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMP
-GetBattleMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
-Func_0A3_401A:: ; address name
+GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleMP_BankA3_Skip
-    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 GetBattleMP_BankA3_Skip::
-Jump_0A3_402E:: ; address name
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-AddDoubleAToHL_BankA3:: ; heuristic: follows a terminator; C0
-Func_0A3_4038:: ; address name
-    add a, a
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
+; appear in 12 banks)
+AddDoubleAToHL_BankA3::
+    add a
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole, wBattleActor
-ActorOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
-Func_0A3_403F:: ; address name
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
+; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+ActorOnLocalSide_BankA3::
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_actor
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_actor:
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole, wBattleTarget
-TargetOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
-Func_0A3_405A:: ; address name
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
+; banks)
+TargetOnLocalSide_BankA3::
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_target
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ret
 
-; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA3[D] (AddAx9ToHL); not reached from traced code (E-0205)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus
+; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA3[D] (AddAx9ToHL); not reached from traced code
+; (E-0205)
 ClearBattleStatusBitsWithMaskD_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_4075:: ; address name
     ld a, d
     ld hl, ClearBitMaskTable_BankA3
     add_a_to_hl
@@ -115,27 +91,26 @@ Func_0A3_4075:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, d
-    and a, [hl]
+    and [hl]
     ld [hl], a
     ret
 
-; E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3).
+; the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 *
+; E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks
+; $05, $A1 and $A3 (E-0205, C1)
 ; record: AND mask
 ClearBitMaskTable_BankA3::
-Data_0A3_408A:: ; address name
-    db $DF ; id 0
-    db $FE ; id 1
+    db $df ; id 0
+    db $fe ; id 1
     db $00 ; id 2
-    db $FD ; id 3
+    db $fd ; id 3
     db $73 ; id 4
-    db $EF ; id 5
-    db $BF ; id 6
+    db $ef ; id 5
+    db $bf ; id 6
 
-; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_4091:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -143,11 +118,9 @@ Func_0A3_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_409E:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -155,11 +128,9 @@ Func_0A3_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_40AB:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -167,11 +138,11 @@ Func_0A3_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
+; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
+; appear in 13 banks)
 PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_40B8:: ; address name
     push hl
     push bc
     ld c, a
@@ -180,57 +151,56 @@ Func_0A3_40B8:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip
     ld l, $09
-    cp a, $40
+    cp $40
     jr nc, .skip
     ld l, $12
 
 .skip:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip2
     ld l, $03
-    cp a, $40
+    cp $40
     jr nc, .skip2
     ld l, $06
 
 .skip2:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip3
     ld l, $01
-    cp a, $40
+    cp $40
     jr nc, .skip3
     ld l, $02
 
 .skip3:
     ld a, l
-    add a, b
+    add b
     pop bc
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
+; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
+; appear in 12 banks)
 CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_410F:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -238,13 +208,13 @@ Func_0A3_410F:: ; address name
     ld c, a
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .set_carry
     ld a, [hl]
-    and a, $0C
+    and $0c
     jr nz, .set_carry
-    xor a, a
+    xor a
     jr .skip
 
 .set_carry:
@@ -256,30 +226,25 @@ Func_0A3_410F:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
+; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
+; appear in 13 banks)
 SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
-Func_0A3_412E:: ; address name
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .done
     ld a, [hl]
-    and a, $0C
+    and $0c
 
 .done:
     pop hl
     ret
 
-; runs Func_0A3_414F, then wSlotMarks[hTemp0] = 3 (E-0122)
-; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
-; reads: hTemp0
-; points at: wSlotMarks
+; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122)
 RunA3414FAndMarkWDA5B3::
-Func_0A3_413F:: ; address name
     call ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld hl, wSlotMarks
@@ -287,74 +252,65 @@ Func_0A3_413F:: ; address name
     ld [hl], $03
     ret
 
-; hTemp0 = the slot for the actor through its side's wFormationSlot0 formation (Data_0A3_4181), $FF when none (E-0124)
-; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, CheckFormationPartnersCanAct, PayActorMPCost, ...)
-; reads: wBattleActor
-; writes: hTemp0
-; points at: wFormationSlot0
+; hTemp0 = the slot for the actor through its side's wFormationSlot0 formation
+; (ActorFormationSlotToTemp0_Data), $FF when none (E-0124)
 ActorFormationSlotToTemp0::
-Func_0A3_414F:: ; address name
     push bc
     ld a, [wBattleActor]
-    and a, $03
+    and $03
     ld c, a
     ld a, [wBattleActor]
-    and a, $04
+    and $04
     ld b, a
     sra a
     sra a
     ld hl, wFormationSlot0
     add_a_to_hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .set_temp02
     sla a
     ld hl, ActorFormationSlotToTemp0_Data
     add_a_to_hl
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jr nz, .set_temp0
     ld a, [hl]
 
 .set_temp0:
-    add a, b
+    add b
 
 .set_temp02:
     ldh [hTemp0], a
     pop bc
     ret
 
-; address loaded by ActorFormationSlotToTemp0
-ActorFormationSlotToTemp0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A3_4181:: ; address name
+ActorFormationSlotToTemp0_Data::
     db $00, $01, $00, $02, $01, $02
 
-; copies 16 bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
-; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_AddWordAtHLToBC_Bank30, RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1)
-; reads: wLinkMode
-; writes: wFormationSlot0, wFormationSlot1
-; points at: wBattleActionChoice, wSavedActionChoices
+; copies 16 bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and
+; outside link battles sets the formation for each side from FindFormationForSide and
+; SaveActionChoicesAndPickFormations_DivideBByA (E-0125)
 SaveActionChoicesAndPickFormations::
-Func_0A3_4187:: ; address name
     ld b, $10
     ld hl, wBattleActionChoice
     ld de, wSavedActionChoices
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
-    ld a, $FF
+    ld a, $ff
     ld [wFormationSlot0], a
     ld [wFormationSlot1], a
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     ret z
     ld de, wBattleActionChoice
     call FindFormationForSide
-    or a, a
+    or a
     jr z, .check_link_mode
     ld de, wBattleActionChoice
     call SaveActionChoicesAndPickFormations_DivideBByA
@@ -362,27 +318,26 @@ Func_0A3_4187:: ; address name
 
 .check_link_mode:
     ld a, [wLinkMode]
-    or a, a
+    or a
     ret z
-    cp a, $02
+    cp $02
     ret z
     ld de, wBattleActionChoice + $8
     call FindFormationForSide
-    or a, a
+    or a
     ret z
     ld de, wBattleActionChoice + $8
     call SaveActionChoicesAndPickFormations_DivideBByA
     ld [wFormationSlot1], a
     ret
 
-; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hTemp0 = its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0 when none applies (E-0172)
-; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
-; reads: wBattleActor, hTemp0, wLinkMode
-; writes: hTemp0
+; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions
+; match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hTemp0 =
+; its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0
+; when none applies (E-0172)
 FindFormationForSide::
-Func_0A3_41CF:: ; address name
     ld a, [wBattleActor]
-    and a, $04
+    and $04
     ldh [hTemp0], a
     ld b, $00
     ld hl, FormationTable
@@ -390,7 +345,7 @@ Func_0A3_41CF:: ; address name
 .skip:
     push hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .skip2
 
 .loop:
@@ -401,11 +356,11 @@ Func_0A3_41CF:: ; address name
 .skip2:
     push de
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .next
     ld c, a
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .restore
     ldh a, [hTemp0]
     call CheckSlotStatusBlock
@@ -419,11 +374,11 @@ Func_0A3_41CF:: ; address name
     inc de
     inc hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .next2
     ld c, a
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .restore
     ldh a, [hTemp0]
     inc a
@@ -439,11 +394,11 @@ Func_0A3_41CF:: ; address name
     inc de
     inc hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .check_link_mode
     ld c, a
     ld a, [de]
-    cp a, c
+    cp c
     jr nz, .restore
     ldh a, [hTemp0]
     inc a
@@ -459,11 +414,11 @@ Func_0A3_41CF:: ; address name
 .check_link_mode:
     pop de
     ld a, [wLinkMode]
-    cp a, $02
+    cp $02
     jr z, .next3
     inc hl
     ld a, [hl]
-    cp a, $01
+    cp $01
     jr nz, .loop
     inc hl
     push bc
@@ -471,7 +426,7 @@ Func_0A3_41CF:: ; address name
     call FormationCompatibilityRoll
     pop hl
     pop bc
-    or a, a
+    or a
     jr z, .loop
     ld a, [hl]
     ldh [hTemp0], a
@@ -493,7 +448,7 @@ Func_0A3_41CF:: ; address name
     call FormationCompatibilityRoll
     pop hl
     pop bc
-    or a, a
+    or a
     jp z, .loop
     ld a, [hl]
     ldh [hTemp0], a
@@ -503,154 +458,155 @@ Func_0A3_41CF:: ; address name
     ld a, $01
     ret
 
-; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
-; 3 call sites from 1 routine (e.g. FindFormationForSide)
-; points at: wBattleStatus3
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
+; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
+; appear in 13 banks)
 SlotHasStatus3Or4Bits_BankA3_4278::
-Func_0A3_4278:: ; address name
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .done
     ld a, [hl]
-    and a, $0C
+    and $0c
 
 .done:
     pop hl
     ret
 
-; E-0172 (C1: SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2).
-; record: action each of the three slots must have chosen ($FF = any); 1 = roll FormationCompatibilityRoll (always rolled in link mode 2); combined action id ($D0-$E3)
+; SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record
+; applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock,
+; SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll
+; when byte 3 is 1 or in link mode 2 (E-0172, C1)
+; record: action each of the three slots must have chosen ($FF = any); 1 = roll
+; FormationCompatibilityRoll (always rolled in link mode 2); combined action id ($D0-$E3)
 FormationTable::
-Data_0A3_4289:: ; address name
-    db $0F, $0F, $FF, $01, $D0 ; id 0
-    db $0F, $FF, $0F, $01, $D0 ; id 1
-    db $FF, $0F, $0F, $01, $D0 ; id 2
-    db $03, $12, $FF, $01, $D1 ; id 3
-    db $03, $FF, $12, $01, $D1 ; id 4
-    db $FF, $03, $12, $01, $D1 ; id 5
-    db $12, $03, $FF, $01, $D1 ; id 6
-    db $12, $FF, $03, $01, $D1 ; id 7
-    db $FF, $12, $03, $01, $D1 ; id 8
-    db $4D, $67, $FF, $01, $D2 ; id 9
-    db $4D, $FF, $67, $01, $D2 ; id 10
-    db $FF, $4D, $67, $01, $D2 ; id 11
-    db $67, $4D, $FF, $01, $D2 ; id 12
-    db $67, $FF, $4D, $01, $D2 ; id 13
-    db $FF, $67, $4D, $01, $D2 ; id 14
-    db $49, $67, $FF, $01, $D3 ; id 15
-    db $49, $FF, $67, $01, $D3 ; id 16
-    db $FF, $49, $67, $01, $D3 ; id 17
-    db $67, $49, $FF, $01, $D3 ; id 18
-    db $67, $FF, $49, $01, $D3 ; id 19
-    db $FF, $67, $49, $01, $D3 ; id 20
-    db $4B, $67, $FF, $01, $D4 ; id 21
-    db $4B, $FF, $67, $01, $D4 ; id 22
-    db $FF, $4B, $67, $01, $D4 ; id 23
-    db $67, $4B, $FF, $01, $D4 ; id 24
-    db $67, $FF, $4B, $01, $D4 ; id 25
-    db $FF, $67, $4B, $01, $D4 ; id 26
-    db $67, $67, $FF, $01, $D5 ; id 27
-    db $67, $FF, $67, $01, $D5 ; id 28
-    db $FF, $67, $67, $01, $D5 ; id 29
-    db $70, $15, $FF, $01, $D6 ; id 30
-    db $70, $FF, $15, $01, $D6 ; id 31
-    db $FF, $70, $15, $01, $D6 ; id 32
-    db $15, $70, $FF, $01, $D6 ; id 33
-    db $15, $FF, $70, $01, $D6 ; id 34
-    db $FF, $15, $70, $01, $D6 ; id 35
-    db $91, $6A, $FF, $01, $D7 ; id 36
-    db $91, $FF, $6A, $01, $D7 ; id 37
-    db $FF, $91, $6A, $01, $D7 ; id 38
-    db $6A, $91, $FF, $01, $D7 ; id 39
-    db $6A, $FF, $91, $01, $D7 ; id 40
-    db $FF, $6A, $91, $01, $D7 ; id 41
-    db $2A, $62, $FF, $01, $D8 ; id 42
-    db $2A, $FF, $62, $01, $D8 ; id 43
-    db $FF, $2A, $62, $01, $D8 ; id 44
-    db $62, $2A, $FF, $01, $D8 ; id 45
-    db $62, $FF, $2A, $01, $D8 ; id 46
-    db $FF, $62, $2A, $01, $D8 ; id 47
-    db $1D, $3D, $FF, $01, $D9 ; id 48
-    db $1D, $FF, $3D, $01, $D9 ; id 49
-    db $FF, $1D, $3D, $01, $D9 ; id 50
-    db $3D, $1D, $FF, $01, $D9 ; id 51
-    db $3D, $FF, $1D, $01, $D9 ; id 52
-    db $FF, $3D, $1D, $01, $D9 ; id 53
-    db $A0, $7C, $FF, $00, $DA ; id 54
-    db $A0, $FF, $7C, $00, $DA ; id 55
-    db $FF, $A0, $7C, $00, $DA ; id 56
-    db $7C, $A0, $FF, $00, $DA ; id 57
-    db $7C, $FF, $A0, $00, $DA ; id 58
-    db $FF, $7C, $A0, $00, $DA ; id 59
-    db $75, $79, $FF, $00, $DB ; id 60
-    db $75, $FF, $79, $00, $DB ; id 61
-    db $FF, $75, $79, $00, $DB ; id 62
-    db $79, $75, $FF, $00, $DB ; id 63
-    db $79, $FF, $75, $00, $DB ; id 64
-    db $FF, $79, $75, $00, $DB ; id 65
-    db $3A, $3C, $FF, $00, $DC ; id 66
-    db $3A, $FF, $3C, $00, $DC ; id 67
-    db $FF, $3A, $3C, $00, $DC ; id 68
-    db $3C, $3A, $FF, $00, $DC ; id 69
-    db $3C, $FF, $3A, $00, $DC ; id 70
-    db $FF, $3C, $3A, $00, $DC ; id 71
-    db $81, $82, $FF, $00, $DD ; id 72
-    db $81, $FF, $82, $00, $DD ; id 73
-    db $FF, $81, $82, $00, $DD ; id 74
-    db $82, $81, $FF, $00, $DD ; id 75
-    db $82, $FF, $81, $00, $DD ; id 76
-    db $FF, $82, $81, $00, $DD ; id 77
-    db $9C, $92, $FF, $00, $DE ; id 78
-    db $9C, $FF, $92, $00, $DE ; id 79
-    db $FF, $9C, $92, $00, $DE ; id 80
-    db $92, $9C, $FF, $00, $DE ; id 81
-    db $92, $FF, $9C, $00, $DE ; id 82
-    db $FF, $92, $9C, $00, $DE ; id 83
-    db $32, $77, $FF, $00, $DF ; id 84
-    db $32, $FF, $77, $00, $DF ; id 85
-    db $FF, $32, $77, $00, $DF ; id 86
-    db $77, $32, $FF, $00, $DF ; id 87
-    db $77, $FF, $32, $00, $DF ; id 88
-    db $FF, $77, $32, $00, $DF ; id 89
-    db $95, $96, $FF, $00, $E0 ; id 90
-    db $95, $FF, $96, $00, $E0 ; id 91
-    db $FF, $95, $96, $00, $E0 ; id 92
-    db $96, $95, $FF, $00, $E0 ; id 93
-    db $96, $FF, $95, $00, $E0 ; id 94
-    db $FF, $96, $95, $00, $E0 ; id 95
-    db $34, $78, $FF, $00, $E1 ; id 96
-    db $34, $FF, $78, $00, $E1 ; id 97
-    db $FF, $34, $78, $00, $E1 ; id 98
-    db $78, $34, $FF, $00, $E1 ; id 99
-    db $78, $FF, $34, $00, $E1 ; id 100
-    db $FF, $78, $34, $00, $E1 ; id 101
-    db $98, $94, $FF, $00, $E2 ; id 102
-    db $98, $FF, $94, $00, $E2 ; id 103
-    db $FF, $98, $94, $00, $E2 ; id 104
-    db $94, $98, $FF, $00, $E2 ; id 105
-    db $94, $FF, $98, $00, $E2 ; id 106
-    db $FF, $94, $98, $00, $E2 ; id 107
-    db $8A, $9F, $FF, $00, $E3 ; id 108
-    db $8A, $FF, $9F, $00, $E3 ; id 109
-    db $FF, $8A, $9F, $00, $E3 ; id 110
-    db $9F, $8A, $FF, $00, $E3 ; id 111
-    db $9F, $FF, $8A, $00, $E3 ; id 112
-    db $FF, $9F, $8A, $00, $E3 ; id 113
+    db $0f, $0f, $ff, $01, $d0 ; id 0
+    db $0f, $ff, $0f, $01, $d0 ; id 1
+    db $ff, $0f, $0f, $01, $d0 ; id 2
+    db $03, $12, $ff, $01, $d1 ; id 3
+    db $03, $ff, $12, $01, $d1 ; id 4
+    db $ff, $03, $12, $01, $d1 ; id 5
+    db $12, $03, $ff, $01, $d1 ; id 6
+    db $12, $ff, $03, $01, $d1 ; id 7
+    db $ff, $12, $03, $01, $d1 ; id 8
+    db $4d, $67, $ff, $01, $d2 ; id 9
+    db $4d, $ff, $67, $01, $d2 ; id 10
+    db $ff, $4d, $67, $01, $d2 ; id 11
+    db $67, $4d, $ff, $01, $d2 ; id 12
+    db $67, $ff, $4d, $01, $d2 ; id 13
+    db $ff, $67, $4d, $01, $d2 ; id 14
+    db $49, $67, $ff, $01, $d3 ; id 15
+    db $49, $ff, $67, $01, $d3 ; id 16
+    db $ff, $49, $67, $01, $d3 ; id 17
+    db $67, $49, $ff, $01, $d3 ; id 18
+    db $67, $ff, $49, $01, $d3 ; id 19
+    db $ff, $67, $49, $01, $d3 ; id 20
+    db $4b, $67, $ff, $01, $d4 ; id 21
+    db $4b, $ff, $67, $01, $d4 ; id 22
+    db $ff, $4b, $67, $01, $d4 ; id 23
+    db $67, $4b, $ff, $01, $d4 ; id 24
+    db $67, $ff, $4b, $01, $d4 ; id 25
+    db $ff, $67, $4b, $01, $d4 ; id 26
+    db $67, $67, $ff, $01, $d5 ; id 27
+    db $67, $ff, $67, $01, $d5 ; id 28
+    db $ff, $67, $67, $01, $d5 ; id 29
+    db $70, $15, $ff, $01, $d6 ; id 30
+    db $70, $ff, $15, $01, $d6 ; id 31
+    db $ff, $70, $15, $01, $d6 ; id 32
+    db $15, $70, $ff, $01, $d6 ; id 33
+    db $15, $ff, $70, $01, $d6 ; id 34
+    db $ff, $15, $70, $01, $d6 ; id 35
+    db $91, $6a, $ff, $01, $d7 ; id 36
+    db $91, $ff, $6a, $01, $d7 ; id 37
+    db $ff, $91, $6a, $01, $d7 ; id 38
+    db $6a, $91, $ff, $01, $d7 ; id 39
+    db $6a, $ff, $91, $01, $d7 ; id 40
+    db $ff, $6a, $91, $01, $d7 ; id 41
+    db $2a, $62, $ff, $01, $d8 ; id 42
+    db $2a, $ff, $62, $01, $d8 ; id 43
+    db $ff, $2a, $62, $01, $d8 ; id 44
+    db $62, $2a, $ff, $01, $d8 ; id 45
+    db $62, $ff, $2a, $01, $d8 ; id 46
+    db $ff, $62, $2a, $01, $d8 ; id 47
+    db $1d, $3d, $ff, $01, $d9 ; id 48
+    db $1d, $ff, $3d, $01, $d9 ; id 49
+    db $ff, $1d, $3d, $01, $d9 ; id 50
+    db $3d, $1d, $ff, $01, $d9 ; id 51
+    db $3d, $ff, $1d, $01, $d9 ; id 52
+    db $ff, $3d, $1d, $01, $d9 ; id 53
+    db $a0, $7c, $ff, $00, $da ; id 54
+    db $a0, $ff, $7c, $00, $da ; id 55
+    db $ff, $a0, $7c, $00, $da ; id 56
+    db $7c, $a0, $ff, $00, $da ; id 57
+    db $7c, $ff, $a0, $00, $da ; id 58
+    db $ff, $7c, $a0, $00, $da ; id 59
+    db $75, $79, $ff, $00, $db ; id 60
+    db $75, $ff, $79, $00, $db ; id 61
+    db $ff, $75, $79, $00, $db ; id 62
+    db $79, $75, $ff, $00, $db ; id 63
+    db $79, $ff, $75, $00, $db ; id 64
+    db $ff, $79, $75, $00, $db ; id 65
+    db $3a, $3c, $ff, $00, $dc ; id 66
+    db $3a, $ff, $3c, $00, $dc ; id 67
+    db $ff, $3a, $3c, $00, $dc ; id 68
+    db $3c, $3a, $ff, $00, $dc ; id 69
+    db $3c, $ff, $3a, $00, $dc ; id 70
+    db $ff, $3c, $3a, $00, $dc ; id 71
+    db $81, $82, $ff, $00, $dd ; id 72
+    db $81, $ff, $82, $00, $dd ; id 73
+    db $ff, $81, $82, $00, $dd ; id 74
+    db $82, $81, $ff, $00, $dd ; id 75
+    db $82, $ff, $81, $00, $dd ; id 76
+    db $ff, $82, $81, $00, $dd ; id 77
+    db $9c, $92, $ff, $00, $de ; id 78
+    db $9c, $ff, $92, $00, $de ; id 79
+    db $ff, $9c, $92, $00, $de ; id 80
+    db $92, $9c, $ff, $00, $de ; id 81
+    db $92, $ff, $9c, $00, $de ; id 82
+    db $ff, $92, $9c, $00, $de ; id 83
+    db $32, $77, $ff, $00, $df ; id 84
+    db $32, $ff, $77, $00, $df ; id 85
+    db $ff, $32, $77, $00, $df ; id 86
+    db $77, $32, $ff, $00, $df ; id 87
+    db $77, $ff, $32, $00, $df ; id 88
+    db $ff, $77, $32, $00, $df ; id 89
+    db $95, $96, $ff, $00, $e0 ; id 90
+    db $95, $ff, $96, $00, $e0 ; id 91
+    db $ff, $95, $96, $00, $e0 ; id 92
+    db $96, $95, $ff, $00, $e0 ; id 93
+    db $96, $ff, $95, $00, $e0 ; id 94
+    db $ff, $96, $95, $00, $e0 ; id 95
+    db $34, $78, $ff, $00, $e1 ; id 96
+    db $34, $ff, $78, $00, $e1 ; id 97
+    db $ff, $34, $78, $00, $e1 ; id 98
+    db $78, $34, $ff, $00, $e1 ; id 99
+    db $78, $ff, $34, $00, $e1 ; id 100
+    db $ff, $78, $34, $00, $e1 ; id 101
+    db $98, $94, $ff, $00, $e2 ; id 102
+    db $98, $ff, $94, $00, $e2 ; id 103
+    db $ff, $98, $94, $00, $e2 ; id 104
+    db $94, $98, $ff, $00, $e2 ; id 105
+    db $94, $ff, $98, $00, $e2 ; id 106
+    db $ff, $94, $98, $00, $e2 ; id 107
+    db $8a, $9f, $ff, $00, $e3 ; id 108
+    db $8a, $ff, $9f, $00, $e3 ; id 109
+    db $ff, $8a, $9f, $00, $e3 ; id 110
+    db $9f, $8a, $ff, $00, $e3 ; id 111
+    db $9f, $ff, $8a, $00, $e3 ; id 112
+    db $ff, $9f, $8a, $00, $e3 ; id 113
     db $00 ; end
 
-; picks the slot pair by B / 3, reads PersonalityCompatibility[personality of the second][personality of the first] + 1, multiplies it by the pair's wSlotTrait sum and by FormationChanceFactors[action - $D0], divides by 10 (capped at 255) and returns A = 1 when a random 0-99 is below that (E-0172)
-; 2 call sites from 1 routine (e.g. FindFormationForSide)
-; reads: wSlotTrait, hTemp0, wRandomLo
-; writes: hTemp0
+; picks the slot pair by B / 3, reads PersonalityCompatibility[personality of the
+; second][personality of the first] + 1, multiplies it by the pair's wSlotTrait sum and by
+; FormationChanceFactors[action - $D0], divides by 10 (capped at 255) and returns A = 1 when a
+; random 0-99 is below that (E-0172)
 FormationCompatibilityRoll::
-Func_0A3_44C4:: ; address name
     push hl
     ld a, $03
     call DivideBByA
-    or a, a
+    or a
     jr z, .call_personality_index_of_slot_bank_a3_497_e
     dec a
     jr z, .call_personality_index_of_slot_bank_a3_497_e2
@@ -669,10 +625,10 @@ Func_0A3_44C4:: ; address name
     pop af
     add_a_to_hl
     ld a, l
-    add a, $B7
+    add $b7
     ld l, a
     ld a, h
-    adc a, $45
+    adc $45
     ld h, a
     ld a, [hl]
     inc a
@@ -681,7 +637,7 @@ Func_0A3_44C4:: ; address name
     ld c, a
     ld b, $00
     ld a, [wSlotTrait + $2]
-    add a, c
+    add c
     ld c, a
     jr nc, .skip
     inc b
@@ -705,10 +661,10 @@ Func_0A3_44C4:: ; address name
     pop af
     add_a_to_hl
     ld a, l
-    add a, $B7
+    add $b7
     ld l, a
     ld a, h
-    adc a, $45
+    adc $45
     ld h, a
     ld a, [hl]
     inc a
@@ -717,7 +673,7 @@ Func_0A3_44C4:: ; address name
     ld c, a
     ld b, $00
     ld a, [wSlotTrait + $1]
-    add a, c
+    add c
     ld c, a
     jr nc, .skip2
     inc b
@@ -741,10 +697,10 @@ Func_0A3_44C4:: ; address name
     pop af
     add_a_to_hl
     ld a, l
-    add a, $B7
+    add $b7
     ld l, a
     ld a, h
-    adc a, $45
+    adc $45
     ld h, a
     ld a, [hl]
     inc a
@@ -753,7 +709,7 @@ Func_0A3_44C4:: ; address name
     ld c, a
     ld b, $00
     ld a, [wSlotTrait + $2]
-    add a, c
+    add c
     ld c, a
     jr nc, .read_temp0
     inc b
@@ -765,62 +721,63 @@ Func_0A3_44C4:: ; address name
     ld b, e
     pop hl
     ld a, [hl]
-    sub a, $D0
+    sub $d0
     ld hl, FormationChanceFactors
     add_a_to_hl
     ld a, [hl]
     call Multiply8By16
-    ld a, $0A
+    ld a, $0a
     call DivideHLByA
     ld a, h
-    or a, a
+    or a
     jr z, .loop
-    ld l, $FF
+    ld l, $ff
 
 .loop:
     call AdvanceRandom
     ld a, [wRandomLo]
-    and a, $7F
-    cp a, $64
+    and $7f
+    cp $64
     jr nc, .loop
-    cp a, l
+    cp l
     jr c, .return_01
-    xor a, a
+    xor a
     ret
 
 .return_01:
     ld a, $01
     ret
 
-; E-0172 (C1: the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it).
+; the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by
+; FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it
+; (E-0172, C1)
 ; record: factor of this combined action in the roll
 FormationChanceFactors::
-Data_0A3_45A3:: ; address name
-    db $0A ; id 208
+    db $0a ; id 208
     db $14 ; id 209
     db $32 ; id 210
     db $32 ; id 211
     db $32 ; id 212
-    db $1E ; id 213
+    db $1e ; id 213
     db $14 ; id 214
     db $64 ; id 215
     db $64 ; id 216
-    db $0A ; id 217
+    db $0a ; id 217
     db $50 ; id 218
     db $50 ; id 219
     db $32 ; id 220
-    db $3C ; id 221
-    db $3C ; id 222
+    db $3c ; id 221
+    db $3c ; id 222
     db $28 ; id 223
     db $64 ; id 224
     db $50 ; id 225
     db $64 ; id 226
-    db $0A ; id 227
+    db $0a ; id 227
 
-; E-0172 (C1: the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917).
+; the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the
+; two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917 (E-0172, C1)
 ; record: value for the first slot's personality index 0-31 (27 used)
 PersonalityCompatibility::
-Data_0A3_45B7:: ; address name
     db $08, $09, $02, $07, $06, $05, $02, $06, $07, $08, $07, $04, $06, $07, $07, $06, $06, $04, $07, $06, $09, $07, $08, $02, $08, $03, $04, $00, $00, $00, $00, $00 ; id 0
     db $09, $08, $03, $07, $07, $03, $06, $07, $07, $08, $08, $05, $07, $09, $08, $07, $08, $05, $08, $03, $02, $08, $08, $03, $08, $05, $09, $00, $00, $00, $00, $00 ; id 1
     db $02, $03, $05, $07, $06, $02, $07, $06, $06, $06, $03, $02, $07, $08, $02, $09, $02, $01, $08, $07, $01, $08, $07, $02, $08, $08, $03, $00, $00, $00, $00, $00 ; id 2
@@ -849,18 +806,14 @@ Data_0A3_45B7:: ; address name
     db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
-; only called from SaveActionChoicesAndPickFormations (E-0047)
-; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
-; reads: hTemp0
 SaveActionChoicesAndPickFormations_DivideBByA::
-Func_0A3_4917:: ; address name
     push bc
     push de
     ld a, $03
     call DivideBByA
     pop de
     pop bc
-    or a, a
+    or a
     jr z, .read_temp0
     dec a
     jr z, .read_temp02
@@ -873,7 +826,7 @@ Func_0A3_4917:: ; address name
     inc de
     ld [de], a
     dec de
-    ld a, $FF
+    ld a, $ff
     ld [de], a
     inc de
     inc de
@@ -892,7 +845,7 @@ Func_0A3_4917:: ; address name
     dec de
     dec de
     dec de
-    ld a, $FF
+    ld a, $ff
     ld [de], a
     inc de
     inc de
@@ -911,7 +864,7 @@ Func_0A3_4917:: ; address name
     inc de
     ld [de], a
     dec de
-    ld a, $FF
+    ld a, $ff
     ld [de], a
     inc de
     inc de
@@ -920,35 +873,30 @@ Func_0A3_4917:: ; address name
     ret
 
 ; hTemp0 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
-; 1 call site from 1 routine (e.g. RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3)
-; reads: wBattleActor
-; writes: hTemp0
-; points at: wBattleActionChoice
 ActorActionIsD0ToE3::
-Func_0A3_4960:: ; address name
     ld a, [wBattleActor]
-    add a, a
+    add a
     ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
-    cp a, $D0
+    cp $d0
     jr c, .clear_temp0
-    cp a, $E4
+    cp $e4
     jr nc, .clear_temp0
     ld a, $01
     ldh [hTemp0], a
     ret
 
 .clear_temp0:
-    xor a, a
+    xor a
     ldh [hTemp0], a
     ret
 
-; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; 6 call sites from 1 routine (e.g. FormationCompatibilityRoll)
-; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
+; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
+; appear in 13 banks)
 PersonalityIndexOfSlot_BankA3_497E::
-Func_0A3_497E:: ; address name
     push hl
     push bc
     ld c, a
@@ -957,68 +905,62 @@ Func_0A3_497E:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip
     ld l, $09
-    cp a, $40
+    cp $40
     jr nc, .skip
     ld l, $12
 
 .skip:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip2
     ld l, $03
-    cp a, $40
+    cp $40
     jr nc, .skip2
     ld l, $06
 
 .skip2:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip3
     ld l, $01
-    cp a, $40
+    cp $40
     jr nc, .skip3
     ld l, $02
 
 .skip3:
     ld a, l
-    add a, b
+    add b
     pop bc
     pop hl
     ret
 
-; only called from RollRandomLoBelowChance (E-0047)
-; 1 call site from 1 routine (e.g. RollRandomLoBelowChance)
-; reads: wLinkMode, wBattleActor
-; writes: hTemp0
-; points at: wBattleMonsterId
 RollRandomLoBelowChance_WriteTemp0::
-Func_0A3_49D5:: ; address name
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr z, .check_battle_actor
-    cp a, $02
+    cp $02
     jr nz, .read_battle_actor
 
 .check_battle_actor:
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     jr c, .read_battle_actor
     ld de, MonsterResolveChanceTable_Foes
     jr .read_battle_actor2
@@ -1028,7 +970,7 @@ Func_0A3_49D5:: ; address name
 
 .read_battle_actor2:
     ld a, [wBattleActor]
-    add a, a
+    add a
     ld hl, wBattleMonsterId
     add_a_to_hl
     deref_hl
@@ -1037,34 +979,31 @@ Func_0A3_49D5:: ; address name
     ldh [hTemp0], a
     ret
 
-; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wSlotMarks[target] = 3 (E-0124)
-; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wBattleTarget
-; points at: wBattleActionChoice, wSlotMarks
+; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with
+; target $FF; others set wSlotMarks[target] = 3 (E-0124)
 CancelTargetActionUnlessSpecial::
-Func_0A3_4A02:: ; address name
     ld a, [wBattleTarget]
-    add a, a
+    add a
     ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
-    cp a, $00
+    cp $00
     ret z
-    cp a, $AC
+    cp $ac
     ret z
-    cp a, $CC
+    cp $cc
     ret z
-    cp a, $CD
+    cp $cd
     ret z
-    cp a, $CE
+    cp $ce
     ret z
-    cp a, $CF
+    cp $cf
     ret z
-    cp a, $D0
+    cp $d0
     jr nc, .read_battle_target
     ld [hl], $00
     inc hl
-    ld [hl], $FF
+    ld [hl], $ff
     ret
 
 .read_battle_target:
@@ -1074,11 +1013,9 @@ Func_0A3_4A02:: ; address name
     ld [hl], $03
     ret
 
-; removes the first byte equal to C from the 8-byte queue at wActionQueue, shifting later bytes down and filling with $FF (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wActionQueue
-RemoveCFromActionQueue_A3:: ; heuristic: follows a terminator; C0
-Func_0A3_4A39:: ; address name
+; removes the first byte equal to C from the 8-byte queue at wActionQueue, shifting later bytes down
+; and filling with $FF (E-0124)
+RemoveCFromActionQueue_A3::
     push de
     ld hl, wActionQueue
     ld b, $08
@@ -1088,20 +1025,20 @@ Func_0A3_4A39:: ; address name
     bit 0, d
     jr nz, .next
     ld a, [hl]
-    cp a, c
+    cp c
     jr nz, .next2
     ld d, $01
 
 .next:
     inc hl
     ld a, [hl]
-    ld [hl], $FF
+    ld [hl], $ff
     dec hl
     ld [hl], a
     inc hl
     dec b
     jr nz, .loop
-    ld [hl], $FF
+    ld [hl], $ff
     pop de
     ret
 
@@ -1112,21 +1049,16 @@ Func_0A3_4A39:: ; address name
     pop de
     ret
 
-; only called from ResolveStepBegin (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStepBegin)
-; reads: wBattleTarget
-; points at: wSlotChoices
 ResolveStepBegin_AdvanceRandom::
-Func_0A3_4A5F:: ; address name
     call AdvanceRandom
-    ld a, $FF
+    ld a, $ff
     ld hl, wSlotChoices
     ld bc, $0003
     call FillBytes
     ld a, [wBattleTarget]
     ld d, a
-    and a, $04
-    xor a, $04
+    and $04
+    xor $04
     ld c, a
     ld b, $03
     ld e, $00
@@ -1135,7 +1067,7 @@ Func_0A3_4A5F:: ; address name
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    cp a, d
+    cp d
     jr z, .loop
     ld a, e
     ld hl, wSlotChoices
@@ -1148,9 +1080,9 @@ Func_0A3_4A5F:: ; address name
     dec b
     jr nz, .loop
     ld a, e
-    or a, a
+    or a
     jr nz, .skip
-    ld c, $FF
+    ld c, $ff
     ret
 
 .skip:
@@ -1166,29 +1098,25 @@ Func_0A3_4A5F:: ; address name
     ld c, a
     ret
 
-; only called from ActionEffect_Chance (E-0047)
-; 1 call site from 1 routine (e.g. ActionEffect_Chance)
-; reads: wRandomLo, wLinkMode, wBattleKind, wBattleActor
 ActionEffect_Chance_AdvanceRandom::
-Func_0A3_4AAF:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     ld b, a
-    ld a, $0E
+    ld a, $0e
     call DivideBByA
     ld hl, ActionEffect_Chance_AdvanceRandom_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
     ld a, [wLinkMode]
-    or a, a
+    or a
     jr nz, .skip2
     ld a, [wBattleKind]
-    cp a, $02
+    cp $02
     jr z, .skip
-    cp a, $03
+    cp $03
     jr z, .skip
-    cp a, $05
+    cp $05
     jr z, .skip
     ld a, [wBattleActor]
     bit 2, a
@@ -1197,36 +1125,29 @@ Func_0A3_4AAF:: ; address name
 
 .skip:
     ld a, c
-    cp a, $B3
+    cp $b3
     jr z, ActionEffect_Chance_AdvanceRandom
-    cp a, $B4
+    cp $b4
     jr z, ActionEffect_Chance_AdvanceRandom
-    cp a, $B6
+    cp $b6
     jr z, ActionEffect_Chance_AdvanceRandom
-    cp a, $BD
+    cp $bd
     jr z, ActionEffect_Chance_AdvanceRandom
 
 .skip2:
     ld a, c
-    cp a, $B0
+    cp $b0
     jr z, ActionEffect_Chance_AdvanceRandom
-    cp a, $B2
+    cp $b2
     jr z, ActionEffect_Chance_AdvanceRandom
     ret
 
-; address loaded by ActionEffect_Chance_AdvanceRandom
-ActionEffect_Chance_AdvanceRandom_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A3_4AFD:: ; address name
-    db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
+ActionEffect_Chance_AdvanceRandom_Data::
+    db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 
-; the same 76 bytes as StoreBattleStateToPartyRecords (A0:5491)
-; 1 call site from 1 routine (e.g. BattleEnd_Step7_StartPaletteFade)
-; reads: wPartyCount
-; writes: rRAMG
-; points at: wPartyList, wBattleBuffer72
+; the same 76 bytes as StoreBattleStateToPartyRecords (StoreBattleStateToPartyRecords)
 StoreBattleStateToPartyRecords_BankA3::
-Func_0A3_4B0B:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
     ld b, a
@@ -1236,7 +1157,7 @@ Func_0A3_4B0B:: ; address name
 .loop:
     inc de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .call_clamp_party_hp_and_mp_to_max
     dec de
     push hl
@@ -1245,7 +1166,7 @@ Func_0A3_4B0B:: ; address name
     call SRAMRecordAddress
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
     ld [hl], a
@@ -1256,7 +1177,7 @@ Func_0A3_4B0B:: ; address name
     call SRAMRecordAddress
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
     ld [hl], a
@@ -1267,7 +1188,7 @@ Func_0A3_4B0B:: ; address name
     call SRAMRecordAddress
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     pop hl
     inc hl
     dec b
@@ -1275,14 +1196,16 @@ Func_0A3_4B0B:: ; address name
 
 .call_clamp_party_hp_and_mp_to_max:
     farcall ClampPartyHPAndMPToMax
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; E-0204 (C1: RollRandomLoBelowChance_Sub01 reads the byte at $4B57 + the actor's wBattleMonsterId for the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id).
+; RollRandomLoBelowChance_Sub01 reads the byte at $4B57 + the actor's wBattleMonsterId for the
+; party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance
+; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
+; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 ; record: chance class 0-3
 MonsterResolveChanceTable::
-Data_0A3_4B57:: ; address name
     db $00 ; id 0
     db $02 ; id 1 DrakSlime
     db $02 ; id 2 SpotSlime
@@ -1668,10 +1591,11 @@ Data_0A3_4B57:: ; address name
     db $03 ; id 382 Kagebou
     db $00 ; id 383 ?
 
-; E-0204 (C1: RollRandomLoBelowChance_Sub01 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id).
-; record: chance class 0-3
+; RollRandomLoBelowChance_Sub01 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers
+; 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance
+; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
+; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 MonsterResolveChanceTable_Foes::
-Data_0A3_4CD7:: ; address name
     db $00 ; id 0
     db $00 ; id 1 DrakSlime
     db $00 ; id 2 SpotSlime
@@ -2056,4 +1980,4 @@ Data_0A3_4CD7:: ; address name
     db $00 ; id 381 Dimensaur
     db $03 ; id 382 Kagebou
     db $00 ; id 383 ?
-    ds $31A9, $00
+    ds $31a9, $00

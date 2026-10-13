@@ -15,7 +15,7 @@ As of **2026-09-12**. Stage: **planning baseline complete; implementation not st
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
 | Working platform | Windows / PowerShell | Observed workspace environment |
 
-Decisions record: **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal). Revisit proposals if the baseline build exposes a better option; record the reason.
+Decisions record: **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
 
 ## Session 2 update (2026-10-09): matching build exists
 
@@ -54,6 +54,18 @@ Disassembler run (2026-10-09, `python -I -u tools/disasm_all.py`, progress in st
 Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced code look like data (compressed graphics, palettes, pointer tables), not missed code; evidence and caveats in [E-0008](EVIDENCE_LOG.md). Heuristic rules and the one failure found are in E-0009. Reproduce: `python -I -u tools/disasm_all.py` (about 2 minutes, progress on stderr), then `python -I tools/build.py --out build/runN`.
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
+
+## Source presentation (2026-10-13, decision D-005)
+
+`src/` is now written for readers, with the pret disassemblies (pokered) as the model. `tools/disasm_all.py` writes the annotated analysis listing to `build/listing/` (untracked, regenerated on every run), and `tools/present.py` writes `src/banks/` from it:
+
+- no address-name aliases (`Func_BBB_AAAA`) or `; heuristic: ...` tags on labels;
+- no machine-made cross-reference comments (call sites, reads/writes, "only called from");
+- a comment repeated on every record of a table is written once;
+- address names and `BB:AAAA` in comments become label names; evidence ids move to the end of the comment; long comments wrap at 100 columns;
+- pret instruction spelling: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, and the `jumptable` macro for `rst $00`.
+
+The instructions and data lines are unchanged, so the ROM is identical (build/run473). `tests/test_present.py` checks that `src/banks` is exactly the presented listing and that no code or data line is lost. The analysis tools and the tests that check annotations read `build/listing/`, so run `tools/disasm_all.py` before the suite. Confidence and evidence of every name stay in `config/` and in the listing. `tools/readability.py` measures what still reads as machine output.
 
 ## Readability state (2026-10-12, after E-0308)
 

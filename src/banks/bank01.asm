@@ -2,17 +2,14 @@ SECTION "Bank 01", ROMX[$4000], BANK[$01]
     db $01
 
 ; start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode0_Init)
-; writes: wDebugCursor, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, wDebugSubState, wDebugCounter, ...
 GameMode0_Init::
-Func_001_4001:: ; address name
     ld hl, vTiles1
     ld de, $1007
     call FillTilesRequest
     ld hl, vTiles2
     ld de, $1007
     call FillTilesRequest
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
@@ -21,24 +18,22 @@ Func_001_4001:: ; address name
     ld [wDebugState], a
     ld [wDebugSubState], a
     ld [wDebugCounter], a
-    xor a, a
+    xor a
     ld [wDebugByteF6], a
     ld [wDebugByteF7], a
     call DebugMode_InitByModeState
-    ld a, $FC
+    ld a, $fc
     call StartPaletteFade
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; jumps by wModeState to the init routine of each debug screen (menu, map editor, automap, picture viewer, sound test, battle setup, results, staff roll, skill viewer, record viewer, message test)
-; 1 call site from 1 routine (e.g. GameMode0_Init)
-; reads: wModeState
+; jumps by wModeState to the init routine of each debug screen (menu, map editor, automap, picture
+; viewer, sound test, battle setup, results, staff roll, skill viewer, record viewer, message test)
 DebugMode_InitByModeState::
-Func_001_4045:: ; address name
     ld a, [wModeState]
-    rst $00
+    jumptable
     dw DebugMainMenu_Init
     dw DebugMainMenu_Init
     dw DebugMapEditor_Init
@@ -53,10 +48,7 @@ Func_001_4045:: ; address name
     dw DebugMessageTest_Init
 
 ; init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextCursorLo, wTextCursorHi, ...
 DebugMessageTest_Init::
-Jump_001_4061:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
@@ -68,7 +60,7 @@ Jump_001_4061:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -83,42 +75,42 @@ Jump_001_4061:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld hl, vBGMap0 + $1C1
+    ld hl, vBGMap0 + $1c1
     ld a, l
     ld [wTextCursorLo], a
     ld a, h
     ld [wTextCursorHi], a
     ld hl, vTiles2 + $200
     ld de, Tiles2Plus200Tiles_1F_4160
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $210
     ld de, Tiles2Plus210Tiles_1F_4130
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $220
     ld de, Tiles1Plus6E0Tiles_1F_4180
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $230
     ld de, Tiles2Plus230Tiles_1F_4190
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $240
     ld de, Tiles2Plus240Tiles_1F_4170
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $250
     ld de, Tiles2Plus250Tiles_1F_41D0
-    ld b, $1F
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
@@ -132,27 +124,27 @@ Jump_001_4061:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRectFromBankToVRAM
-    xor a, a
+    xor a
     ld [wMenuState], a
-    xor a, a
+    xor a
     ld [wTemp0], a
     ld [wTemp1], a
-    xor a, a
+    xor a
     ld [wMenuRowCount], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_412F::
-Data_001_412F:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
-    db $00, $00, $00, $00, $20, $21, $1B, $22, $23, $00, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 3
+    db $00, $00, $00, $00, $20, $21, $1b, $22, $23, $00, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 3
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
-    db $00, $00, $00, $00, $24, $1E, $25, $22, $23, $10, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 5
+    db $00, $00, $00, $00, $24, $1e, $25, $22, $23, $10, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 5
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 6
-    db $00, $00, $00, $00, $24, $1E, $25, $22, $23, $11, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 7
+    db $00, $00, $00, $00, $24, $1e, $25, $22, $23, $11, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 7
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
@@ -165,11 +157,8 @@ Data_001_412F:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; init for debug-mode state 10: the screen shows the monster record viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wStringCategory, wStringIndex
 DebugMonsterRecordViewer_Init::
-Jump_001_4297:: ; address name
-    ld a, $0F
+    ld a, $0f
     ld [wStringCategory], a
     ld a, $01
     ld [wStringIndex], a
@@ -183,37 +172,32 @@ Jump_001_4297:: ; address name
     call DebugShowMonsterRecord
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_42BC::
-Data_001_42BC:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00 ; id 1
     db $00, $12, $13, $14, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
     db $00, $17, $15, $18, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 3
-    db $00, $0F, $1A, $1B, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
-    db $00, $1C, $19, $1D, $19, $15, $1E, $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 5
+    db $00, $0f, $1a, $1b, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
+    db $00, $1c, $19, $1d, $19, $15, $1e, $1f, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 5
     db $00, $20, $21, $22, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 6
     db $00, $23, $24, $25, $24, $26, $27, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 7
     db $00, $23, $24, $25, $24, $28, $27, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
-    db $00, $29, $16, $2A, $2B, $1E, $2C, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
-    db $00, $12, $13, $2D, $1E, $2C, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
-    db $00, $2E, $2F, $30, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $29, $16, $2a, $2b, $1e, $2c, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $00, $12, $13, $2d, $1e, $2c, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $2e, $2f, $30, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
     db $00, $19, $12, $29, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
     db $00, $31, $16, $19, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
-    db $00, $12, $1E, $2C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
-    db $00, $33, $34, $24, $30, $1E, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
-    db $00, $30, $35, $2B, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $12, $1e, $2c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $00, $33, $34, $24, $30, $1e, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $30, $35, $2b, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; init for debug-mode state 9: the screen shows the skill viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; writes: wStringCategory, wStringIndex, rVBK
-; points at: wDebugCursor
 DebugSkillViewer_Init::
-Jump_001_4424:: ; address name
-    ld a, $0F
+    ld a, $0f
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -224,11 +208,11 @@ Jump_001_4424:: ; address name
     ld bc, $1412
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .skip
     ld a, $01
     ldh [rVBK], a
-    xor a, a
+    xor a
     ld hl, vBGMap0
     ld bc, $0400
     call FillBytes
@@ -236,32 +220,26 @@ Jump_001_4424:: ; address name
     ldh [rVBK], a
 
 .skip:
-    xor a, a
+    xor a
     ld hl, wDebugCursor
-    ld [hl+], a
+    ld [hli], a
     dec a
     ld [hl], a
     ret
 
-; init for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wWorkBuf
+; init for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
+; HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 DebugStaffRoll_Init::
-Jump_001_4462:: ; address name
     ld a, $31
     call QueueMusic
-    xor a, a
+    xor a
     ld hl, wWorkBuf
     ld bc, $0038
     call FillBytes
     ret
 
 ; init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wArg1, wDebugCursor, ...
-; points at: wScreenState
 DebugResultsDisplay_Init::
-Jump_001_4472:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
@@ -273,7 +251,7 @@ Jump_001_4472:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -288,7 +266,7 @@ Jump_001_4472:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $27
     ld [wStringIndex], a ; 'RESULTS DISPLAY Species Gender'
@@ -297,53 +275,53 @@ Jump_001_4472:: ; address name
     ld bc, $1001
     ld a, $80
     call FillRectWithTileSequence
-    ld hl, vBGMap0 + $A0
+    ld hl, vBGMap0 + $a0
     ld bc, $1004
     ld a, $90
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $120
     ld bc, $1002
-    ld a, $B0
+    ld a, $b0
     call FillRectWithTileSequence
-    ld a, $FC
+    ld a, $fc
     ld [vBGMap0 + $181], a
-    ld [vBGMap0 + $1E1], a
+    ld [vBGMap0 + $1e1], a
     ld [vBGMap0 + $1], a
-    ld a, $FD
-    ld [vBGMap0 + $1A1], a
+    ld a, $fd
+    ld [vBGMap0 + $1a1], a
     ld [vBGMap0 + $201], a
     ld [vBGMap0 + $21], a
-    ld a, $FB
-    ld [vBGMap0 + $1C1], a
+    ld a, $fb
+    ld [vBGMap0 + $1c1], a
     ld [vBGMap0 + $221], a
     ld de, Tiles1Plus7E0Tiles_1F_4A80
-    ld hl, vTiles1 + $7E0
-    ld b, $1F
+    ld hl, vTiles1 + $7e0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7F0Tiles_1F_4A90
-    ld hl, vTiles1 + $7F0
-    ld b, $1F
+    ld hl, vTiles1 + $7f0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7C0Tiles_1F_4780
-    ld hl, vTiles1 + $7C0
-    ld b, $1F
+    ld hl, vTiles1 + $7c0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, DebugResultsDisplay_Init_Data
-    ld hl, vTiles1 + $7C0
-    ld b, $1F
+    ld hl, vTiles1 + $7c0
+    ld b, $1f
     ld c, $10
     call OrFromBankWaitVRAM
     ld de, Tiles2Plus200Tiles_1F_4160
-    ld hl, vTiles1 + $7D0
-    ld b, $1F
+    ld hl, vTiles1 + $7d0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus7B0Tiles_1F_4480
-    ld hl, vTiles1 + $7B0
-    ld b, $1F
+    ld hl, vTiles1 + $7b0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $200
@@ -375,27 +353,27 @@ Jump_001_4472:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     call FillTilesFromRequest
-    ld hl, vBGMap0 + $8A
+    ld hl, vBGMap0 + $8a
     ld bc, $0901
     ld a, $20
     call FillRectWithTileSequence
-    ld hl, vBGMap0 + $EA
+    ld hl, vBGMap0 + $ea
     ld bc, $0901
     ld a, $30
     call FillRectWithTileSequence
-    ld hl, vBGMap0 + $12A
+    ld hl, vBGMap0 + $12a
     ld bc, $0901
     ld a, $40
     call FillRectWithTileSequence
-    ld hl, vBGMap0 + $AA
+    ld hl, vBGMap0 + $aa
     ld bc, $0901
     ld a, $50
     call FillRectWithTileSequence
-    xor a, a
+    xor a
     ld [wArg1], a
-    add a, $10
+    add $10
     ld [vBGMap0 + $81], a
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
@@ -408,17 +386,14 @@ Jump_001_4472:: ; address name
     ld b, $60
 
 .loop:
-    xor a, a
+    xor a
     ld [wScreenState], a
     dec b
     jr nz, .loop
     ret
 
 ; init for debug-mode state 0: the screen shows the debug menu (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 DebugMainMenu_Init::
-Jump_001_45EA:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles1
     ld a, l
@@ -430,23 +405,19 @@ Jump_001_45EA:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $01
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    ld hl, vBGMap0 + $A3
+    ld hl, vBGMap0 + $a3
     ld bc, $1002
     ld a, $80
     call FillRectWithTileSequence
     ret
 
 ; init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugCursor, wDebugValue0, ...
 DebugMapEditor_Init::
-Jump_001_461E:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -457,7 +428,7 @@ Jump_001_461E:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -472,21 +443,21 @@ Jump_001_461E:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $02
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    ld hl, vBGMap0 + $A3
+    ld hl, vBGMap0 + $a3
     ld bc, $1007
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
     ld de, TileRect_01_46A4
-    ld hl, vBGMap0 + $EA
+    ld hl, vBGMap0 + $ea
     ld bc, $1001
     call CopyRectFromBankToVRAM
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ldh a, [hMapId]
     ld [wDebugValue0], a
@@ -502,18 +473,14 @@ Jump_001_461E:: ; address name
     ld [wDebugSubState], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 16 x 1 tiles, one row per line
 TileRect_01_46A4::
-Data_001_46A4:: ; address name
-    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
+    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wCurrentKeyIndex, hMapScreenX, hMapScreenY
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugCursor, wDebugValue0, ...
 DebugAutomap_Init::
-Jump_001_46B4:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -524,7 +491,7 @@ Jump_001_46B4:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -539,27 +506,27 @@ Jump_001_46B4:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $04
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    ld hl, vBGMap0 + $A3
+    ld hl, vBGMap0 + $a3
     ld bc, $1007
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
     ld de, TileRect_01_4733
-    ld hl, vBGMap0 + $EA
+    ld hl, vBGMap0 + $ea
     ld bc, $1001
     call CopyRectFromBankToVRAM
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld a, [wCurrentKeyIndex]
     push af
     call LoadKeyEntryFieldsToDebugState
     pop af
-    or a, $80
+    or $80
     ld [wDebugValue0], a
     ldh a, [hMapScreenX]
     ld [wDebugValue2], a
@@ -567,18 +534,15 @@ Jump_001_46B4:: ; address name
     ld [wDebugValue3], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 16 x 1 tiles, one row per line
 TileRect_01_4733::
-Data_001_4733:: ; address name
-    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
+    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
-; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugValue0, wDebugValue1, ...
+; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite
+; viewer (E-0041)
 DebugMonsterPictureViewer_Init::
-Jump_001_4743:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -589,7 +553,7 @@ Jump_001_4743:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -604,12 +568,12 @@ Jump_001_4743:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $03
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    ld hl, vBGMap0 + $A3
+    ld hl, vBGMap0 + $a3
     ld bc, $1002
     ld a, $80
     call FillRectWithTileSequence
@@ -619,9 +583,9 @@ Jump_001_4743:: ; address name
     ld bc, $0606
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .set_debug_value0_to_00
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     ld a, $01
@@ -629,7 +593,7 @@ Jump_001_4743:: ; address name
     ld hl, vBGMap0 + $124
     ld bc, $0606
     call CopyRectFromBankToVRAM
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
 
@@ -646,21 +610,18 @@ Jump_001_4743:: ; address name
     ld [wDebugState], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
 TileRect_01_47DE::
-Data_001_47DE:: ; address name
     db $20, $21, $22, $23, $24, $25 ; id 0
-    db $26, $27, $28, $29, $2A, $2B ; id 1
-    db $2C, $2D, $2E, $2F, $30, $31 ; id 2
+    db $26, $27, $28, $29, $2a, $2b ; id 1
+    db $2c, $2d, $2e, $2f, $30, $31 ; id 2
     db $32, $33, $34, $35, $36, $37 ; id 3
-    db $38, $39, $3A, $3B, $3C, $3D ; id 4
-    db $3E, $3F, $40, $41, $42, $43 ; id 5
+    db $38, $39, $3a, $3b, $3c, $3d ; id 4
+    db $3e, $3f, $40, $41, $42, $43 ; id 5
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 6 x 6 tiles, one row per line
 TileRect_01_4802::
-Data_001_4802:: ; address name
     db $01, $01, $01, $01, $01, $01 ; id 0
     db $01, $01, $01, $01, $01, $01 ; id 1
     db $01, $01, $01, $01, $01, $01 ; id 2
@@ -669,10 +630,7 @@ Data_001_4802:: ; address name
     db $01, $01, $01, $01, $01, $01 ; id 5
 
 ; init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wMenuState, wTemp0, ...
 DebugSoundTest_Init::
-Jump_001_4826:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -683,7 +641,7 @@ Jump_001_4826:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -698,38 +656,35 @@ Jump_001_4826:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $06
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
     ld de, TileRect_01_488A
-    ld hl, vBGMap0 + $A3
-    ld bc, $0B04
+    ld hl, vBGMap0 + $a3
+    ld bc, $0b04
     call CopyRectFromBankToVRAM
-    xor a, a
+    xor a
     ld [wMenuState], a
-    xor a, a
+    xor a
     ld [wTemp0], a
     ld [wTemp1], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 11 x 4 tiles, one row per line
 TileRect_01_488A::
-Data_001_488A:: ; address name
-    db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A ; id 0
-    db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9A ; id 1
-    db $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10, $12 ; id 2
-    db $B0, $B1, $B2, $B3, $B4, $B5, $10, $10, $B8, $10, $10 ; id 3
+    db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a ; id 0
+    db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9a ; id 1
+    db $a0, $a1, $a2, $a3, $a4, $a5, $10, $10, $a8, $10, $12 ; id 2
+    db $b0, $b1, $b2, $b3, $b4, $b5, $10, $10, $b8, $10, $10 ; id 3
 
-; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wMenuState
-; points at: wWorkBuf
+; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill,
+; levels) (E-0041)
 DebugBattleSetup_Init::
-Jump_001_48B6:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -740,7 +695,7 @@ Jump_001_48B6:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
@@ -750,12 +705,12 @@ Jump_001_48B6:: ; address name
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0B09
+    ld hl, $0b09
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $09
     ld [wStringIndex], a
@@ -763,9 +718,9 @@ Jump_001_48B6:: ; address name
     ld a, $01
     ld de, TileRect_01_495D
     ld hl, vBGMap0 + $40
-    ld bc, $140E
+    ld bc, $140e
     call CopyRectFromBankToVRAM
-    xor a, a
+    xor a
     ld hl, wWorkBuf
     ld bc, $0018
     call FillBytes
@@ -790,42 +745,41 @@ Jump_001_48B6:: ; address name
     ld a, $08
     ld [wMenuState], a
     call DebugBattleSetupShowFieldString
-    ld a, $0A
+    ld a, $0a
     ld [wMenuState], a
     call DebugBattleSetupShowFieldString
-    xor a, a
+    xor a
     ld [wMenuState], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 14 tiles, one row per line
 TileRect_01_495D::
-Data_001_495D:: ; address name
-    db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
-    db $8B, $8C, $8D, $8E, $8F, $90, $91, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
-    db $96, $97, $98, $99, $9A, $9B, $9C, $10, $10, $10, $A0, $20, $21, $22, $23, $24, $25, $26, $27, $28 ; id 3
-    db $A1, $A2, $A3, $A4, $A5, $A6, $A7, $10, $10, $10, $AB, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32 ; id 4
-    db $AC, $AD, $AE, $AF, $B0, $B1, $B2, $10, $10, $10, $B6, $33, $34, $35, $36, $37, $38, $39, $3A, $3B ; id 5
-    db $B7, $B8, $B9, $BA, $BB, $BC, $BD, $10, $10, $10, $C1, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44 ; id 6
-    db $C2, $C3, $C4, $C5, $C6, $C7, $C8, $10, $10, $10, $CC, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D ; id 7
-    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $4E, $4F, $50, $51, $52, $53, $54, $55, $56 ; id 8
-    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
-    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; id 10
-    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
-    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $60, $61, $62, $63, $64, $65, $66, $67, $68 ; id 12
-    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $8b, $8c, $8d, $8e, $8f, $90, $91, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $96, $97, $98, $99, $9a, $9b, $9c, $10, $10, $10, $a0, $20, $21, $22, $23, $24, $25, $26, $27, $28 ; id 3
+    db $a1, $a2, $a3, $a4, $a5, $a6, $a7, $10, $10, $10, $ab, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32 ; id 4
+    db $ac, $ad, $ae, $af, $b0, $b1, $b2, $10, $10, $10, $b6, $33, $34, $35, $36, $37, $38, $39, $3a, $3b ; id 5
+    db $b7, $b8, $b9, $ba, $bb, $bc, $bd, $10, $10, $10, $c1, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44 ; id 6
+    db $c2, $c3, $c4, $c5, $c6, $c7, $c8, $10, $10, $10, $cc, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d ; id 7
+    db $cd, $ce, $cf, $d0, $d1, $d2, $d3, $10, $10, $10, $d7, $4e, $4f, $50, $51, $52, $53, $54, $55, $56 ; id 8
+    db $d8, $d9, $da, $db, $dc, $dd, $de, $10, $10, $10, $e2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $cd, $ce, $cf, $d0, $d1, $d2, $d3, $10, $10, $10, $d7, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f ; id 10
+    db $d8, $d9, $da, $db, $dc, $dd, $de, $10, $10, $10, $e2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $cd, $ce, $cf, $d0, $d1, $d2, $d3, $10, $10, $10, $d7, $60, $61, $62, $63, $64, $65, $66, $67, $68 ; id 12
+    db $d8, $d9, $da, $db, $dc, $dd, $de, $10, $10, $10, $e2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
 
-; A = first tile, B = width, C = rows, HL = BG map address (rows 32 apart): writes consecutive tile numbers A, A + 1, ... row by row; on CGB then zero-fills the $240 bytes at vBGMap0 in VRAM bank 1 (all attributes 0, regardless of the rectangle) (E-0073)
-; 11 call sites from 5 routines (e.g. DebugResultsDisplay_Init, DebugMonsterPictureViewer_Init, DebugAutomap_Init, DebugMapEditor_Init, ...)
-; reads: wIsCGB
+; A = first tile, B = width, C = rows, HL = BG map address (rows 32 apart): writes consecutive tile
+; numbers A, A + 1, ... row by row; on CGB then zero-fills the $240 bytes at vBGMap0 in VRAM bank 1
+; (all attributes 0, regardless of the rectangle) (E-0073)
 FillRectWithTileSequence::
-Func_001_4A75:: ; address name
     push hl
     ld d, b
 
 .loop:
-    ld [hl+], a
+    ld [hli], a
     inc a
     dec b
     jr nz, .loop
@@ -838,56 +792,47 @@ Func_001_4A75:: ; address name
     dec c
     jr nz, FillRectWithTileSequence
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     ld hl, vBGMap0
     ld bc, $0240
-    xor a, a
+    xor a
     call FillBytes
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
-; on CGB copies the 8-byte palette Data_001_4ACC into wBGPaletteBuffer twice and sets wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117)
-; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_SendSGBPaletteSetPacket, ...)
-; reads: wIsCGB
-; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
-; points at: wBGPaletteBuffer
+; on CGB copies the 8-byte palette LoadPalette0FromData4ACC_Data into wBGPaletteBuffer twice and
+; sets wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117)
 LoadPalette0FromData4ACC::
-Func_001_4AA4:: ; address name
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld de, LoadPalette0FromData4ACC_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ld de, LoadPalette0FromData4ACC_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; address loaded by LoadPalette0FromData4ACC
-LoadPalette0FromData4ACC_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_4ACC:: ; address name
-    db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
+LoadPalette0FromData4ACC_Data::
+    db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
 ; per-frame routine for wGameMode = 0
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode0_Update)
-; reads: wModeState
 GameMode0_Update::
-Func_001_4AD4:: ; address name
     ld a, [wModeState]
-    rst $00
+    jumptable
     dw DebugMainMenu_Update
     dw DebugMainMenu_Update
     dw DebugMapEditor_Update
@@ -902,17 +847,12 @@ Func_001_4AD4:: ; address name
     dw DebugMessageTest_Update
 
 ; update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wJoypadPressed, wMenuRowCount, wTemp1, wTemp0, wJoypadPressedRepeat, wMenuState, wFrameCounterLo
-; writes: wStringIndex, wStringCategory, wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wMenuState, wModeState
-; points at: wTemp0, wModeChangeRequest
 DebugMessageTest_Update::
-Jump_001_4AF0:: ; address name
     ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld a, [wJoypadPressed]
-    and a, $01
+    and $01
     jp z, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
@@ -929,7 +869,7 @@ Jump_001_4AF0:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ld a, [wTemp0]
-    rst $00
+    jumptable
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank08
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank09
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank28
@@ -965,260 +905,157 @@ Jump_001_4AF0:: ; address name
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0B
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C
 
-; entry 0 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank08::
-Jump_001_4B68:: ; address name
     farcall BeginStringDisplay_Bank08
     ret
 
-; entry 1 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank09::
-Jump_001_4B6F:: ; address name
     farcall BeginStringDisplay_Bank09
     ret
 
-; entry 2 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank28::
-Jump_001_4B76:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
-; entry 3 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank29::
-Jump_001_4B7D:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
-; entry 4 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2A::
-Jump_001_4B84:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
-; entry 5 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2B::
-Jump_001_4B8B:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
-; entry 6 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2C::
-Jump_001_4B92:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
-; entry 7 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2D::
-Jump_001_4B99:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
-; entry 8 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2E::
-Jump_001_4BA0:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
-; entry 9 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank7C::
-Jump_001_4BA7:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
-; entry 10 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank80::
-Jump_001_4BAE:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
-; entry 11 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank82::
-Jump_001_4BB5:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
-; entry 12 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank86::
-Jump_001_4BBC:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
-; entry 13 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank89::
-Jump_001_4BC3:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
 
-; entry 14 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank07::
-Jump_001_4BCA:: ; address name
     farcall BeginStringDisplay_Bank07
     ret
 
-; entry 15 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2F::
-Jump_001_4BD1:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
-; entry 16 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank37::
-Jump_001_4BD8:: ; address name
     farcall BeginStringDisplay_Bank37
     ret
 
-; entry 17 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank88::
-Jump_001_4BDF:: ; address name
     farcall BeginStringDisplay_Bank88
     ret
 
-; entry 18 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank83::
-Jump_001_4BE6:: ; address name
     farcall BeginStringDisplay_Bank83
     ret
 
-; entry 19 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1D::
-Jump_001_4BED:: ; address name
     farcall BeginStringDisplay_Bank1D
     ret
 
-; entry 20 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank8A::
-Jump_001_4BF4:: ; address name
     farcall BeginStringDisplay_Bank8A
     ret
 
-; entry 21 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001::
-Jump_001_4BFB:: ; address name
     farcall BeginStringDisplay_BankF0_4001
     ret
 
-; entry 22 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86::
-Jump_001_4C02:: ; address name
     farcall BeginStringDisplay_Bank1B_4C86
     ret
 
-; entry 23 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1F::
-Jump_001_4C09:: ; address name
     farcall BeginStringDisplay_Bank1F
     ret
 
-; entry 24 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0::
-Jump_001_4C10:: ; address name
     farcall BeginStringDisplay_BankF0_48A0
     ret
 
-; entry 25 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0D::
-Jump_001_4C17:: ; address name
     farcall BeginStringDisplay_Bank0D
     ret
 
-; entry 26 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490::
-Jump_001_4C1E:: ; address name
     farcall BeginStringDisplay_Bank33_6490
     ret
 
-; entry 27 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank24::
-Jump_001_4C25:: ; address name
     farcall BeginStringDisplay_Bank24
     ret
 
-; entry 28 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_CallUpdate_Case1C_Sub01_BeginStringDisplay::
-Jump_001_4C2C:: ; address name
     farcall DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01
     ret
 
-; entry 29 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0E::
-Jump_001_4C33:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
-; entry 30 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_BankF2::
-Jump_001_4C3A:: ; address name
     farcall BeginStringDisplay_BankF2
     ret
 
-; entry 31 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037::
-Jump_001_4C41:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
-; entry 32 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0B::
-Jump_001_4C48:: ; address name
     farcall BeginStringDisplay_Bank0B
     ret
 
-; entry 33 of the `rst $00` table in DebugMessageTest_Update
-; no direct call (reached through a table, a jump or a vector)
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C::
-Jump_001_4C4F:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat::
-Jump_001_4C56:: ; address name
     ld a, [wJoypadPressedRepeat]
-    and a, $40
+    and $40
     jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
     ld a, [wMenuState]
-    sub a, $01
+    sub $01
     jr nc, .set_menu_state
     ld a, $02
 
@@ -1229,20 +1066,20 @@ Jump_001_4C56:: ; address name
 
 .check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
-    and a, $80
+    and $80
     jr z, .read_menu_state
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
     ld a, [wMenuState]
-    add a, $01
-    cp a, $03
+    add $01
+    cp $03
     jr nz, .set_menu_state2
     ld a, $00
 
@@ -1258,7 +1095,7 @@ Jump_001_4C56:: ; address name
     ld hl, wTemp0
     add hl, bc
     ld a, [wJoypadPressedRepeat]
-    and a, $10
+    and $10
     jr z, .check_joypad_pressed_repeat2
     inc [hl]
     call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
@@ -1266,7 +1103,7 @@ Jump_001_4C56:: ; address name
 
 .check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
-    and a, $20
+    and $20
     jr z, .check_joypad_pressed
     dec [hl]
     call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
@@ -1274,9 +1111,9 @@ Jump_001_4C56:: ; address name
 
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
-    and a, $08
+    and $08
     jr z, .check_joypad_pressed2
-    xor a, a
+    xor a
     ld [hl], a
 
 .call_queue_sound_effect:
@@ -1284,17 +1121,17 @@ Jump_001_4C56:: ; address name
     call QueueSoundEffect
     ld a, [wMenuState]
     ld b, $21
-    cp a, $00
+    cp $00
     call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
-    add a, a
+    add a
     ld hl, DebugMessageTestTable
     add_a_to_hl
     push hl
     inc hl
     ld a, [hl]
     pop hl
-    cp a, $00
+    cp $00
     jr z, .check_menu_state
     ld e, [hl]
     inc hl
@@ -1304,17 +1141,17 @@ Jump_001_4C56:: ; address name
 .check_menu_state:
     ld b, a
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
-    add a, a
+    add a
     ld hl, DebugMessageTestTable
     add_a_to_hl
     push hl
     inc hl
     ld a, [hl]
     pop hl
-    cp a, $00
+    cp $00
     jr nz, .skip
     ld a, [hl]
     jr .check_menu_state2
@@ -1333,14 +1170,14 @@ Jump_001_4C56:: ; address name
 .check_menu_state2:
     ld b, a
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
 
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
-    and a, $02
+    and $02
     jr z, .check_menu_state3
-    xor a, a
+    xor a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -1348,144 +1185,124 @@ Jump_001_4C56:: ; address name
 
 .check_menu_state3:
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
-    xor a, a
-    ld hl, vBGMap0 + $6D
+    xor a
+    ld hl, vBGMap0 + $6d
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
-; reads: wTemp0, wMenuState, wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE::
-Func_001_4D6E:: ; address name
     ld a, [wTemp0]
-    ld de, vBGMap0 + $6D
+    ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState::
-Jump_001_4D79:: ; address name
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
-    xor a, a
-    ld hl, vBGMap0 + $AD
+    xor a
+    ld hl, vBGMap0 + $ad
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
-; reads: wTemp1, wMenuState, wTemp0, wMenuRowCount
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02::
-Func_001_4D93:: ; address name
     ld a, [wTemp1]
-    ld de, vBGMap0 + $AD
+    ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo::
-Jump_001_4D9E:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
-    xor a, a
-    ld hl, vBGMap0 + $ED
+    xor a
+    ld hl, vBGMap0 + $ed
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
-; reads: wMenuRowCount, wMenuState, wTemp0, wTemp1
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03::
-Func_001_4DB1:: ; address name
     ld a, [wMenuRowCount]
-    ld de, vBGMap0 + $ED
+    ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState::
-Jump_001_4DBC:: ; address name
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     jr z, .check_menu_state
     ld a, [wTemp0]
-    ld de, vBGMap0 + $6D
+    ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
 
 .check_menu_state:
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     jr z, .check_menu_state2
     ld a, [wTemp1]
-    ld de, vBGMap0 + $AD
+    ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
 
 .check_menu_state2:
     ld a, [wMenuState]
-    cp a, $02
+    cp $02
     jr z, .return
     ld a, [wMenuRowCount]
-    ld de, vBGMap0 + $ED
+    ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
 
 .return:
     ret
 
-; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
-; reads: wMenuState, wTemp0, wTemp1, wMenuRowCount
-; points at: wTemp0
 DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc::
-Func_001_4DED:: ; address name
     push af
     ld a, [wMenuState]
     ld hl, wTemp0
     add_a_to_hl
     ld a, b
-    cp a, $FF
+    cp $ff
     jr z, .check_menu_state
     ld a, [hl]
     inc b
-    cp a, b
+    cp b
     jr nz, .next
     ld [hl], $00
 
 .next:
     dec b
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .check_menu_state
     ld [hl], b
 
 .check_menu_state:
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     jr nz, .check_menu_state2
-    ld de, vBGMap0 + $6D
+    ld de, vBGMap0 + $6d
     ld a, [wTemp0]
     jr .call_write_hex_byte_tiles_at_de
 
 .check_menu_state2:
     ld a, [wMenuState]
-    cp a, $01
+    cp $01
     jr nz, .read_menu_row_count
-    ld de, vBGMap0 + $AD
+    ld de, vBGMap0 + $ad
     ld a, [wTemp1]
     jr .call_write_hex_byte_tiles_at_de
 
 .read_menu_row_count:
-    ld de, vBGMap0 + $ED
+    ld de, vBGMap0 + $ed
     ld a, [wMenuRowCount]
 
 .call_write_hex_byte_tiles_at_de:
@@ -1495,86 +1312,77 @@ Func_001_4DED:: ; address name
     pop af
     ret
 
-; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
-; reads: wMenuState
-; writes: wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount::
-Func_001_4E3B:: ; address name
     ld a, [wMenuState]
-    cp a, $00
+    cp $00
     jr nz, .cp_01
-    xor a, a
+    xor a
     ld [wTemp1], a
-    xor a, a
+    xor a
     ld [wMenuRowCount], a
     ret
 
 .cp_01:
-    cp a, $01
+    cp $01
     jr nz, .return
-    xor a, a
+    xor a
     ld [wMenuRowCount], a
 
 .return:
     ret
 
-; E-0233 (C1: DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to the first sub-list).
+; DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the
+; value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to
+; the first sub-list (E-0233, C1)
 ; record: value (high byte 0) or pointer to a sub-list
 DebugMessageTestTable::
-Data_001_4E54:: ; address name
-    dw $4E98 ; id 0
-    dw $4EAE ; id 1
-    dw $00FF ; id 2
-    dw $00D4 ; id 3
-    dw $00EF ; id 4
-    dw $00C2 ; id 5
-    dw $00D2 ; id 6
-    dw $00FF ; id 7
-    dw $00DD ; id 8
-    dw $00EF ; id 9
-    dw $00FF ; id 10
-    dw $00C3 ; id 11
-    dw $00FE ; id 12
-    dw $00F8 ; id 13
-    dw $4EB9 ; id 14
-    dw $4EC1 ; id 15
-    dw $4EC8 ; id 16
-    dw $4ECB ; id 17
-    dw $00F1 ; id 18
+    dw $4e98 ; id 0
+    dw $4eae ; id 1
+    dw $00ff ; id 2
+    dw $00d4 ; id 3
+    dw $00ef ; id 4
+    dw $00c2 ; id 5
+    dw $00d2 ; id 6
+    dw $00ff ; id 7
+    dw $00dd ; id 8
+    dw $00ef ; id 9
+    dw $00ff ; id 10
+    dw $00c3 ; id 11
+    dw $00fe ; id 12
+    dw $00f8 ; id 13
+    dw $4eb9 ; id 14
+    dw $4ec1 ; id 15
+    dw $4ec8 ; id 16
+    dw $4ecb ; id 17
+    dw $00f1 ; id 18
     dw $0017 ; id 19
-    dw $002A ; id 20
-    dw $002F ; id 21
+    dw $002a ; id 20
+    dw $002f ; id 21
     dw $0029 ; id 22
-    dw $003F ; id 23
+    dw $003f ; id 23
     dw $0022 ; id 24
-    dw $002F ; id 25
+    dw $002f ; id 25
     dw $0036 ; id 26
     dw $0015 ; id 27
-    dw $009F ; id 28
+    dw $009f ; id 28
     dw $0016 ; id 29
     dw $0023 ; id 30
     dw $0012 ; id 31
-    dw $4ECF ; id 32
+    dw $4ecf ; id 32
     dw $0027 ; id 33
 
-; E-0233 (C1: the sub-lists that DebugMessageTestTable's pointer words name ($4E98, $4EAE, $4EB9, $4EC1, $4EC8, $4ECB, $4ECF); their format is not read).
+; the sub-lists that DebugMessageTestTable's pointer words name ($4E98, $4EAE, $4EB9, $4EC1, $4EC8,
+; $4ECB, $4ECF); their format is not read (E-0233, C1)
 ; record: sub-lists named by DebugMessageTestTable
 DebugMessageTestSubLists::
-Data_001_4E98:: ; address name
-    db $14, $FF, $10, $FF, $7F, $DF, $6F, $6F, $27, $0D, $AF, $00, $23, $00, $06, $05, $01, $08, $0A, $1B, $07, $03, $09, $02, $19, $09, $57, $00, $53, $0C, $0D, $00, $21, $06, $06, $05, $00, $06, $02, $1A, $08, $05, $85, $FC, $03, $00, $00, $21, $01, $35, $1F, $02, $FF, $FF, $FF, $02, $FF, $84, $0A, $C9 ; entry 0
+    db $14, $ff, $10, $ff, $7f, $df, $6f, $6f, $27, $0d, $af, $00, $23, $00, $06, $05, $01, $08, $0a, $1b, $07, $03, $09, $02, $19, $09, $57, $00, $53, $0c, $0d, $00, $21, $06, $06, $05, $00, $06, $02, $1a, $08, $05, $85, $fc, $03, $00, $00, $21, $01, $35, $1f, $02, $ff, $ff, $ff, $02, $ff, $84, $0a, $c9 ; entry 0
 
 ; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wDebugCursor, wDebugValue0, wMonsterId, wTextWindowTileLo, wTextWindowTileHi, ...
-; writes: wGameMode, wModeState, wDebugCursor, wDebugValue0, wMonsterId, wStringCategory, wStringIndex, wTextWindowTileLo, ...
-; points at: wModeChangeRequest
 DebugMonsterRecordViewer_Update::
-Jump_001_4ED4:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_joypad_pressed_repeat
-    xor a, a
+    xor a
     ld [wGameMode], a
     ld [wModeState], a
     ld hl, wModeChangeRequest
@@ -1589,10 +1397,10 @@ Jump_001_4ED4:: ; address name
     bit 2, a
     jr nz, .read_debug_cursor
     ld a, [wDebugCursor]
-    sub a, $01
+    sub $01
     ld [wDebugCursor], a
     ld a, [wDebugValue0]
-    sbc a, $00
+    sbc $00
     ld [wDebugValue0], a
     jr .read_debug_cursor2
 
@@ -1602,10 +1410,10 @@ Jump_001_4ED4:: ; address name
     ld a, [wDebugValue0]
     ld h, a
     ld a, l
-    sub a, $10
+    sub $10
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
     ld a, l
     ld [wDebugCursor], a
@@ -1617,10 +1425,10 @@ Jump_001_4ED4:: ; address name
     ld l, a
     ld a, [wDebugValue0]
     ld h, a
-    ld bc, $02AB
+    ld bc, $02ab
     call CompareHLToBC
     jr c, DebugShowMonsterRecord
-    ld hl, $02AB
+    ld hl, $02ab
     jr DebugShowMonsterRecord
 
 .check_joypad_pressed_repeat2:
@@ -1631,10 +1439,10 @@ Jump_001_4ED4:: ; address name
     bit 2, a
     jr nz, .read_debug_cursor3
     ld a, [wDebugCursor]
-    add a, $01
+    add $01
     ld [wDebugCursor], a
     ld a, [wDebugValue0]
-    adc a, $00
+    adc $00
     ld [wDebugValue0], a
     jr .read_debug_cursor4
 
@@ -1644,10 +1452,10 @@ Jump_001_4ED4:: ; address name
     ld a, [wDebugValue0]
     ld h, a
     ld a, l
-    add a, $10
+    add $10
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, l
     ld [wDebugCursor], a
@@ -1659,17 +1467,16 @@ Jump_001_4ED4:: ; address name
     ld l, a
     ld a, [wDebugValue0]
     ld h, a
-    ld bc, $02AB
+    ld bc, $02ab
     call CompareHLToBC
     jr c, DebugShowMonsterRecord
     ld hl, $0000
 
-; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wDebugCursor/wDebugValue0 and wMonsterId/wMonsterId + $1, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
-; 1 call site from 1 routine (e.g. DebugMonsterRecordViewer_Init)
-; reads: wMonsterId, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wRecordBuffer, wRecordBufferData, wScreenAttrBuffer
-; writes: wDebugCursor, wDebugValue0, wMonsterId, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
+; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in
+; wDebugCursor/wDebugValue0 and wMonsterId/wMonsterId + $1, loads the record with LoadMonsterRecord
+; and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the
+; record's fields on the debug screen
 DebugShowMonsterRecord::
-Func_001_4F80:: ; address name
     ld a, l
     ld [wDebugCursor], a
     ld a, h
@@ -1722,11 +1529,11 @@ Func_001_4F80:: ; address name
     ld a, d
     ld [wTextWindowWidth], a
     ld a, [wRecordBuffer]
-    ld hl, vBGMap0 + $4F
+    ld hl, vBGMap0 + $4f
     ld bc, $0100
     call WriteHexByteTilesAtHL
     ld a, [wRecordBuffer + $1]
-    ld hl, vBGMap0 + $4F
+    ld hl, vBGMap0 + $4f
     call DebugShowMonsterRecord_WriteTileDPlusBAtHL
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
@@ -1745,91 +1552,85 @@ Func_001_4F80:: ; address name
     ld e, a
     ld a, [wRecordBufferData + $5]
     ld d, a
-    ld hl, vBGMap0 + $8D
+    ld hl, vBGMap0 + $8d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
     ld a, [wRecordBufferData + $6]
-    ld hl, vBGMap0 + $AF
+    ld hl, vBGMap0 + $af
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
     ld a, [wRecordBufferData + $7]
-    ld hl, vBGMap0 + $CF
+    ld hl, vBGMap0 + $cf
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
     ld a, [wRecordBufferData + $8]
     ld e, a
     ld a, [wRecordBufferData + $9]
     ld d, a
-    ld hl, vBGMap0 + $ED
+    ld hl, vBGMap0 + $ed
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
-    ld a, [wRecordBufferData + $A]
+    ld a, [wRecordBufferData + $a]
     ld e, a
-    ld a, [wRecordBufferData + $B]
+    ld a, [wRecordBufferData + $b]
     ld d, a
-    ld hl, vBGMap0 + $10D
+    ld hl, vBGMap0 + $10d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
-    ld a, [wRecordBufferData + $C]
+    ld a, [wRecordBufferData + $c]
     ld e, a
-    ld a, [wRecordBufferData + $D]
+    ld a, [wRecordBufferData + $d]
     ld d, a
-    ld hl, vBGMap0 + $12D
+    ld hl, vBGMap0 + $12d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
-    ld a, [wRecordBufferData + $E]
+    ld a, [wRecordBufferData + $e]
     ld e, a
-    ld a, [wRecordBufferData + $F]
+    ld a, [wRecordBufferData + $f]
     ld d, a
-    ld hl, vBGMap0 + $14D
+    ld hl, vBGMap0 + $14d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
     ld a, [wRecordBufferData + $10]
     ld e, a
     ld a, [wRecordBufferData + $11]
     ld d, a
-    ld hl, vBGMap0 + $16D
+    ld hl, vBGMap0 + $16d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
     ld a, [wScreenAttrBuffer]
     ld e, a
     ld a, [wRecordBufferData + $13]
     ld d, a
-    ld hl, vBGMap0 + $18D
+    ld hl, vBGMap0 + $18d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
     ld a, [wRecordBufferData + $14]
-    ld hl, vBGMap0 + $1AF
+    ld hl, vBGMap0 + $1af
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
     ld a, [wRecordBufferData + $15]
-    ld hl, vBGMap0 + $1CF
+    ld hl, vBGMap0 + $1cf
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
     ld a, [wRecordBufferData + $16]
-    ld hl, vBGMap0 + $1EF
+    ld hl, vBGMap0 + $1ef
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
     ld a, [wRecordBufferData + $17]
-    ld hl, vBGMap0 + $20F
+    ld hl, vBGMap0 + $20f
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
 
 DebugShowMonsterRecord_Return::
-Jump_001_50EC:: ; address name
     ret
 
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor, wRecordBufferData, wRecordBuffer
-; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, ...
-; points at: wModeChangeRequest, wDebugCursor, wRecordBufferData
 DebugSkillViewer_Update::
-Jump_001_50ED:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_joypad_pressed_repeat
-    xor a, a
+    xor a
     ld [wGameMode], a
     ld [wModeState], a
     ld hl, wModeChangeRequest
@@ -1843,9 +1644,9 @@ Jump_001_50ED:: ; address name
     ld a, [wDebugCursor]
     dec a
     ld [wDebugCursor], a
-    cp a, $AF
+    cp $af
     jr c, .check_joypad_pressed_repeat2
-    ld a, $AE
+    ld a, $ae
     ld [wDebugCursor], a
 
 .check_joypad_pressed_repeat2:
@@ -1855,15 +1656,15 @@ Jump_001_50ED:: ; address name
     ld a, [wDebugCursor]
     inc a
     ld [wDebugCursor], a
-    cp a, $AF
+    cp $af
     jr c, .skip
-    xor a, a
+    xor a
     ld [wDebugCursor], a
 
 .skip:
     ld hl, wDebugCursor
-    ld a, [hl+]
-    cp a, [hl]
+    ld a, [hli]
+    cp [hl]
     ld [hl], a
     ret z
     ld hl, vBGMap0 + $46
@@ -1871,9 +1672,9 @@ Jump_001_50ED:: ; address name
     call WriteHexByteTilesAtHL
     ld a, [wDebugCursor]
     ld [wRecordBuffer], a
-    xor a, a
+    xor a
     ld [wRecordBuffer + $1], a
-    xor a, a
+    xor a
     ld [wBattleArg0], a
     ld a, $11
     ld [wBattleArg1], a
@@ -1890,9 +1691,9 @@ Jump_001_50ED:: ; address name
     ld a, $04
     ld [wStringCategory], a
     ld a, [wRecordBuffer]
-    or a, a
+    or a
     jr nz, .set_string_index
-    ld a, $0E
+    ld a, $0e
     ld [wStringCategory], a
     ld a, $01
 
@@ -1921,7 +1722,7 @@ Jump_001_50ED:: ; address name
     ld a, $14
     ld [wStringCategory], a
     ld a, [wRecordBufferData + $3]
-    and a, $03
+    and $03
     ld [wStringIndex], a
     ld hl, vTiles1 + $90
     ld de, $0401
@@ -1930,10 +1731,10 @@ Jump_001_50ED:: ; address name
     ld a, $10
     ld [wStringCategory], a
     ld a, [wRecordBufferData + $3]
-    and a, $F0
+    and $f0
     swap a
     ld [wStringIndex], a
-    ld hl, vTiles1 + $D0
+    ld hl, vTiles1 + $d0
     ld de, $0801
     call FillTilesRequest
     farcall ShowString_Bank08
@@ -1947,81 +1748,76 @@ Jump_001_50ED:: ; address name
     call FillTilesRequest
     farcall ShowString_Bank08
     ld a, [wRecordBufferData + $5]
-    ld hl, vBGMap0 + $14B
+    ld hl, vBGMap0 + $14b
     ld bc, $0801
     call DebugSkillViewer_Update_WriteVRAMByte
     ld a, [wRecordBufferData + $6]
-    ld hl, vBGMap0 + $16B
+    ld hl, vBGMap0 + $16b
     ld bc, $0801
     call DebugSkillViewer_Update_WriteVRAMByte
     ld a, [wRecordBufferData + $7]
-    ld hl, vBGMap0 + $18B
+    ld hl, vBGMap0 + $18b
     ld bc, $0801
     call DebugSkillViewer_Update_WriteVRAMByte
     ld a, [wRecordBufferData + $8]
-    ld hl, vBGMap0 + $1AB
+    ld hl, vBGMap0 + $1ab
     ld bc, $0801
     call DebugSkillViewer_Update_WriteVRAMByte
     ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wRecordBufferData + $A]
+    ld a, [wRecordBufferData + $a]
     ld h, a
     call DebugSkillViewer_Update_Number24ToPackedBCD
-    ld hl, vBGMap0 + $1EA
+    ld hl, vBGMap0 + $1ea
     ld bc, $0100
     call DebugSkillViewer_Update_WriteVRAMByteInc
     ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wRecordBufferData + $A]
+    ld a, [wRecordBufferData + $a]
     ld h, a
-    ld a, [wRecordBufferData + $B]
+    ld a, [wRecordBufferData + $b]
     ld e, a
-    ld a, [wRecordBufferData + $C]
+    ld a, [wRecordBufferData + $c]
     ld d, a
     add hl, de
     call DebugSkillViewer_Update_Number24ToPackedBCD
-    ld hl, vBGMap0 + $1EF
+    ld hl, vBGMap0 + $1ef
     ld bc, $0100
     call DebugSkillViewer_Update_WriteVRAMByteInc
-    ld a, [wRecordBufferData + $D]
+    ld a, [wRecordBufferData + $d]
     ld l, a
-    ld a, [wRecordBufferData + $E]
+    ld a, [wRecordBufferData + $e]
     ld h, a
     call DebugSkillViewer_Update_Number24ToPackedBCD
-    ld hl, vBGMap0 + $20A
+    ld hl, vBGMap0 + $20a
     ld bc, $0100
     call DebugSkillViewer_Update_WriteVRAMByteInc
-    ld a, [wRecordBufferData + $D]
+    ld a, [wRecordBufferData + $d]
     ld l, a
-    ld a, [wRecordBufferData + $E]
+    ld a, [wRecordBufferData + $e]
     ld h, a
-    ld a, [wRecordBufferData + $F]
+    ld a, [wRecordBufferData + $f]
     ld e, a
     ld a, [wRecordBufferData + $10]
     ld d, a
     add hl, de
     call DebugSkillViewer_Update_Number24ToPackedBCD
-    ld hl, vBGMap0 + $20F
+    ld hl, vBGMap0 + $20f
     ld bc, $0100
     call DebugSkillViewer_Update_WriteVRAMByteInc
     ret
 
-; only called from DebugSkillViewer_Update (E-0047)
-; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-; writes: wDigits, hTemp1, hTemp0
-; points at: hTemp3
 DebugSkillViewer_Update_Number24ToPackedBCD::
-Func_001_52AF:: ; address name
     ld a, l
     ld [wDigits], a
     ld a, h
     ld [wDigits + $1], a
-    xor a, a
+    xor a
     ld [wDigits + $2], a
     call Number24ToPackedBCD
     ld hl, hTemp3
-    ld a, [hl-]
-    or a, [hl]
+    ld a, [hld]
+    or [hl]
     ret z
     ld a, $99
     ldh [hTemp1], a
@@ -2029,96 +1825,91 @@ Func_001_52AF:: ; address name
     ldh [hTemp0], a
     ret
 
-; only called from DebugSkillViewer_Update (E-0047)
-; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-; reads: hTemp1, hTemp0
 DebugSkillViewer_Update_WriteVRAMByteInc::
-Func_001_52CD:: ; address name
     ld e, $00
     ldh a, [hTemp1]
-    and a, $F0
+    and $f0
     swap a
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, c
     jr z, .call_write_vram_byte_inc
     ld a, d
-    add a, b
+    add b
 
 .call_write_vram_byte_inc:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp1]
-    and a, $0F
+    and $0f
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, c
     jr z, .call_write_vram_byte_inc2
     ld a, d
-    add a, b
+    add b
 
 .call_write_vram_byte_inc2:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp0]
-    and a, $F0
+    and $f0
     swap a
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, c
     jr z, .call_write_vram_byte_inc3
     ld a, d
-    add a, b
+    add b
 
 .call_write_vram_byte_inc3:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp0]
-    and a, $0F
-    add a, b
+    and $0f
+    add b
     di
     call WriteVRAMByteInc
     ei
     ret
 
-; C = the position of A in the list $11, $12, $14, $21, $22, $31, $32, $40, $80, ...; returns at once for 0
-; 1 call site from 1 routine (e.g. DebugSkillViewer_Update)
+; C = the position of A in the list $11, $12, $14, $21, $22, $31, $32, $40, $80, ...; returns at
+; once for 0
 DebugSkillViewer_Update_IndexOfFlagValue::
-Func_001_5311:: ; address name
-    or a, a
+    or a
     ret z
     ld c, $01
-    cp a, $11
+    cp $11
     jr z, .done
     inc c
-    cp a, $12
+    cp $12
     jr z, .done
     inc c
-    cp a, $14
+    cp $14
     jr z, .done
     inc c
-    cp a, $21
+    cp $21
     jr z, .done
     inc c
-    cp a, $22
+    cp $22
     jr z, .done
     inc c
-    cp a, $31
+    cp $31
     jr z, .done
     inc c
-    cp a, $32
+    cp $32
     jr z, .done
     inc c
-    cp a, $40
+    cp $40
     jr z, .done
     inc c
-    cp a, $80
+    cp $80
     jr z, .done
     inc c
 
@@ -2126,10 +1917,7 @@ Func_001_5311:: ; address name
     ld a, c
     ret
 
-; only called from DebugSkillViewer_Update (E-0047)
-; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
 DebugSkillViewer_Update_WriteVRAMByte::
-Func_001_5344:: ; address name
     ld d, a
     ld e, $00
 
@@ -2139,12 +1927,12 @@ Func_001_5344:: ; address name
     ld hl, DebugSkillViewer_Update_WriteVRAMByte_Data
     add_a_to_hl
     ld a, d
-    and a, [hl]
+    and [hl]
     jr z, .skip
     ld a, $01
 
 .skip:
-    add a, c
+    add c
     pop hl
     di
     call WriteVRAMByte
@@ -2155,33 +1943,26 @@ Func_001_5344:: ; address name
     jr nz, .loop
     ret
 
-; address loaded by DebugSkillViewer_Update_WriteVRAMByte
-DebugSkillViewer_Update_WriteVRAMByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_5364:: ; address name
+DebugSkillViewer_Update_WriteVRAMByte_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
-; only called from DebugShowMonsterRecord (E-0047)
-; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
-; reads: hTemp2, hTemp1, hTemp0
-; writes: wDigits
 DebugShowMonsterRecord_Number24ToPackedBCD::
-Func_001_536C:: ; address name
     push bc
     push hl
     ld a, e
     ld [wDigits], a
     ld a, d
     ld [wDigits + $1], a
-    xor a, a
+    xor a
     ld [wDigits + $2], a
     call Number24ToPackedBCD
     pop hl
     pop bc
     ld e, $00
     ldh a, [hTemp2]
-    and a, $0F
+    and $0f
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, d
     jr nz, .call_write_vram_byte_inc
@@ -2189,17 +1970,17 @@ Func_001_536C:: ; address name
     jr .call_write_vram_byte_inc2
 
 .call_write_vram_byte_inc:
-    add a, b
+    add b
 
 .call_write_vram_byte_inc2:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp1]
-    and a, $F0
+    and $f0
     swap a
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, d
     jr nz, .call_write_vram_byte_inc3
@@ -2207,16 +1988,16 @@ Func_001_536C:: ; address name
     jr .call_write_vram_byte_inc4
 
 .call_write_vram_byte_inc3:
-    add a, b
+    add b
 
 .call_write_vram_byte_inc4:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp1]
-    and a, $0F
+    and $0f
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, d
     jr nz, .call_write_vram_byte_inc5
@@ -2224,17 +2005,17 @@ Func_001_536C:: ; address name
     jr .call_write_vram_byte_inc6
 
 .call_write_vram_byte_inc5:
-    add a, b
+    add b
 
 .call_write_vram_byte_inc6:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp0]
-    and a, $F0
+    and $f0
     swap a
     ld d, a
-    or a, e
+    or e
     ld e, a
     ld a, d
     jr nz, .call_write_vram_byte_inc7
@@ -2242,29 +2023,28 @@ Func_001_536C:: ; address name
     jr .call_write_vram_byte_inc8
 
 .call_write_vram_byte_inc7:
-    add a, b
+    add b
 
 .call_write_vram_byte_inc8:
     di
     call WriteVRAMByteInc
     ei
     ldh a, [hTemp0]
-    and a, $0F
-    add a, b
+    and $0f
+    add b
     di
     call WriteVRAMByte
     ei
     ret
 
-; writes A as decimal digit tiles at HL (three digits, with tile C for absent leading digits) (E-0124)
-; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
+; writes A as decimal digit tiles at HL (three digits, with tile C for absent leading digits)
+; (E-0124)
 WriteDecimalByteTiles_Bank01::
-Func_001_53DC:: ; address name
-    cp a, $64
+    cp $64
     jr nc, .call_div_mod_a_by_e_bank01
     call WriteTileCAtHL
     inc hl
-    cp a, $0A
+    cp $0a
     jr nc, .call_div_mod_a_by_e_bank012
     call WriteTileCAtHL
     inc hl
@@ -2277,7 +2057,7 @@ Func_001_53DC:: ; address name
     inc hl
 
 .call_div_mod_a_by_e_bank012:
-    ld e, $0A
+    ld e, $0a
     call DivModAByE_Bank01
     call WriteTileDPlusBAtHL
     inc hl
@@ -2288,25 +2068,21 @@ Func_001_53DC:: ; address name
     ret
 
 ; D = A / E and A = A mod E by repeated subtraction (E-0122)
-; 2 call sites from 1 routine (e.g. WriteDecimalByteTiles_Bank01)
 DivModAByE_Bank01::
-Func_001_5405:: ; address name
-    ld d, $FF
+    ld d, $ff
 
 .loop:
     inc d
-    sub a, e
+    sub e
     jr nc, .loop
-    add a, e
+    add e
     ret
 
 ; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 5 call sites from 3 routines (e.g. WriteDecimalByteTiles_Bank01, DebugShowMonsterRecord_WriteTileDPlusBAtHL, WriteHexByteTilesAtHL)
 WriteTileDPlusBAtHL::
-Func_001_540D:: ; address name
     push af
     ld a, d
-    add a, b
+    add b
     di
     call WriteVRAMByte
     ei
@@ -2314,9 +2090,7 @@ Func_001_540D:: ; address name
     ret
 
 ; writes tile C at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 2 call sites from 1 routine (e.g. WriteDecimalByteTiles_Bank01)
 WriteTileCAtHL::
-Func_001_5417:: ; address name
     push af
     ld a, c
     di
@@ -2325,46 +2099,36 @@ Func_001_5417:: ; address name
     pop af
     ret
 
-; HL += 1, writes the high nibble of A as a tile (WriteTileDPlusBAtHL), then falls into the low-nibble write (E-0122)
-; 7 call sites from 2 routines (e.g. DebugShowMonsterRecord, DebugSkillViewer_Update)
+; HL += 1, writes the high nibble of A as a tile (WriteTileDPlusBAtHL), then falls into the
+; low-nibble write (E-0122)
 WriteHexByteTilesAtHL::
-Func_001_5420:: ; address name
     inc hl
     push af
     swap a
-    and a, $0F
+    and $0f
     ld d, a
     call WriteTileDPlusBAtHL
     inc hl
     pop af
 
-; only called from DebugShowMonsterRecord (E-0047)
-; 2 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 DebugShowMonsterRecord_WriteTileDPlusBAtHL::
-Func_001_542C:: ; address name
-    and a, $0F
+    and $0f
     ld d, a
     call WriteTileDPlusBAtHL
     ret
 
-; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
+; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
+; HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 DebugStaffRoll_Update::
-Jump_001_5433:: ; address name
     farcall DebugStaffRoll_Update_RunFieldEventFieldEventKind
     ret
 
 ; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenState, wJoypadPressedRepeat, wDebugCursor, wScreenByteBD, wScreenCounter, wGlyphListPos, wDebugValue0, wDebugValue1, ...
-; writes: wScreenState, wScreenByteBD, wDebugCursor, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, ...
-; points at: wGridCursorY, wDebugResultsBuf, wModeChangeRequest, wDebugValue2, wDebugSubState, wRecordBufA, wArg6
 DebugResultsDisplay_Update::
-Jump_001_543A:: ; address name
     ld a, [wScreenState]
-    and a, a
+    and a
     jp z, DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat
-    cp a, $01
+    cp $01
     jp z, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
@@ -2386,14 +2150,14 @@ Jump_001_543A:: ; address name
 
 .call_debug_results_display_update_hl_to:
     call DebugResultsDisplay_Update_HLToDecimalDigits
-    xor a, a
+    xor a
     ld [wScreenState], a
     ld [wScreenByteBD], a
     ret
 
 .check_debug_cursor:
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr nz, .read_screen_byte_bd
     ld hl, wGridCursorY
     jr .read_screen_byte_bd2
@@ -2405,7 +2169,7 @@ Jump_001_543A:: ; address name
     ld a, [wScreenByteBD]
     add_a_to_hl
     ld a, [hl]
-    and a, a
+    and a
     jr nz, .call_debug_results_display_update_write_debug
     ld a, $04
 
@@ -2417,7 +2181,7 @@ Jump_001_543A:: ; address name
 
 .check_debug_cursor2:
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr nz, .read_screen_byte_bd3
     ld hl, wGridCursorY
     jr .read_screen_byte_bd4
@@ -2429,9 +2193,9 @@ Jump_001_543A:: ; address name
     ld a, [wScreenByteBD]
     add_a_to_hl
     ld a, [hl]
-    cp a, $03
+    cp $03
     jr c, .call_debug_results_display_update_write_debug2
-    ld a, $FF
+    ld a, $ff
 
 .call_debug_results_display_update_write_debug2:
     inc a
@@ -2442,9 +2206,9 @@ Jump_001_543A:: ; address name
 .call_debug_results_display_update_hl_to2:
     call DebugResultsDisplay_Update_HLToDecimalDigits
     ld a, [wScreenByteBD]
-    cp a, $1A
+    cp $1a
     jr c, .set_screen_byte_bd
-    ld a, $FF
+    ld a, $ff
 
 .set_screen_byte_bd:
     inc a
@@ -2455,9 +2219,9 @@ Jump_001_543A:: ; address name
 .call_debug_results_display_update_hl_to3:
     call DebugResultsDisplay_Update_HLToDecimalDigits
     ld a, [wScreenByteBD]
-    and a, a
+    and a
     jr nz, .set_screen_byte_bd2
-    ld a, $1B
+    ld a, $1b
 
 .set_screen_byte_bd2:
     dec a
@@ -2465,31 +2229,20 @@ Jump_001_543A:: ; address name
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
-; only called from DebugResultsDisplay_Update (E-0047)
-; 5 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
-; reads: wDebugCounter, wDebugCursor, wScreenByteBD, wDigits
-; writes: wDebugCounter
-; points at: wGridCursorY, wDebugResultsBuf
 DebugResultsDisplay_Update_WriteDebugCounter::
-Func_001_54E8:: ; address name
     ld a, [wDebugCounter]
     inc a
     ld [wDebugCounter], a
-    cp a, $10
+    cp $10
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits
-    cp a, $18
+    cp $18
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb
-    xor a, a
+    xor a
     ld [wDebugCounter], a
 
-; only called from DebugResultsDisplay_Update (E-0047)
-; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
-; reads: wDebugCursor, wScreenByteBD, wDigits
-; points at: wGridCursorY, wDebugResultsBuf
 DebugResultsDisplay_Update_HLToDecimalDigits::
-Func_001_54FB:: ; address name
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr nz, .read_screen_byte_bd
     ld hl, wGridCursorY
     jr .read_screen_byte_bd2
@@ -2506,7 +2259,7 @@ Func_001_54FB:: ; address name
     call HLToDecimalDigits
     call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
     ld a, [wDigits + $2]
-    add a, $10
+    add $10
     ld c, a
     di
     call WaitForVRAMAccess
@@ -2516,22 +2269,17 @@ Func_001_54FB:: ; address name
     ret
 
 DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb::
-Jump_001_552A:: ; address name
     call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
     di
     call WaitForVRAMAccess
-    xor a, a
+    xor a
     ld [hl], a
     ei
     ret
 
-; only called from DebugResultsDisplay_Update_Sub02 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_HLToDecimalDigits)
-; reads: wDebugCursor, wScreenByteBD
 DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
-Func_001_5535:: ; address name
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr nz, .check_screen_byte_bd
     ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C
     jr .check_screen_byte_bd2
@@ -2541,9 +2289,9 @@ Func_001_5535:: ; address name
 
 .check_screen_byte_bd2:
     ld a, [wScreenByteBD]
-    cp a, $0E
+    cp $0e
     jr c, .skip
-    sub a, $0E
+    sub $0e
     inc de
     inc de
 
@@ -2558,38 +2306,33 @@ Func_001_5535:: ; address name
     add_a_to_hl
     ret
 
-; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_555C:: ; address name
-    db $86, $99, $A6, $99
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C::
+    db $86, $99, $a6, $99
 
-; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_5560:: ; address name
-    db $E6, $99, $06, $9A
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560::
+    db $e6, $99, $06, $9a
 
 DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1::
-Jump_001_5564:: ; address name
     ld a, [wArg1]
-    and a, a
+    and a
     jr z, .call_compute_breeding_child
-    cp a, $02
+    cp $02
     jr z, .call_compute_breeding_child
-    xor a, a
+    xor a
     ld [wArg1], a
 
 .call_compute_breeding_child:
     farcall ComputeBreedingChild
     ld a, [wArg5]
-    cp a, $FF
+    cp $ff
     ret nz
     ld a, [wArg1]
     push af
     ld a, [wArg7]
-    cp a, $FF
+    cp $ff
     jr nz, .read_arg6
     ld a, [wArg6]
-    cp a, $FF
+    cp $ff
     jr z, .call_debug_results_display_update_write
 
 .read_arg6:
@@ -2604,7 +2347,7 @@ Jump_001_5564:: ; address name
     ld [wArg4], a
     farcall TestBitInFieldAtArg3
     ld a, [wArg5]
-    cp a, $FF
+    cp $ff
     jr z, .set_text_window_tile_lo
     call DebugResultsDisplay_Update_WriteUnknownName
     ld hl, vTiles2 + $500
@@ -2646,9 +2389,9 @@ Jump_001_5564:: ; address name
     ld de, vTiles2 + $500
     call CopyGlyphTilesToVRAM
     ld bc, $0000
-    ld de, vBGMap0 + $6A
+    ld de, vBGMap0 + $6a
     call WriteThreeHexDigitsAtDE
-    xor a, a
+    xor a
     ld [wScreenState], a
     ld [wNameEntryState], a
     ret
@@ -2680,12 +2423,12 @@ Jump_001_5564:: ; address name
     ld c, a
     ld a, [wArg7]
     ld b, a
-    ld de, vBGMap0 + $6A
+    ld de, vBGMap0 + $6a
     call WriteThreeHexDigitsAtDE
     ld hl, wChildRecord + MON_SEX
     ld a, [hl]
-    and a, $01
-    add a, $FE
+    and $01
+    add $fe
     ld c, a
     ld hl, vBGMap0 + $71
     di
@@ -2718,14 +2461,14 @@ Jump_001_5564:: ; address name
 .loop:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0E
+    cp $0e
     jr c, .loop
     ld de, vBGMap0 + $26
     ld c, $00
@@ -2733,34 +2476,31 @@ Jump_001_5564:: ; address name
 .loop2:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0D
+    cp $0d
     jr c, .loop2
     pop af
     ld [wArg1], a
-    xor a, a
+    xor a
     ld [wScreenState], a
     ld [wNameEntryState], a
     ret
 
-; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD)
 DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess::
-Func_001_56D3:: ; address name
     ld a, c
-    and a, $F0
+    and $f0
     swap a
-    add a, $10
+    add $10
     ld b, a
     ld a, c
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     ld c, a
     di
     call WaitForVRAMAccess
@@ -2776,7 +2516,6 @@ Func_001_56D3:: ; address name
     ret
 
 DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat::
-Jump_001_56F1:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2829,45 +2568,45 @@ Jump_001_56F1:: ; address name
 .loop:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0E
+    cp $0e
     jr c, .loop
-    ld de, vBGMap0 + $1A6
+    ld de, vBGMap0 + $1a6
     ld c, $00
 
 .loop2:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0D
+    cp $0d
     jr c, .loop2
     ld hl, wDebugResultsBuf
-    ld de, vBGMap0 + $1E6
+    ld de, vBGMap0 + $1e6
     ld c, $00
 
 .loop3:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0E
+    cp $0e
     jr c, .loop3
     ld de, vBGMap0 + $206
     ld c, $00
@@ -2875,23 +2614,20 @@ Jump_001_56F1:: ; address name
 .loop4:
     di
     call WaitForVRAMAccess
-    ld a, [hl+]
-    add a, $10
+    ld a, [hli]
+    add $10
     ld [de], a
     ei
     inc de
     inc c
     ld a, c
-    cp a, $0D
+    cp $0d
     jr c, .loop4
     ret
 
-; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE (E-0122)
-; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess)
-; reads: wArg5
-; writes: wArg4
+; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE
+; (E-0122)
 CopyWD01ABytesFromIndexCToDE::
-Func_001_57C7:: ; address name
     push bc
     push de
     ld a, c
@@ -2904,42 +2640,38 @@ Func_001_57C7:: ; address name
     inc de
     inc c
     ld a, c
-    cp a, $1B
+    cp $1b
     jr c, CopyWD01ABytesFromIndexCToDE
     ret
 
-; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following entries are the debug results screen input handlers (E-0131)
-; 1 call site from 1 routine (e.g. DebugToggleArg1Marker)
-; reads: wArg1
-; writes: wArg1
+; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following
+; entries are the debug results screen input handlers (E-0131)
 DebugToggleArg1Marker::
-Func_001_57E1:: ; address name
     ld a, [wArg1]
-    and a, a
+    and a
     jr nz, .clear_arg1
     ld a, $02
     ld [wArg1], a
     jr .call_wait_for_vram_access
 
 .clear_arg1:
-    xor a, a
+    xor a
     ld [wArg1], a
 
 .call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, [wArg1]
-    add a, $10
+    add $10
     ld [vBGMap0 + $81], a
     ei
     ret
 
 DebugToggleArg1Marker_CheckDebugCursor::
-Jump_001_5800:: ; address name
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr z, .call_draw_debug_field_value_debug_cursor
-    cp a, $07
+    cp $07
     jr z, .call_draw_debug_field_value_debug_cursor
     call DebugToggleArg1Marker
     call StepDebugCursorDebugCounter
@@ -2951,15 +2683,14 @@ Jump_001_5800:: ; address name
     inc a
     inc a
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenByteBD], a
     ret
 
 DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
-Jump_001_5822:: ; address name
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
-    and a, a
+    and a
     ret z
     dec a
     ld [wDebugCursor], a
@@ -2967,10 +2698,9 @@ Jump_001_5822:: ; address name
     ret
 
 DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
-Jump_001_5832:: ; address name
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
-    cp a, $09
+    cp $09
     ret z
     inc a
     ld [wDebugCursor], a
@@ -2978,15 +2708,14 @@ Jump_001_5832:: ; address name
     ret
 
 DebugToggleArg1Marker_CheckDebugCursor2::
-Jump_001_5843:: ; address name
     ld a, [wDebugCursor]
-    and a, a
+    and a
     jr z, .skip6
-    cp a, $01
+    cp $01
     jr z, .skip
-    cp a, $02
+    cp $02
     jr z, .skip5
-    cp a, $03
+    cp $03
     jr z, .skip2
     jp DebugToggleArg1Marker_Cp04
 
@@ -3001,9 +2730,9 @@ Jump_001_5843:: ; address name
     push hl
     ld a, [hl]
     ld c, a
-    and a, a
+    and a
     jr z, .skip4
-    ld a, $FF
+    ld a, $ff
 
 .skip4:
     inc a
@@ -3023,39 +2752,37 @@ Jump_001_5843:: ; address name
 
 .skip7:
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ld a, [hl]
     ld b, a
-    cp a, $01
+    cp $01
     jr c, .next
     ld a, c
-    cp a, $74
+    cp $74
     jr c, .next
-    ld bc, $FFFF
+    ld bc, $ffff
 
 .next:
     inc bc
     pop hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld a, b
     ld [hl], a
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
-    cp a, $02
+    cp $02
     jr z, DebugToggleArg1Marker_Loop
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
     jr DebugToggleArg1Marker_Skip
 
 DebugToggleArg1Marker_Loop::
-Jump_001_58A2:: ; address name
     ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
 DebugToggleArg1Marker_Skip::
-Jump_001_58A8:: ; address name
     push de
     push hl
     ld a, l
@@ -3074,15 +2801,14 @@ Jump_001_58A8:: ; address name
     ret
 
 DebugToggleArg1Marker_CheckDebugCursor3::
-Jump_001_58C6:: ; address name
     ld a, [wDebugCursor]
-    and a, a
+    and a
     jr z, .skip5
-    cp a, $01
+    cp $01
     jr z, .skip
-    cp a, $02
+    cp $02
     jr z, .skip6
-    cp a, $03
+    cp $03
     jr z, .skip2
     jp DebugToggleArg1Marker_Cp042
 
@@ -3096,7 +2822,7 @@ Jump_001_58C6:: ; address name
 .skip3:
     push hl
     ld a, [hl]
-    cp a, $01
+    cp $01
     jr z, .skip4
     ld a, $02
 
@@ -3116,14 +2842,14 @@ Jump_001_58C6:: ; address name
 
 .skip7:
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ld a, [hl]
     ld b, a
-    and a, a
+    and a
     jr nz, .next
     ld a, c
-    and a, a
+    and a
     jr nz, .next
     ld bc, $0175
 
@@ -3131,28 +2857,27 @@ Jump_001_58C6:: ; address name
     dec bc
     pop hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld a, b
     ld [hl], a
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
-    cp a, $02
+    cp $02
     jp z, DebugToggleArg1Marker_Loop
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
     jp DebugToggleArg1Marker_Skip
 
 DebugToggleArg1Marker_Cp04::
-Jump_001_5923:: ; address name
-    cp a, $04
+    cp $04
     jr z, .skip
-    cp a, $05
+    cp $05
     jr z, .skip5
-    cp a, $06
+    cp $06
     jr z, .skip7
-    cp a, $07
+    cp $07
     jr z, .skip2
-    cp a, $08
+    cp $08
     jr z, .skip6
     jr .skip8
 
@@ -3168,9 +2893,9 @@ Jump_001_5923:: ; address name
 .skip3:
     push hl
     ld a, [hl]
-    cp a, c
+    cp c
     jr c, .skip4
-    ld a, $FF
+    ld a, $ff
 
 .skip4:
     inc a
@@ -3191,25 +2916,24 @@ Jump_001_5923:: ; address name
 
 .skip7:
     ld hl, wGlyphListStart
-    ld c, $1B
+    ld c, $1b
     jr .skip3
 
 .skip8:
     ld hl, wGridCursorX
-    ld c, $1B
+    ld c, $1b
     jr .skip3
 
 DebugToggleArg1Marker_Cp042::
-Jump_001_596F:: ; address name
-    cp a, $04
+    cp $04
     jr z, .skip
-    cp a, $05
+    cp $05
     jr z, .skip5
-    cp a, $06
+    cp $06
     jr z, .skip7
-    cp a, $07
+    cp $07
     jr z, .skip2
-    cp a, $08
+    cp $08
     jr z, .skip6
     jr .skip8
 
@@ -3225,7 +2949,7 @@ Jump_001_596F:: ; address name
 .skip3:
     push hl
     ld a, [hl]
-    and a, a
+    and a
     jr nz, .skip4
     ld a, c
 
@@ -3248,17 +2972,16 @@ Jump_001_596F:: ; address name
 
 .skip7:
     ld hl, wGlyphListStart
-    ld c, $1C
+    ld c, $1c
     jr .skip3
 
 .skip8:
     ld hl, wGridCursorX
-    ld c, $1C
+    ld c, $1c
     jr .skip3
 
 DebugToggleArg1Marker_ClearDebugCursor::
-Jump_001_59BA:: ; address name
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
@@ -3267,50 +2990,49 @@ Jump_001_59BA:: ; address name
     ld [wDebugState], a
     ld [wDebugSubState], a
     ld [wDebugCounter], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
 
 DebugToggleArg1Marker_CheckScreenCounter::
-Jump_001_59DC:: ; address name
     ld a, [wScreenCounter]
-    cp a, $0A
+    cp $0a
     ret c
     ld a, [wGlyphListPos]
-    cp a, $0A
+    cp $0a
     ret c
     ld hl, wDebugValue2
     ld de, wDebugSubState
     ld a, [hl]
     ld b, a
     ld a, [de]
-    cp a, b
+    cp b
     jr nz, .skip
     ret
 
 .skip:
     ld hl, wRecordBufA
-    ld bc, $01EF
+    ld bc, $01ef
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld hl, wRecordBufA + MON_SPECIES
     ld a, [wDebugValue0]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDebugValue1]
-    ld [hl+], a
+    ld [hli], a
     ld hl, wRecordBufB + MON_SPECIES
     ld a, [wDebugValue3]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDebugState]
-    ld [hl+], a
+    ld [hli], a
     ld hl, wRecordBufA + MON_SEX
     ld a, [wDebugValue2]
     ld [hl], a
@@ -3353,7 +3075,7 @@ Jump_001_59DC:: ; address name
     ld [hl], a
     ld hl, wGridCursorY
     ld de, wRecordBufA + MON_RESISTANCES
-    ld b, $1B
+    ld b, $1b
 
 .loop2:
     ld a, [hl]
@@ -3364,7 +3086,7 @@ Jump_001_59DC:: ; address name
     jr nz, .loop2
     ld hl, wDebugResultsBuf
     ld de, wRecordBufB + MON_RESISTANCES
-    ld b, $1B
+    ld b, $1b
 
 .loop3:
     ld a, [hl]
@@ -3376,35 +3098,30 @@ Jump_001_59DC:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wNameEntryState], a
     ret
 
-; debug: wDebugCounter += 1; below $10 continues at Func_001_5AC0, below $18 at PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
-; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess, DebugToggleArg1Marker)
-; reads: wDebugCounter, wDebugCursor
-; writes: wDebugCounter
+; debug: wDebugCounter += 1; below $10 continues at DrawDebugFieldValueDebugCursor, below $18 at
+; PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
 StepDebugCursorDebugCounter::
-Func_001_5AAC:: ; address name
     ld a, [wDebugCounter]
     inc a
     ld [wDebugCounter], a
-    cp a, $10
+    cp $10
     jr c, DrawDebugFieldValueDebugCursor
-    cp a, $18
+    cp $18
     jp c, PackTwoDigitsOfCAsBCD_ReadDebugCursor
-    xor a, a
+    xor a
     ld [wDebugCounter], a
 
-; debug: draws the value of field wDebugCursor (Data_001_5B70) at Data_001_5B84[wDebugCursor] as hex, a tile or BCD (E-0128)
-; 3 call sites from 1 routine (e.g. DebugToggleArg1Marker)
-; reads: wDebugCursor
+; debug: draws the value of field wDebugCursor (DrawDebugFieldValueDebugCursor_Data_5B70) at
+; DrawDebugFieldValueDebugCursor_Data_5B84[wDebugCursor] as hex, a tile or BCD (E-0128)
 DrawDebugFieldValueDebugCursor::
-Func_001_5AC0:: ; address name
     ld a, [wDebugCursor]
     sla a
     ld de, DrawDebugFieldValueDebugCursor_Data_5B70
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -3421,7 +3138,7 @@ Func_001_5AC0:: ; address name
     ld a, [hl]
     ld b, a
     ld a, [wDebugCursor]
-    cp a, $04
+    cp $04
     jr nc, .read_debug_cursor2
     bit 0, a
     jr nz, .read_debug_cursor
@@ -3450,7 +3167,7 @@ Func_001_5AC0:: ; address name
     di
     call WaitForVRAMAccess
     ld a, c
-    add a, $FE
+    add $fe
     ld [de], a
     ei
     ret
@@ -3470,27 +3187,23 @@ Func_001_5AC0:: ; address name
     ret
 
 ; C = the last two decimal digits of C packed as BCD (E-0125)
-; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DrawDebugFieldValueDebugCursor)
-; reads: wDigits
 PackTwoDigitsOfCAsBCD::
-Func_001_5B2D:: ; address name
     push de
     ld l, c
     ld h, $00
     call HLToDecimalDigits
     ld a, [wDigits + $1]
-    and a, $0F
+    and $0f
     swap a
     ld c, a
     ld a, [wDigits + $2]
-    and a, $0F
-    or a, c
+    and $0f
+    or c
     ld c, a
     pop de
     ret
 
 PackTwoDigitsOfCAsBCD_ReadDebugCursor::
-Jump_001_5B45:: ; address name
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
@@ -3502,41 +3215,34 @@ Jump_001_5B45:: ; address name
     ld d, a
     di
     call WaitForVRAMAccess
-    xor a, a
+    xor a
     ld [de], a
     inc de
     ei
     di
     call WaitForVRAMAccess
-    xor a, a
+    xor a
     ld [de], a
     inc de
     ei
     di
     call WaitForVRAMAccess
-    xor a, a
+    xor a
     ld [de], a
     inc de
     ei
     ret
 
-; address loaded by DrawDebugFieldValueDebugCursor
-DrawDebugFieldValueDebugCursor_Data_5B70:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_5B70:: ; address name
-    db $F9, $C5, $FB, $C5, $FC, $C5, $FE, $C5, $81, $D7, $83, $D7, $85, $D7, $82, $D7
-    db $84, $D7, $86, $D7
+DrawDebugFieldValueDebugCursor_Data_5B70::
+    db $f9, $c5, $fb, $c5, $fc, $c5, $fe, $c5, $81, $d7, $83, $d7, $85, $d7, $82, $d7
+    db $84, $d7, $86, $d7
 
-; address loaded by DrawDebugFieldValueDebugCursor, PackTwoDigitsOfCAsBCD
-DrawDebugFieldValueDebugCursor_Data_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_5B84:: ; address name
-    db $E6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $A2, $99, $C2, $99, $E2, $99
-    db $02, $9A, $22, $9A
+DrawDebugFieldValueDebugCursor_Data_5B84::
+    db $e6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $a2, $99, $c2, $99, $e2, $99
+    db $02, $9a, $22, $9a
 
 ; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
-; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DebugToggleArg1Marker)
-; writes: wNameGlyphBuf
 DrawMonsterNameForWordAtDE_Bank01::
-Func_001_5B98:: ; address name
     push hl
     ld a, [de]
     ld l, a
@@ -3547,18 +3253,14 @@ Func_001_5B98:: ; address name
     pop hl
     ld e, l
     ld d, h
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     call CopyGlyphTilesToVRAM
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
-; 1 call site from 1 routine (e.g. DrawMonsterNameForWordAtDE_Bank01)
-; reads: wDataBank
-; writes: wDataBank
-; points at: wNameGlyphBuf
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
+; wDataBank) to wNameGlyphBuf; wDataBank is restored
 CopyMonsterNameToBuffer_B01::
-Func_001_5BAD:: ; address name
     push hl
     ld a, [wDataBank]
     push af
@@ -3594,36 +3296,28 @@ Func_001_5BAD:: ; address name
     ret
 
 ; fills wNameGlyphBuf with nine $98 placeholder glyphs and $F0
-; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD)
-; points at: wNameGlyphBuf
 DebugResultsDisplay_Update_WriteUnknownName::
-Func_001_5BE8:: ; address name
     ld c, $00
     ld hl, wNameGlyphBuf
 
 .loop:
     ld a, $98
-    ld [hl+], a
+    ld [hli], a
     inc c
     ld a, c
-    cp a, $09
+    cp $09
     jr c, .loop
-    ld a, $F0
+    ld a, $f0
     ld [hl], a
     ret
 
 ; update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wDebugState, wDebugSubState, wDebugValue0, wDebugValue2, wDebugValue3, wKeyWorldWidth, wKeyWorldHeight, ...
-; writes: wCurrentKeyIndex, hMapScreenX, hMapScreenY, hMapId, wMapType, wScriptRunning, wGameMode, wModeState, ...
-; points at: wModeChangeRequest
 DebugAutomap_Update::
-Jump_001_5BFA:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, .check_bit1
     ld a, [wDebugState]
-    cp a, $FF
+    cp $ff
     jr z, .call_debug_automap_update_roll_key_contents
     ld a, [wDebugSubState]
     bit 7, a
@@ -3639,7 +3333,7 @@ Jump_001_5BFA:: ; address name
 
 .check_debug_state:
     ld a, [wDebugState]
-    cp a, $FF
+    cp $ff
     ret z
     ld a, [wDebugValue0]
     ld [wCurrentKeyIndex], a
@@ -3651,18 +3345,18 @@ Jump_001_5BFA:: ; address name
     bit 7, a
     jr z, .check_debug_state2
     ld a, [wDebugState]
-    and a, $1F
+    and $1f
     ld hl, DebugAutomap_Update_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
-    xor a, a
+    xor a
     ld [wMapType], a
-    xor a, a
+    xor a
     ld [wScriptRunning], a
     ld a, $01
     ld [wGameMode], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -3670,12 +3364,12 @@ Jump_001_5BFA:: ; address name
 
 .check_debug_state2:
     ld a, [wDebugState]
-    and a, $7F
+    and $7f
     ld [wKeyWorldSlot], a
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
     ld a, $80
     ld [wMapType], a
-    xor a, a
+    xor a
     ld [wScriptRunning], a
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
@@ -3706,7 +3400,7 @@ Jump_001_5BFA:: ; address name
     jr z, .check_bit7
     ld a, [wDebugCursor]
     dec a
-    cp a, $FF
+    cp $ff
     jr nz, .set_debug_cursor
     ld a, $03
 
@@ -3719,9 +3413,9 @@ Jump_001_5BFA:: ; address name
     jr z, .check_joypad_pressed_repeat2
     ld a, [wDebugCursor]
     inc a
-    cp a, $04
+    cp $04
     jr nz, .set_debug_cursor2
-    xor a, a
+    xor a
 
 .set_debug_cursor2:
     ld [wDebugCursor], a
@@ -3731,7 +3425,7 @@ Jump_001_5BFA:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, .check_bit4
-    ld c, $FF
+    ld c, $ff
     jr .skip
 
 .check_bit4:
@@ -3743,24 +3437,24 @@ Jump_001_5BFA:: ; address name
     bit 0, c
     jr z, .check_debug_value0
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .skip2
     ld a, [wDebugValue0]
-    add a, c
-    cp a, $20
+    add c
+    cp $20
     jr nz, .cp_FF
-    xor a, a
+    xor a
     jr .set_debug_value0
 
 .cp_FF:
-    cp a, $FF
+    cp $ff
     jr nz, .set_debug_value0
     ld a, $13
 
 .set_debug_value0:
-    or a, $80
+    or $80
     ld [wDebugValue0], a
-    and a, $7F
+    and $7f
     call LoadKeyEntryFieldsToDebugState
     jr .check_debug_value0
 
@@ -3771,19 +3465,19 @@ Jump_001_5BFA:: ; address name
     bit 7, a
     jr nz, .skip3
     ld a, [wDebugValue1]
-    add a, c
-    cp a, $64
+    add c
+    cp $64
     jr nz, .cp_FF2
-    xor a, a
+    xor a
     jr .set_debug_value1
 
 .cp_FF2:
-    cp a, $FF
+    cp $ff
     jr nz, .set_debug_value1
     ld a, $63
 
 .set_debug_value1:
-    or a, $80
+    or $80
     ld [wDebugValue1], a
     jr .check_debug_value0
 
@@ -3791,8 +3485,8 @@ Jump_001_5BFA:: ; address name
     dec a
     jr nz, .skip4
     ld a, [wDebugValue2]
-    add a, c
-    and a, $0F
+    add c
+    and $0f
     ld [wDebugValue2], a
     jr .check_debug_value0
 
@@ -3800,8 +3494,8 @@ Jump_001_5BFA:: ; address name
     dec a
     jr nz, .check_debug_value0
     ld a, [wDebugValue3]
-    add a, c
-    and a, $0F
+    add c
+    and $0f
     ld [wDebugValue3], a
 
 .check_debug_value0:
@@ -3814,8 +3508,8 @@ Jump_001_5BFA:: ; address name
     ld a, [wDebugValue0]
     bit 7, a
     jr z, .check_debug_value03
-    and a, $7F
-    ld de, vBGMap0 + $10A
+    and $7f
+    ld de, vBGMap0 + $10a
     call WriteHexByteTilesAtDE
 
 .check_debug_value03:
@@ -3828,33 +3522,33 @@ Jump_001_5BFA:: ; address name
 
 .check_debug_value04:
     ld a, [wDebugValue0]
-    and a, $7F
+    and $7f
     ld [wDebugValue0], a
     ld a, [wDebugValue1]
-    and a, $7F
+    and $7f
     ld [wDebugValue1], a
     call DebugAutomap_Update_WriteHexByteTilesAtDE
 
 .read_debug_value2:
     ld a, [wDebugValue2]
-    ld de, vBGMap0 + $14A
+    ld de, vBGMap0 + $14a
     call WriteHexByteTilesAtDE
     ld a, [wDebugValue3]
-    ld de, vBGMap0 + $16A
+    ld de, vBGMap0 + $16a
     call WriteHexByteTilesAtDE
     ld hl, vBGMap0 + $109
     ld b, $00
 
 .loop:
     ld a, [wDebugCursor]
-    cp a, b
+    cp b
     jr z, .call_write_vram_byte
     ld a, $80
     call WriteVRAMByte
     jr .skip5
 
 .call_write_vram_byte:
-    ld a, $F8
+    ld a, $f8
     call WriteVRAMByte
 
 .skip5:
@@ -3862,22 +3556,14 @@ Jump_001_5BFA:: ; address name
     add_a_to_hl
     inc b
     ld a, b
-    cp a, $05
+    cp $05
     jr nz, .loop
     ret
 
-; address loaded by DebugAutomap_Update
-DebugAutomap_Update_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_5DAD:: ; address name
-    db $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA
+DebugAutomap_Update_Data::
+    db $00, $05, $20, $30, $48, $70, $a0, $a8, $b0, $b8, $c8, $d1, $da
 
-; only called from DebugAutomap_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wDebugValue1, wDebugValue0, wDebugState, hTemp0, hTemp1, hTemp2, hTemp3, wKeyWorldWidth, ...
-; writes: hTemp0, wCurrentKeyIndex, wKeyWorldSlot, wPartyStrength, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
-; points at: wModeChangeRequest
 DebugAutomap_Update_RollKeyContentsForLevelTemp0::
-Func_001_5DBA:: ; address name
     ld a, [wDebugValue1]
     ldh [hTemp0], a
     farcall RollKeyContentsForLevelTemp0
@@ -3888,34 +3574,34 @@ Func_001_5DBA:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ld a, [wDebugState]
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     push hl
     farcall FindSRAMSlotMarkerIndex
     pop hl
     ldh a, [hTemp0]
-    cp a, $FF
+    cp $ff
     ret z
-    ld [hl+], a
+    ld [hli], a
     jr .set_key_world_slot
 
 .skip:
     ld a, [hl]
-    and a, $7F
-    ld [hl+], a
+    and $7f
+    ld [hli], a
 
 .set_key_world_slot:
     ld [wKeyWorldSlot], a
     ldh a, [hTemp1]
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp2]
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp3]
     ld [hl], a
     ld [wPartyStrength], a
@@ -3925,14 +3611,14 @@ Func_001_5DBA:: ; address name
     ld [wMapWidthScreens], a
     ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
-    xor a, a
+    xor a
     ldh [hPlayerFacing], a
     ld a, [wKeyWorldGoalScreen]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [wKeyWorldGoalScreen]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, [wKeyWorldGoalPos]
     ldh [hPlayerX], a
@@ -3941,15 +3627,15 @@ Func_001_5DBA:: ; address name
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
-    ld [wFollowerRecords + $A], a
+    ld [wFollowerRecords + $a], a
     ldh a, [hPlayerX]
     ld [wFollowerRecords + $1], a
     ld [wFollowerRecords + $6], a
-    ld [wFollowerRecords + $B], a
+    ld [wFollowerRecords + $b], a
     ldh a, [hPlayerY]
     ld [wFollowerRecords + $2], a
     ld [wFollowerRecords + $7], a
-    ld [wFollowerRecords + $C], a
+    ld [wFollowerRecords + $c], a
     ld a, $80
     ld [wMapType], a
     ld a, $01
@@ -3960,20 +3646,18 @@ Func_001_5DBA:: ; address name
     inc [hl]
     ret
 
-; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry, wDebugValue1 = byte 3 | $80 (E-0120)
-; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
-; writes: wDebugState, wDebugSubState, wDebugValue1
+; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry, wDebugValue1
+; = byte 3 | $80 (E-0120)
 LoadKeyEntryFieldsToDebugState::
-Func_001_5E6C:: ; address name
     ld l, a
     ld h, $00
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ld a, [hl]
     ld [wDebugState], a
@@ -3982,42 +3666,31 @@ Func_001_5E6C:: ; address name
     inc hl
     ld a, [hl]
     ld [wDebugSubState], a
-    or a, $80
+    or $80
     ld [wDebugValue1], a
     ret
 
-; only called from DebugAutomap_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wDebugState, wDebugSubState, wDebugValue1
-; writes: wDebugValue1
 DebugAutomap_Update_WriteHexByteTilesAtDE::
-Func_001_5E8A:: ; address name
     ld a, [wDebugState]
-    cp a, $FF
+    cp $ff
     jr z, .clear_debug_value1
     ld a, [wDebugSubState]
     bit 7, a
     jr nz, .clear_debug_value1
     ld a, [wDebugValue1]
-    and a, $7F
-    ld de, vBGMap0 + $12A
+    and $7f
+    ld de, vBGMap0 + $12a
     call WriteHexByteTilesAtDE
     ret
 
 .clear_debug_value1:
-    xor a, a
+    xor a
     ld [wDebugValue1], a
-    ld de, vBGMap0 + $12A
+    ld de, vBGMap0 + $12a
     call WriteHexByteTilesAtDE
     ret
 
-; only called from DebugAutomap_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wDebugSubState, wDebugState, wDebugValue0
-; writes: wNameGlyphBuf
-; points at: wNameGlyphBuf
 DebugAutomap_Update_CopyGlyphTilesToVRAM::
-Func_001_5EAF:: ; address name
     ld a, $90
     ld [wNameGlyphBuf], a
     ld [wNameGlyphBuf + $1], a
@@ -4029,32 +3702,32 @@ Func_001_5EAF:: ; address name
     ld [wNameGlyphBuf + $7], a
     ld [wNameGlyphBuf + $8], a
     ld [wNameGlyphBuf + $9], a
-    ld [wNameGlyphBuf + $A], a
-    ld [wNameGlyphBuf + $B], a
-    ld [wNameGlyphBuf + $C], a
-    ld [wNameGlyphBuf + $D], a
-    ld [wNameGlyphBuf + $E], a
-    ld a, $F0
-    ld [wNameGlyphBuf + $F], a
+    ld [wNameGlyphBuf + $a], a
+    ld [wNameGlyphBuf + $b], a
+    ld [wNameGlyphBuf + $c], a
+    ld [wNameGlyphBuf + $d], a
+    ld [wNameGlyphBuf + $e], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $f], a
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     ld a, [wDebugSubState]
     bit 7, a
     jr z, .check_debug_sub_state
     ld a, [wDebugState]
-    cp a, $FF
+    cp $ff
     jr nz, .check_debug_sub_state
     ld a, $29
     ld [wNameGlyphBuf], a
-    ld a, $2A
+    ld a, $2a
     ld [wNameGlyphBuf + $1], a
-    ld a, $8D
+    ld a, $8d
     ld [wNameGlyphBuf + $2], a
     ld a, $39
     ld [wNameGlyphBuf + $3], a
-    ld a, $2F
+    ld a, $2f
     ld [wNameGlyphBuf + $4], a
-    ld a, $F0
+    ld a, $f0
     ld [wNameGlyphBuf + $5], a
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
@@ -4067,16 +3740,16 @@ Func_001_5EAF:: ; address name
     ld a, [wDebugState]
     dec a
     swap a
-    and a, $F0
+    and $f0
     ld hl, DebugMenuNames
     add_a_to_hl
     ld de, wNameGlyphBuf
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    cp a, $F0
+    cp $f0
     jr nz, .loop
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
@@ -4084,47 +3757,43 @@ Func_001_5EAF:: ; address name
 
 .check_debug_value0:
     ld a, [wDebugValue0]
-    and a, $1F
+    and $1f
     ld de, wNameGlyphBuf
     call WriteKeyNameToDE
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     ret
 
-; E-0233 (C1: the debug menu copies the string at $5F56 + 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and draws it with CopyGlyphTilesToVRAM; 10 rows, then an 8-byte string for the 11th entry).
-; record: a debug menu entry name: glyph codes ending in $F0, padded to 16 bytes (not charmap.inc text)
+; the debug menu copies the string at $5F56 + 16 * (wDebugState - 1) up to $F0 to wNameGlyphBuf and
+; draws it with CopyGlyphTilesToVRAM; 10 rows, then an 8-byte string for the 11th entry (E-0233, C1)
+; record: a debug menu entry name: glyph codes ending in $F0, padded to 16 bytes (not charmap.inc
+; text)
 DebugMenuNames::
-Data_001_5F56:: ; address name
-    db $8A, $87, $42, $8D, $26, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 1
-    db $5E, $56, $66, $67, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00, $00 ; id 2
-    db $29, $25, $32, $8D, $2B, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 3
-    db $44, $30, $8D, $26, $44, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 4
-    db $40, $4A, $26, $33, $25, $4F, $2B, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00 ; id 5
-    db $64, $88, $62, $6A, $9C, $3D, $2F, $52, $3D, $29, $2A, $8D, $F0, $00, $00, $00 ; id 6
-    db $5C, $87, $77, $3D, $47, $4F, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00 ; id 7
-    db $2C, $55, $2A, $4B, $26, $2F, $8D, $4D, $3D, $29, $2A, $8D, $F0, $00, $00, $00 ; id 8
-    db $28, $47, $25, $37, $8D, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00, $00 ; id 9
-    db $43, $47, $3D, $35, $29, $25, $3D, $29, $2A, $8D, $F0, $00, $00, $00, $00, $00 ; id 10
-    db $2F, $51, $55, $3D, $29, $2A, $8D, $F0 ; end
+    db $8a, $87, $42, $8d, $26, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00, $00 ; id 1
+    db $5e, $56, $66, $67, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $29, $25, $32, $8d, $2b, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00, $00 ; id 3
+    db $44, $30, $8d, $26, $44, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00, $00 ; id 4
+    db $40, $4a, $26, $33, $25, $4f, $2b, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00 ; id 5
+    db $64, $88, $62, $6a, $9c, $3d, $2f, $52, $3d, $29, $2a, $8d, $f0, $00, $00, $00 ; id 6
+    db $5c, $87, $77, $3d, $47, $4f, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00 ; id 7
+    db $2c, $55, $2a, $4b, $26, $2f, $8d, $4d, $3d, $29, $2a, $8d, $f0, $00, $00, $00 ; id 8
+    db $28, $47, $25, $37, $8d, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00, $00 ; id 9
+    db $43, $47, $3d, $35, $29, $25, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00 ; id 10
+    db $2f, $51, $55, $3d, $29, $2a, $8d, $f0 ; end
 
 ; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, wDebugCursor, wFrameCounterLo, ...
-; writes: hTemp0, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wFieldReturnPhase, wGameMode, ...
-; points at: wModeChangeRequest, wDebugSubState
 DebugMapEditor_Update::
-Jump_001_5FFE:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr z, .check_joypad_pressed_repeat
     ld a, [wDebugValue0]
     ldh [hTemp0], a
     call DebugMapEditor_Update_WriteROMB0AndTemp0
-    or a, a
+    or a
     jr z, .read_debug_value0
     ld b, $08
-    ld hl, vBGMap0 + $1A5
-    ld a, $F0
+    ld hl, vBGMap0 + $1a5
+    ld a, $f0
 
 .loop:
     call WriteVRAMByteInc
@@ -4144,7 +3813,7 @@ Jump_001_5FFE:: ; address name
     ldh [hMapScreenY], a
     ld a, [wDebugState]
     ldh [hPlayerY], a
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $00
     ld [wGameMode], a
@@ -4160,7 +3829,7 @@ Jump_001_5FFE:: ; address name
     jr z, .check_bit7
     ld a, [wDebugCursor]
     dec a
-    cp a, $FF
+    cp $ff
     jr nz, .set_debug_cursor
     ld a, $04
 
@@ -4173,9 +3842,9 @@ Jump_001_5FFE:: ; address name
     jr z, .check_frame_counter_lo
     ld a, [wDebugCursor]
     inc a
-    cp a, $05
+    cp $05
     jr nz, .set_debug_cursor2
-    xor a, a
+    xor a
 
 .set_debug_cursor2:
     ld [wDebugCursor], a
@@ -4183,12 +3852,12 @@ Jump_001_5FFE:: ; address name
 .check_frame_counter_lo:
     ld c, $00
     ld a, [wFrameCounterLo]
-    and a, $03
+    and $03
     jr nz, .skip
     ld a, [wJoypadHeld]
     bit 5, a
     jr z, .check_bit4
-    ld c, $FF
+    ld c, $ff
     jr .skip
 
 .check_bit4:
@@ -4200,13 +3869,13 @@ Jump_001_5FFE:: ; address name
     bit 0, c
     jr z, .check_debug_sub_state
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .skip2
     ld a, [wDebugValue0]
-    add a, c
-    cp a, $FF
+    add c
+    cp $ff
     jr nz, .set_debug_value0
-    ld a, $E1
+    ld a, $e1
 
 .set_debug_value0:
     ld [wDebugValue0], a
@@ -4218,8 +3887,8 @@ Jump_001_5FFE:: ; address name
     dec a
     jr nz, .skip3
     ld a, [wDebugValue1]
-    add a, c
-    and a, $0F
+    add c
+    and $0f
     ld [wDebugValue1], a
     jr .check_debug_sub_state
 
@@ -4227,8 +3896,8 @@ Jump_001_5FFE:: ; address name
     dec a
     jr nz, .skip4
     ld a, [wDebugValue3]
-    add a, c
-    and a, $0F
+    add c
+    and $0f
     ld [wDebugValue3], a
     jr .check_debug_sub_state
 
@@ -4240,7 +3909,7 @@ Jump_001_5FFE:: ; address name
     sla c
     sla c
     ld a, [wDebugValue2]
-    add a, c
+    add c
     ld [wDebugValue2], a
     jr .check_debug_sub_state
 
@@ -4250,17 +3919,17 @@ Jump_001_5FFE:: ; address name
     sla c
     sla c
     ld a, [wDebugState]
-    add a, c
+    add c
     ld [wDebugState], a
 
 .check_debug_sub_state:
     ld a, [wDebugSubState]
-    or a, a
+    or a
     jr z, .read_debug_value1
     ld a, [wDebugValue0]
-    add a, $0A
+    add $0a
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld hl, vTiles2 + $200
     ld a, l
@@ -4273,39 +3942,39 @@ Jump_001_5FFE:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     farcall ShowString_Bank08
-    xor a, a
+    xor a
     ld [wDebugSubState], a
 
 .read_debug_value1:
     ld a, [wDebugValue1]
-    ld de, vBGMap0 + $10A
+    ld de, vBGMap0 + $10a
     call WriteHexByteTilesAtDE
     ld a, [wDebugValue3]
-    ld de, vBGMap0 + $12A
+    ld de, vBGMap0 + $12a
     call WriteHexByteTilesAtDE
     ld a, [wDebugValue2]
     swap a
-    and a, $0F
-    ld de, vBGMap0 + $14A
+    and $0f
+    ld de, vBGMap0 + $14a
     call WriteHexByteTilesAtDE
     ld a, [wDebugState]
     swap a
-    and a, $0F
-    ld de, vBGMap0 + $16A
+    and $0f
+    ld de, vBGMap0 + $16a
     call WriteHexByteTilesAtDE
-    ld hl, vBGMap0 + $E9
+    ld hl, vBGMap0 + $e9
     ld b, $00
 
 .loop2:
     ld a, [wDebugCursor]
-    cp a, b
+    cp b
     jr z, .call_write_vram_byte
     ld a, $80
     call WriteVRAMByte
     jr .skip6
 
 .call_write_vram_byte:
-    ld a, $F8
+    ld a, $f8
     call WriteVRAMByte
 
 .skip6:
@@ -4313,36 +3982,31 @@ Jump_001_5FFE:: ; address name
     add_a_to_hl
     inc b
     ld a, b
-    cp a, $05
+    cp $05
     jr nz, .loop2
     ret
 
 ; update for debug-mode state 0: the screen shows the debug menu (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wDebugCursor, wJoypadPressed, wDebugMenuFlag0, wDebugMenuFlag1, wDebugMenuFlag2, wDebugMenuFlag3
-; writes: wDebugCursor, wGameMode, wMapType, wKeyWorldRefresh, wModeState, wFieldTransitionStep
-; points at: wModeChangeRequest, wGameMode
 DebugMainMenu_Update::
-Jump_001_616A:: ; address name
     ld a, [wJoypadPressedRepeat]
-    and a, $90
+    and $90
     jr z, .check_joypad_pressed_repeat
     ld a, [wDebugCursor]
     inc a
-    cp a, $0C
+    cp $0c
     jr nz, .set_debug_cursor
     ld a, $00
     jr .set_debug_cursor
 
 .check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
-    and a, $60
+    and $60
     jr z, .read_debug_cursor
     ld a, [wDebugCursor]
     dec a
-    cp a, $FF
+    cp $ff
     jr nz, .set_debug_cursor
-    ld a, $0B
+    ld a, $0b
 
 .set_debug_cursor:
     ld [wDebugCursor], a
@@ -4350,7 +4014,7 @@ Jump_001_616A:: ; address name
 .read_debug_cursor:
     ld a, [wDebugCursor]
     swap a
-    add a, $A0
+    add $a0
     ld hl, vBGMap0 + $122
     ld b, $10
 
@@ -4360,16 +4024,16 @@ Jump_001_616A:: ; address name
     dec b
     jr nz, .loop
     ld a, [wJoypadPressed]
-    and a, $01
+    and $01
     ret z
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .skip
     ld a, $01
     ld [wGameMode], a
     ld hl, wModeChangeRequest
     inc [hl]
-    xor a, a
+    xor a
     ld [wMapType], a
     ld a, $80
     ld [wKeyWorldRefresh], a
@@ -4470,7 +4134,7 @@ Jump_001_616A:: ; address name
     jr nz, .skip10
     ld a, $00
     ld [wGameMode], a
-    ld a, $0A
+    ld a, $0a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -4481,7 +4145,7 @@ Jump_001_616A:: ; address name
     jr nz, .read_debug_menu_flag0
     ld a, $00
     ld [wGameMode], a
-    ld a, $0B
+    ld a, $0b
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -4490,30 +4154,26 @@ Jump_001_616A:: ; address name
 .read_debug_menu_flag0:
     ld hl, wGameMode
     ld a, [wDebugMenuFlag0]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDebugMenuFlag1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDebugMenuFlag2]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDebugMenuFlag3]
     ld [hl], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
 
-; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wDebugState, wDebugCursor, wJoypadPressedRepeat, wDebugValue1, wDebugValue0, wIsCGB, wDebugValue3, ...
-; writes: wDebugState, wDebugCursor, wDebugValue0, wDebugValue1, hTemp0, wBGPaletteUploadRequest, wDebugValue3, wOBJPaletteUploadRequest, ...
-; points at: wDebugValue0, wOBJPaletteBuffer, wDebugSubState, wModeChangeRequest
+; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite
+; viewer (E-0041)
 DebugMonsterPictureViewer_Update::
-Jump_001_6294:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .check_bit1
     ld a, [wDebugState]
     inc a
-    and a, $03
+    and $03
     ld [wDebugState], a
     jr .check_joypad_pressed
 
@@ -4530,11 +4190,11 @@ Jump_001_6294:: ; address name
 
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
-    and a, $C0
+    and $c0
     jr z, .read_debug_cursor
     ld a, [wDebugCursor]
     inc a
-    and a, $01
+    and $01
     ld [wDebugCursor], a
     ret
 
@@ -4542,7 +4202,7 @@ Jump_001_6294:: ; address name
     ld a, [wDebugCursor]
     sla a
     ld de, wDebugValue0
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -4558,20 +4218,20 @@ Jump_001_6294:: ; address name
     jr z, .check_bit4
     dec hl
     ld a, h
-    or a, $80
+    or $80
     ld [de], a
     dec de
     ld a, l
     ld [de], a
     ld a, h
-    cp a, $FF
+    cp $ff
     jr nz, .check_debug_value1
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .skip2
-    ld hl, $017E
+    ld hl, $017e
     ld a, h
-    or a, $80
+    or $80
     ld h, a
     ld a, l
     ld [wDebugValue0], a
@@ -4580,9 +4240,9 @@ Jump_001_6294:: ; address name
     jr .check_debug_value1
 
 .skip2:
-    ld hl, $017E
+    ld hl, $017e
     ld a, h
-    or a, $80
+    or $80
     ld h, a
     ld a, l
     ld [wDebugValue2], a
@@ -4594,39 +4254,39 @@ Jump_001_6294:: ; address name
     bit 4, a
     jr z, .check_debug_value1
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .skip3
-    ld a, $7E
-    cp a, l
+    ld a, $7e
+    cp l
     jr nz, .next
     ld a, $01
-    cp a, h
+    cp h
     jr nz, .next
     ld a, $80
     ld [de], a
     dec de
-    xor a, a
+    xor a
     ld [de], a
     jr .check_debug_value1
 
 .skip3:
-    ld a, $7E
-    cp a, l
+    ld a, $7e
+    cp l
     jr nz, .next
     ld a, $01
-    cp a, h
+    cp h
     jr nz, .next
     ld a, $80
     ld [de], a
     dec de
-    xor a, a
+    xor a
     ld [de], a
     jr .check_debug_value1
 
 .next:
     inc hl
     ld a, h
-    or a, $80
+    or $80
     ld [de], a
     dec de
     ld a, l
@@ -4636,7 +4296,7 @@ Jump_001_6294:: ; address name
     ld a, [wDebugValue1]
     bit 7, a
     jr z, .check_debug_value3
-    and a, $7F
+    and $7f
     ld [wDebugValue1], a
     ld a, [wDebugValue0]
     ld e, a
@@ -4646,7 +4306,7 @@ Jump_001_6294:: ; address name
     ld c, $01
     call LoadMonsterPicture
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .check_debug_value3
     ld hl, vBGMap0 + $124
     ld a, $01
@@ -4656,14 +4316,14 @@ Jump_001_6294:: ; address name
     ld a, [wDebugValue1]
     ld d, a
     call LoadMonsterPictureAttributes
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .check_debug_value3:
     ld a, [wDebugValue3]
     bit 7, a
     jr z, .check_debug_cursor
-    and a, $7F
+    and $7f
     ld [wDebugValue3], a
     ld a, [wDebugValue2]
     ld e, a
@@ -4693,7 +4353,7 @@ Jump_001_6294:: ; address name
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .check_debug_cursor
     ld a, [wDebugValue2]
     ld l, a
@@ -4703,10 +4363,10 @@ Jump_001_6294:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $28
+    add $28
     ld l, a
     ld a, h
-    adc a, $73
+    adc $73
     ld h, a
     ld e, l
     ld d, h
@@ -4718,25 +4378,25 @@ Jump_001_6294:: ; address name
     push bc
     call ReadByteInBank
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     pop bc
     inc de
     dec c
     jr nz, .loop
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
 .check_debug_cursor:
     ld hl, wDebugSubState
     inc [hl]
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr nz, .read_debug_value0
     ld a, [wDebugSubState]
     bit 3, a
     jr z, .read_debug_value0
-    xor a, a
-    ld hl, vBGMap0 + $AB
+    xor a
+    ld hl, vBGMap0 + $ab
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByteInc
@@ -4747,18 +4407,18 @@ Jump_001_6294:: ; address name
     ld c, a
     ld a, [wDebugValue1]
     ld b, a
-    ld de, vBGMap0 + $AB
+    ld de, vBGMap0 + $ab
     call WriteThreeHexDigitsAtDE
 
 .check_debug_cursor2:
     ld a, [wDebugCursor]
-    or a, a
+    or a
     jr z, .read_debug_value2
     ld a, [wDebugSubState]
     bit 3, a
     jr z, .read_debug_value2
-    xor a, a
-    ld hl, vBGMap0 + $CB
+    xor a
+    ld hl, vBGMap0 + $cb
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByteInc
@@ -4769,14 +4429,14 @@ Jump_001_6294:: ; address name
     ld c, a
     ld a, [wDebugValue3]
     ld b, a
-    ld de, vBGMap0 + $CB
+    ld de, vBGMap0 + $cb
     call WriteThreeHexDigitsAtDE
 
 .set_sprite_attr_xor_to_00:
     ld a, $00
     ldh [hSpriteAttrXor], a
     ld a, [wDebugState]
-    cp a, $03
+    cp $03
     jr nz, .read_frame_counter_lo
     ld a, $20
     ldh [hSpriteAttrXor], a
@@ -4787,8 +4447,8 @@ Jump_001_6294:: ; address name
     ld c, a
     ld a, [wFrameCounterLo]
     swap a
-    and a, $01
-    add a, c
+    and $01
+    add c
     ldh [hSpriteSubIndex], a
     ld a, $20
     ldh [hSpriteTileOffset], a
@@ -4797,10 +4457,10 @@ Jump_001_6294:: ; address name
     ldh a, [hScrollXHi]
     ld b, a
     ld a, c
-    add a, $70
+    add $70
     ld c, a
     ld a, b
-    adc a, $00
+    adc $00
     ld b, a
     ld a, c
     ldh [hSpriteOriginX], a
@@ -4811,20 +4471,20 @@ Jump_001_6294:: ; address name
     ldh a, [hScrollYHi]
     ld b, a
     ld a, c
-    add a, $60
+    add $60
     ld c, a
     ld a, b
-    adc a, $00
+    adc $00
     ld b, a
     ld a, c
     ldh [hSpriteOriginY], a
     ld a, b
     ldh [hSpriteOriginYHi], a
     ld a, [wDebugValue2]
-    and a, $7F
+    and $7f
     ldh [hSpriteSetIndex], a
     ld a, [wDebugValue3]
-    or a, a
+    or a
     jr nz, .call_draw_meta_sprite_set_bank27
     ld a, [wDebugValue2]
     bit 7, a
@@ -4841,17 +4501,12 @@ Jump_001_6294:: ; address name
     ret
 
 ; update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wMenuState, wTemp0, wTemp1, wJoypadPressedRepeat, wFrameCounterLo
-; writes: wMenuState, wModeState
-; points at: wTemp0, wModeChangeRequest
 DebugSoundTest_Update::
-Jump_001_64C0:: ; address name
     ld a, [wJoypadPressed]
-    and a, $08
+    and $08
     jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
-    or a, a
+    or a
     jr nz, .read_temp1
     call InitSoundHardware
     ld a, [wTemp0]
@@ -4871,10 +4526,10 @@ Jump_001_64C0:: ; address name
 
 .check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
-    and a, $C0
+    and $c0
     jr z, .read_menu_state2
     ld a, [wMenuState]
-    or a, a
+    or a
     jr nz, .call_debug_sound_test_update_write_hex_byte
     call DebugSoundTest_Update_WriteHexByteTilesAtDE
     jr .read_menu_state
@@ -4884,7 +4539,7 @@ Jump_001_64C0:: ; address name
 
 .read_menu_state:
     ld a, [wMenuState]
-    xor a, $01
+    xor $01
     ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
@@ -4896,23 +4551,23 @@ Jump_001_64C0:: ; address name
     ld hl, wTemp0
     add hl, bc
     ld a, [wJoypadPressedRepeat]
-    and a, $10
+    and $10
     jr z, .check_joypad_pressed_repeat2
     inc [hl]
     jr .call_queue_sound_effect
 
 .check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
-    and a, $20
+    and $20
     jr z, .check_joypad_pressed
     dec [hl]
     jr .call_queue_sound_effect
 
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
-    and a, $01
+    and $01
     jr z, .check_joypad_pressed2
-    xor a, a
+    xor a
     ld [hl], a
 
 .call_queue_sound_effect:
@@ -4920,17 +4575,17 @@ Jump_001_64C0:: ; address name
     call QueueSoundEffect
     ld a, [wMenuState]
     ld b, $20
-    cp a, $00
+    cp $00
     call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
     ld b, $54
-    cp a, $01
+    cp $01
     call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
 
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
-    and a, $02
+    and $02
     jr z, .check_menu_state
-    xor a, a
+    xor a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -4938,85 +4593,70 @@ Jump_001_64C0:: ; address name
 
 .check_menu_state:
     ld a, [wMenuState]
-    or a, a
+    or a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE
-    xor a, a
-    ld hl, vBGMap0 + $E9
+    xor a
+    ld hl, vBGMap0 + $e9
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
-; only called from DebugSoundTest_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wTemp0
 DebugSoundTest_Update_WriteHexByteTilesAtDE::
-Func_001_6578:: ; address name
     ld a, [wTemp0]
-    ld de, vBGMap0 + $E9
+    ld de, vBGMap0 + $e9
     call WriteHexByteTilesAtDE
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
 DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
-Jump_001_6583:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
-    xor a, a
+    xor a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
     call WriteVRAMByte
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
-; only called from DebugSoundTest_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wTemp1
 DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02::
-Func_001_6596:: ; address name
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
 DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return::
-Jump_001_659F:: ; address name
     ret
 
-; only called from DebugSoundTest_Update (E-0047)
-; 2 call sites from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wMenuState, wTemp0, wTemp1
-; points at: wTemp0
 DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
-Func_001_65A0:: ; address name
     push af
     ld a, [wMenuState]
     ld hl, wTemp0
     add_a_to_hl
     ld a, [hl]
-    cp a, b
+    cp b
     jr nz, .skip
     ld [hl], $00
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .check_menu_state
     dec b
     ld [hl], b
 
 .check_menu_state:
     ld a, [wMenuState]
-    or a, a
+    or a
     jr nz, .read_temp1
     ld hl, DebugSoundTestMusic
-    ld de, vBGMap0 + $EC
+    ld de, vBGMap0 + $ec
     ld a, [wTemp0]
     jr .call_write_hex_byte_tiles_at_de
 
 .read_temp1:
     ld hl, DebugSoundTestEffects
-    ld de, vBGMap0 + $10C
+    ld de, vBGMap0 + $10c
     ld a, [wTemp1]
 
 .call_write_hex_byte_tiles_at_de:
@@ -5026,47 +4666,48 @@ Func_001_65A0:: ; address name
     pop af
     ret
 
-; E-0238 (C1: DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and DebugSoundTest_Update_Sub03 draws it in hex; 32 entries).
+; DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and
+; DebugSoundTest_Update_Sub03 draws it in hex; 32 entries (E-0238, C1)
 ; record: music number
 DebugSoundTestMusic::
-Data_001_65DE:: ; address name
     db $02 ; id 0
     db $06 ; id 1
     db $09 ; id 2
-    db $0C ; id 3
-    db $0F ; id 4
+    db $0c ; id 3
+    db $0f ; id 4
     db $13 ; id 5
     db $16 ; id 6
     db $19 ; id 7
-    db $1C ; id 8
-    db $1F ; id 9
+    db $1c ; id 8
+    db $1f ; id 9
     db $22 ; id 10
     db $25 ; id 11
     db $28 ; id 12
-    db $2B ; id 13
-    db $2E ; id 14
+    db $2b ; id 13
+    db $2e ; id 14
     db $31 ; id 15
     db $35 ; id 16
-    db $3D ; id 17
+    db $3d ; id 17
     db $40 ; id 18
     db $42 ; id 19
     db $44 ; id 20
     db $46 ; id 21
     db $48 ; id 22
-    db $4A ; id 23
-    db $4D ; id 24
+    db $4a ; id 23
+    db $4d ; id 24
     db $50 ; id 25
     db $52 ; id 26
     db $54 ; id 27
     db $58 ; id 28
-    db $CC ; id 29
-    db $CF ; id 30
-    db $D6 ; id 31
+    db $cc ; id 29
+    db $cf ; id 30
+    db $d6 ; id 31
 
-; E-0238 (C1: DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at DebugSoundTest_Update_ReadMenuStateAndTemp0Etc.read_temp1 draws it in hex at vBGMap0 + $10C; 84 entries up to the next routine).
+; DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at
+; DebugSoundTest_Update_ReadMenuStateAndTemp0Etc.read_temp1 draws it in hex at vBGMap0 + $10C; 84
+; entries up to the next routine (E-0238, C1)
 ; record: sound effect number
 DebugSoundTestEffects::
-Data_001_65FE:: ; address name
     db $00 ; id 0
     db $60 ; id 1
     db $61 ; id 2
@@ -5076,20 +4717,20 @@ Data_001_65FE:: ; address name
     db $66 ; id 6
     db $67 ; id 7
     db $69 ; id 8
-    db $6A ; id 9
-    db $6B ; id 10
-    db $6C ; id 11
-    db $6D ; id 12
+    db $6a ; id 9
+    db $6b ; id 10
+    db $6c ; id 11
+    db $6d ; id 12
     db $70 ; id 13
     db $72 ; id 14
     db $74 ; id 15
     db $76 ; id 16
     db $78 ; id 17
-    db $7A ; id 18
-    db $7B ; id 19
-    db $7C ; id 20
-    db $7D ; id 21
-    db $7E ; id 22
+    db $7a ; id 18
+    db $7b ; id 19
+    db $7c ; id 20
+    db $7d ; id 21
+    db $7e ; id 22
     db $80 ; id 23
     db $81 ; id 24
     db $82 ; id 25
@@ -5100,9 +4741,9 @@ Data_001_65FE:: ; address name
     db $87 ; id 30
     db $88 ; id 31
     db $89 ; id 32
-    db $8B ; id 33
-    db $8D ; id 34
-    db $8F ; id 35
+    db $8b ; id 33
+    db $8d ; id 34
+    db $8f ; id 35
     db $90 ; id 36
     db $91 ; id 37
     db $93 ; id 38
@@ -5112,62 +4753,58 @@ Data_001_65FE:: ; address name
     db $97 ; id 42
     db $98 ; id 43
     db $99 ; id 44
-    db $9A ; id 45
-    db $9B ; id 46
-    db $9D ; id 47
-    db $9E ; id 48
-    db $9F ; id 49
-    db $A1 ; id 50
-    db $A2 ; id 51
-    db $A3 ; id 52
-    db $A4 ; id 53
-    db $A5 ; id 54
-    db $A7 ; id 55
-    db $A8 ; id 56
-    db $A9 ; id 57
-    db $AA ; id 58
-    db $AB ; id 59
-    db $AC ; id 60
-    db $AE ; id 61
-    db $B0 ; id 62
-    db $B1 ; id 63
-    db $B2 ; id 64
-    db $B4 ; id 65
-    db $B6 ; id 66
-    db $B8 ; id 67
-    db $BA ; id 68
-    db $BC ; id 69
-    db $BD ; id 70
-    db $BF ; id 71
-    db $C1 ; id 72
-    db $C3 ; id 73
-    db $C5 ; id 74
-    db $C7 ; id 75
-    db $C9 ; id 76
-    db $CB ; id 77
-    db $D2 ; id 78
-    db $D4 ; id 79
-    db $D9 ; id 80
-    db $DA ; id 81
-    db $DC ; id 82
-    db $DD ; id 83
+    db $9a ; id 45
+    db $9b ; id 46
+    db $9d ; id 47
+    db $9e ; id 48
+    db $9f ; id 49
+    db $a1 ; id 50
+    db $a2 ; id 51
+    db $a3 ; id 52
+    db $a4 ; id 53
+    db $a5 ; id 54
+    db $a7 ; id 55
+    db $a8 ; id 56
+    db $a9 ; id 57
+    db $aa ; id 58
+    db $ab ; id 59
+    db $ac ; id 60
+    db $ae ; id 61
+    db $b0 ; id 62
+    db $b1 ; id 63
+    db $b2 ; id 64
+    db $b4 ; id 65
+    db $b6 ; id 66
+    db $b8 ; id 67
+    db $ba ; id 68
+    db $bc ; id 69
+    db $bd ; id 70
+    db $bf ; id 71
+    db $c1 ; id 72
+    db $c3 ; id 73
+    db $c5 ; id 74
+    db $c7 ; id 75
+    db $c9 ; id 76
+    db $cb ; id 77
+    db $d2 ; id 78
+    db $d4 ; id 79
+    db $d9 ; id 80
+    db $da ; id 81
+    db $dc ; id 82
+    db $dd ; id 83
 
-; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wWorkBuf, wMenuState, wJoypadPressedRepeat, wJoypadHeld, wFrameCounterLo
-; writes: wEncounterKind, wBattleKind, wMenuState, wDebugCursor, wDebugValue0, wDebugValue1, wGameMode, wModeState, ...
-; points at: wEncounterMonsters, wModeChangeRequest, wBGFillFlag, wWorkBuf
+; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters,
+; skill, levels) (E-0041)
 DebugBattleSetup_Update::
-Jump_001_6652:: ; address name
     ld a, [wJoypadPressed]
-    and a, $08
+    and $08
     jp z, DebugBattleSetupLoadWords_CheckJoypadPressed
     ld a, [wWorkBuf]
     ld [wEncounterKind], a
     ld a, [wWorkBuf + $8]
     sra a
     ld [wBattleKind], a
-    or a, a
+    or a
     jr nz, DebugBattleSetupLoadWords_SetEncounterMonsters
     ld hl, wEncounterMonsters
     ld de, wWorkBuf + $2
@@ -5176,15 +4813,14 @@ Jump_001_6652:: ; address name
     call DebugBattleSetupLoadWords
 
 DebugBattleSetup_Update_ClearMenuState::
-Jump_001_667A:: ; address name
-    xor a, a
+    xor a
     ld [wMenuState], a
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
     ld a, [wWorkBuf + $8]
-    or a, a
+    or a
     jr nz, .call_debug_battle_setup_update_write_map_id
     call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01
     jr .set_game_mode_to_04
@@ -5195,7 +4831,7 @@ Jump_001_667A:: ; address name
 .set_game_mode_to_04:
     ld a, $04
     ld [wGameMode], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld a, $04
     call StartPaletteFade
@@ -5205,18 +4841,17 @@ Jump_001_667A:: ; address name
     inc [hl]
     ret
 
-; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries load the setup into wEncounterMonsters-wWildByteE5 and handle input (E-0131)
-; 6 call sites from 2 routines (e.g. DebugBattleSetup_Update, DebugBattleSetupLoadWords)
+; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries
+; load the setup into wEncounterMonsters-wWildByteE5 and handle input (E-0131)
 DebugBattleSetupLoadWords::
-Func_001_66AD:: ; address name
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld c, a
     ld a, [de]
     inc de
-    ld [hl+], a
-    or a, c
+    ld [hli], a
+    or c
     ret nz
     dec hl
     dec hl
@@ -5226,47 +4861,45 @@ Func_001_66AD:: ; address name
     ret
 
 DebugBattleSetupLoadWords_SetEncounterMonsters::
-Jump_001_66BD:: ; address name
-    ld hl, wWorkBuf + $C
-    ld a, [hl+]
+    ld hl, wWorkBuf + $c
+    ld a, [hli]
     ld [wEncounterMonsters], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $1], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wWildLevel], a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $2], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $3], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wWildBand], a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $4], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wEncounterMonsters + $5], a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wWildByteE5], a
     jr DebugBattleSetup_Update_ClearMenuState
 
 DebugBattleSetupLoadWords_CheckJoypadPressed::
-Jump_001_66E8:: ; address name
     ld a, [wJoypadPressed]
-    and a, $01
+    and $01
     jr z, .check_joypad_pressed
     ld a, [wMenuState]
-    add a, a
+    add a
     ld hl, wWorkBuf
     add_a_to_hl
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     ld [hl], a
     jp .clear_frame_counter_lo
 
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
-    and a, $02
+    and $02
     jr z, .check_joypad_pressed_repeat
     ld a, [wWorkBuf]
     ld [wEncounterKind], a
@@ -5275,13 +4908,13 @@ Jump_001_66E8:: ; address name
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
-    xor a, a
+    xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
     ld [wDebugValue1], a
-    xor a, a
+    xor a
     ld [wMenuState], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -5294,9 +4927,9 @@ Jump_001_66E8:: ; address name
     call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     dec a
-    cp a, $FF
+    cp $ff
     jr nz, .set_menu_state
-    ld a, $0B
+    ld a, $0b
 
 .set_menu_state:
     ld [wMenuState], a
@@ -5308,19 +4941,19 @@ Jump_001_66E8:: ; address name
     call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     inc a
-    cp a, $0C
+    cp $0c
     jr nz, .set_menu_state2
-    xor a, a
+    xor a
 
 .set_menu_state2:
     ld [wMenuState], a
     jp .clear_frame_counter_lo
 
 .skip:
-    and a, $30
+    and $30
     jr z, .read_menu_state
     ld a, [wMenuState]
-    add a, a
+    add a
     ld hl, wWorkBuf
     add_a_to_hl
     ld e, [hl]
@@ -5394,13 +5027,13 @@ Jump_001_66E8:: ; address name
 .read_menu_state:
     ld a, [wMenuState]
     ld hl, DebugBattleSetupLoadWords_Data
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, .read_menu_state2
-    xor a, a
+    xor a
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByte
@@ -5409,7 +5042,7 @@ Jump_001_66E8:: ; address name
 .read_menu_state2:
     push hl
     ld a, [wMenuState]
-    add a, a
+    add a
     ld hl, wWorkBuf
     add_a_to_hl
     ld c, [hl]
@@ -5420,62 +5053,57 @@ Jump_001_66E8:: ; address name
     jr .return
 
 .clear_frame_counter_lo:
-    xor a, a
+    xor a
     ld [wFrameCounterLo], a
     call DebugBattleSetupShowFieldString
 
 .return:
     ret
 
-; writes the word wWorkBuf[wMenuState] as three hex digits at the address Data_001_68D3[wMenuState] (E-0122)
-; 4 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wMenuState
-; points at: wWorkBuf
+; writes the word wWorkBuf[wMenuState] as three hex digits at the address
+; DebugBattleSetupLoadWords_Data[wMenuState] (E-0122)
 DrawDebugValueHexForMenuState::
-Func_001_6809:: ; address name
     ld a, [wMenuState]
     ld hl, DebugBattleSetupLoadWords_Data
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld d, [hl]
     ld e, a
     ld a, [wMenuState]
     ld hl, wWorkBuf
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     call WriteThreeHexDigitsAtDE
     ret
 
-; stores Data_001_68EB[wMenuState] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
-; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wMenuState
+; stores SubtractDEFromDebugLimit_Data[wMenuState] - DE at HL (floored at 0; DE = $FFFF stores the
+; limit) (E-0125)
 SubtractDEFromDebugLimit::
-Func_001_682B:: ; address name
     push hl
     ld a, [wMenuState]
     ld hl, SubtractDEFromDebugLimit_Data
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld a, d
-    and a, e
-    cp a, $FF
+    and e
+    cp $ff
     jr z, .skip
     ld a, c
-    sub a, e
+    sub e
     ld c, a
     ld a, b
-    sbc a, d
+    sbc d
     ld b, a
     bit 7, b
     jr z, .restore
-    xor a, a
+    xor a
     ld d, a
     ld e, a
     jr .restore
@@ -5491,17 +5119,15 @@ Func_001_682B:: ; address name
     ld [hl], d
     ret
 
-; clamps the word DE to 0 .. Data_001_68EB[wMenuState] (negative becomes the limit) and stores it at HL (E-0124)
-; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wMenuState
+; clamps the word DE to 0 .. SubtractDEFromDebugLimit_Data[wMenuState] (negative becomes the limit)
+; and stores it at HL (E-0124)
 ClampDebugValueToTableLimit::
-Func_001_6857:: ; address name
     push hl
     ld a, [wMenuState]
     ld hl, SubtractDEFromDebugLimit_Data
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld h, d
@@ -5512,7 +5138,7 @@ Func_001_6857:: ; address name
     dec bc
     bit 7, h
     jr nz, .skip
-    xor a, a
+    xor a
     ld d, a
     ld e, a
     jr .restore
@@ -5528,33 +5154,28 @@ Func_001_6857:: ; address name
     ld [hl], d
     ret
 
-; only called from DebugBattleSetup_Update (E-0047)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update)
-; reads: wPartyCount, wFarmLevel, hTemp0
-; points at: wPartyList
 DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
-Func_001_6880:: ; address name
     ld a, [wPartyCount]
-    or a, a
+    or a
     jr z, .call_check_save_data
-    cp a, $04
+    cp $04
     jr nc, .call_check_save_data
     ld b, a
     ld hl, wPartyList
     ld a, [wFarmLevel]
-    cp a, $03
+    cp $03
     jr nc, .call_check_save_data
-    ld c, $0A
-    cp a, $00
+    ld c, $0a
+    cp $00
     jr z, .loop
     ld c, $14
-    cp a, $01
+    cp $01
     jr z, .loop
-    ld c, $1E
+    ld c, $1e
 
 .loop:
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jr nc, .call_check_save_data
     push bc
     push hl
@@ -5569,7 +5190,7 @@ Func_001_6880:: ; address name
 .call_check_save_data:
     farcall CheckSaveData
     ldh a, [hTemp0]
-    or a, a
+    or a
     jr nz, .call_debug_battle_setup_update_write_map_id
     farcall RunSaveSteps
     ret
@@ -5578,48 +5199,38 @@ Func_001_6880:: ; address name
     call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
     ret
 
-; only called from DebugBattleSetup_Update_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01)
 DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped::
-Func_001_68CA:: ; address name
     ld c, MON_STATE
     call SRAMRecordAddressMapped
     ld a, [hl]
-    cp a, $02
+    cp $02
     ret
 
-; address loaded by DebugBattleSetupLoadWords, DrawDebugValueHexForMenuState
-DebugBattleSetupLoadWords_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_68D3:: ; address name
-    db $87, $98, $A7, $98, $C7, $98, $E7, $98, $07, $99, $27, $99, $47, $99, $67, $99
-    db $87, $99, $A7, $99, $C7, $99, $E7, $99
+DebugBattleSetupLoadWords_Data::
+    db $87, $98, $a7, $98, $c7, $98, $e7, $98, $07, $99, $27, $99, $47, $99, $67, $99
+    db $87, $99, $a7, $99, $c7, $99, $e7, $99
 
-; address loaded by SubtractDEFromDebugLimit, ClampDebugValueToTableLimit
-SubtractDEFromDebugLimit_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_68EB:: ; address name
-    db $02, $00, $AB, $02, $AB, $02, $AB, $02, $01, $00, $00, $00, $40, $01, $63, $00
+SubtractDEFromDebugLimit_Data::
+    db $02, $00, $ab, $02, $ab, $02, $ab, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
-; debug battle setup: shows the string for field wMenuState (wWorkBuf entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)
-; 9 call sites from 2 routines (e.g. DebugBattleSetupLoadWords, DebugBattleSetup_Init)
-; reads: wMenuState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wWorkBuf
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wWorkBuf
+; debug battle setup: shows the string for field wMenuState (wWorkBuf entries, ShowString_Bank88) at
+; the window from DebugBattleSetupShowFieldString_Data_6A6C, with special cases for fields 4-6
+; (E-0131)
 DebugBattleSetupShowFieldString::
-Func_001_6903:: ; address name
     ld a, [wMenuState]
-    or a, a
+    or a
     ret z
-    cp a, $04
+    cp $04
     jr z, .read_work_buf
-    cp a, $05
+    cp $05
     jp z, .clear_string_index
-    cp a, $06
+    cp $06
     jp nc, .read_menu_state
     ld hl, wWorkBuf
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld h, [hl]
     ld [wStringIndex], a
     ld a, h
@@ -5627,7 +5238,7 @@ Func_001_6903:: ; address name
     ld hl, DebugBattleSetupShowFieldString_Data_6A6C
     ld a, [wMenuState]
     dec a
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld de, $0901
@@ -5667,7 +5278,7 @@ Func_001_6903:: ; address name
     ld [wStringIndex], a
     ld a, $02
     ld [wStringCategory], a
-    ld hl, vTiles2 + $3C0
+    ld hl, vTiles2 + $3c0
     ld de, $0901
     ld a, [wTextWindowTileLo]
     ld c, a
@@ -5701,7 +5312,7 @@ Func_001_6903:: ; address name
     ret
 
 .clear_string_index:
-    xor a, a
+    xor a
     ld [wStringIndex], a
     ld a, $04
     ld [wStringCategory], a
@@ -5743,22 +5354,22 @@ Func_001_6903:: ; address name
 .read_menu_state:
     ld a, [wMenuState]
     ld hl, wWorkBuf
-    add a, a
+    add a
     add_a_to_hl
     ld a, [wMenuState]
-    cp a, $07
+    cp $07
     jr z, .call_divide_b_by_a
-    cp a, $09
+    cp $09
     jr z, .call_divide_b_by_a
-    cp a, $0B
+    cp $0b
     jr z, .call_divide_b_by_a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wStringIndex], a
     ld a, [hl]
-    add a, $02
+    add $02
     ld [wStringCategory], a
     ld a, [wMenuState]
-    sub a, $06
+    sub $06
     ld hl, DebugBattleSetupShowFieldString_Data_6A72
     add_a_to_hl
     deref_hl
@@ -5767,68 +5378,60 @@ Func_001_6903:: ; address name
 
 .call_divide_b_by_a:
     ld b, [hl]
-    ld a, $0A
+    ld a, $0a
     call DivideBByA
     ld c, a
     push bc
     ld a, [wMenuState]
-    sub a, $07
+    sub $07
     ld hl, DebugBattleSetupShowFieldString_Data_6A78
     add_a_to_hl
     deref_hl
     pop bc
     ld a, b
-    add a, $10
+    add $10
     call WriteVRAMByteInc
     ld a, c
-    add a, $10
+    add $10
     call WriteVRAMByte
     ret
 
-; address loaded by DebugBattleSetupShowFieldString
-DebugBattleSetupShowFieldString_Data_6A6C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_6A6C:: ; address name
-    db $00, $92, $A0, $92, $30, $93
+DebugBattleSetupShowFieldString_Data_6A6C::
+    db $00, $92, $a0, $92, $30, $93
 
-; address loaded by DebugBattleSetupShowFieldString
-DebugBattleSetupShowFieldString_Data_6A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_6A72:: ; address name
-    db $E0, $94, $70, $95, $00, $96
+DebugBattleSetupShowFieldString_Data_6A72::
+    db $e0, $94, $70, $95, $00, $96
 
-; address loaded by DebugBattleSetupShowFieldString
-DebugBattleSetupShowFieldString_Data_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_6A78:: ; address name
-    db $6B, $99, $AB, $99, $EB, $99
+DebugBattleSetupShowFieldString_Data_6A78::
+    db $6b, $99, $ab, $99, $eb, $99
 
-; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble), each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
-; 20 call sites from 11 routines (e.g. DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE, ...)
+; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble),
+; each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
 WriteHexByteTilesAtDE::
-Func_001_6A7E:: ; address name
     push af
     swap a
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     push af
     call WaitForVRAMAccess
     pop af
     ld [de], a
     inc de
     pop af
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     push af
     call WaitForVRAMAccess
     pop af
     ld [de], a
     ret
 
-; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, DrawDebugFieldValueDebugCursor, DrawDebugValueHexForMenuState, DebugBattleSetupLoadWords, ...)
+; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess
+; each); DE ends on the last tile (E-0120)
 WriteThreeHexDigitsAtDE::
-Func_001_6A98:: ; address name
     ld a, b
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     push af
     call WaitForVRAMAccess
     pop af
@@ -5836,27 +5439,23 @@ Func_001_6A98:: ; address name
     inc de
     ld a, c
     swap a
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     push af
     call WaitForVRAMAccess
     pop af
     ld [de], a
     inc de
     ld a, c
-    and a, $0F
-    add a, $10
+    and $0f
+    add $10
     push af
     call WaitForVRAMAccess
     pop af
     ld [de], a
     ret
 
-; only called from routines of DebugBattleSetup_Update (E-0098)
-; 2 call sites from 2 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, DebugBattleSetup_Update)
-; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wFollowerRecords, wPlayerName, wGoldLo, ...
 DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
-Func_001_6ABE:: ; address name
     ld a, $00
     ldh [hMapId], a
     ld a, $02
@@ -5880,32 +5479,32 @@ Func_001_6ABE:: ; address name
     ld a, $40
     ld [wFollowerRecords + $7], a
     ld a, $00
-    ld [wFollowerRecords + $A], a
+    ld [wFollowerRecords + $a], a
     ld a, $40
-    ld [wFollowerRecords + $B], a
+    ld [wFollowerRecords + $b], a
     ld a, $40
-    ld [wFollowerRecords + $C], a
+    ld [wFollowerRecords + $c], a
     ld a, $24
     ld [wPlayerName], a
     ld a, $35
     ld [wPlayerName + $1], a
-    ld a, $8D
+    ld a, $8d
     ld [wPlayerName + $2], a
-    ld a, $2F
+    ld a, $2f
     ld [wPlayerName + $3], a
-    ld a, $2B
+    ld a, $2b
     ld [wPlayerName + $4], a
     ld a, $55
     ld [wPlayerName + $5], a
-    ld a, $F0
+    ld a, $f0
     ld [wPlayerName + $6], a
-    ld a, $F0
+    ld a, $f0
     ld [wPlayerName + $7], a
-    ld a, $F0
+    ld a, $f0
     ld [wPlayerName + $8], a
-    ld a, $F0
+    ld a, $f0
     ld [wPlayerName + $9], a
-    ld a, $9F
+    ld a, $9f
     ld [wGoldLo], a
     ld a, $86
     ld [wGoldMid], a
@@ -5933,128 +5532,115 @@ Func_001_6ABE:: ; address name
     ld [wInventory + $5], a
     ld a, $01
     ld [wInventory + $6], a
-    ld a, $1F
+    ld a, $1f
     ld [wInventory + $7], a
     ld a, $09
     ld [wInventory + $8], a
     ld a, $33
     ld [wInventory + $9], a
-    ld a, $0B
+    ld a, $0b
     ld [wEventItemSlot], a
     ld a, $20
-    ld [wInventory + $B], a
+    ld [wInventory + $b], a
     ld a, $28
-    ld [wInventory + $C], a
-    ld a, $0E
-    ld [wInventory + $D], a
-    ld a, $0F
-    ld [wInventory + $E], a
+    ld [wInventory + $c], a
+    ld a, $0e
+    ld [wInventory + $d], a
+    ld a, $0f
+    ld [wInventory + $e], a
     ld a, $10
-    ld [wInventory + $F], a
+    ld [wInventory + $f], a
     ld a, $11
     ld [wInventory + $10], a
     ld a, $12
     ld [wInventory + $11], a
-    ld a, $1C
+    ld a, $1c
     ld [wInventory + $12], a
-    ld a, $1C
+    ld a, $1c
     ld [wInventory + $13], a
-    ld a, $1C
+    ld a, $1c
     ld [wInventory + $14], a
-    ld a, $0C
+    ld a, $0c
     ld [wInventory + $15], a
-    ld a, $0C
+    ld a, $0c
     ld [wInventory + $16], a
-    ld a, $0C
+    ld a, $0c
     ld [wInventory + $17], a
     ld a, $50
     ld [wTinyMedalsLo], a
-    xor a, a
+    xor a
     ld [wTinyMedalsHi], a
     call DebugBattleSetup_ClearKeyList
     call DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82
     ret
 
-; only called from DebugBattleSetup_Update_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc)
-; writes: wBattleArg0, rRAMG, rRAMB
-; points at: wBattleArg0, sRecords
 DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82::
-Func_001_6BDC:: ; address name
-    ld b, $1E
-    xor a, a
+    ld b, $1e
+    xor a
     ld [wBattleArg0], a
 
 .loop:
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     push bc
     call PickRandomMonsterSkipping7ETo82
     pop bc
-    xor a, a
+    xor a
     ld [rRAMG], a
     ld hl, wBattleArg0
     inc [hl]
     dec b
     jr nz, .loop
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld hl, sRecords
-    ld de, $00A5
+    ld de, $00a5
     ld [hl], $02
     add hl, de
     ld [hl], $02
     add hl, de
     ld [hl], $02
-    ld b, $1B
+    ld b, $1b
 
 .loop2:
     add hl, de
     ld [hl], $01
     dec b
     jr nz, .loop2
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; draws random ids until one is non-zero and not $7E-$82, then creates that record (Func_001_6E82) (E-0124)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82)
-; reads: wRandomLo, wRandomHi
+; draws random ids until one is non-zero and not $7E-$82, then creates that record
+; (PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc) (E-0124)
 PickRandomMonsterSkipping7ETo82::
-Func_001_6C1F:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
     ld e, a
     ld a, [wRandomHi]
-    or a, e
+    or e
     ld e, a
-    or a, a
+    or a
     jr z, PickRandomMonsterSkipping7ETo82
-    cp a, $7E
+    cp $7e
     jr z, PickRandomMonsterSkipping7ETo82
-    cp a, $7F
+    cp $7f
     jr z, PickRandomMonsterSkipping7ETo82
-    cp a, $80
+    cp $80
     jr z, PickRandomMonsterSkipping7ETo82
-    cp a, $81
+    cp $81
     jr z, PickRandomMonsterSkipping7ETo82
-    cp a, $82
+    cp $82
     jr z, PickRandomMonsterSkipping7ETo82
     ld d, $00
     call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
     ret
 
-; only called from CreateMonsterRecordOfKindTemp1_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_WriteBattleArg0)
-; reads: hTemp3, wBattleArg0, wRecordBuffer, wBattleArg1, wRandomHi, wRecordBufferData, wScreenAttrBuffer, wBattleArg2, ...
-; writes: wMonsterId, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wWorkBuf
-; points at: wPlayerName
 CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
-Func_001_6C48:: ; address name
     ldh a, [hTemp3]
     push af
     ld a, e
@@ -6068,21 +5654,21 @@ Func_001_6C48:: ; address name
     pop af
     ld [hl], a
     ld a, l
-    add a, $0B
+    add $0b
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wRecordBuffer]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBuffer + $1]
-    ld [hl+], a
+    ld [hli], a
     inc hl
     ld a, [wBattleArg1]
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     ld a, [wRandomHi]
-    and a, $01
+    and $01
     jr .skip2
 
 .skip:
@@ -6093,119 +5679,119 @@ Func_001_6C48:: ; address name
     pop hl
 
 .skip2:
-    ld [hl+], a
+    ld [hli], a
     ld de, wPlayerName
-    ld b, $0B
+    ld b, $0b
     call CopyBBytesDEToHL_Bank01
-    ld a, $FF
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
+    ld a, $ff
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
     call WriteUnknownNamePlaceholder_Bank01
     call WriteUnknownNamePlaceholder_Bank01
     ld a, [wRecordBufferData]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $2]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $3]
-    ld [hl+], a
-    ld a, $FF
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld a, $ff
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
     ld a, l
-    add a, $19
+    add $19
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     ld a, [wRecordBufferData + $7]
-    ld [hl+], a
+    ld [hli], a
     ld [wRecordBufA + MON_LEVEL], a
     ld a, l
-    add a, $04
+    add $04
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wRecordBufferData + $8]
     ld e, a
     ld a, [wRecordBufferData + $9]
     ld d, a
     ld a, d
-    cp a, $04
+    cp $04
     jr c, .skip3
-    ld de, $03E7
+    ld de, $03e7
 
 .skip3:
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
-    ld [hl+], a
+    ld [hli], a
     ld a, e
-    ld [hl+], a
+    ld [hli], a
     ld a, d
-    ld [hl+], a
-    ld a, [wRecordBufferData + $A]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $B]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $A]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $B]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $C]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $D]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $E]
-    ld [hl+], a
-    ld a, [wRecordBufferData + $F]
-    ld [hl+], a
+    ld [hli], a
+    ld a, [wRecordBufferData + $a]
+    ld [hli], a
+    ld a, [wRecordBufferData + $b]
+    ld [hli], a
+    ld a, [wRecordBufferData + $a]
+    ld [hli], a
+    ld a, [wRecordBufferData + $b]
+    ld [hli], a
+    ld a, [wRecordBufferData + $c]
+    ld [hli], a
+    ld a, [wRecordBufferData + $d]
+    ld [hli], a
+    ld a, [wRecordBufferData + $e]
+    ld [hli], a
+    ld a, [wRecordBufferData + $f]
+    ld [hli], a
     ld a, [wRecordBufferData + $10]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $11]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wScreenAttrBuffer]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $13]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wBattleArg2]
-    or a, a
+    or a
     jr z, .skip4
     push hl
     call NextTableByte
     pop hl
     ld a, [wRandomLo]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRandomHi]
-    and a, $01
-    ld [hl+], a
+    and $01
+    ld [hli], a
     jr .skip5
 
 .skip4:
-    xor a, a
-    ld [hl+], a
-    ld [hl+], a
+    xor a
+    ld [hli], a
+    ld [hli], a
 
 .skip5:
-    xor a, a
-    ld [hl+], a
-    ld [hl+], a
+    xor a
+    ld [hli], a
+    ld [hli], a
     ld a, [wRecordBufferData + $14]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $15]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $16]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufferData + $17]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wRecordBuffer + $1]
@@ -6223,47 +5809,47 @@ Func_001_6C48:: ; address name
     ld a, a
     ld [wWorkBuf], a
     ld a, l
-    add a, $2F
+    add $2f
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wSpeciesRecord + SPECIES_SKILLS]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
-    ld [hl+], a
+    ld [hli], a
     ld b, $16
-    ld a, $FF
+    ld a, $ff
     call FillBBytesAtHL_Bank01
     ld a, l
-    add a, $02
+    add $02
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, [wSpeciesRecord + SPECIES_MAX_LEVEL]
     ld [hl], a
     ld a, l
-    add a, $1C
+    add $1c
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld de, wSpeciesRecord + SPECIES_RESISTANCES
-    ld b, $1B
+    ld b, $1b
     call CopyBBytesDEToHL_Bank01
     call WriteUnknownNamePlaceholder_Bank01
     call WriteUnknownNamePlaceholder_Bank01
     ld [hl], $00
     ld a, [wBattleArg1]
-    cp a, $FF
+    cp $ff
     jr nz, .skip6
     call NextTableByte
     ld a, [wRandomLo]
     ld b, a
-    ld a, $0E
+    ld a, $0e
     call DivideBByA
     ld [wWorkBuf + $1], a
     ld a, [wBattleArg0]
@@ -6279,19 +5865,19 @@ Func_001_6C48:: ; address name
 .skip6:
     push hl
     ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3
-    add a, a
+    add a
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
     pop hl
     ld a, l
-    sub a, $A3
+    sub $a3
     ld l, a
     ld a, h
-    sbc a, $00
+    sbc $00
     ld h, a
-    ld b, $0A
+    ld b, $0a
     call CopyBBytesDEToHL_Bank01
 
 .read_species_id_lo:
@@ -6308,81 +5894,74 @@ Func_001_6C48:: ; address name
     ld c, MON_EXP
     call SRAMRecordAddress
     ld a, [wRecordBufA + MON_EXP]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufA + MON_EXP + 1]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wRecordBufA + MON_EXP + 2]
-    ld [hl+], a
+    ld [hli], a
     farcall SetSpeciesFlag
     ret
 
-; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 3 call sites from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord)
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
+; the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 CopyBBytesDEToHL_Bank01::
-Func_001_6E25:: ; address name
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, CopyBBytesDEToHL_Bank01
     ret
 
-; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord)
+; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5
+; bytes appear in 2 banks)
 FillBBytesAtHL_Bank01::
-Func_001_6E2C:: ; address name
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, FillBBytesAtHL_Bank01
     ret
 
 ; writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)
-; 4 call sites from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord)
 WriteUnknownNamePlaceholder_Bank01::
-Func_001_6E31:: ; address name
     ld a, $98
-    ld [hl+], a
+    ld [hli], a
     ld a, $98
-    ld [hl+], a
+    ld [hli], a
     ld a, $98
-    ld [hl+], a
-    ld a, $F0
+    ld [hli], a
+    ld a, $f0
     ld b, $07
 
 .loop:
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ret
 
-; with SRAM enabled creates a record from the template Data_001_7098[hTemp1] (wBattleArg1 = hTemp1, level hTemp2); kinds 1 and 2 also set field $6E = 1 (E-0124)
-; 11 call sites from 11 routines (e.g. GreatLogTalkEvents_ShowTheFarmIsFull, GreatLogTalkEvents_TestFlagBit_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
-; reads: hTemp1, hTemp2, wBattleArg0
-; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2
+; with SRAM enabled creates a record from the template CreateMonsterRecordOfKindTemp1_Data[hTemp1]
+; (wBattleArg1 = hTemp1, level hTemp2); kinds 1 and 2 also set field $6E = 1 (E-0124)
 CreateMonsterRecordOfKindTemp1::
-Func_001_6E46:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ldh a, [hTemp1]
     ld [wBattleArg1], a
     ld hl, CreateMonsterRecordOfKindTemp1_Data
-    add a, a
+    add a
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
-    xor a, a
+    xor a
     ld [wBattleArg2], a
     ldh a, [hTemp2]
     call CreateMonsterRecordOfKindTemp1_WriteBattleArg0
     ldh a, [hTemp1]
-    cp a, $01
+    cp $01
     jr z, .read_battle_arg0
-    cp a, $02
+    cp $02
     jr nz, .done
 
 .read_battle_arg0:
@@ -6392,37 +5971,27 @@ Func_001_6E46:: ; address name
     ld [hl], $01
 
 .done:
-    xor a, a
+    xor a
     ld [rRAMG], a
     ret
 
-; only called from PickRandomMonsterSkipping7ETo82 (E-0047)
-; 1 call site from 1 routine (e.g. PickRandomMonsterSkipping7ETo82)
-; reads: wBattleArg0
-; writes: wBattleArg1, wBattleArg2, hTemp3, wBattleArg0
 PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
-Func_001_6E82:: ; address name
-    ld a, $FF
+    ld a, $ff
     ld [wBattleArg1], a
     ld [wBattleArg2], a
     ld a, $01
     ldh [hTemp3], a
     ld a, [wBattleArg0]
 
-; only called from CreateMonsterRecordOfKindTemp1 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1)
-; writes: wBattleArg0
 CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
-Func_001_6E91:: ; address name
     ld [wBattleArg0], a
     call CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
     ret
 
-; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after it) (was DebugBattleSetup_Update_FillKeyListFromTable)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc)
-; points at: wKeyList
+; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this
+; ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after
+; it) (was DebugBattleSetup_Update_FillKeyListFromTable)
 DebugBattleSetup_ClearKeyList::
-Func_001_6E98:: ; address name
     ld de, DebugBattleSetup_ClearKeyList_Data
     ld hl, wKeyList
     ld b, $20
@@ -6430,62 +5999,54 @@ Func_001_6E98:: ; address name
 .loop:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop
     ret
 
-; address loaded by DebugBattleSetup_ClearKeyList
-DebugBattleSetup_ClearKeyList_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_6EB0:: ; address name
-    ds $80, $FF
+DebugBattleSetup_ClearKeyList_Data::
+    ds $80, $ff
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_6F30::
-Data_001_6F30:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
-    db $00, $11, $12, $13, $35, $0E, $00, $00, $00, $00, $A0, $A1, $A2, $A3, $A4, $A5, $A6, $A7, $A8, $00 ; id 2
+    db $00, $11, $12, $13, $35, $0e, $00, $00, $00, $00, $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $00 ; id 2
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 3
     db $00, $14, $15, $16, $17, $18, $19, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
-    db $00, $1A, $1B, $1C, $1D, $14, $1E, $1F, $20, $15, $12, $00, $00, $00, $80, $81, $82, $83, $84, $00 ; id 5
-    db $00, $14, $1E, $1F, $20, $15, $12, $21, $22, $23, $00, $00, $00, $00, $00, $85, $86, $87, $88, $00 ; id 6
-    db $00, $14, $24, $16, $1A, $25, $00, $00, $00, $00, $00, $00, $00, $00, $00, $89, $8A, $8B, $8C, $00 ; id 7
-    db $00, $33, $29, $34, $29, $28, $1D, $29, $00, $00, $00, $8D, $8E, $8F, $90, $91, $92, $93, $94, $00 ; id 8
-    db $00, $26, $16, $27, $28, $1D, $29, $00, $00, $00, $00, $95, $96, $97, $98, $99, $9A, $9B, $9C, $00 ; id 9
-    db $00, $2A, $2B, $2C, $36, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
-    db $00, $2A, $2B, $2C, $36, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
-    db $00, $2A, $2B, $2C, $36, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
-    db $00, $2A, $2B, $2C, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $1a, $1b, $1c, $1d, $14, $1e, $1f, $20, $15, $12, $00, $00, $00, $80, $81, $82, $83, $84, $00 ; id 5
+    db $00, $14, $1e, $1f, $20, $15, $12, $21, $22, $23, $00, $00, $00, $00, $00, $85, $86, $87, $88, $00 ; id 6
+    db $00, $14, $24, $16, $1a, $25, $00, $00, $00, $00, $00, $00, $00, $00, $00, $89, $8a, $8b, $8c, $00 ; id 7
+    db $00, $33, $29, $34, $29, $28, $1d, $29, $00, $00, $00, $8d, $8e, $8f, $90, $91, $92, $93, $94, $00 ; id 8
+    db $00, $26, $16, $27, $28, $1d, $29, $00, $00, $00, $00, $95, $96, $97, $98, $99, $9a, $9b, $9c, $00 ; id 9
+    db $00, $2a, $2b, $2c, $36, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $2a, $2b, $2c, $36, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $2a, $2b, $2c, $36, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $2a, $2b, $2c, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $31, $29, $14, $15, $16, $00, $31, $29, $32, $29, $00 ; id 14
-    db $00, $2D, $27, $2E, $1A, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
-    db $00, $2F, $25, $1A, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $2d, $27, $2e, $1a, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $2f, $25, $1a, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
-; address loaded by CreateMonsterRecordOfKindTemp1
-CreateMonsterRecordOfKindTemp1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_7098:: ; address name
-    db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1B, $00, $7A, $02, $79, $02
+CreateMonsterRecordOfKindTemp1_Data::
+    db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1b, $00, $7a, $02, $79, $02
     db $78, $02
 
-; address loaded by CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_70AA:: ; address name
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA::
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
-; address loaded by CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_70B3:: ; address name
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3::
     dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00
     dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01
     dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02
@@ -6496,44 +6057,33 @@ Data_001_70B3:: ; address name
     dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07
     dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70C5:: ; address name
-    db $0B, $2C, $2C, $31, $32, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00::
+    db $0b, $2c, $2c, $31, $32, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70CF:: ; address name
-    db $0E, $2A, $2A, $F0, $F0, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01::
+    db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70D9:: ; address name
-    db $0E, $2A, $2A, $F0, $F0, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02::
+    db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70E3:: ; address name
-    db $20, $24, $35, $38, $0B, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03::
+    db $20, $24, $35, $38, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70ED:: ; address name
-    db $19, $28, $37, $2C, $0B, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04::
+    db $19, $28, $37, $2c, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05:: ; heuristic: target of a monotone pointer table; C0
-Data_001_70F7:: ; address name
-    db $1C, $34, $38, $2C, $3D, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05::
+    db $1c, $34, $38, $2c, $3d, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06:: ; heuristic: target of a monotone pointer table; C0
-Data_001_7101:: ; address name
-    db $15, $24, $30, $2C, $24, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06::
+    db $15, $24, $30, $2c, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07:: ; heuristic: target of a monotone pointer table; C0
-Data_001_710B:: ; address name
-    db $1C, $24, $37, $30, $24, $F0, $F0, $F0, $F0, $F0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07::
+    db $1c, $24, $37, $30, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08:: ; heuristic: target of a monotone pointer table; C0
-Data_001_7115:: ; address name
-    db $0B, $35, $24, $25, $32, $F0, $F0, $F0, $F0, $F0
-    ds $4A6, $00
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08::
+    db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
+    ds $4a6, $00
 
-; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_001_75C5:: ; address name
-    ds $A3B, $00
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5::
+    ds $a3b, $00

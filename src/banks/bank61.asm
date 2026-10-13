@@ -1,17 +1,13 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
-; wPartyStrength = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
-; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength, RandomGoldOrItem_Case04_NextRandomSeed)
-; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
-; writes: wPartyStrength, hTemp4, hTemp5, rRAMG
-; points at: wPartyList
+; wPartyStrength = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0
+; without a party (E-0130)
 ComputePartyStrengthLevelPartyStrength::
-Func_061_4001:: ; address name
     ld a, [wPartyCount]
-    or a, a
+    or a
     jr nz, .skip
-    xor a, a
+    xor a
     ld [wPartyStrength], a
     ret
 
@@ -23,7 +19,7 @@ Func_061_4001:: ; address name
     ld a, h
     ldh [hTemp5], a
     ld hl, wPartyList
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
 
 .loop:
@@ -101,7 +97,7 @@ Func_061_4001:: ; address name
     pop bc
     dec b
     jp nz, .loop
-    xor a, a
+    xor a
     ld [rRAMG], a
     ldh a, [hTemp4]
     ld l, a
@@ -110,10 +106,10 @@ Func_061_4001:: ; address name
     ld a, [wPartyCount]
     call DivideHLByA
     ld a, h
-    or a, a
+    or a
     jr nz, .set_party_strength_to_63
     ld a, l
-    cp a, $63
+    cp $63
     jr c, .set_party_strength
 
 .set_party_strength_to_63:
@@ -125,17 +121,13 @@ Func_061_4001:: ; address name
     ld [wPartyStrength], a
     ret
 
-; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hTemp4-hTemp7 and wPartyStrength for key generation (E-0131)
-; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthForKey, WriteKeyEntryTemp0)
-; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
-; writes: wPartyStrength, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
-; points at: wPartyList
+; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hTemp4-hTemp7
+; and wPartyStrength for key generation (E-0131)
 ComputePartyStrengthForKey::
-Func_061_40B4:: ; address name
     ld a, [wPartyCount]
-    or a, a
+    or a
     jr nz, .skip
-    xor a, a
+    xor a
     ld [wPartyStrength], a
     ret
 
@@ -151,7 +143,7 @@ Func_061_40B4:: ; address name
     ld a, h
     ldh [hTemp7], a
     ld hl, wPartyList
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
 
 .loop:
@@ -303,10 +295,10 @@ Func_061_40B4:: ; address name
     ldh a, [hTemp3]
     ld h, a
     ld a, l
-    sub a, e
+    sub e
     ld l, a
     ld a, h
-    sbc a, d
+    sbc d
     ld h, a
     ld a, h
     bit 7, a
@@ -334,7 +326,7 @@ Func_061_40B4:: ; address name
     pop bc
     dec b
     jp nz, .loop
-    xor a, a
+    xor a
     ld [rRAMG], a
     ldh a, [hTemp4]
     ld l, a
@@ -347,7 +339,7 @@ Func_061_40B4:: ; address name
     add hl, de
     bit 7, h
     jr z, .read_party_count
-    xor a, a
+    xor a
     ld [wPartyStrength], a
     ret
 
@@ -355,7 +347,7 @@ Func_061_40B4:: ; address name
     ld a, [wPartyCount]
     call DivideHLByA
     ld a, l
-    cp a, $63
+    cp $63
     jr c, .set_party_strength
     ld a, $63
     ld [wPartyStrength], a
@@ -366,13 +358,10 @@ Func_061_40B4:: ; address name
     ret
 
 ; runs the routine for wMapType & 7 (jump table; 4 reuses 3) (E-0122)
-; 1 call site from 1 routine (e.g. LoadMapHeader)
-; reads: wMapType
 LoadMapHeaderByMapType::
-Func_061_420D:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw LoadKeyWorldTilesetAndHeader
     dw LoadMapHeaderByMapType_DecompressToVRAM
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02
@@ -382,22 +371,13 @@ Func_061_420D:: ; address name
     dw LoadMapHeaderByMapType_WriteTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
 
-; entry 7 of the `rst $00` table in LoadMapHeaderByMapType
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0
 LoadMapHeaderByMapType_LoadSpecialMapHeader::
-Jump_061_4223:: ; address name
     ld a, $66
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
-; entry 6 of the `rst $00` table in LoadMapHeaderByMapType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor, hTemp0
-; writes: hTemp0
 LoadMapHeaderByMapType_WriteTemp0::
-Jump_061_422B:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -409,7 +389,7 @@ Jump_061_422B:: ; address name
     dec a
     dec a
     inc a
-    and a, $01
+    and $01
     ldh [hTemp0], a
     pop af
     ld hl, wKeyWorldFloorState + $3
@@ -417,22 +397,20 @@ Jump_061_422B:: ; address name
     swap a
     add_a_to_hl
     ld a, [hl]
-    and a, $01
-    add a, a
+    and $01
+    add a
     ld c, a
     ldh a, [hTemp0]
-    add a, $50
+    add $50
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
-; map type 5 (wMapType & 7 = 5): takes byte 2 of the floor's wKeyWorldFloorState entry as the index into MapType5TilesetTable (61:42DD, 6 bytes each), decompresses its tiles to vTiles2, on CGB copies its $40-byte palettes to wBGPaletteBuffer and requests the upload, then sets a 4 x 4-screen map, wMaxBlockingTile = $3F and other map-header bytes (E-0140)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor, wIsCGB
-; writes: wBGPaletteUploadRequest, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapHeaderByte11, wMapTallTileMin, ...
-; points at: wBGPaletteBuffer
+; map type 5 (wMapType & 7 = 5): takes byte 2 of the floor's wKeyWorldFloorState entry as the index
+; into MapType5TilesetTable (MapType5TilesetTable, 6 bytes each), decompresses its tiles to vTiles2,
+; on CGB copies its $40-byte palettes to wBGPaletteBuffer and requests the upload, then sets a 4 x
+; 4-screen map, wMaxBlockingTile = $3F and other map-header bytes (E-0140)
 LoadMapType5TilesetAndHeader::
-Jump_061_4261:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $2
@@ -441,57 +419,57 @@ Jump_061_4261:: ; address name
     push af
     ld c, a
     sla a
-    add a, c
+    add c
     sla a
     ld hl, MapType5TilesetTable
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push hl
     ld hl, vTiles2
     call DecompressToVRAM
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .set_map_width_screens_to_04
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .set_map_width_screens_to_04:
     ld a, $04
     ld [wMapWidthScreens], a
     ld [wMapHeightScreens], a
-    ld a, $3F
+    ld a, $3f
     ld [wMaxBlockingTile], a
-    xor a, a
+    xor a
     ld [wFieldEventKind], a
     ld a, $10
     ld [wMapSpriteKind], a
-    ld a, $2A
+    ld a, $2a
     ld [wMapHeaderByte11], a
-    xor a, a
+    xor a
     ld [wMapTallTileMin], a
-    ld a, $A3
+    ld a, $a3
     ld [wEncounterRate], a
     pop af
-    cp a, $07
+    cp $07
     jr z, .set_map_move_type_to_05
-    cp a, $09
+    cp $09
     jr z, .set_map_move_type_to_05
-    xor a, a
+    xor a
     ld [wMapMoveType], a
     ret
 
@@ -500,10 +478,13 @@ Jump_061_4261:: ; address name
     ld [wMapMoveType], a
     ret
 
-; E-0140 (C1: LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; entries 0-11 decode to 2048-byte tile sets with 15-bit palettes, entry 12 onward is not a valid record).
-; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
+; LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry,
+; decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to
+; wBGPaletteBuffer; entries 0-11 decode to 2048-byte tile sets with 15-bit palettes, entry 12 onward
+; is not a valid record (E-0140, C1)
+; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte
+; CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 MapType5TilesetTable::
-Data_061_42DD:: ; address name
     dfar MapType5Tiles0 ; id 0: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar MapType5Palettes0 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
     dfar MapType5Tiles1 ; id 1: compressed BG tiles decompressed to vTiles2 (128 tiles)
@@ -529,32 +510,26 @@ Data_061_42DD:: ; address name
     dfar MapType5Tiles11 ; id 11: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar MapType5Palettes11 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
-; entry 1 of the `rst $00` table in LoadMapHeaderByMapType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wKeyWorldFloor
-; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wEncounterRate, ...
-; points at: wBGPaletteBuffer, wKeyWorldObjects
 LoadMapHeaderByMapType_DecompressToVRAM::
-Jump_061_4325:: ; address name
     ld de, MapType5Tiles5
-    ld b, $6E
+    ld b, $6e
     ld hl, vTiles2
     call DecompressToVRAM
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .set_max_blocking_tile_to_3F
     ld de, BGPaletteBufferData_6E_77E0
-    ld b, $6E
+    ld b, $6e
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .set_max_blocking_tile_to_3F:
-    ld a, $3F
+    ld a, $3f
     ld [wMaxBlockingTile], a
-    xor a, a
+    xor a
     ld [wFieldEventKind], a
     ld [wMapSpriteKind], a
     ld [wMapTallTileMin], a
@@ -564,7 +539,7 @@ Jump_061_4325:: ; address name
     sla a
     add_a_to_hl
     ld a, [hl]
-    and a, $0F
+    and $0f
     dec a
     sla a
     sla a
@@ -573,43 +548,37 @@ Jump_061_4325:: ; address name
     ld d, $00
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     dec a
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, e
-    add a, $05
+    add $05
     ld e, a
     ld a, d
-    adc a, $67
+    adc $67
     ld d, a
     ld a, [de]
     ld l, a
     inc de
     ld a, [de]
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld [wMapWidthScreens], a
     ld a, [hl]
     ld [wMapHeightScreens], a
-    ld a, $A3
+    ld a, $a3
     ld [wEncounterRate], a
-    xor a, a
+    xor a
     ld [wMapMoveType], a
     ret
 
-; entry 2 of the `rst $00` table in LoadMapHeaderByMapType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor, hTemp0
-; writes: hTemp0, wKeyWorldByte06
-; points at: hTemp0
 LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02::
-Jump_061_439F:: ; address name
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -620,96 +589,88 @@ Jump_061_439F:: ; address name
 
 .read_temp0:
     ldh a, [hTemp0]
-    sub a, $61
+    sub $61
     ld [wKeyWorldByte06], a
     call LoadSpecialMapHeader
     ret
 
-; entry 3 of the `rst $00` table in LoadMapHeaderByMapType; also entry 4 of the table in LoadMapHeaderByMapType
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: hTemp0
-; points at: wKeyWorldFloorState
 LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03::
-Jump_061_43B9:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
-; map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable (61:5728, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind, wEncounterRate and other map-header bytes (E-0139)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldGoalKind, wIsCGB, wMapSpriteKind
-; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wEncounterRate, wMapMoveType, wMapTallTileMin, wMapHeaderByte11, wMapSpriteKind
-; points at: wBGPaletteBuffer
+; map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable
+; (KeyWorldTilesetTable, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to
+; wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind,
+; wEncounterRate and other map-header bytes (E-0139)
 LoadKeyWorldTilesetAndHeader::
-Jump_061_43CF:: ; address name
     ld a, [wKeyWorldGoalKind]
     ld c, a
     sla a
-    add a, c
+    add c
     sla a
     ld l, a
     ld h, $00
     ld a, l
-    add a, $28
+    add $28
     ld l, a
     ld a, h
-    adc a, $57
+    adc $57
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push hl
     ld hl, vTiles2
     call DecompressToVRAM
     pop hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .set_max_blocking_tile_to_3D
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .set_max_blocking_tile_to_3D:
-    ld a, $3D
+    ld a, $3d
     ld [wMaxBlockingTile], a
     ld a, [wKeyWorldGoalKind]
-    cp a, $04
+    cp $04
     jr z, .clear_field_event_kind
     ld a, $02
     ld [wFieldEventKind], a
     jr .set_encounter_rate_to_A2
 
 .clear_field_event_kind:
-    xor a, a
+    xor a
     ld [wFieldEventKind], a
 
 .set_encounter_rate_to_A2:
-    ld a, $A2
+    ld a, $a2
     ld [wEncounterRate], a
     ld a, [wKeyWorldGoalKind]
-    cp a, $01
+    cp $01
     jr z, .set_map_move_type_to_04
-    cp a, $07
+    cp $07
     jr z, .set_map_move_type_to_04
-    xor a, a
+    xor a
     ld [wMapMoveType], a
     jr .clear_map_tall_tile_min
 
@@ -718,7 +679,7 @@ Jump_061_43CF:: ; address name
     ld [wMapMoveType], a
 
 .clear_map_tall_tile_min:
-    xor a, a
+    xor a
     ld [wMapTallTileMin], a
     ld [wMapHeaderByte11], a
     ld a, [wKeyWorldGoalKind]
@@ -726,34 +687,28 @@ Jump_061_43CF:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wMapSpriteKind], a
-    and a, $0F
+    and $0f
     jr z, .check_map_sprite_kind
     ld a, $29
     ld [wMapTallTileMin], a
 
 .check_map_sprite_kind:
     ld a, [wMapSpriteKind]
-    and a, $F0
+    and $f0
     jr z, .return
-    ld a, $2C
+    ld a, $2c
     ld [wMapHeaderByte11], a
 
 .return:
     ret
 
-; address loaded by LoadKeyWorldTilesetAndHeader
-LoadKeyWorldTilesetAndHeader_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_061_4468:: ; address name
+LoadKeyWorldTilesetAndHeader_Data::
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
-; only called from LoadMapScreen (E-0047)
-; 1 call site from 1 routine (e.g. LoadMapScreen)
-; reads: wMapType
 LoadMapScreen_ReadMapType::
-Func_061_4472:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw LoadMapScreen_Sub03_WriteSVBK
     dw LoadMapScreen_Sub03_Return
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02
@@ -763,22 +718,13 @@ Func_061_4472:: ; address name
     dw LoadMapScreen_Sub03_WriteTemp0
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
 
-; entry 7 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; writes: hTemp0
 LoadMapScreen_Sub03_LoadMapScreenFromChunk::
-Jump_061_4488:: ; address name
     ld a, $66
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
-; entry 6 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor, hTemp0
-; writes: hTemp0
 LoadMapScreen_Sub03_WriteTemp0::
-Jump_061_4490:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -790,7 +736,7 @@ Jump_061_4490:: ; address name
     dec a
     dec a
     dec a
-    and a, $01
+    and $01
     ldh [hTemp0], a
     pop af
     ld hl, wKeyWorldFloorState + $3
@@ -799,122 +745,113 @@ Jump_061_4490:: ; address name
     add_a_to_hl
     ld a, [hl]
     push hl
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     ld a, $00
 
 .skip:
     dec a
-    and a, $01
+    and $01
     sla a
     ld c, a
     ldh a, [hTemp0]
-    add a, $50
+    add $50
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
     pop hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .call_draw_door_tiles_for_key_world_floor
-    and a, $01
+    and $01
     ret z
 
 .call_draw_door_tiles_for_key_world_floor:
     call DrawDoorTilesForKeyWorldFloor
     ret
 
-; writes a 2 x 2 tile block ($1A or $1C by the wKeyWorldFloorState + $3 entry, then $1E) at wScreenTileBuffer + $AC, with CGB attribute 5 (E-0127)
-; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_WriteTemp0, KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor, KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo)
-; reads: wKeyWorldFloor, wIsCGB
-; writes: rSVBK
+; writes a 2 x 2 tile block ($1A or $1C by the wKeyWorldFloorState + $3 entry, then $1E) at
+; wScreenTileBuffer + $AC, with CGB attribute 5 (E-0127)
 DrawDoorTilesForKeyWorldFloor::
-Func_061_44DB:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld de, wKeyWorldFloorState + $3
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
-    ld c, $1A
+    ld c, $1a
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr nz, .skip2
-    ld c, $1C
+    ld c, $1c
 
 .skip2:
-    ld hl, wScreenTileBuffer + $AC
+    ld hl, wScreenTileBuffer + $ac
     push hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     inc a
-    ld [hl-], a
+    ld [hld], a
     ld a, $14
     add_a_to_hl
-    ld a, $1E
-    ld [hl+], a
+    ld a, $1e
+    ld [hli], a
     inc a
     ld [hl], a
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, $02
     ldh [rSVBK], a
     ld a, l
-    sub a, $98
+    sub $98
     ld l, a
     ld a, h
-    sbc a, $C1
+    sbc $c1
     ld h, a
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ld a, $05
-    ld [hl+], a
-    ld [hl-], a
+    ld [hli], a
+    ld [hld], a
     ld a, $14
     add_a_to_hl
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld [hl], a
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; entry 5 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenY, hMapScreenX, wIsCGB
-; writes: hTemp0, rSVBK
-; points at: wScreenTileBuffer, wScreenAttrBuffer
 LoadMapScreen_Sub03_WriteTemp0AndSVBK::
-Jump_061_4533:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld e, a
     ld d, $00
     ld a, [wKeyWorldArea]
-    add a, a
-    add a, e
+    add a
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, e
-    add a, $2C
+    add $2c
     ld e, a
     ld a, d
-    adc a, $CE
+    adc $ce
     ld d, a
     ld a, [de]
     ldh [hTemp0], a
@@ -923,10 +860,10 @@ Jump_061_4533:: ; address name
     sla e
     rl d
     ld a, e
-    add a, $01
+    add $01
     ld e, a
     ld a, d
-    adc a, $40
+    adc $40
     ld d, a
     ld b, $72
     call ReadByteInBank
@@ -940,14 +877,14 @@ Jump_061_4533:: ; address name
     ldh a, [hMapScreenY]
     ld c, a
     sla a
-    add a, c
+    add c
     sla a
     sla a
     add_a_to_hl
     ldh a, [hMapScreenX]
     ld c, a
     sla a
-    add a, c
+    add c
     add_a_to_hl
     push hl
     push bc
@@ -968,13 +905,13 @@ Jump_061_4533:: ; address name
     pop bc
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .call_draw_key_world_exit_tile
     ld a, l
-    add a, $30
+    add $30
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, l
     ld e, a
@@ -1007,12 +944,9 @@ Jump_061_4533:: ; address name
     call CheckTwoWCDB0EntriesForKeyWorldArea
     ret
 
-; for the two wKeyWorldFloorState + $4 entries of wKeyWorldFloor matching wKeyWorldArea runs Func_061_462F with C = $80 or the stored value (E-0127)
-; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK, AreaItemEvent_WriteScriptStartRequestAndStepPtrLo)
-; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
-; writes: rSVBK
+; for the two wKeyWorldFloorState + $4 entries of wKeyWorldFloor matching wKeyWorldArea runs
+; CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK with C = $80 or the stored value (E-0127)
 CheckTwoWCDB0EntriesForKeyWorldArea::
-Func_061_45E8:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $4
@@ -1021,14 +955,14 @@ Func_061_45E8:: ; address name
     ld a, [hl]
     ld b, a
     ld a, [wKeyWorldArea]
-    cp a, b
+    cp b
     jr nz, .restore
     inc hl
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
-    or a, a
+    or a
     jr z, .next
     ld c, $80
     jr .call_check_two_wcdb0_entries_for_key_world
@@ -1053,14 +987,14 @@ Func_061_45E8:: ; address name
     ld a, [hl]
     ld b, a
     ld a, [wKeyWorldArea]
-    cp a, b
+    cp b
     ret nz
     inc hl
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
-    or a, a
+    or a
     jr z, .next2
     ld c, $80
     jr CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
@@ -1071,12 +1005,7 @@ Func_061_45E8:: ; address name
     ld a, [hl]
     ld c, a
 
-; only called from CheckTwoWCDB0EntriesForKeyWorldArea (E-0047)
-; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForKeyWorldArea)
-; reads: hMapScreenX, hMapScreenY, wKeyWorldFloor, wKeyWorldArea, wIsCGB
-; writes: rSVBK
 CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK::
-Func_061_462F:: ; address name
     ld a, b
     ld hl, KeyWorldEntryScreenXY
     add_a_to_hl
@@ -1086,45 +1015,45 @@ Func_061_462F:: ; address name
     swap a
     ld d, a
     ldh a, [hMapScreenY]
-    or a, d
-    cp a, e
+    or d
+    cp e
     ret nz
     bit 7, c
     jr nz, .read_key_world_floor
-    ld a, $2C
+    ld a, $2c
     jr .read_key_world_floor2
 
 .read_key_world_floor:
-    ld a, $2E
+    ld a, $2e
 
 .read_key_world_floor2:
     push af
     ld a, [wKeyWorldFloor]
     swap a
     ld de, wKeyWorldFloorState + $1
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    add a, a
+    add a
     ld e, a
     ld d, $00
     ld a, [wKeyWorldArea]
-    add a, a
-    add a, e
+    add a
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
     ld a, e
-    add a, $2C
+    add $2c
     ld e, a
     ld a, d
-    adc a, $CE
+    adc $ce
     ld d, a
     ld a, [de]
     ld e, a
@@ -1139,17 +1068,17 @@ Func_061_462F:: ; address name
     rl d
     ld a, b
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
 
 .skip3:
     ld a, e
-    add a, $19
+    add $19
     ld e, a
     ld a, d
-    adc a, $48
+    adc $48
     ld d, a
     ld a, [de]
     push de
@@ -1169,87 +1098,84 @@ Func_061_462F:: ; address name
     sla a
     add_a_to_hl
     ld a, l
-    add a, $98
+    add $98
     ld l, a
     ld a, h
-    adc a, $C1
+    adc $c1
     ld h, a
     pop af
     push hl
-    ld [hl+], a
+    ld [hli], a
     inc a
-    ld [hl-], a
+    ld [hld], a
     push af
     ld a, $14
     add_a_to_hl
     pop af
-    add a, $0F
-    ld [hl+], a
+    add $0f
+    ld [hli], a
     inc a
     ld [hl], a
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, $02
     ldh [rSVBK], a
     ld a, l
-    sub a, $98
+    sub $98
     ld l, a
     ld a, h
-    sbc a, $C1
+    sbc $c1
     ld h, a
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ld a, [hl]
-    and a, $F8
-    or a, $06
-    ld [hl+], a
+    and $f8
+    or $06
+    ld [hli], a
     ld a, [hl]
-    and a, $F8
-    or a, $06
-    ld [hl-], a
+    and $f8
+    or $06
+    ld [hld], a
     ld a, $14
     add_a_to_hl
     ld a, [hl]
-    and a, $F8
-    or a, $06
-    ld [hl+], a
+    and $f8
+    or $06
+    ld [hli], a
     ld a, [hl]
-    and a, $F8
-    or a, $06
-    ld [hl-], a
+    and $f8
+    or $06
+    ld [hld], a
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; hTemp0 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wKeyWorldFloorState + $1[16 * wKeyWorldFloor] + 2 * wKeyWorldArea] + 2 * hTemp0, packed into one byte (E-0121)
-; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
-; reads: wKeyWorldFloor, wKeyWorldArea, hTemp0
-; writes: hTemp0
+; hTemp0 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wKeyWorldFloorState + $1[16 *
+; wKeyWorldFloor] + 2 * wKeyWorldArea] + 2 * hTemp0, packed into one byte (E-0121)
 LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
-Func_061_4706:: ; address name
     push hl
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld l, a
     ld h, $00
     ld a, [wKeyWorldArea]
-    add a, a
+    add a
     add_a_to_hl
     ld a, l
-    add a, $2C
+    add $2c
     ld l, a
     ld a, h
-    adc a, $CE
+    adc $ce
     ld h, a
     ld a, [hl]
     ld l, a
@@ -1259,85 +1185,82 @@ Func_061_4706:: ; address name
     add hl, hl
     add hl, hl
     ldh a, [hTemp0]
-    add a, a
+    add a
     add_a_to_hl
     ld a, l
-    add a, $18
+    add $18
     ld l, a
     ld a, h
-    adc a, $48
+    adc $48
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     swap a
     ld c, a
     ld a, [hl]
-    or a, c
+    or c
     ldh [hTemp0], a
     pop hl
     ret
 
-; draws the exit or stairs tile block for the current screen when it matches the area entry in wKeyWorldRoomTable + $1 (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK)
-; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
-; writes: hTemp0, rSVBK
+; draws the exit or stairs tile block for the current screen when it matches the area entry in
+; wKeyWorldRoomTable + $1 (E-0130)
 DrawKeyWorldExitTile::
-Func_061_474C:: ; address name
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     push af
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
     pop af
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld hl, wKeyWorldRoomTable + $1
     add_a_to_hl
     ld a, [wKeyWorldArea]
-    add a, a
+    add a
     add_a_to_hl
     ldh a, [hMapScreenX]
-    and a, $0F
+    and $0f
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    and a, $0F
-    or a, c
+    and $0f
+    or c
     ld c, a
     ld a, [hl]
-    and a, $0F
-    cp a, $0F
+    and $0f
+    cp $0f
     jr z, .skip2
     ld de, DrawKeyWorldExitTile_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    cp a, c
+    cp c
     jr z, .check_temp0
 
 .skip2:
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld de, DrawKeyWorldExitTile_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
 
 .skip3:
     ld a, [de]
-    cp a, c
+    cp c
     jr z, .check_temp02
     ret
 
@@ -1348,7 +1271,7 @@ Func_061_474C:: ; address name
     dec a
     dec a
     sla a
-    add a, $46
+    add $46
     jr .skip4
 
 .check_temp02:
@@ -1360,62 +1283,60 @@ Func_061_474C:: ; address name
     sla a
     ld c, a
     ld a, $48
-    sub a, c
+    sub c
 
 .skip4:
-    ld hl, wScreenTileBuffer + $A8
-    ld [hl+], a
+    ld hl, wScreenTileBuffer + $a8
+    ld [hli], a
     inc a
-    ld [hl-], a
+    ld [hld], a
     push af
     ld a, l
-    add a, $14
+    add $14
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     pop af
-    add a, $0F
-    ld [hl+], a
+    add $0f
+    ld [hli], a
     inc a
-    ld [hl-], a
+    ld [hld], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wWorkBuf + $B
+    ld hl, wWorkBuf + $b
     ld a, [hl]
-    and a, $F8
-    or a, $04
-    ld [hl+], a
+    and $f8
+    or $04
+    ld [hli], a
     ld a, [hl]
-    and a, $F8
-    or a, $04
-    ld [hl-], a
+    and $f8
+    or $04
+    ld [hld], a
     ld a, $14
     add_a_to_hl
     ld a, [hl]
-    and a, $F8
-    or a, $04
-    ld [hl+], a
+    and $f8
+    or $04
+    ld [hli], a
     ld a, [hl]
-    and a, $F8
-    or a, $04
-    ld [hl-], a
+    and $f8
+    or $04
+    ld [hld], a
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; address loaded by DrawKeyWorldExitTile
-DrawKeyWorldExitTile_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_061_480A:: ; address name
+DrawKeyWorldExitTile_Data::
     db $00, $30, $11, $22, $03, $33
 
-; E-0195 (C1: CheckTwoWCDB0EntriesForKeyWorldArea_Sub01 reads the byte at $4810 + B (B from the floor state entry) and continues only when it equals hMapScreenX/Y packed as nibbles).
+; CheckTwoWCDB0EntriesForKeyWorldArea_Sub01 reads the byte at $4810 + B (B from the floor state
+; entry) and continues only when it equals hMapScreenX/Y packed as nibbles (E-0195, C1)
 ; record: screen X (high nibble) / Y (low nibble)
 KeyWorldEntryScreenXY::
-Data_061_4810:: ; address name
     db $01 ; id 0
     db $10 ; id 1
     db $12 ; id 2
@@ -1425,10 +1346,12 @@ Data_061_4810:: ; address name
     db $23 ; id 6
     db $32 ; id 7
 
-; E-0195 (C1: LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418).
+; LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 *
+; floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles;
+; CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK reads byte $4819 + 16 * n + 2 * B the same way; 192
+; records end at the code at $5418 (E-0195, C1)
 ; record: eight spots as (X, Y) byte pairs; all-zero records are unused
 KeyWorldScreenSpotRecords::
-Data_061_4818:: ; address name
     db $04, $04, $05, $01, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04 ; id 0
     db $04, $04, $05, $01, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04 ; id 1
     db $04, $02, $08, $03, $04, $04, $05, $04, $04, $05, $01, $02, $02, $02, $02, $01 ; id 2
@@ -1622,20 +1545,11 @@ Data_061_4818:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
 
-; entry 1 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
 LoadMapScreen_Sub03_Return::
-Jump_061_5418:: ; address name
     ret
-    db $C9
+    db $c9
 
-; entry 2 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: hTemp0
-; points at: hTemp0
 LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02::
-Jump_061_541A:: ; address name
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -1648,49 +1562,37 @@ Jump_061_541A:: ; address name
     call LoadMapScreenFromChunk
     ret
 
-; entry 3 of the `rst $00` table in Func_061_4472; also entry 4 of the table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: hTemp0
-; points at: wKeyWorldFloorState
 LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03::
-Jump_061_542D:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
-; entry 0 of the `rst $00` table in Func_061_4472
-; no direct call (reached through a table, a jump or a vector)
-; reads: hMapScreenY, hMapScreenX, wIsCGB
-; writes: rSVBK
-; points at: wScreenTileBuffer, wScreenAttrBuffer
 LoadMapScreen_Sub03_WriteSVBK::
-Jump_061_5443:: ; address name
     ldh a, [hMapScreenY]
-    and a, $FC
-    add a, a
+    and $fc
+    add a
     ld l, a
     ld h, $00
     ldh a, [hMapScreenX]
-    and a, $FC
+    and $fc
     add_a_to_hl
     ld a, l
-    add a, $60
+    add $60
     ld l, a
     ld a, h
-    adc a, $CD
+    adc $cd
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push bc
     ld a, [hl]
@@ -1699,18 +1601,18 @@ Jump_061_5443:: ; address name
     add hl, de
     pop bc
     ldh a, [hMapScreenY]
-    and a, $03
+    and $03
     ld c, a
     sla a
-    add a, c
+    add c
     sla a
     sla a
     add_a_to_hl
     ldh a, [hMapScreenX]
-    and a, $03
+    and $03
     ld c, a
     sla a
-    add a, c
+    add c
     add_a_to_hl
     push hl
     ld e, l
@@ -1739,13 +1641,13 @@ Jump_061_5443:: ; address name
     pop bc
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .call_draw_key_world_objects_entry_tiles_for
     ld a, l
-    add a, $30
+    add $30
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, l
     ld e, a
@@ -1779,37 +1681,34 @@ Jump_061_5443:: ; address name
     call DrawKeyWorldGoalAtScreen
     ret
 
-; on key-world maps draws the goal object for the current screen (from wKeyWorldGoal when the wKeyWorldKey key matches, else from wKeyWorldGoalPos2) (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
-; reads: wMapType, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
-; writes: rSVBK
+; on key-world maps draws the goal object for the current screen (from wKeyWorldGoal when the
+; wKeyWorldKey key matches, else from wKeyWorldGoalPos2) (E-0130)
 DrawKeyWorldGoalAtScreen::
-Func_061_54EC:: ; address name
     ld a, [wMapType]
-    cp a, $80
+    cp $80
     ret nz
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_map_screen_x
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_map_screen_x
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_map_screen_x
     ldh a, [hMapScreenX]
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wKeyWorldGoalCell]
-    cp a, c
+    cp c
     ret nz
     ld a, [wKeyWorldGoal]
-    and a, $0F
+    and $0f
     ld c, a
     ld e, a
     ld d, $00
@@ -1818,7 +1717,7 @@ Func_061_54EC:: ; address name
     sla e
     rl d
     ld a, c
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -1832,9 +1731,9 @@ Func_061_54EC:: ; address name
     rl d
     ld a, [wKeyWorldGoal]
     swap a
-    and a, $0F
-    add a, a
-    add a, e
+    and $0f
+    add a
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -1847,10 +1746,10 @@ Func_061_54EC:: ; address name
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wKeyWorldGoalScreen]
-    cp a, c
+    cp c
     ret nz
     ld a, [wKeyWorldGoalPos2]
     swap a
@@ -1862,7 +1761,7 @@ Func_061_54EC:: ; address name
     sla e
     rl d
     ld a, c
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -1877,7 +1776,7 @@ Func_061_54EC:: ; address name
     ld a, [wKeyWorldGoalPos]
     swap a
     sla a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip4
     inc d
@@ -1885,22 +1784,22 @@ Func_061_54EC:: ; address name
 .skip4:
     push de
     ld a, e
-    add a, $98
+    add $98
     ld e, a
     ld a, d
-    adc a, $C1
+    adc $c1
     ld d, a
     ld a, $46
     call Write2x2TileBlockAtDE
     pop de
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $D0
+    adc $d0
     ld d, a
     ld a, $02
     ldh [rSVBK], a
@@ -1910,18 +1809,14 @@ Func_061_54EC:: ; address name
     ldh [rSVBK], a
     ret
 
-; for the wKeyWorldObjects entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wScreenTileBuffer + $A8 with CGB attribute 5 (E-0129)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
-; reads: hMapScreenX, hMapScreenY, wIsCGB
-; writes: rSVBK
-; points at: wKeyWorldObjects
+; for the wKeyWorldObjects entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73)
+; at wScreenTileBuffer + $A8 with CGB attribute 5 (E-0129)
 DrawKeyWorldObjectsEntryTilesForScreen::
-Func_061_55AF:: ; address name
     ld hl, wKeyWorldObjects
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .return
     push hl
     dec hl
@@ -1929,25 +1824,25 @@ Func_061_55AF:: ; address name
     dec hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jr nz, .next
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .next
     ldh a, [hMapScreenY]
 
 .restore:
     pop hl
-    ld de, wScreenTileBuffer + $A8
+    ld de, wScreenTileBuffer + $a8
     dec hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .skip2
     ld a, $46
     call Write2x2TileBlockAtDE
@@ -1962,10 +1857,10 @@ Func_061_55AF:: ; address name
     inc a
     push af
     ld a, e
-    add a, $13
+    add $13
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     pop af
     ld [de], a
@@ -1975,9 +1870,9 @@ Func_061_55AF:: ; address name
 
 .check_is_cgb:
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .return
-    ld de, wWorkBuf + $B
+    ld de, wWorkBuf + $b
     ld a, $02
     ldh [rSVBK], a
     ld a, $05
@@ -1990,16 +1885,16 @@ Func_061_55AF:: ; address name
     inc hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jr nz, .restore2
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore2
     ldh a, [hMapScreenY]
     jr .restore
@@ -2015,17 +1910,14 @@ Func_061_55AF:: ; address name
 .return:
     ret
 
-; for the wKeyWorldFloorInfo + $3 object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
-; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
-; reads: hMapScreenX, hMapScreenY, wIsCGB
-; writes: rSVBK
+; for the wKeyWorldFloorInfo + $3 object on the current screen draws its 4 x 2 or 2 x 2 tile blocks
+; by kind (E-0130)
 DrawWCD8BObjectTilesForScreen::
-Func_061_562F:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     ret z
     push hl
     dec hl
@@ -2033,23 +1925,23 @@ Func_061_562F:: ; address name
     dec hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jp nz, .restore
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jp nz, .restore
     pop hl
-    ld de, wScreenTileBuffer + $A8
+    ld de, wScreenTileBuffer + $a8
     dec hl
     dec hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .skip2
     ret
 
@@ -2066,15 +1958,15 @@ Func_061_562F:: ; address name
 .skip3:
     dec a
     jr nz, .skip4
-    ld a, $4C
+    ld a, $4c
     call Write2x2TileBlockAtDE
     ld a, e
-    sub a, $13
+    sub $13
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
-    ld a, $4E
+    ld a, $4e
     call Write2x2TileBlockAtDE
     ld c, $01
     jr .check_is_cgb
@@ -2090,7 +1982,7 @@ Func_061_562F:: ; address name
 .skip5:
     dec a
     jr nz, .skip6
-    ld a, $4A
+    ld a, $4a
     call Write2x2TileBlockAtDE
     ld c, $00
     jr .check_is_cgb
@@ -2108,9 +2000,9 @@ Func_061_562F:: ; address name
 
 .check_is_cgb:
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .return
-    ld de, wWorkBuf + $B
+    ld de, wWorkBuf + $b
     ld a, $02
     ldh [rSVBK], a
     bit 0, c
@@ -2125,10 +2017,10 @@ Func_061_562F:: ; address name
     ld a, $06
     call Write2x2SameTileAtDE
     ld a, e
-    sub a, $13
+    sub $13
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     ld a, $06
     call Write2x2SameTileAtDE
@@ -2148,20 +2040,18 @@ Func_061_562F:: ; address name
     ret
 
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
-; 6 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawKeyWorldObjectsEntryTilesForScreen)
 Write2x2TileBlockAtDE::
-Func_061_56E3:: ; address name
     ld [de], a
     inc de
     inc a
     ld [de], a
-    add a, $0F
+    add $0f
     push af
     ld a, e
-    add a, $13
+    add $13
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     pop af
     ld [de], a
@@ -2171,9 +2061,7 @@ Func_061_56E3:: ; address name
     ret
 
 ; writes tiles A..A+3 at DE and the next four one 20-tile row below (E-0121)
-; 2 call sites from 1 routine (e.g. DrawWCD8BObjectTilesForScreen)
 Write4x2TileBlockAtDE::
-Func_061_56F8:: ; address name
     ld [de], a
     inc a
     inc de
@@ -2187,10 +2075,10 @@ Func_061_56F8:: ; address name
     inc a
     push af
     ld a, e
-    add a, $11
+    add $11
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     pop af
     ld [de], a
@@ -2206,15 +2094,13 @@ Func_061_56F8:: ; address name
     ret
 
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
-; 5 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawKeyWorldObjectsEntryTilesForScreen)
 Write2x2SameTileAtDE::
-Func_061_5718:: ; address name
     ld [de], a
     inc de
     ld [de], a
     push af
     ld a, $13
-    add a, e
+    add e
     ld e, a
     jr nc, .restore
     inc d
@@ -2226,10 +2112,12 @@ Func_061_5718:: ; address name
     ld [de], a
     ret
 
-; E-0139 (C1: RunWCC44Type_420D_Case00 indexes it with 6 * wKeyWorldGoalKind, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile streams decode to 2048 bytes and all 10 palettes are 15-bit colours).
-; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
+; RunWCC44Type_420D_Case00 indexes it with 6 * wKeyWorldGoalKind, decompresses the first far pointer
+; to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile streams
+; decode to 2048 bytes and all 10 palettes are 15-bit colours (E-0139, C1)
+; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte
+; CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 KeyWorldTilesetTable::
-Data_061_5728:: ; address name
     dfar KeyWorldTiles0 ; id 0: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar KeyWorldPalettes0 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
     dfar KeyWorldTiles1 ; id 1: compressed BG tiles decompressed to vTiles2 (128 tiles)
@@ -2251,14 +2139,10 @@ Data_061_5728:: ; address name
     dfar KeyWorldTiles9 ; id 9: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar KeyWorldPalettes9 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
-; only called from CheckWarpAtPlayer (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
-; reads: wMapType
 CheckWarpAtPlayer_ReadMapType::
-Func_061_5764:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
     dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01
     dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
@@ -2268,62 +2152,38 @@ Func_061_5764:: ; address name
     dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
     dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
 
-; entry 0 of the `rst $00` table in Func_061_5764; also entry 6 of the table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ReturnAfterSetup::
-Jump_061_577A:: ; address name
     ld c, $00
     ret
 
-; entry 1 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01::
-Jump_061_577D:: ; address name
     ld c, $00
     ret
 
-; entry 2 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
-Jump_061_5780:: ; address name
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
-; entry 3 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable::
-Jump_061_5784:: ; address name
     call CheckKeyWorldWarpTable
     ret
 
-; entry 4 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83::
-Jump_061_5788:: ; address name
     call WarpToScreen01Event83
     ret
 
-; entry 5 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14::
-Jump_061_578C:: ; address name
     call WarpByWCD89EntryAtScreen14
     ret
 
-; entry 7 of the `rst $00` table in Func_061_5764
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1::
-Jump_061_5790:: ; address name
     call CallF4268OnScreenY1
     ret
 
-; C = 0 unless hMapScreenY = 1, in which case far-calls Func_011_4268 (E-0122)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1)
-; reads: hMapScreenY
+; C = 0 unless hMapScreenY = 1, in which case far-calls WarpToLinkedMapForCurrentMap (E-0122)
 CallF4268OnScreenY1::
-Func_061_5794:: ; address name
     ldh a, [hMapScreenY]
-    cp a, $01
+    cp $01
     jr z, .call_warp_to_linked_map_for_current_map
     ld c, $00
     ret
@@ -2332,14 +2192,11 @@ Func_061_5794:: ; address name
     farcall WarpToLinkedMapForCurrentMap
     ret
 
-; when wKeyWorldArea is 0, the wKeyWorldFloorInfo + $1 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14)
-; reads: wKeyWorldArea, wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
+; when wKeyWorldArea is 0, the wKeyWorldFloorInfo + $1 entry is 5 and the player is at screen (1,
+; 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 WarpByWCD89EntryAtScreen14::
-Func_061_57A4:: ; address name
     ld a, [wKeyWorldArea]
-    or a, a
+    or a
     jr z, .read_key_world_floor
 
 .loop:
@@ -2353,26 +2210,26 @@ Func_061_57A4:: ; address name
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
-    cp a, $05
+    cp $05
     jr nz, .loop
     ldh a, [hMapScreenX]
     dec a
     jr nz, .loop
     ldh a, [hMapScreenY]
-    cp a, $04
+    cp $04
     jr nz, .loop
     dec hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    ld a, $F0
+    ld a, $f0
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -2380,30 +2237,27 @@ Func_061_57A4:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
-; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wKeyWorldFloorState + $1 entry, plays sound $60, wMapType = $83 and starts the transition; C = 1 (E-0125)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83)
-; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wModeState, wFieldTransitionStep, ...
+; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wKeyWorldFloorState + $1
+; entry, plays sound $60, wMapType = $83 and starts the transition; C = 1 (E-0125)
 WarpToScreen01Event83::
-Func_061_5807:: ; address name
     ldh a, [hMapScreenY]
-    cp a, $01
+    cp $01
     jr z, .clear_map_screen_x
     ld c, $00
     ret
 
 .clear_map_screen_x:
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     inc a
     ldh [hMapScreenY], a
@@ -2411,13 +2265,13 @@ Func_061_5807:: ; address name
     ld [wWarpDestX], a
     ld a, $38
     ld [wWarpDestY], a
-    ld a, $FF
+    ld a, $ff
     ld [wWarpDestFacing], a
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
-    ld a, [hl-]
+    ld a, [hld]
     ld [hl], a
     ld a, $60
     call QueueSoundEffect
@@ -2427,32 +2281,28 @@ Func_061_5807:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $40
+    or $40
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
-; on screen row 1: warps to the screen in the wKeyWorldAreaExits entry of wKeyWorldFloor and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1)
-; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
-; points at: wKeyWorldAreaExits
+; on screen row 1: warps to the screen in the wKeyWorldAreaExits entry of wKeyWorldFloor and starts
+; the transition; C = 1 (E-0127)
 WarpByKeyWorldAreaExitsEntryAtScreenRow1::
-Func_061_585A:: ; address name
     ldh a, [hMapScreenY]
-    cp a, $01
+    cp $01
     jr z, .check_key_world_floor
     ld c, $00
     ret
 
 .check_key_world_floor:
     ld a, [wKeyWorldFloor]
-    and a, $7F
+    and $7f
     sla a
     sla a
     ld hl, wKeyWorldAreaExits
@@ -2465,15 +2315,15 @@ Func_061_585A:: ; address name
 .skip:
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    ld a, $F0
+    ld a, $f0
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -2481,39 +2331,35 @@ Func_061_585A:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ldh a, [hPlayerStateFlags]
-    and a, $FE
+    and $fe
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
-; checks the warp list Data_061_6566[wKeyWorldFloorState entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable)
-; reads: wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wWarpDestFacing, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
-; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
+; checks the warp list KeyWorldWarpListTable[wKeyWorldFloorState entry] against the current screen
+; and warps when one matches; C = 0 when none (E-0130)
 CheckKeyWorldWarpTable::
-Func_061_58BC:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ld l, a
     ld h, $00
     sla l
     rl h
     ld de, KeyWorldWarpListTable
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -2522,18 +2368,18 @@ Func_061_58BC:: ; address name
     push de
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr nz, .cp_FD
     pop de
     ld c, $00
     ret
 
 .cp_FD:
-    cp a, $FD
+    cp $fd
     jr z, .restore
-    cp a, $FE
+    cp $fe
     jr z, .set_warp_dest_facing
-    cp a, $FF
+    cp $ff
     jr z, .set_warp_dest_facing
     jr .restore
 
@@ -2544,30 +2390,30 @@ Func_061_58BC:: ; address name
     inc de
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore
     jr .skip2
-    db $F1
+    db $f1
 
 .restore:
     pop de
     ld a, e
-    add a, $09
+    add $09
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     jr .skip
 
 .skip2:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr nz, .done
     inc de
     inc de
@@ -2584,12 +2430,12 @@ Func_061_58BC:: ; address name
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
-    ld a, $F0
+    ld a, $f0
     ld [wWarpDestFacing], a
     jr .call_start_palette_fade
 
@@ -2603,10 +2449,10 @@ Func_061_58BC:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
@@ -2617,13 +2463,10 @@ Func_061_58BC:: ; address name
     ret
 
 ; runs the routine for wMapType & 7 (jump table; 7 reuses 4) (E-0122)
-; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
-; reads: wMapType
 CheckWarpsByMapType::
-Func_061_596F:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00
     dw CheckWarpsByMapType_ToReturnStub_5CCF
     dw CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc_Case02
@@ -2633,70 +2476,44 @@ Func_061_596F:: ; address name
     dw CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06
     dw CheckWarpsByMapType_Return
 
-; entry 4 of the `rst $00` table in CheckWarpsByMapType; also entry 7 of the table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Return::
-Jump_061_5985:: ; address name
     ret
 
-; entry 0 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00::
-Jump_061_5986:: ; address name
     call CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc
-    or a, a
+    or a
     ret nz
     call CheckWarpsByMapType_Case00_WriteWarpDestXAndWarpDestYEtc
-    or a, a
+    or a
     ret nz
     call CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc
-    or a, a
+    or a
     ret nz
     ret
 
-; entry 1 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_ToReturnStub_5CCF::
-Jump_061_5996:: ; address name
     call ReturnStub_5CCF
     ret
 
-; entry 2 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc_Case02::
-Jump_061_599A:: ; address name
     call CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc
     ret
 
-; entry 3 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc_Case03::
-Jump_061_599E:: ; address name
     call CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc
     ret
 
-; entry 5 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Case05::
-Jump_061_59A2:: ; address name
     call CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc
     ret
 
-; entry 6 of the `rst $00` table in CheckWarpsByMapType
-; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06::
-Jump_061_59A6:: ; address name
     call CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc
     ret
 
-; only called from CheckWarpsByMapType_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06)
-; reads: hPlayerX, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hPlayerStateFlags
-; writes: wKeyWorldArea, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wWarpPending, ...
 CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc::
-Func_061_59AA:: ; address name
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .check_player_y
 
 .loop:
@@ -2705,16 +2522,16 @@ Func_061_59AA:: ; address name
 
 .check_player_y:
     ldh a, [hPlayerY]
-    cp a, $40
+    cp $40
     jr nz, .loop
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld de, wKeyWorldRoomTable + $1
-    add a, e
+    add e
     ld e, a
     jr nc, .check_key_world_area
     inc d
@@ -2723,8 +2540,8 @@ Func_061_59AA:: ; address name
     ld a, [wKeyWorldArea]
     dec a
     ld [wKeyWorldArea], a
-    add a, a
-    add a, e
+    add a
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -2732,20 +2549,20 @@ Func_061_59AA:: ; address name
 .skip:
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ld hl, CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $85
     ld [wMapType], a
@@ -2757,131 +2574,123 @@ Func_061_59AA:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
-; address loaded by CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc
-CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_061_5A2D:: ; address name
+CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data::
     db $00, $30, $11, $22, $03, $33
 
-; only called from CheckWarpsByMapType_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Case05)
-; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp1, ...
-; writes: hPlayerStateFlags, hTemp0, hTemp1, wKeyWorldArea, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
-; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
 CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
-Func_061_5A33:: ; address name
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .check_player_y
 
 .loop:
     ldh a, [hPlayerStateFlags]
-    and a, $7F
+    and $7f
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
 .check_player_y:
     ldh a, [hPlayerY]
-    cp a, $40
+    cp $40
     jr nz, .loop
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     push af
     ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
     pop af
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorState
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp1], a
     ld a, [hl]
-    add a, a
+    add a
     ld de, wKeyWorldRoomTable + $1
-    add a, e
+    add e
     ld e, a
     jr nc, .read_key_world_area
     inc d
 
 .read_key_world_area:
     ld a, [wKeyWorldArea]
-    add a, a
-    add a, e
+    add a
+    add e
     ld e, a
     jr nc, .check_map_screen_x
     inc d
 
 .check_map_screen_x:
     ldh a, [hMapScreenX]
-    and a, $0F
+    and $0f
     swap a
     ld b, a
     ldh a, [hMapScreenY]
-    and a, $0F
-    or a, b
+    and $0f
+    or b
     ld b, a
     ld a, [de]
-    and a, $0F
-    cp a, $0F
+    and $0f
+    cp $0f
     jp z, .skip
     ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
-    cp a, b
+    cp b
     jr z, .check_key_world_area
 
 .skip:
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
-    cp a, b
+    cp b
     jr z, .check_key_world_area3
     ldh a, [hPlayerStateFlags]
-    and a, $7F
+    and $7f
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
 .check_key_world_area:
     ld a, [wKeyWorldArea]
-    or a, a
+    or a
     jr nz, .check_key_world_area2
     ldh a, [hTemp0]
-    cp a, $04
+    cp $04
     jr nz, .check_key_world_area2
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    ld a, $F0
+    ld a, $f0
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -2889,10 +2698,10 @@ Func_061_5A33:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
@@ -2907,7 +2716,7 @@ Func_061_5A33:: ; address name
     dec de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     jr .skip2
 
 .check_key_world_area3:
@@ -2917,17 +2726,17 @@ Func_061_5A33:: ; address name
     inc a
     ld c, a
     ldh a, [hTemp1]
-    cp a, c
+    cp c
     jr nz, .next
     ld a, $86
     ld [wMapType], a
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -2937,12 +2746,12 @@ Func_061_5A33:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
@@ -2953,22 +2762,22 @@ Func_061_5A33:: ; address name
     inc de
     inc de
     ld a, [de]
-    and a, $0F
+    and $0f
 
 .skip2:
     ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -2978,31 +2787,24 @@ Func_061_5A33:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld c, $01
     ret
 
-; address loaded by CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc
-CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_061_5BB5:: ; address name
+CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data::
     db $00, $30, $11, $22, $03, $33
 
-; only called from CheckWarpsByMapType_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc_Case02)
-; reads: hPlayerX, hPlayerY, wMapToggleRequest, wKeyWorldFloor, hPlayerStateFlags
-; writes: wMapToggleRequest, wKeyWorldFloor, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapToggleFlag, wModeState, wMenuState, ...
 CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc::
-Func_061_5BBB:: ; address name
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .check_player_y
 
 .loop:
@@ -3011,56 +2813,50 @@ Func_061_5BBB:: ; address name
 
 .check_player_y:
     ldh a, [hPlayerY]
-    cp a, $30
+    cp $30
     jr nz, .loop
     ld a, [wMapToggleRequest]
-    or a, a
+    or a
     jr z, .loop
-    xor a, a
+    xor a
     ld [wMapToggleRequest], a
     ld a, [wKeyWorldFloor]
-    add a, $80
+    add $80
     ld [wKeyWorldFloor], a
     ld a, $40
     ld [wWarpDestX], a
     ld a, $30
     ld [wWarpDestY], a
-    ld a, $FF
+    ld a, $ff
     ld [wWarpDestFacing], a
-    xor a, a
+    xor a
     ld [wMapToggleFlag], a
     ld a, $06
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wMenuState], a
     ld [wMenuSubState], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wFieldTransitionKind], a
     ret
 
-; only called from CheckWarpsByMapType_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc_Case03)
-; reads: wKeyWorldFloor, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; writes: hPlayerStateFlags, wWarpDestFacing, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wMapType, wModeState, ...
-; points at: wKeyWorldFloorState
 CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc::
-Func_061_5C07:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ld l, a
     ld h, $00
     sla l
     rl h
     ld de, KeyWorldWarpListTable
     add hl, de
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -3069,17 +2865,17 @@ Func_061_5C07:: ; address name
     push de
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr nz, .cp_FD
     pop de
     ldh a, [hPlayerStateFlags]
-    and a, $7F
+    and $7f
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
 .cp_FD:
-    cp a, $FD
+    cp $fd
     jr z, .set_warp_dest_facing
     jr .restore2
 
@@ -3089,28 +2885,28 @@ Func_061_5C07:: ; address name
     ld [wWarpDestFacing], a
     push af
     swap a
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
     pop af
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .restore2
     ldh a, [hPlayerStateFlags]
     bit 7, a
@@ -3128,18 +2924,18 @@ Func_061_5C07:: ; address name
 .restore2:
     pop de
     ld a, e
-    add a, $09
+    add $09
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     jr .skip
 
 .skip3:
     ld a, [de]
-    cp a, $F2
+    cp $f2
     jr nz, .done
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
@@ -3150,8 +2946,8 @@ Func_061_5C07:: ; address name
     swap a
     ld hl, wKeyWorldFloorState
     add_a_to_hl
-    ld a, [hl+]
-    ld [hl-], a
+    ld a, [hli]
+    ld [hld], a
     ld a, $63
     ld [hl], a
     ld a, $84
@@ -3162,10 +2958,10 @@ Func_061_5C07:: ; address name
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $03
     ld [wFieldTransitionKind], a
@@ -3179,35 +2975,27 @@ Func_061_5C07:: ; address name
     ret
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_ToReturnStub_5CCF)
 ReturnStub_5CCF::
-Func_061_5CCF:: ; address name
     ret
 
-; only called from CheckWarpsByMapType_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00)
-; reads: hPlayerStateFlags, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hTemp2, hTemp1
-; writes: hTemp1, hPlayerStateFlags, hTemp2, wKeyWorldFloor, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
-; points at: wKeyWorldFloorState
 CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc::
-Func_061_5CD0:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
-    xor a, a
+    xor a
     ldh [hTemp1], a
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .skip2
     ldh a, [hPlayerStateFlags]
-    and a, $5F
+    and $5f
     ldh [hPlayerStateFlags], a
-    xor a, a
+    xor a
     ret
 
 .loop:
     pop hl
-    xor a, a
+    xor a
     ret
 
 .skip2:
@@ -3216,23 +3004,23 @@ Func_061_5CD0:: ; address name
     dec hl
     ld a, [hl]
     ldh [hTemp2], a
-    cp a, $04
+    cp $04
     jr z, .read_player_x
-    cp a, $05
+    cp $05
     jr z, .read_player_x
     ldh a, [hPlayerX]
     swap a
-    and a, $0F
-    cp a, $04
+    and $0f
+    cp $04
     jr z, .read_player_y
-    cp a, $05
+    cp $05
     jr nz, .loop2
 
 .read_player_y:
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
-    cp a, $04
+    and $0f
+    cp $04
     jr nz, .loop2
     jr .next
 
@@ -3242,37 +3030,37 @@ Func_061_5CD0:: ; address name
 .read_player_x:
     ldh a, [hPlayerX]
     swap a
-    and a, $0F
-    cp a, $04
+    and $0f
+    cp $04
     jr nz, .loop2
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
-    cp a, $04
+    and $0f
+    cp $04
     jr nz, .loop2
 
 .next:
     dec hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jp nz, .restore
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jp nz, .restore
     ldh a, [hPlayerStateFlags]
     bit 7, a
     jr nz, .loop
     ldh a, [hTemp2]
-    cp a, $04
+    cp $04
     jp z, .clear_key_world_area2
-    cp a, $05
+    cp $05
     jp z, .clear_key_world_area
     ldh a, [hTemp1]
     ld [wKeyWorldFloor], a
@@ -3283,16 +3071,16 @@ Func_061_5CD0:: ; address name
     ld hl, wKeyWorldFloorState
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ld e, a
     ld d, $00
     sla e
     rl d
     ld a, e
-    add a, $D8
+    add $d8
     ld e, a
     ld a, d
-    adc a, $60
+    adc $60
     ld d, a
     ld b, $61
     call ReadByteInBank
@@ -3300,10 +3088,10 @@ Func_061_5CD0:: ; address name
     inc de
     call ReadByteInBank
     ld h, c
-    ld a, $0C
+    ld a, $0c
     add_a_to_hl
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr z, .call_read_byte_in_bank
     inc hl
     inc hl
@@ -3328,20 +3116,20 @@ Func_061_5CD0:: ; address name
     call ReadByteInBank
     ld a, c
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     ld a, $03
     ld [wFieldTransitionKind], a
@@ -3351,7 +3139,7 @@ Func_061_5CD0:: ; address name
     ret
 
 .clear_key_world_area:
-    xor a, a
+    xor a
     ld [wKeyWorldArea], a
     ld a, $01
     ldh [hMapScreenX], a
@@ -3361,38 +3149,38 @@ Func_061_5CD0:: ; address name
     ld [wWarpDestX], a
     ld a, $80
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
     jr .read_temp1
 
 .clear_key_world_area2:
-    xor a, a
+    xor a
     ld [wKeyWorldArea], a
     ldh a, [hTemp1]
     swap a
     ld hl, wKeyWorldFloorState + $1
     add_a_to_hl
     ld a, [hl]
-    add a, a
+    add a
     ld hl, wKeyWorldRoomTable + $1
     add_a_to_hl
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld hl, CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $01
     ld [wFieldTransitionKind], a
@@ -3406,16 +3194,16 @@ Func_061_5CD0:: ; address name
     ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     farcall ClearPendingFieldEventIfBit7AndNot6
     pop hl
@@ -3433,57 +3221,50 @@ Func_061_5CD0:: ; address name
     ldh [hTemp1], a
     jp .skip
 
-; address loaded by CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc
-CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_061_5E87:: ; address name
+CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data::
     db $00, $30, $11, $22, $03, $33
 
-; only called from CheckWarpsByMapType_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00)
-; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, hPlayerX, hPlayerY, ...
-; writes: wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc::
-Func_061_5E8D:: ; address name
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_map_screen_x
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_map_screen_x
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_map_screen_x
     ldh a, [hMapScreenX]
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wKeyWorldGoalCell]
-    cp a, c
+    cp c
     jr nz, .loop
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld c, a
     ldh a, [hPlayerY]
-    and a, $F0
+    and $f0
     swap a
-    or a, c
+    or c
     ld c, a
     ld a, [wKeyWorldGoal]
-    cp a, c
+    cp c
     jr nz, .loop
     jr .check_player_state_flags
 
 .loop:
     ldh a, [hPlayerStateFlags]
-    and a, $DF
+    and $df
     ldh [hPlayerStateFlags], a
 
 .loop2:
-    xor a, a
+    xor a
     ret
 
 .read_map_screen_x:
@@ -3491,20 +3272,20 @@ Func_061_5E8D:: ; address name
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wKeyWorldGoalScreen]
-    cp a, c
+    cp c
     jr nz, .loop
     ld a, [wKeyWorldGoalPos]
     ld c, a
     ldh a, [hPlayerX]
-    cp a, c
+    cp c
     jr nz, .loop
     ld a, [wKeyWorldGoalPos2]
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .loop
 
 .check_player_state_flags:
@@ -3513,27 +3294,27 @@ Func_061_5E8D:: ; address name
     jr nz, .loop2
     ld a, $60
     call QueueSoundEffect
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
-    or a, $20
+    or $20
     ldh [hPlayerStateFlags], a
     ld a, $87
     ld [wMapType], a
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
     ld [wWarpDestX], a
     ld a, $80
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
@@ -3541,36 +3322,30 @@ Func_061_5E8D:: ; address name
     ld a, $01
     ret
 
-; only called from CheckWarpsByMapType_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00)
-; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wKeyWorldFloor, ...
-; points at: wKeyWorldObjects
 CheckWarpsByMapType_Case00_WriteWarpDestXAndWarpDestYEtc::
-Func_061_5F39:: ; address name
     ldh a, [hPlayerX]
     ld c, a
     ldh a, [hPlayerY]
-    cp a, c
+    cp c
     jr nz, .return_0
     swap a
-    and a, $0F
-    cp a, $04
+    and $0f
+    cp $04
     jr nz, .return_0
     ld hl, wKeyWorldObjects
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr nz, .skip2
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
 .loop:
     pop hl
-    xor a, a
+    xor a
     ret
 
 .skip2:
@@ -3580,16 +3355,16 @@ Func_061_5F39:: ; address name
     dec hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jp nz, .next
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jp nz, .next
     ldh a, [hPlayerStateFlags]
     bit 7, a
@@ -3597,34 +3372,34 @@ Func_061_5F39:: ; address name
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
-    xor a, a
+    xor a
     ld [wFieldReturnPhase], a
     push hl
     ld a, $04
     call StartPaletteFade
     pop hl
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     inc hl
     inc hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .return
     inc hl
     ld a, l
-    sub a, $7B
+    sub $7b
     ld l, a
     ld a, h
-    sbc a, $CD
+    sbc $cd
     ld h, a
     sra h
     rr l
@@ -3634,7 +3409,7 @@ Func_061_5F39:: ; address name
     ld [wKeyWorldFloor], a
     ld a, $82
     ld [wMapType], a
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
@@ -3655,16 +3430,16 @@ Func_061_5F39:: ; address name
     inc hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ld b, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, b
+    cp b
     jp nz, .restore
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jp nz, .restore
     ldh a, [hPlayerStateFlags]
     bit 7, a
@@ -3672,7 +3447,7 @@ Func_061_5F39:: ; address name
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
-    xor a, a
+    xor a
     ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
@@ -3680,34 +3455,34 @@ Func_061_5F39:: ; address name
     ld a, $04
     call StartPaletteFade
     pop hl
-    xor a, a
+    xor a
     ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
-    or a, $80
+    or $80
     ldh [hPlayerStateFlags], a
     inc hl
     ld a, [hl]
-    or a, a
+    or a
     jr nz, .return2
     inc hl
     ld a, l
-    sub a, $7B
+    sub $7b
     ld l, a
     ld a, h
-    sbc a, $CD
+    sbc $cd
     ld h, a
     sra h
     rr l
     sra h
     rr l
     ld a, l
-    or a, $80
+    or $80
     ld [wKeyWorldFloor], a
     ld a, $82
     ld [wMapType], a
-    xor a, a
+    xor a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
@@ -3732,13 +3507,9 @@ Func_061_5F39:: ; address name
     inc hl
     jp .skip
 
-; hTemp0 = 1 when bit 7 of wKeyWorldFlags is set; otherwise on map types $80/$85 the wKeyWorldEncounterTable + $3 entry of the current area (wKeyWorldAreaInfo), else 0 (E-0129)
-; 1 call site from 1 routine (e.g. BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
-; reads: wKeyWorldFlags, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
-; writes: hTemp0
-; points at: wKeyWorldFloorInfo, wKeyWorldAreaInfo
+; hTemp0 = 1 when bit 7 of wKeyWorldFlags is set; otherwise on map types $80/$85 the
+; wKeyWorldEncounterTable + $3 entry of the current area (wKeyWorldAreaInfo), else 0 (E-0129)
 KeyWorldAreaEncounterIndex::
-Func_061_606D:: ; address name
     ld a, [wKeyWorldFlags]
     bit 7, a
     jr z, .check_map_type
@@ -3750,58 +3521,58 @@ Func_061_606D:: ; address name
     push hl
     push de
     ld a, [wMapType]
-    cp a, $80
+    cp $80
     jr z, .read_map_screen_y
-    cp a, $85
+    cp $85
     jr z, .read_key_world_floor
-    xor a, a
+    xor a
     ldh [hTemp0], a
     ret
 
 .read_key_world_floor:
     ld a, [wKeyWorldFloor]
-    add a, a
-    add a, a
+    add a
+    add a
     ld de, wKeyWorldFloorInfo
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
     ld a, [de]
-    and a, $0F
+    and $0f
     srl a
     srl a
-    add a, a
+    add a
     ld l, a
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     srl a
     srl a
-    add a, l
+    add l
     jr .skip2
 
 .read_map_screen_y:
     ldh a, [hMapScreenY]
     srl a
     srl a
-    add a, a
+    add a
     ld l, a
     ldh a, [hMapScreenX]
     srl a
     srl a
-    add a, l
+    add l
 
 .skip2:
     ld hl, wKeyWorldAreaInfo
     add_a_to_hl
     ld a, [hl]
-    and a, $F0
+    and $f0
     swap a
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, wKeyWorldEncounterTable + $3
     add_a_to_hl
     ld a, [hl]
@@ -3810,10 +3581,10 @@ Func_061_606D:: ; address name
     pop hl
     ret
 
-; E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hTemp0; every non-zero word is $61D8 + 26 * n).
+; LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hTemp0;
+; every non-zero word is $61D8 + 26 * n (E-0144, C1)
 ; record: special map record ($0000 = none)
 SpecialMapTable::
-Data_061_60D8:: ; address name
     dw SpecialMapRecords ; id 0
     dw SpecialMapRecord01 ; id 1
     dw SpecialMapRecord02 ; id 2
@@ -3943,259 +3714,231 @@ Data_061_60D8:: ; address name
     dw $0000 ; id 126
     dw $0000 ; id 127
 
-; E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens).
-; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its ROM bank; screen attribute-map array; its ROM bank
+; LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with
+; LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far
+; pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one
+; at +$17 as the attribute array; every array decodes to 360-byte screens (E-0144, C1)
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile,
+; wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its
+; ROM bank; screen attribute-map array; its ROM bank
 SpecialMapRecords::
-SpecialMapRecord00:: ; heuristic: special map record; C0
-Data_061_61D8:: ; address name
+SpecialMapRecord00::
     dfar SpecialMap00Tileset ; id 0
     dfar SpecialMap00Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap00Screens
     dfar SpecialMap00Attrs
-SpecialMapRecord01:: ; heuristic: special map record; C0
-Data_061_61F2:: ; address name
+SpecialMapRecord01::
     dfar SpecialMap01Tileset ; id 1
     dfar SpecialMap01Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap01Screens
     dfar SpecialMap01Attrs
-SpecialMapRecord02:: ; heuristic: special map record; C0
-Data_061_620C:: ; address name
+SpecialMapRecord02::
     dfar SpecialMap02Tileset ; id 2
     dfar SpecialMap02Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap02Screens
     dfar SpecialMap02Attrs
-SpecialMapRecord03:: ; heuristic: special map record; C0
-Data_061_6226:: ; address name
+SpecialMapRecord03::
     dfar SpecialMap03Tileset ; id 3
     dfar SpecialMap03Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap03Screens
     dfar SpecialMap03Attrs
-SpecialMapRecord04:: ; heuristic: special map record; C0
-Data_061_6240:: ; address name
+SpecialMapRecord04::
     dfar SpecialMap04Tileset ; id 4
     dfar SpecialMap04Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap04Screens
     dfar SpecialMap04Attrs
-SpecialMapRecord05:: ; heuristic: special map record; C0
-Data_061_625A:: ; address name
+SpecialMapRecord05::
     dfar SpecialMap05Tileset ; id 5
     dfar SpecialMap05Palettes
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4f, $4c, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap05Screens
     dfar SpecialMap05Attrs
-SpecialMapRecord06:: ; heuristic: special map record; C0
-Data_061_6274:: ; address name
+SpecialMapRecord06::
     dfar SpecialMap06Tileset ; id 6
     dfar SpecialMap06Palettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap06Screens
     dfar SpecialMap06Attrs
-SpecialMapRecord07:: ; heuristic: special map record; C0
-Data_061_628E:: ; address name
+SpecialMapRecord07::
     dfar SpecialMap07Tileset ; id 7
     dfar SpecialMap07Palettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap07Screens
     dfar SpecialMap07Attrs
-SpecialMapRecord08:: ; heuristic: special map record; C0
-Data_061_62A8:: ; address name
+SpecialMapRecord08::
     dfar SpecialMap08Tileset ; id 8
     dfar SpecialMap08Palettes
-    db $02, $02, $4F, $00, $01, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $01, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap08Screens
     dfar SpecialMap08Attrs
-SpecialMapRecord09:: ; heuristic: special map record; C0
-Data_061_62C2:: ; address name
+SpecialMapRecord09::
     dfar SpecialMap09Tileset ; id 9
     dfar SpecialMap09Palettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap09Screens
     dfar SpecialMap09Attrs
-SpecialMapRecord0A:: ; heuristic: special map record; C0
-Data_061_62DC:: ; address name
+SpecialMapRecord0A::
     dfar SpecialMap0ATileset ; id 10
     dfar SpecialMap0APalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0AScreens
     dfar SpecialMap0AAttrs
-SpecialMapRecord0B:: ; heuristic: special map record; C0
-Data_061_62F6:: ; address name
+SpecialMapRecord0B::
     dfar SpecialMap0BTileset ; id 11
     dfar SpecialMap0BPalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0BScreens
     dfar SpecialMap0BAttrs
-SpecialMapRecord0C:: ; heuristic: special map record; C0
-Data_061_6310:: ; address name
+SpecialMapRecord0C::
     dfar SpecialMap0CTileset ; id 12
     dfar SpecialMap0CPalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0CScreens
     dfar SpecialMap0CAttrs
-SpecialMapRecord0D:: ; heuristic: special map record; C0
-Data_061_632A:: ; address name
+SpecialMapRecord0D::
     dfar SpecialMap0DTileset ; id 13
     dfar SpecialMap0DPalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0DScreens
     dfar SpecialMap0DAttrs
-SpecialMapRecord0E:: ; heuristic: special map record; C0
-Data_061_6344:: ; address name
+SpecialMapRecord0E::
     dfar SpecialMap0ETileset ; id 14
     dfar SpecialMap0EPalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0EScreens
     dfar SpecialMap0EAttrs
-SpecialMapRecord0F:: ; heuristic: special map record; C0
-Data_061_635E:: ; address name
+SpecialMapRecord0F::
     dfar SpecialMap0FTileset ; id 15
     dfar SpecialMap0FPalettes
-    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $02, $02, $4f, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0FScreens
     dfar SpecialMap0FAttrs
-SpecialMapRecord10:: ; heuristic: special map record; C0
-Data_061_6378:: ; address name
+SpecialMapRecord10::
     dfar SpecialMap10Tileset ; id 16
     dfar SpecialMap10Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap10Screens
     dfar SpecialMap10Attrs
-SpecialMapRecord11:: ; heuristic: special map record; C0
-Data_061_6392:: ; address name
+SpecialMapRecord11::
     dfar SpecialMap11Tileset ; id 17
     dfar SpecialMap11Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap11Screens
     dfar SpecialMap11Attrs
-SpecialMapRecord12:: ; heuristic: special map record; C0
-Data_061_63AC:: ; address name
+SpecialMapRecord12::
     dfar SpecialMap12Tileset ; id 18
     dfar SpecialMap12Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap12Screens
     dfar SpecialMap12Attrs
-SpecialMapRecord13:: ; heuristic: special map record; C0
-Data_061_63C6:: ; address name
+SpecialMapRecord13::
     dfar SpecialMap13Tileset ; id 19
     dfar SpecialMap13Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap13Screens
     dfar SpecialMap13Attrs
-SpecialMapRecord14:: ; heuristic: special map record; C0
-Data_061_63E0:: ; address name
+SpecialMapRecord14::
     dfar SpecialMap14Tileset ; id 20
     dfar SpecialMap14Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap14Screens
     dfar SpecialMap14Attrs
-SpecialMapRecord15:: ; heuristic: special map record; C0
-Data_061_63FA:: ; address name
+SpecialMapRecord15::
     dfar SpecialMap15Tileset ; id 21
     dfar SpecialMap15Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap15Screens
     dfar SpecialMap15Attrs
-SpecialMapRecord16:: ; heuristic: special map record; C0
-Data_061_6414:: ; address name
+SpecialMapRecord16::
     dfar SpecialMap16Tileset ; id 22
     dfar SpecialMap16Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap16Screens
     dfar SpecialMap16Attrs
-SpecialMapRecord17:: ; heuristic: special map record; C0
-Data_061_642E:: ; address name
+SpecialMapRecord17::
     dfar SpecialMap17Tileset ; id 23
     dfar SpecialMap17Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap17Screens
     dfar SpecialMap17Attrs
-SpecialMapRecord18:: ; heuristic: special map record; C0
-Data_061_6448:: ; address name
+SpecialMapRecord18::
     dfar SpecialMap18Tileset ; id 24
     dfar SpecialMap18Palettes
-    db $02, $01, $3F, $00, $01, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $01, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap18Screens
     dfar SpecialMap18Attrs
-SpecialMapRecord19:: ; heuristic: special map record; C0
-Data_061_6462:: ; address name
+SpecialMapRecord19::
     dfar SpecialMap19Tileset ; id 25
     dfar SpecialMap19Palettes
-    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    db $02, $01, $3f, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap19Screens
     dfar SpecialMap19Attrs
-SpecialMapRecord1A:: ; heuristic: special map record; C0
-Data_061_647C:: ; address name
+SpecialMapRecord1A::
     dfar SpecialMap1ATileset ; id 26
     dfar SpecialMap1APalettes
-    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $01, $01, $3f, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1AScreens
     dfar SpecialMap1AAttrs
-SpecialMapRecord1B:: ; heuristic: special map record; C0
-Data_061_6496:: ; address name
+SpecialMapRecord1B::
     dfar SpecialMap1ATileset ; id 27
     dfar SpecialMap1APalettes
-    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $01, $01, $3f, $3c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1BScreens
     dfar SpecialMap1BAttrs
-SpecialMapRecord1C:: ; heuristic: special map record; C0
-Data_061_64B0:: ; address name
+SpecialMapRecord1C::
     dfar SpecialMap1ATileset ; id 28
     dfar SpecialMap1APalettes
-    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $01, $01, $3f, $3c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1CScreens
     dfar SpecialMap1CAttrs
-SpecialMapRecord1D:: ; heuristic: special map record; C0
-Data_061_64CA:: ; address name
+SpecialMapRecord1D::
     dfar SpecialMap1ATileset ; id 29
     dfar SpecialMap1APalettes
-    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $01, $01, $3f, $3c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1DScreens
     dfar SpecialMap1DAttrs
-SpecialMapRecord1E:: ; heuristic: special map record; C0
-Data_061_64E4:: ; address name
+SpecialMapRecord1E::
     dfar SpecialMap1ATileset ; id 30
     dfar SpecialMap1APalettes
-    db $01, $01, $3F, $3C, $00, $00, $00, $00, $40, $80, $00, $00, $50, $80
+    db $01, $01, $3f, $3c, $00, $00, $00, $00, $40, $80, $00, $00, $50, $80
     dfar SpecialMap1EScreens
     dfar SpecialMap1EAttrs
-SpecialMapRecord1F:: ; heuristic: special map record; C0
-Data_061_64FE:: ; address name
+SpecialMapRecord1F::
     dfar SpecialMap1FTileset ; id 31
     dfar SpecialMap1FPalettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1FScreens
     dfar SpecialMap1FAttrs
-SpecialMapRecord20:: ; heuristic: special map record; C0
-Data_061_6518:: ; address name
+SpecialMapRecord20::
     dfar SpecialMap20Tileset ; id 32
     dfar SpecialMap20Palettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap20Screens
     dfar SpecialMap20Attrs
-SpecialMapRecord21:: ; heuristic: special map record; C0
-Data_061_6532:: ; address name
+SpecialMapRecord21::
     dfar SpecialMap21Tileset ; id 33
     dfar SpecialMap21Palettes
     db $01, $01, $19, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap21Screens
     dfar SpecialMap21Attrs
-SpecialMapRecord22:: ; heuristic: special map record; C0
-Data_061_654C:: ; address name
+SpecialMapRecord22::
     dfar Map29Tileset ; id 34
     dfar Map29Palettes
-    db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $01, $01, $32, $2c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar Map29Screens0
     dfar Map29Attrs0
 
-; E-0195 (C1: CheckKeyWorldWarpTable and CheckWarpsByMapType_Case03_Sub01 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705).
+; CheckKeyWorldWarpTable and CheckWarpsByMapType_Case03_Sub01 read the word at $6566 + 2 * (floor
+; state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3
+; equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen;
+; 128 words, then the lists up to TownObjectSpotGrid0 at $6705 (E-0195, C1)
 ; record: warp list for this floor-state value
 KeyWorldWarpListTable::
-Data_061_6566:: ; address name
     dw KeyWorldWarps00 ; id 0
     dw KeyWorldWarps00 ; id 1
     dw KeyWorldWarps00 ; id 2
@@ -4325,119 +4068,118 @@ Data_061_6566:: ; address name
     dw KeyWorldWarps06 ; id 126
     dw KeyWorldWarps06 ; id 127
 
-; E-0157 (derived: list for entry $06 of KeyWorldWarpListTable; 0 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $06 of KeyWorldWarpListTable; 0 record(s), then $80 (E-0157)
+; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen
+; X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps06::
     db $80 ; end
 
-; E-0157 (derived: list for entry $00 of KeyWorldWarpListTable; 1 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $00 of KeyWorldWarpListTable; 1 record(s), then $80 (E-0157)
 KeyWorldWarps00::
-Data_061_6667:: ; address name
-    db $FE, $00, $00, $02, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $02, $ff ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
-; E-0157 (derived: list for entry $20 of KeyWorldWarpListTable; 9 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $20 of KeyWorldWarpListTable; 9 record(s), then $80 (E-0157)
 KeyWorldWarps20::
-Data_061_6671:: ; address name
-    db $FE, $00, $FF, $00, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $ff, $00, $ff ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $00, $FF, $FF ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $ff, $ff ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $01, $FF, $FF ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $01, $ff, $ff ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $02, $00, $FF ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $02, $00, $ff ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $FF, $01, $FF ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $ff, $01, $ff ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $02, $01, $FF ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $02, $01, $ff ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $00, $02, $FF ; id 6: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $02, $ff ; id 6: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $01, $02, $FF ; id 7: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $01, $02, $ff ; id 7: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FD, $01, $40, $30, $F2 ; id 8: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $fd, $01, $40, $30, $f2 ; id 8: kind, byte 1 (not read), screen X, screen Y, $FF
     db $00, $00 ; not read here
     db $04, $08 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
-; E-0157 (derived: list for entry $40 of KeyWorldWarpListTable; 6 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $40 of KeyWorldWarpListTable; 6 record(s), then $80 (E-0157)
 KeyWorldWarps40::
-Data_061_66C3:: ; address name
-    db $FE, $00, $FF, $00, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $ff, $00, $ff ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $00, $FF, $FF ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $ff, $ff ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $01, $FF, $FF ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $01, $ff, $ff ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $02, $00, $FF ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $02, $00, $ff ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $00, $01, $FF ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $01, $ff ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
-    db $FE, $00, $01, $01, $FF ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $01, $01, $ff ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
-; E-0157 (derived: list for entry $54 of KeyWorldWarpListTable; 1 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $54 of KeyWorldWarpListTable; 1 record(s), then $80 (E-0157)
+; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen
+; X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps54::
-Data_061_66FA:: ; address name
-    db $FE, $00, $00, $01, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
-    db $FF, $FF ; not read here
+    db $fe, $00, $00, $01, $ff ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $ff, $ff ; not read here
     db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
-; E-0157 (derived: list for entry $63 of KeyWorldWarpListTable; 0 record(s), then $80)
-; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
+; list for entry $63 of KeyWorldWarpListTable; 0 record(s), then $80 (E-0157)
 KeyWorldWarps63::
     db $80 ; end
 
-; E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (SetupTownObjectsForMap.set_map_object_count_to_0A), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 0 (band 0 (SetupTownObjectsForMap.set_map_object_count_to_0A),
+; wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching;
+; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen inside wMapWidthScreens x
+; wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width +
+; screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot,
+; otherwise its nibbles place the object; 64 screens (E-0194, C1)
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen,
+; $FF = draw again
 TownObjectSpotGrid0::
-Data_061_6705:: ; address name
     db $03, $02, $05, $05, $07, $04, $08, $06 ; id 0
     db $02, $04, $03, $07, $06, $06, $08, $03 ; id 1
     db $01, $03, $03, $07, $04, $05, $06, $06 ; id 2
-    db $04, $05, $06, $01, $07, $03, $FF, $FF ; id 3
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
+    db $04, $05, $06, $01, $07, $03, $ff, $ff ; id 3
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 4
     db $02, $07, $05, $02, $06, $04, $07, $06 ; id 5
     db $02, $05, $03, $02, $04, $07, $07, $04 ; id 6
     db $02, $01, $02, $05, $04, $03, $06, $06 ; id 7
-    db $04, $06, $07, $02, $07, $07, $FF, $FF ; id 8
+    db $04, $06, $07, $02, $07, $07, $ff, $ff ; id 8
     db $01, $03, $03, $05, $05, $02, $08, $04 ; id 9
     db $03, $02, $03, $05, $04, $07, $06, $06 ; id 10
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 11
     db $02, $02, $03, $06, $06, $03, $08, $05 ; id 12
     db $02, $06, $03, $02, $05, $05, $07, $01 ; id 13
     db $02, $03, $05, $05, $06, $01, $07, $06 ; id 14
     db $02, $07, $03, $03, $05, $05, $06, $02 ; id 15
-    db $04, $03, $07, $04, $08, $01, $FF, $FF ; id 16
+    db $04, $03, $07, $04, $08, $01, $ff, $ff ; id 16
     db $02, $02, $04, $07, $05, $01, $08, $06 ; id 17
     db $02, $06, $03, $07, $04, $02, $05, $05 ; id 18
     db $02, $05, $04, $03, $06, $06, $07, $02 ; id 19
     db $02, $04, $05, $03, $07, $01, $07, $06 ; id 20
     db $02, $07, $03, $02, $06, $03, $08, $06 ; id 21
     db $02, $03, $04, $04, $05, $06, $07, $02 ; id 22
-    db $01, $06, $02, $07, $03, $01, $FF, $FF ; id 23
+    db $01, $06, $02, $07, $03, $01, $ff, $ff ; id 23
     db $02, $06, $04, $03, $05, $04, $06, $05 ; id 24
     db $04, $04, $06, $05, $07, $02, $08, $07 ; id 25
     db $01, $04, $03, $02, $03, $06, $04, $03 ; id 26
@@ -4445,7 +4187,7 @@ Data_061_6705:: ; address name
     db $02, $05, $03, $02, $05, $03, $05, $06 ; id 28
     db $02, $03, $04, $06, $06, $05, $07, $02 ; id 29
     db $01, $07, $03, $05, $05, $03, $07, $06 ; id 30
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 31
     db $03, $04, $05, $03, $06, $06, $08, $01 ; id 32
     db $05, $05, $06, $07, $07, $03, $08, $06 ; id 33
     db $02, $02, $03, $06, $05, $07, $07, $03 ; id 34
@@ -4453,133 +4195,137 @@ Data_061_6705:: ; address name
     db $02, $03, $02, $06, $04, $04, $06, $02 ; id 36
     db $03, $06, $04, $04, $06, $07, $07, $03 ; id 37
     db $03, $06, $05, $04, $07, $05, $08, $01 ; id 38
-    db $02, $05, $03, $02, $04, $03, $FF, $FF ; id 39
-    db $05, $06, $06, $07, $07, $05, $FF, $FF ; id 40
+    db $02, $05, $03, $02, $04, $03, $ff, $ff ; id 39
+    db $05, $06, $06, $07, $07, $05, $ff, $ff ; id 40
     db $03, $06, $06, $02, $06, $04, $08, $07 ; id 41
     db $02, $05, $04, $02, $05, $07, $07, $04 ; id 42
     db $02, $04, $04, $07, $05, $01, $07, $05 ; id 43
-    db $02, $07, $03, $03, $04, $05, $FF, $FF ; id 44
+    db $02, $07, $03, $03, $04, $05, $ff, $ff ; id 44
     db $02, $05, $03, $02, $05, $06, $07, $04 ; id 45
     db $02, $05, $04, $07, $06, $03, $06, $06 ; id 46
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 47
-    db $06, $02, $07, $01, $08, $04, $FF, $FF ; id 48
-    db $01, $04, $04, $02, $06, $03, $FF, $FF ; id 49
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 47
+    db $06, $02, $07, $01, $08, $04, $ff, $ff ; id 48
+    db $01, $04, $04, $02, $06, $03, $ff, $ff ; id 49
     db $01, $05, $03, $02, $04, $06, $07, $03 ; id 50
     db $02, $07, $03, $03, $05, $02, $07, $06 ; id 51
     db $02, $04, $05, $07, $06, $06, $08, $05 ; id 52
     db $01, $04, $02, $02, $05, $03, $07, $06 ; id 53
     db $01, $05, $02, $03, $04, $06, $07, $04 ; id 54
-    db $02, $02, $02, $04, $03, $05, $FF, $FF ; id 55
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 56
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 57
+    db $02, $02, $02, $04, $03, $05, $ff, $ff ; id 55
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 56
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 57
     db $03, $02, $05, $05, $07, $03, $08, $01 ; id 58
     db $02, $06, $03, $03, $07, $02, $07, $04 ; id 59
     db $02, $05, $03, $02, $04, $07, $07, $03 ; id 60
-    db $02, $03, $03, $01, $06, $02, $FF, $FF ; id 61
+    db $02, $03, $03, $01, $06, $02, $ff, $ff ; id 61
     db $03, $01, $05, $04, $06, $02, $07, $03 ; id 62
     db $03, $04, $05, $01, $05, $05, $08, $03 ; id 63
 
-; E-0194 (C1: SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 64 screens (E-0194, C1)
 TownObjectSpotGrid1::
-Data_061_6905:: ; address name
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
     db $01, $03, $04, $05, $05, $01, $07, $07 ; id 1
-    db $03, $04, $03, $06, $06, $07, $FF, $FF ; id 2
-    db $04, $06, $07, $04, $08, $07, $FF, $FF ; id 3
-    db $01, $04, $02, $05, $03, $07, $FF, $FF ; id 4
+    db $03, $04, $03, $06, $06, $07, $ff, $ff ; id 2
+    db $04, $06, $07, $04, $08, $07, $ff, $ff ; id 3
+    db $01, $04, $02, $05, $03, $07, $ff, $ff ; id 4
     db $04, $04, $04, $07, $06, $02, $07, $06 ; id 5
     db $02, $03, $03, $06, $06, $05, $07, $07 ; id 6
-    db $02, $06, $03, $05, $04, $04, $FF, $FF ; id 7
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
+    db $02, $06, $03, $05, $04, $04, $ff, $ff ; id 7
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 8
     db $02, $06, $05, $05, $02, $06, $05, $05 ; id 9
     db $03, $01, $04, $04, $07, $02, $08, $06 ; id 10
     db $02, $05, $05, $02, $07, $06, $08, $03 ; id 11
     db $03, $04, $05, $02, $05, $06, $08, $07 ; id 12
     db $02, $05, $03, $03, $07, $02, $08, $06 ; id 13
     db $01, $06, $03, $03, $04, $07, $07, $02 ; id 14
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 16
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 15
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 16
     db $03, $03, $05, $05, $03, $05, $03, $05 ; id 17
-    db $03, $05, $07, $01, $07, $04, $FF, $FF ; id 18
-    db $02, $02, $04, $04, $06, $06, $FF, $FF ; id 19
+    db $03, $05, $07, $01, $07, $04, $ff, $ff ; id 18
+    db $02, $02, $04, $04, $06, $06, $ff, $ff ; id 19
     db $01, $04, $03, $02, $06, $03, $07, $01 ; id 20
-    db $06, $04, $07, $05, $08, $02, $FF, $FF ; id 21
-    db $02, $02, $02, $06, $03, $03, $FF, $FF ; id 22
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 23
-    db $02, $03, $05, $06, $07, $05, $FF, $FF ; id 24
+    db $06, $04, $07, $05, $08, $02, $ff, $ff ; id 21
+    db $02, $02, $02, $06, $03, $03, $ff, $ff ; id 22
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 23
+    db $02, $03, $05, $06, $07, $05, $ff, $ff ; id 24
     db $02, $05, $04, $03, $04, $07, $07, $06 ; id 25
     db $02, $05, $05, $07, $06, $03, $07, $06 ; id 26
     db $03, $02, $03, $06, $07, $05, $08, $03 ; id 27
     db $03, $06, $05, $01, $06, $05, $07, $03 ; id 28
-    db $04, $06, $06, $07, $07, $05, $FF, $FF ; id 29
-    db $02, $04, $03, $06, $05, $07, $FF, $FF ; id 30
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
+    db $04, $06, $06, $07, $07, $05, $ff, $ff ; id 29
+    db $02, $04, $03, $06, $05, $07, $ff, $ff ; id 30
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 31
     db $02, $04, $03, $05, $05, $06, $07, $03 ; id 32
     db $01, $07, $03, $04, $04, $06, $05, $02 ; id 33
     db $03, $07, $05, $06, $07, $03, $07, $05 ; id 34
-    db $02, $02, $05, $07, $07, $03, $FF, $FF ; id 35
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
-    db $05, $04, $06, $02, $06, $05, $FF, $FF ; id 37
-    db $02, $02, $02, $04, $03, $03, $FF, $FF ; id 38
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 39
-    db $04, $02, $06, $01, $07, $04, $FF, $FF ; id 40
-    db $02, $05, $04, $03, $06, $01, $FF, $FF ; id 41
+    db $02, $02, $05, $07, $07, $03, $ff, $ff ; id 35
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 36
+    db $05, $04, $06, $02, $06, $05, $ff, $ff ; id 37
+    db $02, $02, $02, $04, $03, $03, $ff, $ff ; id 38
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 39
+    db $04, $02, $06, $01, $07, $04, $ff, $ff ; id 40
+    db $02, $05, $04, $03, $06, $01, $ff, $ff ; id 41
     db $02, $03, $05, $07, $06, $02, $07, $04 ; id 42
     db $02, $04, $03, $02, $03, $07, $07, $05 ; id 43
-    db $01, $06, $03, $05, $07, $02, $FF, $FF ; id 44
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 45
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 46
-    db $04, $06, $06, $01, $06, $04, $FF, $FF ; id 47
+    db $01, $06, $03, $05, $07, $02, $ff, $ff ; id 44
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 45
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 46
+    db $04, $06, $06, $01, $06, $04, $ff, $ff ; id 47
     db $03, $05, $06, $04, $03, $05, $06, $04 ; id 48
     db $04, $05, $05, $03, $04, $05, $05, $03 ; id 49
     db $06, $06, $07, $02, $06, $06, $07, $02 ; id 50
     db $02, $05, $03, $02, $05, $04, $07, $03 ; id 51
     db $02, $02, $03, $06, $04, $03, $06, $05 ; id 52
-    db $01, $07, $04, $06, $07, $03, $FF, $FF ; id 53
+    db $01, $07, $04, $06, $07, $03, $ff, $ff ; id 53
     db $02, $06, $05, $05, $07, $04, $07, $07 ; id 54
     db $01, $03, $02, $04, $04, $06, $07, $05 ; id 55
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 56
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 57
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 56
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 57
     db $04, $02, $07, $01, $04, $02, $07, $01 ; id 58
     db $03, $02, $07, $01, $03, $02, $07, $01 ; id 59
     db $02, $06, $04, $04, $05, $05, $08, $03 ; id 60
-    db $02, $03, $04, $01, $07, $02, $FF, $FF ; id 61
-    db $01, $04, $03, $03, $05, $02, $FF, $FF ; id 62
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 63
+    db $02, $03, $04, $01, $07, $02, $ff, $ff ; id 61
+    db $01, $04, $03, $03, $05, $02, $ff, $ff ; id 62
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 63
 
-; E-0194 (C1: SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
 TownObjectSpotGrid2::
-Data_061_6B05:: ; address name
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 1
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 2
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 3
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 1
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 2
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 3
     db $06, $07, $07, $06, $06, $07, $07, $06 ; id 4
     db $02, $03, $03, $06, $05, $01, $07, $05 ; id 5
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 6
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 7
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 9
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 10
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 12
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 13
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 14
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 6
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 7
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 8
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 9
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 10
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 11
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 12
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 13
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 14
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 15
     db $04, $04, $05, $06, $06, $02, $07, $05 ; id 16
     db $02, $02, $02, $06, $04, $04, $08, $03 ; id 17
     db $02, $03, $03, $07, $05, $04, $07, $06 ; id 18
     db $02, $04, $04, $03, $05, $05, $07, $06 ; id 19
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 20
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 21
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 22
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 23
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 24
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 25
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 26
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 27
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 20
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 21
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 22
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 23
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 24
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 25
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 26
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 27
     db $05, $04, $06, $03, $07, $02, $07, $06 ; id 28
     db $02, $06, $04, $03, $07, $02, $07, $05 ; id 29
     db $02, $05, $03, $02, $06, $06, $07, $01 ; id 30
@@ -4587,344 +4333,354 @@ Data_061_6B05:: ; address name
     db $02, $05, $03, $02, $07, $01, $07, $06 ; id 32
     db $01, $02, $03, $06, $05, $04, $07, $03 ; id 33
     db $02, $05, $04, $03, $05, $02, $07, $06 ; id 34
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 35
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 37
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 38
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 39
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 40
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 35
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 36
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 37
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 38
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 39
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 40
     db $02, $06, $03, $03, $03, $07, $07, $04 ; id 41
     db $03, $05, $05, $02, $06, $03, $07, $06 ; id 42
-    db $02, $03, $07, $02, $07, $05, $FF, $FF ; id 43
+    db $02, $03, $07, $02, $07, $05, $ff, $ff ; id 43
     db $01, $07, $03, $04, $05, $01, $07, $03 ; id 44
     db $02, $03, $04, $04, $06, $05, $07, $02 ; id 45
     db $02, $03, $03, $06, $05, $05, $07, $02 ; id 46
     db $02, $05, $02, $07, $03, $03, $05, $06 ; id 47
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 48
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 49
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 50
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 51
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 52
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 48
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 49
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 50
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 51
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 52
     db $03, $06, $06, $04, $06, $07, $07, $05 ; id 53
-    db $02, $01, $02, $04, $04, $03, $FF, $FF ; id 54
-    db $02, $06, $06, $04, $07, $05, $FF, $FF ; id 55
+    db $02, $01, $02, $04, $04, $03, $ff, $ff ; id 54
+    db $02, $06, $06, $04, $07, $05, $ff, $ff ; id 55
     db $02, $03, $06, $06, $07, $04, $08, $02 ; id 56
     db $02, $07, $03, $02, $04, $05, $06, $03 ; id 57
     db $04, $02, $05, $06, $07, $03, $07, $05 ; id 58
     db $02, $02, $02, $05, $07, $03, $07, $06 ; id 59
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 60
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 61
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 62
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 63
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 60
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 61
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 62
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 63
     db $02, $03, $03, $02, $04, $05, $07, $04 ; id 64
     db $02, $02, $03, $01, $06, $03, $07, $05 ; id 65
-    db $02, $03, $02, $06, $06, $02, $FF, $FF ; id 66
-    db $02, $01, $02, $05, $07, $02, $FF, $FF ; id 67
+    db $02, $03, $02, $06, $06, $02, $ff, $ff ; id 66
+    db $02, $01, $02, $05, $07, $02, $ff, $ff ; id 67
     db $06, $03, $07, $02, $06, $03, $07, $02 ; id 68
     db $01, $02, $02, $01, $01, $02, $02, $01 ; id 69
     db $03, $06, $06, $01, $06, $07, $07, $02 ; id 70
     db $02, $01, $04, $02, $02, $01, $04, $02 ; id 71
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 72
-    db $04, $05, $06, $06, $07, $04, $FF, $FF ; id 73
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 72
+    db $04, $05, $06, $06, $07, $04, $ff, $ff ; id 73
     db $02, $03, $03, $06, $05, $05, $07, $04 ; id 74
     db $02, $05, $04, $06, $06, $03, $07, $04 ; id 75
     db $02, $03, $04, $06, $07, $02, $08, $05 ; id 76
     db $02, $05, $03, $02, $06, $03, $06, $06 ; id 77
-    db $01, $02, $02, $04, $03, $06, $FF, $FF ; id 78
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 79
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 80
+    db $01, $02, $02, $04, $03, $06, $ff, $ff ; id 78
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 79
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 80
     db $07, $06, $08, $04, $07, $06, $08, $04 ; id 81
     db $02, $02, $04, $04, $06, $06, $07, $03 ; id 82
     db $02, $02, $02, $04, $03, $05, $04, $03 ; id 83
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 84
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 84
     db $03, $03, $04, $05, $07, $02, $07, $04 ; id 85
     db $03, $06, $04, $03, $06, $02, $08, $05 ; id 86
     db $02, $04, $04, $05, $06, $03, $07, $06 ; id 87
     db $02, $02, $06, $04, $07, $01, $08, $03 ; id 88
-    db $05, $02, $06, $04, $07, $03, $FF, $FF ; id 89
-    db $01, $04, $02, $02, $03, $03, $FF, $FF ; id 90
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 91
+    db $05, $02, $06, $04, $07, $03, $ff, $ff ; id 89
+    db $01, $04, $02, $02, $03, $03, $ff, $ff ; id 90
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 91
     db $03, $05, $05, $03, $03, $05, $05, $03 ; id 92
     db $04, $06, $05, $04, $07, $02, $07, $07 ; id 93
     db $02, $06, $03, $03, $03, $05, $06, $02 ; id 94
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 95
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 96
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 97
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 95
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 96
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 97
     db $05, $02, $06, $06, $07, $04, $08, $01 ; id 98
     db $02, $03, $04, $06, $05, $02, $07, $04 ; id 99
     db $02, $03, $02, $05, $03, $02, $03, $06 ; id 100
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 101
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 102
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 101
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 102
     db $07, $07, $08, $06, $07, $07, $08, $06 ; id 103
     db $01, $06, $02, $07, $01, $06, $02, $07 ; id 104
-    db $05, $06, $06, $02, $08, $05, $FF, $FF ; id 105
-    db $02, $06, $03, $03, $04, $05, $FF, $FF ; id 106
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 107
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 108
-    db $03, $07, $05, $06, $07, $05, $FF, $FF ; id 109
+    db $05, $06, $06, $02, $08, $05, $ff, $ff ; id 105
+    db $02, $06, $03, $03, $04, $05, $ff, $ff ; id 106
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 107
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 108
+    db $03, $07, $05, $06, $07, $05, $ff, $ff ; id 109
     db $02, $05, $05, $02, $08, $03, $08, $07 ; id 110
     db $01, $07, $03, $04, $06, $02, $07, $05 ; id 111
     db $02, $02, $02, $04, $02, $06, $08, $05 ; id 112
     db $02, $04, $03, $03, $04, $06, $06, $05 ; id 113
     db $02, $05, $03, $04, $05, $06, $06, $03 ; id 114
-    db $01, $05, $03, $04, $07, $02, $FF, $FF ; id 115
+    db $01, $05, $03, $04, $07, $02, $ff, $ff ; id 115
     db $02, $02, $03, $04, $05, $05, $07, $06 ; id 116
     db $02, $04, $04, $07, $07, $02, $07, $06 ; id 117
     db $02, $06, $03, $03, $06, $02, $07, $04 ; id 118
-    db $02, $04, $02, $07, $03, $06, $FF, $FF ; id 119
+    db $02, $04, $02, $07, $03, $06, $ff, $ff ; id 119
     db $03, $07, $05, $05, $07, $04, $08, $06 ; id 120
     db $02, $06, $04, $05, $06, $02, $07, $03 ; id 121
     db $02, $03, $05, $07, $07, $02, $07, $05 ; id 122
     db $02, $04, $04, $06, $06, $01, $06, $07 ; id 123
     db $03, $02, $03, $07, $06, $05, $07, $06 ; id 124
     db $02, $06, $04, $02, $05, $05, $06, $07 ; id 125
-    db $01, $06, $02, $04, $04, $02, $FF, $FF ; id 126
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 127
-    db $04, $03, $06, $02, $07, $05, $FF, $FF ; id 128
+    db $01, $06, $02, $04, $04, $02, $ff, $ff ; id 126
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 127
+    db $04, $03, $06, $02, $07, $05, $ff, $ff ; id 128
     db $02, $05, $03, $02, $04, $06, $06, $03 ; id 129
     db $02, $06, $04, $03, $07, $02, $07, $05 ; id 130
     db $02, $02, $02, $06, $05, $03, $06, $05 ; id 131
     db $02, $01, $04, $03, $06, $02, $07, $04 ; id 132
     db $02, $04, $04, $02, $04, $06, $07, $03 ; id 133
-    db $02, $04, $03, $02, $05, $01, $FF, $FF ; id 134
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 135
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 136
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 137
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 138
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 139
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 140
-    db $04, $01, $06, $02, $07, $03, $FF, $FF ; id 141
+    db $02, $04, $03, $02, $05, $01, $ff, $ff ; id 134
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 135
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 136
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 137
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 138
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 139
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 140
+    db $04, $01, $06, $02, $07, $03, $ff, $ff ; id 141
     db $02, $03, $05, $04, $06, $02, $06, $05 ; id 142
     db $02, $02, $03, $04, $05, $05, $07, $03 ; id 143
 
-; E-0194 (C1: SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 144 screens (E-0194, C1)
 TownObjectSpotGrid3::
-Data_061_6F85:: ; address name
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
-    db $02, $06, $05, $04, $06, $07, $FF, $FF ; id 1
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 0
+    db $02, $06, $05, $04, $06, $07, $ff, $ff ; id 1
     db $01, $05, $03, $02, $04, $06, $05, $04 ; id 2
     db $02, $02, $03, $04, $06, $05, $07, $06 ; id 3
     db $02, $04, $02, $07, $05, $06, $07, $05 ; id 4
-    db $01, $05, $02, $06, $06, $07, $FF, $FF ; id 5
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 6
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 7
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 9
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 10
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 12
+    db $01, $05, $02, $06, $06, $07, $ff, $ff ; id 5
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 6
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 7
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 8
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 9
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 10
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 11
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 12
     db $03, $02, $03, $05, $05, $06, $07, $04 ; id 13
-    db $02, $04, $03, $02, $05, $03, $FF, $FF ; id 14
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
+    db $02, $04, $03, $02, $05, $03, $ff, $ff ; id 14
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 15
     db $02, $04, $04, $02, $04, $07, $07, $06 ; id 16
     db $02, $02, $02, $06, $04, $05, $06, $04 ; id 17
-    db $02, $04, $02, $06, $04, $05, $FF, $FF ; id 18
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 19
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 20
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 21
-    db $05, $06, $06, $01, $07, $05, $FF, $FF ; id 22
+    db $02, $04, $02, $06, $04, $05, $ff, $ff ; id 18
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 19
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 20
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 21
+    db $05, $06, $06, $01, $07, $05, $ff, $ff ; id 22
     db $02, $04, $02, $06, $02, $04, $02, $06 ; id 23
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 24
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 24
     db $04, $04, $06, $05, $04, $04, $06, $05 ; id 25
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 26
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 27
-    db $05, $04, $06, $02, $08, $03, $FF, $FF ; id 28
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 26
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 27
+    db $05, $04, $06, $02, $08, $03, $ff, $ff ; id 28
     db $02, $02, $05, $07, $06, $01, $07, $04 ; id 29
     db $02, $02, $03, $05, $07, $01, $07, $04 ; id 30
-    db $02, $03, $04, $04, $05, $02, $FF, $FF ; id 31
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 32
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 33
-    db $05, $02, $06, $05, $07, $03, $FF, $FF ; id 34
+    db $02, $03, $04, $04, $05, $02, $ff, $ff ; id 31
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 32
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 33
+    db $05, $02, $06, $05, $07, $03, $ff, $ff ; id 34
     db $02, $03, $03, $06, $05, $05, $06, $02 ; id 35
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 37
-    db $03, $05, $06, $04, $07, $06, $FF, $FF ; id 38
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 36
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 37
+    db $03, $05, $06, $04, $07, $06, $ff, $ff ; id 38
     db $01, $06, $03, $03, $05, $05, $06, $02 ; id 39
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 40
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 41
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 40
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 41
     db $04, $02, $04, $05, $07, $03, $07, $06 ; id 42
     db $02, $03, $03, $05, $05, $02, $05, $04 ; id 43
     db $03, $07, $04, $04, $05, $05, $07, $03 ; id 44
     db $02, $02, $02, $06, $04, $03, $05, $05 ; id 45
-    db $06, $02, $06, $06, $08, $05, $FF, $FF ; id 46
+    db $06, $02, $06, $06, $08, $05, $ff, $ff ; id 46
     db $01, $06, $02, $04, $05, $03, $06, $02 ; id 47
-    db $05, $06, $06, $02, $07, $05, $FF, $FF ; id 48
+    db $05, $06, $06, $02, $07, $05, $ff, $ff ; id 48
     db $01, $03, $02, $06, $06, $02, $07, $05 ; id 49
-    db $03, $06, $06, $02, $07, $05, $FF, $FF ; id 50
+    db $03, $06, $06, $02, $07, $05, $ff, $ff ; id 50
     db $02, $02, $04, $06, $05, $04, $07, $05 ; id 51
-    db $01, $07, $02, $05, $03, $06, $FF, $FF ; id 52
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 53
+    db $01, $07, $02, $05, $03, $06, $ff, $ff ; id 52
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 53
     db $03, $04, $05, $02, $06, $03, $07, $01 ; id 54
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 55
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 55
     db $03, $05, $05, $02, $07, $03, $07, $06 ; id 56
-    db $02, $03, $03, $06, $05, $02, $FF, $FF ; id 57
-    db $03, $02, $06, $03, $08, $01, $FF, $FF ; id 58
-    db $02, $02, $06, $03, $05, $07, $FF, $FF ; id 59
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 60
+    db $02, $03, $03, $06, $05, $02, $ff, $ff ; id 57
+    db $03, $02, $06, $03, $08, $01, $ff, $ff ; id 58
+    db $02, $02, $06, $03, $05, $07, $ff, $ff ; id 59
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 60
     db $02, $02, $05, $01, $06, $06, $07, $04 ; id 61
     db $01, $07, $03, $05, $05, $01, $07, $05 ; id 62
     db $02, $05, $04, $03, $06, $06, $07, $02 ; id 63
-    db $02, $05, $05, $03, $07, $06, $FF, $FF ; id 64
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 65
-    db $05, $04, $06, $02, $06, $06, $FF, $FF ; id 66
+    db $02, $05, $05, $03, $07, $06, $ff, $ff ; id 64
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 65
+    db $05, $04, $06, $02, $06, $06, $ff, $ff ; id 66
     db $02, $05, $04, $04, $06, $06, $07, $03 ; id 67
     db $02, $04, $04, $07, $05, $03, $07, $05 ; id 68
-    db $03, $04, $04, $06, $05, $03, $FF, $FF ; id 69
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 70
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 71
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 72
+    db $03, $04, $04, $06, $05, $03, $ff, $ff ; id 69
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 70
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 71
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 72
     db $02, $07, $03, $05, $06, $04, $07, $06 ; id 73
     db $02, $03, $03, $06, $05, $05, $06, $02 ; id 74
-    db $03, $02, $06, $01, $07, $05, $FF, $FF ; id 75
-    db $03, $06, $06, $04, $07, $05, $FF, $FF ; id 76
+    db $03, $02, $06, $01, $07, $05, $ff, $ff ; id 75
+    db $03, $06, $06, $04, $07, $05, $ff, $ff ; id 76
     db $02, $03, $02, $07, $06, $06, $07, $04 ; id 77
     db $02, $05, $03, $03, $06, $02, $07, $06 ; id 78
     db $02, $02, $03, $05, $04, $07, $07, $02 ; id 79
     db $03, $06, $04, $03, $05, $04, $07, $02 ; id 80
-    db $01, $04, $04, $02, $05, $03, $FF, $FF ; id 81
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 82
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 83
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 84
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 85
+    db $01, $04, $04, $02, $05, $03, $ff, $ff ; id 81
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 82
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 83
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 84
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 85
     db $03, $03, $05, $05, $07, $07, $08, $02 ; id 86
-    db $02, $03, $06, $04, $07, $06, $FF, $FF ; id 87
+    db $02, $03, $06, $04, $07, $06, $ff, $ff ; id 87
     db $03, $05, $06, $02, $06, $06, $07, $03 ; id 88
     db $02, $04, $04, $05, $05, $02, $06, $07 ; id 89
     db $02, $04, $03, $05, $04, $02, $06, $02 ; id 90
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 91
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 91
     db $03, $03, $05, $06, $06, $01, $06, $04 ; id 92
-    db $02, $04, $03, $03, $04, $06, $FF, $FF ; id 93
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 94
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 95
-    db $04, $06, $06, $07, $07, $05, $FF, $FF ; id 96
+    db $02, $04, $03, $03, $04, $06, $ff, $ff ; id 93
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 94
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 95
+    db $04, $06, $06, $07, $07, $05, $ff, $ff ; id 96
     db $02, $05, $03, $03, $04, $06, $05, $04 ; id 97
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 98
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 98
     db $03, $04, $05, $06, $06, $02, $06, $05 ; id 99
     db $02, $03, $03, $05, $06, $02, $07, $06 ; id 100
-    db $02, $04, $03, $06, $07, $05, $FF, $FF ; id 101
+    db $02, $04, $03, $06, $07, $05, $ff, $ff ; id 101
     db $02, $04, $04, $02, $05, $06, $07, $05 ; id 102
     db $04, $04, $04, $06, $06, $03, $07, $05 ; id 103
     db $02, $01, $02, $03, $04, $07, $06, $03 ; id 104
-    db $02, $05, $03, $03, $05, $02, $FF, $FF ; id 105
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 106
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 107
+    db $02, $05, $03, $03, $05, $02, $ff, $ff ; id 105
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 106
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 107
     db $04, $03, $04, $07, $05, $05, $07, $02 ; id 108
-    db $02, $04, $03, $02, $03, $06, $FF, $FF ; id 109
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 110
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 111
+    db $02, $04, $03, $02, $03, $06, $ff, $ff ; id 109
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 110
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 111
     db $02, $06, $04, $05, $06, $02, $08, $03 ; id 112
-    db $03, $02, $07, $03, $07, $06, $FF, $FF ; id 113
+    db $03, $02, $07, $03, $07, $06, $ff, $ff ; id 113
     db $01, $04, $05, $03, $07, $01, $07, $05 ; id 114
     db $02, $01, $02, $05, $05, $04, $07, $03 ; id 115
     db $02, $03, $02, $05, $03, $01, $07, $02 ; id 116
-    db $05, $07, $07, $04, $07, $06, $FF, $FF ; id 117
-    db $02, $04, $03, $01, $08, $02, $FF, $FF ; id 118
-    db $03, $06, $05, $01, $07, $05, $FF, $FF ; id 119
+    db $05, $07, $07, $04, $07, $06, $ff, $ff ; id 117
+    db $02, $04, $03, $01, $08, $02, $ff, $ff ; id 118
+    db $03, $06, $05, $01, $07, $05, $ff, $ff ; id 119
     db $04, $01, $04, $06, $07, $02, $07, $05 ; id 120
     db $01, $02, $02, $07, $04, $03, $06, $06 ; id 121
-    db $01, $07, $02, $05, $04, $06, $FF, $FF ; id 122
+    db $01, $07, $02, $05, $04, $06, $ff, $ff ; id 122
     db $02, $04, $04, $06, $06, $03, $07, $05 ; id 123
-    db $06, $07, $07, $05, $07, $06, $FF, $FF ; id 124
+    db $06, $07, $07, $05, $07, $06, $ff, $ff ; id 124
     db $02, $05, $05, $02, $05, $06, $06, $05 ; id 125
     db $02, $07, $05, $02, $05, $06, $07, $04 ; id 126
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 127
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 128
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 127
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 128
     db $03, $03, $05, $04, $06, $06, $07, $02 ; id 129
     db $02, $06, $03, $02, $04, $05, $06, $03 ; id 130
     db $02, $07, $03, $02, $04, $06, $07, $05 ; id 131
-    db $05, $02, $07, $03, $07, $05, $FF, $FF ; id 132
+    db $05, $02, $07, $03, $07, $05, $ff, $ff ; id 132
     db $02, $05, $05, $01, $05, $06, $07, $02 ; id 133
     db $02, $03, $02, $06, $04, $02, $07, $04 ; id 134
-    db $02, $03, $04, $02, $04, $04, $FF, $FF ; id 135
+    db $02, $03, $04, $02, $04, $04, $ff, $ff ; id 135
     db $02, $03, $04, $04, $05, $02, $07, $01 ; id 136
     db $02, $03, $04, $06, $06, $02, $07, $04 ; id 137
-    db $02, $03, $03, $04, $05, $02, $FF, $FF ; id 138
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 139
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 140
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 141
+    db $02, $03, $03, $04, $05, $02, $ff, $ff ; id 138
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 139
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 140
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 141
     db $05, $05, $06, $01, $07, $04, $08, $02 ; id 142
     db $02, $04, $03, $02, $04, $05, $06, $03 ; id 143
 
-; E-0194 (C1: SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 36 screens (E-0194, C1)
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen,
+; $FF = draw again
 TownObjectSpotGrid4::
-Data_061_7405:: ; address name
     db $02, $04, $03, $07, $06, $06, $07, $02 ; id 0
     db $02, $03, $05, $05, $07, $01, $08, $07 ; id 1
     db $02, $06, $08, $03, $02, $06, $08, $03 ; id 2
     db $02, $04, $02, $04, $02, $04, $02, $04 ; id 3
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 5
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 4
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 5
     db $02, $02, $05, $04, $07, $07, $08, $01 ; id 6
-    db $02, $04, $05, $06, $07, $02, $FF, $FF ; id 7
+    db $02, $04, $05, $06, $07, $02, $ff, $ff ; id 7
     db $07, $07, $07, $07, $07, $07, $07, $07 ; id 8
-    db $02, $06, $06, $03, $08, $05, $FF, $FF ; id 9
-    db $03, $05, $05, $02, $07, $06, $FF, $FF ; id 10
-    db $02, $07, $04, $02, $06, $03, $FF, $FF ; id 11
+    db $02, $06, $06, $03, $08, $05, $ff, $ff ; id 9
+    db $03, $05, $05, $02, $07, $06, $ff, $ff ; id 10
+    db $02, $07, $04, $02, $06, $03, $ff, $ff ; id 11
     db $05, $06, $07, $04, $05, $06, $07, $04 ; id 12
-    db $02, $06, $04, $03, $07, $05, $FF, $FF ; id 13
-    db $02, $03, $06, $02, $08, $06, $FF, $FF ; id 14
+    db $02, $06, $04, $03, $07, $05, $ff, $ff ; id 13
+    db $02, $03, $06, $02, $08, $06, $ff, $ff ; id 14
     db $02, $07, $03, $01, $06, $04, $08, $02 ; id 15
     db $02, $02, $03, $05, $06, $07, $07, $03 ; id 16
     db $01, $03, $02, $04, $03, $02, $05, $06 ; id 17
     db $02, $06, $03, $03, $07, $01, $07, $05 ; id 18
     db $01, $01, $05, $05, $01, $01, $05, $05 ; id 19
-    db $02, $07, $03, $01, $05, $05, $FF, $FF ; id 20
+    db $02, $07, $03, $01, $05, $05, $ff, $ff ; id 20
     db $02, $06, $07, $02, $02, $06, $07, $02 ; id 21
     db $02, $05, $04, $02, $06, $06, $08, $03 ; id 22
     db $02, $02, $04, $05, $05, $03, $07, $07 ; id 23
     db $03, $06, $04, $03, $07, $05, $08, $02 ; id 24
-    db $02, $02, $04, $05, $08, $03, $FF, $FF ; id 25
+    db $02, $02, $04, $05, $08, $03, $ff, $ff ; id 25
     db $02, $03, $02, $07, $04, $02, $06, $05 ; id 26
     db $02, $03, $08, $05, $02, $03, $08, $05 ; id 27
-    db $02, $04, $05, $06, $06, $02, $FF, $FF ; id 28
+    db $02, $04, $05, $06, $06, $02, $ff, $ff ; id 28
     db $01, $07, $03, $01, $04, $04, $07, $06 ; id 29
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 30
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 32
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 33
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 30
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 31
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 32
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 33
     db $05, $05, $07, $02, $05, $05, $07, $02 ; id 34
     db $03, $06, $06, $02, $03, $06, $06, $02 ; id 35
 
-; E-0194 (C1: SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 6 screens (E-0194, C1)
 TownObjectSpotGrid5::
-Data_061_7525:: ; address name
     db $02, $03, $04, $06, $06, $02, $07, $07 ; id 0
     db $03, $01, $06, $06, $03, $01, $06, $06 ; id 1
     db $02, $02, $02, $05, $04, $03, $07, $06 ; id 2
     db $03, $04, $04, $01, $06, $06, $07, $03 ; id 3
     db $02, $04, $06, $01, $02, $04, $06, $01 ; id 4
-    db $02, $01, $03, $04, $07, $02, $FF, $FF ; id 5
+    db $02, $01, $03, $04, $07, $02, $ff, $ff ; id 5
 
-; E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens).
-; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+; SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to
+; RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching_NextRandomSeed picks a random screen
+; inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at
+; $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new
+; screen, $FF a new spot, otherwise its nibbles place the object; 25 screens (E-0194, C1)
 TownObjectSpotGrid6::
-Data_061_7555:: ; address name
-    db $03, $05, $05, $03, $07, $06, $FF, $FF ; id 0
-    db $03, $02, $04, $06, $07, $03, $FF, $FF ; id 1
+    db $03, $05, $05, $03, $07, $06, $ff, $ff ; id 0
+    db $03, $02, $04, $06, $07, $03, $ff, $ff ; id 1
     db $02, $03, $04, $02, $05, $07, $07, $05 ; id 2
     db $02, $04, $05, $05, $02, $04, $05, $05 ; id 3
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
-    db $03, $02, $04, $06, $07, $05, $FF, $FF ; id 5
-    db $02, $06, $05, $02, $07, $04, $FF, $FF ; id 6
+    db $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe ; id 4
+    db $03, $02, $04, $06, $07, $05, $ff, $ff ; id 5
+    db $02, $06, $05, $02, $07, $04, $ff, $ff ; id 6
     db $02, $02, $03, $06, $05, $05, $07, $01 ; id 7
-    db $03, $02, $03, $06, $06, $05, $FF, $FF ; id 8
+    db $03, $02, $03, $06, $06, $05, $ff, $ff ; id 8
     db $02, $06, $06, $03, $02, $06, $06, $03 ; id 9
     db $02, $03, $04, $05, $07, $02, $07, $06 ; id 10
-    db $02, $02, $04, $07, $05, $04, $FF, $FF ; id 11
-    db $03, $04, $05, $02, $02, $06, $FF, $FF ; id 12
-    db $02, $06, $06, $02, $08, $05, $FF, $FF ; id 13
+    db $02, $02, $04, $07, $05, $04, $ff, $ff ; id 11
+    db $03, $04, $05, $02, $02, $06, $ff, $ff ; id 12
+    db $02, $06, $06, $02, $08, $05, $ff, $ff ; id 13
     db $02, $05, $02, $05, $02, $05, $02, $05 ; id 14
-    db $03, $07, $04, $02, $07, $04, $FF, $FF ; id 15
+    db $03, $07, $04, $02, $07, $04, $ff, $ff ; id 15
     db $03, $03, $04, $07, $05, $04, $08, $01 ; id 16
     db $02, $01, $04, $05, $05, $03, $07, $06 ; id 17
-    db $03, $06, $04, $02, $07, $05, $FF, $FF ; id 18
+    db $03, $06, $04, $02, $07, $05, $ff, $ff ; id 18
     db $04, $07, $07, $02, $04, $07, $07, $02 ; id 19
     db $05, $05, $06, $02, $05, $05, $06, $02 ; id 20
-    db $02, $06, $04, $03, $07, $04, $FF, $FF ; id 21
-    db $02, $03, $04, $04, $07, $02, $FF, $FF ; id 22
-    db $02, $04, $04, $02, $05, $05, $FF, $FF ; id 23
-    db $02, $02, $03, $06, $06, $04, $FF, $FF ; id 24
-    ds $9E3, $00
+    db $02, $06, $04, $03, $07, $04, $ff, $ff ; id 21
+    db $02, $03, $04, $04, $07, $02, $ff, $ff ; id 22
+    db $02, $04, $04, $02, $05, $05, $ff, $ff ; id 23
+    db $02, $02, $03, $06, $06, $04, $ff, $ff ; id 24
+    ds $9e3, $00

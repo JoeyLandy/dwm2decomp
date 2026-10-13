@@ -2,24 +2,21 @@ SECTION "Bank 86", ROMX[$4000], BANK[$86]
     db $86
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank86, ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank86, ShowMessageHL_ToBeginStringDisplay_Bank86)
 BeginStringDisplay_Bank86::
-Func_086_4001:: ; address name
     ld de, StringCategories_86_4016
     call BeginStringDisplay
     ret
-    db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
+    db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_86_4016::
-Data_086_4016:: ; address name
     dw StringList_86_4018 ; id 0
 
-; E-0217 (derived: category list of StringCategories_86_4016; one pointer per wStringIndex)
+; category list of StringCategories_86_4016; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_86_4018::
-Data_086_4018:: ; address name
     dw Message_0C_00 ; id 0
     dw Message_0C_01 ; id 1
     dw Message_0C_02 ; id 2
@@ -277,994 +274,777 @@ Data_086_4018:: ; address name
     dw Message_0C_FE ; id 254
     dw Message_0C_FF ; id 255
 
-Message_0C_00:: ; heuristic: string; C0
-Data_086_4218:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "Power Tower.", $FA, $F7
-    db $EF, $EE, "Are you the new", $EF, $EE, "challenger?", $FA, $F7
-    db $EF, $EE, "If you win, you'll", $EF, $EE, "earn many useful", $FA, $F7
-    db $EF, $EE, "accessories for", $EF, $EE, "your monsters.", $FA, $F7
-    db $EF, $EE, "Could you get them", $EF, $EE, "all?", $F7
-    db $F0
-
-Message_0C_01:: ; heuristic: string; C0
-Data_086_42BB:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If you win,", $F1
-    db "you'll earn many", $FA, $F7
-    db $EF, $EE, "useful accessories", $EF, $EE, "for your monsters.", $FA, $F7
-    db $EF, $EE, "Could you get them", $EF, $EE, "all?", $F7
-    db $F0
-
-Message_0C_02:: ; heuristic: string; C0
-Data_086_4321:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Only a handful", $F1
-    db "of masters have", $FA, $F7
-    db $EF, $EE, "made it to the top", $EF, $EE, "of the Tower.", $FA, $F7
-    db $EF, $EE, "I tried, but the", $EF, $EE, "best I could do", $FA, $F7
-    db $EF, $EE, "was reach the", $EF, $EE, "fourth floor.", $F7
-    db $F0
-
-Message_0C_03:: ; heuristic: string; C0
-Data_086_43AE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The Tower's many", $F1
-    db "treasures are", $FA, $F7
-    db $EF, $EE, "heavily guarded by", $EF, $EE, "monsters, slurp.", $FA, $F7
-    db $EF, $EE, "They'll attack you", $EF, $EE, "all out, slurp.", $F7
-    db $F0
-
-Message_0C_04:: ; heuristic: string; C0
-Data_086_441E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "second floor-", $FA, $F7
-    db $EF, $EE, "the Whirlwind", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "Can you withstand", $EF, $EE, "our wind power?", $F7
-    db $F0
-
-Message_0C_05:: ; heuristic: string; C0
-Data_086_447D:: ; address name
-    db $F0
-
-Message_0C_06:: ; heuristic: string; C0
-Data_086_447E:: ; address name
-    db $F0
-
-Message_0C_07:: ; heuristic: string; C0
-Data_086_447F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Not bad, not bad", $F1
-    db "at all.", $FA, $F7
-    db $EF, $EE, "Fine. Take the", $EF, $EE, "treasures.", $FA, $F7
-    db $EF, $EE, "The Clearwater", $EF, $EE, "Chamber is next.", $FA, $F7
-    db $EF, $EE, "Monsters that use", $EF, $EE, "water skills will", $FA, $F7
-    db $EF, $EE, "be waiting for", $EF, $EE, "you.", $F7
-    db $F0
-
-Message_0C_08:: ; heuristic: string; C0
-Data_086_451E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "third floor-", $FA, $F7
-    db $EF, $EE, "the Clearwater", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "If you belittle", $EF, $EE, "hydropower, you", $FA, $F7
-    db $EF, $EE, "will suffer for", $EF, $EE, "your ignorance!", $F7
-    db $F0
-
-Message_0C_09:: ; heuristic: string; C0
-Data_086_459F:: ; address name
-    db $F0
-
-Message_0C_0A:: ; heuristic: string; C0
-Data_086_45A0:: ; address name
-    db $F0
-
-Message_0C_0B:: ; heuristic: string; C0
-Data_086_45A1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You're quite", $F1
-    db "good.", $FA, $F7
-    db $EF, $EE, "The treasures are", $EF, $EE, "yours to take.", $FA, $F7
-    db $EF, $EE, "Upstairs is the", $EF, $EE, "Blizzard Chamber.", $FA, $F7
-    db $EF, $EE, "It's very cold, so", $EF, $EE, "be careful.", $F7
-    db $F0
-
-Message_0C_0C:: ; heuristic: string; C0
-Data_086_4624:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fourth floor-", $FA, $F7
-    db $EF, $EE, "the Blizzard", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "I hope you're", $EF, $EE, "bundled up warm.", $FA, $F7
-    db $EF, $EE, "We'll freeze you", $EF, $EE, "solid!", $F7
-    db $F0
-
-Message_0C_0D:: ; heuristic: string; C0
-Data_086_4699:: ; address name
-    db $F0
-
-Message_0C_0E:: ; heuristic: string; C0
-Data_086_469A:: ; address name
-    db $F0
-
-Message_0C_0F:: ; heuristic: string; C0
-Data_086_469B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Wow, aren't you", $F1
-    db "good.", $FA, $F7
-    db $EF, $EE, "Go ahead and take", $EF, $EE, "the treasures.", $FA, $F7
-    db $EF, $EE, "The Thunder", $EF, $EE, "Chamber's next.", $FA, $F7
-    db $EF, $EE, "You can always", $EF, $EE, "hear the sound of", $FA, $F7
-    db $EF, $EE, "crashing thunder.", $EF, $EE, "It's annoying!", $F7
-    db $F0
-
-Message_0C_10:: ; heuristic: string; C0
-Data_086_4741:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fifth floor-", $FA, $F7
-    db $EF, $EE, "the Thunder", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "Prepare for", $EF, $EE, "obliteration!", $F7
-    db $F0
-
-Message_0C_11:: ; heuristic: string; C0
-Data_086_4795:: ; address name
-    db $F0
-
-Message_0C_12:: ; heuristic: string; C0
-Data_086_4796:: ; address name
-    db $F0
-
-Message_0C_13:: ; heuristic: string; C0
-Data_086_4797:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Well done.", $F1
-    db "So it shall be.", $FA, $F7
-    db $EF, $EE, "You have bettered", $EF, $EE, "us in power.", $FA, $F7
-    db $EF, $EE, "The Tower's peak", $EF, $EE, "is next.", $FA, $F7
-    db $EF, $EE, "Monsters that use", $EF, $EE, "extreme heat stand", $FA, $F7
-    db $EF, $EE, "alert for your", $EF, $EE, "arrival.", $F7
-    db $F0
-
-Message_0C_14:: ; heuristic: string; C0
-Data_086_483B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Well.", $F1
-    db "How impressive.", $FA, $F7
-    db $EF, $EE, "I must commend you", $EF, $EE, "for reaching me.", $FA, $F7
-    db $EF, $EE, "Well.", $EF, $EE, "Shall we begin?", $F7
-    db $F0
-
-Message_0C_15:: ; heuristic: string; C0
-Data_086_4897:: ; address name
-    db $F0
-
-Message_0C_16:: ; heuristic: string; C0
-Data_086_4898:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Well.", $F1
-    db "How impressive.", $FA, $F7
-    db $EF, $EE, "Conquering the", $EF, $EE, "Power Tower.", $FA, $F7
-    db $EF, $EE, "It was built by a", $A4, $EF, $EE, "a great being.", $FA, $F7
-    db $EF, $EE, "He built other", $EF, $EE, "towers like this.", $FA, $F7
-    db $EF, $EE, "Do you possess all", $EF, $EE, "that is needed to", $FA, $F7
-    db $EF, $EE, "conquer them all?", $EF, $EE, "Well?", $FA, $F7
-    db $EF, $EE, "Take the treasures", $EF, $EE, "behind me.", $F7
-    db $F0
-
-Message_0C_17:: ; heuristic: string; C0
-Data_086_4984:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You've conquered", $F1
-    db "the Power Tower.", $FA, $F7
-    db $EF, $EE, "I hope you become", $EF, $EE, "a powerful master.", $F7
-    db $F0
-
-Message_0C_18:: ; heuristic: string; C0
-Data_086_49D2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "Baffle Tower.", $FA, $F7
-    db $EF, $EE, "Are you the new", $EF, $EE, "challenger?", $FA, $F7
-    db $EF, $EE, "If you win, you'll", $EF, $EE, "earn many useful", $FA, $F7
-    db $EF, $EE, "accessories for", $EF, $EE, "your monsters.", $FA, $F7
-    db $EF, $EE, "Could you get them", $EF, $EE, "all?", $F7
-    db $F0
-
-Message_0C_19:: ; heuristic: string; C0
-Data_086_4A76:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If you win,", $F1
-    db "you'll earn many", $FA, $F7
-    db $EF, $EE, "useful accessories", $EF, $EE, "for your monsters.", $FA, $F7
-    db $EF, $EE, "Could you get them", $EF, $EE, "all?", $F7
-    db $F0
-
-Message_0C_1A:: ; heuristic: string; C0
-Data_086_4ADC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: In this Tower,", $F1
-    db "your opponents", $FA, $F7
-    db $EF, $EE, "come at you with", $EF, $EE, "support skills", $FA, $F7
-    db $EF, $EE, "rather than all-", $EF, $EE, "out attacks.", $FA, $F7
-    db $EF, $EE, "My party was put", $EF, $EE, "to sleep, made to", $FA, $F7
-    db $EF, $EE, "dance", $A4, " All sorts", $EF, $EE, "of weird things.", $FA, $F7
-    db $EF, $EE, "It was a rotten", $EF, $EE, "time, I swear!", $F7
-    db $F0
-
-Message_0C_1B:: ; heuristic: string; C0
-Data_086_4BB4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: It's not that", $F1
-    db "easy to win here", $FA, $F7
-    db $EF, $EE, "by playing it fair", $EF, $EE, "and honorably.", $FA, $F7
-    db $EF, $EE, "You have to use", $EF, $EE, "your noggin to mix", $FA, $F7
-    db $EF, $EE, "and match skills", $EF, $EE, "for best effect.", $F7
-    db $F0
-
-Message_0C_1C:: ; heuristic: string; C0
-Data_086_4C49:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "second floor-", $FA, $F7
-    db $EF, $EE, "the Shackle", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "We'll disable your", $EF, $EE, "skills!", $F7
-    db $F0
-
-Message_0C_1D:: ; heuristic: string; C0
-Data_086_4C9E:: ; address name
-    db $F0
-
-Message_0C_1E:: ; heuristic: string; C0
-Data_086_4C9F:: ; address name
-    db $F0
-
-Message_0C_1F:: ; heuristic: string; C0
-Data_086_4CA0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Well played.", $F1
-    db "I can't complain.", $FA, $F7
-    db $EF, $EE, "Fine. Take the", $EF, $EE, "treasures.", $FA, $F7
-    db $EF, $EE, "The Confusion", $EF, $EE, "Chamber is next.", $FA, $F7
-    db $EF, $EE, "Monsters that", $EF, $EE, "disable control", $FA, $F7
-    db $EF, $EE, "will stand in your", $EF, $EE, "way.", $F7
-    db $F0
-
-Message_0C_20:: ; heuristic: string; C0
-Data_086_4D41:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "third floor-", $FA, $F7
-    db $EF, $EE, "the Confusion", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "Let us gift you", $EF, $EE, "with a time of", $FA, $F7
-    db $EF, $EE, "dreaming", $A4, $EF, $EE, $F7
-    db $F0
-
-Message_0C_21:: ; heuristic: string; C0
-Data_086_4DAB:: ; address name
-    db $F0
-
-Message_0C_22:: ; heuristic: string; C0
-Data_086_4DAC:: ; address name
-    db $F0
-
-Message_0C_23:: ; heuristic: string; C0
-Data_086_4DAD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Bravo. Take the", $F1
-    db "treasures.", $FA, $F7
-    db $EF, $EE, "Upstairs is the", $EF, $EE, "Fatigue Chamber.", $FA, $F7
-    db $EF, $EE, "I understand it is", $EF, $EE, "very tiresome.", $F7
-    db $F0
-
-Message_0C_24:: ; heuristic: string; C0
-Data_086_4E17:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fourth floor-", $FA, $F7
-    db $EF, $EE, "the Fatigue", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "Let us put you to", $EF, $EE, "the test!", $F7
-    db $F0
-
-Message_0C_25:: ; heuristic: string; C0
-Data_086_4E6E:: ; address name
-    db $F0
-
-Message_0C_26:: ; heuristic: string; C0
-Data_086_4E6F:: ; address name
-    db $F0
-
-Message_0C_27:: ; heuristic: string; C0
-Data_086_4E70:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Remarkable,", $F1
-    db "I must admit.", $FA, $F7
-    db $EF, $EE, "You have earned", $EF, $EE, "the treasures.", $FA, $F7
-    db $EF, $EE, "The Looting", $EF, $EE, "Chamber's next.", $FA, $F7
-    db $EF, $EE, "Monsters that", $EF, $EE, "steal your power", $FA, $F7
-    db $EF, $EE, "are what you will", $EF, $EE, "face.", $F7
-    db $F0
-
-Message_0C_28:: ; heuristic: string; C0
-Data_086_4F0F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fifth floor-", $FA, $F7
-    db $EF, $EE, "the Looting", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "Could you battle", $EF, $EE, "without strength?", $F7
-    db $F0
-
-Message_0C_29:: ; heuristic: string; C0
-Data_086_4F6C:: ; address name
-    db $F0
-
-Message_0C_2A:: ; heuristic: string; C0
-Data_086_4F6D:: ; address name
-    db $F0
-
-Message_0C_2B:: ; heuristic: string; C0
-Data_086_4F6E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You're quite", $F1
-    db "tough.", $FA, $F7
-    db $EF, $EE, "The treasures are", $EF, $EE, "yours to take.", $FA, $F7
-    db $EF, $EE, "The Tower's peak", $EF, $EE, "is next.", $FA, $F7
-    db $EF, $EE, "Monsters that use", $EF, $EE, "dangerous skills", $FA, $F7
-    db $EF, $EE, "are waiting for", $EF, $EE, "the worthy.", $F7
-    db $F0
-
-Message_0C_2C:: ; heuristic: string; C0
-Data_086_500E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Ah, you have", $F1
-    db "impressed me.", $FA, $F7
-    db $EF, $EE, "It's rare to see", $EF, $EE, "anyone here.", $FA, $F7
-    db $EF, $EE, "Let the final", $EF, $EE, "battle begin", $A4, $F7
-    db $F0
-
-Message_0C_2D:: ; heuristic: string; C0
-Data_086_506E:: ; address name
-    db $F0
-
-Message_0C_2E:: ; heuristic: string; C0
-Data_086_506F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You are to be", $F1
-    db "commended for", $FA, $F7
-    db $EF, $EE, "conquering the", $EF, $EE, "Baffle Tower.", $FA, $F7
-    db $EF, $EE, "It was built by a", $A4, $EF, $EE, "a great being.", $FA, $F7
-    db $EF, $EE, "He built other", $EF, $EE, "towers like this.", $FA, $F7
-    db $EF, $EE, "If you wish to be", $EF, $EE, "a true master, it", $FA, $F7
-    db $EF, $EE, "is pointless to", $EF, $EE, "not conquer all", $FA, $F7
-    db $EF, $EE, "the towers made by", $EF, $EE, "the great being.", $F7
-    db $F0
-
-Message_0C_2F:: ; heuristic: string; C0
-Data_086_516F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You've conquered", $F1
-    db "the Baffle Tower.", $FA, $F7
-    db $EF, $EE, "I hope you become", $EF, $EE, "a wise master.", $F7
-    db $F0
-
-Message_0C_30:: ; heuristic: string; C0
-Data_086_51BA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If you've made", $F1
-    db "it to this-the", $FA, $F7
-    db $EF, $EE, "Soul Tower-it", $EF, $EE, "must mean that", $FA, $F7
-    db $EF, $EE, "you've conquered", $EF, $EE, "the two other", $FA, $F7
-    db $EF, $EE, "Towers of Power", $EF, $EE, "and Baffle.", $FA, $F7
-    db $EF, $EE, "But even so, this", $EF, $EE, "Tower is terribly", $FA, $F7
-    db $EF, $EE, "tough. I hope", $EF, $EE, "you're ready.", $F7
-    db $F0
-
-Message_0C_31:: ; heuristic: string; C0
-Data_086_5285:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This Tower is", $F1
-    db "terribly tough.", $FA, $F7
-    db $EF, $EE, "I hope you're", $EF, $EE, "ready.", $F7
-    db $F0
-
-Message_0C_32:: ; heuristic: string; C0
-Data_086_52BF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: The monsters", $F1
-    db "here are awful.", $FA, $F7
-    db $EF, $EE, "I'm losing my", $EF, $EE, "confidence", $A4, $FA, $F7
-    db $EF, $EE, "I heard a horrible", $EF, $EE, "racket from above.", $FA, $F7
-    db $EF, $EE, "It might be that", $EF, $EE, "one skill", $A4, $F7
-    db $F0
-
-Message_0C_33:: ; heuristic: string; C0
-Data_086_5347:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: It's brutal up", $F1
-    db "ahead.", $FA, $F7
-    db $EF, $EE, "I wouldn't push my", $EF, $EE, "luck.", $FA, $F7
-    db $EF, $EE, "Beating the second", $EF, $EE, "floor monsters was", $FA, $F7
-    db $EF, $EE, "a serious ordeal,", $EF, $EE, "believe me.", $F7
-    db $F0
-
-Message_0C_34:: ; heuristic: string; C0
-Data_086_53C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "second floor.", $FA, $F7
-    db $EF, $EE, "This is the Life", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "I'm not powerful,", $EF, $EE, "but I am durable!", $F7
-    db $F0
-
-Message_0C_35:: ; heuristic: string; C0
-Data_086_542B:: ; address name
-    db $F0
-
-Message_0C_36:: ; heuristic: string; C0
-Data_086_542C:: ; address name
-    db $F0
-
-Message_0C_37:: ; heuristic: string; C0
-Data_086_542D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You're quite", $F1
-    db "good at this.", $FA, $F7
-    db $EF, $EE, "Sure, take the", $EF, $EE, "treasures.", $FA, $F7
-    db $EF, $EE, "Upstairs is the", $EF, $EE, "Pain Chamber.", $FA, $F7
-    db $EF, $EE, "I don't like being", $EF, $EE, "hurt, so I really", $FA, $F7
-    db $EF, $EE, "hate going up", $EF, $EE, "there, yikes!", $F7
-    db $F0
-
-Message_0C_38:: ; heuristic: string; C0
-Data_086_54D3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "third floor.", $FA, $F7
-    db $EF, $EE, "It's the Pain", $EF, $EE, "Chamber.", $FA, $F7
-    db $EF, $EE, "I'll tell you right", $EF, $EE, "now, it really", $FA, $F7
-    db $EF, $EE, "does hurt a lot in", $EF, $EE, "here! Here goes!", $F7
-    db $F0
-
-Message_0C_39:: ; heuristic: string; C0
-Data_086_5558:: ; address name
-    db $F0
-
-Message_0C_3A:: ; heuristic: string; C0
-Data_086_5559:: ; address name
-    db $F0
-
-Message_0C_3B:: ; heuristic: string; C0
-Data_086_555A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You've shown me", $F1
-    db "your worth.", $FA, $F7
-    db $EF, $EE, "Go on, take the", $EF, $EE, "treasures.", $FA, $F7
-    db $EF, $EE, "The Healing", $EF, $EE, "Chamber is next.", $FA, $F7
-    db $EF, $EE, "Monsters skilled", $EF, $EE, "at healing are", $FA, $F7
-    db $EF, $EE, "eagerly waiting", $EF, $EE, "for you.", $F7
-    db $F0
-
-Message_0C_3C:: ; heuristic: string; C0
-Data_086_55FA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fourth floor.", $FA, $F7
-    db $EF, $EE, "The Healing", $EF, $EE, "Chamber it is!", $FA, $F7
-    db $EF, $EE, "The first thing", $EF, $EE, "you should know", $FA, $F7
-    db $EF, $EE, "is that attacking", $EF, $EE, "us is a waste.", $FA, $F7
-    db $EF, $EE, "Without further", $EF, $EE, "ado, let's begin.", $F7
-    db $F0
-
-Message_0C_3D:: ; heuristic: string; C0
-Data_086_56A5:: ; address name
-    db $F0
-
-Message_0C_3E:: ; heuristic: string; C0
-Data_086_56A6:: ; address name
-    db $F0
-
-Message_0C_3F:: ; heuristic: string; C0
-Data_086_56A7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Fine, we will", $F1
-    db "confer all the", $FA, $F7
-    db $EF, $EE, "treasures to you", $EF, $EE, "for your victory.", $FA, $F7
-    db $EF, $EE, "Up next is the", $EF, $EE, "Chaos Chamber.", $FA, $F7
-    db $EF, $EE, "The greatest of", $EF, $EE, "the destroyers", $FA, $F7
-    db $EF, $EE, "stand guard over", $EF, $EE, "the treasures.", $F7
-    db $F0
-
-Message_0C_40:: ; heuristic: string; C0
-Data_086_5758:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: This is the", $F1
-    db "fifth floor.", $FA, $F7
-    db $EF, $EE, "Welcome to the", $EF, $EE, "Chaos Chamber.", $FA, $F7
-    db $EF, $EE, "Have you said your", $EF, $EE, "prayers?", $FA, $F7
-    db $EF, $EE, "We will come out", $EF, $EE, "at maximum power!", $F7
-    db $F0
-
-Message_0C_41:: ; heuristic: string; C0
-Data_086_57DE:: ; address name
-    db $F0
-
-Message_0C_42:: ; heuristic: string; C0
-Data_086_57DF:: ; address name
-    db $F0
-
-Message_0C_43:: ; heuristic: string; C0
-Data_086_57E0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: All right.", $F1
-    db "Good enough.", $FA, $F7
-    db $EF, $EE, "The treasures are", $EF, $EE, "yours to take.", $FA, $F7
-    db $EF, $EE, "The Tower's peak", $EF, $EE, "is next.", $FA, $F7
-    db $EF, $EE, "The great being", $EF, $EE, "awaits you.", $F7
-    db $F0
-
-Message_0C_44:: ; heuristic: string; C0
-Data_086_585E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Oh? Well, well,", $F1
-    db "you're the first", $FA, $F7
-    db $EF, $EE, "master to visit me", $EF, $EE, "in a long time.", $FA, $F7
-    db $EF, $EE, "But look at you!", $EF, $EE, "You're a child!", $FA, $F7
-    db $EF, $EE, "I'm the Grand", $EF, $EE, "Master.", $FA, $F7
-    db $EF, $EE, "I built this", $EF, $EE, "Tower.", $FA, $F7
-    db $EF, $EE, "I've been waiting", $EF, $EE, "for strong masters", $FA, $F7
-    db $EF, $EE, "to come ever since", $EF, $EE, "then.", $FA, $F7
-    db $EF, $EE, "Please, show me", $EF, $EE, "what you can do!", $F7
-    db $F0
-
-Message_0C_45:: ; heuristic: string; C0
-Data_086_5968:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hello! You've", $F1
-    db "come back!", $FA, $F7
-    db $EF, $EE, "Are you feeling", $EF, $EE, "lucky?", $FA, $F7
-    db $EF, $EE, "Then, let's start!", $EF, $EE, "Here we go!", $F7
-    db $F0
-
-Message_0C_46:: ; heuristic: string; C0
-Data_086_59C1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You are good!", $F1
-    db "I like you!", $FA, $F7
-    db $EF, $EE, "You've conquered", $EF, $EE, "all three Towers-", $FA, $F7
-    db $EF, $EE, "Power, Baffle and", $EF, $EE, "this, Soul Tower.", $FA, $F7
-    db $EF, $EE, "You're certain to", $EF, $EE, "get even better.", $FA, $F7
-    db $EF, $EE, "I want you to have", $EF, $EE, "some gifts!", $F7
-    db $F0
-
-Message_0C_47:: ; heuristic: string; C0
-Data_086_5A76:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: You've conquered", $F1
-    db "the Soul Tower.", $FA, $F7
-    db $EF, $EE, "I hope you'll keep", $EF, $EE, "working towards", $FA, $F7
-    db $EF, $EE, "becoming the best", $EF, $EE, "master ever.", $F7
-    db $F0
-
-Message_0C_48:: ; heuristic: string; C0
-Data_086_5AE3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, "The treasure chest", $EF, $EE, "was a Mimic!", $F7
-    db $F0
-
-Message_0C_49:: ; heuristic: string; C0
-Data_086_5B27:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 checked the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, "It was a Mimic!", $EF, $EE, "It began to talk.", $F7
-    db $F0
-
-Message_0C_4A:: ; heuristic: string; C0
-Data_086_5B6D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Lightning when", $F1
-    db "wet is dangerous!", $F7
-    db $F0
-
-Message_0C_4B:: ; heuristic: string; C0
-Data_086_5B92:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: When it's cold,", $F1
-    db "fire's the answer!", $F7
-    db $F0
-
-Message_0C_4C:: ; heuristic: string; C0
-Data_086_5BB7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Electric jolts", $F1
-    db "are good at times.", $F7
-    db $F0
-
-Message_0C_4D:: ; heuristic: string; C0
-Data_086_5BDD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Hot! Hot!", $F1
-    db "Burning up!", $F7
-    db $F0
-
-Message_0C_4E:: ; heuristic: string; C0
-Data_086_5BF7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: What to do if we", $F1
-    db "are all in danger", $A4, $F7
-    db $F0
-
-Message_0C_4F:: ; heuristic: string; C0
-Data_086_5C1F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Sweets are good", $F1
-    db "cheap energy!", $F7
-    db $F0
-
-Message_0C_50:: ; heuristic: string; C0
-Data_086_5C41:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Overconfidence", $F1
-    db "is a trap.", $F7
-    db $F0
-
-Message_0C_51:: ; heuristic: string; C0
-Data_086_5C5F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I'm scared", $A4, $F1
-    db "Terrified, even", $A4, $F7
-    db $F0
-
-Message_0C_52:: ; heuristic: string; C0
-Data_086_5C7F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: If it hurts,", $F1
-    db "heal it.", $F7
-    db $F0
-
-Message_0C_53:: ; heuristic: string; C0
-Data_086_5C99:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Good health", $F1
-    db "above all.", $F7
-    db $F0
-
-Message_0C_54:: ; heuristic: string; C0
-Data_086_5CB4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Pow! Ka-pow!", $F1
-    db "Big trouble!", $F7
-    db $F0
-
-Message_0C_55:: ; heuristic: string; C0
-Data_086_5CD2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Young master", $A4, $F1
-    db "The final test", $A4, $F7
-    db $F0
-
-Message_0C_56:: ; heuristic: string; C0
-Data_086_5CF4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Really! Wow!", $F1
-    db "You're the first", $FA, $F7
-    db $EF, $EE, "human that I've", $EF, $EE, "ever met!", $FA, $F7
-    db $EF, $EE, "Wow, a human is", $EF, $EE, "pretty cute!", $FA, $F7
-    db $EF, $EE, "Don't you think so,", $EF, $EE, "big brother?", $F7
-    db $F0
-
-Message_0C_57:: ; heuristic: string; C0
-Data_086_5D77:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh, don't lie!", $F1
-    db "You don't look", $FA, $F7
-    db $EF, $EE, "like an elf or a", $EF, $EE, "monster at all!", $FA, $F7
-    db $EF, $EE, "You really are a", $EF, $EE, "human, aren't you?", $FF, $F0
-
-Message_0C_58:: ; heuristic: string; C0
-Data_086_5DE3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: What is it, you", $F1
-    db "little brat?", $FA, $F7
-    db $EF, $EE, "Did you come to", $EF, $EE, "get creamed too?", $FA, $F7
-    db $EF, $EE, "That town is full", $EF, $EE, "of the idle rich.", $FA, $F7
-    db $EF, $EE, "Their treasures", $EF, $EE, "are there for the", $FA, $F7
-    db $EF, $EE, "taking, so I took", $EF, $EE, "them.", $FA, $F7
-    db $EF, $EE, "I was going to", $EF, $EE, "sell it off and", $FA, $F7
-    db $EF, $EE, "make some serious", $EF, $EE, "money.", $FA, $F7
-    db $EF, $EE, "But a brat like", $EF, $EE, "you comes along!", $FA, $F7
-    db $EF, $EE, "I can still make", $EF, $EE, "this work", $A4, $FA, $F7
-    db $EF, $EE, "If I don't let you", $EF, $EE, "go alive!", $F7
-    db $F0
-
-Message_0C_DF:: ; heuristic: string; C0
-Data_086_5F38:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: What is it, you", $F1
-    db "little brat?", $FA, $F7
-    db $EF, $EE, "Back to get", $EF, $EE, "creamed again?", $FA, $F7
-    db $EF, $EE, "I won't let you go", $EF, $EE, "alive this time!", $F7
-    db $F0
-
-Message_0C_E0:: ; heuristic: string; C0
-Data_086_5F9F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: But", $A4, " No! I lost", $F1
-    db "to this brat?", $F7
-    db $F0
-
-Message_0C_E1:: ; heuristic: string; C0
-Data_086_5FC1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: You are", $F1
-    db "really special.", $FA, $F7
-    db $EF, $EE, "I couldn't do a", $EF, $EE, "thing against him", $A4, $FA, $F7
-    db $EF, $EE, "I'll have to train", $EF, $EE, "that much harder", $A4, $FA, $F7
-    db $EF, $EE, "I'll be no match", $EF, $EE, "for my kid brother", $FA, $F7
-    db $EF, $EE, "if  I don't apply", $EF, $EE, "myself better.", $FA, $F7
-    db $EF, $EE, "I'll wait for you", $EF, $EE, "in town!", $F7
-    db $F0
-
-Message_0C_E2:: ; heuristic: string; C0
-Data_086_609B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Welcome to the", $F1
-    db "town of Miagen.", $FA, $F7
-    db $EF, $EE, "We're proud of our", $EF, $EE, "affluence here!", $F7
-    db $F0
-
-Message_0C_E3:: ; heuristic: string; C0
-Data_086_60E4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: So you defeated", $F1
-    db "the evildoer?", $F7
-    db $F0
-
-Message_0C_E4:: ; heuristic: string; C0
-Data_086_6106:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Wow, you have", $F1
-    db "monsters! Wicked!", $FA, $F7
-    db $EF, $EE, "They beat the bad", $EF, $EE, "guy, didn't they?", $F7
-    db $F0
-
-Message_0C_E5:: ; heuristic: string; C0
-Data_086_6151:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Your monsters", $F1
-    db "are good, it's", $FA, $F7
-    db $EF, $EE, "plain to see.", $EF, $EE, "I like them!", $F7
-    db $F0
-
-Message_0C_E6:: ; heuristic: string; C0
-Data_086_6190:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: So there are", $F1
-    db "evil masters", $A4, $FA, $F7
-    db $EF, $EE, "Oh, but you're not", $EF, $EE, "one of those.", $F7
-    db $F0
-
-Message_0C_E7:: ; heuristic: string; C0
-Data_086_61D3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Controlling", $F1
-    db "monsters is no", $FA, $F7
-    db $EF, $EE, "easy feat, is it?", $EF, $EE, "I'm so in awe!", $FA, $F7
-    db $EF, $EE, "You've brought", $EF, $EE, "peace to us!", $F7
-    db $F0
-
-Message_0C_E8:: ; heuristic: string; C0
-Data_086_6235:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I thank you in", $F1
-    db "all sincerity!", $F7
-    db $F0
-
-Message_0C_E9:: ; heuristic: string; C0
-Data_086_6257:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The atmosphere", $F1
-    db "has cheered up,", $FA, $F7
-    db $EF, $EE, "thanks to your", $EF, $EE, "crime busting.", $FA, $F7
-    db $EF, $EE, "It gives me hope", $EF, $EE, "to live another", $FA, $F7
-    db $EF, $EE, "one hundred years!", $EF, $EE, $F7
-    db $F0
-
-Message_0C_EA:: ; heuristic: string; C0
-Data_086_62D9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: I long to have a", $F1
-    db "family of my own.", $FA, $F7
-    db $EF, $EE, "I wish I was", $EF, $EE, "married", $A4, $F7
-    db $F0
-
-Message_0C_EB:: ; heuristic: string; C0
-Data_086_631A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Old people say", $F1
-    db "that a cheerful", $FA, $F7
-    db $EF, $EE, "town is a good", $EF, $EE, "town. I agree!", $F7
-    db $F0
-
-Message_0C_EC:: ; heuristic: string; C0
-Data_086_635F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: Monsters can be", $F1
-    db "good or evil on", $FA, $F7
-    db $EF, $EE, "the whims of their", $EF, $EE, "masters, I guess.", $F7
-    db $F0
-
-Message_0C_ED:: ; heuristic: string; C0
-Data_086_63AC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The thief was", $F1
-    db "selling what he", $FA, $F7
-    db $EF, $EE, "stole from us for", $EF, $EE, "a lot of gold.", $FA, $F7
-    db $EF, $EE, "But why would he", $EF, $EE, "steal my clothes?", $FA, $F7
-    db $EF, $EE, "Were they valuable", $EF, $EE, "because they were", $FA, $F7
-    db $EF, $EE, "mine? I'm not sure", $EF, $EE, "I want to know", $A4, $F7
-    db $F0
-
-Message_0C_EE:: ; heuristic: string; C0
-Data_086_6469:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: It sure was a", $F1
-    db "thrilling time", $FA, $F7
-    db $EF, $EE, "when the thief was", $EF, $EE, "roving around.", $F7
-    db $F0
-
-Message_0C_EF:: ; heuristic: string; C0
-Data_086_64B0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: I asked", $F1
-    db "for your support", $FA, $F7
-    db $EF, $EE, "to capture that", $EF, $EE, "thief", $A4, $FA, $F7
-    db $EF, $EE, "But you ended up", $EF, $EE, "doing it all.", $FA, $F7
-    db $EF, $EE, "I'm sorry, and", $EF, $EE, "thank you.", $FA, $F7
-    db $EF, $EE, "Oh? You're from", $EF, $EE, "GreatLog?", $FA, $F7
-    db $EF, $EE, "And you've won", $EF, $EE, "tournaments.", $FA, $F7
-    db $EF, $EE, "Well, no wonder", $EF, $EE, "you're strong.", $FA, $F7
-    db $EF, $EE, "How is Kameha,", $EF, $EE, "by the way?", $F7
-    db $F0
-
-Message_0C_F0:: ; heuristic: string; C0
-Data_086_65AC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: How do I", $F1
-    db "know about him?", $FA, $F7
-    db $EF, $EE, "Well", $A4, $EF, $EE, "That's a secret!", $F7
-    db $F0
-
-Message_0C_F1:: ; heuristic: string; C0
-Data_086_65EA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: You've", $F1
-    db "inspired me to try", $FA, $F7
-    db $EF, $EE, "harder in my", $EF, $EE, "training.", $FA, $F7
-    db $EF, $EE, "I hope we can", $EF, $EE, "battle some day!", $F7
-    db $F0
-
-Message_0C_F2:: ; heuristic: string; C0
-Data_086_664C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: That merchant,", $F1
-    db "he was a thief.", $FA, $F7
-    db $EF, $EE, "In one way he has", $EF, $EE, "my admiration.", $FA, $F7
-    db $EF, $EE, "His bad deeds", $EF, $EE, "escaped my notice!", $F7
-    db $F0
-
-Message_0C_F3:: ; heuristic: string; C0
-Data_086_66B9:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "*: People say you", $F1
-    db "can't judge people", $FA, $F7
-    db $EF, $EE, "by appearances", $A4, $EF, $EE, "But that thieving", $FA, $F7
-    db $EF, $EE, "merchant", $A4, " He had", $EF, $EE, "the bad guy look!", $F7
-    db $F0
-
-Message_0C_F4:: ; heuristic: string; C0
-Data_086_672B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: That greedy", $F1
-    db "hound of a dealer", $FA, $F7
-    db $EF, $EE, "was behind those", $EF, $EE, "monsters", $A4, $FA, $F7
-    db $EF, $EE, "But to be caught", $EF, $EE, "out by selling", $FA, $F7
-    db $EF, $EE, "what he stole", $A4, $EF, $EE, "He's not what I", $FA, $F7
-    db $EF, $EE, "call a criminal", $EF, $EE, "mastermind.", $F7
-    db $F0
-
-Message_0C_F5:: ; heuristic: string; C0
-Data_086_67D2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: I knew", $F1
-    db "you", $44, " come back!", $FA, $F7
-    db $EF, $EE, "I've trained hard", $EF, $EE, "since we last met.", $FA, $F7
-    db $EF, $EE, "Would you like to", $EF, $EE, "spar with me?", $FF, $F0
-
-Message_0C_F6:: ; heuristic: string; C0
-Data_086_6840:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: Great!", $F1
-    db "No holding back!", $F7
-    db $F0
-
-Message_0C_F7:: ; heuristic: string; C0
-Data_086_6863:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: Oh", $A4, $F1
-    db "I'm disappointed", $A4, $FA, $F7
-    db $EF, $EE, "Come again if you", $EF, $EE, "want to spar.", $F7
-    db $F0
-
-Message_0C_F8:: ; heuristic: string; C0
-Data_086_68A7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: Want to", $F1
-    db "spar with me?", $FF, $F0
-
-Message_0C_F9:: ; heuristic: string; C0
-Data_086_68C8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Milayou: I lost", $A4, $F1
-    db "But, good battle!", $FA, $F7
-    db $EF, $EE, "Oh, I need to tell", $EF, $EE, "you this.", $FA, $F7
-    db $EF, $EE, "If you meet a boy", $EF, $EE, "named Terry,", $FA, $F7
-    db $EF, $EE, "please crush him", $EF, $EE, "in battle.", $FA, $F7
-    db $EF, $EE, "He's not anyone", $EF, $EE, "special, so you", $FA, $F7
-    db $EF, $EE, "can just destroy", $EF, $EE, "him. Promise!", $FA, $F7
-    db $EF, $EE, "I really should", $EF, $EE, "get going myself.", $FA, $F7
-    db $EF, $EE, "I hope we can meet", $EF, $EE, "again somewhere,", $FA, $F7
-    db $EF, $EE, "sometime. OK!", $EF, $EE, "Bye-bye!", $F7
-    db $F0
-
-Message_0C_FA:: ; heuristic: string; C0
-Data_086_6A00:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the oven.", $FA, $F7
-    db $EF, $EE, "A tantalizing", $EF, $EE, "aroma wafted out", $A4, $F7
-    db $F0
-
-Message_0C_FB:: ; heuristic: string; C0
-Data_086_6A3E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 tried to", $F1
-    db "open the chest.", $FA, $F7
-    db $EF, $EE, "But it was locked.", $EF, $EE, $F7
-    db $F0
-
-Message_0C_FC:: ; heuristic: string; C0
-Data_086_6A73:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the vase.", $FA, $F7
-    db $EF, $EE, "Cold water lapped", $EF, $EE, "and rippled.", $F7
-    db $F0
-
-Message_0C_FD:: ; heuristic: string; C0
-Data_086_6AB0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 peered into", $F1
-    db "the oven.", $FA, $F7
-    db $EF, $EE, "Meat sizzled on a", $EF, $EE, "skewer.", $F7
-    db $F0
-
-Message_0C_FE:: ; heuristic: string; C0
-Data_086_6AE8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 opened the", $F1
-    db "treasure chest.", $FA, $F7
-    db $EF, $EE, "It was crammed", $EF, $EE, "with treasures.", $FA, $F7
-    db $EF, $EE, "It appears to be", $EF, $EE, "loot taken from", $FA, $F7
-    db $EF, $EE, "the town.", $EF, $EE, $F7
-    db $F0
-
-Message_0C_FF:: ; heuristic: string; C0
-Data_086_6B5E:: ; address name
-    db $F0
-    ds $14A1, $00
+Message_0C_00::
+    db $ea, "*: This is the", $f1
+    db "Power Tower.", $fa, $f7
+    db $ef, $ee, "Are you the new", $ef, $ee, "challenger?", $fa, $f7
+    db $ef, $ee, "If you win, you'll", $ef, $ee, "earn many useful", $fa, $f7
+    db $ef, $ee, "accessories for", $ef, $ee, "your monsters.", $fa, $f7
+    db $ef, $ee, "Could you get them", $ef, $ee, "all?", $f7
+    db $f0
+
+Message_0C_01::
+    db $ea, "*: If you win,", $f1
+    db "you'll earn many", $fa, $f7
+    db $ef, $ee, "useful accessories", $ef, $ee, "for your monsters.", $fa, $f7
+    db $ef, $ee, "Could you get them", $ef, $ee, "all?", $f7
+    db $f0
+
+Message_0C_02::
+    db $ea, "*: Only a handful", $f1
+    db "of masters have", $fa, $f7
+    db $ef, $ee, "made it to the top", $ef, $ee, "of the Tower.", $fa, $f7
+    db $ef, $ee, "I tried, but the", $ef, $ee, "best I could do", $fa, $f7
+    db $ef, $ee, "was reach the", $ef, $ee, "fourth floor.", $f7
+    db $f0
+
+Message_0C_03::
+    db $ea, "*: The Tower's many", $f1
+    db "treasures are", $fa, $f7
+    db $ef, $ee, "heavily guarded by", $ef, $ee, "monsters, slurp.", $fa, $f7
+    db $ef, $ee, "They'll attack you", $ef, $ee, "all out, slurp.", $f7
+    db $f0
+
+Message_0C_04::
+    db $ea, "*: This is the", $f1
+    db "second floor-", $fa, $f7
+    db $ef, $ee, "the Whirlwind", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "Can you withstand", $ef, $ee, "our wind power?", $f7
+    db $f0
+
+Message_0C_05::
+    db $f0
+
+Message_0C_06::
+    db $f0
+
+Message_0C_07::
+    db $ea, "*: Not bad, not bad", $f1
+    db "at all.", $fa, $f7
+    db $ef, $ee, "Fine. Take the", $ef, $ee, "treasures.", $fa, $f7
+    db $ef, $ee, "The Clearwater", $ef, $ee, "Chamber is next.", $fa, $f7
+    db $ef, $ee, "Monsters that use", $ef, $ee, "water skills will", $fa, $f7
+    db $ef, $ee, "be waiting for", $ef, $ee, "you.", $f7
+    db $f0
+
+Message_0C_08::
+    db $ea, "*: This is the", $f1
+    db "third floor-", $fa, $f7
+    db $ef, $ee, "the Clearwater", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "If you belittle", $ef, $ee, "hydropower, you", $fa, $f7
+    db $ef, $ee, "will suffer for", $ef, $ee, "your ignorance!", $f7
+    db $f0
+
+Message_0C_09::
+    db $f0
+
+Message_0C_0A::
+    db $f0
+
+Message_0C_0B::
+    db $ea, "*: You're quite", $f1
+    db "good.", $fa, $f7
+    db $ef, $ee, "The treasures are", $ef, $ee, "yours to take.", $fa, $f7
+    db $ef, $ee, "Upstairs is the", $ef, $ee, "Blizzard Chamber.", $fa, $f7
+    db $ef, $ee, "It's very cold, so", $ef, $ee, "be careful.", $f7
+    db $f0
+
+Message_0C_0C::
+    db $ea, "*: This is the", $f1
+    db "fourth floor-", $fa, $f7
+    db $ef, $ee, "the Blizzard", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "I hope you're", $ef, $ee, "bundled up warm.", $fa, $f7
+    db $ef, $ee, "We'll freeze you", $ef, $ee, "solid!", $f7
+    db $f0
+
+Message_0C_0D::
+    db $f0
+
+Message_0C_0E::
+    db $f0
+
+Message_0C_0F::
+    db $ea, "*: Wow, aren't you", $f1
+    db "good.", $fa, $f7
+    db $ef, $ee, "Go ahead and take", $ef, $ee, "the treasures.", $fa, $f7
+    db $ef, $ee, "The Thunder", $ef, $ee, "Chamber's next.", $fa, $f7
+    db $ef, $ee, "You can always", $ef, $ee, "hear the sound of", $fa, $f7
+    db $ef, $ee, "crashing thunder.", $ef, $ee, "It's annoying!", $f7
+    db $f0
+
+Message_0C_10::
+    db $ea, "*: This is the", $f1
+    db "fifth floor-", $fa, $f7
+    db $ef, $ee, "the Thunder", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "Prepare for", $ef, $ee, "obliteration!", $f7
+    db $f0
+
+Message_0C_11::
+    db $f0
+
+Message_0C_12::
+    db $f0
+
+Message_0C_13::
+    db $ea, "*: Well done.", $f1
+    db "So it shall be.", $fa, $f7
+    db $ef, $ee, "You have bettered", $ef, $ee, "us in power.", $fa, $f7
+    db $ef, $ee, "The Tower's peak", $ef, $ee, "is next.", $fa, $f7
+    db $ef, $ee, "Monsters that use", $ef, $ee, "extreme heat stand", $fa, $f7
+    db $ef, $ee, "alert for your", $ef, $ee, "arrival.", $f7
+    db $f0
+
+Message_0C_14::
+    db $ea, "*: Well.", $f1
+    db "How impressive.", $fa, $f7
+    db $ef, $ee, "I must commend you", $ef, $ee, "for reaching me.", $fa, $f7
+    db $ef, $ee, "Well.", $ef, $ee, "Shall we begin?", $f7
+    db $f0
+
+Message_0C_15::
+    db $f0
+
+Message_0C_16::
+    db $ea, "*: Well.", $f1
+    db "How impressive.", $fa, $f7
+    db $ef, $ee, "Conquering the", $ef, $ee, "Power Tower.", $fa, $f7
+    db $ef, $ee, "It was built by a", $a4, $ef, $ee, "a great being.", $fa, $f7
+    db $ef, $ee, "He built other", $ef, $ee, "towers like this.", $fa, $f7
+    db $ef, $ee, "Do you possess all", $ef, $ee, "that is needed to", $fa, $f7
+    db $ef, $ee, "conquer them all?", $ef, $ee, "Well?", $fa, $f7
+    db $ef, $ee, "Take the treasures", $ef, $ee, "behind me.", $f7
+    db $f0
+
+Message_0C_17::
+    db $ea, "*: You've conquered", $f1
+    db "the Power Tower.", $fa, $f7
+    db $ef, $ee, "I hope you become", $ef, $ee, "a powerful master.", $f7
+    db $f0
+
+Message_0C_18::
+    db $ea, "*: This is the", $f1
+    db "Baffle Tower.", $fa, $f7
+    db $ef, $ee, "Are you the new", $ef, $ee, "challenger?", $fa, $f7
+    db $ef, $ee, "If you win, you'll", $ef, $ee, "earn many useful", $fa, $f7
+    db $ef, $ee, "accessories for", $ef, $ee, "your monsters.", $fa, $f7
+    db $ef, $ee, "Could you get them", $ef, $ee, "all?", $f7
+    db $f0
+
+Message_0C_19::
+    db $ea, "*: If you win,", $f1
+    db "you'll earn many", $fa, $f7
+    db $ef, $ee, "useful accessories", $ef, $ee, "for your monsters.", $fa, $f7
+    db $ef, $ee, "Could you get them", $ef, $ee, "all?", $f7
+    db $f0
+
+Message_0C_1A::
+    db $eb, "*: In this Tower,", $f1
+    db "your opponents", $fa, $f7
+    db $ef, $ee, "come at you with", $ef, $ee, "support skills", $fa, $f7
+    db $ef, $ee, "rather than all-", $ef, $ee, "out attacks.", $fa, $f7
+    db $ef, $ee, "My party was put", $ef, $ee, "to sleep, made to", $fa, $f7
+    db $ef, $ee, "dance", $a4, " All sorts", $ef, $ee, "of weird things.", $fa, $f7
+    db $ef, $ee, "It was a rotten", $ef, $ee, "time, I swear!", $f7
+    db $f0
+
+Message_0C_1B::
+    db $ea, "*: It's not that", $f1
+    db "easy to win here", $fa, $f7
+    db $ef, $ee, "by playing it fair", $ef, $ee, "and honorably.", $fa, $f7
+    db $ef, $ee, "You have to use", $ef, $ee, "your noggin to mix", $fa, $f7
+    db $ef, $ee, "and match skills", $ef, $ee, "for best effect.", $f7
+    db $f0
+
+Message_0C_1C::
+    db $ea, "*: This is the", $f1
+    db "second floor-", $fa, $f7
+    db $ef, $ee, "the Shackle", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "We'll disable your", $ef, $ee, "skills!", $f7
+    db $f0
+
+Message_0C_1D::
+    db $f0
+
+Message_0C_1E::
+    db $f0
+
+Message_0C_1F::
+    db $ea, "*: Well played.", $f1
+    db "I can't complain.", $fa, $f7
+    db $ef, $ee, "Fine. Take the", $ef, $ee, "treasures.", $fa, $f7
+    db $ef, $ee, "The Confusion", $ef, $ee, "Chamber is next.", $fa, $f7
+    db $ef, $ee, "Monsters that", $ef, $ee, "disable control", $fa, $f7
+    db $ef, $ee, "will stand in your", $ef, $ee, "way.", $f7
+    db $f0
+
+Message_0C_20::
+    db $ea, "*: This is the", $f1
+    db "third floor-", $fa, $f7
+    db $ef, $ee, "the Confusion", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "Let us gift you", $ef, $ee, "with a time of", $fa, $f7
+    db $ef, $ee, "dreaming", $a4, $ef, $ee, $f7
+    db $f0
+
+Message_0C_21::
+    db $f0
+
+Message_0C_22::
+    db $f0
+
+Message_0C_23::
+    db $ea, "*: Bravo. Take the", $f1
+    db "treasures.", $fa, $f7
+    db $ef, $ee, "Upstairs is the", $ef, $ee, "Fatigue Chamber.", $fa, $f7
+    db $ef, $ee, "I understand it is", $ef, $ee, "very tiresome.", $f7
+    db $f0
+
+Message_0C_24::
+    db $ea, "*: This is the", $f1
+    db "fourth floor-", $fa, $f7
+    db $ef, $ee, "the Fatigue", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "Let us put you to", $ef, $ee, "the test!", $f7
+    db $f0
+
+Message_0C_25::
+    db $f0
+
+Message_0C_26::
+    db $f0
+
+Message_0C_27::
+    db $ea, "*: Remarkable,", $f1
+    db "I must admit.", $fa, $f7
+    db $ef, $ee, "You have earned", $ef, $ee, "the treasures.", $fa, $f7
+    db $ef, $ee, "The Looting", $ef, $ee, "Chamber's next.", $fa, $f7
+    db $ef, $ee, "Monsters that", $ef, $ee, "steal your power", $fa, $f7
+    db $ef, $ee, "are what you will", $ef, $ee, "face.", $f7
+    db $f0
+
+Message_0C_28::
+    db $ea, "*: This is the", $f1
+    db "fifth floor-", $fa, $f7
+    db $ef, $ee, "the Looting", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "Could you battle", $ef, $ee, "without strength?", $f7
+    db $f0
+
+Message_0C_29::
+    db $f0
+
+Message_0C_2A::
+    db $f0
+
+Message_0C_2B::
+    db $ea, "*: You're quite", $f1
+    db "tough.", $fa, $f7
+    db $ef, $ee, "The treasures are", $ef, $ee, "yours to take.", $fa, $f7
+    db $ef, $ee, "The Tower's peak", $ef, $ee, "is next.", $fa, $f7
+    db $ef, $ee, "Monsters that use", $ef, $ee, "dangerous skills", $fa, $f7
+    db $ef, $ee, "are waiting for", $ef, $ee, "the worthy.", $f7
+    db $f0
+
+Message_0C_2C::
+    db $ea, "*: Ah, you have", $f1
+    db "impressed me.", $fa, $f7
+    db $ef, $ee, "It's rare to see", $ef, $ee, "anyone here.", $fa, $f7
+    db $ef, $ee, "Let the final", $ef, $ee, "battle begin", $a4, $f7
+    db $f0
+
+Message_0C_2D::
+    db $f0
+
+Message_0C_2E::
+    db $ea, "*: You are to be", $f1
+    db "commended for", $fa, $f7
+    db $ef, $ee, "conquering the", $ef, $ee, "Baffle Tower.", $fa, $f7
+    db $ef, $ee, "It was built by a", $a4, $ef, $ee, "a great being.", $fa, $f7
+    db $ef, $ee, "He built other", $ef, $ee, "towers like this.", $fa, $f7
+    db $ef, $ee, "If you wish to be", $ef, $ee, "a true master, it", $fa, $f7
+    db $ef, $ee, "is pointless to", $ef, $ee, "not conquer all", $fa, $f7
+    db $ef, $ee, "the towers made by", $ef, $ee, "the great being.", $f7
+    db $f0
+
+Message_0C_2F::
+    db $ea, "*: You've conquered", $f1
+    db "the Baffle Tower.", $fa, $f7
+    db $ef, $ee, "I hope you become", $ef, $ee, "a wise master.", $f7
+    db $f0
+
+Message_0C_30::
+    db $ea, "*: If you've made", $f1
+    db "it to this-the", $fa, $f7
+    db $ef, $ee, "Soul Tower-it", $ef, $ee, "must mean that", $fa, $f7
+    db $ef, $ee, "you've conquered", $ef, $ee, "the two other", $fa, $f7
+    db $ef, $ee, "Towers of Power", $ef, $ee, "and Baffle.", $fa, $f7
+    db $ef, $ee, "But even so, this", $ef, $ee, "Tower is terribly", $fa, $f7
+    db $ef, $ee, "tough. I hope", $ef, $ee, "you're ready.", $f7
+    db $f0
+
+Message_0C_31::
+    db $ea, "*: This Tower is", $f1
+    db "terribly tough.", $fa, $f7
+    db $ef, $ee, "I hope you're", $ef, $ee, "ready.", $f7
+    db $f0
+
+Message_0C_32::
+    db $ea, "*: The monsters", $f1
+    db "here are awful.", $fa, $f7
+    db $ef, $ee, "I'm losing my", $ef, $ee, "confidence", $a4, $fa, $f7
+    db $ef, $ee, "I heard a horrible", $ef, $ee, "racket from above.", $fa, $f7
+    db $ef, $ee, "It might be that", $ef, $ee, "one skill", $a4, $f7
+    db $f0
+
+Message_0C_33::
+    db $ea, "*: It's brutal up", $f1
+    db "ahead.", $fa, $f7
+    db $ef, $ee, "I wouldn't push my", $ef, $ee, "luck.", $fa, $f7
+    db $ef, $ee, "Beating the second", $ef, $ee, "floor monsters was", $fa, $f7
+    db $ef, $ee, "a serious ordeal,", $ef, $ee, "believe me.", $f7
+    db $f0
+
+Message_0C_34::
+    db $ea, "*: This is the", $f1
+    db "second floor.", $fa, $f7
+    db $ef, $ee, "This is the Life", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "I'm not powerful,", $ef, $ee, "but I am durable!", $f7
+    db $f0
+
+Message_0C_35::
+    db $f0
+
+Message_0C_36::
+    db $f0
+
+Message_0C_37::
+    db $ea, "*: You're quite", $f1
+    db "good at this.", $fa, $f7
+    db $ef, $ee, "Sure, take the", $ef, $ee, "treasures.", $fa, $f7
+    db $ef, $ee, "Upstairs is the", $ef, $ee, "Pain Chamber.", $fa, $f7
+    db $ef, $ee, "I don't like being", $ef, $ee, "hurt, so I really", $fa, $f7
+    db $ef, $ee, "hate going up", $ef, $ee, "there, yikes!", $f7
+    db $f0
+
+Message_0C_38::
+    db $ea, "*: This is the", $f1
+    db "third floor.", $fa, $f7
+    db $ef, $ee, "It's the Pain", $ef, $ee, "Chamber.", $fa, $f7
+    db $ef, $ee, "I'll tell you right", $ef, $ee, "now, it really", $fa, $f7
+    db $ef, $ee, "does hurt a lot in", $ef, $ee, "here! Here goes!", $f7
+    db $f0
+
+Message_0C_39::
+    db $f0
+
+Message_0C_3A::
+    db $f0
+
+Message_0C_3B::
+    db $ea, "*: You've shown me", $f1
+    db "your worth.", $fa, $f7
+    db $ef, $ee, "Go on, take the", $ef, $ee, "treasures.", $fa, $f7
+    db $ef, $ee, "The Healing", $ef, $ee, "Chamber is next.", $fa, $f7
+    db $ef, $ee, "Monsters skilled", $ef, $ee, "at healing are", $fa, $f7
+    db $ef, $ee, "eagerly waiting", $ef, $ee, "for you.", $f7
+    db $f0
+
+Message_0C_3C::
+    db $ea, "*: This is the", $f1
+    db "fourth floor.", $fa, $f7
+    db $ef, $ee, "The Healing", $ef, $ee, "Chamber it is!", $fa, $f7
+    db $ef, $ee, "The first thing", $ef, $ee, "you should know", $fa, $f7
+    db $ef, $ee, "is that attacking", $ef, $ee, "us is a waste.", $fa, $f7
+    db $ef, $ee, "Without further", $ef, $ee, "ado, let's begin.", $f7
+    db $f0
+
+Message_0C_3D::
+    db $f0
+
+Message_0C_3E::
+    db $f0
+
+Message_0C_3F::
+    db $ea, "*: Fine, we will", $f1
+    db "confer all the", $fa, $f7
+    db $ef, $ee, "treasures to you", $ef, $ee, "for your victory.", $fa, $f7
+    db $ef, $ee, "Up next is the", $ef, $ee, "Chaos Chamber.", $fa, $f7
+    db $ef, $ee, "The greatest of", $ef, $ee, "the destroyers", $fa, $f7
+    db $ef, $ee, "stand guard over", $ef, $ee, "the treasures.", $f7
+    db $f0
+
+Message_0C_40::
+    db $ea, "*: This is the", $f1
+    db "fifth floor.", $fa, $f7
+    db $ef, $ee, "Welcome to the", $ef, $ee, "Chaos Chamber.", $fa, $f7
+    db $ef, $ee, "Have you said your", $ef, $ee, "prayers?", $fa, $f7
+    db $ef, $ee, "We will come out", $ef, $ee, "at maximum power!", $f7
+    db $f0
+
+Message_0C_41::
+    db $f0
+
+Message_0C_42::
+    db $f0
+
+Message_0C_43::
+    db $ea, "*: All right.", $f1
+    db "Good enough.", $fa, $f7
+    db $ef, $ee, "The treasures are", $ef, $ee, "yours to take.", $fa, $f7
+    db $ef, $ee, "The Tower's peak", $ef, $ee, "is next.", $fa, $f7
+    db $ef, $ee, "The great being", $ef, $ee, "awaits you.", $f7
+    db $f0
+
+Message_0C_44::
+    db $ea, "*: Oh? Well, well,", $f1
+    db "you're the first", $fa, $f7
+    db $ef, $ee, "master to visit me", $ef, $ee, "in a long time.", $fa, $f7
+    db $ef, $ee, "But look at you!", $ef, $ee, "You're a child!", $fa, $f7
+    db $ef, $ee, "I'm the Grand", $ef, $ee, "Master.", $fa, $f7
+    db $ef, $ee, "I built this", $ef, $ee, "Tower.", $fa, $f7
+    db $ef, $ee, "I've been waiting", $ef, $ee, "for strong masters", $fa, $f7
+    db $ef, $ee, "to come ever since", $ef, $ee, "then.", $fa, $f7
+    db $ef, $ee, "Please, show me", $ef, $ee, "what you can do!", $f7
+    db $f0
+
+Message_0C_45::
+    db $ea, "*: Hello! You've", $f1
+    db "come back!", $fa, $f7
+    db $ef, $ee, "Are you feeling", $ef, $ee, "lucky?", $fa, $f7
+    db $ef, $ee, "Then, let's start!", $ef, $ee, "Here we go!", $f7
+    db $f0
+
+Message_0C_46::
+    db $ea, "*: You are good!", $f1
+    db "I like you!", $fa, $f7
+    db $ef, $ee, "You've conquered", $ef, $ee, "all three Towers-", $fa, $f7
+    db $ef, $ee, "Power, Baffle and", $ef, $ee, "this, Soul Tower.", $fa, $f7
+    db $ef, $ee, "You're certain to", $ef, $ee, "get even better.", $fa, $f7
+    db $ef, $ee, "I want you to have", $ef, $ee, "some gifts!", $f7
+    db $f0
+
+Message_0C_47::
+    db $ea, "*: You've conquered", $f1
+    db "the Soul Tower.", $fa, $f7
+    db $ef, $ee, "I hope you'll keep", $ef, $ee, "working towards", $fa, $f7
+    db $ef, $ee, "becoming the best", $ef, $ee, "master ever.", $f7
+    db $f0
+
+Message_0C_48::
+    db $f9, "0 checked the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, "The treasure chest", $ef, $ee, "was a Mimic!", $f7
+    db $f0
+
+Message_0C_49::
+    db $f9, "0 checked the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, "It was a Mimic!", $ef, $ee, "It began to talk.", $f7
+    db $f0
+
+Message_0C_4A::
+    db $ea, "*: Lightning when", $f1
+    db "wet is dangerous!", $f7
+    db $f0
+
+Message_0C_4B::
+    db $ea, "*: When it's cold,", $f1
+    db "fire's the answer!", $f7
+    db $f0
+
+Message_0C_4C::
+    db $ea, "*: Electric jolts", $f1
+    db "are good at times.", $f7
+    db $f0
+
+Message_0C_4D::
+    db $ea, "*: Hot! Hot!", $f1
+    db "Burning up!", $f7
+    db $f0
+
+Message_0C_4E::
+    db $ea, "*: What to do if we", $f1
+    db "are all in danger", $a4, $f7
+    db $f0
+
+Message_0C_4F::
+    db $ea, "*: Sweets are good", $f1
+    db "cheap energy!", $f7
+    db $f0
+
+Message_0C_50::
+    db $ea, "*: Overconfidence", $f1
+    db "is a trap.", $f7
+    db $f0
+
+Message_0C_51::
+    db $ea, "*: I'm scared", $a4, $f1
+    db "Terrified, even", $a4, $f7
+    db $f0
+
+Message_0C_52::
+    db $ea, "*: If it hurts,", $f1
+    db "heal it.", $f7
+    db $f0
+
+Message_0C_53::
+    db $ea, "*: Good health", $f1
+    db "above all.", $f7
+    db $f0
+
+Message_0C_54::
+    db $ea, "*: Pow! Ka-pow!", $f1
+    db "Big trouble!", $f7
+    db $f0
+
+Message_0C_55::
+    db $ea, "*: Young master", $a4, $f1
+    db "The final test", $a4, $f7
+    db $f0
+
+Message_0C_56::
+    db $eb, "*: Really! Wow!", $f1
+    db "You're the first", $fa, $f7
+    db $ef, $ee, "human that I've", $ef, $ee, "ever met!", $fa, $f7
+    db $ef, $ee, "Wow, a human is", $ef, $ee, "pretty cute!", $fa, $f7
+    db $ef, $ee, "Don't you think so,", $ef, $ee, "big brother?", $f7
+    db $f0
+
+Message_0C_57::
+    db $eb, "*: Oh, don't lie!", $f1
+    db "You don't look", $fa, $f7
+    db $ef, $ee, "like an elf or a", $ef, $ee, "monster at all!", $fa, $f7
+    db $ef, $ee, "You really are a", $ef, $ee, "human, aren't you?", $ff, $f0
+
+Message_0C_58::
+    db $ea, "*: What is it, you", $f1
+    db "little brat?", $fa, $f7
+    db $ef, $ee, "Did you come to", $ef, $ee, "get creamed too?", $fa, $f7
+    db $ef, $ee, "That town is full", $ef, $ee, "of the idle rich.", $fa, $f7
+    db $ef, $ee, "Their treasures", $ef, $ee, "are there for the", $fa, $f7
+    db $ef, $ee, "taking, so I took", $ef, $ee, "them.", $fa, $f7
+    db $ef, $ee, "I was going to", $ef, $ee, "sell it off and", $fa, $f7
+    db $ef, $ee, "make some serious", $ef, $ee, "money.", $fa, $f7
+    db $ef, $ee, "But a brat like", $ef, $ee, "you comes along!", $fa, $f7
+    db $ef, $ee, "I can still make", $ef, $ee, "this work", $a4, $fa, $f7
+    db $ef, $ee, "If I don't let you", $ef, $ee, "go alive!", $f7
+    db $f0
+
+Message_0C_DF::
+    db $ea, "*: What is it, you", $f1
+    db "little brat?", $fa, $f7
+    db $ef, $ee, "Back to get", $ef, $ee, "creamed again?", $fa, $f7
+    db $ef, $ee, "I won't let you go", $ef, $ee, "alive this time!", $f7
+    db $f0
+
+Message_0C_E0::
+    db $ea, "*: But", $a4, " No! I lost", $f1
+    db "to this brat?", $f7
+    db $f0
+
+Message_0C_E1::
+    db $eb, "Milayou: You are", $f1
+    db "really special.", $fa, $f7
+    db $ef, $ee, "I couldn't do a", $ef, $ee, "thing against him", $a4, $fa, $f7
+    db $ef, $ee, "I'll have to train", $ef, $ee, "that much harder", $a4, $fa, $f7
+    db $ef, $ee, "I'll be no match", $ef, $ee, "for my kid brother", $fa, $f7
+    db $ef, $ee, "if  I don't apply", $ef, $ee, "myself better.", $fa, $f7
+    db $ef, $ee, "I'll wait for you", $ef, $ee, "in town!", $f7
+    db $f0
+
+Message_0C_E2::
+    db $ea, "*: Welcome to the", $f1
+    db "town of Miagen.", $fa, $f7
+    db $ef, $ee, "We're proud of our", $ef, $ee, "affluence here!", $f7
+    db $f0
+
+Message_0C_E3::
+    db $eb, "*: So you defeated", $f1
+    db "the evildoer?", $f7
+    db $f0
+
+Message_0C_E4::
+    db $ea, "*: Wow, you have", $f1
+    db "monsters! Wicked!", $fa, $f7
+    db $ef, $ee, "They beat the bad", $ef, $ee, "guy, didn't they?", $f7
+    db $f0
+
+Message_0C_E5::
+    db $eb, "*: Your monsters", $f1
+    db "are good, it's", $fa, $f7
+    db $ef, $ee, "plain to see.", $ef, $ee, "I like them!", $f7
+    db $f0
+
+Message_0C_E6::
+    db $ea, "*: So there are", $f1
+    db "evil masters", $a4, $fa, $f7
+    db $ef, $ee, "Oh, but you're not", $ef, $ee, "one of those.", $f7
+    db $f0
+
+Message_0C_E7::
+    db $eb, "*: Controlling", $f1
+    db "monsters is no", $fa, $f7
+    db $ef, $ee, "easy feat, is it?", $ef, $ee, "I'm so in awe!", $fa, $f7
+    db $ef, $ee, "You've brought", $ef, $ee, "peace to us!", $f7
+    db $f0
+
+Message_0C_E8::
+    db $ea, "*: I thank you in", $f1
+    db "all sincerity!", $f7
+    db $f0
+
+Message_0C_E9::
+    db $eb, "*: The atmosphere", $f1
+    db "has cheered up,", $fa, $f7
+    db $ef, $ee, "thanks to your", $ef, $ee, "crime busting.", $fa, $f7
+    db $ef, $ee, "It gives me hope", $ef, $ee, "to live another", $fa, $f7
+    db $ef, $ee, "one hundred years!", $ef, $ee, $f7
+    db $f0
+
+Message_0C_EA::
+    db $ea, "*: I long to have a", $f1
+    db "family of my own.", $fa, $f7
+    db $ef, $ee, "I wish I was", $ef, $ee, "married", $a4, $f7
+    db $f0
+
+Message_0C_EB::
+    db $eb, "*: Old people say", $f1
+    db "that a cheerful", $fa, $f7
+    db $ef, $ee, "town is a good", $ef, $ee, "town. I agree!", $f7
+    db $f0
+
+Message_0C_EC::
+    db $ea, "*: Monsters can be", $f1
+    db "good or evil on", $fa, $f7
+    db $ef, $ee, "the whims of their", $ef, $ee, "masters, I guess.", $f7
+    db $f0
+
+Message_0C_ED::
+    db $eb, "*: The thief was", $f1
+    db "selling what he", $fa, $f7
+    db $ef, $ee, "stole from us for", $ef, $ee, "a lot of gold.", $fa, $f7
+    db $ef, $ee, "But why would he", $ef, $ee, "steal my clothes?", $fa, $f7
+    db $ef, $ee, "Were they valuable", $ef, $ee, "because they were", $fa, $f7
+    db $ef, $ee, "mine? I'm not sure", $ef, $ee, "I want to know", $a4, $f7
+    db $f0
+
+Message_0C_EE::
+    db $ea, "*: It sure was a", $f1
+    db "thrilling time", $fa, $f7
+    db $ef, $ee, "when the thief was", $ef, $ee, "roving around.", $f7
+    db $f0
+
+Message_0C_EF::
+    db $eb, "Milayou: I asked", $f1
+    db "for your support", $fa, $f7
+    db $ef, $ee, "to capture that", $ef, $ee, "thief", $a4, $fa, $f7
+    db $ef, $ee, "But you ended up", $ef, $ee, "doing it all.", $fa, $f7
+    db $ef, $ee, "I'm sorry, and", $ef, $ee, "thank you.", $fa, $f7
+    db $ef, $ee, "Oh? You're from", $ef, $ee, "GreatLog?", $fa, $f7
+    db $ef, $ee, "And you've won", $ef, $ee, "tournaments.", $fa, $f7
+    db $ef, $ee, "Well, no wonder", $ef, $ee, "you're strong.", $fa, $f7
+    db $ef, $ee, "How is Kameha,", $ef, $ee, "by the way?", $f7
+    db $f0
+
+Message_0C_F0::
+    db $eb, "Milayou: How do I", $f1
+    db "know about him?", $fa, $f7
+    db $ef, $ee, "Well", $a4, $ef, $ee, "That's a secret!", $f7
+    db $f0
+
+Message_0C_F1::
+    db $eb, "Milayou: You've", $f1
+    db "inspired me to try", $fa, $f7
+    db $ef, $ee, "harder in my", $ef, $ee, "training.", $fa, $f7
+    db $ef, $ee, "I hope we can", $ef, $ee, "battle some day!", $f7
+    db $f0
+
+Message_0C_F2::
+    db $ea, "*: That merchant,", $f1
+    db "he was a thief.", $fa, $f7
+    db $ef, $ee, "In one way he has", $ef, $ee, "my admiration.", $fa, $f7
+    db $ef, $ee, "His bad deeds", $ef, $ee, "escaped my notice!", $f7
+    db $f0
+
+Message_0C_F3::
+    db $ea, "*: People say you", $f1
+    db "can't judge people", $fa, $f7
+    db $ef, $ee, "by appearances", $a4, $ef, $ee, "But that thieving", $fa, $f7
+    db $ef, $ee, "merchant", $a4, " He had", $ef, $ee, "the bad guy look!", $f7
+    db $f0
+
+Message_0C_F4::
+    db $eb, "*: That greedy", $f1
+    db "hound of a dealer", $fa, $f7
+    db $ef, $ee, "was behind those", $ef, $ee, "monsters", $a4, $fa, $f7
+    db $ef, $ee, "But to be caught", $ef, $ee, "out by selling", $fa, $f7
+    db $ef, $ee, "what he stole", $a4, $ef, $ee, "He's not what I", $fa, $f7
+    db $ef, $ee, "call a criminal", $ef, $ee, "mastermind.", $f7
+    db $f0
+
+Message_0C_F5::
+    db $eb, "Milayou: I knew", $f1
+    db "you", $44, " come back!", $fa, $f7
+    db $ef, $ee, "I've trained hard", $ef, $ee, "since we last met.", $fa, $f7
+    db $ef, $ee, "Would you like to", $ef, $ee, "spar with me?", $ff, $f0
+
+Message_0C_F6::
+    db $eb, "Milayou: Great!", $f1
+    db "No holding back!", $f7
+    db $f0
+
+Message_0C_F7::
+    db $eb, "Milayou: Oh", $a4, $f1
+    db "I'm disappointed", $a4, $fa, $f7
+    db $ef, $ee, "Come again if you", $ef, $ee, "want to spar.", $f7
+    db $f0
+
+Message_0C_F8::
+    db $eb, "Milayou: Want to", $f1
+    db "spar with me?", $ff, $f0
+
+Message_0C_F9::
+    db $eb, "Milayou: I lost", $a4, $f1
+    db "But, good battle!", $fa, $f7
+    db $ef, $ee, "Oh, I need to tell", $ef, $ee, "you this.", $fa, $f7
+    db $ef, $ee, "If you meet a boy", $ef, $ee, "named Terry,", $fa, $f7
+    db $ef, $ee, "please crush him", $ef, $ee, "in battle.", $fa, $f7
+    db $ef, $ee, "He's not anyone", $ef, $ee, "special, so you", $fa, $f7
+    db $ef, $ee, "can just destroy", $ef, $ee, "him. Promise!", $fa, $f7
+    db $ef, $ee, "I really should", $ef, $ee, "get going myself.", $fa, $f7
+    db $ef, $ee, "I hope we can meet", $ef, $ee, "again somewhere,", $fa, $f7
+    db $ef, $ee, "sometime. OK!", $ef, $ee, "Bye-bye!", $f7
+    db $f0
+
+Message_0C_FA::
+    db $f9, "0 peered into", $f1
+    db "the oven.", $fa, $f7
+    db $ef, $ee, "A tantalizing", $ef, $ee, "aroma wafted out", $a4, $f7
+    db $f0
+
+Message_0C_FB::
+    db $f9, "0 tried to", $f1
+    db "open the chest.", $fa, $f7
+    db $ef, $ee, "But it was locked.", $ef, $ee, $f7
+    db $f0
+
+Message_0C_FC::
+    db $f9, "0 peered into", $f1
+    db "the vase.", $fa, $f7
+    db $ef, $ee, "Cold water lapped", $ef, $ee, "and rippled.", $f7
+    db $f0
+
+Message_0C_FD::
+    db $f9, "0 peered into", $f1
+    db "the oven.", $fa, $f7
+    db $ef, $ee, "Meat sizzled on a", $ef, $ee, "skewer.", $f7
+    db $f0
+
+Message_0C_FE::
+    db $f9, "0 opened the", $f1
+    db "treasure chest.", $fa, $f7
+    db $ef, $ee, "It was crammed", $ef, $ee, "with treasures.", $fa, $f7
+    db $ef, $ee, "It appears to be", $ef, $ee, "loot taken from", $fa, $f7
+    db $ef, $ee, "the town.", $ef, $ee, $f7
+    db $f0
+
+Message_0C_FF::
+    db $f0
+    ds $14a1, $00

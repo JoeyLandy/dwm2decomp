@@ -1,17 +1,12 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
-; only called from SendSGBPaletteSetPacket (E-0047)
-; 1 call site from 1 routine (e.g. SendSGBPaletteSetPacket)
-; reads: wSGBActive, wSGBPacketIndex
-; points at: wSGBPacketBuffer
 SendSGBPaletteSetPacket_WaitSGBActive::
-Func_017_4001:: ; address name
     ld a, [wSGBActive]
-    or a, a
+    or a
     ret z
     ld a, [wSGBPacketIndex]
-    cp a, $FF
+    cp $ff
     jr nz, .skip
     ld hl, wSGBPacketBuffer
     jr .skip2
@@ -30,7 +25,7 @@ Func_017_4001:: ; address name
 
 .skip2:
     ld a, [hl]
-    and a, $07
+    and $07
     ret z
     ld b, a
     ld c, $00
@@ -45,7 +40,7 @@ Func_017_4001:: ; address name
 
 .loop:
     ld e, $08
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
 
 .loop2:
@@ -73,10 +68,8 @@ Func_017_4001:: ; address name
     call SpinDelay
     jr .skip3
 
-; address loaded by SendSGBPaletteSetPacket_WaitSGBActive
-SendSGBPaletteSetPacket_WaitSGBActive_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_017_4055:: ; address name
-    db $FF, $40, $0F, $41
+SendSGBPaletteSetPacket_WaitSGBActive_Data::
+    db $ff, $40, $0f, $41
     dw PointerRun_17_4059_Entry00
     dw PointerRun_17_4059_Entry01
     dw PointerRun_17_4059_Entry02
@@ -97,93 +90,71 @@ Data_017_4055:: ; address name
     dw PointerRun_17_4059_Entry11
     dw PointerRun_17_4059_Entry12
 
-PointerRun_17_4059_Entry00:: ; heuristic: target of a monotone pointer table; C0
-Data_017_407F:: ; address name
-    db $79, $5D, $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry00::
+    db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry01:: ; heuristic: target of a monotone pointer table; C0
-Data_017_408F:: ; address name
-    db $79, $52, $08, $00, $0B, $A9, $E7, $9F, $01, $C0, $7E, $E8, $E8, $E8, $E8, $E0
+PointerRun_17_4059_Entry01::
+    db $79, $52, $08, $00, $0b, $a9, $e7, $9f, $01, $c0, $7e, $e8, $e8, $e8, $e8, $e0
 
-PointerRun_17_4059_Entry02:: ; heuristic: target of a monotone pointer table; C0
-Data_017_409F:: ; address name
-    db $79, $47, $08, $00, $0B, $C4, $D0, $16, $A5, $CB, $C9, $05, $D0, $10, $A2, $28
+PointerRun_17_4059_Entry02::
+    db $79, $47, $08, $00, $0b, $c4, $d0, $16, $a5, $cb, $c9, $05, $d0, $10, $a2, $28
 
-PointerRun_17_4059_Entry03:: ; heuristic: target of a monotone pointer table; C0
-Data_017_40AF:: ; address name
-    db $79, $3C, $08, $00, $0B, $F0, $12, $A5, $C9, $C9, $C8, $D0, $1C, $A5, $CA, $C9
+PointerRun_17_4059_Entry03::
+    db $79, $3c, $08, $00, $0b, $f0, $12, $a5, $c9, $c9, $c8, $d0, $1c, $a5, $ca, $c9
 
-PointerRun_17_4059_Entry04:: ; heuristic: target of a monotone pointer table; C0
-Data_017_40BF:: ; address name
-    db $79, $31, $08, $00, $0B, $0C, $A5, $CA, $C9, $7E, $D0, $06, $A5, $CB, $C9, $7E
+PointerRun_17_4059_Entry04::
+    db $79, $31, $08, $00, $0b, $0c, $a5, $ca, $c9, $7e, $d0, $06, $a5, $cb, $c9, $7e
 
-PointerRun_17_4059_Entry05:: ; heuristic: target of a monotone pointer table; C0
-Data_017_40CF:: ; address name
-    db $79, $26, $08, $00, $0B, $39, $CD, $48, $0C, $D0, $34, $A5, $C9, $C9, $80, $D0
+PointerRun_17_4059_Entry05::
+    db $79, $26, $08, $00, $0b, $39, $cd, $48, $0c, $d0, $34, $a5, $c9, $c9, $80, $d0
 
-PointerRun_17_4059_Entry06:: ; heuristic: target of a monotone pointer table; C0
-Data_017_40DF:: ; address name
-    db $79, $1B, $08, $00, $0B, $EA, $EA, $EA, $EA, $EA, $A9, $01, $CD, $4F, $0C, $D0
+PointerRun_17_4059_Entry06::
+    db $79, $1b, $08, $00, $0b, $ea, $ea, $ea, $ea, $ea, $a9, $01, $cd, $4f, $0c, $d0
 
-PointerRun_17_4059_Entry07:: ; heuristic: target of a monotone pointer table; C0
-Data_017_40EF:: ; address name
-    db $79, $10, $08, $00, $0B, $4C, $20, $08, $EA, $EA, $EA, $EA, $EA, $60, $EA, $EA
-    db $B9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $B9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry07::
+    db $79, $10, $08, $00, $0b, $4c, $20, $08, $ea, $ea, $ea, $ea, $ea, $60, $ea, $ea
+    db $b9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $b9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry08:: ; heuristic: target of a monotone pointer table; C0
-Data_017_411F:: ; address name
+PointerRun_17_4059_Entry08::
     db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry09:: ; heuristic: target of a monotone pointer table; C0
-Data_017_412F:: ; address name
+PointerRun_17_4059_Entry09::
     db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0A:: ; heuristic: target of a monotone pointer table; C0
-Data_017_413F:: ; address name
+PointerRun_17_4059_Entry0A::
     db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0B:: ; heuristic: target of a monotone pointer table; C0
-Data_017_414F:: ; address name
-    db $A9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry0B::
+    db $a9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0C:: ; heuristic: target of a monotone pointer table; C0
-Data_017_415F:: ; address name
-    db $51, $00, $00, $01, $00, $02, $00, $03, $00, $C0, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry0C::
+    db $51, $00, $00, $01, $00, $02, $00, $03, $00, $c0, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0D:: ; heuristic: target of a monotone pointer table; C0
-Data_017_416F:: ; address name
-    db $A1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry0D::
+    db $a1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0E:: ; heuristic: target of a monotone pointer table; C0
-Data_017_417F:: ; address name
+PointerRun_17_4059_Entry0E::
     db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0F:: ; heuristic: target of a monotone pointer table; C0
-Data_017_418F:: ; address name
+PointerRun_17_4059_Entry0F::
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry10:: ; heuristic: target of a monotone pointer table; C0
-Data_017_419F:: ; address name
-    db $C9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry10::
+    db $c9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry11:: ; heuristic: target of a monotone pointer table; C0
-Data_017_41AF:: ; address name
+PointerRun_17_4059_Entry11::
     db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry12:: ; heuristic: target of a monotone pointer table; C0
-Data_017_41BF:: ; address name
-    db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+PointerRun_17_4059_Entry12::
+    db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wSGBPaletteSet] (also kept in wSGBPaletteNum0Lo), attribute file wSGBAttrFile | $80, loads the object palettes and sends it (E-0125)
-; 9 call sites from 9 routines (e.g. BootAndMainLoop, GameMode1_Init, GameMode5_Init_InitSoundHardware, GameMode5_Init_SendSGBPaletteSetPacket, ...)
-; reads: wSGBActive, wSGBPaletteSet, wTemp0, wSGBAttrFile
-; writes: wSGBPacketBuffer, wTemp0, wSGBPacketIndex
-; points at: wSGBPaletteNum0Lo
+; when the Super Game Boy is active, builds a PAL_SET ($51) packet from
+; SGBPaletteSets[wSGBPaletteSet] (also kept in wSGBPaletteNum0Lo), attribute file wSGBAttrFile |
+; $80, loads the object palettes and sends it (E-0125)
 SendSGBPaletteSetPacket::
-Func_017_41CF:: ; address name
     ld a, [wSGBActive]
-    or a, a
+    or a
     ret z
     call ClearSGBPacketBuffer
     ld a, $51
@@ -202,7 +173,7 @@ Func_017_41CF:: ; address name
     ld [wTemp0], a
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ld [bc], a
     inc de
@@ -212,23 +183,22 @@ Func_017_41CF:: ; address name
     ld [wTemp0], a
     jr nz, .loop
     ld a, [wSGBAttrFile]
-    or a, $80
+    or $80
     ld [de], a
     call LoadSGBObjectPalettesFromPointers
-    ld a, $FF
+    ld a, $ff
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPaletteSetPacket_WaitSGBActive
     call SpinDelay
     ret
 
-; when the Super Game Boy is active, converts the four palettes pointed to by wSGBPaletteNum0Lo-wSGBPaletteNum3Hi into wOBJPaletteBuffer, wOBJPaletteBuffer + $8, wOBJPaletteBuffer + $10 and wOBJPaletteBuffer + $18 (Func_017_4258) (E-0121)
-; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, SendSGBFieldPaletteSet, GameMode5_Init_LoadSGBObjectPalettesFromPointers, ResetLinkScreenPalettes, ...)
-; reads: wSGBActive, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, ...
-; points at: wOBJPaletteBuffer
+; when the Super Game Boy is active, converts the four palettes pointed to by
+; wSGBPaletteNum0Lo-wSGBPaletteNum3Hi into wOBJPaletteBuffer, wOBJPaletteBuffer + $8,
+; wOBJPaletteBuffer + $10 and wOBJPaletteBuffer + $18
+; (LoadSGBObjectPalettesFromPointers_CopyPaletteEntry) (E-0121)
 LoadSGBObjectPalettesFromPointers::
-Func_017_421A:: ; address name
     ld a, [wSGBActive]
-    or a, a
+    or a
     ret z
     ld a, [wSGBPaletteNum0Lo]
     ld l, a
@@ -257,32 +227,32 @@ Func_017_421A:: ; address name
     ret
 
 ; copies the 8 bytes at $446C + 8 * HL to DE
-; 4 call sites from 1 routine (e.g. LoadSGBObjectPalettesFromPointers)
 LoadSGBObjectPalettesFromPointers_CopyPaletteEntry::
-Func_017_4258:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $6C
+    add $6c
     ld l, a
     ld a, h
-    adc a, $44
+    adc $44
     ld h, a
     ld c, $08
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec c
     jr nz, .loop
     ret
 
-; E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not).
+; SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51)
+; packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file
+; wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the
+; words after them do not (E-0178, C1)
 ; record: four SGB system palette numbers for PAL_SET
 SGBPaletteSets::
-Data_017_426C:: ; address name
     dw 0, 1, 2, 3 ; id 0
     dw 4, 5, 6, 7 ; id 1
     dw 8, 9, 10, 11 ; id 2
@@ -347,47 +317,48 @@ Data_017_426C:: ; address name
     dw 244, 245, 246, 247 ; id 61
     dw 248, 249, 250, 251 ; id 62
     dw 252, 253, 254, 255 ; id 63
-    db $DE, $6F, $1F, $33, $3C, $12, $00, $00, $DE, $6F, $1F, $33, $3C, $12, $00, $00
-    db $DE, $6F, $1F, $33, $3C, $12, $00, $00, $DE, $6F, $1F, $33, $3C, $12, $00, $00
+    db $de, $6f, $1f, $33, $3c, $12, $00, $00, $de, $6f, $1f, $33, $3c, $12, $00, $00
+    db $de, $6f, $1f, $33, $3c, $12, $00, $00, $de, $6f, $1f, $33, $3c, $12, $00, $00
 
-; LZSS-compressed asset: 7 bytes expand to 90 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Gfx_17_448C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_448C:: ; address name
-    db $5A, $00, $01, $01, $A0, $FF, $47
+; LZSS-compressed: 7 bytes that expand to 90 (E-0016, E-0017)
+Gfx_17_448C::
+    db $5a, $00, $01, $01, $a0, $ff, $47
 
-; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 3015 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder0TilesA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_4493:: ; address name
+; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 3015 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
+; E-0016/E-0017; C1)
+SGBBorder0TilesA::
     INCBIN "dwm2-cobi-us.gbc", $05C493, $BC7
 
-; Super Game Boy border set 0: border tiles $80-$FF (4096 bytes, packet set $11); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 2729 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder0TilesB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_505A:: ; address name
+; Super Game Boy border set 0: border tiles $80-$FF (4096 bytes, packet set $11);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 2729 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
+; E-0016/E-0017; C1)
+SGBBorder0TilesB::
     INCBIN "dwm2-cobi-us.gbc", $05D05A, $AA9
 
-; Super Game Boy border set 0: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 989 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder0MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_5B03:: ; address name
+; Super Game Boy border set 0: border map and palettes ($880 bytes, packet set $0F);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed: 989 bytes that expand to 2176 (E-0016, E-0017)
+SGBBorder0MapAndPalettes::
     INCBIN "dwm2-cobi-us.gbc", $05DB03, $3DD
 
-; Super Game Boy border set 1: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 710 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder1MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_5EE0:: ; address name
+; Super Game Boy border set 1: border map and palettes ($880 bytes, packet set $0F);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed: 710 bytes that expand to 2176 (E-0016, E-0017)
+SGBBorder1MapAndPalettes::
     INCBIN "dwm2-cobi-us.gbc", $05DEE0, $2C6
 
-; Super Game Boy border set 2: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 949 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder2MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_61A6:: ; address name
+; Super Game Boy border set 2: border map and palettes ($880 bytes, packet set $0F);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed: 949 bytes that expand to 2176 (E-0016, E-0017)
+SGBBorder2MapAndPalettes::
     INCBIN "dwm2-cobi-us.gbc", $05E1A6, $3B5
 
-; Super Game Boy border set 3: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
-; LZSS-compressed asset: 989 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-SGBBorder3MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
-Data_017_655B:: ; address name
+; Super Game Boy border set 3: border map and palettes ($880 bytes, packet set $0F);
+; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed: 989 bytes that expand to 2176 (E-0016, E-0017)
+SGBBorder3MapAndPalettes::
     INCBIN "dwm2-cobi-us.gbc", $05E55B, $3DD
-    ds $16C8, $00
+    ds $16c8, $00

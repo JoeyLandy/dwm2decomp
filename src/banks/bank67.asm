@@ -1,10 +1,11 @@
 SECTION "Bank 67", ROMX[$4000], BANK[$67]
     db $67
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
+; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup00::
-Data_067_4001:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
@@ -38,16 +39,12 @@ Data_067_4001:: ; address name
     dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
+; a permutation of the sub-chunk numbers (E-0146)
 ; record: sub-chunk order
 KeyWorldChunkGroup00Order::
-Data_067_4061:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup01::
-Data_067_4062:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_55DC ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -81,16 +78,10 @@ Data_067_4062:: ; address name
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup01Order::
-Data_067_40C2:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup02::
-Data_067_40C3:: ; address name
     dfar KeyWorldScreenHeader_66_5477 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 2: 8-byte header, then the compressed tile map
@@ -124,16 +115,10 @@ Data_067_40C3:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup02Order::
-Data_067_4123:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup03::
-Data_067_4124:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -167,16 +152,10 @@ Data_067_4124:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup03Order::
-Data_067_4184:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup04::
-Data_067_4185:: ; address name
     dfar KeyWorldScreenHeader_66_5705 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -210,16 +189,10 @@ Data_067_4185:: ; address name
     dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y2X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup04Order::
-Data_067_41E5:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup05::
-Data_067_41E6:: ; address name
     dfar KeyWorldScreenHeader_66_5705 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_743F ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 2: 8-byte header, then the compressed tile map
@@ -253,16 +226,10 @@ Data_067_41E6:: ; address name
     dfar KeyWorld05_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup05Order::
-Data_067_4246:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup06::
-Data_067_4247:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6808 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
@@ -296,16 +263,10 @@ Data_067_4247:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup06Order::
-Data_067_42A7:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup07::
-Data_067_42A8:: ; address name
     dfar KeyWorldScreenHeader_66_596B ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -339,16 +300,10 @@ Data_067_42A8:: ; address name
     dfar KeyWorld07_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup07Order::
-Data_067_4308:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup08::
-Data_067_4309:: ; address name
     dfar KeyWorldScreenHeader_66_5560 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7641 ; screen 2: 8-byte header, then the compressed tile map
@@ -382,16 +337,10 @@ Data_067_4309:: ; address name
     dfar KeyWorld05_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld08_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup08Order::
-Data_067_4369:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup09::
-Data_067_436A:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -425,16 +374,10 @@ Data_067_436A:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup09Order::
-Data_067_43CA:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0A::
-Data_067_43CB:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -468,16 +411,10 @@ Data_067_43CB:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0AOrder::
-Data_067_442B:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0B::
-Data_067_442C:: ; address name
     dfar KeyWorldScreenHeader_66_5658 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -511,16 +448,10 @@ Data_067_442C:: ; address name
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0BOrder::
-Data_067_448C:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0C::
-Data_067_448D:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -554,16 +485,10 @@ Data_067_448D:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld08_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0COrder::
-Data_067_44ED:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0D::
-Data_067_44EE:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5705 ; screen 2: 8-byte header, then the compressed tile map
@@ -597,16 +522,10 @@ Data_067_44EE:: ; address name
     dfar KeyWorld05_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld02_0_Y2X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0DOrder::
-Data_067_454E:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0E::
-Data_067_454F:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_596B ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -640,16 +559,10 @@ Data_067_454F:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0EOrder::
-Data_067_45AF:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0F::
-Data_067_45B0:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -683,16 +596,12 @@ Data_067_45B0:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup0FOrder::
-Data_067_4610:: ; address name
     db $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
 KeyWorldChunkGroup10::
-Data_067_4611:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6808 ; screen 2: 8-byte header, then the compressed tile map
@@ -758,16 +667,10 @@ Data_067_4611:: ; address name
     dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup10Order::
-Data_067_46D1:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup11::
-Data_067_46D3:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 2: 8-byte header, then the compressed tile map
@@ -833,16 +736,10 @@ Data_067_46D3:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup11Order::
-Data_067_4793:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup12::
-Data_067_4795:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 2: 8-byte header, then the compressed tile map
@@ -908,16 +805,10 @@ Data_067_4795:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup12Order::
-Data_067_4855:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup13::
-Data_067_4857:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
@@ -983,16 +874,10 @@ Data_067_4857:: ; address name
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup13Order::
-Data_067_4917:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup14::
-Data_067_4919:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -1058,16 +943,10 @@ Data_067_4919:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup14Order::
-Data_067_49D9:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup15::
-Data_067_49DB:: ; address name
     dfar KeyWorldScreenHeader_66_5705 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -1133,16 +1012,10 @@ Data_067_49DB:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y2X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup15Order::
-Data_067_4A9B:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup16::
-Data_067_4A9D:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5705 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7641 ; screen 2: 8-byte header, then the compressed tile map
@@ -1208,16 +1081,10 @@ Data_067_4A9D:: ; address name
     dfar KeyWorld01_0_Y2X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup16Order::
-Data_067_4B5D:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup17::
-Data_067_4B5F:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 2: 8-byte header, then the compressed tile map
@@ -1283,16 +1150,10 @@ Data_067_4B5F:: ; address name
     dfar KeyWorld06_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup17Order::
-Data_067_4C1F:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup18::
-Data_067_4C21:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -1358,16 +1219,10 @@ Data_067_4C21:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup18Order::
-Data_067_4CE1:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup19::
-Data_067_4CE3:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -1433,16 +1288,10 @@ Data_067_4CE3:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup19Order::
-Data_067_4DA3:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1A::
-Data_067_4DA5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5705 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -1508,16 +1357,10 @@ Data_067_4DA5:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1AOrder::
-Data_067_4E65:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1B::
-Data_067_4E67:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_596B ; screen 2: 8-byte header, then the compressed tile map
@@ -1583,16 +1426,10 @@ Data_067_4E67:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1BOrder::
-Data_067_4F27:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1C::
-Data_067_4F29:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
@@ -1658,16 +1495,10 @@ Data_067_4F29:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1COrder::
-Data_067_4FE9:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1D::
-Data_067_4FEB:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -1733,16 +1564,10 @@ Data_067_4FEB:: ; address name
     dfar KeyWorld10_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1DOrder::
-Data_067_50AB:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1E::
-Data_067_50AD:: ; address name
     dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -1808,16 +1633,10 @@ Data_067_50AD:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1EOrder::
-Data_067_516D:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1F::
-Data_067_516F:: ; address name
     dfar KeyWorldScreenHeader_66_57D9 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_596B ; screen 2: 8-byte header, then the compressed tile map
@@ -1883,16 +1702,10 @@ Data_067_516F:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup1FOrder::
-Data_067_522F:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup20::
-Data_067_5231:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -1958,16 +1771,10 @@ Data_067_5231:: ; address name
     dfar KeyWorld06_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup20Order::
-Data_067_52F1:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup21::
-Data_067_52F3:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -2033,16 +1840,10 @@ Data_067_52F3:: ; address name
     dfar KeyWorld07_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup21Order::
-Data_067_53B3:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup22::
-Data_067_53B5:: ; address name
     dfar KeyWorldScreenHeader_66_5477 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_76ED ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
@@ -2108,16 +1909,10 @@ Data_067_53B5:: ; address name
     dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup22Order::
-Data_067_5475:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup23::
-Data_067_5477:: ; address name
     dfar KeyWorldScreenHeader_66_589C ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6808 ; screen 2: 8-byte header, then the compressed tile map
@@ -2183,16 +1978,10 @@ Data_067_5477:: ; address name
     dfar KeyWorld05_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup23Order::
-Data_067_5537:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup24::
-Data_067_5539:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
@@ -2258,16 +2047,10 @@ Data_067_5539:: ; address name
     dfar KeyWorld10_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup24Order::
-Data_067_55F9:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup25::
-Data_067_55FB:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -2333,16 +2116,10 @@ Data_067_55FB:: ; address name
     dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup25Order::
-Data_067_56BB:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup26::
-Data_067_56BD:: ; address name
     dfar KeyWorldScreenHeader_66_5658 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
@@ -2408,16 +2185,10 @@ Data_067_56BD:: ; address name
     dfar KeyWorld06_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld0F_0_Y3X1_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup26Order::
-Data_067_577D:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup27::
-Data_067_577F:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_57D9 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6991 ; screen 2: 8-byte header, then the compressed tile map
@@ -2483,16 +2254,10 @@ Data_067_577F:: ; address name
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup27Order::
-Data_067_583F:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup28::
-Data_067_5841:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -2558,16 +2323,10 @@ Data_067_5841:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup28Order::
-Data_067_5901:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup29::
-Data_067_5903:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
@@ -2633,16 +2392,10 @@ Data_067_5903:: ; address name
     dfar KeyWorld02_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup29Order::
-Data_067_59C3:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2A::
-Data_067_59C5:: ; address name
     dfar KeyWorldScreenHeader_66_5705 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
@@ -2708,16 +2461,10 @@ Data_067_59C5:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2AOrder::
-Data_067_5A85:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2B::
-Data_067_5A87:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_75A3 ; screen 2: 8-byte header, then the compressed tile map
@@ -2783,16 +2530,10 @@ Data_067_5A87:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2BOrder::
-Data_067_5B47:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2C::
-Data_067_5B49:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_743F ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
@@ -2858,16 +2599,10 @@ Data_067_5B49:: ; address name
     dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2COrder::
-Data_067_5C09:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2D::
-Data_067_5C0B:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5477 ; screen 2: 8-byte header, then the compressed tile map
@@ -2933,16 +2668,10 @@ Data_067_5C0B:: ; address name
     dfar KeyWorld06_0_Y3X1_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2DOrder::
-Data_067_5CCB:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2E::
-Data_067_5CCD:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_596B ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 2: 8-byte header, then the compressed tile map
@@ -3008,16 +2737,10 @@ Data_067_5CCD:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2EOrder::
-Data_067_5D8D:: ; address name
     db $00, $01 ; entry 0
 
-; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2F::
-Data_067_5D8F:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -3083,16 +2806,14 @@ Data_067_5D8F:: ; address name
     dfar KeyWorld05_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup2FOrder::
-Data_067_5E4F:: ; address name
     db $01, $00 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
+; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup30::
-Data_067_5E51:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5560 ; screen 2: 8-byte header, then the compressed tile map
@@ -3222,16 +2943,12 @@ Data_067_5E51:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
+; a permutation of the sub-chunk numbers (E-0146)
 ; record: sub-chunk order
 KeyWorldChunkGroup30Order::
-Data_067_5FD1:: ; address name
     db $00, $01, $02, $03 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup31::
-Data_067_5FD5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -3361,16 +3078,10 @@ Data_067_5FD5:: ; address name
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup31Order::
-Data_067_6155:: ; address name
     db $03, $01, $02, $00 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup32::
-Data_067_6159:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_57D9 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
@@ -3500,16 +3211,10 @@ Data_067_6159:: ; address name
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup32Order::
-Data_067_62D9:: ; address name
     db $01, $02, $00, $03 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup33::
-Data_067_62DD:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
@@ -3639,16 +3344,10 @@ Data_067_62DD:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup33Order::
-Data_067_645D:: ; address name
     db $03, $00, $02, $01 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup34::
-Data_067_6461:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -3778,16 +3477,10 @@ Data_067_6461:: ; address name
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup34Order::
-Data_067_65E1:: ; address name
     db $00, $01, $03, $02 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup35::
-Data_067_65E5:: ; address name
     dfar KeyWorldScreenHeader_66_5705 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6808 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
@@ -3917,16 +3610,10 @@ Data_067_65E5:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup35Order::
-Data_067_6765:: ; address name
     db $02, $03, $01, $00 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup36::
-Data_067_6769:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6808 ; screen 2: 8-byte header, then the compressed tile map
@@ -4056,16 +3743,10 @@ Data_067_6769:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup36Order::
-Data_067_68E9:: ; address name
     db $02, $03, $00, $01 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup37::
-Data_067_68ED:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7878 ; screen 2: 8-byte header, then the compressed tile map
@@ -4195,16 +3876,10 @@ Data_067_68ED:: ; address name
     dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup37Order::
-Data_067_6A6D:: ; address name
     db $01, $00, $02, $03 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup38::
-Data_067_6A71:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
@@ -4334,16 +4009,10 @@ Data_067_6A71:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup38Order::
-Data_067_6BF1:: ; address name
     db $00, $02, $01, $03 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup39::
-Data_067_6BF5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -4473,16 +4142,10 @@ Data_067_6BF5:: ; address name
     dfar KeyWorld01_0_Y3X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup39Order::
-Data_067_6D75:: ; address name
     db $03, $01, $02, $00 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3A::
-Data_067_6D79:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -4612,16 +4275,10 @@ Data_067_6D79:: ; address name
     dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3AOrder::
-Data_067_6EF9:: ; address name
     db $02, $00, $03, $01 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3B::
-Data_067_6EFD:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_57D9 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_7878 ; screen 2: 8-byte header, then the compressed tile map
@@ -4751,16 +4408,10 @@ Data_067_6EFD:: ; address name
     dfar KeyWorld03_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3BOrder::
-Data_067_707D:: ; address name
     db $02, $03, $00, $01 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3C::
-Data_067_7081:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
@@ -4890,16 +4541,10 @@ Data_067_7081:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3COrder::
-Data_067_7201:: ; address name
     db $00, $03, $01, $02 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3D::
-Data_067_7205:: ; address name
     dfar KeyWorldScreenHeader_66_5560 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
@@ -5029,16 +4674,10 @@ Data_067_7205:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3DOrder::
-Data_067_7385:: ; address name
     db $02, $01, $03, $00 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3E::
-Data_067_7389:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_643F ; screen 2: 8-byte header, then the compressed tile map
@@ -5168,16 +4807,10 @@ Data_067_7389:: ; address name
     dfar KeyWorld05_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3EOrder::
-Data_067_7509:: ; address name
     db $03, $02, $00, $01 ; entry 0
 
-; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3F::
-Data_067_750D:: ; address name
     dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_589C ; screen 2: 8-byte header, then the compressed tile map
@@ -5307,16 +4940,12 @@ Data_067_750D:: ; address name
     dfar KeyWorld05_0_Y3X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup3FOrder::
-Data_067_768D:: ; address name
     db $01, $00, $02, $03 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
+; 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
+; each tile map (E-0146)
 KeyWorldChunkGroup40::
-Data_067_7691:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
@@ -5510,16 +5139,10 @@ Data_067_7691:: ; address name
     dfar KeyWorld02_0_Y2X2_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup40Order::
-Data_067_78D1:: ; address name
     db $00, $01, $02, $03, $04, $05 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup41::
-Data_067_78D7:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
@@ -5713,16 +5336,10 @@ Data_067_78D7:: ; address name
     dfar KeyWorld01_0_Y2X3_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup41Order::
-Data_067_7B17:: ; address name
     db $04, $05, $03, $02, $01, $00 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup42::
-Data_067_7B1D:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
@@ -5916,16 +5533,10 @@ Data_067_7B1D:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup42Order::
-Data_067_7D5D:: ; address name
     db $04, $05, $03, $02, $00, $01 ; entry 0
 
-; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup43::
-Data_067_7D63:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_55DC ; screen 1: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
@@ -6119,9 +5730,6 @@ Data_067_7D63:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
     dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
-; E-0146 (derived: a permutation of the sub-chunk numbers)
-; record: sub-chunk order
 KeyWorldChunkGroup43Order::
-Data_067_7FA3:: ; address name
     db $01, $00, $02, $03, $05, $04 ; entry 0
     ds $57, $00

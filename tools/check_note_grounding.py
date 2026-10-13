@@ -24,7 +24,7 @@ class Source:
         self.ramsyms = set(re.findall(r'^DEF ([wsh][A-Z]\w*) EQU', ram, re.M))
         self.ram_at = {a: n for n, a in re.findall(r'^DEF ([wsh]\w+) EQU \$([0-9A-F]{4})', ram, re.M)}
         self.banks = {p.name: p.read_text(encoding='utf-8').split('\n')
-                      for p in sorted((ROOT / 'src/banks').glob('bank*.asm'))}
+                      for p in sorted((ROOT / 'build/listing').glob('bank*.asm'))}
         self.regions: dict[str, tuple[str, int, int]] = {}
         self.alias_of: dict[str, str] = {}
         for p, lines in self.banks.items():

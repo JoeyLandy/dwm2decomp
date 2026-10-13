@@ -48,11 +48,11 @@ class GeneratedSourceHasNoFoldableIdiom(unittest.TestCase):
     """Audit of the committed src/: every foldable sequence was folded."""
 
     def test_no_unfolded_deref(self):
-        for f in sorted((ROOT / "src/banks").glob("bank*.asm")):
+        for f in sorted((ROOT / "build/listing").glob("bank*.asm")):
             self.assertNotIn(disasm_all.DEREF_HL, f.read_text(encoding="utf-8"), f.name)
 
     def test_macros_are_used(self):
-        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src/banks").glob("bank*.asm"))
+        text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
         self.assertGreater(len(re.findall(r"^    add_a_to_hl$", text, re.M)), 1000)
         self.assertGreater(len(re.findall(r"^    deref_hl$", text, re.M)), 200)
 

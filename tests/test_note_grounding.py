@@ -10,7 +10,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import check_note_grounding as cng  # noqa: E402
 
 
-@unittest.skipUnless((ROOT / "src/banks").is_dir(), "src/banks has not been generated")
+@unittest.skipUnless((ROOT / "build/listing").is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class NoteGrounding(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

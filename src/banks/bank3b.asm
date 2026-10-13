@@ -1,16 +1,15 @@
 SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
-    db $3B
+    db $3b
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's HP word (wRecordBufferData + $8) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ActionEffect_Transform_Sub01_GetBaseHP)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's HP word (wRecordBufferData + $8) is returned; otherwise
+; the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseHP::
-Func_03B_4001:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_MAX_HP
@@ -22,9 +21,9 @@ Func_03B_4001:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -44,16 +43,15 @@ Func_03B_4001:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's MP word (wRecordBufferData + $A) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ActionEffect_Transform_Sub01_GetBaseMP)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's MP word (wRecordBufferData + $A) is returned; otherwise
+; the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseMP::
-Func_03B_4045:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_MAX_MP
@@ -65,9 +63,9 @@ Func_03B_4045:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -75,9 +73,9 @@ Func_03B_4045:: ; address name
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wRecordBufferData + $A]
+    ld a, [wRecordBufferData + $a]
     ld c, a
-    ld a, [wRecordBufferData + $B]
+    ld a, [wRecordBufferData + $b]
     ld b, a
 
 .set_battle_stat_result_lo:
@@ -87,16 +85,15 @@ Func_03B_4045:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's ATK word (wRecordBufferData + $C) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, GetBaseATKOfSlotA)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's ATK word (wRecordBufferData + $C) is returned;
+; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseATK::
-Func_03B_4089:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_ATK
@@ -108,9 +105,9 @@ Func_03B_4089:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -118,9 +115,9 @@ Func_03B_4089:: ; address name
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wRecordBufferData + $C]
+    ld a, [wRecordBufferData + $c]
     ld c, a
-    ld a, [wRecordBufferData + $D]
+    ld a, [wRecordBufferData + $d]
     ld b, a
 
 .set_battle_stat_result_lo:
@@ -130,16 +127,15 @@ Func_03B_4089:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's DEF word (wRecordBufferData + $E) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_SetTargetSlotMarksTo3, ...)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's DEF word (wRecordBufferData + $E) is returned;
+; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseDEF::
-Func_03B_40CD:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_DEF
@@ -151,9 +147,9 @@ Func_03B_40CD:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -161,9 +157,9 @@ Func_03B_40CD:: ; address name
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wRecordBufferData + $E]
+    ld a, [wRecordBufferData + $e]
     ld c, a
-    ld a, [wRecordBufferData + $F]
+    ld a, [wRecordBufferData + $f]
     ld b, a
 
 .set_battle_stat_result_lo:
@@ -173,16 +169,15 @@ Func_03B_40CD:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's AGL word (wRecordBufferData + $10) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 7 call sites from 7 routines (e.g. AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_SetTargetSlotMarksTo3, ...)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's AGL word (wRecordBufferData + $10) is returned;
+; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseAGL::
-Func_03B_4111:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_AGL
@@ -194,9 +189,9 @@ Func_03B_4111:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -216,16 +211,15 @@ Func_03B_4111:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with LoadMonsterRecord and the monster record's INT word (wScreenAttrBuffer) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wScreenAttrBuffer, wRecordBufferData
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
-; points at: wSpecialSlotMonsters
+; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low
+; two bits are 3 (slots 3 and 7) the monster id from wSpecialSlotMonsters is loaded with
+; LoadMonsterRecord and the monster record's INT word (wScreenAttrBuffer) is returned; otherwise the
+; word at offset $29 of the slot's 78-byte battler record (wBattlerRecords,
+; BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 GetBaseINT::
-Func_03B_4155:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_INT
@@ -237,9 +231,9 @@ Func_03B_4155:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -259,16 +253,12 @@ Func_03B_4155:: ; address name
     ld [wBattleStatResultHi], a
     ret
 
-; slot C: the byte at battler record field $17, or for slot 3/7 byte wRecordBufferData + $7 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wMonsterId
-; points at: wSpecialSlotMonsters
+; slot C: the byte at battler record field $17, or for slot 3/7 byte wRecordBufferData + $7 of its
+; monster record; stored in wBattleStatResultLo (E-0124)
 SlotField17OrMonsterCFF5::
-Func_03B_4199:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_LEVEL
@@ -280,9 +270,9 @@ Func_03B_4199:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -298,16 +288,12 @@ Func_03B_4199:: ; address name
     ld [wBattleStatResultLo], a
     ret
 
-; slot C: the byte at battler record field $2D, or for slot 3/7 byte wRecordBufferData + $14 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wMonsterId
-; points at: wSpecialSlotMonsters
+; slot C: the byte at battler record field $2D, or for slot 3/7 byte wRecordBufferData + $14 of its
+; monster record; stored in wBattleStatResultLo (E-0124)
 SlotField2DOrMonsterD002::
-Func_03B_41D3:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_PERSONALITY
@@ -319,9 +305,9 @@ Func_03B_41D3:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -337,16 +323,12 @@ Func_03B_41D3:: ; address name
     ld [wBattleStatResultLo], a
     ret
 
-; slot C: the byte at battler record field $30, or for slot 3/7 byte wRecordBufferData + $16 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wMonsterId
-; points at: wSpecialSlotMonsters
+; slot C: the byte at battler record field $30, or for slot 3/7 byte wRecordBufferData + $16 of its
+; monster record; stored in wBattleStatResultLo (E-0124)
 SlotField30OrMonsterD004::
-Func_03B_420D:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_PERSONALITY + 3
@@ -358,9 +340,9 @@ Func_03B_420D:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -376,16 +358,12 @@ Func_03B_420D:: ; address name
     ld [wBattleStatResultLo], a
     ret
 
-; slot C: the byte at battler record field $2E, or for slot 3/7 byte wRecordBufferData + $15 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wMonsterId
-; points at: wSpecialSlotMonsters
+; slot C: the byte at battler record field $2E, or for slot 3/7 byte wRecordBufferData + $15 of its
+; monster record; stored in wBattleStatResultLo (E-0124)
 SlotField2EOrMonsterD003::
-Func_03B_4247:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_PERSONALITY + 1
@@ -397,9 +375,9 @@ Func_03B_4247:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -415,16 +393,12 @@ Func_03B_4247:: ; address name
     ld [wBattleStatResultLo], a
     ret
 
-; slot C: the byte at battler record field $2F, or for slot 3/7 byte wRecordBufferData + $17 of its monster record; stored in wBattleStatResultLo (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
-; reads: wRecordBufferData
-; writes: wBattleStatResultLo, wMonsterId
-; points at: wSpecialSlotMonsters
+; slot C: the byte at battler record field $2F, or for slot 3/7 byte wRecordBufferData + $17 of its
+; monster record; stored in wBattleStatResultLo (E-0124)
 SlotField2FOrMonsterD005::
-Func_03B_4281:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .skip
     ld a, c
     ld e, BATTLER_PERSONALITY + 2
@@ -436,9 +410,9 @@ Func_03B_4281:: ; address name
     ld a, c
     srl a
     srl a
-    and a, $01
+    and $01
     ld hl, wSpecialSlotMonsters
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ld a, l
@@ -454,20 +428,17 @@ Func_03B_4281:: ; address name
     ld [wBattleStatResultLo], a
     ret
 
-; slot C (not 3/7): C = (species byte wSpeciesRecord + $2 << 4) | wSpeciesRecord + $3 for its species (field $0A); 0 for slot 3/7 (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B)
-; reads: wSpeciesRecord
-; writes: wSpeciesIdLo, wSpeciesIdHi
+; slot C (not 3/7): C = (species byte wSpeciesRecord + $2 << 4) | wSpeciesRecord + $3 for its
+; species (field $0A); 0 for slot 3/7 (E-0124)
 SlotSpeciesNibblesD00AD00B::
-Func_03B_42BB:: ; address name
     ld a, c
-    and a, $03
-    cp a, $03
+    and $03
+    cp $03
     jr z, .done
     ld a, c
     ld e, BATTLER_SPECIES
     call BattlerRecordFieldAddress
-    ld a, [hl+]
+    ld a, [hli]
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
@@ -476,7 +447,7 @@ Func_03B_42BB:: ; address name
     swap a
     ld c, a
     ld a, [wSpeciesRecord + SPECIES_METAL]
-    or a, c
+    or c
     ld c, a
     jr .return
 
@@ -486,31 +457,25 @@ Func_03B_42BB:: ; address name
 .return:
     ret
 
-; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
-; no direct call (reached through a table, a jump or a vector)
-ReadBattleWordFromArray_Bank3B:: ; heuristic: follows a terminator; C0
-Func_03B_42E6:: ; address name
-    add a, a
+; the same 10 bytes as ReadBattleWordFromArray (ReadBattleWordFromArray)
+ReadBattleWordFromArray_Bank3B::
+    add a
     add_a_to_hl
     deref_hl
     ret
 
 ; C = [HL], B = [HL + 1]; HL ends on the high byte (E-0077)
-; 6 call sites from 6 routines (e.g. GetBaseHP, GetBaseMP, GetBaseATK, GetBaseDEF, ...)
 LoadBCFromHL::
-Func_03B_42F0:: ; address name
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ret
 
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But nothing happened!', LoadItemRecord, DispatchActionEffectTable_Bank3B)
-; 1 call site from 1 routine (e.g. RunBattleActions_ToRunBattleActions_UseItem)
-; reads: wBattleResolveStep
+; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
+; nothing happened!', LoadItemRecord, DispatchActionEffectTable_Bank3B)
 RunBattleActions_UseItem::
-Func_03B_42F4:: ; address name
     ld a, [wBattleResolveStep]
-    rst $00
+    jumptable
     dw RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleActions_UseItem_ShowActionBattleText
     dw RunBattleActions_UseItem_TargetOnLocalSide_Bank3B
@@ -526,30 +491,24 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_UseItem_SetDefeatFlagsBA
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
-; entry 0 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleFlag92, wBattleFlag93, wLinkRole
-; writes: wDefeatFlagsBA, wSlotsOccupiedFlag, wBattleTarget, wBattleActionId, wBattleResolveStep
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
-Jump_03B_4314:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    xor a, a
+    xor a
     ld [wDefeatFlagsBA], a
-    xor a, a
+    xor a
     ld [wSlotsOccupiedFlag], a
     ld a, [wBattleFlag92]
-    cp a, $10
+    cp $10
     jr z, .check_link_role
-    cp a, $20
+    cp $20
     jr z, .check_link_role2
-    and a, $07
+    and $07
     ld [wBattleTarget], a
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .read_battle_flag93
     ld a, [wBattleFlag93]
-    cp a, $0C
+    cp $0c
     jr z, .read_battle_flag93
     jr .set_battle_action_id
 
@@ -581,14 +540,13 @@ Jump_03B_4314:: ; address name
 .set_battle_action_id:
     ld [wBattleActionId], a
     farcall ShowActionBattleText
-    ld a, $0D
+    ld a, $0d
     ld [wBattleResolveStep], a
     ret
 
-; returns carry only when slots C, C + 1 and C + 2 are all occupied (CarryUnlessBattleSlotOutSlotEmpty) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty)
+; returns carry only when slots C, C + 1 and C + 2 are all occupied
+; (CarryUnlessBattleSlotOutSlotEmpty) (E-0122)
 AllThreeSlotsFromCOccupied::
-Func_03B_4373:: ; address name
     ld b, $03
 
 .loop:
@@ -600,37 +558,27 @@ Func_03B_4373:: ; address name
     jr nz, .loop
     ret
 
-; entry 1 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_ShowActionBattleText::
-Jump_03B_437F:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
     ret
 
-; entry 2 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wBattleKind, wBattleTarget
-; writes: wEffectFlags, wBattleResolveStep
-; points at: wBattleResolveStep, wFoeJoinClass1, wBattleStatus
 RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
-Jump_03B_438A:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleActionId]
-    cp a, $19
+    cp $19
     jr c, .set_effect_flags_to_08
-    cp a, $1E
+    cp $1e
     jr nc, .set_effect_flags_to_08
     call TargetOnLocalSide_Bank3B
     jr c, .set_effect_flags_to_08
     ld a, [wBattleKind]
-    cp a, $03
+    cp $03
     jr z, .call_call774_c_with_battle_foe_count
     ld a, [wBattleTarget]
-    and a, $04
+    and $04
     ld c, a
     ld b, $03
 
@@ -639,11 +587,11 @@ Jump_03B_438A:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
     ld a, c
-    and a, $03
+    and $03
     ld hl, wFoeJoinClass1
     add_a_to_hl
     ld a, [hl]
-    cp a, $07
+    cp $07
     jr z, .call_call774_c_with_battle_foe_count
     ld a, c
     ld hl, wBattleStatus
@@ -651,12 +599,12 @@ Jump_03B_438A:: ; address name
     ld a, [hl]
     bit 6, a
     jr nz, .call_call774_c_with_battle_foe_count2
-    and a, $8C
+    and $8c
     jr nz, .call_call774_c_with_battle_foe_count3
     ld a, $05
     add_a_to_hl
     ld a, [hl]
-    and a, $C0
+    and $c0
     jr nz, .call_call774_c_with_battle_foe_count4
     ld a, c
     call CheckSlotStatusBlock
@@ -675,91 +623,73 @@ Jump_03B_438A:: ; address name
 
 .call_call774_c_with_battle_foe_count:
     call Call774CWithBattleFoeCount
-    ld d, $7E
+    ld d, $7e
     farcall ShowBattleTextCategory0
-    ld a, $0B
+    ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
 .call_call774_c_with_battle_foe_count2:
     call Call774CWithBattleFoeCount
-    ld d, $E6 ; battle text '0 can't eat while paralyzed!'
+    ld d, $e6 ; battle text '0 can't eat while paralyzed!'
     farcall ShowBattleText
-    ld a, $0B
+    ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
 .call_call774_c_with_battle_foe_count3:
     call Call774CWithBattleFoeCount
-    ld d, $7B
+    ld d, $7b
     farcall ShowBattleTextCategory0
-    ld a, $0B
+    ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
 .call_call774_c_with_battle_foe_count4:
     call Call774CWithBattleFoeCount
-    ld d, $7D
+    ld d, $7d
     farcall ShowBattleTextCategory0
-    ld a, $0B
+    ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
 .call_call774_c_with_battle_foe_count5:
     call Call774CWithBattleFoeCount
-    ld d, $7C
+    ld d, $7c
     farcall ShowBattleTextCategory0
-    ld a, $0B
+    ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-; hTemp0 = wBattleFoeCount, then far-calls Func_03A_774C (E-0122)
-; 5 call sites from 1 routine (e.g. RunBattleActions_UseItem_TargetOnLocalSide_Bank3B)
-; reads: wBattleFoeCount
-; writes: hTemp0
+; hTemp0 = wBattleFoeCount, then far-calls Call774CWithBattleFoeCount_WriteBattleStatResultLo
+; (E-0122)
 Call774CWithBattleFoeCount::
-Func_03B_444A:: ; address name
     ld a, [wBattleFoeCount]
     ldh [hTemp0], a
     farcall Call774CWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
-; entry 3 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; points at: wBattleResolveStep, wBattleStatus5
 RunBattleActions_UseItem_ShowHeroIsAHunk::
-Jump_03B_4456:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
-    and a, $C0
+    and $c0
     ret z
     ld d, $66 ; battle text '0 is a hunk of iron!'
     farcall ShowBattleText
     call SetResolveStep0A
     ret
 
-; entry 4 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
-Jump_03B_4473:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
     ret
 
-; entry 5 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wBattleActionId, wBattleTarget
-; writes: wResolveMsgFlags, wSlotsOccupiedFlag, wEffectFlags, wEffectFlags2
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
-Jump_03B_447B:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgFlags]
@@ -771,7 +701,7 @@ Jump_03B_447B:: ; address name
     ld a, [wBattleDamageHi]
     ld h, a
     ld a, h
-    or a, l
+    or l
     jr z, .set_resolve_msg_flags
     set 4, b
     jr .set_resolve_msg_flags2
@@ -796,24 +726,24 @@ Jump_03B_447B:: ; address name
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ld a, [wBattleActionId]
-    cp a, $01
+    cp $01
     ret c
-    cp a, $06
+    cp $06
     jr c, .check_battle_target
-    cp a, $0B
+    cp $0b
     jr z, .check_battle_target
     jr c, .check_battle_target2
-    cp a, $0C
+    cp $0c
     jr z, .check_battle_target2
-    cp a, $24
+    cp $24
     ret c
-    cp a, $28
+    cp $28
     jr c, .read_battle_damage_lo
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     jr c, .read_battle_damage_lo
     ld a, [wBattleDamageLo]
     ld l, a
@@ -826,7 +756,7 @@ Jump_03B_447B:: ; address name
 .check_battle_target2:
     ld hl, $0064
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     jr nc, .call_add_hl_to_battle_meter_capped_at1800
     ld hl, $0005
     jr .call_subtract_hl_from_battle_meter_floored
@@ -847,13 +777,7 @@ Jump_03B_447B:: ; address name
     call AddHLToBattleMeterCappedAt1800
     ret
 
-; entry 6 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wResolveMsgFlags, wResolveMsgActor, wTemp0, wResolveMsgTarget
-; writes: wTemp0
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_ShowBattleText::
-Jump_03B_4512:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -877,43 +801,31 @@ Jump_03B_4512:: ; address name
     ret
 
 ; returns when wResolveMsgFlags bit 4 is set, otherwise SetResolveStep0A (E-0116)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_ShowBattleText)
-; reads: wResolveMsgFlags
 SetResolveStep0AUnlessResolveMsgFlagsBit4::
-Func_03B_453D:: ; address name
     ld a, [wResolveMsgFlags]
     bit 4, a
     ret nz
     call SetResolveStep0A
     ret
 
-; entry 7 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
 RunBattleActions_UseItem_Return::
-Jump_03B_4547:: ; address name
     ret
 
-; entry 8 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wResolveMsgArg, wBattleTarget, wBattleDamageLo, wBattleDamageHi
-; writes: wBattleSubStep2
-; points at: wBattleResolveStep, wBattleHP
 RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
-Jump_03B_4548:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgArg]
-    and a, $C0
-    cp a, $00
+    and $c0
+    cp $00
     jr z, .return
-    cp a, $40
+    cp $40
     jr z, .read_battle_target
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld d, [hl]
     ld e, a
     ld a, [wBattleDamageLo]
@@ -921,26 +833,26 @@ Jump_03B_4548:: ; address name
     ld a, [wBattleDamageHi]
     ld b, a
     ld a, e
-    sub a, c
+    sub c
     ld e, a
     ld a, d
-    sbc a, b
+    sbc b
     ld d, a
     jr c, .skip
     ld a, d
-    ld [hl-], a
+    ld [hld], a
     ld [hl], e
-    or a, e
+    or e
     jr nz, .read_battle_target
     inc hl
 
 .skip:
-    xor a, a
-    ld [hl-], a
+    xor a
+    ld [hld], a
     ld [hl], a
     ld hl, wBattleResolveStep
     dec [hl]
-    xor a, a
+    xor a
     ld [wBattleSubStep2], a
 
 .read_battle_target:
@@ -955,40 +867,31 @@ Jump_03B_4548:: ; address name
 .return:
     ret
 
-; entry 9 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
 RunBattleActions_UseItem_ToRunBattleSubStep2_6764::
-Jump_03B_459F:: ; address name
     farcall RunBattleSubStep2_6764
     ret
 
-; entry 10 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleFlag93, wBattleFlag92, wBattleTarget, wDefeatFlagsBA
-; writes: wBattleTarget, wBattleResolveStep, wSpeciesIdLo, wSpeciesIdHi
-; points at: wBattleResolveStep, wBattleMonsterId, wDefeatFlagsBA, wSpeciesGroups
 RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
-Jump_03B_45A6:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleFlag93]
-    cp a, $1F
+    cp $1f
     jr z, .check_defeat_flags_ba
-    cp a, $1D
+    cp $1d
     jr z, .check_battle_target
     ld a, [wBattleFlag92]
-    cp a, $10
+    cp $10
     jr z, .call_run_once4650_then4673
-    cp a, $20
+    cp $20
     ret nz
     ld a, [wBattleFlag93]
-    cp a, $1E
+    cp $1e
     jr nz, .call_run_once4650_then4673
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ret c
     jr .call_run_once4650_then4673
 
@@ -997,40 +900,40 @@ Jump_03B_45A6:: ; address name
     bit 7, a
     call z, GroupTargetsBySpeciesToSpeciesGroups
     ld a, [wBattleTarget]
-    add a, a
+    add a
     ld hl, wBattleMonsterId
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wSpeciesIdLo], a
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall TestSpeciesFlag
     ld a, c
-    or a, a
+    or a
     jr z, .call_show_battle_text_category0
-    ld d, $2B
+    ld d, $2b
     farcall ShowBattleTextCategory0
     jr .skip
 
 .call_show_battle_text_category0:
-    ld d, $2A
+    ld d, $2a
     farcall ShowBattleTextCategory0
 
 .skip:
     ld hl, wDefeatFlagsBA
     dec [hl]
     ld a, [hl]
-    cp a, $80
+    cp $80
     ret z
     ld a, $04
     ld [wBattleResolveStep], a
     ld a, [hl]
-    and a, $7F
+    and $7f
     dec a
     ld hl, wSpeciesGroups
     add_a_to_hl
     ld a, [hl]
-    and a, $7F
+    and $7f
     ld [wBattleTarget], a
     ret
 
@@ -1043,40 +946,33 @@ Jump_03B_45A6:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; runs Func_03B_4650 once (marked by bit 7 of wDefeatFlagsBA), then Func_03B_4673 each time; returns wDefeatFlagsBA & $7F (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc)
-; reads: wDefeatFlagsBA
-; writes: wDefeatFlagsBA
+; runs RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of
+; wDefeatFlagsBA), then RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02 each time;
+; returns wDefeatFlagsBA & $7F (E-0122)
 RunOnce4650Then4673::
-Func_03B_4635:: ; address name
     ld a, [wDefeatFlagsBA]
     bit 7, a
     jr nz, .call_run_once4650_then4673_carry_unless
     call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wDefeatFlagsBA]
-    or a, $80
+    or $80
     ld [wDefeatFlagsBA], a
 
 .call_run_once4650_then4673_carry_unless:
     call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02
     ld a, [wDefeatFlagsBA]
-    and a, $7F
+    and $7f
     ret
 
-; only called from RunOnce4650Then4673 (E-0047)
-; 1 call site from 1 routine (e.g. RunOnce4650Then4673)
-; reads: wBattleTarget
-; points at: wDefeatFlagsBA
 RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
-Func_03B_4650:: ; address name
     ld b, $04
     ld a, [wBattleTarget]
-    and a, $04
+    and $04
     ld c, a
 
 .loop:
     ld a, [wBattleTarget]
-    cp a, c
+    cp c
     jr z, .skip
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -1092,35 +988,30 @@ Func_03B_4650:: ; address name
     inc c
     dec b
     ld a, b
-    or a, a
+    or a
     jr nz, .loop
     ret
 
-; only called from RunOnce4650Then4673 (E-0047)
-; 1 call site from 1 routine (e.g. RunOnce4650Then4673)
-; reads: wBattleTarget, wRecordBufferData
-; points at: wDefeatFlagsBA
 RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
-Func_03B_4673:: ; address name
     ld a, [wBattleTarget]
     inc a
     ld c, a
     ld hl, wDefeatFlagsBA
     dec [hl]
     ld a, [hl]
-    and a, $7F
+    and $7f
     ret z
 
 .check_record_buffer_data:
     ld a, [wRecordBufferData + $4]
-    cp a, $80
+    cp $80
     jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, c
-    and a, $03
+    and $03
     jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wBattleTarget]
-    and a, $04
-    xor a, $04
+    and $04
+    xor $04
     ld c, a
 
 .call_carry_unless_battle_slot_out_slot_empty:
@@ -1133,44 +1024,38 @@ Func_03B_4673:: ; address name
     inc c
     jr .check_record_buffer_data
 
-; entry 11 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; reads: wResolveMsgArg, wSlotsOccupiedFlag, wBattleFlag93, wCommandCursor, wMenuOption, wItemId, wItemRecord
-; writes: wItemId, wInventorySlot
-; points at: wBattleResolveStep
 RunBattleActions_UseItem_LoadItemRecord::
-Jump_03B_469E:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgArg]
     bit 0, a
     jr nz, .read_battle_flag93
     ld a, [wSlotsOccupiedFlag]
-    or a, a
+    or a
     ret z
 
 .read_battle_flag93:
     ld a, [wBattleFlag93]
     ld [wItemId], a
     ld a, [wCommandCursor]
-    and a, $0F
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
     ld b, a
     ld a, [wMenuOption]
-    and a, $03
-    add a, b
+    and $03
+    add b
     ld [wInventorySlot], a
     farcall LoadItemRecord
     farcall ConsumeSelectedItemByChance
     ld a, [wItemId]
-    cp a, $FF
+    cp $ff
     ret nz
     ld a, [wItemRecord + $3]
-    cp a, $64
+    cp $64
     jr nz, .call_show_battle_text
     ld a, [wBattleFlag93]
-    cp a, $1E
+    cp $1e
     jr z, .call_show_battle_text
     ret
 
@@ -1179,55 +1064,40 @@ Jump_03B_469E:: ; address name
     farcall ShowBattleText
     ret
 
-; entry 12 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; writes: wDefeatFlagsBA, wBattleSubPhase, wBattleResolveStep
 RunBattleActions_UseItem_SetDefeatFlagsBA::
-Jump_03B_46EF:: ; address name
-    xor a, a
+    xor a
     ld [wDefeatFlagsBA], a
     ld a, $07
     ld [wBattleSubPhase], a
-    xor a, a
+    xor a
     ld [wBattleResolveStep], a
     ret
 
-; entry 13 of the `rst $00` table in RunBattleActions_UseItem
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleResolveStep
 RunBattleActions_UseItem_ShowButNothingHappened::
-Jump_03B_46FD:: ; address name
-    ld d, $CC ; battle text 'But nothing happened!'
+    ld d, $cc ; battle text 'But nothing happened!'
     farcall ShowBattleText
-    ld a, $0C
+    ld a, $0c
     ld [wBattleResolveStep], a
     ret
 
 ; wBattleResolveStep = $0A (the damage-message step, ResolveStepDamageMessage) (E-0116)
-; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessResolveMsgFlagsBit4, RunBattleActions_UseItem_ShowHeroIsAHunk)
-; writes: wBattleResolveStep
 SetResolveStep0A::
-Func_03B_470B:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [wBattleResolveStep], a
     ret
 
-; lists the target side's species and groups the targets that share the target's species into wSpeciesGroups-wSpeciesGroups + $2 (bit 7 marks a group) (E-0131)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc)
-; reads: wBattleTarget
-; writes: wSpeciesGroups, wDefeatFlagsBA
-; points at: wSpeciesGroups, wTemp0
+; lists the target side's species and groups the targets that share the target's species into
+; wSpeciesGroups-wSpeciesGroups + $2 (bit 7 marks a group) (E-0131)
 GroupTargetsBySpeciesToSpeciesGroups::
-Func_03B_4711:: ; address name
-    ld a, $FF
+    ld a, $ff
     ld hl, wSpeciesGroups
     ld bc, $0003
     call FillBytes
     farcall ListSideMonsterIdsToWC0A0
     ld a, d
-    cp a, $03
+    cp $03
     jr z, .read_battle_target
-    cp a, $02
+    cp $02
     jp z, .read_battle_target2
     ld a, [wBattleTarget]
     ld [wSpeciesGroups], a
@@ -1237,42 +1107,42 @@ Func_03B_4711:: ; address name
     ld a, [wBattleTarget]
     ld c, a
     ld a, c
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld d, [hl]
     ld e, a
     inc c
     ld a, c
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .next
     ld a, [hl]
-    cp a, d
+    cp d
     jr nz, .next
     inc c
     ld a, c
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .check_battle_target
     ld a, [hl]
-    cp a, d
+    cp d
     jr nz, .check_battle_target
     ld a, c
-    or a, $80
+    or $80
     ld [wSpeciesGroups], a
     jp .skip3
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    or a, $80
+    or $80
     ld [wSpeciesGroups + $1], a
     ld a, c
     ld d, a
@@ -1282,17 +1152,17 @@ Func_03B_4711:: ; address name
 .next:
     inc c
     ld a, c
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .skip
     ld a, [hl]
-    cp a, d
+    cp d
     jr nz, .skip
     ld a, [wBattleTarget]
-    or a, $80
+    or $80
     ld [wSpeciesGroups + $1], a
     dec c
     ld a, c
@@ -1306,20 +1176,20 @@ Func_03B_4711:: ; address name
     ld e, [hl]
     dec c
     ld a, c
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
-    cp a, e
+    ld a, [hli]
+    cp e
     jr nz, .set_species_groups2
     ld a, [hl]
-    cp a, d
+    cp d
     jr nz, .set_species_groups2
     ld a, [wBattleTarget]
     ld [wSpeciesGroups + $1], a
     ld a, c
     ld d, a
-    or a, $80
+    or $80
     ld [wSpeciesGroups], a
     jr .skip4
 
@@ -1354,24 +1224,24 @@ Func_03B_4711:: ; address name
 
 .skip2:
     ld a, e
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld a, d
-    add a, a
+    add a
     ld hl, wTemp0
     add_a_to_hl
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jr nz, .set_species_groups
     ld a, [hl]
-    cp a, b
+    cp b
     jr nz, .set_species_groups
     ld a, e
-    or a, $80
+    or $80
     ld [wSpeciesGroups], a
 
 .skip3:
@@ -1401,31 +1271,28 @@ Func_03B_4711:: ; address name
     ld a, $03
 
 .set_defeat_flags_ba:
-    or a, $80
+    or $80
     ld [wDefeatFlagsBA], a
     ret
 
-; sets the damage word to the target's max HP for action $03, a random 30-40 for actions $01 and $38, else a random 60-70; adds it to the target's HP capped at max HP (the damage word becomes the amount actually added when capped) (E-0236)
-; 2 call sites from 2 routines (e.g. RaiseWord3FAndRestoreHP, RestoreTargetHPIfHurt)
-; reads: wBattleActionId, wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi
-; points at: wBattleHP, wBattleMaxHP
+; sets the damage word to the target's max HP for action $03, a random 30-40 for actions $01 and
+; $38, else a random 60-70; adds it to the target's HP capped at max HP (the damage word becomes the
+; amount actually added when capped) (E-0236)
 RestoreTargetHPByActionAmount::
-Func_03B_483A:: ; address name
     ld a, [wBattleActionId]
-    cp a, $03
+    cp $03
     jr z, .read_battle_target
-    cp a, $01
+    cp $01
     jr z, .call_set_damage_random_in_range
-    cp a, $38
+    cp $38
     jr z, .call_set_damage_random_in_range
-    ld hl, $003C
+    ld hl, $003c
     ld bc, $0046
     call SetDamageRandomInRange
     jr .read_battle_target2
 
 .call_set_damage_random_in_range:
-    ld hl, $001E
+    ld hl, $001e
     ld bc, $0028
     call SetDamageRandomInRange
     jr .read_battle_target2
@@ -1434,7 +1301,7 @@ Func_03B_483A:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld d, [hl]
     ld e, a
     ld a, e
@@ -1449,10 +1316,10 @@ Func_03B_483A:: ; address name
     push hl
     deref_hl
     ld a, l
-    add a, e
+    add e
     ld c, a
     ld a, h
-    adc a, d
+    adc d
     ld b, a
     ld a, [wBattleTarget]
     call GetBattleMaxHP_Bank3B
@@ -1465,22 +1332,16 @@ Func_03B_483A:: ; address name
 .restore:
     pop hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], b
     ret
 
-; only called from RestoreTargetMPIfLow (E-0047)
-; 1 call site from 1 routine (e.g. RestoreTargetMPIfLow)
-; reads: wBattleActionId, wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi
-; points at: wBattleMP, wBattleMaxMP
 RestoreTargetMPIfLow_SetDamageRandomInRange::
-Func_03B_489B:: ; address name
     ld a, [wBattleActionId]
-    cp a, $05
+    cp $05
     jr z, .read_battle_target
     ld hl, $0014
-    ld bc, $001E
+    ld bc, $001e
     call SetDamageRandomInRange
     jr .read_battle_target2
 
@@ -1488,7 +1349,7 @@ Func_03B_489B:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld d, [hl]
     ld e, a
     ld a, e
@@ -1503,10 +1364,10 @@ Func_03B_489B:: ; address name
     push hl
     deref_hl
     ld a, l
-    add a, e
+    add e
     ld c, a
     ld a, h
-    adc a, d
+    adc d
     ld b, a
     ld a, [wBattleTarget]
     call GetBattleMaxMP_Bank3B
@@ -1519,35 +1380,29 @@ Func_03B_489B:: ; address name
 .restore:
     pop hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], b
     ret
 
 ; damage word = DE - (BC - HL) (E-0118)
-; 2 call sites from 2 routines (e.g. RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_SetDamageRandomInRange)
-; writes: wBattleDamageLo, wBattleDamageHi
 SetDamageDEMinusBCPlusHL::
-Func_03B_48E9:: ; address name
     ld a, c
-    sub a, l
+    sub l
     ld c, a
     ld a, b
-    sbc a, h
+    sbc h
     ld b, a
     ld a, e
-    sub a, c
+    sub c
     ld [wBattleDamageLo], a
     ld a, d
-    sbc a, b
+    sbc b
     ld [wBattleDamageHi], a
     ret
 
-; the target's wBattleWordArray3F word -= Data_03B_492A[action - $19], floored at 0 (E-0124)
-; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
-; reads: wBattleTarget, wBattleActionId
-; points at: wBattleWordArray3F
+; the target's wBattleWordArray3F word -=
+; SubtractActionAmountFromTargetBattleWordArray3F_Data[action - $19], floored at 0 (E-0124)
 SubtractActionAmountFromTargetBattleWordArray3F::
-Func_03B_48FA:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleWordArray3F
     call AddDoubleAToHL_Bank3B
@@ -1555,19 +1410,19 @@ Func_03B_48FA:: ; address name
     deref_hl
     push hl
     ld a, [wBattleActionId]
-    sub a, $19
-    add a, a
+    sub $19
+    add a
     ld hl, SubtractActionAmountFromTargetBattleWordArray3F_Data
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     pop hl
     ld a, l
-    sub a, c
+    sub c
     ld c, a
     ld a, h
-    sbc a, b
+    sbc b
     ld b, a
     jr nc, .restore
     ld bc, $0000
@@ -1575,40 +1430,30 @@ Func_03B_48FA:: ; address name
 .restore:
     pop hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], b
     ret
 
-; address loaded by SubtractActionAmountFromTargetBattleWordArray3F
-SubtractActionAmountFromTargetBattleWordArray3F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_03B_492A:: ; address name
-    db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
+SubtractActionAmountFromTargetBattleWordArray3F_Data::
+    db $05, $00, $0a, $00, $14, $00, $64, $00, $05, $00
 
-; adds the word Data_03B_4949[action - $19] to wBattleMeter, capped at 1800 (E-0122)
-; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
-; reads: wBattleActionId
+; adds the word AddActionAmountToBattleMeter_Data[action - $19] to wBattleMeter, capped at 1800
+; (E-0122)
 AddActionAmountToBattleMeter::
-Func_03B_4934:: ; address name
     ld a, [wBattleActionId]
-    sub a, $19
-    add a, a
+    sub $19
+    add a
     ld hl, AddActionAmountToBattleMeter_Data
     add_a_to_hl
     deref_hl
     call AddHLToBattleMeterCappedAt1800
     ret
 
-; address loaded by AddActionAmountToBattleMeter
-AddActionAmountToBattleMeter_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_03B_4949:: ; address name
-    db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
+AddActionAmountToBattleMeter_Data::
+    db $0a, $00, $1e, $00, $64, $00, $e7, $03, $05, $00
 
 ; wBattleMeter += HL, capped at $0708 (1800) (E-0122)
-; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
-; reads: wBattleMeter
-; writes: wBattleMeter
 AddHLToBattleMeterCappedAt1800::
-Func_03B_4953:: ; address name
     ld a, [wBattleMeter]
     ld c, a
     ld a, [wBattleMeter + $1]
@@ -1627,11 +1472,7 @@ Func_03B_4953:: ; address name
     ret
 
 ; wBattleMeter -= HL, floored at 0 (E-0124)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
-; reads: wBattleMeter
-; writes: wBattleMeter
 SubtractHLFromBattleMeterFloored::
-Func_03B_4970:: ; address name
     ld a, [wBattleMeter]
     ld c, a
     ld a, [wBattleMeter + $1]
@@ -1655,18 +1496,16 @@ Func_03B_4970:: ; address name
     ld [wBattleMeter + $1], a
     ret
 
-; actions $24 onward: damage = random in the range from Data_03B_4A24[action - $24], then scaled by the target's resistance level for that element (85 percent at level 1, less above) (E-0129)
-; 1 call site from 1 routine (e.g. RollTableDamageWithMessage35)
-; reads: wBattleActionId, wBattleDamageLo, wBattleDamageHi
-; writes: wBattleDamageLo, wBattleDamageHi
+; actions $24 onward: damage = random in the range from
+; RollTableDamageScaledByResistance_Data[action - $24], then scaled by the target's resistance level
+; for that element (85 percent at level 1, less above) (E-0129)
 RollTableDamageScaledByResistance::
-Func_03B_4990:: ; address name
     ld a, [wBattleActionId]
-    sub a, $24
-    add a, a
-    add a, a
+    sub $24
+    add a
+    add a
     ld de, RollTableDamageScaledByResistance_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -1685,40 +1524,40 @@ Func_03B_4990:: ; address name
     ld b, a
     call SetDamageRandomInRange
     ld a, [wBattleActionId]
-    cp a, $24
+    cp $24
     jr nz, .cp_25
     call TargetSlotResistancesByte1_Bank3B
     rlca
     rlca
-    and a, $03
+    and $03
     jr .skip2
 
 .cp_25:
-    cp a, $25
+    cp $25
     jr nz, .cp_26
     call TargetSlotResistancesByte1_Bank3B
     swap a
-    and a, $03
+    and $03
     jr .skip2
 
 .cp_26:
-    cp a, $26
+    cp $26
     jr nz, .call_target_slot_resistances_byte0_bank3_b
     call TargetSlotResistancesByte1_Bank3B
     rrca
     rrca
-    and a, $03
+    and $03
     jr .skip2
 
 .call_target_slot_resistances_byte0_bank3_b:
     call TargetSlotResistancesByte0_Bank3B
     swap a
-    and a, $03
+    and $03
 
 .skip2:
-    and a, a
+    and a
     ret z
-    cp a, $01
+    cp $01
     jr nz, .cp_02
     ld a, [wBattleDamageLo]
     ld l, a
@@ -1739,7 +1578,7 @@ Func_03B_4990:: ; address name
     ret
 
 .cp_02:
-    cp a, $02
+    cp $02
     jr nz, .clear_battle_damage_lo
     ld a, [wBattleDamageLo]
     ld l, a
@@ -1754,31 +1593,23 @@ Func_03B_4990:: ; address name
     ret
 
 .clear_battle_damage_lo:
-    xor a, a
+    xor a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ret
 
-; address loaded by RollTableDamageScaledByResistance
-RollTableDamageScaledByResistance_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_03B_4A24:: ; address name
-    db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8C, $00, $B4, $00, $C8, $00
+RollTableDamageScaledByResistance_Data::
+    db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8c, $00, $b4, $00, $c8, $00
 
-; only called from InflictTargetStatus0Bit0 (E-0047)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0)
 InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
-Func_03B_4A34:: ; address name
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
     call TargetWDA74Byte
-    and a, $03
+    and $03
     call RollChanceByHLBits6And7_Bank3B
     ret
 
 ; wBattleDamageLo/wBattleDamageHi = RandomInRange(HL, BC) (E-0116)
-; 4 call sites from 3 routines (e.g. RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_SetDamageRandomInRange, RollTableDamageScaledByResistance)
-; writes: wBattleDamageLo, wBattleDamageHi
 SetDamageRandomInRange::
-Func_03B_4A40:: ; address name
     call RandomInRange
     ld a, e
     ld [wBattleDamageLo], a
@@ -1786,59 +1617,43 @@ Func_03B_4A40:: ; address name
     ld [wBattleDamageHi], a
     ret
 
-; HL = wBattleStatus8 + 9 * [wBattleTarget] (AddAx9ToHL); A = [wBattleTarget] (the same 10 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
-; reads: wBattleTarget
-; points at: wBattleStatus8
+; HL = wBattleStatus8 + 9 * [wBattleTarget] (AddAx9ToHL); A = [wBattleTarget] (the same 10 bytes
+; appear in 2 banks)
 HLToBattleStatus8EntryOfBattleTarget_Bank3B::
-Func_03B_4A4C:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
     ret
 
 ; A = byte 0 of the target's 7-byte wSlotResistances record (E-0126)
-; 1 call site from 1 routine (e.g. RollTableDamageScaledByResistance)
-; reads: wBattleTarget
-; points at: wSlotResistances
 TargetSlotResistancesByte0_Bank3B::
-Func_03B_4A56:: ; address name
     ld de, wSlotResistances
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; A = byte 1 of the target's 7-byte wSlotResistances record (E-0126)
-; 3 call sites from 1 routine (e.g. RollTableDamageScaledByResistance)
-; reads: wBattleTarget
 TargetSlotResistancesByte1_Bank3B::
-Func_03B_4A5B:: ; address name
     ld de, wSlotResistances + $1
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
-; A = byte 2 of the target's 7-byte wSlotResistances record (wSlotResistances + $2 + 7 * target) (E-0124)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
-; reads: wBattleTarget
+; A = byte 2 of the target's 7-byte wSlotResistances record (wSlotResistances + $2 + 7 * target)
+; (E-0124)
 TargetWDA74Byte::
-Func_03B_4A60:: ; address name
     ld de, wSlotResistances + $2
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-GetTargetSlotResistancesByte3_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 36:61B5; C0
-Func_03B_4A65:: ; address name
+GetTargetSlotResistancesByte3_Bank3B::
     ld de, wSlotResistances + $3
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
-    db $11, $76, $DA, $18, $08, $11, $77, $DA, $18, $03, $11, $78, $DA
+    db $11, $76, $da, $18, $08, $11, $77, $da, $18, $03, $11, $78, $da
 
 GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
-Jump_03B_4A77:: ; address name
     ld a, [wBattleTarget]
     ld b, a
-    add a, a
-    add a, b
-    add a, a
-    add a, b
-    add a, e
+    add a
+    add b
+    add a
+    add b
+    add e
     ld e, a
     jr nc, .done
     inc d
@@ -1847,10 +1662,9 @@ Jump_03B_4A77:: ; address name
     ld a, [de]
     ret
 
-; bit 6 of [HL]: Func_03B_4ABF; else bit 7: RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
+; bit 6 of [HL]: RollChanceByHLBits6And7_Bank3B_ReadRandomLo; else bit 7:
+; RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
 RollChanceByHLBits6And7_Bank3B::
-Func_03B_4A86:: ; address name
     bit 6, [hl]
     jr z, .skip
     call RollChanceByHLBits6And7_Bank3B_ReadRandomLo
@@ -1869,22 +1683,19 @@ Func_03B_4A86:: ; address name
     ret
 
 ; level A: 0 returns carry; 1 and 2 take two chance rolls; 3 returns no carry (E-0122)
-; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wRandomLo
 RollChanceForLevelA_Bank3B::
-Func_03B_4A9C:: ; address name
-    and a, a
+    and a
     jr nz, .cp_01
     scf
     ret
 
 .cp_01:
-    cp a, $01
+    cp $01
     jr nz, .cp_02
     jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom
 
 .cp_02:
-    cp a, $02
+    cp $02
     jr nz, .done
     jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3
 
@@ -1893,12 +1704,11 @@ Func_03B_4A9C:: ; address name
     ccf
     ret
 
-; the same instruction sequence as RollChanceByLevel_100_100_75_0 (bank $36) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wRandomLo
+; the same instruction sequence as RollChanceByLevel_100_100_75_0 (bank $36) apart from label
+; operands, which refer to this bank's own routines and tables; the twin's note describes the shape
+; (E-0107)
 RollChanceByLevel_100_100_75_0_Bank3B::
-Func_03B_4AB2:: ; address name
-    cp a, $02
+    cp $02
     jr nc, .skip
     ret
 
@@ -1911,23 +1721,19 @@ Func_03B_4AB2:: ; address name
     ccf
     ret
 
-; only called from RollChanceByHLBits6And7_Bank3B (E-0047)
-; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wRandomLo
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
-Func_03B_4ABF:: ; address name
-    and a, a
+    and a
     jr nz, .cp_01
     scf
     ret
 
 .cp_01:
-    cp a, $01
+    cp $01
     jr nz, .cp_02
     jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2
 
 .cp_02:
-    cp a, $02
+    cp $02
     jr nz, .done
     jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4
 
@@ -1937,61 +1743,52 @@ Func_03B_4ABF:: ; address name
     ret
 
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom::
-Jump_03B_4AD5:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
-    cp a, $D8
+    cp $d8
     ret
 
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2::
-Jump_03B_4ADE:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
-    cp a, $BF
+    cp $bf
     ret
 
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3::
-Jump_03B_4AE7:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
-    cp a, $7F
+    cp $7f
     ret
 
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4::
-Jump_03B_4AF0:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
-    cp a, $66
+    cp $66
     ret
 
 ; AdvanceRandom, then compares wRandomLo with $3F: carry (success) about one time in four (E-0116)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wRandomLo
-RollChance3FOf256:: ; heuristic: follows a terminator; C0
-Func_03B_4AF9:: ; address name
+RollChance3FOf256::
     call AdvanceRandom
     ld a, [wRandomLo]
-    cp a, $3F
+    cp $3f
     ret
 
-; jumps to the routine whose address is at $4B11 + 2 * wBattleActionId (JumpToWordAtHL), the bank-$3B counterpart of DispatchActionEffectTable (E-0116)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep)
-; reads: wBattleActionId
+; jumps to the routine whose address is at $4B11 + 2 * wBattleActionId (JumpToWordAtHL), the
+; bank-$3B counterpart of DispatchActionEffectTable (E-0116)
 DispatchActionEffectTable_Bank3B::
-Func_03B_4B02:: ; address name
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00
-    ld hl, $4B11
+    ld hl, $4b11
     add hl, bc
     add hl, bc
     call JumpToWordAtHL
     ret
 
-; E-0239 (C1: Func_03B_4B02 jumps (JumpToWordAtHL) to the word at $4B11 + 2 * wBattleActionId; 64 words up to the first target at $4B91, a lone ret).
+; DispatchActionEffectTable_Bank3B jumps (JumpToWordAtHL) to the word at $4B11 + 2 *
+; wBattleActionId; 64 words up to the first target at $4B91, a lone ret (E-0239, C1)
 ; record: effect routine for this wBattleActionId
 ActionIdEffectTable_3B::
-Data_03B_4B11:: ; address name
     dw ActionIdEffectNone_3B_4B91 ; id 0
     dw RestoreTargetHPIfHurt ; id 1
     dw RestoreTargetHPIfHurt ; id 2
@@ -2058,22 +1855,16 @@ Data_03B_4B11:: ; address name
     dw ActionIdEffectNone_3B_4C94 ; id 63
 
 ; a lone ret: entry 0 of ActionIdEffectTable_3B (E-0239)
-; no direct call (reached through a table, a jump or a vector)
-ActionIdEffectNone_3B_4B91:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4B91:: ; address name
+ActionIdEffectNone_3B_4B91::
     ret
 
-; if the target's HP is below its max, runs Func_03B_483A and shows message $37; otherwise the no-effect path (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wBattleHP, wBattleMaxHP
-RestoreTargetHPIfHurt:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4B92:: ; address name
+; if the target's HP is below its max, runs RestoreTargetHPByActionAmount and shows message $37;
+; otherwise the no-effect path (E-0124)
+RestoreTargetHPIfHurt::
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld a, [wBattleTarget]
@@ -2090,17 +1881,13 @@ Func_03B_4B92:: ; address name
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; if the target's MP is below its max, runs Func_03B_489B and shows message $C3; otherwise the no-effect path (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wBattleMP, wBattleMaxMP
-RestoreTargetMPIfLow:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4BBD:: ; address name
+; if the target's MP is below its max, runs RestoreTargetMPIfLow_SetDamageRandomInRange and shows
+; message $C3; otherwise the no-effect path (E-0124)
+RestoreTargetMPIfLow::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld a, [wBattleTarget]
@@ -2110,65 +1897,57 @@ Func_03B_4BBD:: ; address name
     call CompareHLToBC
     jr z, .skip
     call RestoreTargetMPIfLow_SetDamageRandomInRange
-    ld l, $C3
+    ld l, $c3
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-CureTargetStatus0Bits01:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4BE8:: ; address name
+; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect
+; path (E-0122)
+CureTargetStatus0Bits01::
     call ClearDamageAndReadTargetStatus0
-    and a, $03
+    and $03
     jr z, .skip
     ld a, [hl]
-    and a, $FC
+    and $fc
     ld [hl], a
-    ld l, $4E
+    ld l, $4e
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; clears status byte 0 bit 6 of the target when set (message $4F, wSlotMarks[target] = 3); otherwise takes the no-effect path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wSlotMarks
-CureTargetStatus0Bit6:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4BFE:: ; address name
+; clears status byte 0 bit 6 of the target when set (message $4F, wSlotMarks[target] = 3); otherwise
+; takes the no-effect path (E-0122)
+CureTargetStatus0Bit6::
     call ClearDamageAndReadTargetStatus0
-    and a, $40
+    and $40
     jr z, .skip
     ld a, [hl]
-    and a, $BF
+    and $bf
     ld [hl], a
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
     add_a_to_hl
     ld [hl], $03
-    ld l, $4F
+    ld l, $4f
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-CureTargetStatus0Bit5:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C21:: ; address name
+; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect
+; path (E-0122)
+CureTargetStatus0Bit5::
     call ClearDamageAndReadTargetStatus0
-    and a, $20
+    and $20
     jr z, .skip
     ld a, [hl]
-    and a, $DF
+    and $df
     ld [hl], a
     ld l, $51
     ld bc, $4090
@@ -2177,18 +1956,14 @@ Func_03B_4C21:: ; address name
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; clears status byte 0 bits 2, 3 and 7 of the target when set (message $82, wSlotMarks[target] = 3); otherwise takes the no-effect path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wSlotMarks
-CureTargetStatus0Bits237:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C37:: ; address name
+; clears status byte 0 bits 2, 3 and 7 of the target when set (message $82, wSlotMarks[target] = 3);
+; otherwise takes the no-effect path (E-0122)
+CureTargetStatus0Bits237::
     call ClearDamageAndReadTargetStatus0
-    and a, $8C
+    and $8c
     jr z, .skip
     ld a, [hl]
-    and a, $73
+    and $73
     ld [hl], a
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
@@ -2201,18 +1976,14 @@ Func_03B_4C37:: ; address name
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; clears status byte 0 bit 4 of the target when set (message $83, wSlotMarks[target] = 3); otherwise takes the no-effect path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wSlotMarks
-CureTargetStatus0Bit4:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C5A:: ; address name
+; clears status byte 0 bit 4 of the target when set (message $83, wSlotMarks[target] = 3); otherwise
+; takes the no-effect path (E-0122)
+CureTargetStatus0Bit4::
     call ClearDamageAndReadTargetStatus0
-    and a, $10
+    and $10
     jr z, .skip
     ld a, [hl]
-    and a, $EF
+    and $ef
     ld [hl], a
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
@@ -2225,12 +1996,9 @@ Func_03B_4C5A:: ; address name
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; if the target slot is occupied, far-calls ApplyTargetMaxHPAmount; otherwise one of two failure paths (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleResolveStep, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
-ApplyTargetMaxHPIfPresent:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C7D:: ; address name
+; if the target slot is occupied, far-calls ApplyTargetMaxHPAmount; otherwise one of two failure
+; paths (E-0122)
+ApplyTargetMaxHPIfPresent::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, .skip
@@ -2245,18 +2013,13 @@ Func_03B_4C7D:: ; address name
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239)
-; no direct call (reached through a table, a jump or a vector)
-ActionIdEffectNone_3B_4C94:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C94:: ; address name
+ActionIdEffectNone_3B_4C94::
     ret
 
-; for local targets adds the action amount to wBattleMeter; for others checks status, block and resistance and subtracts the amount from the target's wBattleWordArray3F; then stores message $95 or $FD (E-0127)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wBattleStatus
-ApplyTargetBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4C95:: ; address name
+; for local targets adds the action amount to wBattleMeter; for others checks status, block and
+; resistance and subtracts the amount from the target's wBattleWordArray3F; then stores message $95
+; or $FD (E-0127)
+ApplyTargetBattleWordArray3FReduction::
     call TargetOnLocalSide_Bank3B
     jr c, .read_battle_target
     call AddActionAmountToBattleMeter
@@ -2269,12 +2032,12 @@ Func_03B_4C95:: ; address name
     ld a, [hl]
     bit 6, a
     jr nz, .skip2
-    and a, $8C
+    and $8c
     jr nz, .call_show_battle_text_category0
     ld a, $05
     add_a_to_hl
     ld a, [hl]
-    and a, $C0
+    and $c0
     jr nz, .call_show_battle_text_category02
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
@@ -2283,13 +2046,13 @@ Func_03B_4C95:: ; address name
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $03
+    cp $03
     jr c, .skip
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
-    cp a, $01
+    cp $01
     jr z, .skip
-    ld l, $FD
+    ld l, $fd
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
@@ -2299,39 +2062,35 @@ Func_03B_4C95:: ; address name
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip2:
-    ld h, $E6
+    ld h, $e6
     ld bc, $0080
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
-    ld d, $7B
+    ld d, $7b
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
-    ld d, $7D
+    ld d, $7d
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
-    ld d, $7C
+    ld d, $7c
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-; reduces the target's wBattleWordArray3F (or adds to wBattleMeter for local targets); when status bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wDefeatFlagsBA, wBattleTarget
-; writes: wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wBattleStatus
-InflictStatus0Bit0WithBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4D1C:: ; address name
+; reduces the target's wBattleWordArray3F (or adds to wBattleMeter for local targets); when status
+; bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
+InflictStatus0Bit0WithBattleWordArray3FReduction::
     call TargetOnLocalSide_Bank3B
     jr c, .read_battle_target
     ld a, [wDefeatFlagsBA]
-    or a, a
+    or a
     jr nz, .read_battle_target2
     call AddActionAmountToBattleMeter
     jr .read_battle_target2
@@ -2343,12 +2102,12 @@ Func_03B_4D1C:: ; address name
     ld a, [hl]
     bit 6, a
     jp nz, .skip
-    and a, $8C
+    and $8c
     jp nz, .call_show_battle_text_category0
     ld a, $05
     add_a_to_hl
     ld a, [hl]
-    and a, $C0
+    and $c0
     jp nz, .call_show_battle_text_category02
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
@@ -2360,13 +2119,13 @@ Func_03B_4D1C:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
-    and a, $03
+    and $03
     jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
     push hl
     farcall RollTargetSlotResistancesByte4Bits01ChanceToE
     pop hl
     ld a, e
-    or a, a
+    or a
     jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
     set 0, [hl]
     ld a, [wBattleTarget]
@@ -2375,16 +2134,16 @@ Func_03B_4D1C:: ; address name
     ld bc, $0090
     call ClearDamageAndStoreResolveMsgFlags_Bank3B
     ld a, [wDefeatFlagsBA]
-    or a, a
+    or a
     ret nz
     ld a, [wBattleTarget]
-    cp a, $03
+    cp $03
     jr c, .call_show_battle_text
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
-    cp a, $01
+    cp $01
     jr z, .call_show_battle_text
-    ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
+    ld d, $fe ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
@@ -2396,16 +2155,16 @@ Func_03B_4D1C:: ; address name
 .call_set_wdac3_b5_and_resolve_msg_flags:
     call SetWDAC3B5AndResolveMsgFlagsTo0180
     ld a, [wDefeatFlagsBA]
-    or a, a
+    or a
     ret nz
     ld a, [wBattleTarget]
-    cp a, $03
+    cp $03
     jr c, .call_show_battle_text2
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
-    cp a, $01
+    cp $01
     jr z, .call_show_battle_text2
-    ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
+    ld d, $fe ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
@@ -2415,54 +2174,46 @@ Func_03B_4D1C:: ; address name
     ret
 
 .skip:
-    ld h, $E6
+    ld h, $e6
     ld bc, $0080
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
-    ld d, $7B
+    ld d, $7b
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
-    ld d, $7D
+    ld d, $7d
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
-    ld d, $7C
+    ld d, $7c
     farcall ShowBattleTextCategory0
     ld bc, $0000
     jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; wBattleEndFlag = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleEndFlag, wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg
-SetBattleEndFlagAndMessage98:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4E0A:: ; address name
+SetBattleEndFlagAndMessage98::
     ld a, $01
     ld [wBattleEndFlag], a
     ld l, $98
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
-    db $C9
+    db $c9
 
-; effect table entry that goes straight to the failure path ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleResolveStep
-JumpToEffectFailurePath4F15:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4E18:: ; address name
+; effect table entry that goes straight to the failure path
+; ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126)
+JumpToEffectFailurePath4F15::
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-; unless already set, rolls the chance (Func_03B_4A34) and sets bit 0 of the target's wBattleStatus1 status (message $3B); otherwise one of two failure paths (E-0124)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget, wBattleResolveStep
-; points at: wBattleStatus1
-InflictTargetStatus0Bit0:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4E1B:: ; address name
+; unless already set, rolls the chance
+; (InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B) and sets bit 0 of the
+; target's wBattleStatus1 status (message $3B); otherwise one of two failure paths (E-0124)
+InflictTargetStatus0Bit0::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -2474,7 +2225,7 @@ Func_03B_4E1B:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     set 0, [hl]
-    ld l, $3B
+    ld l, $3b
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
@@ -2484,13 +2235,9 @@ Func_03B_4E1B:: ; address name
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2
 
-; sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wBattleResolveStep
-; points at: wBattleStatus1
-InflictTargetStatus0Bit2:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4E46:: ; address name
+; sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path
+; (E-0122)
+InflictTargetStatus0Bit2::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -2504,36 +2251,32 @@ Func_03B_4E46:: ; address name
 .skip:
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target = $35/$B5, flags $A8, arg $80); entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
+; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target
+; = $35/$B5, flags $A8, arg $80); entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no
+; caller)
 RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
-Func_03B_4E60:: ; address name
     call RollTableDamageScaledByResistance
     jp RaiseWord3FAndRestoreHP_Skip
 
-; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget
-; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-; points at: wBattleWordArray3F, wBattleHP, wBattleMaxHP
-RaiseWord3FAndRestoreHP:: ; code pointer of the table ActionIdEffectTable_3B; C0
-Func_03B_4E66:: ; address name
+; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs
+; RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of
+; ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
+RaiseWord3FAndRestoreHP::
     ld a, [wBattleTarget]
     ld hl, wBattleWordArray3F
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
-    add a, $1E
+    ld a, [hli]
+    add $1e
     ld c, a
     ld a, [hl]
-    adc a, $00
+    adc $00
     ld b, a
     ld a, b
-    sub a, $03
+    sub $03
     ld a, c
-    sbc a, $E7
+    sbc $e7
     jr c, .skip
-    ld bc, $03E7
+    ld bc, $03e7
 
 .skip:
     ld [hl], b
@@ -2542,7 +2285,7 @@ Func_03B_4E66:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld a, [wBattleTarget]
@@ -2560,21 +2303,17 @@ Func_03B_4E66:: ; address name
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 RaiseWord3FAndRestoreHP_Skip::
-Jump_03B_4EB0:: ; address name
-    ld hl, $B535
-    ld bc, $80A8
+    ld hl, $b535
+    ld bc, $80a8
     jr UnreferencedStoreResolveMessage35D0_SetResolveMsgActor
 
-; HL = $D035, BC = $88A8, then falls into the resolve-message store at $4EBE; skipped by the jr before it and no caller found (E-0236)
-; no direct call (reached through a table, a jump or a vector)
-; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
+; HL = $D035, BC = $88A8, then falls into the resolve-message store at $4EBE; skipped by the jr
+; before it and no caller found (E-0236)
 UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
-Func_03B_4EB8:: ; address name
-    ld hl, $D035
-    ld bc, $88A8
+    ld hl, $d035
+    ld bc, $88a8
 
 UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
-Jump_03B_4EBE:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h
@@ -2585,17 +2324,14 @@ Jump_03B_4EBE:: ; address name
     ld [wResolveMsgArg], a
     ret
 
-; clears wBattleDamageLo/wBattleDamageHi (the damage word), then wResolveMsgActor = L, wResolveMsgFlags = C, wResolveMsgArg = B (the same instructions as the bank-$36 copy) (E-0073)
-; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction)
-; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg
+; clears wBattleDamageLo/wBattleDamageHi (the damage word), then wResolveMsgActor = L,
+; wResolveMsgFlags = C, wResolveMsgArg = B (the same instructions as the bank-$36 copy) (E-0073)
 ClearDamageAndStoreResolveMsgFlags_Bank3B::
-Func_03B_4ECF:: ; address name
-    xor a, a
+    xor a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
 ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
-Jump_03B_4ED6:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, c
@@ -2605,46 +2341,35 @@ Jump_03B_4ED6:: ; address name
     ret
 
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
-Jump_03B_4EE3:: ; address name
-    ld h, $CC
+    ld h, $cc
     ld bc, $0080
     jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
-Jump_03B_4EEA:: ; address name
-    ld h, $B5
+    ld h, $b5
     ld bc, $0080
     jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 ; wResolveMsgTarget = $B5 and the word wResolveMsgFlags = $0180 (E-0122)
-; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction)
-; writes: wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 SetWDAC3B5AndResolveMsgFlagsTo0180::
-Func_03B_4EF1:: ; address name
-    ld h, $B5
+    ld h, $b5
     ld bc, $0180
 
 SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
-Jump_03B_4EF6:: ; address name
     ld a, h
     ld [wResolveMsgTarget], a
 
 SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
-Jump_03B_4EFA:: ; address name
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b
     ld [wResolveMsgArg], a
     ret
 
-; clears wBattleDamageLo/wBattleDamageHi, then A = status byte 0 of wBattleTarget (wBattleStatus + 9 * target), HL pointing at it (E-0078)
-; 5 call sites from 5 routines (e.g. CureTargetStatus0Bit4, CureTargetStatus0Bits237, CureTargetStatus0Bit5, CureTargetStatus0Bit6, ...)
-; reads: wBattleTarget
-; writes: wBattleDamageLo, wBattleDamageHi
-; points at: wBattleStatus
+; clears wBattleDamageLo/wBattleDamageHi, then A = status byte 0 of wBattleTarget (wBattleStatus + 9
+; * target), HL pointing at it (E-0078)
 ClearDamageAndReadTargetStatus0::
-Func_03B_4F03:: ; address name
-    xor a, a
+    xor a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, [wBattleTarget]
@@ -2654,104 +2379,84 @@ Func_03B_4F03:: ; address name
     ret
 
 ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
-Jump_03B_4F15:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [wBattleResolveStep], a
     ret
-    db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
+    db $21, $ff, $d8, $18, $28, $21, $0f, $d9, $18, $23
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RestoreTargetHPByActionAmount)
-; points at: wBattleMaxHP
 GetBattleMaxHP_Bank3B::
-Func_03B_4F25:: ; address name
     ld hl, wBattleMaxHP
     jr GetBattleMP_Bank3B_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RestoreTargetMPIfLow_SetDamageRandomInRange)
-; points at: wBattleMaxMP
 GetBattleMaxMP_Bank3B::
-Func_03B_4F2A:: ; address name
     ld hl, wBattleMaxMP
     jr GetBattleMP_Bank3B_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleHP
-GetBattleHP_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
-Func_03B_4F2F:: ; address name
+GetBattleHP_Bank3B::
     ld hl, wBattleHP
     jr GetBattleMP_Bank3B_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMP
-GetBattleMP_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
-Func_03B_4F34:: ; address name
+GetBattleMP_Bank3B::
     ld hl, wBattleMP
     jr GetBattleMP_Bank3B_Skip
-    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 GetBattleMP_Bank3B_Skip::
-Jump_03B_4F48:: ; address name
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 13 call sites from 7 routines (e.g. RaiseWord3FAndRestoreHP, RestoreTargetHPByActionAmount, SubtractActionAmountFromTargetBattleWordArray3F, RestoreTargetMPIfLow, ...)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
+; appear in 12 banks)
 AddDoubleAToHL_Bank3B::
-Func_03B_4F52:: ; address name
-    add a, a
+    add a
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole, wBattleActor
-ActorOnLocalSide_Bank3B:: ; heuristic: follows a terminator; C0
-Func_03B_4F59:: ; address name
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
+; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+ActorOnLocalSide_Bank3B::
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_actor
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_actor:
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction, RunBattleActions_UseItem_TargetOnLocalSide_Bank3B)
-; reads: wLinkMode, wLinkRole, wBattleTarget
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
+; banks)
 TargetOnLocalSide_Bank3B::
-Func_03B_4F74:: ; address name
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_target
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ret
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus
-ClearBattleStatusBitsWithMaskD_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
-Func_03B_4F8F:: ; address name
+ClearBattleStatusBitsWithMaskD_Bank3B::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3B_Data
     add_a_to_hl
@@ -2760,20 +2465,16 @@ Func_03B_4F8F:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, d
-    and a, [hl]
+    and [hl]
     ld [hl], a
     ret
 
-; address loaded by ClearBattleStatusBitsWithMaskD_Bank3B
-ClearBattleStatusBitsWithMaskD_Bank3B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_03B_4FA4:: ; address name
-    db $DF, $FE, $00, $FD, $73, $EF, $BF
+ClearBattleStatusBitsWithMaskD_Bank3B_Data::
+    db $df, $fe, $00, $fd, $73, $ef, $bf
 
-; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
-; points at: wLevelUpGains
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit0OfLevelUpGainsIndexed_Bank3B::
-Func_03B_4FAB:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -2781,11 +2482,9 @@ Func_03B_4FAB:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
-; points at: wLevelUpGains
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit1OfLevelUpGainsIndexed_Bank3B::
-Func_03B_4FB8:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -2793,11 +2492,9 @@ Func_03B_4FB8:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
-; points at: wLevelUpGains
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit2OfLevelUpGainsIndexed_Bank3B::
-Func_03B_4FC5:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -2805,11 +2502,11 @@ Func_03B_4FC5:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
-PersonalityIndexOfSlot_Bank3B:: ; heuristic: follows a terminator; C0
-Func_03B_4FD2:: ; address name
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
+; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
+; appear in 13 banks)
+PersonalityIndexOfSlot_Bank3B::
     push hl
     push bc
     ld c, a
@@ -2818,57 +2515,56 @@ Func_03B_4FD2:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip
     ld l, $09
-    cp a, $40
+    cp $40
     jr nc, .skip
     ld l, $12
 
 .skip:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip2
     ld l, $03
-    cp a, $40
+    cp $40
     jr nc, .skip2
     ld l, $06
 
 .skip2:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip3
     ld l, $01
-    cp a, $40
+    cp $40
     jr nc, .skip3
     ld l, $02
 
 .skip3:
     ld a, l
-    add a, b
+    add b
     pop bc
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
-CheckSlotStatusBlockWide_Bank3B:: ; heuristic: follows a terminator; C0
-Func_03B_5029:: ; address name
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
+; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
+; appear in 12 banks)
+CheckSlotStatusBlockWide_Bank3B::
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -2876,13 +2572,13 @@ Func_03B_5029:: ; address name
     ld c, a
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .set_carry
     ld a, [hl]
-    and a, $0C
+    and $0c
     jr nz, .set_carry
-    xor a, a
+    xor a
     jr .skip
 
 .set_carry:
@@ -2894,54 +2590,51 @@ Func_03B_5029:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
-SlotHasStatus3Or4Bits_Bank3B:: ; heuristic: follows a terminator; C0
-Func_03B_5048:: ; address name
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
+; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
+; appear in 13 banks)
+SlotHasStatus3Or4Bits_Bank3B::
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .done
     ld a, [hl]
-    and a, $0C
+    and $0c
 
 .done:
     pop hl
     ret
 
-; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange)
-; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
-; points at: hSpriteOriginX
+; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR
+; = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
 DrawEffectSpriteAtEffectSpriteX_Bank3B::
-Func_03B_5059:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wEffectSpriteX]
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ld a, $68
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
+    ld [hli], a
     ld a, [wEffectTileOffset]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wEffectSpriteAttrXor]
-    ld [hl+], a
+    ld [hli], a
     ld a, $00
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld [hli], a
     ld de, MetaSprites3B_507CTable
     call BuildOamFromSpriteTable_Bank3B
     ret
 
-; E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3B passes DE = $3B:507C; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 51 words, up to the next code or data).
+; the caller of BuildOamFromSpriteTable_Bank3B passes DE = $MetaSprites3B_507CTable; the builder
+; takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as
+; the frame; 51 words, up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
 MetaSprites3B_507CTable::
-Data_03B_507C:: ; address name
     dw MetaSprites3B_507CSet00 ; id 0
     dw MetaSprites3B_507CSet00 ; id 1
     dw MetaSprites3B_507CSet00 ; id 2
@@ -2994,14 +2687,13 @@ Data_03B_507C:: ; address name
     dw MetaSprites3B_507CSet31 ; id 49
     dw MetaSprites3B_507CSet32 ; id 50
 
-; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteAtEffectSpriteX_Bank3B)
-; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
-; writes: hOamNextEntry
+; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
+; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
+; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
+; (40 entries) (the same 81 bytes appear in 5 banks)
 BuildOamFromSpriteTable_Bank3B::
-Func_03B_50E2:: ; address name
     ldh a, [hOamNextEntry]
-    cp a, $28
+    cp $28
     jr nc, .return
     ldh a, [hSpriteSetIndex]
     ld l, a
@@ -3023,50 +2715,50 @@ Func_03B_50E2:: ; address name
     sla a
     sla a
     ld l, a
-    ld h, $C0
+    ld h, $c0
 
 .loop:
     ld a, [de]
     inc de
-    cp a, $80
+    cp $80
     jr z, .return
     ld b, a
     ldh a, [hSpriteOriginY]
-    add a, b
-    add a, $10
-    ld [hl+], a
+    add b
+    add $10
+    ld [hli], a
     ld a, [de]
     inc de
     ld b, a
     ldh a, [hSpriteOriginX]
-    add a, b
-    add a, $08
-    ld [hl+], a
+    add b
+    add $08
+    ld [hli], a
     ldh a, [hSpriteTileOffset]
     ld b, a
     ld a, [de]
     inc de
-    add a, b
-    ld [hl+], a
+    add b
+    ld [hli], a
     ld a, [de]
     inc de
     ld b, a
     ldh a, [hSpriteAttrXor]
-    xor a, b
-    ld [hl+], a
+    xor b
+    ld [hli], a
     ldh a, [hOamNextEntry]
     inc a
     ldh [hOamNextEntry], a
-    cp a, $28
+    cp $28
     jr c, .loop
 
 .return:
     ret
 
-; E-0147 (derived: meta-sprite set 0 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 0 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet00::
-Data_03B_5133:: ; address name
     dw MetaSprites3B_507CSet00Frame0 ; entry 0
     dw MetaSprites3B_507CSet00Frame1 ; entry 1
     dw MetaSprites3B_507CSet00Frame2 ; entry 2
@@ -3100,169 +2792,148 @@ Data_03B_5133:: ; address name
     dw MetaSprites3B_507CSet00Frame12 ; entry 30
     dw MetaSprites3B_507CSet00Frame12 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet00; ends with $80)
+; frame 0 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet00Frame0::
-Data_03B_5173:: ; address name
-    db $F8, $F8, $00, $00 ; entry 0
-    db $F8, $FF, $00, $20 ; entry 1
+    db $f8, $f8, $00, $00 ; entry 0
+    db $f8, $ff, $00, $20 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame1::
-Data_03B_517C:: ; address name
-    db $F8, $F0, $02, $00 ; entry 0
-    db $F8, $F8, $03, $00 ; entry 1
-    db $F8, $00, $03, $20 ; entry 2
-    db $F8, $07, $02, $20 ; entry 3
-    db $F0, $FF, $01, $20 ; entry 4
-    db $F0, $F8, $01, $00 ; entry 5
+    db $f8, $f0, $02, $00 ; entry 0
+    db $f8, $f8, $03, $00 ; entry 1
+    db $f8, $00, $03, $20 ; entry 2
+    db $f8, $07, $02, $20 ; entry 3
+    db $f0, $ff, $01, $20 ; entry 4
+    db $f0, $f8, $01, $00 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame2::
-Data_03B_5195:: ; address name
-    db $F8, $F0, $05, $00 ; entry 0
-    db $F8, $F8, $06, $00 ; entry 1
-    db $F8, $07, $05, $20 ; entry 2
-    db $F8, $FF, $06, $20 ; entry 3
-    db $F0, $F8, $04, $00 ; entry 4
-    db $F0, $FF, $04, $20 ; entry 5
+    db $f8, $f0, $05, $00 ; entry 0
+    db $f8, $f8, $06, $00 ; entry 1
+    db $f8, $07, $05, $20 ; entry 2
+    db $f8, $ff, $06, $20 ; entry 3
+    db $f0, $f8, $04, $00 ; entry 4
+    db $f0, $ff, $04, $20 ; entry 5
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame3::
-Data_03B_51AE:: ; address name
-    db $F8, $F8, $08, $00 ; entry 0
-    db $F0, $F8, $07, $00 ; entry 1
-    db $F8, $FF, $08, $20 ; entry 2
-    db $F0, $FF, $07, $20 ; entry 3
+    db $f8, $f8, $08, $00 ; entry 0
+    db $f0, $f8, $07, $00 ; entry 1
+    db $f8, $ff, $08, $20 ; entry 2
+    db $f0, $ff, $07, $20 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet00; ends with $80)
+; frame 4 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet00Frame4::
-Data_03B_51BF:: ; address name
-    db $F8, $FC, $0A, $00 ; entry 0
-    db $F0, $FC, $09, $00 ; entry 1
+    db $f8, $fc, $0a, $00 ; entry 0
+    db $f0, $fc, $09, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame5::
-Data_03B_51C8:: ; address name
-    db $F8, $FC, $0B, $00 ; entry 0
-    db $F0, $FC, $0A, $00 ; entry 1
-    db $E8, $FC, $09, $00 ; entry 2
+    db $f8, $fc, $0b, $00 ; entry 0
+    db $f0, $fc, $0a, $00 ; entry 1
+    db $e8, $fc, $09, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame6::
-Data_03B_51D5:: ; address name
-    db $E8, $FC, $0D, $00 ; entry 0
-    db $F0, $FC, $0E, $00 ; entry 1
-    db $F8, $FC, $0C, $00 ; entry 2
+    db $e8, $fc, $0d, $00 ; entry 0
+    db $f0, $fc, $0e, $00 ; entry 1
+    db $f8, $fc, $0c, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame7::
-Data_03B_51E2:: ; address name
-    db $E8, $F8, $11, $00 ; entry 0
-    db $E8, $00, $12, $00 ; entry 1
-    db $E0, $F8, $0F, $00 ; entry 2
-    db $E0, $00, $10, $00 ; entry 3
-    db $F0, $FC, $0C, $00 ; entry 4
+    db $e8, $f8, $11, $00 ; entry 0
+    db $e8, $00, $12, $00 ; entry 1
+    db $e0, $f8, $0f, $00 ; entry 2
+    db $e0, $00, $10, $00 ; entry 3
+    db $f0, $fc, $0c, $00 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet00; ends with $80)
+; frame 8 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet00Frame8::
-Data_03B_51F7:: ; address name
-    db $E4, $F4, $16, $00 ; entry 0
-    db $E4, $FC, $17, $00 ; entry 1
-    db $E4, $04, $18, $00 ; entry 2
-    db $DC, $F4, $13, $00 ; entry 3
-    db $DC, $FC, $14, $00 ; entry 4
-    db $DC, $04, $15, $00 ; entry 5
-    db $EC, $F8, $19, $00 ; entry 6
-    db $EC, $00, $1A, $00 ; entry 7
+    db $e4, $f4, $16, $00 ; entry 0
+    db $e4, $fc, $17, $00 ; entry 1
+    db $e4, $04, $18, $00 ; entry 2
+    db $dc, $f4, $13, $00 ; entry 3
+    db $dc, $fc, $14, $00 ; entry 4
+    db $dc, $04, $15, $00 ; entry 5
+    db $ec, $f8, $19, $00 ; entry 6
+    db $ec, $00, $1a, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame9::
-Data_03B_5218:: ; address name
-    db $D8, $F0, $1B, $00 ; entry 0
-    db $D8, $F8, $1C, $00 ; entry 1
-    db $D8, $00, $1D, $00 ; entry 2
-    db $E0, $F0, $1E, $00 ; entry 3
-    db $E0, $F8, $1F, $00 ; entry 4
-    db $E0, $00, $1F, $20 ; entry 5
-    db $E8, $F8, $1F, $40 ; entry 6
-    db $E8, $00, $1F, $60 ; entry 7
-    db $E0, $08, $20, $00 ; entry 8
-    db $E8, $08, $1E, $60 ; entry 9
-    db $F0, $F0, $22, $00 ; entry 10
-    db $F0, $F8, $23, $00 ; entry 11
-    db $F0, $00, $24, $00 ; entry 12
-    db $F0, $08, $25, $00 ; entry 13
-    db $E8, $F0, $21, $00 ; entry 14
+    db $d8, $f0, $1b, $00 ; entry 0
+    db $d8, $f8, $1c, $00 ; entry 1
+    db $d8, $00, $1d, $00 ; entry 2
+    db $e0, $f0, $1e, $00 ; entry 3
+    db $e0, $f8, $1f, $00 ; entry 4
+    db $e0, $00, $1f, $20 ; entry 5
+    db $e8, $f8, $1f, $40 ; entry 6
+    db $e8, $00, $1f, $60 ; entry 7
+    db $e0, $08, $20, $00 ; entry 8
+    db $e8, $08, $1e, $60 ; entry 9
+    db $f0, $f0, $22, $00 ; entry 10
+    db $f0, $f8, $23, $00 ; entry 11
+    db $f0, $00, $24, $00 ; entry 12
+    db $f0, $08, $25, $00 ; entry 13
+    db $e8, $f0, $21, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame10::
-Data_03B_5255:: ; address name
-    db $DE, $EE, $2C, $00 ; entry 0
-    db $DE, $F6, $2D, $00 ; entry 1
-    db $D6, $EE, $2A, $00 ; entry 2
-    db $D6, $F6, $2B, $00 ; entry 3
-    db $DE, $02, $28, $00 ; entry 4
-    db $DE, $0A, $29, $00 ; entry 5
-    db $D6, $02, $26, $00 ; entry 6
-    db $D6, $0A, $27, $00 ; entry 7
-    db $EA, $0A, $2C, $60 ; entry 8
-    db $EA, $02, $2D, $60 ; entry 9
-    db $F2, $0A, $2A, $60 ; entry 10
-    db $F2, $02, $2B, $60 ; entry 11
-    db $EA, $F6, $28, $60 ; entry 12
-    db $EA, $EE, $29, $60 ; entry 13
-    db $F2, $F6, $26, $60 ; entry 14
-    db $F2, $EE, $27, $60 ; entry 15
+    db $de, $ee, $2c, $00 ; entry 0
+    db $de, $f6, $2d, $00 ; entry 1
+    db $d6, $ee, $2a, $00 ; entry 2
+    db $d6, $f6, $2b, $00 ; entry 3
+    db $de, $02, $28, $00 ; entry 4
+    db $de, $0a, $29, $00 ; entry 5
+    db $d6, $02, $26, $00 ; entry 6
+    db $d6, $0a, $27, $00 ; entry 7
+    db $ea, $0a, $2c, $60 ; entry 8
+    db $ea, $02, $2d, $60 ; entry 9
+    db $f2, $0a, $2a, $60 ; entry 10
+    db $f2, $02, $2b, $60 ; entry 11
+    db $ea, $f6, $28, $60 ; entry 12
+    db $ea, $ee, $29, $60 ; entry 13
+    db $f2, $f6, $26, $60 ; entry 14
+    db $f2, $ee, $27, $60 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3B_507CSet00; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 MetaSprites3B_507CSet00Frame11::
-Data_03B_5296:: ; address name
-    db $DA, $06, $2F, $00 ; entry 0
-    db $D2, $06, $2E, $00 ; entry 1
-    db $D6, $12, $2F, $00 ; entry 2
-    db $DA, $F2, $2E, $20 ; entry 3
-    db $D2, $F2, $2F, $20 ; entry 4
-    db $D7, $EA, $2E, $20 ; entry 5
-    db $EE, $F2, $2F, $60 ; entry 6
-    db $F6, $F2, $2E, $60 ; entry 7
-    db $F2, $E6, $2F, $60 ; entry 8
-    db $EE, $06, $2E, $40 ; entry 9
-    db $F6, $06, $2F, $40 ; entry 10
-    db $F1, $0E, $2E, $40 ; entry 11
+    db $da, $06, $2f, $00 ; entry 0
+    db $d2, $06, $2e, $00 ; entry 1
+    db $d6, $12, $2f, $00 ; entry 2
+    db $da, $f2, $2e, $20 ; entry 3
+    db $d2, $f2, $2f, $20 ; entry 4
+    db $d7, $ea, $2e, $20 ; entry 5
+    db $ee, $f2, $2f, $60 ; entry 6
+    db $f6, $f2, $2e, $60 ; entry 7
+    db $f2, $e6, $2f, $60 ; entry 8
+    db $ee, $06, $2e, $40 ; entry 9
+    db $f6, $06, $2f, $40 ; entry 10
+    db $f1, $0e, $2e, $40 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3B_507CSet00; ends with $80)
+; frame 12 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet00Frame12::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 46 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 46 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet2E::
-Data_03B_52C8:: ; address name
     dw MetaSprites3B_507CSet2EFrame0 ; entry 0
     dw MetaSprites3B_507CSet2EFrame1 ; entry 1
     dw MetaSprites3B_507CSet2EFrame2 ; entry 2
@@ -3296,678 +2967,628 @@ Data_03B_52C8:: ; address name
     dw MetaSprites3B_507CSet2EFrame28 ; entry 30
     dw MetaSprites3B_507CSet2EFrame28 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 0 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame0::
-Data_03B_5308:: ; address name
-    db $F8, $B0, $14, $00 ; entry 0
-    db $E0, $B8, $00, $00 ; entry 1
-    db $E0, $C0, $01, $00 ; entry 2
-    db $E0, $C8, $02, $00 ; entry 3
-    db $F0, $D8, $10, $00 ; entry 4
-    db $F8, $C8, $15, $00 ; entry 5
-    db $F8, $C0, $14, $00 ; entry 6
-    db $E8, $B0, $04, $00 ; entry 7
-    db $E8, $B8, $05, $00 ; entry 8
-    db $E8, $C0, $06, $00 ; entry 9
-    db $E8, $C8, $07, $00 ; entry 10
-    db $E8, $D0, $08, $00 ; entry 11
-    db $F0, $B0, $0B, $00 ; entry 12
-    db $F0, $B8, $0C, $00 ; entry 13
-    db $F0, $C0, $0D, $00 ; entry 14
-    db $F0, $C8, $0E, $00 ; entry 15
-    db $F0, $D0, $0F, $00 ; entry 16
-    db $F8, $B8, $13, $00 ; entry 17
+    db $f8, $b0, $14, $00 ; entry 0
+    db $e0, $b8, $00, $00 ; entry 1
+    db $e0, $c0, $01, $00 ; entry 2
+    db $e0, $c8, $02, $00 ; entry 3
+    db $f0, $d8, $10, $00 ; entry 4
+    db $f8, $c8, $15, $00 ; entry 5
+    db $f8, $c0, $14, $00 ; entry 6
+    db $e8, $b0, $04, $00 ; entry 7
+    db $e8, $b8, $05, $00 ; entry 8
+    db $e8, $c0, $06, $00 ; entry 9
+    db $e8, $c8, $07, $00 ; entry 10
+    db $e8, $d0, $08, $00 ; entry 11
+    db $f0, $b0, $0b, $00 ; entry 12
+    db $f0, $b8, $0c, $00 ; entry 13
+    db $f0, $c0, $0d, $00 ; entry 14
+    db $f0, $c8, $0e, $00 ; entry 15
+    db $f0, $d0, $0f, $00 ; entry 16
+    db $f8, $b8, $13, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 1 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame1::
-Data_03B_5351:: ; address name
-    db $F0, $C0, $14, $00 ; entry 0
-    db $D8, $C8, $00, $00 ; entry 1
-    db $D8, $D0, $01, $00 ; entry 2
-    db $D8, $D8, $02, $00 ; entry 3
-    db $E8, $E8, $10, $00 ; entry 4
-    db $F0, $D8, $15, $00 ; entry 5
-    db $F0, $D0, $14, $00 ; entry 6
-    db $E0, $B8, $03, $00 ; entry 7
-    db $E0, $C0, $04, $00 ; entry 8
-    db $E0, $C8, $05, $00 ; entry 9
-    db $E0, $D0, $06, $00 ; entry 10
-    db $E0, $D8, $07, $00 ; entry 11
-    db $E0, $E0, $08, $00 ; entry 12
-    db $F0, $B0, $11, $00 ; entry 13
-    db $F0, $B8, $12, $00 ; entry 14
-    db $E8, $B0, $09, $00 ; entry 15
-    db $E8, $B8, $0A, $00 ; entry 16
-    db $E8, $C0, $0B, $00 ; entry 17
-    db $E8, $C8, $0C, $00 ; entry 18
-    db $E8, $D0, $0D, $00 ; entry 19
-    db $E8, $D8, $0E, $00 ; entry 20
-    db $E8, $E0, $0F, $00 ; entry 21
-    db $F0, $C8, $13, $00 ; entry 22
-    db $F8, $B0, $17, $00 ; entry 23
-    db $F8, $C8, $19, $00 ; entry 24
-    db $F8, $B8, $18, $00 ; entry 25
-    db $F8, $C0, $18, $00 ; entry 26
-    db $F8, $D0, $18, $00 ; entry 27
+    db $f0, $c0, $14, $00 ; entry 0
+    db $d8, $c8, $00, $00 ; entry 1
+    db $d8, $d0, $01, $00 ; entry 2
+    db $d8, $d8, $02, $00 ; entry 3
+    db $e8, $e8, $10, $00 ; entry 4
+    db $f0, $d8, $15, $00 ; entry 5
+    db $f0, $d0, $14, $00 ; entry 6
+    db $e0, $b8, $03, $00 ; entry 7
+    db $e0, $c0, $04, $00 ; entry 8
+    db $e0, $c8, $05, $00 ; entry 9
+    db $e0, $d0, $06, $00 ; entry 10
+    db $e0, $d8, $07, $00 ; entry 11
+    db $e0, $e0, $08, $00 ; entry 12
+    db $f0, $b0, $11, $00 ; entry 13
+    db $f0, $b8, $12, $00 ; entry 14
+    db $e8, $b0, $09, $00 ; entry 15
+    db $e8, $b8, $0a, $00 ; entry 16
+    db $e8, $c0, $0b, $00 ; entry 17
+    db $e8, $c8, $0c, $00 ; entry 18
+    db $e8, $d0, $0d, $00 ; entry 19
+    db $e8, $d8, $0e, $00 ; entry 20
+    db $e8, $e0, $0f, $00 ; entry 21
+    db $f0, $c8, $13, $00 ; entry 22
+    db $f8, $b0, $17, $00 ; entry 23
+    db $f8, $c8, $19, $00 ; entry 24
+    db $f8, $b8, $18, $00 ; entry 25
+    db $f8, $c0, $18, $00 ; entry 26
+    db $f8, $d0, $18, $00 ; entry 27
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame2::
-Data_03B_53C2:: ; address name
-    db $E8, $C8, $14, $00 ; entry 0
-    db $D0, $D0, $00, $00 ; entry 1
-    db $D0, $D8, $01, $00 ; entry 2
-    db $D0, $E0, $02, $00 ; entry 3
-    db $E0, $F0, $10, $00 ; entry 4
-    db $E8, $E0, $15, $00 ; entry 5
-    db $E8, $D8, $14, $00 ; entry 6
-    db $D8, $C0, $03, $00 ; entry 7
-    db $D8, $C8, $04, $00 ; entry 8
-    db $D8, $D0, $05, $00 ; entry 9
-    db $D8, $D8, $06, $00 ; entry 10
-    db $D8, $E0, $07, $00 ; entry 11
-    db $D8, $E8, $08, $00 ; entry 12
-    db $E8, $B8, $11, $00 ; entry 13
-    db $E8, $C0, $12, $00 ; entry 14
-    db $F8, $E0, $15, $40 ; entry 15
-    db $E0, $B8, $09, $00 ; entry 16
-    db $E0, $C0, $0A, $00 ; entry 17
-    db $E0, $C8, $0B, $00 ; entry 18
-    db $E0, $D0, $0C, $00 ; entry 19
-    db $E0, $D8, $0D, $00 ; entry 20
-    db $E0, $E0, $0E, $00 ; entry 21
-    db $E0, $E8, $0F, $00 ; entry 22
-    db $E8, $D0, $13, $00 ; entry 23
-    db $F8, $C0, $1C, $00 ; entry 24
-    db $F8, $D8, $1D, $00 ; entry 25
-    db $F0, $B8, $17, $00 ; entry 26
-    db $F0, $D0, $19, $00 ; entry 27
-    db $F0, $C0, $18, $00 ; entry 28
-    db $F0, $B0, $16, $00 ; entry 29
-    db $F8, $B0, $1A, $00 ; entry 30
-    db $F0, $C8, $18, $00 ; entry 31
-    db $F0, $D8, $18, $00 ; entry 32
-    db $F8, $D0, $1C, $00 ; entry 33
-    db $F8, $C8, $18, $00 ; entry 34
-    db $F8, $B8, $1B, $00 ; entry 35
+    db $e8, $c8, $14, $00 ; entry 0
+    db $d0, $d0, $00, $00 ; entry 1
+    db $d0, $d8, $01, $00 ; entry 2
+    db $d0, $e0, $02, $00 ; entry 3
+    db $e0, $f0, $10, $00 ; entry 4
+    db $e8, $e0, $15, $00 ; entry 5
+    db $e8, $d8, $14, $00 ; entry 6
+    db $d8, $c0, $03, $00 ; entry 7
+    db $d8, $c8, $04, $00 ; entry 8
+    db $d8, $d0, $05, $00 ; entry 9
+    db $d8, $d8, $06, $00 ; entry 10
+    db $d8, $e0, $07, $00 ; entry 11
+    db $d8, $e8, $08, $00 ; entry 12
+    db $e8, $b8, $11, $00 ; entry 13
+    db $e8, $c0, $12, $00 ; entry 14
+    db $f8, $e0, $15, $40 ; entry 15
+    db $e0, $b8, $09, $00 ; entry 16
+    db $e0, $c0, $0a, $00 ; entry 17
+    db $e0, $c8, $0b, $00 ; entry 18
+    db $e0, $d0, $0c, $00 ; entry 19
+    db $e0, $d8, $0d, $00 ; entry 20
+    db $e0, $e0, $0e, $00 ; entry 21
+    db $e0, $e8, $0f, $00 ; entry 22
+    db $e8, $d0, $13, $00 ; entry 23
+    db $f8, $c0, $1c, $00 ; entry 24
+    db $f8, $d8, $1d, $00 ; entry 25
+    db $f0, $b8, $17, $00 ; entry 26
+    db $f0, $d0, $19, $00 ; entry 27
+    db $f0, $c0, $18, $00 ; entry 28
+    db $f0, $b0, $16, $00 ; entry 29
+    db $f8, $b0, $1a, $00 ; entry 30
+    db $f0, $c8, $18, $00 ; entry 31
+    db $f0, $d8, $18, $00 ; entry 32
+    db $f8, $d0, $1c, $00 ; entry 33
+    db $f8, $c8, $18, $00 ; entry 34
+    db $f8, $b8, $1b, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame3::
-Data_03B_5453:: ; address name
-    db $E8, $D0, $14, $00 ; entry 0
-    db $D0, $D8, $00, $00 ; entry 1
-    db $D0, $E0, $01, $00 ; entry 2
-    db $D0, $E8, $02, $00 ; entry 3
-    db $E0, $F8, $10, $00 ; entry 4
-    db $E8, $E8, $15, $00 ; entry 5
-    db $E8, $E0, $14, $00 ; entry 6
-    db $D8, $C8, $03, $00 ; entry 7
-    db $D8, $D0, $04, $00 ; entry 8
-    db $D8, $D8, $05, $00 ; entry 9
-    db $D8, $E0, $06, $00 ; entry 10
-    db $D8, $E8, $07, $00 ; entry 11
-    db $D8, $F0, $08, $00 ; entry 12
-    db $E8, $C0, $11, $00 ; entry 13
-    db $E8, $C8, $12, $00 ; entry 14
-    db $F8, $E8, $15, $40 ; entry 15
-    db $E0, $C0, $09, $00 ; entry 16
-    db $E0, $C8, $0A, $00 ; entry 17
-    db $E0, $D0, $0B, $00 ; entry 18
-    db $E0, $D8, $0C, $00 ; entry 19
-    db $E0, $E0, $0D, $00 ; entry 20
-    db $E0, $E8, $0E, $00 ; entry 21
-    db $E0, $F0, $0F, $00 ; entry 22
-    db $E8, $D8, $13, $00 ; entry 23
-    db $F8, $C0, $1B, $00 ; entry 24
-    db $F8, $C8, $1C, $00 ; entry 25
-    db $F8, $E0, $1D, $00 ; entry 26
-    db $F0, $C0, $17, $00 ; entry 27
-    db $F0, $D8, $19, $00 ; entry 28
-    db $F0, $C8, $18, $00 ; entry 29
-    db $F0, $B8, $16, $00 ; entry 30
-    db $F8, $B0, $16, $00 ; entry 31
-    db $F8, $B8, $1A, $00 ; entry 32
-    db $F0, $D0, $18, $00 ; entry 33
-    db $F0, $E0, $18, $00 ; entry 34
-    db $F8, $D8, $1C, $00 ; entry 35
-    db $F8, $D0, $18, $00 ; entry 36
+    db $e8, $d0, $14, $00 ; entry 0
+    db $d0, $d8, $00, $00 ; entry 1
+    db $d0, $e0, $01, $00 ; entry 2
+    db $d0, $e8, $02, $00 ; entry 3
+    db $e0, $f8, $10, $00 ; entry 4
+    db $e8, $e8, $15, $00 ; entry 5
+    db $e8, $e0, $14, $00 ; entry 6
+    db $d8, $c8, $03, $00 ; entry 7
+    db $d8, $d0, $04, $00 ; entry 8
+    db $d8, $d8, $05, $00 ; entry 9
+    db $d8, $e0, $06, $00 ; entry 10
+    db $d8, $e8, $07, $00 ; entry 11
+    db $d8, $f0, $08, $00 ; entry 12
+    db $e8, $c0, $11, $00 ; entry 13
+    db $e8, $c8, $12, $00 ; entry 14
+    db $f8, $e8, $15, $40 ; entry 15
+    db $e0, $c0, $09, $00 ; entry 16
+    db $e0, $c8, $0a, $00 ; entry 17
+    db $e0, $d0, $0b, $00 ; entry 18
+    db $e0, $d8, $0c, $00 ; entry 19
+    db $e0, $e0, $0d, $00 ; entry 20
+    db $e0, $e8, $0e, $00 ; entry 21
+    db $e0, $f0, $0f, $00 ; entry 22
+    db $e8, $d8, $13, $00 ; entry 23
+    db $f8, $c0, $1b, $00 ; entry 24
+    db $f8, $c8, $1c, $00 ; entry 25
+    db $f8, $e0, $1d, $00 ; entry 26
+    db $f0, $c0, $17, $00 ; entry 27
+    db $f0, $d8, $19, $00 ; entry 28
+    db $f0, $c8, $18, $00 ; entry 29
+    db $f0, $b8, $16, $00 ; entry 30
+    db $f8, $b0, $16, $00 ; entry 31
+    db $f8, $b8, $1a, $00 ; entry 32
+    db $f0, $d0, $18, $00 ; entry 33
+    db $f0, $e0, $18, $00 ; entry 34
+    db $f8, $d8, $1c, $00 ; entry 35
+    db $f8, $d0, $18, $00 ; entry 36
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 4 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame4::
-Data_03B_54E8:: ; address name
-    db $E8, $E0, $14, $00 ; entry 0
-    db $D0, $E8, $00, $00 ; entry 1
-    db $D0, $F0, $01, $00 ; entry 2
-    db $D0, $F8, $02, $00 ; entry 3
-    db $E0, $08, $10, $00 ; entry 4
-    db $E8, $F8, $15, $00 ; entry 5
-    db $E8, $F0, $14, $00 ; entry 6
-    db $D8, $D8, $03, $00 ; entry 7
-    db $D8, $E0, $04, $00 ; entry 8
-    db $D8, $E8, $05, $00 ; entry 9
-    db $D8, $F0, $06, $00 ; entry 10
-    db $D8, $F8, $07, $00 ; entry 11
-    db $D8, $00, $08, $00 ; entry 12
-    db $E8, $D0, $11, $00 ; entry 13
-    db $E8, $D8, $12, $00 ; entry 14
-    db $F8, $F8, $15, $40 ; entry 15
-    db $E0, $D0, $09, $00 ; entry 16
-    db $E0, $D8, $0A, $00 ; entry 17
-    db $E0, $E0, $0B, $00 ; entry 18
-    db $E0, $E8, $0C, $00 ; entry 19
-    db $E0, $F0, $0D, $00 ; entry 20
-    db $E0, $F8, $0E, $00 ; entry 21
-    db $E0, $00, $0F, $00 ; entry 22
-    db $E8, $E8, $13, $00 ; entry 23
-    db $F8, $D0, $1B, $00 ; entry 24
-    db $F8, $D8, $1C, $00 ; entry 25
-    db $F8, $F0, $1D, $00 ; entry 26
-    db $F0, $D0, $17, $00 ; entry 27
-    db $F0, $E8, $19, $00 ; entry 28
-    db $F0, $C8, $16, $00 ; entry 29
-    db $F8, $C8, $1A, $00 ; entry 30
-    db $F0, $E0, $18, $00 ; entry 31
-    db $F0, $F0, $18, $00 ; entry 32
-    db $F8, $E8, $1C, $00 ; entry 33
-    db $F8, $B0, $20, $00 ; entry 34
-    db $F8, $B8, $21, $00 ; entry 35
-    db $F8, $C0, $1F, $00 ; entry 36
-    db $F0, $D8, $19, $00 ; entry 37
-    db $F8, $E0, $14, $40 ; entry 38
+    db $e8, $e0, $14, $00 ; entry 0
+    db $d0, $e8, $00, $00 ; entry 1
+    db $d0, $f0, $01, $00 ; entry 2
+    db $d0, $f8, $02, $00 ; entry 3
+    db $e0, $08, $10, $00 ; entry 4
+    db $e8, $f8, $15, $00 ; entry 5
+    db $e8, $f0, $14, $00 ; entry 6
+    db $d8, $d8, $03, $00 ; entry 7
+    db $d8, $e0, $04, $00 ; entry 8
+    db $d8, $e8, $05, $00 ; entry 9
+    db $d8, $f0, $06, $00 ; entry 10
+    db $d8, $f8, $07, $00 ; entry 11
+    db $d8, $00, $08, $00 ; entry 12
+    db $e8, $d0, $11, $00 ; entry 13
+    db $e8, $d8, $12, $00 ; entry 14
+    db $f8, $f8, $15, $40 ; entry 15
+    db $e0, $d0, $09, $00 ; entry 16
+    db $e0, $d8, $0a, $00 ; entry 17
+    db $e0, $e0, $0b, $00 ; entry 18
+    db $e0, $e8, $0c, $00 ; entry 19
+    db $e0, $f0, $0d, $00 ; entry 20
+    db $e0, $f8, $0e, $00 ; entry 21
+    db $e0, $00, $0f, $00 ; entry 22
+    db $e8, $e8, $13, $00 ; entry 23
+    db $f8, $d0, $1b, $00 ; entry 24
+    db $f8, $d8, $1c, $00 ; entry 25
+    db $f8, $f0, $1d, $00 ; entry 26
+    db $f0, $d0, $17, $00 ; entry 27
+    db $f0, $e8, $19, $00 ; entry 28
+    db $f0, $c8, $16, $00 ; entry 29
+    db $f8, $c8, $1a, $00 ; entry 30
+    db $f0, $e0, $18, $00 ; entry 31
+    db $f0, $f0, $18, $00 ; entry 32
+    db $f8, $e8, $1c, $00 ; entry 33
+    db $f8, $b0, $20, $00 ; entry 34
+    db $f8, $b8, $21, $00 ; entry 35
+    db $f8, $c0, $1f, $00 ; entry 36
+    db $f0, $d8, $19, $00 ; entry 37
+    db $f8, $e0, $14, $40 ; entry 38
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 5 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame5::
-Data_03B_5585:: ; address name
-    db $F0, $E8, $14, $00 ; entry 0
-    db $D8, $F0, $00, $00 ; entry 1
-    db $D8, $F8, $01, $00 ; entry 2
-    db $D8, $00, $02, $00 ; entry 3
-    db $E8, $10, $10, $00 ; entry 4
-    db $F0, $00, $15, $00 ; entry 5
-    db $F0, $F8, $14, $00 ; entry 6
-    db $E0, $E0, $03, $00 ; entry 7
-    db $E0, $E8, $04, $00 ; entry 8
-    db $E0, $F0, $05, $00 ; entry 9
-    db $E0, $F8, $06, $00 ; entry 10
-    db $E0, $00, $07, $00 ; entry 11
-    db $E0, $08, $08, $00 ; entry 12
-    db $F0, $E0, $12, $00 ; entry 13
-    db $E8, $D8, $09, $00 ; entry 14
-    db $E8, $E0, $0A, $00 ; entry 15
-    db $E8, $E8, $0B, $00 ; entry 16
-    db $E8, $F0, $0C, $00 ; entry 17
-    db $E8, $F8, $0D, $00 ; entry 18
-    db $E8, $00, $0E, $00 ; entry 19
-    db $E8, $08, $0F, $00 ; entry 20
-    db $F0, $F0, $13, $00 ; entry 21
-    db $F8, $C0, $20, $00 ; entry 22
-    db $F8, $C8, $21, $00 ; entry 23
-    db $F8, $F8, $1D, $00 ; entry 24
-    db $F8, $F0, $1C, $00 ; entry 25
-    db $F8, $B0, $20, $20 ; entry 26
-    db $F8, $00, $15, $40 ; entry 27
-    db $F8, $E0, $12, $40 ; entry 28
-    db $F8, $D8, $0E, $00 ; entry 29
-    db $F8, $E8, $14, $40 ; entry 30
-    db $F8, $D0, $23, $20 ; entry 31
-    db $F0, $D8, $11, $00 ; entry 32
-    db $F0, $D4, $16, $00 ; entry 33
+    db $f0, $e8, $14, $00 ; entry 0
+    db $d8, $f0, $00, $00 ; entry 1
+    db $d8, $f8, $01, $00 ; entry 2
+    db $d8, $00, $02, $00 ; entry 3
+    db $e8, $10, $10, $00 ; entry 4
+    db $f0, $00, $15, $00 ; entry 5
+    db $f0, $f8, $14, $00 ; entry 6
+    db $e0, $e0, $03, $00 ; entry 7
+    db $e0, $e8, $04, $00 ; entry 8
+    db $e0, $f0, $05, $00 ; entry 9
+    db $e0, $f8, $06, $00 ; entry 10
+    db $e0, $00, $07, $00 ; entry 11
+    db $e0, $08, $08, $00 ; entry 12
+    db $f0, $e0, $12, $00 ; entry 13
+    db $e8, $d8, $09, $00 ; entry 14
+    db $e8, $e0, $0a, $00 ; entry 15
+    db $e8, $e8, $0b, $00 ; entry 16
+    db $e8, $f0, $0c, $00 ; entry 17
+    db $e8, $f8, $0d, $00 ; entry 18
+    db $e8, $00, $0e, $00 ; entry 19
+    db $e8, $08, $0f, $00 ; entry 20
+    db $f0, $f0, $13, $00 ; entry 21
+    db $f8, $c0, $20, $00 ; entry 22
+    db $f8, $c8, $21, $00 ; entry 23
+    db $f8, $f8, $1d, $00 ; entry 24
+    db $f8, $f0, $1c, $00 ; entry 25
+    db $f8, $b0, $20, $20 ; entry 26
+    db $f8, $00, $15, $40 ; entry 27
+    db $f8, $e0, $12, $40 ; entry 28
+    db $f8, $d8, $0e, $00 ; entry 29
+    db $f8, $e8, $14, $40 ; entry 30
+    db $f8, $d0, $23, $20 ; entry 31
+    db $f0, $d8, $11, $00 ; entry 32
+    db $f0, $d4, $16, $00 ; entry 33
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame6::
-Data_03B_560E:: ; address name
-    db $F8, $F8, $14, $00 ; entry 0
-    db $E8, $F0, $03, $00 ; entry 1
-    db $E8, $F8, $04, $00 ; entry 2
-    db $E8, $00, $05, $00 ; entry 3
-    db $F0, $00, $0C, $00 ; entry 4
-    db $F0, $F8, $0C, $00 ; entry 5
-    db $E8, $20, $27, $00 ; entry 6
-    db $F8, $18, $2A, $00 ; entry 7
-    db $E0, $18, $27, $00 ; entry 8
-    db $E8, $18, $29, $00 ; entry 9
-    db $F0, $18, $07, $00 ; entry 10
-    db $F0, $08, $06, $00 ; entry 11
-    db $F0, $10, $07, $00 ; entry 12
-    db $F8, $00, $0B, $00 ; entry 13
-    db $F8, $08, $0C, $00 ; entry 14
-    db $F8, $10, $0E, $00 ; entry 15
-    db $E8, $10, $28, $00 ; entry 16
-    db $E8, $08, $07, $00 ; entry 17
-    db $E0, $08, $27, $00 ; entry 18
-    db $F0, $E8, $21, $00 ; entry 19
-    db $F0, $F0, $22, $00 ; entry 20
-    db $F0, $E0, $20, $00 ; entry 21
-    db $F8, $D8, $22, $00 ; entry 22
-    db $F8, $E8, $25, $00 ; entry 23
-    db $F8, $E0, $24, $00 ; entry 24
-    db $F0, $20, $29, $00 ; entry 25
-    db $F8, $20, $2B, $00 ; entry 26
-    db $F8, $F0, $2C, $00 ; entry 27
+    db $f8, $f8, $14, $00 ; entry 0
+    db $e8, $f0, $03, $00 ; entry 1
+    db $e8, $f8, $04, $00 ; entry 2
+    db $e8, $00, $05, $00 ; entry 3
+    db $f0, $00, $0c, $00 ; entry 4
+    db $f0, $f8, $0c, $00 ; entry 5
+    db $e8, $20, $27, $00 ; entry 6
+    db $f8, $18, $2a, $00 ; entry 7
+    db $e0, $18, $27, $00 ; entry 8
+    db $e8, $18, $29, $00 ; entry 9
+    db $f0, $18, $07, $00 ; entry 10
+    db $f0, $08, $06, $00 ; entry 11
+    db $f0, $10, $07, $00 ; entry 12
+    db $f8, $00, $0b, $00 ; entry 13
+    db $f8, $08, $0c, $00 ; entry 14
+    db $f8, $10, $0e, $00 ; entry 15
+    db $e8, $10, $28, $00 ; entry 16
+    db $e8, $08, $07, $00 ; entry 17
+    db $e0, $08, $27, $00 ; entry 18
+    db $f0, $e8, $21, $00 ; entry 19
+    db $f0, $f0, $22, $00 ; entry 20
+    db $f0, $e0, $20, $00 ; entry 21
+    db $f8, $d8, $22, $00 ; entry 22
+    db $f8, $e8, $25, $00 ; entry 23
+    db $f8, $e0, $24, $00 ; entry 24
+    db $f0, $20, $29, $00 ; entry 25
+    db $f8, $20, $2b, $00 ; entry 26
+    db $f8, $f0, $2c, $00 ; entry 27
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame7::
-Data_03B_567F:: ; address name
-    db $E8, $18, $00, $00 ; entry 0
-    db $E8, $20, $01, $00 ; entry 1
-    db $E8, $28, $02, $00 ; entry 2
-    db $F0, $08, $03, $00 ; entry 3
-    db $F0, $10, $04, $00 ; entry 4
-    db $F0, $18, $05, $00 ; entry 5
-    db $F8, $18, $0C, $00 ; entry 6
-    db $F0, $20, $0E, $00 ; entry 7
-    db $F0, $28, $0F, $00 ; entry 8
-    db $F8, $20, $06, $00 ; entry 9
-    db $F8, $28, $07, $00 ; entry 10
-    db $F8, $10, $0C, $00 ; entry 11
-    db $F8, $F0, $20, $00 ; entry 12
-    db $F8, $F8, $21, $00 ; entry 13
-    db $F8, $00, $22, $00 ; entry 14
-    db $F8, $08, $24, $00 ; entry 15
-    db $F0, $30, $10, $00 ; entry 16
-    db $F8, $30, $10, $00 ; entry 17
+    db $e8, $18, $00, $00 ; entry 0
+    db $e8, $20, $01, $00 ; entry 1
+    db $e8, $28, $02, $00 ; entry 2
+    db $f0, $08, $03, $00 ; entry 3
+    db $f0, $10, $04, $00 ; entry 4
+    db $f0, $18, $05, $00 ; entry 5
+    db $f8, $18, $0c, $00 ; entry 6
+    db $f0, $20, $0e, $00 ; entry 7
+    db $f0, $28, $0f, $00 ; entry 8
+    db $f8, $20, $06, $00 ; entry 9
+    db $f8, $28, $07, $00 ; entry 10
+    db $f8, $10, $0c, $00 ; entry 11
+    db $f8, $f0, $20, $00 ; entry 12
+    db $f8, $f8, $21, $00 ; entry 13
+    db $f8, $00, $22, $00 ; entry 14
+    db $f8, $08, $24, $00 ; entry 15
+    db $f0, $30, $10, $00 ; entry 16
+    db $f8, $30, $10, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 8 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame8::
-Data_03B_56C8:: ; address name
-    db $E8, $40, $27, $00 ; entry 0
-    db $F8, $38, $2A, $00 ; entry 1
-    db $F8, $40, $2B, $00 ; entry 2
-    db $F0, $38, $28, $00 ; entry 3
-    db $F0, $40, $29, $00 ; entry 4
-    db $F0, $28, $00, $00 ; entry 5
-    db $F0, $30, $04, $00 ; entry 6
-    db $F8, $28, $0C, $00 ; entry 7
-    db $F8, $30, $0D, $00 ; entry 8
-    db $F8, $10, $20, $00 ; entry 9
-    db $F8, $18, $21, $00 ; entry 10
-    db $F8, $20, $22, $00 ; entry 11
-    db $F8, $08, $20, $20 ; entry 12
-    db $F8, $00, $21, $20 ; entry 13
+    db $e8, $40, $27, $00 ; entry 0
+    db $f8, $38, $2a, $00 ; entry 1
+    db $f8, $40, $2b, $00 ; entry 2
+    db $f0, $38, $28, $00 ; entry 3
+    db $f0, $40, $29, $00 ; entry 4
+    db $f0, $28, $00, $00 ; entry 5
+    db $f0, $30, $04, $00 ; entry 6
+    db $f8, $28, $0c, $00 ; entry 7
+    db $f8, $30, $0d, $00 ; entry 8
+    db $f8, $10, $20, $00 ; entry 9
+    db $f8, $18, $21, $00 ; entry 10
+    db $f8, $20, $22, $00 ; entry 11
+    db $f8, $08, $20, $20 ; entry 12
+    db $f8, $00, $21, $20 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 9 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame9::
-Data_03B_5701:: ; address name
-    db $F8, $00, $23, $20 ; entry 0
-    db $F0, $08, $20, $00 ; entry 1
-    db $F0, $10, $21, $00 ; entry 2
-    db $F0, $28, $21, $20 ; entry 3
-    db $F0, $20, $22, $20 ; entry 4
-    db $F0, $18, $23, $20 ; entry 5
-    db $F8, $28, $25, $20 ; entry 6
-    db $F8, $20, $26, $20 ; entry 7
-    db $F8, $08, $24, $00 ; entry 8
-    db $F8, $10, $25, $00 ; entry 9
-    db $F8, $18, $2C, $00 ; entry 10
-    db $F0, $30, $20, $20 ; entry 11
-    db $F8, $30, $24, $20 ; entry 12
-    db $F8, $38, $23, $00 ; entry 13
-    db $F8, $48, $20, $20 ; entry 14
-    db $F8, $40, $21, $20 ; entry 15
+    db $f8, $00, $23, $20 ; entry 0
+    db $f0, $08, $20, $00 ; entry 1
+    db $f0, $10, $21, $00 ; entry 2
+    db $f0, $28, $21, $20 ; entry 3
+    db $f0, $20, $22, $20 ; entry 4
+    db $f0, $18, $23, $20 ; entry 5
+    db $f8, $28, $25, $20 ; entry 6
+    db $f8, $20, $26, $20 ; entry 7
+    db $f8, $08, $24, $00 ; entry 8
+    db $f8, $10, $25, $00 ; entry 9
+    db $f8, $18, $2c, $00 ; entry 10
+    db $f0, $30, $20, $20 ; entry 11
+    db $f8, $30, $24, $20 ; entry 12
+    db $f8, $38, $23, $00 ; entry 13
+    db $f8, $48, $20, $20 ; entry 14
+    db $f8, $40, $21, $20 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame10::
-Data_03B_5742:: ; address name
-    db $F8, $08, $20, $00 ; entry 0
-    db $F8, $10, $21, $00 ; entry 1
-    db $F8, $18, $23, $20 ; entry 2
-    db $F0, $20, $20, $00 ; entry 3
-    db $F0, $28, $21, $00 ; entry 4
-    db $F0, $40, $21, $20 ; entry 5
-    db $F0, $38, $22, $20 ; entry 6
-    db $F0, $30, $23, $20 ; entry 7
-    db $F0, $48, $20, $20 ; entry 8
-    db $F8, $48, $24, $20 ; entry 9
-    db $F8, $40, $25, $20 ; entry 10
-    db $F8, $20, $24, $00 ; entry 11
-    db $F8, $28, $25, $00 ; entry 12
-    db $F8, $30, $26, $00 ; entry 13
-    db $F8, $00, $20, $20 ; entry 14
-    db $F8, $38, $2C, $00 ; entry 15
+    db $f8, $08, $20, $00 ; entry 0
+    db $f8, $10, $21, $00 ; entry 1
+    db $f8, $18, $23, $20 ; entry 2
+    db $f0, $20, $20, $00 ; entry 3
+    db $f0, $28, $21, $00 ; entry 4
+    db $f0, $40, $21, $20 ; entry 5
+    db $f0, $38, $22, $20 ; entry 6
+    db $f0, $30, $23, $20 ; entry 7
+    db $f0, $48, $20, $20 ; entry 8
+    db $f8, $48, $24, $20 ; entry 9
+    db $f8, $40, $25, $20 ; entry 10
+    db $f8, $20, $24, $00 ; entry 11
+    db $f8, $28, $25, $00 ; entry 12
+    db $f8, $30, $26, $00 ; entry 13
+    db $f8, $00, $20, $20 ; entry 14
+    db $f8, $38, $2c, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame11::
-Data_03B_5783:: ; address name
-    db $F8, $20, $20, $00 ; entry 0
-    db $F8, $28, $21, $00 ; entry 1
-    db $F8, $30, $23, $20 ; entry 2
-    db $F0, $38, $20, $00 ; entry 3
-    db $F0, $40, $21, $00 ; entry 4
-    db $F0, $48, $23, $20 ; entry 5
-    db $F8, $38, $24, $00 ; entry 6
-    db $F8, $40, $25, $00 ; entry 7
-    db $F8, $48, $26, $00 ; entry 8
-    db $F8, $18, $20, $20 ; entry 9
-    db $F8, $10, $21, $20 ; entry 10
-    db $F8, $08, $23, $00 ; entry 11
-    db $F8, $00, $22, $00 ; entry 12
+    db $f8, $20, $20, $00 ; entry 0
+    db $f8, $28, $21, $00 ; entry 1
+    db $f8, $30, $23, $20 ; entry 2
+    db $f0, $38, $20, $00 ; entry 3
+    db $f0, $40, $21, $00 ; entry 4
+    db $f0, $48, $23, $20 ; entry 5
+    db $f8, $38, $24, $00 ; entry 6
+    db $f8, $40, $25, $00 ; entry 7
+    db $f8, $48, $26, $00 ; entry 8
+    db $f8, $18, $20, $20 ; entry 9
+    db $f8, $10, $21, $20 ; entry 10
+    db $f8, $08, $23, $00 ; entry 11
+    db $f8, $00, $22, $00 ; entry 12
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 12 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame12::
-Data_03B_57B8:: ; address name
-    db $F8, $08, $20, $00 ; entry 0
-    db $F8, $10, $21, $00 ; entry 1
-    db $F8, $38, $20, $00 ; entry 2
-    db $F8, $40, $21, $00 ; entry 3
-    db $F8, $48, $23, $20 ; entry 4
-    db $F8, $00, $20, $20 ; entry 5
-    db $F8, $30, $20, $20 ; entry 6
-    db $F8, $28, $21, $20 ; entry 7
-    db $F8, $20, $23, $00 ; entry 8
-    db $F8, $18, $22, $00 ; entry 9
+    db $f8, $08, $20, $00 ; entry 0
+    db $f8, $10, $21, $00 ; entry 1
+    db $f8, $38, $20, $00 ; entry 2
+    db $f8, $40, $21, $00 ; entry 3
+    db $f8, $48, $23, $20 ; entry 4
+    db $f8, $00, $20, $20 ; entry 5
+    db $f8, $30, $20, $20 ; entry 6
+    db $f8, $28, $21, $20 ; entry 7
+    db $f8, $20, $23, $00 ; entry 8
+    db $f8, $18, $22, $00 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 13 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame13::
-Data_03B_57E1:: ; address name
-    db $F8, $20, $20, $00 ; entry 0
-    db $F8, $28, $21, $00 ; entry 1
-    db $F8, $18, $20, $20 ; entry 2
-    db $F8, $10, $21, $20 ; entry 3
-    db $F8, $48, $20, $20 ; entry 4
-    db $F8, $40, $21, $20 ; entry 5
-    db $F8, $38, $23, $00 ; entry 6
-    db $F8, $30, $22, $00 ; entry 7
-    db $F8, $08, $23, $00 ; entry 8
-    db $F8, $00, $25, $00 ; entry 9
+    db $f8, $20, $20, $00 ; entry 0
+    db $f8, $28, $21, $00 ; entry 1
+    db $f8, $18, $20, $20 ; entry 2
+    db $f8, $10, $21, $20 ; entry 3
+    db $f8, $48, $20, $20 ; entry 4
+    db $f8, $40, $21, $20 ; entry 5
+    db $f8, $38, $23, $00 ; entry 6
+    db $f8, $30, $22, $00 ; entry 7
+    db $f8, $08, $23, $00 ; entry 8
+    db $f8, $00, $25, $00 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame14::
-Data_03B_580A:: ; address name
-    db $F0, $28, $20, $00 ; entry 0
-    db $F0, $30, $21, $00 ; entry 1
-    db $F0, $38, $23, $20 ; entry 2
-    db $F8, $28, $24, $00 ; entry 3
-    db $F8, $30, $25, $00 ; entry 4
-    db $F8, $10, $20, $00 ; entry 5
-    db $F8, $18, $21, $00 ; entry 6
-    db $F8, $20, $23, $20 ; entry 7
-    db $F8, $08, $20, $20 ; entry 8
-    db $F8, $00, $21, $20 ; entry 9
-    db $F0, $48, $21, $20 ; entry 10
-    db $F0, $40, $22, $20 ; entry 11
-    db $F8, $48, $25, $20 ; entry 12
-    db $F8, $40, $26, $20 ; entry 13
-    db $F8, $38, $2C, $00 ; entry 14
+    db $f0, $28, $20, $00 ; entry 0
+    db $f0, $30, $21, $00 ; entry 1
+    db $f0, $38, $23, $20 ; entry 2
+    db $f8, $28, $24, $00 ; entry 3
+    db $f8, $30, $25, $00 ; entry 4
+    db $f8, $10, $20, $00 ; entry 5
+    db $f8, $18, $21, $00 ; entry 6
+    db $f8, $20, $23, $20 ; entry 7
+    db $f8, $08, $20, $20 ; entry 8
+    db $f8, $00, $21, $20 ; entry 9
+    db $f0, $48, $21, $20 ; entry 10
+    db $f0, $40, $22, $20 ; entry 11
+    db $f8, $48, $25, $20 ; entry 12
+    db $f8, $40, $26, $20 ; entry 13
+    db $f8, $38, $2c, $00 ; entry 14
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame15::
-Data_03B_5847:: ; address name
-    db $F8, $F8, $21, $00 ; entry 0
-    db $F8, $00, $22, $00 ; entry 1
-    db $F8, $20, $20, $20 ; entry 2
-    db $F8, $18, $21, $20 ; entry 3
-    db $F8, $10, $23, $00 ; entry 4
-    db $F8, $30, $20, $00 ; entry 5
-    db $F8, $38, $21, $00 ; entry 6
-    db $F8, $40, $23, $20 ; entry 7
-    db $F8, $48, $22, $20 ; entry 8
-    db $F8, $08, $2C, $20 ; entry 9
+    db $f8, $f8, $21, $00 ; entry 0
+    db $f8, $00, $22, $00 ; entry 1
+    db $f8, $20, $20, $20 ; entry 2
+    db $f8, $18, $21, $20 ; entry 3
+    db $f8, $10, $23, $00 ; entry 4
+    db $f8, $30, $20, $00 ; entry 5
+    db $f8, $38, $21, $00 ; entry 6
+    db $f8, $40, $23, $20 ; entry 7
+    db $f8, $48, $22, $20 ; entry 8
+    db $f8, $08, $2c, $20 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 16 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame16::
-Data_03B_5870:: ; address name
-    db $F8, $00, $20, $20 ; entry 0
-    db $F8, $F8, $21, $20 ; entry 1
-    db $F8, $F0, $22, $20 ; entry 2
-    db $F8, $D0, $20, $00 ; entry 3
-    db $F8, $D8, $21, $00 ; entry 4
-    db $F8, $E0, $23, $20 ; entry 5
-    db $F8, $30, $20, $00 ; entry 6
-    db $F8, $38, $20, $20 ; entry 7
-    db $F8, $E8, $2C, $40 ; entry 8
+    db $f8, $00, $20, $20 ; entry 0
+    db $f8, $f8, $21, $20 ; entry 1
+    db $f8, $f0, $22, $20 ; entry 2
+    db $f8, $d0, $20, $00 ; entry 3
+    db $f8, $d8, $21, $00 ; entry 4
+    db $f8, $e0, $23, $20 ; entry 5
+    db $f8, $30, $20, $00 ; entry 6
+    db $f8, $38, $20, $20 ; entry 7
+    db $f8, $e8, $2c, $40 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 17 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 17 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame17::
-Data_03B_5895:: ; address name
-    db $F8, $40, $20, $00 ; entry 0
-    db $F8, $48, $20, $20 ; entry 1
-    db $F8, $00, $20, $00 ; entry 2
-    db $F8, $08, $20, $20 ; entry 3
-    db $F8, $D8, $20, $00 ; entry 4
-    db $F8, $E0, $20, $20 ; entry 5
-    db $F8, $C8, $20, $00 ; entry 6
-    db $F8, $D0, $20, $20 ; entry 7
+    db $f8, $40, $20, $00 ; entry 0
+    db $f8, $48, $20, $20 ; entry 1
+    db $f8, $00, $20, $00 ; entry 2
+    db $f8, $08, $20, $20 ; entry 3
+    db $f8, $d8, $20, $00 ; entry 4
+    db $f8, $e0, $20, $20 ; entry 5
+    db $f8, $c8, $20, $00 ; entry 6
+    db $f8, $d0, $20, $20 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 18 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 18 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame18::
-Data_03B_58B6:: ; address name
-    db $F8, $D0, $21, $00 ; entry 0
-    db $F8, $C8, $21, $20 ; entry 1
-    db $F8, $C0, $22, $20 ; entry 2
-    db $F0, $B8, $20, $20 ; entry 3
-    db $F0, $B0, $21, $20 ; entry 4
-    db $F8, $B8, $24, $20 ; entry 5
-    db $F8, $B0, $25, $20 ; entry 6
-    db $F0, $25, $27, $20 ; entry 7
-    db $F8, $25, $29, $20 ; entry 8
-    db $F8, $2D, $08, $00 ; entry 9
+    db $f8, $d0, $21, $00 ; entry 0
+    db $f8, $c8, $21, $20 ; entry 1
+    db $f8, $c0, $22, $20 ; entry 2
+    db $f0, $b8, $20, $20 ; entry 3
+    db $f0, $b0, $21, $20 ; entry 4
+    db $f8, $b8, $24, $20 ; entry 5
+    db $f8, $b0, $25, $20 ; entry 6
+    db $f0, $25, $27, $20 ; entry 7
+    db $f8, $25, $29, $20 ; entry 8
+    db $f8, $2d, $08, $00 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 19 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 19 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame19::
-Data_03B_58DF:: ; address name
-    db $F8, $E8, $20, $20 ; entry 0
-    db $F8, $E0, $21, $20 ; entry 1
-    db $F8, $D8, $22, $20 ; entry 2
-    db $F0, $D0, $20, $20 ; entry 3
-    db $F0, $C8, $21, $20 ; entry 4
-    db $F0, $B0, $21, $00 ; entry 5
-    db $F0, $B8, $22, $00 ; entry 6
-    db $F0, $C0, $23, $00 ; entry 7
-    db $F8, $B0, $24, $00 ; entry 8
-    db $F8, $B8, $25, $00 ; entry 9
-    db $F8, $C8, $26, $00 ; entry 10
-    db $F8, $D0, $24, $00 ; entry 11
-    db $F8, $34, $29, $20 ; entry 12
-    db $F0, $34, $27, $20 ; entry 13
-    db $F8, $3C, $08, $00 ; entry 14
-    db $F8, $C0, $2C, $00 ; entry 15
+    db $f8, $e8, $20, $20 ; entry 0
+    db $f8, $e0, $21, $20 ; entry 1
+    db $f8, $d8, $22, $20 ; entry 2
+    db $f0, $d0, $20, $20 ; entry 3
+    db $f0, $c8, $21, $20 ; entry 4
+    db $f0, $b0, $21, $00 ; entry 5
+    db $f0, $b8, $22, $00 ; entry 6
+    db $f0, $c0, $23, $00 ; entry 7
+    db $f8, $b0, $24, $00 ; entry 8
+    db $f8, $b8, $25, $00 ; entry 9
+    db $f8, $c8, $26, $00 ; entry 10
+    db $f8, $d0, $24, $00 ; entry 11
+    db $f8, $34, $29, $20 ; entry 12
+    db $f0, $34, $27, $20 ; entry 13
+    db $f8, $3c, $08, $00 ; entry 14
+    db $f8, $c0, $2c, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 20 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 20 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame20::
-Data_03B_5920:: ; address name
-    db $F8, $C0, $22, $00 ; entry 0
-    db $F0, $C8, $20, $00 ; entry 1
-    db $F0, $D0, $21, $00 ; entry 2
-    db $F0, $E8, $21, $20 ; entry 3
-    db $F0, $E0, $22, $20 ; entry 4
-    db $F0, $D8, $23, $20 ; entry 5
-    db $F8, $E8, $24, $20 ; entry 6
-    db $F8, $E0, $25, $20 ; entry 7
-    db $F8, $D0, $26, $20 ; entry 8
-    db $F8, $C8, $24, $20 ; entry 9
-    db $F0, $F0, $20, $20 ; entry 10
-    db $F8, $F8, $22, $20 ; entry 11
-    db $F8, $F0, $24, $00 ; entry 12
-    db $F8, $D8, $2C, $00 ; entry 13
-    db $F8, $B0, $20, $00 ; entry 14
-    db $F8, $B8, $21, $00 ; entry 15
+    db $f8, $c0, $22, $00 ; entry 0
+    db $f0, $c8, $20, $00 ; entry 1
+    db $f0, $d0, $21, $00 ; entry 2
+    db $f0, $e8, $21, $20 ; entry 3
+    db $f0, $e0, $22, $20 ; entry 4
+    db $f0, $d8, $23, $20 ; entry 5
+    db $f8, $e8, $24, $20 ; entry 6
+    db $f8, $e0, $25, $20 ; entry 7
+    db $f8, $d0, $26, $20 ; entry 8
+    db $f8, $c8, $24, $20 ; entry 9
+    db $f0, $f0, $20, $20 ; entry 10
+    db $f8, $f8, $22, $20 ; entry 11
+    db $f8, $f0, $24, $00 ; entry 12
+    db $f8, $d8, $2c, $00 ; entry 13
+    db $f8, $b0, $20, $00 ; entry 14
+    db $f8, $b8, $21, $00 ; entry 15
     db $80 ; end
 
-; E-0147 (derived: frame 21 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 21 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame21::
-Data_03B_5961:: ; address name
-    db $F8, $C0, $20, $00 ; entry 0
-    db $F8, $C8, $21, $00 ; entry 1
-    db $F8, $B8, $20, $20 ; entry 2
-    db $F8, $B0, $21, $20 ; entry 3
-    db $F8, $F0, $20, $00 ; entry 4
-    db $F8, $F8, $21, $00 ; entry 5
-    db $F8, $E0, $21, $20 ; entry 6
-    db $F8, $D8, $22, $20 ; entry 7
-    db $F8, $D0, $23, $20 ; entry 8
-    db $F8, $E8, $20, $20 ; entry 9
+    db $f8, $c0, $20, $00 ; entry 0
+    db $f8, $c8, $21, $00 ; entry 1
+    db $f8, $b8, $20, $20 ; entry 2
+    db $f8, $b0, $21, $20 ; entry 3
+    db $f8, $f0, $20, $00 ; entry 4
+    db $f8, $f8, $21, $00 ; entry 5
+    db $f8, $e0, $21, $20 ; entry 6
+    db $f8, $d8, $22, $20 ; entry 7
+    db $f8, $d0, $23, $20 ; entry 8
+    db $f8, $e8, $20, $20 ; entry 9
     db $80 ; end
 
-; E-0147 (derived: frame 22 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 22 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame22::
-Data_03B_598A:: ; address name
-    db $F8, $D8, $20, $00 ; entry 0
-    db $F8, $E0, $21, $00 ; entry 1
-    db $F8, $D0, $20, $20 ; entry 2
-    db $F8, $C8, $21, $20 ; entry 3
-    db $F8, $F8, $21, $20 ; entry 4
-    db $F8, $F0, $23, $00 ; entry 5
-    db $F8, $E8, $22, $00 ; entry 6
-    db $F8, $C0, $23, $00 ; entry 7
-    db $F8, $B0, $24, $00 ; entry 8
-    db $F8, $B8, $25, $00 ; entry 9
-    db $F0, $B0, $21, $20 ; entry 10
-    db $F0, $B8, $20, $20 ; entry 11
+    db $f8, $d8, $20, $00 ; entry 0
+    db $f8, $e0, $21, $00 ; entry 1
+    db $f8, $d0, $20, $20 ; entry 2
+    db $f8, $c8, $21, $20 ; entry 3
+    db $f8, $f8, $21, $20 ; entry 4
+    db $f8, $f0, $23, $00 ; entry 5
+    db $f8, $e8, $22, $00 ; entry 6
+    db $f8, $c0, $23, $00 ; entry 7
+    db $f8, $b0, $24, $00 ; entry 8
+    db $f8, $b8, $25, $00 ; entry 9
+    db $f0, $b0, $21, $20 ; entry 10
+    db $f0, $b8, $20, $20 ; entry 11
     db $80 ; end
 
-; E-0147 (derived: frame 23 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 23 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame23::
-Data_03B_59BB:: ; address name
-    db $F8, $F0, $20, $00 ; entry 0
-    db $F8, $F8, $21, $00 ; entry 1
-    db $F8, $E8, $20, $20 ; entry 2
-    db $F8, $E0, $21, $20 ; entry 3
-    db $F8, $D8, $23, $00 ; entry 4
-    db $F8, $C8, $24, $00 ; entry 5
-    db $F8, $D0, $25, $00 ; entry 6
-    db $F0, $C0, $21, $20 ; entry 7
-    db $F0, $B8, $22, $20 ; entry 8
-    db $F0, $C8, $20, $20 ; entry 9
-    db $F8, $C0, $25, $20 ; entry 10
-    db $F8, $B8, $26, $20 ; entry 11
-    db $F0, $B0, $18, $00 ; entry 12
-    db $F8, $B0, $2C, $00 ; entry 13
+    db $f8, $f0, $20, $00 ; entry 0
+    db $f8, $f8, $21, $00 ; entry 1
+    db $f8, $e8, $20, $20 ; entry 2
+    db $f8, $e0, $21, $20 ; entry 3
+    db $f8, $d8, $23, $00 ; entry 4
+    db $f8, $c8, $24, $00 ; entry 5
+    db $f8, $d0, $25, $00 ; entry 6
+    db $f0, $c0, $21, $20 ; entry 7
+    db $f0, $b8, $22, $20 ; entry 8
+    db $f0, $c8, $20, $20 ; entry 9
+    db $f8, $c0, $25, $20 ; entry 10
+    db $f8, $b8, $26, $20 ; entry 11
+    db $f0, $b0, $18, $00 ; entry 12
+    db $f8, $b0, $2c, $00 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 24 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 24 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame24::
-Data_03B_59F4:: ; address name
-    db $F8, $F8, $21, $20 ; entry 0
-    db $F8, $F0, $23, $00 ; entry 1
-    db $F8, $E0, $24, $00 ; entry 2
-    db $F8, $E8, $25, $00 ; entry 3
-    db $F0, $D8, $21, $20 ; entry 4
-    db $F0, $D0, $22, $20 ; entry 5
-    db $F0, $E0, $20, $20 ; entry 6
-    db $F8, $D8, $25, $20 ; entry 7
-    db $F8, $D0, $26, $20 ; entry 8
-    db $F0, $C8, $18, $00 ; entry 9
-    db $F0, $B0, $20, $00 ; entry 10
-    db $F0, $B8, $21, $00 ; entry 11
-    db $F0, $C0, $23, $20 ; entry 12
-    db $F8, $B0, $24, $00 ; entry 13
-    db $F8, $B8, $25, $00 ; entry 14
-    db $F8, $C0, $26, $00 ; entry 15
-    db $F8, $C8, $2C, $00 ; entry 16
+    db $f8, $f8, $21, $20 ; entry 0
+    db $f8, $f0, $23, $00 ; entry 1
+    db $f8, $e0, $24, $00 ; entry 2
+    db $f8, $e8, $25, $00 ; entry 3
+    db $f0, $d8, $21, $20 ; entry 4
+    db $f0, $d0, $22, $20 ; entry 5
+    db $f0, $e0, $20, $20 ; entry 6
+    db $f8, $d8, $25, $20 ; entry 7
+    db $f8, $d0, $26, $20 ; entry 8
+    db $f0, $c8, $18, $00 ; entry 9
+    db $f0, $b0, $20, $00 ; entry 10
+    db $f0, $b8, $21, $00 ; entry 11
+    db $f0, $c0, $23, $20 ; entry 12
+    db $f8, $b0, $24, $00 ; entry 13
+    db $f8, $b8, $25, $00 ; entry 14
+    db $f8, $c0, $26, $00 ; entry 15
+    db $f8, $c8, $2c, $00 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 25 of MetaSprites3B_507CSet2E; ends with $80)
+; frame 25 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2EFrame25::
-Data_03B_5A39:: ; address name
-    db $F8, $F8, $24, $00 ; entry 0
-    db $F0, $F0, $21, $20 ; entry 1
-    db $F0, $E8, $22, $20 ; entry 2
-    db $F0, $F8, $20, $20 ; entry 3
-    db $F8, $F0, $25, $20 ; entry 4
-    db $F0, $C8, $20, $00 ; entry 5
-    db $F0, $D0, $21, $00 ; entry 6
-    db $F0, $D8, $23, $20 ; entry 7
-    db $F8, $C8, $24, $00 ; entry 8
-    db $F8, $D0, $25, $00 ; entry 9
-    db $F8, $D8, $26, $00 ; entry 10
-    db $F8, $B0, $20, $00 ; entry 11
-    db $F8, $B8, $21, $00 ; entry 12
-    db $F8, $C0, $23, $20 ; entry 13
-    db $F8, $E8, $2C, $00 ; entry 14
-    db $F8, $E0, $2C, $60 ; entry 15
-    db $F0, $E0, $2C, $00 ; entry 16
+    db $f8, $f8, $24, $00 ; entry 0
+    db $f0, $f0, $21, $20 ; entry 1
+    db $f0, $e8, $22, $20 ; entry 2
+    db $f0, $f8, $20, $20 ; entry 3
+    db $f8, $f0, $25, $20 ; entry 4
+    db $f0, $c8, $20, $00 ; entry 5
+    db $f0, $d0, $21, $00 ; entry 6
+    db $f0, $d8, $23, $20 ; entry 7
+    db $f8, $c8, $24, $00 ; entry 8
+    db $f8, $d0, $25, $00 ; entry 9
+    db $f8, $d8, $26, $00 ; entry 10
+    db $f8, $b0, $20, $00 ; entry 11
+    db $f8, $b8, $21, $00 ; entry 12
+    db $f8, $c0, $23, $20 ; entry 13
+    db $f8, $e8, $2c, $00 ; entry 14
+    db $f8, $e0, $2c, $60 ; entry 15
+    db $f0, $e0, $2c, $00 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 26 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 26 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame26::
-Data_03B_5A7E:: ; address name
-    db $F8, $D8, $20, $00 ; entry 0
-    db $F8, $E0, $21, $00 ; entry 1
-    db $F8, $D0, $20, $20 ; entry 2
-    db $F8, $C8, $21, $20 ; entry 3
-    db $F8, $E8, $22, $00 ; entry 4
-    db $F8, $C0, $23, $00 ; entry 5
-    db $F8, $B0, $24, $00 ; entry 6
-    db $F8, $B8, $25, $00 ; entry 7
-    db $F0, $B0, $20, $20 ; entry 8
-    db $F8, $F8, $23, $00 ; entry 9
-    db $F8, $F0, $26, $00 ; entry 10
+    db $f8, $d8, $20, $00 ; entry 0
+    db $f8, $e0, $21, $00 ; entry 1
+    db $f8, $d0, $20, $20 ; entry 2
+    db $f8, $c8, $21, $20 ; entry 3
+    db $f8, $e8, $22, $00 ; entry 4
+    db $f8, $c0, $23, $00 ; entry 5
+    db $f8, $b0, $24, $00 ; entry 6
+    db $f8, $b8, $25, $00 ; entry 7
+    db $f0, $b0, $20, $20 ; entry 8
+    db $f8, $f8, $23, $00 ; entry 9
+    db $f8, $f0, $26, $00 ; entry 10
     db $80 ; end
 
-; E-0147 (derived: frame 27 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 27 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame27::
-Data_03B_5AAB:: ; address name
-    db $F8, $F0, $20, $00 ; entry 0
-    db $F8, $E8, $20, $20 ; entry 1
-    db $F8, $E0, $21, $20 ; entry 2
-    db $F8, $D8, $23, $00 ; entry 3
-    db $F8, $C8, $24, $00 ; entry 4
-    db $F8, $D0, $25, $00 ; entry 5
-    db $F0, $C8, $20, $20 ; entry 6
-    db $F0, $B0, $23, $20 ; entry 7
-    db $F0, $C0, $21, $20 ; entry 8
-    db $F0, $B8, $22, $20 ; entry 9
-    db $F8, $C0, $25, $20 ; entry 10
-    db $F8, $B0, $2C, $20 ; entry 11
-    db $F8, $B8, $26, $00 ; entry 12
+    db $f8, $f0, $20, $00 ; entry 0
+    db $f8, $e8, $20, $20 ; entry 1
+    db $f8, $e0, $21, $20 ; entry 2
+    db $f8, $d8, $23, $00 ; entry 3
+    db $f8, $c8, $24, $00 ; entry 4
+    db $f8, $d0, $25, $00 ; entry 5
+    db $f0, $c8, $20, $20 ; entry 6
+    db $f0, $b0, $23, $20 ; entry 7
+    db $f0, $c0, $21, $20 ; entry 8
+    db $f0, $b8, $22, $20 ; entry 9
+    db $f8, $c0, $25, $20 ; entry 10
+    db $f8, $b0, $2c, $20 ; entry 11
+    db $f8, $b8, $26, $00 ; entry 12
     db $80 ; end
 
-; E-0147 (derived: frame 28 of MetaSprites3B_507CSet2E; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 28 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
 MetaSprites3B_507CSet2EFrame28::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 47 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 47 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet2F::
-Data_03B_5AE1:: ; address name
     dw MetaSprites3B_507CSet2FFrame0 ; entry 0
     dw MetaSprites3B_507CSet2FFrame1 ; entry 1
     dw MetaSprites3B_507CSet2FFrame2 ; entry 2
@@ -4001,333 +3622,301 @@ Data_03B_5AE1:: ; address name
     dw MetaSprites3B_507CSet2FFrame18 ; entry 30
     dw MetaSprites3B_507CSet2FFrame18 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet2F; ends with $80)
+; frame 0 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2FFrame0::
-Data_03B_5B21:: ; address name
-    db $D8, $03, $20, $00 ; entry 0
-    db $D8, $0B, $21, $00 ; entry 1
-    db $D0, $03, $22, $00 ; entry 2
-    db $D0, $0B, $23, $00 ; entry 3
+    db $d8, $03, $20, $00 ; entry 0
+    db $d8, $0b, $21, $00 ; entry 1
+    db $d0, $03, $22, $00 ; entry 2
+    db $d0, $0b, $23, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame1::
-Data_03B_5B32:: ; address name
-    db $DC, $00, $20, $00 ; entry 0
-    db $DC, $08, $21, $00 ; entry 1
-    db $E4, $F8, $20, $60 ; entry 2
-    db $E4, $F0, $21, $60 ; entry 3
-    db $D4, $00, $22, $00 ; entry 4
-    db $D4, $08, $23, $00 ; entry 5
-    db $EC, $F8, $22, $60 ; entry 6
-    db $EC, $F0, $23, $60 ; entry 7
+    db $dc, $00, $20, $00 ; entry 0
+    db $dc, $08, $21, $00 ; entry 1
+    db $e4, $f8, $20, $60 ; entry 2
+    db $e4, $f0, $21, $60 ; entry 3
+    db $d4, $00, $22, $00 ; entry 4
+    db $d4, $08, $23, $00 ; entry 5
+    db $ec, $f8, $22, $60 ; entry 6
+    db $ec, $f0, $23, $60 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame2::
-Data_03B_5B53:: ; address name
-    db $F8, $F0, $24, $00 ; entry 0
-    db $E8, $F4, $27, $00 ; entry 1
-    db $E8, $FC, $28, $00 ; entry 2
-    db $F0, $F0, $25, $00 ; entry 3
-    db $F0, $F8, $26, $00 ; entry 4
-    db $D8, $03, $2B, $00 ; entry 5
-    db $E0, $F8, $29, $00 ; entry 6
-    db $E0, $00, $2A, $00 ; entry 7
-    db $D0, $08, $2B, $00 ; entry 8
+    db $f8, $f0, $24, $00 ; entry 0
+    db $e8, $f4, $27, $00 ; entry 1
+    db $e8, $fc, $28, $00 ; entry 2
+    db $f0, $f0, $25, $00 ; entry 3
+    db $f0, $f8, $26, $00 ; entry 4
+    db $d8, $03, $2b, $00 ; entry 5
+    db $e0, $f8, $29, $00 ; entry 6
+    db $e0, $00, $2a, $00 ; entry 7
+    db $d0, $08, $2b, $00 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame3::
-Data_03B_5B78:: ; address name
-    db $F8, $EB, $27, $00 ; entry 0
-    db $F8, $F3, $28, $00 ; entry 1
-    db $E8, $FA, $2B, $00 ; entry 2
-    db $F0, $EF, $29, $00 ; entry 3
-    db $F0, $F7, $2A, $00 ; entry 4
-    db $E0, $FE, $2C, $00 ; entry 5
-    db $D0, $08, $2C, $00 ; entry 6
-    db $D8, $03, $2C, $00 ; entry 7
+    db $f8, $eb, $27, $00 ; entry 0
+    db $f8, $f3, $28, $00 ; entry 1
+    db $e8, $fa, $2b, $00 ; entry 2
+    db $f0, $ef, $29, $00 ; entry 3
+    db $f0, $f7, $2a, $00 ; entry 4
+    db $e0, $fe, $2c, $00 ; entry 5
+    db $d0, $08, $2c, $00 ; entry 6
+    db $d8, $03, $2c, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet2F; ends with $80)
+; frame 4 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2FFrame4::
-Data_03B_5B99:: ; address name
-    db $F0, $F4, $2D, $00 ; entry 0
-    db $F8, $EF, $2D, $00 ; entry 1
-    db $E8, $F9, $2C, $00 ; entry 2
-    db $DC, $01, $2C, $00 ; entry 3
+    db $f0, $f4, $2d, $00 ; entry 0
+    db $f8, $ef, $2d, $00 ; entry 1
+    db $e8, $f9, $2c, $00 ; entry 2
+    db $dc, $01, $2c, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame5::
-Data_03B_5BAA:: ; address name
-    db $F0, $F4, $2D, $00 ; entry 0
-    db $E8, $F9, $2D, $00 ; entry 1
-    db $E0, $FE, $2D, $00 ; entry 2
-    db $F8, $EF, $2B, $00 ; entry 3
+    db $f0, $f4, $2d, $00 ; entry 0
+    db $e8, $f9, $2d, $00 ; entry 1
+    db $e0, $fe, $2d, $00 ; entry 2
+    db $f8, $ef, $2b, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame6::
-Data_03B_5BBB:: ; address name
-    db $F8, $EF, $2D, $00 ; entry 0
-    db $F0, $F4, $2D, $00 ; entry 1
-    db $E8, $F9, $2D, $00 ; entry 2
+    db $f8, $ef, $2d, $00 ; entry 0
+    db $f0, $f4, $2d, $00 ; entry 1
+    db $e8, $f9, $2d, $00 ; entry 2
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame7::
-Data_03B_5BC8:: ; address name
-    db $F8, $F8, $00, $00 ; entry 0
-    db $F8, $00, $01, $00 ; entry 1
+    db $f8, $f8, $00, $00 ; entry 0
+    db $f8, $00, $01, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet2F; ends with $80)
+; frame 8 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2FFrame8::
-Data_03B_5BD1:: ; address name
-    db $F0, $F8, $02, $00 ; entry 0
-    db $F0, $00, $03, $00 ; entry 1
-    db $F8, $F8, $04, $00 ; entry 2
-    db $F8, $00, $05, $00 ; entry 3
+    db $f0, $f8, $02, $00 ; entry 0
+    db $f0, $00, $03, $00 ; entry 1
+    db $f8, $f8, $04, $00 ; entry 2
+    db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame9::
-Data_03B_5BE2:: ; address name
-    db $E8, $F8, $02, $00 ; entry 0
-    db $E8, $00, $03, $00 ; entry 1
-    db $F0, $F8, $04, $00 ; entry 2
-    db $F0, $00, $05, $00 ; entry 3
-    db $F8, $F8, $06, $00 ; entry 4
-    db $F8, $00, $07, $00 ; entry 5
-    db $F8, $F0, $00, $00 ; entry 6
-    db $F8, $08, $01, $00 ; entry 7
+    db $e8, $f8, $02, $00 ; entry 0
+    db $e8, $00, $03, $00 ; entry 1
+    db $f0, $f8, $04, $00 ; entry 2
+    db $f0, $00, $05, $00 ; entry 3
+    db $f8, $f8, $06, $00 ; entry 4
+    db $f8, $00, $07, $00 ; entry 5
+    db $f8, $f0, $00, $00 ; entry 6
+    db $f8, $08, $01, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame10::
-Data_03B_5C03:: ; address name
-    db $D8, $F0, $08, $00 ; entry 0
-    db $D8, $F8, $09, $00 ; entry 1
-    db $D8, $08, $08, $20 ; entry 2
-    db $D8, $00, $09, $20 ; entry 3
-    db $E0, $F0, $0A, $00 ; entry 4
-    db $E0, $F8, $0B, $00 ; entry 5
-    db $E0, $08, $0A, $20 ; entry 6
-    db $E0, $00, $0B, $20 ; entry 7
-    db $E8, $F0, $0C, $00 ; entry 8
-    db $E8, $F8, $0D, $00 ; entry 9
-    db $E8, $08, $0C, $20 ; entry 10
-    db $E8, $00, $0D, $20 ; entry 11
-    db $F0, $F8, $0E, $00 ; entry 12
-    db $F0, $00, $0F, $00 ; entry 13
-    db $F8, $F8, $10, $00 ; entry 14
-    db $F8, $00, $11, $00 ; entry 15
-    db $F0, $F0, $02, $00 ; entry 16
-    db $F0, $08, $03, $00 ; entry 17
-    db $F8, $08, $05, $00 ; entry 18
-    db $F8, $F0, $04, $00 ; entry 19
+    db $d8, $f0, $08, $00 ; entry 0
+    db $d8, $f8, $09, $00 ; entry 1
+    db $d8, $08, $08, $20 ; entry 2
+    db $d8, $00, $09, $20 ; entry 3
+    db $e0, $f0, $0a, $00 ; entry 4
+    db $e0, $f8, $0b, $00 ; entry 5
+    db $e0, $08, $0a, $20 ; entry 6
+    db $e0, $00, $0b, $20 ; entry 7
+    db $e8, $f0, $0c, $00 ; entry 8
+    db $e8, $f8, $0d, $00 ; entry 9
+    db $e8, $08, $0c, $20 ; entry 10
+    db $e8, $00, $0d, $20 ; entry 11
+    db $f0, $f8, $0e, $00 ; entry 12
+    db $f0, $00, $0f, $00 ; entry 13
+    db $f8, $f8, $10, $00 ; entry 14
+    db $f8, $00, $11, $00 ; entry 15
+    db $f0, $f0, $02, $00 ; entry 16
+    db $f0, $08, $03, $00 ; entry 17
+    db $f8, $08, $05, $00 ; entry 18
+    db $f8, $f0, $04, $00 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame11::
-Data_03B_5C54:: ; address name
-    db $E0, $F0, $12, $00 ; entry 0
-    db $E0, $F8, $13, $00 ; entry 1
-    db $E0, $08, $12, $20 ; entry 2
-    db $E0, $00, $13, $20 ; entry 3
-    db $E8, $F0, $0E, $40 ; entry 4
-    db $E8, $08, $0F, $40 ; entry 5
-    db $F0, $F0, $0E, $00 ; entry 6
-    db $F0, $08, $0F, $00 ; entry 7
-    db $F8, $F0, $10, $00 ; entry 8
-    db $F8, $08, $11, $00 ; entry 9
-    db $E8, $F8, $14, $00 ; entry 10
-    db $E8, $00, $15, $00 ; entry 11
-    db $F0, $F8, $16, $00 ; entry 12
-    db $F0, $00, $17, $00 ; entry 13
-    db $D0, $F0, $18, $00 ; entry 14
-    db $D0, $F8, $19, $00 ; entry 15
-    db $D0, $08, $18, $20 ; entry 16
-    db $D0, $00, $19, $20 ; entry 17
-    db $D8, $F0, $1A, $00 ; entry 18
-    db $D8, $F8, $1B, $00 ; entry 19
-    db $D8, $08, $1A, $20 ; entry 20
-    db $D8, $00, $1B, $20 ; entry 21
-    db $F8, $F8, $16, $00 ; entry 22
-    db $F8, $00, $17, $00 ; entry 23
+    db $e0, $f0, $12, $00 ; entry 0
+    db $e0, $f8, $13, $00 ; entry 1
+    db $e0, $08, $12, $20 ; entry 2
+    db $e0, $00, $13, $20 ; entry 3
+    db $e8, $f0, $0e, $40 ; entry 4
+    db $e8, $08, $0f, $40 ; entry 5
+    db $f0, $f0, $0e, $00 ; entry 6
+    db $f0, $08, $0f, $00 ; entry 7
+    db $f8, $f0, $10, $00 ; entry 8
+    db $f8, $08, $11, $00 ; entry 9
+    db $e8, $f8, $14, $00 ; entry 10
+    db $e8, $00, $15, $00 ; entry 11
+    db $f0, $f8, $16, $00 ; entry 12
+    db $f0, $00, $17, $00 ; entry 13
+    db $d0, $f0, $18, $00 ; entry 14
+    db $d0, $f8, $19, $00 ; entry 15
+    db $d0, $08, $18, $20 ; entry 16
+    db $d0, $00, $19, $20 ; entry 17
+    db $d8, $f0, $1a, $00 ; entry 18
+    db $d8, $f8, $1b, $00 ; entry 19
+    db $d8, $08, $1a, $20 ; entry 20
+    db $d8, $00, $1b, $20 ; entry 21
+    db $f8, $f8, $16, $00 ; entry 22
+    db $f8, $00, $17, $00 ; entry 23
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3B_507CSet2F; ends with $80)
+; frame 12 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2FFrame12::
-Data_03B_5CB5:: ; address name
-    db $D0, $00, $04, $20 ; entry 0
-    db $D0, $F8, $05, $20 ; entry 1
-    db $E8, $F8, $1C, $40 ; entry 2
-    db $E8, $00, $1C, $60 ; entry 3
-    db $F8, $F8, $1C, $00 ; entry 4
-    db $F8, $00, $1C, $20 ; entry 5
-    db $E0, $F0, $1A, $00 ; entry 6
-    db $E0, $F8, $1B, $00 ; entry 7
-    db $E0, $08, $1A, $20 ; entry 8
-    db $E0, $00, $1B, $20 ; entry 9
-    db $F0, $F0, $1E, $00 ; entry 10
-    db $F0, $F8, $1F, $00 ; entry 11
-    db $F0, $08, $1E, $20 ; entry 12
-    db $F0, $00, $1F, $20 ; entry 13
-    db $D8, $08, $18, $20 ; entry 14
-    db $D8, $00, $19, $20 ; entry 15
-    db $D8, $F0, $18, $00 ; entry 16
-    db $D8, $F8, $19, $00 ; entry 17
+    db $d0, $00, $04, $20 ; entry 0
+    db $d0, $f8, $05, $20 ; entry 1
+    db $e8, $f8, $1c, $40 ; entry 2
+    db $e8, $00, $1c, $60 ; entry 3
+    db $f8, $f8, $1c, $00 ; entry 4
+    db $f8, $00, $1c, $20 ; entry 5
+    db $e0, $f0, $1a, $00 ; entry 6
+    db $e0, $f8, $1b, $00 ; entry 7
+    db $e0, $08, $1a, $20 ; entry 8
+    db $e0, $00, $1b, $20 ; entry 9
+    db $f0, $f0, $1e, $00 ; entry 10
+    db $f0, $f8, $1f, $00 ; entry 11
+    db $f0, $08, $1e, $20 ; entry 12
+    db $f0, $00, $1f, $20 ; entry 13
+    db $d8, $08, $18, $20 ; entry 14
+    db $d8, $00, $19, $20 ; entry 15
+    db $d8, $f0, $18, $00 ; entry 16
+    db $d8, $f8, $19, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 13 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame13::
-Data_03B_5CFE:: ; address name
-    db $F0, $08, $18, $20 ; entry 0
-    db $F0, $00, $19, $20 ; entry 1
-    db $F0, $F0, $18, $00 ; entry 2
-    db $F0, $F8, $19, $00 ; entry 3
-    db $E0, $F8, $1C, $00 ; entry 4
-    db $E0, $00, $1C, $20 ; entry 5
-    db $E8, $F8, $1D, $20 ; entry 6
-    db $E8, $00, $1D, $00 ; entry 7
-    db $D0, $F8, $1D, $60 ; entry 8
-    db $D0, $00, $1D, $40 ; entry 9
-    db $D8, $F0, $1E, $00 ; entry 10
-    db $D8, $F8, $1F, $00 ; entry 11
-    db $D8, $08, $1E, $20 ; entry 12
-    db $D8, $00, $1F, $20 ; entry 13
-    db $F8, $F0, $1A, $00 ; entry 14
-    db $F8, $F8, $1B, $00 ; entry 15
-    db $F8, $08, $1A, $20 ; entry 16
-    db $F8, $00, $1B, $20 ; entry 17
+    db $f0, $08, $18, $20 ; entry 0
+    db $f0, $00, $19, $20 ; entry 1
+    db $f0, $f0, $18, $00 ; entry 2
+    db $f0, $f8, $19, $00 ; entry 3
+    db $e0, $f8, $1c, $00 ; entry 4
+    db $e0, $00, $1c, $20 ; entry 5
+    db $e8, $f8, $1d, $20 ; entry 6
+    db $e8, $00, $1d, $00 ; entry 7
+    db $d0, $f8, $1d, $60 ; entry 8
+    db $d0, $00, $1d, $40 ; entry 9
+    db $d8, $f0, $1e, $00 ; entry 10
+    db $d8, $f8, $1f, $00 ; entry 11
+    db $d8, $08, $1e, $20 ; entry 12
+    db $d8, $00, $1f, $20 ; entry 13
+    db $f8, $f0, $1a, $00 ; entry 14
+    db $f8, $f8, $1b, $00 ; entry 15
+    db $f8, $08, $1a, $20 ; entry 16
+    db $f8, $00, $1b, $20 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame14::
-Data_03B_5D47:: ; address name
-    db $E0, $08, $18, $20 ; entry 0
-    db $E0, $00, $19, $20 ; entry 1
-    db $E0, $F0, $18, $00 ; entry 2
-    db $E0, $F8, $19, $00 ; entry 3
-    db $F0, $F8, $1C, $00 ; entry 4
-    db $D8, $00, $1D, $40 ; entry 5
-    db $F0, $00, $1C, $20 ; entry 6
-    db $D8, $F8, $1D, $60 ; entry 7
-    db $D0, $F0, $1E, $00 ; entry 8
-    db $D0, $F8, $1F, $00 ; entry 9
-    db $D0, $08, $1E, $20 ; entry 10
-    db $D0, $00, $1F, $20 ; entry 11
-    db $F8, $F0, $1E, $00 ; entry 12
-    db $F8, $F8, $1F, $00 ; entry 13
-    db $F8, $08, $1E, $20 ; entry 14
-    db $F8, $00, $1F, $20 ; entry 15
-    db $E8, $F0, $1A, $00 ; entry 16
-    db $E8, $F8, $1B, $00 ; entry 17
-    db $E8, $08, $1A, $20 ; entry 18
-    db $E8, $00, $1B, $20 ; entry 19
+    db $e0, $08, $18, $20 ; entry 0
+    db $e0, $00, $19, $20 ; entry 1
+    db $e0, $f0, $18, $00 ; entry 2
+    db $e0, $f8, $19, $00 ; entry 3
+    db $f0, $f8, $1c, $00 ; entry 4
+    db $d8, $00, $1d, $40 ; entry 5
+    db $f0, $00, $1c, $20 ; entry 6
+    db $d8, $f8, $1d, $60 ; entry 7
+    db $d0, $f0, $1e, $00 ; entry 8
+    db $d0, $f8, $1f, $00 ; entry 9
+    db $d0, $08, $1e, $20 ; entry 10
+    db $d0, $00, $1f, $20 ; entry 11
+    db $f8, $f0, $1e, $00 ; entry 12
+    db $f8, $f8, $1f, $00 ; entry 13
+    db $f8, $08, $1e, $20 ; entry 14
+    db $f8, $00, $1f, $20 ; entry 15
+    db $e8, $f0, $1a, $00 ; entry 16
+    db $e8, $f8, $1b, $00 ; entry 17
+    db $e8, $08, $1a, $20 ; entry 18
+    db $e8, $00, $1b, $20 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame15::
-Data_03B_5D98:: ; address name
-    db $E8, $F8, $1C, $00 ; entry 0
-    db $E8, $00, $1C, $20 ; entry 1
-    db $D0, $08, $18, $20 ; entry 2
-    db $D0, $00, $19, $20 ; entry 3
-    db $D0, $F0, $18, $00 ; entry 4
-    db $D0, $F8, $19, $00 ; entry 5
-    db $F8, $F8, $1D, $20 ; entry 6
-    db $F8, $00, $1D, $00 ; entry 7
-    db $F0, $F0, $1E, $00 ; entry 8
-    db $F0, $F8, $1F, $00 ; entry 9
-    db $F0, $08, $1E, $20 ; entry 10
-    db $F0, $00, $1F, $20 ; entry 11
-    db $E0, $F0, $1E, $00 ; entry 12
-    db $E0, $F8, $1F, $00 ; entry 13
-    db $E0, $08, $1E, $20 ; entry 14
-    db $E0, $00, $1F, $20 ; entry 15
-    db $D8, $F0, $1A, $00 ; entry 16
-    db $D8, $F8, $1B, $00 ; entry 17
-    db $D8, $08, $1A, $20 ; entry 18
-    db $D8, $00, $1B, $20 ; entry 19
+    db $e8, $f8, $1c, $00 ; entry 0
+    db $e8, $00, $1c, $20 ; entry 1
+    db $d0, $08, $18, $20 ; entry 2
+    db $d0, $00, $19, $20 ; entry 3
+    db $d0, $f0, $18, $00 ; entry 4
+    db $d0, $f8, $19, $00 ; entry 5
+    db $f8, $f8, $1d, $20 ; entry 6
+    db $f8, $00, $1d, $00 ; entry 7
+    db $f0, $f0, $1e, $00 ; entry 8
+    db $f0, $f8, $1f, $00 ; entry 9
+    db $f0, $08, $1e, $20 ; entry 10
+    db $f0, $00, $1f, $20 ; entry 11
+    db $e0, $f0, $1e, $00 ; entry 12
+    db $e0, $f8, $1f, $00 ; entry 13
+    db $e0, $08, $1e, $20 ; entry 14
+    db $e0, $00, $1f, $20 ; entry 15
+    db $d8, $f0, $1a, $00 ; entry 16
+    db $d8, $f8, $1b, $00 ; entry 17
+    db $d8, $08, $1a, $20 ; entry 18
+    db $d8, $00, $1b, $20 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3B_507CSet2F; ends with $80)
+; frame 16 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet2FFrame16::
-Data_03B_5DE9:: ; address name
-    db $D0, $04, $2E, $20 ; entry 0
-    db $F8, $04, $2E, $20 ; entry 1
-    db $F0, $04, $2E, $20 ; entry 2
-    db $E8, $04, $2E, $20 ; entry 3
-    db $E0, $04, $2E, $20 ; entry 4
-    db $D8, $04, $2E, $20 ; entry 5
-    db $D0, $F4, $2E, $00 ; entry 6
-    db $D8, $F4, $2E, $00 ; entry 7
-    db $E0, $F4, $2E, $00 ; entry 8
-    db $E8, $F4, $2E, $00 ; entry 9
-    db $F0, $F4, $2E, $00 ; entry 10
-    db $F8, $F4, $2E, $00 ; entry 11
-    db $D0, $FC, $2F, $00 ; entry 12
-    db $D8, $FC, $2F, $00 ; entry 13
-    db $E0, $FC, $2F, $00 ; entry 14
-    db $E8, $FC, $2F, $00 ; entry 15
-    db $F0, $FC, $2F, $00 ; entry 16
-    db $F8, $FC, $2F, $00 ; entry 17
+    db $d0, $04, $2e, $20 ; entry 0
+    db $f8, $04, $2e, $20 ; entry 1
+    db $f0, $04, $2e, $20 ; entry 2
+    db $e8, $04, $2e, $20 ; entry 3
+    db $e0, $04, $2e, $20 ; entry 4
+    db $d8, $04, $2e, $20 ; entry 5
+    db $d0, $f4, $2e, $00 ; entry 6
+    db $d8, $f4, $2e, $00 ; entry 7
+    db $e0, $f4, $2e, $00 ; entry 8
+    db $e8, $f4, $2e, $00 ; entry 9
+    db $f0, $f4, $2e, $00 ; entry 10
+    db $f8, $f4, $2e, $00 ; entry 11
+    db $d0, $fc, $2f, $00 ; entry 12
+    db $d8, $fc, $2f, $00 ; entry 13
+    db $e0, $fc, $2f, $00 ; entry 14
+    db $e8, $fc, $2f, $00 ; entry 15
+    db $f0, $fc, $2f, $00 ; entry 16
+    db $f8, $fc, $2f, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 17 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 17 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame17::
-Data_03B_5E32:: ; address name
-    db $D0, $F4, $2E, $20 ; entry 0
-    db $F8, $F4, $2E, $20 ; entry 1
-    db $F0, $F4, $2E, $20 ; entry 2
-    db $E8, $F4, $2E, $20 ; entry 3
-    db $E0, $F4, $2E, $20 ; entry 4
-    db $D8, $F4, $2E, $20 ; entry 5
-    db $D0, $04, $2E, $00 ; entry 6
-    db $D8, $04, $2E, $00 ; entry 7
-    db $E0, $04, $2E, $00 ; entry 8
-    db $E8, $04, $2E, $00 ; entry 9
-    db $F0, $04, $2E, $00 ; entry 10
-    db $F8, $04, $2E, $00 ; entry 11
-    db $D0, $FC, $2F, $20 ; entry 12
-    db $D8, $FC, $2F, $20 ; entry 13
-    db $E0, $FC, $2F, $20 ; entry 14
-    db $E8, $FC, $2F, $20 ; entry 15
-    db $F0, $FC, $2F, $20 ; entry 16
-    db $F8, $FC, $2F, $20 ; entry 17
+    db $d0, $f4, $2e, $20 ; entry 0
+    db $f8, $f4, $2e, $20 ; entry 1
+    db $f0, $f4, $2e, $20 ; entry 2
+    db $e8, $f4, $2e, $20 ; entry 3
+    db $e0, $f4, $2e, $20 ; entry 4
+    db $d8, $f4, $2e, $20 ; entry 5
+    db $d0, $04, $2e, $00 ; entry 6
+    db $d8, $04, $2e, $00 ; entry 7
+    db $e0, $04, $2e, $00 ; entry 8
+    db $e8, $04, $2e, $00 ; entry 9
+    db $f0, $04, $2e, $00 ; entry 10
+    db $f8, $04, $2e, $00 ; entry 11
+    db $d0, $fc, $2f, $20 ; entry 12
+    db $d8, $fc, $2f, $20 ; entry 13
+    db $e0, $fc, $2f, $20 ; entry 14
+    db $e8, $fc, $2f, $20 ; entry 15
+    db $f0, $fc, $2f, $20 ; entry 16
+    db $f8, $fc, $2f, $20 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 18 of MetaSprites3B_507CSet2F; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 18 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
 MetaSprites3B_507CSet2FFrame18::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 48 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 48 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet30::
-Data_03B_5E7C:: ; address name
     dw MetaSprites3B_507CSet30Frame0 ; entry 0
     dw MetaSprites3B_507CSet30Frame1 ; entry 1
     dw MetaSprites3B_507CSet30Frame2 ; entry 2
@@ -4361,289 +3950,269 @@ Data_03B_5E7C:: ; address name
     dw MetaSprites3B_507CSet30Frame11 ; entry 30
     dw MetaSprites3B_507CSet30Frame11 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet30; ends with $80)
+; frame 0 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet30Frame0::
-Data_03B_5EBC:: ; address name
-    db $F8, $F8, $00, $00 ; entry 0
-    db $F8, $00, $01, $00 ; entry 1
+    db $f8, $f8, $00, $00 ; entry 0
+    db $f8, $00, $01, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame1::
-Data_03B_5EC5:: ; address name
-    db $F0, $F8, $02, $00 ; entry 0
-    db $F0, $00, $03, $00 ; entry 1
-    db $F8, $F8, $04, $00 ; entry 2
-    db $F8, $00, $05, $00 ; entry 3
+    db $f0, $f8, $02, $00 ; entry 0
+    db $f0, $00, $03, $00 ; entry 1
+    db $f8, $f8, $04, $00 ; entry 2
+    db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame2::
-Data_03B_5ED6:: ; address name
-    db $F0, $00, $02, $20 ; entry 0
-    db $F0, $F8, $03, $20 ; entry 1
-    db $F8, $00, $04, $20 ; entry 2
-    db $F8, $F8, $05, $20 ; entry 3
+    db $f0, $00, $02, $20 ; entry 0
+    db $f0, $f8, $03, $20 ; entry 1
+    db $f8, $00, $04, $20 ; entry 2
+    db $f8, $f8, $05, $20 ; entry 3
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame3::
-Data_03B_5EE7:: ; address name
-    db $E8, $F8, $02, $00 ; entry 0
-    db $E8, $00, $03, $00 ; entry 1
-    db $F0, $F8, $04, $00 ; entry 2
-    db $F0, $00, $05, $00 ; entry 3
-    db $F8, $F8, $06, $00 ; entry 4
-    db $F8, $00, $07, $00 ; entry 5
-    db $F8, $F0, $00, $00 ; entry 6
-    db $F8, $08, $01, $00 ; entry 7
+    db $e8, $f8, $02, $00 ; entry 0
+    db $e8, $00, $03, $00 ; entry 1
+    db $f0, $f8, $04, $00 ; entry 2
+    db $f0, $00, $05, $00 ; entry 3
+    db $f8, $f8, $06, $00 ; entry 4
+    db $f8, $00, $07, $00 ; entry 5
+    db $f8, $f0, $00, $00 ; entry 6
+    db $f8, $08, $01, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet30; ends with $80)
+; frame 4 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet30Frame4::
-Data_03B_5F08:: ; address name
-    db $D8, $F0, $08, $00 ; entry 0
-    db $D8, $F8, $09, $00 ; entry 1
-    db $D8, $08, $08, $20 ; entry 2
-    db $D8, $00, $09, $20 ; entry 3
-    db $E0, $F0, $0A, $00 ; entry 4
-    db $E0, $F8, $0B, $00 ; entry 5
-    db $E0, $08, $0A, $20 ; entry 6
-    db $E0, $00, $0B, $20 ; entry 7
-    db $E8, $F0, $0C, $00 ; entry 8
-    db $E8, $F8, $0D, $00 ; entry 9
-    db $E8, $08, $0C, $20 ; entry 10
-    db $E8, $00, $0D, $20 ; entry 11
-    db $F0, $F8, $0E, $00 ; entry 12
-    db $F0, $00, $0F, $00 ; entry 13
-    db $F8, $F8, $10, $00 ; entry 14
-    db $F8, $00, $11, $00 ; entry 15
-    db $F0, $F0, $02, $00 ; entry 16
-    db $F0, $08, $03, $00 ; entry 17
-    db $F8, $08, $05, $00 ; entry 18
-    db $F8, $F0, $04, $00 ; entry 19
+    db $d8, $f0, $08, $00 ; entry 0
+    db $d8, $f8, $09, $00 ; entry 1
+    db $d8, $08, $08, $20 ; entry 2
+    db $d8, $00, $09, $20 ; entry 3
+    db $e0, $f0, $0a, $00 ; entry 4
+    db $e0, $f8, $0b, $00 ; entry 5
+    db $e0, $08, $0a, $20 ; entry 6
+    db $e0, $00, $0b, $20 ; entry 7
+    db $e8, $f0, $0c, $00 ; entry 8
+    db $e8, $f8, $0d, $00 ; entry 9
+    db $e8, $08, $0c, $20 ; entry 10
+    db $e8, $00, $0d, $20 ; entry 11
+    db $f0, $f8, $0e, $00 ; entry 12
+    db $f0, $00, $0f, $00 ; entry 13
+    db $f8, $f8, $10, $00 ; entry 14
+    db $f8, $00, $11, $00 ; entry 15
+    db $f0, $f0, $02, $00 ; entry 16
+    db $f0, $08, $03, $00 ; entry 17
+    db $f8, $08, $05, $00 ; entry 18
+    db $f8, $f0, $04, $00 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame5::
-Data_03B_5F59:: ; address name
-    db $D0, $F0, $18, $00 ; entry 0
-    db $D0, $08, $18, $20 ; entry 1
-    db $D0, $F8, $1A, $00 ; entry 2
-    db $D0, $00, $1B, $00 ; entry 3
-    db $D8, $F0, $28, $00 ; entry 4
-    db $D8, $F8, $29, $00 ; entry 5
-    db $D8, $08, $28, $20 ; entry 6
-    db $D8, $00, $2B, $00 ; entry 7
-    db $E0, $F0, $12, $00 ; entry 8
-    db $E0, $F8, $13, $00 ; entry 9
-    db $E0, $08, $12, $20 ; entry 10
-    db $E0, $00, $13, $20 ; entry 11
-    db $E8, $F0, $0E, $40 ; entry 12
-    db $E8, $08, $0F, $40 ; entry 13
-    db $F0, $F0, $0E, $00 ; entry 14
-    db $F0, $08, $0F, $00 ; entry 15
-    db $F8, $F0, $10, $00 ; entry 16
-    db $F8, $08, $11, $00 ; entry 17
-    db $E8, $F8, $14, $00 ; entry 18
-    db $E8, $00, $15, $00 ; entry 19
-    db $F0, $F8, $16, $00 ; entry 20
-    db $F0, $00, $17, $00 ; entry 21
-    db $F8, $F8, $20, $00 ; entry 22
-    db $F8, $00, $21, $00 ; entry 23
+    db $d0, $f0, $18, $00 ; entry 0
+    db $d0, $08, $18, $20 ; entry 1
+    db $d0, $f8, $1a, $00 ; entry 2
+    db $d0, $00, $1b, $00 ; entry 3
+    db $d8, $f0, $28, $00 ; entry 4
+    db $d8, $f8, $29, $00 ; entry 5
+    db $d8, $08, $28, $20 ; entry 6
+    db $d8, $00, $2b, $00 ; entry 7
+    db $e0, $f0, $12, $00 ; entry 8
+    db $e0, $f8, $13, $00 ; entry 9
+    db $e0, $08, $12, $20 ; entry 10
+    db $e0, $00, $13, $20 ; entry 11
+    db $e8, $f0, $0e, $40 ; entry 12
+    db $e8, $08, $0f, $40 ; entry 13
+    db $f0, $f0, $0e, $00 ; entry 14
+    db $f0, $08, $0f, $00 ; entry 15
+    db $f8, $f0, $10, $00 ; entry 16
+    db $f8, $08, $11, $00 ; entry 17
+    db $e8, $f8, $14, $00 ; entry 18
+    db $e8, $00, $15, $00 ; entry 19
+    db $f0, $f8, $16, $00 ; entry 20
+    db $f0, $00, $17, $00 ; entry 21
+    db $f8, $f8, $20, $00 ; entry 22
+    db $f8, $00, $21, $00 ; entry 23
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame6::
-Data_03B_5FBA:: ; address name
-    db $D0, $00, $04, $20 ; entry 0
-    db $D0, $F8, $05, $20 ; entry 1
-    db $D8, $E8, $18, $00 ; entry 2
-    db $D8, $F0, $19, $00 ; entry 3
-    db $D8, $F8, $1A, $00 ; entry 4
-    db $D8, $00, $1B, $00 ; entry 5
-    db $E0, $E8, $28, $00 ; entry 6
-    db $E0, $F0, $29, $00 ; entry 7
-    db $E0, $F8, $2A, $00 ; entry 8
-    db $E0, $00, $2B, $00 ; entry 9
-    db $D8, $10, $18, $20 ; entry 10
-    db $D8, $08, $19, $20 ; entry 11
-    db $E0, $10, $28, $20 ; entry 12
-    db $E0, $08, $29, $20 ; entry 13
-    db $E8, $F0, $1C, $00 ; entry 14
-    db $E8, $F8, $1D, $00 ; entry 15
-    db $E8, $08, $1C, $20 ; entry 16
-    db $E8, $00, $1D, $20 ; entry 17
-    db $F8, $F0, $1C, $00 ; entry 18
-    db $F8, $F8, $1D, $00 ; entry 19
-    db $F8, $08, $1C, $20 ; entry 20
-    db $F8, $00, $1D, $20 ; entry 21
-    db $F0, $E8, $22, $00 ; entry 22
-    db $F0, $F0, $23, $00 ; entry 23
-    db $F0, $F8, $24, $00 ; entry 24
-    db $F0, $10, $22, $20 ; entry 25
-    db $F0, $08, $23, $20 ; entry 26
-    db $F0, $00, $24, $20 ; entry 27
+    db $d0, $00, $04, $20 ; entry 0
+    db $d0, $f8, $05, $20 ; entry 1
+    db $d8, $e8, $18, $00 ; entry 2
+    db $d8, $f0, $19, $00 ; entry 3
+    db $d8, $f8, $1a, $00 ; entry 4
+    db $d8, $00, $1b, $00 ; entry 5
+    db $e0, $e8, $28, $00 ; entry 6
+    db $e0, $f0, $29, $00 ; entry 7
+    db $e0, $f8, $2a, $00 ; entry 8
+    db $e0, $00, $2b, $00 ; entry 9
+    db $d8, $10, $18, $20 ; entry 10
+    db $d8, $08, $19, $20 ; entry 11
+    db $e0, $10, $28, $20 ; entry 12
+    db $e0, $08, $29, $20 ; entry 13
+    db $e8, $f0, $1c, $00 ; entry 14
+    db $e8, $f8, $1d, $00 ; entry 15
+    db $e8, $08, $1c, $20 ; entry 16
+    db $e8, $00, $1d, $20 ; entry 17
+    db $f8, $f0, $1c, $00 ; entry 18
+    db $f8, $f8, $1d, $00 ; entry 19
+    db $f8, $08, $1c, $20 ; entry 20
+    db $f8, $00, $1d, $20 ; entry 21
+    db $f0, $e8, $22, $00 ; entry 22
+    db $f0, $f0, $23, $00 ; entry 23
+    db $f0, $f8, $24, $00 ; entry 24
+    db $f0, $10, $22, $20 ; entry 25
+    db $f0, $08, $23, $20 ; entry 26
+    db $f0, $00, $24, $20 ; entry 27
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame7::
-Data_03B_602B:: ; address name
-    db $F8, $E8, $28, $00 ; entry 0
-    db $F8, $10, $28, $20 ; entry 1
-    db $F8, $08, $29, $20 ; entry 2
-    db $F8, $F8, $2A, $00 ; entry 3
-    db $F8, $00, $2B, $00 ; entry 4
-    db $F8, $F0, $29, $00 ; entry 5
-    db $F0, $10, $18, $20 ; entry 6
-    db $F0, $08, $19, $20 ; entry 7
-    db $F0, $F8, $1A, $00 ; entry 8
-    db $F0, $00, $1B, $00 ; entry 9
-    db $F0, $E8, $18, $00 ; entry 10
-    db $F0, $F0, $19, $00 ; entry 11
-    db $E8, $F0, $1E, $00 ; entry 12
-    db $E8, $F8, $1F, $00 ; entry 13
-    db $E8, $08, $1E, $20 ; entry 14
-    db $E8, $00, $1F, $20 ; entry 15
-    db $E0, $F0, $1C, $00 ; entry 16
-    db $E0, $F8, $1D, $00 ; entry 17
-    db $E0, $08, $1C, $20 ; entry 18
-    db $E0, $00, $1D, $20 ; entry 19
-    db $D8, $E8, $22, $00 ; entry 20
-    db $D8, $F0, $23, $00 ; entry 21
-    db $D8, $F8, $24, $00 ; entry 22
-    db $D8, $10, $22, $20 ; entry 23
-    db $D8, $08, $23, $20 ; entry 24
-    db $D8, $00, $24, $20 ; entry 25
-    db $D0, $F0, $1E, $00 ; entry 26
-    db $D0, $F8, $1F, $00 ; entry 27
-    db $D0, $08, $1E, $20 ; entry 28
-    db $D0, $00, $1F, $20 ; entry 29
+    db $f8, $e8, $28, $00 ; entry 0
+    db $f8, $10, $28, $20 ; entry 1
+    db $f8, $08, $29, $20 ; entry 2
+    db $f8, $f8, $2a, $00 ; entry 3
+    db $f8, $00, $2b, $00 ; entry 4
+    db $f8, $f0, $29, $00 ; entry 5
+    db $f0, $10, $18, $20 ; entry 6
+    db $f0, $08, $19, $20 ; entry 7
+    db $f0, $f8, $1a, $00 ; entry 8
+    db $f0, $00, $1b, $00 ; entry 9
+    db $f0, $e8, $18, $00 ; entry 10
+    db $f0, $f0, $19, $00 ; entry 11
+    db $e8, $f0, $1e, $00 ; entry 12
+    db $e8, $f8, $1f, $00 ; entry 13
+    db $e8, $08, $1e, $20 ; entry 14
+    db $e8, $00, $1f, $20 ; entry 15
+    db $e0, $f0, $1c, $00 ; entry 16
+    db $e0, $f8, $1d, $00 ; entry 17
+    db $e0, $08, $1c, $20 ; entry 18
+    db $e0, $00, $1d, $20 ; entry 19
+    db $d8, $e8, $22, $00 ; entry 20
+    db $d8, $f0, $23, $00 ; entry 21
+    db $d8, $f8, $24, $00 ; entry 22
+    db $d8, $10, $22, $20 ; entry 23
+    db $d8, $08, $23, $20 ; entry 24
+    db $d8, $00, $24, $20 ; entry 25
+    db $d0, $f0, $1e, $00 ; entry 26
+    db $d0, $f8, $1f, $00 ; entry 27
+    db $d0, $08, $1e, $20 ; entry 28
+    db $d0, $00, $1f, $20 ; entry 29
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet30; ends with $80)
+; frame 8 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet30Frame8::
-Data_03B_60A4:: ; address name
-    db $E8, $E8, $28, $00 ; entry 0
-    db $E8, $10, $28, $20 ; entry 1
-    db $E8, $08, $29, $20 ; entry 2
-    db $E8, $F8, $2A, $00 ; entry 3
-    db $E8, $00, $2B, $00 ; entry 4
-    db $E8, $F0, $29, $00 ; entry 5
-    db $E0, $10, $18, $20 ; entry 6
-    db $E0, $08, $19, $20 ; entry 7
-    db $E0, $F8, $1A, $00 ; entry 8
-    db $E0, $00, $1B, $00 ; entry 9
-    db $E0, $E8, $18, $00 ; entry 10
-    db $E0, $F0, $19, $00 ; entry 11
-    db $F0, $F0, $1E, $00 ; entry 12
-    db $F0, $F8, $1F, $00 ; entry 13
-    db $F0, $08, $1E, $20 ; entry 14
-    db $F0, $00, $1F, $20 ; entry 15
-    db $F8, $E8, $22, $00 ; entry 16
-    db $F8, $F0, $23, $00 ; entry 17
-    db $F8, $F8, $24, $00 ; entry 18
-    db $F8, $10, $22, $20 ; entry 19
-    db $F8, $08, $23, $20 ; entry 20
-    db $F8, $00, $24, $20 ; entry 21
-    db $D8, $F0, $1E, $00 ; entry 22
-    db $D8, $F8, $1F, $00 ; entry 23
-    db $D8, $08, $1E, $20 ; entry 24
-    db $D8, $00, $1F, $20 ; entry 25
-    db $D0, $E8, $22, $00 ; entry 26
-    db $D0, $F0, $23, $00 ; entry 27
-    db $D0, $F8, $24, $00 ; entry 28
-    db $D0, $10, $22, $20 ; entry 29
-    db $D0, $08, $23, $20 ; entry 30
-    db $D0, $00, $24, $20 ; entry 31
+    db $e8, $e8, $28, $00 ; entry 0
+    db $e8, $10, $28, $20 ; entry 1
+    db $e8, $08, $29, $20 ; entry 2
+    db $e8, $f8, $2a, $00 ; entry 3
+    db $e8, $00, $2b, $00 ; entry 4
+    db $e8, $f0, $29, $00 ; entry 5
+    db $e0, $10, $18, $20 ; entry 6
+    db $e0, $08, $19, $20 ; entry 7
+    db $e0, $f8, $1a, $00 ; entry 8
+    db $e0, $00, $1b, $00 ; entry 9
+    db $e0, $e8, $18, $00 ; entry 10
+    db $e0, $f0, $19, $00 ; entry 11
+    db $f0, $f0, $1e, $00 ; entry 12
+    db $f0, $f8, $1f, $00 ; entry 13
+    db $f0, $08, $1e, $20 ; entry 14
+    db $f0, $00, $1f, $20 ; entry 15
+    db $f8, $e8, $22, $00 ; entry 16
+    db $f8, $f0, $23, $00 ; entry 17
+    db $f8, $f8, $24, $00 ; entry 18
+    db $f8, $10, $22, $20 ; entry 19
+    db $f8, $08, $23, $20 ; entry 20
+    db $f8, $00, $24, $20 ; entry 21
+    db $d8, $f0, $1e, $00 ; entry 22
+    db $d8, $f8, $1f, $00 ; entry 23
+    db $d8, $08, $1e, $20 ; entry 24
+    db $d8, $00, $1f, $20 ; entry 25
+    db $d0, $e8, $22, $00 ; entry 26
+    db $d0, $f0, $23, $00 ; entry 27
+    db $d0, $f8, $24, $00 ; entry 28
+    db $d0, $10, $22, $20 ; entry 29
+    db $d0, $08, $23, $20 ; entry 30
+    db $d0, $00, $24, $20 ; entry 31
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame9::
-Data_03B_6125:: ; address name
-    db $F0, $E8, $22, $00 ; entry 0
-    db $F0, $F0, $23, $00 ; entry 1
-    db $F0, $F8, $24, $00 ; entry 2
-    db $F0, $10, $22, $20 ; entry 3
-    db $F0, $08, $23, $20 ; entry 4
-    db $F0, $00, $24, $20 ; entry 5
-    db $F8, $F0, $1E, $00 ; entry 6
-    db $F8, $F8, $1F, $00 ; entry 7
-    db $F8, $08, $1E, $20 ; entry 8
-    db $F8, $00, $1F, $20 ; entry 9
-    db $E0, $E8, $22, $00 ; entry 10
-    db $E0, $F0, $23, $00 ; entry 11
-    db $E0, $F8, $24, $00 ; entry 12
-    db $E0, $10, $22, $20 ; entry 13
-    db $E0, $08, $23, $20 ; entry 14
-    db $E0, $00, $24, $20 ; entry 15
-    db $E8, $F0, $1C, $00 ; entry 16
-    db $E8, $F8, $1D, $00 ; entry 17
-    db $E8, $08, $1C, $20 ; entry 18
-    db $E8, $00, $1D, $20 ; entry 19
-    db $D8, $E8, $28, $00 ; entry 20
-    db $D8, $10, $28, $20 ; entry 21
-    db $D8, $08, $29, $20 ; entry 22
-    db $D8, $F8, $2A, $00 ; entry 23
-    db $D8, $00, $2B, $00 ; entry 24
-    db $D8, $F0, $29, $00 ; entry 25
-    db $D0, $10, $18, $20 ; entry 26
-    db $D0, $08, $19, $20 ; entry 27
-    db $D0, $F8, $1A, $00 ; entry 28
-    db $D0, $00, $1B, $00 ; entry 29
-    db $D0, $E8, $18, $00 ; entry 30
-    db $D0, $F0, $19, $00 ; entry 31
+    db $f0, $e8, $22, $00 ; entry 0
+    db $f0, $f0, $23, $00 ; entry 1
+    db $f0, $f8, $24, $00 ; entry 2
+    db $f0, $10, $22, $20 ; entry 3
+    db $f0, $08, $23, $20 ; entry 4
+    db $f0, $00, $24, $20 ; entry 5
+    db $f8, $f0, $1e, $00 ; entry 6
+    db $f8, $f8, $1f, $00 ; entry 7
+    db $f8, $08, $1e, $20 ; entry 8
+    db $f8, $00, $1f, $20 ; entry 9
+    db $e0, $e8, $22, $00 ; entry 10
+    db $e0, $f0, $23, $00 ; entry 11
+    db $e0, $f8, $24, $00 ; entry 12
+    db $e0, $10, $22, $20 ; entry 13
+    db $e0, $08, $23, $20 ; entry 14
+    db $e0, $00, $24, $20 ; entry 15
+    db $e8, $f0, $1c, $00 ; entry 16
+    db $e8, $f8, $1d, $00 ; entry 17
+    db $e8, $08, $1c, $20 ; entry 18
+    db $e8, $00, $1d, $20 ; entry 19
+    db $d8, $e8, $28, $00 ; entry 20
+    db $d8, $10, $28, $20 ; entry 21
+    db $d8, $08, $29, $20 ; entry 22
+    db $d8, $f8, $2a, $00 ; entry 23
+    db $d8, $00, $2b, $00 ; entry 24
+    db $d8, $f0, $29, $00 ; entry 25
+    db $d0, $10, $18, $20 ; entry 26
+    db $d0, $08, $19, $20 ; entry 27
+    db $d0, $f8, $1a, $00 ; entry 28
+    db $d0, $00, $1b, $00 ; entry 29
+    db $d0, $e8, $18, $00 ; entry 30
+    db $d0, $f0, $19, $00 ; entry 31
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame10::
-Data_03B_61A6:: ; address name
-    db $D0, $F0, $25, $00 ; entry 0
-    db $D0, $F8, $26, $00 ; entry 1
-    db $D8, $F0, $27, $00 ; entry 2
-    db $D8, $F8, $2C, $00 ; entry 3
-    db $D0, $00, $25, $00 ; entry 4
-    db $D0, $08, $26, $00 ; entry 5
-    db $D8, $00, $27, $00 ; entry 6
-    db $D8, $08, $2C, $00 ; entry 7
-    db $E0, $F0, $25, $00 ; entry 8
-    db $E0, $F8, $26, $00 ; entry 9
-    db $E8, $F0, $27, $00 ; entry 10
-    db $E8, $F8, $2C, $00 ; entry 11
-    db $E0, $00, $25, $00 ; entry 12
-    db $E0, $08, $26, $00 ; entry 13
-    db $E8, $00, $27, $00 ; entry 14
-    db $E8, $08, $2C, $00 ; entry 15
-    db $F0, $00, $25, $00 ; entry 16
-    db $F0, $08, $26, $00 ; entry 17
-    db $F8, $00, $27, $00 ; entry 18
-    db $F8, $08, $2C, $00 ; entry 19
-    db $F0, $F0, $25, $00 ; entry 20
-    db $F0, $F8, $26, $00 ; entry 21
-    db $F8, $F0, $27, $00 ; entry 22
-    db $F8, $F8, $2C, $00 ; entry 23
+    db $d0, $f0, $25, $00 ; entry 0
+    db $d0, $f8, $26, $00 ; entry 1
+    db $d8, $f0, $27, $00 ; entry 2
+    db $d8, $f8, $2c, $00 ; entry 3
+    db $d0, $00, $25, $00 ; entry 4
+    db $d0, $08, $26, $00 ; entry 5
+    db $d8, $00, $27, $00 ; entry 6
+    db $d8, $08, $2c, $00 ; entry 7
+    db $e0, $f0, $25, $00 ; entry 8
+    db $e0, $f8, $26, $00 ; entry 9
+    db $e8, $f0, $27, $00 ; entry 10
+    db $e8, $f8, $2c, $00 ; entry 11
+    db $e0, $00, $25, $00 ; entry 12
+    db $e0, $08, $26, $00 ; entry 13
+    db $e8, $00, $27, $00 ; entry 14
+    db $e8, $08, $2c, $00 ; entry 15
+    db $f0, $00, $25, $00 ; entry 16
+    db $f0, $08, $26, $00 ; entry 17
+    db $f8, $00, $27, $00 ; entry 18
+    db $f8, $08, $2c, $00 ; entry 19
+    db $f0, $f0, $25, $00 ; entry 20
+    db $f0, $f8, $26, $00 ; entry 21
+    db $f8, $f0, $27, $00 ; entry 22
+    db $f8, $f8, $2c, $00 ; entry 23
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3B_507CSet30; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
 MetaSprites3B_507CSet30Frame11::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 49 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 49 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet31::
-Data_03B_6208:: ; address name
     dw MetaSprites3B_507CSet31Frame0 ; entry 0
     dw MetaSprites3B_507CSet31Frame1 ; entry 1
     dw MetaSprites3B_507CSet31Frame2 ; entry 2
@@ -4677,537 +4246,509 @@ Data_03B_6208:: ; address name
     dw MetaSprites3B_507CSet31Frame16 ; entry 30
     dw MetaSprites3B_507CSet31Frame16 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet31; ends with $80)
+; frame 0 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet31Frame0::
-Data_03B_6248:: ; address name
-    db $D8, $10, $00, $00 ; entry 0
-    db $D0, $10, $01, $00 ; entry 1
+    db $d8, $10, $00, $00 ; entry 0
+    db $d0, $10, $01, $00 ; entry 1
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 1 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame1::
-Data_03B_6251:: ; address name
-    db $D8, $08, $00, $20 ; entry 0
-    db $E0, $10, $00, $00 ; entry 1
-    db $D0, $08, $01, $20 ; entry 2
-    db $D8, $10, $01, $00 ; entry 3
-    db $D0, $10, $02, $00 ; entry 4
+    db $d8, $08, $00, $20 ; entry 0
+    db $e0, $10, $00, $00 ; entry 1
+    db $d0, $08, $01, $20 ; entry 2
+    db $d8, $10, $01, $00 ; entry 3
+    db $d0, $10, $02, $00 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame2::
-Data_03B_6266:: ; address name
-    db $D8, $00, $00, $00 ; entry 0
-    db $E0, $08, $00, $20 ; entry 1
-    db $E8, $10, $00, $00 ; entry 2
-    db $D0, $00, $01, $00 ; entry 3
-    db $D8, $08, $01, $20 ; entry 4
-    db $E0, $10, $01, $00 ; entry 5
-    db $D0, $08, $02, $20 ; entry 6
-    db $D8, $10, $02, $00 ; entry 7
-    db $D0, $10, $03, $00 ; entry 8
+    db $d8, $00, $00, $00 ; entry 0
+    db $e0, $08, $00, $20 ; entry 1
+    db $e8, $10, $00, $00 ; entry 2
+    db $d0, $00, $01, $00 ; entry 3
+    db $d8, $08, $01, $20 ; entry 4
+    db $e0, $10, $01, $00 ; entry 5
+    db $d0, $08, $02, $20 ; entry 6
+    db $d8, $10, $02, $00 ; entry 7
+    db $d0, $10, $03, $00 ; entry 8
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame3::
-Data_03B_628B:: ; address name
-    db $D8, $F8, $00, $20 ; entry 0
-    db $E0, $00, $00, $00 ; entry 1
-    db $E8, $08, $00, $20 ; entry 2
-    db $F0, $10, $00, $00 ; entry 3
-    db $D0, $F8, $01, $20 ; entry 4
-    db $D8, $00, $01, $00 ; entry 5
-    db $E0, $08, $01, $20 ; entry 6
-    db $E8, $10, $01, $00 ; entry 7
-    db $D0, $00, $02, $00 ; entry 8
-    db $D8, $08, $02, $20 ; entry 9
-    db $E0, $10, $02, $00 ; entry 10
-    db $D0, $08, $03, $20 ; entry 11
-    db $D8, $10, $03, $00 ; entry 12
-    db $D0, $10, $04, $00 ; entry 13
+    db $d8, $f8, $00, $20 ; entry 0
+    db $e0, $00, $00, $00 ; entry 1
+    db $e8, $08, $00, $20 ; entry 2
+    db $f0, $10, $00, $00 ; entry 3
+    db $d0, $f8, $01, $20 ; entry 4
+    db $d8, $00, $01, $00 ; entry 5
+    db $e0, $08, $01, $20 ; entry 6
+    db $e8, $10, $01, $00 ; entry 7
+    db $d0, $00, $02, $00 ; entry 8
+    db $d8, $08, $02, $20 ; entry 9
+    db $e0, $10, $02, $00 ; entry 10
+    db $d0, $08, $03, $20 ; entry 11
+    db $d8, $10, $03, $00 ; entry 12
+    db $d0, $10, $04, $00 ; entry 13
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet31; ends with $80)
+; frame 4 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet31Frame4::
-Data_03B_62C4:: ; address name
-    db $F8, $10, $00, $00 ; entry 0
-    db $E8, $00, $00, $00 ; entry 1
-    db $E8, $08, $01, $20 ; entry 2
-    db $E8, $10, $02, $00 ; entry 3
-    db $E0, $F8, $00, $20 ; entry 4
-    db $E0, $00, $01, $00 ; entry 5
-    db $E0, $08, $02, $20 ; entry 6
-    db $E0, $10, $03, $00 ; entry 7
-    db $D8, $F0, $00, $00 ; entry 8
-    db $D8, $F8, $01, $20 ; entry 9
-    db $D8, $00, $02, $00 ; entry 10
-    db $D8, $08, $03, $20 ; entry 11
-    db $D8, $10, $04, $00 ; entry 12
-    db $D0, $F0, $01, $00 ; entry 13
-    db $D0, $F8, $02, $20 ; entry 14
-    db $D0, $00, $03, $00 ; entry 15
-    db $D0, $08, $04, $20 ; entry 16
-    db $F0, $08, $00, $20 ; entry 17
-    db $F0, $10, $01, $00 ; entry 18
-    db $D0, $10, $05, $00 ; entry 19
+    db $f8, $10, $00, $00 ; entry 0
+    db $e8, $00, $00, $00 ; entry 1
+    db $e8, $08, $01, $20 ; entry 2
+    db $e8, $10, $02, $00 ; entry 3
+    db $e0, $f8, $00, $20 ; entry 4
+    db $e0, $00, $01, $00 ; entry 5
+    db $e0, $08, $02, $20 ; entry 6
+    db $e0, $10, $03, $00 ; entry 7
+    db $d8, $f0, $00, $00 ; entry 8
+    db $d8, $f8, $01, $20 ; entry 9
+    db $d8, $00, $02, $00 ; entry 10
+    db $d8, $08, $03, $20 ; entry 11
+    db $d8, $10, $04, $00 ; entry 12
+    db $d0, $f0, $01, $00 ; entry 13
+    db $d0, $f8, $02, $20 ; entry 14
+    db $d0, $00, $03, $00 ; entry 15
+    db $d0, $08, $04, $20 ; entry 16
+    db $f0, $08, $00, $20 ; entry 17
+    db $f0, $10, $01, $00 ; entry 18
+    db $d0, $10, $05, $00 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 5 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame5::
-Data_03B_6315:: ; address name
-    db $F8, $08, $00, $20 ; entry 0
-    db $F8, $10, $01, $00 ; entry 1
-    db $F0, $00, $00, $00 ; entry 2
-    db $F0, $08, $01, $20 ; entry 3
-    db $F0, $10, $02, $00 ; entry 4
-    db $E8, $F8, $00, $20 ; entry 5
-    db $E8, $00, $01, $00 ; entry 6
-    db $E8, $08, $02, $20 ; entry 7
-    db $E8, $10, $03, $00 ; entry 8
-    db $E0, $F0, $00, $00 ; entry 9
-    db $E0, $F8, $01, $20 ; entry 10
-    db $E0, $00, $02, $00 ; entry 11
-    db $E0, $08, $03, $20 ; entry 12
-    db $E0, $10, $04, $00 ; entry 13
-    db $D8, $E8, $00, $20 ; entry 14
-    db $D8, $F0, $01, $00 ; entry 15
-    db $D8, $F8, $02, $20 ; entry 16
-    db $D8, $00, $03, $00 ; entry 17
-    db $D8, $08, $04, $00 ; entry 18
-    db $D0, $E8, $01, $20 ; entry 19
-    db $D0, $F0, $02, $00 ; entry 20
-    db $D0, $F8, $03, $20 ; entry 21
-    db $D0, $00, $04, $00 ; entry 22
-    db $D0, $08, $05, $00 ; entry 23
-    db $D0, $10, $06, $00 ; entry 24
-    db $D8, $10, $08, $00 ; entry 25
+    db $f8, $08, $00, $20 ; entry 0
+    db $f8, $10, $01, $00 ; entry 1
+    db $f0, $00, $00, $00 ; entry 2
+    db $f0, $08, $01, $20 ; entry 3
+    db $f0, $10, $02, $00 ; entry 4
+    db $e8, $f8, $00, $20 ; entry 5
+    db $e8, $00, $01, $00 ; entry 6
+    db $e8, $08, $02, $20 ; entry 7
+    db $e8, $10, $03, $00 ; entry 8
+    db $e0, $f0, $00, $00 ; entry 9
+    db $e0, $f8, $01, $20 ; entry 10
+    db $e0, $00, $02, $00 ; entry 11
+    db $e0, $08, $03, $20 ; entry 12
+    db $e0, $10, $04, $00 ; entry 13
+    db $d8, $e8, $00, $20 ; entry 14
+    db $d8, $f0, $01, $00 ; entry 15
+    db $d8, $f8, $02, $20 ; entry 16
+    db $d8, $00, $03, $00 ; entry 17
+    db $d8, $08, $04, $00 ; entry 18
+    db $d0, $e8, $01, $20 ; entry 19
+    db $d0, $f0, $02, $00 ; entry 20
+    db $d0, $f8, $03, $20 ; entry 21
+    db $d0, $00, $04, $00 ; entry 22
+    db $d0, $08, $05, $00 ; entry 23
+    db $d0, $10, $06, $00 ; entry 24
+    db $d8, $10, $08, $00 ; entry 25
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame6::
-Data_03B_637E:: ; address name
-    db $F8, $00, $00, $20 ; entry 0
-    db $F8, $08, $01, $00 ; entry 1
-    db $F8, $10, $02, $20 ; entry 2
-    db $F0, $F8, $00, $00 ; entry 3
-    db $F0, $00, $01, $20 ; entry 4
-    db $F0, $08, $02, $00 ; entry 5
-    db $F0, $10, $03, $20 ; entry 6
-    db $E8, $F0, $00, $20 ; entry 7
-    db $E8, $F8, $01, $00 ; entry 8
-    db $E8, $00, $02, $20 ; entry 9
-    db $E8, $08, $03, $00 ; entry 10
-    db $E8, $10, $04, $00 ; entry 11
-    db $E0, $E8, $00, $00 ; entry 12
-    db $E0, $F0, $01, $20 ; entry 13
-    db $E0, $F8, $02, $00 ; entry 14
-    db $E0, $00, $03, $20 ; entry 15
-    db $E0, $08, $04, $00 ; entry 16
-    db $D8, $E8, $01, $00 ; entry 17
-    db $D8, $F0, $02, $20 ; entry 18
-    db $D8, $F8, $03, $00 ; entry 19
-    db $D8, $00, $04, $00 ; entry 20
-    db $D0, $E8, $02, $00 ; entry 21
-    db $D0, $F0, $03, $20 ; entry 22
-    db $D0, $F8, $04, $00 ; entry 23
-    db $D8, $08, $08, $00 ; entry 24
-    db $D8, $10, $07, $00 ; entry 25
-    db $D0, $00, $05, $00 ; entry 26
-    db $D0, $08, $06, $00 ; entry 27
-    db $D0, $10, $05, $00 ; entry 28
-    db $E0, $10, $05, $00 ; entry 29
+    db $f8, $00, $00, $20 ; entry 0
+    db $f8, $08, $01, $00 ; entry 1
+    db $f8, $10, $02, $20 ; entry 2
+    db $f0, $f8, $00, $00 ; entry 3
+    db $f0, $00, $01, $20 ; entry 4
+    db $f0, $08, $02, $00 ; entry 5
+    db $f0, $10, $03, $20 ; entry 6
+    db $e8, $f0, $00, $20 ; entry 7
+    db $e8, $f8, $01, $00 ; entry 8
+    db $e8, $00, $02, $20 ; entry 9
+    db $e8, $08, $03, $00 ; entry 10
+    db $e8, $10, $04, $00 ; entry 11
+    db $e0, $e8, $00, $00 ; entry 12
+    db $e0, $f0, $01, $20 ; entry 13
+    db $e0, $f8, $02, $00 ; entry 14
+    db $e0, $00, $03, $20 ; entry 15
+    db $e0, $08, $04, $00 ; entry 16
+    db $d8, $e8, $01, $00 ; entry 17
+    db $d8, $f0, $02, $20 ; entry 18
+    db $d8, $f8, $03, $00 ; entry 19
+    db $d8, $00, $04, $00 ; entry 20
+    db $d0, $e8, $02, $00 ; entry 21
+    db $d0, $f0, $03, $20 ; entry 22
+    db $d0, $f8, $04, $00 ; entry 23
+    db $d8, $08, $08, $00 ; entry 24
+    db $d8, $10, $07, $00 ; entry 25
+    db $d0, $00, $05, $00 ; entry 26
+    db $d0, $08, $06, $00 ; entry 27
+    db $d0, $10, $05, $00 ; entry 28
+    db $e0, $10, $05, $00 ; entry 29
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame7::
-Data_03B_63F7:: ; address name
-    db $F8, $F8, $00, $20 ; entry 0
-    db $F8, $00, $01, $00 ; entry 1
-    db $F8, $08, $02, $20 ; entry 2
-    db $F8, $10, $03, $00 ; entry 3
-    db $F0, $F0, $00, $00 ; entry 4
-    db $F0, $F8, $01, $20 ; entry 5
-    db $F0, $00, $02, $00 ; entry 6
-    db $F0, $08, $03, $20 ; entry 7
-    db $F0, $10, $04, $00 ; entry 8
-    db $E8, $E8, $00, $20 ; entry 9
-    db $E8, $F0, $01, $00 ; entry 10
-    db $E8, $F8, $02, $20 ; entry 11
-    db $E8, $00, $03, $00 ; entry 12
-    db $E8, $08, $04, $00 ; entry 13
-    db $E0, $E8, $01, $20 ; entry 14
-    db $E0, $F0, $02, $00 ; entry 15
-    db $E0, $F8, $03, $20 ; entry 16
-    db $E0, $00, $04, $00 ; entry 17
-    db $D8, $E8, $02, $20 ; entry 18
-    db $D8, $F0, $03, $00 ; entry 19
-    db $D8, $F8, $04, $00 ; entry 20
-    db $D0, $E8, $03, $20 ; entry 21
-    db $D0, $F0, $04, $00 ; entry 22
-    db $D0, $F8, $05, $00 ; entry 23
-    db $D0, $00, $06, $00 ; entry 24
-    db $D0, $08, $05, $00 ; entry 25
-    db $D0, $10, $06, $00 ; entry 26
-    db $D8, $00, $08, $00 ; entry 27
-    db $D8, $08, $07, $00 ; entry 28
-    db $D8, $10, $08, $00 ; entry 29
-    db $E0, $08, $05, $00 ; entry 30
-    db $E0, $10, $06, $00 ; entry 31
-    db $E8, $10, $08, $00 ; entry 32
+    db $f8, $f8, $00, $20 ; entry 0
+    db $f8, $00, $01, $00 ; entry 1
+    db $f8, $08, $02, $20 ; entry 2
+    db $f8, $10, $03, $00 ; entry 3
+    db $f0, $f0, $00, $00 ; entry 4
+    db $f0, $f8, $01, $20 ; entry 5
+    db $f0, $00, $02, $00 ; entry 6
+    db $f0, $08, $03, $20 ; entry 7
+    db $f0, $10, $04, $00 ; entry 8
+    db $e8, $e8, $00, $20 ; entry 9
+    db $e8, $f0, $01, $00 ; entry 10
+    db $e8, $f8, $02, $20 ; entry 11
+    db $e8, $00, $03, $00 ; entry 12
+    db $e8, $08, $04, $00 ; entry 13
+    db $e0, $e8, $01, $20 ; entry 14
+    db $e0, $f0, $02, $00 ; entry 15
+    db $e0, $f8, $03, $20 ; entry 16
+    db $e0, $00, $04, $00 ; entry 17
+    db $d8, $e8, $02, $20 ; entry 18
+    db $d8, $f0, $03, $00 ; entry 19
+    db $d8, $f8, $04, $00 ; entry 20
+    db $d0, $e8, $03, $20 ; entry 21
+    db $d0, $f0, $04, $00 ; entry 22
+    db $d0, $f8, $05, $00 ; entry 23
+    db $d0, $00, $06, $00 ; entry 24
+    db $d0, $08, $05, $00 ; entry 25
+    db $d0, $10, $06, $00 ; entry 26
+    db $d8, $00, $08, $00 ; entry 27
+    db $d8, $08, $07, $00 ; entry 28
+    db $d8, $10, $08, $00 ; entry 29
+    db $e0, $08, $05, $00 ; entry 30
+    db $e0, $10, $06, $00 ; entry 31
+    db $e8, $10, $08, $00 ; entry 32
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet31; ends with $80)
+; frame 8 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet31Frame8::
-Data_03B_647C:: ; address name
-    db $F8, $F0, $00, $20 ; entry 0
-    db $F8, $F8, $01, $00 ; entry 1
-    db $F8, $00, $02, $20 ; entry 2
-    db $F8, $08, $03, $00 ; entry 3
-    db $F8, $10, $04, $00 ; entry 4
-    db $F0, $E8, $00, $00 ; entry 5
-    db $F0, $F0, $01, $20 ; entry 6
-    db $F0, $F8, $02, $00 ; entry 7
-    db $F0, $00, $03, $20 ; entry 8
-    db $F0, $08, $04, $00 ; entry 9
-    db $E8, $E8, $01, $00 ; entry 10
-    db $E8, $F0, $02, $20 ; entry 11
-    db $E8, $F8, $03, $00 ; entry 12
-    db $E8, $00, $04, $00 ; entry 13
-    db $E0, $E8, $02, $00 ; entry 14
-    db $E0, $F0, $03, $20 ; entry 15
-    db $E0, $F8, $04, $00 ; entry 16
-    db $D8, $E8, $03, $00 ; entry 17
-    db $D8, $F0, $04, $00 ; entry 18
-    db $D0, $E8, $04, $00 ; entry 19
-    db $D0, $F0, $05, $00 ; entry 20
-    db $D0, $F8, $06, $00 ; entry 21
-    db $D0, $00, $05, $00 ; entry 22
-    db $D0, $08, $06, $00 ; entry 23
-    db $D0, $10, $05, $00 ; entry 24
-    db $D8, $F8, $08, $00 ; entry 25
-    db $D8, $00, $07, $00 ; entry 26
-    db $D8, $08, $08, $00 ; entry 27
-    db $D8, $10, $07, $00 ; entry 28
-    db $E0, $00, $05, $00 ; entry 29
-    db $E0, $08, $06, $00 ; entry 30
-    db $E0, $10, $05, $00 ; entry 31
-    db $F0, $10, $05, $00 ; entry 32
-    db $E8, $08, $08, $00 ; entry 33
-    db $E8, $10, $07, $00 ; entry 34
+    db $f8, $f0, $00, $20 ; entry 0
+    db $f8, $f8, $01, $00 ; entry 1
+    db $f8, $00, $02, $20 ; entry 2
+    db $f8, $08, $03, $00 ; entry 3
+    db $f8, $10, $04, $00 ; entry 4
+    db $f0, $e8, $00, $00 ; entry 5
+    db $f0, $f0, $01, $20 ; entry 6
+    db $f0, $f8, $02, $00 ; entry 7
+    db $f0, $00, $03, $20 ; entry 8
+    db $f0, $08, $04, $00 ; entry 9
+    db $e8, $e8, $01, $00 ; entry 10
+    db $e8, $f0, $02, $20 ; entry 11
+    db $e8, $f8, $03, $00 ; entry 12
+    db $e8, $00, $04, $00 ; entry 13
+    db $e0, $e8, $02, $00 ; entry 14
+    db $e0, $f0, $03, $20 ; entry 15
+    db $e0, $f8, $04, $00 ; entry 16
+    db $d8, $e8, $03, $00 ; entry 17
+    db $d8, $f0, $04, $00 ; entry 18
+    db $d0, $e8, $04, $00 ; entry 19
+    db $d0, $f0, $05, $00 ; entry 20
+    db $d0, $f8, $06, $00 ; entry 21
+    db $d0, $00, $05, $00 ; entry 22
+    db $d0, $08, $06, $00 ; entry 23
+    db $d0, $10, $05, $00 ; entry 24
+    db $d8, $f8, $08, $00 ; entry 25
+    db $d8, $00, $07, $00 ; entry 26
+    db $d8, $08, $08, $00 ; entry 27
+    db $d8, $10, $07, $00 ; entry 28
+    db $e0, $00, $05, $00 ; entry 29
+    db $e0, $08, $06, $00 ; entry 30
+    db $e0, $10, $05, $00 ; entry 31
+    db $f0, $10, $05, $00 ; entry 32
+    db $e8, $08, $08, $00 ; entry 33
+    db $e8, $10, $07, $00 ; entry 34
     db $80 ; end
 
-; E-0147 (derived: frame 9 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 9 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame9::
-Data_03B_6509:: ; address name
-    db $F8, $E8, $00, $20 ; entry 0
-    db $F8, $F0, $01, $00 ; entry 1
-    db $F8, $F8, $02, $20 ; entry 2
-    db $F0, $E8, $01, $20 ; entry 3
-    db $F0, $F0, $02, $00 ; entry 4
-    db $E8, $E8, $02, $20 ; entry 5
-    db $F8, $00, $03, $00 ; entry 6
-    db $F8, $08, $04, $00 ; entry 7
-    db $F0, $F8, $03, $20 ; entry 8
-    db $F0, $00, $04, $00 ; entry 9
-    db $E8, $F0, $03, $00 ; entry 10
-    db $E8, $F8, $04, $00 ; entry 11
-    db $E0, $E8, $03, $20 ; entry 12
-    db $E0, $F0, $04, $00 ; entry 13
-    db $D8, $E8, $04, $00 ; entry 14
-    db $D0, $E8, $05, $00 ; entry 15
-    db $D0, $F0, $06, $00 ; entry 16
-    db $D0, $F8, $05, $00 ; entry 17
-    db $D0, $00, $06, $00 ; entry 18
-    db $D0, $08, $05, $00 ; entry 19
-    db $D0, $10, $06, $00 ; entry 20
-    db $D8, $F0, $08, $00 ; entry 21
-    db $D8, $F8, $07, $00 ; entry 22
-    db $D8, $00, $08, $00 ; entry 23
-    db $D8, $08, $07, $00 ; entry 24
-    db $D8, $10, $08, $00 ; entry 25
-    db $E0, $F8, $05, $00 ; entry 26
-    db $E0, $00, $06, $00 ; entry 27
-    db $E0, $08, $05, $00 ; entry 28
-    db $E0, $10, $06, $00 ; entry 29
-    db $E8, $00, $08, $00 ; entry 30
-    db $E8, $08, $07, $00 ; entry 31
-    db $E8, $10, $08, $00 ; entry 32
-    db $F8, $10, $08, $00 ; entry 33
-    db $F0, $08, $05, $00 ; entry 34
-    db $F0, $10, $06, $00 ; entry 35
+    db $f8, $e8, $00, $20 ; entry 0
+    db $f8, $f0, $01, $00 ; entry 1
+    db $f8, $f8, $02, $20 ; entry 2
+    db $f0, $e8, $01, $20 ; entry 3
+    db $f0, $f0, $02, $00 ; entry 4
+    db $e8, $e8, $02, $20 ; entry 5
+    db $f8, $00, $03, $00 ; entry 6
+    db $f8, $08, $04, $00 ; entry 7
+    db $f0, $f8, $03, $20 ; entry 8
+    db $f0, $00, $04, $00 ; entry 9
+    db $e8, $f0, $03, $00 ; entry 10
+    db $e8, $f8, $04, $00 ; entry 11
+    db $e0, $e8, $03, $20 ; entry 12
+    db $e0, $f0, $04, $00 ; entry 13
+    db $d8, $e8, $04, $00 ; entry 14
+    db $d0, $e8, $05, $00 ; entry 15
+    db $d0, $f0, $06, $00 ; entry 16
+    db $d0, $f8, $05, $00 ; entry 17
+    db $d0, $00, $06, $00 ; entry 18
+    db $d0, $08, $05, $00 ; entry 19
+    db $d0, $10, $06, $00 ; entry 20
+    db $d8, $f0, $08, $00 ; entry 21
+    db $d8, $f8, $07, $00 ; entry 22
+    db $d8, $00, $08, $00 ; entry 23
+    db $d8, $08, $07, $00 ; entry 24
+    db $d8, $10, $08, $00 ; entry 25
+    db $e0, $f8, $05, $00 ; entry 26
+    db $e0, $00, $06, $00 ; entry 27
+    db $e0, $08, $05, $00 ; entry 28
+    db $e0, $10, $06, $00 ; entry 29
+    db $e8, $00, $08, $00 ; entry 30
+    db $e8, $08, $07, $00 ; entry 31
+    db $e8, $10, $08, $00 ; entry 32
+    db $f8, $10, $08, $00 ; entry 33
+    db $f0, $08, $05, $00 ; entry 34
+    db $f0, $10, $06, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 10 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 10 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame10::
-Data_03B_659A:: ; address name
-    db $D8, $E8, $08, $00 ; entry 0
-    db $F8, $E8, $01, $00 ; entry 1
-    db $F8, $F0, $02, $20 ; entry 2
-    db $F0, $E8, $02, $00 ; entry 3
-    db $F8, $F8, $03, $00 ; entry 4
-    db $F0, $F0, $03, $20 ; entry 5
-    db $E8, $E8, $03, $00 ; entry 6
-    db $E0, $E8, $04, $00 ; entry 7
-    db $E8, $F0, $04, $00 ; entry 8
-    db $F0, $F8, $04, $00 ; entry 9
-    db $F8, $00, $04, $00 ; entry 10
-    db $D0, $E8, $06, $00 ; entry 11
-    db $D0, $F0, $05, $00 ; entry 12
-    db $D0, $F8, $06, $00 ; entry 13
-    db $D0, $00, $05, $00 ; entry 14
-    db $D0, $08, $06, $00 ; entry 15
-    db $D0, $10, $05, $00 ; entry 16
-    db $D8, $F0, $07, $00 ; entry 17
-    db $D8, $F8, $08, $00 ; entry 18
-    db $D8, $00, $07, $00 ; entry 19
-    db $D8, $08, $08, $00 ; entry 20
-    db $D8, $10, $07, $00 ; entry 21
-    db $E0, $F0, $05, $00 ; entry 22
-    db $E0, $F8, $06, $00 ; entry 23
-    db $E0, $00, $05, $00 ; entry 24
-    db $E0, $08, $06, $00 ; entry 25
-    db $E0, $10, $05, $00 ; entry 26
-    db $E8, $F8, $08, $00 ; entry 27
-    db $E8, $00, $07, $00 ; entry 28
-    db $E8, $08, $08, $00 ; entry 29
-    db $E8, $10, $07, $00 ; entry 30
-    db $F0, $00, $05, $00 ; entry 31
-    db $F0, $08, $06, $00 ; entry 32
-    db $F0, $10, $05, $00 ; entry 33
-    db $F8, $08, $08, $00 ; entry 34
-    db $F8, $10, $07, $00 ; entry 35
+    db $d8, $e8, $08, $00 ; entry 0
+    db $f8, $e8, $01, $00 ; entry 1
+    db $f8, $f0, $02, $20 ; entry 2
+    db $f0, $e8, $02, $00 ; entry 3
+    db $f8, $f8, $03, $00 ; entry 4
+    db $f0, $f0, $03, $20 ; entry 5
+    db $e8, $e8, $03, $00 ; entry 6
+    db $e0, $e8, $04, $00 ; entry 7
+    db $e8, $f0, $04, $00 ; entry 8
+    db $f0, $f8, $04, $00 ; entry 9
+    db $f8, $00, $04, $00 ; entry 10
+    db $d0, $e8, $06, $00 ; entry 11
+    db $d0, $f0, $05, $00 ; entry 12
+    db $d0, $f8, $06, $00 ; entry 13
+    db $d0, $00, $05, $00 ; entry 14
+    db $d0, $08, $06, $00 ; entry 15
+    db $d0, $10, $05, $00 ; entry 16
+    db $d8, $f0, $07, $00 ; entry 17
+    db $d8, $f8, $08, $00 ; entry 18
+    db $d8, $00, $07, $00 ; entry 19
+    db $d8, $08, $08, $00 ; entry 20
+    db $d8, $10, $07, $00 ; entry 21
+    db $e0, $f0, $05, $00 ; entry 22
+    db $e0, $f8, $06, $00 ; entry 23
+    db $e0, $00, $05, $00 ; entry 24
+    db $e0, $08, $06, $00 ; entry 25
+    db $e0, $10, $05, $00 ; entry 26
+    db $e8, $f8, $08, $00 ; entry 27
+    db $e8, $00, $07, $00 ; entry 28
+    db $e8, $08, $08, $00 ; entry 29
+    db $e8, $10, $07, $00 ; entry 30
+    db $f0, $00, $05, $00 ; entry 31
+    db $f0, $08, $06, $00 ; entry 32
+    db $f0, $10, $05, $00 ; entry 33
+    db $f8, $08, $08, $00 ; entry 34
+    db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 11 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 11 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame11::
-Data_03B_662B:: ; address name
-    db $F8, $E8, $02, $20 ; entry 0
-    db $F8, $F0, $03, $00 ; entry 1
-    db $F0, $E8, $03, $20 ; entry 2
-    db $E8, $E8, $04, $00 ; entry 3
-    db $F0, $F0, $04, $00 ; entry 4
-    db $F8, $F8, $04, $00 ; entry 5
-    db $D0, $E8, $05, $00 ; entry 6
-    db $D0, $F0, $06, $00 ; entry 7
-    db $D0, $F8, $05, $00 ; entry 8
-    db $D0, $00, $06, $00 ; entry 9
-    db $D0, $08, $05, $00 ; entry 10
-    db $D8, $E8, $07, $00 ; entry 11
-    db $D8, $F0, $08, $00 ; entry 12
-    db $D8, $F8, $07, $00 ; entry 13
-    db $D8, $00, $08, $00 ; entry 14
-    db $D8, $08, $07, $00 ; entry 15
-    db $E0, $E8, $05, $00 ; entry 16
-    db $E0, $F0, $06, $00 ; entry 17
-    db $E0, $F8, $05, $00 ; entry 18
-    db $E0, $00, $06, $00 ; entry 19
-    db $E0, $08, $05, $00 ; entry 20
-    db $E8, $F0, $08, $00 ; entry 21
-    db $E8, $F8, $07, $00 ; entry 22
-    db $E8, $00, $08, $00 ; entry 23
-    db $E8, $08, $07, $00 ; entry 24
-    db $F0, $F8, $05, $00 ; entry 25
-    db $F0, $00, $06, $00 ; entry 26
-    db $F0, $08, $05, $00 ; entry 27
-    db $F8, $00, $08, $00 ; entry 28
-    db $F8, $08, $07, $00 ; entry 29
-    db $D0, $10, $06, $00 ; entry 30
-    db $D8, $10, $08, $00 ; entry 31
-    db $E0, $10, $06, $00 ; entry 32
-    db $E8, $10, $08, $00 ; entry 33
-    db $F0, $10, $06, $00 ; entry 34
-    db $F8, $10, $08, $00 ; entry 35
+    db $f8, $e8, $02, $20 ; entry 0
+    db $f8, $f0, $03, $00 ; entry 1
+    db $f0, $e8, $03, $20 ; entry 2
+    db $e8, $e8, $04, $00 ; entry 3
+    db $f0, $f0, $04, $00 ; entry 4
+    db $f8, $f8, $04, $00 ; entry 5
+    db $d0, $e8, $05, $00 ; entry 6
+    db $d0, $f0, $06, $00 ; entry 7
+    db $d0, $f8, $05, $00 ; entry 8
+    db $d0, $00, $06, $00 ; entry 9
+    db $d0, $08, $05, $00 ; entry 10
+    db $d8, $e8, $07, $00 ; entry 11
+    db $d8, $f0, $08, $00 ; entry 12
+    db $d8, $f8, $07, $00 ; entry 13
+    db $d8, $00, $08, $00 ; entry 14
+    db $d8, $08, $07, $00 ; entry 15
+    db $e0, $e8, $05, $00 ; entry 16
+    db $e0, $f0, $06, $00 ; entry 17
+    db $e0, $f8, $05, $00 ; entry 18
+    db $e0, $00, $06, $00 ; entry 19
+    db $e0, $08, $05, $00 ; entry 20
+    db $e8, $f0, $08, $00 ; entry 21
+    db $e8, $f8, $07, $00 ; entry 22
+    db $e8, $00, $08, $00 ; entry 23
+    db $e8, $08, $07, $00 ; entry 24
+    db $f0, $f8, $05, $00 ; entry 25
+    db $f0, $00, $06, $00 ; entry 26
+    db $f0, $08, $05, $00 ; entry 27
+    db $f8, $00, $08, $00 ; entry 28
+    db $f8, $08, $07, $00 ; entry 29
+    db $d0, $10, $06, $00 ; entry 30
+    db $d8, $10, $08, $00 ; entry 31
+    db $e0, $10, $06, $00 ; entry 32
+    db $e8, $10, $08, $00 ; entry 33
+    db $f0, $10, $06, $00 ; entry 34
+    db $f8, $10, $08, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 12 of MetaSprites3B_507CSet31; ends with $80)
+; frame 12 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet31Frame12::
-Data_03B_66BC:: ; address name
-    db $F8, $E8, $03, $00 ; entry 0
-    db $F0, $E8, $04, $00 ; entry 1
-    db $F8, $F0, $04, $00 ; entry 2
-    db $D0, $E8, $06, $00 ; entry 3
-    db $D0, $F0, $05, $00 ; entry 4
-    db $D0, $F8, $06, $00 ; entry 5
-    db $D0, $00, $05, $00 ; entry 6
-    db $D8, $E8, $08, $00 ; entry 7
-    db $D8, $F0, $07, $00 ; entry 8
-    db $D8, $F8, $08, $00 ; entry 9
-    db $D8, $00, $07, $00 ; entry 10
-    db $E0, $E8, $06, $00 ; entry 11
-    db $E0, $F0, $05, $00 ; entry 12
-    db $E0, $F8, $06, $00 ; entry 13
-    db $E0, $00, $05, $00 ; entry 14
-    db $E8, $E8, $08, $00 ; entry 15
-    db $E8, $F0, $07, $00 ; entry 16
-    db $E8, $F8, $08, $00 ; entry 17
-    db $E8, $00, $07, $00 ; entry 18
-    db $F0, $F0, $05, $00 ; entry 19
-    db $F0, $F8, $06, $00 ; entry 20
-    db $F0, $00, $05, $00 ; entry 21
-    db $F8, $F8, $08, $00 ; entry 22
-    db $F8, $00, $07, $00 ; entry 23
-    db $D0, $08, $06, $00 ; entry 24
-    db $D8, $08, $08, $00 ; entry 25
-    db $E0, $08, $06, $00 ; entry 26
-    db $E8, $08, $08, $00 ; entry 27
-    db $F0, $08, $06, $00 ; entry 28
-    db $F8, $08, $08, $00 ; entry 29
-    db $D0, $10, $05, $00 ; entry 30
-    db $D8, $10, $07, $00 ; entry 31
-    db $E0, $10, $05, $00 ; entry 32
-    db $E8, $10, $07, $00 ; entry 33
-    db $F0, $10, $05, $00 ; entry 34
-    db $F8, $10, $07, $00 ; entry 35
+    db $f8, $e8, $03, $00 ; entry 0
+    db $f0, $e8, $04, $00 ; entry 1
+    db $f8, $f0, $04, $00 ; entry 2
+    db $d0, $e8, $06, $00 ; entry 3
+    db $d0, $f0, $05, $00 ; entry 4
+    db $d0, $f8, $06, $00 ; entry 5
+    db $d0, $00, $05, $00 ; entry 6
+    db $d8, $e8, $08, $00 ; entry 7
+    db $d8, $f0, $07, $00 ; entry 8
+    db $d8, $f8, $08, $00 ; entry 9
+    db $d8, $00, $07, $00 ; entry 10
+    db $e0, $e8, $06, $00 ; entry 11
+    db $e0, $f0, $05, $00 ; entry 12
+    db $e0, $f8, $06, $00 ; entry 13
+    db $e0, $00, $05, $00 ; entry 14
+    db $e8, $e8, $08, $00 ; entry 15
+    db $e8, $f0, $07, $00 ; entry 16
+    db $e8, $f8, $08, $00 ; entry 17
+    db $e8, $00, $07, $00 ; entry 18
+    db $f0, $f0, $05, $00 ; entry 19
+    db $f0, $f8, $06, $00 ; entry 20
+    db $f0, $00, $05, $00 ; entry 21
+    db $f8, $f8, $08, $00 ; entry 22
+    db $f8, $00, $07, $00 ; entry 23
+    db $d0, $08, $06, $00 ; entry 24
+    db $d8, $08, $08, $00 ; entry 25
+    db $e0, $08, $06, $00 ; entry 26
+    db $e8, $08, $08, $00 ; entry 27
+    db $f0, $08, $06, $00 ; entry 28
+    db $f8, $08, $08, $00 ; entry 29
+    db $d0, $10, $05, $00 ; entry 30
+    db $d8, $10, $07, $00 ; entry 31
+    db $e0, $10, $05, $00 ; entry 32
+    db $e8, $10, $07, $00 ; entry 33
+    db $f0, $10, $05, $00 ; entry 34
+    db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 13 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 13 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame13::
-Data_03B_674D:: ; address name
-    db $F8, $E8, $04, $00 ; entry 0
-    db $D0, $E8, $05, $00 ; entry 1
-    db $D0, $F0, $06, $00 ; entry 2
-    db $D0, $F8, $05, $00 ; entry 3
-    db $D8, $E8, $07, $00 ; entry 4
-    db $D8, $F0, $08, $00 ; entry 5
-    db $D8, $F8, $07, $00 ; entry 6
-    db $E0, $E8, $05, $00 ; entry 7
-    db $E0, $F0, $06, $00 ; entry 8
-    db $E0, $F8, $05, $00 ; entry 9
-    db $E8, $E8, $07, $00 ; entry 10
-    db $E8, $F0, $08, $00 ; entry 11
-    db $E8, $F8, $07, $00 ; entry 12
-    db $F0, $E8, $05, $00 ; entry 13
-    db $F0, $F0, $06, $00 ; entry 14
-    db $F0, $F8, $05, $00 ; entry 15
-    db $F8, $F0, $08, $00 ; entry 16
-    db $F8, $F8, $07, $00 ; entry 17
-    db $D0, $00, $06, $00 ; entry 18
-    db $D8, $00, $08, $00 ; entry 19
-    db $E0, $00, $06, $00 ; entry 20
-    db $E8, $00, $08, $00 ; entry 21
-    db $F0, $00, $06, $00 ; entry 22
-    db $F8, $00, $08, $00 ; entry 23
-    db $D0, $08, $05, $00 ; entry 24
-    db $D8, $08, $07, $00 ; entry 25
-    db $E0, $08, $05, $00 ; entry 26
-    db $E8, $08, $07, $00 ; entry 27
-    db $F0, $08, $05, $00 ; entry 28
-    db $F8, $08, $07, $00 ; entry 29
-    db $D0, $10, $06, $00 ; entry 30
-    db $D8, $10, $08, $00 ; entry 31
-    db $E0, $10, $06, $00 ; entry 32
-    db $E8, $10, $08, $00 ; entry 33
-    db $F0, $10, $06, $00 ; entry 34
-    db $F8, $10, $08, $00 ; entry 35
+    db $f8, $e8, $04, $00 ; entry 0
+    db $d0, $e8, $05, $00 ; entry 1
+    db $d0, $f0, $06, $00 ; entry 2
+    db $d0, $f8, $05, $00 ; entry 3
+    db $d8, $e8, $07, $00 ; entry 4
+    db $d8, $f0, $08, $00 ; entry 5
+    db $d8, $f8, $07, $00 ; entry 6
+    db $e0, $e8, $05, $00 ; entry 7
+    db $e0, $f0, $06, $00 ; entry 8
+    db $e0, $f8, $05, $00 ; entry 9
+    db $e8, $e8, $07, $00 ; entry 10
+    db $e8, $f0, $08, $00 ; entry 11
+    db $e8, $f8, $07, $00 ; entry 12
+    db $f0, $e8, $05, $00 ; entry 13
+    db $f0, $f0, $06, $00 ; entry 14
+    db $f0, $f8, $05, $00 ; entry 15
+    db $f8, $f0, $08, $00 ; entry 16
+    db $f8, $f8, $07, $00 ; entry 17
+    db $d0, $00, $06, $00 ; entry 18
+    db $d8, $00, $08, $00 ; entry 19
+    db $e0, $00, $06, $00 ; entry 20
+    db $e8, $00, $08, $00 ; entry 21
+    db $f0, $00, $06, $00 ; entry 22
+    db $f8, $00, $08, $00 ; entry 23
+    db $d0, $08, $05, $00 ; entry 24
+    db $d8, $08, $07, $00 ; entry 25
+    db $e0, $08, $05, $00 ; entry 26
+    db $e8, $08, $07, $00 ; entry 27
+    db $f0, $08, $05, $00 ; entry 28
+    db $f8, $08, $07, $00 ; entry 29
+    db $d0, $10, $06, $00 ; entry 30
+    db $d8, $10, $08, $00 ; entry 31
+    db $e0, $10, $06, $00 ; entry 32
+    db $e8, $10, $08, $00 ; entry 33
+    db $f0, $10, $06, $00 ; entry 34
+    db $f8, $10, $08, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 14 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 14 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame14::
-Data_03B_67DE:: ; address name
-    db $D0, $E8, $06, $00 ; entry 0
-    db $D0, $F0, $05, $00 ; entry 1
-    db $D8, $E8, $08, $00 ; entry 2
-    db $D8, $F0, $07, $00 ; entry 3
-    db $E0, $E8, $06, $00 ; entry 4
-    db $E0, $F0, $05, $00 ; entry 5
-    db $E8, $E8, $08, $00 ; entry 6
-    db $E8, $F0, $07, $00 ; entry 7
-    db $F0, $E8, $06, $00 ; entry 8
-    db $F0, $F0, $05, $00 ; entry 9
-    db $F8, $E8, $08, $00 ; entry 10
-    db $F8, $F0, $07, $00 ; entry 11
-    db $D0, $F8, $06, $00 ; entry 12
-    db $D8, $F8, $08, $00 ; entry 13
-    db $E0, $F8, $06, $00 ; entry 14
-    db $E8, $F8, $08, $00 ; entry 15
-    db $F0, $F8, $06, $00 ; entry 16
-    db $F8, $F8, $08, $00 ; entry 17
-    db $D0, $00, $05, $00 ; entry 18
-    db $D8, $00, $07, $00 ; entry 19
-    db $E0, $00, $05, $00 ; entry 20
-    db $E8, $00, $07, $00 ; entry 21
-    db $F0, $00, $05, $00 ; entry 22
-    db $F8, $00, $07, $00 ; entry 23
-    db $D0, $08, $06, $00 ; entry 24
-    db $D8, $08, $08, $00 ; entry 25
-    db $E0, $08, $06, $00 ; entry 26
-    db $E8, $08, $08, $00 ; entry 27
-    db $F0, $08, $06, $00 ; entry 28
-    db $F8, $08, $08, $00 ; entry 29
-    db $D0, $10, $05, $00 ; entry 30
-    db $D8, $10, $07, $00 ; entry 31
-    db $E0, $10, $05, $00 ; entry 32
-    db $E8, $10, $07, $00 ; entry 33
-    db $F0, $10, $05, $00 ; entry 34
-    db $F8, $10, $07, $00 ; entry 35
+    db $d0, $e8, $06, $00 ; entry 0
+    db $d0, $f0, $05, $00 ; entry 1
+    db $d8, $e8, $08, $00 ; entry 2
+    db $d8, $f0, $07, $00 ; entry 3
+    db $e0, $e8, $06, $00 ; entry 4
+    db $e0, $f0, $05, $00 ; entry 5
+    db $e8, $e8, $08, $00 ; entry 6
+    db $e8, $f0, $07, $00 ; entry 7
+    db $f0, $e8, $06, $00 ; entry 8
+    db $f0, $f0, $05, $00 ; entry 9
+    db $f8, $e8, $08, $00 ; entry 10
+    db $f8, $f0, $07, $00 ; entry 11
+    db $d0, $f8, $06, $00 ; entry 12
+    db $d8, $f8, $08, $00 ; entry 13
+    db $e0, $f8, $06, $00 ; entry 14
+    db $e8, $f8, $08, $00 ; entry 15
+    db $f0, $f8, $06, $00 ; entry 16
+    db $f8, $f8, $08, $00 ; entry 17
+    db $d0, $00, $05, $00 ; entry 18
+    db $d8, $00, $07, $00 ; entry 19
+    db $e0, $00, $05, $00 ; entry 20
+    db $e8, $00, $07, $00 ; entry 21
+    db $f0, $00, $05, $00 ; entry 22
+    db $f8, $00, $07, $00 ; entry 23
+    db $d0, $08, $06, $00 ; entry 24
+    db $d8, $08, $08, $00 ; entry 25
+    db $e0, $08, $06, $00 ; entry 26
+    db $e8, $08, $08, $00 ; entry 27
+    db $f0, $08, $06, $00 ; entry 28
+    db $f8, $08, $08, $00 ; entry 29
+    db $d0, $10, $05, $00 ; entry 30
+    db $d8, $10, $07, $00 ; entry 31
+    db $e0, $10, $05, $00 ; entry 32
+    db $e8, $10, $07, $00 ; entry 33
+    db $f0, $10, $05, $00 ; entry 34
+    db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 15 of MetaSprites3B_507CSet31; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 15 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 MetaSprites3B_507CSet31Frame15::
-Data_03B_686F:: ; address name
-    db $F8, $E8, $09, $00 ; entry 0
-    db $F0, $E8, $09, $00 ; entry 1
-    db $E8, $E8, $09, $00 ; entry 2
-    db $E0, $E8, $09, $00 ; entry 3
-    db $D8, $E8, $09, $00 ; entry 4
-    db $D0, $E8, $09, $00 ; entry 5
-    db $D0, $F0, $09, $00 ; entry 6
-    db $D8, $F0, $09, $00 ; entry 7
-    db $E0, $F0, $09, $00 ; entry 8
-    db $E8, $F0, $09, $00 ; entry 9
-    db $F0, $F0, $09, $00 ; entry 10
-    db $F8, $F0, $09, $00 ; entry 11
-    db $F8, $F8, $09, $00 ; entry 12
-    db $F0, $F8, $09, $00 ; entry 13
-    db $E8, $F8, $09, $00 ; entry 14
-    db $E0, $F8, $09, $00 ; entry 15
-    db $D8, $F8, $09, $00 ; entry 16
-    db $D0, $F8, $09, $00 ; entry 17
-    db $F8, $00, $09, $00 ; entry 18
-    db $F0, $00, $09, $00 ; entry 19
-    db $E8, $00, $09, $00 ; entry 20
-    db $E0, $00, $09, $00 ; entry 21
-    db $D8, $00, $09, $00 ; entry 22
-    db $D0, $00, $09, $00 ; entry 23
-    db $D0, $08, $09, $00 ; entry 24
-    db $D8, $08, $09, $00 ; entry 25
-    db $E0, $08, $09, $00 ; entry 26
-    db $E8, $08, $09, $00 ; entry 27
-    db $F0, $08, $09, $00 ; entry 28
-    db $F8, $08, $09, $00 ; entry 29
-    db $F8, $10, $09, $00 ; entry 30
-    db $F0, $10, $09, $00 ; entry 31
-    db $E8, $10, $09, $00 ; entry 32
-    db $E0, $10, $09, $00 ; entry 33
-    db $D8, $10, $09, $00 ; entry 34
-    db $D0, $10, $09, $00 ; entry 35
+    db $f8, $e8, $09, $00 ; entry 0
+    db $f0, $e8, $09, $00 ; entry 1
+    db $e8, $e8, $09, $00 ; entry 2
+    db $e0, $e8, $09, $00 ; entry 3
+    db $d8, $e8, $09, $00 ; entry 4
+    db $d0, $e8, $09, $00 ; entry 5
+    db $d0, $f0, $09, $00 ; entry 6
+    db $d8, $f0, $09, $00 ; entry 7
+    db $e0, $f0, $09, $00 ; entry 8
+    db $e8, $f0, $09, $00 ; entry 9
+    db $f0, $f0, $09, $00 ; entry 10
+    db $f8, $f0, $09, $00 ; entry 11
+    db $f8, $f8, $09, $00 ; entry 12
+    db $f0, $f8, $09, $00 ; entry 13
+    db $e8, $f8, $09, $00 ; entry 14
+    db $e0, $f8, $09, $00 ; entry 15
+    db $d8, $f8, $09, $00 ; entry 16
+    db $d0, $f8, $09, $00 ; entry 17
+    db $f8, $00, $09, $00 ; entry 18
+    db $f0, $00, $09, $00 ; entry 19
+    db $e8, $00, $09, $00 ; entry 20
+    db $e0, $00, $09, $00 ; entry 21
+    db $d8, $00, $09, $00 ; entry 22
+    db $d0, $00, $09, $00 ; entry 23
+    db $d0, $08, $09, $00 ; entry 24
+    db $d8, $08, $09, $00 ; entry 25
+    db $e0, $08, $09, $00 ; entry 26
+    db $e8, $08, $09, $00 ; entry 27
+    db $f0, $08, $09, $00 ; entry 28
+    db $f8, $08, $09, $00 ; entry 29
+    db $f8, $10, $09, $00 ; entry 30
+    db $f0, $10, $09, $00 ; entry 31
+    db $e8, $10, $09, $00 ; entry 32
+    db $e0, $10, $09, $00 ; entry 33
+    db $d8, $10, $09, $00 ; entry 34
+    db $d0, $10, $09, $00 ; entry 35
     db $80 ; end
 
-; E-0147 (derived: frame 16 of MetaSprites3B_507CSet31; ends with $80)
+; frame 16 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet31Frame16::
     db $80 ; end
 
-; E-0147 (derived: meta-sprite set 50 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)
+; meta-sprite set 50 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
+; (E-0147)
 ; record: frame
 MetaSprites3B_507CSet32::
-Data_03B_6901:: ; address name
     dw MetaSprites3B_507CSet32Frame0 ; entry 0
     dw MetaSprites3B_507CSet32Frame1 ; entry 1
     dw MetaSprites3B_507CSet32Frame2 ; entry 2
@@ -5241,169 +4782,154 @@ Data_03B_6901:: ; address name
     dw MetaSprites3B_507CSet32Frame8 ; entry 30
     dw MetaSprites3B_507CSet32Frame8 ; entry 31
 
-; E-0147 (derived: frame 0 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 0 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame0::
-Data_03B_6941:: ; address name
-    db $D0, $28, $00, $00 ; entry 0
-    db $D0, $E0, $00, $00 ; entry 1
-    db $D0, $C0, $01, $00 ; entry 2
-    db $D8, $D0, $00, $00 ; entry 3
-    db $E0, $F6, $01, $00 ; entry 4
-    db $D8, $18, $01, $00 ; entry 5
-    db $E0, $30, $02, $00 ; entry 6
-    db $D0, $FE, $02, $00 ; entry 7
+    db $d0, $28, $00, $00 ; entry 0
+    db $d0, $e0, $00, $00 ; entry 1
+    db $d0, $c0, $01, $00 ; entry 2
+    db $d8, $d0, $00, $00 ; entry 3
+    db $e0, $f6, $01, $00 ; entry 4
+    db $d8, $18, $01, $00 ; entry 5
+    db $e0, $30, $02, $00 ; entry 6
+    db $d0, $fe, $02, $00 ; entry 7
     db $80 ; end
 
-; E-0147 (derived: frame 1 of MetaSprites3B_507CSet32; ends with $80)
+; frame 1 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet32Frame1::
-Data_03B_6962:: ; address name
-    db $F0, $28, $00, $00 ; entry 0
-    db $F0, $E0, $00, $00 ; entry 1
-    db $F0, $C0, $01, $00 ; entry 2
-    db $F8, $18, $01, $00 ; entry 3
-    db $F0, $FE, $02, $00 ; entry 4
-    db $E8, $F2, $02, $00 ; entry 5
-    db $D8, $1F, $00, $20 ; entry 6
-    db $F8, $40, $01, $00 ; entry 7
-    db $E0, $B8, $01, $00 ; entry 8
-    db $E8, $30, $00, $00 ; entry 9
-    db $E0, $18, $02, $20 ; entry 10
-    db $D8, $FA, $00, $20 ; entry 11
-    db $E0, $D8, $01, $20 ; entry 12
-    db $D8, $E5, $02, $20 ; entry 13
-    db $D8, $C0, $00, $20 ; entry 14
-    db $E0, $40, $01, $20 ; entry 15
-    db $D8, $30, $01, $20 ; entry 16
-    db $E8, $D0, $00, $00 ; entry 17
+    db $f0, $28, $00, $00 ; entry 0
+    db $f0, $e0, $00, $00 ; entry 1
+    db $f0, $c0, $01, $00 ; entry 2
+    db $f8, $18, $01, $00 ; entry 3
+    db $f0, $fe, $02, $00 ; entry 4
+    db $e8, $f2, $02, $00 ; entry 5
+    db $d8, $1f, $00, $20 ; entry 6
+    db $f8, $40, $01, $00 ; entry 7
+    db $e0, $b8, $01, $00 ; entry 8
+    db $e8, $30, $00, $00 ; entry 9
+    db $e0, $18, $02, $20 ; entry 10
+    db $d8, $fa, $00, $20 ; entry 11
+    db $e0, $d8, $01, $20 ; entry 12
+    db $d8, $e5, $02, $20 ; entry 13
+    db $d8, $c0, $00, $20 ; entry 14
+    db $e0, $40, $01, $20 ; entry 15
+    db $d8, $30, $01, $20 ; entry 16
+    db $e8, $d0, $00, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 2 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 2 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame2::
-Data_03B_69AB:: ; address name
-    db $E8, $C0, $01, $00 ; entry 0
-    db $F0, $F2, $02, $00 ; entry 1
-    db $E0, $1F, $00, $20 ; entry 2
-    db $D0, $00, $00, $20 ; entry 3
-    db $D0, $E2, $02, $20 ; entry 4
-    db $D0, $3A, $01, $20 ; entry 5
-    db $D0, $2A, $01, $20 ; entry 6
-    db $F8, $B8, $01, $00 ; entry 7
-    db $E8, $D8, $01, $20 ; entry 8
-    db $F8, $E4, $00, $00 ; entry 9
-    db $E0, $F8, $02, $00 ; entry 10
-    db $F8, $00, $00, $00 ; entry 11
-    db $E8, $10, $02, $20 ; entry 12
-    db $F8, $2B, $00, $00 ; entry 13
-    db $E8, $40, $01, $00 ; entry 14
-    db $E0, $2E, $00, $00 ; entry 15
-    db $D8, $0F, $01, $00 ; entry 16
-    db $F8, $D0, $01, $00 ; entry 17
-    db $D0, $D0, $00, $00 ; entry 18
-    db $D0, $B8, $02, $00 ; entry 19
+    db $e8, $c0, $01, $00 ; entry 0
+    db $f0, $f2, $02, $00 ; entry 1
+    db $e0, $1f, $00, $20 ; entry 2
+    db $d0, $00, $00, $20 ; entry 3
+    db $d0, $e2, $02, $20 ; entry 4
+    db $d0, $3a, $01, $20 ; entry 5
+    db $d0, $2a, $01, $20 ; entry 6
+    db $f8, $b8, $01, $00 ; entry 7
+    db $e8, $d8, $01, $20 ; entry 8
+    db $f8, $e4, $00, $00 ; entry 9
+    db $e0, $f8, $02, $00 ; entry 10
+    db $f8, $00, $00, $00 ; entry 11
+    db $e8, $10, $02, $20 ; entry 12
+    db $f8, $2b, $00, $00 ; entry 13
+    db $e8, $40, $01, $00 ; entry 14
+    db $e0, $2e, $00, $00 ; entry 15
+    db $d8, $0f, $01, $00 ; entry 16
+    db $f8, $d0, $01, $00 ; entry 17
+    db $d0, $d0, $00, $00 ; entry 18
+    db $d0, $b8, $02, $00 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 3 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 3 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame3::
-Data_03B_69FC:: ; address name
-    db $E8, $D9, $00, $00 ; entry 0
-    db $D8, $F8, $00, $00 ; entry 1
-    db $D8, $BE, $01, $00 ; entry 2
-    db $F0, $20, $01, $00 ; entry 3
-    db $E8, $00, $02, $20 ; entry 4
-    db $F0, $E8, $02, $00 ; entry 5
-    db $F0, $B8, $01, $20 ; entry 6
-    db $D8, $28, $00, $20 ; entry 7
-    db $D8, $40, $02, $20 ; entry 8
-    db $D0, $0C, $00, $20 ; entry 9
-    db $D0, $20, $01, $20 ; entry 10
-    db $D0, $C5, $03, $00 ; entry 11
-    db $E8, $CA, $03, $00 ; entry 12
-    db $D0, $F0, $03, $00 ; entry 13
-    db $F8, $06, $03, $00 ; entry 14
-    db $D8, $16, $03, $00 ; entry 15
-    db $D0, $38, $03, $00 ; entry 16
-    db $F0, $38, $03, $00 ; entry 17
-    db $E0, $E9, $03, $00 ; entry 18
-    db $D8, $CE, $03, $00 ; entry 19
+    db $e8, $d9, $00, $00 ; entry 0
+    db $d8, $f8, $00, $00 ; entry 1
+    db $d8, $be, $01, $00 ; entry 2
+    db $f0, $20, $01, $00 ; entry 3
+    db $e8, $00, $02, $20 ; entry 4
+    db $f0, $e8, $02, $00 ; entry 5
+    db $f0, $b8, $01, $20 ; entry 6
+    db $d8, $28, $00, $20 ; entry 7
+    db $d8, $40, $02, $20 ; entry 8
+    db $d0, $0c, $00, $20 ; entry 9
+    db $d0, $20, $01, $20 ; entry 10
+    db $d0, $c5, $03, $00 ; entry 11
+    db $e8, $ca, $03, $00 ; entry 12
+    db $d0, $f0, $03, $00 ; entry 13
+    db $f8, $06, $03, $00 ; entry 14
+    db $d8, $16, $03, $00 ; entry 15
+    db $d0, $38, $03, $00 ; entry 16
+    db $f0, $38, $03, $00 ; entry 17
+    db $e0, $e9, $03, $00 ; entry 18
+    db $d8, $ce, $03, $00 ; entry 19
     db $80 ; end
 
-; E-0147 (derived: frame 4 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 4 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame4::
-Data_03B_6A4D:: ; address name
-    db $F0, $18, $00, $20 ; entry 0
-    db $F8, $E0, $01, $20 ; entry 1
-    db $F8, $B8, $01, $20 ; entry 2
-    db $E0, $40, $01, $20 ; entry 3
-    db $E8, $C8, $00, $20 ; entry 4
-    db $E0, $E0, $02, $00 ; entry 5
-    db $E2, $20, $01, $00 ; entry 6
-    db $D8, $13, $02, $00 ; entry 7
-    db $F2, $D0, $04, $00 ; entry 8
-    db $E2, $B8, $04, $00 ; entry 9
-    db $F8, $38, $04, $00 ; entry 10
-    db $DE, $D1, $04, $00 ; entry 11
-    db $D8, $F2, $04, $00 ; entry 12
-    db $E8, $E6, $04, $00 ; entry 13
-    db $F8, $06, $04, $00 ; entry 14
-    db $E0, $18, $04, $00 ; entry 15
-    db $DC, $38, $04, $00 ; entry 16
+    db $f0, $18, $00, $20 ; entry 0
+    db $f8, $e0, $01, $20 ; entry 1
+    db $f8, $b8, $01, $20 ; entry 2
+    db $e0, $40, $01, $20 ; entry 3
+    db $e8, $c8, $00, $20 ; entry 4
+    db $e0, $e0, $02, $00 ; entry 5
+    db $e2, $20, $01, $00 ; entry 6
+    db $d8, $13, $02, $00 ; entry 7
+    db $f2, $d0, $04, $00 ; entry 8
+    db $e2, $b8, $04, $00 ; entry 9
+    db $f8, $38, $04, $00 ; entry 10
+    db $de, $d1, $04, $00 ; entry 11
+    db $d8, $f2, $04, $00 ; entry 12
+    db $e8, $e6, $04, $00 ; entry 13
+    db $f8, $06, $04, $00 ; entry 14
+    db $e0, $18, $04, $00 ; entry 15
+    db $dc, $38, $04, $00 ; entry 16
     db $80 ; end
 
-; E-0147 (derived: frame 5 of MetaSprites3B_507CSet32; ends with $80)
+; frame 5 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites3B_507CSet32Frame5::
-Data_03B_6A92:: ; address name
-    db $F0, $06, $02, $20 ; entry 0
-    db $D0, $16, $02, $00 ; entry 1
-    db $D0, $CE, $01, $00 ; entry 2
-    db $F8, $40, $01, $20 ; entry 3
-    db $E8, $E8, $02, $00 ; entry 4
-    db $E0, $CA, $00, $20 ; entry 5
-    db $D0, $40, $02, $20 ; entry 6
-    db $D0, $BE, $05, $00 ; entry 7
-    db $E8, $B8, $05, $00 ; entry 8
-    db $E0, $D9, $05, $00 ; entry 9
-    db $D8, $E9, $05, $00 ; entry 10
-    db $E0, $00, $05, $00 ; entry 11
-    db $D0, $28, $05, $00 ; entry 12
-    db $E0, $20, $05, $00 ; entry 13
-    db $E8, $38, $05, $00 ; entry 14
-    db $F8, $28, $05, $00 ; entry 15
-    db $F8, $F8, $05, $00 ; entry 16
-    db $F8, $CD, $05, $00 ; entry 17
+    db $f0, $06, $02, $20 ; entry 0
+    db $d0, $16, $02, $00 ; entry 1
+    db $d0, $ce, $01, $00 ; entry 2
+    db $f8, $40, $01, $20 ; entry 3
+    db $e8, $e8, $02, $00 ; entry 4
+    db $e0, $ca, $00, $20 ; entry 5
+    db $d0, $40, $02, $20 ; entry 6
+    db $d0, $be, $05, $00 ; entry 7
+    db $e8, $b8, $05, $00 ; entry 8
+    db $e0, $d9, $05, $00 ; entry 9
+    db $d8, $e9, $05, $00 ; entry 10
+    db $e0, $00, $05, $00 ; entry 11
+    db $d0, $28, $05, $00 ; entry 12
+    db $e0, $20, $05, $00 ; entry 13
+    db $e8, $38, $05, $00 ; entry 14
+    db $f8, $28, $05, $00 ; entry 15
+    db $f8, $f8, $05, $00 ; entry 16
+    db $f8, $cd, $05, $00 ; entry 17
     db $80 ; end
 
-; E-0147 (derived: frame 6 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 6 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame6::
-Data_03B_6ADB:: ; address name
-    db $F0, $38, $05, $20 ; entry 0
-    db $EC, $E8, $05, $20 ; entry 1
-    db $E4, $BE, $05, $20 ; entry 2
-    db $E8, $D9, $03, $00 ; entry 3
-    db $EA, $00, $03, $00 ; entry 4
-    db $E0, $28, $05, $20 ; entry 5
-    db $EB, $20, $03, $00 ; entry 6
+    db $f0, $38, $05, $20 ; entry 0
+    db $ec, $e8, $05, $20 ; entry 1
+    db $e4, $be, $05, $20 ; entry 2
+    db $e8, $d9, $03, $00 ; entry 3
+    db $ea, $00, $03, $00 ; entry 4
+    db $e0, $28, $05, $20 ; entry 5
+    db $eb, $20, $03, $00 ; entry 6
     db $80 ; end
 
-; E-0147 (derived: frame 7 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 7 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame7::
-Data_03B_6AF8:: ; address name
-    db $ED, $2A, $03, $00 ; entry 0
-    db $F8, $3C, $03, $00 ; entry 1
-    db $F1, $BA, $03, $00 ; entry 2
-    db $F8, $20, $03, $00 ; entry 3
-    db $F8, $E6, $03, $00 ; entry 4
+    db $ed, $2a, $03, $00 ; entry 0
+    db $f8, $3c, $03, $00 ; entry 1
+    db $f1, $ba, $03, $00 ; entry 2
+    db $f8, $20, $03, $00 ; entry 3
+    db $f8, $e6, $03, $00 ; entry 4
     db $80 ; end
 
-; E-0147 (derived: frame 8 of MetaSprites3B_507CSet32; ends with $80)
-; record: sprite: Y offset, X offset, tile, attribute
+; frame 8 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
 MetaSprites3B_507CSet32Frame8::
     db $80 ; end
-    ds $14F2, $00
+    ds $14f2, $00

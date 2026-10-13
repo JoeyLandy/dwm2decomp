@@ -1,35 +1,29 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas)
-; reads: wKeyWorldAreaCount, hTemp8, hTemp9
-; writes: wKeyWorldByte46, hTemp8, hTemp9, hTemp0
-; points at: wKeyWorldFloorState
 DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc::
-Func_084_4001:: ; address name
-    xor a, a
+    xor a
     ld [wKeyWorldByte46], a
     ld a, [wKeyWorldAreaCount]
-    add a, a
+    add a
     ld hl, KeyWorldAreaLayoutTable
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp8], a
     ld a, [hl]
     ldh [hTemp9], a
     ldh a, [hTemp8]
-    add a, $01
+    add $01
     ldh [hTemp8], a
     ldh a, [hTemp9]
-    adc a, $00
+    adc $00
     ldh [hTemp9], a
     ld hl, wKeyWorldFloorInfo + $3
     ld de, wKeyWorldFloorState
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     ret z
     push hl
     push de
@@ -53,7 +47,7 @@ Func_084_4001:: ; address name
     ld a, $04
     add_a_to_hl
     ld a, $10
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -62,12 +56,9 @@ Func_084_4001:: ; address name
     jr .skip
 
 ; debug automap: runs the routine for hTemp0 (jump table of seven) (E-0122)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc)
-; reads: hTemp0
 RunDebugAutomapCaseTemp0::
-Func_084_405C:: ; address name
     ldh a, [hTemp0]
-    rst $00
+    jumptable
     dw RunDebugAutomapCaseTemp0_Return
     dw RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
@@ -76,25 +67,15 @@ Func_084_405C:: ; address name
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
-; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
 RunDebugAutomapCaseTemp0_Return::
-Jump_084_406D:: ; address name
     ret
 
-; entry 6 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
 RunDebugAutomapCaseTemp0_ReturnAfterSetup::
-Jump_084_406E:: ; address name
     ld a, $54
     ld [de], a
     ret
 
-; entry 1 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldGoalKind, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
-Jump_084_4072:: ; address name
     ld hl, RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
@@ -107,34 +88,30 @@ Jump_084_4072:: ; address name
     ldh a, [hTemp9]
     ld h, a
     inc hl
-    ld b, $0E
+    ld b, $0e
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
     ret
 
-; entry 2 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_NextRandomSeed::
-Jump_084_4091:: ; address name
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
-    add a, $20
+    add $20
     ld [de], a
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     srl a
-    and a, $01
+    and $01
     jr z, .read_temp8
     ld a, [de]
-    or a, $80
+    or $80
     ld [de], a
 
 .read_temp8:
@@ -145,34 +122,30 @@ Jump_084_4091:: ; address name
     ldh a, [hTemp9]
     ld h, a
     inc hl
-    ld b, $0E
+    ld b, $0e
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
     ret
 
-; entry 3 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
-Jump_084_40C2:: ; address name
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
-    add a, $40
+    add $40
     ld [de], a
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     srl a
-    and a, $01
+    and $01
     jr z, .read_temp8
     ld a, [de]
-    or a, $80
+    or $80
     ld [de], a
 
 .read_temp8:
@@ -183,28 +156,23 @@ Jump_084_40C2:: ; address name
     ldh a, [hTemp9]
     ld h, a
     inc hl
-    ld b, $0E
+    ld b, $0e
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
     ret
 
-; entry 4 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyWorldGoalKind, wKeyRandomHi
-; writes: hTemp0
 RunDebugAutomapCaseTemp0_NextRandomSeed_Case04::
-Jump_084_40F3:: ; address name
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
     ld h, a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ldh [hTemp0], a
     push hl
@@ -213,23 +181,23 @@ Jump_084_40F3:: ; address name
     ld [de], a
     inc de
     ld a, [wKeyWorldGoalKind]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data
     add_a_to_hl
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $03
+    and $03
     add_a_to_hl
     ld a, [hl]
     ld [de], a
     pop hl
     inc de
     push de
-    ld b, $0D
+    ld b, $0d
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -237,22 +205,22 @@ Jump_084_40F3:: ; address name
     pop de
     inc de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $07
+    and $07
     inc de
     inc de
     ld [de], a
     inc de
     inc de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $07
+    and $07
     inc de
     inc de
     ld [de], a
@@ -262,18 +230,13 @@ Jump_084_40F3:: ; address name
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-; entry 5 of the `rst $00` table in RunDebugAutomapCaseTemp0
-; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
-; writes: hTemp0
 RunDebugAutomapCaseTemp0_NextRandomSeed_Case05::
-Jump_084_4156:: ; address name
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
     ld h, a
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     ldh [hTemp0], a
     push hl
@@ -283,7 +246,7 @@ Jump_084_4156:: ; address name
     inc de
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $07
+    and $07
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data
     add_a_to_hl
     ld a, [hl]
@@ -291,10 +254,10 @@ Jump_084_4156:: ; address name
     pop hl
     inc de
     push de
-    ld b, $0D
+    ld b, $0d
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -302,86 +265,72 @@ Jump_084_4156:: ; address name
     pop de
     inc de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $07
+    and $07
     inc de
     inc de
     ld [de], a
     inc de
     inc de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $07
+    and $07
     inc de
     inc de
     ld [de], a
 
 .call_run_debug_automap_case_temp0_random:
-    xor a, a
+    xor a
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-; address loaded by RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
-RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_41AE:: ; address name
+RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
-RunDebugAutomapCaseTemp0_NextRandomSeed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_41B8:: ; address name
+RunDebugAutomapCaseTemp0_NextRandomSeed_Data::
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_41C2:: ; address name
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data::
     db $05, $06, $07, $08, $09, $05, $07, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_41CA:: ; address name
-    db $00, $0B, $00, $0B, $00, $02, $00, $02, $02, $03, $0B, $02, $02, $04, $02, $04
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data::
+    db $00, $0b, $00, $0b, $00, $02, $00, $02, $02, $03, $0b, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
-    db $01, $03, $0B, $01, $00, $0B, $00, $0B
+    db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
-; only called from routines of RunDebugAutomapCaseTemp0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_Case05, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04)
-; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
-; writes: hTemp2, hTemp3, wKeyWorldByte46
-; points at: wKeyWorldRoomTable
 RunDebugAutomapCaseTemp0_RandomBelowC::
-Func_084_41F2:: ; address name
     push af
     ld a, [wKeyWorldByte46]
-    add a, a
+    add a
     ld hl, wKeyWorldRoomTable
     add_a_to_hl
     pop af
-    or a, a
+    or a
     jr nz, .clear_temp2
-    ld a, $A0
+    ld a, $a0
     ldh [hTemp2], a
     call NextRandomSeed
-    and a, $03
-    add a, a
-    add a, a
-    add a, a
+    and $03
+    add a
+    add a
+    add a
     ld c, a
     ldh a, [hTemp2]
-    add a, c
+    add c
     ldh [hTemp2], a
     ld c, $05
     call RandomBelowC
     ld c, a
     ldh a, [hTemp2]
-    add a, c
+    add c
     ldh [hTemp2], a
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp2]
     ld e, a
     ld d, $00
@@ -390,9 +339,9 @@ Func_084_41F2:: ; address name
     call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank
     ldh a, [hTemp4]
     swap a
-    or a, $0F
-    ld [hl+], a
-    ld a, $0F
+    or $0f
+    ld [hli], a
+    ld a, $0f
     ldh [hTemp3], a
     ld a, [wKeyWorldByte46]
     inc a
@@ -400,7 +349,7 @@ Func_084_41F2:: ; address name
     jr .check_temp0
 
 .clear_temp2:
-    xor a, a
+    xor a
     ldh [hTemp2], a
     ld c, $09
     call RandomBelowC
@@ -409,15 +358,15 @@ Func_084_41F2:: ; address name
     sla a
     ld c, a
     ldh a, [hTemp2]
-    add a, c
+    add c
     ldh [hTemp2], a
     ld c, $08
     call RandomBelowC
     ld c, a
     ldh a, [hTemp2]
-    add a, c
+    add c
     ldh [hTemp2], a
-    ld [hl+], a
+    ld [hli], a
     ldh a, [hTemp2]
     ld e, a
     ld d, $00
@@ -428,8 +377,8 @@ Func_084_41F2:: ; address name
     swap a
     ld c, a
     ldh a, [hTemp3]
-    or a, c
-    ld [hl+], a
+    or c
+    ld [hli], a
     ld a, [wKeyWorldByte46]
     inc a
     ld [wKeyWorldByte46], a
@@ -443,18 +392,18 @@ Func_084_41F2:: ; address name
 .loop:
     push bc
     ldh a, [hTemp4]
-    and a, $0F
+    and $0f
     swap a
     ld de, KeyWorldMonsterBaseRows
-    add a, e
+    add e
     ld e, a
     jr nc, .call_random_below_c
     inc d
 
 .call_random_below_c:
-    ld c, $0A
+    ld c, $0a
     call RandomBelowC
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -464,8 +413,8 @@ Func_084_41F2:: ; address name
     ld b, a
     ld c, $08
     call RandomBelowC
-    add a, b
-    ld [hl+], a
+    add b
+    ld [hli], a
     ld e, a
     ld d, $00
     sla e
@@ -477,8 +426,8 @@ Func_084_41F2:: ; address name
     ld c, a
     ldh a, [hTemp4]
     swap a
-    or a, c
-    ld [hl+], a
+    or c
+    ld [hli], a
     ld a, [wKeyWorldByte46]
     inc a
     ld [wKeyWorldByte46], a
@@ -487,10 +436,11 @@ Func_084_41F2:: ; address name
     jr nz, .loop
     ret
 
-; E-0193 (C1: RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine).
+; RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a
+; random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
+; RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine (E-0193, C1)
 ; record: ten base values, then six zero bytes
 KeyWorldMonsterBaseRows::
-Data_084_42C7:: ; address name
     db $00, $08, $10, $18, $20, $28, $30, $38, $40, $48, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $08, $10, $18, $50, $58, $60, $68, $70, $78, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $20, $28, $30, $50, $58, $60, $80, $88, $90, $00, $00, $00, $00, $00, $00 ; id 2
@@ -498,18 +448,13 @@ Data_084_42C7:: ; address name
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
-; reads: hTemp3
-; writes: hTemp4
 RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
-Func_084_4327:: ; address name
     push hl
     ld a, e
-    add a, $01
+    add $01
     ld e, a
     ld a, d
-    adc a, $40
+    adc $40
     ld d, a
     ld a, $72
     ld b, a
@@ -521,7 +466,7 @@ Func_084_4327:: ; address name
 
 .loop:
     call NextRandomSeed
-    and a, $03
+    and $03
     jr z, .loop
     push hl
     dec a
@@ -533,25 +478,20 @@ Func_084_4327:: ; address name
     call ReadByteInBank
     pop hl
     ldh a, [hTemp3]
-    cp a, c
+    cp c
     jr z, .loop
     ld a, c
     ldh [hTemp4], a
     pop hl
     ret
 
-; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
-; reads: hTemp3
-; writes: hTemp3, hTemp4
 RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank::
-Func_084_435C:: ; address name
     push hl
     ld a, e
-    add a, $01
+    add $01
     ld e, a
     ld a, d
-    adc a, $40
+    adc $40
     ld d, a
     ld a, $72
     ld b, a
@@ -566,7 +506,7 @@ Func_084_435C:: ; address name
 
 .loop:
     call NextRandomSeed
-    and a, $03
+    and $03
     jr z, .loop
     dec a
     add_a_to_hl
@@ -581,7 +521,7 @@ Func_084_435C:: ; address name
 
 .loop2:
     call NextRandomSeed
-    and a, $03
+    and $03
     jr z, .loop2
     push hl
     dec a
@@ -593,37 +533,32 @@ Func_084_435C:: ; address name
     call ReadByteInBank
     pop hl
     ldh a, [hTemp3]
-    cp a, c
+    cp c
     jr z, .loop2
     ld a, c
     ldh [hTemp4], a
     pop hl
     ret
 
-; repeats NextRandomSeed until wKeyRandomHi & $0F is below C (C must be 1-16); returns A = that value (E-0077)
-; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
-; reads: wKeyRandomHi
+; repeats NextRandomSeed until wKeyRandomHi & $0F is below C (C must be 1-16); returns A = that
+; value (E-0077)
 RandomBelowC::
-Func_084_43AC:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomHi]
-    and a, $0F
-    cp a, c
+    and $0f
+    cp c
     jr nc, RandomBelowC
     ret
 
-; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hTemp0 = its value) (E-0125)
-; 3 call sites from 3 routines (e.g. LoadMapScreen, RunOneTimeTreasure_ApplyMapScreenFlagEvents, SetFlagRedraw)
-; reads: hMapId, hMapScreenX, hMapScreenY
-; writes: hTemp0
+; for each 8-byte entry of MapScreenFlagTiles matching hMapId and the screen position, with its
+; story flag set, runs ApplyMapScreenFlagEvents_WriteSVBK (hTemp0 = its value) (E-0125)
 ApplyMapScreenFlagEvents::
-Func_084_43B8:: ; address name
     ld hl, MapScreenFlagTiles
 
 .skip:
     push hl
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr nz, .check_map_id
     pop hl
     ret
@@ -631,21 +566,21 @@ Func_084_43B8:: ; address name
 .check_map_id:
     ld c, a
     ldh a, [hMapId]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenX]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
     ldh a, [hMapScreenY]
-    cp a, c
+    cp c
     jr nz, .restore
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -661,26 +596,21 @@ Func_084_43B8:: ; address name
     add_a_to_hl
     jr .skip
 
-; only called from ApplyMapScreenFlagEvents (E-0047)
-; 1 call site from 1 routine (e.g. ApplyMapScreenFlagEvents)
-; reads: hTemp0, wIsCGB
-; writes: rSVBK
 ApplyMapScreenFlagEvents_WriteSVBK::
-Func_084_43F2:: ; address name
     ldh a, [hTemp0]
-    cp a, $FF
+    cp $ff
     jr z, .skip
     ld a, $06
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     ld a, e
-    add a, $98
+    add $98
     ld e, a
     ld a, d
-    adc a, $C1
+    adc $c1
     ld d, a
     ldh a, [hTemp0]
     ld [de], a
@@ -692,16 +622,16 @@ Func_084_43F2:: ; address name
 .skip:
     ld a, $06
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     push de
     ld a, e
-    add a, $98
+    add $98
     ld e, a
     ld a, d
-    adc a, $C1
+    adc $c1
     ld d, a
     ld a, $40
     ld [de], a
@@ -709,7 +639,7 @@ Func_084_43F2:: ; address name
     inc de
     ld [de], a
     ld a, $13
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -722,22 +652,22 @@ Func_084_43F2:: ; address name
     ld [de], a
     pop de
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, $02
     ldh [rSVBK], a
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $D0
+    adc $d0
     ld d, a
     ld a, $05
     ld [de], a
     inc de
     ld [de], a
     ld a, $13
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -751,344 +681,340 @@ Func_084_43F2:: ; address name
     ldh [rSVBK], a
     ret
 
-; E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries).
-; record: map number, screen X, screen Y, tile; story flag number (TestFlagBit); offset into wScreenTileBuffer
+; ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match
+; and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at
+; wScreenTileBuffer + offset (tile $FF takes another path); 108 entries (E-0151, C1)
+; record: map number, screen X, screen Y, tile; story flag number (TestFlagBit); offset into
+; wScreenTileBuffer
 MapScreenFlagTiles::
-Data_084_4461:: ; address name
-    db $19, $00, $02, $3E ; id 0
-    dw $011B
+    db $19, $00, $02, $3e ; id 0
+    dw $011b
     dw $0088
-    db $19, $00, $02, $3E ; id 1
-    dw $011C
+    db $19, $00, $02, $3e ; id 1
+    dw $011c
     dw $0100
-    db $1B, $00, $02, $1A ; id 2
-    dw $013E
-    dw $00A6
-    db $1B, $00, $02, $1A ; id 3
-    dw $013F
-    dw $00AC
-    db $2B, $01, $02, $3C ; id 4
-    dw $004F
+    db $1b, $00, $02, $1a ; id 2
+    dw $013e
+    dw $00a6
+    db $1b, $00, $02, $1a ; id 3
+    dw $013f
+    dw $00ac
+    db $2b, $01, $02, $3c ; id 4
+    dw $004f
     dw $0054
-    db $2B, $02, $02, $3C ; id 5
+    db $2b, $02, $02, $3c ; id 5
     dw $0050
     dw $0084
-    db $2B, $00, $03, $3C ; id 6
+    db $2b, $00, $03, $3c ; id 6
     dw $0051
-    dw $011E
-    db $2B, $00, $03, $3C ; id 7
+    dw $011e
+    db $2b, $00, $03, $3c ; id 7
     dw $0052
     dw $0122
     db $35, $00, $00, $16 ; id 8
     dw $0067
-    dw $00D2
+    dw $00d2
     db $35, $01, $00, $16 ; id 9
     dw $0068
-    dw $00A8
+    dw $00a8
     db $35, $03, $00, $16 ; id 10
     dw $0069
     dw $0086
     db $35, $03, $00, $16 ; id 11
-    dw $006A
-    dw $00D6
+    dw $006a
+    dw $00d6
     db $35, $03, $00, $16 ; id 12
-    dw $006B
+    dw $006b
     dw $0126
     db $35, $02, $03, $16 ; id 13
-    dw $006C
+    dw $006c
     dw $0056
-    db $42, $00, $00, $4C ; id 14
-    dw $00EB
+    db $42, $00, $00, $4c ; id 14
+    dw $00eb
     dw $0030
-    db $42, $00, $00, $4C ; id 15
-    dw $00EC
+    db $42, $00, $00, $4c ; id 15
+    dw $00ec
     dw $0032
-    db $42, $00, $00, $4C ; id 16
-    dw $00ED
+    db $42, $00, $00, $4c ; id 16
+    dw $00ed
     dw $0034
-    db $42, $01, $00, $4C ; id 17
-    dw $00EE
-    dw $00AA
-    db $44, $00, $00, $4C ; id 18
+    db $42, $01, $00, $4c ; id 17
+    dw $00ee
+    dw $00aa
+    db $44, $00, $00, $4c ; id 18
     dw $0076
     dw $0034
     db $39, $03, $00, $06 ; id 19
-    dw $00E0
-    dw $00A4
+    dw $00e0
+    dw $00a4
     db $39, $03, $00, $06 ; id 20
-    dw $00E1
-    dw $00AE
+    dw $00e1
+    dw $00ae
     db $39, $03, $02, $06 ; id 21
-    dw $00E2
-    dw $00F6
+    dw $00e2
+    dw $00f6
     db $39, $03, $02, $06 ; id 22
-    dw $00E3
-    dw $00FA
+    dw $00e3
+    dw $00fa
     db $39, $03, $02, $06 ; id 23
-    dw $00E4
-    dw $00FE
-    db $3A, $00, $00, $06 ; id 24
-    dw $00E5
-    dw $00D0
-    db $3A, $00, $00, $06 ; id 25
-    dw $00E6
-    dw $00D2
-    db $3E, $01, $01, $1C ; id 26
+    dw $00e4
+    dw $00fe
+    db $3a, $00, $00, $06 ; id 24
+    dw $00e5
+    dw $00d0
+    db $3a, $00, $00, $06 ; id 25
+    dw $00e6
+    dw $00d2
+    db $3e, $01, $01, $1c ; id 26
     dw $0079
     dw $0084
-    db $55, $00, $00, $2C ; id 27
+    db $55, $00, $00, $2c ; id 27
     dw $0084
-    dw $00A6
-    db $62, $01, $01, $2C ; id 28
-    dw $01E0
-    dw $005E
-    db $73, $00, $01, $4C ; id 29
-    dw $00A1
+    dw $00a6
+    db $62, $01, $01, $2c ; id 28
+    dw $01e0
+    dw $005e
+    db $73, $00, $01, $4c ; id 29
+    dw $00a1
     dw $0060
-    db $76, $00, $00, $4C ; id 30
-    dw $00A2
-    dw $00CE
-    db $76, $00, $00, $4C ; id 31
-    dw $00A3
+    db $76, $00, $00, $4c ; id 30
+    dw $00a2
+    dw $00ce
+    db $76, $00, $00, $4c ; id 31
+    dw $00a3
     dw $0100
-    db $7A, $00, $00, $2E ; id 32
-    dw $00AA
+    db $7a, $00, $00, $2e ; id 32
+    dw $00aa
     dw $0030
-    db $82, $02, $02, $2C ; id 33
-    dw $00AB
-    dw $00AA
-    db $84, $00, $00, $2C ; id 34
-    dw $00AC
+    db $82, $02, $02, $2c ; id 33
+    dw $00ab
+    dw $00aa
+    db $84, $00, $00, $2c ; id 34
+    dw $00ac
     dw $0034
-    db $85, $01, $00, $3C ; id 35
-    dw $00AF
-    dw $005A
-    db $91, $00, $00, $2C ; id 36
-    dw $00B5
+    db $85, $01, $00, $3c ; id 35
+    dw $00af
+    dw $005a
+    db $91, $00, $00, $2c ; id 36
+    dw $00b5
     dw $0058
-    db $94, $02, $00, $3E ; id 37
-    dw $00BC
-    dw $00A8
-    db $96, $00, $00, $3E ; id 38
-    dw $00BD
-    dw $00A8
-    db $98, $00, $00, $3E ; id 39
-    dw $00BE
-    dw $00F2
-    db $9A, $00, $00, $3E ; id 40
-    dw $00BF
+    db $94, $02, $00, $3e ; id 37
+    dw $00bc
+    dw $00a8
+    db $96, $00, $00, $3e ; id 38
+    dw $00bd
+    dw $00a8
+    db $98, $00, $00, $3e ; id 39
+    dw $00be
+    dw $00f2
+    db $9a, $00, $00, $3e ; id 40
+    dw $00bf
     dw $0128
-    db $63, $01, $00, $2C ; id 41
-    dw $01E9
-    dw $011A
-    db $63, $00, $01, $2C ; id 42
-    dw $01EA
+    db $63, $01, $00, $2c ; id 41
+    dw $01e9
+    dw $011a
+    db $63, $00, $01, $2c ; id 42
+    dw $01ea
     dw $0038
-    db $64, $00, $00, $2C ; id 43
-    dw $01EB
-    dw $00A2
-    db $64, $00, $00, $2C ; id 44
-    dw $01EC
-    dw $00D0
-    db $66, $00, $00, $2C ; id 45
-    dw $01ED
-    dw $00A2
-    db $66, $00, $00, $2C ; id 46
-    dw $01EE
-    dw $00A6
-    db $67, $00, $00, $2C ; id 47
-    dw $01EF
-    dw $011E
-    db $67, $00, $00, $2C ; id 48
-    dw $01F0
+    db $64, $00, $00, $2c ; id 43
+    dw $01eb
+    dw $00a2
+    db $64, $00, $00, $2c ; id 44
+    dw $01ec
+    dw $00d0
+    db $66, $00, $00, $2c ; id 45
+    dw $01ed
+    dw $00a2
+    db $66, $00, $00, $2c ; id 46
+    dw $01ee
+    dw $00a6
+    db $67, $00, $00, $2c ; id 47
+    dw $01ef
+    dw $011e
+    db $67, $00, $00, $2c ; id 48
+    dw $01f0
     dw $0124
-    db $AD, $00, $00, $2E ; id 49
+    db $ad, $00, $00, $2e ; id 49
     dw $0156
-    dw $00AC
-    db $AE, $00, $02, $2E ; id 50
+    dw $00ac
+    db $ae, $00, $02, $2e ; id 50
     dw $0157
-    dw $00AC
-    db $AE, $02, $03, $2E ; id 51
+    dw $00ac
+    db $ae, $02, $03, $2e ; id 51
     dw $0158
     dw $0060
-    db $BE, $00, $00, $2E ; id 52
-    dw $01CB
+    db $be, $00, $00, $2e ; id 52
+    dw $01cb
     dw $0082
-    db $C0, $00, $01, $2E ; id 53
-    dw $01CC
-    dw $011A
-    db $C2, $01, $01, $2E ; id 54
-    dw $01CD
+    db $c0, $00, $01, $2e ; id 53
+    dw $01cc
+    dw $011a
+    db $c2, $01, $01, $2e ; id 54
+    dw $01cd
     dw $0080
-    db $C4, $00, $00, $2E ; id 55
-    dw $01CE
-    dw $00F6
-    db $C4, $00, $00, $FF ; id 56
-    dw $01CF
-    dw $007C
-    db $C4, $00, $00, $FF ; id 57
-    dw $01D0
-    dw $00A8
-    db $C4, $00, $00, $FF ; id 58
-    dw $01D1
-    dw $005A
-    db $C4, $00, $00, $FF ; id 59
-    dw $01D2
-    dw $00D8
-    db $CA, $00, $00, $3E ; id 60
-    dw $01D5
+    db $c4, $00, $00, $2e ; id 55
+    dw $01ce
+    dw $00f6
+    db $c4, $00, $00, $ff ; id 56
+    dw $01cf
+    dw $007c
+    db $c4, $00, $00, $ff ; id 57
+    dw $01d0
+    dw $00a8
+    db $c4, $00, $00, $ff ; id 58
+    dw $01d1
+    dw $005a
+    db $c4, $00, $00, $ff ; id 59
+    dw $01d2
+    dw $00d8
+    db $ca, $00, $00, $3e ; id 60
+    dw $01d5
     dw $0052
-    db $CA, $00, $00, $3E ; id 61
-    dw $01D6
-    dw $002E
-    db $CA, $00, $00, $3E ; id 62
-    dw $01D8
+    db $ca, $00, $00, $3e ; id 61
+    dw $01d6
+    dw $002e
+    db $ca, $00, $00, $3e ; id 62
+    dw $01d8
     dw $0060
-    db $CB, $00, $00, $3E ; id 63
-    dw $01DA
+    db $cb, $00, $00, $3e ; id 63
+    dw $01da
     dw $0052
-    db $CB, $00, $00, $3E ; id 64
-    dw $01DB
-    dw $002E
-    db $CB, $00, $00, $3E ; id 65
-    dw $01DC
+    db $cb, $00, $00, $3e ; id 64
+    dw $01db
+    dw $002e
+    db $cb, $00, $00, $3e ; id 65
+    dw $01dc
     dw $0034
-    db $CC, $00, $00, $3E ; id 66
-    dw $01DE
-    dw $002E
-    db $CC, $00, $00, $3E ; id 67
-    dw $01DF
+    db $cc, $00, $00, $3e ; id 66
+    dw $01de
+    dw $002e
+    db $cc, $00, $00, $3e ; id 67
+    dw $01df
     dw $0034
-    db $CC, $00, $00, $3E ; id 68
+    db $cc, $00, $00, $3e ; id 68
     dw $0169
     dw $0060
-    db $CD, $00, $00, $3E ; id 69
-    dw $016B
+    db $cd, $00, $00, $3e ; id 69
+    dw $016b
     dw $0052
-    db $CD, $00, $00, $3E ; id 70
-    dw $016C
-    dw $002E
-    db $CD, $00, $00, $3E ; id 71
-    dw $016D
+    db $cd, $00, $00, $3e ; id 70
+    dw $016c
+    dw $002e
+    db $cd, $00, $00, $3e ; id 71
+    dw $016d
     dw $0034
-    db $CE, $00, $00, $3E ; id 72
-    dw $016F
-    dw $00A4
-    db $CE, $00, $00, $3E ; id 73
+    db $ce, $00, $00, $3e ; id 72
+    dw $016f
+    dw $00a4
+    db $ce, $00, $00, $3e ; id 73
     dw $0170
-    dw $007E
-    db $CE, $00, $00, $3E ; id 74
+    dw $007e
+    db $ce, $00, $00, $3e ; id 74
     dw $0171
     dw $0084
-    db $CE, $00, $00, $3E ; id 75
+    db $ce, $00, $00, $3e ; id 75
     dw $0172
-    dw $00AE
-    db $D3, $00, $00, $3E ; id 76
+    dw $00ae
+    db $d3, $00, $00, $3e ; id 76
     dw $0175
     dw $0052
-    db $D3, $00, $00, $3E ; id 77
+    db $d3, $00, $00, $3e ; id 77
     dw $0176
-    dw $002E
-    db $D3, $00, $00, $3E ; id 78
+    dw $002e
+    db $d3, $00, $00, $3e ; id 78
     dw $0177
     dw $0034
-    db $D4, $00, $00, $3E ; id 79
+    db $d4, $00, $00, $3e ; id 79
     dw $0179
-    dw $002E
-    db $D4, $00, $00, $3E ; id 80
-    dw $017A
+    dw $002e
+    db $d4, $00, $00, $3e ; id 80
+    dw $017a
     dw $0034
-    db $D4, $00, $00, $3E ; id 81
-    dw $017B
+    db $d4, $00, $00, $3e ; id 81
+    dw $017b
     dw $0060
-    db $D5, $00, $00, $3E ; id 82
-    dw $017D
-    dw $002E
-    db $D5, $00, $00, $3E ; id 83
-    dw $017E
+    db $d5, $00, $00, $3e ; id 82
+    dw $017d
+    dw $002e
+    db $d5, $00, $00, $3e ; id 83
+    dw $017e
     dw $0034
-    db $D5, $00, $00, $3E ; id 84
-    dw $017F
+    db $d5, $00, $00, $3e ; id 84
+    dw $017f
     dw $0060
-    db $D6, $00, $00, $3E ; id 85
-    dw $00D6
-    dw $002E
-    db $D6, $00, $00, $3E ; id 86
-    dw $00D7
+    db $d6, $00, $00, $3e ; id 85
+    dw $00d6
+    dw $002e
+    db $d6, $00, $00, $3e ; id 86
+    dw $00d7
     dw $0034
-    db $D6, $00, $00, $3E ; id 87
-    dw $00D8
+    db $d6, $00, $00, $3e ; id 87
+    dw $00d8
     dw $0060
-    db $D7, $00, $00, $3E ; id 88
-    dw $00DA
-    dw $00A4
-    db $D7, $00, $00, $3E ; id 89
-    dw $00DB
-    dw $007E
-    db $D7, $00, $00, $3E ; id 90
-    dw $00DC
+    db $d7, $00, $00, $3e ; id 88
+    dw $00da
+    dw $00a4
+    db $d7, $00, $00, $3e ; id 89
+    dw $00db
+    dw $007e
+    db $d7, $00, $00, $3e ; id 90
+    dw $00dc
     dw $0084
-    db $D7, $00, $00, $3E ; id 91
-    dw $00DD
-    dw $00AE
-    db $DC, $00, $00, $3E ; id 92
-    dw $00F5
-    dw $002E
-    db $DC, $00, $00, $3E ; id 93
-    dw $00F6
+    db $d7, $00, $00, $3e ; id 91
+    dw $00dd
+    dw $00ae
+    db $dc, $00, $00, $3e ; id 92
+    dw $00f5
+    dw $002e
+    db $dc, $00, $00, $3e ; id 93
+    dw $00f6
     dw $0034
-    db $DC, $00, $00, $3E ; id 94
-    dw $00F7
+    db $dc, $00, $00, $3e ; id 94
+    dw $00f7
     dw $0060
-    db $DD, $00, $00, $3E ; id 95
-    dw $00F9
+    db $dd, $00, $00, $3e ; id 95
+    dw $00f9
     dw $0052
-    db $DD, $00, $00, $3E ; id 96
-    dw $00FA
-    dw $002E
-    db $DD, $00, $00, $3E ; id 97
-    dw $00FB
+    db $dd, $00, $00, $3e ; id 96
+    dw $00fa
+    dw $002e
+    db $dd, $00, $00, $3e ; id 97
+    dw $00fb
     dw $0034
-    db $DE, $00, $00, $3E ; id 98
-    dw $00FD
-    dw $002E
-    db $DE, $00, $00, $3E ; id 99
-    dw $00FE
+    db $de, $00, $00, $3e ; id 98
+    dw $00fd
+    dw $002e
+    db $de, $00, $00, $3e ; id 99
+    dw $00fe
     dw $0034
-    db $DE, $00, $00, $3E ; id 100
-    dw $00FF
+    db $de, $00, $00, $3e ; id 100
+    dw $00ff
     dw $0060
-    db $DF, $00, $00, $3E ; id 101
-    dw $01F3
-    dw $002E
-    db $DF, $00, $00, $3E ; id 102
-    dw $01F4
+    db $df, $00, $00, $3e ; id 101
+    dw $01f3
+    dw $002e
+    db $df, $00, $00, $3e ; id 102
+    dw $01f4
     dw $0034
-    db $DF, $00, $00, $3E ; id 103
-    dw $01F5
+    db $df, $00, $00, $3e ; id 103
+    dw $01f5
     dw $0060
-    db $E0, $00, $00, $3E ; id 104
-    dw $01F7
-    dw $00A4
-    db $E0, $00, $00, $3E ; id 105
-    dw $01F8
-    dw $007E
-    db $E0, $00, $00, $3E ; id 106
-    dw $01F9
+    db $e0, $00, $00, $3e ; id 104
+    dw $01f7
+    dw $00a4
+    db $e0, $00, $00, $3e ; id 105
+    dw $01f8
+    dw $007e
+    db $e0, $00, $00, $3e ; id 106
+    dw $01f9
     dw $0084
-    db $E0, $00, $00, $3E ; id 107
-    dw $01FA
-    dw $00AE
-    db $FF ; end
+    db $e0, $00, $00, $3e ; id 107
+    dw $01fa
+    dw $00ae
+    db $ff ; end
 
-; only called from ItemUsable_LogTwig (E-0047)
-; 1 call site from 1 routine (e.g. ItemUsable_LogTwig)
-; reads: hPlayerStateFlags, wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wKeyWorldActive, ...
-; writes: hTempA, wSpriteSnapshot, wSnapshotByte3C, wSnapshotByte3D, wSnapshotByte3E, wKeyWorldActive, wKeyWorldGoal, wKeyWorldGoalCell, ...
-; points at: wKeyWorldObjects
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
-Func_084_47C2:: ; address name
-    xor a, a
+    xor a
     ldh [hTempA], a
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -1097,11 +1023,11 @@ Func_084_47C2:: ; address name
     bit 7, a
     jp nz, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     ret c
     push af
     call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
-    or a, a
+    or a
     jr z, .restore
     pop af
     ret
@@ -1114,34 +1040,34 @@ Func_084_47C2:: ; address name
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld b, a
     ldh a, [hPlayerY]
-    and a, $F0
+    and $f0
     swap a
-    or a, b
+    or b
     ld b, a
 
 .skip:
     push hl
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr z, .read_map_id
-    cp a, e
+    cp e
     jr nz, .restore2
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jr nz, .restore2
-    ld a, [hl+]
-    cp a, b
+    ld a, [hli]
+    cp b
     jr z, .done
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .restore2
-    cp a, b
+    cp b
     jr z, .done
 
 .restore2:
@@ -1165,9 +1091,9 @@ Func_084_47C2:: ; address name
 
 .skip2:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .set_key_world_active_to_01
-    cp a, d
+    cp d
     jr z, .read_key_world_active
     inc e
     inc hl
@@ -1178,7 +1104,7 @@ Func_084_47C2:: ; address name
 .read_key_world_active:
     ld a, [wKeyWorldActive]
     ld [wSpriteSnapshot], a
-    or a, a
+    or a
     jr z, .next
     ld a, [wKeyWorldGoal]
     ld [wSnapshotByte3C], a
@@ -1189,23 +1115,23 @@ Func_084_47C2:: ; address name
     ld a, [wKeyWorldKey]
     bit 7, a
     jr nz, .next
-    cp a, e
+    cp e
     jr nz, .next
     ld a, [wKeyWorldGoal]
-    cp a, b
+    cp b
     jr nz, .set_key_world_active_to_01
     ld a, [wKeyWorldGoalCell]
-    cp a, c
+    cp c
     jr nz, .set_key_world_active_to_01
     ret
 
 .next:
     inc hl
     ld a, [hl]
-    cp a, b
+    cp b
     jr nz, .set_key_world_active_to_01
     inc hl
-    cp a, c
+    cp c
     jr nz, .set_key_world_active_to_01
     ret
 
@@ -1223,47 +1149,44 @@ Func_084_47C2:: ; address name
     ldh [hTempA], a
     ret
 
-; address loaded by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
-ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_4887:: ; address name
-    db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
-    db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
-    db $00, $FF
+ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
+    db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
+    db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
+    db $00, $ff
 
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
-Jump_084_48A9:: ; address name
-    cp a, $80
+    cp $80
     ret nz
     call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
-    or a, a
+    or a
     ret nz
     ldh a, [hMapScreenX]
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jr nz, .check_player_y2
     ldh a, [hPlayerY]
-    cp a, $40
+    cp $40
     jr nz, .check_player_y2
     ld hl, wKeyWorldObjects
 
 .skip:
     push hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .check_player_y
     dec hl
     dec hl
     dec hl
-    ld a, [hl+]
-    cp a, c
+    ld a, [hli]
+    cp c
     jp z, .done
     ld a, [hl]
-    cp a, c
+    cp c
     jp z, .done
     pop hl
     inc hl
@@ -1277,32 +1200,32 @@ Jump_084_48A9:: ; address name
 
 .check_player_y2:
     ldh a, [hPlayerY]
-    cp a, $40
+    cp $40
     jr nz, .read_key_world_active2
     ld hl, wKeyWorldFloorInfo + $3
 
 .skip2:
     push hl
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, .read_key_world_active
     dec hl
     dec hl
     dec hl
     ld a, [hl]
-    cp a, c
+    cp c
     jr nz, .restore
     ldh a, [hPlayerX]
-    cp a, $40
+    cp $40
     jp z, .done
     inc hl
     ld a, [hl]
-    cp a, $04
+    cp $04
     jr z, .restore
-    cp a, $05
+    cp $05
     jr z, .restore
     ldh a, [hPlayerX]
-    cp a, $50
+    cp $50
     jp z, .done
 
 .restore:
@@ -1319,7 +1242,7 @@ Jump_084_48A9:: ; address name
 .read_key_world_active2:
     ld a, [wKeyWorldActive]
     ld [wSpriteSnapshot], a
-    or a, a
+    or a
     jr z, .check_key_world_goal_screen
     ld a, [wKeyWorldGoal]
     ld [wSnapshotByte3C], a
@@ -1330,51 +1253,51 @@ Jump_084_48A9:: ; address name
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .check_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld b, a
     ld a, [wKeyWorldSlot]
-    cp a, b
+    cp b
     jr nz, .check_key_world_goal_screen
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld b, a
     ldh a, [hPlayerY]
-    and a, $F0
+    and $f0
     swap a
-    or a, b
+    or b
     ld b, a
     ld a, [wKeyWorldGoal]
-    cp a, b
+    cp b
     jr nz, .check_player_x
     ld a, [wKeyWorldGoalCell]
-    cp a, c
+    cp c
     jr nz, .check_player_x
     ret
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
-    cp a, c
+    cp c
     jr nz, .check_player_x
     ld a, [wKeyWorldGoalPos]
     ld b, a
     ldh a, [hPlayerX]
-    cp a, b
+    cp b
     jr nz, .check_player_x
     ld a, [wKeyWorldGoalPos2]
     ld b, a
     ldh a, [hPlayerY]
-    cp a, b
+    cp b
     jr nz, .check_player_x
     ret
 
 .check_player_x:
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld b, a
     ldh a, [hPlayerY]
-    and a, $F0
+    and $f0
     swap a
-    or a, b
+    or b
     ld b, a
     ld a, $01
     ld [wKeyWorldActive], a
@@ -1383,7 +1306,7 @@ Jump_084_48A9:: ; address name
     ld a, c
     ld [wKeyWorldGoalCell], a
     ld a, [wKeyWorldSlot]
-    or a, $80
+    or $80
     ld [wKeyWorldKey], a
     ld a, $01
     ldh [hTempA], a
@@ -1393,95 +1316,88 @@ Jump_084_48A9:: ; address name
     pop hl
     ret
 
-; E-0193 (C1: ItemUsable_LogTwig_Sub01, on maps from $20, walks 4-byte records from $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it goes on to Data_084_4887; 50 records then $FF).
+; ItemUsable_LogTwig_Sub01, on maps from $20, walks 4-byte records from $49A1 until $FF and returns
+; at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or
+; fourth byte equals the player's tile position; on no match it goes on to
+; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data; 50 records then $FF (E-0193, C1)
 ; record: map id; screen XY; two tile positions ($FF = none)
 LogTwigSpotList::
-Data_084_49A1:: ; address name
     db $20, $21, $44, $54 ; id 0
     db $20, $25, $44, $54 ; id 1
     db $20, $55, $44, $54 ; id 2
     db $30, $56, $44, $54 ; id 3
     db $30, $42, $44, $54 ; id 4
     db $30, $24, $44, $54 ; id 5
-    db $30, $03, $44, $FF ; id 6
-    db $30, $62, $44, $FF ; id 7
-    db $30, $53, $44, $FF ; id 8
+    db $30, $03, $44, $ff ; id 6
+    db $30, $62, $44, $ff ; id 7
+    db $30, $53, $44, $ff ; id 8
     db $48, $82, $44, $54 ; id 9
-    db $48, $73, $44, $FF ; id 10
-    db $48, $74, $44, $FF ; id 11
+    db $48, $73, $44, $ff ; id 10
+    db $48, $74, $44, $ff ; id 11
     db $48, $75, $44, $54 ; id 12
     db $48, $46, $44, $64 ; id 13
     db $48, $48, $44, $54 ; id 14
     db $48, $29, $44, $54 ; id 15
-    db $48, $5A, $43, $53 ; id 16
+    db $48, $5a, $43, $53 ; id 16
     db $48, $99, $44, $54 ; id 17
-    db $48, $A5, $44, $FF ; id 18
-    db $48, $87, $44, $FF ; id 19
+    db $48, $a5, $44, $ff ; id 18
+    db $48, $87, $44, $ff ; id 19
     db $48, $50, $44, $54 ; id 20
-    db $48, $4A, $51, $61 ; id 21
+    db $48, $4a, $51, $61 ; id 21
     db $48, $79, $55, $65 ; id 22
-    db $70, $B1, $44, $FF ; id 23
-    db $70, $A4, $44, $FF ; id 24
-    db $70, $94, $44, $FF ; id 25
+    db $70, $b1, $44, $ff ; id 23
+    db $70, $a4, $44, $ff ; id 24
+    db $70, $94, $44, $ff ; id 25
     db $70, $56, $44, $54 ; id 26
-    db $70, $04, $44, $FF ; id 27
-    db $70, $36, $44, $FF ; id 28
-    db $70, $37, $44, $FF ; id 29
+    db $70, $04, $44, $ff ; id 27
+    db $70, $36, $44, $ff ; id 28
+    db $70, $37, $44, $ff ; id 29
     db $70, $59, $44, $54 ; id 30
-    db $70, $89, $44, $FF ; id 31
-    db $70, $99, $44, $FF ; id 32
-    db $70, $5B, $44, $FF ; id 33
-    db $70, $1B, $44, $FF ; id 34
-    db $70, $BA, $44, $54 ; id 35
-    db $70, $52, $44, $FF ; id 36
+    db $70, $89, $44, $ff ; id 31
+    db $70, $99, $44, $ff ; id 32
+    db $70, $5b, $44, $ff ; id 33
+    db $70, $1b, $44, $ff ; id 34
+    db $70, $ba, $44, $54 ; id 35
+    db $70, $52, $44, $ff ; id 36
     db $70, $41, $44, $54 ; id 37
-    db $A0, $12, $44, $FF ; id 38
-    db $A8, $11, $44, $FF ; id 39
-    db $A8, $24, $44, $54 ; id 40
-    db $A8, $43, $44, $FF ; id 41
-    db $A8, $51, $44, $FF ; id 42
-    db $B0, $10, $44, $FF ; id 43
-    db $B8, $43, $44, $54 ; id 44
-    db $B8, $11, $35, $FF ; id 45
-    db $B8, $40, $44, $FF ; id 46
-    db $C8, $00, $44, $FF ; id 47
-    db $D1, $01, $44, $FF ; id 48
-    db $DA, $10, $44, $FF ; id 49
-    db $FF ; end
+    db $a0, $12, $44, $ff ; id 38
+    db $a8, $11, $44, $ff ; id 39
+    db $a8, $24, $44, $54 ; id 40
+    db $a8, $43, $44, $ff ; id 41
+    db $a8, $51, $44, $ff ; id 42
+    db $b0, $10, $44, $ff ; id 43
+    db $b8, $43, $44, $54 ; id 44
+    db $b8, $11, $35, $ff ; id 45
+    db $b8, $40, $44, $ff ; id 46
+    db $c8, $00, $44, $ff ; id 47
+    db $d1, $01, $44, $ff ; id 48
+    db $da, $10, $44, $ff ; id 49
+    db $ff ; end
 
-; only called from ItemUsable_LogTwig_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc)
-; reads: wTriggerKind, hPlayerX, hPlayerY, wTriggerCell
 ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc::
-Func_084_4A6A:: ; address name
     ld a, [wTriggerKind]
-    cp a, $FF
+    cp $ff
     jr z, .return_0
     ldh a, [hPlayerX]
-    and a, $F0
+    and $f0
     ld c, a
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
-    or a, c
+    and $0f
+    or c
     ld c, a
     ld a, [wTriggerCell]
-    cp a, c
+    cp c
     jr nz, .return_0
     ld a, $01
     ret
 
 .return_0:
-    xor a, a
+    xor a
     ret
 
-; only called from RunFieldReturnPhase_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldReturnPhase_OpenFieldMenuOnA)
-; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
-; writes: hSpriteWindowClipMode, hTemp0, rSVBK
 RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc::
-Func_084_4A89:: ; address name
-    xor a, a
+    xor a
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
@@ -1493,7 +1409,7 @@ Func_084_4A89:: ; address name
 
 .skip:
     ld a, [hl]
-    cp a, c
+    cp c
     jr z, .set_temp0
     inc b
     inc hl
@@ -1508,17 +1424,17 @@ Func_084_4A89:: ; address name
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wSpriteSnapshot]
-    or a, a
+    or a
     jr z, .next
     ld a, [wSnapshotByte3E]
     dec a
-    cp a, b
+    cp b
     jr nz, .next
     ld a, [wSnapshotByte3D]
-    cp a, c
+    cp c
     jp nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wSnapshotByte3C]
     ld c, a
@@ -1529,7 +1445,7 @@ Func_084_4A89:: ; address name
     inc hl
     inc hl
     ld a, [hl]
-    cp a, c
+    cp c
     jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     dec hl
     ld a, [hl]
@@ -1537,34 +1453,31 @@ Func_084_4A89:: ; address name
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-; address loaded by RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc
-RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_4ADC:: ; address name
-    db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
-    db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
-    db $00, $FF
+RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data::
+    db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
+    db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
+    db $00, $ff
 
 RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
-Jump_084_4AFE:: ; address name
     ldh a, [hMapScreenX]
     swap a
     ld c, a
     ldh a, [hMapScreenY]
-    or a, c
+    or c
     ld c, a
     ld a, [wSpriteSnapshot]
-    or a, a
+    or a
     jr z, .check_key_world_goal_screen
     ld a, [wSnapshotByte3E]
     bit 7, a
     jr z, .check_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld b, a
     ld a, [wKeyWorldSlot]
-    cp a, b
+    cp b
     jr nz, .check_key_world_goal_screen
     ld a, [wSnapshotByte3D]
-    cp a, c
+    cp c
     jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wSnapshotByte3C]
     ld c, a
@@ -1573,23 +1486,22 @@ Jump_084_4AFE:: ; address name
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
-    cp a, c
+    cp c
     jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wKeyWorldGoalPos]
-    and a, $F0
+    and $f0
     ld c, a
     ld a, [wKeyWorldGoalPos2]
-    and a, $F0
+    and $f0
     swap a
-    or a, c
+    or c
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
 RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
-Jump_084_4B46:: ; address name
     ld a, [wKeyWorldGoal]
-    and a, $0F
+    and $0f
     ld l, a
     ld e, a
     ld h, $00
@@ -1606,16 +1518,16 @@ Jump_084_4B46:: ; address name
     sla l
     rl h
     ld a, [wKeyWorldGoal]
-    and a, $F0
+    and $f0
     swap a
-    add a, a
+    add a
     add_a_to_hl
     push hl
     ld a, l
-    add a, $98
+    add $98
     ld l, a
     ld a, h
-    adc a, $C1
+    adc $c1
     ld h, a
     ld [hl], $46
     inc hl
@@ -1627,7 +1539,7 @@ Jump_084_4B46:: ; address name
     ld [hl], $57
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .check_scroll_y
     ld c, $05
     ld a, [wMapType]
@@ -1635,16 +1547,16 @@ Jump_084_4B46:: ; address name
     jr nz, .skip
     ld c, $03
     ldh a, [hTemp0]
-    cp a, $04
+    cp $04
     jr z, .skip
-    cp a, $0A
+    cp $0a
     jr z, .skip
     ld c, $05
-    cp a, $05
+    cp $05
     jr z, .skip
-    cp a, $06
+    cp $06
     jr z, .skip
-    cp a, $07
+    cp $07
     jr z, .skip
     ld c, $01
 
@@ -1652,25 +1564,25 @@ Jump_084_4B46:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], a
     ld a, $13
     add_a_to_hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], a
     ld a, $00
     ldh [rSVBK], a
 
 .check_scroll_y:
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -1678,19 +1590,19 @@ Jump_084_4B46:: ; address name
     sla e
     rl d
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $98
+    adc $98
     ld d, a
     ld a, d
-    and a, $9B
+    and $9b
     ld d, a
     ldh a, [hScrollX]
     srl a
     srl a
     srl a
-    add a, e
+    add e
     ld e, a
     jr nc, .call_draw_full_screen_buffer_to_bg_map
     inc d
@@ -1701,14 +1613,9 @@ Jump_084_4B46:: ; address name
     call DrawFullScreenBufferToBGMap
     ret
 
-; only called from RunFieldReturnPhase_Case01_Sub02 (E-0047)
-; 4 call sites from 1 routine (e.g. RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc)
-; reads: wIsCGB, wMapType
-; writes: rSVBK
 RunFieldReturnPhase_Case01_Sub02_WriteSVBK::
-Func_084_4C04:: ; address name
     ld a, c
-    and a, $0F
+    and $0f
     ld l, a
     ld e, a
     ld h, $00
@@ -1725,16 +1632,16 @@ Func_084_4C04:: ; address name
     sla l
     rl h
     ld a, c
-    and a, $F0
+    and $f0
     swap a
-    add a, a
+    add a
     add_a_to_hl
     push hl
     ld a, l
-    add a, $98
+    add $98
     ld l, a
     ld a, h
-    adc a, $C1
+    adc $c1
     ld h, a
     ld [hl], $40
     inc hl
@@ -1746,7 +1653,7 @@ Func_084_4C04:: ; address name
     ld [hl], $51
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld c, $01
     ld a, [wMapType]
@@ -1754,7 +1661,7 @@ Func_084_4C04:: ; address name
     jr nz, .skip2
     ld a, b
     ld de, RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -1767,36 +1674,31 @@ Func_084_4C04:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $D0
+    adc $d0
     ld h, a
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], a
     ld a, $13
     add_a_to_hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], a
     ld a, $00
     ldh [rSVBK], a
     ret
 
-; address loaded by RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_084_4C7F:: ; address name
+RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data::
     db $01, $01, $03, $02, $02
 
-; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive (E-0127)
-; 1 call site from 1 routine (e.g. DeleteKeyEntryTemp0)
-; reads: wKeyWorldActive, hTemp0, wKeyWorldKey
-; writes: wKeyWorldActive
+; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive
+; (E-0127)
 ClearKeyWorldActiveForMatchingKeyEntry::
-Func_084_4C84:: ; address name
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     ret z
     ldh a, [hTemp0]
     ld l, a
@@ -1804,10 +1706,10 @@ Func_084_4C84:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $0A
+    add $0a
     ld l, a
     ld a, h
-    adc a, $C7
+    adc $c7
     ld h, a
     ld a, [hl]
     dec hl
@@ -1821,7 +1723,7 @@ Func_084_4C84:: ; address name
     bit 7, a
     ret nz
     dec a
-    cp a, c
+    cp c
     ret nz
     ld a, $00
     ld [wKeyWorldActive], a
@@ -1829,26 +1731,27 @@ Func_084_4C84:: ; address name
 
 .skip:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     ret z
     bit 7, a
     ret z
-    and a, $3F
+    and $3f
     ld c, a
     ld a, [wKeyWorldKey]
     bit 7, a
     ret z
-    and a, $7F
-    cp a, c
+    and $7f
+    cp c
     ret nz
     ld a, $00
     ld [wKeyWorldActive], a
     ret
 
-; E-0193 (C1: DebugAutomap_Update_Sub01_Sub01_Sub0C reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16).
+; DebugAutomap_Update_Sub01_Sub01_Sub0C reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the
+; layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to
+; RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16 (E-0193, C1)
 ; record: area layout
 KeyWorldAreaLayoutTable::
-Data_084_4CCB:: ; address name
     dw KeyWorldAreaLayout00 ; id 0
     dw KeyWorldAreaLayout01 ; id 1
     dw KeyWorldAreaLayout02 ; id 2
@@ -1898,603 +1801,519 @@ Data_084_4CCB:: ; address name
     dw KeyWorldAreaLayout46 ; id 46
     dw KeyWorldAreaLayout47 ; id 47
 
-; E-0193 (C1: entry 0 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 0 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout00::
-Data_084_4D2B:: ; address name
     db $03 ; entry 0: block count
-    db $03, $0A, $9E, $E0, $C2, $00, $00, $00, $00, $0A, $9E, $E0, $C2, $00, $00, $00 ; block 0
-    db $05, $03, $03, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
+    db $03, $0a, $9e, $e0, $c2, $00, $00, $00, $00, $0a, $9e, $e0, $c2, $00, $00, $00 ; block 0
+    db $05, $03, $03, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 1 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+; entry 1 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout01::
-Data_084_4D5D:: ; address name
     db $03 ; entry 0: block count
-    db $03, $A6, $09, $6A, $C8, $00, $00, $00, $00, $A6, $09, $6A, $C8, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
+    db $03, $a6, $09, $6a, $c8, $00, $00, $00, $00, $a6, $09, $6a, $c8, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 2 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+; entry 2 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout02::
-Data_084_4D8F:: ; address name
     db $03 ; entry 0: block count
-    db $03, $B1, $8E, $08, $C6, $00, $00, $00, $00, $00, $8E, $08, $C6, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b1, $8e, $08, $c6, $00, $00, $00, $00, $00, $8e, $08, $c6, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 3 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+; entry 3 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout03::
-Data_084_4DC1:: ; address name
     db $03 ; entry 0: block count
-    db $02, $69, $E5, $0A, $00, $BB, $92, $C9, $7B, $00, $00, $00, $00, $00, $00, $00 ; block 0
-    db $05, $03, $03, $00, $2C, $00, $00, $01, $2A, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $69, $e5, $0a, $00, $bb, $92, $c9, $7b, $00, $00, $00, $00, $00, $00, $00 ; block 0
+    db $05, $03, $03, $00, $2c, $00, $00, $01, $2a, $00, $00, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 4 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 4 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout04::
-Data_084_4DF3:: ; address name
     db $04 ; entry 0: block count
-    db $03, $AF, $09, $72, $C0, $00, $00, $00, $00, $AF, $09, $72, $C0, $00, $00, $00 ; block 0
-    db $05, $04, $03, $01, $03, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $6C, $E5, $B4, $DE, $BF, $97, $D4, $66, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $03, $af, $09, $72, $c0, $00, $00, $00, $00, $af, $09, $72, $c0, $00, $00, $00 ; block 0
+    db $05, $04, $03, $01, $03, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $6c, $e5, $b4, $de, $bf, $97, $d4, $66, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 5 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 5 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout05::
-Data_084_4E35:: ; address name
     db $04 ; entry 0: block count
-    db $03, $A2, $93, $08, $C3, $00, $00, $00, $00, $A2, $93, $08, $C3, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $2C, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $73, $89, $B1, $D9, $BA, $84, $D5, $69, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $03, $a2, $93, $08, $c3, $00, $00, $00, $00, $a2, $93, $08, $c3, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $2c, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $73, $89, $b1, $d9, $ba, $84, $d5, $69, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 6 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 6 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout06::
-Data_084_4E77:: ; address name
     db $04 ; entry 0: block count
-    db $03, $0A, $85, $6D, $CA, $00, $00, $00, $00, $0A, $85, $6D, $CA, $00, $00, $00 ; block 0
+    db $03, $0a, $85, $6d, $ca, $00, $00, $00, $00, $0a, $85, $6d, $ca, $00, $00, $00 ; block 0
     db $04, $04, $03, $01, $03, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $7C, $97, $A3, $C4, $B9, $9E, $DA, $77, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $02, $7c, $97, $a3, $c4, $b9, $9e, $da, $77, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 7 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 7 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout07::
-Data_084_4EB9:: ; address name
     db $04 ; entry 0: block count
-    db $03, $A1, $09, $66, $CB, $00, $00, $00, $00, $A1, $09, $66, $CB, $00, $00, $00 ; block 0
-    db $05, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $76, $94, $AD, $CF, $B6, $96, $D7, $68, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $03, $a1, $09, $66, $cb, $00, $00, $00, $00, $a1, $09, $66, $cb, $00, $00, $00 ; block 0
+    db $05, $04, $03, $01, $0d, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $76, $94, $ad, $cf, $b6, $96, $d7, $68, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 8 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 8 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout08::
-Data_084_4EFB:: ; address name
     db $04 ; entry 0: block count
-    db $03, $B7, $90, $08, $DB, $00, $00, $00, $00, $B7, $90, $08, $DB, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $03, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b7, $90, $08, $db, $00, $00, $00, $00, $b7, $90, $08, $db, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $03, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $05, $04, $03, $01, $0C, $00, $00, $02, $11, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $05, $04, $03, $01, $0c, $00, $00, $02, $11, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $ff ; end
 
-; E-0193 (C1: entry 9 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 9 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout09::
-Data_084_4F3D:: ; address name
     db $04 ; entry 0: block count
-    db $03, $0A, $95, $6B, $CE, $00, $00, $00, $00, $0A, $95, $6B, $CE, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
+    db $03, $0a, $95, $6b, $ce, $00, $00, $00, $00, $0a, $95, $6b, $ce, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $04, $04, $03, $01, $0C, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $04, $04, $03, $01, $0c, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $ff ; end
 
-; E-0193 (C1: entry 10 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 10 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout10::
-Data_084_4F7F:: ; address name
     db $04 ; entry 0: block count
     db $01, $10, $31, $49, $08, $00, $00, $00, $00, $10, $31, $49, $08, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $05, $04, $03, $01, $0F, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $04, $03, $03, $01, $0e, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $05, $04, $03, $01, $0f, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 11 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 11 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout11::
-Data_084_4FC1:: ; address name
     db $04 ; entry 0: block count
-    db $01, $16, $37, $08, $E1, $00, $00, $00, $00, $16, $37, $08, $E1, $00, $00, $00 ; block 0
+    db $01, $16, $37, $08, $e1, $00, $00, $00, $00, $16, $37, $08, $e1, $00, $00, $00 ; block 0
     db $05, $04, $03, $01, $03, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
+    db $04, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 12 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 12 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout12::
-Data_084_5003:: ; address name
     db $04 ; entry 0: block count
-    db $02, $7D, $09, $A5, $D1, $B3, $99, $D8, $62, $00, $00, $00, $00, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $05, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $03, $BC, $9D, $78, $C7, $00, $00, $00, $00, $BC, $9D, $78, $C7, $00, $00, $00 ; block 2
+    db $02, $7d, $09, $a5, $d1, $b3, $99, $d8, $62, $00, $00, $00, $00, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $05, $00, $00, $02, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $03, $bc, $9d, $78, $c7, $00, $00, $00, $00, $bc, $9d, $78, $c7, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 13 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 13 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout13::
-Data_084_5045:: ; address name
     db $04 ; entry 0: block count
-    db $01, $2C, $08, $34, $3C, $00, $00, $00, $00, $2C, $08, $34, $3C, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $03, $B0, $E6, $EA, $CC, $00, $00, $00, $00, $B0, $E6, $EA, $CC, $00, $00, $00 ; block 2
+    db $01, $2c, $08, $34, $3c, $00, $00, $00, $00, $2c, $08, $34, $3c, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b0, $e6, $ea, $cc, $00, $00, $00, $00, $b0, $e6, $ea, $cc, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 14 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 14 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout14::
-Data_084_5087:: ; address name
     db $04 ; entry 0: block count
     db $01, $14, $42, $51, $08, $00, $00, $00, $00, $14, $42, $51, $08, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $2C, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $03, $BD, $8D, $6E, $CD, $00, $00, $00, $00, $BD, $8D, $6E, $CD, $00, $00, $00 ; block 2
+    db $04, $04, $03, $01, $2c, $00, $00, $02, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $03, $bd, $8d, $6e, $cd, $00, $00, $00, $00, $bd, $8d, $6e, $cd, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 15 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+; entry 15 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout15::
-Data_084_50C9:: ; address name
     db $04 ; entry 0: block count
-    db $02, $08, $8A, $E4, $D2, $AC, $98, $D6, $65, $00, $00, $00, $00, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $0C, $00, $00, $02, $0D, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $01, $1C, $32, $3A, $3B, $00, $00, $00, $00, $1C, $32, $3A, $3B, $00, $00, $00 ; block 2
+    db $02, $08, $8a, $e4, $d2, $ac, $98, $d6, $65, $00, $00, $00, $00, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $0c, $00, $00, $02, $0d, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $01, $1c, $32, $3a, $3b, $00, $00, $00, $00, $1c, $32, $3a, $3b, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 16 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 16 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout16::
-Data_084_510B:: ; address name
     db $05 ; entry 0: block count
-    db $02, $7E, $9B, $0A, $D0, $A9, $8F, $D3, $6F, $00, $00, $00, $00, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $03, $B2, $88, $71, $DF, $00, $00, $00, $00, $B2, $88, $71, $DF, $00, $00, $00 ; block 2
+    db $02, $7e, $9b, $0a, $d0, $a9, $8f, $d3, $6f, $00, $00, $00, $00, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $05, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b2, $88, $71, $df, $00, $00, $00, $00, $b2, $88, $71, $df, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $05, $03, $02, $2C, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $04, $05, $03, $02, $2c, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 17 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 17 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout17::
-Data_084_515D:: ; address name
     db $05 ; entry 0: block count
-    db $02, $71, $09, $AA, $D1, $AE, $91, $DC, $62, $00, $00, $00, $00, $00, $00, $00 ; block 0
-    db $04, $05, $03, $01, $05, $00, $00, $03, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $03, $B5, $9C, $7A, $DD, $00, $00, $00, $00, $B5, $9C, $7A, $DD, $00, $00, $00 ; block 2
+    db $02, $71, $09, $aa, $d1, $ae, $91, $dc, $62, $00, $00, $00, $00, $00, $00, $00 ; block 0
+    db $04, $05, $03, $01, $05, $00, $00, $03, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b5, $9c, $7a, $dd, $00, $00, $00, $00, $b5, $9c, $7a, $dd, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $05, $03, $02, $10, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $05, $03, $02, $10, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 18 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 18 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout18::
-Data_084_51AF:: ; address name
     db $05 ; entry 0: block count
-    db $03, $BE, $9A, $08, $D9, $00, $00, $00, $00, $BE, $9A, $64, $D9, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $02, $6A, $95, $B9, $D3, $B3, $85, $C8, $01, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $03, $be, $9a, $08, $d9, $00, $00, $00, $00, $be, $9a, $64, $d9, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $02, $6a, $95, $b9, $d3, $b3, $85, $c8, $01, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $05, $03, $02, $05, $00, $00, $03, $0F, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $05, $03, $02, $05, $00, $00, $03, $0f, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 19 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 19 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout19::
-Data_084_5201:: ; address name
     db $05 ; entry 0: block count
-    db $03, $0A, $E6, $EB, $CC, $00, $00, $00, $00, $0A, $E6, $EB, $CC, $00, $00, $00 ; block 0
+    db $03, $0a, $e6, $eb, $cc, $00, $00, $00, $00, $0a, $e6, $eb, $cc, $00, $00, $00 ; block 0
     db $04, $05, $03, $01, $11, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $69, $84, $AB, $D8, $A4, $8C, $DD, $6D, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $02, $69, $84, $ab, $d8, $a4, $8c, $dd, $6d, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $05, $03, $02, $2C, $00, $00, $03, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $04, $05, $03, $02, $2c, $00, $00, $03, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 20 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 20 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout20::
-Data_084_5253:: ; address name
     db $05 ; entry 0: block count
-    db $03, $A1, $09, $67, $CB, $00, $00, $00, $00, $A1, $09, $67, $CB, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $01, $13, $35, $E1, $47, $00, $00, $00, $00, $13, $35, $E1, $47, $00, $00, $00 ; block 2
+    db $03, $a1, $09, $67, $cb, $00, $00, $00, $00, $a1, $09, $67, $cb, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $03, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $01, $13, $35, $e1, $47, $00, $00, $00, $00, $13, $35, $e1, $47, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $05, $03, $01, $2C, $00, $00, $03, $0E, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $04, $05, $03, $01, $2c, $00, $00, $03, $0e, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 21 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 21 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout21::
-Data_084_52A5:: ; address name
     db $05 ; entry 0: block count
-    db $03, $A1, $89, $08, $CB, $00, $00, $00, $00, $A1, $89, $08, $CB, $00, $00, $00 ; block 0
+    db $03, $a1, $89, $08, $cb, $00, $00, $00, $00, $a1, $89, $08, $cb, $00, $00, $00 ; block 0
     db $05, $05, $03, $01, $05, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $01, $28, $38, $56, $E3, $00, $00, $00, $00, $28, $38, $56, $E3, $00, $00, $00 ; block 2
+    db $01, $28, $38, $56, $e3, $00, $00, $00, $00, $28, $38, $56, $e3, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $05, $03, $02, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $05, $03, $02, $2c, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 22 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 22 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout22::
-Data_084_52F7:: ; address name
     db $05 ; entry 0: block count
-    db $03, $0A, $8B, $EA, $CD, $00, $00, $00, $00, $0A, $8B, $EA, $CD, $00, $00, $00 ; block 0
-    db $02, $75, $E5, $AD, $DB, $BA, $8C, $DE, $6C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $04, $04, $03, $01, $0F, $00, $00, $02, $0D, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $03, $0a, $8b, $ea, $cd, $00, $00, $00, $00, $0a, $8b, $ea, $cd, $00, $00, $00 ; block 0
+    db $02, $75, $e5, $ad, $db, $ba, $8c, $de, $6c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $04, $04, $03, $01, $0f, $00, $00, $02, $0d, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $04, $05, $03, $02, $12, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $ff ; end
 
-; E-0193 (C1: entry 23 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 23 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout23::
-Data_084_5349:: ; address name
     db $05 ; entry 0: block count
-    db $03, $A0, $09, $7E, $CA, $00, $00, $00, $00, $A0, $09, $7E, $CA, $00, $00, $00 ; block 0
-    db $02, $63, $94, $BB, $DA, $B3, $9B, $DF, $72, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $0F, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
+    db $03, $a0, $09, $7e, $ca, $00, $00, $00, $00, $a0, $09, $7e, $ca, $00, $00, $00 ; block 0
+    db $02, $63, $94, $bb, $da, $b3, $9b, $df, $72, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $0f, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $06, $03, $02, $2C, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $06, $03, $02, $2c, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 24 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 24 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout24::
-Data_084_539B:: ; address name
     db $05 ; entry 0: block count
-    db $03, $A5, $83, $08, $D7, $00, $00, $00, $00, $A5, $83, $08, $D7, $00, $00, $00 ; block 0
-    db $02, $EF, $93, $B4, $C3, $BE, $99, $DC, $74, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $01, $15, $5F, $50, $45, $00, $00, $00, $00, $15, $5F, $50, $45, $00, $00, $00 ; block 2
+    db $03, $a5, $83, $08, $d7, $00, $00, $00, $00, $a5, $83, $08, $d7, $00, $00, $00 ; block 0
+    db $02, $ef, $93, $b4, $c3, $be, $99, $dc, $74, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $01, $15, $5f, $50, $45, $00, $00, $00, $00, $15, $5f, $50, $45, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $07, $03, $02, $0C, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $04, $07, $03, $02, $0c, $00, $00, $04, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 25 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 25 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout25::
-Data_084_53ED:: ; address name
     db $05 ; entry 0: block count
-    db $03, $0A, $8A, $6B, $C2, $00, $00, $00, $00, $0A, $8A, $6B, $C2, $00, $00, $00 ; block 0
-    db $02, $71, $91, $AC, $D2, $B2, $98, $D5, $79, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $01, $23, $30, $39, $4A, $00, $00, $00, $00, $23, $30, $39, $4A, $00, $00, $00 ; block 2
+    db $03, $0a, $8a, $6b, $c2, $00, $00, $00, $00, $0a, $8a, $6b, $c2, $00, $00, $00 ; block 0
+    db $02, $71, $91, $ac, $d2, $b2, $98, $d5, $79, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $01, $23, $30, $39, $4a, $00, $00, $00, $00, $23, $30, $39, $4a, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $06, $03, $02, $11, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $06, $03, $02, $11, $00, $00, $04, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 26 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 26 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout26::
-Data_084_543F:: ; address name
     db $05 ; entry 0: block count
-    db $01, $1D, $3F, $E2, $08, $00, $00, $00, $00, $1D, $3F, $E2, $08, $00, $00, $00 ; block 0
-    db $04, $05, $03, $01, $0E, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
+    db $01, $1d, $3f, $e2, $08, $00, $00, $00, $00, $1d, $3f, $e2, $08, $00, $00, $00 ; block 0
+    db $04, $05, $03, $01, $0e, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $0d, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $08, $03, $02, $2C, $00, $00, $05, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $04, $08, $03, $02, $2c, $00, $00, $05, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 27 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+; entry 27 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout27::
-Data_084_5491:: ; address name
     db $05 ; entry 0: block count
-    db $01, $19, $58, $08, $4B, $00, $00, $00, $00, $19, $58, $08, $4B, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $10, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $04, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $01, $19, $58, $08, $4b, $00, $00, $00, $00, $19, $58, $08, $4b, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $10, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $04, $04, $03, $01, $0d, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $08, $03, $02, $03, $00, $00, $05, $0F, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $FF ; end
+    db $05, $08, $03, $02, $03, $00, $00, $05, $0f, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $ff ; end
 
-; E-0193 (C1: entry 28 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 28 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout28::
-Data_084_54E3:: ; address name
     db $06 ; entry 0: block count
-    db $01, $2D, $08, $E3, $3E, $00, $00, $00, $00, $2D, $08, $E3, $3E, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $03, $B0, $96, $7B, $CF, $00, $00, $00, $00, $B0, $96, $7B, $CF, $00, $00, $00 ; block 2
-    db $04, $04, $03, $01, $0D, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $2d, $08, $e3, $3e, $00, $00, $00, $00, $2d, $08, $e3, $3e, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $0e, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $03, $b0, $96, $7b, $cf, $00, $00, $00, $00, $b0, $96, $7b, $cf, $00, $00, $00 ; block 2
+    db $04, $04, $03, $01, $0d, $00, $00, $02, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $05, $08, $03, $02, $11, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $FF ; end
+    db $05, $08, $03, $02, $11, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $ff ; end
 
-; E-0193 (C1: entry 29 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+; entry 29 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout29::
-Data_084_5545:: ; address name
     db $06 ; entry 0: block count
-    db $01, $1B, $59, $4C, $08, $00, $00, $00, $00, $1B, $59, $4C, $08, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $03, $AF, $E7, $78, $CE, $00, $00, $00, $00, $AF, $E7, $78, $CE, $00, $00, $00 ; block 2
-    db $04, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $1b, $59, $4c, $08, $00, $00, $00, $00, $1b, $59, $4c, $08, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $0e, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $03, $af, $e7, $78, $ce, $00, $00, $00, $00, $af, $e7, $78, $ce, $00, $00, $00 ; block 2
+    db $04, $04, $03, $01, $0d, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $04, $05, $03, $02, $2C, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $FF ; end
+    db $04, $05, $03, $02, $2c, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $ff ; end
 
-; E-0193 (C1: entry 30 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+; entry 30 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout30::
-Data_084_55A7:: ; address name
     db $06 ; entry 0: block count
-    db $01, $20, $5D, $08, $5A, $00, $00, $00, $00, $20, $5D, $08, $5A, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $03, $B1, $9E, $73, $EE, $00, $00, $00, $00, $B1, $9E, $73, $EE, $00, $00, $00 ; block 3
+    db $01, $20, $5d, $08, $5a, $00, $00, $00, $00, $20, $5d, $08, $5a, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $12, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $0c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $03, $b1, $9e, $73, $ee, $00, $00, $00, $00, $b1, $9e, $73, $ee, $00, $00, $00 ; block 3
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $04, $06, $03, $02, $05, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $FF ; end
+    db $04, $06, $03, $02, $05, $00, $00, $04, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $ff ; end
 
-; E-0193 (C1: entry 31 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+; entry 31 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout31::
-Data_084_5609:: ; address name
     db $06 ; entry 0: block count
     db $01, $22, $08, $53, $54, $00, $00, $00, $00, $22, $08, $53, $54, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $03, $B8, $E7, $68, $D0, $00, $00, $00, $00, $B8, $E7, $68, $D0, $00, $00, $00 ; block 3
+    db $05, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $05, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $03, $b8, $e7, $68, $d0, $00, $00, $00, $00, $b8, $e7, $68, $d0, $00, $00, $00 ; block 3
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $04, $09, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $FF ; end
+    db $04, $09, $03, $02, $2c, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $ff ; end
 
-; E-0193 (C1: entry 32 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 32 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout32::
-Data_084_566B:: ; address name
     db $07 ; entry 0: block count
-    db $03, $0A, $9D, $7F, $CF, $00, $00, $00, $00, $0A, $9D, $7F, $CF, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $0C, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $02, $75, $82, $E4, $C1, $03, $88, $C4, $6E, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $03, $0a, $9d, $7f, $cf, $00, $00, $00, $00, $0a, $9d, $7f, $cf, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $0c, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $04, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $02, $75, $82, $e4, $c1, $03, $88, $c4, $6e, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $04, $04, $03, $01, $05, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $05, $07, $03, $01, $0F, $00, $00, $04, $10, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $05, $07, $03, $01, $0f, $00, $00, $04, $10, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 33 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 33 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout33::
-Data_084_56DD:: ; address name
     db $07 ; entry 0: block count
-    db $03, $BC, $09, $7D, $C9, $00, $00, $00, $00, $BC, $09, $7D, $C9, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $02, $70, $E6, $A9, $C0, $B7, $8F, $C6, $77, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 4
+    db $03, $bc, $09, $7d, $c9, $00, $00, $00, $00, $bc, $09, $7d, $c9, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $0c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $02, $70, $e6, $a9, $c0, $b7, $8f, $c6, $77, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $05, $03, $03, $01, $05, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $04, $06, $03, $02, $2C, $00, $00, $03, $0F, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $04, $06, $03, $02, $2c, $00, $00, $03, $0f, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 34 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 34 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout34::
-Data_084_574F:: ; address name
     db $07 ; entry 0: block count
-    db $03, $B5, $95, $08, $C1, $00, $00, $00, $00, $B5, $95, $08, $C1, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $04, $04, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $04, $05, $03, $01, $0F, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $02, $76, $87, $A7, $C7, $AE, $8E, $D3, $7C, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $03, $b5, $95, $08, $c1, $00, $00, $00, $00, $b5, $95, $08, $c1, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $0d, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $04, $04, $03, $01, $0e, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $04, $05, $03, $01, $0f, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $02, $76, $87, $a7, $c7, $ae, $8e, $d3, $7c, $00, $00, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $04, $04, $03, $01, $11, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $04, $04, $03, $01, $11, $00, $00, $02, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 35 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 35 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout35::
-Data_084_57C1:: ; address name
     db $07 ; entry 0: block count
-    db $03, $0A, $E8, $7E, $F1, $00, $00, $00, $00, $0A, $E8, $7E, $F1, $00, $00, $00 ; block 0
-    db $05, $04, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $05, $04, $03, $01, $0F, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $02, $65, $8C, $A8, $C5, $B9, $92, $D2, $73, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $03, $0a, $e8, $7e, $f1, $00, $00, $00, $00, $0a, $e8, $7e, $f1, $00, $00, $00 ; block 0
+    db $05, $04, $03, $01, $0d, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $05, $04, $03, $01, $0f, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $02, $65, $8c, $a8, $c5, $b9, $92, $d2, $73, $00, $00, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $05, $07, $03, $02, $2C, $00, $00, $04, $0C, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $05, $07, $03, $02, $2c, $00, $00, $04, $0c, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 36 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 36 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout36::
-Data_084_5833:: ; address name
     db $07 ; entry 0: block count
-    db $03, $B7, $09, $7B, $F0, $00, $00, $00, $00, $B7, $09, $7B, $F0, $00, $00, $00 ; block 0
-    db $04, $05, $03, $01, $11, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $6E, $E8, $AA, $EE, $B3, $93, $DB, $79, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $04, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $01, $2B, $4E, $55, $35, $00, $00, $00, $00, $2B, $4E, $55, $35, $00, $00, $00 ; block 4
+    db $03, $b7, $09, $7b, $f0, $00, $00, $00, $00, $b7, $09, $7b, $f0, $00, $00, $00 ; block 0
+    db $04, $05, $03, $01, $11, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $6e, $e8, $aa, $ee, $b3, $93, $db, $79, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $04, $04, $03, $01, $12, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $2b, $4e, $55, $35, $00, $00, $00, $00, $2b, $4e, $55, $35, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $05, $06, $03, $02, $2C, $00, $00, $04, $0D, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $05, $06, $03, $02, $2c, $00, $00, $04, $0d, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 37 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 37 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout37::
-Data_084_58A5:: ; address name
     db $07 ; entry 0: block count
-    db $03, $B5, $99, $08, $DA, $00, $00, $00, $00, $B5, $99, $08, $DA, $00, $00, $00 ; block 0
-    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $02, $64, $82, $A4, $C3, $AB, $8A, $D0, $6C, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $05, $04, $03, $01, $12, $00, $00, $02, $0F, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $01, $2F, $33, $4A, $04, $00, $00, $00, $00, $2F, $33, $4A, $04, $00, $00, $00 ; block 4
+    db $03, $b5, $99, $08, $da, $00, $00, $00, $00, $b5, $99, $08, $da, $00, $00, $00 ; block 0
+    db $05, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $02, $64, $82, $a4, $c3, $ab, $8a, $d0, $6c, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $05, $04, $03, $01, $12, $00, $00, $02, $0f, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $2f, $33, $4a, $04, $00, $00, $00, $00, $2f, $33, $4a, $04, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $04, $07, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $04, $07, $03, $02, $2c, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 38 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 38 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout38::
-Data_084_5917:: ; address name
     db $07 ; entry 0: block count
-    db $03, $0A, $E7, $EC, $CF, $00, $00, $00, $00, $0A, $E7, $EC, $CF, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $04, $05, $03, $01, $0E, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $04, $06, $03, $01, $03, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $07, $03, $01, $0C, $00, $00, $03, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $03, $0a, $e7, $ec, $cf, $00, $00, $00, $00, $0a, $e7, $ec, $cf, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $04, $05, $03, $01, $0e, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $04, $06, $03, $01, $03, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $04, $07, $03, $01, $0c, $00, $00, $03, $05, $00, $00, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $05, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $05, $04, $03, $01, $12, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 39 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+; entry 39 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout39::
-Data_084_5989:: ; address name
     db $07 ; entry 0: block count
-    db $03, $AD, $09, $71, $F0, $00, $00, $00, $00, $AD, $09, $71, $F0, $00, $00, $00 ; block 0
-    db $05, $04, $03, $01, $0D, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $04, $03, $01, $0E, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 3
-    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 4
+    db $03, $ad, $09, $71, $f0, $00, $00, $00, $00, $ad, $09, $71, $f0, $00, $00, $00 ; block 0
+    db $05, $04, $03, $01, $0d, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $04, $03, $01, $0e, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $05, $03, $03, $01, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 3
+    db $05, $03, $03, $01, $0c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 4
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 5
-    db $04, $07, $03, $02, $2C, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $FF ; end
+    db $04, $07, $03, $02, $2c, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00 ; block 6
+    db $ff ; end
 
-; E-0193 (C1: entry 40 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 40 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout40::
-Data_084_59FB:: ; address name
     db $08 ; entry 0: block count
-    db $03, $B8, $91, $08, $F1, $00, $00, $00, $00, $B8, $91, $08, $F1, $00, $00, $00 ; block 0
-    db $04, $06, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $04, $05, $03, $01, $0E, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $02, $62, $E9, $A5, $C2, $B1, $8B, $D1, $6B, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $04, $03, $03, $01, $12, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 4
-    db $01, $2E, $3B, $44, $3D, $00, $00, $00, $00, $2E, $3B, $44, $3D, $00, $00, $00 ; block 5
+    db $03, $b8, $91, $08, $f1, $00, $00, $00, $00, $b8, $91, $08, $f1, $00, $00, $00 ; block 0
+    db $04, $06, $03, $01, $0d, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $04, $05, $03, $01, $0e, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $02, $62, $e9, $a5, $c2, $b1, $8b, $d1, $6b, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $04, $03, $03, $01, $12, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 4
+    db $01, $2e, $3b, $44, $3d, $00, $00, $00, $00, $2e, $3b, $44, $3d, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $04, $07, $03, $02, $05, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $04, $07, $03, $02, $05, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 41 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 41 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout41::
-Data_084_5A7D:: ; address name
     db $08 ; entry 0: block count
-    db $03, $0A, $98, $74, $D8, $00, $00, $00, $00, $0A, $98, $74, $D8, $00, $00, $00 ; block 0
-    db $05, $07, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 2
-    db $02, $69, $96, $A2, $CA, $AC, $8F, $D4, $6D, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 4
-    db $01, $2A, $43, $49, $57, $00, $00, $00, $00, $2A, $43, $49, $57, $00, $00, $00 ; block 5
+    db $03, $0a, $98, $74, $d8, $00, $00, $00, $00, $0a, $98, $74, $d8, $00, $00, $00 ; block 0
+    db $05, $07, $03, $01, $0d, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $03, $03, $01, $0c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 2
+    db $02, $69, $96, $a2, $ca, $ac, $8f, $d4, $6d, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $05, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 4
+    db $01, $2a, $43, $49, $57, $00, $00, $00, $00, $2a, $43, $49, $57, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $05, $06, $03, $02, $2C, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $05, $06, $03, $02, $2c, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 42 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 42 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout42::
-Data_084_5AFF:: ; address name
     db $08 ; entry 0: block count
-    db $01, $2D, $5A, $5E, $08, $00, $00, $00, $00, $2D, $5A, $5E, $08, $00, $00, $00 ; block 0
-    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 1
-    db $03, $A7, $E9, $ED, $C4, $00, $00, $00, $00, $A7, $E9, $ED, $C4, $00, $00, $00 ; block 2
+    db $01, $2d, $5a, $5e, $08, $00, $00, $00, $00, $2d, $5a, $5e, $08, $00, $00, $00 ; block 0
+    db $04, $03, $03, $01, $11, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 1
+    db $03, $a7, $e9, $ed, $c4, $00, $00, $00, $00, $a7, $e9, $ed, $c4, $00, $00, $00 ; block 2
     db $01, $24, $45, $47, $53, $00, $00, $00, $00, $24, $45, $47, $53, $00, $00, $00 ; block 3
-    db $04, $04, $03, $01, $0D, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $05, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 5
+    db $04, $04, $03, $01, $0d, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $05, $03, $03, $01, $03, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $04, $07, $03, $02, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $04, $07, $03, $02, $2c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 43 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 43 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout43::
-Data_084_5B81:: ; address name
     db $08 ; entry 0: block count
-    db $01, $29, $3A, $08, $42, $00, $00, $00, $00, $29, $3A, $08, $42, $00, $00, $00 ; block 0
+    db $01, $29, $3a, $08, $42, $00, $00, $00, $00, $29, $3a, $08, $42, $00, $00, $00 ; block 0
     db $05, $06, $03, $01, $11, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $03, $B4, $8D, $75, $CD, $00, $00, $00, $00, $B4, $8D, $75, $CD, $00, $00, $00 ; block 2
-    db $01, $26, $4C, $34, $58, $00, $00, $00, $00, $26, $4C, $34, $58, $00, $00, $00 ; block 3
-    db $05, $06, $03, $01, $0E, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $04, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 5
+    db $03, $b4, $8d, $75, $cd, $00, $00, $00, $00, $b4, $8d, $75, $cd, $00, $00, $00 ; block 2
+    db $01, $26, $4c, $34, $58, $00, $00, $00, $00, $26, $4c, $34, $58, $00, $00, $00 ; block 3
+    db $05, $06, $03, $01, $0e, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 4
+    db $04, $03, $03, $01, $03, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $05, $07, $03, $04, $2C, $00, $00, $05, $0F, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $05, $07, $03, $04, $2c, $00, $00, $05, $0f, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 44 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; entry 44 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 ; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
 KeyWorldAreaLayout44::
-Data_084_5C03:: ; address name
     db $08 ; entry 0: block count
-    db $01, $2C, $08, $52, $4D, $00, $00, $00, $00, $2C, $08, $52, $4D, $00, $00, $00 ; block 0
-    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $03, $AF, $9D, $7A, $C7, $00, $00, $00, $00, $AF, $9D, $7A, $C7, $00, $00, $00 ; block 2
-    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $01, $2B, $40, $3C, $54, $00, $00, $00, $00, $2B, $40, $3C, $54, $00, $00, $00 ; block 4
-    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $01, $2c, $08, $52, $4d, $00, $00, $00, $00, $2c, $08, $52, $4d, $00, $00, $00 ; block 0
+    db $04, $09, $03, $01, $2c, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $03, $af, $9d, $7a, $c7, $00, $00, $00, $00, $af, $9d, $7a, $c7, $00, $00, $00 ; block 2
+    db $04, $09, $03, $01, $2c, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $2b, $40, $3c, $54, $00, $00, $00, $00, $2b, $40, $3c, $54, $00, $00, $00 ; block 4
+    db $04, $09, $03, $01, $2c, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $04, $09, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $04, $09, $03, $02, $2c, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 45 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 45 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout45::
-Data_084_5C85:: ; address name
     db $08 ; entry 0: block count
-    db $01, $17, $39, $5F, $08, $00, $00, $00, $00, $17, $39, $5F, $08, $00, $00, $00 ; block 0
-    db $05, $09, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $02, $63, $88, $A3, $C8, $BA, $9F, $DC, $6F, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $05, $09, $03, $01, $2C, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00 ; block 3
-    db $01, $18, $50, $3E, $5D, $00, $00, $00, $00, $18, $50, $3E, $5D, $00, $00, $00 ; block 4
+    db $01, $17, $39, $5f, $08, $00, $00, $00, $00, $17, $39, $5f, $08, $00, $00, $00 ; block 0
+    db $05, $09, $03, $01, $0d, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $02, $63, $88, $a3, $c8, $ba, $9f, $dc, $6f, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $05, $09, $03, $01, $2c, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $18, $50, $3e, $5d, $00, $00, $00, $00, $18, $50, $3e, $5d, $00, $00, $00 ; block 4
     db $05, $09, $03, $01, $12, $00, $00, $03, $05, $00, $00, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $05, $09, $03, $02, $11, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $05, $09, $03, $02, $11, $00, $00, $05, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 46 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 46 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout46::
-Data_084_5D07:: ; address name
     db $08 ; entry 0: block count
-    db $01, $1F, $31, $08, $56, $00, $00, $00, $00, $1F, $31, $08, $56, $00, $00, $00 ; block 0
-    db $04, $04, $03, $01, $2C, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $04, $04, $03, $01, $0F, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $01, $1f, $31, $08, $56, $00, $00, $00, $00, $1f, $31, $08, $56, $00, $00, $00 ; block 0
+    db $04, $04, $03, $01, $2c, $00, $00, $02, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $04, $04, $03, $01, $0f, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00 ; block 2
     db $04, $04, $03, $01, $05, $00, $00, $02, $11, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $04, $04, $03, $01, $03, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $04, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00 ; block 5
+    db $04, $03, $03, $01, $0c, $00, $00, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $05, $09, $03, $03, $0E, $00, $00, $05, $0D, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
+    db $05, $09, $03, $03, $0e, $00, $00, $05, $0d, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
 
-; E-0193 (C1: entry 47 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
-; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+; entry 47 of KeyWorldAreaLayoutTable; size 2 + 16 * count (E-0193, C1)
 KeyWorldAreaLayout47::
-Data_084_5D89:: ; address name
     db $08 ; entry 0: block count
-    db $01, $1E, $08, $4E, $55, $00, $00, $00, $00, $1E, $08, $4E, $55, $00, $00, $00 ; block 0
-    db $05, $04, $03, $01, $0E, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
-    db $05, $06, $03, $01, $2C, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00 ; block 2
-    db $05, $04, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 3
+    db $01, $1e, $08, $4e, $55, $00, $00, $00, $00, $1e, $08, $4e, $55, $00, $00, $00 ; block 0
+    db $05, $04, $03, $01, $0e, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00 ; block 1
+    db $05, $06, $03, $01, $2c, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00 ; block 2
+    db $05, $04, $03, $01, $0d, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 3
     db $05, $06, $03, $01, $11, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00 ; block 4
-    db $05, $05, $03, $01, $0C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00 ; block 5
+    db $05, $05, $03, $01, $0c, $00, $00, $03, $2c, $00, $00, $00, $00, $00, $00, $00 ; block 5
     db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; block 6
-    db $04, $09, $03, $02, $2C, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00 ; block 7
-    db $FF ; end
-    ds $21F5, $00
+    db $04, $09, $03, $02, $2c, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00 ; block 7
+    db $ff ; end
+    ds $21f5, $00

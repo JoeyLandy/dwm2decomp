@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Whole-ROM recursive-descent disassembler: regenerates src/banks/bankNN.asm.
+"""Whole-ROM recursive-descent disassembler: regenerates the annotated listing build/listing/bankNN.asm and,
+through tools/present.py, the reader-facing src/banks/bankNN.asm.
 
 Starts from the reset/interrupt/RST vectors and the cartridge entry in bank 0,
 follows jumps/calls, and mines two game idioms found in bank 0 (C1, local
@@ -14,7 +15,7 @@ execution and names carry no semantics.
 
 Usage: disasm_all.py [--stats] [--quiet] [--no-text] [--export-streams PATH.json]
   --no-text keeps prose as opaque INCBIN data instead of rendering it as db strings.
-Progress goes to stderr. All banks are rendered in memory first; src/banks/*.asm
+Progress goes to stderr. All banks are rendered in memory first; build/listing/*.asm, src/banks/*.asm
 and src/main.asm are written only after the whole analysis succeeds, so an
 interrupted run leaves the previous generated tree untouched.
 """
@@ -35,6 +36,7 @@ from lzss_gfx import decompress as lzss_decompress  # noqa: E402
 from sound_tracks import decode_event, decode_header, decode_region  # noqa: E402
 import gb_symbols as gbs  # noqa: E402
 import gb_text  # noqa: E402
+import present  # noqa: E402
 
 _T0 = time.monotonic()
 _QUIET = False
@@ -80,6 +82,12 @@ ENDM
 MACRO dfar
     dw \\1
     db BANK(\\1)
+ENDM
+
+; A jump through the word table that follows: `rst $00` (JumpTable) jumps to entry A of the
+; `dw` list right after it, keeping DE (E-0007). src/ writes it this way; the listing keeps `rst $00`.
+MACRO jumptable
+    rst $00
 ENDM
 
 ; Event script commands (E-0152). FetchScriptCommand (bank $10) reads one opcode byte and
@@ -5064,7 +5072,8 @@ class Rom:
 
     def emit_text(self, bank: int, lo: int, hi: int, out: list[str]) -> None:
         raw = self.data[bank * BANK + lo - self.base(bank):bank * BANK + hi - self.base(bank)]
-        out.append("; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning")
+        out.append("; text (E-0024): characters and printer commands (<LINE>, @, ...; E-0336) via charmap.inc; "
+                   "$XX bytes are command arguments or glyph codes")
         for line in gb_text.render(raw):
             out.append("    db " + line)
 
@@ -5770,9 +5779,9 @@ def main() -> int:
         texts, nk = name_record_offsets(texts, extra[key], set(cfg_k["callees"]), "c", tuple(cfg_k["buffers"]))
         log(f"{key} field offsets named: {nk}")
     sp_fields = extra["species"]
-    out = ROOT / "src/banks"
+    out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)
-    log(f"writing {len(texts)} bank files and src/main.asm")
+    log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")
     tot_code = 0
     reached = []
     for b, text in enumerate(texts):
@@ -5809,6 +5818,7 @@ def main() -> int:
         'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\nINCLUDE "records.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
+    present.main([str(out)])
     log("done writing; rebuild and verify with tools/build.py")
     if "--stats" in sys.argv:
         nz = rom.nbanks - len(rom.zero)

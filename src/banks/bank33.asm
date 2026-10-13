@@ -1,11 +1,10 @@
 SECTION "Bank 33", ROMX[$4000], BANK[$33]
     db $33
 
-; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows 32 bytes apart
-; 64 call sites from 38 routines (e.g. LoadScreenBlocks00To03, LoadScreenBlocks00And04To06, LoadScreenBlocks00_07_08, LoadScreenBlocks00_09_0A, ...)
-; points at: wScreenTileBuffer
+; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a
+; width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows
+; 32 bytes apart
 CopyBlockToTileBuffer::
-Func_033_4001:: ; address name
     ld d, $00
     ld hl, ScreenBlockTable
     add hl, de
@@ -30,7 +29,7 @@ Func_033_4001:: ; address name
 
 .loop2:
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     inc de
     dec b
     jr nz, .loop2
@@ -42,11 +41,10 @@ Func_033_4001:: ; address name
     jr nz, .loop
     ret
 
-; E = block: copies the screen block from Data_033_405F[E] (word offset, width, rows, tiles) into wScreenTileBuffer like CopyBlockToTileBuffer, but writes tile $C3 for tiles $15-$A3 (the text glyphs) (E-0117)
-; 14 call sites from 4 routines (e.g. LoadBlankedBlocks00To03WithCursor, LoadBlankedBlocks00And04To06WithCursor, LoadBlankedBlocks00_07_08WithCursor, LoadBlankedBlocks00_09_0AWithCursor)
-; points at: wScreenTileBuffer
+; E = block: copies the screen block from ScreenBlockTable[E] (word offset, width, rows, tiles) into
+; wScreenTileBuffer like CopyBlockToTileBuffer, but writes tile $C3 for tiles $15-$A3 (the text
+; glyphs) (E-0117)
 CopyBlockToTileBufferBlankingText::
-Func_033_402B:: ; address name
     ld d, $00
     ld hl, ScreenBlockTable
     add hl, de
@@ -71,14 +69,14 @@ Func_033_402B:: ; address name
 
 .loop2:
     ld a, [de]
-    cp a, $15
+    cp $15
     jr c, .skip
-    cp a, $A4
+    cp $a4
     jr nc, .skip
-    ld a, $C3
+    ld a, $c3
 
 .skip:
-    ld [hl+], a
+    ld [hli], a
     inc de
     dec b
     jr nz, .loop2
@@ -90,10 +88,11 @@ Func_033_402B:: ; address name
     jr nz, .loop
     ret
 
-; E-0232 (C1: CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText read the word at $405F + 2 * E and copy that record (word offset into wScreenTileBuffer, width, rows, tiles) into the screen buffer; 51 words, and the records tile $40C5-$51C6).
+; CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText read the word at $405F + 2 * E and
+; copy that record (word offset into wScreenTileBuffer, width, rows, tiles) into the screen buffer;
+; 51 words, and the records tile $40C5-$51C6 (E-0232, C1)
 ; record: screen block record
 ScreenBlockTable::
-Data_033_405F:: ; address name
     dw TileRect_33_40C5 ; id 0
     dw TileRect_33_4111 ; id 1
     dw TileRect_33_41B1 ; id 2
@@ -146,656 +145,576 @@ Data_033_405F:: ; address name
     dw TileRect_33_4749 ; id 49
     dw TileRect_33_48D4 ; id 50
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_40C5::
-Data_033_40C5:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $A4, $A5, $A6, $A7, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $a4, $a5, $a6, $a7, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 13 tiles
 TileRect_33_4111::
-Data_033_4111:: ; address name
     dw $0008 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $0D ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $AE, $A8, $AB, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $EE, $A9, $A6, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $AE, $BF, $AC, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $B6, $C3, $A4, $A5, $A8, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B6, $C3, $EF, $AC, $EE, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 11
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 12
+    db $0c, $0d ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $ae, $a8, $ab, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $ee, $a9, $a6, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $ae, $bf, $ac, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; row 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $b6, $c3, $a4, $a5, $a8, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; row 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b6, $c3, $ef, $ac, $ee, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; row 11
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 12
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0161 (row 11, column 1); 6 x 6 tiles
 TileRect_33_41B1::
-Data_033_41B1:: ; address name
     dw $0161 ; entry 0: offset into wScreenTileBuffer
     db $06, $06 ; width, rows
-    db $5C, $5D, $5E, $5F, $60, $61 ; row 0
+    db $5c, $5d, $5e, $5f, $60, $61 ; row 0
     db $62, $63, $64, $65, $66, $67 ; row 1
-    db $68, $69, $6A, $6B, $6C, $6D ; row 2
-    db $6E, $6F, $70, $71, $72, $73 ; row 3
+    db $68, $69, $6a, $6b, $6c, $6d ; row 2
+    db $6e, $6f, $70, $71, $72, $73 ; row 3
     db $74, $75, $76, $77, $78, $79 ; row 4
-    db $7A, $7B, $7C, $7D, $7E, $7F ; row 5
+    db $7a, $7b, $7c, $7d, $7e, $7f ; row 5
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $01A8 (row 13, column 8); 12 x 5 tiles
 TileRect_33_41D9::
-Data_033_41D9:: ; address name
-    dw $01A8 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $F9, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $FB, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+    dw $01a8 ; entry 0: offset into wScreenTileBuffer
+    db $0c, $05 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $f9, $fa, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $fb, $fa, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0008 (row 0, column 8); 12 x 11 tiles
 TileRect_33_4219::
-Data_033_4219:: ; address name
     dw $0008 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $0B ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $B6, $EC, $EC, $ED, $47, $48, $49, $4A, $4B, $C3, $C3, $B7 ; row 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 10
+    db $0c, $0b ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $b6, $ec, $ec, $ed, $47, $48, $49, $4a, $4b, $c3, $c3, $b7 ; row 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
 TileRect_33_42A1::
-Data_033_42A1:: ; address name
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $08, $07 ; width, rows
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 1
-    db $B6, $35, $36, $37, $38, $39, $3A, $B7 ; row 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $B7 ; row 4
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 0
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 1
+    db $b6, $35, $36, $37, $38, $39, $3a, $b7 ; row 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $3b, $3c, $3d, $3e, $3f, $40, $b7 ; row 4
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0168 (row 11, column 8); 12 x 7 tiles
 TileRect_33_42DD::
-Data_033_42DD:: ; address name
     dw $0168 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $A5, $CF, $F1, $F2, $C3, $AC, $CF, $F3, $CF, $F4, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $0c, $07 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $fd, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $a5, $cf, $f1, $f2, $c3, $ac, $cf, $f3, $cf, $f4, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $fd, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 18 tiles
 TileRect_33_4335::
-Data_033_4335:: ; address name
     dw $0008 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $12 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $41, $42, $43, $44, $45, $46, $47, $48, $49, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $B7 ; row 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7 ; row 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; row 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7 ; row 13
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
-    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; row 15
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $0c, $12 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $41, $42, $43, $44, $45, $46, $47, $48, $49, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $53, $54, $55, $56, $57, $58, $59, $5a, $5b, $b7 ; row 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $b6, $c3, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $b7 ; row 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b6, $c3, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; row 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $6e, $6f, $70, $71, $72, $73, $74, $75, $76, $b7 ; row 13
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 14
+    db $b6, $c3, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f, $b7 ; row 15
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; E-0232 (C1: a record of ScreenBlockTable).
-; record: offset $0160 (row 11, column 0); 8 x 7 tiles
+; a record of ScreenBlockTable (E-0232, C1)
 TileRect_33_4411::
-Data_033_4411:: ; address name
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $08, $07 ; width, rows
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 0
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 1
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 2
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 4
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 6
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 0
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 1
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 2
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 3
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 5
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
-; record: offset $0008 (row 0, column 8); 12 x 18 tiles
 TileRect_33_444D::
-Data_033_444D:: ; address name
     dw $0008 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $12 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $F5, $F6, $DF, $CF, $ED, $58, $59, $5A, $5B, $5C, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $5D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $EC, $EC, $ED, $67, $68, $69, $6A, $6B, $C3, $C3, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 9
-    db $B6, $EC, $F6, $F2, $CF, $ED, $6C, $6D, $6E, $6F, $70, $B7 ; row 10
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
-    db $B6, $71, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
-    db $B6, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $C3, $B7 ; row 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
-    db $B6, $EC, $EC, $ED, $7B, $7C, $7D, $7E, $7F, $C3, $C3, $B7 ; row 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $0c, $12 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $f5, $f6, $df, $cf, $ed, $58, $59, $5a, $5b, $5c, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $5d, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $ec, $ec, $ed, $67, $68, $69, $6a, $6b, $c3, $c3, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 9
+    db $b6, $ec, $f6, $f2, $cf, $ed, $6c, $6d, $6e, $6f, $70, $b7 ; row 10
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 11
+    db $b6, $71, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 13
+    db $b6, $72, $73, $74, $75, $76, $77, $78, $79, $7a, $c3, $b7 ; row 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 15
+    db $b6, $ec, $ec, $ed, $7b, $7c, $7d, $7e, $7f, $c3, $c3, $b7 ; row 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0183 (row 12, column 3); 2 x 4 tiles
 TileRect_33_4529::
-Data_033_4529:: ; address name
     dw $0183 ; entry 0: offset into wScreenTileBuffer
     db $02, $04 ; width, rows
-    db $C3, $0F ; row 0
+    db $c3, $0f ; row 0
     db $11, $10 ; row 1
     db $12, $10 ; row 2
-    db $C3, $13 ; row 3
+    db $c3, $13 ; row 3
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 7 x 13 tiles
 TileRect_33_4535::
-Data_033_4535:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
-    db $07, $0D ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $D0, $D1, $D2, $D3, $D4, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $EB, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $EC, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $EA, $ED, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
-    db $C3, $14, $15, $16, $17, $18, $19 ; row 7
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F ; row 8
-    db $C3, $20, $21, $22, $23, $24, $25 ; row 9
-    db $C3, $26, $27, $28, $29, $2A, $2B ; row 10
-    db $C3, $2C, $2D, $2E, $2F, $30, $31 ; row 11
-    db $C3, $32, $33, $34, $35, $36, $37 ; row 12
+    db $07, $0d ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $d0, $d1, $d2, $d3, $d4, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $eb, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $ec, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $ea, $ed, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
+    db $c3, $14, $15, $16, $17, $18, $19 ; row 7
+    db $c3, $1a, $1b, $1c, $1d, $1e, $1f ; row 8
+    db $c3, $20, $21, $22, $23, $24, $25 ; row 9
+    db $c3, $26, $27, $28, $29, $2a, $2b ; row 10
+    db $c3, $2c, $2d, $2e, $2f, $30, $31 ; row 11
+    db $c3, $32, $33, $34, $35, $36, $37 ; row 12
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 13 x 13 tiles
 TileRect_33_4594::
-Data_033_4594:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
-    db $0D, $0D ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
-    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D ; row 7
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43 ; row 8
-    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49 ; row 9
-    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F ; row 10
-    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55 ; row 11
-    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B ; row 12
+    db $0d, $0d ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $d0, $d1, $d2, $d3, $d4, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $eb, $c3, $c3, $c3, $c3, $c3, $eb, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $ec, $c3, $c3, $c3, $c3, $c3, $ec, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $ea, $ed, $c3, $c3, $c3, $c3, $ea, $ed, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
+    db $c3, $14, $15, $16, $17, $18, $19, $38, $39, $3a, $3b, $3c, $3d ; row 7
+    db $c3, $1a, $1b, $1c, $1d, $1e, $1f, $3e, $3f, $40, $41, $42, $43 ; row 8
+    db $c3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49 ; row 9
+    db $c3, $26, $27, $28, $29, $2a, $2b, $4a, $4b, $4c, $4d, $4e, $4f ; row 10
+    db $c3, $2c, $2d, $2e, $2f, $30, $31, $50, $51, $52, $53, $54, $55 ; row 11
+    db $c3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5a, $5b ; row 12
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 20 x 13 tiles
 TileRect_33_4641::
-Data_033_4641:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
-    db $14, $0D ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
-    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D, $5C, $5D, $5E, $5F, $60, $61, $C3 ; row 7
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43, $62, $63, $64, $65, $66, $67, $C3 ; row 8
-    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49, $68, $69, $6A, $6B, $6C, $6D, $C3 ; row 9
-    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F, $6E, $6F, $70, $71, $72, $73, $C3 ; row 10
-    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55, $74, $75, $76, $77, $78, $79, $C3 ; row 11
-    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B, $7A, $7B, $7C, $7D, $7E, $7F, $C3 ; row 12
+    db $14, $0d ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $d0, $d1, $d2, $d3, $d4, $c3, $d5, $d6, $d7, $d8, $d9, $c3, $da, $db, $dc, $dd, $de, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $eb, $c3, $c3, $c3, $c3, $c3, $eb, $c3, $c3, $c3, $c3, $c3, $eb, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $ec, $c3, $c3, $c3, $c3, $c3, $ec, $c3, $c3, $c3, $c3, $c3, $ec, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $ea, $ed, $c3, $c3, $c3, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
+    db $c3, $14, $15, $16, $17, $18, $19, $38, $39, $3a, $3b, $3c, $3d, $5c, $5d, $5e, $5f, $60, $61, $c3 ; row 7
+    db $c3, $1a, $1b, $1c, $1d, $1e, $1f, $3e, $3f, $40, $41, $42, $43, $62, $63, $64, $65, $66, $67, $c3 ; row 8
+    db $c3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49, $68, $69, $6a, $6b, $6c, $6d, $c3 ; row 9
+    db $c3, $26, $27, $28, $29, $2a, $2b, $4a, $4b, $4c, $4d, $4e, $4f, $6e, $6f, $70, $71, $72, $73, $c3 ; row 10
+    db $c3, $2c, $2d, $2e, $2f, $30, $31, $50, $51, $52, $53, $54, $55, $74, $75, $76, $77, $78, $79, $c3 ; row 11
+    db $c3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5a, $5b, $7a, $7b, $7c, $7d, $7e, $7f, $c3 ; row 12
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $01A4 (row 13, column 4); 12 x 5 tiles
 TileRect_33_4749::
-Data_033_4749:: ; address name
-    dw $01A4 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $C3, $B7 ; row 1
-    db $B6, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $C3, $B7 ; row 2
-    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+    dw $01a4 ; entry 0: offset into wScreenTileBuffer
+    db $0c, $05 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $c3, $b7 ; row 1
+    db $b6, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $c3, $b7 ; row 2
+    db $b6, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 6 x 3 tiles
 TileRect_33_4789::
-Data_033_4789:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $06, $03 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $A4, $A8, $A9, $EC, $B7 ; row 1
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 2
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $a4, $a8, $a9, $ec, $b7 ; row 1
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; row 2
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 9 tiles
 TileRect_33_479F::
-Data_033_479F:: ; address name
     dw $0008 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $0c, $09 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $6e, $6f, $70, $71, $72, $73, $74, $75, $76, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0140 (row 10, column 0); 20 x 7 tiles
 TileRect_33_480F::
-Data_033_480F:: ; address name
     dw $0140 ; entry 0: offset into wScreenTileBuffer
     db $14, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45, $46, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $56, $57, $58, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0040 (row 2, column 0); 7 x 7 tiles
 TileRect_33_489F::
-Data_033_489F:: ; address name
     dw $0040 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $EE, $EF, $F0, $F1, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $F2, $F3, $F5, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $F1, $F4, $F3, $F3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $ee, $ef, $f0, $f1, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $f2, $f3, $f5, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $f1, $f4, $f3, $f3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
-; record: offset $0040 (row 2, column 0); 7 x 7 tiles
 TileRect_33_48D4::
-Data_033_48D4:: ; address name
     dw $0040 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $EE, $EF, $F0, $F1, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $F2, $F3, $F4, $F5, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $F6, $F7, $F8, $F9, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $ee, $ef, $f0, $f1, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $f2, $f3, $f4, $f5, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $f6, $f7, $f8, $f9, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0100 (row 8, column 0); 6 x 5 tiles
 TileRect_33_4909::
-Data_033_4909:: ; address name
     dw $0100 ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ce, $cf, $df, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $a5, $f4, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
 TileRect_33_492B::
-Data_033_492B:: ; address name
-    dw $01A0 ; entry 0: offset into wScreenTileBuffer
+    dw $01a0 ; entry 0: offset into wScreenTileBuffer
     db $14, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $a3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4993::
-Data_033_4993:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $EE, $EF, $A7, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ee, $ef, $a7, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0120 (row 9, column 0); 14 x 5 tiles
 TileRect_33_49DF::
-Data_033_49DF:: ; address name
     dw $0120 ; entry 0: offset into wScreenTileBuffer
-    db $0E, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $0e, $05 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
-; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4A29::
-Data_033_4A29:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $AA, $AB, $A4, $AC, $AC, $AA, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $aa, $ab, $a4, $ac, $ac, $aa, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0120 (row 9, column 0); 20 x 9 tiles
 TileRect_33_4A75::
-Data_033_4A75:: ; address name
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $14, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7 ; row 5
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 6
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45, $46, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $56, $57, $58, $b7 ; row 5
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 6
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
-; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4B2D::
-Data_033_4B2D:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $F0, $F1, $F2, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $f0, $f1, $f2, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 13 x 15 tiles
 TileRect_33_4B79::
-Data_033_4B79:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
-    db $0D, $0F ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $C3, $C3, $AD, $AC, $AE, $A5, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $AB, $CF, $FA, $DF, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $AD, $F2, $F0, $F3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $A8, $CF, $F9, $F7, $C3, $AA, $F5, $CF, $CF, $F1, $B7 ; row 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $B6, $C3, $EE, $CF, $FB, $A7, $F6, $F1, $CF, $F6, $C3, $C3, $B7 ; row 9
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B6, $C3, $A4, $F3, $FC, $F4, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $EF, $F4, $F8, $F6, $F3, $F0, $F2, $C3, $C3, $C3, $B7 ; row 13
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 14
+    db $0d, $0f ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $c3, $c3, $ad, $ac, $ae, $a5, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $ab, $cf, $fa, $df, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $ad, $f2, $f0, $f3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $a8, $cf, $f9, $f7, $c3, $aa, $f5, $cf, $cf, $f1, $b7 ; row 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $b6, $c3, $ee, $cf, $fb, $a7, $f6, $f1, $cf, $f6, $c3, $c3, $b7 ; row 9
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b6, $c3, $a4, $f3, $fc, $f4, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 11
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $ef, $f4, $f8, $f6, $f3, $f0, $f2, $c3, $c3, $c3, $b7 ; row 13
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 14
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0006 (row 0, column 6); 14 x 7 tiles
 TileRect_33_4C40::
-Data_033_4C40:: ; address name
     dw $0006 ; entry 0: offset into wScreenTileBuffer
-    db $0E, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $35, $36, $37, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $0e, $07 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $2c, $2d, $2e, $2f, $30, $31, $32, $33, $34, $35, $36, $37, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0125 (row 9, column 5); 15 x 9 tiles
 TileRect_33_4CA6::
-Data_033_4CA6:: ; address name
     dw $0125 ; entry 0: offset into wScreenTileBuffer
-    db $0F, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $C3, $68, $69, $6A, $6B, $6C, $6D, $6E, $6F, $70, $71, $72, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $0f, $09 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $c3, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $c3, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5a, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $c3, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $c3, $68, $69, $6a, $6b, $6c, $6d, $6e, $6f, $70, $71, $72, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 7 x 7 tiles
 TileRect_33_4D31::
-Data_033_4D31:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $FD, $02, $FE, $FF, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C3, $00, $DF, $CF, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $FF, $F4, $DF, $DF, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $fd, $02, $fe, $ff, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c3, $00, $df, $cf, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $ff, $f4, $df, $df, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $00E0 (row 7, column 0); 6 x 5 tiles
 TileRect_33_4D66::
-Data_033_4D66:: ; address name
-    dw $00E0 ; entry 0: offset into wScreenTileBuffer
+    dw $00e0 ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ce, $cf, $df, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $a5, $f4, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $00CD (row 6, column 13); 7 x 3 tiles
 TileRect_33_4D88::
-Data_033_4D88:: ; address name
-    dw $00CD ; entry 0: offset into wScreenTileBuffer
+    dw $00cd ; entry 0: offset into wScreenTileBuffer
     db $07, $03 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $D0, $D1, $D2, $D3, $D4, $B7 ; row 1
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 2
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $d0, $d1, $d2, $d3, $d4, $b7 ; row 1
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 2
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0129 (row 9, column 9); 11 x 9 tiles
 TileRect_33_4DA1::
-Data_033_4DA1:: ; address name
     dw $0129 ; entry 0: offset into wScreenTileBuffer
-    db $0B, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $01, $0A, $F0, $F6, $07, $CF, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $04, $08, $F9, $CF, $F1, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $05, $CF, $FC, $CF, $F3, $06, $CF, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $01, $F4, $09, $09, $F0, $F3, $F1, $C3, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $0b, $09 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $01, $0a, $f0, $f6, $07, $cf, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $04, $08, $f9, $cf, $f1, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $05, $cf, $fc, $cf, $f3, $06, $cf, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $01, $f4, $09, $09, $f0, $f3, $f1, $c3, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0042 (row 2, column 2); 18 x 7 tiles
 TileRect_33_4E08::
-Data_033_4E08:: ; address name
     dw $0042 ; entry 0: offset into wScreenTileBuffer
     db $12, $07 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0128 (row 9, column 8); 12 x 9 tiles
 TileRect_33_4E8A::
-Data_033_4E8A:: ; address name
     dw $0128 ; entry 0: offset into wScreenTileBuffer
-    db $0C, $09 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $D0, $D1, $D2, $D3, $D4, $CC, $EA, $ED, $C3, $C3, $B7 ; row 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
-    db $B6, $C7, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $02, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $04, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $0c, $09 ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $d0, $d1, $d2, $d3, $d4, $cc, $ea, $ed, $c3, $c3, $b7 ; row 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; row 2
+    db $b6, $c7, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $02, $03, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $04, $03, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0020 (row 1, column 0); 20 x 11 tiles
 TileRect_33_4EFA::
-Data_033_4EFA:: ; address name
     dw $0020 ; entry 0: offset into wScreenTileBuffer
-    db $14, $0B ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $05, $06, $07, $08, $09, $0A, $ED, $20, $21, $22, $23, $24, $C3, $C3, $C3, $ED, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $25, $26, $27, $28, $29, $2A, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $37, $38, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $39, $3A, $C3, $C3, $B7 ; row 4
-    db $B6, $2B, $2C, $2D, $2E, $2F, $30, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $31, $32, $33, $34, $35, $36, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
-    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $47, $C3, $C3, $C3, $C3, $C3, $B7 ; row 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 10
+    db $14, $0b ; width, rows
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $05, $06, $07, $08, $09, $0a, $ed, $20, $21, $22, $23, $24, $c3, $c3, $c3, $ed, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $25, $26, $27, $28, $29, $2a, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $c3, $37, $38, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $39, $3a, $c3, $c3, $b7 ; row 4
+    db $b6, $2b, $2c, $2d, $2e, $2f, $30, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $31, $32, $33, $34, $35, $36, $c3, $ea, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 8
+    db $b6, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43, $44, $45, $46, $47, $c3, $c3, $c3, $c3, $c3, $b7 ; row 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
-; E-0232 (C1: a record of ScreenBlockTable).
+; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $010E (row 8, column 14); 6 x 5 tiles
 TileRect_33_4FDA::
-Data_033_4FDA:: ; address name
-    dw $010E ; entry 0: offset into wScreenTileBuffer
+    dw $010e ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $c3, $ce, $cf, $df, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $a5, $f4, $c3, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0121 (row 9, column 1); 18 x 5 tiles
 TileRect_33_4FFC::
-Data_033_4FFC:: ; address name
     dw $0121 ; entry 0: offset into wScreenTileBuffer
     db $12, $05 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $A6, $F0, $DF, $F7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $AA, $F2, $F4, $0B, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $E1, $C3, $E2, $C3, $E3, $C3, $E4, $C3, $E5, $C3, $E6, $C3, $E7, $C3, $E8, $B7 ; row 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $a6, $f0, $df, $f7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $aa, $f2, $f4, $0b, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $e1, $c3, $e2, $c3, $e3, $c3, $e4, $c3, $e5, $c3, $e6, $c3, $e7, $c3, $e8, $b7 ; row 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 20 x 18 tiles
 TileRect_33_505A::
-Data_033_505A:: ; address name
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $14, $12 ; width, rows
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
-    db $B6, $04, $F0, $DF, $F7, $CF, $F6, $ED, $30, $31, $32, $33, $34, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
-    db $B6, $C3, $C3, $A8, $13, $14, $CF, $ED, $C3, $C3, $C3, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
-    db $B6, $C3, $C3, $A6, $F0, $F6, $14, $ED, $04, $A7, $A5, $C3, $C3, $C3, $A9, $BF, $BF, $C3, $C3, $B7 ; row 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
-    db $B6, $C3, $AA, $F2, $CF, $CF, $F5, $ED, $04, $A7, $A5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 9
-    db $B6, $C3, $C3, $01, $F0, $F7, $CF, $12, $F4, $F6, $13, $CF, $DF, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
-    db $B6, $C3, $20, $C3, $C3, $C3, $21, $C3, $C3, $C3, $22, $C3, $C3, $C3, $23, $C3, $C3, $C3, $C3, $B7 ; row 12
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
-    db $B6, $C3, $24, $C3, $C3, $C3, $25, $C3, $C3, $C3, $26, $C3, $C3, $C3, $27, $C3, $C3, $C3, $C3, $B7 ; row 14
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
-    db $B6, $C3, $28, $C3, $C3, $C3, $29, $C3, $C3, $C3, $2A, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 16
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
+    db $b6, $04, $f0, $df, $f7, $cf, $f6, $ed, $30, $31, $32, $33, $34, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 2
+    db $b6, $c3, $c3, $a8, $13, $14, $cf, $ed, $c3, $c3, $c3, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 4
+    db $b6, $c3, $c3, $a6, $f0, $f6, $14, $ed, $04, $a7, $a5, $c3, $c3, $c3, $a9, $bf, $bf, $c3, $c3, $b7 ; row 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 6
+    db $b6, $c3, $aa, $f2, $cf, $cf, $f5, $ed, $04, $a7, $a5, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 9
+    db $b6, $c3, $c3, $01, $f0, $f7, $cf, $12, $f4, $f6, $13, $cf, $df, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; row 10
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 11
+    db $b6, $c3, $20, $c3, $c3, $c3, $21, $c3, $c3, $c3, $22, $c3, $c3, $c3, $23, $c3, $c3, $c3, $c3, $b7 ; row 12
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 13
+    db $b6, $c3, $24, $c3, $c3, $c3, $25, $c3, $c3, $c3, $26, $c3, $c3, $c3, $27, $c3, $c3, $c3, $c3, $b7 ; row 14
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 15
+    db $b6, $c3, $28, $c3, $c3, $c3, $29, $c3, $c3, $c3, $2a, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; only called from GameMode5_Update_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode5_Update_ToGameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
-; reads: wTitleScreenState, wScreenState, wScreenStep, wScreenSubStep
 GameMode5_Update_Case05_LinkExchangeJoypadPerFrame::
-Func_033_51C6:: ; address name
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
-    or a, a
+    or a
     jr nz, .check_screen_state
     ret
 
 .check_screen_state:
     ld a, [wScreenState]
-    cp a, $0C
+    cp $0c
     jr z, .check_screen_sub_step
-    cp a, $0D
+    cp $0d
     jr z, .check_screen_step
     ret
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenStep]
-    cp a, $20
+    cp $20
     jr z, .call_call_draw_party_species_sprites
-    cp a, $15
+    cp $15
     jr z, .call_draw_list_entries_cell5_species_sprite
     ret
 
@@ -809,9 +728,9 @@ Func_033_51C6:: ; address name
 
 .check_screen_step:
     ld a, [wScreenStep]
-    cp a, $15
+    cp $15
     jr z, .call_draw_wca36_sprite_part_bank_f1
-    cp a, $20
+    cp $20
     jr z, .call_draw_record_buf_b_species_sprites
     ret
 
@@ -823,16 +742,12 @@ Func_033_51C6:: ; address name
     farcall DrawRecordBufBSpeciesSprites
     ret
 
-; only called from RunLinkSession6Exchange_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_LinkReceiveStepWithBuffer)
-; reads: wTitleScreenState, wTitleScreenSubState, wFadeState, wScreenState
 RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
-Func_033_5215:: ; address name
     ld a, [wTitleScreenState]
-    or a, a
+    or a
     jr nz, .check_fade_state
     ld a, [wTitleScreenSubState]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
     dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep
     dw RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero
@@ -850,10 +765,10 @@ Func_033_5215:: ; address name
 
 .check_fade_state:
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, [wScreenState]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02
@@ -871,18 +786,14 @@ Func_033_5215:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F
 
-; entry 0 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenTileBuffer, wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
-Jump_033_5264:: ; address name
     ld de, TileRect_33_62AB
-    ld hl, wScreenTileBuffer + $C
+    ld hl, wScreenTileBuffer + $c
     ld bc, $0803
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, TileRect_33_62C3
     ld hl, wScreenTileBuffer
-    ld bc, $0A0B
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     call DrawPlayerNameAndString0Category1
     call SetDefaultStringWindow_Bank33
@@ -890,72 +801,55 @@ Jump_033_5264:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte
-; points at: wKeyNameBuf, wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep::
-Jump_033_5287:: ; address name
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     call WriteGoldDigitsToWC1BA
     ld de, wKeyNameBuf
     ld hl, wScreenTileBuffer + $43
     call RunFunc6204FourTimes
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
+    ld bc, $140d
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState
-; writes: wLinkSendByte
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero::
-Jump_033_52A8:: ; address name
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, $19 ; 'For Team Mode, 1000G is charged.'
     call BeginString_Bank07_Cat5
     ld hl, wTitleScreenSubState
     inc [hl]
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi, wTitleScreenSubState
-; writes: wLinkSendByte, wTitleScreenState, wScreenState, wTitleScreenSubState, wGoldHi, wGoldMid, wGoldLo
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe::
-Jump_033_52BB:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .check_text_flags
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
 .check_text_flags:
     ld a, [wTextFlags]
-    or a, a
+    or a
     ret nz
     ld a, [wTextYesNoResult]
-    and a, $01
+    and $01
     jr z, .read_gold_lo
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
@@ -967,18 +861,18 @@ Jump_033_52BB:: ; address name
 
 .read_gold_lo:
     ld a, [wGoldLo]
-    sub a, $E8
+    sub $e8
     ld c, a
     ld a, [wGoldMid]
-    sbc a, $03
+    sbc $03
     ld b, a
     ld a, [wGoldHi]
-    sbc a, $00
+    sbc $00
     jr nc, .set_gold_hi
     ld a, $00 ; 'Not enough money. Please wait.'
     call BeginString_Bank07_Cat5
     ld a, [wTitleScreenSubState]
-    add a, $08
+    add $08
     ld [wTitleScreenSubState], a
     ld a, $10
     ld [wLinkSendByte], a
@@ -990,7 +884,7 @@ Jump_033_52BB:: ; address name
     ld [wGoldMid], a
     ld a, c
     ld [wGoldLo], a
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ld hl, wTitleScreenSubState
     inc [hl]
@@ -998,30 +892,24 @@ Jump_033_52BB:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 4 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wTitleScreenState, wScreenState
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc::
-Jump_033_5338:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_link_send_byte_to_FE
-    cp a, $01
+    cp $01
     jr z, .call_begin_string_bank07_cat5
-    cp a, $10
+    cp $10
     jr z, .call_begin_string_bank07_cat52
     ret
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -1030,7 +918,7 @@ Jump_033_5338:: ; address name
     call BeginString_Bank07_Cat5
     ld hl, wTitleScreenSubState
     inc [hl]
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ret
 
@@ -1045,61 +933,44 @@ Jump_033_5338:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte, wLinkScreenFlag
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte::
-Jump_033_537D:: ; address name
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wTitleScreenSubState
     inc [hl]
-    xor a, a
+    xor a
     ld [wLinkScreenFlag], a
     ret
 
 ; by its step: 'Choose a monster for the Team ...'
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkScreenFlag
 RunLinkSession6Exchange_ChooseTeamMonster::
-Jump_033_538A:: ; address name
     ld a, [wLinkScreenFlag]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags
     dw RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor
     dw RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState
 
-; entry 0 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; points at: wScreenTileBuffer, wLinkScreenFlag
 RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
-Jump_033_5394:: ; address name
     ld a, [wTextFlags]
-    or a, a
+    or a
     ret nz
     ld hl, wScreenTileBuffer
     ld bc, $0104
 
 .loop:
-    ld a, $C3
-    ld [hl+], a
+    ld a, $c3
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld hl, wLinkScreenFlag
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLinkScreenFlag
 RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
-Jump_033_53AC:: ; address name
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
+    ld bc, $140d
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
     ld a, $08 ; 'Choose a monster for the Team'
@@ -1108,33 +979,23 @@ Jump_033_53AC:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTitleScreenSubState, wLinkScreenFlag, wTitleScreenState, wScreenState
 RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
-Jump_033_53C2:: ; address name
-    xor a, a
+    xor a
     ld [wTitleScreenSubState], a
-    xor a, a
+    xor a
     ld [wLinkScreenFlag], a
     ld a, $01
     ld [wTitleScreenState], a
-    xor a, a
+    xor a
     ld [wScreenState], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi
-; writes: wLinkSendByte, wGoldHi, wGoldMid, wGoldLo
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay::
-Jump_033_53D4:: ; address name
     ld a, [wTextFlags]
-    or a, a
+    or a
     ret nz
     ld a, [wTextYesNoResult]
-    and a, $01
+    and $01
     jr z, .read_gold_lo
     ld a, $05 ; 'You refused to pay the battle'
     call BeginString_Bank07_Cat5
@@ -1148,13 +1009,13 @@ Jump_033_53D4:: ; address name
 
 .read_gold_lo:
     ld a, [wGoldLo]
-    sub a, $E8
+    sub $e8
     ld c, a
     ld a, [wGoldMid]
-    sbc a, $03
+    sbc $03
     ld b, a
     ld a, [wGoldHi]
-    sbc a, $00
+    sbc $00
     jr nc, .set_gold_hi
     ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
@@ -1180,17 +1041,11 @@ Jump_033_53D4:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wTitleScreenState, wScreenState
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08::
-Jump_033_5433:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_link_send_byte_to_FE
-    cp a, $20
+    cp $20
     ret nz
     ld hl, wTitleScreenSubState
     dec [hl]
@@ -1199,29 +1054,23 @@ Jump_033_5433:: ; address name
     ret
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 9 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wTitleScreenState, wScreenState
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09::
-Jump_033_545B:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_link_send_byte_to_FE
-    cp a, $30
+    cp $30
     jr z, .done
-    cp a, $40
+    cp $40
     ret nz
 
 .done:
@@ -1230,48 +1079,38 @@ Jump_033_545B:: ; address name
     ret
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 10 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte, wTitleScreenState, wTitleScreenSubState, wScreenState
 RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A::
-Jump_033_5483:: ; address name
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
-    xor a, a
+    xor a
     ld [wTitleScreenSubState], a
     ld a, $02
     ld [wScreenState], a
     ret
 
-; entry 11 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wTitleScreenState, wScreenState
-; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo::
-Jump_033_5497:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_link_send_byte_to_FE
-    cp a, $10
+    cp $10
     jr z, .set_link_send_byte
-    cp a, $20
+    cp $20
     jr z, .set_link_send_byte2
-    cp a, $30
+    cp $30
     jr z, .set_link_send_byte3
-    cp a, $40
+    cp $40
     ret nz
     ld [wLinkSendByte], a
     ld a, $06 ; 'Your pal refused to pay the'
@@ -1311,28 +1150,23 @@ Jump_033_5497:: ; address name
     ret
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 12 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wTitleScreenSubState, wLinkSendByte, wTitleScreenState, wScreenState
 RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc::
-Jump_033_5502:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_link_send_byte_to_FE
-    or a, a
+    or a
     jr z, .set_title_screen_sub_state_to_05
-    cp a, $20
+    cp $20
     ret nz
 
 .set_title_screen_sub_state_to_05:
@@ -1341,130 +1175,93 @@ Jump_033_5502:: ; address name
     ret
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 13 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wTitleScreenState, wTitleScreenSubState, wScreenState
 RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D::
-Jump_033_552A:: ; address name
     ld a, [wLinkMessage]
-    cp a, $10
+    cp $10
     jr z, .set_link_send_byte_to_FE
-    cp a, $30
+    cp $30
     jr z, .set_link_send_byte_to_FE
-    cp a, $40
+    cp $40
     jr z, .set_link_send_byte_to_FE
-    cp a, $FE
+    cp $fe
     ret nz
 
 .set_link_send_byte_to_FE:
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
     ld [wTitleScreenState], a
-    xor a, a
+    xor a
     ld [wTitleScreenSubState], a
     ld a, $02
     ld [wScreenState], a
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
-; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08, ...)
-; writes: wStringIndex, wStringCategory
 BeginString_Bank07_Cat5::
-Func_033_5550:: ; address name
     ld [wStringIndex], a
     ld a, $05
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank07
     ret
 
-; entry 0 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenState
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case00::
-Jump_033_555F:: ; address name
     ld hl, wScreenState
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; points at: wScreenState
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case01::
-Jump_033_5564:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, wScreenState
     inc [hl]
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02::
-Jump_033_556F:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case04
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case02
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wScreenStep
-; writes: wLinkSendByte, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00::
-Jump_033_557D:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case02
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01::
-Jump_033_558F:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank33
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case02
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02::
-Jump_033_559E:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, $01
     ld [wLinkSendByte], a
@@ -1472,69 +1269,50 @@ Jump_033_559E:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215_Table2_Case02
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03::
-Jump_033_55AD:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case02
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; points at: wScreenState, wGameMode, wModeChangeRequest
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case04::
-Jump_033_55BC:: ; address name
     ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld hl, wGameMode
     ld a, $05
-    ld [hl+], a
+    ld [hli], a
     ld a, $01
-    ld [hl+], a
-    xor a, a
-    ld [hl+], a
+    ld [hli], a
+    xor a
+    ld [hli], a
     ld [hl], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenState
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case03::
-Jump_033_55E0:: ; address name
     ld hl, wScreenState
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04::
-Jump_033_55E5:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02
@@ -1552,74 +1330,55 @@ Jump_033_55E5:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case04; also entries 1, 3 of the table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00::
-Jump_033_5609:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     farcall BreedMenu
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02::
-Jump_033_5615:: ; address name
     farcall DrawRecordListPageIndicators_1B
     ret
 
 ; far-calls DrawListEntriesCell5RecordPanel (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case03)
 CallDrawListEntriesCell5RecordPanel::
-Func_033_561C:: ; address name
     farcall DrawListEntriesCell5RecordPanel
     ret
 
 ; far-calls ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case04)
 CallClearAndDrawListEntriesCell5Name::
-Func_033_5623:: ; address name
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle Data_033_62C3 into wWindowTileBuffer + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05)
-; points at: wScreenStep
+; copies the 10 x 11 rectangle TileRect_33_62C3 into wWindowTileBuffer + $6E
+; (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119)
 CopyRect62C3ToWC36EAndIncScreenStep::
-Func_033_562A:: ; address name
     ld de, TileRect_33_62C3
-    ld hl, wWindowTileBuffer + $6E
-    ld bc, $0A0B
+    ld hl, wWindowTileBuffer + $6e
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wListCursor, wScreenStep
-; writes: wScreenStep
-; points at: wKeyNameBuf
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07::
-Jump_033_563B:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wListCursor]
-    ld b, $BB
+    ld b, $bb
     ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     ld de, wKeyNameBuf
-    ld hl, wWindowTileBuffer + $B1
+    ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, [wListCursor]
-    ld b, $C3
+    ld b, $c3
     ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call SetDefaultStringWindow_Bank33
@@ -1628,55 +1387,49 @@ Jump_033_563B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wListCursor, wScreenStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wMenuInputResult
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08::
-Jump_033_5676:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .clear_menu_input_result
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_menu_input_result:
-    xor a, a
+    xor a
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FB
+    cp $fb
     jr z, .read_screen_step
-    cp a, $FC
+    cp $fc
     jr z, .read_screen_step
-    cp a, $FD
+    cp $fd
     jr z, .read_screen_step2
-    cp a, $FE
+    cp $fe
     jr z, .set_screen_state_to_02
-    cp a, $FF
+    cp $ff
     jr z, .call_store_list_entries_cell5_record_in
     ret
 
 .read_screen_step:
     ld a, [wScreenStep]
-    sub a, $07
+    sub $07
     ld [wScreenStep], a
     ret
 
 .read_screen_step2:
     ld a, [wScreenStep]
-    sub a, $04
+    sub $04
     ld [wScreenStep], a
     ret
 
@@ -1685,17 +1438,17 @@ Jump_033_5676:: ; address name
     ld [wScreenState], a
     ld a, $09 ; 'You refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_store_list_entries_cell5_record_in:
     call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
@@ -1705,79 +1458,67 @@ Jump_033_5676:: ; address name
     call ShowStringA10_Bank33
     ret
 
-; entry 9 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09::
-Jump_033_56FC:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0C01
+    ld hl, $0c01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1E
+    ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
-    ld a, $6C
+    ld a, $6c
     call QueueSoundEffect
     ld de, TileRect_33_63C7
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRowsJp_Bank33
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call SetDefaultStringWindow_Bank33
-    xor a, a
+    xor a
     ld [wChoiceCursor], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wArg5, wChoiceCursor, wScreenState, wScreenStep
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wArg5, wScreenByteB2, wScreenByteB3
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A::
-Jump_033_574F:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .clear_arg5
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_arg5:
-    xor a, a
+    xor a
     ld [wArg5], a
     farcall HandleTwoChoiceCursorInput_0D
     ld a, [wArg5]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .done
-    cp a, $FF
+    cp $ff
     jr z, .check_choice_cursor
     ret
 
@@ -1788,16 +1529,16 @@ Jump_033_574F:: ; address name
 
 .check_choice_cursor:
     ld a, [wChoiceCursor]
-    and a, a
+    and a
     jr nz, .call_store_list_entries_cell5_record_in
     ld a, [wScreenState]
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
     ld [wScreenByteB3], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0C
+    ld a, $0c
     ld [wScreenState], a
     ret
 
@@ -1808,57 +1549,42 @@ Jump_033_574F:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wScreenStep
-; writes: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B::
-Jump_033_57B2:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld c, $05
     ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call WriteC3AtWordTableEntries_Bank33
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, $08 ; 'Choose a monster for the Team'
     call BeginString_Bank07_Cat5
     ld a, [wScreenStep]
-    sub a, $03
+    sub $03
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; points at: wPickCount
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C::
-Jump_033_57DC:: ; address name
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld hl, wPickCount
     inc [hl]
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank33
     call FinishPickedRecordsEntryAndStep_33
     ret
 
-; entry 13 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wPickedRecords
-; writes: rRAMG, rRAMB, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSceneByte4B, wLinkSendByte
-; points at: wRecordBufA, wRecordBufB, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0D::
-Jump_033_57F8:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [wPickedRecords]
     ld c, MON_STATE
@@ -1868,10 +1594,10 @@ Jump_033_57F8:: ; address name
     ld [wLinkTimeoutLo], a
     ld a, d
     ld [wLinkTimeoutHi], a
-    ld b, $A5
+    ld b, $a5
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -1881,9 +1607,9 @@ Jump_033_57F8:: ; address name
     ld [wLinkBufferPtrLo], a
     ld a, d
     ld [wLinkBufferPtrHi], a
-    xor a, a
+    xor a
     ld [rRAMG], a
-    xor a, a
+    xor a
     ld [wLinkSceneByte4B], a
     ld a, $01
     ld [wLinkSendByte], a
@@ -1891,36 +1617,30 @@ Jump_033_57F8:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkReady
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E::
-Jump_033_5839:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     jr z, .set_link_buffer_count_lo
-    cp a, $FE
+    cp $fe
     ret nz
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .set_link_buffer_count_lo:
-    ld hl, $00A5
+    ld hl, $00a5
     ld a, l
     ld [wLinkBufferCountLo], a
     ld a, h
     ld [wLinkBufferCountHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
@@ -1928,29 +1648,19 @@ Jump_033_5839:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in Func_033_5215_Table2_Case04
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wScreenStep
-; points at: wScreenState
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F::
-Jump_033_5874:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
     ld hl, wScreenState
     inc [hl]
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05::
-Jump_033_5883:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02
@@ -1970,28 +1680,21 @@ Jump_033_5883:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte
-; points at: wScreenStep, wKeyNameBuf, wLinkRecvBuffer, wPlayerName
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case00::
-Jump_033_58AB:: ; address name
     ld hl, wScreenStep
     inc [hl]
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wKeyNameBuf
     ld de, wLinkRecvBuffer
     ld b, $04
     call CopyBBytesThenMark1
     ld hl, wPlayerName
-    ld b, $0B
+    ld b, $0b
 
 ; copies B bytes from HL to DE, then stores 1 after them (E-0115)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case00)
 CopyBBytesThenMark1::
-Func_033_58C3:: ; address name
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
@@ -2000,27 +1703,16 @@ Func_033_58C3:: ; address name
     ld [de], a
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case01::
-Jump_033_58CD:: ; address name
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkSendByte
-; points at: wLinkRecvBuffer, wLinkPartnerName, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02::
-Jump_033_58D7:: ; address name
     ld a, [wLinkMessage]
-    cp a, $01
+    cp $01
     ret nz
     ld hl, wLinkRecvBuffer
     ld a, l
@@ -2034,38 +1726,26 @@ Jump_033_58D7:: ; address name
     ld [wLinkBufferPtrHi], a
     ld a, $10
     ld [wLinkBufferCountLo], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03::
-Jump_033_5902:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkTradeByte
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wBattleByte63, wStringCategory, wStringIndex
-; points at: wNameGlyphBuf, wRandomSeed2Hi, wLinkPartnerName, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04::
-Jump_033_5911:: ; address name
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0A0B
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld hl, vTiles2 + $50
     ld a, l
@@ -2080,37 +1760,37 @@ Jump_033_5911:: ; address name
     call FillTilesFromRequest
     ld de, wNameGlyphBuf
     ld hl, wRandomSeed2Hi
-    ld bc, $000A
+    ld bc, $000a
     call CopyBytes
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     ld de, vTiles2 + $50
     call CopyGlyphTilesToVRAM
     ld a, [wLinkTradeByte]
     ld [wBattleByte63], a
     ld de, wLinkPartnerName
-    ld hl, wWindowTileBuffer + $A7
+    ld hl, wWindowTileBuffer + $a7
     call RunFunc6204FourTimes
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0E01
+    ld hl, $0e01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
     farcall ShowString_Bank1B_481A
     ld de, TileRect_33_63F9
-    ld hl, wWindowTileBuffer + $E7
+    ld hl, wWindowTileBuffer + $e7
     ld bc, $0907
     call CopyRectTo20ByteRowsJp_Bank33
-    ld hl, vTiles1 + $4E0
+    ld hl, vTiles1 + $4e0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -2129,53 +1809,42 @@ Jump_033_5911:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTwoChoiceCursor
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case05::
-Jump_033_59B9:: ; address name
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
-    ld a, $0D ; 'Battle in Team Mode?'
+    ld a, $0d ; 'Battle in Team Mode?'
     call BeginString_Bank07_Cat5
-    xor a, a
+    xor a
     ld [wTwoChoiceCursor], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wScreenState, wScreenStep, wListCursor, wListPageIndex
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, ...
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06::
-Jump_033_59D3:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .call_handle_three_choice_cursor_input_f1:
     farcall HandleThreeChoiceCursorInput_F1
     ld a, [wMenuInputResult]
-    and a, a
+    and a
     ret z
-    cp a, $FE
+    cp $fe
     jr z, .set_screen_state_to_02
-    cp a, $FF
+    cp $ff
     jr z, .check_two_choice_cursor
     ret
 
@@ -2184,18 +1853,18 @@ Jump_033_59D3:: ; address name
     ld [wScreenState], a
     ld a, $09 ; 'You refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
-    and a, a
+    and a
     jr z, .done
-    cp a, $01
+    cp $01
     jr z, .read_screen_state
     jr .set_screen_state_to_02
 
@@ -2209,66 +1878,55 @@ Jump_033_59D3:: ; address name
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
     ld [wScreenByteB3], a
-    ld a, $0D
+    ld a, $0d
     ld [wScreenState], a
     ld a, [wListCursor]
     ld [wItemGridX], a
     ld a, [wListPageIndex]
     ld [wItemGridY], a
-    xor a, a
+    xor a
     ld [wListCursor], a
     ld [wListPageIndex], a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte
-; points at: wScreenTileBuffer, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case07::
-Jump_033_5A58:: ; address name
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
     call CopyBytes
-    ld a, $0E ; 'The battle results will be recorded.'
+    ld a, $0e ; 'The battle results will be recorded.'
     call BeginString_Bank07_Cat5
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wTextFlags, wTextYesNoResult
-; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08::
-Jump_033_5A72:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr nz, .check_text_flags
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .check_text_flags:
     ld a, [wTextFlags]
-    or a, a
+    or a
     ret nz
     ld a, [wTextYesNoResult]
-    and a, $01
+    and $01
     jr z, .done
-    ld a, $0D ; 'Battle in Team Mode?'
+    ld a, $0d ; 'Battle in Team Mode?'
     call BeginString_Bank07_Cat5
     ld hl, wScreenStep
     dec [hl]
@@ -2281,26 +1939,16 @@ Jump_033_5A72:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09::
-Jump_033_5AAF:: ; address name
     ld hl, wScreenStep
     inc [hl]
-    ld a, $0C ; 'Please wait.'
+    ld a, $0c ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 10 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags
-; writes: wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A::
-Jump_033_5AB9:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, wScreenStep
     inc [hl]
@@ -2308,50 +1956,38 @@ Jump_033_5AB9:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 11 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wScreenState, wScreenStep, wScreenSubStep
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B::
-Jump_033_5AC8:: ; address name
     ld a, [wLinkMessage]
-    cp a, $FE
+    cp $fe
     jr z, .set_screen_state_to_02
-    cp a, $01
+    cp $01
     jr z, .clear_link_send_byte
     ret
 
 .set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A ; 'Your pal refused the Team Mode.'
+    ld a, $0a ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
-    ld a, $FE
+    ld a, $fe
     ld [wLinkSendByte], a
     ret
 
 .clear_link_send_byte:
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
-    ld a, $1A ; 'Saving Please wait.'
+    ld a, $1a ; 'Saving Please wait.'
     call BeginString_Bank07_Cat5
     ret
 
-; entry 12 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wGoldLo, wGoldMid, wGoldHi, wWorkBuf
-; writes: wWorkBuf, wGoldLo, wGoldMid, wGoldHi, wLinkSendByte
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C::
-Jump_033_5AF9:: ; address name
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld hl, wScreenStep
     inc [hl]
@@ -2373,21 +2009,15 @@ Jump_033_5AF9:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 13 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wArg5, wArg6, wScreenStep
-; writes: wLinkSendByte, wLinkReceivedByte, wScreenStep
-; points at: wRandomSeed2Hi, wLinkSeedCopy
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D::
-Jump_033_5B38:: ; address name
     ld a, [wLinkMessage]
-    cp a, $05
+    cp $05
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld hl, wRandomSeed2Hi
     ld de, wLinkSeedCopy
-    ld bc, $000B
+    ld bc, $000b
     call CopyBytes
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2401,13 +2031,7 @@ Jump_033_5B38:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, wRandomLo, wRandomHi
-; writes: wScreenStep, wBattleSetupFlagsLo, wBattleSetupFlagsHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, ...
-; points at: wBattleSetupFlagsLo, wRandomSeed2Lo
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0E::
-Jump_033_5B68:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2427,26 +2051,21 @@ Jump_033_5B68:: ; address name
     ld [wLinkBufferPtrHi], a
     ld a, $02
     ld [wLinkBufferCountLo], a
-    xor a, a
+    xor a
     ld [wLinkBufferCountHi], a
-    ld a, $FF
+    ld a, $ff
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
     ret
 
-; entry 15 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wLinkRole, wRandomLo, wRandomHi, wScreenStep, wRandomSeed2Lo, wRandomSeed2Hi
-; writes: wLinkSendByte, wLinkReady, wRandomSeed2Lo, wRandomSeed2Hi, wScreenStep, wRandomLo, wRandomHi
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0F::
-Jump_033_5BA5:: ; address name
     ld a, [wLinkMessage]
-    cp a, $F0
+    cp $f0
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wLinkReady], a
     ld a, [wLinkRole]
     bit 1, a
@@ -2469,33 +2088,23 @@ Jump_033_5BA5:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wScreenStep, wLinkSendByte
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10::
-Jump_033_5BDC:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld a, $D2
+    ld a, $d2
     ld [wLinkSendByte], a
     ret
 
-; entry 17 of the `rst $00` table in Func_033_5215_Table2_Case05
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage
-; writes: wLinkSendByte, wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wModeChangeRequest, wLinkSession, wLinkExchangeState, ...
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11::
-Jump_033_5BE9:: ; address name
     ld a, [wLinkMessage]
-    cp a, $D2
+    cp $d2
     ret nz
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
     ld a, $07
     ld [wGameMode], a
-    xor a, a
+    xor a
     ld [wModeState], a
     ld [wGameMode2State], a
     ld [wGameMode2Arg], a
@@ -2505,39 +2114,29 @@ Jump_033_5BE9:: ; address name
     ld [wLinkSession], a
     ld a, $00
     ld [wLinkExchangeState], a
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wLinkMessage], a
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215; also entries 7, 8, 9, 10, 11, 12 of the table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, wScreenState
-; writes: wScreenStep, wScreenSubStep, wScreenState
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case06::
-Jump_033_5C1A:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
-    cp a, $0A
+    cp $0a
     ret nz
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
     ld a, [wScreenState]
-    add a, $03
+    add $03
     ld [wScreenState], a
     ret
 
-; entry 13 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenState, wItemGridX, wItemGridY
-; writes: wListCursor, wListPageIndex
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D::
-Jump_033_5C36:: ; address name
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
-    cp a, $0E
+    cp $0e
     ret nz
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2545,13 +2144,9 @@ Jump_033_5C36:: ; address name
     ld [wListPageIndex], a
     ret
 
-; entry 14 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E::
-Jump_033_5C4F:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01
@@ -2561,19 +2156,14 @@ Jump_033_5C4F:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case07
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00::
-Jump_033_5C63:: ; address name
     farcall ClearRecordPanelTiles
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0A0B
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     call DrawPlayerNameAndString0Category1
-    ld hl, vTiles1 + $4E0
+    ld hl, vTiles1 + $4e0
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -2593,21 +2183,12 @@ Jump_033_5C63:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0E; also entry 2 of the table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01::
-Jump_033_5CA7:: ; address name
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wArg5, wArg6, hTemp0, wArg1, wArg2, wArg3, wDigits, wScreenStep
-; writes: wArg1, rRAMG2, rRAMB, wWorkBuf, wArg2, wArg3, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03::
-Jump_033_5CAC:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -2616,26 +2197,26 @@ Jump_033_5CAC:: ; address name
     ld a, [hl]
     ld b, a
     push af
-    ld a, $C7
+    ld a, $c7
     ld [wArg1], a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, b
     ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
-    and a, $0F
+    and $0f
     ld [wWorkBuf], a
     ld a, [wArg1]
     ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWorkBuf
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld de, TileRect_33_5D5F
     ld hl, wWindowTileBuffer + $140
-    ld bc, $0D02
+    ld bc, $0d02
     call CopyRectTo20ByteRowsJp_Bank33
     pop af
     ld [wArg1], a
@@ -2652,9 +2233,9 @@ Jump_033_5CAC:: ; address name
     ld h, a
     push bc
     push hl
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, b
     ld c, MON_LEVEL
@@ -2665,20 +2246,20 @@ Jump_033_5CAC:: ; address name
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F
     ld a, [wDigits + $1]
-    add a, $E0
+    add $e0
     pop hl
     push hl
-    ld [hl+], a
+    ld [hli], a
     ld a, [wDigits + $2]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     pop hl
     pop bc
     ld a, l
-    add a, $07
+    add $07
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     push hl
     ld a, b
@@ -2686,8 +2267,8 @@ Jump_033_5CAC:: ; address name
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
-    and a, $01
-    add a, $CC
+    and $01
+    add $cc
     pop hl
     ld [hl], a
     ld a, [wScreenStep]
@@ -2695,39 +2276,31 @@ Jump_033_5CAC:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 2 tiles, one row per line
 TileRect_33_5D5F::
-Data_033_5D5F:: ; address name
-    db $B6, $EA, $ED, $C3, $C3, $F8, $F9, $FA, $FB, $FC, $C3, $C7, $B7 ; id 0
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 1
+    db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
-; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04::
-Jump_033_5D79:: ; address name
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf
-; points at: wKeyNameBuf, wLinkPartnerName, wNameGlyphBuf, wRandomSeed2Hi, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05::
-Jump_033_5D80:: ; address name
     ld de, TileRect_33_62C3
-    ld hl, wWindowTileBuffer + $6E
-    ld bc, $0A0B
+    ld hl, wWindowTileBuffer + $6e
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
-    ld hl, wWindowTileBuffer + $B1
+    ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0A0B
+    ld bc, $0a0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wLinkPartnerName
-    ld hl, wWindowTileBuffer + $A7
+    ld hl, wWindowTileBuffer + $a7
     call RunFunc6204FourTimes
     ld hl, vTiles2 + $50
     ld a, l
@@ -2742,39 +2315,34 @@ Jump_033_5D80:: ; address name
     call FillTilesFromRequest
     ld de, wNameGlyphBuf
     ld hl, wRandomSeed2Hi
-    ld bc, $000A
+    ld bc, $000a
     call CopyBytes
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     ld de, vTiles2 + $50
     call CopyGlyphTilesToVRAM
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06::
-Jump_033_5DDF:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0E01
+    ld hl, $0e01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
     farcall ShowString_Bank1B_481A
     ld de, TileRect_33_63F9
-    ld hl, wWindowTileBuffer + $E7
+    ld hl, wWindowTileBuffer + $e7
     ld bc, $0907
     call CopyRectTo20ByteRowsJp_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
@@ -2786,25 +2354,20 @@ Jump_033_5DDF:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_5215_Table2_Case0E
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenByteB2, wScreenByteB3
-; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case07::
-Jump_033_5E23:: ; address name
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
-    ld de, $01A0
+    ld de, $01a0
     add hl, de
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRectToBGMap_33
     ld a, $70
     ldh [hSpriteHideTile], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenByteB2]
     ld [wScreenState], a
@@ -2813,13 +2376,9 @@ Jump_033_5E23:: ; address name
     call SetDefaultStringWindow_Bank33
     ret
 
-; entry 15 of the `rst $00` table in Func_033_5215
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F::
-Jump_033_5E57:: ; address name
     ld a, [wScreenStep]
-    rst $00
+    jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02
@@ -2829,19 +2388,14 @@ Jump_033_5E57:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListCursor, wScreenStep
-; writes: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00::
-Jump_033_5E6B:: ; address name
     farcall ClearRecordPanelTiles
     ld de, TileRect_33_6438
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080B
+    ld bc, $080b
     call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wListCursor]
-    ld b, $BC
+    ld b, $bc
     ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call DrawPlayerNameAndString0Category1
@@ -2850,27 +2404,19 @@ Jump_033_5E6B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case03::
-Jump_033_5E93:: ; address name
     call CallDrawListEntriesCell5RecordPanel
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
-; reads: wListPages, wScreenStep
-; writes: wArg1, wArg2, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01::
-Jump_033_5E97:: ; address name
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
-    cp a, $02
+    cp $02
     jr c, .check_screen_step
-    ld hl, wWindowTileBuffer + $12E
+    ld hl, wWindowTileBuffer + $12e
     call StoreC5BEC6AtHLStride2_Bank33
-    ld hl, wWindowTileBuffer + $12F
+    ld hl, wWindowTileBuffer + $12f
     ld a, h
     ld [wArg1], a
     ld a, l
@@ -2883,92 +2429,71 @@ Jump_033_5E97:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
-; writes: wArg1
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02::
-Jump_033_5EC6:: ; address name
     farcall DrawRecordListPageNames
-    xor a, a
+    xor a
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case04::
-Jump_033_5ED7:: ; address name
     call CallClearAndDrawListEntriesCell5Name
     ret
 
-; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05::
-Jump_033_5EDB:: ; address name
     call CopyRect62C3ToWC36EAndIncScreenStep
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-; points at: wKeyNameBuf
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06::
-Jump_033_5EDF:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $0C01
+    ld hl, $0c01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
-    ld a, $1E
+    ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank1B_481A
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     call SetDefaultStringWindow_Bank33
-    xor a, a
+    xor a
     ld a, $12
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
     ld de, wKeyNameBuf
-    ld hl, wWindowTileBuffer + $B1
+    ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     ld de, TileRect_33_63C7
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRowsJp_Bank33
-    xor a, a
+    xor a
     ld [wChoiceCursor], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in Func_033_5215_Table2_Case0F
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenByteB2, wScreenByteB3
-; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07::
-Jump_033_5F37:: ; address name
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
-    ld de, $01A0
+    ld de, $01a0
     add hl, de
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRectToBGMap_33
     ld a, $70
     ldh [hSpriteHideTile], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenByteB2]
     ld [wScreenState], a
@@ -2977,66 +2502,57 @@ Jump_033_5F37:: ; address name
     call SetDefaultStringWindow_Bank33
     ret
 
-; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller); then disables SRAM (E-0119)
-; no direct call (reached through a table, a jump or a vector)
-; writes: rRAMG2, rRAMB
-; points at: wPickedRecords
-LoadRecordByteForPickedRecords:: ; heuristic: follows a terminator; C0
-Func_033_5F6B:: ; address name
+; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller);
+; then disables SRAM (E-0119)
+LoadRecordByteForPickedRecords::
     ld hl, wPickedRecords
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld a, [hl]
     call LoadSRAMRecordByte
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld [rRAMB], a
     ret
 
-; copies box Data_033_639F to wWindowTileBuffer + $110 and runs RunFunc6204FourTimes for wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B)
-; points at: wKeyNameBuf
+; copies box TileRect_33_639F to wWindowTileBuffer + $110 and runs RunFunc6204FourTimes for
+; wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126)
 DrawBox639FAndKeyRows::
-Func_033_5F83:: ; address name
     ld de, TileRect_33_639F
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
-    ld hl, wWindowTileBuffer + $B1
+    ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     ret
 
-; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01)
-; reads: wPickCount, wRecordsFlagged
-; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
+; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
+; clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ListAvailableRecordsForSelection_Bank33::
-Func_033_5F99:: ; address name
     ld hl, wListEntries
-    ld b, $1E
+    ld b, $1e
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld hl, wListEntries2
-    ld b, $1E
+    ld b, $1e
 
 .loop2:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop2
-    xor a, a
+    xor a
     ld [wListCount], a
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
     ld de, sRecords
@@ -3046,35 +2562,35 @@ Func_033_5F99:: ; address name
 
 .loop3:
     ld a, [de]
-    and a, a
+    and a
     jr z, .skip3
-    cp a, $01
+    cp $01
     jr z, .skip
     ld a, [wPickCount]
-    cp a, $03
+    cp $03
     jr z, .skip3
     ld a, [de]
-    cp a, $02
+    cp $02
     jr z, .skip
     jr .skip3
 
 .skip:
     push de
-    ld a, $6E
-    add a, e
+    ld a, $6e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
     ld a, [de]
-    and a, a
+    and a
     jr nz, .check_records_flagged
     pop de
     ld a, [wPickCount]
-    and a, a
+    and a
     jr z, .next
-    cp a, $03
+    cp $03
     jr nc, .next
     push hl
     push de
@@ -3085,8 +2601,8 @@ Func_033_5F99:: ; address name
     ld b, a
 
 .loop4:
-    ld a, [hl+]
-    cp a, d
+    ld a, [hli]
+    cp d
     jr z, .restore
     dec b
     jr nz, .loop4
@@ -3104,7 +2620,7 @@ Func_033_5F99:: ; address name
 .next:
     inc c
     ld a, b
-    ld [hl+], a
+    ld [hli], a
     jr .skip3
 
 .check_records_flagged:
@@ -3114,8 +2630,8 @@ Func_033_5F99:: ; address name
     ld [wRecordsFlagged], a
 
 .skip3:
-    ld a, $A5
-    add a, e
+    ld a, $a5
+    add e
     ld e, a
     jr nc, .next2
     inc d
@@ -3123,32 +2639,27 @@ Func_033_5F99:: ; address name
 .next2:
     inc b
     ld a, b
-    cp a, $1E
+    cp $1e
     jr c, .loop3
     ld a, c
     ld [wListCount], a
-    xor a, a
+    xor a
     ld [rRAMG2], a
     farcall MovePartyRecordsToFrontOfList
     ret
 
-; the same 16 bytes as ShowStringA10_Bank1B (1B:7439)
-; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08)
-; writes: wStringIndex, wStringCategory
+; the same 16 bytes as ShowStringA10_Bank1B (ShowStringA10_Bank1B)
 ShowStringA10_Bank33::
-Func_033_6039:: ; address name
-    add a, $10
+    add $10
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800), wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 9 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800),
+; wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 SetDefaultStringWindow_Bank33::
-Func_033_6049:: ; address name
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -3162,11 +2673,7 @@ Func_033_6049:: ; address name
     ret
 
 ; wPickedRecords = the record index at WD789 cell 5 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08)
-; reads: wArg5, wArg6
-; points at: wPickedRecords
 StoreListEntriesCell5RecordInPickedRecords::
-Func_033_6060:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -3178,15 +2685,10 @@ Func_033_6060:: ; address name
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wTextBuf0 (E-0124)
-; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06)
-; reads: wArg5, wArg6
-; writes: rRAMG2, rRAMB, rRAMG
-; points at: wNameGlyphBuf, wTextBuf0
 CopyListEntriesCell5NameToTextBuf0_Bank33::
-Func_033_6074:: ; address name
-    ld a, $0A
+    ld a, $0a
     ld [rRAMG2], a
-    xor a, a
+    xor a
     ld [rRAMB], a
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3198,46 +2700,42 @@ Func_033_6074:: ; address name
     call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
-    ld b, $0B
+    ld b, $0b
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [rRAMB], a
     ld [rRAMG], a
     ret
 
-; wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, wScreenSubStep = 0 and wScreenStep += 1 (E-0126)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C)
-; reads: wPickCount, wScreenStep
-; writes: wSelectedRecord, wPackWork, wPickCount, wScreenSubStep, wScreenStep
+; wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, wScreenSubStep = 0 and wScreenStep
+; += 1 (E-0126)
 FinishPickedRecordsEntryAndStep_33::
-Func_033_60A7:: ; address name
     ld a, [wPickCount]
     ld [wSelectedRecord], a
-    ld a, $FF
+    ld a, $ff
     ld [wPackWork], a
     ld a, $04
     ld [wPickCount], a
-    xor a, a
+    xor a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 4 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
+; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
+; A, DE, HL (the same 16 bytes appear in 4 banks)
 StoreBAtWordTableEntry_Bank33::
-Func_033_60C3:: ; address name
     push bc
     sla a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -3246,13 +2744,11 @@ Func_033_60C3:: ; address name
     ld [de], a
     ret
 
-; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
-; reads: hScrollY, hScrollX
+; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
+; clobbers A, DE (the same 41 bytes appear in 3 banks)
 BGMapAddressAtScroll_Bank33::
-Func_033_60D3:: ; address name
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -3260,16 +2756,16 @@ Func_033_60D3:: ; address name
     sla e
     rl d
     ld a, e
-    add a, $00
+    add $00
     ld e, a
     ld a, d
-    adc a, $98
+    adc $98
     ld d, a
     ldh a, [hScrollX]
     srl a
     srl a
     srl a
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -3281,13 +2777,9 @@ Func_033_60D3:: ; address name
     ld h, a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
-; reads: wIsCGB
-; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wScreenAttrBuffer
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL +
+; $1C1, and on CGB copies its attributes (E-0127)
 DrawScreenBufferRectToBGMap_33::
-Func_033_60FC:: ; address name
     push de
     push bc
     push hl
@@ -3299,15 +2791,15 @@ Func_033_60FC:: ; address name
     ld d, a
     pop hl
     push hl
-    xor a, a
+    xor a
     call CopyRectFromBankToBGMapWrapped
     pop hl
     push hl
     ld a, l
-    add a, $C1
+    add $c1
     ld l, a
     ld a, h
-    adc a, $01
+    adc $01
     ld h, a
     ld a, l
     ld [wTextCursorLo], a
@@ -3317,12 +2809,12 @@ Func_033_60FC:: ; address name
     pop bc
     pop de
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     push de
     call WaitForVRAMAccess
     push bc
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     pop bc
@@ -3337,22 +2829,20 @@ Func_033_60FC:: ; address name
     ld a, h
     ld d, a
     pop hl
-    xor a, a
+    xor a
     call CopyRectFromBankToBGMapWrapped
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
-; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
-; 14 call sites from 11 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09, CopyRect62C3ToWC36EAndIncScreenStep, ...)
-; reads: wIsCGB
-; writes: rSVBK
+; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL
+; with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2
+; (E-0072)
 CopyRectTo20ByteRowsJp_Bank33::
-Func_033_6152:: ; address name
     push hl
     push bc
 
@@ -3363,29 +2853,29 @@ Func_033_6152:: ; address name
 .loop2:
     ld a, [de]
     inc de
-    ld [hl+], a
+    ld [hli], a
     dec b
     jr nz, .loop2
     pop bc
     pop hl
     ld a, l
-    add a, $14
+    add $14
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec c
     jp nz, .loop
     pop bc
     pop hl
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     ld a, l
-    add a, $68
+    add $68
     ld l, a
     ld a, h
-    adc a, $0E
+    adc $0e
     ld h, a
     ld a, $02
     ldh [rSVBK], a
@@ -3395,17 +2885,17 @@ Func_033_6152:: ; address name
     push bc
 
 .loop4:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop4
     pop bc
     pop hl
     ld a, l
-    add a, $14
+    add $14
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     dec c
     jp nz, .loop3
@@ -3413,12 +2903,9 @@ Func_033_6152:: ; address name
     ldh [rSVBK], a
     ret
 
-; writes the gold as up to five decimal digit tiles without leading zeros at wScreenTileBuffer + $22 (E-0127)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep)
-; reads: wGoldLo, wGoldMid, wGoldHi, hTemp2, hTemp1, hTemp0
-; writes: wDigits
+; writes the gold as up to five decimal digit tiles without leading zeros at wScreenTileBuffer + $22
+; (E-0127)
 WriteGoldDigitsToWC1BA::
-Func_033_6197:: ; address name
     ld a, [wGoldLo]
     ld l, a
     ld a, [wGoldMid]
@@ -3433,9 +2920,9 @@ Func_033_6197:: ; address name
     ld c, $00
     ld hl, wScreenTileBuffer + $22
     ldh a, [hTemp2]
-    and a, $0F
+    and $0f
     jr z, .read_temp1
-    add a, $E0
+    add $e0
     ld [hl], a
     set 0, c
 
@@ -3443,26 +2930,26 @@ Func_033_6197:: ; address name
     inc hl
     ldh a, [hTemp1]
     swap a
-    and a, $0F
+    and $0f
     jr nz, .skip
     bit 0, c
     jr z, .check_temp1
 
 .skip:
-    add a, $E0
+    add $e0
     ld [hl], a
     set 0, c
 
 .check_temp1:
     inc hl
     ldh a, [hTemp1]
-    and a, $0F
+    and $0f
     jr nz, .skip2
     bit 0, c
     jr z, .read_temp0
 
 .skip2:
-    add a, $E0
+    add $e0
     ld [hl], a
     set 0, c
 
@@ -3470,37 +2957,30 @@ Func_033_6197:: ; address name
     inc hl
     ldh a, [hTemp0]
     swap a
-    and a, $0F
+    and $0f
     jr nz, .skip3
     bit 0, c
     jr z, .check_temp0
 
 .skip3:
-    add a, $E0
+    add $e0
     ld [hl], a
 
 .check_temp0:
     inc hl
     ldh a, [hTemp0]
-    and a, $0F
-    add a, $E0
+    and $0f
+    add $e0
     ld [hl], a
     ret
 
-; calls Func_033_6204 three times and falls into it once more (E-0122)
-; 7 call sites from 6 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
-; reads: wDigits
+; calls RunFunc6204FourTimes_HLToDecimalDigits three times and falls into it once more (E-0122)
 RunFunc6204FourTimes::
-Func_033_61FB:: ; address name
     call RunFunc6204FourTimes_HLToDecimalDigits
     call RunFunc6204FourTimes_HLToDecimalDigits
     call RunFunc6204FourTimes_HLToDecimalDigits
 
-; only called from RunFunc6204FourTimes (E-0047)
-; 3 call sites from 1 routine (e.g. RunFunc6204FourTimes)
-; reads: wDigits
 RunFunc6204FourTimes_HLToDecimalDigits::
-Func_033_6204:: ; address name
     push hl
     ld a, [de]
     inc de
@@ -3509,28 +2989,26 @@ Func_033_6204:: ; address name
     call HLToDecimalDigits
     pop hl
     ld a, [wDigits + $1]
-    or a, a
+    or a
     jr z, .read_digits
-    add a, $E0
+    add $e0
     ld [hl], a
 
 .read_digits:
     inc hl
     ld a, [wDigits + $2]
-    add a, $E0
+    add $e0
     ld [hl], a
     ld a, l
-    add a, $27
+    add $27
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ret
 
 ; writes $C3 at the addresses held by entries 0 to C - 1 of the word table at HL (E-0124)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B)
 WriteC3AtWordTableEntries_Bank33::
-Func_033_6227:: ; address name
     ld a, c
     ld b, a
     ld c, $00
@@ -3538,12 +3016,12 @@ Func_033_6227:: ; address name
 .loop:
     ld a, c
     push bc
-    ld b, $C3
+    ld b, $c3
     push hl
     push bc
     sla a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
@@ -3554,16 +3032,13 @@ Func_033_6227:: ; address name
     pop bc
     inc c
     ld a, c
-    cp a, b
+    cp b
     jr c, .loop
     ret
 
-; clears vTiles2 (size $0105), draws the 10-byte player name wPlayerName there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
-; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wStringCategory, wStringIndex
-; points at: wNameGlyphBuf, wPlayerName
+; clears vTiles2 (size $0105), draws the 10-byte player name wPlayerName there, then shows string 0
+; of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
 DrawPlayerNameAndString0Category1::
-Func_033_6247:: ; address name
     ld hl, vTiles2
     ld a, l
     ld [wTextWindowTileLo], a
@@ -3577,10 +3052,10 @@ Func_033_6247:: ; address name
     call FillTilesFromRequest
     ld de, wNameGlyphBuf
     ld hl, wPlayerName
-    ld bc, $000A
+    ld bc, $000a
     call CopyBytes
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     ld de, vTiles2
     call CopyGlyphTilesToVRAM
     ld hl, vTiles2 + $100
@@ -3595,147 +3070,127 @@ Func_033_6247:: ; address name
     ld [wTextWindowWidth], a
     ld a, $01
     ld [wStringCategory], a
-    xor a, a
+    xor a
     ld [wStringIndex], a
     farcall ShowString_Bank07
     ret
 
-; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01)
+; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
+; banks)
 StoreC5BEC6AtHLStride2_Bank33::
-Func_033_629D:: ; address name
-    ld a, $C5
+    ld a, $c5
     ld [hl], a
     inc hl
     inc hl
-    ld a, $BE
+    ld a, $be
     ld [hl], a
     inc hl
     inc hl
-    ld a, $C6
+    ld a, $c6
     ld [hl], a
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
 TileRect_33_62AB::
-Data_033_62AB:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 11 tiles, one row per line
 TileRect_33_62C3::
-Data_033_62C3:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $00, $01, $02, $03, $04, $C3, $C3, $C3, $B7 ; id 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $B6, $10, $11, $12, $C3, $16, $ED, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $13, $14, $15, $C3, $16, $ED, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $10, $11, $12, $C3, $17, $ED, $C3, $C3, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $13, $14, $15, $C3, $17, $ED, $C3, $C3, $B7 ; id 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $b6, $10, $11, $12, $c3, $16, $ed, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $13, $14, $15, $c3, $16, $ed, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $10, $11, $12, $c3, $17, $ed, $c3, $c3, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $13, $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 10 x 11 tiles, one row per line
 TileRect_33_6331::
-Data_033_6331:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $05, $06, $07, $08, $09, $C3, $C3, $C3, $B7 ; id 1
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    db $B6, $10, $11, $12, $C3, $16, $ED, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $13, $14, $15, $C3, $16, $ED, $C3, $C3, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $10, $11, $12, $C3, $17, $ED, $C3, $C3, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $13, $14, $15, $C3, $17, $ED, $C3, $C3, $B7 ; id 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $05, $06, $07, $08, $09, $c3, $c3, $c3, $b7 ; id 1
+    db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
+    db $b6, $10, $11, $12, $c3, $16, $ed, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $13, $14, $15, $c3, $16, $ed, $c3, $c3, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $10, $11, $12, $c3, $17, $ed, $c3, $c3, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $13, $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_33_639F::
-Data_033_639F:: ; address name
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 0
-    db $14, $15, $C3, $17, $ED, $C3, $C3, $B7 ; id 1
-    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
-    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
-    db $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
+    db $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 1
+    db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
+    db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
+    db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
-; record: 8 x 5 tiles, one row per line
 TileRect_33_63C7::
-Data_033_63C7:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $70, $71, $72, $73, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; address loaded by RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_033_63EF:: ; address name
-    db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data::
+    db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_33_63F9::
-Data_033_63F9:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $30, $31, $32, $33, $34, $C3, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $35, $36, $37, $38, $C3, $C3, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $39, $3A, $31, $34, $C3, $C3, $B7 ; id 5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $30, $31, $32, $33, $34, $c3, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $35, $36, $37, $38, $c3, $c3, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $39, $3a, $31, $34, $c3, $c3, $b7 ; id 5
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
 TileRect_33_6438::
-Data_033_6438:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 3
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 5
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
-    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7 ; id 7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
-    db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7 ; id 9
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+    db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
+    db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
+    db $b6, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; id 3
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 4
+    db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; id 5
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
+    db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $b7 ; id 7
+    db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 8
+    db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
+    db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490)
 BeginStringDisplay_Bank33_6490::
-Func_033_6490:: ; address name
     ld de, StringCategories_33_64A5
     call BeginStringDisplay
     ret
-    db $11, $A5, $64, $CD, $FE, $25, $C9
+    db $11, $a5, $64, $cd, $fe, $25, $c9
 
-; Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 1 routine (e.g. ArenaMenu_CopyBytesDEToHL_Bank0C)
+; BeginStringDisplay_Bank33_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_Bank33_649E::
-Func_033_649E:: ; address name
     call BeginStringDisplay_Bank33_6490
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_33_64A5::
-Data_033_64A5:: ; address name
     dw StringList_33_64A7 ; id 0
 
-; E-0217 (derived: category list of StringCategories_33_64A5; one pointer per wStringIndex)
+; category list of StringCategories_33_64A5; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_33_64A7::
-Data_033_64A7:: ; address name
     dw String_33_64A5_00_00 ; id 0
     dw String_33_64A5_00_00 ; id 1
     dw String_33_64A5_00_02 ; id 2
@@ -3792,364 +3247,271 @@ Data_033_64A7:: ; address name
     dw String_33_64A5_00_35 ; id 53
     dw BeginStringDisplay_Bank33_7037 ; id 54
 
-String_33_64A5_00_00:: ; heuristic: string; C0
-Data_033_6515:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You've finished", $F1
-    db "that Class.", $F7
-    db $F0
+String_33_64A5_00_00::
+    db $eb, "*: You've finished", $f1
+    db "that Class.", $f7
+    db $f0
 
-String_33_64A5_00_02:: ; heuristic: string; C0
-Data_033_6534:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Which Class will", $F1
-    db "you challenge?", $F0
+String_33_64A5_00_02::
+    db $eb, "*: Which Class will", $f1
+    db "you challenge?", $f0
 
-String_33_64A5_00_03:: ; heuristic: string; C0
-Data_033_6557:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Train some more,", $F1
-    db "and see you again!", $F7
-    db $F0
+String_33_64A5_00_03::
+    db $eb, "*: Train some more,", $f1
+    db "and see you again!", $f7
+    db $f0
 
-String_33_64A5_00_04:: ; heuristic: string; C0
-Data_033_657F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Let me confirm", $F1
-    db "that-the ", $F9, "0 Class?", $F0
+String_33_64A5_00_04::
+    db $eb, "*: Let me confirm", $f1
+    db "that-the ", $f9, "0 Class?", $f0
 
-String_33_64A5_00_05:: ; heuristic: string; C0
-Data_033_65A4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Good luck! I'll", $F1
-    db "cheer for you!", $F7
-    db $F0
+String_33_64A5_00_05::
+    db $eb, "*: Good luck! I'll", $f1
+    db "cheer for you!", $f7
+    db $f0
 
-String_33_64A5_00_06:: ; heuristic: string; C0
-Data_033_65C6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Not enough gold", $F1
-    db "for that Class!", $F7
-    db $F0
+String_33_64A5_00_06::
+    db $eb, "*: Not enough gold", $f1
+    db "for that Class!", $f7
+    db $f0
 
-String_33_64A5_00_07:: ; heuristic: string; C0
-Data_033_65EA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh", $A4, " The crowd", $F1
-    db "wanted to see you", $A4, $F7
-    db $F0
+String_33_64A5_00_07::
+    db $eb, "*: Oh", $a4, " The crowd", $f1
+    db "wanted to see you", $a4, $f7
+    db $f0
 
-String_33_64A5_00_0A:: ; heuristic: string; C0
-Data_033_660F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: How many masters", $F1
-    db "in the group?", $F0
+String_33_64A5_00_0A::
+    db $eb, "*: How many masters", $f1
+    db "in the group?", $f0
 
-String_33_64A5_00_0B:: ; heuristic: string; C0
-Data_033_6631:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Will you try a", $F1
-    db "Master Battle?", $F0
+String_33_64A5_00_0B::
+    db $eb, "*: Will you try a", $f1
+    db "Master Battle?", $f0
 
-String_33_64A5_00_0C:: ; heuristic: string; C0
-Data_033_6652:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The S Class", $F1
-    db "should be good.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_0C::
+    db $eb, "*: The S Class", $f1
+    db "should be good.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_0D:: ; heuristic: string; C0
-Data_033_6695:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The A Class", $F1
-    db "should be good.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_0D::
+    db $eb, "*: The A Class", $f1
+    db "should be good.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_0E:: ; heuristic: string; C0
-Data_033_66D8:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The B Class", $F1
-    db "should be good.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_0E::
+    db $eb, "*: The B Class", $f1
+    db "should be good.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_0F:: ; heuristic: string; C0
-Data_033_671B:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It could get", $F1
-    db "rough out there.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_0F::
+    db $eb, "*: It could get", $f1
+    db "rough out there.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_10:: ; heuristic: string; C0
-Data_033_6760:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It could get", $F1
-    db "rough out there.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_10::
+    db $eb, "*: It could get", $f1
+    db "rough out there.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_11:: ; heuristic: string; C0
-Data_033_67A5:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: The E Class", $F1
-    db "should do.", $FA, $F7
-    db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
+String_33_64A5_00_11::
+    db $eb, "*: The E Class", $f1
+    db "should do.", $fa, $f7
+    db $ef, $ee, "Which Class will", $ef, $ee, "you challenge?", $f0
 
-String_33_64A5_00_12:: ; heuristic: string; C0
-Data_033_67E3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Is ", $F9, "0 Class OK?", $F0
+String_33_64A5_00_12::
+    db $eb, "*: Is ", $f9, "0 Class OK?", $f0
 
-String_33_64A5_00_13:: ; heuristic: string; C0
-Data_033_67F6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: I hope you do", $F1
-    db "well!", $F7
-    db $F0
+String_33_64A5_00_13::
+    db $eb, "*: I hope you do", $f1
+    db "well!", $f7
+    db $f0
 
-String_33_64A5_00_14:: ; heuristic: string; C0
-Data_033_680E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You need more", $F1
-    db "gold to register.", $F7
-    db $F0
+String_33_64A5_00_14::
+    db $eb, "*: You need more", $f1
+    db "gold to register.", $f7
+    db $f0
 
-String_33_64A5_00_15:: ; heuristic: string; C0
-Data_033_6832:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You can't try", $F1
-    db "that Class yet.", $F7
-    db $F0
+String_33_64A5_00_15::
+    db $eb, "*: You can't try", $f1
+    db "that Class yet.", $f7
+    db $f0
 
-String_33_64A5_00_17:: ; heuristic: string; C0
-Data_033_6853:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "lasSABCDE", $AC, "No", $F0
+String_33_64A5_00_17::
+    db "lasSABCDE", $ac, "No", $f0
 
-String_33_64A5_00_18:: ; heuristic: string; C0
-Data_033_6860:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Battles Cost", $F0
+String_33_64A5_00_18::
+    db "Battles Cost", $f0
 
-String_33_64A5_00_19:: ; heuristic: string; C0
-Data_033_686D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "INFOTESKLPA", $F0
+String_33_64A5_00_19::
+    db "INFOTESKLPA", $f0
 
-String_33_64A5_00_1A:: ; heuristic: string; C0
-Data_033_6879:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "lasSABCDE", $AC, "No", $F0
+String_33_64A5_00_1A::
+    db "lasSABCDE", $ac, "No", $f0
 
-String_33_64A5_00_1B:: ; heuristic: string; C0
-Data_033_6886:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've won the", $EF, $EE, "Kids' Class!", $FA, $F7
-    db $EF, $EE, "The King will give", $EF, $EE, "you his official", $FA, $F7
-    db $EF, $EE, "recognition as a", $EF, $EE, "monster master.", $FA, $F7
-    db $EF, $EE, "You can use the", $EF, $EE, "Starry Shrine and", $FA, $F7
-    db $EF, $EE, "the Egg Evaluator's", $EF, $EE, "services now.", $FA, $F7
-    db $EF, $EE, "You'll be facing", $EF, $EE, "grownups here from", $FA, $F7
-    db $EF, $EE, "now on, so keep", $EF, $EE, "training hard.", $FA, $F7
-    db $EF, $EE, "Here's your prize", $EF, $EE, "-the Pirate Key!", $F7
-    db $F0
+String_33_64A5_00_1B::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've won the", $ef, $ee, "Kids' Class!", $fa, $f7
+    db $ef, $ee, "The King will give", $ef, $ee, "you his official", $fa, $f7
+    db $ef, $ee, "recognition as a", $ef, $ee, "monster master.", $fa, $f7
+    db $ef, $ee, "You can use the", $ef, $ee, "Starry Shrine and", $fa, $f7
+    db $ef, $ee, "the Egg Evaluator's", $ef, $ee, "services now.", $fa, $f7
+    db $ef, $ee, "You'll be facing", $ef, $ee, "grownups here from", $fa, $f7
+    db $ef, $ee, "now on, so keep", $ef, $ee, "training hard.", $fa, $f7
+    db $ef, $ee, "Here's your prize", $ef, $ee, "-the Pirate Key!", $f7
+    db $f0
 
-String_33_64A5_00_21:: ; heuristic: string; C0
-Data_033_69CE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've won the", $EF, $EE, "C Class!", $FA, $F7
-    db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
-    db $F0
+String_33_64A5_00_21::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've won the", $ef, $ee, "C Class!", $fa, $f7
+    db $ef, $ee, "Here's your prize", $ef, $ee, "-a  Magic Key!", $f7
+    db $f0
 
-String_33_64A5_00_22:: ; heuristic: string; C0
-Data_033_6A2E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've won the", $EF, $EE, "B Class!", $FA, $F7
-    db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
-    db $F0
+String_33_64A5_00_22::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've won the", $ef, $ee, "B Class!", $fa, $f7
+    db $ef, $ee, "Here's your prize", $ef, $ee, "-a  Magic Key!", $f7
+    db $f0
 
-String_33_64A5_00_23:: ; heuristic: string; C0
-Data_033_6A8E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've won the", $EF, $EE, "A Class!", $FA, $F7
-    db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
-    db $F0
+String_33_64A5_00_23::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've won the", $ef, $ee, "A Class!", $fa, $f7
+    db $ef, $ee, "Here's your prize", $ef, $ee, "-a  Magic Key!", $f7
+    db $f0
 
-String_33_64A5_00_24:: ; heuristic: string; C0
-Data_033_6AEE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've finally won", $EF, $EE, "the S Class!", $FA, $F7
-    db $EF, $EE, "You can now choose", $EF, $EE, "any Class you want", $FA, $F7
-    db $EF, $EE, "by paying the", $EF, $EE, "class entry fee.", $FA, $F7
-    db $EF, $EE, "There are prizes", $EF, $EE, "for winners too.", $FA, $F7
-    db $EF, $EE, "Naturally, the", $EF, $EE, "level of battling", $FA, $F7
-    db $EF, $EE, "becomes much more", $EF, $EE, "difficult.", $FA, $F7
-    db $EF, $EE, "Plan and prepare", $EF, $EE, "wisely!", $F7
-    db $F0
+String_33_64A5_00_24::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've finally won", $ef, $ee, "the S Class!", $fa, $f7
+    db $ef, $ee, "You can now choose", $ef, $ee, "any Class you want", $fa, $f7
+    db $ef, $ee, "by paying the", $ef, $ee, "class entry fee.", $fa, $f7
+    db $ef, $ee, "There are prizes", $ef, $ee, "for winners too.", $fa, $f7
+    db $ef, $ee, "Naturally, the", $ef, $ee, "level of battling", $fa, $f7
+    db $ef, $ee, "becomes much more", $ef, $ee, "difficult.", $fa, $f7
+    db $ef, $ee, "Plan and prepare", $ef, $ee, "wisely!", $f7
+    db $f0
 
-String_33_64A5_00_25:: ; heuristic: string; C0
-Data_033_6C08:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Too bad you", $F1
-    db "didn't make it.", $FA, $F7
-    db $EF, $EE, "It's hard to win", $EF, $EE, "if your monsters", $FA, $F7
-    db $EF, $EE, "aren't leveled up", $EF, $EE, "enough.", $FA, $F7
-    db $EF, $EE, "I hope you do", $EF, $EE, "better next time.", $F7
-    db $F0
+String_33_64A5_00_25::
+    db $eb, "*: Too bad you", $f1
+    db "didn't make it.", $fa, $f7
+    db $ef, $ee, "It's hard to win", $ef, $ee, "if your monsters", $fa, $f7
+    db $ef, $ee, "aren't leveled up", $ef, $ee, "enough.", $fa, $f7
+    db $ef, $ee, "I hope you do", $ef, $ee, "better next time.", $f7
+    db $f0
 
-String_33_64A5_00_26:: ; heuristic: string; C0
-Data_033_6C8D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Too bad you", $F1
-    db "didn't make it.", $FA, $F7
-    db $EF, $EE, "You can create", $EF, $EE, "tougher monsters", $FA, $F7
-    db $EF, $EE, "by leveling up", $EF, $EE, "those you bred.", $FA, $F7
-    db $EF, $EE, "I hope you do", $EF, $EE, "better next time.", $F7
-    db $F0
+String_33_64A5_00_26::
+    db $eb, "*: Too bad you", $f1
+    db "didn't make it.", $fa, $f7
+    db $ef, $ee, "You can create", $ef, $ee, "tougher monsters", $fa, $f7
+    db $ef, $ee, "by leveling up", $ef, $ee, "those you bred.", $fa, $f7
+    db $ef, $ee, "I hope you do", $ef, $ee, "better next time.", $f7
+    db $f0
 
-String_33_64A5_00_27:: ; heuristic: string; C0
-Data_033_6D17:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db $F9, "0 does it!", $FA, $F7
-    db $EF, $EE, "You've won", $EF, $EE, $F9, "GG!", $FA, $F7
-    db $EF, $EE, "We hope you'll", $EF, $EE, "battle here again!", $F7
-    db $F0
+String_33_64A5_00_27::
+    db $eb, "*: Congratulations!", $f1
+    db $f9, "0 does it!", $fa, $f7
+    db $ef, $ee, "You've won", $ef, $ee, $f9, "GG!", $fa, $f7
+    db $ef, $ee, "We hope you'll", $ef, $ee, "battle here again!", $f7
+    db $f0
 
-String_33_64A5_00_28:: ; heuristic: string; C0
-Data_033_6D70:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: You lost?", $F1
-    db "That's too bad.", $FA, $F7
-    db $EF, $EE, "Try again after", $EF, $EE, "leveling up your", $FA, $F7
-    db $EF, $EE, "monsters some", $EF, $EE, "more.", $F7
-    db $F0
+String_33_64A5_00_28::
+    db $eb, "*: You lost?", $f1
+    db "That's too bad.", $fa, $f7
+    db $ef, $ee, "Try again after", $ef, $ee, "leveling up your", $fa, $f7
+    db $ef, $ee, "monsters some", $ef, $ee, "more.", $f7
+    db $f0
 
-String_33_64A5_00_2A:: ; heuristic: string; C0
-Data_033_6DCA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 received", $F1
-    db "the Magic Key.", $E5, $58, $F7
-    db $E9, $FF, $F0
+String_33_64A5_00_2A::
+    db $f9, "0 received", $f1
+    db "the Magic Key.", $e5, $58, $f7
+    db $e9, $ff, $f0
 
-String_33_64A5_00_2B:: ; heuristic: string; C0
-Data_033_6DEA:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: ", $A4, "Oh, but your", $F1
-    db "key ring is full.", $FA, $F7
-    db $EF, $EE, "You'll have to", $EF, $EE, "make room, and", $FA, $F7
-    db $EF, $EE, "come back for this", $EF, $EE, "later.", $F7
-    db $F0
+String_33_64A5_00_2B::
+    db $eb, "*: ", $a4, "Oh, but your", $f1
+    db "key ring is full.", $fa, $f7
+    db $ef, $ee, "You'll have to", $ef, $ee, "make room, and", $fa, $f7
+    db $ef, $ee, "come back for this", $ef, $ee, "later.", $f7
+    db $f0
 
-String_33_64A5_00_2C:: ; heuristic: string; C0
-Data_033_6E4D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Here's the Magic", $F1
-    db "Key you", $44, " won!", $F7
-    db $F0
+String_33_64A5_00_2C::
+    db $eb, "*: Here's the Magic", $f1
+    db "Key you", $44, " won!", $f7
+    db $f0
 
-String_33_64A5_00_2D:: ; heuristic: string; C0
-Data_033_6E6F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0 received", $F1
-    db "the Pirate Key.", $E5, $58, $F7
-    db $E9, $FF, $F0
+String_33_64A5_00_2D::
+    db $f9, "0 received", $f1
+    db "the Pirate Key.", $e5, $58, $f7
+    db $e9, $ff, $f0
 
-String_33_64A5_00_2E:: ; heuristic: string; C0
-Data_033_6E90:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Here's the Pirate", $F1
-    db "Key you", $44, " won!", $F7
-    db $F0
+String_33_64A5_00_2E::
+    db $eb, "*: Here's the Pirate", $f1
+    db "Key you", $44, " won!", $f7
+    db $f0
 
-String_33_64A5_00_2F:: ; heuristic: string; C0
-Data_033_6EB3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Congratulations!", $F1
-    db "You did it!", $FA, $F7
-    db $EF, $EE, "You've won the", $EF, $EE, $F9, "0 Class!", $FA, $F7
-    db $EF, $EE, "Choose one of", $EF, $EE, "these chests!", $F7
-    db $F0
+String_33_64A5_00_2F::
+    db $eb, "*: Congratulations!", $f1
+    db "You did it!", $fa, $f7
+    db $ef, $ee, "You've won the", $ef, $ee, $f9, "0 Class!", $fa, $f7
+    db $ef, $ee, "Choose one of", $ef, $ee, "these chests!", $f7
+    db $f0
 
-String_33_64A5_00_30:: ; heuristic: string; C0
-Data_033_6F10:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Do you want the", $F1
-    db "left chest?", $F0
+String_33_64A5_00_30::
+    db $eb, "*: Do you want the", $f1
+    db "left chest?", $f0
 
-String_33_64A5_00_31:: ; heuristic: string; C0
-Data_033_6F2F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Do you want the", $F1
-    db "right chest?", $F0
+String_33_64A5_00_31::
+    db $eb, "*: Do you want the", $f1
+    db "right chest?", $f0
 
-String_33_64A5_00_32:: ; heuristic: string; C0
-Data_033_6F4F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Your prize is", $F1
-    db "one ", $F9, "G!", $F7
-    db $F0
+String_33_64A5_00_32::
+    db $eb, "*: Your prize is", $f1
+    db "one ", $f9, "G!", $f7
+    db $f0
 
-String_33_64A5_00_33:: ; heuristic: string; C0
-Data_033_6F69:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Your prize is", $F1
-    db "a Magic Key!", $F7
-    db $F0
+String_33_64A5_00_33::
+    db $eb, "*: Your prize is", $f1
+    db "a Magic Key!", $f7
+    db $f0
 
-String_33_64A5_00_34:: ; heuristic: string; C0
-Data_033_6F88:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: ", $A4, "Oh, but you", $F1
-    db "have no room.", $FA, $F7
-    db $EF, $EE, "Well, instead of", $EF, $EE, "the ", $F9, "G,", $FA, $F7
-    db $EF, $EE, "here's 6000G.", $EF, $EE, $F7
-    db $F0
+String_33_64A5_00_34::
+    db $eb, "*: ", $a4, "Oh, but you", $f1
+    db "have no room.", $fa, $f7
+    db $ef, $ee, "Well, instead of", $ef, $ee, "the ", $f9, "G,", $fa, $f7
+    db $ef, $ee, "here's 6000G.", $ef, $ee, $f7
+    db $f0
 
-String_33_64A5_00_35:: ; heuristic: string; C0
-Data_033_6FD6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: ", $A4, "Oh, but your", $F1
-    db "key ring is full.", $FA, $F7
-    db $EF, $EE, "Well, instead of", $EF, $EE, "the Magic Key,", $FA, $F7
-    db $EF, $EE, "here's 6000G", $EF, $EE, "instead.", $F7
-    db $F0
+String_33_64A5_00_35::
+    db $eb, "*: ", $a4, "Oh, but your", $f1
+    db "key ring is full.", $fa, $f7
+    db $ef, $ee, "Well, instead of", $ef, $ee, "the Magic Key,", $fa, $f7
+    db $ef, $ee, "here's 6000G", $ef, $ee, "instead.", $f7
+    db $f0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037, ShowStringAInDefaultWindow_Bank24)
 BeginStringDisplay_Bank33_7037::
-Func_033_7037:: ; address name
     ld de, StringCategories_33_704C
     call BeginStringDisplay
     ret
-    db $11, $4C, $70, $CD, $FE, $25, $C9
+    db $11, $4c, $70, $cd, $fe, $25, $c9
 
-; Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 7 call sites from 7 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN, GameMode6_Update_SwitchEgg_ShowInfoOKYesN, GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg, GameMode6_Update_SwitchMonster_ShowInfoOKYesN, ...)
+; BeginStringDisplay_Bank33_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_Bank33_7045::
-Func_033_7045:: ; address name
     call BeginStringDisplay_Bank33_7037
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_33_704C::
-Data_033_704C:: ; address name
     dw StringList_33_704E ; id 0
 
-; E-0217 (derived: category list of StringCategories_33_704C; one pointer per wStringIndex)
+; category list of StringCategories_33_704C; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_33_704E::
-Data_033_704E:: ; address name
     dw String_33_704C_00_00 ; id 0
     dw String_33_704C_00_01 ; id 1
     dw String_33_704C_00_02 ; id 2
@@ -4170,100 +3532,68 @@ Data_033_704E:: ; address name
     dw String_33_704C_00_0E ; id 17
     dw String_33_704C_00_12 ; id 18
 
-String_33_704C_00_00:: ; heuristic: string; C0
-Data_033_7074:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "It ends in a draw!", $FA, $F7
-    db $F0
+String_33_704C_00_00::
+    db "It ends in a draw!", $fa, $f7
+    db $f0
 
-String_33_704C_00_01:: ; heuristic: string; C0
-Data_033_7089:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Congratulations!", $F1
-    db "You've won!", $FA, $F7
-    db $F0
+String_33_704C_00_01::
+    db "Congratulations!", $f1
+    db "You've won!", $fa, $f7
+    db $f0
 
-String_33_704C_00_02:: ; heuristic: string; C0
-Data_033_70A7:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Too bad!", $F1
-    db "You've lost!", $FA, $F7
-    db $F0
+String_33_704C_00_02::
+    db "Too bad!", $f1
+    db "You've lost!", $fa, $f7
+    db $f0
 
-String_33_704C_00_03:: ; heuristic: string; C0
-Data_033_70BE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Turned over", $F1
-    db $F9, "0", $A4, $FA, $F7
-    db $F0
+String_33_704C_00_03::
+    db "Turned over", $f1
+    db $f9, "0", $a4, $fa, $f7
+    db $f0
 
-String_33_704C_00_04:: ; heuristic: string; C0
-Data_033_70D0:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Received", $F1
-    db $F9, "0", $FA, $F7
-    db $F0
+String_33_704C_00_04::
+    db "Received", $f1
+    db $f9, "0", $fa, $f7
+    db $f0
 
-String_33_704C_00_05:: ; heuristic: string; C0
-Data_033_70DE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "But you have no", $F1
-    db "room for it", $A4, $FA, $F7
-    db $EF, $EE, "Switch it with", $EF, $EE, "another monster?", $F0
+String_33_704C_00_05::
+    db "But you have no", $f1
+    db "room for it", $a4, $fa, $f7
+    db $ef, $ee, "Switch it with", $ef, $ee, "another monster?", $f0
 
-String_33_704C_00_06:: ; heuristic: string; C0
-Data_033_711F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Gave up on getting", $F1
-    db $F9, "0 and released", $FA, $F7
-    db $EF, $EE, "it in the wild", $A4, $FA, $F7
-    db $F0
+String_33_704C_00_06::
+    db "Gave up on getting", $f1
+    db $f9, "0 and released", $fa, $f7
+    db $ef, $ee, "it in the wild", $a4, $fa, $f7
+    db $f0
 
-String_33_704C_00_07:: ; heuristic: string; C0
-Data_033_7157:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Switch with which?", $F0
+String_33_704C_00_07::
+    db "Switch with which?", $f0
 
-String_33_704C_00_08:: ; heuristic: string; C0
-Data_033_716A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Switch with which?", $F0
+String_33_704C_00_08::
+    db "Switch with which?", $f0
 
-String_33_704C_00_09:: ; heuristic: string; C0
-Data_033_717D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Switch which egg?", $F0
+String_33_704C_00_09::
+    db "Switch which egg?", $f0
 
-String_33_704C_00_0A:: ; heuristic: string; C0
-Data_033_718F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0", $F1
-    db "was released.", $FA, $F7
-    db $F0
+String_33_704C_00_0A::
+    db $f9, "0", $f1
+    db "was released.", $fa, $f7
+    db $f0
 
-String_33_704C_00_0B:: ; heuristic: string; C0
-Data_033_71A2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "MonsterE?g", $F0
+String_33_704C_00_0B::
+    db "MonsterE?g", $f0
 
-String_33_704C_00_0C:: ; heuristic: string; C0
-Data_033_71AD:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "YesNo", $F0
+String_33_704C_00_0C::
+    db "YesNo", $f0
 
-String_33_704C_00_0D:: ; heuristic: string; C0
-Data_033_71B3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "InfoOKYesN", $F0
+String_33_704C_00_0D::
+    db "InfoOKYesN", $f0
 
-String_33_704C_00_0E:: ; heuristic: string; C0
-Data_033_71BE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "There are no eggs.", $F0
+String_33_704C_00_0E::
+    db "There are no eggs.", $f0
 
-String_33_704C_00_12:: ; heuristic: string; C0
-Data_033_71D1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "You'll be left", $F1
-    db "with no monster.", $F0
-    ds $E10, $00
+String_33_704C_00_12::
+    db "You'll be left", $f1
+    db "with no monster.", $f0
+    ds $e10, $00

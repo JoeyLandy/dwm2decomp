@@ -1,112 +1,88 @@
 SECTION "Bank A1", ROMX[$4000], BANK[$A1]
-    db $A1
+    db $a1
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleATK
-GetBattleATK_BankA1:: ; heuristic: follows a terminator; C0
-Func_0A1_4001:: ; address name
+GetBattleATK_BankA1::
     ld hl, wBattleATK
     jr GetBattleMP_BankA1_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleDEF
-GetBattleDEF_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
-Func_0A1_4006:: ; address name
+GetBattleDEF_BankA1::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA1_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMaxHP
-GetBattleMaxHP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
-Func_0A1_400B:: ; address name
+GetBattleMaxHP_BankA1::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA1_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMaxMP
-GetBattleMaxMP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
-Func_0A1_4010:: ; address name
+GetBattleMaxMP_BankA1::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA1_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleHP
-GetBattleHP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
-Func_0A1_4015:: ; address name
+GetBattleHP_BankA1::
     ld hl, wBattleHP
     jr GetBattleMP_BankA1_Skip
 
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleMP
-GetBattleMP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
-Func_0A1_401A:: ; address name
+GetBattleMP_BankA1::
     ld hl, wBattleMP
     jr GetBattleMP_BankA1_Skip
-    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+    db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 GetBattleMP_BankA1_Skip::
-Jump_0A1_402E:: ; address name
-    add a, a
+    add a
     add_a_to_hl
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-AddDoubleAToHL_BankA1:: ; heuristic: follows a terminator; C0
-Func_0A1_4038:: ; address name
-    add a, a
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
+; appear in 12 banks)
+AddDoubleAToHL_BankA1::
+    add a
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole, wBattleActor
-ActorOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
-Func_0A1_403F:: ; address name
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the
+; reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+ActorOnLocalSide_BankA1::
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_actor
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_actor:
     ld a, [wBattleActor]
-    cp a, $04
+    cp $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wLinkRole, wBattleTarget
-TargetOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
-Func_0A1_405A:: ; address name
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the
+; test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12
+; banks)
+TargetOnLocalSide_BankA1::
     ld a, [wLinkMode]
-    cp a, $01
+    cp $01
     jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
     jr z, .check_battle_target
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ccf
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
-    cp a, $04
+    cp $04
     ret
 
-; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA1[D] (AddAx9ToHL); not reached from traced code (E-0205)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus
+; wBattleStatus + 9 * E &= ClearBitMaskTable_BankA1[D] (AddAx9ToHL); not reached from traced code
+; (E-0205)
 ClearBattleStatusBitsWithMaskD_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_4075:: ; address name
     ld a, d
     ld hl, ClearBitMaskTable_BankA1
     add_a_to_hl
@@ -115,27 +91,26 @@ Func_0A1_4075:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, d
-    and a, [hl]
+    and [hl]
     ld [hl], a
     ret
 
-; E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3).
+; the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 *
+; E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks
+; $05, $A1 and $A3 (E-0205, C1)
 ; record: AND mask
 ClearBitMaskTable_BankA1::
-Data_0A1_408A:: ; address name
-    db $DF ; id 0
-    db $FE ; id 1
+    db $df ; id 0
+    db $fe ; id 1
     db $00 ; id 2
-    db $FD ; id 3
+    db $fd ; id 3
     db $73 ; id 4
-    db $EF ; id 5
-    db $BF ; id 6
+    db $ef ; id 5
+    db $bf ; id 6
 
-; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_4091:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -143,11 +118,9 @@ Func_0A1_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_409E:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -155,11 +128,9 @@ Func_0A1_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wLevelUpGains
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
+; banks)
 SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_40AB:: ; address name
     push hl
     ld hl, wLevelUpGains
     add_a_to_hl
@@ -167,11 +138,11 @@ Func_0A1_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) +
+; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
+; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
+; appear in 13 banks)
 PersonalityIndexOfSlot_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_40B8:: ; address name
     push hl
     push bc
     ld c, a
@@ -180,57 +151,56 @@ Func_0A1_40B8:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip
     ld l, $09
-    cp a, $40
+    cp $40
     jr nc, .skip
     ld l, $12
 
 .skip:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityMid
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip2
     ld l, $03
-    cp a, $40
+    cp $40
     jr nc, .skip2
     ld l, $06
 
 .skip2:
     ld a, l
-    add a, b
+    add b
     ld b, a
     ld a, c
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     ld l, $00
-    cp a, $C0
+    cp $c0
     jr nc, .skip3
     ld l, $01
-    cp a, $40
+    cp $40
     jr nc, .skip3
     ld l, $02
 
 .skip3:
     ld a, l
-    add a, b
+    add b
     pop bc
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C
+; is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes
+; appear in 12 banks)
 CheckSlotStatusBlockWide_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_410F:: ; address name
     call CheckSlotStatusBlock
     ret c
     push hl
@@ -238,13 +208,13 @@ Func_0A1_410F:: ; address name
     ld c, a
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .set_carry
     ld a, [hl]
-    and a, $0C
+    and $0c
     jr nz, .set_carry
-    xor a, a
+    xor a
     jr .skip
 
 .set_carry:
@@ -256,34 +226,31 @@ Func_0A1_410F:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
-; no direct call (reached through a table, a jump or a vector)
-; points at: wBattleStatus3
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
+; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
+; appear in 13 banks)
 SlotHasStatus3Or4Bits_BankA1:: ; configured code entry (E-0205); C0
-Func_0A1_412E:: ; address name
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    ld a, [hl+]
-    and a, $C0
+    ld a, [hli]
+    and $c0
     jr nz, .done
     ld a, [hl]
-    and a, $0C
+    and $0c
 
 .done:
     pop hl
     ret
 
-; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleCommandEntry_BankA1)
-; reads: wTextFlags, wBattleSubPhase
+; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which
+; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 RunBattleCommandEntry_BankA1::
-Func_0A1_413F:: ; address name
     ld a, [wTextFlags]
-    or a, a
+    or a
     ret nz
     ld a, [wBattleSubPhase]
-    rst $00
+    jumptable
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01
     dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
@@ -292,28 +259,23 @@ Func_0A1_413F:: ; address name
     dw RunBattleCommandEntry_BankA1_CompareHLToBC
     dw RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1
 
-; entry 0 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte, wBattleActor
-; points at: wBattleSubPhase
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
-Jump_0A1_4156:: ; address name
-    xor a, a
+    xor a
     ld [wLinkSendByte], a
-    xor a, a
+    xor a
     ld [wBattleActor], a
     ld bc, $0304
     ld hl, wSlotMarks + $4
 
 .loop:
     ld a, [hl]
-    ld e, $FF
-    cp a, $FF
+    ld e, $ff
+    cp $ff
     jr z, .skip
     ld e, $03
-    cp a, $FE
+    cp $fe
     jr z, .skip
-    cp a, $FD
+    cp $fd
     jr z, .skip
     ld e, $03
     ld a, c
@@ -331,22 +293,16 @@ Jump_0A1_4156:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; writes: wBattleActor, wBattleResolveStep
-; points at: wSlotMarks, wBattleSubPhase
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01::
-Jump_0A1_418A:: ; address name
     call NextTableByteSecondStream
     ld a, [wBattleActor]
-    cp a, $08
+    cp $08
     jr z, .skip
     ld e, a
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
-    cp a, $01
+    cp $01
     jr z, .call_carry_unless_battle_slot_out_slot_empty
 
 .loop:
@@ -362,7 +318,7 @@ Jump_0A1_418A:: ; address name
     ld [wBattleActor], a
     ld hl, wBattleSubPhase
     inc [hl]
-    xor a, a
+    xor a
     ld [wBattleResolveStep], a
     jr .return
 
@@ -375,24 +331,15 @@ Jump_0A1_418A:: ; address name
 .return:
     ret
 
-; entry 2 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
 RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep::
-Jump_0A1_41C3:: ; address name
     farcall RunCommandEntryResolveStep
     ret
 
-; entry 3 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor
-; writes: wBattleSubPhase
-; points at: wBattleTargetChoice, wSlotMarks, wBattleActor
 RunBattleCommandEntry_BankA1_ChooseActionTarget::
-Jump_0A1_41CA:: ; address name
     farcall ChooseActionTarget
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
-    add a, a
+    add a
     add_a_to_hl
     ld d, [hl]
     ld a, [wBattleActor]
@@ -405,26 +352,20 @@ Jump_0A1_41CA:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; reads: wLoadSlot
-; writes: wActionQueuePos, wLoadSlot, wBattleTemp7A, wBattleTemp7B
-; points at: wActionQueue, wBattleArg0, wBattleTemp7D, wSlotMarks, wBattleTemp7A, wLoadSlot, wBattleSubPhase
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04::
-Jump_0A1_41F4:: ; address name
     ld hl, wActionQueue
     ld bc, $0009
-    ld a, $FF
+    ld a, $ff
     call FillBytes
     ld hl, wBattleArg0
     ld bc, $0009
-    ld a, $FF
+    ld a, $ff
     call FillBytes
     ld hl, wBattleTemp7D
     ld bc, $0012
     ld a, $00
     call FillBytes
-    xor a, a
+    xor a
     ld [wActionQueuePos], a
     ld [wLoadSlot], a
     ld hl, wBattleTemp7D
@@ -442,7 +383,7 @@ Jump_0A1_41F4:: ; address name
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
-    cp a, $02
+    cp $02
     jr nz, .next
     ld a, e
     call RunBattleCommandEntry_BankA1_Case04_RandomInRange
@@ -450,7 +391,7 @@ Jump_0A1_41F4:: ; address name
     ld hl, wBattleTemp7A
     deref_hl
     ld a, c
-    ld [hl+], a
+    ld [hli], a
     ld [hl], b
     ld a, [wLoadSlot]
     ld hl, wBattleArg0
@@ -471,13 +412,7 @@ Jump_0A1_41F4:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTemp7A, wBattleTemp7B, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, wActionQueuePos
-; writes: wBattleTemp7A, wBattleTemp7B, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, wActionQueuePos
-; points at: wBattleTemp7D, wBattleTemp7F, wBattleArg0, wBattleTemp7A, wActionQueue, wBattleSubPhase
 RunBattleCommandEntry_BankA1_CompareHLToBC::
-Jump_0A1_4270:: ; address name
     ld d, $08
 
 .loop:
@@ -486,7 +421,7 @@ Jump_0A1_4270:: ; address name
     ld [wBattleTemp7A], a
     ld a, h
     ld [wBattleTemp7B], a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     ld hl, wBattleTemp7F
@@ -509,32 +444,32 @@ Jump_0A1_4270:: ; address name
     ld a, [wBattleTemp7B]
     ld h, a
     ld a, [wBattleDamageLo]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wBattleDamageHi]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wTargetEstimates]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wTargetEstimates + $1]
     ld [hl], a
     ld a, e
     ld hl, wBattleArg0
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
-    ld [hl-], a
+    ld [hld], a
     ld [hl], b
 
 .next:
     inc e
     ld a, e
-    cp a, d
+    cp d
     jr z, .next2
     ld hl, wBattleTemp7A
     inc [hl]
     ld hl, wBattleTemp7A
     inc [hl]
     deref_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     inc hl
@@ -546,7 +481,7 @@ Jump_0A1_4270:: ; address name
     jr nz, .loop
     ld a, [wActionQueuePos]
     ld de, wActionQueue
-    add a, e
+    add e
     ld e, a
     jr nc, .read_action_queue_pos
     inc d
@@ -557,8 +492,8 @@ Jump_0A1_4270:: ; address name
     ld b, $09
 
 .loop2:
-    ld a, [hl+]
-    cp a, $FF
+    ld a, [hli]
+    cp $ff
     jr z, .set_action_queue_pos_to_00
     ld [de], a
     inc de
@@ -572,12 +507,7 @@ Jump_0A1_4270:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunBattleCommandEntry_BankA1
-; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleCommandArgs, wBattleSubPhase
-; points at: wBattleHP, wBattleMaxHP, wBattleStep, wBattleResolveStep
 RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
-Jump_0A1_4305:: ; address name
     ld hl, wBattleHP
     ld bc, $0000
     call AddWordAtHLToBC_BankA1
@@ -598,9 +528,9 @@ Jump_0A1_4305:: ; address name
     ld [wBattleCommandArgs + $3], a
     ld hl, wBattleStep
     inc [hl]
-    xor a, a
+    xor a
     ld [wBattleSubPhase], a
-    xor a, a
+    xor a
     ld hl, wBattleResolveStep
     ld bc, $0005
     call FillBytes
@@ -609,22 +539,16 @@ Jump_0A1_4305:: ; address name
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1)
 AddWordAtHLToBC_BankA1::
-Func_0A1_434F:: ; address name
-    ld a, [hl+]
-    add a, c
+    ld a, [hli]
+    add c
     ld c, a
-    ld a, [hl+]
-    adc a, b
+    ld a, [hli]
+    adc b
     ld b, a
     ret
 
-; only called from RunBattleCommandEntry_BankA1_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1)
-; points at: wBattleActionChoice, wBattleStatus6
 RunBattleCommandEntry_BankA1_Case06_CarryUnlessBattleSlotOutSlotEmpty::
-Func_0A1_4356:: ; address name
     ld c, $00
     ld b, $08
 
@@ -633,11 +557,11 @@ Func_0A1_4356:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
     ld a, c
-    add a, a
+    add a
     ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
-    cp a, $6E
+    cp $6e
     jr nz, .next
     ld a, c
     ld hl, wBattleStatus6
@@ -650,24 +574,20 @@ Func_0A1_4356:: ; address name
     jr nz, .loop
     ret
 
-; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04)
-; points at: wBattleAGL
 RunBattleCommandEntry_BankA1_Case04_RandomInRange::
-Func_0A1_437D:: ; address name
     push de
     call NextTableByteSecondStream
     ld a, e
     ld hl, wBattleAGL
-    add a, a
+    add a
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, [hl]
     ld c, a
     push bc
     ld a, $03
     call Multiply8By16
-    ld a, $0A
+    ld a, $0a
     call Divide24ByA
     pop bc
     call RandomInRange
@@ -676,31 +596,25 @@ Func_0A1_437D:: ; address name
     pop de
     ret
 
-; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04)
-; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBufferData, wRandomLo
-; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-; points at: wBattleActionChoice
 RunBattleCommandEntry_BankA1_Case04_WriteRecordBufferAndBattleArg0Etc::
-Func_0A1_43A1:: ; address name
     push de
     ld a, e
     ld hl, wBattleActionChoice
-    add a, a
+    add a
     add_a_to_hl
     ld a, [hl]
-    cp a, $62
+    cp $62
     jr z, .skip
-    cp a, $69
+    cp $69
     jr z, .call_next_table_byte_second_stream
-    cp a, $D8
+    cp $d8
     jr z, .skip
     push af
     push bc
     push de
     push hl
     ld [wRecordBuffer], a
-    xor a, a
+    xor a
     ld [wRecordBuffer + $1], a
     ld a, [wBattleArg0]
     ld l, a
@@ -739,15 +653,15 @@ Func_0A1_43A1:: ; address name
     ld a, [wRecordBufferData + $5]
     bit 2, a
     jr nz, .skip2
-    ld hl, $000A
+    ld hl, $000a
     jr .skip3
 
 .skip:
-    ld hl, $0BB8
+    ld hl, $0bb8
     jr .skip3
 
 .skip2:
-    ld hl, $07D0
+    ld hl, $07d0
     jr .skip3
 
 .call_next_table_byte_second_stream:
@@ -756,7 +670,7 @@ Func_0A1_43A1:: ; address name
     ld b, a
     ld a, $09
     call DivideBByA
-    add a, $01
+    add $01
     ld c, a
     ld b, $00
     jr .done
@@ -770,24 +684,21 @@ Func_0A1_43A1:: ; address name
     pop de
     ret
 
-; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wVisitedScreens (E-0125)
-; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY, RunMenuStateMenuState_InitSoundHardware)
-; reads: wMapType, hMapScreenY, hMapScreenX
-; points at: wVisitedScreens
+; on map type $80 sets the bit for the current map screen in the visited-screen bitmap
+; wVisitedScreens (E-0125)
 MarkVisitedMapScreenInVisitedScreens::
-Func_0A1_4435:: ; address name
     ld a, [wMapType]
     bit 7, a
     ret z
-    cp a, $80
+    cp $80
     ret nz
     ldh a, [hMapScreenY]
-    and a, $FC
+    and $fc
     ld hl, wVisitedScreens
     add_a_to_hl
     ldh a, [hMapScreenX]
     srl a
-    and a, $FE
+    and $fe
     add_a_to_hl
     ldh a, [hMapScreenY]
     bit 1, a
@@ -802,7 +713,7 @@ Func_0A1_4435:: ; address name
 
 .check_map_screen_x:
     ldh a, [hMapScreenX]
-    and a, $03
+    and $03
     jr z, .skip2
     ld b, a
 
@@ -813,16 +724,11 @@ Func_0A1_4435:: ; address name
 
 .skip2:
     ld a, [hl]
-    or a, c
+    or c
     ld [hl], a
     ret
 
-; only called from RunMenuStateMenuState_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunMenuStateMenuState_InitSoundHardware)
-; reads: wKeyWorldFloor
-; points at: wKeyWorldAreaExits, wVisitedScreens
 RunMenuStateMenuState_Case05_ReadKeyWorldFloor::
-Func_0A1_4474:: ; address name
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
     bit 7, a
@@ -830,26 +736,26 @@ Func_0A1_4474:: ; address name
     inc hl
 
 .skip:
-    and a, $0F
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
     add_a_to_hl
     ld a, [hl]
     push af
-    and a, $0F
-    and a, $FC
+    and $0f
+    and $fc
     ld hl, wVisitedScreens
     add_a_to_hl
     pop af
     push af
     swap a
-    and a, $0F
+    and $0f
     srl a
-    and a, $FE
+    and $fe
     add_a_to_hl
     pop af
     push af
-    and a, $0F
+    and $0f
     bit 1, a
     jr z, .skip2
     inc hl
@@ -863,8 +769,8 @@ Func_0A1_4474:: ; address name
 .restore:
     pop af
     swap a
-    and a, $0F
-    and a, $03
+    and $0f
+    and $03
     jr z, .skip3
     ld b, a
 
@@ -875,17 +781,13 @@ Func_0A1_4474:: ; address name
 
 .skip3:
     ld a, [hl]
-    or a, c
+    or c
     ld [hl], a
     ret
 
-; marks the 5 x 5 map screens around the current one (within wKeyWorldWidth x wKeyWorldHeight) as visited (E-0127)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer)
-; reads: hMapScreenX, hMapScreenY, wKeyWorldHeight, wKeyWorldWidth, hTemp0, hTemp1
-; writes: hTemp0, hMapScreenX, hTemp1, hMapScreenY
-; points at: hMapScreenX, hMapScreenY
+; marks the 5 x 5 map screens around the current one (within wKeyWorldWidth x wKeyWorldHeight) as
+; visited (E-0127)
 MarkVisitedScreens5x5AroundPlayer::
-Func_0A1_44C9:: ; address name
     ldh a, [hMapScreenX]
     ldh [hTemp0], a
     dec a
@@ -907,14 +809,14 @@ Func_0A1_44C9:: ; address name
     ldh a, [hMapScreenY]
     bit 7, a
     jr nz, .read_temp0
-    cp a, d
+    cp d
     jr nc, .read_temp0
     ld a, [wKeyWorldWidth]
     ld d, a
     ldh a, [hMapScreenX]
     bit 7, a
     jr nz, .skip
-    cp a, d
+    cp d
     jr nc, .skip
     push bc
     call MarkVisitedMapScreenInVisitedScreens
@@ -928,7 +830,7 @@ Func_0A1_44C9:: ; address name
 
 .read_temp0:
     ldh a, [hTemp0]
-    sub a, $02
+    sub $02
     ldh [hMapScreenX], a
     ld hl, hMapScreenY
     inc [hl]
@@ -941,13 +843,10 @@ Func_0A1_44C9:: ; address name
     ret
 
 ; runs the routine for wGameMode2State & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunGameMode2State)
-; reads: wGameMode2State
 RunGameMode2State::
-Func_0A1_4519:: ; address name
     ld a, [wGameMode2State]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw RunGameMode2State_UploadBGPalettes
     dw RunGameMode2State_CopyScrollToHardware
     dw RunGameMode2State_WriteGameMode2State
@@ -956,31 +855,25 @@ Func_0A1_4519:: ; address name
     dw RunGameMode2State_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest
     dw RunGameMode2State_ToEnterGameMode1WithDefaultPalettes
 
-; entry 4 of the `rst $00` table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
-; reads: wMapType, wIsCGB
-; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
-; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
 RunGameMode2State_CopyScrollToHardware_Case04::
-Jump_0A1_452D:: ; address name
-    xor a, a
+    xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
     ld de, Tiles0Gfx_7E_4EB3
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
     ld de, Tiles0Plus100Gfx_7E_5B27
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld de, Tiles0Plus200Gfx_7E_5B46
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld de, Tiles2Gfx_5D_43AE
-    ld b, $5D
+    ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
     call FillBGMap0With57
@@ -996,40 +889,40 @@ Jump_0A1_452D:: ; address name
 
 .skip:
     ld hl, wDMGPaletteBGP
-    ld a, $D2
-    ld [hl+], a
-    ld a, $D2
-    ld [hl+], a
-    ld a, $E2
+    ld a, $d2
+    ld [hli], a
+    ld a, $d2
+    ld [hli], a
+    ld a, $e2
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .done
     ld a, $40
     ld de, OBJPaletteBufferData_7E_4BBD
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
-    ld b, $7E
+    ld b, $7e
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, OBJPaletteBufferPlus8Data_7E_5AF6
-    ld b, $7E
+    ld b, $7e
     ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ld de, BGPaletteBufferData_5D_4565
-    ld b, $5D
+    ld b, $5d
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .done:
@@ -1037,12 +930,7 @@ Jump_0A1_452D:: ; address name
     inc [hl]
     ret
 
-; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
-; reads: hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, hTemp9, hTemp6
-; writes: hTemp9, hTempA, hTemp8, hTemp6
 RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01::
-Func_0A1_45C5:: ; address name
     call RunGameMode2State_Case04_Sub01_RunGameMode2MapTypeState
     call StoreTemp5ValuesToCursorCellX
     ld hl, vBGMap0
@@ -1065,7 +953,7 @@ Func_0A1_45C5:: ; address name
     ld c, a
     ldh a, [hTemp3]
     dec a
-    cp a, c
+    cp c
     jr c, .check_temp9
     ldh a, [hTemp8]
     bit 7, a
@@ -1073,33 +961,33 @@ Func_0A1_45C5:: ; address name
     ld c, a
     ldh a, [hTemp4]
     dec a
-    cp a, c
+    cp c
     jr c, .check_temp9
     push bc
     ldh a, [hTempA]
-    and a, $0F
+    and $0f
     swap a
     ld c, a
     ldh a, [hTemp8]
-    and a, $0F
-    or a, c
+    and $0f
+    or c
     pop bc
     push de
     call IsMapScreenAVisited
     pop de
-    or a, a
+    or a
     jr z, .check_temp9
     call RunGameMode2State_Case04_Sub01_WriteTemp0AndTemp1
 
 .check_temp9:
     ldh a, [hTemp9]
     inc a
-    cp a, $05
+    cp $05
     jr nz, .set_temp9
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
-    xor a, a
+    xor a
 
 .set_temp9:
     ldh [hTemp9], a
@@ -1110,12 +998,12 @@ Func_0A1_45C5:: ; address name
     jr nz, .loop2
     ldh a, [hTemp6]
     inc a
-    cp a, $05
+    cp $05
     jr nz, .set_temp6
     ldh a, [hTemp8]
     inc a
     ldh [hTemp8], a
-    xor a, a
+    xor a
 
 .set_temp6:
     ldh [hTemp6], a
@@ -1126,32 +1014,27 @@ Func_0A1_45C5:: ; address name
     jr nz, .loop
     ret
 
-; only called from RunGameMode2State_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01)
-; reads: hTemp8, hTempA, hTemp6, hTemp9
-; writes: hTemp0, hTemp1
 RunGameMode2State_Case04_Sub01_WriteTemp0AndTemp1::
-Func_0A1_4640:: ; address name
     push hl
     ldh a, [hTemp8]
-    and a, $FC
-    add a, a
+    and $fc
+    add a
     ld l, a
     ld h, $00
     ldh a, [hTempA]
-    and a, $FC
+    and $fc
     add_a_to_hl
     ld a, l
-    add a, $60
+    add $60
     ld l, a
     ld a, h
-    adc a, $CD
+    adc $cd
     ld h, a
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push bc
     ld a, [hl]
@@ -1160,18 +1043,18 @@ Func_0A1_4640:: ; address name
     add hl, de
     pop bc
     ldh a, [hTemp8]
-    and a, $03
+    and $03
     ld c, a
     sla a
-    add a, c
+    add c
     sla a
     sla a
     add_a_to_hl
     ldh a, [hTempA]
-    and a, $03
+    and $03
     ld c, a
     sla a
-    add a, c
+    add c
     add_a_to_hl
     ld e, l
     ld d, h
@@ -1209,32 +1092,26 @@ Func_0A1_4640:: ; address name
     ld c, a
     sla a
     sla a
-    add a, c
+    add c
     add_a_to_hl
     ldh a, [hTemp9]
     add_a_to_hl
     ld a, l
-    add a, $A0
+    add $a0
     ld l, a
     ld a, h
-    adc a, $43
+    adc $43
     ld h, a
     ld e, l
     ld d, h
-    ld b, $5E
+    ld b, $5e
     call ReadByteInBank
     pop hl
     ld a, c
     call WriteVRAMByte
     ret
 
-; only called from RunGameMode2State_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01)
-; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wKeyWorldWidth, wKeyWorldHeight
-; writes: hTemp3, hTemp4, hTemp7, hTemp8, hTemp5, hTemp6, hPlayerY, hMapScreenY, ...
-; points at: hTemp7, hTemp8
 RunGameMode2State_Case04_Sub01_RunGameMode2MapTypeState::
-Func_0A1_46DF:: ; address name
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1260,12 +1137,12 @@ Func_0A1_46DF:: ; address name
     ldh [hTemp8], a
     ldh a, [hPlayerX]
     swap a
-    and a, $0F
+    and $0f
     srl a
     inc a
-    cp a, $05
+    cp $05
     jr c, .set_temp5
-    sub a, $05
+    sub $05
     push af
     ld hl, hTemp7
     inc [hl]
@@ -1275,13 +1152,13 @@ Func_0A1_46DF:: ; address name
     ldh [hTemp5], a
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
+    and $0f
     srl a
     inc a
     inc a
-    cp a, $05
+    cp $05
     jr c, .set_temp6
-    sub a, $05
+    sub $05
     push af
     ld hl, hTemp8
     inc [hl]
@@ -1302,13 +1179,10 @@ Func_0A1_46DF:: ; address name
     ret
 
 ; runs the routine for wMapType & 7 (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01_RunGameMode2MapTypeState)
-; reads: wMapType
 RunGameMode2MapTypeState::
-Func_0A1_4744:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw RunGameMode2MapTypeState_Return
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc
@@ -1318,23 +1192,14 @@ Func_0A1_4744:: ; address name
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03
     dw RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer
 
-; entry 0 of the `rst $00` table in RunGameMode2MapTypeState
-; no direct call (reached through a table, a jump or a vector)
 RunGameMode2MapTypeState_Return::
-Jump_0A1_475A:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in RunGameMode2MapTypeState; also entry 2 of the table in RunGameMode2MapTypeState
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; points at: wKeyWorldAreaExits
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
-Jump_0A1_475B:: ; address name
     ld a, [wKeyWorldFloor]
-    and a, $07
-    add a, a
-    add a, a
+    and $07
+    add a
+    add a
     ld hl, wKeyWorldAreaExits
     add_a_to_hl
     ld a, [wKeyWorldFloor]
@@ -1346,46 +1211,35 @@ Jump_0A1_475B:: ; address name
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 3 of the `rst $00` table in RunGameMode2MapTypeState; also entries 4, 5, 6 of the table in RunGameMode2MapTypeState
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; points at: wKeyWorldFloorInfo
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03::
-Jump_0A1_4775:: ; address name
     ld a, [wKeyWorldFloor]
-    and a, $07
-    add a, a
-    add a, a
+    and $07
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 7 of the `rst $00` table in RunGameMode2MapTypeState
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldGoalScreen, wKeyWorldGoalPos, wKeyWorldGoalPos2
-; writes: hPlayerX, hPlayerY
 RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer::
-Jump_0A1_4787:: ; address name
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     call SetMapScreenFromAAndCenterPlayer
     ld a, [wKeyWorldGoal]
-    and a, $F0
+    and $f0
     ldh [hPlayerX], a
     ld a, [wKeyWorldGoal]
-    and a, $0F
+    and $0f
     swap a
     ldh [hPlayerY], a
     ret
@@ -1400,28 +1254,20 @@ Jump_0A1_4787:: ; address name
     ret
 
 ; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
-; 2 call sites from 1 routine (e.g. RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer)
-; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 SetMapScreenFromAAndCenterPlayer::
-Func_0A1_47C5:: ; address name
     push af
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     pop af
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, $40
     ldh [hPlayerX], a
     ldh [hPlayerY], a
     ret
 
-; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
-; reads: hTemp0, hTemp1, hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, ...
-; writes: hTemp9, hTempA, hTemp8, hTemp6
 RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX::
-Func_0A1_47D8:: ; address name
     call RunGameMode2State_Case04_Sub02_WriteTemp3AndTemp4Etc
     call StoreTemp5ValuesToCursorCellX
     ldh a, [hTemp0]
@@ -1449,7 +1295,7 @@ Func_0A1_47D8:: ; address name
     ld c, a
     ldh a, [hTemp3]
     dec a
-    cp a, c
+    cp c
     jr c, .check_temp9
     ldh a, [hTemp8]
     bit 7, a
@@ -1457,7 +1303,7 @@ Func_0A1_47D8:: ; address name
     ld c, a
     ldh a, [hTemp4]
     dec a
-    cp a, c
+    cp c
     jr c, .check_temp9
     ldh a, [hTemp2]
     ld b, a
@@ -1469,18 +1315,18 @@ Func_0A1_47D8:: ; address name
     inc de
     ldh a, [hTemp9]
     inc a
-    cp a, $05
+    cp $05
     jr nz, .set_temp9
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
     ld a, e
-    add a, $14
+    add $14
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
-    xor a, a
+    xor a
 
 .set_temp9:
     ldh [hTemp9], a
@@ -1491,7 +1337,7 @@ Func_0A1_47D8:: ; address name
     jr nz, .loop2
     pop de
     ld a, $05
-    add a, e
+    add e
     ld e, a
     jr nc, .check_temp6
     inc d
@@ -1499,7 +1345,7 @@ Func_0A1_47D8:: ; address name
 .check_temp6:
     ldh a, [hTemp6]
     inc a
-    cp a, $05
+    cp $05
     jr nz, .set_temp6
     ldh a, [hTemp8]
     inc a
@@ -1515,13 +1361,13 @@ Func_0A1_47D8:: ; address name
     ld e, l
     ld d, h
     ld a, e
-    sub a, $19
+    sub $19
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     pop bc
-    xor a, a
+    xor a
 
 .set_temp6:
     ldh [hTemp6], a
@@ -1532,13 +1378,7 @@ Func_0A1_47D8:: ; address name
     jp nz, .loop
     ret
 
-; only called from RunGameMode2State_Case04_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX)
-; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wGameMode2Byte44, hMapId, hTemp0, hTemp1, ...
-; writes: hTemp3, hTemp4, hTemp0, hTemp1, hTemp2, hTemp7, hTemp8, hTemp5, ...
-; points at: hTemp7, hTemp8
 RunGameMode2State_Case04_Sub02_WriteTemp3AndTemp4Etc::
-Func_0A1_4874:: ; address name
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1551,20 +1391,20 @@ Func_0A1_4874:: ; address name
     push hl
     call RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc
     ld a, [wGameMode2Byte44]
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, WorldMapScreenCellTable
     add_a_to_hl
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hTemp3], a
-    ld a, [hl+]
-    and a, $0F
+    ld a, [hli]
+    and $0f
     ldh [hTemp4], a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp1], a
     ld a, [hl]
     ldh [hTemp2], a
@@ -1614,12 +1454,12 @@ Func_0A1_4874:: ; address name
     ldh [hTemp1], a
     ldh a, [hPlayerX]
     swap a
-    and a, $0F
+    and $0f
     srl a
     inc a
-    cp a, $05
+    cp $05
     jr c, .set_temp5
-    sub a, $05
+    sub $05
     push af
     ld hl, hTemp7
     inc [hl]
@@ -1628,10 +1468,10 @@ Func_0A1_4874:: ; address name
     ldh a, [hTemp1]
     ld h, a
     ld a, l
-    add a, $19
+    add $19
     ld l, a
     ld a, h
-    adc a, $00
+    adc $00
     ld h, a
     ld a, l
     ldh [hTemp0], a
@@ -1654,13 +1494,13 @@ Func_0A1_4874:: ; address name
     ldh [hTemp1], a
     ldh a, [hPlayerY]
     swap a
-    and a, $0F
+    and $0f
     srl a
     inc a
     inc a
-    cp a, $05
+    cp $05
     jr c, .set_temp6
-    sub a, $05
+    sub $05
     push af
     ld hl, hTemp8
     inc [hl]
@@ -1681,9 +1521,9 @@ Func_0A1_4874:: ; address name
 .set_temp6:
     ldh [hTemp6], a
     ld c, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add c
     push af
     ldh a, [hTemp0]
     ld l, a
@@ -1707,17 +1547,20 @@ Func_0A1_4874:: ; address name
     ldh [hMapScreenX], a
     ret
 
-; E-0185 (C1: RunGameMode2State_Case04_Sub02_Sub01 reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692).
-; record: size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid
+; RunGameMode2State_Case04_Sub02_Sub01 reads the record at $497C + 4 * wGameMode2Byte44: width and
+; height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and
+; (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height *
+; 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692 (E-0185, C1)
+; record: size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell
+; grid
 WorldMapScreenCellTable::
-Data_0A1_497C:: ; address name
     db $88 ; id 0: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells0 ; screen cell grid: 25 bytes (5 x 5) per screen
     db $88 ; id 1: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells1 ; screen cell grid: 25 bytes (5 x 5) per screen
-    db $CC ; id 2: size: width in screens (high nibble), height in screens (low nibble)
+    db $cc ; id 2: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells2 ; screen cell grid: 25 bytes (5 x 5) per screen
-    db $CC ; id 3: size: width in screens (high nibble), height in screens (low nibble)
+    db $cc ; id 3: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells3 ; screen cell grid: 25 bytes (5 x 5) per screen
     db $43 ; id 4: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells4 ; screen cell grid: 25 bytes (5 x 5) per screen
@@ -1734,74 +1577,69 @@ Data_0A1_497C:: ; address name
     db $21 ; id 10: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells10 ; screen cell grid: 25 bytes (5 x 5) per screen
 
-; only called from RunGameMode2State_Case04_Sub02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub02_WriteTemp3AndTemp4Etc)
-; reads: hMapId, wLastWarpIndex, wGameMode2Byte44, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal
-; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc::
-Func_0A1_49A8:: ; address name
     ldh a, [hMapId]
     ld c, $01
-    cp a, $29
+    cp $29
     jp z, .check_game_mode2_byte44
     ld c, $02
-    cp a, $45
+    cp $45
     jp z, .check_game_mode2_byte44
     ld c, $03
-    cp a, $68
+    cp $68
     jp z, .check_game_mode2_byte44
     ld c, $04
-    cp a, $9D
+    cp $9d
     jp z, .check_game_mode2_byte44
     ld c, $05
-    cp a, $A4
+    cp $a4
     jp z, .check_game_mode2_byte44
     ld c, $06
-    cp a, $AF
+    cp $af
     jp z, .check_game_mode2_byte44
     ld c, $07
-    cp a, $B2
+    cp $b2
     jp z, .check_game_mode2_byte44
     ld c, $08
-    cp a, $C5
+    cp $c5
     jr z, .check_game_mode2_byte44
     ld c, $09
-    cp a, $D0
+    cp $d0
     jr z, .check_game_mode2_byte44
-    ld c, $0A
-    cp a, $D9
+    ld c, $0a
+    cp $d9
     jr z, .check_game_mode2_byte44
-    ld c, $0B
-    cp a, $E2
+    ld c, $0b
+    cp $e2
     jr z, .check_game_mode2_byte44
-    cp a, $20
+    cp $20
     ret z
-    cp a, $30
+    cp $30
     ret z
-    cp a, $48
+    cp $48
     ret z
-    cp a, $70
+    cp $70
     ret z
-    cp a, $A0
+    cp $a0
     ret z
-    cp a, $A8
+    cp $a8
     ret z
-    cp a, $B0
+    cp $b0
     ret z
-    cp a, $B8
+    cp $b8
     ret z
-    cp a, $C8
+    cp $c8
     ret z
-    cp a, $D1
+    cp $d1
     ret z
-    cp a, $DA
+    cp $da
     ret z
     ld c, a
     ld hl, WorldMapScreenPositionTable
 
 .skip:
     ld a, [hl]
-    cp a, c
+    cp c
     jr z, .check_last_warp_index
     inc hl
     inc hl
@@ -1828,25 +1666,25 @@ Func_0A1_49A8:: ; address name
     inc a
     ld c, a
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .skip2
     ld a, [wKeyWorldKey]
     bit 7, a
     jr nz, .skip2
-    cp a, c
+    cp c
     jr nz, .skip2
     ld a, [wKeyWorldGoalCell]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [wKeyWorldGoalCell]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     ld a, [wKeyWorldGoal]
-    and a, $F0
+    and $f0
     ldh [hPlayerX], a
     ld a, [wKeyWorldGoal]
-    and a, $0F
+    and $0f
     swap a
     ldh [hPlayerY], a
     ret
@@ -1854,41 +1692,36 @@ Func_0A1_49A8:: ; address name
 .skip2:
     ld a, c
     dec a
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, WorldMapStartPositions
     add_a_to_hl
     call LoadMapPositionFromHL
     ret
 
-; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4 (E-0118)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc)
-; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4
+; (E-0118)
 LoadMapPositionFromHL::
-Func_0A1_4A77:: ; address name
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     ldh [hMapScreenX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     ldh [hMapScreenY], a
     inc hl
     ld a, [hl]
-    and a, $F0
+    and $f0
     ldh [hPlayerX], a
     ld a, [hl]
-    and a, $0F
+    and $0f
     swap a
     ldh [hPlayerY], a
     ret
 
-; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8 (E-0118)
-; 2 call sites from 2 routines (e.g. RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX, RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01)
-; reads: hTemp5, hTemp7, hTemp6, hTemp8
-; writes: wCursorCellX, wCursorCellY, wCursorCellW, wCursorCellH
+; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8
+; (E-0118)
 StoreTemp5ValuesToCursorCellX::
-Func_0A1_4A91:: ; address name
     ldh a, [hTemp5]
     ld [wCursorCellX], a
     ldh a, [hTemp7]
@@ -1899,41 +1732,29 @@ Func_0A1_4A91:: ; address name
     ld [wCursorCellH], a
     ret
 
-; entry 5 of the `rst $00` table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wIsCGB
-; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
-; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunGameMode2State_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
-Jump_0A1_4AA6:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr nz, RunGameMode2State_Case02_UploadBGPalettes
     bit 2, a
     jr z, RunGameMode2State_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8
 
-; only called from RunGameMode2State_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
-; reads: wIsCGB
-; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
-; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunGameMode2State_Case02_UploadBGPalettes::
-Func_0A1_4AB1:: ; address name
     ld hl, wDMGPaletteBGP
     ld a, $00
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld [hli], a
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .done
     ld hl, wBGPaletteBuffer
     ld bc, $0050
-    ld a, $FF
+    ld a, $ff
     call FillBytes
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     call UploadBGPalettes
 
@@ -1943,7 +1764,6 @@ Func_0A1_4AB1:: ; address name
     ret
 
 RunGameMode2State_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8::
-Jump_0A1_4ADC:: ; address name
     call DrawBlinkingMetaSprite8
     call RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc
     call RunGameMode2State_Case02_Sub01_WaitMapType
@@ -1951,54 +1771,49 @@ Jump_0A1_4ADC:: ; address name
     call RunGameMode2State_Case02_Sub01_WriteTemp1AndTemp2
     ret
 
-; only called from RunGameMode2State_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldSlot, wKeyWorldGoalScreen, ...
-; writes: hTemp1, hTemp2
 RunGameMode2State_Case02_Sub01_WriteTemp1AndTemp2::
-Func_0A1_4AEC:: ; address name
     ld a, [wMapType]
     bit 7, a
     jp nz, .check_key_world_active2
     ldh a, [hMapId]
     ld c, $01
-    cp a, $30
+    cp $30
     jr c, .check_key_world_active
     ld c, $02
-    cp a, $48
+    cp $48
     jr c, .check_key_world_active
     ld c, $03
-    cp a, $70
+    cp $70
     jr c, .check_key_world_active
     ld c, $04
-    cp a, $A0
+    cp $a0
     jr c, .check_key_world_active
     ld c, $05
-    cp a, $A8
+    cp $a8
     jr c, .check_key_world_active
     ld c, $06
-    cp a, $B0
+    cp $b0
     jr c, .check_key_world_active
     ld c, $07
-    cp a, $B8
+    cp $b8
     jr c, .check_key_world_active
     ld c, $08
-    cp a, $C8
+    cp $c8
     jr c, .check_key_world_active
     ld c, $09
-    cp a, $D1
+    cp $d1
     jr c, .check_key_world_active
-    ld c, $0A
-    cp a, $DA
+    ld c, $0a
+    cp $da
     jr c, .check_key_world_active
-    ld c, $0B
+    ld c, $0b
 
 .check_key_world_active:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .skip
     ld a, [wKeyWorldKey]
-    cp a, c
+    cp c
     jr nz, .skip
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
@@ -2010,11 +1825,11 @@ Func_0A1_4AEC:: ; address name
 .skip:
     ld a, c
     dec a
-    add a, a
-    add a, a
+    add a
+    add a
     ld hl, WorldMapStartPositions
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp1], a
     ld a, [hl]
     ldh [hTemp2], a
@@ -2023,15 +1838,15 @@ Func_0A1_4AEC:: ; address name
 
 .check_key_world_active2:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
@@ -2044,31 +1859,26 @@ Func_0A1_4AEC:: ; address name
     ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
     ld a, [wKeyWorldGoalPos]
-    and a, $F0
+    and $f0
     ld c, a
     ld a, [wKeyWorldGoalPos2]
-    and a, $F0
+    and $f0
     swap a
-    or a, c
+    or c
     ldh [hTemp2], a
     call RunGameMode2State_Case02_Sub01_Sub01_Multiply8
     ret
 
-; only called from RunGameMode2State_Case02_Sub01_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_WriteTemp1AndTemp2)
-; reads: wCursorCellY, hTemp1, wCursorCellH, wCursorCellX, hTemp2, hSpriteOriginX, wCursorCellW, hSpriteOriginY
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub01_Sub01_Multiply8::
-Func_0A1_4BA1:: ; address name
     ld a, [wCursorCellY]
     ld c, a
     ldh a, [hTemp1]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jp nz, .return
-    cp a, $05
+    cp $05
     jp nc, .return
     ld c, $28
     call Multiply8
@@ -2077,11 +1887,11 @@ Func_0A1_4BA1:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ldh a, [hTemp1]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jr nz, .return
-    cp a, $05
+    cp $05
     jr nc, .return
     ld c, $28
     call Multiply8
@@ -2094,15 +1904,15 @@ Func_0A1_4BA1:: ; address name
     ld c, a
     ldh a, [hTemp2]
     swap a
-    and a, $0F
+    and $0f
     srl a
     sla a
     sla a
     sla a
-    sub a, c
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
     sla a
@@ -2110,15 +1920,15 @@ Func_0A1_4BA1:: ; address name
     sla a
     ld c, a
     ldh a, [hTemp2]
-    and a, $0F
+    and $0f
     srl a
     sla a
     sla a
     sla a
-    sub a, c
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $20
     ldh [hSpriteTileOffset], a
@@ -2126,9 +1936,9 @@ Func_0A1_4BA1:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $28
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
@@ -2136,15 +1946,9 @@ Func_0A1_4BA1:: ; address name
 .return:
     ret
 
-; only called from RunGameMode2State_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
-; reads: wGameMode2Byte50, wMapType, wMapObjectCount, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, ...
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-; points at: wMapObjects
 RunGameMode2State_Case02_Sub01_WaitGameMode2Byte50::
-Func_0A1_4C2E:: ; address name
     ld a, [wGameMode2Byte50]
-    or a, a
+    or a
     ret z
     ld a, [wMapType]
     bit 7, a
@@ -2167,11 +1971,11 @@ Func_0A1_4C2E:: ; address name
     ld c, a
     ld a, [de]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jp nz, .restore
-    cp a, $05
+    cp $05
     jp nc, .restore
     ld c, $28
     push de
@@ -2182,11 +1986,11 @@ Func_0A1_4C2E:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ld a, [de]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jr nz, .restore
-    cp a, $05
+    cp $05
     jr nc, .restore
     ld c, $28
     push de
@@ -2195,38 +1999,38 @@ Func_0A1_4C2E:: ; address name
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     inc de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     srl a
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, [de]
-    and a, $0F
+    and $0f
     srl a
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $10
     ldh [hSpriteTileOffset], a
@@ -2234,9 +2038,9 @@ Func_0A1_4C2E:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $27
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
@@ -2244,7 +2048,7 @@ Func_0A1_4C2E:: ; address name
 .restore:
     pop de
     ld a, $08
-    add a, e
+    add e
     ld e, a
     jr nc, .restore2
     inc d
@@ -2274,11 +2078,11 @@ Func_0A1_4C2E:: ; address name
     ld c, a
     ld a, [de]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jp nz, .restore3
-    cp a, $05
+    cp $05
     jp nc, .restore3
     ld c, $28
     push de
@@ -2289,11 +2093,11 @@ Func_0A1_4C2E:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ld a, [de]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jr nz, .restore3
-    cp a, $05
+    cp $05
     jr nc, .restore3
     ld c, $28
     push de
@@ -2303,7 +2107,7 @@ Func_0A1_4C2E:: ; address name
     ldh [hSpriteOriginY], a
     inc de
     ld a, [de]
-    ld hl, $4D94
+    ld hl, $4d94
     add_a_to_hl
     ld a, [wCursorCellX]
     sla a
@@ -2312,15 +2116,15 @@ Func_0A1_4C2E:: ; address name
     ld c, a
     ld a, [hl]
     swap a
-    and a, $0F
+    and $0f
     srl a
     sla a
     sla a
     sla a
-    sub a, c
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
     sla a
@@ -2328,15 +2132,15 @@ Func_0A1_4C2E:: ; address name
     sla a
     ld c, a
     ld a, [hl]
-    and a, $0F
+    and $0f
     srl a
     sla a
     sla a
     sla a
-    sub a, c
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $10
     ldh [hSpriteTileOffset], a
@@ -2344,9 +2148,9 @@ Func_0A1_4C2E:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $27
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
@@ -2354,7 +2158,7 @@ Func_0A1_4C2E:: ; address name
 .restore3:
     pop de
     ld a, $08
-    add a, e
+    add e
     ld e, a
     jr nc, .restore4
     inc d
@@ -2366,25 +2170,20 @@ Func_0A1_4C2E:: ; address name
     ret
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
-; only called from RunGameMode2State_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
-; reads: wMapType, wGameMode2Byte44, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY, ...
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc::
-Func_0A1_4DA4:: ; address name
     ld a, [wMapType]
     bit 7, a
     jp nz, .skip
     ld a, [wGameMode2Byte44]
-    add a, a
+    add a
     ld hl, WorldMapMarkerLists
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     ld a, [de]
-    or a, a
+    or a
     ret z
     inc de
     ld b, a
@@ -2396,11 +2195,11 @@ Func_0A1_4DA4:: ; address name
     ld c, a
     ld a, [de]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jp nz, .restore
-    cp a, $05
+    cp $05
     jp nc, .restore
     ld c, $28
     push de
@@ -2411,11 +2210,11 @@ Func_0A1_4DA4:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ld a, [de]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jr nz, .restore
-    cp a, $05
+    cp $05
     jr nc, .restore
     ld c, $28
     push de
@@ -2424,38 +2223,38 @@ Func_0A1_4DA4:: ; address name
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     inc de
     ld a, [de]
     swap a
-    and a, $0F
+    and $0f
     srl a
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, [de]
-    and a, $0F
+    and $0f
     srl a
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $20
     ldh [hSpriteTileOffset], a
@@ -2463,9 +2262,9 @@ Func_0A1_4DA4:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $28
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
@@ -2485,7 +2284,7 @@ Func_0A1_4DA4:: ; address name
 .skip2:
     push de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr nz, .next
     pop de
     ret
@@ -2498,11 +2297,11 @@ Func_0A1_4DA4:: ; address name
     ld c, a
     ld a, [de]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jp nz, .restore2
-    cp a, $05
+    cp $05
     jr nc, .restore2
     ld c, $28
     push de
@@ -2513,11 +2312,11 @@ Func_0A1_4DA4:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ld a, [de]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     jr nz, .restore2
-    cp a, $05
+    cp $05
     jr nc, .restore2
     ld c, $28
     push de
@@ -2526,41 +2325,41 @@ Func_0A1_4DA4:: ; address name
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, [wGameMode2Byte50]
-    or a, a
+    or a
     jr nz, .read_cursor_cell_x
     ld a, [de]
     call IsMapScreenAVisited
-    or a, a
+    or a
     jr z, .restore2
 
 .read_cursor_cell_x:
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, $02
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, $02
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $20
     ldh [hSpriteTileOffset], a
@@ -2568,9 +2367,9 @@ Func_0A1_4DA4:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $28
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
@@ -2583,12 +2382,7 @@ Func_0A1_4DA4:: ; address name
     inc de
     jp .skip2
 
-; only called from RunGameMode2State_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
-; reads: wMapType
-; points at: wKeyWorldObjects
 RunGameMode2State_Case02_Sub01_WaitMapType::
-Func_0A1_4EE7:: ; address name
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -2597,7 +2391,7 @@ Func_0A1_4EE7:: ; address name
 .skip:
     push de
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr nz, .next
     pop de
     ret
@@ -2616,21 +2410,16 @@ Func_0A1_4EE7:: ; address name
     inc de
     jp .skip
 
-; only called from RunGameMode2State_Case02_Sub01_Sub04 (E-0047)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_WaitMapType)
-; reads: wCursorCellY, wCursorCellH, wGameMode2Byte50, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub01_Sub04_Multiply8::
-Func_0A1_4F0A:: ; address name
     ld a, [wCursorCellY]
     ld c, a
     ld a, [de]
     swap a
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     ret nz
-    cp a, $05
+    cp $05
     ret nc
     ld c, $28
     push de
@@ -2641,11 +2430,11 @@ Func_0A1_4F0A:: ; address name
     ld a, [wCursorCellH]
     ld c, a
     ld a, [de]
-    and a, $0F
-    sub a, c
+    and $0f
+    sub c
     bit 7, a
     ret nz
-    cp a, $05
+    cp $05
     ret nc
     ld c, $28
     push de
@@ -2654,41 +2443,41 @@ Func_0A1_4F0A:: ; address name
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, [wGameMode2Byte50]
-    or a, a
+    or a
     jr nz, .read_cursor_cell_x
     ld a, [de]
     call IsMapScreenAVisited
-    or a, a
+    or a
     ret z
 
 .read_cursor_cell_x:
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, $02
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginX]
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ld a, [wCursorCellW]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld c, a
     ld a, $02
-    add a, a
-    add a, a
-    add a, a
-    sub a, c
+    add a
+    add a
+    add a
+    sub c
     ld c, a
     ldh a, [hSpriteOriginY]
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $20
     ldh [hSpriteTileOffset], a
@@ -2696,9 +2485,9 @@ Func_0A1_4F0A:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $28
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     push de
@@ -2707,11 +2496,7 @@ Func_0A1_4F0A:: ; address name
     ret
 
 ; while bit 5 of wFrameCounterLo is set, draws metasprite set 8 at ($4E, $46) (E-0121)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
-; reads: wFrameCounterLo
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawBlinkingMetaSprite8::
-Func_0A1_4F8B:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
@@ -2729,36 +2514,30 @@ Func_0A1_4F8B:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $08
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
 
-; entry 0 of the `rst $00` table in RunGameMode2State; also entry 3 of the table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB
-; writes: wSpriteSlotCount, wBGPaletteUploadRequest
-; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunGameMode2State_UploadBGPalettes::
-Jump_0A1_4FB8:: ; address name
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ld hl, wDMGPaletteBGP
     ld a, $00
-    ld [hl+], a
-    ld [hl+], a
+    ld [hli], a
+    ld [hli], a
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .done
     ld hl, wBGPaletteBuffer
     ld bc, $0040
-    ld a, $FF
+    ld a, $ff
     call FillBytes
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
 
@@ -2767,35 +2546,29 @@ Jump_0A1_4FB8:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
-; reads: wMapType, wIsCGB
-; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
-; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
 RunGameMode2State_CopyScrollToHardware::
-Jump_0A1_4FE2:: ; address name
-    xor a, a
+    xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
     ld de, Tiles0Gfx_7E_4EB3
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
     ld de, Tiles0Plus100Gfx_7E_5B0E
-    ld b, $7E
+    ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld de, Tiles2Gfx_5D_4001
-    ld b, $5D
+    ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
     ld de, Tiles2Plus500Gfx_5E_4001
-    ld b, $5E
+    ld b, $5e
     ld hl, vTiles2 + $500
     call DecompressToVRAM
     ld de, $4238
-    ld a, $5E
+    ld a, $5e
     ld bc, $1412
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
@@ -2812,45 +2585,45 @@ Jump_0A1_4FE2:: ; address name
 
 .skip:
     ld hl, wDMGPaletteBGP
-    ld a, $D2
-    ld [hl+], a
-    ld a, $D2
-    ld [hl+], a
-    ld a, $E2
+    ld a, $d2
+    ld [hli], a
+    ld a, $d2
+    ld [hli], a
+    ld a, $e2
     ld [hl], a
     ld a, [wIsCGB]
-    or a, a
+    or a
     jr z, .done
     ld a, $40
     ld de, OBJPaletteBufferData_7E_4BBD
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
 
 .skip2:
-    ld b, $7E
+    ld b, $7e
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, OBJPaletteBufferPlus8Data_7E_5AF6
-    ld b, $7E
+    ld b, $7e
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ld de, BGPaletteBufferData_5D_4139
-    ld b, $5D
+    ld b, $5d
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
     ld de, BGPaletteBufferPlus8Data_5E_422F
-    ld b, $5E
+    ld b, $5e
     ld hl, wBGPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
-    ld a, $7F
+    ld a, $7f
     ld [wBGPaletteUploadRequest], a
 
 .done:
@@ -2858,13 +2631,7 @@ Jump_0A1_4FE2:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed
-; writes: wGameMode2State
-; points at: wGameMode2State
 RunGameMode2State_WriteGameMode2State::
-Jump_0A1_5095:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit2
@@ -2887,20 +2654,11 @@ Jump_0A1_5095:: ; address name
     call RunGameMode2State_Case02_WriteTemp1
     ret
 
-; entry 6 of the `rst $00` table in RunGameMode2State
-; no direct call (reached through a table, a jump or a vector)
 RunGameMode2State_ToEnterGameMode1WithDefaultPalettes::
-Jump_0A1_50BB:: ; address name
     call EnterGameMode1WithDefaultPalettes
     ret
 
-; only called from RunGameMode2State_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware)
-; reads: wKeyWorldHeight, wKeyWorldWidth, hTemp4, hTemp5, hTemp0, hTemp1, hTemp2, hTemp3, ...
-; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7
-; points at: wVisitedScreens, wKeyWorldChunks, wNameGlyphBuf
 RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01::
-Func_0A1_50BF:: ; address name
     ld a, [wKeyWorldHeight]
     ld c, a
     ld a, [wKeyWorldWidth]
@@ -2940,11 +2698,11 @@ Func_0A1_50BF:: ; address name
 .loop2:
     push bc
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push bc
     ld a, [hl]
@@ -2966,8 +2724,8 @@ Func_0A1_50BF:: ; address name
     ld e, a
     ldh a, [hTemp1]
     ld d, a
-    ld a, $1C
-    add a, e
+    ld a, $1c
+    add e
     ld e, a
     jr nc, .set_temp0
     inc d
@@ -2986,8 +2744,8 @@ Func_0A1_50BF:: ; address name
     ld e, a
     ldh a, [hTemp1]
     ld d, a
-    ld a, $1C
-    add a, e
+    ld a, $1c
+    add e
     ld e, a
     jr nc, .set_temp02
     inc d
@@ -3016,8 +2774,8 @@ Func_0A1_50BF:: ; address name
     ld e, a
     ldh a, [hTemp1]
     ld d, a
-    ld a, $1C
-    add a, e
+    ld a, $1c
+    add e
     ld e, a
     jr nc, .set_temp03
     inc d
@@ -3036,8 +2794,8 @@ Func_0A1_50BF:: ; address name
     ld e, a
     ldh a, [hTemp1]
     ld d, a
-    ld a, $1C
-    add a, e
+    ld a, $1c
+    add e
     ld e, a
     jr nc, .set_temp04
     inc d
@@ -3062,10 +2820,10 @@ Func_0A1_50BF:: ; address name
     ldh a, [hTemp1]
     ld d, a
     ld a, e
-    sub a, $7C
+    sub $7c
     ld e, a
     ld a, d
-    sbc a, $00
+    sbc $00
     ld d, a
     ld a, e
     ldh [hTemp0], a
@@ -3082,7 +2840,7 @@ Func_0A1_50BF:: ; address name
     ldh a, [hTemp3]
     ld d, a
     ld a, $80
-    add a, e
+    add e
     ld e, a
     jr nc, .set_temp2
     inc d
@@ -3101,10 +2859,10 @@ Func_0A1_50BF:: ; address name
     ldh a, [hTemp7]
     ld d, a
     ld a, e
-    add a, $04
+    add $04
     ld e, a
     ld a, d
-    adc a, $00
+    adc $00
     ld d, a
     ld a, e
     ldh [hTemp4], a
@@ -3124,9 +2882,9 @@ Func_0A1_50BF:: ; address name
     ld b, $58
 
 .loop3:
-    ld a, $FF
+    ld a, $ff
     call WriteVRAMByteInc
-    xor a, a
+    xor a
     call WriteVRAMByteInc
     dec b
     jr nz, .loop3
@@ -3138,7 +2896,7 @@ Func_0A1_50BF:: ; address name
     call CopyGlyphTilesToVRAM
     ld e, $80
     ld hl, vBGMap0 + $204
-    ld b, $0B
+    ld b, $0b
 
 .loop4:
     ld a, e
@@ -3148,12 +2906,7 @@ Func_0A1_50BF:: ; address name
     jr nz, .loop4
     ret
 
-; only called from RunGameMode2State_Case01_Sub01 (E-0047)
-; 16 call sites from 1 routine (e.g. RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01)
-; reads: hTemp0, hTemp1
-; writes: hTemp0
 RunGameMode2State_Case01_Sub01_WriteTemp0::
-Func_0A1_5242:: ; address name
     sra a
     push af
     jr c, .skip
@@ -3202,11 +2955,9 @@ Func_0A1_5242:: ; address name
     pop af
     ret
 
-; counts the characters of wNameGlyphBuf (not the dakuten marks) and shifts it to center it in 13 tiles
-; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01)
-; points at: wNameGlyphBuf
+; counts the characters of wNameGlyphBuf (not the dakuten marks) and shifts it to center it in 13
+; tiles
 RunGameMode2State_CenterName::
-Func_0A1_528B:: ; address name
     push hl
     push de
     ld hl, wNameGlyphBuf
@@ -3214,27 +2965,27 @@ Func_0A1_528B:: ; address name
 
 .loop:
     inc b
-    ld a, [hl+]
-    cp a, $8D
+    ld a, [hli]
+    cp $8d
     jr z, .loop
-    cp a, $8E
+    cp $8e
     jr z, .loop
     inc c
-    cp a, $F0
+    cp $f0
     jr z, .skip
     jr .loop
 
 .skip:
-    ld a, $0D
-    sub a, c
+    ld a, $0d
+    sub c
     srl a
     jr z, .done
     ld c, b
     ld b, a
     ld a, c
-    add a, b
+    add b
     ld de, wNameGlyphBuf
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -3265,48 +3016,42 @@ Func_0A1_528B:: ; address name
     pop hl
     ret
 
-; only called from RunGameMode2State_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware)
-; reads: wGameMode2Byte44, hMapId
-; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
-; points at: wNameGlyphBuf
 RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC::
-Func_0A1_52D4:: ; address name
     ld a, [wGameMode2Byte44]
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     ld hl, WorldMapViewTable
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
-    ld a, [hl+]
+    ld a, [hli]
     ld d, a
-    ld a, [hl+]
+    ld a, [hli]
     ld c, a
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     push hl
     push de
     call CenteredBGMapOriginForSizeBC
     pop de
-    ld a, $5D
+    ld a, $5d
     call CopyRectFromBankToVRAM
     pop hl
     ld hl, vTiles1
     ld b, $58
 
 .loop:
-    ld a, $FF
+    ld a, $ff
     call WriteVRAMByteInc
-    xor a, a
+    xor a
     call WriteVRAMByteInc
     dec b
     jr nz, .loop
     ldh a, [hMapId]
-    add a, $0A
+    add $0a
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld de, wNameGlyphBuf
     ld a, e
@@ -3319,7 +3064,7 @@ Func_0A1_52D4:: ; address name
     call CopyGlyphTilesToVRAM
     ld e, $80
     ld hl, vBGMap0 + $204
-    ld b, $0B
+    ld b, $0b
 
 .loop2:
     ld a, e
@@ -3329,10 +3074,12 @@ Func_0A1_52D4:: ; address name
     jr nz, .loop2
     ret
 
-; E-0167 (C1: RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE).
-; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+; RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows
+; and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM;
+; 11 entries whose rectangles are contiguous from $41B9 to $43AE (E-0167, C1)
+; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero
+; bytes; not read here
 WorldMapViewTable::
-Data_0A1_533C:: ; address name
     dw WorldMapView0 ; id 0: tile rectangle in bank $5D
     db $08, $08 ; rows, width
     db $20, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
@@ -3340,81 +3087,76 @@ Data_0A1_533C:: ; address name
     db $08, $08 ; rows, width
     db $30, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView2 ; id 2: tile rectangle in bank $5D
-    db $0C, $0C ; rows, width
+    db $0c, $0c ; rows, width
     db $48, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView3 ; id 3: tile rectangle in bank $5D
-    db $0C, $0C ; rows, width
+    db $0c, $0c ; rows, width
     db $70, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView4 ; id 4: tile rectangle in bank $5D
     db $03, $04 ; rows, width
-    db $A0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $a0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView5 ; id 5: tile rectangle in bank $5D
     db $06, $06 ; rows, width
-    db $A8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $a8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView6 ; id 6: tile rectangle in bank $5D
     db $02, $03 ; rows, width
-    db $B0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $b0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView7 ; id 7: tile rectangle in bank $5D
     db $05, $05 ; rows, width
-    db $B8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $b8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView8 ; id 8: tile rectangle in bank $5D
     db $02, $01 ; rows, width
-    db $C8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $c8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView9 ; id 9: tile rectangle in bank $5D
     db $02, $01 ; rows, width
-    db $D1, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $d1, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
     dw WorldMapView10 ; id 10: tile rectangle in bank $5D
     db $01, $02 ; rows, width
-    db $DA, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    db $da, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 
-; only called from RunGameMode2State_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldSlot, wKeyWorldGoalScreen
-; writes: hTemp1
 RunGameMode2State_Case02_WriteTemp1::
-Func_0A1_5394:: ; address name
     ld a, [wMapType]
     bit 7, a
     jp nz, .check_key_world_active2
     ldh a, [hMapId]
     ld c, $01
-    cp a, $30
+    cp $30
     jr c, .check_key_world_active
     ld c, $02
-    cp a, $48
+    cp $48
     jr c, .check_key_world_active
     ld c, $03
-    cp a, $70
+    cp $70
     jr c, .check_key_world_active
     ld c, $04
-    cp a, $A0
+    cp $a0
     jr c, .check_key_world_active
     ld c, $05
-    cp a, $A8
+    cp $a8
     jr c, .check_key_world_active
     ld c, $06
-    cp a, $B0
+    cp $b0
     jr c, .check_key_world_active
     ld c, $07
-    cp a, $B8
+    cp $b8
     jr c, .check_key_world_active
     ld c, $08
-    cp a, $C8
+    cp $c8
     jr c, .check_key_world_active
     ld c, $09
-    cp a, $D1
+    cp $d1
     jr c, .check_key_world_active
-    ld c, $0A
-    cp a, $DA
+    ld c, $0a
+    cp $da
     jr c, .check_key_world_active
-    ld c, $0B
+    ld c, $0b
 
 .check_key_world_active:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .skip
     ld a, [wKeyWorldKey]
-    cp a, c
+    cp c
     jr nz, .skip
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
@@ -3435,15 +3177,15 @@ Func_0A1_5394:: ; address name
 
 .check_key_world_active2:
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
@@ -3456,14 +3198,11 @@ Func_0A1_5394:: ; address name
     call DrawCursorSpriteAtTemp1Cell
     ret
 
-; draws metasprite set $26 at X = 8 * (wCursorCellX + 8 * high nibble of hTemp1), Y = 8 * (wCursorCellY + 8 * low nibble) (E-0121)
-; 4 call sites from 1 routine (e.g. RunGameMode2State_Case02_WriteTemp1)
-; reads: hTemp1, wCursorCellX, wCursorCellY
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
+; draws metasprite set $26 at X = 8 * (wCursorCellX + 8 * high nibble of hTemp1), Y = 8 *
+; (wCursorCellY + 8 * low nibble) (E-0121)
 DrawCursorSpriteAtTemp1Cell::
-Func_0A1_542E:: ; address name
     ldh a, [hTemp1]
-    and a, $F0
+    and $f0
     swap a
     sla a
     sla a
@@ -3473,10 +3212,10 @@ Func_0A1_542E:: ; address name
     sla a
     sla a
     sla a
-    add a, c
+    add c
     ldh [hSpriteOriginX], a
     ldh a, [hTemp1]
-    and a, $0F
+    and $0f
     sla a
     sla a
     sla a
@@ -3485,7 +3224,7 @@ Func_0A1_542E:: ; address name
     sla a
     sla a
     sla a
-    add a, c
+    add c
     ldh [hSpriteOriginY], a
     ld a, $10
     ldh [hSpriteTileOffset], a
@@ -3493,19 +3232,15 @@ Func_0A1_542E:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $26
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
 
-; only called from RunGameMode2State_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
-; reads: wFrameCounterLo, wMapType, hMapId, wLastWarpIndex, hMapScreenX, hMapScreenY, wKeyWorldActive, wKeyWorldKey, ...
 RunGameMode2State_Case02_WaitFrameCounterLo::
-Func_0A1_5479:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
@@ -3514,66 +3249,66 @@ Func_0A1_5479:: ; address name
     jp nz, SetSpriteYFromCursorCellY_CheckMapType
     ldh a, [hMapId]
     ld c, $01
-    cp a, $29
+    cp $29
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $02
-    cp a, $45
+    cp $45
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $03
-    cp a, $68
+    cp $68
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $04
-    cp a, $9D
+    cp $9d
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $05
-    cp a, $A4
+    cp $a4
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $06
-    cp a, $AF
+    cp $af
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $07
-    cp a, $B2
+    cp $b2
     jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $08
-    cp a, $C5
+    cp $c5
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $09
-    cp a, $D0
+    cp $d0
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
-    ld c, $0A
-    cp a, $D9
+    ld c, $0a
+    cp $d9
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
-    ld c, $0B
-    cp a, $E2
+    ld c, $0b
+    cp $e2
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
-    cp a, $20
+    cp $20
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $30
+    cp $30
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $48
+    cp $48
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $70
+    cp $70
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $A0
+    cp $a0
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $A8
+    cp $a8
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $B0
+    cp $b0
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $B8
+    cp $b8
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $C8
+    cp $c8
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $D1
+    cp $d1
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
-    cp a, $DA
+    cp $da
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     ld c, a
     ld hl, WorldMapCursorCellTable
 
 .skip:
     ld a, [hl]
-    cp a, c
+    cp c
     jr z, .check_last_warp_index
     inc hl
     inc hl
@@ -3592,18 +3327,14 @@ Func_0A1_5479:: ; address name
 
 .call_set_sprite_x_from_cursor_cell_x:
     inc hl
-    ld a, [hl+]
+    ld a, [hli]
     call SetSpriteXFromCursorCellX
     ld a, [hl]
     call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
-; entry 0 of the `rst $00` table in SetSpriteYFromCursorCellY
-; no direct call (reached through a table, a jump or a vector)
-; reads: hMapScreenX, hMapScreenY
 SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
-Jump_0A1_5523:: ; address name
     ldh a, [hMapScreenX]
     sla a
     sla a
@@ -3618,83 +3349,73 @@ Jump_0A1_5523:: ; address name
     ret
 
 SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive::
-Jump_0A1_553D:: ; address name
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .check_key_world_goal_screen
     ld a, [wKeyWorldKey]
-    cp a, c
+    cp c
     jr nz, .check_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
-    and a, $F0
+    and $f0
     swap a
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     call SetSpriteXFromCursorCellX
     ld a, [wKeyWorldGoalCell]
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
-    and a, $F0
+    and $f0
     swap a
-    add a, a
-    add a, a
-    add a, a
+    add a
+    add a
+    add a
     call SetSpriteXFromCursorCellX
     ld a, [wKeyWorldGoalScreen]
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
 ; hSpriteOriginX = 8 * wCursorCellX + A + 6 (E-0122)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
-; reads: wCursorCellX
-; writes: hSpriteOriginX
 SetSpriteXFromCursorCellX::
-Func_0A1_5581:: ; address name
     ld c, a
     ld a, [wCursorCellX]
     sla a
     sla a
     sla a
-    add a, c
-    add a, $06
+    add c
+    add $06
     ldh [hSpriteOriginX], a
     ret
 
 ; hSpriteOriginY = 8 * wCursorCellY + A + 6; the next entry dispatches on wMapType & 7 (E-0124)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
-; reads: wCursorCellY
-; writes: hSpriteOriginY
 SetSpriteYFromCursorCellY::
-Func_0A1_5591:: ; address name
     ld c, a
     ld a, [wCursorCellY]
     sla a
     sla a
     sla a
-    add a, c
-    add a, $06
+    add c
+    add $06
     ldh [hSpriteOriginY], a
     ret
 
 SetSpriteYFromCursorCellY_CheckMapType::
-Jump_0A1_55A1:: ; address name
     ld a, [wMapType]
-    and a, $07
-    rst $00
+    and $07
+    jumptable
     dw SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA
@@ -3704,14 +3425,9 @@ Jump_0A1_55A1:: ; address name
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07
 
-; entry 1 of the `rst $00` table in SetSpriteYFromCursorCellY; also entry 2 of the table in SetSpriteYFromCursorCellY
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; points at: wKeyWorldAreaExits
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
-Jump_0A1_55B7:: ; address name
     ld a, [wKeyWorldFloor]
-    and a, $07
+    and $07
     sla a
     sla a
     ld hl, wKeyWorldAreaExits
@@ -3726,37 +3442,28 @@ Jump_0A1_55B7:: ; address name
     call SetSpriteXYFromCellA
     ret
 
-; entry 3 of the `rst $00` table in SetSpriteYFromCursorCellY; also entries 4, 5, 6 of the table in SetSpriteYFromCursorCellY
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldFloor
-; points at: wKeyWorldFloorInfo
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03::
-Jump_0A1_55D5:: ; address name
     ld a, [wKeyWorldFloor]
-    and a, $07
-    add a, a
-    add a, a
+    and $07
+    add a
+    add a
     ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     call SetSpriteXYFromCellA
     ret
 
-; entry 7 of the `rst $00` table in SetSpriteYFromCursorCellY
-; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoalScreen
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07::
-Jump_0A1_55E9:: ; address name
     ld a, [wKeyWorldActive]
-    or a, a
+    or a
     jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .read_key_world_goal_screen
-    and a, $7F
+    and $7f
     ld c, a
     ld a, [wKeyWorldSlot]
-    cp a, c
+    cp c
     jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     call SetSpriteXYFromCellA
@@ -3767,25 +3474,22 @@ Jump_0A1_55E9:: ; address name
     call SetSpriteXYFromCellA
     ret
 
-; hSpriteOriginX = 8 * wCursorCellX + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wCursorCellY + (A & $0F) * 8 + 6 (E-0124)
-; 4 call sites from 3 routines (e.g. SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA)
-; reads: wCursorCellX, wCursorCellY
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
+; hSpriteOriginX = 8 * wCursorCellX + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wCursorCellY + (A &
+; $0F) * 8 + 6 (E-0124)
 SetSpriteXYFromCellA::
-Func_0A1_560D:: ; address name
     push af
-    and a, $F0
+    and $f0
     srl a
     ld c, a
     ld a, [wCursorCellX]
     sla a
     sla a
     sla a
-    add a, c
-    add a, $06
+    add c
+    add $06
     ldh [hSpriteOriginX], a
     pop af
-    and a, $0F
+    and $0f
     sla a
     sla a
     sla a
@@ -3794,48 +3498,41 @@ Func_0A1_560D:: ; address name
     sla a
     sla a
     sla a
-    add a, c
-    add a, $06
+    add c
+    add $06
     ldh [hSpriteOriginY], a
 
-; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
-; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
+; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0)
+; (E-0118)
 DrawMetaSpriteSet08::
-Func_0A1_5639:: ; address name
     ld a, $00
     ldh [hSpriteTileOffset], a
     ld a, $00
     ldh [hSpriteAttrXor], a
     ld a, $08
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
 
-; only called from RunGameMode2State_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
-; reads: wMapType, wGameMode2Byte44, wCursorCellX, wCursorCellY, wGameMode2Byte50
-; writes: hSpriteOriginX, hSpriteOriginY
 RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY::
-Func_0A1_5654:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr nz, .skip
     ld a, [wGameMode2Byte44]
-    add a, a
+    add a
     ld hl, WorldMapCursorSpriteLists
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld e, a
     ld a, [hl]
     ld d, a
     ld a, [de]
-    or a, a
+    or a
     ret z
     inc de
     ld b, a
@@ -3846,19 +3543,19 @@ Func_0A1_5654:: ; address name
     ld a, [de]
     ld c, a
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginX], a
     inc de
     ld a, [de]
     ld c, a
     ld a, [wCursorCellY]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginY], a
     call DrawMetaSpriteSet26
     pop de
@@ -3874,7 +3571,7 @@ Func_0A1_5654:: ; address name
 
 .skip2:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     ret z
     push de
     dec de
@@ -3882,45 +3579,45 @@ Func_0A1_5654:: ; address name
     dec de
     ld a, [de]
     ld a, [wGameMode2Byte50]
-    or a, a
+    or a
     jr nz, .skip3
     ld a, [de]
     call IsMapScreenAVisited
-    or a, a
+    or a
     jr z, .restore
 
 .skip3:
     ld a, [de]
     swap a
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     ld c, a
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginX], a
     ld a, [de]
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     ld c, a
     ld a, [wCursorCellY]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginY], a
     call DrawMetaSpriteSet26
 
 .restore:
     pop de
     ld a, $04
-    add a, e
+    add e
     ld e, a
     jr nc, .skip4
     inc d
@@ -3928,31 +3625,24 @@ Func_0A1_5654:: ; address name
 .skip4:
     jr .skip2
 
-; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0) (E-0118)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY)
-; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
+; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0)
+; (E-0118)
 DrawMetaSpriteSet26::
-Func_0A1_56DC:: ; address name
     ld a, $10
     ldh [hSpriteTileOffset], a
     ld a, $01
     ldh [hSpriteAttrXor], a
     ld a, $26
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
     ret
 
-; only called from RunGameMode2State_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
-; reads: wMapType
-; points at: wKeyWorldObjects
 RunGameMode2State_Case02_WaitMapType::
-Func_0A1_56F7:: ; address name
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -3960,7 +3650,7 @@ Func_0A1_56F7:: ; address name
 
 .skip:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     ret z
     push de
     dec de
@@ -3971,7 +3661,7 @@ Func_0A1_56F7:: ; address name
     call RunGameMode2State_Case02_Sub05_IsMapScreenAVisited
     pop de
     ld a, $04
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -3979,45 +3669,40 @@ Func_0A1_56F7:: ; address name
 .skip2:
     jr .skip
 
-; only called from RunGameMode2State_Case02_Sub05 (E-0047)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_WaitMapType)
-; reads: wGameMode2Byte50, wCursorCellX, wCursorCellY
-; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub05_IsMapScreenAVisited::
-Func_0A1_5719:: ; address name
     ld a, [wGameMode2Byte50]
-    or a, a
+    or a
     jr nz, .skip
     ld a, [de]
     call IsMapScreenAVisited
-    or a, a
+    or a
     ret z
 
 .skip:
     ld a, [de]
     swap a
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     ld c, a
     ld a, [wCursorCellX]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginX], a
     ld a, [de]
-    and a, $0F
-    add a, a
-    add a, a
-    add a, a
+    and $0f
+    add a
+    add a
+    add a
     ld c, a
     ld a, [wCursorCellY]
-    add a, a
-    add a, a
-    add a, a
-    add a, c
+    add a
+    add a
+    add a
+    add c
     ldh [hSpriteOriginY], a
     ld a, $10
     ldh [hSpriteTileOffset], a
@@ -4025,9 +3710,9 @@ Func_0A1_5719:: ; address name
     ldh [hSpriteAttrXor], a
     ld a, $26
     ldh [hSpriteSetIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteSubIndex], a
-    xor a, a
+    xor a
     ldh [hSpriteOriginXHi], a
     ldh [hSpriteOriginYHi], a
     push de
@@ -4035,16 +3720,14 @@ Func_0A1_5719:: ; address name
     pop de
     ret
 
-; row = 9 - C/2 (wCursorCellY), column = 10 - B/2 (wCursorCellX); HL = vBGMap0 + 32 * row + column (E-0121)
-; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01)
-; writes: wCursorCellY, wCursorCellX
+; row = 9 - C/2 (wCursorCellY), column = 10 - B/2 (wCursorCellX); HL = vBGMap0 + 32 * row + column
+; (E-0121)
 CenteredBGMapOriginForSizeBC::
-Func_0A1_5764:: ; address name
     ld a, c
     srl a
     ld l, a
     ld a, $09
-    sub a, l
+    sub l
     ld [wCursorCellY], a
     ld l, a
     ld h, $00
@@ -4054,24 +3737,22 @@ Func_0A1_5764:: ; address name
     add hl, hl
     add hl, hl
     ld a, l
-    add a, $00
+    add $00
     ld l, a
     ld a, h
-    adc a, $98
+    adc $98
     ld h, a
     ld a, b
     srl a
     ld e, a
-    ld a, $0A
-    sub a, e
+    ld a, $0a
+    sub e
     ld [wCursorCellX], a
     add_a_to_hl
     ret
 
 ; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
 FillBGMap0With57::
-Func_0A1_578E:: ; address name
     ld hl, vBGMap0
     ld bc, $0400
 
@@ -4080,45 +3761,37 @@ Func_0A1_578E:: ; address name
     call WriteVRAMByteInc
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ret
 
-; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
-; reads: wIsCGB
 RunGameMode2State_Case04_WriteVRAMByteInc::
-Func_0A1_579F:: ; address name
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     ld hl, vBGMap0
     ld bc, $0400
 
 .loop:
-    xor a, a
+    xor a
     call WriteVRAMByteInc
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
-; only called from RunGameMode2State_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware)
-; reads: wIsCGB
 RunGameMode2State_Case01_WriteVRAMByteInc::
-Func_0A1_57BE:: ; address name
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     ld hl, vBGMap0
@@ -4129,17 +3802,17 @@ Func_0A1_57BE:: ; address name
     call WriteVRAMByteInc
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ld hl, vBGMap0 + $64
-    ld c, $0C
+    ld c, $0c
 
 .loop2:
     push hl
-    ld b, $0C
+    ld b, $0c
 
 .loop3:
-    xor a, a
+    xor a
     call WriteVRAMByte
     inc hl
     dec b
@@ -4149,26 +3822,24 @@ Func_0A1_57BE:: ; address name
     add_a_to_hl
     dec c
     jr nz, .loop2
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware)
 DrawRect12x12FromBankA1::
-Func_0A1_57F9:: ; address name
     ld de, $5808
-    ld bc, $0C0C
+    ld bc, $0c0c
     ld hl, vBGMap0 + $64
-    ld a, $A1
+    ld a, $a1
     call CopyRectFromBankToVRAM
     ret
 
-; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
+; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 12 tiles, one row per line
 TileRect_A1_5808::
-Data_0A1_5808:: ; address name
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 0
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 1
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 2
@@ -4182,47 +3853,40 @@ Data_0A1_5808:: ; address name
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 10
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 11
 
-; wFieldInitStage = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
-; 1 call site from 1 routine (e.g. RunGameMode2State_ToEnterGameMode1WithDefaultPalettes)
-; writes: wFieldInitStage, wDataBankSave, wGameMode
-; points at: wDMGPaletteBGP
+; wFieldInitStage = 3, wDataBankSave = $40, far-calls InitFieldScreen, sets the default DMG palette
+; bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 EnterGameMode1WithDefaultPalettes::
-Func_0A1_5898:: ; address name
     ld a, $03
     ld [wFieldInitStage], a
     ld a, $40
     ld [wDataBankSave], a
     farcall InitFieldScreen
     ld hl, wDMGPaletteBGP
-    ld a, $D2
-    ld [hl+], a
-    ld a, $D2
-    ld [hl+], a
-    ld a, $E2
+    ld a, $d2
+    ld [hli], a
+    ld a, $d2
+    ld [hli], a
+    ld a, $e2
     ld [hl], a
     ld a, $01
     ld [wGameMode], a
     ret
 
-; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wVisitedScreens, else 0 (E-0125)
-; 5 call sites from 5 routines (e.g. RunGameMode2State_Case02_Sub01_Sub04_Multiply8, RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc, RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01, RunGameMode2State_Case02_Sub05_IsMapScreenAVisited, ...)
-; reads: hTemp0
-; writes: hTemp0
-; points at: wVisitedScreens
+; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wVisitedScreens, else 0
+; (E-0125)
 IsMapScreenAVisited::
-Func_0A1_58BA:: ; address name
     push bc
     push hl
     ldh [hTemp0], a
-    and a, $0F
-    and a, $FC
+    and $0f
+    and $fc
     ld hl, wVisitedScreens
     add_a_to_hl
     ldh a, [hTemp0]
     swap a
-    and a, $0F
+    and $0f
     srl a
-    and a, $FE
+    and $fe
     add_a_to_hl
     ldh a, [hTemp0]
     bit 1, a
@@ -4238,7 +3902,7 @@ Func_0A1_58BA:: ; address name
 .read_temp0:
     ldh a, [hTemp0]
     swap a
-    and a, $03
+    and $03
     jr z, .skip2
     ld b, a
 
@@ -4249,9 +3913,9 @@ Func_0A1_58BA:: ; address name
 
 .skip2:
     ld a, [hl]
-    and a, c
+    and c
     jr nz, .skip3
-    xor a, a
+    xor a
     pop hl
     pop bc
     ret
@@ -4262,19 +3926,14 @@ Func_0A1_58BA:: ; address name
     pop bc
     ret
 
-; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
-; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wMapType, hMapId
-; writes: hTemp0, wGameMode2Byte44, wFieldReturnPhase, wModeState, wGameMode2State
 FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc::
-Func_0A1_5903:: ; address name
-    xor a, a
+    xor a
     ldh [hTemp0], a
     ld a, [wFadeState]
-    or a, a
+    or a
     ret nz
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     ret nz
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -4286,37 +3945,37 @@ Func_0A1_5903:: ; address name
     bit 7, a
     jp nz, .set_temp0_to_01
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     ret c
     ld c, $00
-    cp a, $30
+    cp $30
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $48
+    cp $48
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $70
+    cp $70
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $A0
+    cp $a0
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $A8
+    cp $a8
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $B0
+    cp $b0
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $B8
+    cp $b8
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $C8
+    cp $c8
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $D1
+    cp $d1
     jr c, .set_game_mode2_byte44
     inc c
-    cp a, $DA
+    cp $da
     jr c, .set_game_mode2_byte44
     inc c
 
@@ -4331,34 +3990,34 @@ Func_0A1_5903:: ; address name
     ld a, $08
     ld [wModeState], a
     ldh a, [hMapId]
-    cp a, $20
+    cp $20
     jr z, .clear_game_mode2_state
-    cp a, $30
+    cp $30
     jr z, .clear_game_mode2_state
-    cp a, $48
+    cp $48
     jr z, .clear_game_mode2_state
-    cp a, $70
+    cp $70
     jr z, .clear_game_mode2_state
-    cp a, $A0
+    cp $a0
     jr z, .clear_game_mode2_state
-    cp a, $A8
+    cp $a8
     jr z, .clear_game_mode2_state
-    cp a, $B0
+    cp $b0
     jr z, .clear_game_mode2_state
-    cp a, $B8
+    cp $b8
     jr z, .clear_game_mode2_state
-    cp a, $C8
+    cp $c8
     jr z, .clear_game_mode2_state
-    cp a, $D1
+    cp $d1
     jr z, .clear_game_mode2_state
-    cp a, $DA
+    cp $da
     jr z, .clear_game_mode2_state
     ld a, $03
     ld [wGameMode2State], a
     ret
 
 .clear_game_mode2_state:
-    xor a, a
+    xor a
     ld [wGameMode2State], a
     ret
 
@@ -4371,9 +4030,9 @@ Func_0A1_5903:: ; address name
     ld a, $08
     ld [wModeState], a
     ld a, [wMapType]
-    and a, $7F
+    and $7f
     jr nz, .set_game_mode2_state_to_03
-    xor a, a
+    xor a
     ld [wGameMode2State], a
     ret
 
@@ -4383,14 +4042,16 @@ Func_0A1_5903:: ; address name
     ret
     db $01, $01
 
-; E-0215 (C1: RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip2 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes, so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists' first word).
+; RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip2 reads the record at
+; $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles);
+; 11 indexes, so record 10's first two bytes are the tail and its other two would be
+; WorldMapCursorSpriteLists' first word (E-0215, C1)
 ; record: screen X/Y and position X/Y nibbles; two bytes not read here
 WorldMapStartPositions::
-Data_0A1_59D6:: ; address name
     db $00, $44, $39, $31 ; id 0
     db $76, $44, $59, $21 ; id 1
-    db $B4, $44, $59, $21 ; id 2
-    db $B4, $44, $09, $01 ; id 3
+    db $b4, $44, $59, $21 ; id 2
+    db $b4, $44, $09, $01 ; id 3
     db $10, $44, $01, $01 ; id 4
     db $00, $44, $01, $09 ; id 5
     db $01, $44, $21, $21 ; id 6
@@ -4399,10 +4060,11 @@ Data_0A1_59D6:: ; address name
     db $00, $44, $01, $01 ; id 9
     db $00, $44 ; end
 
-; E-0215 (C1: Func_0A1_5654 reads word wGameMode2Byte44 and draws DrawMetaSpriteSet26 once per entry at wCursorCellX * 8 + X, wCursorCellY * 8 + Y; the lists run to $5A49).
+; RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY reads word wGameMode2Byte44 and draws
+; DrawMetaSpriteSet26 once per entry at wCursorCellX * 8 + X, wCursorCellY * 8 + Y; the lists run to
+; $5A49 (E-0215, C1)
 ; record: list
 WorldMapCursorSpriteLists::
-Data_0A1_5A00:: ; address name
     dw WorldMapCursorSprites000 ; id 0
     dw WorldMapCursorSprites001 ; id 1
     dw WorldMapCursorSprites002 ; id 2
@@ -4415,76 +4077,57 @@ Data_0A1_5A00:: ; address name
     dw WorldMapCursorSprites009 ; id 9
     dw WorldMapCursorSprites00A ; id 10
 
-; E-0199 (derived: list for entry $00 of WorldMapCursorSpriteLists; it runs to the next list)
+; list for entry $00 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 ; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
 WorldMapCursorSprites000::
-Data_0A1_5A16:: ; address name
     db $02, $11, $09, $11, $29 ; id 0
 
-; E-0199 (derived: list for entry $01 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $01 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites001::
-Data_0A1_5A1B:: ; address name
     db $03, $29, $31, $21, $11, $11, $21 ; id 0
 
-; E-0199 (derived: list for entry $02 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $02 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites002::
-Data_0A1_5A22:: ; address name
     db $05, $41, $11, $39, $29, $21, $41, $11, $49, $49, $49 ; id 0
 
-; E-0199 (derived: list for entry $03 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $03 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites003::
-Data_0A1_5A2D:: ; address name
     db $03, $59, $09, $29, $31, $29, $49 ; id 0
 
-; E-0199 (derived: list for entry $04 of WorldMapCursorSpriteLists; it runs to the next list)
+; list for entry $04 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 ; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
 WorldMapCursorSprites004::
-Data_0A1_5A34:: ; address name
     db $00 ; id 0
 
-; E-0199 (derived: list for entry $05 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $05 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites005::
-Data_0A1_5A35:: ; address name
     db $01, $11, $21 ; id 0
 
-; E-0199 (derived: list for entry $06 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $06 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites006::
-Data_0A1_5A38:: ; address name
     db $01, $09, $01 ; id 0
 
-; E-0199 (derived: list for entry $07 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $07 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites007::
-Data_0A1_5A3B:: ; address name
     db $02, $21, $19, $09, $09 ; id 0
 
-; E-0199 (derived: list for entry $08 of WorldMapCursorSpriteLists; it runs to the next list)
+; list for entry $08 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 ; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
 WorldMapCursorSprites008::
-Data_0A1_5A40:: ; address name
     db $01, $01, $01 ; id 0
 
-; E-0199 (derived: list for entry $09 of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $09 of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites009::
-Data_0A1_5A43:: ; address name
     db $01, $01, $09 ; id 0
 
-; E-0199 (derived: list for entry $0A of WorldMapCursorSpriteLists; it runs to the next list)
-; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+; list for entry $0A of WorldMapCursorSpriteLists; it runs to the next list (E-0199)
 WorldMapCursorSprites00A::
-Data_0A1_5A46:: ; address name
     db $01, $09, $01 ; id 0
 
-; E-0215 (C1: Func_0A1_4DA4 reads word wGameMode2Byte44 and walks count entries of two bytes; the lists run to $5A92).
+; RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc reads word wGameMode2Byte44
+; and walks count entries of two bytes; the lists run to $5A92 (E-0215, C1)
 ; record: list
 WorldMapMarkerLists::
-Data_0A1_5A49:: ; address name
     dw WorldMapMarkers000 ; id 0
     dw WorldMapMarkers001 ; id 1
     dw WorldMapMarkers002 ; id 2
@@ -4497,76 +4140,58 @@ Data_0A1_5A49:: ; address name
     dw WorldMapMarkers009 ; id 9
     dw WorldMapMarkers00A ; id 10
 
-; E-0199 (derived: list for entry $00 of WorldMapMarkerLists; it runs to the next list)
+; list for entry $00 of WorldMapMarkerLists; it runs to the next list (E-0199)
 ; record: count, then two bytes (screen / position nibbles) per entry
 WorldMapMarkers000::
-Data_0A1_5A5F:: ; address name
     db $02, $21, $44, $25, $44 ; id 0
 
-; E-0199 (derived: list for entry $01 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $01 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers001::
-Data_0A1_5A64:: ; address name
     db $03, $56, $44, $42, $44, $24, $44 ; id 0
 
-; E-0199 (derived: list for entry $02 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $02 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers002::
-Data_0A1_5A6B:: ; address name
     db $05, $82, $44, $75, $44, $48, $44, $29, $44, $99, $44 ; id 0
 
-; E-0199 (derived: list for entry $03 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $03 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers003::
-Data_0A1_5A76:: ; address name
-    db $03, $B1, $44, $56, $64, $59, $44 ; id 0
+    db $03, $b1, $44, $56, $64, $59, $44 ; id 0
 
-; E-0199 (derived: list for entry $04 of WorldMapMarkerLists; it runs to the next list)
+; list for entry $04 of WorldMapMarkerLists; it runs to the next list (E-0199)
 ; record: count, then two bytes (screen / position nibbles) per entry
 WorldMapMarkers004::
-Data_0A1_5A7D:: ; address name
     db $00 ; id 0
 
-; E-0199 (derived: list for entry $05 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $05 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers005::
-Data_0A1_5A7E:: ; address name
     db $01, $24, $44 ; id 0
 
-; E-0199 (derived: list for entry $06 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $06 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers006::
-Data_0A1_5A81:: ; address name
     db $01, $10, $44 ; id 0
 
-; E-0199 (derived: list for entry $07 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $07 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers007::
-Data_0A1_5A84:: ; address name
     db $02, $43, $44, $11, $35 ; id 0
 
-; E-0199 (derived: list for entry $08 of WorldMapMarkerLists; it runs to the next list)
+; list for entry $08 of WorldMapMarkerLists; it runs to the next list (E-0199)
 ; record: count, then two bytes (screen / position nibbles) per entry
 WorldMapMarkers008::
-Data_0A1_5A89:: ; address name
     db $01, $00, $44 ; id 0
 
-; E-0199 (derived: list for entry $09 of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $09 of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers009::
-Data_0A1_5A8C:: ; address name
     db $01, $01, $44 ; id 0
 
-; E-0199 (derived: list for entry $0A of WorldMapMarkerLists; it runs to the next list)
-; record: count, then two bytes (screen / position nibbles) per entry
+; list for entry $0A of WorldMapMarkerLists; it runs to the next list (E-0199)
 WorldMapMarkers00A::
-Data_0A1_5A8F:: ; address name
     db $01, $10, $44 ; id 0
 
-; E-0215 (C1: SetSpriteYFromCursorCellY's path scans 5-byte records from $5A92 for the current map id (no terminator) and takes bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records, map ids rising, end exactly at WorldMapScreenPositionTable).
+; SetSpriteYFromCursorCellY's path scans 5-byte records from $5A92 for the current map id (no
+; terminator) and takes bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records, map ids rising, end
+; exactly at WorldMapScreenPositionTable (E-0215, C1)
 ; record: map id; cursor cell X, Y; second X, Y used when wLastWarpIndex = 2
 WorldMapCursorCellTable::
-Data_0A1_5A92:: ; address name
     db $21, $11, $09, $00, $00 ; id 0
     db $22, $11, $09, $00, $00 ; id 1
     db $23, $11, $29, $00, $00 ; id 2
@@ -4574,11 +4199,11 @@ Data_0A1_5A92:: ; address name
     db $25, $11, $29, $00, $00 ; id 4
     db $26, $11, $29, $00, $00 ; id 5
     db $28, $29, $29, $00, $00 ; id 6
-    db $2A, $11, $09, $00, $00 ; id 7
-    db $2B, $11, $09, $11, $29 ; id 8
-    db $2D, $11, $29, $00, $00 ; id 9
-    db $2E, $11, $29, $00, $00 ; id 10
-    db $2F, $29, $29, $00, $00 ; id 11
+    db $2a, $11, $09, $00, $00 ; id 7
+    db $2b, $11, $09, $11, $29 ; id 8
+    db $2d, $11, $29, $00, $00 ; id 9
+    db $2e, $11, $29, $00, $00 ; id 10
+    db $2f, $29, $29, $00, $00 ; id 11
     db $31, $29, $31, $00, $00 ; id 12
     db $32, $21, $11, $00, $00 ; id 13
     db $33, $21, $11, $00, $00 ; id 14
@@ -4588,24 +4213,24 @@ Data_0A1_5A92:: ; address name
     db $37, $29, $29, $00, $00 ; id 18
     db $38, $29, $19, $00, $00 ; id 19
     db $39, $29, $19, $00, $00 ; id 20
-    db $3A, $29, $19, $00, $00 ; id 21
-    db $3B, $29, $19, $00, $00 ; id 22
-    db $3C, $11, $21, $00, $00 ; id 23
-    db $3D, $11, $21, $00, $00 ; id 24
-    db $3E, $31, $0D, $00, $00 ; id 25
-    db $3F, $31, $0D, $00, $00 ; id 26
-    db $40, $31, $0D, $00, $00 ; id 27
+    db $3a, $29, $19, $00, $00 ; id 21
+    db $3b, $29, $19, $00, $00 ; id 22
+    db $3c, $11, $21, $00, $00 ; id 23
+    db $3d, $11, $21, $00, $00 ; id 24
+    db $3e, $31, $0d, $00, $00 ; id 25
+    db $3f, $31, $0d, $00, $00 ; id 26
+    db $40, $31, $0d, $00, $00 ; id 27
     db $41, $11, $21, $00, $00 ; id 28
     db $42, $29, $29, $00, $00 ; id 29
     db $43, $29, $29, $00, $00 ; id 30
     db $44, $29, $29, $00, $00 ; id 31
     db $49, $29, $01, $00, $00 ; id 32
-    db $4A, $41, $11, $00, $00 ; id 33
-    db $4B, $41, $11, $00, $00 ; id 34
-    db $4C, $41, $11, $00, $00 ; id 35
-    db $4D, $41, $11, $00, $00 ; id 36
-    db $4E, $39, $19, $39, $21 ; id 37
-    db $4F, $39, $29, $00, $00 ; id 38
+    db $4a, $41, $11, $00, $00 ; id 33
+    db $4b, $41, $11, $00, $00 ; id 34
+    db $4c, $41, $11, $00, $00 ; id 35
+    db $4d, $41, $11, $00, $00 ; id 36
+    db $4e, $39, $19, $39, $21 ; id 37
+    db $4f, $39, $29, $00, $00 ; id 38
     db $50, $39, $29, $00, $00 ; id 39
     db $51, $39, $29, $00, $00 ; id 40
     db $52, $21, $31, $21, $31 ; id 41
@@ -4616,12 +4241,12 @@ Data_0A1_5A92:: ; address name
     db $57, $21, $31, $21, $31 ; id 46
     db $58, $21, $41, $00, $00 ; id 47
     db $59, $21, $41, $00, $00 ; id 48
-    db $5A, $11, $49, $00, $00 ; id 49
-    db $5B, $11, $49, $00, $00 ; id 50
-    db $5C, $11, $49, $00, $00 ; id 51
-    db $5D, $28, $51, $00, $00 ; id 52
-    db $5E, $49, $49, $00, $00 ; id 53
-    db $5F, $49, $49, $00, $00 ; id 54
+    db $5a, $11, $49, $00, $00 ; id 49
+    db $5b, $11, $49, $00, $00 ; id 50
+    db $5c, $11, $49, $00, $00 ; id 51
+    db $5d, $28, $51, $00, $00 ; id 52
+    db $5e, $49, $49, $00, $00 ; id 53
+    db $5f, $49, $49, $00, $00 ; id 54
     db $60, $49, $49, $00, $00 ; id 55
     db $61, $49, $49, $00, $00 ; id 56
     db $62, $51, $29, $00, $00 ; id 57
@@ -4639,12 +4264,12 @@ Data_0A1_5A92:: ; address name
     db $77, $51, $21, $49, $21 ; id 69
     db $78, $29, $31, $00, $00 ; id 70
     db $79, $29, $31, $00, $00 ; id 71
-    db $7A, $01, $21, $00, $00 ; id 72
-    db $7B, $19, $31, $19, $39 ; id 73
-    db $7C, $29, $49, $00, $00 ; id 74
-    db $7D, $29, $49, $00, $00 ; id 75
-    db $7E, $29, $49, $00, $00 ; id 76
-    db $7F, $29, $49, $00, $00 ; id 77
+    db $7a, $01, $21, $00, $00 ; id 72
+    db $7b, $19, $31, $19, $39 ; id 73
+    db $7c, $29, $49, $00, $00 ; id 74
+    db $7d, $29, $49, $00, $00 ; id 75
+    db $7e, $29, $49, $00, $00 ; id 76
+    db $7f, $29, $49, $00, $00 ; id 77
     db $80, $41, $21, $49, $21 ; id 78
     db $81, $29, $59, $00, $00 ; id 79
     db $82, $29, $59, $00, $00 ; id 80
@@ -4655,12 +4280,12 @@ Data_0A1_5A92:: ; address name
     db $87, $09, $59, $00, $00 ; id 85
     db $88, $09, $59, $00, $00 ; id 86
     db $89, $59, $09, $00, $00 ; id 87
-    db $8A, $59, $51, $00, $00 ; id 88
-    db $8B, $59, $51, $00, $00 ; id 89
-    db $8C, $59, $51, $00, $00 ; id 90
-    db $8D, $59, $51, $00, $00 ; id 91
-    db $8E, $59, $51, $00, $00 ; id 92
-    db $8F, $59, $51, $00, $00 ; id 93
+    db $8a, $59, $51, $00, $00 ; id 88
+    db $8b, $59, $51, $00, $00 ; id 89
+    db $8c, $59, $51, $00, $00 ; id 90
+    db $8d, $59, $51, $00, $00 ; id 91
+    db $8e, $59, $51, $00, $00 ; id 92
+    db $8f, $59, $51, $00, $00 ; id 93
     db $90, $59, $51, $00, $00 ; id 94
     db $91, $59, $51, $00, $00 ; id 95
     db $92, $29, $11, $00, $00 ; id 96
@@ -4671,57 +4296,59 @@ Data_0A1_5A92:: ; address name
     db $97, $11, $01, $00, $00 ; id 101
     db $98, $11, $01, $00, $00 ; id 102
     db $99, $11, $01, $00, $00 ; id 103
-    db $9A, $11, $01, $00, $00 ; id 104
-    db $9B, $11, $01, $00, $00 ; id 105
-    db $A1, $09, $11, $00, $00 ; id 106
-    db $A2, $09, $09, $00, $00 ; id 107
-    db $A3, $09, $09, $00, $00 ; id 108
-    db $A9, $11, $21, $00, $00 ; id 109
-    db $AA, $09, $09, $00, $00 ; id 110
-    db $AB, $21, $19, $00, $00 ; id 111
-    db $AC, $29, $09, $00, $00 ; id 112
-    db $AD, $29, $09, $00, $00 ; id 113
-    db $AE, $29, $09, $00, $00 ; id 114
-    db $B1, $09, $01, $00, $00 ; id 115
-    db $B3, $09, $01, $00, $00 ; id 116
-    db $B4, $09, $01, $00, $00 ; id 117
-    db $B5, $09, $01, $00, $00 ; id 118
-    db $B6, $09, $01, $00, $00 ; id 119
-    db $B9, $21, $19, $00, $00 ; id 120
-    db $BA, $09, $09, $00, $00 ; id 121
-    db $BB, $21, $01, $00, $00 ; id 122
-    db $BC, $21, $19, $00, $00 ; id 123
-    db $BD, $21, $01, $00, $00 ; id 124
-    db $BE, $21, $01, $00, $00 ; id 125
-    db $BF, $21, $01, $00, $00 ; id 126
-    db $C0, $21, $01, $00, $00 ; id 127
-    db $C1, $21, $01, $00, $00 ; id 128
-    db $C2, $21, $01, $00, $00 ; id 129
-    db $C3, $21, $01, $00, $00 ; id 130
-    db $C4, $21, $01, $00, $00 ; id 131
-    db $C9, $01, $01, $00, $00 ; id 132
-    db $CA, $01, $01, $00, $00 ; id 133
-    db $CB, $01, $01, $00, $00 ; id 134
-    db $CC, $01, $01, $00, $00 ; id 135
-    db $CD, $01, $01, $00, $00 ; id 136
-    db $CE, $01, $01, $00, $00 ; id 137
-    db $D2, $01, $09, $00, $00 ; id 138
-    db $D3, $01, $09, $00, $00 ; id 139
-    db $D4, $01, $09, $00, $00 ; id 140
-    db $D5, $01, $09, $00, $00 ; id 141
-    db $D6, $01, $09, $00, $00 ; id 142
-    db $D7, $01, $09, $00, $00 ; id 143
-    db $DB, $09, $01, $00, $00 ; id 144
-    db $DC, $09, $01, $00, $00 ; id 145
-    db $DD, $09, $01, $00, $00 ; id 146
-    db $DE, $09, $01, $00, $00 ; id 147
-    db $DF, $09, $01, $00, $00 ; id 148
-    db $E0, $09, $01, $00, $00 ; id 149
+    db $9a, $11, $01, $00, $00 ; id 104
+    db $9b, $11, $01, $00, $00 ; id 105
+    db $a1, $09, $11, $00, $00 ; id 106
+    db $a2, $09, $09, $00, $00 ; id 107
+    db $a3, $09, $09, $00, $00 ; id 108
+    db $a9, $11, $21, $00, $00 ; id 109
+    db $aa, $09, $09, $00, $00 ; id 110
+    db $ab, $21, $19, $00, $00 ; id 111
+    db $ac, $29, $09, $00, $00 ; id 112
+    db $ad, $29, $09, $00, $00 ; id 113
+    db $ae, $29, $09, $00, $00 ; id 114
+    db $b1, $09, $01, $00, $00 ; id 115
+    db $b3, $09, $01, $00, $00 ; id 116
+    db $b4, $09, $01, $00, $00 ; id 117
+    db $b5, $09, $01, $00, $00 ; id 118
+    db $b6, $09, $01, $00, $00 ; id 119
+    db $b9, $21, $19, $00, $00 ; id 120
+    db $ba, $09, $09, $00, $00 ; id 121
+    db $bb, $21, $01, $00, $00 ; id 122
+    db $bc, $21, $19, $00, $00 ; id 123
+    db $bd, $21, $01, $00, $00 ; id 124
+    db $be, $21, $01, $00, $00 ; id 125
+    db $bf, $21, $01, $00, $00 ; id 126
+    db $c0, $21, $01, $00, $00 ; id 127
+    db $c1, $21, $01, $00, $00 ; id 128
+    db $c2, $21, $01, $00, $00 ; id 129
+    db $c3, $21, $01, $00, $00 ; id 130
+    db $c4, $21, $01, $00, $00 ; id 131
+    db $c9, $01, $01, $00, $00 ; id 132
+    db $ca, $01, $01, $00, $00 ; id 133
+    db $cb, $01, $01, $00, $00 ; id 134
+    db $cc, $01, $01, $00, $00 ; id 135
+    db $cd, $01, $01, $00, $00 ; id 136
+    db $ce, $01, $01, $00, $00 ; id 137
+    db $d2, $01, $09, $00, $00 ; id 138
+    db $d3, $01, $09, $00, $00 ; id 139
+    db $d4, $01, $09, $00, $00 ; id 140
+    db $d5, $01, $09, $00, $00 ; id 141
+    db $d6, $01, $09, $00, $00 ; id 142
+    db $d7, $01, $09, $00, $00 ; id 143
+    db $db, $09, $01, $00, $00 ; id 144
+    db $dc, $09, $01, $00, $00 ; id 145
+    db $dd, $09, $01, $00, $00 ; id 146
+    db $de, $09, $01, $00, $00 ; id 147
+    db $df, $09, $01, $00, $00 ; id 148
+    db $e0, $09, $01, $00, $00 ; id 149
 
-; E-0215 (C1: the routine before RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E).
+; the routine before RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip scans
+; 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4
+; when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero
+; padding from $606E (E-0215, C1)
 ; record: map id; screen / position nibbles; the same for wLastWarpIndex = 2
 WorldMapScreenPositionTable::
-Data_0A1_5D80:: ; address name
     db $21, $21, $44, $00, $00 ; id 0
     db $22, $21, $44, $00, $00 ; id 1
     db $23, $25, $44, $00, $00 ; id 2
@@ -4729,11 +4356,11 @@ Data_0A1_5D80:: ; address name
     db $25, $25, $44, $00, $00 ; id 4
     db $26, $25, $44, $00, $00 ; id 5
     db $28, $55, $44, $00, $00 ; id 6
-    db $2A, $21, $44, $00, $00 ; id 7
-    db $2B, $21, $44, $25, $44 ; id 8
-    db $2D, $25, $44, $00, $00 ; id 9
-    db $2E, $25, $44, $00, $00 ; id 10
-    db $2F, $55, $44, $00, $00 ; id 11
+    db $2a, $21, $44, $00, $00 ; id 7
+    db $2b, $21, $44, $25, $44 ; id 8
+    db $2d, $25, $44, $00, $00 ; id 9
+    db $2e, $25, $44, $00, $00 ; id 10
+    db $2f, $55, $44, $00, $00 ; id 11
     db $31, $56, $44, $00, $00 ; id 12
     db $32, $42, $44, $00, $00 ; id 13
     db $33, $42, $44, $00, $00 ; id 14
@@ -4743,24 +4370,24 @@ Data_0A1_5D80:: ; address name
     db $37, $55, $44, $00, $00 ; id 18
     db $38, $53, $44, $00, $00 ; id 19
     db $39, $53, $44, $00, $00 ; id 20
-    db $3A, $53, $44, $00, $00 ; id 21
-    db $3B, $53, $44, $00, $00 ; id 22
-    db $3C, $24, $44, $00, $00 ; id 23
-    db $3D, $24, $44, $00, $00 ; id 24
-    db $3E, $62, $44, $00, $00 ; id 25
-    db $3F, $62, $44, $00, $00 ; id 26
+    db $3a, $53, $44, $00, $00 ; id 21
+    db $3b, $53, $44, $00, $00 ; id 22
+    db $3c, $24, $44, $00, $00 ; id 23
+    db $3d, $24, $44, $00, $00 ; id 24
+    db $3e, $62, $44, $00, $00 ; id 25
+    db $3f, $62, $44, $00, $00 ; id 26
     db $40, $62, $44, $00, $00 ; id 27
     db $41, $24, $44, $00, $00 ; id 28
     db $42, $55, $44, $00, $00 ; id 29
     db $43, $55, $44, $00, $00 ; id 30
     db $44, $55, $44, $00, $00 ; id 31
     db $49, $50, $44, $00, $00 ; id 32
-    db $4A, $82, $44, $00, $00 ; id 33
-    db $4B, $82, $44, $00, $00 ; id 34
-    db $4C, $82, $44, $00, $00 ; id 35
-    db $4D, $82, $44, $00, $00 ; id 36
-    db $4E, $73, $44, $74, $44 ; id 37
-    db $4F, $75, $44, $00, $00 ; id 38
+    db $4a, $82, $44, $00, $00 ; id 33
+    db $4b, $82, $44, $00, $00 ; id 34
+    db $4c, $82, $44, $00, $00 ; id 35
+    db $4d, $82, $44, $00, $00 ; id 36
+    db $4e, $73, $44, $74, $44 ; id 37
+    db $4f, $75, $44, $00, $00 ; id 38
     db $50, $75, $44, $00, $00 ; id 39
     db $51, $75, $44, $00, $00 ; id 40
     db $52, $46, $44, $46, $64 ; id 41
@@ -4771,53 +4398,53 @@ Data_0A1_5D80:: ; address name
     db $57, $46, $44, $46, $64 ; id 46
     db $58, $48, $44, $00, $00 ; id 47
     db $59, $48, $44, $00, $00 ; id 48
-    db $5A, $29, $44, $00, $00 ; id 49
-    db $5B, $29, $44, $00, $00 ; id 50
-    db $5C, $29, $44, $00, $00 ; id 51
-    db $5D, $5A, $43, $00, $00 ; id 52
-    db $5E, $99, $44, $00, $00 ; id 53
-    db $5F, $99, $44, $00, $00 ; id 54
+    db $5a, $29, $44, $00, $00 ; id 49
+    db $5b, $29, $44, $00, $00 ; id 50
+    db $5c, $29, $44, $00, $00 ; id 51
+    db $5d, $5a, $43, $00, $00 ; id 52
+    db $5e, $99, $44, $00, $00 ; id 53
+    db $5f, $99, $44, $00, $00 ; id 54
     db $60, $99, $44, $00, $00 ; id 55
     db $61, $99, $44, $00, $00 ; id 56
-    db $62, $A5, $44, $00, $00 ; id 57
+    db $62, $a5, $44, $00, $00 ; id 57
     db $63, $87, $44, $00, $00 ; id 58
     db $64, $87, $44, $00, $00 ; id 59
     db $65, $87, $44, $00, $00 ; id 60
     db $66, $87, $44, $00, $00 ; id 61
     db $67, $87, $44, $00, $00 ; id 62
-    db $71, $B1, $44, $00, $00 ; id 63
-    db $72, $B1, $44, $00, $00 ; id 64
-    db $73, $B1, $44, $00, $00 ; id 65
-    db $74, $B1, $44, $00, $00 ; id 66
-    db $75, $B1, $44, $00, $00 ; id 67
-    db $76, $B1, $44, $00, $00 ; id 68
-    db $77, $A4, $44, $94, $44 ; id 69
+    db $71, $b1, $44, $00, $00 ; id 63
+    db $72, $b1, $44, $00, $00 ; id 64
+    db $73, $b1, $44, $00, $00 ; id 65
+    db $74, $b1, $44, $00, $00 ; id 66
+    db $75, $b1, $44, $00, $00 ; id 67
+    db $76, $b1, $44, $00, $00 ; id 68
+    db $77, $a4, $44, $94, $44 ; id 69
     db $78, $56, $44, $00, $00 ; id 70
     db $79, $56, $44, $00, $00 ; id 71
-    db $7A, $04, $44, $00, $00 ; id 72
-    db $7B, $36, $44, $37, $44 ; id 73
-    db $7C, $59, $44, $00, $00 ; id 74
-    db $7D, $59, $44, $00, $00 ; id 75
-    db $7E, $59, $44, $00, $00 ; id 76
-    db $7F, $59, $44, $00, $00 ; id 77
+    db $7a, $04, $44, $00, $00 ; id 72
+    db $7b, $36, $44, $37, $44 ; id 73
+    db $7c, $59, $44, $00, $00 ; id 74
+    db $7d, $59, $44, $00, $00 ; id 75
+    db $7e, $59, $44, $00, $00 ; id 76
+    db $7f, $59, $44, $00, $00 ; id 77
     db $80, $89, $44, $99, $44 ; id 78
-    db $81, $5B, $44, $00, $00 ; id 79
-    db $82, $5B, $44, $00, $00 ; id 80
-    db $83, $5B, $44, $00, $00 ; id 81
-    db $84, $5B, $44, $00, $00 ; id 82
-    db $85, $1B, $44, $00, $00 ; id 83
-    db $86, $1B, $44, $00, $00 ; id 84
-    db $87, $1B, $44, $00, $00 ; id 85
-    db $88, $1B, $44, $00, $00 ; id 86
-    db $89, $B1, $44, $00, $00 ; id 87
-    db $8A, $BA, $44, $00, $00 ; id 88
-    db $8B, $BA, $44, $00, $00 ; id 89
-    db $8C, $BA, $44, $00, $00 ; id 90
-    db $8D, $BA, $44, $00, $00 ; id 91
-    db $8E, $BA, $44, $00, $00 ; id 92
-    db $8F, $BA, $44, $00, $00 ; id 93
-    db $90, $BA, $44, $00, $00 ; id 94
-    db $91, $BA, $44, $00, $00 ; id 95
+    db $81, $5b, $44, $00, $00 ; id 79
+    db $82, $5b, $44, $00, $00 ; id 80
+    db $83, $5b, $44, $00, $00 ; id 81
+    db $84, $5b, $44, $00, $00 ; id 82
+    db $85, $1b, $44, $00, $00 ; id 83
+    db $86, $1b, $44, $00, $00 ; id 84
+    db $87, $1b, $44, $00, $00 ; id 85
+    db $88, $1b, $44, $00, $00 ; id 86
+    db $89, $b1, $44, $00, $00 ; id 87
+    db $8a, $ba, $44, $00, $00 ; id 88
+    db $8b, $ba, $44, $00, $00 ; id 89
+    db $8c, $ba, $44, $00, $00 ; id 90
+    db $8d, $ba, $44, $00, $00 ; id 91
+    db $8e, $ba, $44, $00, $00 ; id 92
+    db $8f, $ba, $44, $00, $00 ; id 93
+    db $90, $ba, $44, $00, $00 ; id 94
+    db $91, $ba, $44, $00, $00 ; id 95
     db $92, $52, $44, $00, $00 ; id 96
     db $93, $41, $44, $00, $00 ; id 97
     db $94, $41, $44, $00, $00 ; id 98
@@ -4826,50 +4453,50 @@ Data_0A1_5D80:: ; address name
     db $97, $41, $44, $00, $00 ; id 101
     db $98, $41, $44, $00, $00 ; id 102
     db $99, $41, $44, $00, $00 ; id 103
-    db $9A, $41, $44, $00, $00 ; id 104
-    db $9B, $41, $44, $00, $00 ; id 105
-    db $A1, $12, $44, $00, $00 ; id 106
-    db $A2, $11, $44, $00, $00 ; id 107
-    db $A3, $11, $44, $00, $00 ; id 108
-    db $A9, $24, $44, $00, $00 ; id 109
-    db $AA, $11, $44, $00, $00 ; id 110
-    db $AB, $43, $44, $00, $00 ; id 111
-    db $AC, $51, $44, $00, $00 ; id 112
-    db $AD, $51, $44, $00, $00 ; id 113
-    db $AE, $51, $44, $00, $00 ; id 114
-    db $B1, $10, $44, $00, $00 ; id 115
-    db $B3, $10, $44, $00, $00 ; id 116
-    db $B4, $10, $44, $00, $00 ; id 117
-    db $B5, $10, $44, $00, $00 ; id 118
-    db $B6, $10, $44, $00, $00 ; id 119
-    db $B9, $43, $44, $00, $00 ; id 120
-    db $BA, $11, $44, $00, $00 ; id 121
-    db $BB, $40, $44, $00, $00 ; id 122
-    db $BC, $43, $44, $00, $00 ; id 123
-    db $BD, $40, $44, $00, $00 ; id 124
-    db $BE, $40, $44, $00, $00 ; id 125
-    db $BF, $40, $44, $00, $00 ; id 126
-    db $C0, $40, $44, $00, $00 ; id 127
-    db $C1, $40, $44, $00, $00 ; id 128
-    db $C2, $40, $44, $00, $00 ; id 129
-    db $C3, $40, $44, $00, $00 ; id 130
-    db $C4, $40, $44, $00, $00 ; id 131
-    db $C9, $00, $44, $00, $00 ; id 132
-    db $CA, $00, $44, $00, $00 ; id 133
-    db $CB, $00, $44, $00, $00 ; id 134
-    db $CC, $00, $44, $00, $00 ; id 135
-    db $CD, $00, $44, $00, $00 ; id 136
-    db $CE, $00, $44, $00, $00 ; id 137
-    db $D2, $01, $44, $00, $00 ; id 138
-    db $D3, $01, $44, $00, $00 ; id 139
-    db $D4, $01, $44, $00, $00 ; id 140
-    db $D5, $01, $44, $00, $00 ; id 141
-    db $D6, $01, $44, $00, $00 ; id 142
-    db $D7, $01, $44, $00, $00 ; id 143
-    db $DB, $10, $44, $00, $00 ; id 144
-    db $DC, $10, $44, $00, $00 ; id 145
-    db $DD, $10, $44, $00, $00 ; id 146
-    db $DE, $10, $44, $00, $00 ; id 147
-    db $DF, $10, $44, $00, $00 ; id 148
-    db $E0, $10, $44, $00, $00 ; id 149
-    ds $1F92, $00
+    db $9a, $41, $44, $00, $00 ; id 104
+    db $9b, $41, $44, $00, $00 ; id 105
+    db $a1, $12, $44, $00, $00 ; id 106
+    db $a2, $11, $44, $00, $00 ; id 107
+    db $a3, $11, $44, $00, $00 ; id 108
+    db $a9, $24, $44, $00, $00 ; id 109
+    db $aa, $11, $44, $00, $00 ; id 110
+    db $ab, $43, $44, $00, $00 ; id 111
+    db $ac, $51, $44, $00, $00 ; id 112
+    db $ad, $51, $44, $00, $00 ; id 113
+    db $ae, $51, $44, $00, $00 ; id 114
+    db $b1, $10, $44, $00, $00 ; id 115
+    db $b3, $10, $44, $00, $00 ; id 116
+    db $b4, $10, $44, $00, $00 ; id 117
+    db $b5, $10, $44, $00, $00 ; id 118
+    db $b6, $10, $44, $00, $00 ; id 119
+    db $b9, $43, $44, $00, $00 ; id 120
+    db $ba, $11, $44, $00, $00 ; id 121
+    db $bb, $40, $44, $00, $00 ; id 122
+    db $bc, $43, $44, $00, $00 ; id 123
+    db $bd, $40, $44, $00, $00 ; id 124
+    db $be, $40, $44, $00, $00 ; id 125
+    db $bf, $40, $44, $00, $00 ; id 126
+    db $c0, $40, $44, $00, $00 ; id 127
+    db $c1, $40, $44, $00, $00 ; id 128
+    db $c2, $40, $44, $00, $00 ; id 129
+    db $c3, $40, $44, $00, $00 ; id 130
+    db $c4, $40, $44, $00, $00 ; id 131
+    db $c9, $00, $44, $00, $00 ; id 132
+    db $ca, $00, $44, $00, $00 ; id 133
+    db $cb, $00, $44, $00, $00 ; id 134
+    db $cc, $00, $44, $00, $00 ; id 135
+    db $cd, $00, $44, $00, $00 ; id 136
+    db $ce, $00, $44, $00, $00 ; id 137
+    db $d2, $01, $44, $00, $00 ; id 138
+    db $d3, $01, $44, $00, $00 ; id 139
+    db $d4, $01, $44, $00, $00 ; id 140
+    db $d5, $01, $44, $00, $00 ; id 141
+    db $d6, $01, $44, $00, $00 ; id 142
+    db $d7, $01, $44, $00, $00 ; id 143
+    db $db, $10, $44, $00, $00 ; id 144
+    db $dc, $10, $44, $00, $00 ; id 145
+    db $dd, $10, $44, $00, $00 ; id 146
+    db $de, $10, $44, $00, $00 ; id 147
+    db $df, $10, $44, $00, $00 ; id 148
+    db $e0, $10, $44, $00, $00 ; id 149
+    ds $1f92, $00

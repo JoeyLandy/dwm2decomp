@@ -1,22 +1,18 @@
 SECTION "Bank F2", ROMX[$4000], BANK[$F2]
-    db $F2
+    db $f2
 
-; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode8_Init)
-; reads: wSaveStep, wTextWindowState
-; writes: wSaveStep, wSaveRecordIndex, hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-; points at: wScreenState
+; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when
+; forced (E-0029)
 GameMode8_Init::
-Func_0F2_4001:: ; address name
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
-    xor a, a
+    xor a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
 
@@ -30,12 +26,12 @@ Func_0F2_4001:: ; address name
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
-    xor a, a
+    xor a
     ldh [hScrollY], a
     ldh [hScrollX], a
     call BGMapAddressAtScroll_BankF2
-    ld bc, $140D
-    ld de, $01CC
+    ld bc, $140d
+    ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B_BankF2
     farcall LoadPalette0FromData53C6
     farcall SendSGBFieldPaletteSet
@@ -60,14 +56,14 @@ Func_0F2_4001:: ; address name
 .loop3:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     jr nz, .loop3
-    ld a, $FC
+    ld a, $fc
     call StartPaletteFade
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    xor a, a
+    xor a
     ld [wSpriteSlotCount], a
     ld a, $02
     ldh [hSpriteWindowClipMode], a
@@ -77,24 +73,21 @@ Func_0F2_4001:: ; address name
     jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; per-frame routine for wGameMode = 8
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode8_Update)
-; reads: wFadeState, wScreenSubStep, wTextFlags
 GameMode8_Update::
-Func_0F2_40A2:: ; address name
     ld a, [wFadeState]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenSubStep]
-    and a, a
+    and a
     jr z, .check_text_flags
     call GameMode8_Update_UpdateAndDrawSpriteSlots
 
 .check_text_flags:
     ld a, [wTextFlags]
-    and a, a
+    and a
     ret nz
     ld a, [wScreenSubStep]
-    rst $00
+    jumptable
     dw GameMode8_Update_WriteScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteObject1AndScreenSubStep
@@ -110,50 +103,35 @@ Func_0F2_40A2:: ; address name
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
 
-; entry 0 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
-; writes: wScreenSubStep
 GameMode8_Update_WriteScreenSubStep::
-Jump_0F2_40D5:: ; address name
     call GameMode8_Update_Case00_TestFlagBit
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode8_Update; also entries 3, 6, 7, 9, 10 of the table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenCounter, wScreenSubStep
-; writes: wScreenCounter, wScreenSubStep
 GameMode8_Update_WriteScreenCounterAndScreenSubStep::
-Jump_0F2_40E0:: ; address name
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
-    cp a, $10
+    cp $10
     ret c
-    xor a, a
+    xor a
     ld [wScreenCounter], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wObject1, wScreenSubStep
-; writes: wObject1, wScreenSubStep
 GameMode8_Update_WriteObject1AndScreenSubStep::
-Jump_0F2_40F6:: ; address name
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
-    and a, $03
-    and a, a
+    and $03
+    and a
     ret z
     ld a, [wObject1 + OBJ_X]
     dec a
     ld [wObject1 + OBJ_X], a
-    cp a, $59
+    cp $59
     ret nc
     ld a, $58
     ld [wObject1 + OBJ_X], a
@@ -165,12 +143,7 @@ Jump_0F2_40F6:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
-; writes: wObject5, wArg1, wScreenSubStep
 GameMode8_Update_SetObject5::
-Jump_0F2_411C:: ; address name
     ld a, $80
     ld [wObject5], a
     ld a, $01
@@ -180,35 +153,25 @@ Jump_0F2_411C:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlots, wScreenSubStep
-; writes: wSpriteSlots, wScreenSubStep
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
-Jump_0F2_412E:: ; address name
     ld a, [wSpriteSlots + $9]
-    and a, $03
-    and a, a
+    and $03
+    and a
     ret z
-    ld a, [wSpriteSlots + $B]
+    ld a, [wSpriteSlots + $b]
     inc a
-    ld [wSpriteSlots + $B], a
-    cp a, $38
+    ld [wSpriteSlots + $b], a
+    cp $38
     ret nz
-    ld a, [wSpriteSlots + $D]
+    ld a, [wSpriteSlots + $d]
     set 1, a
-    ld [wSpriteSlots + $D], a
+    ld [wSpriteSlots + $d], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenSubStep
-; writes: wObject5, wArg1, wScreenSubStep
 GameMode8_Update_SetObject5_Case08::
-Jump_0F2_414F:: ; address name
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -217,40 +180,30 @@ Jump_0F2_414F:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlots, wScreenSubStep
-; writes: wSpriteSlots, wScreenSubStep
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B::
-Jump_0F2_415F:: ; address name
-    ld a, [wSpriteSlots + $D]
+    ld a, [wSpriteSlots + $d]
     res 1, a
-    ld [wSpriteSlots + $D], a
+    ld [wSpriteSlots + $d], a
     ld a, $03
     ld [wSpriteSlots + $7], a
     ld a, [wSpriteSlots + $9]
-    and a, $03
-    and a, a
+    and $03
+    and a
     ret z
-    ld a, [wSpriteSlots + $B]
+    ld a, [wSpriteSlots + $b]
     dec a
-    ld [wSpriteSlots + $B], a
-    cp a, $E0
+    ld [wSpriteSlots + $b], a
+    cp $e0
     ret nz
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-; entry 12 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
-; writes: wStringIndex, wStringCategory
-; points at: wPlayerName, wTextBuf0, wNameGlyphBuf, wTextBuf1, wScreenSubStep
 GameMode8_Update_ShowHeroReceivedGsEgg::
-Jump_0F2_4185:: ; address name
     ld hl, wPlayerName
     ld de, wTextBuf0
-    ld c, $0A
+    ld c, $0a
     call GameMode8_Update_CopyStringMaxC
     ld de, wChildRecord + MON_SPECIES
     ld a, [de]
@@ -263,9 +216,9 @@ Jump_0F2_4185:: ; address name
     ld de, wTextBuf1
     ld c, $10
     call GameMode8_Update_CopyStringMaxC
-    ld a, $0E
+    ld a, $0e
     ld [wStringIndex], a ; '0 received G's egg. Please raise'
-    xor a, a
+    xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_48A0
     ld hl, wScreenSubStep
@@ -273,11 +226,9 @@ Jump_0F2_4185:: ; address name
     ret
 
 ; copies a string from HL to DE, at most C bytes, ending it with $F0
-; 2 call sites from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGsEgg)
 GameMode8_Update_CopyStringMaxC::
-Func_0F2_41BA:: ; address name
-    ld a, [hl+]
-    cp a, $F0
+    ld a, [hli]
+    cp $f0
     jr z, .done
     ld [de], a
     inc de
@@ -285,24 +236,17 @@ Func_0F2_41BA:: ; address name
     jr nz, GameMode8_Update_CopyStringMaxC
 
 .done:
-    ld a, $F0
+    ld a, $f0
     ld [de], a
     ret
 
-; entry 13 of the `rst $00` table in GameMode8_Update
-; no direct call (reached through a table, a jump or a vector)
 GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
-Jump_0F2_41C8:: ; address name
     call GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
-; 1 call site from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGsEgg)
-; reads: wDataBank
-; writes: wDataBank
-; points at: wNameGlyphBuf
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
+; wDataBank) to wNameGlyphBuf; wDataBank is restored
 CopyMonsterNameToBuffer_BF2::
-Func_0F2_41CC:: ; address name
     push hl
     ld a, [wDataBank]
     push af
@@ -332,12 +276,9 @@ Func_0F2_41CC:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; clears the default window, wTextWindowState = 1, wTextWindowStep = 0, hSpriteWindowClipMode = 2, then repeatedly far-calls Func_002_69D0 until wTextWindowState & 3 = 0 (E-0122)
-; no direct call (reached through a table, a jump or a vector)
-; reads: wTextWindowState
-; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
-RunTextUntilTextWindowStateDone_BankF2:: ; heuristic: follows a terminator; C0
-Func_0F2_4202:: ; address name
+; clears the default window, wTextWindowState = 1, wTextWindowStep = 0, hSpriteWindowClipMode = 2,
+; then repeatedly far-calls StepTextWindowOpenClose until wTextWindowState & 3 = 0 (E-0122)
+RunTextUntilTextWindowStateDone_BankF2::
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -351,27 +292,22 @@ Func_0F2_4202:: ; address name
 .loop:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
-    and a, $03
+    and $03
     jr nz, .loop
     ret
 
-; only called from GameMode8_Update_Case0D (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc)
-; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
-; points at: wScreenState
 GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
-Func_0F2_4227:: ; address name
     ld hl, wScreenState
-    ld bc, $006F
+    ld bc, $006f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
-    xor a, a
+    xor a
     ld [wLinkSceneByte4B], a
     ld a, $05
     ld [wGameMode], a
@@ -381,13 +317,7 @@ Func_0F2_4227:: ; address name
     ld [wModeChangeRequest], a
     ret
 
-; only called from GameMode8_Update_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update_WriteScreenSubStep)
-; reads: wBankF0BlockC7, wIsCGB
-; writes: hTemp0, wObject5, wSpriteSlotCount, wOBJPaletteUploadRequest
-; points at: wSpriteSlots, wObject1, hTemp0
 GameMode8_Update_Case00_TestFlagBit::
-Func_0F2_4248:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, .skip
@@ -402,7 +332,7 @@ Func_0F2_4248:: ; address name
     ld b, $10
     call CopyBytesDEFromHL_BankF2
     ld a, [wBankF0BlockC7]
-    and a, a
+    and a
     jr nz, .skip2
     ld hl, GameMode8_Update_Case00_TestFlagBit_Data_431E
     jr .call_copy_bytes_de_from_hl_bank_f22
@@ -429,7 +359,7 @@ Func_0F2_4248:: ; address name
     call CopyBytesDEFromHL_BankF2
     farcall DecompressGraphicsTemp0ToTemp4
     ld a, [wBankF0BlockC7]
-    and a, a
+    and a
     jr nz, .skip4
     ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42EC
     jr .call_copy_bytes_de_from_hl_bank_f24
@@ -442,10 +372,10 @@ Func_0F2_4248:: ; address name
     ld b, $06
     call CopyBytesDEFromHL_BankF2
     farcall DecompressGraphicsTemp0ToTemp4
-    ld a, $0D
+    ld a, $0d
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
-    xor a, a
+    xor a
     ld [wObject5], a
     ld a, $48
     ld [wObject5 + SCRIPTOBJ_X], a
@@ -454,76 +384,58 @@ Func_0F2_4248:: ; address name
     ld a, $02
     ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
-    and a, a
+    and a
     jr z, .return
-    ld a, $7F
+    ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
 .return:
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 4 call sites from 1 routine (e.g. GameMode8_Update_Case00_TestFlagBit)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL)
 CopyBytesDEFromHL_BankF2::
-Func_0F2_42D9:: ; address name
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_42E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_42E0:: ; address name
+GameMode8_Update_Case00_TestFlagBit_Data_42E0::
     db $00, $00, $01, $04, $00, $80
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_42E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_42E6:: ; address name
+GameMode8_Update_Case00_TestFlagBit_Data_42E6::
     db $01, $00, $01, $01, $00, $80
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_42EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_42EC:: ; address name
-    db $0C, $00, $01, $05, $00, $81
+GameMode8_Update_Case00_TestFlagBit_Data_42EC::
+    db $0c, $00, $01, $05, $00, $81
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_42F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_42F2:: ; address name
-    db $0C, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
+GameMode8_Update_Case00_TestFlagBit_Data_42F2::
+    db $0c, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_42FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_42FE:: ; address name
-    db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
+GameMode8_Update_Case00_TestFlagBit_Data_42FE::
+    db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
-; E-0264 (derived: Func_0F2_42D9 copies these 16 bytes to wSpriteSlots)
+; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
 SpriteSlotsInit_F2_430E::
-Data_0F2_430E:: ; address name
-    db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
+    db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-; address loaded by GameMode8_Update_Case00_TestFlagBit
-GameMode8_Update_Case00_TestFlagBit_Data_431E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_431E:: ; address name
-    db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00
+GameMode8_Update_Case00_TestFlagBit_Data_431E::
+    db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
-; E-0264 (derived: Func_0F2_42D9 copies these 16 bytes to wObject1)
+; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wObject1 (E-0264)
 ; record: 16 bytes copied to wObject1
 Object1Init_F2_432E::
-Data_0F2_432E:: ; address name
-    db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
+    db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
-; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 1 call site from 1 routine (e.g. GameMode8_Init)
-; reads: hScrollY, hScrollX
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_BankF2::
-Func_0F2_434E:: ; address name
     ld hl, vBGMap0
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -538,13 +450,8 @@ Func_0F2_434E:: ; address name
     add_a_to_hl
     ret
 
-; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (1B:6277)
-; 1 call site from 1 routine (e.g. GameMode8_Init)
-; reads: wIsCGB
-; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wScreenAttrBuffer
+; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (DrawScreenBufferRectToBGMap_1B)
 DrawScreenBufferRectToBGMap_1B_BankF2::
-Func_0F2_436F:: ; address name
     push de
     push bc
     push hl
@@ -560,10 +467,10 @@ Func_0F2_436F:: ; address name
     pop hl
     push hl
     ld a, l
-    add a, $C1
+    add $c1
     ld l, a
     ld a, h
-    adc a, $01
+    adc $01
     ld h, a
     ld a, l
     ld [wTextCursorLo], a
@@ -573,12 +480,12 @@ Func_0F2_436F:: ; address name
     pop bc
     pop de
     ld a, [wIsCGB]
-    or a, a
+    or a
     ret z
     push de
     call WaitForVRAMAccess
     push bc
-    ld c, $4F
+    ld c, $4f
     ld a, $01
     ldh [c], a
     pop bc
@@ -597,46 +504,38 @@ Func_0F2_436F:: ; address name
     call WaitForVRAMAccess
     ld a, $00
     ldh [rSVBK], a
-    ld c, $4F
+    ld c, $4f
     ld a, $00
     ldh [c], a
     ret
 
-; only called from GameMode8_Update (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update)
 GameMode8_Update_UpdateAndDrawSpriteSlots::
-Func_0F2_43C3:: ; address name
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_BankF2, DebugMessageTest_Update_ToBeginStringDisplay_BankF2)
 BeginStringDisplay_BankF2::
-Func_0F2_43D0:: ; address name
     ld de, StringCategories_F2_43E5
     call BeginStringDisplay
     ret
-    db $11, $E5, $43, $CD, $FE, $25, $C9
+    db $11, $e5, $43, $cd, $fe, $25, $c9
 
-; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD, RenameMenu_PickMonster_ShowPickTheMonsterTo)
+; BeginStringDisplay_BankF2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
 ShowString_BankF2::
-Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2
     call RunStringDisplayToEnd
     ret
 
-; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
+; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_F2_43E5::
-Data_0F2_43E5:: ; address name
     dw StringList_F2_43E7 ; id 0
 
-; E-0217 (derived: category list of StringCategories_F2_43E5; one pointer per wStringIndex)
+; category list of StringCategories_F2_43E5; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_F2_43E7::
-Data_0F2_43E7:: ; address name
     dw String_F2_00_00 ; id 0
     dw String_F2_00_00 ; id 1
     dw String_F2_00_02 ; id 2
@@ -674,260 +573,192 @@ Data_0F2_43E7:: ; address name
     dw String_F2_00_22 ; id 34
     dw String_F2_00_23 ; id 35
 
-String_F2_00_00:: ; heuristic: string; C0
-Data_0F2_442F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Hello, how may I", $F1
-    db "serve you?", $F0
+String_F2_00_00::
+    db $eb, "*: Hello, how may I", $f1
+    db "serve you?", $f0
 
-String_F2_00_02:: ; heuristic: string; C0
-Data_0F2_444E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Which egg should", $F1
-    db "I appraise?", $F0
+String_F2_00_02::
+    db $eb, "*: Which egg should", $f1
+    db "I appraise?", $f0
 
-String_F2_00_03:: ; heuristic: string; C0
-Data_0F2_446E:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It will cost", $F1
-    db "20G. It that OK?", $F0
+String_F2_00_03::
+    db $eb, "*: It will cost", $f1
+    db "20G. It that OK?", $f0
 
-String_F2_00_04:: ; heuristic: string; C0
-Data_0F2_448F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: How else may I", $F1
-    db "serve you?", $F0
+String_F2_00_04::
+    db $eb, "*: How else may I", $f1
+    db "serve you?", $f0
 
-String_F2_00_05:: ; heuristic: string; C0
-Data_0F2_44AC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Um", $A4, " You don't", $F1
-    db "have enough gold", $A4, $F7
-    db $F0
+String_F2_00_05::
+    db $eb, "*: Um", $a4, " You don't", $f1
+    db "have enough gold", $a4, $f7
+    db $f0
 
-String_F2_00_06:: ; heuristic: string; C0
-Data_0F2_44CF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Um", $A4, " You don't", $F1
-    db "have any eggs", $A4, $F7
-    db $F0
+String_F2_00_06::
+    db $eb, "*: Um", $a4, " You don't", $f1
+    db "have any eggs", $a4, $f7
+    db $f0
 
-String_F2_00_07:: ; heuristic: string; C0
-Data_0F2_44EF:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Which egg should", $F1
-    db "I bless?", $F0
+String_F2_00_07::
+    db $eb, "*: Which egg should", $f1
+    db "I bless?", $f0
 
-String_F2_00_08:: ; heuristic: string; C0
-Data_0F2_450C:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It will cost", $F1
-    db $F9, "0G. Is that OK?", $F0
+String_F2_00_08::
+    db $eb, "*: It will cost", $f1
+    db $f9, "0G. Is that OK?", $f0
 
-String_F2_00_09:: ; heuristic: string; C0
-Data_0F2_452D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Egg, egg, toss", $F1
-    db "and scramble", $A4, $E5, "0", $E4, $D2, $FA, $F7
-    db $EF, $EE, $E9, $FF, "There", $A4, $EF, $EE, "That did it.", $FA, $F7
-    db $EF, $EE, "You just have to", $EF, $EE, "hatch it now.", $F7
-    db $F0
+String_F2_00_09::
+    db $eb, "*: Egg, egg, toss", $f1
+    db "and scramble", $a4, $e5, "0", $e4, $d2, $fa, $f7
+    db $ef, $ee, $e9, $ff, "There", $a4, $ef, $ee, "That did it.", $fa, $f7
+    db $ef, $ee, "You just have to", $ef, $ee, "hatch it now.", $f7
+    db $f0
 
-String_F2_00_0A:: ; heuristic: string; C0
-Data_0F2_458F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Please come see", $F1
-    db "me when you get", $FA, $F7
-    db $EF, $EE, "more eggs.", $EF, $EE, $F7
-    db $F0
+String_F2_00_0A::
+    db $eb, "*: Please come see", $f1
+    db "me when you get", $fa, $f7
+    db $ef, $ee, "more eggs.", $ef, $ee, $f7
+    db $f0
 
-String_F2_00_0B:: ; heuristic: string; C0
-Data_0F2_45C3:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: OK, I'll evaluate", $F1
-    db "this egg now", $A4, $F7
-    db $F0
+String_F2_00_0B::
+    db $eb, "*: OK, I'll evaluate", $f1
+    db "this egg now", $a4, $f7
+    db $f0
 
-String_F2_00_0C:: ; heuristic: string; C0
-Data_0F2_45E6:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It's fine. There's", $F1
-    db "nothing wrong.", $F7
-    db $F0
+String_F2_00_0C::
+    db $eb, "*: It's fine. There's", $f1
+    db "nothing wrong.", $f7
+    db $f0
 
-String_F2_00_0D:: ; heuristic: string; C0
-Data_0F2_460A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It's good, and", $F1
-    db "growing healthy.", $F7
-    db $F0
+String_F2_00_0D::
+    db $eb, "*: It's good, and", $f1
+    db "growing healthy.", $f7
+    db $f0
 
-String_F2_00_0E:: ; heuristic: string; C0
-Data_0F2_462D:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Wow, this egg is", $F1
-    db "really vigorous.", $F7
-    db $F0
+String_F2_00_0E::
+    db $eb, "*: Wow, this egg is", $f1
+    db "really vigorous.", $f7
+    db $f0
 
-String_F2_00_0F:: ; heuristic: string; C0
-Data_0F2_4653:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Oh, my! This egg", $F1
-    db "is incredible!", $F7
-    db $F0
+String_F2_00_0F::
+    db $eb, "*: Oh, my! This egg", $f1
+    db "is incredible!", $f7
+    db $f0
 
-String_F2_00_10:: ; heuristic: string; C0
-Data_0F2_4677:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Don't expect too", $F1
-    db "many skills.", $F7
-    db $F0
+String_F2_00_10::
+    db $eb, "*: Don't expect too", $f1
+    db "many skills.", $f7
+    db $f0
 
-String_F2_00_11:: ; heuristic: string; C0
-Data_0F2_4698:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It has a fair", $F1
-    db "number of skills.", $F7
-    db $F0
+String_F2_00_11::
+    db $eb, "*: It has a fair", $f1
+    db "number of skills.", $f7
+    db $f0
 
-String_F2_00_12:: ; heuristic: string; C0
-Data_0F2_46BC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It inherited its", $F1
-    db "parents' skills.", $F7
-    db $F0
+String_F2_00_12::
+    db $eb, "*: It inherited its", $f1
+    db "parents' skills.", $f7
+    db $f0
 
-String_F2_00_13:: ; heuristic: string; C0
-Data_0F2_46E2:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It knows a great", $F1
-    db "variety of skills!", $F7
-    db $F0
+String_F2_00_13::
+    db $eb, "*: It knows a great", $f1
+    db "variety of skills!", $f7
+    db $f0
 
-String_F2_00_14:: ; heuristic: string; C0
-Data_0F2_470A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Its growth may", $F1
-    db "be a bit wanting.", $F7
-    db $F0
+String_F2_00_14::
+    db $eb, "*: Its growth may", $f1
+    db "be a bit wanting.", $f7
+    db $f0
 
-String_F2_00_15:: ; heuristic: string; C0
-Data_0F2_472F:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It will grow in", $F1
-    db "an average way.", $F7
-    db $F0
+String_F2_00_15::
+    db $eb, "*: It will grow in", $f1
+    db "an average way.", $f7
+    db $f0
 
-String_F2_00_16:: ; heuristic: string; C0
-Data_0F2_4753:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It will be hard", $F1
-    db "to raise a little", $A4, $F7
-    db $F0
+String_F2_00_16::
+    db $eb, "*: It will be hard", $f1
+    db "to raise a little", $a4, $f7
+    db $f0
 
-String_F2_00_17:: ; heuristic: string; C0
-Data_0F2_477A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Its growth can't", $F1
-    db "be faulted.", $F7
-    db $F0
+String_F2_00_17::
+    db $eb, "*: Its growth can't", $f1
+    db "be faulted.", $f7
+    db $f0
 
-String_F2_00_18:: ; heuristic: string; C0
-Data_0F2_479A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: It appears to be", $F1
-    db "a hard worker.", $F7
-    db $F0
+String_F2_00_18::
+    db $eb, "*: It appears to be", $f1
+    db "a hard worker.", $f7
+    db $f0
 
-String_F2_00_19:: ; heuristic: string; C0
-Data_0F2_47BE:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: This one seems", $F1
-    db "to be quite smart.", $F7
-    db $F0
+String_F2_00_19::
+    db $eb, "*: This one seems", $f1
+    db "to be quite smart.", $f7
+    db $f0
 
-String_F2_00_1A:: ; heuristic: string; C0
-Data_0F2_47E4:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: I can tell this", $F1
-    db "one is kind.", $F7
-    db $F0
+String_F2_00_1A::
+    db $eb, "*: I can tell this", $f1
+    db "one is kind.", $f7
+    db $f0
 
-String_F2_00_1B:: ; heuristic: string; C0
-Data_0F2_4805:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: No doubt at", $F1
-    db "all-it's male.", $F7
-    db $F0
+String_F2_00_1B::
+    db $eb, "*: No doubt at", $f1
+    db "all-it's male.", $f7
+    db $f0
 
-String_F2_00_1C:: ; heuristic: string; C0
-Data_0F2_4823:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: No doubt at", $F1
-    db "all-it's female.", $F7
-    db $F0
+String_F2_00_1C::
+    db $eb, "*: No doubt at", $f1
+    db "all-it's female.", $f7
+    db $f0
 
-String_F2_00_1D:: ; heuristic: string; C0
-Data_0F2_4843:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: That's the best", $F1
-    db "I could do now.", $FA, $F7
-    db $EF, $EE, "Um", $A4, " I hope I was", $EF, $EE, "useful to you.", $F7
-    db $F0
+String_F2_00_1D::
+    db $eb, "*: That's the best", $f1
+    db "I could do now.", $fa, $f7
+    db $ef, $ee, "Um", $a4, " I hope I was", $ef, $ee, "useful to you.", $f7
+    db $f0
 
-String_F2_00_1E:: ; heuristic: string; C0
-Data_0F2_488A:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Should I change", $F1
-    db "someone's name?", $F0
+String_F2_00_1E::
+    db $eb, "*: Should I change", $f1
+    db "someone's name?", $f0
 
-String_F2_00_22:: ; heuristic: string; C0
-Data_0F2_48AC:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Come here for", $F1
-    db "renaming monsters.", $F7
-    db $F0
+String_F2_00_22::
+    db $eb, "*: Come here for", $f1
+    db "renaming monsters.", $f7
+    db $f0
 
-String_F2_00_23:: ; heuristic: string; C0
-Data_0F2_48D1:: ; address name
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "*: Pick the monster", $F1
-    db "to rename.", $F0, "Is ", $F9, "0 OK?", $F0, "Is ", $F9, "0 OK?", $F0, "That name is", $F1
-    db "already in use.", $F7
-    db $F0, "That name can't be", $F1
-    db "used.", $FA, $F7
-    db $F2, "Please use another", $F1
-    db "name.", $F7
-    db $F0, $EB
-    db $45, $90, $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90, $12
-    db $36, $90, $F9, $00, $90, $18, $14, $98, $F0, $EB, $45
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " That name is", $F1
-    db "already in use.", $F7
-    db $F0, $EB
+String_F2_00_23::
+    db $eb, "*: Pick the monster", $f1
+    db "to rename.", $f0, "Is ", $f9, "0 OK?", $f0, "Is ", $f9, "0 OK?", $f0, "That name is", $f1
+    db "already in use.", $f7
+    db $f0, "That name can't be", $f1
+    db "used.", $fa, $f7
+    db $f2, "Please use another", $f1
+    db "name.", $f7
+    db $f0, $eb
+    db $45, $90, $12, $36, $90, $f9, $00, $90, $18, $14, $98, $f0, $eb, $45, $90, $12
+    db $36, $90, $f9, $00, $90, $18, $14, $98, $f0, $eb, $45
+    db " That name is", $f1
+    db "already in use.", $f7
+    db $f0, $eb
     db $45
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " That name can't", $F1
-    db "be used.", $FA, $F7
-    db $F2, "You'll have to use", $F1
-    db "another name.", $F7
-    db $F0
+    db " That name can't", $f1
+    db "be used.", $fa, $f7
+    db $f2, "You'll have to use", $f1
+    db "another name.", $f7
+    db $f0
 
-; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault, RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF)
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores
+; the default window (E-0121)
 ShowString10Bank0EAtTiles2020ThenDefault::
-Func_0F2_49CF:: ; address name
     ld a, $10
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld hl, vTiles2 + $20
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, $1E01
+    ld hl, $1e01
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
@@ -945,14 +776,12 @@ Func_0F2_49CF:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; shows string $0E of category 0 (ShowString_Bank0E) at vTiles2 + $700 with size $0107, restores the default window and copies two tiles from bank $1F to vTiles1 + $6E0 and + $6F0 (E-0121)
-; 2 call sites from 2 routines (e.g. ShowString0EAndStep_Bank37, ShowString0EAndStep_BankF1)
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; shows string $0E of category 0 (ShowString_Bank0E) at vTiles2 + $700 with size $0107, restores the
+; default window and copies two tiles from bank $1F to vTiles1 + $6E0 and + $6F0 (E-0121)
 ShowString0EBank0EAtTiles2700AndLoadTiles::
-Func_0F2_4A0B:: ; address name
-    ld a, $0E
+    ld a, $0e
     ld [wStringIndex], a
-    xor a, a
+    xor a
     ld [wStringCategory], a
     ld hl, vTiles2 + $700
     ld a, l
@@ -976,22 +805,20 @@ Func_0F2_4A0B:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     ld de, Tiles1Plus6E0Tiles_1F_4510
-    ld hl, vTiles1 + $6E0
-    ld b, $1F
+    ld hl, vTiles1 + $6e0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld de, Tiles1Plus6F0Tiles_1F_4450
-    ld hl, vTiles1 + $6F0
-    ld b, $1F
+    ld hl, vTiles1 + $6f0
+    ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
 
-; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wRecordBufB + $F there (E-0121)
-; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
-; writes: wNameGlyphBuf
+; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wRecordBufB + $F there
+; (E-0121)
 DrawWCA3ANameAtTiles2290::
-Func_0F2_4A61:: ; address name
     ld hl, $2940
     ld de, vTiles2 + $290
     call CopyTileBytesToVRAMCounted_BankF2
@@ -1006,16 +833,14 @@ Func_0F2_4A61:: ; address name
     ld hl, wRecordBufB + MON_MASTER_NAME
     call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $290
-    ld a, $F0
-    ld [wNameGlyphBuf + $A], a
+    ld a, $f0
+    ld [wNameGlyphBuf + $a], a
     call CopyGlyphTilesToVRAM
     ret
 
-; shows personality name CombinedPersonalityLevelIndex (category 7) at vTiles2 + $200 with size $0109, then restores the default window (E-0121)
-; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; shows personality name CombinedPersonalityLevelIndex (category 7) at vTiles2 + $200 with size
+; $0109, then restores the default window (E-0121)
 ShowCombinedPersonalityName::
-Func_0F2_4A94:: ; address name
     call CombinedPersonalityLevelIndex
     ld c, a
     ld [wStringIndex], a
@@ -1044,11 +869,9 @@ Func_0F2_4A94:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; returns 9 * PersonalityLevelOfA(wRecordBufB + $6F) + 3 * PersonalityLevelOfA(wRecordBufB + $72) + PersonalityLevelOfA(wRecordBufB + $70) (E-0121)
-; 1 call site from 1 routine (e.g. ShowCombinedPersonalityName)
-; reads: wRecordBufB
+; returns 9 * PersonalityLevelOfA(wRecordBufB + $6F) + 3 * PersonalityLevelOfA(wRecordBufB + $72) +
+; PersonalityLevelOfA(wRecordBufB + $70) (E-0121)
 CombinedPersonalityLevelIndex::
-Func_0F2_4AD3:: ; address name
     ld a, [wRecordBufB + MON_PERSONALITY]
     call PersonalityLevelOfA
     ld a, $09
@@ -1057,44 +880,36 @@ Func_0F2_4AD3:: ; address name
     ld a, [wRecordBufB + MON_PERSONALITY + 3]
     call PersonalityLevelOfA
     ld a, c
-    add a, a
-    add a, c
-    add a, b
+    add a
+    add c
+    add b
     ld b, a
     ld a, [wRecordBufB + MON_PERSONALITY + 1]
     call PersonalityLevelOfA
     ld a, c
-    add a, b
+    add b
     ret
 
 ; C = 0 when A >= $C0, 1 when A >= $40, else 2 (the g(v) of PersonalityIndexOfSlot) (E-0116)
-; 3 call sites from 1 routine (e.g. CombinedPersonalityLevelIndex)
 PersonalityLevelOfA::
-Func_0F2_4AF3:: ; address name
     ld c, $00
-    cp a, $C0
+    cp $c0
     ret nc
     inc c
-    cp a, $40
+    cp $40
     ret nc
     inc c
     ret
 
 ; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowPersonalityNameAndWCA3AName, RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowPersonalityNameAndWCA3AName)
 ShowPersonalityNameAndWCA3AName::
-Func_0F2_4AFE:: ; address name
     call ShowCombinedPersonalityName
     call DrawWCA3ANameAtTiles2290
     ret
 
-; writes the EXP wRecordBufB + $58-wRecordBufB + $5A as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
-; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
-; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
-; points at: hTemp2
+; writes the EXP wRecordBufB + $58-wRecordBufB + $5A as seven digits and, below the level cap, the
+; EXP still needed for the next level (E-0129)
 DrawWCA83ExpAndToNextLevel::
-Func_0F2_4B05:: ; address name
     ld a, [wRecordBufB + MON_EXP]
     ld [wDigits], a
     ld a, [wRecordBufB + MON_EXP + 1]
@@ -1104,7 +919,7 @@ Func_0F2_4B05:: ; address name
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsArg1_Bank1E
     call BGMapAddressAtScroll_BankF2_514D
-    ld de, $018C
+    ld de, $018c
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
     call DrawSevenDigitsFromArg1_BankF2
@@ -1114,7 +929,7 @@ Func_0F2_4B05:: ; address name
     ldh [hTemp1], a
     ld b, a
     ldh a, [hTemp0]
-    cp a, b
+    cp b
     jp nc, .set_arg1_to_E3
     ldh a, [hTemp0]
     ld b, a
@@ -1152,17 +967,17 @@ Func_0F2_4B05:: ; address name
     ldh a, [hTemp0]
     ld l, a
     ld a, c
-    sub a, l
+    sub l
     ld c, a
     ldh a, [hTemp1]
     ld l, a
     ld a, b
-    sbc a, l
+    sbc l
     ld b, a
     ldh a, [hTemp2]
     ld l, a
     ld a, e
-    sbc a, l
+    sbc l
     ld e, a
     ld a, c
     ld [wDigits], a
@@ -1175,35 +990,32 @@ Func_0F2_4B05:: ; address name
 
 .call_bg_map_address_at_scroll_bank_f2_514_d:
     call BGMapAddressAtScroll_BankF2_514D
-    ld de, $020C
+    ld de, $020c
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
     call DrawSevenDigitsFromArg1_BankF2
     ret
 
 .set_arg1_to_E3:
-    ld a, $E3
+    ld a, $e3
     ld [wArg1], a
     ld [wArg2], a
     ld [wArg3], a
     ld [wArg4], a
     ld [wArg5], a
     ld [wArg6], a
-    xor a, a
+    xor a
     ld [wArg7], a
     jr .call_bg_map_address_at_scroll_bank_f2_514_d
 
-; shows string wRecordBufB + $A4 of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4, RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4)
-; reads: wRecordBufB
-; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; shows string wRecordBufB + $A4 of category $0B (ShowString_Bank08) at vTiles2 + $320 with size
+; $0206 (E-0121)
 ShowWCACFCategory11StringAtTiles2320::
-Func_0F2_4BD0:: ; address name
     ld a, [wRecordBufB + MON_ITEM]
     ld [wStringIndex], a
-    ld a, $0B
+    ld a, $0b
     ld [wStringCategory], a
-    xor a, a
+    xor a
     ld [rRAMG2], a
     ld hl, vTiles2 + $320
     ld a, l
@@ -1218,12 +1030,9 @@ Func_0F2_4BD0:: ; address name
     farcall ShowString_Bank08
     ret
 
-; loads the species record of wRecordBufB + $B/7 and shows string [wSpeciesRecord + $B] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1A)
-; reads: wRecordBufB, wSpeciesRecord
-; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; loads the species record of wRecordBufB + $B/7 and shows string [wSpeciesRecord + $B] of category
+; $0D at vTiles2 + $680 with size $0206 (E-0121)
 ShowSpeciesCategory13StringAtTiles2680::
-Func_0F2_4BFC:: ; address name
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
     ld a, [wRecordBufB + MON_SPECIES + 1]
@@ -1231,7 +1040,7 @@ Func_0F2_4BFC:: ; address name
     farcall LoadSpeciesRecord
     ld a, [wSpeciesRecord + SPECIES_FIELD_ABILITY]
     ld [wStringIndex], a
-    ld a, $0D
+    ld a, $0d
     ld [wStringCategory], a
     ld hl, vTiles2 + $680
     ld a, l
@@ -1246,24 +1055,17 @@ Func_0F2_4BFC:: ; address name
     farcall ShowString_Bank08
     ret
 
-; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_RunF24C3DAnd4D72, RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72)
+; runs RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB and
+; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02 (E-0126)
 RunF24C3DAnd4D72::
-Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
     ret
 
-; only called from RunF24C3DAnd4D72 (E-0047)
-; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
-; reads: wRecordBufB, hTemp1
-; writes: wNameGlyphBuf, wArg1, wArg2, wArg3
-; points at: wRecordBufB
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
-Func_0F2_4C3D:: ; address name
     ld a, [wRecordBufB + MON_FAMILY]
-    and a, $10
-    and a, a
+    and $10
+    and a
     jr nz, .skip
     ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D62
     jr .call_load_temp0_word_from_record_buf_b
@@ -1277,7 +1079,7 @@ Func_0F2_4C3D:: ; address name
     call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
-    cp a, $FF
+    cp $ff
     jr nz, .next
     ld a, $98
     ld [wNameGlyphBuf], a
@@ -1285,14 +1087,14 @@ Func_0F2_4C3D:: ; address name
     ld [wNameGlyphBuf + $1], a
     ld a, $98
     ld [wNameGlyphBuf + $2], a
-    ld a, $F0
+    ld a, $f0
     ld [wNameGlyphBuf + $3], a
     push de
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     pop de
     ld a, $03
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -1329,7 +1131,7 @@ Func_0F2_4C3D:: ; address name
     ld hl, wRecordBufB
     add_a_to_hl
     call CopyShortStringToNameGlyphBuf_BankF2
-    ld de, vTiles2 + $2F0
+    ld de, vTiles2 + $2f0
     call CopyGlyphTilesToVRAM
     pop de
     ld a, [de]
@@ -1337,7 +1139,7 @@ Func_0F2_4C3D:: ; address name
     call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
-    cp a, $FF
+    cp $ff
     jr nz, .next2
     ld a, $98
     ld [wNameGlyphBuf], a
@@ -1345,14 +1147,14 @@ Func_0F2_4C3D:: ; address name
     ld [wNameGlyphBuf + $1], a
     ld a, $98
     ld [wNameGlyphBuf + $2], a
-    ld a, $F0
+    ld a, $f0
     ld [wNameGlyphBuf + $3], a
     push de
     ld de, vTiles2 + $340
     call CopyGlyphTilesToVRAM
     pop de
     ld a, $03
-    add a, e
+    add e
     ld e, a
     jr nc, .skip4
     inc d
@@ -1391,20 +1193,16 @@ Func_0F2_4C3D:: ; address name
     call CopyGlyphTilesToVRAM
     ret
 
-; shows string wRecordBufB[wArg3] of category wRecordBufB + $1[wArg3] + 2 at the address in wArg1/2 with size $0109 (E-0121)
-; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
-; reads: wArg3, wArg1, wArg2
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wRecordBufB
+; shows string wRecordBufB[wArg3] of category wRecordBufB + $1[wArg3] + 2 at the address in wArg1/2
+; with size $0109 (E-0121)
 ShowRecordBufBEntryStringAtArg1::
-Func_0F2_4D2B:: ; address name
     ld a, [wArg3]
     ld hl, wRecordBufB
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [wStringIndex], a
     ld a, [hl]
-    add a, $02
+    add $02
     ld [wStringCategory], a
     ld a, [wArg1]
     ld h, a
@@ -1422,25 +1220,16 @@ Func_0F2_4D2B:: ; address name
     farcall ShowString_Bank08
     ret
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4D62:: ; address name
-    db $1A, $8E, $1A, $1E, $1C, $99, $1C, $29
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D62::
+    db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4D6A:: ; address name
-    db $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D6A::
+    db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
-; only called from RunF24C3DAnd4D72 (E-0047)
-; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
-; reads: wRecordBufB, hTemp1
-; writes: wArg1, wArg5, wArg2, wArg3, wArg4
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
-Func_0F2_4D72:: ; address name
     ld a, [wRecordBufB + MON_FAMILY]
-    and a, $10
-    and a, a
+    and $10
+    and a
     jr nz, .skip
     ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E34
     jr .call_load_temp0_word_from_record_buf_b
@@ -1454,11 +1243,11 @@ Func_0F2_4D72:: ; address name
     call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
-    cp a, $FF
+    cp $ff
     jr nz, .set_arg1
     push de
     ld hl, vTiles1 + $430
-    ld de, vTiles2 + $6C0
+    ld de, vTiles2 + $6c0
     call CopyTileBytesToVRAMCounted_BankF2
     pop de
     inc de
@@ -1475,11 +1264,11 @@ Func_0F2_4D72:: ; address name
     dec de
     push de
     ld [wArg5], a
-    xor a, a
+    xor a
     ld [wArg2], a
-    ld a, $6A
+    ld a, $6a
     ld [wArg3], a
-    ld a, $6C
+    ld a, $6c
     ld [wArg4], a
     call DrawSpeciesIconForRecordBufBEntry
     pop de
@@ -1488,7 +1277,7 @@ Func_0F2_4D72:: ; address name
     inc de
     push de
     call BGMapAddressAtScroll_BankF2_514D
-    ld de, $006E
+    ld de, $006e
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
     di
@@ -1504,11 +1293,11 @@ Func_0F2_4D72:: ; address name
     call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
-    cp a, $FF
+    cp $ff
     jr nz, .set_arg12
     push de
     ld hl, vTiles1 + $430
-    ld de, vTiles2 + $6D0
+    ld de, vTiles2 + $6d0
     call CopyTileBytesToVRAMCounted_BankF2
     pop de
     inc de
@@ -1527,16 +1316,16 @@ Func_0F2_4D72:: ; address name
     ld [wArg5], a
     ld a, $01
     ld [wArg2], a
-    ld a, $8A
+    ld a, $8a
     ld [wArg3], a
-    ld a, $6D
+    ld a, $6d
     ld [wArg4], a
     call DrawSpeciesIconForRecordBufBEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
     push de
     call BGMapAddressAtScroll_BankF2_514D
-    ld de, $018E
+    ld de, $018e
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
     di
@@ -1550,12 +1339,9 @@ Func_0F2_4D72:: ; address name
     ret
 
 ; BC = wNameBufUnknown when the byte at DE is $98 (the ??? placeholder), else wNameBufAlt (E-0122)
-; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
-; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte_BankF2::
-Func_0F2_4E26:: ; address name
     ld a, [de]
-    cp a, $98
+    cp $98
     jr z, .done
     ld bc, wNameBufAlt
     jr .return
@@ -1566,24 +1352,16 @@ Func_0F2_4E26:: ; address name
 .return:
     ret
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E34:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4E34:: ; address name
-    db $1A, $98, $1A, $1C, $A3, $1C
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E34::
+    db $1a, $98, $1a, $1c, $a3, $1c
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4E3A:: ; address name
-    db $1C, $A3, $1C, $1A, $98, $1A
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E3A::
+    db $1c, $a3, $1c, $1a, $98, $1a
 
 ; A = byte offset: hTemp0/hTemp1 = the word at wRecordBufB + A (E-0079)
-; 5 call sites from 3 routines (e.g. DrawRecordBufBSpeciesSprites, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
-; writes: hTemp0, hTemp1
-; points at: wRecordBufB
 LoadTemp0WordFromRecordBufB::
-Func_0F2_4E40:: ; address name
     ld de, wRecordBufB
-    add a, e
+    add e
     ld e, a
     jr nc, .set_temp0
     inc d
@@ -1596,17 +1374,15 @@ Func_0F2_4E40:: ; address name
     ldh [hTemp1], a
     ret
 
-; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
-; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
-; points at: wNameGlyphBuf
+; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0
+; terminator (the same 19 bytes appear in 2 banks)
 CopyShortStringToNameGlyphBuf_BankF2::
-Func_0F2_4E50:: ; address name
     ld de, wNameGlyphBuf
-    ld c, $0A
+    ld c, $0a
 
 .loop:
-    ld a, [hl+]
-    cp a, $F0
+    ld a, [hli]
+    cp $f0
     jr z, .done
     ld [de], a
     inc de
@@ -1614,15 +1390,13 @@ Func_0F2_4E50:: ; address name
     jr nz, .loop
 
 .done:
-    ld a, $F0
+    ld a, $f0
     ld [de], a
     ret
 
-; HL = VRAM address: writes the 7 bytes at wArg1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
-; 2 call sites from 1 routine (e.g. DrawWCA83ExpAndToNextLevel)
-; points at: wArg1
+; HL = VRAM address: writes the 7 bytes at wArg1 as tiles $E0 + digit to HL onward
+; (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 DrawSevenDigitsFromArg1_BankF2::
-Func_0F2_4E63:: ; address name
     ld de, wArg1
     ld c, $07
 
@@ -1630,27 +1404,24 @@ Func_0F2_4E63:: ; address name
     di
     call WaitForVRAMAccess
     ld a, [de]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     inc de
     ei
     dec c
     jr nz, .loop
     ret
 
-; for the three species words of wRecordBufB (offsets Data_0F2_4F41 or 4F44 by bit 4 of wRecordBufB + $D) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E)
-; reads: wRecordBufB, hTemp0, hTemp1
-; writes: hTemp0, hTemp1, wArg1, wArg2
-; points at: wRecordBufB, wArg3
+; for the three species words of wRecordBufB (offsets DecompressRecordBufBSpeciesGraphics_Data_4F41
+; or 4F44 by bit 4 of wRecordBufB + $D) decompresses their graphics to the targets in
+; DecompressRecordBufBSpeciesGraphics_Data_4ED4 (E-0127)
 DecompressRecordBufBSpeciesGraphics::
-Func_0F2_4E76:: ; address name
     ld c, $00
 
 .loop:
     push bc
     ld a, [wRecordBufB + MON_FAMILY]
-    and a, $10
+    and $10
     jr nz, .skip
     ld de, DecompressRecordBufBSpeciesGraphics_Data_4F41
     jr .restore
@@ -1662,7 +1433,7 @@ Func_0F2_4E76:: ; address name
     pop bc
     push bc
     ld a, c
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -1671,11 +1442,11 @@ Func_0F2_4E76:: ; address name
     ld a, [de]
     ld hl, wRecordBufB
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     ld a, [hl]
     ldh [hTemp1], a
-    cp a, $FF
+    cp $ff
     jr z, .restore2
     pop bc
     push bc
@@ -1685,10 +1456,10 @@ Func_0F2_4E76:: ; address name
     ld [wArg2], a
     ld a, c
     ld b, a
-    add a, a
-    add a, b
+    add a
+    add b
     ld de, DecompressRecordBufBSpeciesGraphics_Data_4ED4
-    add a, e
+    add e
     ld e, a
     jr nc, .skip3
     inc d
@@ -1699,7 +1470,7 @@ Func_0F2_4E76:: ; address name
 
 .loop2:
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     inc de
     dec c
     jr nz, .loop2
@@ -1709,29 +1480,23 @@ Func_0F2_4E76:: ; address name
     pop bc
     inc c
     ld a, c
-    cp a, $03
+    cp $03
     jr c, .loop
     ret
 
-; address loaded by DecompressRecordBufBSpeciesGraphics
-DecompressRecordBufBSpeciesGraphics_Data_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4ED4:: ; address name
+DecompressRecordBufBSpeciesGraphics_Data_4ED4::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; for the three species words of wRecordBufB draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
-; reads: wRecordBufB, hTemp1, hTemp0
-; writes: hTemp0, wArg1, wArg2
-; points at: wArg3
+; for the three species words of wRecordBufB draws their sprite parts at the positions in
+; DrawRecordBufBSpeciesSprites_Data (E-0127)
 DrawRecordBufBSpeciesSprites::
-Func_0F2_4EDD:: ; address name
     ld c, $00
 
 .loop:
     push bc
     ld a, [wRecordBufB + MON_FAMILY]
     ldh [hTemp0], a
-    and a, $10
+    and $10
     jr nz, .skip
     ld de, DecompressRecordBufBSpeciesGraphics_Data_4F41
     jr .restore
@@ -1743,7 +1508,7 @@ Func_0F2_4EDD:: ; address name
     pop bc
     push bc
     ld a, c
-    add a, e
+    add e
     ld e, a
     jr nc, .call_load_temp0_word_from_record_buf_b
     inc d
@@ -1752,7 +1517,7 @@ Func_0F2_4EDD:: ; address name
     ld a, [de]
     call LoadTemp0WordFromRecordBufB
     ldh a, [hTemp1]
-    cp a, $FF
+    cp $ff
     jr z, .restore2
     pop bc
     push bc
@@ -1761,10 +1526,10 @@ Func_0F2_4EDD:: ; address name
     ldh a, [hTemp1]
     ld [wArg2], a
     ld a, c
-    add a, a
-    add a, a
+    add a
+    add a
     ld de, DrawRecordBufBSpeciesSprites_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip2
     inc d
@@ -1775,7 +1540,7 @@ Func_0F2_4EDD:: ; address name
 
 .loop2:
     ld a, [de]
-    ld [hl+], a
+    ld [hli], a
     inc de
     dec c
     jr nz, .loop2
@@ -1786,33 +1551,24 @@ Func_0F2_4EDD:: ; address name
     pop bc
     inc c
     ld a, c
-    cp a, $03
+    cp $03
     jr c, .loop
     ret
 
-; address loaded by DrawRecordBufBSpeciesSprites
-DrawRecordBufBSpeciesSprites_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4F35:: ; address name
+DrawRecordBufBSpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
-; address loaded by DecompressRecordBufBSpeciesGraphics, DrawRecordBufBSpeciesSprites
-DecompressRecordBufBSpeciesGraphics_Data_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4F41:: ; address name
-    db $0B, $1A, $1C
+DecompressRecordBufBSpeciesGraphics_Data_4F41::
+    db $0b, $1a, $1c
 
-; address loaded by DecompressRecordBufBSpeciesGraphics, DrawRecordBufBSpeciesSprites
-DecompressRecordBufBSpeciesGraphics_Data_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_4F44:: ; address name
-    db $0B, $1C, $1A
+DecompressRecordBufBSpeciesGraphics_Data_4F44::
+    db $0b, $1c, $1a
 
-; writes the level wRecordBufB + $56 (marked $6F at the cap wRecordBufB + $57), its digits and the status marks from wRecordBufB + $55 into the BG map (E-0129)
-; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81_Case1D, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawLevelAndStatusRowForWCA81, ...)
-; reads: hTemp1, hTemp0, wDigits, wRecordBufB
-; writes: hTemp0, hTemp1
+; writes the level wRecordBufB + $56 (marked $6F at the cap wRecordBufB + $57), its digits and the
+; status marks from wRecordBufB + $55 into the BG map (E-0129)
 DrawLevelAndStatusRowForWCA81::
-Func_0F2_4F47:: ; address name
     ld hl, wRecordBufB + MON_LEVEL
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     ld a, [hl]
     ldh [hTemp1], a
@@ -1823,11 +1579,11 @@ Func_0F2_4F47:: ; address name
     ldh a, [hTemp1]
     ld b, a
     ldh a, [hTemp0]
-    cp a, b
+    cp b
     jr c, .call_wait_for_vram_access
     di
     call WaitForVRAMAccess
-    ld a, $6F
+    ld a, $6f
     ld [hl], a
     ei
     jr .call_wait_for_vram_access2
@@ -1835,7 +1591,7 @@ Func_0F2_4F47:: ; address name
 .call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
-    ld a, $C3
+    ld a, $c3
     ld [hl], a
     ei
 
@@ -1843,10 +1599,10 @@ Func_0F2_4F47:: ; address name
     inc hl
     di
     call WaitForVRAMAccess
-    ld a, $EA
-    ld [hl+], a
-    ld a, $ED
-    ld [hl+], a
+    ld a, $ea
+    ld [hli], a
+    ld a, $ed
+    ld [hli], a
     ei
     push hl
     ldh a, [hTemp0]
@@ -1856,7 +1612,7 @@ Func_0F2_4F47:: ; address name
     farcall BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
-    add a, $E0
+    add $e0
     ld e, a
     di
     call WaitForVRAMAccess
@@ -1864,7 +1620,7 @@ Func_0F2_4F47:: ; address name
     ei
     inc hl
     ld a, [wDigits + $2]
-    add a, $E0
+    add $e0
     ld e, a
     di
     call WaitForVRAMAccess
@@ -1888,8 +1644,8 @@ Func_0F2_4F47:: ; address name
     inc hl
     inc hl
     ld a, [wRecordBufB + MON_SEX]
-    and a, $01
-    add a, $CC
+    and $01
+    add $cc
     ld e, a
     di
     call WaitForVRAMAccess
@@ -1897,12 +1653,11 @@ Func_0F2_4F47:: ; address name
     ei
     ret
 
-; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
+; writes tile $C3 to the 3 VRAM bytes from HL (WaitForVRAMAccess, interrupts off per byte); HL kept;
+; clobbers C, E (E-0067) (the same 17 bytes appear in 2 banks)
 WriteThreeC3TilesAtHL_BankF2::
-Func_0F2_4FD6:: ; address name
     push hl
-    ld e, $C3
+    ld e, $c3
     ld c, $03
 
 .loop:
@@ -1916,53 +1671,47 @@ Func_0F2_4FD6:: ; address name
     pop hl
     ret
 
-; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
+; writes tile $C1 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes
+; appear in 2 banks)
 WriteTileC1AtHL_BankF2::
-Func_0F2_4FE7:: ; address name
     di
     call WaitForVRAMAccess
-    ld a, $C1
+    ld a, $c1
     ld [hl], a
     ei
     ret
 
-; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
+; writes tile $C0 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes
+; appear in 2 banks)
 WriteTileC0AtHL_BankF2::
-Func_0F2_4FF0:: ; address name
     di
     call WaitForVRAMAccess
-    ld a, $C0
+    ld a, $c0
     ld [hl], a
     ei
     ret
 
-; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. DrawLevelAndStatusRowForWCA81)
+; writes tile $C2 at VRAM address HL (WaitForVRAMAccess, interrupts off) (E-0067) (the same 9 bytes
+; appear in 2 banks)
 WriteTileC2AtHL_BankF2::
-Func_0F2_4FF9:: ; address name
     di
     call WaitForVRAMAccess
-    ld a, $C2
+    ld a, $c2
     ld [hl], a
     ei
     ret
 
-; runs Func_0F2_4F47, DrawFiveRecordBufBStatsColumn and DrawFourRecordBufBStatsDigits (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawRecordBufBStatsScreenAndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRecordBufBStatsScreen)
+; runs DrawLevelAndStatusRowForWCA81, DrawFiveRecordBufBStatsColumn and
+; DrawFourRecordBufBStatsDigits (E-0126)
 DrawRecordBufBStatsScreen::
-Func_0F2_5002:: ; address name
     call DrawLevelAndStatusRowForWCA81
     call DrawFiveRecordBufBStatsColumn
     call DrawFourRecordBufBStatsDigits
     ret
 
-; writes four stat words from wRecordBufB (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
-; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
-; points at: wRecordBufB
+; writes four stat words from wRecordBufB (offsets DrawFourRecordBufBStatsDigits_Data_5050) as three
+; digits at the scroll offsets DrawFourRecordBufBStatsDigits_Data_5054 (E-0125)
 DrawFourRecordBufBStatsDigits::
-Func_0F2_500C:: ; address name
     ld c, $00
 
 .loop:
@@ -1973,7 +1722,7 @@ Func_0F2_500C:: ; address name
     ld a, [hl]
     ld hl, wRecordBufB
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
     ld h, a
@@ -1982,7 +1731,7 @@ Func_0F2_500C:: ; address name
     farcall BlankLeadingZeroDigits_F
     pop bc
     ld a, c
-    add a, a
+    add a
     ld hl, DrawFourRecordBufBStatsDigits_Data_5054
     add_a_to_hl
     ld e, [hl]
@@ -1996,25 +1745,19 @@ Func_0F2_500C:: ; address name
     call WriteThreeDigitsAtHL
     inc c
     ld a, c
-    cp a, $04
+    cp $04
     jr c, .loop
     ret
 
-; address loaded by DrawFourRecordBufBStatsDigits
-DrawFourRecordBufBStatsDigits_Data_5050:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_5050:: ; address name
-    db $5B, $5D, $5F, $61
+DrawFourRecordBufBStatsDigits_Data_5050::
+    db $5b, $5d, $5f, $61
 
-; address loaded by DrawFourRecordBufBStatsDigits
-DrawFourRecordBufBStatsDigits_Data_5054:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_5054:: ; address name
-    db $CC, $01, $D0, $01, $0C, $02, $10, $02
+DrawFourRecordBufBStatsDigits_Data_5054::
+    db $cc, $01, $d0, $01, $0c, $02, $10, $02
 
-; writes five stat words from wRecordBufB (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
-; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
-; points at: wRecordBufB
+; writes five stat words from wRecordBufB (offsets DrawFiveRecordBufBStatsColumn_Data) as three
+; digits down a column at scroll + $70 (E-0125)
 DrawFiveRecordBufBStatsColumn::
-Func_0F2_505C:: ; address name
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $0070
     add hl, de
@@ -2026,7 +1769,7 @@ Func_0F2_505C:: ; address name
     push hl
     ld a, c
     ld de, DrawFiveRecordBufBStatsColumn_Data
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -2035,7 +1778,7 @@ Func_0F2_505C:: ; address name
     ld a, [de]
     ld hl, wRecordBufB
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ld b, a
     ld a, [hl]
     ld h, a
@@ -2051,52 +1794,43 @@ Func_0F2_505C:: ; address name
     pop bc
     inc c
     ld a, c
-    cp a, $05
+    cp $05
     jr c, .loop
     ret
 
-; address loaded by DrawFiveRecordBufBStatsColumn
-DrawFiveRecordBufBStatsColumn_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0F2_509F:: ; address name
-    db $63, $65, $67, $69, $6B
+DrawFiveRecordBufBStatsColumn_Data::
+    db $63, $65, $67, $69, $6b
 
 ; writes wDigits, wDigits + $1, wDigits + $2 as digit tiles ($E0 + n) at HL (E-0121)
-; 2 call sites from 2 routines (e.g. DrawFourRecordBufBStatsDigits, DrawFiveRecordBufBStatsColumn)
-; reads: wDigits
 WriteThreeDigitsAtHL::
-Func_0F2_50A4:: ; address name
     di
     call WaitForVRAMAccess
     ld a, [wDigits]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     ei
     di
     call WaitForVRAMAccess
     ld a, [wDigits + $1]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     ei
     di
     call WaitForVRAMAccess
     ld a, [wDigits + $2]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     ei
     ret
 
-; hTemp0/7 = the word wRecordBufB[wArg5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues at DrawFamilyIconAndCountForWCA38_ReadArg1 (E-0126)
-; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
-; reads: wArg5, wArg1, wArg2, wArg3, wDigits
-; writes: hTemp0, hTemp1
-; points at: wRecordBufB
+; hTemp0/7 = the word wRecordBufB[wArg5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues
+; at DrawFamilyIconAndCountForWCA38_ReadArg1 (E-0126)
 DrawSpeciesIconForRecordBufBEntry::
-Func_0F2_50C6:: ; address name
     push bc
     ld hl, wRecordBufB
     ld a, [wArg5]
     add_a_to_hl
-    ld a, [hl+]
+    ld a, [hli]
     ldh [hTemp0], a
     ld a, [hl]
     ldh [hTemp1], a
@@ -2104,16 +1838,12 @@ Func_0F2_50C6:: ; address name
     pop bc
     jp DrawFamilyIconAndCountForWCA38_ReadArg1
 
-; loads the family icon of wRecordBufB + $D & $0F into tile wArg4; the next entry draws tile $1E and the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
-; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
-; writes: wWorkBuf
-; points at: wRecordBufB
+; loads the family icon of wRecordBufB + $D & $0F into tile wArg4; the next entry draws tile $1E and
+; the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127)
 DrawFamilyIconAndCountForWCA38::
-Func_0F2_50E2:: ; address name
     push bc
     ld a, [wRecordBufB + MON_FAMILY]
-    and a, $0F
+    and $0f
     ld [wWorkBuf], a
     ld a, [wArg4]
     ld [wWorkBuf + $1], a
@@ -2121,12 +1851,11 @@ Func_0F2_50E2:: ; address name
     pop bc
 
 DrawFamilyIconAndCountForWCA38_ReadArg1::
-Jump_0F2_50F8:: ; address name
     ld a, [wArg1]
     ld hl, wRecordBufB
     add_a_to_hl
     ld a, [hl]
-    and a, a
+    and a
     jr nz, .call_bg_map_address_at_scroll_bank_f2_514_d
     ret
 
@@ -2141,8 +1870,8 @@ Jump_0F2_50F8:: ; address name
     call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
-    ld a, $1E
-    ld [hl+], a
+    ld a, $1e
+    ld [hli], a
     ei
     pop af
     push hl
@@ -2152,32 +1881,30 @@ Jump_0F2_50F8:: ; address name
     farcall BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
-    cp a, $E3
+    cp $e3
     jr z, .call_wait_for_vram_access
     di
     call WaitForVRAMAccess
     ld a, [wDigits + $1]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     ei
 
 .call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, [wDigits + $2]
-    add a, $E0
-    ld [hl+], a
+    add $e0
+    ld [hli], a
     ei
     ret
 
-; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 8 call sites from 6 routines (e.g. DrawFourRecordBufBStatsDigits, DrawFiveRecordBufBStatsColumn, DrawWCA83ExpAndToNextLevel, DrawFamilyIconAndCountForWCA38, ...)
-; reads: hScrollY, hScrollX
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_BankF2_514D::
-Func_0F2_514D:: ; address name
     ld hl, vBGMap0
     ldh a, [hScrollY]
-    and a, $F8
+    and $f8
     ld e, a
     ld d, $00
     sla e
@@ -2192,11 +1919,9 @@ Func_0F2_514D:: ; address name
     add_a_to_hl
     ret
 
-; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
-; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
-; reads: rSTAT
+; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same
+; effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
 CopyTileBytesToVRAMCounted_BankF2::
-Func_0F2_516E:: ; address name
     ld a, $10
 
 .loop:
@@ -2207,7 +1932,7 @@ Func_0F2_516E:: ; address name
     ldh a, [rSTAT]
     bit 1, a
     jr nz, .loop2
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ei
@@ -2216,13 +1941,9 @@ Func_0F2_516E:: ; address name
     jr nz, .loop
     ret
 
-; reorders the three bytes wArg5-7 by the permutation MonsterArgOrderTable[wArg2:wArg1] (byte k says where wArg5 + k goes among wArg1-3), then copies the result back to wArg5-7 (E-0171)
-; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050)
-; reads: wArg1, wArg2, wArg3
-; writes: wArg5, wArg6, wArg7
-; points at: wArg1, wArg5
+; reorders the three bytes wArg5-7 by the permutation MonsterArgOrderTable[wArg2:wArg1] (byte k says
+; where wArg5 + k goes among wArg1-3), then copies the result back to wArg5-7 (E-0171)
 PermuteArg5To7ByMonster::
-Func_0F2_5181:: ; address name
     ld a, [wArg1]
     ld c, a
     ld a, [wArg2]
@@ -2235,9 +1956,9 @@ Func_0F2_5181:: ; address name
     ld b, $00
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld de, wArg1
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
@@ -2261,10 +1982,11 @@ Func_0F2_5181:: ; address name
     ld [wArg7], a
     ret
 
-; E-0171 (C1: PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1 + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller, script command $F6 case $10/4, indexes it with the id it shows as a monster name).
+; PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1
+; + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller,
+; script command $F6 case $10/4, indexes it with the id it shows as a monster name (E-0171, C1)
 ; record: destination offsets of wArg5-7 among wArg1-3 (always a permutation of 0, 1, 2)
 MonsterArgOrderTable::
-Data_0F2_51C3:: ; address name
     db $00, $01, $02 ; id 0
     db $02, $00, $01 ; id 1 DrakSlime
     db $01, $00, $02 ; id 2 SpotSlime
@@ -2650,10 +2372,12 @@ Data_0F2_51C3:: ; address name
     db $00, $01, $02 ; id 382 Kagebou
     db $00, $01, $02 ; id 383 ?
 
-; E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05.skip adds 3 * entry (after ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed).
+; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
+; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05.skip adds 3 * entry (after
+; ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the
+; lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
-Data_0F2_5643:: ; address name
     dw ScreenNumberList000 ; id 0
     dw ScreenNumberList001 ; id 1
     dw ScreenNumberList002 ; id 2
@@ -2679,10 +2403,9 @@ Data_0F2_5643:: ; address name
     dw ScreenNumberList005 ; id 22
     dw ScreenNumberList017 ; id 23
 
-; E-0199 (derived: list for entry $00 of ScreenNumberListTable; it runs to the next list)
+; list for entry $00 of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList000::
-Data_0F2_5673:: ; address name
     d24 0 ; id 0
     d24 10 ; id 1
     d24 50 ; id 2
@@ -2772,10 +2495,8 @@ Data_0F2_5673:: ; address name
     d24 0 ; id 86
     d24 0 ; id 87
 
-; E-0199 (derived: list for entry $01 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $01 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList001::
-Data_0F2_577B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 0 ; id 2
@@ -2825,10 +2546,8 @@ Data_0F2_577B:: ; address name
     d24 50 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $02 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $02 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList002::
-Data_0F2_580B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 0 ; id 2
@@ -2878,10 +2597,8 @@ Data_0F2_580B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $03 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $03 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList003::
-Data_0F2_589B:: ; address name
     d24 0 ; id 0
     d24 10 ; id 1
     d24 0 ; id 2
@@ -2931,10 +2648,9 @@ Data_0F2_589B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $04 of ScreenNumberListTable; it runs to the next list)
+; list for entry $04 of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList004::
-Data_0F2_592B:: ; address name
     d24 0 ; id 0
     d24 10 ; id 1
     d24 50 ; id 2
@@ -2984,10 +2700,8 @@ Data_0F2_592B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $05 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $05 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList005::
-Data_0F2_59BB:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 0 ; id 2
@@ -3037,10 +2751,8 @@ Data_0F2_59BB:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $06 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $06 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList006::
-Data_0F2_5A4B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 50 ; id 2
@@ -3090,10 +2802,8 @@ Data_0F2_5A4B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $07 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $07 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList007::
-Data_0F2_5ADB:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 65 ; id 2
@@ -3143,10 +2853,9 @@ Data_0F2_5ADB:: ; address name
     d24 50 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $08 of ScreenNumberListTable; it runs to the next list)
+; list for entry $08 of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList008::
-Data_0F2_5B6B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 65 ; id 2
@@ -3196,10 +2905,8 @@ Data_0F2_5B6B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $09 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $09 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList009::
-Data_0F2_5BFB:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 0 ; id 2
@@ -3249,10 +2956,8 @@ Data_0F2_5BFB:: ; address name
     d24 100 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $0A of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $0A of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList00A::
-Data_0F2_5C8B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 0 ; id 2
@@ -3286,10 +2991,8 @@ Data_0F2_5C8B:: ; address name
     d24 0 ; id 30
     d24 0 ; id 31
 
-; E-0199 (derived: list for entry $0B of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $0B of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList00B::
-Data_0F2_5CEB:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 75 ; id 2
@@ -3339,10 +3042,9 @@ Data_0F2_5CEB:: ; address name
     d24 50 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $0C of ScreenNumberListTable; it runs to the next list)
+; list for entry $0C of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList00C::
-Data_0F2_5D7B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 50 ; id 2
@@ -3392,10 +3094,8 @@ Data_0F2_5D7B:: ; address name
     d24 50 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $0D of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $0D of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList00D::
-Data_0F2_5E0B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 60 ; id 2
@@ -3445,10 +3145,8 @@ Data_0F2_5E0B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $0E of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $0E of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList00E::
-Data_0F2_5E9B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 75 ; id 2
@@ -3498,10 +3196,8 @@ Data_0F2_5E9B:: ; address name
     d24 50 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $0F of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $0F of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList00F::
-Data_0F2_5F2B:: ; address name
     d24 0 ; id 0
     d24 15 ; id 1
     d24 75 ; id 2
@@ -3551,10 +3247,9 @@ Data_0F2_5F2B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $10 of ScreenNumberListTable; it runs to the next list)
+; list for entry $10 of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList010::
-Data_0F2_5FBB:: ; address name
     d24 0 ; id 0
     d24 15 ; id 1
     d24 75 ; id 2
@@ -3604,10 +3299,8 @@ Data_0F2_5FBB:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $11 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $11 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList011::
-Data_0F2_604B:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 75 ; id 2
@@ -3657,10 +3350,8 @@ Data_0F2_604B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $12 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $12 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList012::
-Data_0F2_60DB:: ; address name
     d24 0 ; id 0
     d24 0 ; id 1
     d24 75 ; id 2
@@ -3710,10 +3401,8 @@ Data_0F2_60DB:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $13 of ScreenNumberListTable; it runs to the next list)
-; record: 24-bit number
+; list for entry $13 of ScreenNumberListTable; it runs to the next list (E-0199)
 ScreenNumberList013::
-Data_0F2_616B:: ; address name
     d24 0 ; id 0
     d24 15 ; id 1
     d24 75 ; id 2
@@ -3763,10 +3452,9 @@ Data_0F2_616B:: ; address name
     d24 0 ; id 46
     d24 0 ; id 47
 
-; E-0199 (derived: list for entry $17 of ScreenNumberListTable; it runs to the next list)
+; list for entry $17 of ScreenNumberListTable; it runs to the next list (E-0199)
 ; record: 24-bit number
 ScreenNumberList017::
-Data_0F2_61FB:: ; address name
     d24 1 ; id 0
     d24 1 ; id 1
     d24 1 ; id 2
@@ -3873,59 +3561,44 @@ Data_0F2_61FB:: ; address name
     d24 1 ; id 103
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc)
 ReturnStub_6333::
-Func_0F2_6333:: ; address name
     ret
-    db $CD, $55, $63, $CD, $46, $63, $C9
+    db $cd, $55, $63, $cd, $46, $63, $c9
 
-; only called from KeyAppraisalMenu_ChooseKey_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor)
-; writes: wScreenStep
 KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList::
-Func_0F2_633B:: ; address name
     call KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf
     call CopyWD09EToKeyList
-    xor a, a
+    xor a
     ld [wScreenStep], a
     ret
 
 ; copies $C0 bytes from wWorkBuf + $1 to wKeyList (E-0122)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList)
-; points at: wKeyList
 CopyWD09EToKeyList::
-Func_0F2_6346:: ; address name
     ld hl, wWorkBuf + $1
     ld de, wKeyList
-    ld c, $C0
+    ld c, $c0
 
 .loop:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec c
     jr nz, .loop
     ret
 
-; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList)
-; reads: wWorkBuf
-; writes: wKeyGenCount, wWorkBuf
-; points at: wKeyList
 KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
-Func_0F2_6355:: ; address name
     ld hl, wWorkBuf + $1
-    ld c, $C0
+    ld c, $c0
 
 .loop:
-    ld a, $FF
-    ld [hl+], a
+    ld a, $ff
+    ld [hli], a
     dec c
     jr nz, .loop
-    xor a, a
+    xor a
     ld [wKeyGenCount], a
     ld a, [wWorkBuf]
-    and a, a
+    and a
     jr nz, .clear_work_buf
     ld a, $01
     ld [wWorkBuf], a
@@ -3937,7 +3610,7 @@ Func_0F2_6355:: ; address name
     ret
 
 .clear_work_buf:
-    xor a, a
+    xor a
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
@@ -3946,20 +3619,13 @@ Func_0F2_6355:: ; address name
     call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount
     ret
 
-; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
-; reads: wKeyGenCount
-; writes: wKeyGenCount
-; points at: wKeySeeds, wKeyGenList
 KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01::
-Func_0F2_6393:: ; address name
     ld b, $00
     ld c, $20
 
 KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop::
-Jump_0F2_6397:: ; address name
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
     push hl
     inc hl
@@ -3971,21 +3637,21 @@ Jump_0F2_6397:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    and a, $3F
-    cp a, $07
+    and $3f
+    cp $07
     jr nc, .restore
     jr .restore2
 
 .restore:
     pop hl
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -3993,19 +3659,19 @@ Jump_0F2_6397:: ; address name
     inc de
     push de
     ld a, b
-    add a, a
+    add a
     ld hl, wKeySeeds
     add_a_to_hl
     ld a, [wKeyGenCount]
-    add a, a
+    add a
     ld de, wKeyGenList
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -4019,7 +3685,6 @@ Jump_0F2_6397:: ; address name
     pop hl
 
 KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip::
-Jump_0F2_63E3:: ; address name
     ld a, $04
     add_a_to_hl
     inc b
@@ -4027,19 +3692,13 @@ Jump_0F2_63E3:: ; address name
     jr nz, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop
     ret
 
-; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
-; reads: wKeyGenCount
-; writes: wKeyGenCount
-; points at: wKeySeeds, wKeyGenList
 KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount::
-Func_0F2_63EF:: ; address name
     ld b, $00
     ld c, $20
 
 .loop:
     ld a, [hl]
-    cp a, $FF
+    cp $ff
     jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
     push hl
     inc hl
@@ -4051,18 +3710,18 @@ Func_0F2_63EF:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    and a, $3F
-    cp a, $07
+    and $3f
+    cp $07
     jr nc, .restore
     pop hl
     push hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -4070,19 +3729,19 @@ Func_0F2_63EF:: ; address name
     inc de
     push de
     ld a, b
-    add a, a
+    add a
     ld hl, wKeySeeds
     add_a_to_hl
     ld a, [wKeyGenCount]
-    add a, a
+    add a
     ld de, wKeyGenList
-    add a, e
+    add e
     ld e, a
     jr nc, .skip
     inc d
 
 .skip:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     ld a, [hl]
@@ -4101,35 +3760,26 @@ Func_0F2_63EF:: ; address name
     jr nz, .loop
     ret
 
-; in state 3 continues at VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip; otherwise runs Func_0F2_64C7 (E-0126)
-; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41, VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc)
-; reads: wScreenState, wCounterPtr0Lo
-; writes: wCounterPtr0Lo
-; points at: wWorkBuf, wInventory, wItemGrid
+; in state 3 continues at VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip; otherwise
+; runs Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126)
 Run64C7UnlessScreenStateIs3::
-Func_0F2_6449:: ; address name
     ld a, [wScreenState]
-    cp a, $03
+    cp $03
     jr z, VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip
     call Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo
     ret
 
-; only called from VaultMenu_Store_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_ReadScreenState)
-; reads: wCounterPtr0Lo
-; points at: wWorkBuf
 VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory::
-Func_0F2_6454:: ; address name
     ld hl, wWorkBuf
     ld b, $18
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld a, [wCounterPtr0Lo]
-    and a, a
+    and a
     jr nz, .call_vault_menu_store_map_items_to_inventory
     ld de, ItemOrderListB
     jr .call_vault_menu_store_map_items_to_inventory2
@@ -4142,17 +3792,16 @@ Func_0F2_6454:: ; address name
     ret
 
 VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip::
-Jump_0F2_6470:: ; address name
     ld hl, wWorkBuf
     ld b, $18
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld a, [wCounterPtr0Lo]
-    and a, a
+    and a
     jr nz, .clear_counter_ptr0_lo
     ld de, ItemOrderListA
     ld a, $01
@@ -4160,21 +3809,18 @@ Jump_0F2_6470:: ; address name
 
 .clear_counter_ptr0_lo:
     ld de, ItemOrderListB
-    xor a, a
+    xor a
 
 .set_counter_ptr0_lo:
     ld [wCounterPtr0Lo], a
 
 ; for each item in the list at DE finds its inventory slot and records it in wWorkBuf
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory)
-; points at: wInventory, wWorkBuf, wItemGrid
 VaultMenu_Store_MapItemsToInventory::
-Func_0F2_648E:: ; address name
     ld b, $00
 
 .skip:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .skip3
     ld c, a
     push de
@@ -4183,7 +3829,7 @@ Func_0F2_648E:: ; address name
 
 .loop:
     ld a, [hl]
-    cp a, c
+    cp c
     jr z, .skip2
     inc hl
     dec d
@@ -4203,7 +3849,7 @@ Func_0F2_648E:: ; address name
     ld e, l
     ld d, h
     pop hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc b
     jr .restore
@@ -4214,30 +3860,24 @@ Func_0F2_648E:: ; address name
     ld b, $18
 
 .loop2:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop2
     ret
 
-; only called from Run64C7UnlessScreenStateIs3 (E-0047)
-; 1 call site from 1 routine (e.g. Run64C7UnlessScreenStateIs3)
-; reads: wCounterPtr0Lo
-; writes: wCounterPtr0Lo
-; points at: wWorkBuf, wItemStorage
 Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo::
-Func_0F2_64C7:: ; address name
     ld hl, wWorkBuf
-    ld b, $C8
+    ld b, $c8
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec b
     jr nz, .loop
     ld a, [wCounterPtr0Lo]
-    and a, a
+    and a
     jr nz, .clear_counter_ptr0_lo
     ld de, ItemOrderListA
     ld a, $01
@@ -4245,7 +3885,7 @@ Func_0F2_64C7:: ; address name
 
 .clear_counter_ptr0_lo:
     ld de, ItemOrderListB
-    xor a, a
+    xor a
 
 .set_counter_ptr0_lo:
     ld [wCounterPtr0Lo], a
@@ -4253,7 +3893,7 @@ Func_0F2_64C7:: ; address name
 
 .skip:
     ld a, [de]
-    cp a, $FF
+    cp $ff
     jr z, .skip3
     ld c, a
     push de
@@ -4262,7 +3902,7 @@ Func_0F2_64C7:: ; address name
 
 .loop2:
     ld a, [hl]
-    cp a, c
+    cp c
     jr z, .skip2
     inc hl
     inc hl
@@ -4285,10 +3925,10 @@ Func_0F2_64C7:: ; address name
     ld e, l
     ld d, h
     pop hl
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc b
     jr .restore
@@ -4296,51 +3936,50 @@ Func_0F2_64C7:: ; address name
 .skip3:
     ld hl, wWorkBuf
     ld de, wItemStorage
-    ld b, $C8
+    ld b, $c8
 
 .loop3:
-    ld a, [hl+]
+    ld a, [hli]
     ld [de], a
     inc de
     dec b
     jr nz, .loop3
     ret
 
-; E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
+; passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to
+; VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among
+; the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF (E-0237,
+; C1)
 ; record: item numbers in order, $FF ends the list
 ItemOrderListA::
-Data_0F2_6526:: ; address name
-    db $21, $28, $29, $2A, $2E, $1F, $20, $2B, $01, $02, $03, $04 ; id 0
-    db $05, $06, $07, $08, $09, $0A, $0B, $0C, $19, $1A, $1B, $1C ; id 1
-    db $1D, $1E, $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10 ; id 2
-    db $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47 ; id 3
-    db $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53 ; id 4
-    db $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; id 5
+    db $21, $28, $29, $2a, $2e, $1f, $20, $2b, $01, $02, $03, $04 ; id 0
+    db $05, $06, $07, $08, $09, $0a, $0b, $0c, $19, $1a, $1b, $1c ; id 1
+    db $1d, $1e, $13, $14, $15, $16, $17, $18, $0d, $0e, $0f, $10 ; id 2
+    db $11, $12, $2c, $2d, $40, $41, $42, $43, $44, $45, $46, $47 ; id 3
+    db $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53 ; id 4
+    db $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f ; id 5
     db $60, $61, $62, $22, $23, $24, $25, $26, $27, $30, $31, $32 ; id 6
-    db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
+    db $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $ff ; id 7
 
-; E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
-; record: item numbers in order, $FF ends the list
+; passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to
+; VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among
+; the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF (E-0237,
+; C1)
 ItemOrderListB::
-Data_0F2_6586:: ; address name
-    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C ; id 0
-    db $22, $23, $24, $25, $26, $27, $19, $1A, $1B, $1C, $1D, $1E ; id 1
-    db $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10, $11, $12 ; id 2
-    db $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49 ; id 3
-    db $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55 ; id 4
-    db $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61 ; id 5
-    db $62, $21, $28, $29, $2A, $2E, $1F, $20, $2B, $30, $31, $32 ; id 6
-    db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c ; id 0
+    db $22, $23, $24, $25, $26, $27, $19, $1a, $1b, $1c, $1d, $1e ; id 1
+    db $13, $14, $15, $16, $17, $18, $0d, $0e, $0f, $10, $11, $12 ; id 2
+    db $2c, $2d, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49 ; id 3
+    db $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55 ; id 4
+    db $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61 ; id 5
+    db $62, $21, $28, $29, $2a, $2e, $1f, $20, $2b, $30, $31, $32 ; id 6
+    db $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $ff ; id 7
 
-; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
-; 2 call sites from 2 routines (e.g. StoreBattleStateToPartyRecords, StoreBattleStateToPartyRecords_BankA3)
-; reads: wPartyCount, wCounterPtr0Lo, wCounterPtr0Hi
-; writes: wCounterPtr0Lo, wCounterPtr0Hi
-; points at: wPartyList
+; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed
+; them (E-0129)
 ClampPartyHPAndMPToMax::
-Func_0F2_65E6:: ; address name
     ld a, [wPartyCount]
-    and a, a
+    and a
     ret z
     ld b, a
     ld hl, wPartyList
@@ -4351,7 +3990,7 @@ Func_0F2_65E6:: ; address name
     ld a, [hl]
     ld c, MON_HP
     call SRAMRecordAddress
-    ld a, [hl+]
+    ld a, [hli]
     ld [wCounterPtr0Lo], a
     ld a, [hl]
     ld [wCounterPtr0Hi], a
@@ -4374,7 +4013,7 @@ Func_0F2_65E6:: ; address name
     ld [wCounterPtr0Hi], a
     call CompareHLWithDE_BankF2
     ld a, c
-    and a, a
+    and a
     jr nz, .restore
     pop hl
     push hl
@@ -4382,7 +4021,7 @@ Func_0F2_65E6:: ; address name
     ld c, MON_HP
     call SRAMRecordAddress
     ld a, [wCounterPtr0Lo]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wCounterPtr0Hi]
     ld [hl], a
 
@@ -4392,7 +4031,7 @@ Func_0F2_65E6:: ; address name
     ld a, [hl]
     ld c, MON_MP
     call SRAMRecordAddress
-    ld a, [hl+]
+    ld a, [hli]
     ld [wCounterPtr0Lo], a
     ld a, [hl]
     ld [wCounterPtr0Hi], a
@@ -4415,7 +4054,7 @@ Func_0F2_65E6:: ; address name
     ld [wCounterPtr0Hi], a
     call CompareHLWithDE_BankF2
     ld a, c
-    and a, a
+    and a
     jr nz, .restore2
     pop hl
     push hl
@@ -4423,7 +4062,7 @@ Func_0F2_65E6:: ; address name
     ld c, MON_MP
     call SRAMRecordAddress
     ld a, [wCounterPtr0Lo]
-    ld [hl+], a
+    ld [hli], a
     ld a, [wCounterPtr0Hi]
     ld [hl], a
 
@@ -4435,21 +4074,19 @@ Func_0F2_65E6:: ; address name
     jp nz, .loop
     ret
 
-; the same 21 bytes as CompareHLWithDE (F0:7C81)
-; 2 call sites from 1 routine (e.g. ClampPartyHPAndMPToMax)
+; the same 21 bytes as CompareHLWithDE (CompareHLWithDE)
 CompareHLWithDE_BankF2::
-Func_0F2_667D:: ; address name
     ld a, h
-    cp a, d
+    cp d
     jr c, .done2
     jr nz, .done
     ld a, l
-    cp a, e
+    cp e
     jr c, .done2
     jr z, .done3
 
 .done:
-    ld c, $FF
+    ld c, $ff
     ret
 
 .done2:
@@ -4461,19 +4098,16 @@ Func_0F2_667D:: ; address name
     ret
 
 ; clears $20F bytes from wArenaEntry
-; 1 call site from 1 routine (e.g. GreatLogTalkEvents_ClearArenaData_Case65)
-; points at: wArenaEntry
 GreatLogTalkEvents_ClearArenaData::
-Func_0F2_6692:: ; address name
     ld hl, wArenaEntry
-    ld bc, $020F
+    ld bc, $020f
 
 .loop:
-    xor a, a
-    ld [hl+], a
+    xor a
+    ld [hli], a
     dec bc
     ld a, b
-    or a, c
+    or c
     jr nz, .loop
     ret
     ds $1960, $00
