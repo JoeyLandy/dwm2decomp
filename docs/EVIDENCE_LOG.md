@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0322 — The field menu's four choices, the bag, an item, and saving refused
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced as in E-0321 (the Desert world, story flag 2).
+- **The four choices.** The field menu's cursor is wMenuState: a tap of Right moves it from 0 to 1, and Down from 0 to 2. Its wMenuSubState runs the cursor's blink, so a single picture may not show the cursor.
+  - Choosing enters game mode 2 with wModeState = the choice: 0 INFO (PauseMenu_Info), 1 ITEM (PauseMenu_Items), 2 SKILLS (PauseMenu_Skills), 3 PLAN.
+  - PLAN shows Keys, Plan, Text Speed, Re-Order, Info and Journal. E-0046 had read state 0 as holding PLAN and state 3 as an item list, so PauseMenu_Main is now PauseMenu_Info and PauseMenu_State3 is PauseMenu_Plan, with their sub-routines (C2).
+  - From the idle party window (shown when the player stands still), A selects the remembered choice at once.
+- **The bag.** ITEM lists Herb, LoveWater, WorldDew, Potion on page 1 of 6, with "Restores HP of one monster by 30~40." (ShowSelectedItemDescription).
+  - wInventory starts $01, $02, $03, $04, and String_08_05_01-04 are those four names. So wInventory holds item ids, which index category 5 of the bank-$08 strings (C2).
+- **An item.** Use > Patta on the Herb runs PauseMenu_Items_UseItem_*, CheckItemUsable, ItemUsable_Herb and CheckRecordFlag55Bit7, and shows "… used the Herb on". With HP at its maximum the Herb stays in the bag.
+  - The user's name prints as "ar'lh⌂", apparently overwritten by the debug set-up; this was not investigated.
+- **Saving refused.** PLAN > Journal shows "You can't save here." It runs Func_003_6B5E, which far-calls Func_016_4645 (rule names Bank16Func4645ResultTest and …_ReadMapTypeAndEncounterRateEtc). These are now TestSaveForbiddenHere and SaveForbiddenHere.
+  - SaveForbiddenHere returns C = 1 when saving is refused: when wMapType bit 7 is set, while wEncounterRate & $7F is non-zero; otherwise when bit 4 of MapItemUseFlags + hMapId is clear.
+  - Here wMapType is 0 and hMapId is $20, whose flag byte $C0 has bit 4 clear. Bit 4 is set for all of GreatLog's maps $00-$1F and the towns $21-$26. So bit 4 means saving is allowed on that map (C2).
+  - E-0229 had said a clear bit "gives C = 0" for this routine; it gives C = 1. The wMapType branch stays C1.
+- **Reproduction and tests.** tools/recipes/e0322_menus.txt includes e0321_desert.txt. tests/test_play_chain.py replays it (about 95 s) and pins:
+  - the four choices and their mode states;
+  - the bag's item ids and names;
+  - the Herb kept at full HP;
+  - the refusal with its map flag.
+- Binary verification: build/run453-455 PASS, 0 differing bytes; tests OK (214, skipped=3).
+
 ### E-0321 — A key world, random encounters, the field menu and the pause menu, played in the emulator
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware). Everything here is forced from the farm state of E-0320, so it shows what the code does, not how the story reaches it.

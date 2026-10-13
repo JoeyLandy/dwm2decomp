@@ -7508,7 +7508,7 @@ Data_07F_6FF9:: ; address name
     db $80 ; end
 
 ; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
-; 25 call sites from 20 routines (e.g. PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc, DrawPlayerOverlaySprite21Or22, DrawPartyFollowerSprites, DrawMetaSprite0AtX50YWD09E, ...)
+; 25 call sites from 20 routines (e.g. PauseMenu_Plan_RecordJourney_WriteRAMGAndRAMBEtc, DrawPlayerOverlaySprite21Or22, DrawPartyFollowerSprites, DrawMetaSprite0AtX50YWD09E, ...)
 DrawMetaSprite::
 Func_07F_700A:: ; address name
     ld de, MetaSprites7F_7011Table

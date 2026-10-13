@@ -1,0 +1,13 @@
+# E-0322: the field menu's ITEM, SKILLS and PLAN in the Desert world of E-0321 (includes it), the Herb used on a
+# monster at full HP, and PLAN's Journal (the save) refused in a key world.
+@ e0321_desert.txt
+m03! | k05! |  | R2 W30
+m04! | m03! |  | A2 W60
+m05! | m04! |  | A2 W40
+m06! | m05! |  | A2 W40 A2 W60
+m07! | m06! |  | A2 W40 A2 W40 A2 W40
+m08! | k05! |  | D2 W30
+m09! | m08! |  | A2 W60
+m10! | k05! |  | D2 W30 R2 W30
+m11! | m10! |  | A2 W60
+m12! | m11! |  | D2 W20 D2 W20 D2 W20 D2 W20 D2 W20 A2 W60

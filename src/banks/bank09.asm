@@ -10,7 +10,7 @@ Func_009_4001:: ; address name
     ret
 
 ; ld de, this bank's string table / CopyStringToBuffer
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03, CopyItemStringToWC152)
+; 2 call sites from 2 routines (e.g. PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03, CopyItemStringToWC152)
 CopyStringToBuffer_Bank09::
 Func_009_4008:: ; address name
     ld de, StringCategories_09_4016
@@ -18,7 +18,7 @@ Func_009_4008:: ; address name
     ret
 
 ; Func_009_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 16 call sites from 13 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_State3_ChooseListEntry_WaitPauseListCount, ...)
+; 16 call sites from 13 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_Plan_ChooseListEntry_WaitPauseListCount, ...)
 ShowString_Bank09::
 Func_009_400F:: ; address name
     call BeginStringDisplay_Bank09

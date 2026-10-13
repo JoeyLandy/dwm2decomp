@@ -5753,7 +5753,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wBGPaletteBuffer
-; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wBGPaletteBuffer
@@ -5810,7 +5810,7 @@ Func_000_1FE3:: ; address name
     ret
 
 ; copies the 6 x 6 picture attribute block of species DE (table $447E in bank $38, default $20E9) plus hTemp0 to HL in WRAM bank 2 (E-0128)
-; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize)
+; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize)
 ; reads: hTemp0
 ; writes: rROMB0, rSVBK
 LoadMonsterPictureAttributeBlock::
@@ -5962,7 +5962,7 @@ Func_000_2090:: ; address name
     ds $24, $00
 
 ; DE = destination: writes wDigits + $1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wDigits + $2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03, WriteByteAAsTwoDigitTiles, ...)
+; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_Plan_PagedMenu_ShowStringBank08AtTilesHL_Bank03, WriteByteAAsTwoDigitTiles, ...)
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
     push hl
@@ -5986,7 +5986,7 @@ Func_000_210D:: ; address name
     ret
 
 ; DE = destination: writes three tile ids for the digits in wDigits-wDigits + $2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03, PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, ...)
+; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_Plan_PagedMenu_ShowStringBank08AtTilesHL_Bank03, PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D, ...)
 ; points at: wDigits
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -6225,7 +6225,7 @@ Func_000_21A1:: ; address name
     ret
 
 ; fills wNameGlyphBuf with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wPartyCount record numbers listed at wPartyList copies that record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wPartyCount = 0 it returns with SRAM still enabled (E-0059)
-; 24 call sites from 24 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, PauseMenu_State3_Block21Menu_LoadScreenBlock21, RefreshRecordListAndNameTiles, ...)
+; 24 call sites from 24 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, PauseMenu_Plan_Block21Menu_LoadScreenBlock21, RefreshRecordListAndNameTiles, ...)
 ; reads: wPartyCount
 ; writes: wNameGlyphBuf, rRAMG
 ; points at: wPartyList
@@ -6634,7 +6634,7 @@ Jump_000_2447:: ; address name
     ret
 
 ; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
-; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03, PauseMenu_State3_ChooseListEntry_WaitPauseListCount, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03, PauseMenu_Plan_ChooseListEntry_WaitPauseListCount, ...)
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE

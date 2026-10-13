@@ -1144,7 +1144,7 @@
   },
   "C0A4": {
     "name": "wPauseMenuScreen",
-    "note": "screen index of the pause menu (RunPauseMenuScreen dispatches on it; PauseMenu_Main cases set it)",
+    "note": "screen index of the pause menu (RunPauseMenuScreen dispatches on it; PauseMenu_Info cases set it)",
     "evidence": "E-0133"
   },
   "C0A7": {
@@ -1154,7 +1154,7 @@
   },
   "C0A8": {
     "name": "wPauseMenuStep",
-    "note": "step counter of the pause menu sub-screens (PauseMenu_State3 cases)",
+    "note": "step counter of the pause menu sub-screens (PauseMenu_Plan cases)",
     "evidence": "E-0133"
   },
   "C0C0": {
@@ -3306,12 +3306,12 @@
   },
   "D080": {
     "of": "D000",
-    "note": "attribute rectangle copied by PauseMenu_Main_Case03_Case01_Sub01_Case02 (row 6, column 8)",
+    "note": "attribute rectangle copied by PauseMenu_Info_Case03_Case01_Sub01_Case02 (row 6, column 8)",
     "evidence": "E-0136"
   },
   "D100": {
     "of": "D000",
-    "note": "attribute rectangle copied by PauseMenu_Main_Case03_Case01_Sub01_Case02 (row 12, column 16)",
+    "note": "attribute rectangle copied by PauseMenu_Info_Case03_Case01_Sub01_Case02 (row 12, column 16)",
     "evidence": "E-0136"
   },
   "D104": {
@@ -3512,7 +3512,7 @@
   },
   "D0C7": {
     "name": "wPauseListCount",
-    "note": "number of entries in the pause-menu list (PauseMenu_State3; BuildScreenBlocks21To23_Sub01)",
+    "note": "number of entries in the pause-menu list (PauseMenu_Plan; BuildScreenBlocks21To23_Sub01)",
     "evidence": "E-0136"
   },
   "D0D6": {

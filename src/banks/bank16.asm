@@ -1191,10 +1191,10 @@ Func_016_4636:: ; address name
     or a, a
     ret
 
-; only called from Bank16Func4645ResultTest (E-0047)
-; 1 call site from 1 routine (e.g. Bank16Func4645ResultTest)
+; C = 1 when the game refuses to save here: when wMapType bit 7 is set, while wEncounterRate & $7F is non-zero; otherwise when bit 4 of MapItemUseFlags + hMapId is clear (C2 for the map flag from E-0322: in the Desert world, map $20, whose flag byte $C0 has bit 4 clear, PLAN's Journal shows 'You can't save here.'; bit 4 is set for GreatLog's maps $00-$1F and the towns $21-$26; the wMapType case C1)
+; 1 call site from 1 routine (e.g. TestSaveForbiddenHere)
 ; reads: wMapType, wEncounterRate, hMapId
-Bank16Func4645ResultTest_ReadMapTypeAndEncounterRateEtc::
+SaveForbiddenHere::
 Func_016_4645:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -2739,8 +2739,8 @@ Data_016_4CC2:: ; address name
     db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 97
     db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 98
 
-; E-0229 (C1: ItemUsable_WarpWing tests bit 6, the ExitBell check (Func_016_44D0, E-0085) bit 5 and Func_016_4645 bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId = $FF) or gives C = 0; 256 bytes, one per map number, end at Func_016_52C9).
-; record: flag bits for this map (bit 6: WarpWing, bit 5: ExitBell, bit 4: Func_016_4645)
+; E-0229 (C1: ItemUsable_WarpWing tests bit 6, the ExitBell check (Func_016_44D0, E-0085) bit 5 and SaveForbiddenHere bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId = $FF) or, for bit 4, gives C = 1 (no saving, E-0322); 256 bytes, one per map number, end at Func_016_52C9).
+; record: flag bits for this map (bit 6: WarpWing, bit 5: ExitBell, bit 4: saving allowed, SaveForbiddenHere)
 MapItemUseFlags::
 Data_016_51C9:: ; address name
     db $10 ; id 0
@@ -4679,7 +4679,7 @@ Func_016_5AAF:: ; address name
     ret
 
 ; zeroes the 11 per-family counters at wWorkBuf, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wWorkBuf[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wMonsterLibraryBuf (wArg5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
+; 2 call sites from 2 routines (e.g. PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wArg5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg1, wArg2, wArg3, wArg4
 ; points at: wWorkBuf, wMonsterLibraryBuf
@@ -9363,7 +9363,7 @@ Func_016_7720:: ; address name
     ret
 
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary (E-0127)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_RecordJourney_Case00_CopyBlockToTileBuffer, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
+; 2 call sites from 2 routines (e.g. PauseMenu_Plan_RecordJourney_Case00_CopyBlockToTileBuffer, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
 ; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wTitlePlayerName, wTitlePartySummary
@@ -9830,7 +9830,7 @@ Func_016_7A48:: ; address name
     ret
 
 ; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wWorkBuf + $1; corrected in E-0124 (E-0122)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
+; 2 call sites from 2 routines (e.g. PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
 LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
     ld de, FamilyIconTiles
@@ -9839,7 +9839,7 @@ Func_016_7A5B:: ; address name
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wPartyCount entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_State3_Block21Menu_LoadScreenBlock21, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ...)
+; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_Plan_Block21Menu_LoadScreenBlock21, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ...)
 ; reads: wPartyCount
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::

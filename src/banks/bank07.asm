@@ -11,7 +11,7 @@ Func_007_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 11 call sites from 9 routines (e.g. PauseMenu_State3_RecordJourney_ShowMaster, GameMode5_Init_InitSoundHardware, GameMode5_Init_Case04_ShowString_Bank07, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster, ...)
+; 11 call sites from 9 routines (e.g. PauseMenu_Plan_RecordJourney_ShowMaster, GameMode5_Init_InitSoundHardware, GameMode5_Init_Case04_ShowString_Bank07, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster, ...)
 ShowString_Bank07::
 Func_007_400F:: ; address name
     call BeginStringDisplay_Bank07

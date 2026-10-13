@@ -1,6 +1,6 @@
 """A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt),
-then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt, which
-includes the first), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt), then
+the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0321_desert.txt"
+CHAIN = ROOT / "tools/recipes/e0322_menus.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -19,8 +19,12 @@ class FarmChain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         import play
-        cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!"})
+        cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!", "m03!", "m04!", "m07!",
+                                                             "m09!", "m11!", "m12!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
+        import re
+        cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
+                                                         (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M)}
 
     def test_story_scenes_run_at_the_steps_that_showed_their_text(self):
         expect = {"s14": ["TalkMsg000A_WellSoonBeReachingGreatLog"],  # talking to the mother
@@ -66,7 +70,7 @@ class FarmChain(unittest.TestCase):
     def test_the_pause_menu_is_game_mode_2_and_shows_the_skills(self):
         """INFO runs the pause menu in mode 2; its skill page showed 'Sleep' for Patta, whose first MON_SKILLS
         byte names String_08_04_2F; MON_SKILL_LIST holds Dracky's three natural skills."""
-        for name in ("GameMode2_Update", "PauseMenu_Main"):
+        for name in ("GameMode2_Update", "PauseMenu_Info"):
             self.assertEqual(self.ran["k06!"].get(name), {2}, name)
         self.assertEqual(self.ran["k08!"].get("ShowRecordSpeciesAndSkillNames"), {2})
         r = self.kept["k08!"].sram[0:0xA5]
@@ -84,6 +88,51 @@ class FarmChain(unittest.TestCase):
         self.assertEqual(self.ran["k14!"].get("RunBattleSetup_CommandMenu"), {4})
         self.assertEqual(self.ran["k15!"].get("SetSlotTacticAndSlotLastTacticForCommandMonster"), {4})
         self.assertEqual(self.ran["k16!"].get("ShowSkillPageNames"), {4})
+
+
+    def test_the_field_menu_choice_is_the_pause_menu_state(self):
+        """wMenuState is the field menu's cursor and becomes wModeState of game mode 2: 0 INFO, 1 ITEM, 2 SKILLS,
+        3 PLAN (pictured: the ITEM list, the SKILLS list and the PLAN menu)."""
+        self.assertEqual(self.kept["m03!"].rb(self.ram["wMenuState"]), 1)
+        for state, mode_state, name in (("m04!", 1, "PauseMenu_Items"), ("m09!", 2, "PauseMenu_Skills"),
+                                        ("m11!", 3, "PauseMenu_Plan")):
+            self.assertEqual(self.ran[state].get(name), {2}, name)
+            gb = self.kept[state]
+            self.assertEqual((gb.rb(0xC5DB), gb.rb(self.ram["wModeState"])), (2, mode_state), state)
+
+    def test_the_inventory_holds_item_ids(self):
+        """The ITEM list's first page is Herb, LoveWater, WorldDew, Potion; wInventory starts 1, 2, 3, 4, and
+        String_08_05_01-04 are those names."""
+        import gb_text
+        inv = [self.kept["m04!"].rb(0xC61D + i) for i in range(4)]
+        self.assertEqual(inv, [1, 2, 3, 4])
+        rom = ROM.read_bytes()
+        names = []
+        for i in inv:
+            b, a = self.labels[f"String_08_05_{i:02X}"]
+            o = b * 0x4000 + a - 0x4000
+            names.append("".join(gb_text.BYTE_TO_TEXT[c] for c in rom[o:rom.index(0xF0, o)]))
+        self.assertEqual(names, ["Herb", "LoveWater", "WorldDew", "Potion"])
+
+    def test_a_herb_on_a_monster_at_full_hp_is_kept(self):
+        for name in ("PauseMenu_Items_UseItem", "CheckItemUsable", "ItemUsable_Herb"):
+            self.assertEqual(self.ran["m06!"].get(name, set()) | self.ran["m07!"].get(name, set()), {2}, name)
+        gb = self.kept["m07!"]
+        self.assertEqual(gb.rb(0xC61D), 1)  # still a Herb in slot 0
+        self.assertEqual(gb.sram[0x5B] | gb.sram[0x5C] << 8, gb.sram[0x5D] | gb.sram[0x5E] << 8)
+
+    def test_saving_is_refused_in_a_key_world(self):
+        """PLAN's Journal showed 'You can't save here.' in the Desert world: SaveForbiddenHere ran with wMapType
+        bit 7 clear, so the refusal is bit 4 of MapItemUseFlags for map $20, which is clear there and set for
+        GreatLog's maps."""
+        for name in ("TestSaveForbiddenHere", "SaveForbiddenHere"):
+            self.assertEqual(self.ran["m12!"].get(name), {2}, name)
+        gb = self.kept["m12!"]
+        self.assertEqual((gb.rb(self.ram["wMapType"]) & 0x80, gb.rb(0xFF90)), (0, 0x20))  # hMapId
+        b, a = self.labels["MapItemUseFlags"]
+        flags = ROM.read_bytes()[b * 0x4000 + a - 0x4000:][:0x100]
+        self.assertFalse(flags[0x20] & 0x10)
+        self.assertTrue(all(f & 0x10 for f in flags[:0x20]))
 
 
 if __name__ == "__main__":
