@@ -190,7 +190,7 @@ Jump_073_40E2:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 7 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities; also entry 12 of the table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe::
@@ -1994,7 +1994,7 @@ Jump_073_4C03:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe; also entry 7 of the table in GreatLogFieldEvents_KingAskedUs
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wRandomLo, hTemp0
 ; writes: wStepPtrLo
@@ -2328,7 +2328,7 @@ Jump_073_4E15:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
+; entry 3 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK; also entry 3 of the table in GreatLogFieldEvents_YouFolksRunA; entry 1 of the table in GreatLogFieldEvents_PapaCalling
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
@@ -2352,14 +2352,14 @@ Jump_073_4E20:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing; also entry 4 of the table in GreatLogFieldEvents_YouFolksRunA; entry 2 of the table in GreatLogFieldEvents_PapaCalling; entry 1 of the table in SceneMonstersInTow
 ; no direct call (reached through a table, a jump or a vector)
 GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative::
 Jump_073_4E41:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 8 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
+; entry 8 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing; also entry 3 of the table in GreatLogFieldEvents_PapaCalling
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
@@ -2374,7 +2374,7 @@ Jump_073_4E48:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
+; entry 1 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities; also entries 4, 6, 8 of the table in GreatLogFieldEvents_MajorFacilities; entries 1, 3, 6, 11, 13 of the table in GreatLogFieldEvents_KamehaNoGoing; entries 1, 3, 9 of the table in GreatLogFieldEvents_GoHelpYourMotherScene; entries 1, 6 of the table in GreatLogFieldEvents_TaraWellBeOK; entries 1, 3, 5, 8, 12, 14, 16 of the table in GreatLogFieldEvents_ThisIsATale; entries 1, 3, 6, 8, 10, 12 of the table in GreatLogFieldEvents_WarubouWhatIsThis; entries 1, 3, 6, 8, 10 of the table in GreatLogFieldEvents_WarubouItsADead; entries 1, 3, 6, 8 of the table in GreatLogFieldEvents_WarubouGiveMe; entries 1, 3, 6, 8 of the table in GreatLogFieldEvents_KingAskedUs; entries 1, 3 of the table in GreatLogFieldEvents_GoodToHear; entries 1, 7 of the table in GreatLogFieldEvents_YouFolksRunA; entries 1, 3 of the table in GreatLogFieldEvents_TaraThereYouAre; entry 5 of the table in GreatLogFieldEvents_PapaCalling
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73::
@@ -2386,7 +2386,7 @@ Jump_073_4E5D:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
+; entry 9 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing; also entry 6 of the table in GreatLogFieldEvents_YouFolksRunA; entry 4 of the table in GreatLogFieldEvents_PapaCalling
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
@@ -2962,7 +2962,7 @@ Func_073_516B:: ; address name
     xor a, a
     ret
 
-; entry 2 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities; also entry 4 of the table in GreatLogFieldEvents_KamehaNoGoing; entry 4 of the table in GreatLogFieldEvents_WarubouWhatIsThis; entry 4 of the table in GreatLogFieldEvents_WarubouItsADead; entry 4 of the table in GreatLogFieldEvents_WarubouGiveMe; entry 4 of the table in GreatLogFieldEvents_KingAskedUs
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep, wModeState, wBattleTransitionStep, wFieldReturnPhase
 ; points at: wScriptStep
@@ -3028,7 +3028,7 @@ Jump_073_51D7:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in SceneChestBattle
+; entry 7 of the `rst $00` table in SceneChestBattle; also entry 10 of the table in SceneChestBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId
 ; writes: wScriptStartRequest
@@ -3306,7 +3306,7 @@ Jump_073_53B3:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 8 of the `rst $00` table in SceneChestBattle
+; entry 8 of the `rst $00` table in SceneChestBattle; also entry 0 of the table in SceneMilayouForest
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, wPartyCount
 ; writes: wScriptParam1, wSpriteSlots
@@ -4114,7 +4114,7 @@ Jump_073_5825:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in SceneKamehaStole
+; entry 0 of the `rst $00` table in SceneKamehaStole; also entries 1, 2 of the table in SceneKamehaStole
 ; no direct call (reached through a table, a jump or a vector)
 SceneKamehaStole_ToScriptStepMoveFollowersToLeader::
 Jump_073_5873:: ; address name
@@ -5672,7 +5672,7 @@ Jump_073_618F:: ; address name
     farcall SetupScriptSpriteFromMapSpriteKind
     ret
 
-; entry 0 of the `rst $00` table in GatherFollowers
+; entry 0 of the `rst $00` table in GatherFollowers; also entries 1, 2 of the table in GatherFollowers
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMapSpriteKind
 GatherFollowers_ScriptStepMoveFollowersToLeader::
@@ -6188,7 +6188,7 @@ Jump_073_645D:: ; address name
     call RewardItemOrKey_DecAndFace2
     ret
 
-; entry 6 of the `rst $00` table in RewardItemOrKey
+; entry 6 of the `rst $00` table in RewardItemOrKey; also entry 12 of the table in RewardItemOrKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1, wScriptStep
@@ -6243,7 +6243,7 @@ Jump_073_649E:: ; address name
     call RewardItemOrKey_IncAndFace1
     ret
 
-; entry 4 of the `rst $00` table in RewardItemOrKey
+; entry 4 of the `rst $00` table in RewardItemOrKey; also entry 10 of the table in RewardItemOrKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
@@ -6275,7 +6275,7 @@ Jump_073_64BA:: ; address name
     call RewardItemOrKey_DecAndFace2
     ret
 
-; entry 3 of the `rst $00` table in RewardItemOrKey
+; entry 3 of the `rst $00` table in RewardItemOrKey; also entry 9 of the table in RewardItemOrKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; writes: wObject1, wScriptStep
@@ -6330,7 +6330,7 @@ Jump_073_64FF:: ; address name
     call RewardItemOrKey_IncAndFace0
     ret
 
-; entry 1 of the `rst $00` table in RewardItemOrKey
+; entry 1 of the `rst $00` table in RewardItemOrKey; also entry 7 of the table in RewardItemOrKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
@@ -6695,7 +6695,7 @@ Jump_073_66B6:: ; address name
     ld [hl], $02
     ret
 
-; entry 3 of the `rst $00` table in SceneMasterThanks
+; entry 3 of the `rst $00` table in SceneMasterThanks; also entry 7 of the table in SceneMasterThanks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
@@ -7099,7 +7099,7 @@ Jump_073_68B8:: ; address name
     db $06, $47, $42, $4C, $FB, $47, $CB, $4C, $EE, $48, $3C, $4D, $FB, $47, $CB, $4C
     db $06, $47, $42, $4C, $FF, $45, $B3, $4B
 
-; entry 2 of the `rst $00` table in SceneKamehaEscape
+; entry 2 of the `rst $00` table in SceneKamehaEscape; also entries 9, 16 of the table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepPtrLo
 SceneKamehaEscape_WriteStepPtrLo::
@@ -7109,7 +7109,7 @@ Jump_073_6910:: ; address name
     farcall SceneKamehaEscape_Case02_WriteScrollXAndScrollXHi
     ret
 
-; entry 1 of the `rst $00` table in SceneKamehaEscape
+; entry 1 of the `rst $00` table in SceneKamehaEscape; also entries 4, 5, 7, 11, 12, 14, 18, 19 of the table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneKamehaEscape_StepScriptParam0Counter_Bank73::
@@ -7132,7 +7132,7 @@ Jump_073_6927:: ; address name
     ld a, $70
     call QueueSoundEffect
 
-; entry 8 of the `rst $00` table in SceneKamehaEscape
+; entry 8 of the `rst $00` table in SceneKamehaEscape; also entry 15 of the table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
@@ -7603,7 +7603,7 @@ Func_073_6B98:: ; address name
     dw SceneMermaidSong_ShowHeroReceivedATinyMedal
     dw SceneMermaidSong_RunMessageBoxFar_Bank73
 
-; entry 8 of the `rst $00` table in SceneMermaidSong
+; entry 8 of the `rst $00` table in SceneMermaidSong; also entry 12 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1, wScriptStartRequest
 SceneMermaidSong_RunMessageBoxFar_Bank73::
@@ -7654,7 +7654,7 @@ Jump_073_6BC6:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand60_Run
+; entry 1 of the `rst $00` table in ScriptCommand60_Run; also entry 10 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73::
@@ -7773,14 +7773,14 @@ Func_073_6C77:: ; address name
     call StartMessageHL_B73b
     ret
 
-; entry 5 of the `rst $00` table in SceneMermaidSong2
+; entry 5 of the `rst $00` table in SceneMermaidSong2; also entry 5 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 SceneMermaidSong2_ToSceneMermaidSong2_MoveSteps::
 Jump_073_6CCA:: ; address name
     farcall SceneMermaidSong2_MoveSteps
     ret
 
-; entry 4 of the `rst $00` table in SceneMermaidSong2
+; entry 4 of the `rst $00` table in SceneMermaidSong2; also entry 4 of the table in SceneDancing; entry 4 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wFollowerRecords, hPlayerFacing, hPlayerX, wScriptParam0, wScriptSubStep
@@ -7822,14 +7822,14 @@ Jump_073_6CD1:: ; address name
     ld [wScriptSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in SceneMermaidSong2
+; entry 1 of the `rst $00` table in SceneMermaidSong2; also entries 2, 3 of the table in SceneMermaidSong2; entries 1, 2, 3 of the table in SceneDancing; entries 1, 2, 3 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 SceneMermaidSong2_ToScriptStepMoveFollowersToLeader::
 Jump_073_6D1B:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; entry 0 of the `rst $00` table in SceneMermaidSong2
+; entry 0 of the `rst $00` table in SceneMermaidSong2; also entry 0 of the table in SceneDancing; entry 0 of the table in SceneMermaidSong
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, hPlayerX, wStepArrived
 ; writes: wStepPtrLo, hPlayerFacing
@@ -8618,7 +8618,7 @@ Jump_073_71BC:: ; address name
     call ScriptStepAdjust32TimesThenMessage_Bank73
     ret
 
-; entry 18 of the `rst $00` table in SceneWarubouFood2
+; entry 18 of the `rst $00` table in SceneWarubouFood2; also entry 20 of the table in SceneWarubouFood2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
@@ -8810,7 +8810,7 @@ Jump_073_7300:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in SceneWarubouFood2
+; entry 7 of the `rst $00` table in SceneWarubouFood2; also entry 8 of the table in SceneWarubouFood2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWarubouFood2_ShowWarubouWaheySomePrince::
@@ -8824,7 +8824,7 @@ Jump_073_7317:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in SceneWarubouFood2
+; entry 4 of the `rst $00` table in SceneWarubouFood2; also entry 5 of the table in SceneWarubouFood2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWarubouFood2_ShowKamehaGimmeItYou::
@@ -8838,7 +8838,7 @@ Jump_073_7329:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in SceneWarubouFood2
+; entry 1 of the `rst $00` table in SceneWarubouFood2; also entry 2 of the table in SceneWarubouFood2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWarubouFood2_ShowWarubouWaheyImStarving::
@@ -9049,7 +9049,7 @@ Jump_073_741E:: ; address name
     db $3C, $3C, $3D, $3E, $3E, $3F, $40, $40, $41, $42, $42, $43, $44, $44, $45, $46
     db $46, $47, $48, $48, $49, $4A, $4A, $4B, $4C, $4C, $4D, $4E, $4E, $4F, $50, $50
 
-; entry 2 of the `rst $00` table in SceneWarubouFood
+; entry 2 of the `rst $00` table in SceneWarubouFood; also entries 3, 6, 7 of the table in SceneWarubouFood
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2, hPlayerX, wFollowerRecords, wObject5
 ; writes: wObject2, hPlayerX, wFollowerRecords, wObject5, wScriptParam0
@@ -9065,7 +9065,7 @@ Jump_073_74DA:: ; address name
     ld c, a
     jr SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2
 
-; entry 1 of the `rst $00` table in SceneWarubouFood
+; entry 1 of the `rst $00` table in SceneWarubouFood; also entries 4, 5, 8 of the table in SceneWarubouFood
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2, hPlayerX, wFollowerRecords, wObject5
 ; writes: wObject2, hPlayerX, wFollowerRecords, wObject5, wScriptParam0
@@ -9393,7 +9393,7 @@ Jump_073_7709:: ; address name
     call ScriptStepAdjust32TimesThenMessage_Bank73
     ret
 
-; entry 7 of the `rst $00` table in SceneSpinning
+; entry 7 of the `rst $00` table in SceneSpinning; also entry 11 of the table in SceneSpinning
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
@@ -9404,7 +9404,7 @@ Jump_073_7713:: ; address name
     inc [hl]
     jr SceneSpinning_AddStepDeltaToPointedByte_SetStepPtrLo
 
-; entry 5 of the `rst $00` table in SceneSpinning
+; entry 5 of the `rst $00` table in SceneSpinning; also entry 9 of the table in SceneSpinning
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
@@ -9452,7 +9452,7 @@ Jump_073_7741:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in SceneSpinning
+; entry 2 of the `rst $00` table in SceneSpinning; also entries 4, 6, 8, 10, 12 of the table in SceneSpinning
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneSpinning_StepScriptParam0Counter_Bank73::
@@ -10076,7 +10076,7 @@ Func_073_7AB2:: ; address name
     scf
     ret
 
-; entry 1 of the `rst $00` table in SceneChestBattle
+; entry 1 of the `rst $00` table in SceneChestBattle; also entry 4 of the table in SceneChestBattle; entries 3, 6 of the table in SceneWizstone; entry 1 of the table in SceneTooStrong; entry 2 of the table in SceneThreeItemsBattle; entries 6, 8 of the table in RewardItemOrKey2; entries 16, 18 of the table in RewardItemOrKey; entry 8 of the table in SceneMermaidSong2; entries 1, 4 of the table in UnreferencedScriptStepDispatch_73_6D52; entries 3, 6, 9, 13, 25 of the table in SceneWarubouFood2; entry 14 of the table in SceneSpinning
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneChestBattle_RunMessageBoxFar_Bank73::
@@ -10088,7 +10088,7 @@ Jump_073_7AC6:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in SceneWizstone
+; entry 9 of the `rst $00` table in SceneWizstone; also entry 5 of the table in SceneMadcondorCry; entry 3 of the table in UnreferencedScriptStepDispatch_73_6D52
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 SceneWizstone_RunMessageBoxFar_Bank73::

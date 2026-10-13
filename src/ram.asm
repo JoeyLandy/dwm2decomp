@@ -249,7 +249,7 @@ DEF wKeySeeds EQU $C787 ; two bytes per key entry: the random seed saved when a 
 DEF wFarmLevel EQU $C7C7 ; storage level: Data_016_75EB[it] is how many SRAM records the farm holds (E-0133)
 DEF wStepCounterLo EQU $C7C9 ; field step counter for stored-record updates (wraps at 1000), low byte (E-0133)
 DEF wStepCounterHi EQU $C7CA ; field step counter, high byte (E-0133)
-DEF wSpeciesFlags EQU $C7CC ; one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070) (reading (E-0070))
+DEF wSpeciesFlags EQU $C7CC ; one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070) (C2 from E-0329: the library's per-family counts are the set bits counted by family) (reading (E-0070); E-0329)
 DEF wSpeciesFlagCount EQU $C7FB ; count kept by SetSpeciesFlag (monsters recorded) (E-0133)
 DEF wMonsterLibraryBuf EQU $C7FC ; buffer at $C7FC used by the record screens and script command $F6 (E-0133)
 DEF wArenaRank EQU $C82C ; arena class or rank index (script command $F7 indexes message tables with it) (E-0133)

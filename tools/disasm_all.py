@@ -2591,6 +2591,8 @@ class Rom:
         labels are renamed (routines already have a name or an address name of their own)."""
         done = 0
         tables_of: dict[str, int] = {}
+        owners: dict[tuple[int, int], list[tuple[str, int]]] = {}  # target -> [(table owner, entry)] (E-0328)
+        named_here: dict[tuple[int, int], tuple[str, int]] = {}
         for (bank, start), targets in sorted(self.dispatch.items()):
             if not targets:
                 continue
@@ -2614,6 +2616,7 @@ class Rom:
             for n, tgt in enumerate(targets):
                 if tgt is None:
                     continue
+                owners.setdefault(tgt, []).append((parent, n))
                 tb, ta = tgt
                 if tb != bank or (tb, ta) in self.names or not self.labels[tb].get(ta, "").startswith("Jump_"):
                     continue
@@ -2622,7 +2625,17 @@ class Rom:
                 self.names[(tb, ta)] = {"name": f"{stem}{n:02X}",
                                         "note": f"entry {n} of the `rst $00` table in {parent}",
                                         "evidence": "structure of the table"}
+                named_here[(tb, ta)] = (parent, n)
                 done += 1
+        for tgt, first in named_here.items():  # a step shared by several tables: the name gives only the first
+            others: dict[str, list[int]] = {}
+            for p2, n2 in owners[tgt]:
+                if (p2, n2) != first:
+                    others.setdefault(p2, []).append(n2)
+            if others:
+                self.names[tgt]["note"] += "; also " + "; ".join(
+                    f"entr{'y' if len(ns) == 1 else 'ies'} {', '.join(map(str, ns))} of the table in {p2}"
+                    for p2, ns in others.items())
         log(f"jump-table cases named: {done}")
 
     def apply_names(self) -> None:

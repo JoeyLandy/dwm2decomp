@@ -865,14 +865,14 @@ Jump_024_4567:: ; address name
     dw GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5
     dw GameMode6_Update_ChooseRecordList_RunSaveGameSteps
 
-; entry 0 of the `rst $00` table in GameMode6_Update_ChooseRecordList
+; entry 0 of the `rst $00` table in GameMode6_Update_ChooseRecordList; also entries 1, 2, 3 of the table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_ChooseRecordList_ToBreedMenu::
 Jump_024_4587:: ; address name
     farcall BreedMenu
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update_ChooseRecordList
+; entry 4 of the `rst $00` table in GameMode6_Update_ChooseRecordList; also entries 5, 9 of the table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B::
 Jump_024_458E:: ; address name
@@ -1580,7 +1580,7 @@ Jump_024_4A4C:: ; address name
     call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update
+; entry 6 of the `rst $00` table in GameMode6_Update; also entries 7, 8, 9, 10, 11 of the table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Return::
 Jump_024_4A5C:: ; address name
@@ -1940,7 +1940,7 @@ Jump_024_4CD2:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update_SwitchMonster
+; entry 3 of the `rst $00` table in GameMode6_Update_SwitchMonster; also entries 4, 6 of the table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B::
 Jump_024_4CE3:: ; address name
@@ -3177,7 +3177,7 @@ Jump_024_5454:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 0 of the `rst $00` table in GameMode6_Update_Save_ObjectScene
+; entry 0 of the `rst $00` table in GameMode6_Update_Save_ObjectScene; also entries 2, 4, 6, 9, 10 of the table in GameMode6_Update_Save_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
@@ -3414,7 +3414,7 @@ Jump_024_5591:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 0 of the `rst $00` table in GameMode6_Update_SavePrompt_ObjectScene
+; entry 0 of the `rst $00` table in GameMode6_Update_SavePrompt_ObjectScene; also entries 2, 4, 6, 9, 10 of the table in GameMode6_Update_SavePrompt_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
@@ -4288,7 +4288,7 @@ Data_024_60CD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "RviD-oxUncurt", $F0
 
-; implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244)
+; implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244) (C2 from E-0330: Revive / De-Tox / Uncurse / Exit; a revival costs 25G here)
 ; 1 call site from 1 routine (e.g. ScriptCommandF8)
 ; reads: wScreenState
 PriestMenu::
@@ -5120,7 +5120,7 @@ Jump_024_6655:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in PriestMenu_PayForService
+; entry 12 of the `rst $00` table in PriestMenu_PayForService; also entry 14 of the table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenStep
 ; writes: wScreenCounter, wScreenStep

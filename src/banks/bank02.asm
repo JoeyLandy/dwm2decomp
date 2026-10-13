@@ -1255,7 +1255,7 @@ Func_002_4745:: ; address name
     dw RunFieldReturnPhase_ResetLeadRecordFields55And5B
     dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
-; entry 0 of the `rst $00` table in RunFieldReturnPhase
+; entry 0 of the `rst $00` table in RunFieldReturnPhase; also entry 3 of the table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState
@@ -2441,7 +2441,7 @@ Func_002_4F4C:: ; address name
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing
 
-; entry 0 of the `rst $00` table in Func_002_4F4C
+; entry 0 of the `rst $00` table in Func_002_4F4C; also entries 1, 2, 4, 5, 6 of the table in Func_002_4F4C
 ; no direct call (reached through a table, a jump or a vector)
 FieldModeStateDispatch_Case05_Sub01_Return::
 Jump_002_4F7E:: ; address name
@@ -5460,7 +5460,7 @@ Jump_002_609D:: ; address name
     dw PlayMapMusic_ReadCurrentMusic_Case20
     db $00, $00
 
-; entry 0 of the `rst $00` table in PlayMapMusic
+; entry 0 of the `rst $00` table in PlayMapMusic; also entries 2, 3, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic::
@@ -5517,7 +5517,7 @@ Jump_002_6291:: ; address name
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 13 of the `rst $00` table in PlayMapMusic
+; entry 13 of the `rst $00` table in PlayMapMusic; also entry 20 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_Case0D::
@@ -5525,7 +5525,7 @@ Jump_002_62BB:: ; address name
     ld c, $0C
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 4 of the `rst $00` table in PlayMapMusic
+; entry 4 of the `rst $00` table in PlayMapMusic; also entry 24 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_TestFlagBit_Case04::
@@ -5553,7 +5553,7 @@ PlayMapMusic_Return::
 Jump_002_62DA:: ; address name
     ret
 
-; entry 33 of the `rst $00` table in PlayMapMusic
+; entry 33 of the `rst $00` table in PlayMapMusic; also entries 34, 35, 36, 37, 38, 42, 45, 46, 49, 50, 51, 52, 60, 61, 65, 113, 114, 120, 121, 124, 125, 126, 127, 137, 169, 171, 177, 185, 186, 188 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_Case21::
@@ -5589,7 +5589,7 @@ Jump_002_62ED:: ; address name
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 32 of the `rst $00` table in PlayMapMusic
+; entry 32 of the `rst $00` table in PlayMapMusic; also entries 40, 41, 47, 69, 112, 119, 122, 123, 128, 138, 146, 147, 157, 168, 170, 175, 176, 178, 184, 187, 197, 200, 208, 209, 217, 218, 226 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_Case20::
@@ -5631,7 +5631,7 @@ Jump_002_6327:: ; address name
     ld c, $1F
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 161 of the `rst $00` table in PlayMapMusic
+; entry 161 of the `rst $00` table in PlayMapMusic; also entries 162, 163 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_CaseA1::
@@ -5639,7 +5639,7 @@ Jump_002_6334:: ; address name
     ld c, $CC
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 43 of the `rst $00` table in PlayMapMusic
+; entry 43 of the `rst $00` table in PlayMapMusic; also entries 53, 58, 83, 84, 85, 86, 87, 129, 130, 131, 132, 139, 140, 141, 142, 143, 144, 145, 179, 180, 181, 182 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_Case2B::
@@ -5689,7 +5689,7 @@ Jump_002_6365:: ; address name
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; entry 55 of the `rst $00` table in PlayMapMusic
+; entry 55 of the `rst $00` table in PlayMapMusic; also entries 62, 63, 64, 66, 67, 68, 93, 98, 99, 100, 101, 102, 103, 115, 116, 117, 118, 133, 134, 135, 136, 148, 149, 150, 151, 152, 153, 154, 172, 173, 174, 189, 190, 191, 192, 193, 194, 195, 196, 201, 202, 203, 204, 205, 206, 210, 211, 212, 213, 214, 215, 219, 220, 221, 222, 223, 224 of the table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
 PlayMapMusic_ReadCurrentMusic_Case37::
@@ -6842,7 +6842,7 @@ Jump_002_6AA8:: ; address name
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-; entry 2 of the `rst $00` table in StepTextWindowOpenClose
+; entry 2 of the `rst $00` table in StepTextWindowOpenClose; also entry 3 of the table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep
@@ -7030,7 +7030,7 @@ Func_002_6C40:: ; address name
     dw RunMenuStateMenuState_Return
     dw RunMenuStateMenuState_Return
 
-; entry 6 of the `rst $00` table in RunMenuStateMenuState
+; entry 6 of the `rst $00` table in RunMenuStateMenuState; also entries 7, 8 of the table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 RunMenuStateMenuState_Return::
 Jump_002_6C5E:: ; address name

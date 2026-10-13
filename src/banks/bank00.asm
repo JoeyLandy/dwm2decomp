@@ -7564,7 +7564,7 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_ClearTextControlBit0
     dw AcknowledgeTextPrompt
 
-; entry 0 of the `rst $00` table in Func_000_2950
+; entry 0 of the `rst $00` table in Func_000_2950; also entries 1, 2, 3, 4 of the table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
 StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord::

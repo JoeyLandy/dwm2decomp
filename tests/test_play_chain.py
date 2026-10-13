@@ -2,7 +2,9 @@
 then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt), then
 the field menu's ITEM, SKILLS and PLAN (E-0322; e0322_menus.txt), then saving on the farm and continuing after a fresh
 power-on (E-0323; e0323_save.txt), then GreatLog's Vault, Egg Evaluator and Christener (E-0325; e0325_town.txt), then the
-HP/MP pairs and the Herb (E-0326; e0326_hp.txt, which includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+HP/MP pairs and the Herb (E-0326; e0326_hp.txt), then a shop and an inn (E-0327; e0327_shop_inn.txt), then breeding
+(E-0328; e0328_breed.txt), then the monster library (E-0329; e0329_library.txt), then the priest (E-0330; e0330_priest.txt, which
+includes the others), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
 with the text or screen their names describe, and the records the status pages showed. An observation of our own
 emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
@@ -13,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0326_hp.txt"
+CHAIN = ROOT / "tools/recipes/e0330_priest.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -24,7 +26,8 @@ class FarmChain(unittest.TestCase):
         cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!", "m03!", "m04!", "m07!",
                                                              "m09!", "m11!", "m12!", "j02!", "j03!", "r04!",
                                                              "v05!", "v07!", "x07!", "c04!", "c05!",
-                                                             "hp02!", "hp04!"})
+                                                             "hp02!", "hp04!", "sh12!", "sh13!", "sh15!", "q06!",
+                                                             "q07!", "br01!", "bb02!", "bb19!", "lb01!", "lb02!", "pr03!", "pr05!"})
         cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
         import re
         cls.ram = {n: int(a, 16) for n, a in re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})",
@@ -209,6 +212,103 @@ class FarmChain(unittest.TestCase):
         moahm = self.kept["hp04!"]
         self.assertTrue(80 <= w(moahm, 2 * 0xA5 + 0x5B) <= 90)
         self.assertEqual(w(moahm, 2 * 0xA5 + 0x5D), 138)
+
+
+    def gold(self, state):
+        gb = self.kept[state]
+        return gb.rb(0xC617) | gb.rb(0xC618) << 8 | gb.rb(0xC619) << 16
+
+    def test_the_shop_sells_at_three_quarters_and_buys_at_the_value(self):
+        """The sell list showed Herb 7G, LoveWater 37G, WorldDew 375G, Potion 150G: ItemValueTable (10, 50, 500,
+        200) times ShopPercentTable[0] (75) / 100. Selling a Herb at 99,999 gold leaves 99,999 (the cap); buying one
+        at 10G takes 10 and puts it in the free slot."""
+        rom = ROM.read_bytes()
+        b, a = self.labels["ItemValueTable"]
+        o = b * 0x4000 + a - 0x4000
+        values = [rom[o + 2 * i] | rom[o + 2 * i + 1] << 8 for i in (1, 2, 3, 4)]
+        b, a = self.labels["ShopPercentTable"]
+        pct = rom[b * 0x4000 + a - 0x4000]
+        self.assertEqual([v * pct // 100 for v in values], [7, 37, 375, 150])
+        self.assertEqual(self.ran["sh11!"].get("ShopMenu"), {1})
+        self.assertEqual(self.ran["sh13!"].get("AddArg1ToGoldCapped99999"), {1})
+        self.assertEqual(self.ran["sh15!"].get("SubtractArg1AmountFromGold"), {1})
+        bag12 = [self.kept["sh12!"].rb(0xC61D + i) for i in range(24)]
+        bag13 = [self.kept["sh13!"].rb(0xC61D + i) for i in range(24)]
+        bag15 = [self.kept["sh15!"].rb(0xC61D + i) for i in range(24)]
+        self.assertEqual(bag13, bag12[1:] + [0])  # the Herb in slot 0 sold, the bag closed up
+        self.assertEqual((self.gold("sh12!"), self.gold("sh13!"), self.gold("sh15!")), (99999, 99999, 99989))
+        self.assertEqual(bag15, bag13[:23] + [1])
+
+    def test_the_inn_restores_hp_and_mp_for_ten_gold(self):
+        self.assertEqual(self.ran["q07!"].get("InnMenu_RestoreParty"), {1})
+        hurt, rested = self.kept["q06!"], self.kept["q07!"]
+        self.assertEqual((hurt.sram[0x5B], hurt.sram[0x5F], self.gold("q06!")), (5, 7, 99989))
+        self.assertEqual((rested.sram[0x5B], rested.sram[0x5F]), (rested.sram[0x5D], rested.sram[0x61]))
+
+
+    def test_breeding_follows_the_family_pair_table_and_makes_the_child(self):
+        """Base Vanyl (Gulpple, family 4) with mate Moahm (family 5): the preview's child is
+        FamilyPairResultTable[4][5] (CactiBall, $91); after the egg hatches the two parents' records are gone and a
+        new record holds the child: level 1, the base's family, MON_PARENT1/2_SPECIES $92 and $C2, MON_PARENT1/2_NAME
+        Vanyl and Moahm."""
+        self.assertEqual(self.ran["br01!"].get("BreedMenu"), {1})
+        self.assertIn(1, set().union(*(self.ran[s].get("ComputeBreedingChild", set()) for s in ("bb01!", "bb02!"))))
+        rom = ROM.read_bytes()
+        b, a = self.labels["FamilyPairResultTable"]
+        o = b * 0x4000 + a - 0x4000
+        row = rom[o + 8] | rom[o + 9] << 8  # family 4
+        r = b * 0x4000 + row - 0x4000 + 2 * 5  # parent B's family 5
+        expect = rom[r] | rom[r + 1] << 8
+        gb = self.kept["bb02!"]
+        self.assertEqual(gb.rb(0xCAD0 + 0x0B) | gb.rb(0xCAD0 + 0x0C) << 8, expect)  # wChildRecord + MON_SPECIES
+        self.assertEqual(expect, 0x91)
+        before, after = self.kept["br01!"].sram, self.kept["bb19!"].sram
+        live = lambda sram: [bytes(sram[i * 0xA5:(i + 1) * 0xA5]) for i in range(0x2000 // 0xA5) if sram[i * 0xA5] in (1, 2)]
+        species = lambda recs: sorted(r[0x0B] | r[0x0C] << 8 for r in recs)
+        old, new = live(before), live(after)
+        self.assertEqual(len(new), len(old) - 1)
+        gone = species(old)
+        for sp in species(new):
+            gone.remove(sp) if sp in gone else None
+        self.assertEqual(sorted(gone), [0x92, 0xC2])
+        child = [r for r in new if r[0x0B] | r[0x0C] << 8 == 0x91 and r[0x1A] != 0xFF][0]
+        self.assertEqual((child[0x56], child[0x0D] & 0x0F), (1, 4))
+        self.assertEqual((child[0x1A] | child[0x1B] << 8, child[0x1C] | child[0x1D] << 8), (0x92, 0xC2))
+        self.assertEqual(child[0x8E:0x93], bytes([0x1F, 0x24, 0x31, 0x3C, 0x2F]))  # Vanyl
+        self.assertEqual(child[0x99:0x9E], bytes([0x16, 0x32, 0x24, 0x2B, 0x30]))  # Moahm
+
+
+    def test_the_library_counts_seen_species_per_family(self):
+        """The library's two pages draw one count per family (digit tiles $E0 + d in column 7, rows 1-11): the
+        species ids 0-372 whose wSpeciesFlags bit is set, counted by the family byte of their SpeciesRecordPointers
+        record, as CountSpeciesPerFamilyFlaggedOrListed is read (its second source, the list at wMonsterLibraryBuf,
+        is empty here)."""
+        self.assertEqual(self.ran["lb01!"].get("LibraryMenu"), {1})
+        rom = ROM.read_bytes()
+        b, a = self.labels["SpeciesRecordPointers"]
+        o = b * 0x4000 + a - 0x4000
+        gb = self.kept["lb01!"]
+        model = [0] * 11
+        for i in range(373):
+            fam = rom[b * 0x4000 + (rom[o + 2 * i] | rom[o + 2 * i + 1] << 8) - 0x4000]
+            if fam != 0xFF and gb.rb(0xC7CC + i // 8) >> (i & 7) & 1:
+                model[fam] += 1
+        self.assertEqual([gb.rb(0xC7FC + i) for i in range(4)], [0, 0, 0, 0])
+        drawn = []
+        for state, rows in (("lb01!", 6), ("lb02!", 5)):
+            g = self.kept[state]
+            drawn += [g.vram[0][0x1800 + (1 + 2 * r) * 32 + 7] - 0xE0 for r in range(rows)]
+        self.assertEqual(drawn, model)
+
+
+    def test_the_priest_revives_a_dead_monster_for_25_gold(self):
+        """With MON_STATUS bit 7 set and MON_HP 0, Revive lists the monster, takes 25 gold, and leaves MON_STATUS 0 and
+        MON_HP = MON_MAX_HP."""
+        dead, alive = self.kept["pr03!"], self.kept["pr05!"]
+        self.assertEqual((dead.sram[0x55], dead.sram[0x5B]), (0x80, 0))
+        self.assertEqual((alive.sram[0x55], alive.sram[0x5B]), (0, alive.sram[0x5D]))
+        self.assertEqual(self.gold("pr03!") - self.gold("pr05!"), 25)
+        self.assertIn(1, self.ran["pr04!"].get("PriestMenu_PayForService_SubtractArg1AmountFromGold", set()))
 
 
 if __name__ == "__main__":

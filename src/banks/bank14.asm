@@ -1018,7 +1018,7 @@ Jump_014_46A1:: ; address name
     ld [wCursorBlinkAE], a
     ret
 
-; entry 5 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 5 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 34, 56 of the table in HibernateMenu_ChooseRecords; entries 5, 37, 56 of the table in HibernateMenu_ChooseToHibernate; entry 5 of the table in HibernateMenu_ChooseWithStats; entry 5 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
 HibernateMenu_ChooseRecords_FillTilesBxC::
@@ -1041,7 +1041,7 @@ Jump_014_46F4:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 7 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 36, 58 of the table in HibernateMenu_ChooseRecords; entries 7, 39, 58 of the table in HibernateMenu_ChooseToHibernate; entry 7 of the table in HibernateMenu_ChooseWithStats; entry 7 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
@@ -1064,7 +1064,7 @@ Jump_014_4718:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 9 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 20, 38, 65 of the table in HibernateMenu_ChooseRecords; entries 9, 23, 41, 68 of the table in HibernateMenu_ChooseToHibernate; entry 9 of the table in HibernateMenu_ChooseWithStats; entries 9, 19 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1083,7 +1083,7 @@ Jump_014_4742:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 10 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 21, 39, 66 of the table in HibernateMenu_ChooseRecords; entries 10, 24, 42, 69 of the table in HibernateMenu_ChooseToHibernate; entry 10 of the table in HibernateMenu_ChooseWithStats; entries 10, 20 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1098,7 +1098,7 @@ Jump_014_475E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 11 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 22, 40, 67 of the table in HibernateMenu_ChooseRecords; entries 11, 25, 43, 70 of the table in HibernateMenu_ChooseToHibernate; entry 11 of the table in HibernateMenu_ChooseWithStats; entries 11, 21 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
@@ -1112,7 +1112,7 @@ Jump_014_4772:: ; address name
     inc [hl]
     ret
 
-; entry 45 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 45 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 16, 61 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D::
@@ -1126,7 +1126,7 @@ Jump_014_4783:: ; address name
     inc [hl]
     ret
 
-; entry 46 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 46 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 17, 62 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wChoiceCursor, wCursorBlinkAE, wScreenStep
@@ -1160,7 +1160,7 @@ Data_014_47C0:: ; address name
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 47 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 47 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 18, 63 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wChoiceCursor, wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenByteB2, wScreenByteB3, wScreenState, wScreenSubStep, ...
@@ -1406,7 +1406,7 @@ TileRect_14_4965::
 Data_014_4965:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
-; entry 27 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 27 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 30 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
@@ -1448,7 +1448,7 @@ Data_014_49AE:: ; address name
     db $B6, $C3, $EF, $73, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 28 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 28 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 31 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor, wScreenState
@@ -1554,7 +1554,7 @@ Func_014_4A54:: ; address name
     jr c, HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14
     ret
 
-; entry 0 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 0 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 12, 23, 29, 41, 51, 68 of the table in HibernateMenu_ChooseRecords; entries 0, 12, 26, 32, 44, 51, 71 of the table in HibernateMenu_ChooseToHibernate; entries 0, 12 of the table in HibernateMenu_ChooseWithStats; entries 0, 12, 22 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wListPageIndex, wCursorBlinkAE, wScreenStep
@@ -1637,7 +1637,7 @@ Func_014_4B5A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 31 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 31 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 2, 53 of the table in HibernateMenu_ChooseToHibernate; entry 2 of the table in HibernateMenu_ChooseWithStats
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1680,14 +1680,14 @@ Func_014_4BA0:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 32 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 32 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 3, 54 of the table in HibernateMenu_ChooseToHibernate; entry 3 of the table in HibernateMenu_ChooseWithStats
 ; no direct call (reached through a table, a jump or a vector)
 HibernateMenu_ChooseRecords_ToDrawRecordListPageNames::
 Jump_014_4BE3:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; entry 33 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 33 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 4, 55 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -1714,7 +1714,7 @@ Jump_014_4BEA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 35 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 35 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 6, 57 of the table in HibernateMenu_ChooseToHibernate; entry 6 of the table in HibernateMenu_ChooseWithStats
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -1733,7 +1733,7 @@ Jump_014_4C1C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 37 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 37 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 8 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
@@ -1800,7 +1800,7 @@ Jump_014_4C3C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 13 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 24, 42, 69 of the table in HibernateMenu_ChooseRecords; entries 13, 27, 45, 72 of the table in HibernateMenu_ChooseToHibernate; entry 13 of the table in HibernateMenu_ChooseWithStats; entries 13, 23 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1816,7 +1816,7 @@ Jump_014_4CA8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 14 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 25, 43, 70 of the table in HibernateMenu_ChooseRecords; entries 14, 28, 46, 73 of the table in HibernateMenu_ChooseToHibernate; entry 14 of the table in HibernateMenu_ChooseWithStats; entries 14, 24 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1876,7 +1876,7 @@ Jump_014_4D10:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 15 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 15 of the `rst $00` table in HibernateMenu_ChooseRecords; also entries 26, 71 of the table in HibernateMenu_ChooseRecords; entries 15, 29, 74 of the table in HibernateMenu_ChooseToHibernate; entry 15 of the table in HibernateMenu_ChooseWithStats; entries 15, 25 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 HibernateMenu_ChooseRecords_RunFunc5925At0280::
@@ -1986,7 +1986,7 @@ Jump_014_4D64:: ; address name
     dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_ChooseRecords_RunFunc5925At0280
 
-; entry 2 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 2 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 53 of the table in HibernateMenu_ChooseRecords; entry 34 of the table in HibernateMenu_ChooseToHibernate; entry 2 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1995,14 +1995,14 @@ Jump_014_4DFE:: ; address name
     farcall HibernateMenu_WriteListCountAndRAMG2Etc
     jp HibernateMenu_ClampRecordListPageCursor5
 
-; entry 3 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 3 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 54 of the table in HibernateMenu_ChooseRecords; entry 35 of the table in HibernateMenu_ChooseToHibernate; entry 3 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03::
 Jump_014_4E07:: ; address name
     farcall HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc
     ret
 
-; entry 4 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 4 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 55 of the table in HibernateMenu_ChooseRecords; entry 36 of the table in HibernateMenu_ChooseToHibernate; entry 4 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -2030,7 +2030,7 @@ Jump_014_4E0E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 6 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 57 of the table in HibernateMenu_ChooseRecords; entry 38 of the table in HibernateMenu_ChooseToHibernate; entry 6 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -2188,7 +2188,7 @@ Func_014_4F30:: ; address name
     jr c, HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ret
 
-; entry 16 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 16 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 61 of the table in HibernateMenu_ChooseRecords; entry 48 of the table in HibernateMenu_ChooseToHibernate; entry 16 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
@@ -2525,7 +2525,7 @@ Jump_014_5171:: ; address name
     ld [wCursorBlinkAE], a
     ret
 
-; entry 8 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 8 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 40 of the table in HibernateMenu_ChooseToHibernate; entry 8 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wListCursor, wScreenStep
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -2655,7 +2655,7 @@ Jump_014_529C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 59 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 59 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 59 of the table in HibernateMenu_ChooseToHibernate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor, wScreenState
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
@@ -3108,7 +3108,7 @@ Jump_014_55C9:: ; address name
     dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_ChooseRecords_RunFunc5925At0280
 
-; entry 17 of the `rst $00` table in HibernateMenu_ChooseRecords
+; entry 17 of the `rst $00` table in HibernateMenu_ChooseRecords; also entry 17 of the table in HibernateMenu_IndexListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep, wListCursor
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor
@@ -3203,7 +3203,7 @@ Jump_014_5649:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in HibernateMenu
+; entry 8 of the `rst $00` table in HibernateMenu; also entries 9, 10, 11 of the table in HibernateMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wAreaGraphicsIndex
 HibernateMenu_SwapMonstersMenu::
@@ -4448,7 +4448,7 @@ Jump_014_5F57:: ; address name
     dw RunNameEntryStateWhenNotFading_Case01_WriteNameEntryStateAndArg5
     dw RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5
 
-; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01; also entry 5 of the table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wNameEntrySubState, wNameEntryCursorX, wNameEntryCursorY
 ; writes: wNameEntryCursorX, wNameEntryCursorY, wArg5, wNameEntrySubState
@@ -4876,7 +4876,7 @@ Data_014_61E2:: ; address name
     dw $01C1, $01C2, $01C3, $01C4, $01C5, $01C6, $01C7, $01C8, $01C9, $01CA, $01CB, $01CC, $01CD, $01CF, $01D0, $01D1, $01D2 ; id 3
     dw $0201, $0202, $0203, $0204, $0205, $0206, $0207, $0208, $0209, $020A, $020B, $020C, $020D, $020F, $0210, $0211, $0212 ; id 4
 
-; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01; also entry 6 of the table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryLength, wNameEntrySubState, wNameEntryByteC3
 ; writes: wNameEntrySubState, wArg5, wNameEntryByteC3, wNameEntryLength
@@ -4965,7 +4965,7 @@ Jump_014_628C:: ; address name
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01; also entry 7 of the table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryCursorY, wNameEntryCursorX, wNameEntryLength, wNameEntrySubState, wNameEntryByteC3, wNameEntryState
 ; writes: wNameEntryByteC3, wNameEntryLength, wNameEntrySubState, wArg5, wNameEntryCursorX, wNameEntryCursorY, wNameEntryState
@@ -5230,7 +5230,7 @@ Func_014_631C:: ; address name
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01; also entry 8 of the table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wNameEntryState, wArg5

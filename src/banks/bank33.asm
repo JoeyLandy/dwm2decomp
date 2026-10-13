@@ -1552,7 +1552,7 @@ Jump_033_55E5:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F
 
-; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case04
+; entry 0 of the `rst $00` table in Func_033_5215_Table2_Case04; also entries 1, 3 of the table in Func_033_5215_Table2_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00::
@@ -2511,7 +2511,7 @@ Jump_033_5BE9:: ; address name
     ld [wLinkMessage], a
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215
+; entry 6 of the `rst $00` table in Func_033_5215; also entries 7, 8, 9, 10, 11, 12 of the table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
@@ -2593,7 +2593,7 @@ Jump_033_5C63:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0E
+; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0E; also entry 2 of the table in Func_033_5215_Table2_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01::

@@ -1393,7 +1393,7 @@ Jump_0F0_5028:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage
+; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage; also entry 3 of the table in RunLinkSession8Exchange_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: rSVBK, wGameMode, wModeState, wModeChangeRequest
@@ -1911,7 +1911,7 @@ Jump_0F0_52EC:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 1 of the `rst $00` table in Func_0F0_4CA0
+; entry 1 of the `rst $00` table in Func_0F0_4CA0; also entries 7, 11, 15 of the table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -1924,7 +1924,7 @@ Jump_0F0_5379:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in Func_0F0_4CA0
+; entry 2 of the `rst $00` table in Func_0F0_4CA0; also entries 8, 12, 16 of the table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
@@ -1991,7 +1991,7 @@ Jump_0F0_53B9:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 4 of the `rst $00` table in Func_0F0_4CA0
+; entry 4 of the `rst $00` table in Func_0F0_4CA0; also entries 10, 14, 18 of the table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wLinkReady, wScreenStep
@@ -2220,7 +2220,7 @@ Jump_0F0_54FA:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 12 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 12 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entry 12 of the table in RunLinkSession8Exchange_ObtainedEgg; entry 16 of the table in RunLinkSession8Exchange_EggsTraded; entry 34 of the table in RunLinkSession8Exchange_ObjectScene; entry 31 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSaveStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState
@@ -2240,7 +2240,7 @@ Jump_0F0_5518:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 1 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entry 4 of the table in RunLinkSession8Exchange_ObtainedEgg; entry 1 of the table in RunLinkSession8Exchange_EggsTraded; entry 1 of the table in RunLinkSession8Exchange_ObjectScene; entry 5 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
@@ -2263,7 +2263,7 @@ Jump_0F0_5537:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 4 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entry 1 of the table in RunLinkSession8Exchange_ObtainedEgg; entry 4 of the table in RunLinkSession8Exchange_EggsTraded; entry 5 of the table in RunLinkSession8Exchange_ObjectScene; entry 1 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
@@ -2288,7 +2288,7 @@ Jump_0F0_5558:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 0 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 0 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entries 2, 5, 6, 8, 9 of the table in RunLinkSession8Exchange_ObjectSceneThenSave; entries 0, 2, 5, 6, 8, 9 of the table in RunLinkSession8Exchange_ObtainedEgg; entries 0, 2, 5, 6, 8, 9, 11, 12 of the table in RunLinkSession8Exchange_EggsTraded; entries 0, 2, 4, 6, 7, 12, 13, 14, 16, 18, 20, 22, 24, 25, 27, 29 of the table in RunLinkSession8Exchange_ObjectScene; entries 0, 2, 4, 6, 7, 12, 13, 14, 16, 18, 20, 22, 24, 25, 27, 29 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
@@ -2306,7 +2306,7 @@ Jump_0F0_557E:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entry 3 of the table in RunLinkSession8Exchange_ObtainedEgg; entries 3, 10 of the table in RunLinkSession8Exchange_EggsTraded; entry 3 of the table in RunLinkSession8Exchange_ObjectScene; entry 3 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
@@ -2321,7 +2321,7 @@ Jump_0F0_5594:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 7 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
+; entry 7 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave; also entry 7 of the table in RunLinkSession8Exchange_ObtainedEgg; entries 7, 13 of the table in RunLinkSession8Exchange_EggsTraded
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
@@ -2752,7 +2752,7 @@ Jump_0F0_583B:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 15 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
+; entry 15 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene; also entries 19, 23 of the table in RunLinkSession8Exchange_ObjectScene; entries 17, 21 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject2, wScreenSubStep
@@ -2765,7 +2765,7 @@ Jump_0F0_5848:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 17 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
+; entry 17 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene; also entry 21 of the table in RunLinkSession8Exchange_ObjectScene; entries 15, 19, 23 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject2, wScreenSubStep
@@ -2842,7 +2842,7 @@ Func_0F0_5888:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
+; entry 10 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene; also entry 10 of the table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wSpriteSlotCount, wScreenSubStep
 ; writes: wScreenCounter, wObject5, wSpriteSlotCount, wScreenSubStep, wScreenStep

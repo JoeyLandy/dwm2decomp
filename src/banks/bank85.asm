@@ -334,7 +334,7 @@ Func_085_4207:: ; address name
     dw SceneWatchOut_StepObjectCoordByDirection16Frames
     dw SceneWatchOut_RunMessageBoxFar_Bank85_Case12
 
-; entry 18 of the `rst $00` table in SceneWatchOut
+; entry 18 of the `rst $00` table in SceneWatchOut; also entry 18 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
 SceneWatchOut_RunMessageBoxFar_Bank85_Case12::
@@ -346,7 +346,7 @@ Jump_085_4231:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 17 of the `rst $00` table in SceneWatchOut
+; entry 17 of the `rst $00` table in SceneWatchOut; also entry 17 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWatchOut_StepObjectCoordByDirection16Frames::
@@ -536,7 +536,7 @@ Func_085_4339:: ; address name
     ld a, $01
     ret
 
-; entry 10 of the `rst $00` table in SceneWatchOut
+; entry 10 of the `rst $00` table in SceneWatchOut; also entries 11, 12 of the table in SceneWatchOut; entries 10, 11, 12 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptMsgSelect
 ; points at: wScriptStep
@@ -553,7 +553,7 @@ Jump_085_437D:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; entry 9 of the `rst $00` table in SceneWatchOut
+; entry 9 of the `rst $00` table in SceneWatchOut; also entry 9 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
 SceneWatchOut_ShowLetMeJoinYour::
@@ -567,7 +567,7 @@ Jump_085_4390:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 8 of the `rst $00` table in SceneWatchOut
+; entry 8 of the `rst $00` table in SceneWatchOut; also entry 8 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 SceneWatchOut_ToSceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
 Jump_085_43AB:: ; address name
@@ -591,7 +591,7 @@ Jump_085_43AF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in SceneWatchOut
+; entry 5 of the `rst $00` table in SceneWatchOut; also entry 5 of the table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWatchOut_Msg4D50_PickTheMonsterTo::
@@ -1227,7 +1227,7 @@ Jump_085_47B1:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 1 of the `rst $00` table in SceneChestServant
+; entry 1 of the `rst $00` table in SceneChestServant; also entries 2, 3 of the table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wStepArrived, hFieldDrawFlags
 ; writes: wStepPtrLo, hFieldDrawFlags
@@ -1890,7 +1890,7 @@ Jump_085_4BB2:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in SceneLimboMonster2
+; entry 9 of the `rst $00` table in SceneLimboMonster2; also entry 10 of the table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
 Jump_085_4BBD:: ; address name
@@ -2041,7 +2041,7 @@ Jump_085_4C46:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in SceneLimboMonster
+; entry 9 of the `rst $00` table in SceneLimboMonster; also entry 10 of the table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85::
 Jump_085_4CBC:: ; address name
@@ -2050,7 +2050,7 @@ Jump_085_4CBC:: ; address name
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; entry 8 of the `rst $00` table in SceneLimboMonster2
+; entry 8 of the `rst $00` table in SceneLimboMonster2; also entry 8 of the table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2, wObject1
 ; writes: hFieldDrawFlags, wScriptParam0, wStepPtrLo, wStepPtrHi, wObject2
@@ -2106,7 +2106,7 @@ Jump_085_4CC6:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in SceneLimboMonster2
+; entry 5 of the `rst $00` table in SceneLimboMonster2; also entries 6, 7 of the table in SceneLimboMonster2; entries 5, 6, 7 of the table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
 Jump_085_4D29:: ; address name
@@ -2508,7 +2508,7 @@ Jump_085_4F8E:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in SceneGiveBackCyal
+; entry 0 of the `rst $00` table in SceneGiveBackCyal; also entries 1, 2, 3, 4 of the table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2
 ; writes: wObject2, wScriptParam0
@@ -3054,7 +3054,7 @@ Jump_085_526C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in SceneLimbo
+; entry 3 of the `rst $00` table in SceneLimbo; also entries 8, 13 of the table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject5
 ; writes: wObject5
@@ -3097,7 +3097,7 @@ Jump_085_5290:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in SceneLimbo
+; entry 2 of the `rst $00` table in SceneLimbo; also entries 7, 12 of the table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptParam0
@@ -3121,7 +3121,7 @@ Jump_085_52C8:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in SceneLimbo
+; entry 1 of the `rst $00` table in SceneLimbo; also entries 6, 11 of the table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
@@ -3138,7 +3138,7 @@ Jump_085_52ED:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in SceneLimbo
+; entry 0 of the `rst $00` table in SceneLimbo; also entries 5, 10 of the table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: hTemp0, wObject5
@@ -3732,7 +3732,7 @@ Jump_085_5664:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in SceneCanalGate
+; entry 0 of the `rst $00` table in SceneCanalGate; also entry 1 of the table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneCanalGate_ScriptApplyStepDeltaAtDE_Bank85::
@@ -4001,7 +4001,7 @@ Func_085_57D5:: ; address name
     scf
     ret
 
-; entry 1 of the `rst $00` table in SceneWatchOut
+; entry 1 of the `rst $00` table in SceneWatchOut; also entries 4, 6 of the table in SceneWatchOut; entries 1, 4, 6 of the table in SceneWaterReward; entry 2 of the table in SceneKamehaKeyBattle2; entry 2 of the table in SceneKamehaKeyBattle; entries 2, 4, 11, 13 of the table in SceneLimboMonster2; entries 2, 4, 11, 13 of the table in SceneLimboMonster; entry 6 of the table in SceneGiveBackCyal; entry 1 of the table in GrowthLimitInfo; entries 2, 6 of the table in SceneBarrel; entries 4, 9, 14 of the table in SceneLimbo; entry 1 of the table in SceneFoundMeBattle; entry 1 of the table in ScenePirateGhosts; entries 2, 7 of the table in SceneTreasureTheft; entry 3 of the table in SceneCanalGate; entries 1, 3 of the table in SceneGreatlogKey
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 SceneWatchOut_RunMessageBoxFar_Bank85::
@@ -4013,7 +4013,7 @@ Jump_085_57E9:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in SceneWatchOut
+; entry 3 of the `rst $00` table in SceneWatchOut; also entry 3 of the table in SceneWaterReward; entry 4 of the table in SceneKamehaKeyBattle2; entry 4 of the table in SceneKamehaKeyBattle; entry 2 of the table in SceneArenaChallenge; entry 2 of the table in SceneTerryBattle; entry 1 of the table in SceneLimboMonster2; entries 1, 14 of the table in SceneLimboMonster; entry 1 of the table in SceneYouDidIt; entry 9 of the table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 SceneWatchOut_RunMessageBoxFar_Bank85_Case03::

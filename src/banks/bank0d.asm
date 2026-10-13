@@ -351,7 +351,7 @@ Func_00D_45D1:: ; address name
     dw EggServiceMenu_Return_Case06
     dw EggServiceMenu_DrawListAndPrice
 
-; entry 6 of the `rst $00` table in EggServiceMenu
+; entry 6 of the `rst $00` table in EggServiceMenu; also entries 7, 8, 9, 10, 11, 12, 14 of the table in EggServiceMenu
 ; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Return_Case06::
 Jump_00D_45F5:: ; address name
@@ -574,7 +574,7 @@ Jump_00D_4710:: ; address name
     dw EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks
     dw EggServiceMenu_ChooseAndPay_CheckAndPay
 
-; entry 0 of the `rst $00` table in EggServiceMenu_ChooseAndPay
+; entry 0 of the `rst $00` table in EggServiceMenu_ChooseAndPay; also entries 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14 of the table in EggServiceMenu_ChooseAndPay
 ; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_ChooseAndPay_ToBreedMenu::
 Jump_00D_473A:: ; address name
@@ -2153,7 +2153,7 @@ Func_00D_50E5:: ; address name
     dw CloseRenameMenu_ToCloseBreedMenu
     dw CloseRenameMenu_ToCloseBreedMenu
 
-; entry 0 of the `rst $00` table in CloseRenameMenu
+; entry 0 of the `rst $00` table in CloseRenameMenu; also entries 2, 3 of the table in CloseRenameMenu
 ; no direct call (reached through a table, a jump or a vector)
 CloseRenameMenu_ToCloseBreedMenu::
 Jump_00D_50F1:: ; address name
@@ -3574,7 +3574,7 @@ Jump_00D_5A5C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in KeyAppraisalMenu_ChooseKey
+; entry 6 of the `rst $00` table in KeyAppraisalMenu_ChooseKey; also entry 12 of the table in KeyAppraisalMenu_ChooseKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTwoChoiceCursor, wScreenSubStep, wScreenStep
@@ -6875,7 +6875,7 @@ Jump_00D_7144:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in NpcBreedMenu
+; entry 1 of the `rst $00` table in NpcBreedMenu; also entries 2, 3, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16 of the table in NpcBreedMenu
 ; no direct call (reached through a table, a jump or a vector)
 NpcBreedMenu_Return::
 Jump_00D_7158:: ; address name
@@ -6917,7 +6917,7 @@ Jump_00D_7159:: ; address name
     dw NpcBreedMenu_ChooseAndBreed_ToRestorePlayerPositionState_Bank0DAndStep
     dw NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D
 
-; entry 0 of the `rst $00` table in NpcBreedMenu_ChooseAndBreed
+; entry 0 of the `rst $00` table in NpcBreedMenu_ChooseAndBreed; also entries 1, 2, 3, 5, 6, 7, 8, 10, 11, 13, 14, 16 of the table in NpcBreedMenu_ChooseAndBreed
 ; no direct call (reached through a table, a jump or a vector)
 NpcBreedMenu_ChooseAndBreed_ToBreedMenu::
 Jump_00D_7195:: ; address name
@@ -6941,7 +6941,7 @@ Jump_00D_719C:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; entry 4 of the `rst $00` table in NpcBreedMenu_ChooseAndBreed
+; entry 4 of the `rst $00` table in NpcBreedMenu_ChooseAndBreed; also entry 5 of the table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
@@ -7495,7 +7495,7 @@ Jump_00D_7578:: ; address name
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
 
-; entry 2 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
+; entry 2 of the `rst $00` table in NpcBreedMenu_RedrawListScreen; also entries 3, 4, 8, 9 of the table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 NpcBreedMenu_RedrawListScreen_ToBreedMenu::
 Jump_00D_7590:: ; address name

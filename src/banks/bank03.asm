@@ -297,7 +297,7 @@ Jump_003_4218:: ; address name
     ld [wMenuPage], a
     ret
 
-; entry 1 of the `rst $00` table in Func_003_4208
+; entry 1 of the `rst $00` table in Func_003_4208; also entry 4 of the table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_State4_Sub01_ResetInventoryMenuToFirstPage::
 Jump_003_4235:: ; address name
@@ -3364,7 +3364,7 @@ Jump_003_53D5:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 1 of the `rst $00` table in PauseMenu_Items_UseItem; also entries 13, 20 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
 PauseMenu_Items_UseItem_BuildScreenBlock0EWithSubMenuCursorAndStep::
@@ -3489,7 +3489,7 @@ Jump_003_54A9:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 7 of the `rst $00` table in PauseMenu_Items_UseItem; also entries 14, 21 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemMessage
 ; writes: wStringCategory, wStringIndex, wTemp1
@@ -3512,7 +3512,7 @@ Jump_003_54B4:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 8 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 8 of the `rst $00` table in PauseMenu_Items_UseItem; also entry 15 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wItemId, wItemRecord
 ; writes: rRAMG, rRAMB, wTemp1
@@ -3550,7 +3550,7 @@ Jump_003_54D4:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 9 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 9 of the `rst $00` table in PauseMenu_Items_UseItem; also entry 16 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventorySlot
 ; writes: wStringIndex, wStringCategory
@@ -3583,7 +3583,7 @@ Jump_003_5512:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 10 of the `rst $00` table in PauseMenu_Items_UseItem; also entries 12, 17, 19 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage::
@@ -3594,7 +3594,7 @@ Jump_003_5547:: ; address name
     call ResetInventoryMenuToFirstPage
     ret
 
-; entry 11 of the `rst $00` table in PauseMenu_Items_UseItem
+; entry 11 of the `rst $00` table in PauseMenu_Items_UseItem; also entry 18 of the table in PauseMenu_Items_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemRecordByte0A, hTemp0
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wMenuPage, wMenuCursor

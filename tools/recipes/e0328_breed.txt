@@ -1,0 +1,24 @@
+# E-0328: breeding. The breeding script Script_15_764B is started by its four RAM bytes on Main Street (t02! of
+# e0327); Vanyl (Gulpple) is the base and Moahm the mate; the egg hatches and the child is named AB.
+@ e0327_shop_inn.txt
+br01! | t02! | wDataBank=0x15 wScriptInDataBank=1 wScriptPointerLo=0x4B wScriptPointerHi=0x76 wScriptStartRequest=0x80 wModeState=1 | W60
+br02! | br01! |  | A2 W60
+bb01! | br02! |  | D2 W30 A2 W60 D2 W30 A2 W80
+bb02! | bb01! |  | D2 W40
+bb03! | bb02! |  | A2 W40 D2 W30 A2 W80
+bb04! | bb03! |  | W60
+bb05! | bb04! |  | A2 W60
+bb06! | bb05! |  | A2 W50
+bb07! | bb06! |  | A2 W50
+bb08! | bb07! |  | A2 W50
+bb09! | bb08! |  | A2 W50
+bb10! | bb09! |  | A2 W80
+bb11! | bb10! |  | A2 W60
+bb12! | bb11! |  | A2 W60
+bb13! | bb12! |  | A2 W60
+bb14! | bb13! |  | A2 W60
+bb15! | bb14! |  | A2 W60
+bb16! | bb15! |  | A2 W60
+bb17! | bb16! |  | W200 A2 W60 A2 W60 A2 W60
+bb18! | bb17! |  | W100 A2 W60 A2 W60 A2 W60 A2 W60 A2 W60 A2 W100
+bb19! | bb18! |  | A2 W12 R2 W12 A2 W12 S W20 A2 W60 A2 W60

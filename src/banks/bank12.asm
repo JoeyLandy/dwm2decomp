@@ -32,7 +32,7 @@ Func_012_4013:: ; address name
     dw EncounterCounterMessage_ToStartMessageAAndStep
     dw CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12
 
-; entry 1 of the `rst $00` table in CountdownMessage
+; entry 1 of the `rst $00` table in CountdownMessage; also entry 1 of the table in EncounterCounterMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12::
@@ -391,7 +391,7 @@ Func_012_4210:: ; address name
     dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12
     dw ObjectPath1C_ClearBit2AtHL_Bank12
 
-; entry 11 of the `rst $00` table in ObjectPath1C
+; entry 11 of the `rst $00` table in ObjectPath1C; also entry 11 of the table in ObjectPath1B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 ; points at: hPlayerStateFlags
@@ -883,7 +883,7 @@ Func_012_44DB:: ; address name
     dw ArenaRounds_FullyHealParty
     dw ArenaRounds_RestartMapMusic
 
-; entry 25 of the `rst $00` table in ArenaRounds
+; entry 25 of the `rst $00` table in ArenaRounds; also entry 26 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: wTalkEventIndex, wTalkEventGroup, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, hSpriteWindowClipMode, wScriptCommandType, wScriptInDataBank
@@ -908,7 +908,7 @@ Jump_012_4515:: ; address name
     ld [wScriptInDataBank], a
     ret
 
-; entry 24 of the `rst $00` table in ArenaRounds
+; entry 24 of the `rst $00` table in ArenaRounds; also entry 25 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
 ArenaRounds_FullyHealParty::
@@ -929,7 +929,7 @@ Jump_012_4546:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 23 of the `rst $00` table in ArenaRounds
+; entry 23 of the `rst $00` table in ArenaRounds; also entry 24 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
@@ -967,7 +967,7 @@ Jump_012_4587:: ; address name
     dec [hl]
     ret
 
-; entry 18 of the `rst $00` table in ArenaRounds
+; entry 18 of the `rst $00` table in ArenaRounds; also entry 19 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 ArenaRounds_ToStartArenaRankMessageAndStep_Case12::
@@ -1002,7 +1002,7 @@ Jump_012_459F:: ; address name
     farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02
     ret
 
-; entry 10 of the `rst $00` table in ArenaRounds
+; entry 10 of the `rst $00` table in ArenaRounds; also entry 11 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 ArenaRounds_ToStartArenaRankMessageAndStep::
@@ -1013,7 +1013,7 @@ Jump_012_45CC:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in ArenaRounds
+; entry 9 of the `rst $00` table in ArenaRounds; also entry 17 of the table in ArenaRounds; entries 10, 18 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots, wFieldEventKind, wObject1, wObject2, wObject3
@@ -1048,7 +1048,7 @@ Jump_012_45D6:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in ArenaRounds
+; entry 8 of the `rst $00` table in ArenaRounds; also entry 16 of the table in ArenaRounds; entries 9, 17 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex
 ; writes: wMessageIndex, wSpriteSlotCount
@@ -1153,7 +1153,7 @@ Jump_012_461A:: ; address name
     jr nz, .loop
     ret
 
-; entry 7 of the `rst $00` table in ArenaRounds
+; entry 7 of the `rst $00` table in ArenaRounds; also entry 15 of the table in ArenaRounds; entries 8, 16 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest, wSpriteSlotCount, wFieldEventKind, wMessageIndex
 ; points at: wScriptStep
@@ -1206,7 +1206,7 @@ Jump_012_46D8:: ; address name
     farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02
     ret
 
-; entry 4 of the `rst $00` table in ArenaRounds
+; entry 4 of the `rst $00` table in ArenaRounds; also entries 12, 20 of the table in ArenaRounds; entries 5, 13, 21 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep
 ; points at: wScriptStep, wRecordCapacity
@@ -1238,7 +1238,7 @@ Jump_012_4705:: ; address name
     farcall SetModeState3AndSaveScreen
     ret
 
-; entry 3 of the `rst $00` table in ArenaRounds
+; entry 3 of the `rst $00` table in ArenaRounds; also entries 6, 11, 14, 19, 22 of the table in ArenaRounds; entries 4, 7, 12, 15, 20, 23 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMessageIndex
 ; points at: wScriptStep
@@ -1253,7 +1253,7 @@ Jump_012_473C:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ArenaRounds
+; entry 2 of the `rst $00` table in ArenaRounds; also entry 3 of the table in ArenaGridBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wScriptParam0, hPlayerY, hPlayerX, wScriptParam1
 ; writes: wMessageIndex, hFieldDrawFlags, hPlayerY, hPlayerFacing, hPlayerX, wFollowerRecords, wFieldEventKind, wScriptParam0, ...
@@ -1752,7 +1752,7 @@ Func_012_4A9A:: ; address name
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
 
-; entry 27 of the `rst $00` table in BreedChildScene
+; entry 27 of the `rst $00` table in BreedChildScene; also entry 16 of the table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wObject5, wSpriteSlotCount, wFieldEventKind, ...
@@ -1792,7 +1792,7 @@ Jump_012_4AC0:: ; address name
     ld [wScriptInDataBank], a
     ret
 
-; entry 26 of the `rst $00` table in BreedChildScene
+; entry 26 of the `rst $00` table in BreedChildScene; also entry 15 of the table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hSpriteWindowClipMode
@@ -1808,7 +1808,7 @@ Jump_012_4B0A:: ; address name
     ldh [hSpriteWindowClipMode], a
     ret
 
-; entry 25 of the `rst $00` table in BreedChildScene
+; entry 25 of the `rst $00` table in BreedChildScene; also entry 14 of the table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hSpriteWindowClipMode
 ; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi, wScriptParam0, hSpriteWindowClipMode
@@ -1865,7 +1865,7 @@ Jump_012_4B19:: ; address name
     ldh [hSpriteWindowClipMode], a
     ret
 
-; entry 21 of the `rst $00` table in BreedChildScene
+; entry 21 of the `rst $00` table in BreedChildScene; also entry 10 of the table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wObject5, wObject1
@@ -1892,7 +1892,7 @@ Jump_012_4B77:: ; address name
     inc [hl]
     ret
 
-; entry 20 of the `rst $00` table in BreedChildScene
+; entry 20 of the `rst $00` table in BreedChildScene; also entry 9 of the table in BreedChildSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
@@ -2048,7 +2048,7 @@ Jump_012_4C69:: ; address name
     inc [hl]
     ret
 
-; entry 18 of the `rst $00` table in LinkMessageEvent
+; entry 18 of the `rst $00` table in LinkMessageEvent; also entry 19 of the table in NpcBreedWarp; entry 19 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
@@ -2060,7 +2060,7 @@ Jump_012_4C97:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in LinkMessageEvent
+; entry 15 of the `rst $00` table in LinkMessageEvent; also entry 16 of the table in NpcBreedWarp; entry 16 of the table in BreedChildScene; entry 16 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12::
@@ -2072,7 +2072,7 @@ Jump_012_4CA0:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in LinkMessageEvent
+; entry 14 of the `rst $00` table in LinkMessageEvent; also entry 15 of the table in NpcBreedWarp; entry 15 of the table in BreedChildScene; entry 15 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 LinkMessageEvent_ToStartMessageAAndStep::
@@ -2083,7 +2083,7 @@ Jump_012_4CAA:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in LinkMessageEvent
+; entry 13 of the `rst $00` table in LinkMessageEvent; also entry 14 of the table in NpcBreedWarp; entry 14 of the table in BreedChildScene; entry 14 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldInitFlag, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
 LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc::
@@ -2092,7 +2092,7 @@ Jump_012_4CB4:: ; address name
     ld [wFieldInitFlag], a
     jp NpcBreedWarp_ScriptStartFadeAndAdvanceStep
 
-; entry 10 of the `rst $00` table in LinkMessageEvent
+; entry 10 of the `rst $00` table in LinkMessageEvent; also entry 20 of the table in LinkMessageEvent; entries 11, 21 of the table in NpcBreedWarp; entry 11 of the table in BreedChildScene; entry 6 of the table in BreedChildSprite; entries 11, 21 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots, wObject1, wObject2
@@ -2116,7 +2116,7 @@ Jump_012_4CBC:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in LinkMessageEvent
+; entry 7 of the `rst $00` table in LinkMessageEvent; also entry 8 of the table in NpcBreedWarp; entry 8 of the table in BreedChildScene; entry 8 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2
 ; writes: wObject2, wScriptParam0
@@ -2143,7 +2143,7 @@ Jump_012_4CDF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in LinkMessageEvent
+; entry 5 of the `rst $00` table in LinkMessageEvent; also entry 6 of the table in NpcBreedWarp; entry 6 of the table in BreedChildScene; entry 6 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject2
 ; points at: wScriptStep
@@ -2158,7 +2158,7 @@ Jump_012_4D05:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in LinkMessageEvent
+; entry 4 of the `rst $00` table in LinkMessageEvent; also entry 5 of the table in NpcBreedWarp; entry 5 of the table in BreedChildScene; entry 5 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject1
 ; writes: wObject1, wScriptParam0
@@ -2185,7 +2185,7 @@ Jump_012_4D15:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in LinkMessageEvent
+; entry 3 of the `rst $00` table in LinkMessageEvent; also entries 6, 8, 9, 11, 12, 17, 19, 21 of the table in LinkMessageEvent; entries 4, 7, 9, 10, 12, 13, 18, 20, 22 of the table in NpcBreedWarp; entries 4, 7, 9, 10, 12, 13, 18, 19, 22, 23, 24 of the table in BreedChildScene; entries 3, 5, 7, 8, 11, 12, 13 of the table in BreedChildSprite; entries 4, 7, 9, 10, 12, 13, 18, 20, 22 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03::
@@ -2197,7 +2197,7 @@ Jump_012_4D3B:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in LinkMessageEvent
+; entry 2 of the `rst $00` table in LinkMessageEvent; also entry 3 of the table in NpcBreedWarp; entry 3 of the table in BreedChildScene; entry 3 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
 ; points at: wScriptStep
@@ -2212,7 +2212,7 @@ Jump_012_4D46:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in LinkMessageEvent
+; entry 1 of the `rst $00` table in LinkMessageEvent; also entry 16 of the table in LinkMessageEvent; entries 2, 17 of the table in NpcBreedWarp; entry 2 of the table in BreedChildScene; entry 2 of the table in BreedChildSprite; entries 2, 17 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots
@@ -2230,7 +2230,7 @@ Jump_012_4D56:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in LinkMessageEvent
+; entry 0 of the `rst $00` table in LinkMessageEvent; also entry 1 of the table in NpcBreedWarp; entry 1 of the table in BreedChildScene; entry 1 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hFieldDrawFlags
 ; writes: hSpriteWindowClipMode, hFieldDrawFlags, wObject1, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
@@ -2288,7 +2288,7 @@ Jump_012_4D6B:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in NpcBreedWarp
+; entry 0 of the `rst $00` table in NpcBreedWarp; also entry 0 of the table in BreedChildScene; entry 0 of the table in BreedChildSprite; entry 0 of the table in BreedFade
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
 NpcBreedWarp_ScriptStartFadeAndAdvanceStep::
@@ -2522,7 +2522,7 @@ Func_012_4F1E:: ; address name
     dw FollowersStep10_UpdateFollowersOnStep_Bank12
     dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
 
-; entry 2 of the `rst $00` table in FollowersStep14
+; entry 2 of the `rst $00` table in FollowersStep14; also entry 4 of the table in WarpWithFollowers; entry 5 of the table in PlayerAndFollowersStep; entry 2 of the table in FollowersStep11; entry 5 of the table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wPartyCount
 ; writes: wScriptStartRequest
@@ -2574,7 +2574,7 @@ Jump_012_4F5C:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in PlayerAndFollowersStep
+; entry 3 of the `rst $00` table in PlayerAndFollowersStep; also entry 3 of the table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFieldActionRequest
 ; points at: wScriptStep
@@ -2589,7 +2589,7 @@ Jump_012_4F77:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in PlayerAndFollowersStep
+; entry 2 of the `rst $00` table in PlayerAndFollowersStep; also entry 2 of the table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
 ; writes: wFieldActionRequest, wScreenScrollDir, hPlayerStateFlags, hPlayerStepDYLo, hPlayerStepDYHi
@@ -2616,7 +2616,7 @@ Jump_012_4F8E:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in FollowersStep14
+; entry 1 of the `rst $00` table in FollowersStep14; also entry 1 of the table in WarpWithFollowers; entry 1 of the table in PlayerAndFollowersStep; entry 1 of the table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: hPlayerY
@@ -2638,7 +2638,7 @@ Jump_012_4FBC:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in FollowersStep14
+; entry 0 of the `rst $00` table in FollowersStep14; also entry 0 of the table in WarpWithFollowers; entry 0 of the table in PlayerAndFollowersStep; entry 0 of the table in FollowersStep11; entry 0 of the table in FollowersStep10
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing
 ; points at: hPlayerStateFlags, wScriptStep
@@ -2698,7 +2698,7 @@ Jump_012_5007:: ; address name
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
 
-; entry 3 of the `rst $00` table in PlayerSpriteFlash
+; entry 3 of the `rst $00` table in PlayerSpriteFlash; also entries 5, 6 of the table in PlayerSpriteFlash
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: wScriptParam0, hPlayerFacing
@@ -3290,7 +3290,7 @@ Func_012_5534:: ; address name
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
     dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
 
-; entry 1 of the `rst $00` table in HealPartyEvent
+; entry 1 of the `rst $00` table in HealPartyEvent; also entry 2 of the table in ReturnWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots, wObject1
 ; points at: wScriptStep
@@ -3332,7 +3332,7 @@ Jump_012_5573:: ; address name
     ld [wFieldTransitionStep], a
     ret
 
-; entry 0 of the `rst $00` table in MapLinkWarp
+; entry 0 of the `rst $00` table in MapLinkWarp; also entry 0 of the table in MapExitWarp; entry 0 of the table in ReturnWarp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0, wFollowerRecords, hPlayerFacing, hPlayerStateFlags
 ; writes: hPlayerY, hPlayerFacing, wFollowerRecords, hPlayerStateFlags
@@ -3478,7 +3478,7 @@ Jump_012_5633:: ; address name
     call StartMessageA
     ret
 
-; entry 2 of the `rst $00` table in HealPartyEvent
+; entry 2 of the `rst $00` table in HealPartyEvent; also entry 3 of the table in ReturnWarp; entry 1 of the table in ReturnMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
@@ -3502,7 +3502,7 @@ Jump_012_5668:: ; address name
     call QueueSoundEffect
     ret
 
-; entry 4 of the `rst $00` table in HealPartyEvent
+; entry 4 of the `rst $00` table in HealPartyEvent; also entry 5 of the table in ReturnWarp; entry 3 of the table in ReturnMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wScriptParam0, wScriptStep
 ; writes: rRAMG, wScriptParam0, wScriptStep, hFieldDrawFlags
@@ -3567,7 +3567,7 @@ Jump_012_5689:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in HealPartyEvent
+; entry 5 of the `rst $00` table in HealPartyEvent; also entry 6 of the table in ReturnWarp; entry 4 of the table in ReturnMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest, hFieldDrawFlags
 ; points at: wScriptStep
@@ -3595,7 +3595,7 @@ Jump_012_56E8:: ; address name
     call StartMessageA
     ret
 
-; entry 6 of the `rst $00` table in HealPartyEvent
+; entry 6 of the `rst $00` table in HealPartyEvent; also entry 7 of the table in ReturnWarp; entry 5 of the table in ReturnMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
 HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06::
@@ -3882,7 +3882,7 @@ Jump_012_5868:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in KeyWorldBossBattle
+; entry 6 of the `rst $00` table in KeyWorldBossBattle; also entry 4 of the table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wSpriteSlotCount, wScriptParam0
@@ -3929,7 +3929,7 @@ Jump_012_589B:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in KeyWorldBossBattle
+; entry 5 of the `rst $00` table in KeyWorldBossBattle; also entry 3 of the table in KeyWorldFloorBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
@@ -5001,7 +5001,7 @@ Func_012_5EE7:: ; address name
     dw FieldScene01_Sub03_WaitFieldActionRequest
     dw FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09
 
-; entry 4 of the `rst $00` table in Func_012_5DB6
+; entry 4 of the `rst $00` table in Func_012_5DB6; also entry 4 of the table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 FieldScene01_Sub02_StepScriptParam0Counter_Bank12::
@@ -5013,7 +5013,7 @@ Jump_012_5F06:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_012_5DB6
+; entry 5 of the `rst $00` table in Func_012_5DB6; also entry 5 of the table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing, wFollowerRecords
 ; writes: wStepPtrLo, wStepPtrHi, hPlayerFacing, wScriptParam0
@@ -5307,7 +5307,7 @@ Jump_012_6077:: ; address name
     dec [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_012_5DB6
+; entry 6 of the `rst $00` table in Func_012_5DB6; also entry 6 of the table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags
@@ -5579,7 +5579,7 @@ Jump_012_6247:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in KeyWorldDoorItem
+; entry 1 of the `rst $00` table in KeyWorldDoorItem; also entry 3 of the table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
 KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12::
@@ -6354,7 +6354,7 @@ Jump_012_668A:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunMessageBox_Bank12
+; entry 3 of the `rst $00` table in RunMessageBox_Bank12; also entry 3 of the table in RunMessageBoxStateIfActive_Bank12; entry 3 of the table in Func_012_6787
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wMessageState
@@ -7298,7 +7298,7 @@ Func_012_6B98:: ; address name
     dw RunFieldCommandTemp0_WriteObject5_Case14
     dw RunFieldCommandTemp0_WriteObject5_Case14
 
-; entry 20 of the `rst $00` table in RunFieldCommandTemp0
+; entry 20 of the `rst $00` table in RunFieldCommandTemp0; also entry 21 of the table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 RunFieldCommandTemp0_WriteObject5_Case14::
@@ -7433,7 +7433,7 @@ Jump_012_6C59:: ; address name
     ld [wObject5], a
     ret
 
-; entry 13 of the `rst $00` table in RunFieldCommandTemp0
+; entry 13 of the `rst $00` table in RunFieldCommandTemp0; also entry 14 of the table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 RunFieldCommandTemp0_WriteObject5_Case0D::

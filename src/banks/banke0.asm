@@ -4185,7 +4185,7 @@ Jump_0E0_6120:: ; address name
     ld [wSpriteSlots + $F], a
     ret
 
-; entry 6 of the `rst $00` table in DebugStaffRoll_Scene01
+; entry 6 of the `rst $00` table in DebugStaffRoll_Scene01; also entries 10, 14, 18 of the table in DebugStaffRoll_Scene01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
@@ -4217,7 +4217,7 @@ Jump_0E0_6165:: ; address name
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; entry 9 of the `rst $00` table in DebugStaffRoll_Scene01
+; entry 9 of the `rst $00` table in DebugStaffRoll_Scene01; also entries 13, 17 of the table in DebugStaffRoll_Scene01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
@@ -4249,7 +4249,7 @@ Jump_0E0_6194:: ; address name
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; entry 7 of the `rst $00` table in DebugStaffRoll_Scene01
+; entry 7 of the `rst $00` table in DebugStaffRoll_Scene01; also entries 11, 15, 19 of the table in DebugStaffRoll_Scene01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
@@ -4281,7 +4281,7 @@ Jump_0E0_61C3:: ; address name
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; entry 8 of the `rst $00` table in DebugStaffRoll_Scene01
+; entry 8 of the `rst $00` table in DebugStaffRoll_Scene01; also entries 12, 16 of the table in DebugStaffRoll_Scene01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1

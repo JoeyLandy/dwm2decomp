@@ -7130,7 +7130,7 @@ Jump_004_69D9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 0 of the `rst $00` table in FieldTalkEvents
+; entry 0 of the `rst $00` table in FieldTalkEvents; also entries 3, 39 of the table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
 FieldTalkEvents_Return::

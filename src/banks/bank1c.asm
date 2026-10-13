@@ -61,7 +61,7 @@ Func_01C_4001:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10 (E-0038, E-0244)
+; implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10 (E-0038, E-0244) (C2 from E-0327: the Kalka inn's stay costs 10G and runs it)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0)
 ; reads: wScreenState
 InnMenu::
@@ -289,7 +289,7 @@ Jump_01C_41E6:: ; address name
     inc [hl]
     ret
 
-; for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max MP ($61) to MP ($5F) (E-0276)
+; for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max MP ($61) to MP ($5F) (E-0276) (C2 from E-0327: a stay turns HP 5/21 and MP 7/35 into 21/21 and 35/35)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, hTemp0, wArg5, wArg6, wArg7, wArg8
 ; writes: rRAMG2, rRAMB, wArg5, wArg6, wArg7, wArg8
@@ -967,7 +967,7 @@ Data_01C_4598:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; adds the 24-bit wArg1-wArg3 to the gold, capped at 99,999 ($01869F) (E-0127)
+; adds the 24-bit wArg1-wArg3 to the gold, capped at 99,999 ($01869F) (E-0127) (C2 from E-0327: selling a Herb at 99,999 gold leaves 99,999)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_AddArg1ToGoldCapped99999, ArenaMenu_AddArg1ToGoldCapped99999)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wArg1, wArg2, wArg3
 ; writes: wGoldHi, wGoldMid, wGoldLo
@@ -1121,7 +1121,7 @@ Jump_01C_465B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through ScriptCommandE2 in bank $10 (E-0038, E-0244)
+; implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through ScriptCommandE2 in bank $10 (E-0038, E-0244) (C2 from E-0327: GreatLog's merchant opens it with Buy / Sell / Exit)
 ; 1 call site from 1 routine (e.g. ScriptCommandE2)
 ; reads: wScreenState
 ShopMenu::
@@ -1480,7 +1480,7 @@ Jump_01C_488E:: ; address name
     dw ShopMenu_Buy_DrawTwoBoxesAndRequestScript80
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10
 
-; entry 0 of the `rst $00` table in ShopMenu_Buy
+; entry 0 of the `rst $00` table in ShopMenu_Buy; also entry 0 of the table in ShopMenu_Sell
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rSTAT, wIsCGB, wScreenStep
 ; writes: rVBK, wScreenStep
@@ -1536,7 +1536,7 @@ Jump_01C_48B4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in ShopMenu_Buy
+; entry 1 of the `rst $00` table in ShopMenu_Buy; also entry 1 of the table in ShopMenu_Sell
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -2909,7 +2909,7 @@ Jump_01C_507C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in ShopMenu_Buy
+; entry 11 of the `rst $00` table in ShopMenu_Buy; also entry 10 of the table in ShopMenu_Sell
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5160,7 +5160,7 @@ Func_01C_5F26:: ; address name
     pop de
     ret
 
-; BC = the ItemValueTable word at DE (DE = 2 * item) times ShopPercentTable[wScreenTableIndex], divided by 100 (E-0237, E-0276)
+; BC = the ItemValueTable word at DE (DE = 2 * item) times ShopPercentTable[wScreenTableIndex], divided by 100 (E-0237, E-0276) (C2 from E-0327: the sell list shows Herb 7G, LoveWater 37G, WorldDew 375G and Potion 150G for values 10, 50, 500 and 200 at 75%)
 ; 3 call sites from 3 routines (e.g. ShopMenu_Sell_Case08_WriteThreeDigits, ShopMenu_Sell_ResetTextCounter0Counters, ShopMenu_Sell_ComputeSellPrice)
 ; reads: wScreenTableIndex
 ComputeSellPrice::
@@ -5463,7 +5463,7 @@ Data_01C_6302:: ; address name
     db $B6, $C3, $A5, $EE, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0237 (C1: ShopMenu_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0).
+; E-0237 (C1: ShopMenu_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0). C2 from E-0327: the sell price, by the shop's index (GreatLog's merchant sets 0, 75%); the buy price is the ItemValueTable word itself.
 ; record: percentage
 ShopPercentTable::
 Data_01C_6320:: ; address name
@@ -5492,7 +5492,7 @@ Data_01C_6320:: ; address name
     db $50 ; id 22
     db $50 ; id 23
 
-; E-0237 (C1: ShopMenu_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE).
+; E-0237 (C1: ShopMenu_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE). C2 from E-0327: the value of each item id: a shop buys at it (Herb 10G, LoveWater 50G, Antidote 4G) and sells at value * ShopPercentTable / 100 (Herb 7G, LoveWater 37G, WorldDew 375G, Potion 150G at 75%).
 ; record: value
 ItemValueTable::
 Data_01C_6338:: ; address name
@@ -7339,14 +7339,14 @@ Jump_01C_6F27:: ; address name
     dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
     dw VaultMenu_Store_ClearRect147AndAskTwoChoice
 
-; entry 0 of the `rst $00` table in VaultMenu_Store
+; entry 0 of the `rst $00` table in VaultMenu_Store; also entry 0 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case00_WaitForVRAMAccess::
 Jump_01C_6F5D:: ; address name
     farcall VaultMenu_Store_Case00_WaitForVRAMAccess
     ret
 
-; entry 1 of the `rst $00` table in VaultMenu_Store
+; entry 1 of the `rst $00` table in VaultMenu_Store; also entry 1 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -7361,7 +7361,7 @@ Jump_01C_6F64:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in VaultMenu_Store
+; entry 2 of the `rst $00` table in VaultMenu_Store; also entry 2 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenByteED, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -7386,7 +7386,7 @@ Jump_01C_6F93:: ; address name
     farcall VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc
     ret
 
-; entry 4 of the `rst $00` table in VaultMenu_Store
+; entry 4 of the `rst $00` table in VaultMenu_Store; also entry 4 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState, wScreenStep, wTwoChoiceCursor, wScreenByteED, wScriptCommandType, wScriptStartRequest
 VaultMenu_Store_SetScreenState::
@@ -7404,14 +7404,14 @@ Jump_01C_6F9A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in VaultMenu_Store
+; entry 5 of the `rst $00` table in VaultMenu_Store; also entry 5 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep::
 Jump_01C_6FB5:: ; address name
     farcall DrawRect0088AtBGMap1370AndStep
     ret
 
-; entry 6 of the `rst $00` table in VaultMenu_Store
+; entry 6 of the `rst $00` table in VaultMenu_Store; also entry 6 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter
 ; writes: wScreenCounter
@@ -7428,7 +7428,7 @@ Jump_01C_6FBC:: ; address name
     farcall DrawRect0140AtBGMap13E0AndStep
     ret
 
-; entry 9 of the `rst $00` table in VaultMenu_Store
+; entry 9 of the `rst $00` table in VaultMenu_Store; also entry 9 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wItemGridY, wScreenCounter, wCursorBlinkB8, wGlyphListPos, wScreenStep
 ; writes: wCursorBlinkB8, wGlyphListPos, wScreenCounter, wScreenStep
@@ -7575,35 +7575,35 @@ Jump_01C_6FD5:: ; address name
 .return:
     ret
 
-; entry 7 of the `rst $00` table in VaultMenu_Store
+; entry 7 of the `rst $00` table in VaultMenu_Store; also entry 7 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
 Jump_01C_70B8:: ; address name
     farcall VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D
     ret
 
-; entry 8 of the `rst $00` table in VaultMenu_Store
+; entry 8 of the `rst $00` table in VaultMenu_Store; also entry 8 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case08_HLToDecimalDigits::
 Jump_01C_70BF:: ; address name
     farcall VaultMenu_Store_Case08_HLToDecimalDigits
     ret
 
-; entry 10 of the `rst $00` table in VaultMenu_Store
+; entry 10 of the `rst $00` table in VaultMenu_Store; also entry 10 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
 Jump_01C_70C6:: ; address name
     farcall VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc
     ret
 
-; entry 11 of the `rst $00` table in VaultMenu_Store
+; entry 11 of the `rst $00` table in VaultMenu_Store; also entry 11 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 Jump_01C_70CD:: ; address name
     farcall VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
     ret
 
-; entry 12 of the `rst $00` table in VaultMenu_Store
+; entry 12 of the `rst $00` table in VaultMenu_Store; also entry 12 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
 VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C::
@@ -7628,14 +7628,14 @@ Jump_01C_70D4:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 13 of the `rst $00` table in VaultMenu_Store
+; entry 13 of the `rst $00` table in VaultMenu_Store; also entry 13 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 Jump_01C_7103:: ; address name
     farcall VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     ret
 
-; entry 14 of the `rst $00` table in VaultMenu_Store
+; entry 14 of the `rst $00` table in VaultMenu_Store; also entry 14 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 VaultMenu_Store_ReadScreenState::
@@ -7652,7 +7652,7 @@ Jump_01C_710A:: ; address name
     farcall VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory
     ret
 
-; entry 15 of the `rst $00` table in VaultMenu_Store
+; entry 15 of the `rst $00` table in VaultMenu_Store; also entry 15 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_InitItemListScreenListAndDraw::
 Jump_01C_7128:: ; address name
@@ -7660,7 +7660,7 @@ Jump_01C_7128:: ; address name
     farcall VaultMenu_Store_Case0F_WriteScreenStepAndScriptCommandTypeEtc
     ret
 
-; entry 16 of the `rst $00` table in VaultMenu_Store
+; entry 16 of the `rst $00` table in VaultMenu_Store; also entry 16 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScreenStep
 VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10::
@@ -7683,21 +7683,21 @@ Jump_01C_7132:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in VaultMenu_Store
+; entry 17 of the `rst $00` table in VaultMenu_Store; also entry 17 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos::
 Jump_01C_715C:: ; address name
     farcall DrawRect0147AndResetNumberEditPos
     ret
 
-; entry 19 of the `rst $00` table in VaultMenu_Store
+; entry 19 of the `rst $00` table in VaultMenu_Store; also entry 19 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD::
 Jump_01C_7163:: ; address name
     farcall VaultMenu_Store_Number24ToPackedBCD
     ret
 
-; entry 18 of the `rst $00` table in VaultMenu_Store
+; entry 18 of the `rst $00` table in VaultMenu_Store; also entry 18 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -7716,7 +7716,7 @@ Jump_01C_716A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 20 of the `rst $00` table in VaultMenu_Store
+; entry 20 of the `rst $00` table in VaultMenu_Store; also entry 20 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 VaultMenu_Store_ToVaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
 Jump_01C_7188:: ; address name
@@ -7755,7 +7755,7 @@ Func_01C_7196:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 23 of the `rst $00` table in VaultMenu_Store
+; entry 23 of the `rst $00` table in VaultMenu_Store; also entry 23 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptCommandType, wScriptStartRequest
 ; points at: wScreenList, wScreenBlock92
@@ -7788,7 +7788,7 @@ Jump_01C_71C6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 24 of the `rst $00` table in VaultMenu_Store
+; entry 24 of the `rst $00` table in VaultMenu_Store; also entry 24 of the table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState, wScreenStep
 VaultMenu_Store_ClearRect147AndAskTwoChoice::

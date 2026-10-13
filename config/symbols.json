@@ -464,8 +464,8 @@
   },
   "C7CC": {
     "name": "wSpeciesFlags",
-    "note": "one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070)",
-    "evidence": "reading (E-0070)"
+    "note": "one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070) (C2 from E-0329: the library's per-family counts are the set bits counted by family)",
+    "evidence": "reading (E-0070); E-0329"
   },
   "C617": {
     "name": "wGoldLo",

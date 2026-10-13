@@ -1,7 +1,8 @@
 """Draw the background, window and sprite layers of a tools/sm83.py GameBoy as a PNG (E-0319, E-0320).
 
 A diagnostic picture of VRAM at one moment: the CGB tile map attributes (palette, tile bank, flips) and palette
-RAM are used, and OAM sprites are drawn on top; mid-frame scroll changes and priority are not. Standard library only."""
+RAM are used, OAM sprites are drawn on top, and when tools/play.py recorded the registers of each scanline those are
+used (mid-frame window and scroll changes); priority is not. Standard library only."""
 import struct
 import zlib
 from pathlib import Path
@@ -27,16 +28,22 @@ def render(gb) -> list[list[tuple[int, int, int]]]:
         c = (lo >> (7 - tx) & 1) | (hi >> (7 - tx) & 1) << 1
         return _rgb(gb.bgpal, attr & 7, c)
 
-    bg = 0x1C00 if lcdc & 0x08 else 0x1800
-    win = 0x1C00 if lcdc & 0x40 else 0x1800
+    lines = getattr(gb, "line_regs", None) or [None] * 144
     out = []
+    win_line = 0  # the window's own line counter advances only on lines where it is drawn
     for y in range(144):
+        if lines[y]:  # the registers this line was drawn with, recorded by tools/play.py
+            lcdc, scy, scx, wy, wx = lines[y][0], lines[y][1], lines[y][2], lines[y][3], lines[y][4] - 7
+        bg = 0x1C00 if lcdc & 0x08 else 0x1800
+        win = 0x1C00 if lcdc & 0x40 else 0x1800
+        shown = lcdc & 0x20 and y >= wy and wx < 160
         row = []
         for x in range(160):
-            if lcdc & 0x20 and y >= wy and x >= wx:
-                row.append(pixel(win, x - wx, y - wy))
+            if shown and x >= wx:
+                row.append(pixel(win, x - wx, win_line))
             else:
                 row.append(pixel(bg, (x + scx) & 0xFF, (y + scy) & 0xFF))
+        win_line += bool(shown)
         out.append(row)
     if lcdc & 0x02:  # sprites from OAM, drawn over everything (priority ignored); colour 0 is transparent
         h = 16 if lcdc & 0x04 else 8

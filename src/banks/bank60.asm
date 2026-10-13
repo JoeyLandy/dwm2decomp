@@ -3322,7 +3322,7 @@ Func_060_5EE1:: ; address name
     dw RunRandomPatternCase_WriteTempA_Case03
     db $C9, $C9
 
-; entry 3 of the `rst $00` table in RunRandomPatternCase
+; entry 3 of the `rst $00` table in RunRandomPatternCase; also entries 9, 15 of the table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
@@ -3439,7 +3439,7 @@ Jump_060_5F0C:: ; address name
     ld a, $01
     ret
 
-; entry 2 of the `rst $00` table in RunRandomPatternCase
+; entry 2 of the `rst $00` table in RunRandomPatternCase; also entries 4, 8, 10, 14 of the table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
@@ -3517,7 +3517,7 @@ Jump_060_5FBF:: ; address name
     ld a, $01
     ret
 
-; entry 1 of the `rst $00` table in RunRandomPatternCase
+; entry 1 of the `rst $00` table in RunRandomPatternCase; also entries 5, 7, 11, 13 of the table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
@@ -3593,7 +3593,7 @@ Jump_060_6031:: ; address name
     ld a, $01
     ret
 
-; entry 0 of the `rst $00` table in RunRandomPatternCase
+; entry 0 of the `rst $00` table in RunRandomPatternCase; also entries 6, 12 of the table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTempA
 ; writes: hTempA

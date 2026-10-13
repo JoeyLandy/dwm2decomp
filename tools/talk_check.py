@@ -36,19 +36,10 @@ def words_of(raw: bytes) -> str:
 def check_one(base: bytes, bank: int, addr: int, frames: int = 240):
     """(bank, DE, category, index, raw bytes) of the first LookupString after calling bank:addr, or None."""
     gb = pickle.loads(base)
-    for _ in range(200000):  # to the main loop's halt, outside an interrupt
-        if gb.halted and gb.pc < 0x4000 and gb.ime:
-            break
-        gb.tick(gb.step() if not gb.halted else 456 - gb.line_cycles)
-        gb.service()
-    else:
-        return None
     for i in range(0x6B):  # story flags cleared: the name quotes the flag-clear path's message
         gb.wb(wStoryFlags + i, 0)
-    gb.halted = False
-    gb.push(gb.pc)
-    gb.rombank = bank
-    gb.pc = addr
+    if not play.call_at_halt(gb, bank, addr):
+        return None
     end = gb.cycles + frames * play.FRAME
     while gb.cycles < end:
         if gb.pc == LOOKUP_STRING_RET:

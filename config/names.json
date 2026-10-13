@@ -2004,8 +2004,8 @@
   },
   "1C:4075": {
     "name": "InnMenu",
-    "note": "implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10 (E-0038, E-0244) (C2 from E-0327: the Kalka inn's stay costs 10G and runs it)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0327"
   },
   "1C:4001": {
     "name": "CloseInnMenu",
@@ -2014,8 +2014,8 @@
   },
   "1C:4696": {
     "name": "ShopMenu",
-    "note": "implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through ScriptCommandE2 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through ScriptCommandE2 in bank $10 (E-0038, E-0244) (C2 from E-0327: GreatLog's merchant opens it with Buy / Sell / Exit)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0327"
   },
   "1C:4605": {
     "name": "CloseShopMenu",
@@ -2054,8 +2054,8 @@
   },
   "15:40FA": {
     "name": "BreedMenu",
-    "note": "implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244) (C2 from E-0328: started by its script, it shows Breed / Hatch / Exit, takes a base and a mate, removes both parents' records and adds the hatched, named child)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0328"
   },
   "15:4001": {
     "name": "CloseBreedMenu",
@@ -2094,8 +2094,8 @@
   },
   "0C:4001": {
     "name": "LibraryMenu",
-    "note": "implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244) (C2 from E-0329: started by its script it shows one count per family on two pages)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0329"
   },
   "0C:659F": {
     "name": "ArenaMenu",
@@ -2104,8 +2104,8 @@
   },
   "24:60DB": {
     "name": "PriestMenu",
-    "note": "implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244)",
-    "evidence": "structure of the stub (farcall and ret) (E-0038)"
+    "note": "implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244) (C2 from E-0330: Revive / De-Tox / Uncurse / Exit; a revival costs 25G here)",
+    "evidence": "structure of the stub (farcall and ret) (E-0038); E-0330"
   },
   "00:1FE3": {
     "name": "LoadMonsterPicture",
@@ -2525,7 +2525,7 @@
   "16:6A36": {"name": "CopyMonsterNameOfDisplaySlotToDE", "note": "copies the name of the monster in slot wDAAB to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)", "evidence": "reading + data (E-0069)"},
   "16:5A7E": {"name": "TestSpeciesFlag", "note": "monster id = wSpeciesIdLo/Hi: HL = wSpeciesFlags + id / 8, B = the mask 1 << (id & 7) (Data_016_5AA7); C = A = [HL] & B, so Z is set when the species' bit is clear (E-0070)", "evidence": "reading (E-0070)"},
   "16:5AAF": {"name": "SetSpeciesFlag", "note": "sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)", "evidence": "reading (E-0070)"},
-  "16:5AC0": {"name": "CountSpeciesPerFamilyFlaggedOrListed", "note": "zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)", "evidence": "reading (E-0070)"},
+  "16:5AC0": {"name": "CountSpeciesPerFamilyFlaggedOrListed", "note": "zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070) (C2 from E-0329 for the flag source: the library's 11 counts equal the flagged species per family; the list was empty)", "evidence": "reading (E-0070); E-0329"},
   "00:1E29": {"name": "DrawFullScreenBufferToBGMap", "note": "HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)", "evidence": "reading (E-0071)"},
   "00:15DE": {"name": "CopyRectFromBankToVRAM", "note": "A = ROM bank, DE = source in that bank, B = width, C = rows, HL = VRAM with rows 32 bytes apart: switches to the bank, copies the rectangle with WriteVRAMByteInc (interrupts off per byte; source rows packed), then restores the bank; B kept (E-0071)", "evidence": "reading (E-0071)"},
   "00:2431": {"name": "CopyItemNameToDE", "note": "A = item number: with ROM bank $08 mapped, copies that string of StringTable_ItemNames, including its $F0 terminator, to DE; restores the bank (E-0071)", "evidence": "reading (E-0071)"},
@@ -3476,7 +3476,7 @@
   "1D:62AD": {"name": "DrawRecordListNameTiles_Bank1D", "note": "with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)", "evidence": "reading (E-0106)"},
   "1D:75C7": {"name": "CopyTenBytesThenSelectSRAMBank0", "note": "copies 10 bytes from HL to DE, selecting SRAM bank 0 (rRAMB = 0) after each byte is read; HL and DE advance (E-0106)", "evidence": "reading (E-0106)"},
   "12:7DF1": {"name": "RemoveInventorySlotShiftDown", "note": "hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)", "evidence": "reading (E-0106)"},
-  "15:683C": {"name": "SubtractArg1AmountFromGold", "note": "wGold -= the 24-bit amount wD7F3:wD7F2:wD7F1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106)", "evidence": "reading (E-0106)"},
+  "15:683C": {"name": "SubtractArg1AmountFromGold", "note": "wGold -= the 24-bit amount wD7F3:wD7F2:wD7F1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106) (C2 from E-0327: buying a Herb at 10G turns 99,999 into 99,989)", "evidence": "reading (E-0106); E-0327"},
   "15:6676": {"name": "UnpackBCDToDigitsArg1", "note": "wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)", "evidence": "reading (E-0106)"},
   "1E:7564": {"name": "DrawPageOfPagesAtScrollOffset", "note": "HL = BGMapAddressAtScroll + the offset in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two entries later, each through StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (current page and page count) (E-0106)", "evidence": "reading (E-0106)"},
   "F1:4870": {"name": "UpdateMenuCursor_BankF1", "note": "the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
@@ -4879,7 +4879,7 @@
   "1C:449F": {"name": "DrawScreenBufferRectToBGMap_1C", "note": "copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)", "evidence": "reading (E-0127)"},
   "1B:7205": {"name": "ClearRecordPanelTiles", "note": "clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)", "evidence": "reading (E-0127)"},
   "1B:74DC": {"name": "ClearTileRowsFromPickCount", "note": "clears the 6-tile rows of vTiles2 + $100-$220 from row wD7DC onward, then restores the default window (E-0127)", "evidence": "reading (E-0127)"},
-  "1C:45B0": {"name": "AddArg1ToGoldCapped99999", "note": "adds the 24-bit wD7F1-wD7F3 to the gold, capped at 99,999 ($01869F) (E-0127)", "evidence": "reading (E-0127)"},
+  "1C:45B0": {"name": "AddArg1ToGoldCapped99999", "note": "adds the 24-bit wD7F1-wD7F3 to the gold, capped at 99,999 ($01869F) (E-0127) (C2 from E-0327: selling a Herb at 99,999 gold leaves 99,999)", "evidence": "reading (E-0127); E-0327"},
   "1C:689A": {"name": "ListDistinctInventoryItemsToItemGrid", "note": "clears wD7D5 ($18 bytes) and lists each item id 1-$62 present in the inventory, counting them in wD785 (E-0127)", "evidence": "reading (E-0127)"},
   "1C:69D5": {"name": "CopyTileListFromBank1F_1C", "note": "for each entry from wD783 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then wD781 += 1 (E-0127)", "evidence": "reading (E-0127)"},
   "1C:7252": {"name": "InitItemListScreenListAndDraw", "note": "copies $20 bytes from Data_01C_5F5E to wD788, counts the inventory items into wD7B0 and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)", "evidence": "reading (E-0127)"},
@@ -5102,7 +5102,7 @@
   "01:6903": {"name": "DebugBattleSetupShowFieldString", "note": "debug battle setup: shows the string for field wC46B (wD09D entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)", "evidence": "reading (E-0131)"},
   "03:5AA7": {"name": "DrawItemTargetStatPreview", "note": "for item wItemId (kind Data_003_5C8B) writes the target record's affected value (HP, MP or a stat word) as digits in the item screen (E-0131)", "evidence": "reading (E-0131)"},
   "0A:43EC": {"name": "TickRandomEncounterCounter", "note": "in the field when nothing blocks it: counts down the encounter or talk timers (wC901, wD091) and starts a battle or talk event when they expire (E-0131)", "evidence": "reading (E-0131)"},
-  "0E:5688": {"name": "ComputeBreedingChild", "note": "clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)", "evidence": "reading (E-0131)"},
+  "0E:5688": {"name": "ComputeBreedingChild", "note": "clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131) (C2 from E-0328: in BreedMenu's preview, base Gulpple (family 4) with a family-3 mate gives WingTree and with a family-5 mate CactiBall, FamilyPairResultTable[4][3] and [4][5], since neither species has a rule list; the hatched child is level 1 with the user's name as master)", "evidence": "reading (E-0131); E-0328"},
   "11:4130": {"name": "CheckWarpsAtPlayerPosition", "note": "special maps use CheckWarpsByMapType; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)", "evidence": "reading (E-0131)"},
   "14:7E96": {"name": "DeleteSRAMRecordAndCompact", "note": "clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)", "evidence": "reading (E-0131)"},
   "15:6B00": {"name": "ShowSaveFileInfoWindow", "note": "clears the text tiles and, when the save is valid, shows the save details (player name, play time, party) from SRAM in the window (E-0131)", "evidence": "reading (E-0131)"},
@@ -7116,7 +7116,7 @@
   "1C:4785": {"name": "ShopMenu_ChooseAction", "note": "the shop's choice menu: Up/Down move the cursor, A selects, B leaves (E-0276)", "evidence": "reading (E-0276)"},
   "1C:488E": {"name": "ShopMenu_Buy", "note": "buying: items from ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and SubtractArg1AmountFromGold (E-0276)", "evidence": "reading (E-0276)"},
   "1C:5476": {"name": "ShopMenu_Sell", "note": "selling: items from the inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0276)", "evidence": "reading (E-0276)"},
-  "1C:5F3E": {"name": "ComputeSellPrice", "note": "BC = the ItemValueTable word at DE (DE = 2 * item) times ShopPercentTable[wScreenTableIndex], divided by 100 (E-0237, E-0276)", "evidence": "reading (E-0276)"},
+  "1C:5F3E": {"name": "ComputeSellPrice", "note": "BC = the ItemValueTable word at DE (DE = 2 * item) times ShopPercentTable[wScreenTableIndex], divided by 100 (E-0237, E-0276) (C2 from E-0327: the sell list shows Herb 7G, LoveWater 37G, WorldDew 375G and Potion 150G for values 10, 50, 500 and 200 at 75%)", "evidence": "reading (E-0276); E-0327"},
   "1C:6CFD": {"name": "VaultMenu_Init", "note": "state 0 of VaultMenu: clears the screen state (E-0276)", "evidence": "reading (E-0276)"},
   "1C:6D4D": {"name": "VaultMenu_Setup", "note": "screen setup: tile lists, the item list screen and its box (E-0276)", "evidence": "reading (E-0276)"},
   "1C:6E3C": {"name": "VaultMenu_ChooseAction", "note": "the Vault's choice menu: Up/Down move the cursor, A selects, B leaves (E-0276)", "evidence": "reading (E-0276)"},
@@ -7127,7 +7127,7 @@
   "1C:4170": {"name": "InnMenu_Pay", "note": "checks the price against the gold (IsAmountInArg1AboveGold) and redraws the gold (E-0276)", "evidence": "reading (E-0276)"},
   "1C:41CD": {"name": "InnMenu_FadeOut", "note": "starts a palette fade (StartPaletteFade) for the night (E-0276)", "evidence": "reading (E-0276)"},
   "1C:41DC": {"name": "InnMenu_WaitFade", "note": "waits until wFadeState is 0, then advances wScreenState (E-0276)", "evidence": "reading (E-0276)"},
-  "1C:41EB": {"name": "InnMenu_RestoreParty", "note": "for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max MP ($61) to MP ($5F) (E-0276)", "evidence": "reading (E-0276)"},
+  "1C:41EB": {"name": "InnMenu_RestoreParty", "note": "for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max MP ($61) to MP ($5F) (E-0276) (C2 from E-0327: a stay turns HP 5/21 and MP 7/35 into 21/21 and 35/35)", "evidence": "reading (E-0276); E-0327"},
   "1C:4258": {"name": "InnMenu_Morning", "note": "after $90 frames sends the SGB palette set, fades back in and refreshes the town/key-world objects (E-0276)", "evidence": "reading (E-0276)"},
   "1C:4295": {"name": "InnMenu_RestartMusic", "note": "restarts the map music (RestartMapMusic) (E-0276)", "evidence": "reading (E-0276)"},
   "15:4124": {"name": "BreedMenu_Init", "note": "state 0 of BreedMenu: clears $6F bytes from wScreenState (E-0277)", "evidence": "reading (E-0277)"},

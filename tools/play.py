@@ -1,6 +1,7 @@
 """Steer the reference ROM in tools/sm83.py by an input recipe, keeping state between runs (E-0320).
 
     python -I tools/play.py STATE RECIPE [--from OLDSTATE | --sram-from OLDSTATE] [--poke SYMBOL=VALUE ...]
+                            [--call LABEL]
     python -I tools/play.py --chain tools/recipes/FILE.txt    (replays one run per line)
 
 RECIPE is space-separated steps: `W60` waits 60 frames; `A`, `B`, `S` (Start), `E` (Select), `U`, `D`, `L`, `R`
@@ -11,7 +12,7 @@ the run is added to build/states/coverage.json with the state name and wGameMode
 emulator). `--poke` writes a byte before the run (a symbol from src/ram.asm, a hex address, or sram+HEX for
 cartridge RAM); such a state
 is forced, not reached by play, and its name is recorded with a `!` in the coverage file. States and pictures stay
-local (build/ is not tracked). `--sram-from` powers on afresh with OLDSTATE's cartridge RAM, as after switching the
+local (build/ is not tracked). `--call` calls a routine at the main loop's halt (forced too). `--sram-from` powers on afresh with OLDSTATE's cartridge RAM, as after switching the
 console off and on with the battery-backed save."""
 import json
 import pickle
@@ -57,13 +58,34 @@ def poke(gb: GameBoy, ram: dict, spec: str) -> None:
         gb.wb(int(ram.get(sym, sym), 16), int(val, 0))
 
 
+def call_at_halt(gb: GameBoy, bank: int, addr: int) -> bool:
+    """Runs to the main loop's `halt` (outside an interrupt) and calls bank:addr there: the bank is mapped, the
+    return address pushed. False when no such halt comes within 200,000 instructions."""
+    for _ in range(200000):
+        if gb.halted and gb.pc < 0x4000 and gb.ime:
+            break
+        gb.tick(gb.step() if not gb.halted else 456 - gb.line_cycles)
+        gb.service()
+    else:
+        return False
+    gb.halted = False
+    gb.push(gb.pc)
+    gb.rombank = bank
+    gb.pc = addr
+    return True
+
+
 def run(gb: GameBoy, segments, labels, seen: dict) -> None:
     """Play the (mask, frames) segments; seen[(bank, addr)] collects every wGameMode a named routine ran in."""
     entry_at = set(labels)
+    lines = getattr(gb, "line_regs", None) or [None] * 144
+    gb.line_regs = lines
     for mask, frames in segments:
         gb.joy = 0xFF & ~mask
         end = (gb.cycles // FRAME + frames) * FRAME
         while gb.cycles < end:
+            if gb.ly < 144:  # the registers each scanline is drawn with (screen.py uses them)
+                lines[gb.ly] = (gb.io[0x40], gb.io[0x42], gb.io[0x43], gb.io[0x4A], gb.io[0x4B])
             pc = gb.pc
             key = (gb.rombank if pc >= 0x4000 else 0, pc) if pc < 0x8000 else None
             if key in entry_at:
@@ -100,9 +122,13 @@ def main(argv: list[str]) -> None:
         if a == "--poke":
             poke(gb, ram, argv[k + 1])
             forced = True
+    labels = boot_trace.load_labels()
+    if "--call" in argv:  # call a routine at the main loop's halt, as an event would (E-0327)
+        by_name = {v: k for k, v in labels.items()}
+        call_at_halt(gb, *by_name[argv[argv.index("--call") + 1]])
+        forced = True
     if forced and not state.endswith("!"):
         state += "!"
-    labels = boot_trace.load_labels()
     seen: dict = {}
     run(gb, parse(recipe), labels, seen)
     (STATES / f"{state}.pkl").write_bytes(pickle.dumps(gb))
@@ -140,6 +166,7 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dic
     {state: {routine name: wGameMode values}} for every run). With `stop_when_kept` it stops once every state in
     `keep` exists."""
     labels = boot_trace.load_labels()
+    by_name = {v: k for k, v in labels.items()}
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     states: dict[str, bytes] = {}
     kept, ran = {}, {}
@@ -151,7 +178,10 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dic
         else:
             gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
         for p in pokes.split():
-            poke(gb, ram, p)
+            if p.startswith("call:"):
+                call_at_halt(gb, *by_name[p[5:]])
+            else:
+                poke(gb, ram, p)
         seen: dict = {}
         run(gb, parse(recipe), labels, seen)
         states[state] = pickle.dumps(gb)
@@ -165,7 +195,8 @@ def replay(path: str, keep: set[str], stop_when_kept: bool = False) -> tuple[dic
 
 def chain(path: str) -> None:
     """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments, `@ FILE` includes; FROM
-    `sram:STATE` powers on afresh with that state's cartridge RAM."""
+    `sram:STATE` powers on afresh with that state's cartridge RAM; `call:LABEL` among the pokes calls that routine at
+    the main loop's halt after the pokes."""
     for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
         if old.startswith("sram:"):
@@ -173,7 +204,7 @@ def chain(path: str) -> None:
         else:
             argv = [state, recipe] + (["--from", old] if old else [])
         for p in pokes.split():
-            argv += ["--poke", p]
+            argv += ["--call", p[5:]] if p.startswith("call:") else ["--poke", p]
         main(argv)
 
 

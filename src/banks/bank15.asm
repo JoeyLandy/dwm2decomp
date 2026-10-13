@@ -150,7 +150,7 @@ Jump_015_40AE:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244)
+; implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244) (C2 from E-0328: started by its script, it shows Breed / Hatch / Exit, takes a base and a mate, removes both parents' records and adds the hatched, named child)
 ; 27 call sites from 27 routines (e.g. EggServiceMenu_ChooseAndPay_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_BreedMenu, NpcBreedMenu_RedrawListScreen_ToBreedMenu, ...)
 ; reads: wScreenState
 BreedMenu::
@@ -534,7 +534,7 @@ Jump_015_4369:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 3 of the `rst $00` table in BreedMenu_ChooseParents; also entry 23 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
 BreedMenu_ChooseParents_DrawRecordListPageNames::
@@ -545,7 +545,7 @@ Jump_015_43AC:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 4 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 4 of the `rst $00` table in BreedMenu_ChooseParents; also entry 5 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
@@ -575,7 +575,7 @@ Jump_015_43BD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 5 of the `rst $00` table in BreedMenu_ChooseParents; also entry 6 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
 BreedMenu_ChooseParents_FillTilesBxC::
@@ -598,7 +598,7 @@ Jump_015_43F4:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 6 of the `rst $00` table in BreedMenu_ChooseParents; also entry 7 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -778,7 +778,7 @@ Jump_015_451B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 12 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 12 of the `rst $00` table in BreedMenu_ChooseParents; also entry 33 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -797,7 +797,7 @@ Jump_015_4550:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 13 of the `rst $00` table in BreedMenu_ChooseParents; also entry 34 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTwoChoiceCursor, wChoiceCursor, wScreenStep
@@ -1163,7 +1163,7 @@ Jump_015_47CF:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 28 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 28 of the `rst $00` table in BreedMenu_ChooseParents; also entry 8 of the table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg7, wArg6, wScreenStep
 ; writes: wArg1, wSpeciesIdLo, wArg2, wSpeciesIdHi, wArg3, wArg4, wArg5, wScreenStep, ...
@@ -1928,7 +1928,7 @@ Jump_015_4CE3:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 48 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 48 of the `rst $00` table in BreedMenu_ChooseParents; also entry 55 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest
 BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep::
@@ -1943,7 +1943,7 @@ Jump_015_4D2B:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; entry 50 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 50 of the `rst $00` table in BreedMenu_ChooseParents; also entry 57 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenStep
@@ -1967,7 +1967,7 @@ Jump_015_4D46:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 49 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 49 of the `rst $00` table in BreedMenu_ChooseParents; also entry 56 of the table in BreedMenu_ChooseParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -2850,7 +2850,7 @@ Jump_015_52FF:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 11 of the `rst $00` table in BreedMenu_ChooseParents; also entry 53 of the table in BreedMenu_ChooseParents; entry 9 of the table in BreedMenu_ChooseEgg; entry 32 of the table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wScriptCommandType, wScriptStartRequest
 BreedMenu_ChooseParents_BlankWordTableTargets::
@@ -2869,7 +2869,7 @@ Jump_015_5358:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 10 of the `rst $00` table in BreedMenu_ChooseEgg
+; entry 10 of the `rst $00` table in BreedMenu_ChooseEgg; also entry 22 of the table in BreedMenu_ReturnToMap; entry 5 of the table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -2883,7 +2883,7 @@ Jump_015_5376:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in BreedMenu_ChooseEgg
+; entry 11 of the `rst $00` table in BreedMenu_ChooseEgg; also entry 23 of the table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wChoiceCursorF0, wChoiceCursor, wScreenStep
@@ -2907,7 +2907,7 @@ Jump_015_5387:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 14 of the `rst $00` table in BreedMenu_ChooseParents; also entry 35 of the table in BreedMenu_ChooseParents; entry 12 of the table in BreedMenu_ChooseEgg; entry 24 of the table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wChoiceCursor, wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenByteB2, wScreenByteB3, wScreenState, wScreenSubStep, ...
@@ -3401,7 +3401,7 @@ Jump_015_56B0:: ; address name
     dw BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_Case1F
     dw BreedMenu_ChooseParents_BlankWordTableTargets
 
-; entry 0 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 0 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 1 of the table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3431,7 +3431,7 @@ Func_015_570C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 2 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 3 of the table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hMapId, hFieldDrawFlags, wOBJPaletteUploadRequest, wScreenStep
@@ -3453,7 +3453,7 @@ Jump_015_571D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 3 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 4 of the table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
@@ -3531,7 +3531,7 @@ Jump_015_57A4:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 62 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 62 of the `rst $00` table in BreedMenu_ChooseParents; also entry 5 of the table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
@@ -3968,14 +3968,14 @@ Jump_015_5ACA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 14 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 3 of the table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 BreedMenu_ReturnToMap_ToDrawRecordListPageNames::
 Jump_015_5AF5:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; entry 15 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 15 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 4 of the table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -4004,7 +4004,7 @@ Jump_015_5AFC:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 16 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 5 of the table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -4033,7 +4033,7 @@ Jump_015_5B33:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in BreedMenu_ReturnToMap
+; entry 17 of the `rst $00` table in BreedMenu_ReturnToMap; also entry 6 of the table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -4722,7 +4722,7 @@ Jump_015_5FD9:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 13 of the `rst $00` table in BreedMenu
+; entry 13 of the `rst $00` table in BreedMenu; also entry 14 of the table in BreedMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
@@ -4758,7 +4758,7 @@ Jump_015_6028:: ; address name
     dw BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4
     dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 0 of the `rst $00` table in BreedMenu_RedrawListScreen
+; entry 0 of the `rst $00` table in BreedMenu_RedrawListScreen; also entry 0 of the table in BreedMenu_ClearListMarks; entry 0 of the table in BreedMenu_ShowSelectedRecord; entry 0 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
@@ -4781,7 +4781,7 @@ Jump_015_603E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in BreedMenu_RedrawListScreen
+; entry 1 of the `rst $00` table in BreedMenu_RedrawListScreen; also entry 1 of the table in BreedMenu_ClearListMarks; entry 1 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15::
 Jump_015_6063:: ; address name
@@ -4798,7 +4798,7 @@ Jump_015_6070:: ; address name
     call ClearTileRowsAndResetWindowAndStep
     ret
 
-; entry 13 of the `rst $00` table in BreedMenu_ChooseEgg
+; entry 13 of the `rst $00` table in BreedMenu_ChooseEgg; also entry 3 of the table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -4922,7 +4922,7 @@ Jump_015_6101:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu_RedrawListScreen
+; entry 8 of the `rst $00` table in BreedMenu_RedrawListScreen; also entry 9 of the table in BreedMenu_ClearListMarks; entry 10 of the table in BreedMenu_ShowSelectedRecord; entry 9 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
@@ -5024,7 +5024,7 @@ Jump_015_61F5:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 61 of the `rst $00` table in BreedMenu_ChooseParents
+; entry 61 of the `rst $00` table in BreedMenu_ChooseParents; also entry 7 of the table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5211,7 +5211,7 @@ Jump_015_62F7:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_ShowSelectedRecord
+; entry 3 of the `rst $00` table in BreedMenu_ShowSelectedRecord; also entry 3 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5231,7 +5231,7 @@ Jump_015_6336:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_ShowSelectedRecord
+; entry 6 of the `rst $00` table in BreedMenu_ShowSelectedRecord; also entry 4 of the table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
 Jump_015_6359:: ; address name
@@ -6186,7 +6186,7 @@ Func_015_6822:: ; address name
     ld [de], a
     ret
 
-; wGold -= the 24-bit amount wArg3:wArg2:wArg1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106)
+; wGold -= the 24-bit amount wArg3:wArg2:wArg1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106) (C2 from E-0327: buying a Herb at 10G turns 99,999 into 99,989)
 ; 9 call sites from 9 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10, ArenaMenu_SubtractArg1AmountFromGold, ArenaMenu_SubtractArg1AmountFromGold_Case19, ...)
 ; reads: wArg3, wArg2, wArg1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldHi, wGoldMid, wGoldLo

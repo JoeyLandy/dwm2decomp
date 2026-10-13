@@ -1639,7 +1639,7 @@ Jump_0F1_4AFD:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1; also entries 5, 6, 7, 8, 9, 10, 11, 15, 16 of the table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
@@ -1863,7 +1863,7 @@ Jump_0F1_4C08:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed; also entries 1, 2, 3, 5, 6, 7, 13 of the table in RunScreenStateWhenNotFading_F1_LinkBreed
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu::
@@ -1902,7 +1902,7 @@ Jump_0F1_4C4C:: ; address name
     dw RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1; also entry 4 of the table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
@@ -1920,7 +1920,7 @@ Jump_0F1_4C78:: ; address name
     call BeginString_Bank0E_Cat0
     ret
 
-; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1; also entry 5 of the table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep, wLinkSendByte
@@ -1936,7 +1936,7 @@ Jump_0F1_4C8E:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1; also entry 6 of the table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
@@ -1954,7 +1954,7 @@ Jump_0F1_4CA0:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1; also entry 7 of the table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wSelectedRecord, wScreenSubStep
@@ -2004,7 +2004,7 @@ Jump_0F1_4CCA:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed
+; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed; also entry 5 of the table in RunScreenStateWhenNotFading_F1_ShowChosenRecord; entry 5 of the table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
@@ -2191,7 +2191,7 @@ Jump_0F1_4DFA:: ; address name
     call DrawScreenBufferRect_BankF1
     ret
 
-; entry 19 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed
+; entry 19 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed; also entries 27, 31 of the table in RunScreenStateWhenNotFading_F1_LinkBreed
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -2860,7 +2860,7 @@ Jump_0F1_525E:: ; address name
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord; also entries 3, 4, 8, 9 of the table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu::
 Jump_0F1_5276:: ; address name
@@ -2890,7 +2890,7 @@ Func_0F1_5285:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord; also entry 6 of the table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC::
@@ -2913,7 +2913,7 @@ Jump_0F1_5293:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord; also entry 7 of the table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -2974,7 +2974,7 @@ Jump_0F1_52D8:: ; address name
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case20
 
-; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowRecordStats
+; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowRecordStats; also entries 9, 10, 11, 12, 13 of the table in RunScreenStateWhenNotFading_F1_ShowRecordStats
 ; no direct call (reached through a table, a jump or a vector)
 RunScreenStateWhenNotFading_F1_ShowRecordStats_Return::
 Jump_0F1_531E:: ; address name
@@ -3589,7 +3589,7 @@ Jump_0F1_56B7:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString; also entries 3, 4 of the table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState

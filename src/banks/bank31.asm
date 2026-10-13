@@ -3695,7 +3695,7 @@ Jump_031_55E0:: ; address name
     inc [hl]
     ret
 
-; entry 22 of the `rst $00` table in RunBattleSetup_CommandMenu
+; entry 22 of the `rst $00` table in RunBattleSetup_CommandMenu; also entry 34 of the table in RunBattleSetup_CommandMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep

@@ -771,7 +771,7 @@ Jump_037_4B2A:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in Func_037_4AFD
+; entry 1 of the `rst $00` table in Func_037_4AFD; also entries 7, 8, 9, 10, 11, 15, 16 of the table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
@@ -1036,7 +1036,7 @@ Jump_037_4C5B:: ; address name
     ld [wAIFlag], a
     ret
 
-; entry 0 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed; also entries 1, 2, 3, 5, 6, 7, 13 of the table in RunLinkSession5Exchange_LinkBreed
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 RunLinkSession5Exchange_LinkBreed_BreedMenu::
@@ -1078,7 +1078,7 @@ Jump_037_4CA9:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case09
     dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03
 
-; entry 0 of the `rst $00` table in Func_037_4AFD
+; entry 0 of the `rst $00` table in Func_037_4AFD; also entries 4, 8 of the table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
@@ -1096,7 +1096,7 @@ Jump_037_4CDB:: ; address name
     call ShowStringIndexA_Bank37
     ret
 
-; entry 1 of the `rst $00` table in Func_037_4AFD
+; entry 1 of the `rst $00` table in Func_037_4AFD; also entry 5 of the table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep, wLinkSendByte
@@ -1112,7 +1112,7 @@ Jump_037_4CF1:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in Func_037_4AFD
+; entry 2 of the `rst $00` table in Func_037_4AFD; also entry 6 of the table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
@@ -1130,7 +1130,7 @@ Jump_037_4D03:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in Func_037_4AFD
+; entry 3 of the `rst $00` table in Func_037_4AFD; also entries 7, 10 of the table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wSelectedRecord, wScreenSubStep
@@ -1198,7 +1198,7 @@ Jump_037_4D43:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed
+; entry 4 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed; also entry 5 of the table in RunLinkSession5Exchange_ShowChosenRecord; entry 5 of the table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
@@ -1388,7 +1388,7 @@ Jump_037_4E75:: ; address name
     call DrawScreenBufferRectToBGMap_37
     ret
 
-; entry 19 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed
+; entry 19 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed; also entry 27 of the table in RunLinkSession5Exchange_LinkBreed
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -2091,7 +2091,7 @@ Jump_037_531D:: ; address name
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
 
-; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
+; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord; also entries 3, 4, 8, 9 of the table in RunLinkSession5Exchange_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu::
 Jump_037_5335:: ; address name
@@ -2121,7 +2121,7 @@ Func_037_5344:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
+; entry 6 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord; also entry 6 of the table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wScreenStep
@@ -2163,7 +2163,7 @@ Jump_037_5352:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
+; entry 7 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord; also entry 7 of the table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -2224,7 +2224,7 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_ShowRecordStats_RunF24C3DAnd4D72
     dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case20
 
-; entry 8 of the `rst $00` table in RunLinkSession5Exchange_ShowRecordStats
+; entry 8 of the `rst $00` table in RunLinkSession5Exchange_ShowRecordStats; also entries 9, 10, 11, 12, 13 of the table in RunLinkSession5Exchange_ShowRecordStats
 ; no direct call (reached through a table, a jump or a vector)
 RunLinkSession5Exchange_ShowRecordStats_Return::
 Jump_037_5406:: ; address name
@@ -2883,7 +2883,7 @@ Jump_037_57FC:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
+; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString; also entries 3, 4 of the table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState

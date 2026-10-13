@@ -122,7 +122,7 @@ Jump_0F2_40D5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode8_Update
+; entry 1 of the `rst $00` table in GameMode8_Update; also entries 3, 6, 7, 9, 10 of the table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep

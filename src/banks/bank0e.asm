@@ -987,7 +987,7 @@ Data_00E_5662:: ; address name
     db "be in the Vault.", $F7
     db $F0
 
-; clears the child record wChildRecord and fills it from the two parents (wRecordBufA + $B, wRecordBufB + $B): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
+; clears the child record wChildRecord and fills it from the two parents (wRecordBufA + $B, wRecordBufB + $B): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131) (C2 from E-0328: in BreedMenu's preview, base Gulpple (family 4) with a family-3 mate gives WingTree and with a family-5 mate CactiBall, FamilyPairResultTable[4][3] and [4][5], since neither species has a rule list; the hatched child is level 1 with the user's name as master)
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, RunLinkSession4ScreenState_ResetAndSignal_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild, BreedMenu_ChooseParents_ComputeBreedingChild, ...)
 ; reads: wArg6, wArg7, wArg5, wPlayerId, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
@@ -9431,7 +9431,7 @@ Data_00E_7E7F:: ; address name
     dw $014C ; id 0 RogueWave
     dw $015A ; id 1 Pumpoise
 
-; E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 = $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B)
+; E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 = $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B) C2 from E-0328 for rows 4 (plant) x columns 3 and 5: base Gulpple with a Dracky mate gives WingTree and with a family-5 mate CactiBall in the game's own breeding.
 ; record: list
 FamilyPairResultTable::
 Data_00E_7E83:: ; address name

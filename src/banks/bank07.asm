@@ -1291,7 +1291,7 @@ Func_007_4E11:: ; address name
     jr nz, .loop
     ret
 
-; entry 5 of the `rst $00` table in GameMode5_Init
+; entry 5 of the `rst $00` table in GameMode5_Init; also entry 7 of the table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rSTAT, wSGBActive, wSaveStep, wMapType, wTextWindowState, wIsCGB
 ; writes: wSaveStep, wSaveRecordIndex, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
@@ -1516,7 +1516,7 @@ Func_007_4F7B:: ; address name
     dw GameMode5_Update_ToGameMode5_Update_Case05_LinkExchangeJoypadPerFrame
     dw GameMode5_Update_ToGameMode5_Update_Case07_LinkExchangeJoypadPerFrame
 
-; entry 5 of the `rst $00` table in GameMode5_Update
+; entry 5 of the `rst $00` table in GameMode5_Update; also entry 6 of the table in GameMode5_Update
 ; no direct call (reached through a table, a jump or a vector)
 GameMode5_Update_ToGameMode5_Update_Case05_LinkExchangeJoypadPerFrame::
 Jump_007_4F8F:: ; address name
@@ -2023,7 +2023,7 @@ Jump_007_5910:: ; address name
     dw GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_Screen0_WriteWorkBufAndTitleScreenSubState
 
-; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen0
+; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen0; also entry 1 of the table in GameMode5_Update_LoadScreens_Screen0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState, wIsCGB
 ; writes: rSVBK, wWorkBuf
@@ -2134,7 +2134,7 @@ Jump_007_59B6:: ; address name
     dw GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_Screen1_WriteWorkBufAndTitleScreenSubState
 
-; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen1
+; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen1; also entry 1 of the table in GameMode5_Update_LoadScreens_Screen1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState, wIsCGB
 ; writes: rSVBK, wWorkBuf
@@ -2245,7 +2245,7 @@ Jump_007_5A5C:: ; address name
     dw GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_Screen2_StartPaletteFade
 
-; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen2
+; entry 0 of the `rst $00` table in GameMode5_Update_LoadScreens_Screen2; also entry 1 of the table in GameMode5_Update_LoadScreens_Screen2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState, wIsCGB
 ; writes: rSVBK, wWorkBuf

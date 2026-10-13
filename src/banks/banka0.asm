@@ -5537,7 +5537,7 @@ Jump_0A0_61DA:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 8 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu
+; entry 8 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu; also entry 21 of the table in RunBattleSetup_BankA0_CommandMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
 RunBattleSetup_BankA0_CommandMenu_DrawWC2B8Rect11x9ToBGMapRow9_BankA0AndStep::
@@ -5581,7 +5581,7 @@ Jump_0A0_6212:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu
+; entry 10 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu; also entry 23 of the table in RunBattleSetup_BankA0_CommandMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
@@ -5595,7 +5595,7 @@ Jump_0A0_622A:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu
+; entry 11 of the `rst $00` table in RunBattleSetup_BankA0_CommandMenu; also entry 24 of the table in RunBattleSetup_BankA0_CommandMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
 RunBattleSetup_BankA0_CommandMenu_DrawWC338RowsToBGMapRow13_BankA0::

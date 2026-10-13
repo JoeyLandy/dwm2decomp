@@ -2431,6 +2431,72 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0330 — The priest revives a dead monster: MON_STATUS bit 7
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: Script_1F_77D4 is started by its RAM bytes on Main Street, with Patta's MON_STATUS set to $80 and MON_HP to 0 in cartridge RAM.
+- **The menu.** PriestMenu shows Revive / De-Tox / Uncurse / Exit. Revive lists the party with a mark beside Patta (PriestMenu_PayForService_WriteMarkC0/C2) and asks "… 25G. Do you accept?".
+- **Paying.** Yes takes 25 gold (99,999 to 99,974, PriestMenu_PayForService_SubtractArg1AmountFromGold) and shows "Please summon the soul of Patta!".
+- **After.** Patta's MON_STATUS is 0 and MON_HP is 21, MON_MAX_HP. So bit 7 of MON_STATUS marks a dead monster, which the priest revives to full HP (C2).
+  - InnMenu_RestoreParty, by reading, skips records with that bit set (E-0276).
+- **Reproduction and tests.** tools/recipes/e0330_priest.txt includes e0329_library.txt. tests/test_play_chain.py checks the record before and after and the 25 gold.
+- **The arena, observed but not pinned.** Script_0C_7A51 started the same way runs ArenaMenu, the arena rounds (ArenaRounds_*, ArenaGridBattle_*) and battles that do damage (Patta at 17 of 21 HP on the battle panel), with skill effects such as ActionEffect_CallHelp (Moahm's YellHelp) and BattleEnd_GainExperience_LearnSkill. After the first class the menu offers C, B, A and S classes at 100, 500, 1000 and 5000G. These steps are not in a recipe.
+- Binary verification: build/run464 PASS, 0 differing bytes; tests OK (227, skipped=3).
+
+### E-0329 — The monster library's counts per family
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: Script_1F_787B is started by its RAM bytes on Main Street.
+- **The screen.** LibraryMenu shows one family icon and count per line on two pages: 4, 2, 3, 1, 1, 1, then 2, 2, 5, 4, 0. The digits are tiles $E0 + d in column 7 of rows 1-11, and the page indicator is $E1 $BE $E2 ("1/2").
+- **The model.** For each species id 0-372 whose wSpeciesFlags bit is set, add 1 to the family named by byte 0 of its SpeciesRecordPointers record. This gives exactly those eleven counts.
+  - The list at wMonsterLibraryBuf, the routine's second source, is empty here, so only the flag source is confirmed (C2 for CountSpeciesPerFamilyFlaggedOrListed's flag path, wSpeciesFlags and LibraryMenu).
+  - wWorkBuf ($D09D), where the counts are built, is reused afterwards. Its first two bytes no longer hold the counts when the screen is up, so the test reads the drawn digits instead.
+- **Reproduction and tests.** tools/recipes/e0329_library.txt includes e0328_breed.txt. tests/test_play_chain.py compares the drawn digits on both pages with the model.
+- Binary verification: build/run463 PASS, 0 differing bytes.
+
+### E-0328 — Breeding, from the menu to the hatched child; shared script steps
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced.
+- **Starting the breeding script.** A script outside bank $10 is started with five RAM writes: wDataBank, wScriptInDataBank = 1, wScriptPointerLo/Hi, wScriptStartRequest = $80, and wModeState = 1. FetchScriptCommand then reads through ReadWordFromDataBank.
+  - Without wScriptInDataBank it reads bank $10 at that address and shows the opening narration. This confirms that flag's role.
+  - Script_15_764B, started this way on Main Street, runs BreedMenu: Breed / Hatch / Exit.
+- **Choosing.** Base Vanyl (Gulpple $92, family 4, ♂, level 14).
+  - With the mate cursor on Patta (Dracky, family 3) the preview reads WingTree. On Moahm ($C2, family 5) it reads CactiBall.
+  - Both previews run ComputeBreedingChild. wChildRecord's species is $90 and then $91.
+  - Neither species has a rule list (BreedSpeciesRuleTable entries are BreedSpeciesRules000), so stage 4 decides: FamilyPairResultTable[4][3] = $0090 WingTree and [4][5] = $0091 CactiBall. So the base is parent A, the table's row (C2 for these entries).
+- **The game's checks.** The two-choice result after a pick feeds the script's four-way branch: mate allowed / "You won't have a monster" / "That's too low in level" / "There's no potential mate".
+  - My first attempt confirmed Patta at level 4 and got the fourth branch (wTwoChoiceCursor = 3). The message itself could not be seen then (see the screen picture below), so which rule refused her is not established.
+- **Hatching.** "Hatching that will cost 20G." and "Should I hatch it too?" lead to BreedChildScene (script command $8D): the parents on the altar, then an egg, then name entry for a CactiBall ♀.
+  - Named "AB", the child is a new record with:
+    - species $91, family 4, level 1, MON_PLUS 1;
+    - master = the user's name;
+    - MON_PARENT1/2_SPECIES = $92, $C2;
+    - MON_PARENT1/2_NAME = Vanyl, Moahm.
+  - Vanyl's and Moahm's records are gone, and the list closes up (29 records in use, one fewer). MON_PARENT1/2_SPECIES and _NAME are C2.
+- **Shared steps.** BreedChildScene's step table points at routines named LinkMessageEvent_* (for example LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03), because a case takes the name of the first table that lists it. LinkMessageEvent itself never ran here.
+  - The generator now lists every table that uses such a step. For this one, five tables share it: LinkMessageEvent, NpcBreedWarp, BreedChildScene, BreedChildSprite and BreedFade.
+  - Names are unchanged; only comments change.
+- **The screen picture.** tools/play.py records the LCD registers of each scanline and tools/screen.py draws each line with them. So a text window placed by a mid-frame change now shows; the breeding messages were invisible before.
+- **Reproduction and tests.** tools/recipes/e0328_breed.txt includes e0327_shop_inn.txt. tests/test_play_chain.py (about 190 s) checks:
+  - BreedMenu ran;
+  - the preview's species equals FamilyPairResultTable[4][5] read from the ROM;
+  - the parents' records are gone and the child record has the fields above.
+- Binary verification: build/run461 (shared-step comments) and build/run462 (notes) PASS, 0 differing bytes.
+
+### E-0327 — A shop and an inn: prices, the gold cap, and resting
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced. tools/play.py `--call LABEL` (and `call:LABEL` in a recipe line) calls a routine at the main loop's `halt`, as a talk event would.
+- **Finding the shop.** The shop script Script_6659 is reached from Script_5345 ("Welcome! How may I serve you today?"). That script is started by TalkMsg0035_TheKingIsTooLenientOn, a GreatLog townsperson, when story flags $25 and $CE are set. With only flag 2 the same person says "I am a dealer—a merchant who buys and sells useful items…" and no shop opens.
+- **The shop.** With those two flags poked and the routine called on Main Street, ShopMenu shows Buy / Sell / Exit.
+  - **Selling.** The sell list shows Herb 7G, LoveWater 37G, WorldDew 375G and Potion 150G. ItemValueTable holds 10, 50, 500 and 200 for those ids, and ComputeSellPrice multiplies by ShopPercentTable[wScreenTableIndex] (75: the talk routine sets the index to 0) and divides by 100.
+  - **The cap.** Selling a Herb at 99,999 gold leaves 99,999 (AddArg1ToGoldCapped99999), while the Herb leaves the bag.
+  - **Buying.** The buy list prices are the values themselves (Herb 10G, LoveWater 50G, Antidote 4G). Buying a Herb takes 10 gold (SubtractArg1AmountFromGold) and puts it in the free last slot.
+- **The inn.** In the Kalka inn (map $22), "Welcome to our inn!" leads to InnMenu.
+  - With Patta at HP 5/21 and MP 7/35, a stay costs 10 gold. It runs InnMenu_FadeOut, InnMenu_RestoreParty and InnMenu_Morning, and leaves 21/21 and 35/35.
+- **Reproduction and tests.** tools/recipes/e0327_shop_inn.txt includes e0326_hp.txt. tests/test_play_chain.py (about 160 s) checks:
+  - the price formula against the two tables;
+  - the cap, the buy, and the bag changes;
+  - the inn's restoration.
+- Binary verification: build/run460 PASS, 0 differing bytes.
+
 ### E-0326 — The current HP and MP words, and the Herb
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: one record word is written straight into cartridge RAM (tools/play.py `--poke sram+HEX=VALUE`) at the field menu of E-0321.

@@ -2277,7 +2277,7 @@ Jump_016_4B39:: ; address name
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 12 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
+; entry 12 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem; also entries 13, 14, 15, 16, 17, 18 of the table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
 ApplyEquipmentEffectKeepA_ByItem_Return::
 Jump_016_4B41:: ; address name
@@ -2292,13 +2292,13 @@ Jump_016_4B42:: ; address name
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 20 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
+; entry 20 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem; also entries 21, 22, 23, 24, 25 of the table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
 ApplyEquipmentEffectKeepA_ByItem_Return_Case14::
 Jump_016_4B4A:: ; address name
     ret
 
-; entry 26 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
+; entry 26 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem; also entries 27, 28, 29, 30, 31, 32, 33 of the table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
 ApplyEquipmentEffectKeepA_ByItem_Return_Case1A::
 Jump_016_4B4B:: ; address name
@@ -3036,7 +3036,7 @@ Func_016_52C9:: ; address name
     dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp
     dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing
 
-; entry 0 of the `rst $00` table in Func_016_52C9
+; entry 0 of the `rst $00` table in Func_016_52C9; also entries 1, 2 of the table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb::
 Jump_016_52FF:: ; address name
@@ -3044,7 +3044,7 @@ Jump_016_52FF:: ; address name
     call SetWD08D12IfItemRefused
     ret
 
-; entry 3 of the `rst $00` table in Func_016_52C9
+; entry 3 of the `rst $00` table in Func_016_52C9; also entry 4 of the table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew::
 Jump_016_5306:: ; address name
@@ -3052,7 +3052,7 @@ Jump_016_5306:: ; address name
     call SetWD08D12IfItemRefused
     ret
 
-; entry 5 of the `rst $00` table in Func_016_52C9
+; entry 5 of the `rst $00` table in Func_016_52C9; also entries 6, 7 of the table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember, wTargetRecord
 ; writes: wItemId
@@ -3074,7 +3074,7 @@ Jump_016_530D:: ; address name
     call SetWD08D12IfItemRefused
     ret
 
-; entry 8 of the `rst $00` table in Func_016_52C9
+; entry 8 of the `rst $00` table in Func_016_52C9; also entry 9 of the table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf::
 Jump_016_5325:: ; address name
@@ -3098,7 +3098,7 @@ Jump_016_5333:: ; address name
     call SetWD08D12IfItemRefused
     ret
 
-; entry 12 of the `rst $00` table in Func_016_52C9
+; entry 12 of the `rst $00` table in Func_016_52C9; also entries 13, 14, 16 of the table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventorySlot, wItemId
 ; writes: wItemMessage
@@ -4678,7 +4678,7 @@ Func_016_5AAF:: ; address name
     pop af
     ret
 
-; zeroes the 11 per-family counters at wWorkBuf, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wWorkBuf[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wMonsterLibraryBuf (wArg5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
+; zeroes the 11 per-family counters at wWorkBuf, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wWorkBuf[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wMonsterLibraryBuf (wArg5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070) (C2 from E-0329 for the flag source: the library's 11 counts equal the flagged species per family; the list was empty)
 ; 2 call sites from 2 routines (e.g. PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wArg5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg1, wArg2, wArg3, wArg4
@@ -5143,7 +5143,7 @@ Jump_016_5DA0:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in BattleEnd_AskToJoin
+; entry 3 of the `rst $00` table in BattleEnd_AskToJoin; also entry 7 of the table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wMenuState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
@@ -5172,7 +5172,7 @@ Jump_016_5DB2:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in BattleEnd_AskToJoin
+; entry 4 of the `rst $00` table in BattleEnd_AskToJoin; also entry 8 of the table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wTextBuf0

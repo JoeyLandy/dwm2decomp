@@ -7156,7 +7156,7 @@ Jump_013_69B8:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 51 of the `rst $00` table in GreatLogTalkEvents
+; entry 51 of the `rst $00` table in GreatLogTalkEvents; also entries 52, 53 of the table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wTalkEventGroup
 ; writes: hTemp1, hTemp2, hTemp3
@@ -9118,7 +9118,7 @@ Jump_013_7579:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 149 of the `rst $00` table in GreatLogTalkEvents
+; entry 149 of the `rst $00` table in GreatLogTalkEvents; also entries 150, 151 of the table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 GreatLogTalkEvents_Return_Case95::
 Jump_013_7580:: ; address name

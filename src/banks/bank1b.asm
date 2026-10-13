@@ -2624,7 +2624,7 @@ Jump_01B_572B:: ; address name
     ld [wModeChangeRequest], a
     ret
 
-; entry 7 of the `rst $00` table in LinkKeyTrade
+; entry 7 of the `rst $00` table in LinkKeyTrade; also entry 21 of the table in LinkKeyTrade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep
@@ -2919,7 +2919,7 @@ Jump_01B_5823:: ; address name
     jr nz, .loop
     jp .call_begin_string_bank1_b_cat0
 
-; entry 12 of the `rst $00` table in LinkKeyTrade
+; entry 12 of the `rst $00` table in LinkKeyTrade; also entry 25 of the table in LinkKeyTrade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -2953,7 +2953,7 @@ Jump_01B_58F8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in LinkKeyTrade
+; entry 13 of the `rst $00` table in LinkKeyTrade; also entry 26 of the table in LinkKeyTrade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -4401,7 +4401,7 @@ Func_01B_61A7:: ; address name
     dw RunScreenCounterStep_61A7_WriteScreenCounter
     dw RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart
 
-; entry 0 of the `rst $00` table in RunScreenCounterStep_61A7
+; entry 0 of the `rst $00` table in RunScreenCounterStep_61A7; also entries 2, 4 of the table in RunScreenCounterStep_61A7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGlyphListStart, wScreenCounter
 ; writes: wScreenCounter
@@ -4410,7 +4410,7 @@ Jump_01B_61B7:: ; address name
     ld b, $C3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
 
-; entry 1 of the `rst $00` table in RunScreenCounterStep_61A7
+; entry 1 of the `rst $00` table in RunScreenCounterStep_61A7; also entry 3 of the table in RunScreenCounterStep_61A7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGlyphListStart, wScreenCounter
 ; writes: wScreenCounter
@@ -5324,7 +5324,7 @@ Jump_01B_6727:: ; address name
     dw EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount
     dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_PickRecords; also entry 3 of the table in EggServiceMenu_Bank1B_PickRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 EggServiceMenu_Bank1B_PickRecords_BreedMenu_Case01::
@@ -5880,7 +5880,7 @@ Jump_01B_6AE5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_01B_6A5E
+; entry 1 of the `rst $00` table in Func_01B_6A5E; also entry 6 of the table in Func_01B_6A5E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep, wPickCount
 ; writes: wTwoChoiceCursor, wScreenSubStep
@@ -6146,7 +6146,7 @@ Jump_01B_6C9E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
+; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entry 18 of the table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
@@ -6221,7 +6221,7 @@ Jump_01B_6CC8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entries 11, 14, 19 of the table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
@@ -6234,7 +6234,7 @@ Jump_01B_6D11:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle; also entry 20 of the table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
@@ -6609,7 +6609,7 @@ Jump_01B_6F68:: ; address name
     ld [wLinkMessage], a
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B; also entries 7, 8, 9, 10, 11, 12 of the table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
@@ -6708,7 +6708,7 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 0 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
@@ -6728,7 +6728,7 @@ Jump_01B_702D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 1 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -6754,7 +6754,7 @@ Jump_01B_704F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 2 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
 EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
@@ -6765,21 +6765,21 @@ Jump_01B_707E:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 3 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
 Jump_01B_708F:: ; address name
     call DrawListEntriesCell5RecordPanel
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 4 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780::
 Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 5 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7::
 Jump_01B_7097:: ; address name
@@ -6843,7 +6843,7 @@ Jump_01B_709B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords; also entry 7 of the table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth

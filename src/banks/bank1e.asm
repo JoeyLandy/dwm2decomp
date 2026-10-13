@@ -440,7 +440,7 @@ Jump_01E_4234:: ; address name
     dw SwapMonstersMenu_MoveRecords_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_MoveRecords_CountRecordsInUse
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 0 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 32 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wScreenStep, wPartyCount
 ; writes: wScreenSubStep, wScreenStep, rRAMG2, rRAMB, wNameGlyphBuf
@@ -544,7 +544,7 @@ Data_01E_4333:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
     db $00, $8D, $50, $8D, $A0, $8D
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 1 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 33, 62 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -571,7 +571,7 @@ Jump_01E_4371:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 2 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 24 of the table in SwapMonstersMenu_MoveRecords; entries 5, 34, 54, 63 of the table in SwapMonstersMenu_ChooseFromFarm; entry 9 of the table in SwapMonstersMenu_ChooseToView; entry 9 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
 SwapMonstersMenu_MoveRecords_FillTilesBxC_Case02::
@@ -594,7 +594,7 @@ Jump_01E_439E:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 3 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 35, 64 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -613,7 +613,7 @@ Jump_01E_43C2:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 4 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 26 of the table in SwapMonstersMenu_MoveRecords; entries 7, 36, 56 of the table in SwapMonstersMenu_ChooseFromFarm; entry 11 of the table in SwapMonstersMenu_ChooseToView; entry 11 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
@@ -689,7 +689,7 @@ Jump_01E_440A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 6 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 28, 42 of the table in SwapMonstersMenu_MoveRecords; entries 9, 23, 38, 73 of the table in SwapMonstersMenu_ChooseFromFarm; entries 27, 52 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -708,7 +708,7 @@ Jump_01E_4463:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 7 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 29, 43 of the table in SwapMonstersMenu_MoveRecords; entries 10, 24, 39, 74 of the table in SwapMonstersMenu_ChooseFromFarm; entry 14 of the table in SwapMonstersMenu_ChooseToView; entries 14, 28 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -723,7 +723,7 @@ Jump_01E_447F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 8 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 30, 44 of the table in SwapMonstersMenu_MoveRecords; entries 11, 25, 40, 75 of the table in SwapMonstersMenu_ChooseFromFarm; entry 15 of the table in SwapMonstersMenu_ChooseToView; entries 15, 29, 56 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
 SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
@@ -750,7 +750,7 @@ Jump_01E_44A1:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 10 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 10 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 35 of the table in SwapMonstersMenu_MoveRecords; entries 16, 42, 66 of the table in SwapMonstersMenu_ChooseFromFarm; entries 20, 44 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
 SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_Case0A::
@@ -762,7 +762,7 @@ Jump_01E_44B5:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 11 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 36 of the table in SwapMonstersMenu_MoveRecords; entries 17, 43, 67 of the table in SwapMonstersMenu_ChooseFromFarm; entries 21, 45 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wChoiceCursor, wCursorBlinkAE, wScreenStep
@@ -796,7 +796,7 @@ Data_01E_44EF:: ; address name
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 12 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 12 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 37 of the table in SwapMonstersMenu_MoveRecords; entries 18, 44, 68 of the table in SwapMonstersMenu_ChooseFromFarm; entries 22, 46 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wChoiceCursor, wScreenState, wChoiceCursorF0, wListCursor, wPartyCount, ...
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenByteB2, wScreenByteB3, wScreenState, wScreenSubStep, ...
@@ -1267,7 +1267,7 @@ Jump_01E_47B2:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 17 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 17 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 30 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
@@ -1309,7 +1309,7 @@ Data_01E_4872:: ; address name
     db $B6, $C3, $F3, $A6, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 18 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 18 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 31 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor, wScreenState
@@ -1413,7 +1413,7 @@ Func_01E_4918:: ; address name
     jr nz, SwapMonstersMenu_MoveRecords_Case12_Sub01_CopyBytesDEToHL_Bank1E
     ret
 
-; entry 19 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 19 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 31, 45 of the table in SwapMonstersMenu_MoveRecords; entries 0, 12, 26, 49, 76 of the table in SwapMonstersMenu_ChooseFromFarm; entries 4, 16 of the table in SwapMonstersMenu_ChooseToView; entries 4, 16, 30 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wListPageIndex, wCursorBlinkAE, wScreenStep
@@ -1451,7 +1451,7 @@ Data_01E_495A:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; entry 20 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 20 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 1, 50 of the table in SwapMonstersMenu_ChooseFromFarm; entry 5 of the table in SwapMonstersMenu_ChooseToView; entry 5 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1487,7 +1487,7 @@ Func_01E_49EA:: ; address name
     farcall ListRecordsState1WithByte6EClear
     jr SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
 
-; entry 6 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 6 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 6 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1535,7 +1535,7 @@ Func_01E_4A32:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; entry 23 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 23 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 4, 53 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
@@ -1559,7 +1559,7 @@ Jump_01E_4A39:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 25 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 25 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 6, 55 of the table in SwapMonstersMenu_ChooseFromFarm; entry 10 of the table in SwapMonstersMenu_ChooseToView; entry 10 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
@@ -1575,7 +1575,7 @@ Jump_01E_4A5E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 27 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 27 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 8 of the table in SwapMonstersMenu_ChooseFromFarm
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
@@ -1642,7 +1642,7 @@ Jump_01E_4A74:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 32 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 32 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 46 of the table in SwapMonstersMenu_MoveRecords; entries 13, 27, 77 of the table in SwapMonstersMenu_ChooseFromFarm; entry 17 of the table in SwapMonstersMenu_ChooseToView; entries 17, 31 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1656,7 +1656,7 @@ Jump_01E_4AE0:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 33 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 33 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entry 47 of the table in SwapMonstersMenu_MoveRecords; entries 14, 28, 78 of the table in SwapMonstersMenu_ChooseFromFarm; entry 18 of the table in SwapMonstersMenu_ChooseToView; entries 18, 32, 57 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1856,7 +1856,7 @@ Jump_01E_4BE1:: ; address name
     ld [wCursorBlinkAE], a
     ret
 
-; entry 48 of the `rst $00` table in SwapMonstersMenu_MoveRecords
+; entry 48 of the `rst $00` table in SwapMonstersMenu_MoveRecords; also entries 15, 29, 79 of the table in SwapMonstersMenu_ChooseFromFarm; entry 33 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 SwapMonstersMenu_MoveRecords_CountRecordsInUse::
@@ -2497,7 +2497,7 @@ Jump_01E_506C:: ; address name
     dw SwapMonstersMenu_ChooseToView_CopyRectTo20ByteRows_Bank1E
     dw SwapMonstersMenu_ChooseToView_LoadTileListSixPerCall
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 0 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wListCount, wDigits, wRecordsFlagged, wGridCursorX
 ; writes: wScreenStep, wChoiceCursorF0
@@ -2510,7 +2510,7 @@ Jump_01E_50AE:: ; address name
     inc a
     ld [wScreenStep], a
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 1 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 1 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wDigits, wRecordsFlagged, wGridCursorX, wScreenStep
 ; writes: wChoiceCursorF0, wScreenStep
@@ -2667,7 +2667,7 @@ Jump_01E_5199:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 3 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 3 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX
 ; writes: wArg1, wArg2, wScreenStep, wScreenSubStep, wScreenState, wScriptCommandType, wScriptStartRequest
@@ -2719,7 +2719,7 @@ Jump_01E_51E6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 8 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 8 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 8 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
@@ -2746,7 +2746,7 @@ Jump_01E_525F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 12 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 12 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wListCursor
@@ -2815,7 +2815,7 @@ Jump_01E_5290:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 13 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 28 of the table in SwapMonstersMenu_ChooseToView; entries 13, 41 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wDigits, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -2858,7 +2858,7 @@ Data_01E_5343:: ; address name
     db $B6, $BC, $7C, $7D, $7E, $DF, $7F, $FE, $FF, $76, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
 
-; entry 19 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 19 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 19 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wListCount, wDigits, wRecordsFlagged
 ; writes: wChoiceCursorF0, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
@@ -2945,14 +2945,14 @@ Jump_01E_540F:: ; address name
     call SaveAndHideSpriteState_Bank1E
     ret
 
-; entry 21 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 21 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 34 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 SwapMonstersMenu_ChooseToView_ToLoadTileList6DC4SixPerFrame::
 Jump_01E_5429:: ; address name
     farcall LoadTileList6DC4SixPerFrame
     ret
 
-; entry 22 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 22 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 35 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursorF0, wScreenStep
 ; writes: wScreenStep
@@ -2990,7 +2990,7 @@ Data_01E_5461:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; entry 23 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 23 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 36 of the table in SwapMonstersMenu_ChooseToView2; entry 13 of the table in SwapMonstersMenu_ShowParents2; entry 13 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3025,7 +3025,7 @@ Jump_01E_54D6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 24 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 24 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 37 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -3066,7 +3066,7 @@ Jump_01E_5518:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 25 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 25 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 38 of the table in SwapMonstersMenu_ChooseToView2; entry 15 of the table in SwapMonstersMenu_ShowParents2; entry 15 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
@@ -3080,7 +3080,7 @@ Jump_01E_556A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 26 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 26 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 39 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -3154,7 +3154,7 @@ Jump_01E_559E:: ; address name
     call SaveAndHideSpriteState_Bank1E
     ret
 
-; entry 29 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 29 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 42 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3198,7 +3198,7 @@ Jump_01E_55F3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 30 of the `rst $00` table in SwapMonstersMenu_ChooseToView
+; entry 30 of the `rst $00` table in SwapMonstersMenu_ChooseToView; also entry 43 of the table in SwapMonstersMenu_ChooseToView2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wChoiceCursorF0
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -3934,7 +3934,7 @@ Jump_01E_5B50:: ; address name
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordParentNames
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3
 
-; entry 3 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 3 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 3 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 3 of the table in SwapMonstersMenu_ShowFarmMonsterDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg3, wArg4, wArg7, wArg1, wArg2, wScreenStep
@@ -3979,7 +3979,7 @@ Jump_01E_5BD0:: ; address name
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_CallListRecordsState1ThenContinue
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList; also entry 0 of the table in SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wScreenSubStep
 ; writes: wMenuInputResult, wArg3, wArg4, wArg7, wScreenStep, wScreenSubStep
@@ -4087,7 +4087,7 @@ Jump_01E_5C78:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 13 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 13 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 13 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 13 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 13 of the table in SwapMonstersMenu_ShowFarmMonsterDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDataBank, wScreenByteB2, wScreenByteB3, wListCursor, wScreenState, wScriptCommandType
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -4177,7 +4177,7 @@ Jump_01E_5D1F:: ; address name
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_WriteScreenSubStep
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList; also entry 0 of the table in SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameMode, wMenuInputResult, wScreenStep, wScreenSubStep
 ; writes: wMenuInputResult, hSpriteHideTile, wScreenStep, wArg3, wArg4, wArg7, wScreenSubStep
@@ -4283,7 +4283,7 @@ Jump_01E_5DC5:: ; address name
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_CallListRecordsState1ThenContinue
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2; also entry 0 of the table in SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wScreenSubStep
 ; writes: wMenuInputResult, wArg3, wArg4, wArg7, wScreenStep, wScreenSubStep
@@ -4391,7 +4391,7 @@ Jump_01E_5E88:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 23 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 23 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 23 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 23 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 23 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 23 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
@@ -4424,7 +4424,7 @@ Jump_01E_5E98:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 24 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 24 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 24 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 24 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 24 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 24 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
@@ -4472,7 +4472,7 @@ Jump_01E_5F1D:: ; address name
     dw RedrawRecordListAndNextStep
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_CallListRecordsState1ThenContinue
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3; also entry 0 of the table in SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wGameMode, wScreenStep, wScreenSubStep
 ; writes: wMenuInputResult, hSpriteHideTile, wScreenStep, wScreenSubStep
@@ -4665,7 +4665,7 @@ Jump_01E_600F:: ; address name
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordParentNames
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 1 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 1 of the table in SwapMonstersMenu_ShowMonsterDetails2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep, wScreenStep
 SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles::
@@ -4740,7 +4740,7 @@ Func_01E_6074:: ; address name
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; entry 7 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 7 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 7 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 9 of the table in SwapMonstersMenu_ShowParents2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep
 SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_Case07::
@@ -4751,7 +4751,7 @@ Jump_01E_60E1:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 9 of the table in SwapMonstersMenu_ShowMonsterDetails3; entries 8, 9 of the table in SwapMonstersMenu_ShowMonsterDetails2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -4833,7 +4833,7 @@ Jump_01E_613A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 4 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 4 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 4 of the table in SwapMonstersMenu_ShowFarmMonsterDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
 SwapMonstersMenu_ShowMonsterDetails3_DrawListEntriesCell5RecordDetails::
@@ -4872,7 +4872,7 @@ Jump_01E_618F:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 10 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 10 of the table in SwapMonstersMenu_ShowMonsterDetails2
 ; no direct call (reached through a table, a jump or a vector)
 SwapMonstersMenu_ShowMonsterDetails3_ListRecordsAndDrawListEntriesCell5Panel::
 Jump_01E_619F:: ; address name
@@ -4886,7 +4886,7 @@ Jump_01E_619F:: ; address name
     call LoadFamilyIconTileForRecordB_Bank1E
     ret
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3
+; entry 0 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails3; also entry 0 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 0 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 0 of the table in SwapMonstersMenu_ShowParents2; entry 0 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll::
 Jump_01E_61B4:: ; address name
@@ -5061,7 +5061,7 @@ Jump_01E_6298:: ; address name
     dw SwapMonstersMenu_ShowParents2_DrawRecordListPageMarks
     dw SwapMonstersMenu_ShowParents2_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 3 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 3 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 3 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPageIndex, wListCursor, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
@@ -5089,7 +5089,7 @@ Jump_01E_62C0:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 4 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 4 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wArg1, wArg2, wScreenStep
@@ -5116,7 +5116,7 @@ Jump_01E_62EF:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 5 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 5 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
@@ -5181,7 +5181,7 @@ Jump_01E_6325:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 6 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 6 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, hTemp0, hTemp1, wIsCGB, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenSubStep, wBGPaletteUploadRequest, hTemp0, wArg3, wArg4, wArg7, ...
@@ -5268,7 +5268,7 @@ Jump_01E_6399:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 7 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 7 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wLinkMode, wLinkSession, wScreenStep, wRecordsFlagged
 ; writes: wArg1, wArg2, hSpriteHideTile, wScreenStep
@@ -5324,7 +5324,7 @@ Jump_01E_6437:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 8 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5341,7 +5341,7 @@ Jump_01E_6492:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 12 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 12 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5355,7 +5355,7 @@ Jump_01E_64AD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 17 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 17 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -5401,7 +5401,7 @@ Jump_01E_64BE:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 14 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 14 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenByteB2, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -5451,7 +5451,7 @@ TileRect_1E_6567::
 Data_01E_6567:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
 
-; entry 16 of the `rst $00` table in SwapMonstersMenu_ShowParents2
+; entry 16 of the `rst $00` table in SwapMonstersMenu_ShowParents2; also entry 16 of the table in SwapMonstersMenu_ShowParents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenByteB2, wScreenStep, wListCursor
 ; writes: wArg1, wArg2, wScreenStep
@@ -5561,7 +5561,7 @@ Func_01E_65FE:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 1 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 1 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 1 of the table in SwapMonstersMenu_ShowParents; entry 1 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5575,7 +5575,7 @@ Jump_01E_6635:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 2 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 2 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 2 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 2 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 2 of the table in SwapMonstersMenu_ShowParents2; entry 2 of the table in SwapMonstersMenu_ShowParents; entry 2 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5633,7 +5633,7 @@ Func_01E_667C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 5 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 5 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 5 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 5 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 5 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, hTemp0, hTemp1, wIsCGB, wScreenStep
 ; writes: wArg3, wArg4, wArg7, rRAMG2, rRAMB, wScreenSubStep, wBGPaletteUploadRequest, hTemp0, ...
@@ -5777,7 +5777,7 @@ Jump_01E_6753:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 8 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 8 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 10 of the table in SwapMonstersMenu_ShowParents2; entry 10 of the table in SwapMonstersMenu_ShowParents; entry 8 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
@@ -5791,7 +5791,7 @@ Jump_01E_679E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 9 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 9 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 11 of the table in SwapMonstersMenu_ShowParents2; entry 11 of the table in SwapMonstersMenu_ShowParents; entry 9 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wListCursor, wScreenStep
 ; writes: wScreenStep
@@ -5871,7 +5871,7 @@ Func_01E_6810:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 11 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 15 of the table in SwapMonstersMenu_ShowMonsterDetails; entries 11, 15 of the table in SwapMonstersMenu_ShowMonsterDetails3; entries 11, 15 of the table in SwapMonstersMenu_ShowMonsterDetails2; entries 11, 15 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entries 11, 15 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5888,7 +5888,7 @@ Jump_01E_6840:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 12 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 16 of the table in SwapMonstersMenu_ShowMonsterDetails; entries 12, 16 of the table in SwapMonstersMenu_ShowMonsterDetails3; entries 12, 16 of the table in SwapMonstersMenu_ShowMonsterDetails2; entries 12, 16 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entries 12, 16 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
@@ -5952,7 +5952,7 @@ Jump_01E_6870:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 14 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 14 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 14 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 14 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 14 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5966,7 +5966,7 @@ Jump_01E_68D3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 17 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 17 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 17 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 17 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 17 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
@@ -5988,7 +5988,7 @@ Jump_01E_68E4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 18 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 18 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 18 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 18 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 18 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
@@ -6007,7 +6007,7 @@ Jump_01E_6907:: ; address name
     xor a, a
     ld [rRAMG2], a
 
-; entry 19 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 19 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 19 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 19 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 19 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 19 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
@@ -6035,7 +6035,7 @@ Jump_01E_6920:: ; address name
     xor a, a
     ld [rRAMG2], a
 
-; entry 20 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 20 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 20 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 20 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 20 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 20 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
@@ -6169,7 +6169,7 @@ Jump_01E_69AD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 22 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 22 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 22 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 22 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 22 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 22 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wScreenStep
 SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E::
@@ -6186,7 +6186,7 @@ Jump_01E_6A57:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 25 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 25 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 25 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 25 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 25 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 25 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp5, wScreenStep
 ; writes: rRAMG2, rRAMB, hTemp5, wTextWindowRows, wTextWindowWidth, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, ...
@@ -6284,7 +6284,7 @@ Jump_01E_6A70:: ; address name
     ld [hl+], a
     ld [hl], $12
 
-; entry 26 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 26 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 26 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 26 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 26 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 26 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -6380,7 +6380,7 @@ Jump_01E_6B1F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 28 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 28 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 28 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 28 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 28 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 28 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenSubStep, wScreenStep
@@ -6427,7 +6427,7 @@ Jump_01E_6BC6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 29 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 29 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 29 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 29 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 29 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 29 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wArg1, wScreenStep
 ; points at: wTextWindowTileLo
@@ -6468,7 +6468,7 @@ Jump_01E_6C1F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 30 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 30 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 30 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 30 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 30 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 30 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wArg1, wArg2, hSpriteHideTile, wScreenStep
@@ -6494,7 +6494,7 @@ Jump_01E_6C69:: ; address name
     farcall LoadPartySpeciesSpriteGraphics
     pop hl
 
-; entry 31 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails
+; entry 31 of the `rst $00` table in SwapMonstersMenu_ShowMonsterDetails; also entry 31 of the table in SwapMonstersMenu_ShowMonsterDetails3; entry 31 of the table in SwapMonstersMenu_ShowMonsterDetails2; entry 31 of the table in SwapMonstersMenu_ShowFarmMonsterDetails; entry 31 of the table in SwapMonstersMenu_ShowPartyMemberDetails
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteHideTile, wScreenStep

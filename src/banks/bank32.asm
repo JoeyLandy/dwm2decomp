@@ -5869,7 +5869,7 @@ Jump_032_640B:: ; address name
     ld [wBattleSubStep2], a
     ret
 
-; entry 6 of the `rst $00` table in ResolveStep0EEffect
+; entry 6 of the `rst $00` table in ResolveStep0EEffect; also entries 7, 8 of the table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
 ResolveStep0EEffect_Return::
 Jump_032_643C:: ; address name

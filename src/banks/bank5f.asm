@@ -550,7 +550,7 @@ Jump_05F_6A54:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
-; entry 6 of the `rst $00` table in ShowMessageHL
+; entry 6 of the `rst $00` table in ShowMessageHL; also entry 7 of the table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_ToBeginStringDisplay_Bank2E::
 Jump_05F_6A5B:: ; address name
@@ -564,7 +564,7 @@ Jump_05F_6A62:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
-; entry 9 of the `rst $00` table in ShowMessageHL
+; entry 9 of the `rst $00` table in ShowMessageHL; also entry 10 of the table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
 ShowMessageHL_ToBeginStringDisplay_Bank80::
 Jump_05F_6A69:: ; address name
@@ -1437,7 +1437,7 @@ Func_05F_6EC3:: ; address name
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
-; entry 16 of the `rst $00` table in SceneDancing_DanceSteps
+; entry 16 of the `rst $00` table in SceneDancing_DanceSteps; also entry 13 of the table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
 ; writes: hPlayerStateFlags
@@ -1451,7 +1451,7 @@ Jump_05F_6EE3:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in SceneDancing_DanceSteps
+; entry 12 of the `rst $00` table in SceneDancing_DanceSteps; also entry 9 of the table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
@@ -1494,7 +1494,7 @@ Jump_05F_6EEE:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in SceneMermaidSong2_MoveSteps
+; entry 7 of the `rst $00` table in SceneMermaidSong2_MoveSteps; also entry 10 of the table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: wScriptParam0, hPlayerFacing, wFollowerRecords
@@ -1616,7 +1616,7 @@ Jump_05F_6FE7:: ; address name
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
 
-; entry 0 of the `rst $00` table in SceneDancing_DanceSteps
+; entry 0 of the `rst $00` table in SceneDancing_DanceSteps; also entries 1, 3, 4, 6, 7, 9, 10, 13, 14, 15 of the table in SceneDancing_DanceSteps; entries 0, 1, 5, 6, 8, 11, 12 of the table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
@@ -2427,7 +2427,7 @@ Jump_05F_750C:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunSceneScriptSubStep
+; entry 9 of the `rst $00` table in RunSceneScriptSubStep; also entry 16 of the table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptSubStep
 ; points at: wScriptSubStep
@@ -3413,7 +3413,7 @@ Jump_05F_7B3B:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand0E_Run
+; entry 0 of the `rst $00` table in ScriptCommand0E_Run; also entries 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 of the table in ScriptCommand0E_Run
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand0E_Run_Return::
 Jump_05F_7B40:: ; address name

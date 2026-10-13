@@ -1,7 +1,7 @@
 SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
     db $0C
 
-; implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244)
+; implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244) (C2 from E-0329: started by its script it shows one count per family on two pages)
 ; 1 call site from 1 routine (e.g. ScriptCommandF6)
 ; reads: wScreenState
 LibraryMenu::
@@ -6264,7 +6264,7 @@ Jump_00C_6A04:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 6 of the `rst $00` table in ArenaMenu
+; entry 6 of the `rst $00` table in ArenaMenu; also entries 9, 29, 32 of the table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
@@ -6314,7 +6314,7 @@ Jump_00C_6A29:: ; address name
     call RedrawFullScreenBoxes_0C
     ret
 
-; entry 8 of the `rst $00` table in ArenaMenu
+; entry 8 of the `rst $00` table in ArenaMenu; also entry 31 of the table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wRecordCapacity, wScreenState, wArenaRank
 ; writes: wScriptCommandType, wScriptStartRequest, wScreenState, wArenaRank, wTwoChoiceCursor, wAreaGraphicsIndex, wScreenTableIndex, wRecordCapacity

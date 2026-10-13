@@ -1862,7 +1862,7 @@ Func_010_4A1B:: ; address name
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
 
-; entry 0 of the `rst $00` table in ScriptCommand09
+; entry 0 of the `rst $00` table in ScriptCommand09; also entry 0 of the table in ScriptCommand01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
@@ -1898,7 +1898,7 @@ Jump_010_4A27:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand09
+; entry 1 of the `rst $00` table in ScriptCommand09; also entry 1 of the table in ScriptCommand01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wTextWindowState, wScriptParam0
 ; points at: wScriptStep
@@ -1921,7 +1921,7 @@ Jump_010_4A67:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand09
+; entry 2 of the `rst $00` table in ScriptCommand09; also entry 2 of the table in ScriptCommand01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wTextWindowState, wTextWindowStep
@@ -2097,7 +2097,7 @@ Jump_010_4B76:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
-; entry 6 of the `rst $00` table in Func_010_4AD0
+; entry 6 of the `rst $00` table in Func_010_4AD0; also entry 7 of the table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2E::
 Jump_010_4B7D:: ; address name
@@ -2111,7 +2111,7 @@ Jump_010_4B84:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
-; entry 9 of the `rst $00` table in Func_010_4AD0
+; entry 9 of the `rst $00` table in Func_010_4AD0; also entry 10 of the table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank80::
 Jump_010_4B8B:: ; address name

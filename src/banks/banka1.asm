@@ -1324,7 +1324,7 @@ RunGameMode2MapTypeState_Return::
 Jump_0A1_475A:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in RunGameMode2MapTypeState
+; entry 1 of the `rst $00` table in RunGameMode2MapTypeState; also entry 2 of the table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
@@ -1346,7 +1346,7 @@ Jump_0A1_475B:: ; address name
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 3 of the `rst $00` table in RunGameMode2MapTypeState
+; entry 3 of the `rst $00` table in RunGameMode2MapTypeState; also entries 4, 5, 6 of the table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
@@ -2737,7 +2737,7 @@ Func_0A1_4F8B:: ; address name
     farcall DrawMetaSprite
     ret
 
-; entry 0 of the `rst $00` table in RunGameMode2State
+; entry 0 of the `rst $00` table in RunGameMode2State; also entry 3 of the table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wSpriteSlotCount, wBGPaletteUploadRequest
@@ -3704,7 +3704,7 @@ Jump_0A1_55A1:: ; address name
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07
 
-; entry 1 of the `rst $00` table in SetSpriteYFromCursorCellY
+; entry 1 of the `rst $00` table in SetSpriteYFromCursorCellY; also entry 2 of the table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; points at: wKeyWorldAreaExits
@@ -3726,7 +3726,7 @@ Jump_0A1_55B7:: ; address name
     call SetSpriteXYFromCellA
     ret
 
-; entry 3 of the `rst $00` table in SetSpriteYFromCursorCellY
+; entry 3 of the `rst $00` table in SetSpriteYFromCursorCellY; also entries 4, 5, 6 of the table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; points at: wKeyWorldFloorInfo

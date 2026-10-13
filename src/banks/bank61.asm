@@ -625,7 +625,7 @@ Jump_061_439F:: ; address name
     call LoadSpecialMapHeader
     ret
 
-; entry 3 of the `rst $00` table in LoadMapHeaderByMapType
+; entry 3 of the `rst $00` table in LoadMapHeaderByMapType; also entry 4 of the table in LoadMapHeaderByMapType
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
@@ -1648,7 +1648,7 @@ Jump_061_541A:: ; address name
     call LoadMapScreenFromChunk
     ret
 
-; entry 3 of the `rst $00` table in Func_061_4472
+; entry 3 of the `rst $00` table in Func_061_4472; also entry 4 of the table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
@@ -2268,7 +2268,7 @@ Func_061_5764:: ; address name
     dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
     dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
 
-; entry 0 of the `rst $00` table in Func_061_5764
+; entry 0 of the `rst $00` table in Func_061_5764; also entry 6 of the table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
 CheckWarpAtPlayer_Sub01_ReturnAfterSetup::
 Jump_061_577A:: ; address name
@@ -2633,7 +2633,7 @@ Func_061_596F:: ; address name
     dw CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06
     dw CheckWarpsByMapType_Return
 
-; entry 4 of the `rst $00` table in CheckWarpsByMapType
+; entry 4 of the `rst $00` table in CheckWarpsByMapType; also entry 7 of the table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
 CheckWarpsByMapType_Return::
 Jump_061_5985:: ; address name
