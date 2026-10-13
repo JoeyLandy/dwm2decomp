@@ -1300,7 +1300,7 @@ BattleEnd_Step6_QueueMusic_Case02::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld [wNewRecordByte0D], a
     ld [wScreenState], a
@@ -1391,7 +1391,7 @@ BattleEnd_Step7_StartPaletteFade::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld [wScreenState], a
     ld hl, wModeChangeRequest

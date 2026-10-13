@@ -103,7 +103,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85_Case0F::
     xor a
     ldh [hSpriteWindowClipMode], a
     farcall PlayMapMusic
-    ld de, $0078
+    ld de, EVENT_SCENE_WATCH_OUT_078
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -327,7 +327,7 @@ SceneWaterReward_RunMessageBoxFar_Bank85::
     xor a
     ldh [hSpriteWindowClipMode], a
     farcall PlayMapMusic
-    ld de, $005c
+    ld de, EVENT_SCENE_WATER_REWARD
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -948,7 +948,7 @@ SaveScreen_BufferToBGMap1::
     ld a, $0c
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     xor a
     ld [wTemp0], a
     ld [wTemp1], a
@@ -1198,7 +1198,7 @@ SceneKamehaKeyBattle2_SetFlagBit::
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b85
-    ld de, $003b
+    ld de, EVENT_SCENE_KAMEHA_KEY_BATTLE2
     call SetFlagBit
     ld a, $09
     ldh [hTemp0], a
@@ -1221,7 +1221,7 @@ SceneKamehaKeyBattle2_SetFlagBit::
 .set_temp1_to_09:
     ld a, $09
     ldh [hTemp1], a
-    ld de, $0205
+    ld de, EVENT_KEY_BOSS_BEATEN_2_205
     call TestFlagBit
     jr nc, .call_write_key_entry_temp0
     ld a, $49
@@ -1242,7 +1242,7 @@ SceneKamehaKeyBattle2_SetFlagBit::
     ld [wScriptParam0], a
 
 .call_set_flag_bit:
-    ld de, $003c
+    ld de, EVENT_HERO_RECEIVED_THE_TRAVELER_KEY
     call SetFlagBit
     ld hl, $0b9c ; 'Kameha: That was a good warmup!'
     call StartMessageHL_B85
@@ -1294,7 +1294,7 @@ SceneKamehaKeyBattle_SetFlagBit::
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b85
-    ld de, $0039
+    ld de, EVENT_SCENE_KAMEHA_KEY_BATTLE
     call SetFlagBit
     ld a, $07
     ldh [hTemp0], a
@@ -1317,7 +1317,7 @@ SceneKamehaKeyBattle_SetFlagBit::
 .set_temp1_to_07:
     ld a, $07
     ldh [hTemp1], a
-    ld de, $0203
+    ld de, EVENT_KEY_BOSS_BEATEN_203
     call TestFlagBit
     jr nc, .call_write_key_entry_temp0
     ld a, $47
@@ -1338,7 +1338,7 @@ SceneKamehaKeyBattle_SetFlagBit::
     ld [wScriptParam0], a
 
 .call_set_flag_bit:
-    ld de, $003a
+    ld de, EVENT_HERO_RECEIVED_THE_ELF_KEY
     call SetFlagBit
     ld hl, $0b92 ; 'Kameha: Well, uh, luck and status'
     call StartMessageHL_B85
@@ -1414,7 +1414,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
     call StartMessageHL_B85
     ld a, $01
     ld [wLinkByte94], a
-    ld de, $0038
+    ld de, EVENT_SCENE_TERRY_BATTLE_038
     call SetFlagBit
     ret
 
@@ -1424,7 +1424,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
     ret
 
 SceneTerryBattle_SetFlagBitAndStep::
-    ld de, $0037
+    ld de, EVENT_SCENE_TERRY_BATTLE
     call SetFlagBit
     ld a, $14
     ldh [hTemp0], a
@@ -1563,7 +1563,7 @@ SceneLimboMonster2_StepObjectTowardCoord_Case0F::
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld de, $002b
+    ld de, EVENT_SCENE_LIMBO_MONSTER2
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -1728,7 +1728,7 @@ SceneLimboMonster_AddStepDeltaToPointedByte::
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld de, $002a
+    ld de, EVENT_SCENE_LIMBO_MONSTER
     call SetFlagBit
     xor a
     ldh [hFieldDrawFlags], a
@@ -1920,7 +1920,7 @@ ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
     ld [wStoryFlags + $61], a
     ld hl, wScriptStep
     inc [hl]
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     ret c
     ld a, $80
@@ -2009,7 +2009,7 @@ ScreenAnimationTable::
     dw Map2FAttrs4_Y1X0 ; frame 1 attribute map
 
 ScenePoorChurch_TestFlagBit::
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr nc, .clear_script_param1
     ld a, $01
@@ -2466,7 +2466,7 @@ SceneBarrel_SetFlagBit::
     call SetFlagBit
 
 .call_test_flag_bit:
-    ld de, $0162
+    ld de, EVENT_KIRAL_PLEASE_GO_STOP_HIM
     call TestFlagBit
     jr c, .call_set_flag_bit2
     ld a, $80
@@ -2474,7 +2474,7 @@ SceneBarrel_SetFlagBit::
     ret
 
 .call_set_flag_bit2:
-    ld de, $0163
+    ld de, EVENT_SCENE_BARREL
     call SetFlagBit
     ld hl, $0779 ; '*: PROFE… SOR… ORDER… MUST… OBEY…'
     call StartMessageHL_B85

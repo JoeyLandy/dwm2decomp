@@ -1833,7 +1833,7 @@ LoadPlayerAndFollowerSpriteGraphics::
     jr nc, .set_player_sprite_mode_to_01
 
 .call_test_flag_bit:
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     jr c, .check_player_state_flags
 
@@ -2068,7 +2068,7 @@ DrawFollowerSpriteIfFlag1B::
     ldh a, [hFieldDrawFlags]
     bit 1, a
     ret nz
-    ld de, $001b
+    ld de, EVENT_SCENE_LAND_HO
     call TestFlagBit
     ret nc
     ldh a, [hPlayerSpriteVariant]
@@ -3337,7 +3337,7 @@ StartScript4F7CAndSetFlag06::
 ; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119)
 ; starts Script_4F9D: 'Warubou: Calm down and listen! What'
 IfFlag000AStartScript4F9D::
-    ld de, $000a
+    ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
     ret nc
     ld hl, Script_4F9D
@@ -3351,13 +3351,13 @@ Talk0046_ThanksForComingBy::
     ld de, $0025
     call TestFlagBit
     jr c, .set_data_bank_to_102
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     jr c, .set_data_bank_to_10
-    ld de, $000c
+    ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0007
+    ld de, EVENT_THANKS_FOR_COMING_BY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld a, $01
@@ -3365,7 +3365,7 @@ Talk0046_ThanksForComingBy::
     farcall RunFieldCommandTemp0
     ld hl, Script_4F88
     call StartScriptAtHL_B04
-    ld de, $0007
+    ld de, EVENT_THANKS_FOR_COMING_BY
     call SetFlagBit
     ret
 
@@ -3577,7 +3577,7 @@ ReadableTalkEvents_TestFlagBit_Case17::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $0024
+    ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     ret c
 
@@ -3605,7 +3605,7 @@ TalkMsg000F_HeroPeeredIntoTheBarrelIt::
 ; with story flag $1A set: counts keys twice (WriteKeyEntryTemp0 with hTemp1 = 1 and 2), sets bit 7
 ; of wGameFlags836 and starts script $5039 (E-0124)
 MapEventCountKeysAndStartScript5039::
-    ld de, $001a
+    ld de, EVENT_SCENE_OASIS_KEY
     call TestFlagBit
     ret nc
     farcall CountKeysOrFull
@@ -3627,7 +3627,7 @@ MapEventCountKeysAndStartScript5039::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'You saved
 ; us all by yourself.' (E-0082)
 IfFlag00D1Msg0D33_YouSavedUsAll::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d33 ; '*: You saved us all by'
@@ -3638,7 +3638,7 @@ IfFlag00D1Msg0D33_YouSavedUsAll::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Please,
 ; eat up, eat up! Don't' (E-0082)
 IfFlag00D1Msg0D34_PleaseEatUpEat::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d34 ; '*: Please, eat up, eat up!'
@@ -3649,7 +3649,7 @@ IfFlag00D1Msg0D34_PleaseEatUpEat::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Hm? I saw
 ; your family. They' (E-0082)
 IfFlag00D1Msg0D35_HmISawYour::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d35 ; '*: Hm? I saw your family.'
@@ -3660,7 +3660,7 @@ IfFlag00D1Msg0D35_HmISawYour::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'The
 ; Kingdom is rejoicing!' (E-0082)
 IfFlag00D1Msg0D36_TheKingdomIsRejoicing::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d36 ; '*: The Kingdom is rejoicing!'
@@ -3671,7 +3671,7 @@ IfFlag00D1Msg0D36_TheKingdomIsRejoicing::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Instead
 ; of standing around, you should' (E-0082)
 IfFlag00D1Msg0D37_InsteadOfStandingAround::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d37 ; '*: Instead of standing around, you'
@@ -3682,7 +3682,7 @@ IfFlag00D1Msg0D37_InsteadOfStandingAround::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Just
 ; imagine if you weren't here.' (E-0082)
 IfFlag00D1Msg0D38_JustImagineIfYou::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d38 ; '*: Just imagine if you weren't'
@@ -3693,7 +3693,7 @@ IfFlag00D1Msg0D38_JustImagineIfYou::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Ah,
 ; GreatLog's mighty hero! I hope' (E-0082)
 IfFlag00D1Msg0D39_AhGreatLogsMightyHero::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d39 ; '*: Ah, GreatLog's mighty hero! I'
@@ -3704,7 +3704,7 @@ IfFlag00D1Msg0D39_AhGreatLogsMightyHero::
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'To be
 ; honest, I was getting' (E-0082)
 IfFlag00D1Msg0D3A_ToBeHonestI::
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld hl, $0d3a ; '*: To be honest, I was'
@@ -3856,7 +3856,7 @@ TalkMsg0802_AroundThesePartsItsFaster::
 ; StartMessageCommand09HL (script command $09); that string begins 'I saw a haunted ship in the'
 ; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case03)
 TalkMsg0803_ISawAHauntedShipIn::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0803 ; '*: I saw a haunted ship'
@@ -3874,7 +3874,7 @@ TalkMsg0803_ISawAHauntedShipIn::
 ; island off the coast appears' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case03_Sub01_Case04)
 TalkMsg0804_TheVolcanicIslandOffTheCoast::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0804 ; '*: The volcanic island off the'
@@ -3891,7 +3891,7 @@ TalkMsg0804_TheVolcanicIslandOffTheCoast::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Mermaids lived in the
 ; sea in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case05)
 TalkMsg0805_MermaidsLivedInTheSeaIn::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0805 ; '*: Mermaids lived in the sea'
@@ -3904,7 +3904,7 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
     ret
 
 YoldTalkEvents_TestFlagBit::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $0060
@@ -4014,7 +4014,7 @@ TalkMsg080C_WelcomeToPolonaItsATourist::
 ; through StartMessageCommand09HL (script command $09); that string begins 'You could meet mermaids
 ; here in the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case10)
 TalkMsg080D_YouCouldMeetMermaidsHere::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $080d ; '*: You could meet mermaids here'
@@ -4081,7 +4081,7 @@ YoldTalkEvents_TestFlagBit_Case13::
     ldh a, [hTemp2]
     ld de, wTextBuf2 + $2
     call ReadBank08Table4558WordForA
-    ld de, $006d
+    ld de, EVENT_THE_PIRATES
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5C40
@@ -4127,7 +4127,7 @@ TalkMsg081B_AhhThisIsHeavenlyItMakes::
 ; StartMessageCommand09HL (script command $09); that string begins 'I came from far away to see'
 ; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case17)
 TalkMsg081C_ICameFromFarAwayTo::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $081c ; '*: I came from far away'
@@ -4227,7 +4227,7 @@ YoldTalkEvents_StartScriptAtHL_B04_Case20::
 ; through StartMessageCommand09HL (script command $09); that string begins 'There is a lighthouse to
 ; the east,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case21)
 TalkMsg0824_ThereIsALighthouseToThe::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0824 ; '*: There is a lighthouse to'
@@ -4260,7 +4260,7 @@ TalkMsg0826_TheOldManInTheTaverns::
 ; through StartMessageCommand09HL (script command $09); that string begins 'This port used to be
 ; lively in' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case24)
 TalkMsg0827_ThisPortUsedToBeLively::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0827 ; '*: This port used to be'
@@ -4277,7 +4277,7 @@ TalkMsg0827_ThisPortUsedToBeLively::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The lighthouse had the
 ; MoonRock installed at' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case25)
 TalkMsg0829_TheLighthouseHadTheMoonRock::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0829 ; '*: The lighthouse had the MoonRock'
@@ -4399,10 +4399,10 @@ TalkScript5BC4::
 ; through StartMessageCommand09HL (script command $09); that string begins 'When that old man gets
 ; grogged You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case30)
 TalkMsg0834_WhenThatOldManGetsGrogged::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $006d
+    ld de, EVENT_THE_PIRATES
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0834 ; '*: When that old man gets'
@@ -4425,7 +4425,7 @@ TalkMsg0834_WhenThatOldManGetsGrogged::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The old fellow there,
 ; the instant he' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case31)
 TalkMsg0835_TheOldFellowThereTheInstant::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $007a
@@ -4454,13 +4454,13 @@ TalkMsg0836_TheVolcanicIslandOffTheCoast::
     ret
 
 YoldTalkEvents_ShowHnnnrHicGnnZzz::
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld de, $007a
     call TestFlagBit
     jr c, .call_party_has_species_lo3_c_to5_b_with_hi
-    ld de, $006d
+    ld de, EVENT_THE_PIRATES
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     call PartyHasSpeciesLo3CTo5BWithHiSet
@@ -4537,7 +4537,7 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
     ret
 
 YoldTalkEvents_TestFlagBit_Case34::
-    ld de, $0066
+    ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     ld de, $0065
@@ -4662,12 +4662,12 @@ YoldTalkEvents_TestFlagBit_Case3D::
     ret
 
 YoldTalkEvents_ShowThisIsTheMermaid::
-    ld de, $00f1
+    ld de, EVENT_THIS_IS_THE_MERMAID
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, $084e ; '*: This is the mermaid kingdom.'
     call StartMessageCommand09HL_B04
-    ld de, $00f1
+    ld de, EVENT_THIS_IS_THE_MERMAID
     call SetFlagBit
     ret
 
@@ -4681,7 +4681,7 @@ YoldTalkEvents_ShowThisIsTheMermaid::
 ; through StartMessageCommand09HL (script command $09); that string begins 'I know not all humans
 ; are bad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3F)
 TalkMsg084F_IKnowNotAllHumansAre::
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $084f ; '*: I know not all humans'
@@ -4698,7 +4698,7 @@ TalkMsg084F_IKnowNotAllHumansAre::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The pirates caught us in
 ; nets and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case40)
 TalkMsg0850_ThePiratesCaughtUsInNets::
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0850 ; '*: The pirates caught us in'
@@ -4731,7 +4731,7 @@ TalkMsg0852_TheMoonRockFellFromTheSky::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The pirates sank with
 ; their ship. However,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case43)
 TalkMsg0853_ThePiratesSankWithTheirShip::
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0853 ; '*: The pirates sank with their'
@@ -4748,7 +4748,7 @@ TalkMsg0853_ThePiratesSankWithTheirShip::
 ; through StartMessageCommand09HL (script command $09); that string begins 'We mermaids are peaceful
 ; beings. We shy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case44)
 TalkMsg0854_WeMermaidsArePeacefulBeings::
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0854 ; '*: We mermaids are peaceful beings.'
@@ -4761,13 +4761,13 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
     ret
 
 YoldTalkEvents_TestFlagBit_Case45::
-    ld de, $005e
+    ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check
-    ld de, $0070
+    ld de, EVENT_WELCOME_YOUNG_HUMAN_I_HEARD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_5C77
@@ -5349,7 +5349,7 @@ TalkMsg0130_ThisIsKalkaAnOasisVillage::
 ; through StartMessageCommand09HL (script command $09); that string begins 'A thieving band runs
 ; amok here. It's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case01)
 TalkMsg0131_AThievingBandRunsAmokHere::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0131 ; '*: A thieving band runs amok'
@@ -5366,7 +5366,7 @@ TalkMsg0131_AThievingBandRunsAmokHere::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Pardon? A plug for a
 ; navel? Sorry,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case02)
 TalkMsg0132_PardonAPlugForANavel::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0132 ; '*: Pardon? A plug for a'
@@ -5391,7 +5391,7 @@ TalkMsg0133_TheOasisWaterTravelsThrough::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The leader of the
 ; thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case04)
 TalkMsg0134_TheLeaderOfTheThievesIs::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0134 ; '*: The leader of the thieves'
@@ -5408,7 +5408,7 @@ TalkMsg0134_TheLeaderOfTheThievesIs::
 ; StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? What is that?
 ; I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case05)
 TalkMsg0135_TheLogsNavelWhatIsThat::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, $0135 ; '*: The Log's Navel? What is'
@@ -5425,7 +5425,7 @@ TalkMsg0135_TheLogsNavelWhatIsThat::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The Log's Navel? Let me
 ; think Perhaps' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case06)
 TalkMsg0136_TheLogsNavelLetMeThink::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0136 ; '*: The Log's Navel? Let me'
@@ -5465,10 +5465,10 @@ VaseItem_Herb::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The underground canal is
 ; ahead. The last' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case09)
 TalkMsg0138_TheUndergroundCanalIsAhead::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $004a
@@ -5516,7 +5516,7 @@ KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The King called a circus
 ; troupe to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0B)
 TalkMsg0139_TheKingCalledACircusTroupe::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0139 ; '*: The King called a circus'
@@ -5541,7 +5541,7 @@ TalkMsg013A_ThisIsAsiyaTheDesertFlower::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Our King came into an
 ; enormous inheritance.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0D)
 TalkMsg013B_OurKingCameIntoAnEnormous::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $013b ; '*: Our King came into an'
@@ -5558,7 +5558,7 @@ TalkMsg013B_OurKingCameIntoAnEnormous::
 ; StartMessageCommand09HL (script command $09); that string begins 'I saw a lake like a mirage.'
 ; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0E)
 TalkMsg013C_ISawALakeLikeA::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $013c ; '*: I saw a lake like'
@@ -5578,16 +5578,16 @@ TalkMsg013C_ISawALakeLikeA::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Strong monsters are in
 ; the well. You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case0F)
 TalkMsg013D_StrongMonstersAreInTheWell::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $0048
+    ld de, EVENT_STRONG_MONSTERS_ARE_IN_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0045
+    ld de, EVENT_KING_THEN_MAKE_WAY_TO
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $013d ; '*: Strong monsters are in the'
@@ -5597,7 +5597,7 @@ TalkMsg013D_StrongMonstersAreInTheWell::
 .call_start_message_command09_hl_b04:
     ld hl, $0168 ; '*: Do I have any concerns?'
     call StartMessageCommand09HL_B04
-    ld de, $0048
+    ld de, EVENT_STRONG_MONSTERS_ARE_IN_THE
     call SetFlagBit
     ret
 
@@ -5628,7 +5628,7 @@ TalkMsg013E_OurKingHasBeenAFan::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The circus master was
 ; trying to recruit' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case11)
 TalkMsg013F_TheCircusMasterWasTrying::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $013f ; '*: The circus master was trying'
@@ -5664,7 +5664,7 @@ KalkaTalkEvents_TestFlagBit::
 ; through StartMessageCommand09HL (script command $09); that string begins 'No one enters the castle
 ; without a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case13)
 TalkMsg0140_NoOneEntersTheCastleWithout::
-    ld de, $0043
+    ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0140 ; '*: No one enters the castle'
@@ -5682,10 +5682,10 @@ TalkMsg0140_NoOneEntersTheCastleWithout::
 ; StartMessageCommand09HL (script command $09); that string begins 'If you want to get in that'
 ; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case14)
 TalkMsg0141_IfYouWantToGetIn::
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0043
+    ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0141 ; '*: If you want to get'
@@ -5707,7 +5707,7 @@ TalkMsg0141_IfYouWantToGetIn::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Did you want something,
 ; honey? A plug' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case15)
 TalkMsg0142_DidYouWantSomethingHoney::
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0142 ; '*: Did you want something, honey?'
@@ -5744,7 +5744,7 @@ KalkaTalkEvents_TestFlagBit_Case17::
     ret
 
 KalkaTalkEvents_TestFlagBit_Case18::
-    ld de, $0042
+    ld de, EVENT_DID_YOU_SAY_YES_YES
     call TestFlagBit
     jr c, .check_party_count
     ld a, [wPartyCount]
@@ -5818,7 +5818,7 @@ TalkMsg0137_HeroCheckedTheOvenASharp_046456::
 ; (script command $09); that string begins 'We didn't help the thieves! One of' (E-0268, the E-0082
 ; shape; was DispatchTalkEvent_Case02_Sub01_Case1C)
 IfFlag056Msg018F_WeDidntHelpTheThievesOne::
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     ret nc
     ld hl, $018f ; '*: We didn't help the thieves!'
@@ -5855,7 +5855,7 @@ KalkaTalkEvents_StartScriptAtHL_B04::
 ; $0150 through StartMessageCommand09HL (script command $09); that string begins 'I heard that the
 ; thieves disappear as' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case20)
 TalkMsg0150_IHeardThatTheThievesDisappear::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0150 ; '*: I heard that the thieves'
@@ -5872,7 +5872,7 @@ TalkMsg0150_IHeardThatTheThievesDisappear::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Several of our members
 ; came back. We' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case21)
 TalkMsg0154_SeveralOfOurMembersCameBack::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0154 ; '*: Several of our members came'
@@ -5889,7 +5889,7 @@ TalkMsg0154_SeveralOfOurMembersCameBack::
 ; through StartMessageCommand09HL (script command $09); that string begins 'When the thieves raided
 ; us, we ran.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case22)
 TalkMsg0155_WhenTheThievesRaidedUsWe::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0155 ; '*: When the thieves raided us,'
@@ -5906,7 +5906,7 @@ TalkMsg0155_WhenTheThievesRaidedUsWe::
 ; through StartMessageCommand09HL (script command $09); that string begins 'I wonder if the others
 ; are safe' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case23)
 TalkMsg0156_IWonderIfTheOthersAre::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0156 ; '*: I wonder if the others'
@@ -5932,10 +5932,10 @@ TalkMsg0157_HehDidYouSeeTheLooks::
 ; through StartMessageCommand09HL (script command $09); that string begins 'This is the King's
 ; treasury! No one,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case25)
 TalkMsg0158_ThisIsTheKingsTreasuryNo::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0158 ; '*: This is the King's treasury!'
@@ -5959,13 +5959,13 @@ TalkMsg0158_ThisIsTheKingsTreasuryNo::
 ; through StartMessageCommand09HL (script command $09); that string begins 'What? See his Majesty's
 ; treasure? What foolishness!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case26)
 TalkMsg0159_WhatSeeHisMajestysTreasure::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0159 ; '*: What? See his Majesty's treasure?'
@@ -5988,10 +5988,10 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
     ret
 
 KalkaTalkEvents_TestFlagBit_Case27::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_5B57
@@ -6014,10 +6014,10 @@ KalkaTalkEvents_TestFlagBit_Case27::
 ; through StartMessageCommand09HL (script command $09); that string begins 'His Majesty is honest
 ; and most certainly' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case28)
 TalkMsg015A_HisMajestyIsHonestAndMost::
-    ld de, $0053
+    ld de, EVENT_YOU_WILL_SO_WE_CAN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0049
+    ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $015a ; '*: His Majesty is honest and'
@@ -6052,22 +6052,22 @@ TalkMsg015F_HeroCheckedTheDresserThere::
     ret
 
 KalkaTalkEvents_TestFlagBit_Case2B::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $0054
+    ld de, EVENT_SCENE_WATER_SOLVED
     call TestFlagBit
     jr c, .call_start_script_at_hl_b043
-    ld de, $0049
+    ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0048
+    ld de, EVENT_STRONG_MONSTERS_ARE_IN_THE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $0045
+    ld de, EVENT_KING_THEN_MAKE_WAY_TO
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld de, $0044
@@ -6117,7 +6117,7 @@ KalkaTalkEvents_TestFlagBit_Case2B::
 ; through StartMessageCommand09HL (script command $09); that string begins 'That fool is a terrible
 ; swindler. I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2C)
 TalkMsg0166_ThatFoolIsATerribleSwindler::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0166 ; '*: That fool is a terrible'
@@ -6134,7 +6134,7 @@ TalkMsg0166_ThatFoolIsATerribleSwindler::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Humph! A mirage lake, he
 ; says! No' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case2D)
 TalkMsg0167_HumphAMirageLakeHeSays::
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0167 ; '*: Humph! A mirage lake, he'
@@ -6148,7 +6148,7 @@ TalkMsg0167_HumphAMirageLakeHeSays::
 
 ; starts Script_5A95: '*: What? Open the Canal Gate'
 KalkaTalkEvents_TestFlagBit_Case2E::
-    ld de, $0049
+    ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
     ret nc
     ld hl, Script_5A95
@@ -6263,7 +6263,7 @@ ChestItem_AGL::
 
 ; starts Script_5AAB: '*: I'm making a new home'
 KalkaTalkEvents_TestFlagBit_Case37::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5AAB
@@ -6276,10 +6276,10 @@ KalkaTalkEvents_TestFlagBit_Case37::
     ret
 
 KalkaTalkEvents_TestFlagBit_Case38::
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     ret nc
-    ld de, $0057
+    ld de, EVENT_CHECK_ITEM
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld a, $19
@@ -6338,7 +6338,7 @@ KalkaTalkEvents_StartScriptAtHL_B04_Case39::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Thieves drove us from
 ; our homes!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3A)
 TalkMsg0194_ThievesDroveUsFromOurHomes::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0194 ; '*: Thieves drove us from our'
@@ -6355,7 +6355,7 @@ TalkMsg0194_ThievesDroveUsFromOurHomes::
 ; through StartMessageCommand09HL (script command $09); that string begins 'The leader of the
 ; thieves is a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case3B)
 TalkMsg0195_TheLeaderOfTheThievesIs::
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0195 ; '*: The leader of the thieves'
@@ -6371,7 +6371,7 @@ KalkaTalkEvents_RunFieldCommandTemp0::
     ld a, $03
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
-    ld de, $0059
+    ld de, EVENT_HEH_YOU_HAVE_MONSTERS_IN
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_5B3C
@@ -6479,7 +6479,7 @@ DarckTalkEvents::
     dw DarckTalkEvents_TestFlagBit_Case01
 
 DarckTalkEvents_TestFlagBit::
-    ld de, $00d2
+    ld de, EVENT_TAKE_ITEM
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     ld a, $36
@@ -6516,7 +6516,7 @@ DarckTalkEvents_TestFlagBit::
 
 ; starts Script_61E9: 'Darck: Fawahahah! You chased your treasures'
 DarckTalkEvents_TestFlagBit_Case01::
-    ld de, $00d0
+    ld de, EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_61E9
@@ -6589,7 +6589,7 @@ TalkScript5171::
     ret
 
 FieldTalkEvents_TestFlagBit_Case1C::
-    ld de, $0024
+    ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ret
@@ -6600,7 +6600,7 @@ FieldTalkEvents_TestFlagBit_Case1C::
     ret
 
 FieldTalkEvents_TestFlagBit::
-    ld de, $0024
+    ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ret
@@ -7057,7 +7057,7 @@ ElvenVillageTalkEvents::
 
 ; starts Script_6200
 ElvenVillageTalkEvents_TestFlagBit::
-    ld de, $0140
+    ld de, EVENT_SCENE_CYAL_SHINE
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, Script_6200
@@ -7065,10 +7065,10 @@ ElvenVillageTalkEvents_TestFlagBit::
     ret
 
 .call_test_flag_bit:
-    ld de, $0148
+    ld de, EVENT_CYAL_EEEK_HERO_HELP_ME
     call TestFlagBit
     ret c
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     ret nc
     ld hl, Script_624B
@@ -7076,27 +7076,27 @@ ElvenVillageTalkEvents_TestFlagBit::
     ret
 
 ElvenVillageTalkEvents_ShowYoureAHumanHow::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $014f
+    ld de, EVENT_SCENE_GIVE_BACK_CYAL
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014b
+    ld de, EVENT_SCENE_TOO_STRONG
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $0146
+    ld de, EVENT_SCENE_ROLT_ELDER
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0143
+    ld de, EVENT_CYAL_YAY_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $0141
+    ld de, EVENT_YOURE_AHUMAN_HOW
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, $0701 ; '*: You're a human. How did'
     call StartMessageCommand09HL_B04
-    ld de, $0141
+    ld de, EVENT_YOURE_AHUMAN_HOW
     call SetFlagBit
     ret
 
@@ -7116,7 +7116,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
 .call_start_message_command09_hl_b04:
     ld hl, $0706 ; 'Rolt: Go south in the plains,'
     call StartMessageCommand09HL_B04
-    ld de, $0145
+    ld de, EVENT_YOURE_AHUMAN_HOW_145
     call SetFlagBit
     ret
 
@@ -7144,13 +7144,13 @@ ElvenVillageTalkEvents_TestFlagBit_Case02::
     ld de, $0152
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0146
+    ld de, EVENT_SCENE_ROLT_ELDER
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld de, $0143
+    ld de, EVENT_CYAL_YAY_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_6382
@@ -7160,7 +7160,7 @@ ElvenVillageTalkEvents_TestFlagBit_Case02::
 .call_start_message_command09_hl_b04:
     ld hl, $0707 ; 'Cyal: We're going back home now.'
     call StartMessageCommand09HL_B04
-    ld de, $0145
+    ld de, EVENT_YOURE_AHUMAN_HOW_145
     call SetFlagBit
     ret
 
@@ -7188,13 +7188,13 @@ ElvenVillageTalkEvents_TestFlagBit_Case02::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Hello, munchkin. Enjoy
 ; your stay!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case03)
 TalkMsg0708_HelloMunchkinEnjoyYourStay::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0708 ; '*: Hello, munchkin. Enjoy your stay!'
@@ -7222,10 +7222,10 @@ TalkMsg0708_HelloMunchkinEnjoyYourStay::
 ; through StartMessageCommand09HL (script command $09); that string begins 'A human here? It's been
 ; several centuries' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case04)
 TalkMsg0709_AHumanHereItsBeenSeveral::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0709 ; '*: A human here? It's been'
@@ -7247,7 +7247,7 @@ TalkMsg0709_AHumanHereItsBeenSeveral::
 ; through StartMessageCommand09HL (script command $09); that string begins 'You're not like us. You
 ; scare me' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case05)
 TalkMsg070A_YoureNotLikeUsYouScare::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $070a ; '*: You're not like us. You'
@@ -7266,13 +7266,13 @@ TalkMsg070A_YoureNotLikeUsYouScare::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Hey there! I'm a talking
 ; horse. Glad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case06)
 TalkMsg070B_HeyThereImATalkingHorse::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $070b ; '*: Hey there! I'm a talking'
@@ -7299,7 +7299,7 @@ TalkMsg070B_HeyThereImATalkingHorse::
 ; through StartMessageCommand09HL (script command $09); that string begins 'This horse was here
 ; before us.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case07)
 TalkMsg070C_ThisHorseWasHereBeforeUs::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $070c ; '*: This horse was here before'
@@ -7318,13 +7318,13 @@ TalkMsg070C_ThisHorseWasHereBeforeUs::
 ; through StartMessageCommand09HL (script command $09); that string begins 'This is Elven village.
 ; You're a human,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case08)
 TalkMsg070D_ThisIsElvenVillageYoureA::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $070d ; '*: This is Elven village. You're'
@@ -7354,13 +7354,13 @@ TalkMsg070D_ThisIsElvenVillageYoureA::
 ; are wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case09) (E-0324: was
 ; TalkMsg0752_IEHeardThatHumansAre; read before $42 was known as 'v)
 TalkMsg0752_IveHeardThatHumansAre::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0147
+    ld de, EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0752 ; '*: I've heard that humans are'
@@ -7392,27 +7392,27 @@ ElvenVillageTalkEvents_StartScriptAtHL_B04::
     ret
 
 ElvenVillageTalkEvents_ShowWellWellItIs::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld de, $014d
+    ld de, EVENT_WELL_WELL_IT_IS_14D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0146
+    ld de, EVENT_SCENE_ROLT_ELDER
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $0144
+    ld de, EVENT_WELL_WELL_IT_IS
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld de, $0145
+    ld de, EVENT_YOURE_AHUMAN_HOW_145
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, $070f ; '*: Well, well… It is a'
     call StartMessageCommand09HL_B04
-    ld de, $0144
+    ld de, EVENT_WELL_WELL_IT_IS
     call SetFlagBit
     ret
 
@@ -7422,7 +7422,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     ret
 
 .call_test_flag_bit:
-    ld de, $0145
+    ld de, EVENT_YOURE_AHUMAN_HOW_145
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
     ld hl, $0753 ; 'I'm the Village Elder. By the'
@@ -7442,7 +7442,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
 .call_start_message_command09_hl_b042:
     ld hl, $072a ; '*: AgDevil killed Rolt's parents. Rolt'
     call StartMessageCommand09HL_B04
-    ld de, $014d
+    ld de, EVENT_WELL_WELL_IT_IS_14D
     call SetFlagBit
     ret
 
@@ -7458,7 +7458,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
 
 ; starts Script_626A: '*: Master AgDevil, a human, ruff!'
 ElvenVillageTalkEvents_TestFlagBit_Case0C::
-    ld de, $0148
+    ld de, EVENT_CYAL_EEEK_HERO_HELP_ME
     call TestFlagBit
     ret nc
     ld hl, Script_626A
@@ -7470,7 +7470,7 @@ ElvenVillageTalkEvents_TestFlagBit_Case0C::
 ; StartMessageCommand09HL (script command $09); that string begins 'Tch, we have to eat the lousy'
 ; (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0D)
 TalkMsg0723_TchWeHaveToEatThe::
-    ld de, $014a
+    ld de, EVENT_THAT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0723 ; '*: Tch, we have to eat'
@@ -7484,7 +7484,7 @@ TalkMsg0723_TchWeHaveToEatThe::
 
 ; starts Script_6290: '*: That's what we'll do, kid.'
 ElvenVillageTalkEvents_TestFlagBit_Case0E::
-    ld de, $014a
+    ld de, EVENT_THAT
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_6290
@@ -7503,13 +7503,13 @@ ElvenVillageTalkEvents_TestFlagBit_Case0E::
 ; through StartMessageCommand09HL (script command $09); that string begins 'This is Elven's lookout
 ; post. We stand' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case0F)
 TalkMsg072F_ThisIsElvensLookoutPostWe::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $014e
+    ld de, EVENT_THIS_IS_ELVENS_LOOKOUT_POST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $072f ; '*: This is Elven's lookout post.'
@@ -7519,7 +7519,7 @@ TalkMsg072F_ThisIsElvensLookoutPostWe::
 .call_start_message_command09_hl_b04:
     ld hl, $0731 ; '*: This is the lookout post.'
     call StartMessageCommand09HL_B04
-    ld de, $014e
+    ld de, EVENT_THIS_IS_ELVENS_LOOKOUT_POST
     call SetFlagBit
     ret
 
@@ -7539,10 +7539,10 @@ TalkMsg072F_ThisIsElvensLookoutPostWe::
 ; through StartMessageCommand09HL (script command $09); that string begins 'Horrid monsters that
 ; attack elves appear often' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case10)
 TalkMsg0730_HorridMonstersThatAttack::
-    ld de, $0151
+    ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0730 ; '*: Horrid monsters that attack elves'
@@ -7577,12 +7577,12 @@ ElvenVillageTalkEvents_TestFlagBit_Case11::
 
 ; starts Script_6369: 'Rolt: I've found you at last!'
 ElvenVillageTalkEvents_TestFlagBit_Case12::
-    ld de, $014c
+    ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
     ret nc
     ld hl, Script_6369
     call StartScriptAtHL_B04
-    ld de, $0149
+    ld de, EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU
     call SetFlagBit
     ret
 
@@ -7695,22 +7695,22 @@ Talk075F_KiralFetchMeMy::
     ld de, $0167
     call TestFlagBit
     jp c, .call_test_flag_bit2
-    ld de, $0165
+    ld de, EVENT_SCENE_WIZSTONE
     call TestFlagBit
     jp c, .call_test_flag_bit
-    ld de, $0163
+    ld de, EVENT_SCENE_BARREL
     call TestFlagBit
     jr c, .set_temp0_to_3C
-    ld de, $0162
+    ld de, EVENT_KIRAL_PLEASE_GO_STOP_HIM
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
     ld de, $015f
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $015a
+    ld de, EVENT_KIRAL_OH_FOOLISH_OF_ME
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $0159
+    ld de, EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_6398
@@ -7763,12 +7763,12 @@ Talk075F_KiralFetchMeMy::
     ret
 
 .call_test_flag_bit:
-    ld de, $0166
+    ld de, EVENT_KIRAL_FETCH_ME_MY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
     ld hl, $0786 ; 'Kiral: You've been a great help.'
     call StartMessageCommand09HL_B04
-    ld de, $0166
+    ld de, EVENT_KIRAL_FETCH_ME_MY
     call SetFlagBit
     ret
 
@@ -7778,12 +7778,12 @@ Talk075F_KiralFetchMeMy::
     ret
 
 .call_test_flag_bit2:
-    ld de, $0168
+    ld de, EVENT_KIRAL_FETCH_ME_MY_168
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b045
     ld hl, $0789 ; 'Kiral: Hohoh! I've got good news!'
     call StartMessageCommand09HL_B04
-    ld de, $0168
+    ld de, EVENT_KIRAL_FETCH_ME_MY_168
     call SetFlagBit
     ret
 
@@ -7799,7 +7799,7 @@ Talk075A_PiiGgzzPiiiiii::
     ld de, $0167
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0165
+    ld de, EVENT_SCENE_WIZSTONE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     xor a
@@ -7905,7 +7905,7 @@ TalkMsg0766_HeroPeeredIntoTheBarrelA::
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; starts Script_63DB: '0 peered into the barrel. A'
 Talk0768_HeroPeeredIntoThe::
-    ld de, $015d
+    ld de, EVENT_HERO_PEERED_INTO_THE_BARREL
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_63DB
@@ -7922,7 +7922,7 @@ Talk0768_HeroPeeredIntoThe::
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; starts Script_63E4: '0 peered into the barrel. A'
 Talk0768_HeroPeeredIntoThe_70FC::
-    ld de, $015e
+    ld de, EVENT_HERO_PEERED_INTO_THE_BARREL_15E
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_63E4
@@ -7941,7 +7941,7 @@ Talk078E_RobosterStoppedMovingEntirely::
     ld de, $0167
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $0163
+    ld de, EVENT_SCENE_BARREL
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld de, $0161
@@ -7986,10 +7986,10 @@ Talk078E_RobosterStoppedMovingEntirely::
 ; constant message(s) depending on story flags and state; the first one in the code is $077B, whose
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 Talk077B_HeroPeeredIntoThe::
-    ld de, $0164
+    ld de, EVENT_HERO_PEERED_INTO_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $0163
+    ld de, EVENT_SCENE_BARREL
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check
     ld hl, Script_6416
@@ -8010,7 +8010,7 @@ Talk077B_HeroPeeredIntoThe::
     ld [wGameFlags836], a
     ld hl, $077a ; '0 peered into the barrel. There'
     call StartMessageCommand09HL_B04
-    ld de, $0164
+    ld de, EVENT_HERO_PEERED_INTO_THE
     call SetFlagBit
     ret
 
@@ -8032,7 +8032,7 @@ TalkMsg07B7_TheTowersEntryIsSealedTight::
 ; message $078F through StartMessageCommand09HL_B04 (script command $09); that string begins 'This
 ; is the town of Miagen.' (E-0082)
 TalkMsg078F_ThisIsTheTown::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $078f ; '*: This is the town of'
@@ -8050,10 +8050,10 @@ TalkMsg078F_ThisIsTheTown::
 ; starts message $0790 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Are you friends with monsters? You're' (E-0082)
 TalkMsg0790_AreYouFriendsWith::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bc
+    ld de, EVENT_HERO_OPENED_THE_TREASURE_CHEST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0790 ; '*: Are you friends with monsters?'
@@ -8075,7 +8075,7 @@ TalkMsg0790_AreYouFriendsWith::
 ; starts message $0791 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Wow! You have monsters! Neat! Are' (E-0082)
 TalkMsg0791_WowYouHaveMonsters::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0791 ; '*: Wow! You have monsters! Neat!'
@@ -8092,7 +8092,7 @@ TalkMsg0791_WowYouHaveMonsters::
 ; starts message $0792 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Are your monsters good? I don't' (E-0082)
 TalkMsg0792_AreYourMonstersGood::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0792 ; '*: Are your monsters good? I'
@@ -8110,10 +8110,10 @@ TalkMsg0792_AreYourMonstersGood::
 ; starts message $0793 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Monsters can be good or bad.' (E-0082)
 TalkMsg0793_MonstersCanBeGood::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bc
+    ld de, EVENT_HERO_OPENED_THE_TREASURE_CHEST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0793 ; '*: Monsters can be good or'
@@ -8135,7 +8135,7 @@ TalkMsg0793_MonstersCanBeGood::
 ; starts message $0794 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'You appear to have the power' (E-0082)
 TalkMsg0794_YouAppearToHave::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0794 ; '*: You appear to have the'
@@ -8151,16 +8151,16 @@ TalkMsg0794_YouAppearToHave::
 ; constant message(s) depending on story flags and state; the first one in the code is $07A4, whose
 ; string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
 Talk07A4_CouldYouHumorThis::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $01bc
+    ld de, EVENT_HERO_OPENED_THE_TREASURE_CHEST
     call TestFlagBit
     jr c, .set_temp0_to_3D
-    ld de, $01b1
+    ld de, EVENT_THANK_YOU_I_KNEW_YOU
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, Script_6430
@@ -8168,12 +8168,12 @@ Talk07A4_CouldYouHumorThis::
     ret
 
 .call_test_flag_bit:
-    ld de, $01b2
+    ld de, EVENT_COULD_YOU_HUMOR_THIS
     call TestFlagBit
     jr c, .loop
     ld hl, $07a4 ; '*: Could you humor this old'
     call StartMessageCommand09HL_B04
-    ld de, $01b2
+    ld de, EVENT_COULD_YOU_HUMOR_THIS
     call SetFlagBit
     ret
 
@@ -8208,16 +8208,16 @@ Talk07A4_CouldYouHumorThis::
 ; constant message(s) depending on story flags and state; the first one in the code is $07A6, whose
 ; string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
 Talk07A6_OurDaughtersOnlyMemento::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01bf
+    ld de, EVENT_HERO_RECEIVED_A_SAGE_ROCK
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_inventory_has_free_slot_check
-    ld de, $01b1
+    ld de, EVENT_THANK_YOU_I_KNEW_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_6437
@@ -8262,13 +8262,13 @@ Talk07A6_OurDaughtersOnlyMemento::
 ; branches, starts message $0799 through StartMessageCommand09HL_B04 (script command $09); that
 ; string begins 'Monsters raided this house within the' (E-0082)
 TalkMsg0799_MonstersRaidedThisHouse::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01b1
+    ld de, EVENT_THANK_YOU_I_KNEW_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0799 ; '*: Monsters raided this house within'
@@ -8297,13 +8297,13 @@ TalkMsg0799_MonstersRaidedThisHouse::
 ; starts message $079A through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'The old people across the way' (E-0082)
 TalkMsg079A_TheOldPeopleAcross::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01b1
+    ld de, EVENT_THANK_YOU_I_KNEW_YOU
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $079a ; '*: The old people across the'
@@ -8331,10 +8331,10 @@ TalkMsg079A_TheOldPeopleAcross::
 ; starts message $079B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Monsters have taken to attacking the' (E-0082)
 TalkMsg079B_MonstersHaveTakenTo::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bc
+    ld de, EVENT_HERO_OPENED_THE_TREASURE_CHEST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $079b ; '*: Monsters have taken to attacking'
@@ -8357,10 +8357,10 @@ TalkMsg079B_MonstersHaveTakenTo::
 ; starts message $079C through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Grrrr! I'm so angry! Monsters stole' (E-0082)
 TalkMsg079C_GrrrrImSoAngry::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bc
+    ld de, EVENT_HERO_OPENED_THE_TREASURE_CHEST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $079c ; '*: Grrrr! I'm so angry! Monsters'
@@ -8411,10 +8411,10 @@ StartScript6445ByPlayerX30::
 ; starts message $079F through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'If you travel west along the' (E-0082)
 TalkMsg079F_IfYouTravelWest::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $079f ; '*: If you travel west along'
@@ -8438,22 +8438,22 @@ Talk07D7_MilayouIEBeen::
     ld de, $01c5
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld de, $01c4
+    ld de, EVENT_MILAYOU_HOW_DO_I_KNOW
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_script_at_hl_b043
-    ld de, $01c1
+    ld de, EVENT_SCENE_MILAYOU_FOREST
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01c0
+    ld de, EVENT_SCENE_PENDANT_SELLER_1C0
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld de, $01b0
+    ld de, EVENT_I_CAN
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
     ld hl, Script_644C
@@ -8518,13 +8518,13 @@ TalkMsg07A9_ThisIsTheTravelersHutStay::
 ; branches, starts message $07AA through StartMessageCommand09HL_B04 (script command $09); that
 ; string begins 'That dealer, how expensive! Nobody can' (E-0082)
 TalkMsg07AA_ThatDealerHowExpensive::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bb
+    ld de, EVENT_SCENE_MERCY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $07aa ; '*: That dealer, how expensive! Nobody'
@@ -8550,13 +8550,13 @@ TalkMsg07AA_ThatDealerHowExpensive::
 ; constant message(s) depending on story flags and state; the first one in the code is $07C1, whose
 ; string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
 Talk07C1_WhatMonstersAttackedYou::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bb
+    ld de, EVENT_SCENE_MERCY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, Script_6481
@@ -8585,13 +8585,13 @@ Talk07C1_WhatMonstersAttackedYou::
 ; branches, starts message $07AE through StartMessageCommand09HL_B04 (script command $09); that
 ; string begins 'That dealer's wares Could he sell' (E-0082)
 TalkMsg07AE_ThatDealersWaresCould::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
-    ld de, $01c0
+    ld de, EVENT_SCENE_PENDANT_SELLER_1C0
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
-    ld de, $01bb
+    ld de, EVENT_SCENE_MERCY
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $07ae ; '*: That dealer's wares… Could he'
@@ -8617,44 +8617,44 @@ TalkMsg07AE_ThatDealersWaresCould::
 ; constant message(s) depending on story flags and state; the first one in the code is $07AF, whose
 ; string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
 Talk07AF_HowDoesThisOrnament::
-    ld de, $01be
+    ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
     jp c, .call_start_script_at_hl_b042
-    ld de, $01bd
+    ld de, EVENT_YOU_DEFEATED_THE_MONSTERS_YOU
     call TestFlagBit
     jp c, .call_start_message_command09_hl_b04
-    ld de, $01bb
+    ld de, EVENT_SCENE_MERCY
     call TestFlagBit
     jp c, .call_start_script_at_hl_b04
-    ld de, $01b1
+    ld de, EVENT_THANK_YOU_I_KNEW_YOU
     call TestFlagBit
     jr c, .call_test_flag_bit3
-    ld de, $01b3
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld hl, $07af ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
-    ld de, $01b3
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT
     call SetFlagBit
     ret
 
 .call_test_flag_bit:
-    ld de, $01b4
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B4
     call TestFlagBit
     jr c, .call_test_flag_bit2
     ld hl, $07b0 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
-    ld de, $01b4
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B4
     call SetFlagBit
     ret
 
 .call_test_flag_bit2:
-    ld de, $01b5
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B5
     call TestFlagBit
     jr c, .loop
     ld hl, $07b1 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
-    ld de, $01b5
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B5
     call SetFlagBit
     ret
 
@@ -8664,37 +8664,37 @@ Talk07AF_HowDoesThisOrnament::
     ret
 
 .call_test_flag_bit3:
-    ld de, $01b6
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B6
     call TestFlagBit
     jr c, .call_test_flag_bit4
     ld hl, $07b3 ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
-    ld de, $01b6
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B6
     call SetFlagBit
     ret
 
 .call_test_flag_bit4:
-    ld de, $01b7
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B7
     call TestFlagBit
     jr c, .call_test_flag_bit5
     ld hl, $07b4 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
-    ld de, $01b7
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B7
     call SetFlagBit
     ret
 
 .call_test_flag_bit5:
-    ld de, $01b8
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B8
     call TestFlagBit
     jr c, .call_test_flag_bit6
     ld hl, $07b5 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
-    ld de, $01b8
+    ld de, EVENT_HOW_DOES_THIS_ORNAMENT_1B8
     call SetFlagBit
     ret
 
 .call_test_flag_bit6:
-    ld de, $01b9
+    ld de, EVENT_SCENE_PENDANT_SELLER
     call TestFlagBit
     jr c, .loop
     ld hl, Script_648E
@@ -8873,7 +8873,7 @@ ChestItem_Laurel::
 ; when none of them branches, starts message $0CFE through StartMessageCommand09HL_B04 (script
 ; command $09); that string is empty (E-0082)
 TalkMsg0CFE::
-    ld de, $01c3
+    ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0cfe ; '0 opened the treasure chest. It'
@@ -8949,12 +8949,12 @@ TalkMsg0C02_OnlyAHandfulOfMastersHave::
     ret
 
 ElvenVillageTalkEvents_ShowThisIsThePower::
-    ld de, $01d3
+    ld de, EVENT_THIS_IS_THE_POWER
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0c00 ; '*: This is the Power Tower.'
     call StartMessageCommand09HL_B04
-    ld de, $01d3
+    ld de, EVENT_THIS_IS_THE_POWER
     call SetFlagBit
     ret
 
@@ -9220,12 +9220,12 @@ TalkMsg0C1A_InThisTowerYourOpponents::
     ret
 
 ElvenVillageTalkEvents_ShowThisIsTheBaffle::
-    ld de, $0173
+    ld de, EVENT_THIS_IS_THE_BAFFLE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0c18 ; '*: This is the Baffle Tower.'
     call StartMessageCommand09HL_B04
-    ld de, $0173
+    ld de, EVENT_THIS_IS_THE_BAFFLE
     call SetFlagBit
     ret
 
@@ -9483,12 +9483,12 @@ TalkMsg0C32_TheMonstersHereAreAwfulIm::
     ret
 
 ElvenVillageTalkEvents_ShowIfYouveMadeIt::
-    ld de, $00de
+    ld de, EVENT_IF_YOUVE_MADE_IT
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     ld hl, $0c30 ; '*: If you've made it to'
     call StartMessageCommand09HL_B04
-    ld de, $00de
+    ld de, EVENT_IF_YOUVE_MADE_IT
     call SetFlagBit
     ret
 

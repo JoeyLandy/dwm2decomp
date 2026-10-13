@@ -2109,7 +2109,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld a, $01
     ld [wModeChangeRequest], a

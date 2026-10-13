@@ -3590,7 +3590,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld [wScreenState], a
     ld hl, wModeChangeRequest
@@ -3792,7 +3792,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade::
     ld a, $01
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld [wScreenState], a
     ld hl, wModeChangeRequest

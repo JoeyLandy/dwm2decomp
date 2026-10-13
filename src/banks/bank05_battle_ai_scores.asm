@@ -306,7 +306,7 @@ SkillPassesStatus1Bit0Check::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr z, .done
     ld c, $00
     ret
@@ -324,7 +324,7 @@ PassUnlessWCFF3Bit4AndActorStatusBit7::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jp z, .done
     ld c, $00
     ret
@@ -342,7 +342,7 @@ PassUnlessWCFF3Bit5AndActorStatusBit6::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jp z, .done
     ld c, $00
     ret
@@ -639,7 +639,7 @@ AnyActiveFoeHasSkillFlag40::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .next
     call SlotHasSkillWithFlagD
     jr nz, .set_record_buffer
@@ -727,7 +727,7 @@ AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr nz, .next
     call SlotHasSkillWithFlagD
     jr nz, .set_record_buffer
@@ -1352,7 +1352,7 @@ ActorLacksStatus1Bit3::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT1_CRITICAL, [hl]
     jr z, .done
     ld c, $00
     ret
@@ -1378,7 +1378,7 @@ AIScore_TailWind_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT2_WIND_GUARD, [hl]
     jr z, .done
     ld c, $00
     ret
@@ -1704,7 +1704,7 @@ AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .next
     call SlotHasSkillWithFlagD
     jr z, .next
@@ -1967,7 +1967,7 @@ AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr nz, .next
     call SlotHasSkillWithFlagD
     jr z, .next
@@ -2012,7 +2012,7 @@ AnyFoeWithSkillFlag10VulnerableWDA78::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .next
     call SlotHasSkillWithFlagD
     jr z, .next
@@ -3678,7 +3678,7 @@ FailIfFoeKnowsSkills42To47::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .next
     ld hl, wBattleSkills
     swap a
@@ -4357,7 +4357,7 @@ CheckFoeStatus6Bit3::
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT6_IMITATE, [hl]
     jr nz, .done
 
 .next:
@@ -4652,7 +4652,7 @@ AIGateLoneAllyMPAndSkills::
     ld a, e
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .done2
     ld a, e
     swap a
@@ -4713,7 +4713,7 @@ FailIfAllyLacksMPForHealSkill::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr nz, .loop2
     ld a, c
     swap a
@@ -4805,7 +4805,7 @@ FailIfAbleAllyKnowsSkillList6D1A:: ; configured code entry (E-0175); C0
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr nz, .loop2
     call CountSkillsInList6D1A
     jr z, .loop2
@@ -4965,7 +4965,7 @@ FailIfAbleAllyKnowsSkill42To47:: ; configured code entry (E-0228); C0
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .loop2
     ld hl, wBattleSkills
     swap a
@@ -5030,7 +5030,7 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr z, .loop2
     ld hl, wBattleSkills
     swap a
@@ -5439,7 +5439,7 @@ AnyFoeOpenToWDA74Field3::
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT0_ASLEEP, [hl]
     jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $2
@@ -5519,7 +5519,7 @@ AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT8_EERIE_LITE, [hl]
     jr nz, .skip
     ld a, [de]
     and $30
@@ -5593,7 +5593,7 @@ AnyFoeVulnerableByWDA75Bits67::
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT0_CONFUSED, [hl]
     jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $3
@@ -6092,7 +6092,7 @@ TestSlotStatus1Bit0OrSideFlagBit3::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     ret nz
     ld a, c
     rrca
@@ -6109,7 +6109,7 @@ TestSlotStatus1Bit6::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     ret
 
 SlotCHasCastableHealSkill_Data::
@@ -6189,7 +6189,7 @@ AIScore_AquaWall_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT2_AQUA_WALL, [hl]
     jr nz, .done
     ld c, $ff
     ret
@@ -6604,7 +6604,7 @@ AnyFoeHasSkillWithFlagD::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .next
     call SlotCSkillFlagMatchD
     jr nz, .set_record_buffer

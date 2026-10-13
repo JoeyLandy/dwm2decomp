@@ -19,9 +19,9 @@ GameMode2_Init::
 
 ; per-frame routine for wGameMode = 2
 GameMode2_Update::
-    ld a, [wGameMode2State]
+    ld a, [wWorldMapState]
     bit 7, a
-    jr z, PauseMenu_State4_CheckGameMode2State
+    jr z, PauseMenu_State4_CheckWorldMapState
     call GameMode2_Update_WriteGM2TimerFramesAndGM2TimerSecondsEtc
     ld a, [wModeState]
     and $07
@@ -37,8 +37,8 @@ PauseMenu_State4::
     farcall PauseMenu_State4_GiftMenu
     ret
 
-PauseMenu_State4_CheckGameMode2State::
-    ld a, [wGameMode2State]
+PauseMenu_State4_CheckWorldMapState::
+    ld a, [wWorldMapState]
     or a
     jp nz, .call_fill_tiles_request
     xor a
@@ -110,7 +110,7 @@ PauseMenu_State4_CheckGameMode2State::
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyTileBufferToBGMap
-    ld hl, wGameMode2State
+    ld hl, wWorldMapState
     inc [hl]
     ret
 
@@ -151,7 +151,7 @@ PauseMenu_State4_CheckGameMode2State::
     call FillTilesRequest
     ld a, [wIsCGB]
     or a
-    jr z, .set_game_mode2_state_to_80
+    jr z, .set_world_map_state_to_80
     ld hl, wBGPaletteBuffer
     ld a, $39
     ld [hli], a
@@ -182,9 +182,9 @@ PauseMenu_State4_CheckGameMode2State::
     ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
 
-.set_game_mode2_state_to_80:
+.set_world_map_state_to_80:
     ld a, $80
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     xor a
     ld [wDataBankSave], a
     ld hl, vBGMap0 + $1c0

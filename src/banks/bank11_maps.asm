@@ -254,10 +254,10 @@ CheckWarpsAtPlayerPosition::
     ldh a, [hPlayerY]
     cp $50
     jr nz, .check_player_state_flags
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .check_player_state_flags
-    ld de, $0070
+    ld de, EVENT_WELCOME_YOUNG_HUMAN_I_HEARD
     call TestFlagBit
     jr nc, .check_player_state_flags
     jr .done

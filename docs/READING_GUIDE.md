@@ -25,6 +25,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | `src/constants.inc` | Named ids made from the ROM's own name tables: `MONSTER_DRACKY`, `SKILL_DEMAGIC`, `ITEM_HERB`, and `ACTION_FIGHT` for the plain attack. Code compares battle actions by name (`cp SKILL_DEMAGIC`), and data tables list skills and monsters by name (`db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills`). |
 | `src/macros.inc` | Macros for the ROM's own idioms (below) and the event-script command constants. |
 | `src/charmap.inc` | The text encoding: characters, and the text printer's commands as `<TOKENS>`. |
+| `src/constants.inc` (continued) | Story flags as `EVENT_*`, named after what sets them (`EVENT_THANKS_FOR_COMING_BY` is set by the talk routine that says it; the comment names the setter), and battle status bits as `BSTAT<byte>_<NAME>` (`bit BSTAT0_ASLEEP, [hl]` on `wBattleStatus`). |
 | `src/assets.txt` | The asset files the source includes by name (`INCBIN "gfx/monster_sprites/drak_slime.lz"`, `maps/map00/screens0_y1_x1.bin`, ...): each one's offset and length in the original ROM. The build extracts them from your copy of the ROM into its own directory, so no game data is stored in the repository. `.lz` files are compressed with the game's LZSS scheme (`tools/lzss_gfx.py`). |
 | `src/hardware.inc` | Game Boy hardware register names. |
 

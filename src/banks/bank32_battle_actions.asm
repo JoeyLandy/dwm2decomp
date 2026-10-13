@@ -1800,7 +1800,7 @@ RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 5, [hl]
+    bit BSTAT0_CURSED, [hl]
     jr z, RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled
     call RollStatusTickEffect
     jr nc, RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled
@@ -1821,7 +1821,7 @@ RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT0_CONFUSED, [hl]
     jr z, RunBattleActions_StatusChecks_StartAction_SetBattleResolveStep
     call PickRandomActionWhenUncontrolled
     ld d, $14
@@ -1986,7 +1986,7 @@ RollStatusTickEffect::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    set 4, [hl]
+    set BSTAT0_CONFUSED, [hl]
     ld a, [wBattleActor]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld d, $12
@@ -2816,7 +2816,7 @@ CheckActorStatusAndFoeTargets::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .skip3
     ld hl, wSideFlags0
     ld a, [wBattleActor]
@@ -2886,7 +2886,7 @@ CheckActorStatusBit7AndFoeBit6::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .done
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank32
@@ -2937,7 +2937,7 @@ CheckActorStatusBit6::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jr nz, .done
     jr .return_carry
 
@@ -3259,7 +3259,7 @@ RunBattleActions_StatusChecks_ShatterChecks_ReadByteAtHLPlusA::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT8_SEAL_PRAY, [hl]
     jr nz, .skip3
     jr .skip2
 
@@ -3711,7 +3711,7 @@ RunBattleStep4_ResolveSkill_ShatterChecks_ReadByteAtHLPlusA::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT8_SEAL_PRAY, [hl]
     jr nz, .skip3
     jr .skip2
 
@@ -4131,7 +4131,7 @@ DefeatTarget_WriteDefeatFlagsBA::
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT6_GUARDED, [hl]
     jr z, .next
     inc hl
     ld a, [hl]
@@ -4663,7 +4663,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT0_ASLEEP, [hl]
     jp nz, SetBattleSubStep1
     push hl
     farcall ResolveStep0EEffect_RollVsSleepResistance

@@ -199,7 +199,7 @@ SceneHomecoming_WriteMapIdAndMapScreenXEtc::
     ld a, $0b
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     xor a
     ld [wTemp0], a
     xor a
@@ -2312,7 +2312,7 @@ SceneDarckDefeated_ScriptStepBlinkObjectTemp0::
     ret z
     ld a, $01
     ld [wSpriteSlotCount], a
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call SetFlagBit
     ld a, [wStoryFlags + $65]
     set 0, a
@@ -2575,7 +2575,7 @@ SceneThreeItems_ShowWarubouWaheyThereIs::
     ld a, [wStepArrived]
     or a
     ret z
-    ld de, $00c3
+    ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call SetFlagBit
     farcall PlayMapMusic
     ld a, $01
@@ -2618,7 +2618,7 @@ SceneThreeItems_ShowWarubouWaheyHeroAnd::
     ld [wWarpDestX], a
     ld a, $30
     ld [wWarpDestY], a
-    ld de, $0024
+    ld de, EVENT_SCENE_THREE_ITEMS
     call SetFlagBit
     ld a, $04
     ld [wFieldTransitionKind], a
@@ -2669,7 +2669,7 @@ SceneThreeItems_SetFlagBit::
     ld a, [wStoryFlags + $64]
     set 3, a
     ld [wStoryFlags + $64], a
-    ld de, $00c2
+    ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call SetFlagBit
     ldh a, [hPlayerX]
     ld [wWarpDestX], a
@@ -2900,14 +2900,14 @@ SceneGrave_ShowAhYoullDoIt::
     jr nz, .call_start_message_hl_b0_f
     ld hl, vTiles0 + $416
     call StartMessageHL_B0F
-    ld de, $00a6
+    ld de, EVENT_SCENE_GRAVE_0A6
     call SetFlagBit
     ret
 
 .call_start_message_hl_b0_f:
     ld hl, vTiles0 + $417
     call StartMessageHL_B0F
-    ld de, $00a5
+    ld de, EVENT_SCENE_GRAVE_0A5
     call SetFlagBit
     ret
 
@@ -2950,22 +2950,22 @@ SceneGrave_StepScriptParam0Counter_Bank0F::
     ld [wSpriteSlotCount], a
     xor a
     ld [wScriptParam0], a
-    ld de, $00c2
+    ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jp c, .call_start_message_hl_b0_f6
-    ld de, $00a7
+    ld de, EVENT_HERO_CHECKED_BEHIND_THE
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f5
-    ld de, $00a6
+    ld de, EVENT_SCENE_GRAVE_0A6
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f4
-    ld de, $00a5
+    ld de, EVENT_SCENE_GRAVE_0A5
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f3
-    ld de, $00a4
+    ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld de, $00a0
+    ld de, EVENT_SCENE_GRAVE
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
     ld hl, $040c ; '*: Who disturbs my sleep? A'
@@ -2982,7 +2982,7 @@ SceneGrave_StepScriptParam0Counter_Bank0F::
     ret
 
 .call_test_flag_bit:
-    ld de, $00a0
+    ld de, EVENT_SCENE_GRAVE
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f2
     ld hl, $4415 ; '*: Who disturbs my sleep? A'
@@ -3057,7 +3057,7 @@ SceneShield2::
     dw SceneShield2_SetFlagBit
 
 SceneShield2_SetFlagBit::
-    ld de, $0023
+    ld de, EVENT_SCENE_SHIELD2_023
     call SetFlagBit
     ld a, $04
     ldh [hTemp0], a
@@ -3081,7 +3081,7 @@ SceneShield2_ShowWarubouWaheyYouCan::
     ld [wObject5], a
     ld hl, $0dcb ; 'Warubou: Wa-hey, you can now fly'
     call StartMessageHL_B0F
-    ld de, $001e
+    ld de, EVENT_SCENE_SHIELD2
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3167,7 +3167,7 @@ SceneShield2_ShowHeroReceivedTheSky::
     ld [wSpriteSlots + $c], a
     ld hl, $0a08 ; '0 received the Sky Shield.'
     call StartMessageHL_B0F
-    ld de, $01e5
+    ld de, EVENT_SCENE_SHIELD2_1E5
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3319,7 +3319,7 @@ SceneShield::
 SceneShield_ShowIBoreWitnessTo::
     ld hl, $0a05 ; '*: I bore witness to it'
     call StartMessageHL_B0F
-    ld de, $01e4
+    ld de, EVENT_SCENE_SHIELD_1E4
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3423,7 +3423,7 @@ SceneShield_ToScriptStepFlashScreenNegative::
     ret
 
 SceneShield_ShowTchObstinateAndFoolish::
-    ld de, $01e3
+    ld de, EVENT_SCENE_SHIELD
     call TestFlagBit
     jr nc, .check_is_cgb
     ld hl, $0a03 ; '*: Tch, obstinate and foolish. You'
@@ -3444,7 +3444,7 @@ SceneShield_ShowTchObstinateAndFoolish::
     call CopyBytes
 
 .call_set_flag_bit:
-    ld de, $01e3
+    ld de, EVENT_SCENE_SHIELD
     call SetFlagBit
     xor a
     ld [wScriptParam1], a
@@ -3480,7 +3480,7 @@ SceneShieldGuardian_ShowHelenIPutYou::
     ld [wSpriteSlots + $7], a
     ld hl, $0af5 ; 'Helen: I put you through trouble…'
     call StartMessageHL_B0F
-    ld de, $01e2
+    ld de, EVENT_SCENE_SHIELD_GUARDIAN_1E2
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3609,7 +3609,7 @@ SceneShieldGuardian_StepScriptParam0Counter_Bank0F::
     ret
 
 SceneShieldGuardian_ShowIWishYouWouldnt::
-    ld de, $01e1
+    ld de, EVENT_SCENE_SHIELD_GUARDIAN
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
     ld hl, $0aed ; '*: I wish you wouldn't do'
@@ -3618,7 +3618,7 @@ SceneShieldGuardian_ShowIWishYouWouldnt::
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
-    ld de, $01e1
+    ld de, EVENT_SCENE_SHIELD_GUARDIAN
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3820,7 +3820,7 @@ ScenePrincessMedicine::
 ScenePrincessMedicine_ShowIveFinallyRememberedIm::
     ld hl, $0ad5 ; '*: I've finally remembered. I'm Yuna,'
     call StartMessageHL_B0F
-    ld de, $009d
+    ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -3902,12 +3902,12 @@ ScenePrincessMedicine_ScriptApplyStepDeltaAtDE::
     ret nc
     ld hl, wScriptStep
     inc [hl]
-    ld de, $009c
+    ld de, EVENT_SCENE_PRINCESS_MEDICINE
     call TestFlagBit
     jr c, .set_script_step_to_06
     ld hl, $4ad2 ; '*: NEVER DID I EXPECT YUNA'S'
     call StartMessageHL_B0F
-    ld de, $009c
+    ld de, EVENT_SCENE_PRINCESS_MEDICINE
     call SetFlagBit
     ret
 
@@ -4427,11 +4427,11 @@ SceneExplosion_StepObjectTowardCoord::
     ret
 
 SceneExplosion_TestFlagBit::
-    ld de, $0085
+    ld de, EVENT_SCENE_EXPLOSION
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
     farcall RedrawColumnsBesideScreen
-    ld de, $0085
+    ld de, EVENT_SCENE_EXPLOSION
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -4482,14 +4482,14 @@ ScenePlanRuined_StepScriptParam0Counter_Bank0F::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
     ret nc
-    ld de, $0093
+    ld de, EVENT_SCENE_PLAN_RUINED
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
     ret
 
 ScenePlanRuined_TestFlagBit::
-    ld de, $0093
+    ld de, EVENT_SCENE_PLAN_RUINED
     call TestFlagBit
     jr nc, .read_object2
     ld hl, wScriptStep
@@ -5207,7 +5207,7 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_SetFlagBit_Case31
 
 SceneMermaidKingdom_SetFlagBit_Case31::
-    ld de, $0022
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call SetFlagBit
     ld a, $03
     ldh [hTemp0], a
@@ -5233,7 +5233,7 @@ SceneMermaidKingdom_ShowWarubouWaheyYouCan::
     ld [wObject5], a
     ld hl, $0dc1 ; 'Warubou: Wa-hey, you can now crush'
     call StartMessageHL_B0F
-    ld de, $001f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -5344,7 +5344,7 @@ SceneMermaidKingdom_StepPlayerLeftTowardWC928::
     ld a, [wStepArrived]
     or a
     ret z
-    ld de, $005f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -5521,7 +5521,7 @@ SceneMermaidKingdom_SetFlagBit::
     ld a, [wStoryFlags + $62]
     set 3, a
     ld [wStoryFlags + $62], a
-    ld de, $007f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_07F
     call SetFlagBit
     ldh a, [hPlayerX]
     ld [wWarpDestX], a
@@ -5913,7 +5913,7 @@ SceneKamehaFlees_SetFlagBit::
     ld a, [wObject5 + SCRIPTOBJ_X]
     cp $a0
     ret nz
-    ld de, $007e
+    ld de, EVENT_SCENE_KAMEHA_FLEES
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -6231,7 +6231,7 @@ SceneCrewFollows_StepScriptParam0Counter_Bank0F::
     add $07
     and $f8
     ldh [hScrollX], a
-    ld de, $007d
+    ld de, EVENT_SCENE_CREW_FOLLOWS_07D
     call SetFlagBit
     ld a, [wStoryFlags + $62]
     set 2, a
@@ -6340,7 +6340,7 @@ GiveItemBlink::
     dw GiveItemBlink_TestFlagBit
 
 GiveItemBlink_TestFlagBit::
-    ld de, $0075
+    ld de, EVENT_GIVE_ITEM_BLINK
     call TestFlagBit
     jr c, .set_temp0_to_00
     ld a, $00
@@ -6366,7 +6366,7 @@ GiveItemBlink_TestFlagBit::
     ldh a, [hTemp0]
     or a
     ret z
-    ld de, $009b
+    ld de, EVENT_YOU_WILL_THANK_YOU_LET
     call TestFlagBit
     jr nc, .clear_sprite_slot_count
     ld a, $33
@@ -6411,7 +6411,7 @@ SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09::
     ldh a, [hPlayerStateFlags]
     and $fd
     ldh [hPlayerStateFlags], a
-    ld de, $0064
+    ld de, EVENT_SCENE_WHO_ARE_YOU
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -6698,7 +6698,7 @@ SceneRivalDefeated::
     dw SceneRivalDefeated_SetFlagBit
 
 SceneRivalDefeated_SetFlagBit::
-    ld de, $0021
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call SetFlagBit
     ld a, $02
     ldh [hTemp0], a
@@ -6724,7 +6724,7 @@ SceneRivalDefeated_ShowWarubouWaheyTheAbility::
     ld [wObject5], a
     ld hl, $0dc0 ; 'Warubou: Wa-hey, the ability to cross'
     call StartMessageHL_B0F
-    ld de, $001d
+    ld de, EVENT_SCENE_RIVAL_DEFEATED
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -7055,7 +7055,7 @@ SceneRivalDefeated_ScriptStepBlinkObjectTemp0::
     ld a, [wStoryFlags + $61]
     set 5, a
     ld [wStoryFlags + $61], a
-    ld de, $005a
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call SetFlagBit
     ld hl, wScriptStep
     inc [hl]
@@ -7390,7 +7390,7 @@ SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B::
     farcall ScriptStartFadeAndAdvanceStep
     ld a, $01
     ld [wPartyCount], a
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call SetFlagBit
     ret
 
@@ -7726,7 +7726,7 @@ SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D::
     ld a, $01
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld de, $001b
+    ld de, EVENT_SCENE_LAND_HO
     call SetFlagBit
     ld a, $01
     ldh [hPlayerSpriteMode], a
@@ -7978,7 +7978,7 @@ ScriptCommand76_Run::
 ScriptCommand76_Run_SetFlagBit::
     ld a, $76
     call QueueSoundEffect
-    ld de, $001b
+    ld de, EVENT_SCENE_LAND_HO
     call SetFlagBit
     ld a, $03
     ld [wFollowerRecords], a

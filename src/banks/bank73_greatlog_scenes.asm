@@ -2659,7 +2659,7 @@ SceneChestBattle_WriteTemp0AndScriptStep::
     ld a, $0a
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
-    ld de, $0206
+    ld de, EVENT_SCENE_CHEST_BATTLE
     call SetFlagBit
     jr .set_script_step_to_08
 
@@ -2667,7 +2667,7 @@ SceneChestBattle_WriteTemp0AndScriptStep::
     ld a, $0b
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
-    ld de, $0207
+    ld de, EVENT_SCENE_CHEST_BATTLE_207
     call SetFlagBit
     jr .set_script_step_to_08
 
@@ -2675,7 +2675,7 @@ SceneChestBattle_WriteTemp0AndScriptStep::
     ld a, $0c
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
-    ld de, $0208
+    ld de, EVENT_SCENE_CHEST_BATTLE_208
     call SetFlagBit
 
 .set_script_step_to_08:
@@ -3919,7 +3919,7 @@ SceneGravestone_ScriptStepBlinkObjectTemp0::
     inc hl
     ld [hl], $5b
     farcall DrawFullScreenBufferAtScroll
-    ld de, $00b1
+    ld de, EVENT_SCENE_GRAVESTONE
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -4164,7 +4164,7 @@ SceneJustice::
     ld a, [wStoryFlags + $64]
     set 0, a
     ld [wStoryFlags + $64], a
-    ld de, $00b0
+    ld de, EVENT_SCENE_JUSTICE
     call SetFlagBit
 
 .call_draw_full_screen_buffer_at_scroll:
@@ -4603,7 +4603,7 @@ ScriptCommand4C_Run_RunFieldCommandTemp0::
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld hl, $6020
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     jr nc, .read_map_id
     ld hl, $602c
@@ -4669,15 +4669,15 @@ SceneSpiritEnvoy2_SetBit1AtHL_Bank73::
     ld [wSpriteSlots + $7], a
     ld hl, wScriptStep
     inc [hl]
-    ld de, $0098
+    ld de, EVENT_SCENE_SPIRIT_ENVOY2
     call TestFlagBit
     jr c, .call_set_flag_bit
-    ld de, $0098
+    ld de, EVENT_SCENE_SPIRIT_ENVOY2
     call SetFlagBit
     ret
 
 .call_set_flag_bit:
-    ld de, $0099
+    ld de, EVENT_SCENE_SPIRIT_ENVOY2_099
     call SetFlagBit
     ret
 
@@ -4881,7 +4881,7 @@ RewardItemOrKey2_TestFlagBit_Case09::
     inc a
     and $03
     ld [wObject1 + OBJ_STATE], a
-    ld de, $0191
+    ld de, EVENT_REWARD_ITEM_OR_KEY
     call TestFlagBit
     jr c, .call_count_keys_or_full
     ld a, [wInventory + $17]
@@ -4910,7 +4910,7 @@ RewardItemOrKey2_TestFlagBit_Case09::
     ret
 
 RewardItemOrKey2_TestFlagBit::
-    ld de, $0191
+    ld de, EVENT_REWARD_ITEM_OR_KEY
     call TestFlagBit
     jr c, .call_start_message_hl_b73b
     ld hl, $0d3f
@@ -5105,7 +5105,7 @@ RewardItemOrKey_TestFlagBit_Case13::
     inc a
     and $03
     ld [wSpriteSlots + $7], a
-    ld de, $0134
+    ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
     jr c, .call_count_keys_or_full
     ld a, [wInventory + $17]
@@ -5134,7 +5134,7 @@ RewardItemOrKey_TestFlagBit_Case13::
     ret
 
 RewardItemOrKey_TestFlagBit::
-    ld de, $0134
+    ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
     jr c, .call_start_message_hl_b73b
     ld hl, $0d46
@@ -6460,7 +6460,7 @@ SceneMermaidSong_ShowHeroReceivedATinyMedal::
     ld a, $2c
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
-    ld de, $006e
+    ld de, EVENT_SCENE_MERMAID_SONG
     call SetFlagBit
     ld hl, $0813 ; '0 received a TinyMedal.'
     call StartMessageHL_B73b
@@ -6505,7 +6505,7 @@ SceneMermaidSong_ShowBravoBravoYouWere::
     ld [wObject1 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
-    ld de, $006e
+    ld de, EVENT_SCENE_MERMAID_SONG
     call TestFlagBit
     jr nc, .check_inventory
     ld hl, $0815 ; '*: Bravo, bravo! You were fabulous!'
@@ -6693,7 +6693,7 @@ UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel::
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ld de, $0078
+    ld de, EVENT_SCENE_WATCH_OUT_078
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -7107,7 +7107,7 @@ SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
-    ld de, $000c
+    ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call SetFlagBit
     ld a, $80
     ld [wScriptStartRequest], a
@@ -7311,7 +7311,7 @@ SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
-    ld de, $000b
+    ld de, EVENT_SCENE_WARUBOU_FOOD2
     call SetFlagBit
     ldh a, [hPlayerX]
     ld [wWarpDestX], a

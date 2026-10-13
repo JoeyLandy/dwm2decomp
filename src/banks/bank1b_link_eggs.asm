@@ -334,7 +334,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $05
     ld [wLinkSession], a
-    jp .clear_game_mode2_state
+    jp .clear_world_map_state
 
 .call_queue_sound_effect2:
     ld a, $69
@@ -350,7 +350,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $02
     ld [wLinkSession], a
-    jr .clear_game_mode2_state
+    jr .clear_world_map_state
 
 .call_queue_sound_effect3:
     ld a, $69
@@ -366,7 +366,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $03
     ld [wLinkSession], a
-    jr .clear_game_mode2_state
+    jr .clear_world_map_state
 
 .call_queue_sound_effect4:
     ld a, $69
@@ -382,7 +382,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $08
     ld [wLinkSession], a
-    jr .clear_game_mode2_state
+    jr .clear_world_map_state
 
 .call_queue_sound_effect5:
     ld a, $69
@@ -398,7 +398,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $04
     ld [wLinkSession], a
-    jr .clear_game_mode2_state
+    jr .clear_world_map_state
 
 .call_queue_sound_effect6:
     ld a, $69
@@ -414,11 +414,11 @@ RunLinkSession_WaitSerialTransferDone::
     ld [hli], a
     ld a, $06
     ld [wLinkSession], a
-    jr .clear_game_mode2_state
+    jr .clear_world_map_state
 
-.clear_game_mode2_state:
+.clear_world_map_state:
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld [wLinkExchangeState], a
     ld [wLinkStateByte], a
@@ -5661,7 +5661,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld a, $01
     ld [wModeChangeRequest], a

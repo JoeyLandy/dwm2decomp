@@ -2495,7 +2495,7 @@ Script_4F54::
     script_message $0031 ; '*: C'mon, Warubou!'
     script_command SCRIPT_SCENE_WARUBOU_LEAVES
     script_sound $ff
-    script_set_flag $0015
+    script_set_flag EVENT_SCENE_WARUBOU_LEAVES
     script_end
 Script_4F66::
     script_message $404c ; '*: Have you heard about Magic'
@@ -2527,7 +2527,7 @@ Script_4F8D::
     script_message $0050 ; 'Warubou: Wha…? I smell something! I'
     script_command SCRIPT_SCENE_WARUBOU_SMELLS
     script_message $0051 ; 'Warubou: What is this? Food? Perfect!'
-    script_set_flag $000a
+    script_set_flag EVENT_SCENE_WARUBOU_SMELLS
     script_command SCRIPT_SCENE_WARUBOU_FOOD
     script_sound $ff
     script_end
@@ -2540,7 +2540,7 @@ Script_4FA4::
     script_message $001e ; '*: You've come at the right'
     script_command SCRIPT_SCENE_VAULT_SETTLED
     script_message $0020 ; '*: Good, that's settled then. The'
-    script_set_flag $0003
+    script_set_flag EVENT_SCENE_VAULT_SETTLED
     script_end
 Script_4FAF::
     script_message $006a ; '*: Did you get the package'
@@ -2555,7 +2555,7 @@ Script_4FB7::
     script_slide_y $01
     script_message $002d ; 'Tara: Big brother can't do it'
     script_message $002c ; '*: I aspired to be one'
-    script_set_flag $0014
+    script_set_flag EVENT_FOLLOWER_FACE_PLAYER
     script_end
 Script_4FCC::
     script_message $8029 ; '*: Oh? Well, that's fine then.'
@@ -2567,7 +2567,7 @@ Script_4FD0::
     script_slide_y $01
     script_message $002b ; 'Cobi: Hahah! 0 won't last a'
     script_message $002c ; '*: I aspired to be one'
-    script_set_flag $0014
+    script_set_flag EVENT_FOLLOWER_FACE_PLAYER
     script_end
 Script_4FE4::
     script_message $8029 ; '*: Oh? Well, that's fine then.'
@@ -2577,14 +2577,14 @@ Script_4FE8::
     script_slide_y $01
     script_message $0063 ; 'Tara: Why aren't you listening? Papa,'
     script_message $0062 ; '*: Look, an island just doesn't'
-    script_set_flag $000e
+    script_set_flag EVENT_LOOK_AN_ISLAND_JUST_DOESN
     script_end
 Script_4FF7::
     script_message $0060 ; '*: Hah? The island's going to'
     script_slide_y $01
     script_message $0061 ; 'Cobi: Why won't you believe us?'
     script_message $0062 ; '*: Look, an island just doesn't'
-    script_set_flag $000e
+    script_set_flag EVENT_LOOK_AN_ISLAND_JUST_DOESN
     script_end
 Script_5006::
     script_message $007a ; 'Warubou: Wa-hey! Good, you're back. You'
@@ -2592,7 +2592,7 @@ Script_5006::
     script_message $407b ; 'Warubou: No time to waste, warooh!'
     script_skip_if_no Script_5017
     script_message $807c ; 'Warubou: No? Then find someone!'
-    script_set_flag $0016
+    script_set_flag EVENT_WARUBOU_NO_THEN_FIND_SOMEONE
     script_end
 Script_5017::
     script_message $807f ; 'Warubou: Wa-hey! Good, good, good! In'
@@ -2601,7 +2601,7 @@ Script_5017::
     script_command SCRIPT_SCENE_OASIS_KEY
     script_message $0081 ; '0 received the Oasis Key.'
     script_message $0082 ; 'Warubou: Wa-hey! I trust you! Go!'
-    script_set_flag $001a
+    script_set_flag EVENT_SCENE_OASIS_KEY
     script_end
 Script_5029::
     script_message $407d ; 'Warubou: Wa-hey? No one believed! You'
@@ -2613,7 +2613,7 @@ Script_502E::
 Script_5036::
     script_jump Script_5017
 Script_5039::
-    script_set_flag $0011
+    script_set_flag EVENT_THAT_WEIRD_APE_THING_IS
     script_set_flag $0017
     script_command SCRIPT_SCENE_GREATLOG_KEY
     script_message $0085 ; '0 received the GreatLog Key.'
@@ -2648,7 +2648,7 @@ Script_5063::
     script_message $0002 ; 'Tara: There you are, big brother!'
     script_walk 2, 3, 1
     script_face $82, 1
-    script_set_flag $0012
+    script_set_flag EVENT_SCENE_AT_SEA
     script_end
 Script_509F::
     script_wait 30
@@ -2669,7 +2669,7 @@ Script_509F::
     script_message $0001 ; 'Cobi: 0! Papa's calling. He's at'
     script_walk 2, 3, 1
     script_face $82, 1
-    script_set_flag $0012
+    script_set_flag EVENT_SCENE_AT_SEA
     script_end
 Script_50DB::
     script_message $0013 ; 'Tara: Big brother! GreatLog will be'
@@ -2814,7 +2814,7 @@ Script_5173::
 Script_5175::
     script_message $0100 ; '*: Are you going out to'
     script_message $0101 ; '0 received an Herb.'
-    script_set_flag $01a7
+    script_set_flag EVENT_HERO_RECEIVED_AN_HERB
     script_end
 Script_517F::
     script_message $0200 ; '*: You've been going out a'
@@ -2830,12 +2830,12 @@ Script_5192::
     script_message $88a2 ; '*: My, what has gotten into'
     script_message $08a3 ; 'Mama handed over 400G.'
     script_add_gold 400
-    script_set_flag $0183
+    script_set_flag EVENT_MAMA_HANDED_OVER_400_G
     script_end
 Script_519F::
     script_message $08a6 ; '*: Oh… You've found what I'
     script_message $08a7 ; '0 handed over the Potion.'
-    script_set_flag $0184
+    script_set_flag EVENT_HERO_HANDED_OVER_THE_POTION
     script_end
 Script_51A9::
     script_message $48a1 ; '*: Oh? You'll run another errand?'
@@ -2846,12 +2846,12 @@ Script_51B2::
     script_message $88a8 ; '*: Well, could you go buy'
     script_message $08a9 ; 'Mama handed over 600G.'
     script_add_gold 600
-    script_set_flag $0185
+    script_set_flag EVENT_MAMA_HANDED_OVER_600_G
     script_end
 Script_51BF::
     script_message $08a6 ; '*: Oh… You've found what I'
     script_message $08ac ; '0 handed over the Rib.'
-    script_set_flag $0186
+    script_set_flag EVENT_HERO_HANDED_OVER_THE_RIB
     script_end
     db $00, $01, $43, $06, $04, $00, $04, $83, $ff, $00, $02, $83, $00, $03, $03, $0e
     db $b0, $04, $0a, $87, $01, $ff, $00, $01, $43, $06, $04, $00, $04, $83, $ff, $00
@@ -2866,7 +2866,7 @@ Script_51FE::
     script_message $8a22 ; '*: The farm that your father'
     script_message $0a23 ; '*: Mama handed over 1,200G.'
     script_add_gold 1200
-    script_set_flag $018b
+    script_set_flag EVENT_MAMA_HANDED_OVER_1_200
     script_end
 Script_520B::
     script_message $4a21 ; '*: I was going to ask'
@@ -2877,12 +2877,12 @@ Script_5214::
     script_message $8a22 ; '*: The farm that your father'
     script_message $0a23 ; '*: Mama handed over 1,200G.'
     script_add_gold 1200
-    script_set_flag $018b
+    script_set_flag EVENT_MAMA_HANDED_OVER_1_200
     script_end
 Script_5221::
     script_message $0a28 ; '*: They didn't have any around'
     script_message $0a29 ; '0 handed over the Sirloin.'
-    script_set_flag $018c
+    script_set_flag EVENT_HERO_HANDED_OVER_THE_SIRLOIN
     script_end
 Script_522B::
     script_message $0212 ; '*: Oh? You bought the LoveWater!'
@@ -3005,7 +3005,7 @@ Script_52FC::
     script_message $0d17 ; '*: Here, 0! You need this!'
     script_message $0d18 ; '0 received the Ice Key.'
     script_message $0d19 ; '*: Be careful when you're traveling'
-    script_set_flag $0191
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY
     script_end
 Script_530D::
     script_message $48b3 ; '*: A MadGopher joined you? Could'
@@ -3016,8 +3016,8 @@ Script_5316::
     script_message $88b4 ; '*: Great, 0! Thanks a lot!'
     script_command SCRIPT_REWARD_ITEM_OR_KEY
     script_message $0d48 ; '*: Here, 0! You hold onto'
-    script_set_flag $01a3
-    script_set_flag $0191
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY_1A3
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY
     script_end
 Script_5324::
     script_message $48b3 ; '*: A MadGopher joined you? Could'
@@ -3030,7 +3030,7 @@ Script_532D::
     script_message $0d47 ; '*: Here, 0! You hold onto'
     script_message $0d41 ; '0 received a TinyMedal!'
     script_message $0d19 ; '*: Be careful when you're traveling'
-    script_set_flag $0191
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY
     script_end
 Script_533E::
     script_message $420d ; '*: You're too young to be'
@@ -3094,7 +3094,7 @@ Script_53C3::
     script_message $852b ; 'Warubou: Wa-hey! Take the treasures that'
     script_command SCRIPT_SCENE_LIMBO
     script_message $052f ; 'Warubou: Limbo is the King's domain!'
-    script_set_flag $013b
+    script_set_flag EVENT_SCENE_LIMBO
     script_end
 Script_53CE::
     script_command SCRIPT_SCENE_LIMBO_MONSTER
@@ -3109,7 +3109,7 @@ Script_53D2::
     script_end
 Script_53DB::
     script_message $8a37 ; '*: What's that? You saw Prince'
-    script_set_flag $0117
+    script_set_flag EVENT_WHAT
     script_command SCRIPT_SCENE_SAW_KAMEHA
     script_message $0a3a ; '*: Sire, this child claims to'
     script_message $0a3b ; 'King: What's that? Is that so?'
@@ -3120,19 +3120,19 @@ Script_53DB::
     script_message $0d29 ; 'King: Kameha made off with the'
     script_end
 Script_53FA::
-    script_set_flag $0117
+    script_set_flag EVENT_WHAT
     script_message $4504 ; '*: If the island sink, is'
     script_skip_if_no Script_540D
     script_message $8506 ; '*: Hey! You're the kid who'
     script_command SCRIPT_SCENE_KAMEHA_BACK
     script_message $0507 ; '*: Prince Kameha came back! What'
-    script_set_flag $0122
+    script_set_flag EVENT_SCENE_KAMEHA_BACK
     script_end
 Script_540D::
     script_message $8505 ; '*: People have been saying that'
     script_command SCRIPT_SCENE_KAMEHA_BACK
     script_message $0507 ; '*: Prince Kameha came back! What'
-    script_set_flag $0122
+    script_set_flag EVENT_SCENE_KAMEHA_BACK
     script_end
 Script_5418::
     script_message $021d ; '*: Take this slide as a'
@@ -3147,7 +3147,7 @@ Script_5422::
 Script_542B::
     script_message $8265 ; '*: R… Really? Wow! Thank you!'
     script_command SCRIPT_SCENE_MASTER_THANKS
-    script_set_flag $012d
+    script_set_flag EVENT_SCENE_MASTER_THANKS
     script_end
 Script_5433::
     script_message $4b47 ; '*: I became a master because'
@@ -3375,7 +3375,7 @@ Script_5594::
     script_end
 Script_5598::
     script_message $48cf ; '*: Um… I'm the Egg Evaluator.'
-    script_set_flag $010f
+    script_set_flag EVENT_UM_I
     script_jump_data_bank Script_96_6EF7
     db $ff
 
@@ -3392,7 +3392,7 @@ Script_55A9::
 
 Script_55B3::
     script_message $48d3 ; '*: Welcome to the Starry Shrine.'
-    script_set_flag $0110
+    script_set_flag EVENT_WELCOME_TO_THE_STARRY_SHRINE
     script_jump_data_bank Script_15_764B
     db $ff
 
@@ -3435,7 +3435,7 @@ Script_55EC::
 Script_55F6::
     script_message $025f ; '*: I've never seen my granddaughter'
     script_message $0260 ; '0 received a LifeAcorn.'
-    script_set_flag $012e
+    script_set_flag EVENT_HERO_RECEIVED_A_LIFE_ACORN
     script_end
 Script_5600::
     script_message $48c8 ; '*: Wait! Could I get you'
@@ -3448,7 +3448,7 @@ Script_5609::
     script_message $0d40 ; '*: I like you to have'
     script_message $0d18 ; '0 received the Ice Key.'
     script_message $0d42 ; '*: I'll pray for your safety.'
-    script_set_flag $0134
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY_2
     script_end
 Script_561A::
     script_message $48c8 ; '*: Wait! Could I get you'
@@ -3459,8 +3459,8 @@ Script_5623::
     script_message $88c9 ; '*: Fantastic! I can open my'
     script_command SCRIPT_REWARD_ITEM_OR_KEY_2
     script_message $0d43 ; '*: I like you to have'
-    script_set_flag $01a5
-    script_set_flag $0134
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY_2_1A5
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY_2
     script_end
 Script_5631::
     script_message $48c8 ; '*: Wait! Could I get you'
@@ -3473,7 +3473,7 @@ Script_563A::
     script_message $0d40 ; '*: I like you to have'
     script_message $0d41 ; '0 received a TinyMedal!'
     script_message $0d42 ; '*: I'll pray for your safety.'
-    script_set_flag $0134
+    script_set_flag EVENT_REWARD_ITEM_OR_KEY_2
     script_end
 Script_564B::
     script_message $48cb ; '*: ArmyAnt helped me get my'
@@ -3519,7 +3519,7 @@ Script_5690::
     script_message $44c8 ; '*: I was once a great'
     script_skip_if_no Script_569C
     script_message $84ca ; '*: You've not found any yet?'
-    script_set_flag $011d
+    script_set_flag EVENT_YOU
     script_end
 Script_569C::
     script_message $84c9 ; '*: Have you shown them to'
@@ -3527,14 +3527,14 @@ Script_569C::
 Script_56A0::
     script_message $0b4c ; '*: Oh! Goodness! I'm surprised! I've'
     script_command SCRIPT_SCENE_KEY_SHOP
-    script_set_flag $002f
+    script_set_flag EVENT_SCENE_KEY_SHOP
     script_end
 Script_56A8::
     script_message $0bbf ; '*: How good of you to'
     script_command SCRIPT_SCENE_KEY_SHOP
     script_end
 Script_56AD::
-    script_set_flag $011f
+    script_set_flag EVENT_ITS_EXCITING_TO_THINK
     script_message $4297 ; '*: Welcome to my Key Shop!'
     script_jump_data_bank Script_0D_62B8
     db $ff
@@ -3640,7 +3640,7 @@ Script_575B::
     script_end
 Script_575F::
     script_command SCRIPT_SCENE_STRONGEST_MASTER
-    script_set_flag $012b
+    script_set_flag EVENT_SCENE_STRONGEST_MASTER
     script_end
     db $00, $70, $4a, $06, $04, $00, $73, $8a, $ff, $00, $72, $8a, $ff, $00, $70, $4a
     db $06, $04, $00, $73, $8a, $ff, $00, $71, $8a, $02, $02, $02, $03, $02, $02, $03
@@ -3660,7 +3660,7 @@ Script_57A2::
     script_end
 Script_57BD::
     script_message $8a37 ; '*: What's that? You saw Prince'
-    script_set_flag $0117
+    script_set_flag EVENT_WHAT
     script_command SCRIPT_SCENE_SAW_KAMEHA
     script_message $0a3a ; '*: Sire, this child claims to'
     script_message $0a3b ; 'King: What's that? Is that so?'
@@ -3712,7 +3712,7 @@ Script_580B::
 Script_5814::
     script_message $8b22 ; '*: You'll take it? Excellent! I'll'
     script_command SCRIPT_GIVE_MONSTER
-    script_set_flag $0029
+    script_set_flag EVENT_GIVE_MONSTER
     script_end
 Script_581C::
     script_message $4b53 ; '*: Didn't you save GreatLog? That'
@@ -3768,19 +3768,19 @@ Script_586C::
     script_message $0bc3 ; '0 checked the desk.'
     script_command SCRIPT_DESK_KEY
     script_message $0b4e ; '0 obtained the Brawn Key.'
-    script_set_flag $003d
+    script_set_flag EVENT_DESK_KEY
     script_end
 Script_5877::
     script_message $0bc3 ; '0 checked the desk.'
     script_command SCRIPT_DESK_KEY
     script_message $0bb5 ; '0 obtained the Baffle Key.'
-    script_set_flag $003d
+    script_set_flag EVENT_DESK_KEY
     script_end
 Script_5882::
     script_message $0bc3 ; '0 checked the desk.'
     script_command SCRIPT_DESK_KEY
     script_message $0bb7 ; '0 obtained the Soul Key.'
-    script_set_flag $00c8
+    script_set_flag EVENT_DESK_KEY_0C8
     script_end
 Script_588D::
     script_message $0bc3 ; '0 checked the desk.'
@@ -3814,12 +3814,12 @@ Script_58BE::
 Script_58C3::
     script_message $0b95 ; 'Kameha: What? Oh, it's 0. Did'
     script_message $0b93 ; '0 received the Elf Key.'
-    script_set_flag $003a
+    script_set_flag EVENT_HERO_RECEIVED_THE_ELF_KEY
     script_end
 Script_58CD::
     script_message $0b95 ; 'Kameha: What? Oh, it's 0. Did'
     script_message $0bc2 ; '0 received the Magic Key.'
-    script_set_flag $003a
+    script_set_flag EVENT_HERO_RECEIVED_THE_ELF_KEY
     script_end
     db $00, $95, $0b, $00, $9a, $0b, $0a, $3a, $00, $ff
 
@@ -3835,12 +3835,12 @@ Script_58EA::
 Script_58EF::
     script_message $0b95 ; 'Kameha: What? Oh, it's 0. Did'
     script_message $0b9d ; '0 received the Traveler Key.'
-    script_set_flag $003c
+    script_set_flag EVENT_HERO_RECEIVED_THE_TRAVELER_KEY
     script_end
 Script_58F9::
     script_message $0b95 ; 'Kameha: What? Oh, it's 0. Did'
     script_message $0bc2 ; '0 received the Magic Key.'
-    script_set_flag $003c
+    script_set_flag EVENT_HERO_RECEIVED_THE_TRAVELER_KEY
     script_end
 Script_5903::
     script_message $4b7c ; 'King: Oh? It's our savior 0!'
@@ -3849,12 +3849,12 @@ Script_5903::
     script_end
 Script_590C::
     script_message $8b7d ; 'King: You will? I knew I'
-    script_set_flag $0192
+    script_set_flag EVENT_KING_YOU_WILL_I_KNEW
     script_end
 Script_5913::
     script_message $0b80 ; 'King: Ah, you've finally caught the'
     script_message $0b81 ; '0 received 10,000G.'
-    script_set_flag $0194
+    script_set_flag EVENT_HERO_RECEIVED_10_000_G
     script_end
 Script_591D::
     script_message $4b83 ; 'King: Oh? It's our savior 0!'
@@ -3863,12 +3863,12 @@ Script_591D::
     script_end
 Script_5926::
     script_message $8b84 ; 'King: You will? I knew I'
-    script_set_flag $0195
+    script_set_flag EVENT_KING_YOU_WILL_I_KNEW_195
     script_end
 Script_592D::
     script_message $0b80 ; 'King: Ah, you've finally caught the'
     script_message $0b86 ; '0 received 20,000G.'
-    script_set_flag $0197
+    script_set_flag EVENT_HERO_RECEIVED_20_000_G
     script_end
 Script_5937::
     script_message $4b83 ; 'King: Oh? It's our savior 0!'
@@ -3877,12 +3877,12 @@ Script_5937::
     script_end
 Script_5940::
     script_message $8b87 ; 'King: You will? I knew I'
-    script_set_flag $0198
+    script_set_flag EVENT_KING_YOU_WILL_I_KNEW_198
     script_end
 Script_5947::
     script_message $0b80 ; 'King: Ah, you've finally caught the'
     script_message $0b89 ; '0 received 30,000G.'
-    script_set_flag $019a
+    script_set_flag EVENT_HERO_RECEIVED_30_000_G
     script_end
 Script_5951::
     script_message $4b83 ; 'King: Oh? It's our savior 0!'
@@ -3891,12 +3891,12 @@ Script_5951::
     script_end
 Script_595A::
     script_message $8b8a ; 'King: You will? I knew I'
-    script_set_flag $019b
+    script_set_flag EVENT_KING_YOU_WILL_I_KNEW_19B
     script_end
 Script_5961::
     script_message $0b80 ; 'King: Ah, you've finally caught the'
     script_message $0b8c ; '0 received 40,000G.'
-    script_set_flag $019d
+    script_set_flag EVENT_HERO_RECEIVED_40_000_G
     script_end
 Script_596B::
     script_set_flag $012a
@@ -3922,17 +3922,17 @@ Script_5988::
     script_slide_y $82
     script_message $0dde ; '*: What? You don't know about'
     script_walk 2, 3, 6
-    script_set_flag $0187
+    script_set_flag EVENT_WHAT_YOU_DON
     script_end
 Script_599F::
     script_message $0d49 ; '*: Here's that TinyMedal.'
     script_message $0d41 ; '0 received a TinyMedal!'
-    script_set_flag $01a4
+    script_set_flag EVENT_HERO_RECEIVED_A_TINY_MEDAL
     script_end
 Script_59A9::
     script_message $0d44 ; '*: Here it is-the TinyMedal. My'
     script_message $0d41 ; '0 received a TinyMedal!'
-    script_set_flag $01a6
+    script_set_flag EVENT_HERO_RECEIVED_A_TINY_MEDAL_1A6
     script_end
 Script_59B3::
     script_message $40fa ; '*: Hello! What can I do'
@@ -3971,11 +3971,11 @@ Script_59DD::
     script_end
 Script_59E6::
     script_message $8149 ; '*: Did you say yes? Yes,'
-    script_set_flag $0042
+    script_set_flag EVENT_DID_YOU_SAY_YES_YES
     script_command SCRIPT_SCENE_MONSTER_INSPECTION
     script_face $83, 2
     script_message $0153 ; '*: Very good show! That was'
-    script_set_flag $0043
+    script_set_flag EVENT_SCENE_MONSTER_INSPECTION
     script_end
 Script_59F7::
     script_message $4148 ; '*: I am the leader of'
@@ -3984,7 +3984,7 @@ Script_59F7::
     script_end
 Script_5A00::
     script_message $814b ; '*: Did you say yes? Yes,'
-    script_set_flag $0042
+    script_set_flag EVENT_DID_YOU_SAY_YES_YES
     script_end
 Script_5A07::
     script_message $4148 ; '*: I am the leader of'
@@ -3993,14 +3993,14 @@ Script_5A07::
     script_end
 Script_5A10::
     script_message $814a ; '*: Did you say yes? Yes,'
-    script_set_flag $0042
+    script_set_flag EVENT_DID_YOU_SAY_YES_YES
     script_end
 Script_5A17::
     script_message $014d ; '*: Ah, three healthy monsters! Very'
     script_command SCRIPT_SCENE_MONSTER_INSPECTION
     script_face $83, 2
     script_message $0153 ; '*: Very good show! That was'
-    script_set_flag $0043
+    script_set_flag EVENT_SCENE_MONSTER_INSPECTION
     script_end
 Script_5A25::
     script_message $41bb ; '*: Welcome to our inn!'
@@ -4022,7 +4022,7 @@ Script_5A35::
     script_end
 Script_5A45::
     script_message $8162 ; 'King: Then make way to the'
-    script_set_flag $0045
+    script_set_flag EVENT_KING_THEN_MAKE_WAY_TO
     script_end
 Script_5A4C::
     script_message $4165 ; 'King: So? Have you decided to'
@@ -4031,7 +4031,7 @@ Script_5A4C::
     script_end
 Script_5A55::
     script_message $8162 ; 'King: Then make way to the'
-    script_set_flag $0045
+    script_set_flag EVENT_KING_THEN_MAKE_WAY_TO
     script_end
 Script_5A5C::
     script_message $016c ; '*: So, have you discovered what'
@@ -4049,7 +4049,7 @@ Script_5A5C::
     script_message $016f ; 'King: What? Never mind, then! I'll'
     script_walk_fast 1, 3, 1
     script_walk_fast 1, 0, 5
-    script_set_flag $0049
+    script_set_flag EVENT_KING_WHAT_NEVER_MIND_THEN
     script_end
 Script_5A95::
     script_message $0171 ; '*: What? Open the Canal Gate'
@@ -4070,9 +4070,9 @@ Script_5AAB::
     script_face $81, 0
     script_message $0178 ; '*: You will? So we can'
     script_hide_object $01
-    script_set_flag $0053
+    script_set_flag EVENT_YOU_WILL_SO_WE_CAN
     script_command SCRIPT_SCENE_WATER_SOLVED
-    script_set_flag $0054
+    script_set_flag EVENT_SCENE_WATER_SOLVED
     script_message $0179 ; 'King: This should solve the water'
     script_walk 0, 0, 3
     script_end
@@ -4083,7 +4083,7 @@ Script_5AD2::
 
 Script_5AD6::
     script_message $0181 ; 'King: The town's water shortage seems'
-    script_set_flag $0055
+    script_set_flag EVENT_KING_THE_TOWN
     script_walk 1, 0, 8
     script_command SCRIPT_SCENE_WATER_SHORTAGE
     script_walk_fast 0, 1, 3
@@ -4099,7 +4099,7 @@ Script_5AD6::
     script_face $00, 3
     script_message $0187 ; 'King: I apologize, but my treasures'
     script_walk 0, 0, 8
-    script_set_flag $0056
+    script_set_flag EVENT_SCENE_TREASURE_THEFT
     script_end
 Script_5B0D::
     script_message $4188 ; '*: Wh-where is everybody? I haven't'
@@ -4121,7 +4121,7 @@ Script_5B26::
     script_message $018b ; '0 received a WaterCall.'
     script_message $0d03 ; '*: That will help you for'
     script_command SCRIPT_CHECK_ITEM
-    script_set_flag $0057
+    script_set_flag EVENT_CHECK_ITEM
     script_end
 Script_5B37::
     script_set_flag $0058
@@ -4129,7 +4129,7 @@ Script_5B37::
     script_end
 Script_5B3C::
     script_message $0196 ; '*: Heh, you have monsters in'
-    script_set_flag $0059
+    script_set_flag EVENT_HEH_YOU_HAVE_MONSTERS_IN
     script_encounter $00 ; encounter words: CurseLamp, Slime, Slime
     script_message $0198 ; '*: You defeated my monster? Urggh…'
     script_command SCRIPT_SCENE_RIVAL_DEFEATED
@@ -4233,13 +4233,13 @@ Script_5BE8::
     script_message $0838 ; '*: Who are you? This is'
     script_encounter $01 ; encounter words: HoodSquid, Slime, Slime
     script_command SCRIPT_SCENE_WATCH_OUT
-    script_set_flag $0066
+    script_set_flag EVENT_SCENE_WATCH_OUT
     script_end
 Script_5BF2::
     script_message $0839 ; '*: You can keep trying, but'
     script_encounter $01 ; encounter words: HoodSquid, Slime, Slime
     script_command SCRIPT_SCENE_WATCH_OUT
-    script_set_flag $0066
+    script_set_flag EVENT_SCENE_WATCH_OUT
     script_end
 Script_5BFC::
     script_command SCRIPT_SCENE_WATCH_OUT
@@ -4255,7 +4255,7 @@ Script_5C0C::
     script_message $883c ; '*: It was in my callow'
     script_wait 120
     script_message $083d ; '*: The pirates' loot is probably'
-    script_set_flag $006d
+    script_set_flag EVENT_THE_PIRATES
     script_end
 Script_5C19::
     script_message $483f ; '*: What? Are you here for'
@@ -4317,12 +4317,12 @@ Script_5C72::
     script_end
 Script_5C77::
     script_message $0855 ; '*: Welcome, young human. I heard'
-    script_set_flag $0070
+    script_set_flag EVENT_WELCOME_YOUNG_HUMAN_I_HEARD
     script_end
 Script_5C7E::
     script_message $0dc5 ; '*: Welcome, my young hero! No'
     script_message $0dc6 ; '0 received the Sailor Ring.'
-    script_set_flag $005e
+    script_set_flag EVENT_HERO_RECEIVED_THE_SAILOR_RING
     script_end
 Script_5C88::
     script_command SCRIPT_SCENE_SAILOR_RING
@@ -4330,19 +4330,19 @@ Script_5C88::
 Script_5C8A::
     script_message $0859 ; '*: How could we die before'
     script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
-    script_set_flag $0071
+    script_set_flag EVENT_HOW_COULD_WE_DIE_BEFORE
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C94::
     script_message $085a ; '*: The treasures are ours… No'
     script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
-    script_set_flag $0072
+    script_set_flag EVENT_THE_TREASURES_ARE_OURS_NO
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C9E::
     script_message $085c ; '*: It nags and nags that'
     script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
-    script_set_flag $0073
+    script_set_flag EVENT_IT_NAGS_AND_NAGS_THAT
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5CA8::
@@ -4350,19 +4350,19 @@ Script_5CA8::
     script_encounter $02 ; encounter words: BoneSlave, CaptDead, BoneSlave
     script_message $0860 ; '*: Child… We have lost… Finally,'
     script_command SCRIPT_GIVE_ITEM_BLINK
-    script_set_flag $0075
+    script_set_flag EVENT_GIVE_ITEM_BLINK
     script_end
 Script_5CB5::
     script_message $085f ; '*: …You seem to not understand…'
     script_encounter $02 ; encounter words: BoneSlave, CaptDead, BoneSlave
     script_message $0860 ; '*: Child… We have lost… Finally,'
     script_command SCRIPT_GIVE_ITEM_BLINK
-    script_set_flag $0075
+    script_set_flag EVENT_GIVE_ITEM_BLINK
     script_end
 Script_5CC2::
     script_message $0887 ; '0 checked the treasure chest. 0'
     script_command SCRIPT_SCENE_CRATE
-    script_set_flag $0076
+    script_set_flag EVENT_SCENE_CRATE
     script_end
 Script_5CCA::
     script_message $0863 ; '0 checked the crate. There was'
@@ -4399,7 +4399,7 @@ Script_5CDD::
     script_wait 15
     script_sound $65
     script_hide_object $02
-    script_set_flag $007c
+    script_set_flag EVENT_SCENE_CREW_FOLLOWS
     script_wait 90
     script_sound $ff
     script_end
@@ -4430,7 +4430,7 @@ Script_5D3F::
 Script_5D44::
     script_message $0893 ; 'Thick, suction- cupped tentacles snaked out'
     script_encounter $1e ; encounter words: KingSquid, Slime, Slime
-    script_set_flag $00f4
+    script_set_flag EVENT_THICK_SUCTION_CUPPED_TENTACLES_SNAKED
     script_end
 Script_5D4D::
     script_message $4da1 ; '*: Our church is impoverished, so'
@@ -4469,26 +4469,26 @@ Script_5D76::
 Script_5D82::
     script_message $8318 ; '*: You will? No words of'
     script_command SCRIPT_BLINK_SPRITES
-    script_set_flag $01e8
+    script_set_flag EVENT_BLINK_SPRITES
     script_end
 Script_5D8A::
     script_message $031c ; '*: What is that dirty medal?'
     script_walk 0, 2, 1
     script_hide_object $00
-    script_set_flag $0081
+    script_set_flag EVENT_WHAT_IS_THAT_DIRTY_MEDAL
     script_end
 Script_5D97::
     script_message $0321 ; '*: Ah, you are the spirit's'
-    script_set_flag $0083
+    script_set_flag EVENT_AH_YOU_ARE_THE_SPIRIT
     script_command SCRIPT_SCENE_SPIRIT_ENVOY
     script_walk 1, 0, 2
-    script_set_flag $0082
+    script_set_flag EVENT_SCENE_SPIRIT_ENVOY
     script_end
 Script_5DA6::
     script_message $0359 ; '*: We reported to the King'
     script_command SCRIPT_SCENE_REPORT_TO_KING
     script_sound $28
-    script_set_flag $0087
+    script_set_flag EVENT_SCENE_REPORT_TO_KING
     script_end
 Script_5DB0::
     script_message $4331 ; '*: Welcome! What can I do'
@@ -4532,7 +4532,7 @@ Script_5DD3::
     script_message $034d ; '*: That's true… I've got to…'
     script_walk_fast 1, 1, 4
     script_command SCRIPT_SCENE_GOT_TO
-    script_set_flag $0086
+    script_set_flag EVENT_SCENE_GOT_TO
     script_end
 Script_5E02::
     script_command SCRIPT_SCENE_EXPLOSION
@@ -4550,7 +4550,7 @@ Script_5E02::
     script_message $034d ; '*: That's true… I've got to…'
     script_walk_fast 1, 1, 4
     script_command SCRIPT_SCENE_GOT_TO
-    script_set_flag $0086
+    script_set_flag EVENT_SCENE_GOT_TO
     script_end
 Script_5E2F::
     script_message $0360 ; '0 tapped on the wall. The'
@@ -4565,7 +4565,7 @@ Script_5E37::
     script_walk_fast 1, 2, 3
     script_hide_object $01
     script_wait 30
-    script_set_flag $008a
+    script_set_flag EVENT_SCENE_WALL_EXIT
     script_sound $ff
     script_walk_fast 0, 3, 4
     script_walk_fast 0, 2, 5
@@ -4576,7 +4576,7 @@ Script_5E5A::
     script_message $0365 ; '*: I'm the real King, you'
     script_slide_y $81
     script_message $0366 ; '*: What? How dare you, impostor!'
-    script_set_flag $008b
+    script_set_flag EVENT_SCENE_REAL_KING
     script_end
 Script_5E67::
     script_message $0370 ; '*: Arrgh, you've ruined my plan'
@@ -4584,7 +4584,7 @@ Script_5E67::
     script_face $81, 2
     script_slide_y $81
     script_message $0374 ; '*: Bravo! We're saved! Thank you'
-    script_set_flag $0094
+    script_set_flag EVENT_SCENE_PLAN_RUINED_094
     script_end
 Script_5E77::
     script_message $0372 ; '*: It almost worked to perfection!'
@@ -4592,7 +4592,7 @@ Script_5E77::
     script_face $81, 2
     script_slide_y $81
     script_message $0374 ; '*: Bravo! We're saved! Thank you'
-    script_set_flag $0094
+    script_set_flag EVENT_SCENE_PLAN_RUINED_094
     script_end
 Script_5E87::
     script_message $41bb ; '*: Welcome to our inn!'
@@ -4631,7 +4631,7 @@ Script_5E95::
     script_hide_object $03
     script_wait 30
     script_sound $ff
-    script_set_flag $0095
+    script_set_flag EVENT_GATHER_FOLLOWERS
     script_end
 Script_5EE6::
     script_message $039d ; '*: You're here to cheer Lady'
@@ -4647,7 +4647,7 @@ Script_5EF5::
     script_message $03a3 ; '*: …………'
     script_face $80, 0
     script_message $03a4 ; 'King: …Sigh… Not even this… You'
-    script_set_flag $0096
+    script_set_flag EVENT_SCENE_CHEER_YUNA
     script_end
 Script_5F0B::
     script_message $43b3 ; '*: Hello! What may I do'
@@ -4673,7 +4673,7 @@ Script_5F26::
     script_message $03b1 ; '*: Oh? An envoy from the'
     script_walk 0, 2, 1
     script_hide_object $00
-    script_set_flag $0097
+    script_set_flag EVENT_OH_AN_ENVOY_FROM_THE
     script_end
 Script_5F38::
     script_message $03b0 ; '*: This is no place for'
@@ -4681,7 +4681,7 @@ Script_5F38::
     script_message $03b1 ; '*: Oh? An envoy from the'
     script_walk 1, 2, 1
     script_hide_object $01
-    script_set_flag $0097
+    script_set_flag EVENT_OH_AN_ENVOY_FROM_THE
     script_end
 Script_5F4A::
     script_command SCRIPT_SCENE_SPIRIT_ENVOY_2
@@ -4689,24 +4689,24 @@ Script_5F4A::
 Script_5F4C::
     script_message $0d4c ; '*: …………? You startled me… I'
     script_command SCRIPT_GIVE_ITEM_BLINK
-    script_set_flag $009a
+    script_set_flag EVENT_GIVE_ITEM_BLINK_09A
     script_end
 Script_5F54::
     script_message $4ab5 ; '*: …………? You startled me… I'
-    script_set_flag $009a
+    script_set_flag EVENT_GIVE_ITEM_BLINK_09A
     script_skip_if_no Script_5F61
     script_message $8ac9 ; '*: Oh… How terribly disappointing. I'll'
     script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5F61::
     script_message $8ab6 ; '*: You will? Thank you! Let'
-    script_set_flag $009b
+    script_set_flag EVENT_YOU_WILL_THANK_YOU_LET
     script_command SCRIPT_GIVE_ITEM_BLINK
     script_message $0ab7 ; '0 obtained YunaSoul.'
     script_end
 Script_5F6C::
     script_message $4ab5 ; '*: …………? You startled me… I'
-    script_set_flag $009a
+    script_set_flag EVENT_GIVE_ITEM_BLINK_09A
     script_skip_if_no Script_5F79
     script_message $8ac9 ; '*: Oh… How terribly disappointing. I'll'
     script_command SCRIPT_GIVE_ITEM_BLINK
@@ -4726,7 +4726,7 @@ Script_5F82::
     script_end
 Script_5F8C::
     script_message $8ab6 ; '*: You will? Thank you! Let'
-    script_set_flag $009b
+    script_set_flag EVENT_YOU_WILL_THANK_YOU_LET
     script_command SCRIPT_GIVE_ITEM_BLINK
     script_message $0ab7 ; '0 obtained YunaSoul.'
     script_end
@@ -4756,7 +4756,7 @@ Script_5FB8::
     script_hide_object $02
     script_hold_dpad $01, 3
     script_command SCRIPT_SCENE_MEDICINE_GIVEN
-    script_set_flag $01f1
+    script_set_flag EVENT_SCENE_MEDICINE_GIVEN
     script_end
 Script_5FC9::
     script_command SCRIPT_SCENE_SHIELD_GUARDIAN
@@ -4782,7 +4782,7 @@ Script_5FD6::
 Script_5FDD::
     script_message $0319 ; '0 checked the treasure chest. 0'
     script_hide_object $01
-    script_set_flag $0080
+    script_set_flag EVENT_HERO_CHECKED_THE_TREASURE_CHEST
     script_end
 Script_5FE6::
     script_command SCRIPT_SCENE_CHEST_SERVANT
@@ -4795,7 +4795,7 @@ Script_5FE8::
 Script_5FEF::
     script_message $040b ; '0 checked the grave. There was'
     script_command SCRIPT_SCENE_GRAVE
-    script_set_flag $00a0
+    script_set_flag EVENT_SCENE_GRAVE
     script_end
 Script_5FF7::
     script_message $040b ; '0 checked the grave. There was'
@@ -4815,7 +4815,7 @@ Script_600A::
     script_message $0412 ; '*: Kweeeeh!'
     script_message $0de6 ; 'Look! A MadCondor! It has something!'
     script_command SCRIPT_SCENE_MADCONDOR
-    script_set_flag $00a4
+    script_set_flag EVENT_SCENE_MADCONDOR
     script_end
 Script_6015::
     script_message $041d ; '*: Hm? You're from the village!'
@@ -4857,12 +4857,12 @@ Script_604F::
     script_message $0433 ; '*: Kweeeeeh!'
     script_command SCRIPT_SCENE_MADCONDOR_CRY
     script_encounter $05 ; encounter words: MadCondor, Slime, Slime
-    script_set_flag $00a8
+    script_set_flag EVENT_SCENE_MADCONDOR_CRY
     script_end
 Script_6059::
     script_message $0433 ; '*: Kweeeeeh!'
     script_encounter $05 ; encounter words: MadCondor, Slime, Slime
-    script_set_flag $00a8
+    script_set_flag EVENT_SCENE_MADCONDOR_CRY
     script_end
 Script_6062::
     script_message $4439 ; '*: I've lived here for 200'
@@ -4896,13 +4896,13 @@ Script_6091::
     script_end
 Script_6096::
     script_message $045d ; '*: You can take this treasure,'
-    script_set_flag $00ad
+    script_set_flag EVENT_YOU_CAN_TAKE_THIS_TREASURE
     script_encounter $06 ; encounter words: Metabble, Slime, Slime
     script_message $045f ; '*: Heh, you're not half bad!'
     script_walk 0, 0, 2
     script_walk 0, 3, 2
     script_hide_object $00
-    script_set_flag $00ae
+    script_set_flag EVENT_HEH_YOU
     script_command SCRIPT_HIDE_SPRITES
     script_end
 Script_60B0::
@@ -4912,7 +4912,7 @@ Script_60B0::
     script_walk 0, 0, 2
     script_walk 0, 3, 2
     script_hide_object $00
-    script_set_flag $00ae
+    script_set_flag EVENT_HEH_YOU
     script_command SCRIPT_HIDE_SPRITES
     script_end
 Script_60C7::
@@ -4937,40 +4937,40 @@ Script_60DD::
     script_wait 60
     script_message $8465 ; 'A door opened somewhere…'
     script_command SCRIPT_SET_FLAG_322
-    script_set_flag $00b2
+    script_set_flag EVENT_SET_FLAG_322
     script_end
 Script_60EA::
     script_message $0466 ; '*: You overcame the traps I'
-    script_set_flag $00b3
+    script_set_flag EVENT_YOU_OVERCAME_THE_TRAPS_I
     script_encounter $08 ; encounter words: Niterich, Slime, Slime
     script_message $0468 ; '*: You've beaten me fairly… Take'
     script_command SCRIPT_SCENE_BEATEN_FAIRLY
-    script_set_flag $00b4
-    script_set_flag $00c5
-    script_set_flag $00c6
-    script_set_flag $00c7
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C5
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C6
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C7
     script_end
 Script_6103::
     script_message $0467 ; '*: Wahahahah! Here again, are you?'
     script_encounter $08 ; encounter words: Niterich, Slime, Slime
     script_message $0468 ; '*: You've beaten me fairly… Take'
     script_command SCRIPT_SCENE_BEATEN_FAIRLY
-    script_set_flag $00b4
-    script_set_flag $00c5
-    script_set_flag $00c6
-    script_set_flag $00c7
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C5
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C6
+    script_set_flag EVENT_SCENE_BEATEN_FAIRLY_0C7
     script_end
 Script_6119::
     script_message $0469 ; '*: What? You have the three'
     script_walk 0, 2, 1
     script_hide_object $00
-    script_set_flag $00b6
+    script_set_flag EVENT_WHAT_YOU_HAVE_THE_THREE
     script_end
 Script_6126::
     script_message $0471 ; '*: I'm surprised anyone managed to'
     script_command SCRIPT_SCENE_FOUND_ME
     script_face $80, 0
-    script_set_flag $00b8
+    script_set_flag EVENT_SCENE_FOUND_ME
     script_end
 Script_6131::
     script_command SCRIPT_SCENE_FOUND_ME_BATTLE
@@ -4981,14 +4981,14 @@ Script_6133::
     script_message $c47c ; '0 handed over the Heaven Armor.'
     script_message $847d ; '0 handed over the Heaven Sword.'
     script_message $047e ; '*: Good. You have brought the'
-    script_set_flag $00c0
+    script_set_flag EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     script_command SCRIPT_SCENE_THREE_ITEMS_BATTLE
-    script_set_flag $00c1
+    script_set_flag EVENT_SCENE_THREE_ITEMS_BATTLE
     script_end
 Script_614A::
     script_message $047f ; '*: Fwahahaha! Don't you ever give'
     script_command SCRIPT_SCENE_THREE_ITEMS_BATTLE
-    script_set_flag $00c1
+    script_set_flag EVENT_SCENE_THREE_ITEMS_BATTLE
     script_end
 Script_6152::
     script_sound $28
@@ -5044,22 +5044,22 @@ Script_61B3::
     script_hide_object $01
     script_face $80, 0
     script_message $0554 ; '*: My work is done… I'
-    script_set_flag $00d2
+    script_set_flag EVENT_TAKE_ITEM
     script_encounter $1d ; encounter words: Centasaur, GigaDraco, Garudian
     script_message $0556 ; '*: N… No… How could my'
     script_command SCRIPT_SCENE_DARCK_TAUNT
-    script_set_flag $00d3
+    script_set_flag EVENT_SCENE_DARCK_TAUNT
     script_end
 Script_61DC::
     script_message $0555 ; '*: You seem to still not'
     script_encounter $1d ; encounter words: Centasaur, GigaDraco, Garudian
     script_message $0556 ; '*: N… No… How could my'
     script_command SCRIPT_SCENE_DARCK_TAUNT
-    script_set_flag $00d3
+    script_set_flag EVENT_SCENE_DARCK_TAUNT
     script_end
 Script_61E9::
     script_message $0557 ; 'Darck: Fawahahah! You chased your treasures'
-    script_set_flag $00d0
+    script_set_flag EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     script_encounter $0a ; encounter words: Darck, Slime, Slime
     script_message $0559 ; 'Darck: …Wha… What? How could I…'
     script_command SCRIPT_SCENE_DARCK_DEFEATED
@@ -5074,13 +5074,13 @@ Script_6200::
     script_face $80, 0
     script_command SCRIPT_SCENE_CYAL_SHINE
     script_walk 0, 2, 5
-    script_set_flag $0140
+    script_set_flag EVENT_SCENE_CYAL_SHINE
     script_end
 Script_620C::
     script_message $0704 ; '*: So Cyal took a shine'
     script_slide_y $81
     script_message $0705 ; 'Cyal: Yay, you'll be my friend?'
-    script_set_flag $0143
+    script_set_flag EVENT_CYAL_YAY_YOU
     script_end
 Script_6218::
     script_message $0710 ; '*: Well, well, a human here'
@@ -5089,7 +5089,7 @@ Script_6218::
     script_slide_y $82
     script_message $0712 ; 'Cyal: 0, let's play! I want'
     script_walk 2, 0, 2
-    script_set_flag $0146
+    script_set_flag EVENT_SCENE_ROLT_ELDER
     script_end
 Script_622C::
     script_message $0713 ; '*: I'm the village's elder. What's'
@@ -5098,12 +5098,12 @@ Script_622C::
     script_slide_y $82
     script_message $0712 ; 'Cyal: 0, let's play! I want'
     script_walk 2, 0, 2
-    script_set_flag $0146
+    script_set_flag EVENT_SCENE_ROLT_ELDER
     script_end
 Script_6240::
     script_message $0716 ; 'Cyal: Listen, 0. We should go'
     script_walk_fast 2, 0, 4
-    script_set_flag $0147
+    script_set_flag EVENT_CYAL_LISTEN_HERO_WE_SHOULD
     script_end
 Script_624B::
     script_face $80, 0
@@ -5115,7 +5115,7 @@ Script_624B::
     script_message $071e ; '0 counted off…'
     script_wait 30
     script_message $071f ; 'Cyal: Eeek, 0! Help me!'
-    script_set_flag $0148
+    script_set_flag EVENT_CYAL_EEEK_HERO_HELP_ME
     script_end
 Script_626A::
     script_slide_y $82
@@ -5129,29 +5129,29 @@ Script_626A::
     script_walk 1, 2, 1
     script_walk 1, 1, 1
     script_face $81, 2
-    script_set_flag $0149
+    script_set_flag EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU
     script_end
 Script_6290::
     script_message $0724 ; '*: That's what we'll do, kid.'
-    script_set_flag $014a
+    script_set_flag EVENT_THAT
     script_encounter $09 ; encounter words: ArrowDog, ArrowDog, Slime
     script_message $0754 ; '*: …Too strong… Arroooh!'
     script_command SCRIPT_SCENE_TOO_STRONG
-    script_set_flag $014b
+    script_set_flag EVENT_SCENE_TOO_STRONG
     script_end
 Script_62A0::
     script_message $0727 ; '*: You've come back again, ruff?'
     script_encounter $09 ; encounter words: ArrowDog, ArrowDog, Slime
     script_message $0754 ; '*: …Too strong… Arroooh!'
     script_command SCRIPT_SCENE_TOO_STRONG
-    script_set_flag $014b
+    script_set_flag EVENT_SCENE_TOO_STRONG
     script_end
 Script_62AD::
     script_message $0728 ; 'Rolt: What? Cyal was abducted? Who'
     script_walk_fast 1, 0, 7
     script_slide_y $80
     script_message $0729 ; '*: Rolt, wait! …Gone already…'
-    script_set_flag $014c
+    script_set_flag EVENT_ROLT_WAIT_GONE_ALREADY
     script_end
 Script_62BD::
     script_message $4739 ; '*: The human in the forest'
@@ -5178,8 +5178,8 @@ Script_62BD::
     script_message $073f ; 'Rolt: You're safe now. 0 did'
     script_face $82, 0
     script_message $0740 ; 'Rolt: 0, I'm sorry we put'
-    script_set_flag $0151
-    script_set_flag $0203
+    script_set_flag EVENT_KEY_BOSS_BEATEN
+    script_set_flag EVENT_KEY_BOSS_BEATEN_203
     script_command SCRIPT_SCENE_CYAL_ROLT
     script_face $80, 3
     script_message $0741 ; '*: I'm glad that Cyal and'
@@ -5209,8 +5209,8 @@ Script_6313::
     script_message $073f ; 'Rolt: You're safe now. 0 did'
     script_face $82, 0
     script_message $0740 ; 'Rolt: 0, I'm sorry we put'
-    script_set_flag $0151
-    script_set_flag $0203
+    script_set_flag EVENT_KEY_BOSS_BEATEN
+    script_set_flag EVENT_KEY_BOSS_BEATEN_203
     script_command SCRIPT_SCENE_CYAL_ROLT
     script_face $80, 3
     script_message $0741 ; '*: I'm glad that Cyal and'
@@ -5221,7 +5221,7 @@ Script_6369::
     script_message $0736 ; 'Rolt: Shut up! Give back Cyal!'
     script_walk_fast 2, 2, 2
     script_command SCRIPT_SCENE_GIVE_BACK_CYAL
-    script_set_flag $014f
+    script_set_flag EVENT_SCENE_GIVE_BACK_CYAL
     script_end
 Script_637B::
     script_message $470e ; '*: Welcome! How may I help'
@@ -5245,7 +5245,7 @@ Script_6398::
     script_message $4759 ; '*: Hoh? Ah, excuse my incivility.'
     script_skip_if_no Script_63A6
     script_message $875d ; 'Kiral: No? How disappointing. Your efforts'
-    script_set_flag $0159
+    script_set_flag EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR
     script_end
 Script_63A6::
     script_message $875b ; 'Kiral: Hohoh! Grand, grand! Go fetch'
@@ -5254,7 +5254,7 @@ Script_63A6::
     script_wait 30
     script_slide_y $80
     script_message $075c ; 'Kiral: Oh! Foolish of me, I'
-    script_set_flag $015a
+    script_set_flag EVENT_KIRAL_OH_FOOLISH_OF_ME
     script_end
 Script_63BC::
     script_message $475e ; 'Kiral: I need help with my'
@@ -5268,17 +5268,17 @@ Script_63C5::
     script_wait 30
     script_slide_y $80
     script_message $075c ; 'Kiral: Oh! Foolish of me, I'
-    script_set_flag $015a
+    script_set_flag EVENT_KIRAL_OH_FOOLISH_OF_ME
     script_end
 Script_63DB::
     script_message $0767 ; '0 peered into the barrel. A'
     script_encounter $1f ; encounter words: Shadow, Slime, Slime
-    script_set_flag $015d
+    script_set_flag EVENT_HERO_PEERED_INTO_THE_BARREL
     script_end
 Script_63E4::
     script_message $0767 ; '0 peered into the barrel. A'
     script_encounter $1f ; encounter words: Shadow, Slime, Slime
-    script_set_flag $015e
+    script_set_flag EVENT_HERO_PEERED_INTO_THE_BARREL_15E
     script_end
 Script_63ED::
     script_message $0769 ; '*: PROFESSOR… SAY GUARD… TREASURE… NEVER…'
@@ -5300,7 +5300,7 @@ Script_6409::
     script_message $0776 ; 'Kiral: Ah! Back! The treasure? What?'
     script_wait 30
     script_message $0777 ; 'Kiral: Please… Go stop him. He'
-    script_set_flag $0162
+    script_set_flag EVENT_KIRAL_PLEASE_GO_STOP_HIM
     script_end
 Script_6416::
     script_message $076b ; '0 peered into the barrel. There'
@@ -5312,8 +5312,8 @@ Script_641B::
     script_message $077f ; 'Kiral: This stone, the WizStone, it'
     script_walk_fast 0, 1, 3
     script_command SCRIPT_SCENE_WIZSTONE
-    script_set_flag $0165
-    script_set_flag $0204
+    script_set_flag EVENT_SCENE_WIZSTONE
+    script_set_flag EVENT_SCENE_WIZSTONE_204
     script_end
 Script_6430::
     script_message $0795 ; '*: Sigh…'
@@ -5338,13 +5338,13 @@ Script_644C::
     script_message $47a0 ; '*: Excuse me, are you a'
     script_skip_if_no Script_645A
     script_message $87a2 ; '*: I can't count on your'
-    script_set_flag $01b0
+    script_set_flag EVENT_I_CAN
     script_end
 Script_645A::
     script_message $87a1 ; '*: Thank you! I knew you'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
-    script_set_flag $01b1
+    script_set_flag EVENT_THANK_YOU_I_KNEW_YOU
     script_end
 Script_6469::
     script_message $47a3 ; '*: Have you changed your mind?'
@@ -5355,7 +5355,7 @@ Script_6472::
     script_message $87a1 ; '*: Thank you! I knew you'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
-    script_set_flag $01b1
+    script_set_flag EVENT_THANK_YOU_I_KNEW_YOU
     script_end
 Script_6481::
     script_message $47ab ; '*: Lately, the town of Miagen'
@@ -5368,7 +5368,7 @@ Script_648A::
 Script_648E::
     script_message $07b6 ; '*: This pendant is yours for'
     script_command SCRIPT_SCENE_PENDANT_SELLER
-    script_set_flag $01b9
+    script_set_flag EVENT_SCENE_PENDANT_SELLER
     script_end
 Script_6496::
     script_set_flag $01ba
@@ -5376,26 +5376,26 @@ Script_6496::
     script_encounter $11 ; encounter words: Pixy, Pixy, Slime
     script_message $07bc ; '*: Please! Mercy! Spare us! Take'
     script_command SCRIPT_SCENE_MERCY
-    script_set_flag $01bb
+    script_set_flag EVENT_SCENE_MERCY
     script_end
 Script_64A6::
     script_message $07bb ; '*: We'll smash you as often'
     script_encounter $11 ; encounter words: Pixy, Pixy, Slime
     script_message $07bc ; '*: Please! Mercy! Spare us! Take'
     script_command SCRIPT_SCENE_MERCY
-    script_set_flag $01bb
+    script_set_flag EVENT_SCENE_MERCY
     script_end
 Script_64B3::
     script_message $07bd ; '0 opened the treasure chest. 0'
     script_hide_object $00
     script_hide_object $02
-    script_set_flag $01bc
+    script_set_flag EVENT_HERO_OPENED_THE_TREASURE_CHEST
     script_end
 Script_64BE::
     script_message $07c3 ; '*: For 47,000G this earring… What?'
     script_slide_y $81
     script_message $07c4 ; '*: You defeated the monsters? You're'
-    script_set_flag $01bd
+    script_set_flag EVENT_YOU_DEFEATED_THE_MONSTERS_YOU
     script_end
 Script_64CA::
     script_message $07ca ; '0 showed the Pretty Ring.'
@@ -5403,7 +5403,7 @@ Script_64CA::
     script_message $07cb ; '*: Ah… That ring… Is… Is'
     script_message $07cc ; '0 handed over the Pretty Ring.'
     script_message $07cd ; '*: Thank you for getting the'
-    script_set_flag $01be
+    script_set_flag EVENT_THANK_YOU_FOR_GETTING_THE
     script_end
 Script_64DC::
     script_message $07cf ; '*: Thank you for recovering our'
@@ -5412,7 +5412,7 @@ Script_64DC::
 Script_64E3::
     script_message $07cf ; '*: Thank you for recovering our'
     script_message $07d0 ; '0 received a SageRock.'
-    script_set_flag $01bf
+    script_set_flag EVENT_HERO_RECEIVED_A_SAGE_ROCK
     script_end
 Script_64ED::
     script_message $07da ; '*: What? Where I get my'
@@ -5420,12 +5420,12 @@ Script_64ED::
     script_walk_fast 1, 0, 2
     script_walk_fast 1, 1, 1
     script_walk_fast 1, 0, 4
-    script_set_flag $01c0
+    script_set_flag EVENT_SCENE_PENDANT_SELLER_1C0
     script_end
 Script_6501::
     script_message $07dc ; 'Milayou: I thought this forest looked'
     script_command SCRIPT_SCENE_MILAYOU_FOREST
-    script_set_flag $01c1
+    script_set_flag EVENT_SCENE_MILAYOU_FOREST
     script_end
 Script_6509::
     script_set_flag $01c2
@@ -5438,8 +5438,8 @@ Script_6509::
     script_message $0ce1 ; 'Milayou: You are really special. I'
     script_walk 1, 0, 2
     script_hide_object $01
-    script_set_flag $01c3
-    script_set_flag $0205
+    script_set_flag EVENT_KEY_BOSS_BEATEN_2
+    script_set_flag EVENT_KEY_BOSS_BEATEN_2_205
     script_end
 Script_652C::
     script_message $0cdf ; '*: What is it, you little'
@@ -5451,14 +5451,14 @@ Script_652C::
     script_message $0ce1 ; 'Milayou: You are really special. I'
     script_walk 1, 0, 2
     script_hide_object $01
-    script_set_flag $01c3
-    script_set_flag $0205
+    script_set_flag EVENT_KEY_BOSS_BEATEN_2
+    script_set_flag EVENT_KEY_BOSS_BEATEN_2_205
     script_end
 Script_654C::
     script_message $0cef ; 'Milayou: I asked for your support'
     script_slide_y $00
     script_message $0cf0 ; 'Milayou: How do I know about'
-    script_set_flag $01c4
+    script_set_flag EVENT_MILAYOU_HOW_DO_I_KNOW
     script_end
 Script_6558::
     script_set_flag $01c6
@@ -5472,7 +5472,7 @@ Script_6564::
     script_message $0cf9 ; 'Milayou: I lost… But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
-    script_set_flag $01c7
+    script_set_flag EVENT_MILAYOU_I_LOST_BUT_GOOD
     script_end
 Script_6578::
     script_message $4cf8 ; 'Milayou: Want to spar with me?'
@@ -5485,7 +5485,7 @@ Script_6581::
     script_message $0cf9 ; 'Milayou: I lost… But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
-    script_set_flag $01c7
+    script_set_flag EVENT_MILAYOU_I_LOST_BUT_GOOD
     script_end
 Script_6595::
     script_message $0c48 ; '0 checked the treasure chest. The'

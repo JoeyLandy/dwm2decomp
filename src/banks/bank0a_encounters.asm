@@ -4,8 +4,8 @@
 SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
     db $0a
 
-FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc::
-    call FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect
+FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
+    call FieldState_StepChecks_Sub01_QueueSoundEffect
     ld a, [wMenuState]
     inc a
     ld [wMenuState], a
@@ -15,14 +15,14 @@ FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc::
     ld [rRAMG], a
     ld a, [wMenuSubState]
     or a
-    jr nz, .call_field_mode_state_dispatch_case07_sub01
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
+    jr nz, .call_field_state_step_checks_sub01_load_sram
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
     jr .check_status_field_step
 
-.call_field_mode_state_dispatch_case07_sub01:
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
+.call_field_state_step_checks_sub01_load_sram:
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
 
 .check_status_field_step:
     xor a
@@ -50,7 +50,7 @@ FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc::
     ld [wModeState], a
     ret
 
-FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01::
+FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01::
     ld a, [wStatusStepFlags]
     and $01
     ret z
@@ -107,7 +107,7 @@ SetFieldStepFlagsBit7::
     ld [wFieldStepFlags], a
     ret
 
-FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02::
+FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -185,7 +185,7 @@ FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02::
     jr nz, .loop
     ret
 
-FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte::
+FieldState_StepChecks_Sub01_LoadSRAMRecordByte::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -279,7 +279,7 @@ FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte::
     jr nz, .loop
     ret
 
-FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect::
+FieldState_StepChecks_Sub01_QueueSoundEffect::
     ld a, [wMenuState]
     or a
     jr nz, .read_menu_state
@@ -469,7 +469,7 @@ EnterStatusEffectFieldState::
     ret nz
     bit 5, a
     ret nz
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     ret nc
     ld a, [wModeState]
@@ -2699,7 +2699,7 @@ RunBattleTransitionStep_WriteGameModeAndModeStateEtc::
     ld [wGameMode], a
     xor a
     ld [wModeState], a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld [wGameMode2Arg], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -3464,7 +3464,7 @@ UpdatePlayerMovement_Sub01_TestFlagBit::
     ld a, [wScriptRunning]
     or a
     ret nz
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     ret nc
     ld a, [wPartyCount]

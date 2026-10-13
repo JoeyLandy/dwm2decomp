@@ -4522,7 +4522,7 @@ LoadMapScreen_Sub01_WriteSVBK::
     ret
 
 LoadMapScreen_TestFlagBit::
-    ld de, $012b
+    ld de, EVENT_SCENE_STRONGEST_MASTER
     call TestFlagBit
     ret nc
     ldh a, [hMapScreenX]
@@ -4719,7 +4719,7 @@ SetFieldEventKindOnMap19IfFlagD1::
     ret nz
     ld a, [wStoryFlags + $60]
     ret nz
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld a, $0b

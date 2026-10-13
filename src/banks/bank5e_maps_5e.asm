@@ -39,7 +39,7 @@ TileRect_5E_4238::
     db $64, $51, $51, $6d, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $52, $6f, $51, $51, $65 ; id 16
     db $7b, $7c, $7d, $70, $71, $72, $72, $71, $71, $72, $72, $71, $71, $72, $72, $71, $73, $7c, $7e, $7f ; id 17
 
-; RunGameMode2State_Case04_Sub01_Sub01 (RunGameMode2State_Case04_Sub01_WriteTemp0AndTemp1, the game
+; RunGameMode2State_Case04_Sub01_Sub01 (RunWorldMapState_Case04_Sub01_WriteTemp0AndTemp1, the game
 ; mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and
 ; writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers
 ; 1-281 fit before Map49Tileset at $5F2A (E-0166, C1)

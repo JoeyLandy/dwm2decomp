@@ -2874,7 +2874,7 @@ RollKeyWorldObjectKind_Data::
     db $00, $00, $59, $00, $5a, $5d, $00, $00, $5e, $5f, $61, $62, $63, $00, $64
     ds $11, $00
 
-FieldModeStateDispatch_NextRandomSeed::
+FieldState_MapTransition_NextRandomSeed::
     ld a, [wKeyWorldBand]
     and $0f
     ld l, a
@@ -2933,7 +2933,7 @@ FieldModeStateDispatch_NextRandomSeed::
     jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, FieldModeStateDispatch_NextRandomSeed_Data
+    ld hl, FieldState_MapTransition_NextRandomSeed_Data
     add_a_to_hl
     ld a, [hl]
     cp c
@@ -2999,7 +2999,7 @@ FieldModeStateDispatch_NextRandomSeed::
     ld [de], a
     ret
 
-FieldModeStateDispatch_NextRandomSeed_Data::
+FieldState_MapTransition_NextRandomSeed_Data::
     ds $13, $00
     db $55
     ds $26, $00
@@ -4129,11 +4129,11 @@ RemoveMapObjectsEntryMatching_NextRandomSeed::
     ld a, $01
     ret
 
-FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
+FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld a, [wMapType]
     bit 7, a
     jr z, .check_map_id
-    call FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending
+    call FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending
     ret
 
 .check_map_id:
@@ -4161,7 +4161,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
 .read_map_id:
     ldh a, [hMapId]
     ld c, a
-    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data2
+    ld hl, FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2
     ld b, $00
 
 .skip:
@@ -4188,7 +4188,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
     ld [wWarpPending], a
     ld a, b
     push af
-    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data1
+    ld hl, FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBand], a
@@ -4206,7 +4206,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
 .loop2:
     push de
     push bc
-    call FieldModeStateDispatch_NextRandomSeed
+    call FieldState_MapTransition_NextRandomSeed
     call WriteKeyContentsWordRowsEntryForTemp2Temp3
     ld hl, hTemp3
     inc [hl]
@@ -4220,10 +4220,10 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
     jr nz, .loop2
     ret
 
-FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data1::
+FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data1::
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0c, $0c
 
-FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data2::
+FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
 ; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] at DE
@@ -4301,7 +4301,7 @@ KeyContentsWordRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 27
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 28
 
-FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending::
+FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending::
     ld a, [wMapType]
     and $07
     cp $05
@@ -4357,7 +4357,7 @@ FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending::
 .loop2:
     push de
     push bc
-    call FieldModeStateDispatch_NextRandomSeed
+    call FieldState_MapTransition_NextRandomSeed
     call WriteRandomEntryFromTable690E
     pop bc
     pop de

@@ -562,7 +562,7 @@ RunBattleCommandEntry_Case06_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 2, [hl]
+    set BSTAT6_BERSERK, [hl]
 
 .next:
     inc c

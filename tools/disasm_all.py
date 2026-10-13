@@ -524,6 +524,148 @@ ACTION_CP = re.compile(r"^(\s+cp a, )\$([0-9A-F]{2})(\s*;.*)?$")
 ACTION_KEEPS_A = re.compile(r"^\s+(?:cp a, |jr (?:z|nz|c|nc), |jp (?:z|nz|c|nc), |ret (?:z|nz|c|nc)$)")
 
 
+FLAG_CALL = re.compile(r"^\s+(?:call|farcall) (SetFlagBit|ClearFlagBit|TestFlagBit)\w*\s*(?:;.*)?$")
+FLAG_LD_DE = re.compile(r"^(\s+ld de, )\$([0-9A-F]{4})(\s*;.*)?$")
+FLAG_MACRO = re.compile(r"^(\s+(?:script_set_flag|objsel_unless_flag|objsel_skip_if_clear|objsel_skip_if_set) )"
+                        r"\$([0-9A-Fa-f]{4})\b")
+FLAG_MACRO2 = re.compile(r"^(\s+objsel_unless_flags )\$([0-9A-Fa-f]{4}), \$([0-9A-Fa-f]{4})\b")
+
+
+def _words(text: str, n: int = 5) -> str:
+    """'Thanks for coming by!' / 'ThanksForComingBy' -> THANKS_FOR_COMING_BY (at most n words)."""
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", text.replace("'", ""))
+    ws = [w for w in re.split(r"[^A-Za-z0-9]+", text) if w]
+    return "_".join("HERO" if w == "0" else w.upper() for w in ws[:n])  # "0" in a quote is the hero's name
+
+
+def flag_descriptor(routine: str, script_cmd: str | None, quote: str | None) -> str | None:
+    """What a flag's setter says about it (D-009): a talk routine's message words, a scene's name, a talk event's
+    shown words, or, inside an event script, its last scene command or message before the flag is set."""
+    if routine.startswith("Script_"):
+        if script_cmd:
+            return re.sub(r"^SCRIPT_", "", script_cmd)
+        return _words(quote) if quote else None
+    m = re.match(r"^(?:Talk(?:Msg|Script)?[0-9A-F]{4}|IfFlag[0-9A-F]{4}Msg[0-9A-F]{4})_([A-Za-z0-9]+)", routine)
+    if m:
+        return _words(m.group(1))
+    m = re.match(r"^(Scene[A-Za-z0-9]+)", routine)
+    if m:
+        return _words(m.group(1), 6)
+    m = re.match(r"^\w*?(?:TalkEvents|Talk)_Show([A-Za-z0-9]+)", routine)
+    if m:
+        return _words(m.group(1))
+    return None
+
+
+def name_story_flags(texts: list[str]) -> tuple[list[str], dict[int, tuple[str, list[str]]], int]:
+    """D-009: a story flag (TestFlagBit/SetFlagBit/ClearFlagBit with DE = flag number, script_set_flag, object
+    selectors) is named EVENT_<what its first setter says> when a setter says something; the constant's comment lists
+    the setters. Flags only tested, or set by routines whose names say nothing, keep their numbers."""
+    setters: dict[int, list[tuple[str, str | None]]] = {}
+    for text in texts:
+        routine, cmd, quote, de = "?", None, None, None
+        for ln in text.split("\n"):
+            m = re.match(r"^([A-Za-z_]\w*)::", ln)
+            if m and "address name" not in ln:
+                routine, cmd, quote = m.group(1), None, None
+            code = ln.split(";")[0].strip()
+            q = re.search(r"; '([^']+)'", ln)
+            if code.startswith("script_message") and q:
+                quote = q.group(1)
+            m = re.match(r"script_command (SCRIPT_\w+)", code)
+            if m:
+                cmd = m.group(1)
+            m = FLAG_LD_DE.match(ln)
+            if m:
+                de = int(m.group(2), 16)
+                continue
+            m = FLAG_CALL.match(ln)
+            if m and de is not None and m.group(1) == "SetFlagBit":
+                setters.setdefault(de, []).append((routine, flag_descriptor(routine, cmd, quote)))
+            m = re.match(r"script_set_flag \$([0-9A-Fa-f]{4})", code)
+            if m:
+                setters.setdefault(int(m.group(1), 16), []).append((routine, flag_descriptor(routine, cmd, quote)))
+            if code:
+                de = None
+    names: dict[int, tuple[str, list[str]]] = {}
+    used: set[str] = set()
+    for flag in sorted(setters):
+        desc = next((d for _r, d in setters[flag] if d), None)
+        if not desc:
+            continue
+        name = f"EVENT_{desc}"
+        if name in used:
+            name = f"{name}_{flag:03X}"
+        used.add(name)
+        names[flag] = (name, sorted({r for r, _d in setters[flag]}))
+    out, n = [], 0
+    for text in texts:
+        ls = text.split("\n")
+        for i, ln in enumerate(ls):
+            m = FLAG_LD_DE.match(ln)
+            if m and int(m.group(2), 16) in names:
+                nxt = next((x for x in ls[i + 1:i + 4] if x.strip() and not x.lstrip().startswith(";")), "")
+                if FLAG_CALL.match(nxt):
+                    ls[i] = m.group(1) + names[int(m.group(2), 16)][0] + (m.group(3) or "")
+                    n += 1
+                continue
+            m = FLAG_MACRO2.match(ln)
+            if m:
+                a, b = int(m.group(2), 16), int(m.group(3), 16)
+                ls[i] = (m.group(1) + (names[a][0] if a in names else f"${a:04X}") + ", "
+                         + (names[b][0] if b in names else f"${b:04X}") + ln[m.end():])
+                n += (a in names) + (b in names)
+                continue
+            m = FLAG_MACRO.match(ln)
+            if m and int(m.group(2), 16) in names:
+                ls[i] = m.group(1) + names[int(m.group(2), 16)][0] + ln[m.end():]
+                n += 1
+        out.append("\n".join(ls))
+    return out, names, n
+
+
+STATUS_LD = re.compile(r"^\s+ld hl, wBattleStatus(\d?)\s*(?:;.*)?$")
+STATUS_HELPER = re.compile(r"^\s+call (?:TargetStatus(\d)Address|HLToBattleStatus(8)EntryOf\w+)\s*(?:;.*)?$")
+STATUS_OP = re.compile(r"^(\s+(?:bit|set|res) )(\d)(, \[hl\].*)$")
+HL_CHANGES = re.compile(r"^\s+(?:ld (?:hl|h|l),|inc hl|dec hl|add hl|pop hl|call|farcall|jp |jp$|jr (?!z|nz|c|nc)|ret$|"
+                        r"rst|jumptable|ld a, \[hl[+-]\]|ld \[hl[+-]\]|ld a, \[hli\]|ld \[hli\])")
+
+
+def name_status_bits(texts: list[str], bits: dict[tuple[int, int], str]) -> tuple[list[str], int]:
+    """D-009: `bit/set/res N, [hl]` while HL points at a slot's status byte K (after `ld hl, wBattleStatusK` and
+    AddAx9ToHL, or TargetStatusKAddress) use BSTATK_<NAME> when that bit is named (config/battle_status.json)."""
+    out, n = [], 0
+    for text in texts:
+        ls = text.split("\n")
+        k, pending = None, None
+        for i, ln in enumerate(ls):
+            if not ln.strip() or ln.lstrip().startswith(";"):
+                continue
+            m = STATUS_LD.match(ln)
+            if m:
+                k, pending = None, int(m.group(1) or 0)
+                continue
+            if pending is not None and re.match(r"^\s+call AddAx9ToHL\b", ln):
+                k, pending = pending, None
+                continue
+            m = STATUS_HELPER.match(ln)
+            if m:
+                k, pending = int(m.group(1) or m.group(2)), None
+                continue
+            pending = None if not re.match(r"^\s+ld a, \[w", ln) else pending
+            if k is None:
+                continue
+            m = STATUS_OP.match(ln)
+            if m and (k, int(m.group(2))) in bits:
+                ls[i] = m.group(1) + bits[(k, int(m.group(2)))] + m.group(3)
+                n += 1
+                continue
+            if not ln.startswith("    ") or HL_CHANGES.match(ln):
+                k = None
+        out.append("\n".join(ls))
+    return out, n
+
+
 def name_id_compares(texts: list[str], consts: dict) -> tuple[list[str], int]:
     """D-007: after `ld a, [V]` for a RAM byte V that holds an id (ID_VARS), the `cp a, $NN` of the comparison chain
     that follows name the id (SKILL_*/ACTION_*, ITEM_*). The chain ends at a label or any instruction other than cp
@@ -5850,6 +5992,12 @@ def main() -> int:
     sp_fields = extra["species"]
     texts, nact = name_id_compares(texts, rom.consts)
     log(f"id compares named: {nact}")
+    texts, events, nev = name_story_flags(texts)
+    log(f"story flags named: {len(events)}, {nev} uses")
+    bstat_cfg = json.loads((ROOT / "config/battle_status.json").read_text(encoding="utf-8"))["bits"]
+    bstat = {(b["byte"], b["bit"]): f"BSTAT{b['byte']}_{b['name']}" for b in bstat_cfg}
+    texts, nbs = name_status_bits(texts, bstat)
+    log(f"battle status bits named: {nbs} uses")
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")
@@ -5886,7 +6034,7 @@ def main() -> int:
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
-    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts)
+    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts, events, bstat_cfg)
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")

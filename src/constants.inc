@@ -725,3 +725,277 @@ DEF ITEM_6C EQU $6C
 DEF ITEM_6D EQU $6D
 DEF ITEM_6E EQU $6E
 DEF ITEM_6F EQU $6F
+
+; Story flags (wStoryFlags; TestFlagBit, SetFlagBit, script_set_flag, object selectors), named after
+; what their first setter says: a talk routine's message, a scene, a script's last scene command or
+; message before the flag is set (D-009). Flags only tested, or set by routines whose names say
+; nothing, keep their numbers.
+DEF EVENT_SCENE_LONG_FACES EQU $002 ; set by SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B
+DEF EVENT_SCENE_VAULT_SETTLED EQU $003 ; set by Script_4FA4
+DEF EVENT_YO_DID_YOU_ENJOY EQU $004 ; set by GreatLogTalkEvents_ShowYoDidYouEnjoy
+DEF EVENT_THANKS_FOR_COMING_BY EQU $007 ; set by Talk0046_ThanksForComingBy
+DEF EVENT_IM_PRINCE_KAMEHA_OF EQU $008 ; set by GreatLogTalkEvents_ShowImPrinceKamehaOf
+DEF EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT EQU $009 ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit
+DEF EVENT_SCENE_WARUBOU_SMELLS EQU $00A ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit, Script_4F8D
+DEF EVENT_SCENE_WARUBOU_FOOD2 EQU $00B ; set by SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73
+DEF EVENT_SCENE_WARUBOU_FOOD2_00C EQU $00C ; set by SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc
+DEF EVENT_LOOK_AN_ISLAND_JUST_DOESN EQU $00E ; set by Script_4FE8, Script_4FF7
+DEF EVENT_YOURE_THE_KIDS_FROM_THE EQU $00F ; set by TalkMsg003C_YoureTheKidsFromTheNew
+DEF EVENT_HELLO_THERE_YOU_MUST_BE EQU $010 ; set by TalkMsg0032_HelloThereYouMustBeThe
+DEF EVENT_THAT_WEIRD_APE_THING_IS EQU $011 ; set by Script_5039, TalkMsg003A_ThatWeirdApeThingIsWarubou
+DEF EVENT_SCENE_AT_SEA EQU $012 ; set by Script_5063, Script_509F
+DEF EVENT_FOLLOWER_FACE_PLAYER EQU $014 ; set by Script_4FB7, Script_4FD0
+DEF EVENT_SCENE_WARUBOU_LEAVES EQU $015 ; set by Script_4F54
+DEF EVENT_WARUBOU_NO_THEN_FIND_SOMEONE EQU $016 ; set by Script_5006
+DEF EVENT_SCENE_OASIS_KEY EQU $01A ; set by Script_5017
+DEF EVENT_SCENE_LAND_HO EQU $01B ; set by SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D, ScriptCommand76_Run_SetFlagBit
+DEF EVENT_SCENE_RIVAL_DEFEATED EQU $01D ; set by SceneRivalDefeated_ShowWarubouWaheyTheAbility
+DEF EVENT_SCENE_SHIELD2 EQU $01E ; set by SceneShield2_ShowWarubouWaheyYouCan
+DEF EVENT_SCENE_MERMAID_KINGDOM EQU $01F ; set by SceneMermaidKingdom_ShowWarubouWaheyYouCan
+DEF EVENT_SCENE_RIVAL_DEFEATED_021 EQU $021 ; set by SceneRivalDefeated_SetFlagBit
+DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_SetFlagBit_Case31
+DEF EVENT_SCENE_SHIELD2_023 EQU $023 ; set by SceneShield2_SetFlagBit
+DEF EVENT_SCENE_THREE_ITEMS EQU $024 ; set by SceneThreeItems_ShowWarubouWaheyHeroAnd
+DEF EVENT_GIVE_MONSTER EQU $029 ; set by Script_5814
+DEF EVENT_SCENE_LIMBO_MONSTER EQU $02A ; set by SceneLimboMonster_AddStepDeltaToPointedByte
+DEF EVENT_SCENE_LIMBO_MONSTER2 EQU $02B ; set by SceneLimboMonster2_StepObjectTowardCoord_Case0F
+DEF EVENT_THAT_KEY_IUSED EQU $02E ; set by Talk04CB_ThatKeyIUsed
+DEF EVENT_SCENE_KEY_SHOP EQU $02F ; set by Script_56A0
+DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_SetFlagBitAndStep
+DEF EVENT_SCENE_TERRY_BATTLE_038 EQU $038 ; set by SceneTerryBattle_ShowTerryWellThisProves
+DEF EVENT_SCENE_KAMEHA_KEY_BATTLE EQU $039 ; set by SceneKamehaKeyBattle_SetFlagBit
+DEF EVENT_HERO_RECEIVED_THE_ELF_KEY EQU $03A ; set by SceneKamehaKeyBattle_SetFlagBit, Script_58C3 and 1 more
+DEF EVENT_SCENE_KAMEHA_KEY_BATTLE2 EQU $03B ; set by SceneKamehaKeyBattle2_SetFlagBit
+DEF EVENT_HERO_RECEIVED_THE_TRAVELER_KEY EQU $03C ; set by SceneKamehaKeyBattle2_SetFlagBit, Script_58EF and 1 more
+DEF EVENT_DESK_KEY EQU $03D ; set by GreatLogTalkEvents_ShowHeroFoundAMagic, Script_586C and 1 more
+DEF EVENT_THAT_KEY_IUSED_03E EQU $03E ; set by Talk04CB_ThatKeyIUsed
+DEF EVENT_DID_YOU_SAY_YES_YES EQU $042 ; set by Script_59E6, Script_5A00 and 1 more
+DEF EVENT_SCENE_MONSTER_INSPECTION EQU $043 ; set by Script_59E6, Script_5A17
+DEF EVENT_KING_THEN_MAKE_WAY_TO EQU $045 ; set by Script_5A45, Script_5A55
+DEF EVENT_STRONG_MONSTERS_ARE_IN_THE EQU $048 ; set by TalkMsg013D_StrongMonstersAreInTheWell
+DEF EVENT_KING_WHAT_NEVER_MIND_THEN EQU $049 ; set by Script_5A5C
+DEF EVENT_YOU_WILL_SO_WE_CAN EQU $053 ; set by Script_5AAB
+DEF EVENT_SCENE_WATER_SOLVED EQU $054 ; set by Script_5AAB
+DEF EVENT_KING_THE_TOWN EQU $055 ; set by Script_5AD6
+DEF EVENT_SCENE_TREASURE_THEFT EQU $056 ; set by Script_5AD6
+DEF EVENT_CHECK_ITEM EQU $057 ; set by Script_5B26
+DEF EVENT_HEH_YOU_HAVE_MONSTERS_IN EQU $059 ; set by Script_5B3C
+DEF EVENT_SCENE_RIVAL_DEFEATED_05A EQU $05A ; set by SceneRivalDefeated_ScriptStepBlinkObjectTemp0
+DEF EVENT_SCENE_WATER_REWARD EQU $05C ; set by SceneWaterReward_RunMessageBoxFar_Bank85
+DEF EVENT_HERO_RECEIVED_THE_SAILOR_RING EQU $05E ; set by Script_5C7E
+DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_StepPlayerLeftTowardWC928
+DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09
+DEF EVENT_SCENE_WATCH_OUT EQU $066 ; set by Script_5BE8, Script_5BF2
+DEF EVENT_THE_PIRATES EQU $06D ; set by Script_5C0C
+DEF EVENT_SCENE_MERMAID_SONG EQU $06E ; set by SceneMermaidSong_ShowHeroReceivedATinyMedal
+DEF EVENT_WELCOME_YOUNG_HUMAN_I_HEARD EQU $070 ; set by Script_5C77
+DEF EVENT_HOW_COULD_WE_DIE_BEFORE EQU $071 ; set by Script_5C8A
+DEF EVENT_THE_TREASURES_ARE_OURS_NO EQU $072 ; set by Script_5C94
+DEF EVENT_IT_NAGS_AND_NAGS_THAT EQU $073 ; set by Script_5C9E
+DEF EVENT_GIVE_ITEM_BLINK EQU $075 ; set by Script_5CA8, Script_5CB5
+DEF EVENT_SCENE_CRATE EQU $076 ; set by Script_5CC2
+DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel
+DEF EVENT_SCENE_CREW_FOLLOWS EQU $07C ; set by Script_5CDD
+DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_StepScriptParam0Counter_Bank0F
+DEF EVENT_SCENE_KAMEHA_FLEES EQU $07E ; set by SceneKamehaFlees_SetFlagBit
+DEF EVENT_SCENE_MERMAID_KINGDOM_07F EQU $07F ; set by SceneMermaidKingdom_SetFlagBit
+DEF EVENT_HERO_CHECKED_THE_TREASURE_CHEST EQU $080 ; set by Script_5FDD
+DEF EVENT_WHAT_IS_THAT_DIRTY_MEDAL EQU $081 ; set by Script_5D8A
+DEF EVENT_SCENE_SPIRIT_ENVOY EQU $082 ; set by Script_5D97
+DEF EVENT_AH_YOU_ARE_THE_SPIRIT EQU $083 ; set by Script_5D97
+DEF EVENT_SCENE_EXPLOSION EQU $085 ; set by SceneExplosion_TestFlagBit
+DEF EVENT_SCENE_GOT_TO EQU $086 ; set by Script_5DD3, Script_5E02
+DEF EVENT_SCENE_REPORT_TO_KING EQU $087 ; set by Script_5DA6
+DEF EVENT_AH_SAVED_AT_LAST EQU $088 ; set by NordenTalkEvents_ShowAhSavedAtLast
+DEF EVENT_KAMEHA_WHERES_THE_EXIT EQU $089 ; set by NordenTalkEvents_ShowKamehaWheresTheExit
+DEF EVENT_SCENE_WALL_EXIT EQU $08A ; set by Script_5E37
+DEF EVENT_SCENE_REAL_KING EQU $08B ; set by Script_5E5A
+DEF EVENT_AH_SAVED_AT_LAST_08C EQU $08C ; set by NordenTalkEvents_ShowAhSavedAtLast
+DEF EVENT_AH_SAVED_AT_LAST_08D EQU $08D ; set by NordenTalkEvents_ShowAhSavedAtLast
+DEF EVENT_AH_SAVED_AT_LAST_08E EQU $08E ; set by NordenTalkEvents_ShowAhSavedAtLast
+DEF EVENT_IAM_REAL_DONT EQU $08F ; set by NordenTalkEvents_ShowIAmRealDont
+DEF EVENT_IAM_REAL_DONT_090 EQU $090 ; set by NordenTalkEvents_ShowIAmRealDont
+DEF EVENT_IAM_REAL_DONT_091 EQU $091 ; set by NordenTalkEvents_ShowIAmRealDont
+DEF EVENT_IAM_REAL_DONT_092 EQU $092 ; set by NordenTalkEvents_ShowIAmRealDont
+DEF EVENT_SCENE_PLAN_RUINED EQU $093 ; set by ScenePlanRuined_StepScriptParam0Counter_Bank0F
+DEF EVENT_SCENE_PLAN_RUINED_094 EQU $094 ; set by Script_5E67, Script_5E77
+DEF EVENT_GATHER_FOLLOWERS EQU $095 ; set by Script_5E95
+DEF EVENT_SCENE_CHEER_YUNA EQU $096 ; set by Script_5EF5
+DEF EVENT_OH_AN_ENVOY_FROM_THE EQU $097 ; set by Script_5F26, Script_5F38
+DEF EVENT_SCENE_SPIRIT_ENVOY2 EQU $098 ; set by SceneSpiritEnvoy2_SetBit1AtHL_Bank73
+DEF EVENT_SCENE_SPIRIT_ENVOY2_099 EQU $099 ; set by SceneSpiritEnvoy2_SetBit1AtHL_Bank73
+DEF EVENT_GIVE_ITEM_BLINK_09A EQU $09A ; set by Script_5F4C, Script_5F54 and 1 more
+DEF EVENT_YOU_WILL_THANK_YOU_LET EQU $09B ; set by Script_5F61, Script_5F8C
+DEF EVENT_SCENE_PRINCESS_MEDICINE EQU $09C ; set by ScenePrincessMedicine_ScriptApplyStepDeltaAtDE
+DEF EVENT_SCENE_PRINCESS_MEDICINE_09D EQU $09D ; set by ScenePrincessMedicine_ShowIveFinallyRememberedIm
+DEF EVENT_ICAME_FROM_THE_EASTERN_KINGDOM EQU $09E ; set by TalkMsg0337_ICameFromTheEasternKingdom
+DEF EVENT_SCENE_GRAVE EQU $0A0 ; set by Script_5FEF
+DEF EVENT_SCENE_MADCONDOR EQU $0A4 ; set by Script_600A
+DEF EVENT_SCENE_GRAVE_0A5 EQU $0A5 ; set by SceneGrave_ShowAhYoullDoIt
+DEF EVENT_SCENE_GRAVE_0A6 EQU $0A6 ; set by SceneGrave_ShowAhYoullDoIt
+DEF EVENT_HERO_CHECKED_BEHIND_THE EQU $0A7 ; set by FhuntTalkEvents_ShowHeroCheckedBehindThe
+DEF EVENT_SCENE_MADCONDOR_CRY EQU $0A8 ; set by Script_604F, Script_6059
+DEF EVENT_WHEN_IPASSED_TOO EQU $0A9 ; set by FhuntTalkEvents_ShowWhenIPassedToo
+DEF EVENT_YOU_CAN_TAKE_THIS_TREASURE EQU $0AD ; set by Script_6096
+DEF EVENT_HEH_YOU EQU $0AE ; set by Script_6096, Script_60B0
+DEF EVENT_SCENE_JUSTICE EQU $0B0 ; set by SceneJustice
+DEF EVENT_SCENE_GRAVESTONE EQU $0B1 ; set by SceneGravestone_ScriptStepBlinkObjectTemp0
+DEF EVENT_SET_FLAG_322 EQU $0B2 ; set by Script_60DD
+DEF EVENT_YOU_OVERCAME_THE_TRAPS_I EQU $0B3 ; set by Script_60EA
+DEF EVENT_SCENE_BEATEN_FAIRLY EQU $0B4 ; set by Script_60EA, Script_6103
+DEF EVENT_WHAT_YOU_HAVE_THE_THREE EQU $0B6 ; set by Script_6119
+DEF EVENT_SCENE_FOUND_ME EQU $0B8 ; set by Script_6126
+DEF EVENT_GOOD_YOU_HAVE_BROUGHT_THE EQU $0C0 ; set by Script_6133
+DEF EVENT_SCENE_THREE_ITEMS_BATTLE EQU $0C1 ; set by Script_6133, Script_614A
+DEF EVENT_SCENE_THREE_ITEMS_0C2 EQU $0C2 ; set by SceneThreeItems_SetFlagBit
+DEF EVENT_SCENE_THREE_ITEMS_0C3 EQU $0C3 ; set by SceneThreeItems_ShowWarubouWaheyThereIs
+DEF EVENT_SCENE_BEATEN_FAIRLY_0C5 EQU $0C5 ; set by Script_60EA, Script_6103
+DEF EVENT_SCENE_BEATEN_FAIRLY_0C6 EQU $0C6 ; set by Script_60EA, Script_6103
+DEF EVENT_SCENE_BEATEN_FAIRLY_0C7 EQU $0C7 ; set by Script_60EA, Script_6103
+DEF EVENT_DESK_KEY_0C8 EQU $0C8 ; set by GreatLogTalkEvents_ShowHeroFoundAMagic, Script_5882
+DEF EVENT_THE_KING_IS_TOO_LENIENT EQU $0CE ; set by TalkMsg0035_TheKingIsTooLenientOn
+DEF EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR EQU $0D0 ; set by Script_61E9
+DEF EVENT_SCENE_DARCK_DEFEATED EQU $0D1 ; set by SceneDarckDefeated_ScriptStepBlinkObjectTemp0
+DEF EVENT_TAKE_ITEM EQU $0D2 ; set by Script_61B3
+DEF EVENT_SCENE_DARCK_TAUNT EQU $0D3 ; set by Script_61B3, Script_61DC
+DEF EVENT_IF_YOUVE_MADE_IT EQU $0DE ; set by ElvenVillageTalkEvents_ShowIfYouveMadeIt
+DEF EVENT_THIS_IS_THE_MERMAID EQU $0F1 ; set by YoldTalkEvents_ShowThisIsTheMermaid
+DEF EVENT_THICK_SUCTION_CUPPED_TENTACLES_SNAKED EQU $0F4 ; set by Script_5D44
+DEF EVENT_IT_SEEMS_TO_ME_THAT EQU $100 ; set by TalkMsg0016_ItSeemsToMeThatThe
+DEF EVENT_IT_SEEMS_TO_ME_THAT_101 EQU $101 ; set by TalkMsg0016_ItSeemsToMeThatThe
+DEF EVENT_THE_KING_IS_TOO_LENIENT_106 EQU $106 ; set by TalkMsg0035_TheKingIsTooLenientOn
+DEF EVENT_THAT_WEIRD_APE_THING_IS_10B EQU $10B ; set by TalkMsg003A_ThatWeirdApeThingIsWarubou
+DEF EVENT_UM_I EQU $10F ; set by Script_5598
+DEF EVENT_WELCOME_TO_THE_STARRY_SHRINE EQU $110 ; set by Script_55B3
+DEF EVENT_WHAT EQU $117 ; set by Script_53DB, Script_53FA and 2 more
+DEF EVENT_YOU EQU $11D ; set by Script_5690
+DEF EVENT_HERO_CHECKED_THE_SHELF EQU $11E ; set by Talk04CE_HeroCheckedTheShelf
+DEF EVENT_ITS_EXCITING_TO_THINK EQU $11F ; set by GreatLogTalkEvents_ShowItsExcitingToThink, Script_56AD
+DEF EVENT_SCENE_KAMEHA_BACK EQU $122 ; set by Script_53FA, Script_540D and 1 more
+DEF EVENT_SCENE_STRONGEST_MASTER EQU $12B ; set by Script_575F
+DEF EVENT_SCENE_MASTER_THANKS EQU $12D ; set by Script_542B
+DEF EVENT_HERO_RECEIVED_A_LIFE_ACORN EQU $12E ; set by Script_55F6
+DEF EVENT_REWARD_ITEM_OR_KEY_2 EQU $134 ; set by Script_5609, Script_5623 and 1 more
+DEF EVENT_SCENE_LIMBO EQU $13B ; set by Script_53C3
+DEF EVENT_SCENE_CYAL_SHINE EQU $140 ; set by Script_6200
+DEF EVENT_YOURE_AHUMAN_HOW EQU $141 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow
+DEF EVENT_CYAL_YAY_YOU EQU $143 ; set by Script_620C
+DEF EVENT_WELL_WELL_IT_IS EQU $144 ; set by ElvenVillageTalkEvents_ShowWellWellItIs
+DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_ShowYoureAHumanHow, ElvenVillageTalkEvents_TestFlagBit_Case02
+DEF EVENT_SCENE_ROLT_ELDER EQU $146 ; set by Script_6218, Script_622C
+DEF EVENT_CYAL_LISTEN_HERO_WE_SHOULD EQU $147 ; set by Script_6240
+DEF EVENT_CYAL_EEEK_HERO_HELP_ME EQU $148 ; set by Script_624B
+DEF EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_Case12, Script_626A
+DEF EVENT_THAT EQU $14A ; set by Script_6290
+DEF EVENT_SCENE_TOO_STRONG EQU $14B ; set by Script_6290, Script_62A0
+DEF EVENT_ROLT_WAIT_GONE_ALREADY EQU $14C ; set by Script_62AD
+DEF EVENT_WELL_WELL_IT_IS_14D EQU $14D ; set by ElvenVillageTalkEvents_ShowWellWellItIs
+DEF EVENT_THIS_IS_ELVENS_LOOKOUT_POST EQU $14E ; set by TalkMsg072F_ThisIsElvensLookoutPostWe
+DEF EVENT_SCENE_GIVE_BACK_CYAL EQU $14F ; set by Script_6369
+DEF EVENT_KEY_BOSS_BEATEN EQU $151 ; set by Script_62BD, Script_6313
+DEF EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR EQU $159 ; set by Script_6398
+DEF EVENT_KIRAL_OH_FOOLISH_OF_ME EQU $15A ; set by Script_63A6, Script_63C5
+DEF EVENT_HERO_PEERED_INTO_THE_BARREL EQU $15D ; set by Script_63DB
+DEF EVENT_HERO_PEERED_INTO_THE_BARREL_15E EQU $15E ; set by Script_63E4
+DEF EVENT_KIRAL_PLEASE_GO_STOP_HIM EQU $162 ; set by Script_6409
+DEF EVENT_SCENE_BARREL EQU $163 ; set by SceneBarrel_SetFlagBit
+DEF EVENT_HERO_PEERED_INTO_THE EQU $164 ; set by Talk077B_HeroPeeredIntoThe
+DEF EVENT_SCENE_WIZSTONE EQU $165 ; set by Script_641B
+DEF EVENT_KIRAL_FETCH_ME_MY EQU $166 ; set by Talk075F_KiralFetchMeMy
+DEF EVENT_KIRAL_FETCH_ME_MY_168 EQU $168 ; set by Talk075F_KiralFetchMeMy
+DEF EVENT_THIS_IS_THE_BAFFLE EQU $173 ; set by ElvenVillageTalkEvents_ShowThisIsTheBaffle
+DEF EVENT_MAMA_HANDED_OVER_400_G EQU $183 ; set by Script_5192
+DEF EVENT_HERO_HANDED_OVER_THE_POTION EQU $184 ; set by Script_519F
+DEF EVENT_MAMA_HANDED_OVER_600_G EQU $185 ; set by Script_51B2
+DEF EVENT_HERO_HANDED_OVER_THE_RIB EQU $186 ; set by Script_51BF
+DEF EVENT_WHAT_YOU_DON EQU $187 ; set by Script_5988
+DEF EVENT_MAMA_HANDED_OVER_1_200 EQU $18B ; set by Script_51FE, Script_5214
+DEF EVENT_HERO_HANDED_OVER_THE_SIRLOIN EQU $18C ; set by Script_5221
+DEF EVENT_REWARD_ITEM_OR_KEY EQU $191 ; set by Script_52FC, Script_5316 and 1 more
+DEF EVENT_KING_YOU_WILL_I_KNEW EQU $192 ; set by Script_590C
+DEF EVENT_HERO_RECEIVED_10_000_G EQU $194 ; set by Script_5913
+DEF EVENT_KING_YOU_WILL_I_KNEW_195 EQU $195 ; set by Script_5926
+DEF EVENT_HERO_RECEIVED_20_000_G EQU $197 ; set by Script_592D
+DEF EVENT_KING_YOU_WILL_I_KNEW_198 EQU $198 ; set by Script_5940
+DEF EVENT_HERO_RECEIVED_30_000_G EQU $19A ; set by Script_5947
+DEF EVENT_KING_YOU_WILL_I_KNEW_19B EQU $19B ; set by Script_595A
+DEF EVENT_HERO_RECEIVED_40_000_G EQU $19D ; set by Script_5961
+DEF EVENT_REWARD_ITEM_OR_KEY_1A3 EQU $1A3 ; set by Script_5316
+DEF EVENT_HERO_RECEIVED_A_TINY_MEDAL EQU $1A4 ; set by Script_599F
+DEF EVENT_REWARD_ITEM_OR_KEY_2_1A5 EQU $1A5 ; set by Script_5623
+DEF EVENT_HERO_RECEIVED_A_TINY_MEDAL_1A6 EQU $1A6 ; set by Script_59A9
+DEF EVENT_HERO_RECEIVED_AN_HERB EQU $1A7 ; set by Script_5175
+DEF EVENT_I_CAN EQU $1B0 ; set by Script_644C
+DEF EVENT_THANK_YOU_I_KNEW_YOU EQU $1B1 ; set by Script_645A, Script_6472
+DEF EVENT_COULD_YOU_HUMOR_THIS EQU $1B2 ; set by Talk07A4_CouldYouHumorThis
+DEF EVENT_HOW_DOES_THIS_ORNAMENT EQU $1B3 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_HOW_DOES_THIS_ORNAMENT_1B4 EQU $1B4 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_HOW_DOES_THIS_ORNAMENT_1B5 EQU $1B5 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_HOW_DOES_THIS_ORNAMENT_1B6 EQU $1B6 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_HOW_DOES_THIS_ORNAMENT_1B7 EQU $1B7 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_HOW_DOES_THIS_ORNAMENT_1B8 EQU $1B8 ; set by Talk07AF_HowDoesThisOrnament
+DEF EVENT_SCENE_PENDANT_SELLER EQU $1B9 ; set by Script_648E
+DEF EVENT_SCENE_MERCY EQU $1BB ; set by Script_6496, Script_64A6
+DEF EVENT_HERO_OPENED_THE_TREASURE_CHEST EQU $1BC ; set by Script_64B3
+DEF EVENT_YOU_DEFEATED_THE_MONSTERS_YOU EQU $1BD ; set by Script_64BE
+DEF EVENT_THANK_YOU_FOR_GETTING_THE EQU $1BE ; set by Script_64CA
+DEF EVENT_HERO_RECEIVED_A_SAGE_ROCK EQU $1BF ; set by Script_64E3
+DEF EVENT_SCENE_PENDANT_SELLER_1C0 EQU $1C0 ; set by Script_64ED
+DEF EVENT_SCENE_MILAYOU_FOREST EQU $1C1 ; set by Script_6501
+DEF EVENT_KEY_BOSS_BEATEN_2 EQU $1C3 ; set by Script_6509, Script_652C
+DEF EVENT_MILAYOU_HOW_DO_I_KNOW EQU $1C4 ; set by Script_654C
+DEF EVENT_MILAYOU_I_LOST_BUT_GOOD EQU $1C7 ; set by Script_6564, Script_6581
+DEF EVENT_THIS_IS_THE_POWER EQU $1D3 ; set by ElvenVillageTalkEvents_ShowThisIsThePower
+DEF EVENT_SCENE_SHIELD_GUARDIAN EQU $1E1 ; set by SceneShieldGuardian_ShowIWishYouWouldnt
+DEF EVENT_SCENE_SHIELD_GUARDIAN_1E2 EQU $1E2 ; set by SceneShieldGuardian_ShowHelenIPutYou
+DEF EVENT_SCENE_SHIELD EQU $1E3 ; set by SceneShield_ShowTchObstinateAndFoolish
+DEF EVENT_SCENE_SHIELD_1E4 EQU $1E4 ; set by SceneShield_ShowIBoreWitnessTo
+DEF EVENT_SCENE_SHIELD2_1E5 EQU $1E5 ; set by SceneShield2_ShowHeroReceivedTheSky
+DEF EVENT_BLINK_SPRITES EQU $1E8 ; set by Script_5D82
+DEF EVENT_SCENE_MEDICINE_GIVEN EQU $1F1 ; set by Script_5FB8
+DEF EVENT_KEY_BOSS_BEATEN_203 EQU $203 ; set by Script_62BD, Script_6313
+DEF EVENT_SCENE_WIZSTONE_204 EQU $204 ; set by Script_641B
+DEF EVENT_KEY_BOSS_BEATEN_2_205 EQU $205 ; set by Script_6509, Script_652C
+DEF EVENT_SCENE_CHEST_BATTLE EQU $206 ; set by SceneChestBattle_WriteTemp0AndScriptStep
+DEF EVENT_SCENE_CHEST_BATTLE_207 EQU $207 ; set by SceneChestBattle_WriteTemp0AndScriptStep
+DEF EVENT_SCENE_CHEST_BATTLE_208 EQU $208 ; set by SceneChestBattle_WriteTemp0AndScriptStep
+
+; Bits of a battle slot's status bytes wBattleStatus ... wBattleStatus8 (config/battle_status.json, D-009):
+; 'forced' = tools/status_check.py set the bit in a debug battle and the texts appeared (E-0339);
+; 'set by' = that skill's effect routine sets it (E-0333, E-0339).
+DEF BSTAT0_POISONED EQU 0 ; forced: '0 suffers from poison! 0 lost ... HP'
+DEF BSTAT0_BADLY_POISONED EQU 1 ; forced: '0 is wracked by poison!', '0 dropped dead!'
+DEF BSTAT0_CONFUSED EQU 4 ; forced: '0 is confused!', '0 snapped out of confusion!'; set by PanicAll
+DEF BSTAT0_CURSED EQU 5 ; forced: '0 is cursed! 0 can't move!', '0 is cursed! 0 lost ... HP!'
+DEF BSTAT0_ASLEEP EQU 7 ; forced: '0 woke up!'
+DEF BSTAT1_SPELLS_SEALED EQU 0 ; set by StopSpell
+DEF BSTAT1_CRITICAL EQU 3 ; forced: 'Critical hit!', 'A brutal hit!'
+DEF BSTAT1_DRAGON_FORM EQU 4 ; set by BeDragon
+DEF BSTAT1_TRANSFORMED EQU 5 ; set by Transform; DeMagic clears bits 4-5 with '0 turned back to normal!' (E-0337)
+DEF BSTAT1_DANCE_SEALED EQU 6 ; set by DanceShut
+DEF BSTAT1_BREATH_SEALED EQU 7 ; set by MouthShut
+DEF BSTAT2_AQUA_WALL EQU 3 ; set by AquaWall
+DEF BSTAT2_WIND_GUARD EQU 6 ; set by TailWind; TryWindBounce: 'The wind around 0 bounced the attack!', DeMagic: 'The wind around 0 died!' (E-0337)
+DEF BSTAT3_FROZEN EQU 0 ; forced: '0 is frozen solid!'
+DEF BSTAT3_DANCING EQU 1 ; forced: '0 is dancing along!'
+DEF BSTAT3_TRIPPED EQU 2 ; forced: '0 can't get back up!'
+DEF BSTAT3_SHIVERING EQU 3 ; forced: '0 is shivering!'
+DEF BSTAT3_COWERING EQU 4 ; forced: '0 is cowering in fear!'
+DEF BSTAT3_VACANT EQU 5 ; forced: '0 looks vacant and lost!'
+DEF BSTAT3_AIRBORNE EQU 6 ; forced: '0 fell out of the sky!', '0 landed safely!'
+DEF BSTAT4_CHARGE_UP EQU 0 ; set (with bit 1) by ChargeUp
+DEF BSTAT4_SUCK_AIR EQU 4 ; set (with bit 5) by SuckAir
+DEF BSTAT4_FOCUS EQU 7 ; set by Focus
+DEF BSTAT5_LIFE_SONG EQU 5 ; forced: '0's song ended!', '0 came back to life!'
+DEF BSTAT5_IRONIZED EQU 6 ; forced: '0 is a hunk of iron!', '0's Ironize wore off!' (bit 7 the same)
+DEF BSTAT6_CALLED_HELP EQU 0 ; 'Help arrived from seemingly nowhere!', 'The help went away!' (E-0339 reading)
+DEF BSTAT6_SUCK_ALL EQU 1 ; set by SuckAll; '0 blew back G!'
+DEF BSTAT6_BERSERK EQU 2 ; set by Berserker
+DEF BSTAT6_IMITATE EQU 3 ; set by Imitate; forced: '0 struck back!'
+DEF BSTAT6_GUARDED EQU 4 ; an ally guards this slot (TryAllyGuard, E-0337)
+DEF BSTAT6_DODGE EQU 5 ; set by Dodge; forced: '0 shunted the attack!'
+DEF BSTAT7_GUARD EQU 0 ; set by Guard
+DEF BSTAT7_COUNTER EQU 2 ; forced: '0's counterstrike!', '0 couldn't retaliate!'
+DEF BSTAT8_SEAL_PRAY EQU 4 ; set by SealPray; forced: 'SealPray was broken!'
+DEF BSTAT8_MAGIC_WALL EQU 6 ; set by MagicWall
+DEF BSTAT8_EERIE_LITE EQU 7 ; set by EerieLite

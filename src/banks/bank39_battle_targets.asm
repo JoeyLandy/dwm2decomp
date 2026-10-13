@@ -3800,7 +3800,7 @@ ChooseTarget_MouthShut::
     ldh [hTemp3], a
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .next
     ld a, c
     ldh [hTemp4], a
@@ -4800,7 +4800,7 @@ ChooseTarget_Ramming::
     ldh [hTemp3], a
     ld hl, wBattleStatus7
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT7_GUARD, [hl]
     jr nz, .restore2
     ld a, c
     call GetBattleHP_Bank39
@@ -7781,7 +7781,7 @@ TestSlotStatus2Bit3OrStatus5Bits67::
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT2_AQUA_WALL, [hl]
     ret nz
     inc hl
     inc hl

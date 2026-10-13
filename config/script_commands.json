@@ -682,7 +682,7 @@
     "87": {
       "const": "SCRIPT_PARTY_DEFEATED_RETURN",
       "routine": "PartyDefeatedReturn",
-      "note": "a key-world/field talk event (group $04, dispatched from FieldModeStateDispatch_Case07: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $04, dispatched from FieldState_StepChecks: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "88": {

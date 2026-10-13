@@ -518,7 +518,7 @@ CopyRectTo20ByteRowsJp_Bank1C::
 ; hPlayerStateFlags bit 0 clear: hSpriteWindowClipMode = 3, sets bit 1 of the player and object
 ; flags and returns A = $FF; otherwise 0 (E-0124)
 TryStartFieldMenu::
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     jr nc, .return_0
     ld a, [wTextWindowState]

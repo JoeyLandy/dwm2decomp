@@ -2753,7 +2753,7 @@ ReturnWarp::
 HealPartyEvent_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
-    ld de, $002b
+    ld de, EVENT_SCENE_LIMBO_MONSTER2
     call TestFlagBit
     jr c, .call_start_message_a
     ld a, $0d
@@ -2902,7 +2902,7 @@ ReturnMessage_TestFlagBit::
 .clear_object1:
     xor a
     ld [wObject1 + OBJ_STATE], a
-    ld de, $002b
+    ld de, EVENT_SCENE_LIMBO_MONSTER2
     call TestFlagBit
     jr c, .call_start_message_a
     ld a, $13
@@ -2963,7 +2963,7 @@ HealPartyEvent_FullyHealParty::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_field_draw_flags_to_0E
-    ld de, $002b
+    ld de, EVENT_SCENE_LIMBO_MONSTER2
     call TestFlagBit
     jr c, .call_start_message_a
     ld a, $11
@@ -3003,7 +3003,7 @@ HealPartyEvent_MoveIncapacitatedPartyMembersBack::
     ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
     inc [hl]
-    ld de, $002b
+    ld de, EVENT_SCENE_LIMBO_MONSTER2
     call TestFlagBit
     jr c, .call_start_message_a
     ld a, $11
@@ -3024,7 +3024,7 @@ HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06::
     ret
 
 ; implements script command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event
-; (group $04, dispatched from FieldModeStateDispatch_Case07: moves incapacitated members back
+; (group $04, dispatched from FieldState_StepChecks: moves incapacitated members back
 ; (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named
 ; from its trigger and calls
 PartyDefeatedReturn::
@@ -7400,7 +7400,10 @@ DrawTriggerMarkerSprite_Data2::
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
-FieldModeStateDispatch_WaitTextWindowState::
+; A in the field when nothing blocks input: checks whether the player stands on a trigger cell
+; (wTriggerKind 2 or 3, IsPlayerOnTriggerCell) (E-0339; was
+; FieldModeStateDispatch_WaitTextWindowState)
+CheckTriggerCellOnA::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -7519,7 +7522,7 @@ CheckStepTriggerAndDispatchTalk::
 .return:
     ret
 
-FieldModeStateDispatch_Case05_WaitTextWindowState::
+FieldState_WalkAMenu_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -7622,7 +7625,7 @@ FieldModeStateDispatch_Case05_WaitTextWindowState::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, FieldModeStateDispatch_Case05_WaitTextWindowState_Data
+    ld de, FieldState_WalkAMenu_WaitTextWindowState_Data
     add e
     ld e, a
     jr nc, .skip4
@@ -7658,7 +7661,7 @@ FieldModeStateDispatch_Case05_WaitTextWindowState::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, FieldModeStateDispatch_Case05_WaitTextWindowState_Data
+    ld de, FieldState_WalkAMenu_WaitTextWindowState_Data
     add e
     ld e, a
     jr nc, .skip5
@@ -7710,7 +7713,7 @@ FieldModeStateDispatch_Case05_WaitTextWindowState::
     ld [wJoypadPressed], a
     ret
 
-FieldModeStateDispatch_Case05_WaitTextWindowState_Data::
+FieldState_WalkAMenu_WaitTextWindowState_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wTriggerCell (or its
@@ -7891,7 +7894,7 @@ RunPeriodicFieldEventChecks::
 ; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wPendingFieldEvent =
 ; $CC and carry set; otherwise A = 0 and carry clear (E-0075)
 EventCheckGoldAtLeast10000::
-    ld de, $0192
+    ld de, EVENT_KING_YOU_WILL_I_KNEW
     call TestFlagBit
     jr nc, .done
     ld de, $0193
@@ -7924,7 +7927,7 @@ EventCheckGoldAtLeast10000::
 ; with story flag $195 set and $196 clear: when the party's total HP is below 100,
 ; wPendingFieldEvent = $CD and carry (E-0127)
 TriggerEventCDIfPartyHPTotalBelow100::
-    ld de, $0195
+    ld de, EVENT_KING_YOU_WILL_I_KNEW_195
     call TestFlagBit
     jr nc, .done
     ld de, $0196
@@ -7985,7 +7988,7 @@ TriggerEventCDIfPartyHPTotalBelow100::
 ; with story flag $198 set and $199 clear: when the party's total MP is below 100,
 ; wPendingFieldEvent = $CE and carry (E-0127)
 TriggerEventCEIfPartyMPTotalBelow100::
-    ld de, $0198
+    ld de, EVENT_KING_YOU_WILL_I_KNEW_198
     call TestFlagBit
     jr nc, .done
     ld de, $0199
@@ -8046,7 +8049,7 @@ TriggerEventCEIfPartyMPTotalBelow100::
 ; with story flag $19B set and $19C clear: when the party's total level is below 100,
 ; wPendingFieldEvent = $CF and carry (E-0127)
 TriggerEventCFIfPartyLevelTotalBelow100::
-    ld de, $019b
+    ld de, EVENT_KING_YOU_WILL_I_KNEW_19B
     call TestFlagBit
     jr nc, .done
     ld de, $019c
@@ -9053,10 +9056,10 @@ ClearPendingFieldEventWhenFieldIdle_TestFlagBit::
     ldh a, [hMapScreenY]
     cp $05
     jp nz, .return_0
-    ld de, $0076
+    ld de, EVENT_SCENE_CRATE
     call TestFlagBit
     jr c, .return_0
-    ld de, $0070
+    ld de, EVENT_WELCOME_YOUNG_HUMAN_I_HEARD
     call TestFlagBit
     jr nc, .return_0
     ld a, $00

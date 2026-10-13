@@ -2070,7 +2070,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09::
     ld [wScriptParam0], a
     ld hl, wScriptSubStep
     inc [hl]
-    ld de, $00d1
+    ld de, EVENT_SCENE_DARCK_DEFEATED
     call TestFlagBit
     ret nc
     ld a, $11
@@ -2303,7 +2303,7 @@ RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
     ld a, $01
     ldh [hTemp0], a
     farcall LoadSpriteGraphics7E5595ToTiles0
-    ld de, $0021
+    ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     jr c, .call_test_flag_bit
     ld a, $00
@@ -2313,7 +2313,7 @@ RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
     jr .call_run_field_command_temp0
 
 .call_test_flag_bit:
-    ld de, $0022
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
     jr c, .call_test_flag_bit2
     ld a, $01
@@ -2323,7 +2323,7 @@ RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
     jr .call_run_field_command_temp0
 
 .call_test_flag_bit2:
-    ld de, $0023
+    ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
     jr c, .set_script_msg_select_to_03
     ld a, $02

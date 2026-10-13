@@ -56,7 +56,7 @@ def build(rom: bytes) -> dict[str, dict[int, tuple[str, str]]]:
     return out
 
 
-def write_constants_inc(path, consts: dict) -> None:
+def write_constants_inc(path, consts: dict, events: dict | None = None, status: list | None = None) -> None:
     head = {"MONSTER": "Monster ids: StringTable_MonsterNames (ids $00-$FF) and StringTable_MonsterNames2 ($100-$17F)",
             "SKILL": "Skill and battle action ids: StringTable_SkillNames; ACTION_FIGHT is the plain attack (E-0333)",
             "ITEM": "Item ids: StringTable_ItemNames"}
@@ -66,5 +66,21 @@ def write_constants_inc(path, consts: dict) -> None:
         lines.append(f"; {head[prefix]}")
         for v, (name, text) in sorted(table.items()):
             lines.append(f"DEF {name} EQU ${v:02X}" + (f" ; {text}" if text and not name.endswith(text.upper()) else ""))
+        lines.append("")
+    if events:
+        lines += ["; Story flags (wStoryFlags; TestFlagBit, SetFlagBit, script_set_flag, object selectors), named after",
+                  "; what their first setter says: a talk routine's message, a scene, a script's last scene command or",
+                  "; message before the flag is set (D-009). Flags only tested, or set by routines whose names say",
+                  "; nothing, keep their numbers."]
+        for flag, (name, setters) in sorted(events.items()):
+            more = f" and {len(setters) - 2} more" if len(setters) > 2 else ""
+            lines.append(f"DEF {name} EQU ${flag:03X} ; set by {', '.join(setters[:2])}{more}")
+        lines.append("")
+    if status:
+        lines += ["; Bits of a battle slot's status bytes wBattleStatus ... wBattleStatus8 (config/battle_status.json, D-009):",
+                  "; 'forced' = tools/status_check.py set the bit in a debug battle and the texts appeared (E-0339);",
+                  "; 'set by' = that skill's effect routine sets it (E-0333, E-0339)."]
+        for b in status:
+            lines.append(f"DEF BSTAT{b['byte']}_{b['name']} EQU {b['bit']} ; {b['note']}")
         lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8", newline="\n")

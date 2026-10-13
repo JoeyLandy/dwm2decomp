@@ -2431,6 +2431,45 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0339 — Battle status bits, story flags, field states and the world map
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware; battles forced through the debug menu as in E-0332, the field by location pokes as in E-0321), plus READING and a naming DECISION (D-009).
+- **Battle status bits (C2 where forced).** tools/status_check.py sets one bit of a status byte (wBattleStatus ... wBattleStatus8, stride 9) for all eight slots whenever an action starts resolving or the turn's status checks run. It records the bank-$2F battle texts looked up, against template 95, and compares them with an unforced battle; all 72 bits were run.
+  - Bits with texts of their own:
+    - byte 0: bit 0 poison ("suffers from poison"), bit 1 bad poison ("wracked by poison", "dropped dead"), bit 4 confusion ("snapped out of confusion"), bit 5 curse ("is cursed! can't move"), bit 7 sleep ("woke up!");
+    - byte 1: bit 3 critical hits;
+    - byte 3: bits 0-6 frozen, dancing, tripped ("can't get back up"), shivering, cowering, vacant, airborne ("fell out of the sky");
+    - byte 5: bit 5 LifeSong ("song ended", "came back to life"), bits 6-7 Ironize ("a hunk of iron");
+    - byte 6: bit 3 "struck back", bit 5 "shunted the attack";
+    - byte 7: bit 2 counterstrike;
+    - byte 8: bit 4 SealPray ("SealPray was broken!").
+  - Bits named by the one skill whose effect routine sets them (tools/status_bits.py; the skill of each routine is C2 from E-0333):
+    - StopSpell, BeDragon, Transform, DanceShut and MouthShut in byte 1;
+    - AquaWall and TailWind in byte 2;
+    - ChargeUp, SuckAir and Focus in byte 4;
+    - SuckAll, Berserker, Imitate and Dodge in byte 6;
+    - Guard in byte 7;
+    - SealPray, MagicWall and EerieLite in byte 8.
+  - The bits are kept in config/battle_status.json. src/constants.inc defines them as BSTAT<byte>_<NAME>, and 112 `bit/set/res N, [hl]` on a status byte use them.
+- **Story flags (D-009).** 229 of the 330 flags the code sets or tests are named EVENT_<what the first setter says>. The setter is the routine or script that calls SetFlagBit or `script_set_flag` with the flag:
+  - a talk routine's message (EVENT_THANKS_FOR_COMING_BY);
+  - a scene (EVENT_SCENE_MERMAID_KINGDOM);
+  - a talk event's shown words;
+  - inside a script, its last scene command (EVENT_SCENE_VAULT_SETTLED) or message before the flag is set ("0" in a quote reads HERO).
+  - Each constant's comment names its setters. 1,150 uses in code, scripts and object selectors use them; flags only tested, or set by routines whose names say nothing, keep their numbers. The names say who sets a flag, not what it means for the story (C1 for meaning).
+- **Field states.** The nine states of FieldModeStateDispatch (wModeState) are named from what each runs:
+  - FieldState_WalkATalks (A checks in front) and FieldState_WalkAMenu (A opens the field menu);
+  - FieldState_RunScript, FieldState_Still, FieldState_BattleTransition and FieldState_MapTransition;
+  - FieldState_FieldMenu, FieldState_StepChecks and FieldState_WorldMap.
+  - Their shared A-button helpers are now CheckTileInFrontOnA, CheckTriggerCellOnA and CheckMapInteractionOnA.
+- **World map (C2).** From the desert party of E-0321, moved to map $30, Select switches wModeState to 8. The world map appears showing the Water region (pictured with tools/screen.py), $C5DD becomes 2 and $C944 becomes 1. B does nothing as a control.
+  - TryOpenWorldMap (was FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc) stores a region by hMapId band.
+  - Renames: $C944 is wWorldMapRegion (was wGameMode2Byte44), $C5DD wWorldMapState (was wGameMode2State), and RunGameMode2State is RunWorldMapState.
+- **Tests.**
+  - tests/test_story_flags.py checks that every EVENT_ constant is set under its name, that every `ld de, EVENT_` feeds a flag routine, and that every BSTATk_ use sits on status byte k. It also forces sleep, frozen and Ironize in a battle and finds their texts, absent without the bit.
+  - tests/test_world_map.py checks the world map opening, with the B control.
+- Binary verification: build/run489 PASS, 0 differing bytes.
+
 ### E-0338 — The 27 resistances, named by the skills that read them
 
 - Kind: READING of bank $36's effect helpers and bank $19's PackResistanceFieldsToDE, plus a TOOL check.

@@ -1219,7 +1219,7 @@
   },
   "C197": {
     "name": "wMapHeaderByte11",
-    "note": "map header byte ($2C or $30 on the special maps; read by FieldModeStateDispatch_Shared01_Sub02)",
+    "note": "map header byte ($2C or $30 on the special maps; read by TryHeaderTileTalkEvent)",
     "evidence": "E-0133"
   },
   "C468": {
@@ -1777,9 +1777,9 @@
     "evidence": "E-0133"
   },
   "C5DD": {
-    "name": "wGameMode2State",
-    "note": "state of game mode 2 (RunGameMode2State); CheckInteractionInFront sets it",
-    "evidence": "E-0133"
+    "name": "wWorldMapState",
+    "note": "state of the world map screen (RunWorldMapState, field state 8; the pause menu also reads it) (C2 from E-0339: 2 once Select has opened the map; was wGameMode2State)",
+    "evidence": "E-0133; E-0339"
   },
   "C5DE": {
     "name": "wGameMode2Arg",
@@ -2479,7 +2479,7 @@
   },
   "C934": {
     "name": "wFieldStateByte34",
-    "note": "set by FieldModeStateDispatch_Shared01",
+    "note": "set by CheckTileInFrontOnA (E-0339)",
     "evidence": "E-0134"
   },
   "C935": {
@@ -2499,9 +2499,9 @@
     "size": "D"
   },
   "C944": {
-    "name": "wGameMode2Byte44",
-    "note": "set by the field states, read by game mode 2",
-    "evidence": "E-0134"
+    "name": "wWorldMapRegion",
+    "note": "the world map region to show: TryOpenWorldMap sets 0-5 by hMapId bands $20-$2F, $30-$47, $48-$6F, $70-$9F, $A0-$A7 and above (C2 from E-0339: 1 on map $30, shown as the Water region; was wGameMode2Byte44)",
+    "evidence": "E-0134; E-0339"
   },
   "C945": {
     "name": "wCursorCellX",

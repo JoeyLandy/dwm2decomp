@@ -2065,7 +2065,7 @@
           }
         ]
       },
-      "note": "E-0157 (C1: FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index)."
+      "note": "E-0157 (C1: CheckMapInteractionOnA reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to CheckMapInteractionOnA_SpriteSlots at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index)."
     },
     {
       "bank": "1A",
@@ -2492,7 +2492,7 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
     },
     {
       "bank": "87",
@@ -2519,7 +2519,7 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
     },
     {
       "bank": "87",
@@ -2546,7 +2546,7 @@
         }
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
-      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+      "note": "E-0170 (C1: CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
     },
     {
       "bank": "F2",
@@ -8155,7 +8155,7 @@
           }
         ]
       },
-      "note": "E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0)."
+      "note": "E-0198 (C1: FieldState_StepChecks (CheckStepTriggerAndDispatchTalk), once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0)."
     },
     {
       "bank": "0E",

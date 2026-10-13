@@ -4,7 +4,7 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-FieldModeStateDispatch_Case00_WaitTextWindowState::
+FieldState_WalkATalks_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -118,9 +118,9 @@ FieldModeStateDispatch_Case00_WaitTextWindowState::
     add_a_to_hl
     jr .skip
 
-; FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2
-; * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and
-; position (unless player X is $FF) match and whose flag is $FFFF or clear sets
+; FieldState_StepChecks (CheckStepTriggerAndDispatchTalk), once per step (wStepTriggerFlag), reads
+; the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose
+; map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets
 ; wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0 (E-0198,
 ; C1)
 ; record: list of step triggers for this map ($0000 = none)
@@ -382,7 +382,10 @@ MapStepTriggerTable::
     dw $0000 ; id 254
     dw $0000 ; id 255
 
-FieldModeStateDispatch_WaitTextWindowState_Shared03::
+; A in the field when nothing blocks input: walks this map's list in MapInteractionTable and runs
+; the talk event of the first spot that matches (E-0157, E-0339; was
+; FieldModeStateDispatch_WaitTextWindowState_Shared03)
+CheckMapInteractionOnA::
     ld a, [wTextWindowState]
     and $03
     ret nz
@@ -408,27 +411,27 @@ FieldModeStateDispatch_WaitTextWindowState_Shared03::
     dec a
     jr z, .skip2
     dec a
-    jr z, .call_field_mode_state_dispatch_shared03_wait
+    jr z, .call_check_map_interaction_on_a_sprite_slots
     dec b
-    jr .call_field_mode_state_dispatch_shared03_wait2
+    jr .call_check_map_interaction_on_a_sprite_slots2
 
 .skip:
     ld a, c
     add $11
     ld c, a
-    jr .call_field_mode_state_dispatch_shared03_wait2
+    jr .call_check_map_interaction_on_a_sprite_slots2
 
 .skip2:
     ld a, b
     add $11
     ld b, a
-    jr .call_field_mode_state_dispatch_shared03_wait2
+    jr .call_check_map_interaction_on_a_sprite_slots2
 
-.call_field_mode_state_dispatch_shared03_wait:
+.call_check_map_interaction_on_a_sprite_slots:
     dec c
 
-.call_field_mode_state_dispatch_shared03_wait2:
-    call FieldModeStateDispatch_Shared03_WaitSpriteSlotCount
+.call_check_map_interaction_on_a_sprite_slots2:
+    call CheckMapInteractionOnA_SpriteSlots
     or a
     jp z, .check_map_type
     dec a
@@ -599,7 +602,7 @@ FieldModeStateDispatch_WaitTextWindowState_Shared03::
     ld a, [wMapType]
     bit 7, a
     jr z, .read_map_id
-    call FieldModeStateDispatch_Shared03_ReadKeyWorldFloor
+    call CheckMapInteractionOnA_KeyWorldFloor
     or a
     jr nz, .skip4
     ret
@@ -784,7 +787,9 @@ FieldModeStateDispatch_WaitTextWindowState_Shared03::
     add_a_to_hl
     jp .skip4
 
-FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
+; part of CheckMapInteractionOnA that reads the key-world floor (E-0339; was
+; FieldModeStateDispatch_Shared03_ReadKeyWorldFloor)
+CheckMapInteractionOnA_KeyWorldFloor::
     cp $84
     jr nz, .cp_83
     ld hl, SpecialMapInteractions_5D28
@@ -817,11 +822,11 @@ FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
     xor a
     ret
 
-; FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up
-; to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an
-; entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front),
-; map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the
-; group and index (E-0157, C1)
+; CheckMapInteractionOnA reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to
+; CheckMapInteractionOnA_SpriteSlots at $4709); its list of 10-byte entries ends with $FF; an entry
+; matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map,
+; screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group
+; and index (E-0157, C1)
 ; record: list of interaction spots for this map ($0000 = none)
 MapInteractionTable::
     dw MapInteractions00 ; id 0
@@ -1057,7 +1062,9 @@ MapInteractionTable::
     dw $0000 ; id 230
     dw $0000 ; id 231
 
-FieldModeStateDispatch_Shared03_WaitSpriteSlotCount::
+; part of CheckMapInteractionOnA that reads the sprite slots (E-0339; was
+; FieldModeStateDispatch_Shared03_WaitSpriteSlotCount)
+CheckMapInteractionOnA_SpriteSlots::
     ld a, [wSpriteSlotCount]
     or a
     ret z
@@ -3283,7 +3290,7 @@ MapInteractionsE0::
     db $b7, $07 ; talk event group, index
     db $ff ; end
 
-; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte
+; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when the floor info byte
 ; is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X,
 ; player Y; story flag ($FFFF = none; set = skip); talk event group, index
@@ -3317,7 +3324,7 @@ SpecialMapInteractions_5CA4::
     db $02, $09 ; talk event group, index
     db $ff ; end
 
-; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the
+; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $83 when that byte is 3; the
 ; same 10-byte entries as MapInteractionTable's lists, ending with $FF (E-0170, C1)
 SpecialMapInteractions_5CFF::
     db $05, $00, $00, $00, $40, $30 ; id 0: kind, map, screen X, screen Y, player X, player Y
@@ -3334,7 +3341,7 @@ SpecialMapInteractions_5CFF::
     db $04, $09 ; talk event group, index
     db $ff ; end
 
-; FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries
+; CheckMapInteractionOnA_KeyWorldFloor returns this list for map type $84; the same 10-byte entries
 ; as MapInteractionTable's lists, ending with $FF (E-0170, C1)
 SpecialMapInteractions_5D28::
     db $03, $00, $00, $00, $30, $40 ; id 0: kind, map, screen X, screen Y, player X, player Y

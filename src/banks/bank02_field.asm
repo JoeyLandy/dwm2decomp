@@ -1630,40 +1630,42 @@ FieldModeStateDispatch::
     ld a, [wModeState]
     and $0f
     jumptable
-    dw FieldModeStateDispatch_UpdatePlayerMovement
-    dw FieldModeStateDispatch_RunEventScriptFrame
-    dw FieldModeStateDispatch_DrawFieldSprites
-    dw FieldModeStateDispatch_RunBattleTransitionStep
-    dw FieldModeStateDispatch_DrawFieldSprites_Case04
-    dw FieldModeStateDispatch_UpdatePlayerMovement_Case05
-    dw FieldModeStateDispatch_RunMenuStateMenuState
-    dw FieldModeStateDispatch_FieldStateCommonUpdate
-    dw FieldModeStateDispatch_RunGameMode2State
+    dw FieldState_WalkATalks
+    dw FieldState_RunScript
+    dw FieldState_Still
+    dw FieldState_BattleTransition
+    dw FieldState_MapTransition
+    dw FieldState_WalkAMenu
+    dw FieldState_FieldMenu
+    dw FieldState_StepChecks
+    dw FieldState_WorldMap
 
-FieldModeStateDispatch_UpdatePlayerMovement::
+; field state 0: walking on a map; Select may open the world map (TryOpenWorldMap), A checks for
+; someone or something in front (CheckInteractionInFront) (E-0339)
+FieldState_WalkATalks::
     ld a, [wFadeState]
     or a
     jp nz, .call_draw_field_sprites
     ld a, [wJoypadPressed]
     bit 2, a
-    jr z, .call_field_mode_state_dispatch_case00_wait
-    farcall FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc
+    jr z, .call_field_state_walk_a_talks_wait_text
+    farcall TryOpenWorldMap
     ldh a, [hTemp0]
     or a
     ret nz
 
-.call_field_mode_state_dispatch_case00_wait:
-    farcall FieldModeStateDispatch_Case00_WaitTextWindowState
-    call FieldModeStateDispatch_Case00_WaitFadeState
+.call_field_state_walk_a_talks_wait_text:
+    farcall FieldState_WalkATalks_WaitTextWindowState
+    call FieldState_WalkATalks_WaitFadeState
     call UpdatePlayerMovement
     call RunFieldActionRequestActionIfBit7
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .call_draw_field_sprites
     call CheckInteractionInFront
-    farcall FieldModeStateDispatch_WaitTextWindowState
-    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
-    call FieldModeStateDispatch_WaitMapSpriteKind
+    farcall CheckTriggerCellOnA
+    farcall CheckMapInteractionOnA
+    call CheckTileInFrontOnA
     xor a
     ldh [hTemp8], a
     farcall OpenFieldMenuOnA
@@ -1676,7 +1678,9 @@ FieldModeStateDispatch_UpdatePlayerMovement::
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
-FieldModeStateDispatch_RunEventScriptFrame::
+; field state 1: runs a frame of the event script and the text window, moving the player only for
+; some script commands (E-0339)
+FieldState_RunScript::
     farcall RunEventScriptFrame
     farcall StepTextWindowOpenClose
     ld a, [wScriptCommandType]
@@ -1698,8 +1702,9 @@ FieldModeStateDispatch_RunEventScriptFrame::
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
-FieldModeStateDispatch_DrawFieldSprites::
-    call FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags
+; field state 2: draws the field sprites and runs the common update without player input (E-0339)
+FieldState_Still::
+    call FieldState_Still_ClearBit1OfPlayerAndObjectFlags
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
@@ -1707,7 +1712,8 @@ FieldModeStateDispatch_DrawFieldSprites::
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
-FieldModeStateDispatch_RunBattleTransitionStep::
+; field state 3: runs a step of the battle transition (E-0339)
+FieldState_BattleTransition::
     farcall RunBattleTransitionStep
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
@@ -1715,7 +1721,9 @@ FieldModeStateDispatch_RunBattleTransitionStep::
     call RunFieldEventFieldEventKind
     ret
 
-FieldModeStateDispatch_DrawFieldSprites_Case04::
+; field state 4: a map or screen transition: warps, the key-world floor and the transition steps
+; (wFieldTransitionStep) (E-0339)
+FieldState_MapTransition::
     farcall DrawFieldSprites
     farcall AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     farcall RunFunc722AAnd6EB7
@@ -1728,10 +1736,10 @@ FieldModeStateDispatch_DrawFieldSprites_Case04::
     jp nz, .check_field_transition_step
     ld a, $ff
     ld [wTriggerKind], a
-    farcall FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc
+    farcall FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc
     ld a, [wWarpDestFacing]
     cp $f0
-    jr nz, .call_field_mode_state_dispatch_case04_test
+    jr nz, .call_field_state_map_transition_test_flag_bit
     push af
     ld a, $80
     ld [wMapType], a
@@ -1741,8 +1749,8 @@ FieldModeStateDispatch_DrawFieldSprites_Case04::
     ld [wMapHeightScreens], a
     pop af
 
-.call_field_mode_state_dispatch_case04_test:
-    call FieldModeStateDispatch_Case04_TestFlagBit
+.call_field_state_map_transition_test_flag_bit:
+    call FieldState_MapTransition_TestFlagBit
     ret
 
 .check_field_transition_step:
@@ -1776,7 +1784,7 @@ FieldModeStateDispatch_DrawFieldSprites_Case04::
     call InitFieldScreen
     ret
 
-FieldModeStateDispatch_Case04_TestFlagBit::
+FieldState_MapTransition_TestFlagBit::
     ld a, [wFieldTransitionKind]
     or a
     jr z, .check_return_warp_flag
@@ -1881,14 +1889,15 @@ FieldModeStateDispatch_Case04_TestFlagBit::
     inc [hl]
     ret
 
-FieldModeStateDispatch_UpdatePlayerMovement_Case05::
+; field state 5: walking where A opens the field menu (OpenFieldMenuOnA) instead of talking (E-0339)
+FieldState_WalkAMenu::
     ld a, [wFadeState]
     or a
     jr nz, .call_draw_field_sprites
     ld a, [wJoypadPressed]
     bit 2, a
     jr z, .call_update_player_movement
-    farcall FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc
+    farcall TryOpenWorldMap
     ldh a, [hTemp0]
     or a
     ret nz
@@ -1899,11 +1908,11 @@ FieldModeStateDispatch_UpdatePlayerMovement_Case05::
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .call_draw_field_sprites
-    call FieldModeStateDispatch_Case05_WaitFadeState
-    farcall FieldModeStateDispatch_WaitTextWindowState
-    farcall FieldModeStateDispatch_Case05_WaitTextWindowState
-    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
-    call FieldModeStateDispatch_WaitMapSpriteKind
+    call FieldState_WalkAMenu_WaitFadeState
+    farcall CheckTriggerCellOnA
+    farcall FieldState_WalkAMenu_WaitTextWindowState
+    farcall CheckMapInteractionOnA
+    call CheckTileInFrontOnA
     xor a
     ldh [hTemp8], a
     farcall OpenFieldMenuOnA
@@ -1916,7 +1925,8 @@ FieldModeStateDispatch_UpdatePlayerMovement_Case05::
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
-FieldModeStateDispatch_RunMenuStateMenuState::
+; field state 6: runs the field menu (RunMenuStateMenuState) (E-0339)
+FieldState_FieldMenu::
     farcall RunMenuStateMenuState
     ld a, [wMenuSubState]
     or a
@@ -1926,8 +1936,10 @@ FieldModeStateDispatch_RunMenuStateMenuState::
 .return:
     ret
 
-FieldModeStateDispatch_FieldStateCommonUpdate::
-    farcall FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc
+; field state 7: after a step: the trigger marker, the random encounter counter, step triggers and
+; warps (E-0339)
+FieldState_StepChecks::
+    farcall FieldState_StepChecks_WriteMenuStateAndRAMGEtc
     farcall FieldStateCommonUpdate
     farcall DrawTriggerMarkerSprite
     ld a, [wModeState]
@@ -1942,8 +1954,10 @@ FieldModeStateDispatch_FieldStateCommonUpdate::
     ld [wFieldStepFlags], a
     ret
 
-FieldModeStateDispatch_RunGameMode2State::
-    farcall RunGameMode2State
+; field state 8: the world map (RunWorldMapState) (C2 from E-0339: Select on map $30 switches to
+; this state and the world map shows the Water region)
+FieldState_WorldMap::
+    farcall RunWorldMapState
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
@@ -1962,7 +1976,12 @@ CallF072B4WhenGM2TimerMinutesIs59::
     farcall ClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
-FieldModeStateDispatch_WaitMapSpriteKind::
+; A in field states 0 and 5, when the map has special tiles (wMapSpriteKind) and nothing blocks
+; input: finds the tile in front of the player (TileBlockedAtPixel); a kind in the high nibble,
+; allowed once story flag $1F is set, may run TryHeaderTileTalkEvent; a kind in the low nibble needs
+; MapSpriteKindUnlocked, then CheckTallTileInFront (E-0339; was
+; FieldModeStateDispatch_WaitMapSpriteKind)
+CheckTileInFrontOnA::
     ld a, [wMapSpriteKind]
     or a
     ret z
@@ -2032,7 +2051,7 @@ FieldModeStateDispatch_WaitMapSpriteKind::
     or a
     jr z, .check_map_sprite_kind
     ld [wFieldStateByte34], a
-    call FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc
+    call TryHeaderTileTalkEvent
     or a
     ret nz
 
@@ -2042,19 +2061,19 @@ FieldModeStateDispatch_WaitMapSpriteKind::
     ret z
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, .call_field_mode_state_dispatch_shared01_write
-    call FieldModeStateDispatch_Shared01_TestFlagBit
+    jr nz, .call_check_tall_tile_in_front
+    call MapSpriteKindUnlocked
     or a
     ret z
     ld [wFieldStateByte34], a
 
-.call_field_mode_state_dispatch_shared01_write:
-    call FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03
+.call_check_tall_tile_in_front:
+    call CheckTallTileInFront
     ret
 
 ; A = 1 if story flag $1F is set, else 0 (E-0122)
 TestFlag1FAsBool::
-    ld de, $001f
+    ld de, EVENT_SCENE_MERMAID_KINGDOM
     call TestFlagBit
     jr c, .return_01
     xor a
@@ -2064,18 +2083,21 @@ TestFlag1FAsBool::
     ld a, $01
     ret
 
-FieldModeStateDispatch_Shared01_TestFlagBit::
+; A = 1 when the story flag for wMapSpriteKind's low nibble is set: kind 1 needs
+; EVENT_SCENE_RIVAL_DEFEATED ($1E?), other kinds EVENT_SCENE_SHIELD2 (E-0339; was
+; FieldModeStateDispatch_Shared01_TestFlagBit)
+MapSpriteKindUnlocked::
     ld a, [wMapSpriteKind]
     and $0f
     cp $01
     jr nz, .call_test_flag_bit
-    ld de, $001d
+    ld de, EVENT_SCENE_RIVAL_DEFEATED
     call TestFlagBit
     jr c, .return_01
     jr .return_0
 
 .call_test_flag_bit:
-    ld de, $001e
+    ld de, EVENT_SCENE_SHIELD2
     call TestFlagBit
     jr c, .return_01
 
@@ -2087,7 +2109,10 @@ FieldModeStateDispatch_Shared01_TestFlagBit::
     ld a, $01
     ret
 
-FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc::
+; unless player state bit 3 is set: when the tile under the point equals wMapHeaderByte11, runs talk
+; event group 2, index 0 (DispatchTalkEvent) and clears the joypad (E-0339; was
+; FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc)
+TryHeaderTileTalkEvent::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr z, .read_map_header_byte11
@@ -2119,7 +2144,10 @@ FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc::
     ld a, $01
     ret
 
-FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03::
+; compares the four tiles under the point (wTilesUnderPoint) with wMapTallTileMin, unless player
+; state bit 3 is set (E-0339; was
+; FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03)
+CheckTallTileInFront::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .skip
@@ -2191,7 +2219,7 @@ FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03::
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
-FieldModeStateDispatch_Case05_WaitFadeState::
+FieldState_WalkAMenu_WaitFadeState::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2210,19 +2238,19 @@ FieldModeStateDispatch_Case05_WaitFadeState::
     ld a, [wMapType]
     and $07
     jumptable
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_WriteFieldReturnPhaseAndGameModeEtc
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_WriteFieldReturnPhaseAndGameModeEtc
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_Return
+    dw FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
-FieldModeStateDispatch_Case05_Sub01_Return::
+FieldState_WalkAMenu_Sub01_Return::
     ret
 
-FieldModeStateDispatch_Case05_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
+FieldState_WalkAMenu_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
     ld a, [wKeyWorldFloor]
     add a
     add a
@@ -2245,12 +2273,12 @@ FieldModeStateDispatch_Case05_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
     ldh a, [hPlayerY]
     cp $10
     ret nz
-    jr FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
 .return:
     ret
 
-FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing::
+FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ldh a, [hPlayerFacing]
     cp $02
     ret nz
@@ -2260,9 +2288,9 @@ FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing::
     ldh a, [hPlayerY]
     cp $40
     ret nz
-    jr FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
-FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
+FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     call SaveScreenBufferToBGMap1
@@ -2275,7 +2303,7 @@ FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing_CallSaveKeyWorldFlagsRecord
     ld a, $0b
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -2289,7 +2317,7 @@ CheckInteractionInFront::
     ld a, [wMapHeaderByte7]
     or a
     ret z
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     ret nc
     ld a, [wFadeState]
@@ -2371,7 +2399,7 @@ CheckInteractionInFront::
     ld a, $0b
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -2629,7 +2657,7 @@ RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo::
     ret
 
 RunFieldEventFieldEventKind_TestFlagBit::
-    ld de, $0043
+    ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
     ret c
     ld a, [wFrameCounterLo]
@@ -3991,7 +4019,7 @@ UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
-FieldModeStateDispatch_Case00_WaitFadeState::
+FieldState_WalkATalks_WaitFadeState::
     ld a, [wFadeState]
     or a
     ret nz
@@ -4009,7 +4037,7 @@ FieldModeStateDispatch_Case00_WaitFadeState::
     ld d, a
     ldh a, [hMapId]
     ld e, a
-    ld hl, FieldModeStateDispatch_Case00_WaitFadeState_Data
+    ld hl, FieldState_WalkATalks_WaitFadeState_Data
     ld b, $00
 
 .skip:
@@ -4057,7 +4085,7 @@ FieldModeStateDispatch_Case00_WaitFadeState::
     inc b
     jr .skip
 
-FieldModeStateDispatch_Case00_WaitFadeState_Data::
+FieldState_WalkATalks_WaitFadeState_Data::
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1a, $10, $70, $70
     db $85, $10, $50, $60, $ff
 
@@ -5054,10 +5082,10 @@ PlayMapMusic_TestFlagBit::
     jr nz, PlayMapMusic_ReadCurrentMusic
 
 .call_test_flag_bit:
-    ld de, $0007
+    ld de, EVENT_THANKS_FOR_COMING_BY
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
-    ld de, $000a
+    ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic
     ld c, $28
@@ -5067,16 +5095,16 @@ PlayMapMusic_TestFlagBit_Case05::
     ldh a, [hMapScreenX]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic
-    ld de, $000a
+    ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
-    ld de, $000c
+    ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
     jr nc, .skip
-    ld de, $00c2
+    ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
-    ld de, $00c3
+    ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic
 
@@ -5092,7 +5120,7 @@ PlayMapMusic_TestFlagBit_Case04::
     ld de, $00cc
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
-    ld de, $0038
+    ld de, EVENT_SCENE_TERRY_BATTLE_038
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic
     ld c, $cf
@@ -5111,7 +5139,7 @@ PlayMapMusic_ReadCurrentMusic_Case21::
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
 MapMusicByFlag23::
-    ld de, $0023
+    ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_Case21
     ld c, $2e
@@ -5123,10 +5151,10 @@ MapMusicByScreenAndFlags87And8A::
     ldh a, [hMapScreenY]
     or a
     jr z, MapMusicByFlag23
-    ld de, $0087
+    ld de, EVENT_SCENE_REPORT_TO_KING
     call TestFlagBit
     jr nc, MapMusicByFlag23
-    ld de, $008a
+    ld de, EVENT_SCENE_WALL_EXIT
     call TestFlagBit
     jr c, MapMusicByFlag23
     ld c, $28
@@ -5147,7 +5175,7 @@ MapMusicByPlayerStateFlagsBit3::
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
 MapMusicByFlag23_631A::
-    ld de, $0023
+    ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_Case20
     ld c, $2e
@@ -5186,14 +5214,14 @@ PlayMapMusic_TestFlagBit_Case39::
     ldh a, [hMapScreenY]
     cp $01
     jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
-    ld de, $007c
+    ld de, EVENT_SCENE_CREW_FOLLOWS
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_Case2B
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
 PlayMapMusic_TestFlagBit_Case3B::
-    ld de, $0022
+    ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_Case2B
     ld c, $28
@@ -5207,17 +5235,17 @@ PlayMapMusic_TestFlagBit_Case9B::
     ldh a, [hMapScreenY]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic_Case37
-    ld de, $00c2
+    ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic_Case37
-    ld de, $00c3
+    ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
     jr c, PlayMapMusic_ReadCurrentMusic_Case37
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags::
-    call FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState
+FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
+    call FieldState_Still_Sub01_WriteMenuSubState
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -5226,7 +5254,7 @@ FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags::
     farcall ClearBit1OfPlayerAndObjectFlags
     xor a
     ldh [hSpriteWindowClipMode], a
-    call FieldModeStateDispatch_Case02_Sub01_WritePartyWindowFlagsAndPartyWindowTimer
+    call FieldState_Still_Sub01_WritePartyWindowFlagsAndPartyWindowTimer
     ld a, [wMapType]
     bit 7, a
     jr nz, .set_mode_state_to_05
@@ -5249,7 +5277,7 @@ FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wMenuState]
     ld [wModeState], a
     xor a
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ret
 
 .check_bit5:
@@ -5294,7 +5322,7 @@ FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags::
 .return:
     ret
 
-FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState::
+FieldState_Still_Sub01_WriteMenuSubState::
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5322,7 +5350,7 @@ FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState::
     ld l, e
     ld h, d
     ld b, $00
-    ld de, FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState_Data
+    ld de, FieldState_Still_Sub01_WriteMenuSubState_Data
 
 .loop:
     push hl
@@ -5392,10 +5420,10 @@ FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState::
     jr nz, .loop
     ret
 
-FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState_Data::
+FieldState_Still_Sub01_WriteMenuSubState_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
-FieldModeStateDispatch_Case02_Sub01_WritePartyWindowFlagsAndPartyWindowTimer::
+FieldState_Still_Sub01_WritePartyWindowFlagsAndPartyWindowTimer::
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5435,7 +5463,7 @@ OpenFieldMenuOnA::
     ld a, [wFadeState]
     or a
     ret nz
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     ret nc
     ld a, [wTextWindowState]
@@ -5720,7 +5748,7 @@ DrawGoldDigitsAtHLWrapped::
 ; in the field, after $B4 idle frames: saves the bottom of the screen and shows the party status
 ; window (level, HP, MP) (E-0130)
 ShowIdlePartyStatusWindow::
-    ld de, $0002
+    ld de, EVENT_SCENE_LONG_FACES
     call TestFlagBit
     ret nc
     ld a, [wTextWindowState]
@@ -6835,14 +6863,14 @@ RunMenuStateMenuState_InitSoundHardware::
     ld [wKeyWorldRefresh], a
     xor a
     ld [wScreenTriggerCount], a
-    ld de, $0165
+    ld de, EVENT_SCENE_WIZSTONE
     call TestFlagBit
     jr nc, .call_test_flag_bit
     ld de, $0167
     call SetFlagBit
 
 .call_test_flag_bit:
-    ld de, $01c4
+    ld de, EVENT_MILAYOU_HOW_DO_I_KNOW
     call TestFlagBit
     jr nc, .restore
     ld de, $01c5

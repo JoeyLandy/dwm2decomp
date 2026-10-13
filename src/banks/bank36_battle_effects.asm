@@ -188,12 +188,12 @@ ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT2_AQUA_WALL, [hl]
     ret z
     ld a, [wRecordBufferData + $5]
     bit 3, a
     ret z
-    res 3, [hl]
+    res BSTAT2_AQUA_WALL, [hl]
     ld d, $e9
     call TargetOnLocalSide_Bank36
     jr c, .call_show_battle_text
@@ -249,7 +249,7 @@ TryShuntOrGuard::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT6_CALLED_HELP, [hl]
     jr z, .return_0
 
 .read_battle_target:
@@ -264,7 +264,7 @@ TryShuntOrGuard::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 5, [hl]
+    bit BSTAT6_DODGE, [hl]
     jr z, .return_0
 
 .call_pick_shunt_slot:
@@ -319,9 +319,9 @@ TryWindBounce::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT2_WIND_GUARD, [hl]
     jr z, .return_0
-    res 6, [hl]
+    res BSTAT2_WIND_GUARD, [hl]
     ld a, $02
     ld [wDefeatStep], a
     ld d, $c7 ; battle text 'The wind around 0 bounced the'
@@ -424,7 +424,7 @@ TryAllyGuard::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT6_GUARDED, [hl]
     jr z, .return_carry
     ld a, [wRecordBufferData + $6]
     bit 0, a
@@ -847,7 +847,7 @@ ResolveStepChanceRoll::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT1_CRITICAL, [hl]
     jr nz, .read_battle_actor
     call AdvanceRandom
     call RollRandomLoBelowChance
@@ -954,7 +954,7 @@ ResolveStepComputeDamage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT4_CHARGE_UP, [hl]
     jr z, .check_record_buffer_data4
     ld a, [wBattleDamageLo]
     ld l, a
@@ -974,7 +974,7 @@ ResolveStepComputeDamage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT4_SUCK_AIR, [hl]
     jr z, .read_battle_actor
     ld a, [wBattleDamageLo]
     ld l, a
@@ -1065,7 +1065,7 @@ ResolveStepComputeDamage::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT6_BERSERK, [hl]
     jr z, .return
     ld a, [wRecordBufferData + $5]
     bit 7, a
@@ -1685,9 +1685,9 @@ ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT2_WIND_GUARD, [hl]
     ret z
-    res 6, [hl]
+    res BSTAT2_WIND_GUARD, [hl]
     ld d, $80 ; battle text 'The wind around 0 died!'
     farcall ShowBattleText
     ret
@@ -1999,9 +1999,9 @@ ResolveStepDamageMessage_Sub04_AddAx9ToHL::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT8_SEAL_PRAY, [hl]
     ret z
-    res 4, [hl]
+    res BSTAT8_SEAL_PRAY, [hl]
     ld a, $ff
     ld [wQueuedActionId], a
     ld a, $ff
@@ -6718,9 +6718,9 @@ ActionEffect_ActionDE::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 0, [hl]
-    set 6, [hl]
-    set 7, [hl]
+    set BSTAT1_SPELLS_SEALED, [hl]
+    set BSTAT1_DANCE_SEALED, [hl]
+    set BSTAT1_BREATH_SEALED, [hl]
     ld l, $9e
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -6799,7 +6799,7 @@ ActionEffect_ActionE3::
     ldh a, [hTemp0]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 3, [hl]
+    set BSTAT1_CRITICAL, [hl]
     inc hl
     inc hl
     inc hl
@@ -7502,14 +7502,14 @@ ActionEffect_StopSpell::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .skip
     call ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 0, [hl]
+    set BSTAT1_SPELLS_SEALED, [hl]
     ld l, $3b
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7527,14 +7527,14 @@ ActionEffect_PanicAll::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT0_CONFUSED, [hl]
     jr nz, .skip
     call ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    set 4, [hl]
+    set BSTAT0_CONFUSED, [hl]
     ld l, $42
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7683,7 +7683,7 @@ ActionEffect_MagicWall::
     ld a, c
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT8_MAGIC_WALL, [hl]
 
 .next:
     inc c
@@ -7708,8 +7708,8 @@ ActionEffect_Transform::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 5, [hl]
-    res 4, [hl]
+    set BSTAT1_TRANSFORMED, [hl]
+    res BSTAT1_DRAGON_FORM, [hl]
     ret
 
 ResolveStepDamageMessage_WaitLinkMode::
@@ -7740,8 +7740,8 @@ ActionEffect_BeDragon::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 4, [hl]
-    res 5, [hl]
+    set BSTAT1_DRAGON_FORM, [hl]
+    res BSTAT1_TRANSFORMED, [hl]
     ld a, [wBattleActor]
     ld c, a
     farcall ActionEffect_BeDragon_ReadLinkMode
@@ -7866,7 +7866,7 @@ ActionEffect_CallHelp::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT6_CALLED_HELP, [hl]
     jr nz, .call_action_effect_call_help_write_battle
     push hl
     call AdvanceRandom
@@ -8191,7 +8191,7 @@ ActionEffect_Berserker::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 2, [hl]
+    set BSTAT6_BERSERK, [hl]
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -8305,7 +8305,7 @@ ActionEffect_Curse::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 5, [hl]
+    bit BSTAT0_CURSED, [hl]
     jr nz, .skip2
     push hl
     call ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36
@@ -8349,12 +8349,12 @@ ActionEffect_OddDance::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_LureDance::
     call TargetStatus3Address
-    bit 1, [hl]
+    bit BSTAT3_DANCING, [hl]
     jr nz, .skip2
     call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
-    set 1, [hl]
+    set BSTAT3_DANCING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $58
     ld bc, $0090
@@ -8472,14 +8472,14 @@ ActionEffect_EerieLite::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT8_EERIE_LITE, [hl]
     jr nz, .skip2
     call ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    set 7, [hl]
+    set BSTAT8_EERIE_LITE, [hl]
     ld l, $d5
     ld bc, $0098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8616,7 +8616,7 @@ ActionEffect_Focus::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
-    set 7, [hl]
+    set BSTAT4_FOCUS, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8624,7 +8624,7 @@ ActionEffect_Focus::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_LushLicks::
     call TargetStatus3Address
-    bit 3, [hl]
+    bit BSTAT3_SHIVERING, [hl]
     jr nz, .skip3
     ld a, [wBattleActionId]
     cp SKILL_SICKLICK
@@ -8638,7 +8638,7 @@ ActionEffect_LushLicks::
 .skip:
     jr nc, .skip2
     call TargetStatus3Address
-    set 3, [hl]
+    set BSTAT3_SHIVERING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld a, [wBattleActionId]
     cp SKILL_LUSHLICKS
@@ -8672,12 +8672,12 @@ ActionEffect_LushLicks::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_LegSweep::
     call TargetStatus3Address
-    bit 2, [hl]
+    bit BSTAT3_TRIPPED, [hl]
     jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
     call ActionEffect_LegSweep_RollVsLegSweepResistance
     jr nc, .read_battle_target
     call TargetStatus3Address
-    set 2, [hl]
+    set BSTAT3_TRIPPED, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $5d
     ld bc, $0090
@@ -8701,12 +8701,12 @@ ActionEffect_LegSweep::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_Ahhh::
     call TargetStatus3Address
-    bit 5, [hl]
+    bit BSTAT3_VACANT, [hl]
     jr nz, .skip2
     call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
-    set 5, [hl]
+    set BSTAT3_VACANT, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $59
     ld bc, $0090
@@ -8725,12 +8725,12 @@ ActionEffect_Ahhh::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_WarCry::
     call TargetStatus3Address
-    bit 4, [hl]
+    bit BSTAT3_COWERING, [hl]
     jr nz, .skip2
     call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
-    set 4, [hl]
+    set BSTAT3_COWERING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $5c
     ld bc, $0090
@@ -8787,7 +8787,7 @@ ActionEffect_Geyser_Skip::
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, .read_battle_actor
-    bit 7, [hl]
+    bit BSTAT0_ASLEEP, [hl]
     jr nz, .read_battle_actor
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -8832,14 +8832,14 @@ ActionEffect_DanceShut::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT1_DANCE_SEALED, [hl]
     jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
     call ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT1_DANCE_SEALED, [hl]
     ld l, $de
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8854,14 +8854,14 @@ ActionEffect_MouthShut::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT1_BREATH_SEALED, [hl]
     jr nz, .skip2
     call ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 7, [hl]
+    set BSTAT1_BREATH_SEALED, [hl]
     ld l, $64
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8913,7 +8913,7 @@ ActionEffect_Dodge::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 5, [hl]
+    set BSTAT6_DODGE, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8953,9 +8953,9 @@ ActionEffect_Cover::
     jr z, .next
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 4, [hl]
+    bit BSTAT6_GUARDED, [hl]
     jr nz, .next
-    set 4, [hl]
+    set BSTAT6_GUARDED, [hl]
     inc hl
     ld a, [wBattleActor]
     and $0f
@@ -8979,7 +8979,7 @@ ActionEffect_TailWind::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT2_WIND_GUARD, [hl]
     jr .skip
 
 .check_battle_target:
@@ -8995,7 +8995,7 @@ ActionEffect_TailWind::
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT2_WIND_GUARD, [hl]
 
 .next:
     inc c
@@ -9019,7 +9019,7 @@ ActionEffect_AquaWall::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    set 3, [hl]
+    set BSTAT2_AQUA_WALL, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9029,7 +9029,7 @@ ActionEffect_SealPray::
     ld a, [wBattleActor]
     ld hl, wBattleStatus8
     call AddAx9ToHL
-    set 4, [hl]
+    set BSTAT8_SEAL_PRAY, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9058,7 +9058,7 @@ ActionEffect_SuckAll::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 1, [hl]
+    set BSTAT6_SUCK_ALL, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9068,7 +9068,7 @@ ActionEffect_Imitate::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 3, [hl]
+    set BSTAT6_IMITATE, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -9272,7 +9272,7 @@ ActionEffect_ActionB4::
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 3, [hl]
+    set BSTAT1_CRITICAL, [hl]
 
 .next:
     inc c
@@ -9336,7 +9336,7 @@ ActionEffect_ActionB9::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionBA::
     call TargetStatus3Address
-    bit 0, [hl]
+    bit BSTAT3_FROZEN, [hl]
     jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
     set 0, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -9461,7 +9461,7 @@ ActionEffect_ActionC5::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    set 2, [hl]
+    set BSTAT3_TRIPPED, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by

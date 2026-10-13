@@ -28,7 +28,7 @@ LoadMapObjectsForScreen::
     ldh a, [hMapScreenY]
     cp $01
     jr nz, .read_map_id
-    ld de, $0056
+    ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr nc, .read_map_id
     ld de, $0058
@@ -955,7 +955,7 @@ MapObjectScreens_45E8::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_45EC::
-    objsel_unless_flag $01c0, MapObjects_45F4
+    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_45F4
     objsel_list MapObjects_460B
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -994,12 +994,12 @@ MapObjectScreens_463D::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4641::
-    objsel_skip_if_set $01c0, $02, $00
+    objsel_skip_if_set EVENT_SCENE_PENDANT_SELLER_1C0, $02, $00
     objsel_none
 
 ObjSelector_4649::
-    objsel_unless_flag $01c1, MapObjects_4653
-    objsel_unless_flag $01c3, MapObjects_465F
+    objsel_unless_flag EVENT_SCENE_MILAYOU_FOREST, MapObjects_4653
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_465F
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -1013,12 +1013,12 @@ MapObjects_465F::
     db $85, $01, $43, $00, $00, $30, $20, $05, $00, $50, $3f
 
 ObjSelector_466B::
-    objsel_skip_if_set $01b9, $02, $00
+    objsel_skip_if_set EVENT_SCENE_PENDANT_SELLER, $02, $00
     objsel_none
 
 ObjSelector_4673::
-    objsel_unless_flag $01bb, MapObjects_467D
-    objsel_unless_flag $01bc, MapObjects_469F
+    objsel_unless_flag EVENT_SCENE_MERCY, MapObjects_467D
+    objsel_unless_flag EVENT_HERO_OPENED_THE_TREASURE_CHEST, MapObjects_469F
     objsel_none
 
 ; record: count, then 3 object(s), the layout of the other object lists
@@ -1039,11 +1039,11 @@ MapObjectScreens_46AB::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_46AD::
-    objsel_unless_flag $01b1, MapObjects_46C5
-    objsel_unless_flag $01be, MapObjects_46E7
-    objsel_unless_flag $01c0, MapObjects_46C5
-    objsel_unless_flag $01c3, MapObjects_46E7
-    objsel_unless_flag $01c7, MapObjects_46C5
+    objsel_unless_flag EVENT_THANK_YOU_I_KNEW_YOU, MapObjects_46C5
+    objsel_unless_flag EVENT_THANK_YOU_FOR_GETTING_THE, MapObjects_46E7
+    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_46C5
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_46E7
+    objsel_unless_flag EVENT_MILAYOU_I_LOST_BUT_GOOD, MapObjects_46C5
     objsel_list MapObjects_46E7
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1071,7 +1071,7 @@ MapObjectScreens_46FE::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4700::
-    objsel_unless_flag $01c3, MapObjects_4706
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_4706
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1090,7 +1090,7 @@ MapObjectScreens_471D::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_471F::
-    objsel_unless_flag $015a, MapObjects_472B
+    objsel_unless_flag EVENT_KIRAL_OH_FOOLISH_OF_ME, MapObjects_472B
     objsel_unless_flag $0167, MapObjects_4742
     objsel_list MapObjects_4759
 
@@ -1124,7 +1124,7 @@ MapObjectScreens_477B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_477D::
-    objsel_unless_flag $0163, MapObjects_4787
+    objsel_unless_flag EVENT_SCENE_BARREL, MapObjects_4787
     objsel_unless_flag $0167, MapObjects_479E
     objsel_none
 
@@ -1166,10 +1166,10 @@ MapObjects_47B6::
     db $86, $01, $32, $00, $00, $50, $40, $06, $00, $60, $07 ; object 1
 
 ObjSelector_47CD::
-    objsel_unless_flag $0146, MapObjects_47E1
-    objsel_unless_flag $0147, MapObjects_4803
-    objsel_unless_flag $014c, MapObjects_4825
-    objsel_unless_flag $0151, MapObjects_483C
+    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_47E1
+    objsel_unless_flag EVENT_CYAL_LISTEN_HERO_WE_SHOULD, MapObjects_4803
+    objsel_unless_flag EVENT_ROLT_WAIT_GONE_ALREADY, MapObjects_4825
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_483C
     objsel_list MapObjects_4848
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1232,15 +1232,15 @@ MapObjectScreens_48B6::
     dw ObjSelector_4916 ; id 1
 
 ObjSelector_48BA::
-    objsel_skip_if_clear $014b, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_TOO_STRONG, $02, $00
     objsel_none
 
 ObjSelector_48C2::
-    objsel_skip_if_clear $0147, $04, $00
+    objsel_skip_if_clear EVENT_CYAL_LISTEN_HERO_WE_SHOULD, $04, $00
     objsel_list MapObjects_48E9
 
 ObjSelector_48CC::
-    objsel_unless_flag $0146, MapObjects_48D2
+    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_48D2
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -1260,15 +1260,15 @@ MapObjects_48E9::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4916::
-    objsel_skip_if_clear $0148, $02, $00
+    objsel_skip_if_clear EVENT_CYAL_EEEK_HERO_HELP_ME, $02, $00
     objsel_none
 
 ObjSelector_491E::
-    objsel_skip_if_clear $0147, $04, $00
+    objsel_skip_if_clear EVENT_CYAL_LISTEN_HERO_WE_SHOULD, $04, $00
     objsel_list MapObjects_492E
 
 ObjSelector_4928::
-    objsel_unless_flag $0140, MapObjects_492E
+    objsel_unless_flag EVENT_SCENE_CYAL_SHINE, MapObjects_492E
     objsel_none
 
 ; record: count, then 1 object(s), the layout of the other object lists
@@ -1298,12 +1298,12 @@ MapObjectScreens_4957::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4959::
-    objsel_skip_if_set $014c, $02, $00
+    objsel_skip_if_set EVENT_ROLT_WAIT_GONE_ALREADY, $02, $00
     objsel_none
 
 ObjSelector_4961::
-    objsel_unless_flag $014f, MapObjects_496B
-    objsel_unless_flag $0151, MapObjects_498D
+    objsel_unless_flag EVENT_SCENE_GIVE_BACK_CYAL, MapObjects_496B
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_498D
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -1329,7 +1329,7 @@ MapObjectScreens_49AF::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_49B5::
-    objsel_unless_flag $00d3, MapObjects_49BB
+    objsel_unless_flag EVENT_SCENE_DARCK_TAUNT, MapObjects_49BB
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1349,7 +1349,7 @@ MapObjectScreens_49D2::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_49D6::
-    objsel_unless_flag $00d1, MapObjects_49DC
+    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_49DC
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1371,7 +1371,7 @@ MapObjectScreens_49F3::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_49F9::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_4A24
 
 ObjSelector_4A09::
@@ -1442,7 +1442,7 @@ MapObjectScreens_4ABA::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4AC2::
-    objsel_unless_flag $00a4, MapObjects_4AC8
+    objsel_unless_flag EVENT_SCENE_MADCONDOR, MapObjects_4AC8
     objsel_none
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1570,7 +1570,7 @@ ObjSelector_4BF9::
     objsel_list MapObjects_4C44
 
 ObjSelector_4C03::
-    objsel_unless_flag $00a8, MapObjects_4C0B
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4C0B
     objsel_list MapObjects_4C2D
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -1612,11 +1612,11 @@ MapObjectScreens_4C60::
     dw ObjSelector_4D2C ; id 3
 
 ObjSelector_4C68::
-    objsel_skip_if_clear $00b6, $04, $00
+    objsel_skip_if_clear EVENT_WHAT_YOU_HAVE_THE_THREE, $04, $00
     objsel_list MapObjects_4CB3
 
 ObjSelector_4C72::
-    objsel_unless_flag $00a8, MapObjects_4C7A
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4C7A
     objsel_list MapObjects_4C91
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -1667,7 +1667,7 @@ MapObjects_4CFF::
     db $87, $00, $62, $00, $00, $70, $20, $07, $02, $70, $33 ; object 3
 
 ObjSelector_4D2C::
-    objsel_unless_flag $00a8, MapObjects_4D34
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4D34
     objsel_list MapObjects_4D56
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1694,7 +1694,7 @@ MapObjectScreens_4D83::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4D85::
-    objsel_unless_flag $00a8, MapObjects_4D8D
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4D8D
     objsel_list MapObjects_4D99
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1716,7 +1716,7 @@ MapObjectScreens_4DA5::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4DA7::
-    objsel_unless_flag $00a8, MapObjects_4DAF
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4DAF
     objsel_list MapObjects_4DBB
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1745,7 +1745,7 @@ MapObjectScreens_4DE8::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4DEC::
-    objsel_unless_flag $00b8, MapObjects_4DF4
+    objsel_unless_flag EVENT_SCENE_FOUND_ME, MapObjects_4DF4
     objsel_list MapObjects_4E00
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1761,7 +1761,7 @@ MapObjects_4E00::
     db $85, $00, $61, $00, $00, $40, $40, $05, $00, $50, $5a
 
 ObjSelector_4E0C::
-    objsel_unless_flag $00c2, MapObjects_4E14
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_4E14
     objsel_list MapObjects_4E36
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -1784,7 +1784,7 @@ MapObjectScreens_4E42::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4E44::
-    objsel_unless_flag $00ae, MapObjects_4E4A
+    objsel_unless_flag EVENT_HEH_YOU, MapObjects_4E4A
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1848,7 +1848,7 @@ MapObjectScreens_4E99::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4EAB::
-    objsel_unless_flag $00c5, MapObjects_4EB1
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C5, MapObjects_4EB1
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1940,7 +1940,7 @@ MapObjectScreens_4F89::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4F8B::
-    objsel_unless_flag $00b1, MapObjects_4F91
+    objsel_unless_flag EVENT_SCENE_GRAVESTONE, MapObjects_4F91
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1963,7 +1963,7 @@ MapObjectScreens_4F9D::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4FA9::
-    objsel_unless_flag $00c6, MapObjects_4FAF
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C6, MapObjects_4FAF
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -1975,7 +1975,7 @@ MapObjects_4FAF::
     db $85, $00, $0a, $01, $00, $50, $20, $05, $00, $50, $6e
 
 ObjSelector_4FBB::
-    objsel_unless_flag $00c7, MapObjects_4FC1
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C7, MapObjects_4FC1
     objsel_none
 
 MapObjects_4FC1::
@@ -1989,7 +1989,7 @@ MapObjectScreens_4FCD::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4FCF::
-    objsel_unless_flag $00b4, MapObjects_4FD5
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY, MapObjects_4FD5
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2015,7 +2015,7 @@ MapObjectScreens_4FE1::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4FF3::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_4FFB::
@@ -2029,7 +2029,7 @@ MapObjects_5001::
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
 ObjSelector_500D::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_5015::
@@ -2041,7 +2041,7 @@ MapObjects_501B::
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
 ObjSelector_5027::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_502F::
@@ -2053,7 +2053,7 @@ MapObjects_5035::
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
 ObjSelector_5041::
-    objsel_unless_flag $0024, MapObjects_5047
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5047
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2066,7 +2066,7 @@ MapObjects_5047::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5053::
-    objsel_unless_flag $0024, MapObjects_5059
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5059
     objsel_none
 
 MapObjects_5059::
@@ -2084,7 +2084,7 @@ MapObjectScreens_5065::
     dw ObjSelector_5071 ; id 5
 
 ObjSelector_5071::
-    objsel_unless_flag $0024, MapObjects_5077
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5077
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2103,7 +2103,7 @@ MapObjectScreens_5083::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_508B::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_5093::
@@ -2125,11 +2125,11 @@ MapObjectScreens_50A5::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_50AB::
-    objsel_skip_if_clear $00c3, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS_0C3, $02, $00
     objsel_none
 
 ObjSelector_50B3::
-    objsel_unless_flag $00c2, MapObjects_50BB
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_50BB
     objsel_list MapObjects_50D2
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2145,7 +2145,7 @@ MapObjects_50D2::
     db $85, $01, $03, $00, $00, $50, $30, $05, $02, $50, $5c
 
 ObjSelector_50DE::
-    objsel_unless_flag $00c1, MapObjects_50E4
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_BATTLE, MapObjects_50E4
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2164,24 +2164,24 @@ MapObjectScreens_50F0::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_50F2::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_519C
 
 ObjSelector_5102::
-    objsel_skip_if_clear $01e5, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $02, $00
     objsel_none
 
 ObjSelector_510A::
-    objsel_skip_if_clear $01e4, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD_1E4, $04, $00
     objsel_list MapObjects_5158
 
 ObjSelector_5114::
-    objsel_skip_if_clear $0080, $08, $00
-    objsel_unless_flag $01e3, MapObjects_5158
+    objsel_skip_if_clear EVENT_HERO_CHECKED_THE_TREASURE_CHEST, $08, $00
+    objsel_unless_flag EVENT_SCENE_SHIELD, MapObjects_5158
     objsel_list MapObjects_517A
 
 ObjSelector_5122::
-    objsel_unless_flag $01e8, MapObjects_512A
+    objsel_unless_flag EVENT_BLINK_SPRITES, MapObjects_512A
     objsel_list MapObjects_5141
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2231,7 +2231,7 @@ MapObjectScreens_51D4::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_51DC::
-    objsel_unless_flag $0081, MapObjects_51E4
+    objsel_unless_flag EVENT_WHAT_IS_THAT_DIRTY_MEDAL, MapObjects_51E4
     objsel_list MapObjects_5211
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2291,7 +2291,7 @@ MapObjectScreens_52C6::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_52C8::
-    objsel_unless_flag $0094, MapObjects_52D0
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_52D0
     objsel_list MapObjects_52E7
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2320,15 +2320,15 @@ MapObjectScreens_52F3::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_52FB::
-    objsel_skip_if_clear $0094, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_PLAN_RUINED_094, $04, $00
     objsel_list MapObjects_5367
 
 ObjSelector_5305::
-    objsel_skip_if_clear $0093, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_PLAN_RUINED, $04, $00
     objsel_list MapObjects_5350
 
 ObjSelector_530F::
-    objsel_unless_flag $008a, MapObjects_5317
+    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_5317
     objsel_list MapObjects_532E
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2371,15 +2371,15 @@ MapObjects_5382::
     db $85, $01, $12, $00, $00, $20, $20, $05, $02, $50, $17
 
 ObjSelector_538E::
-    objsel_skip_if_clear $0087, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_REPORT_TO_KING, $04, $00
     objsel_list MapObjects_53D8
 
 ObjSelector_5398::
-    objsel_skip_if_clear $0082, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SPIRIT_ENVOY, $04, $00
     objsel_list MapObjects_53AA
 
 ObjSelector_53A2::
-    objsel_unless_flag $0083, MapObjects_53AA
+    objsel_unless_flag EVENT_AH_YOU_ARE_THE_SPIRIT, MapObjects_53AA
     objsel_list MapObjects_53C1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2421,7 +2421,7 @@ MapObjectScreens_53FF::
     dw ObjSelector_5403 ; id 1
 
 ObjSelector_5403::
-    objsel_unless_flag $008a, MapObjects_5409
+    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_5409
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2473,7 +2473,7 @@ MapObjects_5442::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_546F::
-    objsel_unless_flag $01e5, MapObjects_5477
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5477
     objsel_list MapObjects_54A4
 
 MapObjects_5477::
@@ -2518,7 +2518,7 @@ MapObjectScreens_5528::
     dw ObjSelector_552A ; id 0
 
 ObjSelector_552A::
-    objsel_unless_flag $01e5, MapObjects_5532
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5532
     objsel_list MapObjects_555F
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2570,7 +2570,7 @@ MapObjects_559D::
     db $86, $01, $52, $00, $00, $70, $40, $06, $03, $60, $3d ; object 1
 
 ObjSelector_55B4::
-    objsel_unless_flag $0094, MapObjects_55BC
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_55BC
     objsel_list MapObjects_55E9
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -2623,7 +2623,7 @@ MapObjects_563A::
     db $85, $01, $16, $00, $00, $70, $30, $05, $00, $50, $3f
 
 ObjSelector_5646::
-    objsel_unless_flag $0094, MapObjects_564E
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_564E
     objsel_list MapObjects_5670
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -2683,7 +2683,7 @@ MapObjectScreens_56A2::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_56A8::
-    objsel_unless_flag $0086, MapObjects_56AE
+    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_56AE
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2695,11 +2695,11 @@ MapObjects_56AE::
     db $85, $01, $16, $00, $02, $60, $10, $05, $01, $50, $44
 
 ObjSelector_56BA::
-    objsel_skip_if_clear $0086, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_GOT_TO, $02, $00
     objsel_none
 
 ObjSelector_56C2::
-    objsel_unless_flag $0085, MapObjects_56CA
+    objsel_unless_flag EVENT_SCENE_EXPLOSION, MapObjects_56CA
     objsel_list MapObjects_56EC
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2718,7 +2718,7 @@ MapObjects_56EC::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_570E::
-    objsel_unless_flag $0086, MapObjects_5714
+    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_5714
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -2821,11 +2821,11 @@ MapObjectScreens_5810::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5814::
-    objsel_skip_if_clear $01e5, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
     objsel_list MapObjects_5851
 
 ObjSelector_581E::
-    objsel_unless_flag $0096, MapObjects_5824
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_5824
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2847,11 +2847,11 @@ MapObjects_5851::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_585D::
-    objsel_skip_if_clear $0096, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_CHEER_YUNA, $04, $00
     objsel_list MapObjects_58A8
 
 ObjSelector_5867::
-    objsel_unless_flag $0095, MapObjects_586F
+    objsel_unless_flag EVENT_GATHER_FOLLOWERS, MapObjects_586F
     objsel_list MapObjects_589C
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2900,11 +2900,11 @@ MapObjects_58D6::
     db $86, $01, $14, $00, $00, $20, $10, $06, $02, $60, $6b ; object 1
 
 ObjSelector_58ED::
-    objsel_skip_if_clear $009b, $04, $00
+    objsel_skip_if_clear EVENT_YOU_WILL_THANK_YOU_LET, $04, $00
     objsel_list MapObjects_5938
 
 ObjSelector_58F7::
-    objsel_unless_flag $0096, MapObjects_58FF
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_58FF
     objsel_list MapObjects_5921
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -2942,7 +2942,7 @@ MapObjects_5948::
     db $87, $01, $52, $00, $00, $10, $20, $07, $02, $70, $6a ; object 1
 
 ObjSelector_595F::
-    objsel_unless_flag $0096, MapObjects_5967
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_5967
     objsel_list MapObjects_5989
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -2969,11 +2969,11 @@ MapObjectScreens_59AB::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_59AF::
-    objsel_skip_if_clear $009d, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_PRINCESS_MEDICINE_09D, $04, $00
     objsel_list MapObjects_59FA
 
 ObjSelector_59B9::
-    objsel_unless_flag $009b, MapObjects_59C1
+    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_59C1
     objsel_list MapObjects_59D8
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -3020,7 +3020,7 @@ MapObjectScreens_5A06::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5A26::
-    objsel_unless_flag $01e5, MapObjects_5A2E
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5A2E
     objsel_list MapObjects_5A50
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3042,15 +3042,15 @@ MapObjects_5A50::
     db $86, $01, $2f, $00, $02, $60, $30, $06, $01, $60, $93 ; object 1
 
 ObjSelector_5A67::
-    objsel_unless_flag $0098, MapObjects_5A79
+    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2, MapObjects_5A79
     objsel_none
 
 ObjSelector_5A6D::
-    objsel_unless_flag $0099, MapObjects_5A79
+    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2_099, MapObjects_5A79
     objsel_none
 
 ObjSelector_5A73::
-    objsel_unless_flag $009b, MapObjects_5A79
+    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_5A79
     objsel_none
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -3070,7 +3070,7 @@ MapObjectScreens_5A85::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5A8D::
-    objsel_unless_flag $01e5, MapObjects_5A95
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5A95
     objsel_list MapObjects_5AB7
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3094,7 +3094,7 @@ MapObjects_5AB7::
     db $87, $01, $21, $00, $00, $50, $20, $07, $00, $70, $9b ; object 3
 
 ObjSelector_5AE4::
-    objsel_unless_flag $0097, MapObjects_5AEC
+    objsel_unless_flag EVENT_OH_AN_ENVOY_FROM_THE, MapObjects_5AEC
     objsel_list MapObjects_5B19
 
 MapObjects_5AEC::
@@ -3138,7 +3138,7 @@ MapObjectScreens_5BA8::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5BAA::
-    objsel_unless_flag $01e5, MapObjects_5BB2
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5BB2
     objsel_list MapObjects_5BDF
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3171,15 +3171,15 @@ MapObjectScreens_5C01::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5C07::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_5C39
 
 ObjSelector_5C17::
-    objsel_skip_if_clear $01e5, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
     objsel_list MapObjects_5C2D
 
 ObjSelector_5C21::
-    objsel_skip_if_clear $009d, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_PRINCESS_MEDICINE_09D, $02, $00
     objsel_none
 
 ObjSelector_5C29::
@@ -3205,7 +3205,7 @@ MapObjects_5C39::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5C71::
-    objsel_unless_flag $01f1, MapObjects_5C79
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5C79
     objsel_list MapObjects_5C9B
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -3243,19 +3243,19 @@ MapObjectScreens_5CD8::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5CDC::
-    objsel_skip_if_clear $01e5, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
     objsel_list MapObjects_5D7F
 
 ObjSelector_5CE6::
-    objsel_skip_if_clear $01e2, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD_GUARDIAN_1E2, $04, $00
     objsel_list MapObjects_5D68
 
 ObjSelector_5CF0::
-    objsel_skip_if_clear $01e1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD_GUARDIAN, $04, $00
     objsel_list MapObjects_5D46
 
 ObjSelector_5CFA::
-    objsel_unless_flag $01f1, MapObjects_5D02
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5D02
     objsel_list MapObjects_5D24
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -3294,7 +3294,7 @@ MapObjects_5D7F::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5D8B::
-    objsel_unless_flag $01f1, MapObjects_5D91
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5D91
     objsel_none
 
 MapObjects_5D91::
@@ -3370,11 +3370,11 @@ MapObjectScreens_5D9D::
     dw $0000 ; id 63
 
 ObjSelector_5E1D::
-    objsel_skip_if_set $0022, $02, $00
+    objsel_skip_if_set EVENT_SCENE_MERMAID_KINGDOM_022, $02, $00
     objsel_none
 
 ObjSelector_5E25::
-    objsel_unless_flag $00f4, MapObjects_5E2B
+    objsel_unless_flag EVENT_THICK_SUCTION_CUPPED_TENTACLES_SNAKED, MapObjects_5E2B
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -3385,11 +3385,11 @@ MapObjects_5E2B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5E37::
-    objsel_skip_if_clear $0076, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_CRATE, $02, $00
     objsel_none
 
 ObjSelector_5E3F::
-    objsel_skip_if_set $0070, $02, $00
+    objsel_skip_if_set EVENT_WELCOME_YOUNG_HUMAN_I_HEARD, $02, $00
     objsel_none
 
 ObjSelector_5E47::
@@ -3492,7 +3492,7 @@ MapObjectScreens_5F73::
 
 ObjSelector_5F77::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_5FB8
 
 ObjSelector_5F87::
@@ -3520,7 +3520,7 @@ MapObjects_5FB8::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5FE5::
-    objsel_unless_flag $006d, MapObjects_5FED
+    objsel_unless_flag EVENT_THE_PIRATES, MapObjects_5FED
     objsel_list MapObjects_600F
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -3581,7 +3581,7 @@ MapObjectScreens_604E::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_606E::
-    objsel_unless_flag $0078, MapObjects_6074
+    objsel_unless_flag EVENT_SCENE_WATCH_OUT_078, MapObjects_6074
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3601,7 +3601,7 @@ MapObjectScreens_6080::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6086::
-    objsel_unless_flag $0071, MapObjects_608C
+    objsel_unless_flag EVENT_HOW_COULD_WE_DIE_BEFORE, MapObjects_608C
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3672,11 +3672,11 @@ MapObjectScreens_60F0::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6108::
-    objsel_skip_if_clear $007c, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_CREW_FOLLOWS, $02, $00
     objsel_none
 
 ObjSelector_6110::
-    objsel_unless_flag $007d, MapObjects_6118
+    objsel_unless_flag EVENT_SCENE_CREW_FOLLOWS_07D, MapObjects_6118
     objsel_list MapObjects_613A
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -3708,7 +3708,7 @@ MapObjectScreens_615C::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_616E::
-    objsel_unless_flag $007e, MapObjects_6174
+    objsel_unless_flag EVENT_SCENE_KAMEHA_FLEES, MapObjects_6174
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3728,11 +3728,11 @@ MapObjectScreens_6196::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6198::
-    objsel_skip_if_clear $005f, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_05F, $02, $00
     objsel_none
 
 ObjSelector_61A0::
-    objsel_unless_flag $007f, MapObjects_61A8
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_07F, MapObjects_61A8
     objsel_list MapObjects_61CA
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -3850,7 +3850,7 @@ MapObjectScreens_62C0::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_62C4::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_6305
 
 ObjSelector_62D4::
@@ -3899,7 +3899,7 @@ MapObjectScreens_636E::
     dw $0000 ; id 2
 
 ObjSelector_6374::
-    objsel_unless_flag $0072, MapObjects_637A
+    objsel_unless_flag EVENT_THE_TREASURES_ARE_OURS_NO, MapObjects_637A
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3917,7 +3917,7 @@ MapObjectScreens_6386::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_638C::
-    objsel_unless_flag $0073, MapObjects_6392
+    objsel_unless_flag EVENT_IT_NAGS_AND_NAGS_THAT, MapObjects_6392
     objsel_none
 
 MapObjects_6392::
@@ -3930,7 +3930,7 @@ MapObjectScreens_639E::
     dw ObjSelector_63A0 ; id 0
 
 ObjSelector_63A0::
-    objsel_unless_flag $0075, MapObjects_63A6
+    objsel_unless_flag EVENT_GIVE_ITEM_BLINK, MapObjects_63A6
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -3957,7 +3957,7 @@ MapObjectScreens_63B2::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_63CA::
-    objsel_unless_flag $0015, MapObjects_63D6
+    objsel_unless_flag EVENT_SCENE_WARUBOU_LEAVES, MapObjects_63D6
     objsel_unless_flag $0006, MapObjects_63F8
     objsel_list MapObjects_6404
 
@@ -3983,11 +3983,11 @@ MapObjects_6404::
     db $86, $01, $10, $00, $00, $40, $e0, $06, $00, $60, $00 ; object 1
 
 ObjSelector_641B::
-    objsel_skip_if_clear $0023, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
     objsel_list MapObjects_645B
 
 ObjSelector_6425::
-    objsel_unless_flag $0191, MapObjects_642D
+    objsel_unless_flag EVENT_REWARD_ITEM_OR_KEY, MapObjects_642D
     objsel_list MapObjects_6444
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4014,12 +4014,12 @@ MapObjects_645B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_647D::
-    objsel_skip_if_clear $0024, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
     objsel_list MapObjects_649F
 
 ObjSelector_6487::
-    objsel_skip_if_clear $0003, $04, $00
-    objsel_unless_flag $0002, MapObjects_6493
+    objsel_skip_if_clear EVENT_SCENE_VAULT_SETTLED, $04, $00
+    objsel_unless_flag EVENT_SCENE_LONG_FACES, MapObjects_6493
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4044,15 +4044,15 @@ ObjSelector_64AB::
 
 ObjSelector_64B9::
     objsel_skip_if_set $0020, $12, $00
-    objsel_skip_if_set $0002, $08, $00
-    objsel_unless_flag $0003, MapObjects_64ED
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $08, $00
+    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_64ED
     objsel_list MapObjects_6504
 
 ObjSelector_64CD::
     objsel_list MapObjects_651B
 
 ObjSelector_64D1::
-    objsel_skip_if_clear $0021, $0e, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $0e, $00
     objsel_skip_if_set $0181, $08, $00
     objsel_unless_flag $0000, MapObjects_6598
     objsel_list MapObjects_6581
@@ -4110,19 +4110,19 @@ MapObjects_6598::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_65AF::
-    objsel_skip_if_clear $0023, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
     objsel_list MapObjects_660D
 
 ObjSelector_65B9::
-    objsel_skip_if_clear $0022, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
     objsel_list MapObjects_65F6
 
 ObjSelector_65C3::
-    objsel_skip_if_clear $0021, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
     objsel_list MapObjects_65DF
 
 ObjSelector_65CD::
-    objsel_unless_flag $0003, MapObjects_65D3
+    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_65D3
     objsel_none
 
 ; record: count, then 1 object(s), the layout of the other object lists
@@ -4162,11 +4162,11 @@ MapObjects_6633::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_663F::
-    objsel_skip_if_clear $0023, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
     objsel_list MapObjects_669B
 
 ObjSelector_6649::
-    objsel_skip_if_clear $0021, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
     objsel_list MapObjects_6684
 
 ObjSelector_6653::
@@ -4205,15 +4205,15 @@ MapObjects_669B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_66BD::
-    objsel_skip_if_clear $0023, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
     objsel_list MapObjects_6700
 
 ObjSelector_66C7::
-    objsel_skip_if_clear $0022, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
     objsel_list MapObjects_66E9
 
 ObjSelector_66D1::
-    objsel_skip_if_clear $0021, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
     objsel_list MapObjects_66DD
 
 ObjSelector_66DB::
@@ -4284,7 +4284,7 @@ MapObjects_675E::
     db $85, $01, $19, $00, $00, $20, $60, $05, $01, $50, $22
 
 ObjSelector_676A::
-    objsel_skip_if_clear $0117, $02, $00
+    objsel_skip_if_clear EVENT_WHAT, $02, $00
     objsel_none
 
 ObjSelector_6772::
@@ -4305,7 +4305,7 @@ MapObjects_6791::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_679D::
-    objsel_unless_flag $0022, MapObjects_67A3
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_67A3
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -4318,7 +4318,7 @@ MapObjects_67A3::
     db $86, $01, $12, $00, $00, $50, $70, $06, $02, $60, $b8 ; object 1
 
 ObjSelector_67BA::
-    objsel_skip_if_set $0002, $02, $00
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $02, $00
     objsel_none
 
 ObjSelector_67C2::
@@ -4332,8 +4332,8 @@ MapObjects_67C6::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_67D2::
-    objsel_unless_flag $0007, MapObjects_67DE
-    objsel_unless_flag $000a, MapObjects_67F5
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_67DE
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_67F5
     objsel_list MapObjects_67DE
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -4360,11 +4360,11 @@ ObjSelector_6822::
     objsel_list MapObjects_685B
 
 ObjSelector_682C::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_6834::
-    objsel_unless_flag $0021, MapObjects_6844
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6844
     objsel_skip_if_set $0107, $02, $00
     objsel_none
 
@@ -4388,10 +4388,10 @@ MapObjects_685B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6867::
-    objsel_unless_flag $0007, MapObjects_687F
-    objsel_unless_flag $000a, MapObjects_6896
-    objsel_unless_flag $0021, MapObjects_687F
-    objsel_unless_flag $0024, MapObjects_68C3
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_687F
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_6896
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_687F
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_68C3
     objsel_unless_flag $0025, MapObjects_68E5
     objsel_list MapObjects_68F1
 
@@ -4444,11 +4444,11 @@ ObjSelector_6908::
     objsel_list MapObjects_692E
 
 ObjSelector_6912::
-    objsel_skip_if_clear $0024, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
 ObjSelector_691A::
-    objsel_unless_flag $0021, MapObjects_6922
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6922
     objsel_list MapObjects_692E
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4475,20 +4475,20 @@ MapObjectScreens_6945::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_694B::
-    objsel_skip_if_clear $0134, $08, $00
-    objsel_unless_flag $0023, MapObjects_69D9
+    objsel_skip_if_clear EVENT_REWARD_ITEM_OR_KEY_2, $08, $00
+    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_69D9
     objsel_list MapObjects_6A06
 
 ObjSelector_6959::
-    objsel_skip_if_clear $0022, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
     objsel_list MapObjects_69AC
 
 ObjSelector_6963::
-    objsel_skip_if_clear $0021, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
     objsel_list MapObjects_6995
 
 ObjSelector_696D::
-    objsel_unless_flag $0011, MapObjects_6973
+    objsel_unless_flag EVENT_THAT_WEIRD_APE_THING_IS, MapObjects_6973
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4533,7 +4533,7 @@ MapObjects_6A06::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6A33::
-    objsel_unless_flag $0021, MapObjects_6A3B
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6A3B
     objsel_list MapObjects_6A52
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -4558,12 +4558,12 @@ ObjSelector_6A74::
     objsel_list MapObjects_6AC2
 
 ObjSelector_6A7E::
-    objsel_skip_if_clear $0024, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
     objsel_list MapObjects_6AE4
 
 ObjSelector_6A88::
     objsel_unless_flag $0005, MapObjects_6A94
-    objsel_unless_flag $0022, MapObjects_6AB6
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_6AB6
     objsel_list MapObjects_6AC2
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4635,11 +4635,11 @@ ObjSelector_6B42::
     objsel_list MapObjects_6C10
 
 ObjSelector_6B54::
-    objsel_skip_if_set $0022, $04, $00
+    objsel_skip_if_set EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
     objsel_list MapObjects_6B66
 
 ObjSelector_6B5E::
-    objsel_unless_flag $0023, MapObjects_6B88
+    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_6B88
     objsel_list MapObjects_6BAA
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4701,20 +4701,20 @@ ObjSelector_6C42::
     objsel_list MapObjects_6C8C
 
 ObjSelector_6C4C::
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_6CE8
 
 ObjSelector_6C56::
-    objsel_skip_if_clear $0024, $04, $00
-    objsel_unless_flag $00c3, MapObjects_6CD1
-    objsel_skip_if_clear $000c, $0e, $00
+    objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C3, MapObjects_6CD1
+    objsel_skip_if_clear EVENT_SCENE_WARUBOU_FOOD2_00C, $0e, $00
     objsel_skip_if_clear $0018, $04, $00
     objsel_unless_flag $0019, MapObjects_6CFF
     objsel_list MapObjects_6CC5
 
 ObjSelector_6C74::
-    objsel_unless_flag $000a, MapObjects_6C80
-    objsel_unless_flag $000b, MapObjects_6C8C
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_6C80
+    objsel_unless_flag EVENT_SCENE_WARUBOU_FOOD2, MapObjects_6C8C
     objsel_list MapObjects_6CAE
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -4775,13 +4775,13 @@ ObjSelector_6D2F::
     objsel_list MapObjects_6D61
 
 ObjSelector_6D39::
-    objsel_skip_if_set $0002, $08, $00
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $08, $00
     objsel_unless_flag $0017, MapObjects_6D61
     objsel_list MapObjects_6D9B
 
 ObjSelector_6D47::
     objsel_skip_if_clear $0020, $0c, $00
-    objsel_unless_flag $0021, MapObjects_6D61
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6D61
     objsel_unless_flag $0181, MapObjects_6DA7
     objsel_list MapObjects_6D61
 
@@ -4887,7 +4887,7 @@ MapObjectScreens_6E8B::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_6E8D::
-    objsel_unless_flag $0002, MapObjects_6E95
+    objsel_unless_flag EVENT_SCENE_LONG_FACES, MapObjects_6E95
     objsel_list MapObjects_6EA1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -4977,7 +4977,7 @@ ObjSelector_6F4A::
     objsel_list MapObjects_6F5A
 
 ObjSelector_6F54::
-    objsel_unless_flag $0024, MapObjects_6F5A
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_6F5A
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -4994,7 +4994,7 @@ ObjSelector_6F71::
     objsel_list MapObjects_6F83
 
 ObjSelector_6F7B::
-    objsel_unless_flag $0024, MapObjects_6F83
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_6F83
     objsel_list MapObjects_6F9A
 
 MapObjects_6F83::
@@ -5089,7 +5089,7 @@ ObjSelector_7054::
     objsel_list MapObjects_7070
 
 ObjSelector_705E::
-    objsel_unless_flag $0024, MapObjects_7064
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7064
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -5114,7 +5114,7 @@ MapObjectScreens_7087::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7089::
-    objsel_unless_flag $0024, MapObjects_7091
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7091
     objsel_list MapObjects_709D
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5176,7 +5176,7 @@ ObjSelector_7106::
     objsel_list MapObjects_713A
 
 ObjSelector_7110::
-    objsel_unless_flag $012d, MapObjects_7118
+    objsel_unless_flag EVENT_SCENE_MASTER_THANKS, MapObjects_7118
     objsel_list MapObjects_713A
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -5240,11 +5240,11 @@ MapObjectScreens_7196::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7198::
-    objsel_unless_flag $003d, MapObjects_71B0
-    objsel_unless_flag $0206, MapObjects_71DE
-    objsel_unless_flag $0207, MapObjects_71DE
-    objsel_unless_flag $003e, MapObjects_71B0
-    objsel_unless_flag $00c8, MapObjects_71C7
+    objsel_unless_flag EVENT_DESK_KEY, MapObjects_71B0
+    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE, MapObjects_71DE
+    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE_207, MapObjects_71DE
+    objsel_unless_flag EVENT_THAT_KEY_IUSED_03E, MapObjects_71B0
+    objsel_unless_flag EVENT_DESK_KEY_0C8, MapObjects_71C7
     objsel_list MapObjects_71DE
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5300,7 +5300,7 @@ ObjSelector_7214::
     objsel_list MapObjects_72E2
 
 ObjSelector_7226::
-    objsel_unless_flag $0024, MapObjects_722E
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_722E
     objsel_list MapObjects_725B
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -5435,11 +5435,11 @@ ObjSelector_742C::
     objsel_list MapObjects_745F
 
 ObjSelector_7436::
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_7481
 
 ObjSelector_7440::
-    objsel_unless_flag $0117, MapObjects_7448
+    objsel_unless_flag EVENT_WHAT, MapObjects_7448
     objsel_list MapObjects_745F
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -5472,11 +5472,11 @@ ObjSelector_74A3::
     objsel_list MapObjects_74CB
 
 ObjSelector_74AD::
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_74D7
 
 ObjSelector_74B7::
-    objsel_unless_flag $0122, MapObjects_74BF
+    objsel_unless_flag EVENT_SCENE_KAMEHA_BACK, MapObjects_74BF
     objsel_list MapObjects_74CB
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -5506,7 +5506,7 @@ ObjSelector_74F9::
     objsel_list MapObjects_7511
 
 ObjSelector_7503::
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_7528
 
 ObjSelector_750D::
@@ -5556,7 +5556,7 @@ ObjSelector_7570::
     objsel_list MapObjects_7582
 
 ObjSelector_757A::
-    objsel_unless_flag $0024, MapObjects_7582
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7582
     objsel_list MapObjects_7599
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5583,12 +5583,12 @@ ObjSelector_75C6::
     objsel_list MapObjects_75E6
 
 ObjSelector_75D0::
-    objsel_skip_if_clear $00d1, $08, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $08, $00
     objsel_unless_flag $0001, MapObjects_761F
     objsel_list MapObjects_764C
 
 ObjSelector_75DE::
-    objsel_unless_flag $0024, MapObjects_75E6
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_75E6
     objsel_list MapObjects_75F2
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5624,8 +5624,8 @@ MapObjects_764C::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7679::
-    objsel_unless_flag $0024, MapObjects_7689
-    objsel_unless_flag $00d1, MapObjects_76AB
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7689
+    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_76AB
     objsel_unless_flag $0025, MapObjects_7689
     objsel_list MapObjects_76C2
 
@@ -5704,7 +5704,7 @@ MapObjects_7741::
     db $84, $01, $01, $00, $00, $b0, $50, $04, $03, $40, $00 ; object 3
 
 ObjSelector_776E::
-    objsel_skip_if_set $0012, $08, $00
+    objsel_skip_if_set EVENT_SCENE_AT_SEA, $08, $00
     objsel_unless_flag $0001, MapObjects_7784
     objsel_list MapObjects_77B1
 
@@ -5820,7 +5820,7 @@ MapObjectScreens_78C2::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_78CA::
-    objsel_unless_flag $0043, MapObjects_78D2
+    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_78D2
     objsel_list MapObjects_78FF
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5863,7 +5863,7 @@ MapObjects_794B::
     db $85, $01, $26, $00, $02, $60, $50, $05, $01, $50, $11 ; object 3
 
 ObjSelector_7978::
-    objsel_unless_flag $0043, MapObjects_7980
+    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_7980
     objsel_list MapObjects_79A2
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
@@ -5888,24 +5888,24 @@ MapObjectScreens_79B9::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_79BD::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_79ED
 
 ObjSelector_79C7::
-    objsel_skip_if_set $0043, $02, $00
+    objsel_skip_if_set EVENT_SCENE_MONSTER_INSPECTION, $02, $00
     objsel_none
 
 ObjSelector_79CF::
-    objsel_skip_if_clear $0055, $06, $00
-    objsel_unless_flag $0056, MapObjects_7A10
+    objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7A10
     objsel_none
 
 ObjSelector_79DB::
-    objsel_skip_if_clear $0053, $04, $00
+    objsel_skip_if_clear EVENT_YOU_WILL_SO_WE_CAN, $04, $00
     objsel_list MapObjects_79ED
 
 ObjSelector_79E5::
-    objsel_unless_flag $0049, MapObjects_79ED
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_79ED
     objsel_list MapObjects_7A04
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
@@ -5932,11 +5932,11 @@ MapObjects_7A10::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7A32::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_7A6F
 
 ObjSelector_7A3C::
-    objsel_unless_flag $0056, MapObjects_7A42
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7A42
     objsel_none
 
 ; record: count, then 4 object(s), the layout of the other object lists
@@ -5965,24 +5965,24 @@ MapObjectScreens_7A91::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7A93::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_7B26
 
 ObjSelector_7AA3::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_7ACB
 
 ObjSelector_7AAD::
-    objsel_skip_if_clear $0055, $06, $00
-    objsel_unless_flag $0056, MapObjects_7AEE
+    objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7AEE
     objsel_none
 
 ObjSelector_7AB9::
-    objsel_skip_if_clear $0053, $04, $00
+    objsel_skip_if_clear EVENT_YOU_WILL_SO_WE_CAN, $04, $00
     objsel_list MapObjects_7ACB
 
 ObjSelector_7AC3::
-    objsel_unless_flag $0049, MapObjects_7ACB
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_7ACB
     objsel_list MapObjects_7AE2
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -6037,7 +6037,7 @@ MapObjects_7B66::
     db $85, $00, $4f, $00, $00, $50, $20, $05, $00, $50, $3b
 
 ObjSelector_7B72::
-    objsel_skip_if_clear $005a, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $02, $00
     objsel_none
 
 ObjSelector_7B7A::
@@ -6060,7 +6060,7 @@ MapObjectScreens_7BAB::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7BAD::
     objsel_skip_if_set $004a, $08, $00
-    objsel_unless_flag $0049, MapObjects_7BBF
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_7BBF
     objsel_list MapObjects_7BCB
 
 ObjSelector_7BBB::
@@ -6111,11 +6111,11 @@ MapObjectScreens_7BF9::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7C19::
-    objsel_skip_if_clear $0054, $02, $00
+    objsel_skip_if_clear EVENT_SCENE_WATER_SOLVED, $02, $00
     objsel_none
 
 ObjSelector_7C21::
-    objsel_unless_flag $0053, MapObjects_7C29
+    objsel_unless_flag EVENT_YOU_WILL_SO_WE_CAN, MapObjects_7C29
     objsel_list MapObjects_7C40
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -6137,11 +6137,11 @@ MapObjectScreens_7C4C::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7C4E::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_7CAF
 
 ObjSelector_7C58::
-    objsel_unless_flag $0056, MapObjects_7C60
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7C60
     objsel_list MapObjects_7C82
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
@@ -6178,12 +6178,12 @@ MapObjectScreens_7CDC::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7CDE::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_7CF8
 
 ObjSelector_7CE8::
-    objsel_skip_if_clear $0055, $06, $00
-    objsel_unless_flag $0056, MapObjects_7D0F
+    objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7D0F
     objsel_none
 
 ObjSelector_7CF4::
@@ -6216,7 +6216,7 @@ MapObjectScreens_7D31::
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7D39::
-    objsel_skip_if_set $005a, $02, $00
+    objsel_skip_if_set EVENT_SCENE_RIVAL_DEFEATED_05A, $02, $00
     objsel_none
 
 ObjSelector_7D41::
@@ -6230,15 +6230,15 @@ MapObjects_7D45::
 
 ObjSelector_7D51::
     objsel_skip_if_set $0025, $0a, $00
-    objsel_skip_if_clear $00d1, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
     objsel_list MapObjects_7DBB
 
 ObjSelector_7D61::
-    objsel_skip_if_clear $005c, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_WATER_REWARD, $04, $00
     objsel_list MapObjects_7DAF
 
 ObjSelector_7D6B::
-    objsel_skip_if_clear $005a, $04, $00
+    objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
     objsel_list MapObjects_7D98
 
 ObjSelector_7D75::
@@ -6279,7 +6279,7 @@ ObjSelector_7DDD::
     objsel_none
 
 ObjSelector_7DE5::
-    objsel_skip_if_set $0056, $02, $00
+    objsel_skip_if_set EVENT_SCENE_TREASURE_THEFT, $02, $00
     objsel_none
 
 ObjSelector_7DED::

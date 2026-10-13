@@ -2220,14 +2220,14 @@ InflictTargetStatus0Bit0::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT1_SPELLS_SEALED, [hl]
     jr nz, .skip
     call InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B
     jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 0, [hl]
+    set BSTAT1_SPELLS_SEALED, [hl]
     ld l, $3b
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B

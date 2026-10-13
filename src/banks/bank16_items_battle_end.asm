@@ -985,10 +985,10 @@ ItemUsable_Crest::
     ldh a, [hPlayerFacing]
     cp $02
     jr nz, .set_item_id_to_FF
-    ld de, $01e4
+    ld de, EVENT_SCENE_SHIELD_1E4
     call TestFlagBit
     jr nc, .set_item_id_to_FF
-    ld de, $01e5
+    ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
     jr c, .set_item_id_to_FF
     jr .return
@@ -1030,7 +1030,7 @@ ItemUsable_SleepHerb::
     ldh a, [hPlayerFacing]
     cp $02
     jr nz, .set_item_id_to_FF
-    ld de, $01e1
+    ld de, EVENT_SCENE_SHIELD_GUARDIAN
     call TestFlagBit
     jr c, .set_item_id_to_FF
     jr .return

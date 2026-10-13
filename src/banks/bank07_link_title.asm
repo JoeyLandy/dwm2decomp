@@ -2718,7 +2718,7 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_CheckJoypadPressed::
     ld a, $01
     ld [wModeState], a
     ld a, $00
-    ld [wGameMode2State], a
+    ld [wWorldMapState], a
     ld a, $00
     ld [wGameMode2Arg], a
     ld hl, wModeChangeRequest

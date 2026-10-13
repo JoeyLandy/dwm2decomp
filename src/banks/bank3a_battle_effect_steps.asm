@@ -4854,7 +4854,7 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT6_CALLED_HELP, [hl]
     jr nz, .call_roll_repeat_count_for_action
     ld hl, wBattleSubPhase
     inc [hl]
@@ -4892,9 +4892,9 @@ RunActionSpecificPostStep::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT6_CALLED_HELP, [hl]
     jr z, .done
-    res 0, [hl]
+    res BSTAT6_CALLED_HELP, [hl]
     ld d, $81 ; battle text 'The help went away!'
     farcall ShowBattleText
     jr .done
@@ -4903,7 +4903,7 @@ RunActionSpecificPostStep::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    res 0, [hl]
+    res BSTAT6_CALLED_HELP, [hl]
     ld d, $86 ; battle text 'The giant went away laughing!'
     farcall ShowBattleText
     jr .done
@@ -4943,7 +4943,7 @@ RunBattleActions_ShowHeroBlewBackG::
     jr c, .skip
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT6_SUCK_ALL, [hl]
     jr z, .skip
     ld hl, wBattleStep
     inc [hl]
@@ -5970,7 +5970,7 @@ RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT6_CALLED_HELP, [hl]
     jr nz, .call_roll_repeat_count_for_action
     ld hl, wBattleSubPhase
     inc [hl]
@@ -6203,9 +6203,9 @@ RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
-    bit 4, [hl]
+    bit BSTAT0_CONFUSED, [hl]
     jr z, RunActionResolveStep_CheckActionBDOrRun63B2And63D2
-    res 4, [hl]
+    res BSTAT0_CONFUSED, [hl]
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
     add_a_to_hl
@@ -6234,7 +6234,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus7
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT7_COUNTER, [hl]
     jp z, .skip4
     ld a, [wRecordBufferData + $5]
     bit 7, a
@@ -6522,7 +6522,7 @@ RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A::
     jr c, .clear_attack_deflected
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    bit 3, [hl]
+    bit BSTAT6_IMITATE, [hl]
     jr z, .clear_attack_deflected
     ld a, [wRecordBufferData + $7]
     bit 2, a
