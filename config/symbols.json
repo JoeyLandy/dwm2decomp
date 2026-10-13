@@ -2679,9 +2679,9 @@
     "evidence": "E-0134"
   },
   "C971": {
-    "name": "wResolveByte71",
-    "note": "set at the start of an action",
-    "evidence": "E-0134"
+    "name": "wDuckBehindSlot",
+    "note": "the ally the target ducked behind (PickDuckBehindAlly), named by text $33 '0 ducked behind <ally>!' (BattleText0Hook33) (E-0337; was wResolveByte71)",
+    "evidence": "E-0134; E-0337"
   },
   "C972": {
     "name": "wBattleBuffer72",
@@ -2690,9 +2690,9 @@
     "size": "F"
   },
   "C981": {
-    "name": "wResolveByte81",
-    "note": "set while resolving targets",
-    "evidence": "E-0134"
+    "name": "wAttackDeflected",
+    "note": "1 when the target's reaction bounced the attack (TryWindBounce, TryWallOfLightBounce) or an ally guarded it (TryAllyGuard); then the target does not strike back (E-0337; was wResolveByte81)",
+    "evidence": "E-0134; E-0337"
   },
   "C982": {
     "name": "wSavedActorSlot",
@@ -4280,9 +4280,9 @@
     "evidence": "E-0137"
   },
   "D854": {
-    "name": "wSlotFlags854",
-    "note": "per-slot flag bytes (ResolveStepFlagBit7Effect, BattleFight_Step0_Sub01)",
-    "evidence": "E-0137"
+    "name": "wPersonalityActs",
+    "note": "a word per battle slot, cleared each turn; the low byte's bits are the personality acts the trait rolls set (RollPersonality*, RollSlotTrait*): 0 struck at full power, 1 tucked in fear, 2 concentrated, 3 (none seen), 4 light fell softly, 5 ducked behind an ally, 6 pumped up, 7 rolled out of the way (C2 from E-0337: each forced bit but 3 shows its battle text; was wSlotFlags854)",
+    "evidence": "E-0137; E-0337"
   },
   "D864": {
     "name": "wSlotPairBytes",
@@ -4613,9 +4613,9 @@
     "evidence": "E-0137"
   },
   "DAB2": {
-    "name": "wResolveFlagB2",
-    "note": "resolve flag (bit 0 skips the action text in RunBattleStep4_Case00_Sub01_Case02)",
-    "evidence": "E-0137"
+    "name": "wAttackInhaled",
+    "note": "1 when a target inhaled the attack ('0 inhaled the attack!'); the action's own text is skipped and the target blows it back next (E-0337; was wResolveFlagB2)",
+    "evidence": "E-0137; E-0337"
   },
   "DAB3": {
     "name": "wEffectByteB3",
@@ -4653,9 +4653,9 @@
     "evidence": "E-0137"
   },
   "DABF": {
-    "name": "wDefeatByteBF",
-    "note": "defeat bookkeeping byte (DefeatTarget_Sub01)",
-    "evidence": "E-0137"
+    "name": "wRedirectFlags",
+    "note": "bit 0: the target shunted the attack (TryShuntOrGuard); bit 1: an ally guarded it (TryAllyGuard); cleared per action (ResetEffectStateForAction) (E-0337; was wDefeatByteBF)",
+    "evidence": "E-0137; E-0337"
   },
   "DAC0": {
     "name": "wResolveMsgFlags",
@@ -4683,9 +4683,9 @@
     "evidence": "E-0137"
   },
   "DAD1": {
-    "name": "wDefeatByteD1",
-    "note": "$FF after reset (ResetEffectStateForAction; DefeatTarget_Sub01)",
-    "evidence": "E-0137"
+    "name": "wOriginalTarget",
+    "note": "the slot first targeted when a shunt or a guard moved the attack, $FF otherwise (E-0337; was wDefeatByteD1)",
+    "evidence": "E-0137; E-0337"
   },
   "DAD2": {
     "name": "wEffectFlags",

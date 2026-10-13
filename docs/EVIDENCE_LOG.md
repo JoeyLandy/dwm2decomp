@@ -2431,6 +2431,34 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0337 — Personality acts and the target's reactions in battle
+
+- Kind: READING of banks $30, $32, $36 and $3A plus EMULATION (tools/sm83.py, our own emulator; not checked against hardware). The battle is forced through the debug menu, as in E-0332, with template 95.
+- **Personality acts.** $D854 holds a word per battle slot; both battle set-ups clear it each turn. Eight roll routines in bank $30 OR one bit each into the low byte (RollPersonality* for three personality bytes, RollSlotTrait* for wSlotTrait): a "high" bit when the value is $80 or more, a "low" bit when it is below.
+- **Forced in the emulator (C2).** tools/act_check.py ORs one bit into every slot's word before each routine that reads it, and records the category-0 battle texts looked up. With no bit forced only $03 "Monsters appear!" is looked up. Forced:
+  - bit 0 brings $2E "struck at full power!";
+  - bit 1 brings $2F "tucked tighter in fear!";
+  - bit 2 brings $30 "concentrated!";
+  - bit 4 brings $32 "Light fell softly on 0!";
+  - bit 5 brings $33 "0 ducked behind G!";
+  - bit 6 brings $34 "pumped itself up!";
+  - bit 7 brings $35 "rolled out of the way!", and $2E.
+  - Bit 3 showed no text in this battle.
+  - Bits 1, 2 and 4 also brought $14 "is confused!", which is recorded, not explained.
+  - $D854 is renamed wPersonalityActs (was wSlotFlags854).
+- **The target's reactions (reading, C1).** ResolveTargetReaction, case 0 of ResolveStepTargetAndSubEffects (36:$407F):
+  - A target that inhales attacks takes the hit ("0 inhaled the attack!"): $DAB2 is renamed wAttackInhaled.
+  - Otherwise bits 7, 4 and 6 of the action's record byte 5 pick one of four routines:
+    - TryShuntOrGuard: "failed to reach", an ally's guard, or a shunt when the duck act is set, to PickShuntSlot's slot;
+    - TryWindBounce: "The wind around 0 bounced the attack!";
+    - TryWallOfLightBounce: "The wall of light bounced the spell!";
+    - CheckTargetOutOfReach.
+  - TryAllyGuard moves the attack to a guarding ally (text $CA "0 guarded G!").
+  - A bounce turns the action back on the actor (TurnActionBackOnActor). It saves both slots' state, swaps actor and target, and ORs 1 (wind) or 4 (wall) into wFollowUpAction.
+  - RAM renamed: $DAD1 wOriginalTarget (was wDefeatByteD1), the slot first targeted. $DABF wRedirectFlags (was wDefeatByteBF): bit 0 a shunt, bit 1 a guard. $C981 wAttackDeflected (was wResolveByte81), 1 after a bounce or guard. $C971 wDuckBehindSlot (was wResolveByte71), the ally named by text $33.
+- **Tests.** tests/test_act_check.py checks that no act text appears without a flag, and that bits 5, 6, 7 and 2 each bring their own text and no other act's.
+- Binary verification: build/run477 PASS, 0 differing bytes.
+
 ### E-0336 — The text printer's commands; text in source as charmap tokens
 
 - Kind: READING of bank 0's text printer (00:$2620-$2D33) plus EMULATION (tools/sm83.py, our own emulator; not checked against hardware) of a farmhand's conversation (state s13 of E-0320) and a debug-menu battle (d06!, forced).

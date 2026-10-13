@@ -15,7 +15,7 @@ As of **2026-09-12**. Stage: **planning baseline complete; implementation not st
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
 | Working platform | Windows / PowerShell | Observed workspace environment |
 
-Decisions record: **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
+Decisions record: **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
 
 ## Session 2 update (2026-10-09): matching build exists
 
@@ -64,6 +64,8 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 - a comment repeated on every record of a table is written once;
 - address names and `BB:AAAA` in comments become label names; evidence ids move to the end of the comment; long comments wrap at 100 columns;
 - pret instruction spelling: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, and the `jumptable` macro for `rst $00`.
+
+Each bank file is named and headed by what it holds (D-006, `config/banks.json`): `bank00_home.asm`, `bank36_battle_effects.asm`, `bank2f_battle_text.asm`. The titles come from the names the bank's labels carry; the annotated listing keeps the plain `bankNN.asm` names.
 
 Text is written with charmap tokens for the text printer's 32 commands (E-0336): `db "<VOICE1>Cobi: <BUF0>!<LINE>"`, `db "Blaze@"`, with `<NEXT>`, `<PROMPT>`, `<WAIT>` and others named in `src/charmap.inc`. The font glyphs …()+~/★© are mapped too.
 

@@ -72,15 +72,28 @@ class PresentedTreeTest(unittest.TestCase):
     def test_src_is_the_presented_listing(self):
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
         names = present.Names(texts)
-        stale = [n for n, t in texts.items() if (SRC / n).read_text(encoding="utf-8") != present.present(t, names)]
+        titles = present.bank_titles()
+        stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
+                 != present.header(n, titles) + present.present(t, names)]
         self.assertEqual(stale, [], "src/banks is not tools/present.py's output for build/listing")
 
     def test_no_code_or_data_line_is_lost(self):
+        titles = present.bank_titles()
         for p in sorted(LISTING.glob("bank*.asm")):
             want = _code(p.read_text(encoding="utf-8"))
-            got = [present.split_code(ln)[0].rstrip() for ln in (SRC / p.name).read_text(encoding="utf-8").split("\n")
+            got = [present.split_code(ln)[0].rstrip()
+                   for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
             self.assertEqual(got, want, p.name)
+
+    def test_every_bank_file_is_named_and_included_once(self):
+        titles = present.bank_titles()
+        self.assertEqual(len(titles), 256)
+        files = sorted(p.name for p in SRC.glob("bank*.asm"))
+        self.assertEqual(files, sorted(present.src_name(f"bank{b:02x}.asm", titles) for b in range(256)))
+        main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8")
+        self.assertEqual(re.findall(r'^INCLUDE "banks/(bank\w+\.asm)"$', main, re.M), files)
+        self.assertTrue((SRC / files[0x36]).read_text(encoding="utf-8").startswith("; ROM bank $36: "))
 
     def test_no_address_name_left(self):
         text = "\n".join(p.read_text(encoding="utf-8") for p in SRC.glob("bank*.asm"))

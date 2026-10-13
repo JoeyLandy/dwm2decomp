@@ -4,12 +4,13 @@ First target: **Dragon Warrior Monsters 2: Cobi's Journey**, Game Boy / Game Boy
 
 We are building a documented, reproducible disassembly: readable assembly and data that recreate the original ROM byte for byte. Understanding the program is a separate, evidence-based effort. The folder name `dwm2decomp` does not commit us to recovering C or the original developers' source code.
 
-This is the planning baseline. There is no ROM, assembler setup, game source, build command, or verified rebuild here yet. The title is selected; the exact ROM revision and SHA-256 remain to be established.
+The source in `src/` rebuilds the US release (SHA-256 `8e38a742...766d4e`) byte for byte with RGBDS: `python -I tools/build.py --out build/run1`. You supply the original ROM in `local/roms/`; it is never part of the repository. Read [the reading guide](docs/READING_GUIDE.md) first.
 
 ## Start here
 
 | Document | Purpose |
 | --- | --- |
+| [Reading guide](docs/READING_GUIDE.md) | How the source is laid out and how to read it |
 | [Project status](docs/PROJECT_STATUS.md) | What exists, what is unknown, and the next session |
 | [Repository and community survey](docs/SURVEY.md) | Existing work, inspected revisions, limitations, and adoption recommendation |
 | [Knowledge map](docs/KNOWLEDGE_MAP.md) | Research areas, source leads, dependencies, and first experiments |

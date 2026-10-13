@@ -1,0 +1,913 @@
+; ROM bank $64: key-world map screens
+; The annotated listing of this bank is build/listing/bank64.asm.
+
+SECTION "Bank 64", ROMX[$4000], BANK[$64]
+    db $64
+
+; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 2: entry 2 of KeyWorldTilesetTable,
+; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; LZSS-compressed: 1227 bytes that expand to 2048 (E-0016, E-0017)
+KeyWorldTiles2::
+    INCBIN "dwm2-cobi-us.gbc", $190001, $4CB
+
+KeyWorld12_0_Y2X1_Header::
+    db $01, $02, $04, $09, $0d, $33, $23, $00
+
+; LZSS-compressed: 123 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1904D4, $7B
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_454F::
+KeyWorld31_1_Y2X0_Header::
+    db $00, $02, $04, $09, $0d, $33, $24, $00 ; entry 0
+
+; LZSS-compressed: 183 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld31_1_Y2X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $190557, $B7
+
+KeyWorldScreenHeader_64_460E::
+KeyWorld1E_0_Y2X1_Header::
+    db $03, $02, $04, $09, $0d, $33, $25, $00 ; entry 0
+
+; LZSS-compressed: 145 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $190616, $91
+
+KeyWorldScreenHeader_64_46A7::
+KeyWorld12_1_Y2X1_Header::
+    db $ff, $02, $04, $05, $0d, $33, $26, $00 ; entry 0
+
+; LZSS-compressed: 133 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1906AF, $85
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_4734::
+KeyWorld10_0_Y2X1_Header::
+    db $05, $02, $04, $09, $0d, $33, $27, $00 ; entry 0
+
+; LZSS-compressed: 129 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19073C, $81
+
+KeyWorldScreenHeader_64_47BD::
+KeyWorld20_1_Y2X1_Header::
+    db $05, $02, $04, $09, $0d, $33, $28, $00 ; entry 0
+
+; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld20_1_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1907C5, $7E
+
+KeyWorldScreenHeader_64_4843::
+KeyWorld36_0_Y2X1_Header::
+    db $ff, $02, $04, $06, $0d, $33, $29, $00 ; entry 0
+
+; LZSS-compressed: 143 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld36_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19084B, $8F
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_48DA::
+KeyWorld00_0_Y2X1_Header::
+    db $ff, $02, $04, $09, $0d, $33, $2a, $00 ; entry 0
+
+KeyWorld00_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1908E2, $7E
+
+KeyWorldScreenHeader_64_4960::
+KeyWorld16_1_Y0X1_Header::
+    db $00, $02, $09, $0b, $0c, $33, $2b, $00 ; entry 0
+
+; LZSS-compressed: 196 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld16_1_Y0X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $190968, $C4
+
+; LZSS-compressed: 44 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_0_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $0b, $00
+    db $08, $06, $00, $28, $0f, $0d, $00, $08, $04, $00, $50, $0f, $0f, $00, $08, $02
+    db $00, $78, $0f, $11, $00, $af, $0f, $4d, $00, $08, $1f, $45
+
+; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld31_1_Y2X0_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $190A58, $51
+
+; LZSS-compressed: 48 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_0_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $07, $02
+    db $02, $00, $1c, $0f, $11, $02, $02, $00, $42, $0f, $11, $00, $54, $02, $00, $04
+    db $08, $00, $78, $0f, $03, $00, $a1, $0f, $4d, $00, $01, $1f, $4d, $00, $00, $02
+
+; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $190AD9, $45
+
+; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $0b, $00
+    db $04, $06, $00, $28, $0f, $11, $00, $08, $00, $00, $50, $0f, $3b, $00, $b1, $0f
+    db $4d, $00, $08, $1f, $43
+
+KeyWorld20_1_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $190B43, $45
+
+; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld36_0_Y2X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $05, $03, $00, $0a, $05, $00, $00, $0f, $09, $00
+    db $0a, $06, $00, $26, $0f, $09, $00, $30, $08, $00, $4e, $0f, $0f, $00, $7c, $06
+    db $00, $7a, $0f, $09, $00, $a2, $08, $00, $a2, $0f, $05, $00, $b2, $0c, $00, $ca
+    db $0f, $0d, $00, $fd, $0f, $4d, $00, $00, $06
+
+; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $190BC1, $46
+
+; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld16_1_Y0X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $190C07, $5A
+
+; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 6: entry 6 of KeyWorldTilesetTable,
+; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; LZSS-compressed: 1159 bytes that expand to 2048 (E-0016, E-0017)
+KeyWorldTiles6::
+    INCBIN "dwm2-cobi-us.gbc", $190C61, $487
+
+; entry 6 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; wBGPaletteBuffer (E-0139, C1)
+; record: one CGB palette: 4 BGR555 colours
+KeyWorldPalettes6::
+    dw $1412, $7fff, $259f, $0063 ; entry 0
+    dw $012f, $02bf, $01d5, $0000 ; entry 1
+    dw $012f, $02bf, $01d5, $0000 ; entry 2
+    dw $318c, $02bf, $5ad6, $0000 ; entry 3
+    dw $318c, $02bf, $2a13, $0000 ; entry 4
+    dw $0171, $02bf, $2a13, $0000 ; entry 5
+    dw $7da0, $02bf, $25f5, $0000 ; entry 6
+    dw $318c, $7fff, $5294, $0000 ; entry 7
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_5128::
+KeyWorld34_1_Y3X2_Header::
+    db $05, $03, $05, $08, $0a, $33, $47, $00 ; entry 0
+
+; LZSS-compressed: 117 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_1_Y3X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191130, $75
+
+KeyWorldScreenHeader_64_51A5::
+KeyWorld40_1_Y3X2_Header::
+    db $ff, $08, $09, $0a, $0d, $33, $48, $00 ; entry 0
+
+; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_1_Y3X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1911AD, $6B
+
+KeyWorldScreenHeader_64_5218::
+KeyWorld34_1_Y2X2_Header::
+    db $ff, $0b, $0d, $0e, $0f, $33, $49, $00 ; entry 0
+
+; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_1_Y2X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191220, $64
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_5284::
+KeyWorld3C_1_Y2X0_Header::
+    db $ff, $0b, $0c, $0d, $0f, $33, $4a, $00 ; entry 0
+
+; LZSS-compressed: 132 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_1_Y2X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19128C, $84
+
+KeyWorldScreenHeader_64_5310::
+KeyWorld12_1_Y0X2_Header::
+    db $06, $03, $07, $08, $0a, $33, $4b, $00 ; entry 0
+
+; LZSS-compressed: 124 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y0X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191318, $7C
+
+KeyWorldScreenHeader_64_5394::
+KeyWorld12_1_Y1X2_Header::
+    db $07, $03, $05, $0b, $0d, $33, $4c, $00 ; entry 0
+
+; LZSS-compressed: 177 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19139C, $B1
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_544D::
+KeyWorld30_1_Y2X0_Header::
+    db $04, $03, $04, $05, $0b, $33, $4d, $00 ; entry 0
+
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_1_Y2X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191455, $95
+
+KeyWorldScreenHeader_64_54EA::
+KeyWorld3F_3_Y1X2_Header::
+    db $05, $00, $03, $07, $08, $33, $4e, $00 ; entry 0
+
+; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3F_3_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1914F2, $A4
+
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
+KeyWorldScreenHeader_64_5596::
+    db $07, $04, $06, $09, $0b, $33, $4f, $00 ; entry 0
+
+; LZSS-compressed: 181 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_559E::
+    INCBIN "dwm2-cobi-us.gbc", $19159E, $B5
+
+; LZSS-compressed: 44 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_1_Y3X2_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $4d, $00
+    db $10, $06, $00, $1e, $06, $00, $74, $0f, $09, $00, $7e, $0a, $00, $9e, $0f, $07
+    db $00, $7c, $0f, $15, $00, $18, $0f, $4d, $00, $04, $1f, $01
+
+; LZSS-compressed: 49 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_1_Y3X2_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $0f, $02
+    db $02, $00, $24, $0f, $11, $02, $00, $5c, $01, $00, $4e, $0f, $4d, $00, $72, $0f
+    db $03, $00, $4c, $0f, $01, $00, $24, $0f, $25, $00, $0c, $0f, $17, $00, $0e, $0f
+    db $07
+
+; LZSS-compressed: 48 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_1_Y2X2_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $0b, $00
+    db $08, $06, $00, $28, $0f, $0d, $00, $08, $04, $00, $50, $0f, $0f, $00, $08, $02
+    db $00, $78, $0f, $4d, $00, $4c, $0f, $25, $00, $20, $0f, $13, $00, $0a, $0f, $0b
+
+; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_1_Y2X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $0b, $03
+    db $03, $02, $02, $02, $02, $00, $24, $0f, $11, $00, $32, $00, $00, $4c, $0f, $15
+    db $00, $36, $00, $00, $78, $0f, $4d, $00, $9c, $0c, $00, $34, $0f, $13, $00, $34
+    db $04, $00, $16, $1f, $0d, $00, $0a, $0f, $0b
+
+; LZSS-compressed: 41 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y0X2_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $05, $00
+    db $0a, $06, $00, $22, $0f, $09, $00, $2c, $0c, $00, $4e, $0f, $4d, $00, $ae, $0f
+    db $45, $00, $2a, $0f, $15, $00, $02, $0f, $13
+
+; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld12_1_Y1X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $191742, $52
+
+KeyWorld30_1_Y2X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $05, $01, $00, $0a, $05, $00, $00, $0f, $31, $00
+    db $0a, $06, $00, $4e, $0f, $07, $00, $58, $08, $00, $74, $0f, $07, $00, $7c, $0c
+    db $00, $9e, $0f, $09, $00, $04, $0a, $00, $c8, $0f, $2b, $00, $08, $00, $00, $06
+    db $0e, $00, $1c, $1f, $01, $00, $04, $0f, $11
+
+; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3F_3_Y1X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $1917CD, $46
+
+; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_5813::
+    INCBIN "dwm2-cobi-us.gbc", $191813, $51
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_5864::
+KeyWorld40_0_Y2X3_Header::
+    db $02, $02, $05, $06, $0b, $33, $6b, $00 ; entry 0
+
+; LZSS-compressed: 122 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_0_Y2X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19186C, $7A
+
+KeyWorldScreenHeader_64_58E6::
+KeyWorld40_0_Y2X2_Header::
+    db $ff, $ff, $ff, $ff, $ff, $33, $6c, $00 ; entry 0
+
+; LZSS-compressed: 97 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_0_Y2X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1918EE, $61
+
+KeyWorldScreenHeader_64_594F::
+KeyWorld34_2_Y0X3_Header::
+    db $ff, $ff, $ff, $ff, $ff, $33, $6d, $00 ; entry 0
+
+; LZSS-compressed: 99 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_2_Y0X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191957, $63
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_59BA::
+KeyWorld23_0_Y1X2_Header::
+    db $ff, $ff, $ff, $ff, $ff, $33, $6e, $00 ; entry 0
+
+; LZSS-compressed: 114 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld23_0_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1919C2, $72
+
+KeyWorldScreenHeader_64_5A34::
+KeyWorld3C_0_Y3X2_Header::
+    db $05, $00, $06, $07, $0b, $33, $6f, $00 ; entry 0
+
+; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_0_Y3X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191A3C, $98
+
+KeyWorldScreenHeader_64_5AD4::
+KeyWorld30_3_Y0X0_Header::
+    db $04, $03, $06, $07, $08, $33, $70, $00 ; entry 0
+
+; LZSS-compressed: 183 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_3_Y0X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191ADC, $B7
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_5B93::
+KeyWorld31_1_Y1X1_Header::
+    db $ff, $00, $09, $0a, $0c, $33, $71, $00 ; entry 0
+
+; LZSS-compressed: 150 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld31_1_Y1X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191B9B, $96
+
+KeyWorldScreenHeader_64_5C31::
+KeyWorld40_5_Y0X1_Header::
+    db $ff, $00, $05, $07, $08, $33, $72, $00 ; entry 0
+
+; LZSS-compressed: 159 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y0X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $191C39, $9F
+
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
+KeyWorldScreenHeader_64_5CD8::
+    db $00, $06, $07, $09, $0e, $33, $73, $00 ; entry 0
+
+; LZSS-compressed: 195 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_5CE0::
+    INCBIN "dwm2-cobi-us.gbc", $191CE0, $C3
+
+; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_0_Y2X3_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $40, $0f, $2c, $03, $00, $a0, $01
+    db $00, $98, $0a, $00, $a0, $0f, $2f, $00, $a4, $02, $00, $ea, $0a, $00, $f6, $0f
+    db $03, $00, $10, $1f, $35
+
+; LZSS-compressed: 38 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_0_Y2X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $20, $02, $02, $00, $22, $0f, $11, $00, $34
+    db $0f, $11, $02, $00, $7e, $01, $00, $70, $0f, $09, $03, $00, $a0, $0f, $4d, $00
+    db $00, $1f, $4d, $00, $08, $13
+
+; LZSS-compressed: 36 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld34_2_Y0X3_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $42, $03, $00, $56, $03, $00, $4a, $0f, $0b
+    db $00, $56, $04, $00, $5a, $08, $00, $7c, $0c, $00, $7c, $08, $00, $ab, $0f, $4d
+    db $00, $08, $1f, $49
+
+; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld23_0_Y1X2_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $20, $02, $02, $02, $02, $00, $24, $0f, $09
+    db $00, $34, $00, $03, $03, $03, $03, $00, $34, $00, $00, $36, $04, $00, $54, $0e
+    db $00, $54, $04, $00, $58, $04, $00, $76, $0f, $03, $00, $7e, $04, $00, $a7, $0f
+    db $4d, $00, $07, $1f, $4d
+
+; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_0_Y3X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $191E47, $47
+
+KeyWorld30_3_Y0X0_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $191E8E, $47
+
+; LZSS-compressed: 55 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld31_1_Y1X1_Attrs::
+    db $68, $01, $00, $01, $00, $00, $0f, $4d, $00, $1e, $0f, $0a, $03, $03, $03, $03
+    db $00, $6e, $0f, $0b, $00, $80, $02, $00, $7e, $08, $00, $7e, $04, $00, $a6, $0e
+    db $00, $7e, $00, $00, $80, $04, $00, $cc, $04, $00, $cc, $0e, $00, $ec, $04, $00
+    db $e6, $0f, $15, $00, $14, $1f, $33
+
+; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y0X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $191F0C, $48
+
+; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_5F54::
+    INCBIN "dwm2-cobi-us.gbc", $191F54, $5C
+
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_5FB0::
+    db $07, $05, $06, $0c, $0d, $33, $8f, $00 ; entry 0
+
+; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_5FB8::
+    INCBIN "dwm2-cobi-us.gbc", $191FB8, $64
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_601C::
+KeyWorld40_4_Y1X3_Header::
+    db $ff, $ff, $ff, $ff, $ff, $33, $90, $00 ; entry 0
+
+; LZSS-compressed: 79 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_4_Y1X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192024, $4F
+
+KeyWorldScreenHeader_64_6073::
+KeyWorld41_2_Y1X2_Header::
+    db $ff, $06, $07, $0c, $0f, $33, $91, $00 ; entry 0
+
+; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld41_2_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19207B, $5D
+
+; record: screen header
+KeyWorldScreenHeader_64_60D8::
+KeyWorld50_4_Y1X3_Header::
+    db $ff, $09, $0a, $0d, $0f, $33, $92, $00 ; entry 0
+
+; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld50_4_Y1X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1920E0, $65
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_6145::
+KeyWorld3C_3_Y0X0_Header::
+    db $05, $02, $05, $06, $0c, $33, $93, $00 ; entry 0
+
+; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3C_3_Y0X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19214D, $78
+
+KeyWorldScreenHeader_64_61C5::
+KeyWorld4C_4_Y0X0_Header::
+    db $07, $00, $08, $09, $07, $33, $94, $00 ; entry 0
+
+; LZSS-compressed: 165 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld4C_4_Y0X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1921CD, $A5
+
+; record: screen header
+KeyWorldScreenHeader_64_6272::
+KeyWorld30_0_Y3X3_Header::
+    db $ff, $00, $03, $04, $0a, $33, $95, $00 ; entry 0
+
+; LZSS-compressed: 151 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_0_Y3X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19227A, $97
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_6311::
+KeyWorld40_5_Y1X1_Header::
+    db $ff, $00, $03, $07, $09, $33, $96, $00 ; entry 0
+
+; LZSS-compressed: 145 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y1X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192319, $91
+
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_63AA::
+    db $07, $02, $06, $07, $09, $33, $97, $00 ; entry 0
+
+; LZSS-compressed: 167 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_63B2::
+    INCBIN "dwm2-cobi-us.gbc", $1923B2, $A7
+
+; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_6459::
+    db $68, $01, $00, $03, $00, $00, $0f, $4d, $00, $1e, $0f, $0a, $01, $00, $7e, $03
+    db $00, $72, $0f, $15, $00, $80, $08, $00, $a6, $0f, $29, $00, $a2, $0a, $00, $f0
+    db $0f, $4d, $00, $7e, $00
+
+; LZSS-compressed: 41 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_4_Y1X3_Attrs::
+    db $68, $01, $00, $03, $00, $00, $0f, $4d, $00, $50, $0f, $3c, $01, $01, $01, $01
+    db $00, $a0, $0f, $0f, $00, $b0, $00, $00, $c6, $0f, $0f, $00, $d6, $02, $00, $ee
+    db $0f, $0d, $00, $fc, $04, $00, $16, $1f, $2b
+
+; LZSS-compressed: 51 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld41_2_Y1X2_Attrs::
+    db $68, $01, $00, $03, $00, $00, $0f, $4d, $00, $28, $0f, $14, $01, $01, $00, $76
+    db $0f, $0f, $01, $00, $ac, $03, $00, $a0, $0f, $09, $00, $ac, $04, $00, $c4, $0f
+    db $0b, $00, $d0, $08, $00, $ee, $0f, $09, $00, $ce, $0f, $15, $00, $cc, $0a, $00
+    db $40, $1f, $01
+
+; LZSS-compressed: 47 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld50_4_Y1X3_Attrs::
+    db $68, $01, $00, $03, $00, $00, $0f, $4d, $00, $22, $0f, $0e, $02, $02, $02, $02
+    db $00, $72, $0f, $15, $02, $02, $01, $01, $01, $01, $00, $a0, $0f, $0d, $00, $b0
+    db $00, $00, $c4, $0f, $4d, $00, $e8, $0e, $00, $e8, $04, $00, $3e, $1f, $03
+
+KeyWorld3C_3_Y0X0_Attrs::
+    db $68, $01, $00, $03, $00, $00, $0f, $18, $01, $00, $2c, $03, $00, $20, $0f, $15
+    db $00, $30, $08, $00, $54, $0f, $29, $00, $52, $0a, $00, $32, $04, $00, $a6, $0f
+    db $01, $00, $52, $0f, $4b, $00, $18, $1f, $29
+
+; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld4C_4_Y0X0_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $192532, $4C
+
+; LZSS-compressed: 62 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld30_0_Y3X3_Attrs::
+    db $68, $01, $00, $03, $00, $00, $0f, $16, $01, $01, $00, $18, $0f, $15, $00, $2a
+    db $06, $00, $2a, $04, $00, $52, $0f, $0b, $00, $7a, $0f, $0f, $00, $2a, $02, $00
+    db $a2, $02, $00, $2a, $00, $00, $a2, $0f, $07, $00, $ca, $08, $00, $c8, $0f, $2b
+    db $00, $a8, $08, $00, $12, $1f, $0d, $00, $1a, $1a, $00, $40, $1f, $01
+
+; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld40_5_Y1X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $1925BC, $43
+
+; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_65FF::
+    INCBIN "dwm2-cobi-us.gbc", $1925FF, $5A
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_6659::
+KeyWorld20_0_Y1X3_Header::
+    db $03, $04, $05, $0c, $0e, $03, $b3, $00 ; entry 0
+
+; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld20_0_Y1X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192661, $95
+
+KeyWorldScreenHeader_64_66F6::
+KeyWorld02_0_Y2X1_Header::
+    db $04, $04, $05, $0c, $0e, $03, $b4, $00 ; entry 0
+
+; LZSS-compressed: 153 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1926FE, $99
+
+KeyWorldScreenHeader_64_6797::
+KeyWorld0F_0_Y1X2_Header::
+    db $06, $00, $04, $05, $0e, $2e, $b5, $00 ; entry 0
+
+; LZSS-compressed: 137 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0F_0_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19279F, $89
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_6828::
+KeyWorld0A_0_Y1X1_Header::
+    db $00, $04, $05, $0c, $0e, $2e, $b6, $00 ; entry 0
+
+; LZSS-compressed: 180 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0A_0_Y1X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192830, $B4
+
+KeyWorldScreenHeader_64_68E4::
+KeyWorld10_0_Y3X2_Header::
+    db $05, $04, $05, $0c, $0e, $03, $b7, $00 ; entry 0
+
+; LZSS-compressed: 146 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y3X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1928EC, $92
+
+KeyWorldScreenHeader_64_697E::
+KeyWorld14_1_Y1X2_Header::
+    db $06, $04, $05, $0c, $0e, $03, $b8, $00 ; entry 0
+
+; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld14_1_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192986, $BD
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_6A43::
+KeyWorld01_0_Y2X2_Header::
+    db $01, $04, $05, $0d, $0e, $03, $b9, $00 ; entry 0
+
+; LZSS-compressed: 161 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192A4B, $A1
+
+KeyWorldScreenHeader_64_6AEC::
+KeyWorld11_1_Y2X2_Header::
+    db $00, $04, $05, $07, $0e, $03, $ba, $00 ; entry 0
+
+; LZSS-compressed: 193 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld11_1_Y2X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192AF4, $C1
+
+KeyWorldScreenHeader_64_6BB5::
+KeyWorld17_0_Y1X2_Header::
+    db $01, $04, $06, $08, $0b, $03, $bb, $00 ; entry 0
+
+; LZSS-compressed: 216 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_0_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192BBD, $D8
+
+; LZSS-compressed: 47 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld20_0_Y1X3_Attrs::
+    db $68, $01, $02, $01, $02, $00, $0f, $4d, $02, $52, $0f, $3e, $02, $fe, $ff, $01
+    db $02, $fe, $fe, $02, $fc, $ff, $01, $02, $fc, $fe, $02, $fa, $ff, $01, $02, $fa
+    db $fe, $02, $f8, $ff, $01, $02, $f8, $fe, $02, $f6, $ff, $01, $02, $a0, $f6
+
+; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $192CC4, $45
+
+; LZSS-compressed: 31 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0F_0_Y1X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $0f, $4d, $02, $4c, $0f, $38, $02, $f8, $ff, $01
+    db $02, $f8, $fe, $02, $f6, $ff, $01, $02, $d2, $0f, $4d, $02, $f6, $0f, $0f
+
+; LZSS-compressed: 60 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0A_0_Y1X1_Attrs::
+    db $68, $01, $03, $01, $03, $00, $0f, $1e, $02, $03, $32, $01, $03, $24, $0f, $0b
+    db $03, $32, $02, $03, $36, $0a, $03, $56, $0e, $03, $32, $0f, $11, $03, $30, $0c
+    db $03, $fc, $f2, $03, $a2, $0f, $05, $03, $aa, $06, $03, $c4, $0f, $09, $03, $a8
+    db $08, $03, $ec, $0f, $07, $03, $f4, $0c, $03, $16, $1f, $2b
+
+; LZSS-compressed: 34 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y3X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $0f, $4d, $02, $52, $0f, $3e, $02, $fe, $ff, $01
+    db $02, $b2, $0f, $4d, $02, $c4, $00, $02, $16, $1f, $0d, $02, $f6, $ff, $01, $02
+    db $a0, $f6
+
+; LZSS-compressed: 66 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld14_1_Y1X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $192D86, $42
+
+; LZSS-compressed: 54 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y2X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $0f, $48, $02, $fc, $ff, $01, $02, $5c, $0f, $05
+    db $02, $fe, $fc, $02, $84, $0f, $07, $02, $fe, $fa, $02, $f8, $ff, $03, $02, $84
+    db $0f, $15, $02, $58, $02, $02, $f0, $0f, $0b, $02, $fc, $f4, $02, $16, $1f, $11
+    db $02, $fa, $fc, $02, $a0, $f6
+
+; LZSS-compressed: 62 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld11_1_Y2X2_Attrs::
+    db $68, $01, $03, $01, $03, $00, $0f, $1c, $02, $02, $02, $02, $03, $20, $0f, $0f
+    db $03, $30, $00, $03, $fa, $fc, $03, $56, $0f, $0b, $03, $fe, $f6, $03, $7e, $0e
+    db $03, $30, $00, $03, $7e, $0c, $03, $a4, $0e, $03, $7e, $08, $03, $c2, $0f, $35
+    db $03, $32, $00, $03, $0e, $1f, $0d, $03, $00, $04, $03, $36, $1f, $0b
+
+; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_0_Y1X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $192E3C, $53
+
+; an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling
+; a gap (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_6E8F::
+    db $05, $02, $06, $09, $0d, $07, $d7, $00 ; entry 0
+
+; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_6E97::
+    INCBIN "dwm2-cobi-us.gbc", $192E97, $8C
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_6F23::
+KeyWorld18_0_Y3X1_Header::
+    db $06, $02, $07, $09, $0f, $07, $d8, $00 ; entry 0
+
+; LZSS-compressed: 164 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld18_0_Y3X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192F2B, $A4
+
+KeyWorldScreenHeader_64_6FCF::
+KeyWorld0B_0_Y2X1_Header::
+    db $07, $02, $06, $09, $0d, $07, $d9, $00 ; entry 0
+
+; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0B_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $192FD7, $98
+
+; record: screen header
+KeyWorldScreenHeader_64_706F::
+KeyWorld17_0_Y3X1_Header::
+    db $02, $02, $03, $06, $0d, $07, $da, $00 ; entry 0
+
+; LZSS-compressed: 194 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_0_Y3X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193077, $C2
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_7139::
+KeyWorld0C_0_Y1X2_Header::
+    db $03, $01, $04, $09, $0a, $07, $db, $00 ; entry 0
+
+; LZSS-compressed: 205 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0C_0_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193141, $CD
+
+KeyWorldScreenHeader_64_720E::
+KeyWorld3A_0_Y1X3_Header::
+    db $07, $04, $07, $09, $0b, $07, $dc, $00 ; entry 0
+
+; LZSS-compressed: 202 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3A_0_Y1X3_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193216, $CA
+
+; record: screen header
+KeyWorldScreenHeader_64_72E0::
+KeyWorld0B_0_Y1X2_Header::
+    db $ff, $02, $03, $07, $0b, $07, $dd, $00 ; entry 0
+
+; LZSS-compressed: 207 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0B_0_Y1X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1932E8, $CF
+
+; the 8-byte header of the screen stream that follows (E-0222)
+KeyWorldScreenHeader_64_73B7::
+KeyWorld1E_1_Y2X1_Header::
+    db $ff, $00, $08, $07, $0f, $07, $de, $00 ; entry 0
+
+; LZSS-compressed: 205 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_1_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1933BF, $CD
+
+KeyWorldScreenHeader_64_748C::
+KeyWorld19_1_Y2X1_Header::
+    db $07, $05, $0a, $0b, $0d, $07, $df, $00 ; entry 0
+
+; LZSS-compressed: 222 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld19_1_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193494, $DE
+
+; LZSS-compressed: 55 bytes that expand to 360 (E-0016, E-0017)
+KeyWorldScreen_64_7572::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $15, $02, $06, $06, $02, $28
+    db $0f, $0f, $02, $08, $02, $02, $50, $0f, $11, $02, $08, $00, $02, $78, $0f, $01
+    db $02, $76, $0f, $29, $02, $4c, $0f, $05, $02, $26, $0f, $17, $02, $26, $0a, $02
+    db $18, $1f, $09, $02, $fe, $ff, $0d
+
+; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld18_0_Y3X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $1935A9, $49
+
+; LZSS-compressed: 43 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0B_0_Y2X1_Attrs::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $4d, $02, $1a, $0f, $05, $02
+    db $1c, $06, $02, $78, $0f, $01, $02, $72, $0e, $02, $1c, $04, $02, $a6, $0f, $01
+    db $02, $76, $0f, $19, $02, $e6, $0f, $4d, $02, $0a, $1a
+
+; LZSS-compressed: 68 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld17_0_Y3X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $19361D, $44
+
+; LZSS-compressed: 66 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0C_0_Y1X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193661, $42
+
+; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld3A_0_Y1X3_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $1936A3, $54
+
+; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld0B_0_Y1X2_Attrs::
+    db $68, $01, $02, $01, $02, $00, $05, $02, $f6, $ff, $15, $02, $08, $06, $02, $28
+    db $0f, $0d, $02, $04, $04, $02, $50, $0f, $29, $02, $fe, $f2, $02, $fa, $fa, $02
+    db $a0, $0f, $05, $02, $f4, $fc, $02, $c8, $0f, $03, $02, $f2, $fe, $02, $f0, $0f
+    db $09, $02, $28, $0f, $15, $02, $fe, $ff, $0d
+
+; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld1E_1_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193730, $48
+
+KeyWorld19_1_Y2X1_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193778, $54
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_77CC::
+KeyWorld08_0_Y2X1_Header::
+    db $06, $06, $08, $09, $0b, $3c, $fb, $00 ; entry 0
+
+; LZSS-compressed: 116 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld08_0_Y2X1_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1937D4, $74
+
+KeyWorldScreenHeader_64_7848::
+KeyWorld05_0_Y3X0_Header::
+    db $ff, $ff, $ff, $ff, $ff, $0b, $fc, $00 ; entry 0
+
+; LZSS-compressed: 97 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld05_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193850, $61
+
+KeyWorldScreenHeader_64_78B1::
+KeyWorld10_0_Y3X0_Header::
+    db $ff, $08, $09, $0a, $0b, $25, $fd, $00 ; entry 0
+
+; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1938B9, $8C
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_7945::
+KeyWorld02_0_Y3X0_Header::
+    db $ff, $ff, $ff, $ff, $ff, $25, $fe, $00 ; entry 0
+
+; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $19394D, $82
+
+KeyWorldScreenHeader_64_79CF::
+KeyWorld01_0_Y3X0_Header::
+    db $04, $05, $06, $0b, $0c, $3c, $ff, $00 ; entry 0
+
+; LZSS-compressed: 166 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $1939D7, $A6
+
+KeyWorldScreenHeader_64_7A7D::
+KeyWorld00_0_Y3X0_Header::
+    db $01, $04, $06, $07, $09, $3c, $00, $01 ; entry 0
+
+; LZSS-compressed: 209 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193A85, $D1
+
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
+KeyWorldScreenHeader_64_7B56::
+KeyWorld04_0_Y3X0_Header::
+    db $04, $03, $05, $0a, $0b, $3c, $01, $01 ; entry 0
+
+; LZSS-compressed: 182 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193B5E, $B6
+
+KeyWorldScreenHeader_64_7C14::
+KeyWorld07_0_Y3X2_Header::
+    db $06, $04, $06, $0d, $0e, $3c, $02, $01 ; entry 0
+
+; LZSS-compressed: 185 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld07_0_Y3X2_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193C1C, $B9
+
+KeyWorldScreenHeader_64_7CD5::
+KeyWorld06_0_Y3X0_Header::
+    db $06, $00, $03, $07, $08, $3c, $03, $01 ; entry 0
+
+; LZSS-compressed: 247 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld06_0_Y3X0_Tiles::
+    INCBIN "dwm2-cobi-us.gbc", $193CDD, $F7
+
+; LZSS-compressed: 39 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld08_0_Y2X1_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $4d, $02, $10
+    db $06, $02, $1e, $06, $02, $74, $0f, $13, $02, $fe, $ff, $01, $02, $ae, $0f, $21
+    db $02, $f5, $0f, $4d, $02, $55, $1e
+
+KeyWorld05_0_Y3X0_Attrs::
+    db $68, $01, $03, $03, $ff, $f6, $01, $03, $0a, $05, $03, $00, $0f, $33, $00, $00
+    db $02, $02, $02, $02, $03, $4c, $0f, $11, $03, $5a, $00, $03, $74, $0f, $13, $03
+    db $ad, $0f, $4d, $03, $0d, $1f, $47
+
+; LZSS-compressed: 47 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld10_0_Y3X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $09, $02, $0a
+    db $06, $02, $26, $0f, $33, $02, $08, $0f, $15, $02, $06, $04, $02, $fa, $ff, $01
+    db $02, $fa, $fe, $02, $f8, $ff, $01, $02, $a0, $ff, $4d, $02, $49, $1f, $0b
+
+; LZSS-compressed: 51 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld02_0_Y3X0_Attrs::
+    db $68, $01, $03, $03, $ff, $f6, $01, $03, $0a, $05, $03, $00, $0f, $0f, $02, $02
+    db $03, $24, $0f, $11, $03, $36, $02, $03, $4e, $0f, $0d, $03, $5c, $04, $03, $76
+    db $0f, $0f, $02, $02, $03, $fa, $fc, $03, $aa, $0f, $01, $03, $d1, $0f, $4d, $03
+    db $31, $1f, $23
+
+; LZSS-compressed: 44 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld01_0_Y3X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $09, $02, $0a
+    db $06, $02, $26, $0f, $31, $02, $30, $08, $02, $76, $0f, $13, $02, $00, $0f, $1d
+    db $02, $08, $0f, $09, $02, $fc, $ff, $01, $02, $a0, $ff, $45
+
+; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld00_0_Y3X0_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193EB0, $50
+
+; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld04_0_Y3X0_Attrs::
+    db $68, $01, $02, $02, $ff, $f6, $01, $02, $0a, $05, $02, $00, $0f, $07, $02, $0a
+    db $06, $02, $24, $0f, $09, $02, $2e, $0a, $02, $4e, $0f, $2d, $02, $2e, $0f, $13
+    db $02, $08, $02, $02, $06, $06, $02, $c4, $0f, $09, $02, $00, $08, $02, $ec, $0f
+    db $07, $02, $19, $1f, $3b
+
+; LZSS-compressed: 79 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld07_0_Y3X2_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193F35, $4F
+
+; LZSS-compressed: 99 bytes that expand to 360 (E-0016, E-0017)
+KeyWorld06_0_Y3X0_Attrs::
+    INCBIN "dwm2-cobi-us.gbc", $193F84, $63
+    ds $19, $00

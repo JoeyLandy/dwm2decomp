@@ -10,13 +10,15 @@ identical, but writes them in the style of the pret disassemblies (pokered is th
   (call sites, reads/writes, "only called from", "entry N of the table") stay in the listing. A comment that
   repeats on every record of a table is written once. Address names and `BB:AAAA` addresses in comments become
   the label at that address, evidence ids move to the end, and long comments are wrapped;
-- instructions as pret writes them: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, `jumptable` for `rst $00`.
+- instructions as pret writes them: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, `jumptable` for `rst $00`;
+- each bank file is named and headed by what it holds (config/banks.json, D-006): bank36_battle_effects.asm.
 
 The confidence and evidence of every name stay in config/ (names.json, symbols.json, tables.json) and in the
 listing. Run after disasm_all, or alone to re-present an existing listing:
 
     python -I tools/present.py [LISTING_DIR]
 """
+import json
 import re
 import sys
 import textwrap
@@ -156,14 +158,45 @@ def present(text: str, names: Names) -> str:
     return "\n".join(out)
 
 
+def bank_titles() -> dict[int, dict]:
+    """config/banks.json: bank -> {"file": short name, "title": what the bank holds} (D-006)."""
+    cfg = json.loads((ROOT / "config/banks.json").read_text(encoding="utf-8"))
+    return {int(k, 16): v for k, v in cfg.items() if not k.startswith("_")}
+
+
+def src_name(listing_name: str, titles: dict[int, dict]) -> str:
+    """bank36.asm -> bank36_battle_effects.asm"""
+    b = int(listing_name[4:6], 16)
+    return f"bank{b:02x}_{titles[b]['file']}.asm" if b in titles else listing_name
+
+
+def header(listing_name: str, titles: dict[int, dict]) -> str:
+    b = int(listing_name[4:6], 16)
+    title = titles[b]["title"] if b in titles else "(untitled)"
+    return f"; ROM bank ${b:02X}: {title}\n; The annotated listing of this bank is build/listing/{listing_name}.\n\n"
+
+
 def main(argv: list[str]) -> int:
     src = Path(argv[0]) if argv else ROOT / "build/listing"
     dest = ROOT / "src/banks"
     dest.mkdir(parents=True, exist_ok=True)
     texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(src.glob("bank*.asm"))}
     names = Names(texts)
+    titles = bank_titles()
+    written = []
     for name, text in texts.items():
-        (dest / name).write_text(present(text, names), encoding="utf-8", newline="\n")
+        out = src_name(name, titles)
+        (dest / out).write_text(header(name, titles) + present(text, names), encoding="utf-8", newline="\n")
+        written.append(out)
+    for stale in set(p.name for p in dest.glob("bank*.asm")) - set(written):
+        (dest / stale).unlink()  # a bank file under an earlier name
+    main_asm = ROOT / "src/main.asm"
+    lines = main_asm.read_text(encoding="utf-8").split("\n")
+    out_lines = []
+    for ln in lines:
+        m = re.match(r'INCLUDE "banks/(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
+        out_lines.append(f'INCLUDE "banks/{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
+    main_asm.write_text("\n".join(out_lines), encoding="utf-8", newline="\n")
     print(f"presented {len(texts)} bank files from {src} into {dest}")
     return 0
 
