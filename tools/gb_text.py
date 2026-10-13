@@ -9,6 +9,9 @@ Observed table (C2; decoded passages read as ordinary sentences):
     $95 "'"  (C2 from E-0319: the name-entry keyboard pictures it as an apostrophe, and text reads
              "oasis' water", "Girls' clothes"; before s/m/r/t/v/l it stays $95, which would
              otherwise re-encode as a contraction glyph)
+    $A3 ":"  $45 "*:"  (C2 from E-0320: the debug menu pictures "1:GOTO PROGRAM" for "1", $A3, "GOTO PROGRAM";
+             $45 is one character cell holding an asterisk and a colon, the mark before an unnamed
+             speaker's words: $EA, $45, " GreatLog's King" is drawn "*: GreatLog's King")
 Other bytes between words ($EA-$EF, $F0-$FA, $A3, $A4, $95, ...) are control or glyph codes
 whose meaning is NOT established; they are kept as raw bytes. `render` therefore never changes
 a byte: every string character maps back to the byte it came from.
@@ -22,7 +25,8 @@ for _i in range(26):
     CHARMAP[chr(ord("A") + _i)] = 0x0A + _i
     CHARMAP[chr(ord("a") + _i)] = 0x24 + _i
 CHARMAP.update({" ": 0x90, ".": 0xB5, ",": 0xAB, "!": 0x99, "?": 0x98, "-": 0x9C,
-                "'s": 0x3E, "'m": 0x3F, "'r": 0x40, "'t": 0x41, "'v": 0x42, "'l": 0x43, "'": 0x95})
+                "'s": 0x3E, "'m": 0x3F, "'r": 0x40, "'t": 0x41, "'v": 0x42, "'l": 0x43, "'": 0x95,
+                ":": 0xA3, "*:": 0x45})
 BYTE_TO_TEXT = {v: k for k, v in CHARMAP.items()}
 
 LETTERS = set(range(0x0A, 0x3E)) | {0x90}

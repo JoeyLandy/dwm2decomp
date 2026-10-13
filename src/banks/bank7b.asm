@@ -7,7 +7,7 @@ MonsterPic_Dimensaur:: ; heuristic: monster picture stream; C0
 Data_07B_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1EC001, $208
 
-; E-0041 (C1: Func_000_1FE3 copies 16 bytes from bank $7B, $4209 + 16 * monster id to the palette buffer wC49F on CGB; the count matches the picture table).
+; E-0041 (C1: Func_000_1FE3 copies 16 bytes from bank $7B, $4209 + 16 * monster id to the palette buffer wBGPaletteBuffer on CGB; the count matches the picture table).
 ; record: CGB colours of the monster picture (two 4-colour palettes, BGR555 words)
 MonsterPaletteTable::
 Data_07B_4209:: ; address name

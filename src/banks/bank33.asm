@@ -1584,7 +1584,7 @@ Func_033_5623:: ; address name
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle Data_033_62C3 into wC36E (CopyRectTo20ByteRowsJp_Bank33), then wD781 += 1 (E-0119)
+; copies the 10 x 11 rectangle Data_033_62C3 into wWindowTileBuffer + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05)
 ; points at: wScreenStep
 CopyRect62C3ToWC36EAndIncScreenStep::
@@ -2977,7 +2977,7 @@ Jump_033_5F37:: ; address name
     call SetDefaultStringWindow_Bank33
     ret
 
-; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wD7DD (C = field from the caller); then disables SRAM (E-0119)
+; with SRAM bank 0 enabled, LoadSRAMRecordByte with A = wPickedRecords (C = field from the caller); then disables SRAM (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB
 ; points at: wPickedRecords
@@ -2995,7 +2995,7 @@ Func_033_5F6B:: ; address name
     ld [rRAMB], a
     ret
 
-; copies box Data_033_639F to wC410 and runs RunFunc6204FourTimes for wC895 at wC3B1 (E-0126)
+; copies box Data_033_639F to wWindowTileBuffer + $110 and runs RunFunc6204FourTimes for wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126)
 ; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B)
 ; points at: wKeyNameBuf
 DrawBox639FAndKeyRows::
@@ -3009,7 +3009,7 @@ Func_033_5F83:: ; address name
     call RunFunc6204FourTimes
     ret
 
-; lists in wD789 the stored records (state 1, or 2 unless wD7DC is 3) whose field $6E is clear and that are not already chosen in wD7DD; count in wD7A9 (E-0130)
+; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is clear and that are not already chosen in wPickedRecords; count in wListCount (E-0130)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01)
 ; reads: wPickCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
@@ -3144,7 +3144,7 @@ Func_033_6039:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
+; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800), wTextWindowRows/wTextWindowWidth = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
 ; 9 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank33::
@@ -3161,7 +3161,7 @@ Func_033_6049:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; wD7DD = the record index at WD789 cell 5 (E-0126)
+; wPickedRecords = the record index at WD789 cell 5 (E-0126)
 ; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08)
 ; reads: wArg5, wArg6
 ; points at: wPickedRecords
@@ -3177,7 +3177,7 @@ Func_033_6060:: ; address name
     ld [de], a
     ret
 
-; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
+; copies the name of the record at WD789 cell 5 (11 bytes) to wTextBuf0 (E-0124)
 ; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
@@ -3211,7 +3211,7 @@ Func_033_6074:: ; address name
     ld [rRAMG], a
     ret
 
-; wD7B4 = wD7DC, wD7E0 = $FF, wD7DC = 4, wD782 = 0 and wD781 += 1 (E-0126)
+; wSelectedRecord = wPickCount, wPackWork = $FF, wPickCount = 4, wScreenSubStep = 0 and wScreenStep += 1 (E-0126)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C)
 ; reads: wPickCount, wScreenStep
 ; writes: wSelectedRecord, wPackWork, wPickCount, wScreenSubStep, wScreenStep
@@ -3281,7 +3281,7 @@ Func_033_60D3:: ; address name
     ld h, a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
@@ -3413,7 +3413,7 @@ Func_033_6152:: ; address name
     ldh [rSVBK], a
     ret
 
-; writes the gold as up to five decimal digit tiles without leading zeros at wC1BA (E-0127)
+; writes the gold as up to five decimal digit tiles without leading zeros at wScreenTileBuffer + $22 (E-0127)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep)
 ; reads: wGoldLo, wGoldMid, wGoldHi, hTemp2, hTemp1, hTemp0
 ; writes: wDigits
@@ -3558,7 +3558,7 @@ Func_033_6227:: ; address name
     jr c, .loop
     ret
 
-; clears vTiles2 (size $0105), draws the 10-byte player name wC60C there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
+; clears vTiles2 (size $0105), draws the 10-byte player name wPlayerName there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
 ; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wStringCategory, wStringIndex
 ; points at: wNameGlyphBuf, wPlayerName
@@ -3795,127 +3795,127 @@ Data_033_64A7:: ; address name
 String_33_64A5_00_00:: ; heuristic: string; C0
 Data_033_6515:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " You've finished", $F1
+    db $EB, "*: You've finished", $F1
     db "that Class.", $F7
     db $F0
 
 String_33_64A5_00_02:: ; heuristic: string; C0
 Data_033_6534:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Which Class will", $F1
+    db $EB, "*: Which Class will", $F1
     db "you challenge?", $F0
 
 String_33_64A5_00_03:: ; heuristic: string; C0
 Data_033_6557:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Train some more,", $F1
+    db $EB, "*: Train some more,", $F1
     db "and see you again!", $F7
     db $F0
 
 String_33_64A5_00_04:: ; heuristic: string; C0
 Data_033_657F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Let me confirm", $F1
+    db $EB, "*: Let me confirm", $F1
     db "that-the ", $F9, "0 Class?", $F0
 
 String_33_64A5_00_05:: ; heuristic: string; C0
 Data_033_65A4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Good luck! I'll", $F1
+    db $EB, "*: Good luck! I'll", $F1
     db "cheer for you!", $F7
     db $F0
 
 String_33_64A5_00_06:: ; heuristic: string; C0
 Data_033_65C6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Not enough gold", $F1
+    db $EB, "*: Not enough gold", $F1
     db "for that Class!", $F7
     db $F0
 
 String_33_64A5_00_07:: ; heuristic: string; C0
 Data_033_65EA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Oh", $A4, " The crowd", $F1
+    db $EB, "*: Oh", $A4, " The crowd", $F1
     db "wanted to see you", $A4, $F7
     db $F0
 
 String_33_64A5_00_0A:: ; heuristic: string; C0
 Data_033_660F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " How many masters", $F1
+    db $EB, "*: How many masters", $F1
     db "in the group?", $F0
 
 String_33_64A5_00_0B:: ; heuristic: string; C0
 Data_033_6631:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Will you try a", $F1
+    db $EB, "*: Will you try a", $F1
     db "Master Battle?", $F0
 
 String_33_64A5_00_0C:: ; heuristic: string; C0
 Data_033_6652:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " The S Class", $F1
+    db $EB, "*: The S Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_0D:: ; heuristic: string; C0
 Data_033_6695:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " The A Class", $F1
+    db $EB, "*: The A Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_0E:: ; heuristic: string; C0
 Data_033_66D8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " The B Class", $F1
+    db $EB, "*: The B Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_0F:: ; heuristic: string; C0
 Data_033_671B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It could get", $F1
+    db $EB, "*: It could get", $F1
     db "rough out there.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_10:: ; heuristic: string; C0
 Data_033_6760:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It could get", $F1
+    db $EB, "*: It could get", $F1
     db "rough out there.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_11:: ; heuristic: string; C0
 Data_033_67A5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " The E Class", $F1
+    db $EB, "*: The E Class", $F1
     db "should do.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 String_33_64A5_00_12:: ; heuristic: string; C0
 Data_033_67E3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Is ", $F9, "0 Class OK?", $F0
+    db $EB, "*: Is ", $F9, "0 Class OK?", $F0
 
 String_33_64A5_00_13:: ; heuristic: string; C0
 Data_033_67F6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " I hope you do", $F1
+    db $EB, "*: I hope you do", $F1
     db "well!", $F7
     db $F0
 
 String_33_64A5_00_14:: ; heuristic: string; C0
 Data_033_680E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " You need more", $F1
+    db $EB, "*: You need more", $F1
     db "gold to register.", $F7
     db $F0
 
 String_33_64A5_00_15:: ; heuristic: string; C0
 Data_033_6832:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " You can't try", $F1
+    db $EB, "*: You can't try", $F1
     db "that Class yet.", $F7
     db $F0
 
@@ -3942,7 +3942,7 @@ Data_033_6879:: ; address name
 String_33_64A5_00_1B:: ; heuristic: string; C0
 Data_033_6886:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've won the", $EF, $EE, "Kids' Class!", $FA, $F7
     db $EF, $EE, "The King will give", $EF, $EE, "you his official", $FA, $F7
@@ -3957,7 +3957,7 @@ Data_033_6886:: ; address name
 String_33_64A5_00_21:: ; heuristic: string; C0
 Data_033_69CE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've won the", $EF, $EE, "C Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
@@ -3966,7 +3966,7 @@ Data_033_69CE:: ; address name
 String_33_64A5_00_22:: ; heuristic: string; C0
 Data_033_6A2E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've won the", $EF, $EE, "B Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
@@ -3975,7 +3975,7 @@ Data_033_6A2E:: ; address name
 String_33_64A5_00_23:: ; heuristic: string; C0
 Data_033_6A8E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've won the", $EF, $EE, "A Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
@@ -3984,7 +3984,7 @@ Data_033_6A8E:: ; address name
 String_33_64A5_00_24:: ; heuristic: string; C0
 Data_033_6AEE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've finally won", $EF, $EE, "the S Class!", $FA, $F7
     db $EF, $EE, "You can now choose", $EF, $EE, "any Class you want", $FA, $F7
@@ -3998,7 +3998,7 @@ Data_033_6AEE:: ; address name
 String_33_64A5_00_25:: ; heuristic: string; C0
 Data_033_6C08:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Too bad you", $F1
+    db $EB, "*: Too bad you", $F1
     db "didn't make it.", $FA, $F7
     db $EF, $EE, "It's hard to win", $EF, $EE, "if your monsters", $FA, $F7
     db $EF, $EE, "aren't leveled up", $EF, $EE, "enough.", $FA, $F7
@@ -4008,7 +4008,7 @@ Data_033_6C08:: ; address name
 String_33_64A5_00_26:: ; heuristic: string; C0
 Data_033_6C8D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Too bad you", $F1
+    db $EB, "*: Too bad you", $F1
     db "didn't make it.", $FA, $F7
     db $EF, $EE, "You can create", $EF, $EE, "tougher monsters", $FA, $F7
     db $EF, $EE, "by leveling up", $EF, $EE, "those you bred.", $FA, $F7
@@ -4018,7 +4018,7 @@ Data_033_6C8D:: ; address name
 String_33_64A5_00_27:: ; heuristic: string; C0
 Data_033_6D17:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db $F9, "0 does it!", $FA, $F7
     db $EF, $EE, "You've won", $EF, $EE, $F9, "GG!", $FA, $F7
     db $EF, $EE, "We hope you'll", $EF, $EE, "battle here again!", $F7
@@ -4027,7 +4027,7 @@ Data_033_6D17:: ; address name
 String_33_64A5_00_28:: ; heuristic: string; C0
 Data_033_6D70:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " You lost?", $F1
+    db $EB, "*: You lost?", $F1
     db "That's too bad.", $FA, $F7
     db $EF, $EE, "Try again after", $EF, $EE, "leveling up your", $FA, $F7
     db $EF, $EE, "monsters some", $EF, $EE, "more.", $F7
@@ -4043,7 +4043,7 @@ Data_033_6DCA:: ; address name
 String_33_64A5_00_2B:: ; heuristic: string; C0
 Data_033_6DEA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " ", $A4, "Oh, but your", $F1
+    db $EB, "*: ", $A4, "Oh, but your", $F1
     db "key ring is full.", $FA, $F7
     db $EF, $EE, "You'll have to", $EF, $EE, "make room, and", $FA, $F7
     db $EF, $EE, "come back for this", $EF, $EE, "later.", $F7
@@ -4052,7 +4052,7 @@ Data_033_6DEA:: ; address name
 String_33_64A5_00_2C:: ; heuristic: string; C0
 Data_033_6E4D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Here's the Magic", $F1
+    db $EB, "*: Here's the Magic", $F1
     db "Key you", $44, " won!", $F7
     db $F0
 
@@ -4066,14 +4066,14 @@ Data_033_6E6F:: ; address name
 String_33_64A5_00_2E:: ; heuristic: string; C0
 Data_033_6E90:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Here's the Pirate", $F1
+    db $EB, "*: Here's the Pirate", $F1
     db "Key you", $44, " won!", $F7
     db $F0
 
 String_33_64A5_00_2F:: ; heuristic: string; C0
 Data_033_6EB3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Congratulations!", $F1
+    db $EB, "*: Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You've won the", $EF, $EE, $F9, "0 Class!", $FA, $F7
     db $EF, $EE, "Choose one of", $EF, $EE, "these chests!", $F7
@@ -4082,33 +4082,33 @@ Data_033_6EB3:: ; address name
 String_33_64A5_00_30:: ; heuristic: string; C0
 Data_033_6F10:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Do you want the", $F1
+    db $EB, "*: Do you want the", $F1
     db "left chest?", $F0
 
 String_33_64A5_00_31:: ; heuristic: string; C0
 Data_033_6F2F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Do you want the", $F1
+    db $EB, "*: Do you want the", $F1
     db "right chest?", $F0
 
 String_33_64A5_00_32:: ; heuristic: string; C0
 Data_033_6F4F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Your prize is", $F1
+    db $EB, "*: Your prize is", $F1
     db "one ", $F9, "G!", $F7
     db $F0
 
 String_33_64A5_00_33:: ; heuristic: string; C0
 Data_033_6F69:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Your prize is", $F1
+    db $EB, "*: Your prize is", $F1
     db "a Magic Key!", $F7
     db $F0
 
 String_33_64A5_00_34:: ; heuristic: string; C0
 Data_033_6F88:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " ", $A4, "Oh, but you", $F1
+    db $EB, "*: ", $A4, "Oh, but you", $F1
     db "have no room.", $FA, $F7
     db $EF, $EE, "Well, instead of", $EF, $EE, "the ", $F9, "G,", $FA, $F7
     db $EF, $EE, "here's 6000G.", $EF, $EE, $F7
@@ -4117,7 +4117,7 @@ Data_033_6F88:: ; address name
 String_33_64A5_00_35:: ; heuristic: string; C0
 Data_033_6FD6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " ", $A4, "Oh, but your", $F1
+    db $EB, "*: ", $A4, "Oh, but your", $F1
     db "key ring is full.", $FA, $F7
     db $EF, $EE, "Well, instead of", $EF, $EE, "the Magic Key,", $FA, $F7
     db $EF, $EE, "here's 6000G", $EF, $EE, "instead.", $F7

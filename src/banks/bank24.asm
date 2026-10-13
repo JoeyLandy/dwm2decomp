@@ -2201,7 +2201,7 @@ Func_024_4E12:: ; address name
     ldh [rSVBK], a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_SavePrompt_DecompressToVRAM, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
@@ -2342,7 +2342,7 @@ Func_024_4EE8:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
-; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
+; HL = wRecordBufB + $1, then copies up to 10 name bytes to wTextBuf0 with a $F0 terminator (E-0124)
 ; 2 call sites from 2 routines (e.g. GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D, GameMode6_Update_SavePrompt_ObjectScene_CopyWCA2CNameToTextBuf0)
 ; points at: wTextBuf0
 CopyWCA2CNameToTextBuf0::
@@ -2350,7 +2350,7 @@ Func_024_4F0C:: ; address name
     ld hl, wRecordBufB + MON_NAME
     jp CopyWC987NameToTextBuf0_Skip
 
-; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
+; copies up to 10 name bytes from wRecordBufA + $1 (stopping at $F0) to wTextBuf0 with a $F0 terminator (E-0124)
 ; 1 call site from 1 routine (e.g. GameMode6_Update_Save_ObjectScene_CopyWC987NameToTextBuf0)
 ; points at: wTextBuf0
 CopyWC987NameToTextBuf0::
@@ -2425,7 +2425,7 @@ Func_024_4F41:: ; address name
     ld [rRAMB], a
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
 ; 1 call site from 1 routine (e.g. GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D)
 ; reads: wDataBank
 ; writes: wDataBank
@@ -2781,7 +2781,7 @@ ReturnStub_51A3::
 Func_024_51A3:: ; address name
     ret
 
-; on CGB with wD092 = 8: copies the 6 x 6 block Data_024_51D3 into the WRAM-bank-2 buffer at wD25F (20-byte rows) (E-0124)
+; on CGB with wBattleScene = 8: copies the 6 x 6 block Data_024_51D3 into the WRAM-bank-2 buffer at wWindowAttrBuffer + $F7 (20-byte rows) (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wBattleScene
 ; writes: rSVBK
@@ -2994,7 +2994,7 @@ Func_024_52CE:: ; address name
     ld [de], a
     ret
 
-; copies the $A5 bytes at Data_024_52ED to wCA2B (E-0122)
+; copies the $A5 bytes at Data_024_52ED to wRecordBufB (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wRecordBufB
 CopyDefaultRecordToRecordBufB:: ; heuristic: follows a terminator; C0
@@ -4145,87 +4145,87 @@ Data_024_5D27:: ; address name
 String_24_00_00:: ; heuristic: string; C0
 Data_024_5D53:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Oh? But none", $F1
+    db $EA, "*: Oh? But none", $F1
     db "appear to be dead", $A4, $FA, $F7
     db $F0
 
 String_24_00_02:: ; heuristic: string; C0
 Data_024_5D78:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Oh? But no one", $F1
+    db $EA, "*: Oh? But no one", $F1
     db "is poisoned.", $FA, $F7
     db $F0
 
 String_24_00_03:: ; heuristic: string; C0
 Data_024_5D99:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " But none appear", $F1
+    db $EA, "*: But none appear", $F1
     db "to be cursed", $A4, $FA, $F7
     db $F0
 
 String_24_00_04:: ; heuristic: string; C0
 Data_024_5DBC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Do you need any", $F1
+    db $EA, "*: Do you need any", $F1
     db "other help?", $F0
 
 String_24_00_05:: ; heuristic: string; C0
 Data_024_5DDB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " May the gods go", $F1
+    db $EA, "*: May the gods go", $F1
     db "with you.", $F7
     db $F0
 
 String_24_00_06:: ; heuristic: string; C0
 Data_024_5DF9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Which monster", $F1
+    db $EA, "*: Which monster", $F1
     db "should be revived?", $F0
 
 String_24_00_07:: ; heuristic: string; C0
 Data_024_5E1D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who should be", $F1
+    db $EA, "*: Who should be", $F1
     db "cured of poison?", $F0
 
 String_24_00_08:: ; heuristic: string; C0
 Data_024_5E3F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who should be", $F1
+    db $EA, "*: Who should be", $F1
     db "freed of a curse?", $F0
 
 String_24_00_09:: ; heuristic: string; C0
 Data_024_5E62:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Surely you jest.", $F1
+    db $EA, "*: Surely you jest.", $F1
     db "That one is alive.", $FA, $F7
     db $F0
 
 String_24_00_0A:: ; heuristic: string; C0
 Data_024_5E8B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " But that monster", $F1
+    db $EA, "*: But that monster", $F1
     db "is not poisoned.", $FA, $F7
     db $F0
 
 String_24_00_0B:: ; heuristic: string; C0
 Data_024_5EB2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " But that monster", $F1
+    db $EA, "*: But that monster", $F1
     db "is not cursed.", $FA, $F7
     db $F0
 
 String_24_00_0C:: ; heuristic: string; C0
 Data_024_5ED7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I must ask for a", $F1
+    db $EA, "*: I must ask for a", $F1
     db "small donation of", $FA, $F7
     db $EF, $EE, $F9, "0G.", $EF, $EE, "Do you accept?", $F0
 
 String_24_00_0D:: ; heuristic: string; C0
 Data_024_5F15:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Gods, the", $F1
+    db $EA, "*: Gods, the", $F1
     db "spirits of earth!", $FA, $F7
     db $EF, $EE, "Please summon the", $EF, $EE, "soul of ", $F9, "0!", $F7
     db $F0
@@ -4233,7 +4233,7 @@ Data_024_5F15:: ; address name
 String_24_00_0E:: ; heuristic: string; C0
 Data_024_5F57:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Gods, I  beg", $F1
+    db $EA, "*: Gods, I  beg", $F1
     db "you, purify the", $FA, $F7
     db $EF, $EE, "poison sullying", $EF, $EE, $F9, "0!", $F7
     db $F0
@@ -4241,7 +4241,7 @@ Data_024_5F57:: ; address name
 String_24_00_0F:: ; heuristic: string; C0
 Data_024_5F90:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Gods, I beg", $F1
+    db $EA, "*: Gods, I beg", $F1
     db "you, free ", $F9, "0", $FA, $F7
     db $EF, $EE, "from its enslaving", $EF, $EE, "curse!", $F7
     db $F0
@@ -4278,7 +4278,7 @@ Data_024_6019:: ; address name
 String_24_00_14:: ; heuristic: string; C0
 Data_024_6087:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Oh, my, my", $A4, $F1
+    db $EA, "*: Oh, my, my", $A4, $F1
     db "How deplorable!", $FA, $F7
     db $EF, $EE, "You haven't enough", $EF, $EE, "gold for this.", $FA, $F7
     db $F0
@@ -5422,7 +5422,7 @@ Func_024_67FD:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 are not written (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi are not written (E-0062)
 ; 9 call sites from 8 routines (e.g. PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_6866, PriestMenu_PayForService_FillTilesFromRequest, PriestMenu_PayForService_QueueMusic, PriestMenu_PayForService_SubtractArg1AmountFromGold, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
@@ -5532,7 +5532,7 @@ Func_024_68A2:: ; address name
     ld [de], a
     ret
 
-; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)
+; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wWindowTileBuffer + $70, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wWindowTileBuffer + $86 (E-0074)
 ; 3 call sites from 3 routines (e.g. PriestMenu_ShowServices_DrawGoldPanel_Bank24, PriestMenu_PayForService_SubtractArg1AmountFromGold, PriestMenu_PayForService_DrawGoldPanel_Bank24)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
@@ -6139,7 +6139,7 @@ GameMode6_Init_Data_6F4E:: ; heuristic: stream decompressed by a call to Decompr
 Data_024_6F4E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
-; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
+; draws the next glyph of the description of the item at wItemGrid[4 * wItemGridY + wItemGridX] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
 ; 1 call site from 1 routine (e.g. ShopMenu_Shared01_ToStepItemDescriptionText)
 ; reads: wTextCounter6, wScreenState, wItemGridY, wItemGridX, wTextCounter2, wTextCounter1, wCursorBlinkB8, wTextCounter4, ...
 ; writes: wCursorBlinkB8, wTextCounter2, wTextCounter1, wTextCounter3, wTextCounter4, wTextCounter0

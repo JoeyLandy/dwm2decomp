@@ -60,7 +60,7 @@ Func_0A3_4038:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
@@ -81,7 +81,7 @@ Func_0A3_403F:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
@@ -131,7 +131,7 @@ Data_0A3_408A:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -143,7 +143,7 @@ Func_0A3_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -155,7 +155,7 @@ Func_0A3_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -167,7 +167,7 @@ Func_0A3_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
@@ -226,7 +226,7 @@ Func_0A3_40B8:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
@@ -256,7 +256,7 @@ Func_0A3_410F:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
@@ -274,7 +274,7 @@ Func_0A3_412E:: ; address name
     pop hl
     ret
 
-; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
+; runs Func_0A3_414F, then wSlotMarks[hTemp0] = 3 (E-0122)
 ; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
 ; reads: hTemp0
 ; points at: wSlotMarks
@@ -287,7 +287,7 @@ Func_0A3_413F:: ; address name
     ld [hl], $03
     ret
 
-; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
+; hTemp0 = the slot for the actor through its side's wFormationSlot0 formation (Data_0A3_4181), $FF when none (E-0124)
 ; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, CheckFormationPartnersCanAct, PayActorMPCost, ...)
 ; reads: wBattleActor
 ; writes: hTemp0
@@ -329,7 +329,7 @@ ActorFormationSlotToTemp0_Data:: ; heuristic: pointer load in the same bank (ban
 Data_0A3_4181:: ; address name
     db $00, $01, $00, $02, $01, $02
 
-; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
+; copies 16 bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_AddWordAtHLToBC_Bank30, RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1)
 ; reads: wLinkMode
 ; writes: wFormationSlot0, wFormationSlot1
@@ -375,7 +375,7 @@ Func_0A3_4187:: ; address name
     ld [wFormationSlot1], a
     ret
 
-; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hFFC6 = its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0 when none applies (E-0172)
+; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hTemp0 = its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0 when none applies (E-0172)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: wBattleActor, hTemp0, wLinkMode
 ; writes: hTemp0
@@ -503,7 +503,7 @@ Func_0A3_41CF:: ; address name
     ld a, $01
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; 3 call sites from 1 routine (e.g. FindFormationForSide)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3_4278::
@@ -919,7 +919,7 @@ Func_0A3_4917:: ; address name
     ld a, $02
     ret
 
-; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
+; hTemp0 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
 ; 1 call site from 1 routine (e.g. RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3)
 ; reads: wBattleActor
 ; writes: hTemp0
@@ -944,7 +944,7 @@ Func_0A3_4960:: ; address name
     ldh [hTemp0], a
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 6 call sites from 1 routine (e.g. FormationCompatibilityRoll)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3_497E::
@@ -1037,7 +1037,7 @@ Func_0A3_49D5:: ; address name
     ldh [hTemp0], a
     ret
 
-; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)
+; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wSlotMarks[target] = 3 (E-0124)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; reads: wBattleTarget
 ; points at: wBattleActionChoice, wSlotMarks
@@ -1074,7 +1074,7 @@ Func_0A3_4A02:: ; address name
     ld [hl], $03
     ret
 
-; removes the first byte equal to C from the 8-byte queue at wD895, shifting later bytes down and filling with $FF (E-0124)
+; removes the first byte equal to C from the 8-byte queue at wActionQueue, shifting later bytes down and filling with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wActionQueue
 RemoveCFromActionQueue_A3:: ; heuristic: follows a terminator; C0

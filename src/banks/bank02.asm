@@ -138,7 +138,7 @@ Func_002_4071:: ; address name
     ld [wFadeState], a
     ret
 
-; rBGPI = $80 (palette 0, auto-increment), the 8 BG palettes from wC49F through WriteFadedPaletteFloorToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteFloorToOBPD (E-0076)
+; rBGPI = $80 (palette 0, auto-increment), the 8 BG palettes from wBGPaletteBuffer through WriteFadedPaletteFloorToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wOBJPaletteBuffer through WriteFadedPaletteFloorToOBPD (E-0076)
 ; 1 call site from 1 routine (e.g. StepCGBFade)
 ; writes: rBGPI, rOBPI
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
@@ -184,7 +184,7 @@ Func_002_4118:: ; address name
     call WriteFadedColorFloorToOBPD
     call WriteFadedColorFloorToOBPD
 
-; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentFloor and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wC572 into D is overwritten at once (E-0076)
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentFloor and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wFadeLevel into D is overwritten at once (E-0076)
 ; 3 call sites from 1 routine (e.g. WriteFadedPaletteFloorToOBPD)
 ; reads: wFadeLevel
 ; writes: rOBPD
@@ -248,7 +248,7 @@ Func_002_4152:: ; address name
     ei
     ret
 
-; the 5-bit component in C's low bits becomes max(component, wC572) when wC56D bit 7 is clear (lighten toward the level) or max(component - wC572, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
+; the 5-bit component in C's low bits becomes max(component, wFadeLevel) when wFadeMode bit 7 is clear (lighten toward the level) or max(component - wFadeLevel, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
 ; 6 call sites from 2 routines (e.g. WriteFadedColorFloorToOBPD, WriteFadedColorFloorToBGPD)
 ; reads: wFadeMode, wFadeLevel
 FadeColorComponentFloor::
@@ -304,7 +304,7 @@ Func_002_4176:: ; address name
     rr e
     ret
 
-; rBGPI = $80, the 8 BG palettes from wC49F through WriteFadedPaletteAddToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wC4DF through WriteFadedPaletteAddToOBPD (E-0076)
+; rBGPI = $80, the 8 BG palettes from wBGPaletteBuffer through WriteFadedPaletteAddToBGPD; then rOBPI = $80 and the 8 OBJ palettes from wOBJPaletteBuffer through WriteFadedPaletteAddToOBPD (E-0076)
 ; 1 call site from 1 routine (e.g. StepCGBFade)
 ; writes: rBGPI, rOBPI
 ; points at: wBGPaletteBuffer, wOBJPaletteBuffer
@@ -350,7 +350,7 @@ Func_002_420F:: ; address name
     call WriteFadedColorAddToOBPD
     call WriteFadedColorAddToOBPD
 
-; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentAdd and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wC572 into D is overwritten at once (E-0076)
+; reads one RGB555 colour word at HL (HL += 2), passes its three components through FadeColorComponentAdd and writes the result to rOBPD (low byte first, after WaitForVRAMAccess); its load of wFadeLevel into D is overwritten at once (E-0076)
 ; 3 call sites from 1 routine (e.g. WriteFadedPaletteAddToOBPD)
 ; reads: wFadeLevel
 ; writes: rOBPD
@@ -414,7 +414,7 @@ Func_002_4249:: ; address name
     ei
     ret
 
-; the 5-bit component in C's low bits becomes min(component + wC572, $1F) when wC56D bit 7 is clear (lighten) or max(component - wC572, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
+; the 5-bit component in C's low bits becomes min(component + wFadeLevel, $1F) when wFadeMode bit 7 is clear (lighten) or max(component - wFadeLevel, 0) when it is set (darken); then B:C:D:E is rotated right 5 bits so the next component comes down and the result collects in D:E (E-0076)
 ; 6 call sites from 2 routines (e.g. WriteFadedColorAddToOBPD, WriteFadedColorAddToBGPD)
 ; reads: wFadeMode, wFadeLevel
 FadeColorComponentAdd::
@@ -535,7 +535,7 @@ Func_002_42DD:: ; address name
     jr nz, .loop
     ret
 
-; on CGB copies the 8-byte palette Data_002_4322 into wBGPaletteBuffer and wOBJPaletteBuffer and sets the upload requests wC526 and wC527 = $7F (E-0117)
+; on CGB copies the 8-byte palette Data_002_4322 into wBGPaletteBuffer and wOBJPaletteBuffer and sets the upload requests wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117)
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wIsCGB
 ; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
@@ -583,7 +583,7 @@ Func_002_432A:: ; address name
     ld [wDMGPaletteBytes], a
     jp RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
 
-; wD781 += 1; on odd values, unless wD780 is $FF, runs the step for wD780 (jump table) (E-0122)
+; wScreenStep += 1; on odd values, unless wScreenState is $FF, runs the step for wScreenState (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep
@@ -946,7 +946,7 @@ Jump_002_4519:: ; address name
     ld [wDMGPaletteBytes + $1], a
     jp WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return
 
-; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wC5EA through Data_002_45C2; HL += 8 (E-0129)
+; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wDMGPaletteOBP0 through Data_002_45C2; HL += 8 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDMGPaletteOBP0
 ; writes: rOBPD
@@ -1210,7 +1210,7 @@ Func_002_4628:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; copies the player name to wC130 with a terminator, then a two-tile suffix ($58 $87 when story flag 0 is set, else $87 $60) (E-0124)
+; copies the player name to wTextBuf0 with a terminator, then a two-tile suffix ($58 $87 when story flag 0 is set, else $87 $60) (E-0124)
 ; 10 call sites from 10 routines (e.g. InitFieldScreen, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case23, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0, ...)
 ; writes: wTextBuf0
 ; points at: wPlayerName, wTextBuf0
@@ -1242,7 +1242,7 @@ Func_002_470B:: ; address name
     ld [wTextBuf0 + $E], a
     ret
 
-; runs the routine for wC8C7 & 3 (jump table; phase 3 reuses phase 0) (E-0122)
+; runs the routine for wFieldReturnPhase & 3 (jump table; phase 3 reuses phase 0) (E-0122)
 ; 1 call site from 1 routine (e.g. InitFieldScreen)
 ; reads: wFieldReturnPhase
 RunFieldReturnPhase::
@@ -1659,7 +1659,7 @@ Func_002_4A2C:: ; address name
     ld [wDataBankSave], a
     ret
 
-; for the lead record wC6FE: field $55 = 0, field $5B = $0001, then far-calls Func_004_4AA8 (E-0122)
+; for the lead record wPartyList: field $55 = 0, field $5B = $0001, then far-calls Func_004_4AA8 (E-0122)
 ; 1 call site from 1 routine (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B)
 ; reads: wPartyList
 ; writes: rRAMG
@@ -2141,7 +2141,7 @@ Jump_002_4DCC:: ; address name
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
-; when wCE9D = $3B and wCE9C = wCE9B = 0, far-calls Func_0F0_72B4 (E-0122)
+; when wGM2TimerMinutes = $3B and wGM2TimerSeconds = wGM2TimerFrames = 0, far-calls Func_0F0_72B4 (E-0122)
 ; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_RunGameMode2State, FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_DrawFieldSprites, FieldModeStateDispatch_RunEventScriptFrame, ...)
 ; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames
 CallF072B4WhenGM2TimerMinutesIs59::
@@ -2517,7 +2517,7 @@ Jump_002_4FBC:: ; address name
     ld [wJoypadPressed], a
     ret
 
-; when A is newly pressed and no fade, load or move is in progress: finds the position one step ahead of the player (hPlayerX or hPlayerY +/- 16 chosen by hPlayerFacing), looks it up with Func_002_59CD, and compares the result with the four ids at wC910 to pick an interaction
+; when A is newly pressed and no fade, load or move is in progress: finds the position one step ahead of the player (hPlayerX or hPlayerY +/- 16 chosen by hPlayerFacing), looks it up with Func_002_59CD, and compares the result with the four ids at wTilesUnderPoint to pick an interaction
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement)
 ; reads: wMapHeaderByte7, wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
@@ -2615,7 +2615,7 @@ Func_002_4FE8:: ; address name
     ld [wJoypadPressed], a
     ret
 
-; unless a fade runs or bit 7 of wC468 is set, runs the field event for wC90D & $0F (jump table of sixteen) (E-0124)
+; unless a fade runs or bit 7 of wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F (jump table of sixteen) (E-0124)
 ; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_DrawFieldSprites_Case04, FieldModeStateDispatch_RunBattleTransitionStep, FieldModeStateDispatch_DrawFieldSprites, ...)
 ; reads: wFadeState, wFieldActionRequest, wFieldEventKind
 RunFieldEventFieldEventKind::
@@ -3240,7 +3240,7 @@ Func_002_53D5:: ; address name
     ld [wFieldEventTimer], a
     ret
 
-; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
+; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hPlayerTurnDelay, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
 ; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
 ; reads: wFadeState, hPlayerTurnDelay, hPlayerStateFlags, wFieldActionRequest, wJoypadPressed, hPlayerFacing, hPlayerX, wScriptRunning, ...
 ; writes: hPlayerTurnDelay, hPlayerFacing, hPlayerStateFlags, hPlayerStepDXLo, hPlayerStepDXHi, hMapScreenX, wFieldActionRequest, wScreenScrollDir, ...
@@ -3976,7 +3976,7 @@ Func_002_5923:: ; address name
     ld [wFollowerRecords + $E], a
     ret
 
-; unless wC94D is non-zero, moves each of the three follower records one pixel toward its target (four pixels when wC468 bit 7 is set), X first and then Y, storing the direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end) (E-0093)
+; unless wFollowerDelay is non-zero, moves each of the three follower records one pixel toward its target (four pixels when wFieldActionRequest bit 7 is set), X first and then Y, storing the direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end) (E-0093)
 ; 12 call sites from 5 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, UpdateFollowersOnStep_Bank0F, ScriptStepMoveFollowersToLeader, UpdateFollowersOnStep_Bank12, ...)
 ; reads: wFollowerDelay, wFieldActionRequest
 ; points at: wFollowerRecords
@@ -4092,7 +4092,7 @@ Func_002_5946:: ; address name
     jr nz, .loop
     ret
 
-; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
+; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wTilesUnderPoint-wTilesUnderPoint + $3; returns A = 1 when any of them is at most wMaxBlockingTile, else A = 0 (a different pair of comparisons with wMapTallTileMin runs when hPlayerStateFlags bit 3 is set)
 ; 6 call sites from 3 routines (e.g. FieldModeStateDispatch_WaitMapSpriteKind, CheckInteractionInFront, UpdatePlayerMovement)
 ; reads: hPlayerStateFlags, wMaxBlockingTile, wMapTallTileMin
 ; writes: wTilesUnderPoint
@@ -4194,7 +4194,7 @@ Func_002_59CD:: ; address name
     pop bc
     ret
 
-; B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wCB8A, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does
+; B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wSpriteSlots + $B, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wSpriteSlotCount, hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
@@ -4417,7 +4417,7 @@ Data_002_5B89:: ; address name
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1A, $10, $70, $70
     db $85, $10, $50, $60, $FF
 
-; clears wC8CE; if bit 7 of wC8CD is set, draws the full screen buffer to the BG map at the scroll position and clears wC8CD and wC8CE (E-0121)
+; clears wPartyWindowTimer; if bit 7 of wPartyWindowFlags is set, draws the full screen buffer to the BG map at the scroll position and clears wPartyWindowFlags and wPartyWindowTimer (E-0121)
 ; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, ...)
 ; reads: wPartyWindowFlags, hScrollY, hScrollX
 ; writes: wPartyWindowTimer, wPartyWindowFlags
@@ -4452,7 +4452,7 @@ Func_002_5B9E:: ; address name
     ld [wPartyWindowTimer], a
     ret
 
-; if bit 7 of wC468 is set, runs the routine for wC468 & 3 (jump table) (E-0122)
+; if bit 7 of wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0122)
 ; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
 ; reads: wFieldActionRequest
 RunFieldActionRequestActionIfBit7::
@@ -4934,7 +4934,7 @@ Func_002_5E85:: ; address name
     ld [rRAMG], a
     ret
 
-; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
+; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wScreenAttrBuffer to wSavedScreenAttrs (rSVBK = 2); saves wSpriteSlotCount in wScreenSavedFlag. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
 ; 23 call sites from 21 routines (e.g. CheckInteractionInFront, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wScreenSavedFlag
@@ -4970,7 +4970,7 @@ Func_002_5EEE:: ; address name
     ld [wScreenSavedFlag], a
     ret
 
-; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
+; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wSavedScreenAttrs back to wScreenAttrBuffer (rSVBK = 2); restores wSpriteSlotCount from wScreenSavedFlag (E-0066)
 ; 7 call sites from 7 routines (e.g. InitFieldScreen, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1, SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, SceneWatchOut_RestoreScreenBufferFromBGMap1, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
@@ -5009,7 +5009,7 @@ Func_002_5F22:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
-; counts frames wC82D (0-59), seconds wC82E (0-59), minutes wC82F (0-59) and a 16-bit hour count wC830/wC831; stops at 999:59:59 ($03E7 hours)
+; counts frames wPlayFrames (0-59), seconds wPlaySeconds (0-59), minutes wPlayMinutes (0-59) and a 16-bit hour count wPlayHoursLo/wPlayHoursHi; stops at 999:59:59 ($03E7 hours)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch)
 ; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes
 ; points at: wPlayFrames
@@ -5066,7 +5066,7 @@ Func_002_5F59:: ; address name
     ld [hl], c
     ret
 
-; on the Super Game Boy sends PAL_SET for wC51F and loads the object palettes; wC5E0 1 becomes 2. The following entry clears the joypad state and runs the field mode states (E-0129)
+; on the Super Game Boy sends PAL_SET for wSGBPaletteSet and loads the object palettes; wFieldInitStage 1 becomes 2. The following entry clears the joypad state and runs the field mode states (E-0129)
 ; 3 call sites from 3 routines (e.g. InitFieldScreen, GameMode6_Init, GameMode8_Init)
 ; reads: wSGBActive, wSGBPaletteSet, wSGBAttrFile, wFieldInitStage
 ; writes: wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, wSGBPaletteNum3Hi, ...
@@ -5165,7 +5165,7 @@ Jump_002_5FF7:: ; address name
     call StartPaletteFade
     ret
 
-; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
+; wCurrentMusic = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
 ; 11 call sites from 11 routines (e.g. GameMode1_Init, InitFieldScreen, StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case09, RunMenuStateMenuState_InitSoundHardware, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; writes: wCurrentMusic
@@ -5174,7 +5174,7 @@ Func_002_604B:: ; address name
     ld a, $FF
     ld [wCurrentMusic], a
 
-; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
+; chooses the music for the current map (by wMapType and hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0122)
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_DrawFieldSprites_Case04, RunFieldReturnPhase_ResetLeadRecordFields55And5B, SceneThreeItems_ShowWarubouWaheyThereIs, SceneCheerYuna_StepObjectTowardCoord_Case0A, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 PlayMapMusic::
@@ -5597,7 +5597,7 @@ Jump_002_6307:: ; address name
     ld c, $1C
     jp PlayMapMusic_CheckCurrentMusic
 
-; map music case: music $2B when bit 3 of hFF8C is set, else $1C (E-0122)
+; map music case: music $2B when bit 3 of hPlayerStateFlags is set, else $1C (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wCurrentMusic
 MapMusicByPlayerStateFlagsBit3::
@@ -6361,7 +6361,7 @@ Func_002_66CC:: ; address name
     farcall LoadTilesForPartyRecords
     ret
 
-; for each party member writes level (field $56), HP (field $5B) and MP (field $5F) into the status window at wC364 (offsets Data_002_6835) (E-0130)
+; for each party member writes level (field $56), HP (field $5B) and MP (field $5F) into the status window at wWindowTileBuffer + $64 (offsets Data_002_6835) (E-0130)
 ; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: wPartyWindowFlags, hTemp0, hTemp5, hTemp1
 ; writes: rRAMG, hTemp5
@@ -6489,7 +6489,7 @@ BuildPartyStatusWindowRows_Data:: ; heuristic: pointer load in the same bank (ba
 Data_002_6835:: ; address name
     db $54, $2B, $3F, $51, $5A, $31, $45, $57, $60, $37, $4B, $5D
 
-; draws the 20 x 6 window wC364 at the scroll position + $180 (and its CGB attributes from wD1CC) (E-0127)
+; draws the 20 x 6 window wWindowTileBuffer + $64 at the scroll position + $180 (and its CGB attributes from wWindowAttrBuffer + $64) (E-0127)
 ; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: hScrollY, hScrollX, wIsCGB
 ; writes: rVBK, rSVBK
@@ -6655,7 +6655,7 @@ Data_002_695E:: ; address name
     db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $B7 ; id 4
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
-; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
+; while wTextWindowState & 3 is set: copies the text window rows to or from wWindowTileBuffer (with CGB attributes) and redraws them at the scroll position (E-0130)
 ; 10 call sites from 10 routines (e.g. FieldModeStateDispatch_RunEventScriptFrame, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, GameMode5_Init_SendSGBPaletteSetPacket_Case06, ...)
 ; reads: wTextWindowState, wIsCGB, hScrollY, hScrollX, wTextWindowStep
 ; writes: rSVBK
@@ -6881,7 +6881,7 @@ Jump_002_6ADB:: ; address name
     ld [wTextWindowStep], a
     ret
 
-; copies a rectangle of the screen buffer wC300 to the BG map (CopyRectFromBankToBGMapWrapped) and sets wC554 = HL + $21 (wrapped in the map); on CGB also copies the attributes from wD168 in VRAM bank 1 (E-0121)
+; copies a rectangle of the screen buffer wWindowTileBuffer to the BG map (CopyRectFromBankToBGMapWrapped) and sets wTextCursorLo = HL + $21 (wrapped in the map); on CGB also copies the attributes from wWindowAttrBuffer in VRAM bank 1 (E-0121)
 ; 7 call sites from 4 routines (e.g. StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes, OpenFieldMenuOnA)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -7007,7 +7007,7 @@ Data_002_6BDC:: ; address name
     ds $12, $B4
     db $B5
 
-; runs the routine for wC46B & $0F (jump table) (E-0122)
+; runs the routine for wMenuState & $0F (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunMenuStateMenuState)
 ; reads: wMenuState
 RunMenuStateMenuState::
@@ -7598,7 +7598,7 @@ Data_002_7006:: ; address name
     db $E2, $00, $00, $40, $40 ; id 12: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
     db $00, $00, $00 ; not read
 
-; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
+; with SRAM bank 1 selected: hTemp0 = 1 when sSaveSignature is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
 ; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, GameMode5_Init_InitSoundHardware, ShowSaveFileInfoWindow, LoadSaveFileSummary)
 ; reads: sSaveSignature
 ; writes: rRAMG, rRAMB, hTemp0
@@ -7638,7 +7638,7 @@ Func_002_706E:: ; address name
     ld [rRAMB], a
     ret
 
-; sums the SRAM bank-1 bytes from sA06F into the word DE (the loop adds several bytes per pass; the comparison at the end is not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; sums the SRAM bank-1 bytes from sBank1Records into the word DE (the loop adds several bytes per pass; the comparison at the end is not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum
@@ -7751,7 +7751,7 @@ Func_002_70A2:: ; address name
     ld a, $01
     ret
 
-; sums the SRAM bank-3 bytes from sA000 into the word DE (comparison not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
+; sums the SRAM bank-3 bytes from sRecords into the word DE (comparison not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
 ; points at: sRecords
@@ -7863,7 +7863,7 @@ Func_002_7111:: ; address name
     ld a, $01
     ret
 
-; with SRAM enabled, steps by wC8C3: on the first call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines; on the second runs Func_002_71B2; afterwards sets bit 7 of wC8C3 (finished); disables SRAM each time (E-0109)
+; with SRAM enabled, steps by wSaveStep: on the first call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines; on the second runs Func_002_71B2; afterwards sets bit 7 of wSaveStep (finished); disables SRAM each time (E-0109)
 ; 9 call sites from 9 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, GameMode5_Init_SendSGBPaletteSetPacket_Case04, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
@@ -7899,7 +7899,7 @@ Func_002_717D:: ; address name
     ld [rRAMB], a
     ret
 
-; runs Func_01D_7492 for SRAM bank 1 record wC8C4 ($A06F + $6F * index); when wD7F5 is $FF advances wC8C4 and, after record 30, increments wC8C3 (E-0121)
+; runs Func_01D_7492 for SRAM bank 1 record wSaveRecordIndex ($A06F + $6F * index); when wArg5 is $FF advances wSaveRecordIndex and, after record 30, increments wSaveStep (E-0121)
 ; 2 call sites from 2 routines (e.g. RunSaveSteps, RunBank1RecordScanSteps)
 ; reads: wSaveRecordIndex, wArg5
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
@@ -7935,7 +7935,7 @@ Func_002_71B2:: ; address name
     inc [hl]
     ret
 
-; copies the record backup at sAD71 (SRAM bank 1) back to sB356 in bank 0 and to sA000 in bank 1; counterpart of BackupRecordsToSRAMBank1 (E-0128)
+; copies the record backup at sRecordBackup (SRAM bank 1) back to sCompactRecords in bank 0 and to sRecords in bank 1; counterpart of BackupRecordsToSRAMBank1 (E-0128)
 ; 2 call sites from 2 routines (e.g. RunSaveSteps, RunBank1RecordScanSteps)
 ; writes: rRAMB
 ; points at: sRecordBackup, sCompactRecords, sRecords
@@ -8085,7 +8085,7 @@ Func_002_7247:: ; address name
     jp nz, .loop
     ret
 
-; with SRAM bank 1 selected, walks the list at Data_002_75F7 (word address, word length; a zero address ends it) and copies each WRAM block to SRAM from sBB01 onward (the copy loop is not read to its end) (E-0109)
+; with SRAM bank 1 selected, walks the list at Data_002_75F7 (word address, word length; a zero address ends it) and copies each WRAM block to SRAM from sSaveData onward (the copy loop is not read to its end) (E-0109)
 ; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMB, hTemp0, hTemp1, wSaveStateFlag
@@ -8165,7 +8165,7 @@ Func_002_72E9:: ; address name
     jr nz, .loop
     ret
 
-; when wCECE is 0 or 1, copies the $D8 bytes at wCE9B to sBEC0 in SRAM bank 1 (E-0124)
+; when wGiftRecord is 0 or 1, copies the $D8 bytes at wGM2TimerFrames to sSavedCE9BBlock in SRAM bank 1 (E-0124)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
 ; reads: wGiftRecord
 ; writes: rRAMB, rSVBK
@@ -8196,7 +8196,7 @@ Func_002_730E:: ; address name
     jr nz, .loop
     ret
 
-; with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
+; with SRAM enabled: on the first step (wSaveStep = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
 ; 9 call sites from 9 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_ResetAndSignal_Case04_ComputeBreedingChild, LinkKeyTrade_ShowPleaseWait, GameMode6_Init, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
@@ -8212,7 +8212,7 @@ Func_002_7333:: ; address name
     call CopySaveBlocksToSRAMWithSum
     jr RunSaveGameSteps_7347_CallRunSaveGameSteps_7347_ClearSRAMBanks2And
 
-; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wC8C3) (E-0124)
+; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wSaveStep) (E-0124)
 ; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_RunSaveGameSteps_7347, KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_7347, BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
@@ -8254,7 +8254,7 @@ Jump_002_7377:: ; address name
     ld [rRAMB], a
     ret
 
-; sums $29A * 10 bytes from sA06F in SRAM bank 1 and stores the complement plus $4321 at sBA73 (E-0129)
+; sums $29A * 10 bytes from sBank1Records in SRAM bank 1 and stores the complement plus $4321 at sBank1Checksum (E-0129)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum
@@ -8360,7 +8360,7 @@ Func_002_737F:: ; address name
     ld [hl], a
     ret
 
-; copies SRAM bank-1 record wC8C4 ($6F bytes at sA06F + $6F * n) through Func_01D_6E39, then wC8C4 += 1; after 30 records wC8C3 += 1 (the next save step) (E-0120)
+; copies SRAM bank-1 record wSaveRecordIndex ($6F bytes at sBank1Records + $6F * n) through Func_01D_6E39, then wSaveRecordIndex += 1; after 30 records wSaveStep += 1 (the next save step) (E-0120)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; reads: wSaveRecordIndex
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
@@ -8393,7 +8393,7 @@ Func_002_73E6:: ; address name
     inc [hl]
     ret
 
-; copies the SRAM bank-0 records from sB356 (and the bank-1 record at sA000) to the backup area at sAD71 in SRAM bank 1 (E-0127)
+; copies the SRAM bank-0 records from sCompactRecords (and the bank-1 record at sRecords) to the backup area at sRecordBackup in SRAM bank 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; writes: rRAMB
 ; points at: sCompactRecords, sRecordBackup, sRecords
@@ -8653,7 +8653,7 @@ Func_002_7491:: ; address name
     ld [hl], a
     ret
 
-; wC83A = wCB7E and the $50 bytes of wSpriteSlots go to wC83B; then clears bit 1 of five object flag bytes at wC848, wC858, wC868, wC878 and wC888 (E-0109)
+; wSpriteSnapshotCount = wScreenSavedFlag and the $50 bytes of wSpriteSlots go to wSpriteSnapshot; then clears bit 1 of five object flag bytes at wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4 and wSnapshotSlot5 (E-0109)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
 ; reads: wScreenSavedFlag, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, hTemp0, hTemp1, ...
 ; writes: wSpriteSnapshotCount, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, rRAMB, hTemp2, ...
@@ -8682,7 +8682,7 @@ Func_002_755E:: ; address name
     and a, $FD
     ld [wSnapshotSlot5], a
 
-; the same walk of Data_002_75F7 into SRAM from sBB01, also clearing the running sum in hFFC8/hFFC9 (accumulation not read to its end) (E-0109)
+; the same walk of Data_002_75F7 into SRAM from sSaveData, also clearing the running sum in hTemp2/hTemp3 (accumulation not read to its end) (E-0109)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: rRAMB, hTemp2, hTemp3, hTemp0, hTemp1, sSaveSignature, sSaveChecksumLo, sSaveChecksumHi
@@ -8758,7 +8758,7 @@ Data_002_75F7:: ; address name
     db $8A, $FF, $0E, $00, $0C, $C6, $91, $02, $D7, $CB, $6B, $00, $42, $CC, $B5, $00
     db $00, $00, $00, $00
 
-; SRAM bank 1: C = $FF when sBB00 is not $55 or the checksum of the four saved blocks plus $9753 differs from sBF98; otherwise loads them and returns with C unchanged (E-0127)
+; SRAM bank 1: C = $FF when sSaveSignature is not $55 or the checksum of the four saved blocks plus $9753 differs from sSaveChecksumLo; otherwise loads them and returns with C unchanged (E-0127)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C)
 ; reads: sSaveSignature, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3
@@ -8821,7 +8821,7 @@ Func_002_760B:: ; address name
     ld c, $FF
     ret
 
-; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
+; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hTemp2/hTemp3; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
 ; 4 call sites from 1 routine (e.g. VerifySaveChecksum)
 ; reads: hTemp2, hTemp3
 ; writes: hTemp2, hTemp3
@@ -8842,7 +8842,7 @@ Func_002_7674:: ; address name
     jr nz, CopyBytesWithChecksum_Bank02_7674
     ret
 
-; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
+; SRAM bank 1: copies hPlayerSpriteVariant ($0E bytes), wPlayerName ($291), wStoryFlags ($6B) and wKeyWorldSlot ($B5) to sSaveData onward while summing them; stores sum + $9753 at sSaveChecksumLo and $55 at sSaveSignature (E-0121)
 ; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
@@ -8889,7 +8889,7 @@ Func_002_7688:: ; address name
     ld [rRAMG], a
     ret
 
-; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
+; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hTemp2/hTemp3; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
 ; 4 call sites from 1 routine (e.g. SaveGameToSRAMWithChecksum)
 ; reads: hTemp2, hTemp3
 ; writes: hTemp2, hTemp3
@@ -8910,7 +8910,7 @@ Func_002_76DE:: ; address name
     jr nz, CopyBytesWithChecksum_Bank02
     ret
 
-; with SRAM enabled: first call runs Func_002_71ED, then scans bank-1 records; after stage 2 sets wC8C3 = $80 (E-0124)
+; with SRAM enabled: first call runs Func_002_71ED, then scans bank-1 records; after stage 2 sets wSaveStep = $80 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep

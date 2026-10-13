@@ -641,7 +641,7 @@ Func_0E1_5AC0:: ; address name
     jr nz, .loop5
     ret
 
-; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
+; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. RunE15AC0For5ABE_WaitOamNextEntry)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
 BGTileUnderPointIsSpriteHideTile_BankE1::

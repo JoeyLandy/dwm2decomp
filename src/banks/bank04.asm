@@ -9,7 +9,7 @@ Func_004_4001:: ; address name
     call UpdateAndDrawSpriteSlots
     ret
 
-; when wC88D bit 7 is set: clears wC88D, wSpriteSlotCount = wC83A and the $50 bytes at wC83B go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
+; when wSaveStateFlag bit 7 is set: clears wSaveStateFlag, wSpriteSlotCount = wSpriteSnapshotCount and the $50 bytes at wSpriteSnapshot go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
 ; 2 call sites from 1 routine (e.g. LoadMapObjectsForScreen)
 ; reads: wSaveStateFlag, wSpriteSnapshotCount
 ; writes: wSaveStateFlag, wSpriteSlotCount
@@ -29,7 +29,7 @@ Func_004_4008:: ; address name
     call CopyBytes
     ret
 
-; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wCD89/wCDAC entries (E-0130)
+; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wKeyWorldFloorInfo + $1/wKeyWorldFloorState entries (E-0130)
 ; 1 call site from 1 routine (e.g. LoadMapObjectsForScreen)
 ; reads: wMapType, wKeyWorldFloor, wKeyWorldByte06, wKeyWorldFlags, wKeyWorldGoalKind, wKeyWorldObjFlag
 ; writes: wKeyWorldObjFlag, hTemp9, wSpriteSlotCount
@@ -416,7 +416,7 @@ Data_004_423D:: ; address name
     db $15, $15, $15, $15, $15, $15, $15, $44, $15, $15, $00, $00, $00, $00, $00, $00 ; id 7
     db $00, $16, $00, $00, $00, $00, $00, $44, $16, $33, $00, $00, $00, $00, $00, $00 ; id 8
 
-; on map screen (0, 0) or (1, 0) sets wCB8A/wCB8B and wCB86 for wCD0B values 1, 7, 8 or 9 (E-0125)
+; on map screen (0, 0) or (1, 0) sets wSpriteSlots + $B/wSpriteSlots + $C and wSpriteSlots + $7 for wKeyWorldGoalKind values 1, 7, 8 or 9 (E-0125)
 ; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
 ; reads: hMapScreenY, hMapScreenX, wKeyWorldGoalKind
 ; writes: wSpriteSlots
@@ -469,7 +469,7 @@ Func_004_42CD:: ; address name
     ld [wSpriteSlots + $7], a
     ret
 
-; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
+; hTemp0/hTemp1 = graphics number, hTemp4/hTemp5 = VRAM destination: with hTemp2 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
 ; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Multiply8, SceneExplosion_QueueSoundEffect, ...)
 ; reads: hTemp2, hTemp0, hTemp1, hTemp4, hTemp5, wIsCGB, hTemp3
 ; points at: wOBJPaletteBuffer
@@ -579,7 +579,7 @@ Func_004_431F:: ; address name
     call CopyFromBank
     ret
 
-; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
+; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
 ; record: compressed sprite graphics in bank $7D
 FieldSpriteGraphicsTable::
 Data_004_43AC:: ; address name
@@ -664,7 +664,7 @@ Data_004_43AC:: ; address name
     dw FieldSpriteGfx4E ; id 78
     dw FieldSpriteGfx4F ; id 79
 
-; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
+; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hTemp2 non-zero reads the word $43AC + 2 * hTemp0/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
 ; record: compressed sprite graphics in bank $7E
 FieldSpriteGraphicsTable50::
 Data_004_444C:: ; address name
@@ -687,7 +687,7 @@ Data_004_444C:: ; address name
     dw FieldSpriteGfx60 ; id 96
     dw FieldSpriteGfx61 ; id 97
 
-; sets bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
+; sets bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
 ; 11 call sites from 11 routines (e.g. OpenFieldMenuOnA, ScriptCommand09_SetBit1OfPlayerAndObjectFlags, RunMessageBox_Bank12_SetBit1OfPlayerAndObjectFlags, RunMessageBoxStateIfActive_Bank12_SetBit1OfPlayerAndObjectFlags, ...)
 ; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
@@ -713,7 +713,7 @@ Func_004_4470:: ; address name
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
-; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
+; clears bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object entries 0-4 (E-0072)
 ; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_ClearBit1OfPlayerAndObjectFlags, RunGameMode5Case01SubStates_Case02_Case00_RunSaveSteps, ArenaMenu_Case1A_DispatchTalkEvent, ArenaMenu_DispatchTalkEvent, ...)
 ; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
@@ -739,7 +739,7 @@ Func_004_449F:: ; address name
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
-; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
+; unless bit 7 of wFieldActionRequest is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
 ; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots, ...)
 ; reads: wFieldActionRequest, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
 ; writes: hTemp0, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
@@ -1409,7 +1409,7 @@ Jump_004_4705:: ; address name
     ld a, [hl]
     jp UpdateSpriteSlots_RestoreRegisters_Skip
 
-; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
+; runs Func_004_495A when wPendingFieldEvent & $0F = $0A, else Func_004_4904 (E-0122)
 ; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03)
 ; reads: wPendingFieldEvent
 RunPendingFieldEventType0AOrOther::
@@ -1533,7 +1533,7 @@ Jump_004_4877:: ; address name
     db $00, $10, $01, $0E, $02, $0E, $01, $0E, $02, $0E, $00, $20, $06, $0E, $07, $20
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
-; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wC910-wC913; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
+; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
 ; 3 call sites from 2 routines (e.g. RunPendingFieldEventType0AOrOther, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wTilesUnderPoint
@@ -1783,7 +1783,7 @@ Func_004_49B0:: ; address name
     pop bc
     ret
 
-; E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20).
+; E-0143 (C1: on CGB, with hTemp2 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hTemp0 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hTemp3; values 0-20).
 ; record: palette number in FieldSpritePalettes
 FieldSpritePaletteIndex::
 Data_004_4A46:: ; address name
@@ -1886,7 +1886,7 @@ Data_004_4A46:: ; address name
     db $00 ; id 96
     db $14 ; id 97
 
-; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
+; hPlayerSpriteMode = sprite mode from story flags $19F, $25 and 2 and bit 3 of hPlayerStateFlags, then loads the matching player and follower sprite graphics (E-0128)
 ; 34 call sites from 34 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, ResetLeadRecordFields55And5B, LibraryMenu_LoadMapHeader, ...)
 ; reads: hPlayerStateFlags, hPlayerSpriteMode
 ; writes: hPlayerSpriteMode, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
@@ -1973,7 +1973,7 @@ Func_004_4AA8:: ; address name
     call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
-; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hFF94/hFF95 when bit 7 of hFF93 is set (E-0127)
+; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hPlayerSpriteStreamLo/hPlayerSpriteStreamHi when bit 7 of hPlayerSpriteOverride is set (E-0127)
 ; 5 call sites from 3 routines (e.g. LoadPlayerAndFollowerSpriteGraphics, PlayerSpriteFlash_LoadPlayerSpriteGraphics, PlayerSpriteMessage_LoadPlayerSpriteGraphics)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hTemp0, hPlayerSpriteVariant, hTemp1, hTemp3, hTemp2, hTemp4, hTemp5
@@ -2030,7 +2030,7 @@ Func_004_4B2D:: ; address name
     call DecompressGraphicsTemp0ToTemp4
     ret
 
-; when hFF8C bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wC527 = $7F) (E-0120)
+; when hPlayerStateFlags bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wOBJPaletteUploadRequest = $7F) (E-0120)
 ; 1 call site from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
 ; reads: hPlayerStateFlags
 ; writes: wOBJPaletteUploadRequest
@@ -2061,7 +2061,7 @@ Func_004_4B7E:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; unless bit 1 of hFF8C is set, hFF99 += 1 (+3 more with bit 2); then runs the routine for hFF8B (jump table of three) (E-0124)
+; unless bit 1 of hPlayerStateFlags is set, hPlayerAnimCounter += 1 (+3 more with bit 2); then runs the routine for hPlayerSpriteMode (jump table of three) (E-0124)
 ; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_Case04)
 ; reads: hPlayerStateFlags, hPlayerAnimCounter, hPlayerSpriteMode
 ; writes: hPlayerAnimCounter
@@ -3323,7 +3323,7 @@ Data_004_55AF:: ; address name
     db $01 ; entry 0
     db $85, $00, $28, $00, $00, $40, $50, $05, $00, $50, $FB
 
-; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
+; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
 ; 357 call sites from 201 routines (e.g. IfFlag00D1Msg0D3A_ToBeHonestI, IfFlag00D1Msg0D39_AhGreatLogsMightyHero, IfFlag00D1Msg0D38_JustImagineIfYou, IfFlag00D1Msg0D37_InsteadOfStandingAround, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 StartMessageCommand09HL_B04::
@@ -3444,7 +3444,7 @@ Jump_004_5660:: ; address name
 
 ; starts Script_4F54 (StartScriptAtHL); its first message begins 'Heh, so these are the newcomers?' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case01)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_4F54: 'Heh, so these are the newcomers?'
+; starts Script_4F54: '*: Heh, so these are the'
 TalkScript4F54_HehSoTheseAreTheNewcomers::
 Jump_004_5676:: ; address name
     ld hl, Script_4F54
@@ -3453,7 +3453,7 @@ Jump_004_5676:: ; address name
 
 ; starts Script_5111 (StartScriptAtHL); its first message begins 'Listen you two! Quit your horsing' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case02)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5111: 'Listen you two! Quit your horsing'
+; starts Script_5111: '*: Listen you two! Quit your'
 TalkScript5111_ListenYouTwoQuitYourHorsing::
 Jump_004_567D:: ; address name
     ld hl, Script_5111
@@ -3463,7 +3463,7 @@ Jump_004_567D:: ; address name
 
 ; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_4F73: 'Oh It's all spinning around That'
+; starts Script_4F73: '*: Oh It's all spinning around'
 StartScript4F73AndSetFlag5::
 Jump_004_568B:: ; address name
     ld hl, Script_4F73
@@ -3472,7 +3472,7 @@ Jump_004_568B:: ; address name
     call SetFlagBit
     ret
 
-; map event: starts script $4F7C, runs Func_012_6B98 with hFFC6 = 0 and sets story flag 6 (E-0122)
+; map event: starts script $4F7C, runs Func_012_6B98 with hTemp0 = 0 and sets story flag 6 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; starts Script_4F7C
@@ -3489,7 +3489,7 @@ Jump_004_5698:: ; address name
 
 ; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_4F9D: 'Warubou Calm down and listen! What'
+; starts Script_4F9D: 'Warubou: Calm down and listen! What'
 IfFlag000AStartScript4F9D::
 Jump_004_56AF:: ; address name
     ld de, $000A
@@ -3526,12 +3526,12 @@ Jump_004_56BD:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0046 ; 'Thanks for coming by. I'll always'
+    ld hl, $0046 ; '*: Thanks for coming by. I'll'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0079 ; 'You say the island will sink?'
+    ld hl, $0079 ; '*: You say the island will'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3767,7 +3767,7 @@ Jump_004_5815:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; with story flag $1A set: counts keys twice (Func_012_6955 with hFFC7 = 1 and 2), sets bit 7 of wC836 and starts script $5039 (E-0124)
+; with story flag $1A set: counts keys twice (Func_012_6955 with hTemp1 = 1 and 2), sets bit 7 of wGameFlags836 and starts script $5039 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: hTemp1, wGameFlags836
@@ -3798,7 +3798,7 @@ Jump_004_5852:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D33 ; 'You saved us all by yourself.'
+    ld hl, $0D33 ; '*: You saved us all by'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3809,7 +3809,7 @@ Jump_004_5860:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D34 ; 'Please, eat up, eat up! Don't'
+    ld hl, $0D34 ; '*: Please, eat up, eat up!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3820,7 +3820,7 @@ Jump_004_586E:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D35 ; 'Hm? I saw your family. They'
+    ld hl, $0D35 ; '*: Hm? I saw your family.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3831,7 +3831,7 @@ Jump_004_587C:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D36 ; 'The Kingdom is rejoicing!'
+    ld hl, $0D36 ; '*: The Kingdom is rejoicing!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3842,7 +3842,7 @@ Jump_004_588A:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D37 ; 'Instead of standing around, you should'
+    ld hl, $0D37 ; '*: Instead of standing around, you'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3853,7 +3853,7 @@ Jump_004_5898:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D38 ; 'Just imagine if you weren't here.'
+    ld hl, $0D38 ; '*: Just imagine if you weren't'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3864,7 +3864,7 @@ Jump_004_58A6:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D39 ; 'Ah, GreatLog's mighty hero! I hope'
+    ld hl, $0D39 ; '*: Ah, GreatLog's mighty hero! I'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3875,7 +3875,7 @@ Jump_004_58B4:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
-    ld hl, $0D3A ; 'To be honest, I was getting'
+    ld hl, $0D3A ; '*: To be honest, I was'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4001,7 +4001,7 @@ Func_004_58C2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0800_ThisIsTheVillageOfYold::
 Jump_004_59A2:: ; address name
-    ld hl, $0800 ; 'This is the village of Yold.'
+    ld hl, $0800 ; '*: This is the village of'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4009,7 +4009,7 @@ Jump_004_59A2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0801_InTheNorthwestIsAVillage::
 Jump_004_59A9:: ; address name
-    ld hl, $0801 ; 'In the northwest is a village'
+    ld hl, $0801 ; '*: In the northwest is a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4017,7 +4017,7 @@ Jump_004_59A9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0802_AroundThesePartsItsFaster::
 Jump_004_59B0:: ; address name
-    ld hl, $0802 ; 'Around these parts it's faster to'
+    ld hl, $0802 ; '*: Around these parts it's faster'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4028,12 +4028,12 @@ Jump_004_59B7:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0803 ; 'I saw a haunted ship in'
+    ld hl, $0803 ; '*: I saw a haunted ship'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0874 ; 'I haven't seen the ghost ship'
+    ld hl, $0874 ; '*: I haven't seen the ghost'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4044,12 +4044,12 @@ Jump_004_59CD:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0804 ; 'The volcanic island off the coast'
+    ld hl, $0804 ; '*: The volcanic island off the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0875 ; 'The volcanic island appears to have'
+    ld hl, $0875 ; '*: The volcanic island appears to'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4060,12 +4060,12 @@ Jump_004_59E3:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0805 ; 'Mermaids lived in the sea in'
+    ld hl, $0805 ; '*: Mermaids lived in the sea'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0876 ; 'Sigh Will the HarMirror make me'
+    ld hl, $0876 ; '*: Sigh Will the HarMirror make'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4086,12 +4086,12 @@ Jump_004_59F9:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0808 ; 'I hope the volcanic island off'
+    ld hl, $0808 ; '*: I hope the volcanic island'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0877 ; 'My grandson just shivers now He's'
+    ld hl, $0877 ; '*: My grandson just shivers now'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4178,7 +4178,7 @@ Jump_004_5A73:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg080C_WelcomeToPolonaItsATourist::
 Jump_004_5A7A:: ; address name
-    ld hl, $080C ; 'Welcome to Polona. It's a tourist'
+    ld hl, $080C ; '*: Welcome to Polona. It's a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4189,12 +4189,12 @@ Jump_004_5A81:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $080D ; 'You could meet mermaids here in'
+    ld hl, $080D ; '*: You could meet mermaids here'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0878 ; 'The mermaids came back.'
+    ld hl, $0878 ; '*: The mermaids came back.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4202,7 +4202,7 @@ Jump_004_5A81:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg080E_ImFromThePortInThe::
 Jump_004_5A97:: ; address name
-    ld hl, $080E ; 'I'm from the port in the'
+    ld hl, $080E ; '*: I'm from the port in'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4210,7 +4210,7 @@ Jump_004_5A97:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg080F_YoureNotSupposedToGoNear::
 Jump_004_5A9E:: ; address name
-    ld hl, $080F ; 'You're not supposed to go near'
+    ld hl, $080F ; '*: You're not supposed to go'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4272,14 +4272,14 @@ Jump_004_5AA5:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $084A ; 'I'm astonished. Mermaids exist.'
+    ld hl, $084A ; '*: I'm astonished. Mermaids exist.'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 20 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_5B94: 'Welcome to our inn!'
+; starts Script_5B94: '*: Welcome to our inn!'
 YoldTalkEvents_StartScriptAtHL_B04_Case14::
 Jump_004_5B1D:: ; address name
     ld hl, Script_5B94
@@ -4290,7 +4290,7 @@ Jump_004_5B1D:: ; address name
 
 ; starts Script_5B9B (StartScriptAtHL); its first message begins 'Have you heard the legend about' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case15)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5B9B: 'Have you heard the legend about'
+; starts Script_5B9B: '*: Have you heard the legend'
 TalkScript5B9B_HaveYouHeardTheLegendAbout::
 Jump_004_5B29:: ; address name
     ld hl, Script_5B9B
@@ -4301,7 +4301,7 @@ Jump_004_5B29:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg081B_AhhThisIsHeavenlyItMakes::
 Jump_004_5B30:: ; address name
-    ld hl, $081B ; 'Ahh This is heavenly! It makes'
+    ld hl, $081B ; '*: Ahh This is heavenly! It'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4312,12 +4312,12 @@ Jump_004_5B37:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $081C ; 'I came from far away to'
+    ld hl, $081C ; '*: I came from far away'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0879 ; 'I've seen mermaids too. I think'
+    ld hl, $0879 ; '*: I've seen mermaids too. I'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4341,7 +4341,7 @@ Jump_004_5B54:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg081D_ThisIsPortRitzWhereShips::
 Jump_004_5B5B:: ; address name
-    ld hl, $081D ; 'This is Port Ritz, where ships'
+    ld hl, $081D ; '*: This is Port Ritz, where'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4352,12 +4352,12 @@ Jump_004_5B62:: ; address name
     ld de, $007A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $081E ; 'The pirates were swallowed by the'
+    ld hl, $081E ; '*: The pirates were swallowed by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087A ; 'The pirates hid their loot on'
+    ld hl, $087A ; '*: The pirates hid their loot'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4365,14 +4365,14 @@ Jump_004_5B62:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg081F_TheresThisOldSailorManIn::
 Jump_004_5B78:: ; address name
-    ld hl, $081F ; 'There's this old sailor man in'
+    ld hl, $081F ; '*: There's this old sailor man'
     call StartMessageCommand09HL_B04
     ret
 
 ; sets wDataBank = $1F, then starts Script_5BA8 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_5BA8: 'How may our church serve you?'
+; starts Script_5BA8: '*: How may our church serve'
 TalkScript5BA8_HowMayOurChurchServeYou::
 Jump_004_5B7F:: ; address name
     ld a, $1F
@@ -4385,7 +4385,7 @@ Jump_004_5B7F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0821_AllSortsOfPeopleComeHere::
 Jump_004_5B8B:: ; address name
-    ld hl, $0821 ; 'All sorts of people come here'
+    ld hl, $0821 ; '*: All sorts of people come'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4393,7 +4393,7 @@ Jump_004_5B8B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0822_IWentToPolonaAWhile::
 Jump_004_5B92:: ; address name
-    ld hl, $0822 ; 'I went to Polona a while'
+    ld hl, $0822 ; '*: I went to Polona a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4417,12 +4417,12 @@ Jump_004_5BAA:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0824 ; 'There is a lighthouse to the'
+    ld hl, $0824 ; '*: There is a lighthouse to'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D13 ; 'The lighthouse is out east. Stay'
+    ld hl, $0D13 ; '*: The lighthouse is out east.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4430,7 +4430,7 @@ Jump_004_5BAA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0825_MyShipSankInTheEastern::
 Jump_004_5BC0:: ; address name
-    ld hl, $0825 ; 'My ship sank in the eastern'
+    ld hl, $0825 ; '*: My ship sank in the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4438,7 +4438,7 @@ Jump_004_5BC0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0826_TheOldManInTheTaverns::
 Jump_004_5BC7:: ; address name
-    ld hl, $0826 ; 'The old man in the tavern's'
+    ld hl, $0826 ; '*: The old man in the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4449,12 +4449,12 @@ Jump_004_5BCE:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0827 ; 'This port used to be lively'
+    ld hl, $0827 ; '*: This port used to be'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087B ; 'The sea around here is safe'
+    ld hl, $087B ; '*: The sea around here is'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4465,12 +4465,12 @@ Jump_004_5BE4:: ; address name
     ld de, $005F
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0829 ; 'The lighthouse had the MoonRock installed'
+    ld hl, $0829 ; '*: The lighthouse had the MoonRock'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087C ; 'The MoonRock glows at night from'
+    ld hl, $087C ; '*: The MoonRock glows at night'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4481,12 +4481,12 @@ Jump_004_5BFA:: ; address name
     ld de, $007A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $082A ; 'The sea's level has gone down.'
+    ld hl, $082A ; '*: The sea's level has gone'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087D ; 'The sea's level has risen. No'
+    ld hl, $087D ; '*: The sea's level has risen.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4494,7 +4494,7 @@ Jump_004_5BFA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg082B_ListenDidYouKnowMermaids::
 Jump_004_5C10:: ; address name
-    ld hl, $082B ; 'Listen, did you know? Mermaids appear'
+    ld hl, $082B ; '*: Listen, did you know? Mermaids'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4540,7 +4540,7 @@ Jump_004_5C2C:: ; address name
 ; entry 44 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_5BBD: 'Welcome to our inn!'
+; starts Script_5BBD: '*: Welcome to our inn!'
 YoldTalkEvents_StartScriptAtHL_B04_Case2C::
 Jump_004_5C3D:: ; address name
     ld hl, Script_5BBD
@@ -4556,12 +4556,12 @@ Jump_004_5C49:: ; address name
     ld de, $007A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $082F ; 'This area was a lot more'
+    ld hl, $082F ; '*: This area was a lot'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $087E ; 'For some reason, the shoals sank'
+    ld hl, $087E ; '*: For some reason, the shoals'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4570,7 +4570,7 @@ Jump_004_5C49:: ; address name
 ; starts Script_5BC4
 TalkMsg0830_WhenYoureOutAtSeaYou::
 Jump_004_5C5F:: ; address name
-    ld hl, $0830 ; 'When you're out at sea, you'
+    ld hl, $0830 ; '*: When you're out at sea,'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4593,17 +4593,17 @@ Jump_004_5C6D:: ; address name
     ld de, $006D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0834 ; 'When that old man gets grogged'
+    ld hl, $0834 ; '*: When that old man gets'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0842 ; 'I'm tired of the geezer's tales.'
+    ld hl, $0842 ; '*: I'm tired of the geezer's'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0D14 ; 'Another master was here with two'
+    ld hl, $0D14 ; '*: Another master was here with'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4617,17 +4617,17 @@ Jump_004_5C92:: ; address name
     ld de, $007A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0835 ; 'The old fellow there, the instant'
+    ld hl, $0835 ; '*: The old fellow there, the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0DC3 ; 'The shoals that ringed the volcano'
+    ld hl, $0DC3 ; '*: The shoals that ringed the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $087F ; 'Did you hear? Pirates hid their'
+    ld hl, $087F ; '*: Did you hear? Pirates hid'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4635,7 +4635,7 @@ Jump_004_5C92:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0836_TheVolcanicIslandOffTheCoast::
 Jump_004_5CB7:: ; address name
-    ld hl, $0836 ; 'The volcanic island off the coast'
+    ld hl, $0836 ; '*: The volcanic island off the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4657,7 +4657,7 @@ Jump_004_5CBE:: ; address name
     jr c, .call_start_script_at_hl_b04
     ld a, $01
     ld [wObject3 + OBJ_STATE], a
-    ld hl, $0837 ; 'Hnnnr Hic Gnn Zzz Gfffff'
+    ld hl, $0837 ; '*: Hnnnr Hic Gnn Zzz Gfffff'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4676,7 +4676,7 @@ Jump_004_5CBE:: ; address name
     jr c, .call_start_script_at_hl_b043
     ld a, $01
     ld [wObject3 + OBJ_STATE], a
-    ld hl, $0837 ; 'Hnnnr Hic Gnn Zzz Gfffff'
+    ld hl, $0837 ; '*: Hnnnr Hic Gnn Zzz Gfffff'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4686,7 +4686,7 @@ Jump_004_5CBE:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0880 ; 'What? You again? Back to hear'
+    ld hl, $0880 ; '*: What? You again? Back to'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4838,7 +4838,7 @@ Jump_004_5DC4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0843_ISawAChildCrossThe::
 Jump_004_5DD5:: ; address name
-    ld hl, $0843 ; 'I saw a child cross the'
+    ld hl, $0843 ; '*: I saw a child cross'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4846,13 +4846,13 @@ Jump_004_5DD5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0844_WatchMeDanceAndYoullWant::
 Jump_004_5DDC:: ; address name
-    ld hl, $0844 ; 'Watch me dance, and you'll want'
+    ld hl, $0844 ; '*: Watch me dance, and you'll'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 61 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5C69: 'Do you want to go to'
+; starts Script_5C69: '*: Do you want to go'
 YoldTalkEvents_TestFlagBit_Case3D::
 Jump_004_5DE3:: ; address name
     ld de, $006F
@@ -4869,7 +4869,7 @@ Jump_004_5DF1:: ; address name
     ld de, $00F1
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $084E ; 'This is the mermaid kingdom. It'
+    ld hl, $084E ; '*: This is the mermaid kingdom.'
     call StartMessageCommand09HL_B04
     ld de, $00F1
     call SetFlagBit
@@ -4887,12 +4887,12 @@ Jump_004_5E0D:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $084F ; 'I know not all humans are'
+    ld hl, $084F ; '*: I know not all humans'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0881 ; 'Our words of thanks could never'
+    ld hl, $0881 ; '*: Our words of thanks could'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4903,12 +4903,12 @@ Jump_004_5E23:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0850 ; 'The pirates caught us in nets'
+    ld hl, $0850 ; '*: The pirates caught us in'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0882 ; 'Mermaids and humans can live side'
+    ld hl, $0882 ; '*: Mermaids and humans can live'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4916,7 +4916,7 @@ Jump_004_5E23:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0851_TheHarMirrorWasExquisite::
 Jump_004_5E39:: ; address name
-    ld hl, $0851 ; 'The HarMirror was exquisite. It was'
+    ld hl, $0851 ; '*: The HarMirror was exquisite. It'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4924,7 +4924,7 @@ Jump_004_5E39:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0852_TheMoonRockFellFromTheSky::
 Jump_004_5E40:: ; address name
-    ld hl, $0852 ; 'The MoonRock fell from the sky.'
+    ld hl, $0852 ; '*: The MoonRock fell from the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4935,12 +4935,12 @@ Jump_004_5E47:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0853 ; 'The pirates sank with their ship.'
+    ld hl, $0853 ; '*: The pirates sank with their'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0883 ; 'Thanks to you, the spectral ship'
+    ld hl, $0883 ; '*: Thanks to you, the spectral'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4951,12 +4951,12 @@ Jump_004_5E5D:: ; address name
     ld de, $0076
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0854 ; 'We mermaids are peaceful beings. We'
+    ld hl, $0854 ; '*: We mermaids are peaceful beings.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0884 ; 'That wandering ghost ship's gone! My'
+    ld hl, $0884 ; '*: That wandering ghost ship's gone!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4980,14 +4980,14 @@ Jump_004_5E73:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0858 ; 'The MoonRock is on the ghost'
+    ld hl, $0858 ; '*: The MoonRock is on the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_inventory_has_free_slot_check:
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
-    ld hl, $0DC7 ; 'Welcome, my young hero! No words'
+    ld hl, $0DC7 ; '*: Welcome, my young hero! No'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5001,7 +5001,7 @@ Jump_004_5E73:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0885 ; 'Welcome, young hero! No words could'
+    ld hl, $0885 ; '*: Welcome, young hero! No words'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5016,7 +5016,7 @@ Jump_004_5EBD:: ; address name
 
 ; starts Script_5C8A (StartScriptAtHL); its first message begins 'How could we die before enjoying' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case47)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5C8A: 'How could we die before enjoying'
+; starts Script_5C8A: '*: How could we die before'
 TalkScript5C8A_HowCouldWeDieBeforeEnjoying::
 Jump_004_5EC4:: ; address name
     ld hl, Script_5C8A
@@ -5025,7 +5025,7 @@ Jump_004_5EC4:: ; address name
 
 ; starts Script_5C94 (StartScriptAtHL); its first message begins 'The treasures are ours No one' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case48)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5C94: 'The treasures are ours No one'
+; starts Script_5C94: '*: The treasures are ours No'
 TalkScript5C94_TheTreasuresAreOursNoOne::
 Jump_004_5ECB:: ; address name
     ld hl, Script_5C94
@@ -5034,7 +5034,7 @@ Jump_004_5ECB:: ; address name
 
 ; starts Script_5C9E (StartScriptAtHL); its first message begins 'It nags and nags that we' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case49)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5C9E: 'It nags and nags that we'
+; starts Script_5C9E: '*: It nags and nags that'
 TalkScript5C9E_ItNagsAndNagsThatWe::
 Jump_004_5ED2:: ; address name
     ld hl, Script_5C9E
@@ -5043,7 +5043,7 @@ Jump_004_5ED2:: ; address name
 
 ; entry 74 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5CA8: 'Who disturbs us in our sleep'
+; starts Script_5CA8: '*: Who disturbs us in our'
 YoldTalkEvents_TestFlagBit_Case4A::
 Jump_004_5ED9:: ; address name
     ld de, $0074
@@ -5162,7 +5162,7 @@ Jump_004_5F5A:: ; address name
 
 ; starts Script_5CDD (StartScriptAtHL); its first message begins 'Kameha Urk! How you catch up?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case51)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5CDD: 'Kameha Urk! How you catch up?'
+; starts Script_5CDD: 'Kameha: Urk! How you catch up?'
 TalkScript5CDD_KamehaUrkHowYouCatchUp::
 Jump_004_5F7C:: ; address name
     ld hl, Script_5CDD
@@ -5171,7 +5171,7 @@ Jump_004_5F7C:: ; address name
 
 ; starts Script_5D1C (StartScriptAtHL); its first message begins 'Kameha Arrrrh, clear the way! I'm' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case52)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5D1C: 'Kameha Arrrrh, clear the way! I'm'
+; starts Script_5D1C: 'Kameha: Arrrrh, clear the way! I'm'
 TalkScript5D1C_KamehaArrrrhClearTheWayIm::
 Jump_004_5F83:: ; address name
     ld hl, Script_5D1C
@@ -5591,7 +5591,7 @@ Func_004_612B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0130_ThisIsKalkaAnOasisVillage::
 Jump_004_61BB:: ; address name
-    ld hl, $0130 ; 'This is Kalka, an oasis village.'
+    ld hl, $0130 ; '*: This is Kalka, an oasis'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5602,12 +5602,12 @@ Jump_004_61C2:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0131 ; 'A thieving band runs amok here.'
+    ld hl, $0131 ; '*: A thieving band runs amok'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A3 ; 'The King caught the thieves!'
+    ld hl, $01A3 ; '*: The King caught the thieves!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5618,12 +5618,12 @@ Jump_004_61D8:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0132 ; 'Pardon? A plug for a navel?'
+    ld hl, $0132 ; '*: Pardon? A plug for a'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A4 ; 'The last king was a great'
+    ld hl, $01A4 ; '*: The last king was a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5631,7 +5631,7 @@ Jump_004_61D8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0133_TheOasisWaterTravelsThrough::
 Jump_004_61EE:: ; address name
-    ld hl, $0133 ; 'The oasis' water travels through an'
+    ld hl, $0133 ; '*: The oasis' water travels through'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5642,12 +5642,12 @@ Jump_004_61F5:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0134 ; 'The leader of the thieves is'
+    ld hl, $0134 ; '*: The leader of the thieves'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A5 ; 'We recovered everything that was taken'
+    ld hl, $01A5 ; '*: We recovered everything that was'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5658,7 +5658,7 @@ Jump_004_620B:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $0135 ; 'The Log's Navel? What is that?'
+    ld hl, $0135 ; '*: The Log's Navel? What is'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5674,12 +5674,12 @@ Jump_004_6221:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0136 ; 'The Log's Navel? Let me think'
+    ld hl, $0136 ; '*: The Log's Navel? Let me'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D07 ; 'The shortage of water has been'
+    ld hl, $0D07 ; '*: The shortage of water has'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5717,22 +5717,22 @@ Jump_004_624F:: ; address name
     ld de, $004A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0138 ; 'The underground canal is ahead. The'
+    ld hl, $0138 ; '*: The underground canal is ahead.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0173 ; 'My, our King has no patience'
+    ld hl, $0173 ; '*: My, our King has no'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $017A ; 'Oh? You say that a monster'
+    ld hl, $017A ; '*: Oh? You say that a'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0D08 ; 'Oh, it's you lot. We haven't'
+    ld hl, $0D08 ; '*: Oh, it's you lot. We'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5766,12 +5766,12 @@ Jump_004_629F:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0139 ; 'The King called a circus troupe'
+    ld hl, $0139 ; '*: The King called a circus'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A6 ; 'The circus has moved onto the'
+    ld hl, $01A6 ; '*: The circus has moved onto'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5779,7 +5779,7 @@ Jump_004_629F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg013A_ThisIsAsiyaTheDesertFlower::
 Jump_004_62B5:: ; address name
-    ld hl, $013A ; 'This is Asiya, the desert flower.'
+    ld hl, $013A ; '*: This is Asiya, the desert'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5790,12 +5790,12 @@ Jump_004_62BC:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013B ; 'Our King came into an enormous'
+    ld hl, $013B ; '*: Our King came into an'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D0B ; 'The King gave away his prized'
+    ld hl, $0D0B ; '*: The King gave away his'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5806,12 +5806,12 @@ Jump_004_62D2:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013C ; 'I saw a lake like a'
+    ld hl, $013C ; '*: I saw a lake like'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0D0A ; 'The band of thieves made their'
+    ld hl, $0D0A ; '*: The band of thieves made'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5831,29 +5831,29 @@ Jump_004_62E8:: ; address name
     ld de, $0045
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013D ; 'Strong monsters are in the well.'
+    ld hl, $013D ; '*: Strong monsters are in the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0168 ; 'Do I have any concerns? You'll'
+    ld hl, $0168 ; '*: Do I have any concerns?'
     call StartMessageCommand09HL_B04
     ld de, $0048
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0168 ; 'Do I have any concerns? You'll'
+    ld hl, $0168 ; '*: Do I have any concerns?'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $017B ; 'The well has ample water again.'
+    ld hl, $017B ; '*: The well has ample water'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $0D09 ; 'The well filled up with water'
+    ld hl, $0D09 ; '*: The well filled up with'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5861,7 +5861,7 @@ Jump_004_62E8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg013E_OurKingHasBeenAFan::
 Jump_004_6331:: ; address name
-    ld hl, $013E ; 'Our King has been a fan'
+    ld hl, $013E ; '*: Our King has been a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5872,12 +5872,12 @@ Jump_004_6338:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $013F ; 'The circus master was trying to'
+    ld hl, $013F ; '*: The circus master was trying'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A7 ; 'His Majesty's popularity has been growing'
+    ld hl, $01A7 ; '*: His Majesty's popularity has been'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5911,12 +5911,12 @@ Jump_004_6374:: ; address name
     ld de, $0043
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0140 ; 'No one enters the castle without'
+    ld hl, $0140 ; '*: No one enters the castle'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $016A ; 'The King has given permission for'
+    ld hl, $016A ; '*: The King has given permission'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5930,17 +5930,17 @@ Jump_004_638A:: ; address name
     ld de, $0043
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0141 ; 'If you want to get in'
+    ld hl, $0141 ; '*: If you want to get'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $016B ; 'The King is so frivolous. A'
+    ld hl, $016B ; '*: The King is so frivolous.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $017C ; 'We have heard from his Majesty.'
+    ld hl, $017C ; '*: We have heard from his'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5951,12 +5951,12 @@ Jump_004_63AF:: ; address name
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0142 ; 'Did you want something, honey? A'
+    ld hl, $0142 ; '*: Did you want something, honey?'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017D ; 'Hi! Did you hear the news?'
+    ld hl, $017D ; '*: Hi! Did you hear the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5964,7 +5964,7 @@ Jump_004_63AF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0143_WhenWeGetAHotSpell::
 Jump_004_63C5:: ; address name
-    ld hl, $0143 ; 'When we get a hot spell,'
+    ld hl, $0143 ; '*: When we get a hot'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6031,7 +6031,7 @@ Jump_004_63ED:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $014E ; 'Oh, you need a trio of'
+    ld hl, $014E ; '*: Oh, you need a trio'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6071,7 +6071,7 @@ Jump_004_645D:: ; address name
     ld de, $0056
     call TestFlagBit
     ret nc
-    ld hl, $018F ; 'We didn't help the thieves! One'
+    ld hl, $018F ; '*: We didn't help the thieves!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6085,7 +6085,7 @@ Jump_004_646B:: ; address name
 
 ; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5A25: 'Welcome to our inn!'
+; starts Script_5A25: '*: Welcome to our inn!'
 TalkMsg0037_HeroTriedToOpenTheChest_046472::
 Jump_004_6472:: ; address name
     ld hl, $0037 ; '0 tried to open the chest.'
@@ -6095,7 +6095,7 @@ Jump_004_6472:: ; address name
 ; entry 31 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_5A25: 'Welcome to our inn!'
+; starts Script_5A25: '*: Welcome to our inn!'
 KalkaTalkEvents_StartScriptAtHL_B04::
 Jump_004_6479:: ; address name
     ld hl, Script_5A25
@@ -6111,12 +6111,12 @@ Jump_004_6485:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0150 ; 'I heard that the thieves disappear'
+    ld hl, $0150 ; '*: I heard that the thieves'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A8 ; 'Making a hideout in Mirage Lake'
+    ld hl, $01A8 ; '*: Making a hideout in Mirage'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6127,12 +6127,12 @@ Jump_004_649B:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0154 ; 'Several of our members came back.'
+    ld hl, $0154 ; '*: Several of our members came'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01A9 ; 'They let us out when they'
+    ld hl, $01A9 ; '*: They let us out when'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6143,12 +6143,12 @@ Jump_004_64B1:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0155 ; 'When the thieves raided us, we'
+    ld hl, $0155 ; '*: When the thieves raided us,'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01AA ; 'Come back and join the troupe!'
+    ld hl, $01AA ; '*: Come back and join the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6159,12 +6159,12 @@ Jump_004_64C7:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0156 ; 'I wonder if the others are'
+    ld hl, $0156 ; '*: I wonder if the others'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01AB ; 'The troupe'll reform! We'll recruit new'
+    ld hl, $01AB ; '*: The troupe'll reform! We'll recruit'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6172,7 +6172,7 @@ Jump_004_64C7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0157_HehDidYouSeeTheLooks::
 Jump_004_64DD:: ; address name
-    ld hl, $0157 ; 'Heh, did you see the looks'
+    ld hl, $0157 ; '*: Heh, did you see the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6186,17 +6186,17 @@ Jump_004_64E4:: ; address name
     ld de, $0056
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0158 ; 'This is the King's treasury! No'
+    ld hl, $0158 ; '*: This is the King's treasury!'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0192 ; 'The prisoner in the dungeon said'
+    ld hl, $0192 ; '*: The prisoner in the dungeon'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $01AC ; 'We're more vigilant now! No thieves'
+    ld hl, $01AC ; '*: We're more vigilant now! No'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6213,22 +6213,22 @@ Jump_004_6509:: ; address name
     ld de, $0053
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0159 ; 'What? See his Majesty's treasure? What'
+    ld hl, $0159 ; '*: What? See his Majesty's treasure?'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017E ; 'The King solved our water shortage'
+    ld hl, $017E ; '*: The King solved our water'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0191 ; 'We can see the hideout plainly,'
+    ld hl, $0191 ; '*: We can see the hideout'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $01AD ; 'I will do my best to'
+    ld hl, $01AD ; '*: I will do my best'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6247,12 +6247,12 @@ Jump_004_653D:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $017F ; 'Our King worked to save all'
+    ld hl, $017F ; '*: Our King worked to save'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $01AE ; 'Welcome, our honored guests! The King'
+    ld hl, $01AE ; '*: Welcome, our honored guests! The'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6266,17 +6266,17 @@ Jump_004_6562:: ; address name
     ld de, $0049
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $015A ; 'His Majesty is honest and most'
+    ld hl, $015A ; '*: His Majesty is honest and'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0170 ; 'I feel badly for his Majesty,'
+    ld hl, $0170 ; '*: I feel badly for his'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0180 ; 'The King appears to have turned'
+    ld hl, $0180 ; '*: The King appears to have'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6336,7 +6336,7 @@ Jump_004_659B:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0164 ; 'King Investigate what concerns my people'
+    ld hl, $0164 ; 'King: Investigate what concerns my people'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6346,7 +6346,7 @@ Jump_004_659B:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0174 ; 'I discovered why the water is'
+    ld hl, $0174 ; '*: I discovered why the water'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6356,12 +6356,12 @@ Jump_004_659B:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0190 ; 'King The lake was in sight,'
+    ld hl, $0190 ; 'King: The lake was in sight,'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $01B0 ; 'King Ah, good of you to'
+    ld hl, $01B0 ; 'King: Ah, good of you to'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6372,12 +6372,12 @@ Jump_004_660B:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0166 ; 'That fool is a terrible swindler.'
+    ld hl, $0166 ; '*: That fool is a terrible'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B1 ; 'The dungeon is full of thieves!'
+    ld hl, $01B1 ; '*: The dungeon is full of'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6388,18 +6388,18 @@ Jump_004_6621:: ; address name
     ld de, $0056
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0167 ; 'Humph! A mirage lake, he says!'
+    ld hl, $0167 ; '*: Humph! A mirage lake, he'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0193 ; 'How can we reach the hideout?'
+    ld hl, $0193 ; '*: How can we reach the'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 46 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5A95: 'What? Open the Canal Gate more?'
+; starts Script_5A95: '*: What? Open the Canal Gate'
 KalkaTalkEvents_TestFlagBit_Case2E::
 Jump_004_6637:: ; address name
     ld de, $0049
@@ -6517,7 +6517,7 @@ Jump_004_66C2:: ; address name
 
 ; entry 55 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_5AAB: 'I'm making a new home for'
+; starts Script_5AAB: '*: I'm making a new home'
 KalkaTalkEvents_TestFlagBit_Case37::
 Jump_004_66D3:: ; address name
     ld de, $005A
@@ -6578,7 +6578,7 @@ Jump_004_66E9:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $018E ; 'Don't chase what runs from you.'
+    ld hl, $018E ; '*: Don't chase what runs from'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6607,12 +6607,12 @@ Jump_004_676C:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0194 ; 'Thieves drove us from our homes!'
+    ld hl, $0194 ; '*: Thieves drove us from our'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B2 ; 'Cooh, our home come back to'
+    ld hl, $01B2 ; '*: Cooh, our home come back'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6623,12 +6623,12 @@ Jump_004_6782:: ; address name
     ld de, $005A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0195 ; 'The leader of the thieves is'
+    ld hl, $0195 ; '*: The leader of the thieves'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $01B4 ; 'Cooh! This bed perfect for sleep!'
+    ld hl, $01B4 ; '*: Cooh! This bed perfect for'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6656,7 +6656,7 @@ Jump_004_6798:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg01B5_KyoohSwimmingInADesertThis::
 Jump_004_67B8:: ; address name
-    ld hl, $01B5 ; 'Kyooh! Swimming in a desert This'
+    ld hl, $01B5 ; '*: Kyooh! Swimming in a desert'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6804,7 +6804,7 @@ Jump_004_682F:: ; address name
 
 ; entry 1 of the `rst $00` table in DarckTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_61E9: 'Darck Fawahahah! You chased your treasures'
+; starts Script_61E9: 'Darck: Fawahahah! You chased your treasures'
 DarckTalkEvents_TestFlagBit_Case01::
 Jump_004_687C:: ; address name
     ld de, $00D0
@@ -7483,7 +7483,7 @@ Jump_004_6BDD:: ; address name
     ld de, $0141
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld hl, $0701 ; 'You're a human. How did you'
+    ld hl, $0701 ; '*: You're a human. How did'
     call StartMessageCommand09HL_B04
     ld de, $0141
     call SetFlagBit
@@ -7493,7 +7493,7 @@ Jump_004_6BDD:: ; address name
     ld de, $0142
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $0702 ; 'Even worse, you have monsters. Get'
+    ld hl, $0702 ; '*: Even worse, you have monsters.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7503,14 +7503,14 @@ Jump_004_6BDD:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0706 ; 'Rolt Go south in the plains,'
+    ld hl, $0706 ; 'Rolt: Go south in the plains,'
     call StartMessageCommand09HL_B04
     ld de, $0145
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0715 ; 'Rolt 0, I can see that'
+    ld hl, $0715 ; 'Rolt: 0, I can see that'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7520,12 +7520,12 @@ Jump_004_6BDD:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0738 ; 'Rolt Urrrgh 0 Please Please save'
+    ld hl, $0738 ; 'Rolt: Urrrgh 0 Please Please save'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $0746 ; 'Rolt I'm going to get strong'
+    ld hl, $0746 ; 'Rolt: I'm going to get strong'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7550,7 +7550,7 @@ Jump_004_6C59:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0707 ; 'Cyal We're going back home now.'
+    ld hl, $0707 ; 'Cyal: We're going back home now.'
     call StartMessageCommand09HL_B04
     ld de, $0145
     call SetFlagBit
@@ -7562,14 +7562,14 @@ Jump_004_6C59:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0747 ; 'Cyal I hope you'll stay my'
+    ld hl, $0747 ; 'Cyal: I hope you'll stay my'
     call StartMessageCommand09HL_B04
     ld de, $0152
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0748 ; 'Cyal I ought to become a'
+    ld hl, $0748 ; 'Cyal: I ought to become a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7586,22 +7586,22 @@ Jump_004_6CA8:: ; address name
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0708 ; 'Hello, munchkin. Enjoy your stay!'
+    ld hl, $0708 ; '*: Hello, munchkin. Enjoy your stay!'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0717 ; 'Cyal grew up as an orphan.'
+    ld hl, $0717 ; '*: Cyal grew up as an'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0755 ; 'Not only their parents, but Cyal'
+    ld hl, $0755 ; '*: Not only their parents, but'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0749 ; 'We owe you a big thanks.'
+    ld hl, $0749 ; '*: We owe you a big'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7615,17 +7615,17 @@ Jump_004_6CDC:: ; address name
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0709 ; 'A human here? It's been several'
+    ld hl, $0709 ; '*: A human here? It's been'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0718 ; 'Cyal and Rolt have no family'
+    ld hl, $0718 ; '*: Cyal and Rolt have no'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $074A ; 'Thanks to you, we can live'
+    ld hl, $074A ; '*: Thanks to you, we can'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7636,12 +7636,12 @@ Jump_004_6D01:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070A ; 'You're not like us. You scare'
+    ld hl, $070A ; '*: You're not like us. You'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $074B ; 'You look kind and caring. I'm'
+    ld hl, $074B ; '*: You look kind and caring.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7658,22 +7658,22 @@ Jump_004_6D17:: ; address name
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070B ; 'Hey there! I'm a talking horse.'
+    ld hl, $070B ; '*: Hey there! I'm a talking'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071A ; 'Cyal's parents were attacked by horrible'
+    ld hl, $071A ; '*: Cyal's parents were attacked by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072C ; 'AgDevil is a total terror. We'
+    ld hl, $072C ; '*: AgDevil is a total terror.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074C ; 'Brave human, hear this. The King'
+    ld hl, $074C ; '*: Brave human, hear this. The'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7684,12 +7684,12 @@ Jump_004_6D4B:: ; address name
     ld de, $0151
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070C ; 'This horse was here before us.'
+    ld hl, $070C ; '*: This horse was here before'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $074D ; 'The talking horse came from somewhere'
+    ld hl, $074D ; '*: The talking horse came from'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7706,22 +7706,22 @@ Jump_004_6D61:: ; address name
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $070D ; 'This is Elven village. You're a'
+    ld hl, $070D ; '*: This is Elven village. You're'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071B ; 'I think Cyal's looking forward to'
+    ld hl, $071B ; '*: I think Cyal's looking forward'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072D ; 'Cyal was taken away by monsters?'
+    ld hl, $072D ; '*: Cyal was taken away by'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074E ; 'You put down that fiend? You're'
+    ld hl, $074E ; '*: You put down that fiend?'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7738,22 +7738,22 @@ Jump_004_6D95:: ; address name
     ld de, $0147
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0752 ; 'I've heard that humans are wild'
+    ld hl, $0752 ; '*: I've heard that humans are'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071C ; 'Humans can't be trusted, but Please'
+    ld hl, $071C ; '*: Humans can't be trusted, but'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072E ; 'Didn't I ask you to protect'
+    ld hl, $072E ; '*: Didn't I ask you to'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074F ; 'You You're a savage but I'
+    ld hl, $074F ; '*: You You're a savage but'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7792,7 +7792,7 @@ Jump_004_6DDA:: ; address name
     ld de, $0145
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $070F ; 'Well, well It is a rare'
+    ld hl, $070F ; '*: Well, well It is a'
     call StartMessageCommand09HL_B04
     ld de, $0144
     call SetFlagBit
@@ -7817,30 +7817,30 @@ Jump_004_6DDA:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0714 ; 'Tamed monsters, have you? That's impressive'
+    ld hl, $0714 ; '*: Tamed monsters, have you? That's'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $072A ; 'AgDevil killed Rolt's parents. Rolt must'
+    ld hl, $072A ; '*: AgDevil killed Rolt's parents. Rolt'
     call StartMessageCommand09HL_B04
     ld de, $014D
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $072B ; 'AgDevil appears to come from deep'
+    ld hl, $072B ; '*: AgDevil appears to come from'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $0744 ; 'Our gratitude is as plentiful as'
+    ld hl, $0744 ; '*: Our gratitude is as plentiful'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 12 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_626A: 'Master AgDevil, a human, ruff!'
+; starts Script_626A: '*: Master AgDevil, a human, ruff!'
 ElvenVillageTalkEvents_TestFlagBit_Case0C::
 Jump_004_6E56:: ; address name
     ld de, $0148
@@ -7857,18 +7857,18 @@ Jump_004_6E64:: ; address name
     ld de, $014A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0723 ; 'Tch, we have to eat the'
+    ld hl, $0723 ; '*: Tch, we have to eat'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0726 ; 'Huh? It's here again, ruff! It's'
+    ld hl, $0726 ; '*: Huh? It's here again, ruff!'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 14 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_6290: 'That's what we'll do, kid. You're'
+; starts Script_6290: '*: That's what we'll do, kid.'
 ElvenVillageTalkEvents_TestFlagBit_Case0E::
 Jump_004_6E7A:: ; address name
     ld de, $014A
@@ -7896,24 +7896,24 @@ Jump_004_6E90:: ; address name
     ld de, $014C
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $072F ; 'This is Elven's lookout post. We'
+    ld hl, $072F ; '*: This is Elven's lookout post.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0731 ; 'This is the lookout post. Rolt'
+    ld hl, $0731 ; '*: This is the lookout post.'
     call StartMessageCommand09HL_B04
     ld de, $014E
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0732 ; 'That AgDevil is from the mountains'
+    ld hl, $0732 ; '*: That AgDevil is from the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0750 ; 'This is Elven's lookout post. We'
+    ld hl, $0750 ; '*: This is Elven's lookout post.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7927,23 +7927,23 @@ Jump_004_6ECA:: ; address name
     ld de, $014C
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0730 ; 'Horrid monsters that attack elves appear'
+    ld hl, $0730 ; '*: Horrid monsters that attack elves'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0733 ; 'You're not going to the northern'
+    ld hl, $0733 ; '*: You're not going to the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0751 ; 'Beating AgDevil That's incredible! But now'
+    ld hl, $0751 ; '*: Beating AgDevil That's incredible! But'
     call StartMessageCommand09HL_B04
     ret
 
 ; entry 17 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_62BD: 'The human in the forest again?'
+; starts Script_62BD: '*: The human in the forest'
 ElvenVillageTalkEvents_TestFlagBit_Case11::
 Jump_004_6EEF:: ; address name
     ld de, $0150
@@ -7962,7 +7962,7 @@ Jump_004_6EEF:: ; address name
 
 ; entry 18 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_6369: 'Rolt I've found you at last!'
+; starts Script_6369: 'Rolt: I've found you at last!'
 ElvenVillageTalkEvents_TestFlagBit_Case12::
 Jump_004_6F0B:: ; address name
     ld de, $014C
@@ -8113,7 +8113,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $075F ; 'Kiral Fetch me my treasure from'
+    ld hl, $075F ; 'Kiral: Fetch me my treasure from'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8123,7 +8123,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0778 ; 'Kiral Please Go stop him. You'
+    ld hl, $0778 ; 'Kiral: Please Go stop him. You'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8148,7 +8148,7 @@ Jump_004_6F9A:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $077D ; 'Kiral Ah! Back! Is Rob-N Did'
+    ld hl, $077D ; 'Kiral: Ah! Back! Is Rob-N Did'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8156,14 +8156,14 @@ Jump_004_6F9A:: ; address name
     ld de, $0166
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
-    ld hl, $0786 ; 'Kiral You've been a great help.'
+    ld hl, $0786 ; 'Kiral: You've been a great help.'
     call StartMessageCommand09HL_B04
     ld de, $0166
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b044:
-    ld hl, $0787 ; 'Kiral Visit me when you're free.'
+    ld hl, $0787 ; 'Kiral: Visit me when you're free.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8171,14 +8171,14 @@ Jump_004_6F9A:: ; address name
     ld de, $0168
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b045
-    ld hl, $0789 ; 'Kiral Hohoh! I've got good news!'
+    ld hl, $0789 ; 'Kiral: Hohoh! I've got good news!'
     call StartMessageCommand09HL_B04
     ld de, $0168
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b045:
-    ld hl, $078A ; 'Kiral Roboster2's skills are simply exceptional.'
+    ld hl, $078A ; 'Kiral: Roboster2's skills are simply exceptional.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8195,17 +8195,17 @@ Jump_004_706A:: ; address name
     jr c, .call_start_message_command09_hl_b04
     xor a, a
     ld [wObject1 + OBJ_STATE], a
-    ld hl, $075A ; 'Pii Ggzz Piiiiii'
+    ld hl, $075A ; '*: Pii Ggzz Piiiiii'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0788 ; 'I AM THE LATEST ROBOSTER. ROBOSTER2'
+    ld hl, $0788 ; '*: I AM THE LATEST ROBOSTER.'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $078B ; 'MY NAME IS LEO. THE PROFESSOR'
+    ld hl, $078B ; '*: MY NAME IS LEO. THE'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8369,7 +8369,7 @@ Jump_004_7112:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $078C ; 'WELCOME. I AM ROB-N. I SERVE'
+    ld hl, $078C ; '*: WELCOME. I AM ROB-N. I'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8427,12 +8427,12 @@ Jump_004_71AC:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $078F ; 'This is the town of Miagen.'
+    ld hl, $078F ; '*: This is the town of'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE2 ; 'Welcome to the town of Miagen.'
+    ld hl, $0CE2 ; '*: Welcome to the town of'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8446,17 +8446,17 @@ Jump_004_71C2:: ; address name
     ld de, $01BC
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0790 ; 'Are you friends with monsters? You're'
+    ld hl, $0790 ; '*: Are you friends with monsters?'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C6 ; 'Are you Milayou's friend? The little'
+    ld hl, $07C6 ; '*: Are you Milayou's friend? The'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE3 ; 'So you defeated the evildoer?'
+    ld hl, $0CE3 ; '*: So you defeated the evildoer?'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8467,12 +8467,12 @@ Jump_004_71E7:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0791 ; 'Wow! You have monsters! Neat! Are'
+    ld hl, $0791 ; '*: Wow! You have monsters! Neat!'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE4 ; 'Wow, you have monsters! Wicked! They'
+    ld hl, $0CE4 ; '*: Wow, you have monsters! Wicked!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8483,12 +8483,12 @@ Jump_004_71FD:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0792 ; 'Are your monsters good? I don't'
+    ld hl, $0792 ; '*: Are your monsters good? I'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE5 ; 'Your monsters are good, it's plain'
+    ld hl, $0CE5 ; '*: Your monsters are good, it's'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8502,17 +8502,17 @@ Jump_004_7213:: ; address name
     ld de, $01BC
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0793 ; 'Monsters can be good or bad.'
+    ld hl, $0793 ; '*: Monsters can be good or'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C7 ; 'If a monster could be good'
+    ld hl, $07C7 ; '*: If a monster could be'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE6 ; 'So there are evil masters Oh,'
+    ld hl, $0CE6 ; '*: So there are evil masters'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8523,12 +8523,12 @@ Jump_004_7238:: ; address name
     ld de, $01C3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0794 ; 'You appear to have the power'
+    ld hl, $0794 ; '*: You appear to have the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0CE7 ; 'Controlling monsters is no easy feat,'
+    ld hl, $0CE7 ; '*: Controlling monsters is no easy'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8558,14 +8558,14 @@ Jump_004_724E:: ; address name
     ld de, $01B2
     call TestFlagBit
     jr c, .loop
-    ld hl, $07A4 ; 'Could you humor this old man'
+    ld hl, $07A4 ; '*: Could you humor this old'
     call StartMessageCommand09HL_B04
     ld de, $01B2
     call SetFlagBit
     ret
 
 .loop:
-    ld hl, $07A5 ; 'My daughter wedded a man from'
+    ld hl, $07A5 ; '*: My daughter wedded a man'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8582,12 +8582,12 @@ Jump_004_724E:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07CE ; 'Things haven't been good for us.'
+    ld hl, $07CE ; '*: Things haven't been good for'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CE8 ; 'I thank you in all sincerity!'
+    ld hl, $0CE8 ; '*: I thank you in all'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8614,7 +8614,7 @@ Jump_004_72BC:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A6 ; 'Our daughter's only memento was taken'
+    ld hl, $07A6 ; '*: Our daughter's only memento was'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8635,12 +8635,12 @@ Jump_004_72BC:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D3 ; 'We are grateful that you recovered'
+    ld hl, $07D3 ; '*: We are grateful that you'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CE9 ; 'The atmosphere has cheered up, thanks'
+    ld hl, $0CE9 ; '*: The atmosphere has cheered up,'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8657,22 +8657,22 @@ Jump_004_7315:: ; address name
     ld de, $01B1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0799 ; 'Monsters raided this house within the'
+    ld hl, $0799 ; '*: Monsters raided this house within'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A7 ; 'It doesn't look like the monsters'
+    ld hl, $07A7 ; '*: It doesn't look like the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D4 ; 'The old couple look happy after'
+    ld hl, $07D4 ; '*: The old couple look happy'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CEA ; 'I long to have a family'
+    ld hl, $0CEA ; '*: I long to have a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8689,22 +8689,22 @@ Jump_004_7349:: ; address name
     ld de, $01B1
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079A ; 'The old people across the way'
+    ld hl, $079A ; '*: The old people across the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07A8 ; 'The old couple across the way'
+    ld hl, $07A8 ; '*: The old couple across the'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D5 ; 'I'm so glad the people across'
+    ld hl, $07D5 ; '*: I'm so glad the people'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CEB ; 'Old people say that a cheerful'
+    ld hl, $0CEB ; '*: Old people say that a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8718,17 +8718,17 @@ Jump_004_737D:: ; address name
     ld de, $01BC
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079B ; 'Monsters have taken to attacking the'
+    ld hl, $079B ; '*: Monsters have taken to attacking'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C8 ; 'Don't you think it's odd that'
+    ld hl, $07C8 ; '*: Don't you think it's odd'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CEC ; 'Monsters can be good or evil'
+    ld hl, $0CEC ; '*: Monsters can be good or'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8742,21 +8742,21 @@ Jump_004_73A2:: ; address name
     ld de, $01BC
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079C ; 'Grrrr! I'm so angry! Monsters stole'
+    ld hl, $079C ; '*: Grrrr! I'm so angry! Monsters'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C9 ; 'Arrrgh! This is so infuriating! The'
+    ld hl, $07C9 ; '*: Arrrgh! This is so infuriating!'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CED ; 'The thief was selling what he'
+    ld hl, $0CED ; '*: The thief was selling what'
     call StartMessageCommand09HL_B04
     ret
 
-; wD7FB = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Data_010_643E (E-0119)
+; wScreenTableIndex = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Data_010_643E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
 StartScript643EInBank10::
@@ -8769,7 +8769,7 @@ Jump_004_73C7:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; map event: wCB86 = 0 if hPlayerX = $30 else 1, starts script $6445 and sets wDataBank = $10 (E-0122)
+; map event: wSpriteSlots + $7 = 0 if hPlayerX = $30 else 1, starts script $6445 and sets wDataBank = $10 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wSpriteSlots, wDataBank
@@ -8800,17 +8800,17 @@ Jump_004_73F3:: ; address name
     ld de, $01BE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $079F ; 'If you travel west along the'
+    ld hl, $079F ; '*: If you travel west along'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07D6 ; 'What do those monsters do with'
+    ld hl, $07D6 ; '*: What do those monsters do'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0CEE ; 'It sure was a thrilling time'
+    ld hl, $0CEE ; '*: It sure was a thrilling'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8849,7 +8849,7 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07D7 ; 'Milayou I've been checking around, and'
+    ld hl, $07D7 ; 'Milayou: I've been checking around, and'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8859,7 +8859,7 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07DD ; 'Milayou Please defeat the dark master'
+    ld hl, $07DD ; 'Milayou: Please defeat the dark master'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8869,7 +8869,7 @@ Jump_004_7418:: ; address name
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF1 ; 'Milayou You've inspired me to try'
+    ld hl, $0CF1 ; 'Milayou: You've inspired me to try'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8890,7 +8890,7 @@ Jump_004_7418:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg07A9_ThisIsTheTravelersHutStay::
 Jump_004_7497:: ; address name
-    ld hl, $07A9 ; 'This is the traveler's hut. Stay'
+    ld hl, $07A9 ; '*: This is the traveler's hut.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8907,22 +8907,22 @@ Jump_004_749E:: ; address name
     ld de, $01BB
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07AA ; 'That dealer, how expensive! Nobody can'
+    ld hl, $07AA ; '*: That dealer, how expensive! Nobody'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C0 ; 'I dug deep in my purse'
+    ld hl, $07C0 ; '*: I dug deep in my'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D8 ; 'I dug deep in my purse'
+    ld hl, $07D8 ; '*: I dug deep in my'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF2 ; 'That merchant, he was a thief.'
+    ld hl, $0CF2 ; '*: That merchant, he was a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8944,17 +8944,17 @@ Jump_004_74D2:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C1 ; 'What? Monsters attacked you in the'
+    ld hl, $07C1 ; '*: What? Monsters attacked you in'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07D9 ; 'The thieving monsters had a boss,'
+    ld hl, $07D9 ; '*: The thieving monsters had a'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF3 ; 'People say you can't judge people'
+    ld hl, $0CF3 ; '*: People say you can't judge'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8971,22 +8971,22 @@ Jump_004_7506:: ; address name
     ld de, $01BB
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07AE ; 'That dealer's wares Could he sell'
+    ld hl, $07AE ; '*: That dealer's wares Could he'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C2 ; 'That dealer is a greedy hound!'
+    ld hl, $07C2 ; '*: That dealer is a greedy'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $07DB ; 'That greedhound dealer scuttled off in'
+    ld hl, $07DB ; '*: That greedhound dealer scuttled off'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0CF4 ; 'That greedy hound of a dealer'
+    ld hl, $0CF4 ; '*: That greedy hound of a'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9011,7 +9011,7 @@ Jump_004_753A:: ; address name
     ld de, $01B3
     call TestFlagBit
     jr c, .call_test_flag_bit
-    ld hl, $07AF ; 'How does this ornament look? Take'
+    ld hl, $07AF ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
     ld de, $01B3
     call SetFlagBit
@@ -9021,7 +9021,7 @@ Jump_004_753A:: ; address name
     ld de, $01B4
     call TestFlagBit
     jr c, .call_test_flag_bit2
-    ld hl, $07B0 ; 'How does this jewelry look? It's'
+    ld hl, $07B0 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
     ld de, $01B4
     call SetFlagBit
@@ -9031,14 +9031,14 @@ Jump_004_753A:: ; address name
     ld de, $01B5
     call TestFlagBit
     jr c, .loop
-    ld hl, $07B1 ; 'How does this grand vase look?'
+    ld hl, $07B1 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
     ld de, $01B5
     call SetFlagBit
     ret
 
 .loop:
-    ld hl, $07B2 ; 'I've no use for the poor.'
+    ld hl, $07B2 ; '*: I've no use for the'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9046,7 +9046,7 @@ Jump_004_753A:: ; address name
     ld de, $01B6
     call TestFlagBit
     jr c, .call_test_flag_bit4
-    ld hl, $07B3 ; 'How does this ornament look? Take'
+    ld hl, $07B3 ; '*: How does this ornament look?'
     call StartMessageCommand09HL_B04
     ld de, $01B6
     call SetFlagBit
@@ -9056,7 +9056,7 @@ Jump_004_753A:: ; address name
     ld de, $01B7
     call TestFlagBit
     jr c, .call_test_flag_bit5
-    ld hl, $07B4 ; 'How does this jewelry look? It's'
+    ld hl, $07B4 ; '*: How does this jewelry look?'
     call StartMessageCommand09HL_B04
     ld de, $01B7
     call SetFlagBit
@@ -9066,7 +9066,7 @@ Jump_004_753A:: ; address name
     ld de, $01B8
     call TestFlagBit
     jr c, .call_test_flag_bit6
-    ld hl, $07B5 ; 'How does this grand vase look?'
+    ld hl, $07B5 ; '*: How does this grand vase'
     call StartMessageCommand09HL_B04
     ld de, $01B8
     call SetFlagBit
@@ -9086,7 +9086,7 @@ Jump_004_753A:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07C5 ; 'You defeated the monsters You're not'
+    ld hl, $07C5 ; '*: You defeated the monsters You're'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9105,18 +9105,18 @@ Jump_004_760E:: ; address name
     ld de, $01BA
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07B8 ; 'Who are you? You shouldn't be'
+    ld hl, $07B8 ; '*: Who are you? You shouldn't'
     call StartMessageCommand09HL_B04
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07BA ; 'What, not you again!'
+    ld hl, $07BA ; '*: What, not you again!'
     call StartMessageCommand09HL_B04
     ret
 
 ; map event: starts script $64A6 if story flag $1BA is set, else $6496 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_6496: 'You're going to regret seeing us.'
+; starts Script_6496: '*: You're going to regret seeing'
 StartScript6496Or64A6ByFlag1BA::
 Jump_004_7624:: ; address name
     ld de, $01BA
@@ -9154,7 +9154,7 @@ Jump_004_763A:: ; address name
 
 ; map event: starts script $652C if story flag $1C2 is set, else $6509 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_6509: 'What is it, you little brat?'
+; starts Script_6509: '*: What is it, you little'
 StartScript6509Or652CByFlag1C2::
 Jump_004_7657:: ; address name
     ld de, $01C2
@@ -9321,7 +9321,7 @@ Jump_004_7716:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C03_TheTowersManyTreasuresAre::
 Jump_004_771D:: ; address name
-    ld hl, $0C03 ; 'The Tower's many treasures are heavily'
+    ld hl, $0C03 ; '*: The Tower's many treasures are'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9329,7 +9329,7 @@ Jump_004_771D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C02_OnlyAHandfulOfMastersHave::
 Jump_004_7724:: ; address name
-    ld hl, $0C02 ; 'Only a handful of masters have'
+    ld hl, $0C02 ; '*: Only a handful of masters'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9340,14 +9340,14 @@ Jump_004_772B:: ; address name
     ld de, $01D3
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C00 ; 'This is the Power Tower. Are'
+    ld hl, $0C00 ; '*: This is the Power Tower.'
     call StartMessageCommand09HL_B04
     ld de, $01D3
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C01 ; 'If you win, you'll earn many'
+    ld hl, $0C01 ; '*: If you win, you'll earn'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9373,7 +9373,7 @@ Jump_004_774E:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C17 ; 'You've conquered the Power Tower. I'
+    ld hl, $0C17 ; '*: You've conquered the Power Tower.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9598,7 +9598,7 @@ Jump_004_7874:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C1B_ItsNotThatEasyToWin::
 Jump_004_787B:: ; address name
-    ld hl, $0C1B ; 'It's not that easy to win'
+    ld hl, $0C1B ; '*: It's not that easy to'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9606,7 +9606,7 @@ Jump_004_787B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C1A_InThisTowerYourOpponents::
 Jump_004_7882:: ; address name
-    ld hl, $0C1A ; 'In this Tower, your opponents come'
+    ld hl, $0C1A ; '*: In this Tower, your opponents'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9617,14 +9617,14 @@ Jump_004_7889:: ; address name
     ld de, $0173
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C18 ; 'This is the Baffle Tower. Are'
+    ld hl, $0C18 ; '*: This is the Baffle Tower.'
     call StartMessageCommand09HL_B04
     ld de, $0173
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C19 ; 'If you win, you'll earn many'
+    ld hl, $0C19 ; '*: If you win, you'll earn'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9650,7 +9650,7 @@ Jump_004_78AC:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C2F ; 'You've conquered the Baffle Tower. I'
+    ld hl, $0C2F ; '*: You've conquered the Baffle Tower.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9866,7 +9866,7 @@ Jump_004_79C1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C33_ItsBrutalUpAheadIWouldnt::
 Jump_004_79D2:: ; address name
-    ld hl, $0C33 ; 'It's brutal up ahead. I wouldn't'
+    ld hl, $0C33 ; '*: It's brutal up ahead. I'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9874,7 +9874,7 @@ Jump_004_79D2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0C32_TheMonstersHereAreAwfulIm::
 Jump_004_79D9:: ; address name
-    ld hl, $0C32 ; 'The monsters here are awful. I'm'
+    ld hl, $0C32 ; '*: The monsters here are awful.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9885,14 +9885,14 @@ Jump_004_79E0:: ; address name
     ld de, $00DE
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $0C30 ; 'If you've made it to this-the'
+    ld hl, $0C30 ; '*: If you've made it to'
     call StartMessageCommand09HL_B04
     ld de, $00DE
     call SetFlagBit
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C31 ; 'This Tower is terribly tough. I'
+    ld hl, $0C31 ; '*: This Tower is terribly tough.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -9918,7 +9918,7 @@ Jump_004_7A03:: ; address name
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0C47 ; 'You've conquered the Soul Tower. I'
+    ld hl, $0C47 ; '*: You've conquered the Soul Tower.'
     call StartMessageCommand09HL_B04
     ret
 
@@ -10200,7 +10200,7 @@ Jump_004_7B46:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hPlayerFacing
 ; writes: wSpriteSlots, wDataBank
-; starts Script_65AA: 'Warubou Wa-hey! You did it, 0!'
+; starts Script_65AA: 'Warubou: Wa-hey! You did it, 0!'
 KeyWorldTalkEvents_StartScriptAtHL_B04_Case02::
 Jump_004_7B82:: ; address name
     ld a, [wMapType]
@@ -10227,7 +10227,7 @@ Jump_004_7B82:: ; address name
     ld [wDataBank], a
     ret
 
-; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
+; A = 1 when the player stands on one of the trigger columns for wKeyWorldGoalKind (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
 ; 1 call site from 1 routine (e.g. KeyWorldTalkEvents_StartScriptAtHL_B04_Case02)
 ; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
 IsPlayerAtKeyWorldGoalKindTriggerColumn::
@@ -10297,7 +10297,7 @@ Jump_004_7BF7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0120_WarubouQuitDawdlingWarooh::
 Jump_004_7BFE:: ; address name
-    ld hl, $0120 ; 'Warubou Quit dawdling, warooh!'
+    ld hl, $0120 ; 'Warubou: Quit dawdling, warooh!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -10305,7 +10305,7 @@ Jump_004_7BFE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0122_WarubouWaheyYouDidItHero::
 Jump_004_7C05:: ; address name
-    ld hl, $0122 ; 'Warubou Wa-hey! You did it, 0!'
+    ld hl, $0122 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageCommand09HL_B04
     ret
 
@@ -10321,14 +10321,14 @@ Jump_004_7C0C:: ; address name
     ret z
     cp a, $08
     ret z
-    ld hl, $0121 ; 'Warubou Use a Magic Key and'
+    ld hl, $0121 ; 'Warubou: Use a Magic Key and'
     call StartMessageCommand09HL_B04
     ret
 
 ; sets wDataBank = $10, then starts Script_65AA (StartScriptAtHL); its first message begins 'Warubou Wa-hey! You did it, 0!' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case07)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_65AA: 'Warubou Wa-hey! You did it, 0!'
+; starts Script_65AA: 'Warubou: Wa-hey! You did it, 0!'
 TalkScript65AA_WarubouWaheyYouDidItHero::
 Jump_004_7C1F:: ; address name
     ld a, $10
@@ -10340,7 +10340,7 @@ Jump_004_7C1F:: ; address name
 ; sets wDataBank = $1F, then starts Script_65B8 (StartScriptAtHL); its first message begins 'Warubou Wa-hey! So, this is it?' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-; starts Script_65B8: 'Warubou Wa-hey! So, this is it?'
+; starts Script_65B8: 'Warubou: Wa-hey! So, this is it?'
 TalkScript65B8_WarubouWaheySoThisIsIt::
 Jump_004_7C2B:: ; address name
     ld a, $1F
@@ -10349,7 +10349,7 @@ Jump_004_7C2B:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; A = 0 unless wC634 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and returns carry (E-0124)
+; A = 0 unless wInventory + $17 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and returns carry (E-0124)
 ; 6 call sites from 6 routines (e.g. Talk07BF_HeroFoundThePretty, Talk07A6_OurDaughtersOnlyMemento, Talk077B_HeroPeeredIntoThe, Talk075F_KiralFetchMeMy, ...)
 ; reads: wInventory
 ; points at: wInventory

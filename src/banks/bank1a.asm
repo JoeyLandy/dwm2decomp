@@ -1,7 +1,7 @@
 SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1A
 
-; wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE
+; wRecordBuffer/wRecordBuffer + $1 (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wRecordBufferData
 ; 17 call sites from 15 routines (e.g. PauseMenu_Skills_ChooseSkill_SRAMRecordAddressMapped, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31, LoadSelectedSkillRecord_Bank31, ...)
 ; reads: wRecordBuffer
 ; points at: wRecordBufferData
@@ -30,7 +30,7 @@ Func_01A_4001:: ; address name
     jr nz, .loop
     ret
 
-; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
+; like LoadSkillRecord, but copies wBattleArg1 bytes starting wBattleArg0 bytes into the record to the address in wBattleArg2/wBattleArg3; with wRecordBuffer = $FF it zero-fills that destination instead
 ; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05, SlotCSkillFlagMatchD, SlotHasSkillWithFlagD, ...)
 ; reads: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 LoadSkillRecordPart::
@@ -133,7 +133,7 @@ Func_01A_408F:: ; address name
     ret
 
 ; E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10). E-0204: LoadSkillRecord takes a 16-bit index (wRecordBuffer) and the 17-byte records continue past the viewer's 175 up to SkillRequirementTable at $4FF8: 228 records; 175-227 have the same layout (no family or type strings in bytes 0-2 for most).
-; record: first number the debug skill viewer shows; rises across a spell family (2, 4, 10 for Blaze, Blazemore, Blazemost); skill family: string index in category $12 (1 = Blaze, 2 = Firebal, 3 = Bang, ...); skill type: string index in category $13 ('Type A' ... 'Type G'); low 2 bits: when usable, string index in category $14 (0 None, 1 Battle, 2 Field, 3 Anytime); high nibble: string index in category $10 ('Charge', 'Mixed', 'Cautious', ...); target: string index in category $11 after Func_001_5311 ('1 enemy', 'All enemies', ...); number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; 16-bit number shown by the debug skill viewer; 16-bit value read by the viewer (wCFF9); 16-bit value; 16-bit value
+; record: first number the debug skill viewer shows; rises across a spell family (2, 4, 10 for Blaze, Blazemore, Blazemost); skill family: string index in category $12 (1 = Blaze, 2 = Firebal, 3 = Bang, ...); skill type: string index in category $13 ('Type A' ... 'Type G'); low 2 bits: when usable, string index in category $14 (0 None, 1 Battle, 2 Field, 3 Anytime); high nibble: string index in category $10 ('Charge', 'Mixed', 'Cautious', ...); target: string index in category $11 after Func_001_5311 ('1 enemy', 'All enemies', ...); number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; 16-bit number shown by the debug skill viewer; 16-bit value read by the viewer (wRecordBufferData + $B); 16-bit value; 16-bit value
 SkillTable::
 Data_01A_40D4:: ; address name
     db $00, $00, $00, $01, $11, $81, $FF, $3E, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
@@ -1655,7 +1655,7 @@ PointerRun_1A_5E99_Entry00:: ; heuristic: target of a monotone pointer table; C0
 Data_01A_5F9C:: ; address name
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
-; copies the record's eight skills to wD09D and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
+; copies the record's eight skills to wWorkBuf and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
 ; reads: wBattleArg2, wBattleArg3
 ; writes: wNameSlot
@@ -1925,7 +1925,7 @@ Func_01A_60E6:: ; address name
     inc b
     ret
 
-; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
+; for record wBattleArg0 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case03_FindNewlyLearnableSkills)
 ; reads: wBattleArg0, hTemp6
 ; writes: hTemp6, hTemp3, hTemp4, hTemp5
@@ -2191,7 +2191,7 @@ Func_01A_6232:: ; address name
     inc b
     ret
 
-; searches the $38 bytes at wD09D for C: Z when found, else B = 1 and NZ (E-0122)
+; searches the $38 bytes at wWorkBuf for C: Z when found, else B = 1 and NZ (E-0122)
 ; 1 call site from 1 routine (e.g. FindNewlyLearnableSkills)
 ; points at: wWorkBuf
 FindCInWD09D38::
@@ -2386,7 +2386,7 @@ Func_01A_6306:: ; address name
     pop bc
     ret
 
-; hFFC6 = 0 and A = 0 (E-0114)
+; hTemp0 = 0 and A = 0 (E-0114)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA)
 ; writes: hTemp0
 ClearTemp0AndA::
@@ -2396,7 +2396,7 @@ Func_01A_631A:: ; address name
     xor a, a
     ret
 
-; skill hFFC6: when every skill in its $FF-terminated list Data_01A_5BEC[hFFC6] is already among the eight at wD09D (or equal to C), adds it (Func_01A_636C); otherwise hFFC6 = 0 (E-0126)
+; skill hTemp0: when every skill in its $FF-terminated list Data_01A_5BEC[hTemp0] is already among the eight at wWorkBuf (or equal to C), adds it (Func_01A_636C); otherwise hTemp0 = 0 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
@@ -2435,7 +2435,7 @@ Func_01A_631F:: ; address name
 .return:
     ret
 
-; A = 0 and NC if A equals C or one of the 8 bytes at wD09D; otherwise carry (E-0122)
+; A = 0 and NC if A equals C or one of the 8 bytes at wWorkBuf; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; points at: wWorkBuf
 AIsCOrInWD09D8::
@@ -2458,7 +2458,7 @@ Func_01A_6348:: ; address name
     xor a, a
     ret
 
-; A = 0 and NC if C is one of the 8 bytes at wD09D; otherwise carry (E-0122)
+; A = 0 and NC if C is one of the 8 bytes at wWorkBuf; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; points at: wWorkBuf
 FindCInWD09D8::
@@ -2480,7 +2480,7 @@ Func_01A_635B:: ; address name
     xor a, a
     ret
 
-; stores C in the first empty slot of the eight at wD09D, skipping slots whose skill is not in the exclusion list Data_01A_5D8B[C]; hFFC6 = 0 when none (E-0126)
+; stores C in the first empty slot of the eight at wWorkBuf, skipping slots whose skill is not in the exclusion list Data_01A_5D8B[C]; hTemp0 = 0 when none (E-0126)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; writes: hTemp1, hTemp0
 ; points at: wWorkBuf
@@ -2542,7 +2542,7 @@ Func_01A_6395:: ; address name
     xor a, a
     ret
 
-; hFFC8/9 = StatGrowthBase[hFFC6] + the sum of the first hFFC7 gains of StatGrowthTable row hFFC6: the stat value of growth row hFFC6 at level hFFC7 (E-0125, E-0158)
+; hTemp2/9 = StatGrowthBase[hTemp0] + the sum of the first hTemp1 gains of StatGrowthTable row hTemp0: the stat value of growth row hTemp0 at level hTemp1 (E-0125, E-0158)
 ; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3
@@ -2586,7 +2586,7 @@ Func_01A_63A7:: ; address name
     ldh [hTemp3], a
     ret
 
-; hFFC8/9 = the byte StatGrowthTable[hFFC6][hFFC7] (high byte 0); no traced caller (E-0175)
+; hTemp2/9 = the byte StatGrowthTable[hTemp0][hTemp1] (high byte 0); no traced caller (E-0175)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3
@@ -2648,7 +2648,7 @@ Data_01A_63F8:: ; address name
     db $0E ; id 30
     db $10 ; id 31
 
-; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
+; for record wBattleArg1 below its level cap: computes the stat gains from its species growth rows (table $6616) into wLevelUpGains-wLevelUpGains + $5 (E-0127)
 ; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
@@ -2882,7 +2882,7 @@ Func_01A_6562:: ; address name
     ld c, [hl]
     ret
 
-; A = C + (wD09C when wD09B = B, else 0) (E-0078)
+; A = C + (wGrowthTemp1 when wGrowthTemp0 = B, else 0) (E-0078)
 ; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wGrowthTemp0, wGrowthTemp1
 AddGrowthTemp1IfGrowthTemp0MatchesB::
@@ -2900,7 +2900,7 @@ Func_01A_6579:: ; address name
     add a, c
     ret
 
-; limits each gain in wD095-wD09A so the record's stat words from field $5D stay at or below 999 (E-0127)
+; limits each gain in wLevelUpGains-wLevelUpGains + $5 so the record's stat words from field $5D stay at or below 999 (E-0127)
 ; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wLevelUpGains
 ; writes: wLevelUpGains
@@ -2999,7 +2999,7 @@ Func_01A_65F4:: ; address name
     pop hl
     ret
 
-; E-0158 (C1: StatFromGrowthRow adds the first hFFC7 bytes of row hFFC6 ($6616 + $63 * row) to StatGrowthBase[row]; ReadStatGrowthGain reads one byte of a row for ComputeLevelUpStatGainsForBattleArg1; 32 rows of 99 bytes fill the slice).
+; E-0158 (C1: StatFromGrowthRow adds the first hTemp1 bytes of row hTemp0 ($6616 + $63 * row) to StatGrowthBase[row]; ReadStatGrowthGain reads one byte of a row for ComputeLevelUpStatGainsForBattleArg1; 32 rows of 99 bytes fill the slice).
 ; record: 99 per-level stat gains (levels 1-99), 11 per line
 StatGrowthTable::
 Data_01A_6616:: ; address name

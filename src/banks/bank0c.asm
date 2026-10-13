@@ -2423,7 +2423,7 @@ Func_00C_5050:: ; address name
     add_a_to_hl
     ret
 
-; A = the byte at Data_00C_594F[GridIndexFromGridCursorXGridCursorY] + wD78B (E-0122)
+; A = the byte at Data_00C_594F[GridIndexFromGridCursorXGridCursorY] + wGrid2CursorY (E-0122)
 ; 6 call sites from 3 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08)
 ; reads: wGrid2CursorY
 ReadGridCellByteForGridCursorXGridCursorY::
@@ -2720,7 +2720,7 @@ Func_00C_51BB:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (row 14, column 1 of the drawn area) when wStringIndex is $18 or $12, otherwise $99C1 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi = HL + $1C1 (row 14, column 1 of the drawn area) when wStringIndex is $18 or $12, otherwise $99C1 (E-0062)
 ; 29 call sites from 22 routines (e.g. ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26, RedrawFullScreenBoxes_0C, ArenaMenu_SubtractArg1AmountFromGold_Case19, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -2914,7 +2914,7 @@ Func_00C_52D9:: ; address name
     ldh [rSVBK], a
     ret
 
-; A = 6 * wD787 + wD786 (row-major index in a 6-column grid: wD786 column, wD787 row); BC kept (E-0072)
+; A = 6 * wGridCursorY + wGridCursorX (row-major index in a 6-column grid: wGridCursorX column, wGridCursorY row); BC kept (E-0072)
 ; 15 call sites from 8 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, ReadGridCellByteForGridCursorXGridCursorY, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03, LibraryMenu_GridIndexFromGridCursorXGridCursorY, ...)
 ; reads: wGridCursorY, wGridCursorX
 GridIndexFromGridCursorXGridCursorY::
@@ -2931,7 +2931,7 @@ Func_00C_52EC:: ; address name
     pop bc
     ret
 
-; A = 6 * wD78B + wD78A (row-major index in a 6-column grid); BC kept (E-0117)
+; A = 6 * wGrid2CursorY + wGrid2CursorX (row-major index in a 6-column grid); BC kept (E-0117)
 ; 2 call sites from 2 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, GridCellAddressFromGridCursorXAndGrid2CursorX)
 ; reads: wGrid2CursorY, wGrid2CursorX
 GridIndexFromGrid2CursorXGrid2CursorY::
@@ -6119,7 +6119,7 @@ ArenaMenu_Case02_ReadGridCursorX_Sub03_Data:: ; heuristic: pointer load in the s
 Data_00C_691A:: ; address name
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
-; plays sound $6C, copies the 6 x 5 box Data_00C_7831 to wC412, draws it at the scroll position + $1CC, wD780 += 1 and wTwoChoiceCursor = 0 (E-0122)
+; plays sound $6C, copies the 6 x 5 box Data_00C_7831 to wWindowTileBuffer + $112, draws it at the scroll position + $1CC, wScreenState += 1 and wTwoChoiceCursor = 0 (E-0122)
 ; 1 call site from 1 routine (e.g. ArenaMenu_ShowTwoChoiceBoxAtWC412)
 ; reads: wScreenState
 ; writes: wScreenState, wTwoChoiceCursor
@@ -7219,7 +7219,7 @@ ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Data:: ; heuristic: po
 Data_00C_7037:: ; address name
     db $0C, $0C, $0C, $0B, $0A, $1C
 
-; wD588 += 1 and wD78C = wD7FC (E-0122)
+; wArenaRound += 1 and wScreenArea = wAreaGraphicsIndex (E-0122)
 ; 3 call sites from 3 routines (e.g. ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea, ArenaRounds_StartArenaRankMessage_Case0D, ArenaRounds_StartArenaRankMessage_Case05)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; writes: wArenaRound, wScreenArea
@@ -7232,7 +7232,7 @@ Func_00C_703D:: ; address name
     ld [wScreenArea], a
     ret
 
-; wD78E = wD7FF + 1 (and stored back to wD7FF), wD786 = wD7FC, wTwoChoiceCursor = 1 (E-0122)
+; wScreenCountPlusOne = wRecordCapacity + 1 (and stored back to wRecordCapacity), wGridCursorX = wAreaGraphicsIndex, wTwoChoiceCursor = 1 (E-0122)
 ; 5 call sites from 3 routines (e.g. ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity, ArenaGridBattle_StartArenaRankMessage_Case0E, ArenaGridBattle_StartArenaRankMessage_Case06)
 ; reads: wRecordCapacity, wAreaGraphicsIndex, wScreenCountPlusOne
 ; writes: wScreenCountPlusOne, wGridCursorX, wTwoChoiceCursor, wRecordCapacity
@@ -7580,7 +7580,7 @@ Func_00C_70FE:: ; address name
     ld [rRAMG2], a
     ret
 
-; HL += the word in hFFC6/hFFC7; clobbers A (E-0073)
+; HL += the word in hTemp0/hTemp1; clobbers A (E-0073)
 ; 12 call sites from 1 routine (e.g. ArenaMenu_Shared05_AddTemp0WordToHL)
 ; reads: hTemp0, hTemp1
 AddTemp0WordToHL::
@@ -7690,7 +7690,7 @@ PickTableEntryByPartyLevelTotal_Data:: ; heuristic: pointer load in the same ban
 Data_00C_72C0:: ; address name
     db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 7 call sites from 6 routines (e.g. ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26, RedrawFullScreenBoxes_0C, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -7868,7 +7868,7 @@ Func_00C_7326:: ; address name
     jp c, .loop2
     ret
 
-; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $52 (E-0117)
+; NextTableByte; L = wRandomLo, H = (wRandomLo rotated left through carry) & B; returns A = HL mod $52 (E-0117)
 ; 3 call sites from 3 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_Case27_RandomModulo52, ArenaRounds_Shared01_RandomModulo52)
 ; reads: wRandomLo
 RandomModulo52::
@@ -8722,13 +8722,13 @@ Script_0C_7A5F:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7A6E, Script_0C_7A6B, Script_0C_7A65
 Script_0C_7A65:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0025 ; 'Too bad you didn't make it.'
+    script_message $0025 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7A6B:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A5F
 Script_0C_7A6E:: ; heuristic: event script entry or jump target; C0
-    script_message $4020 ; 'Congratulations! You did it! You've won'
+    script_message $4020 ; '*: Congratulations! You did it! You've'
     script_command SCRIPT_ARENA
     script_jump Script_0C_7ADB
 Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
@@ -8736,26 +8736,26 @@ Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7A8D, Script_0C_7A87, Script_0C_7A81, Script_0C_7A7B
 Script_0C_7A7B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8003 ; 'Train some more, and see you'
+    script_message $8003 ; '*: Train some more, and see'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7A81:: ; heuristic: event script entry or jump target; C0
-    script_message $C016 ; 'You can't try that Class yet.'
+    script_message $C016 ; '*: You can't try that Class'
     script_jump Script_0C_7A75
 Script_0C_7A87:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'You've finished that Class.'
+    script_message $C001 ; '*: You've finished that Class.'
     script_jump Script_0C_7A75
 Script_0C_7A8D:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Let me confirm that-the 0 Class?'
+    script_message $C004 ; '*: Let me confirm that-the 0'
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7A9E, Script_0C_7A98, Script_0C_7A95
 Script_0C_7A95:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A75
 Script_0C_7A98:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'Not enough gold for that Class!'
+    script_message $C006 ; '*: Not enough gold for that'
     script_jump Script_0C_7A75
 Script_0C_7A9E:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Good luck! I'll cheer for you!'
+    script_message $C005 ; '*: Good luck! I'll cheer for'
 Script_0C_7AA1:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
@@ -8771,17 +8771,17 @@ Script_0C_7AB0:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7AC8, Script_0C_7AC2, Script_0C_7ABC, Script_0C_7AB6
 Script_0C_7AB6:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0024 ; 'Congratulations! You did it! You've finally'
+    script_message $0024 ; '*: Congratulations! You did it! You've'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ABC:: ; heuristic: event script entry or jump target; C0
-    script_message $4023 ; 'Congratulations! You did it! You've won'
+    script_message $4023 ; '*: Congratulations! You did it! You've'
     script_jump Script_0C_7ACB
 Script_0C_7AC2:: ; heuristic: event script entry or jump target; C0
-    script_message $4022 ; 'Congratulations! You did it! You've won'
+    script_message $4022 ; '*: Congratulations! You did it! You've'
     script_jump Script_0C_7ACB
 Script_0C_7AC8:: ; heuristic: event script entry or jump target; C0
-    script_message $4021 ; 'Congratulations! You did it! You've won'
+    script_message $4021 ; '*: Congratulations! You did it! You've'
 Script_0C_7ACB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7ACF, Script_0C_7AD5
@@ -8792,7 +8792,7 @@ Script_0C_7ACF:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_0C_7AD5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $802B ; 'Oh, but your key ring is'
+    script_message $802B ; '*: Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ADB:: ; heuristic: event script entry or jump target; C0
@@ -8805,7 +8805,7 @@ Script_0C_7ADF:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_0C_7AE5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $802B ; 'Oh, but your key ring is'
+    script_message $802B ; '*: Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AEB:: ; heuristic: event script entry or jump target; C0
@@ -8813,12 +8813,12 @@ Script_0C_7AEB:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7AF5, Script_0C_7AEF
 Script_0C_7AEF:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0026 ; 'Too bad you didn't make it.'
+    script_message $0026 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AF5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0025 ; 'Too bad you didn't make it.'
+    script_message $0025 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
     db $00, $0B, $C0
@@ -8829,7 +8829,7 @@ Script_0C_7AFE:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7B08, Script_0C_7B02
 Script_0C_7B02:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8009 ; 'Oh The crowd wanted to see'
+    script_message $8009 ; '*: Oh The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B08:: ; heuristic: event script entry or jump target; C0
@@ -8838,45 +8838,45 @@ Script_0C_7B08:: ; heuristic: event script entry or jump target; C0
 Script_0C_7B0A:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7B2F, Script_0C_7B29, Script_0C_7B23, Script_0C_7B1D, Script_0C_7B17, Script_0C_7B11
 Script_0C_7B11:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; 'The E Class should do. Which'
+    script_message $C011 ; '*: The E Class should do.'
     script_jump Script_0C_7B32
 Script_0C_7B17:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; 'It could get rough out there.'
+    script_message $C010 ; '*: It could get rough out'
     script_jump Script_0C_7B32
 Script_0C_7B1D:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'It could get rough out there.'
+    script_message $C00F ; '*: It could get rough out'
     script_jump Script_0C_7B32
 Script_0C_7B23:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'The B Class should be good.'
+    script_message $C00E ; '*: The B Class should be'
     script_jump Script_0C_7B32
 Script_0C_7B29:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; 'The A Class should be good.'
+    script_message $C00D ; '*: The A Class should be'
     script_jump Script_0C_7B32
 Script_0C_7B2F:: ; heuristic: event script entry or jump target; C0
-    script_message $C00C ; 'The S Class should be good.'
+    script_message $C00C ; '*: The S Class should be'
 Script_0C_7B32:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B3C, Script_0C_7B36
 Script_0C_7B36:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8009 ; 'Oh The crowd wanted to see'
+    script_message $8009 ; '*: Oh The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B3C:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
-    script_message $C012 ; 'Is 0 Class OK?'
+    script_message $C012 ; '*: Is 0 Class OK?'
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B50, Script_0C_7B49, Script_0C_7B45
 Script_0C_7B45:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_jump Script_0C_7B0A
 Script_0C_7B49:: ; heuristic: event script entry or jump target; C0
-    script_message $C014 ; 'You need more gold to register.'
+    script_message $C014 ; '*: You need more gold to'
     script_command SCRIPT_ARENA
     script_jump Script_0C_7B0A
 Script_0C_7B50:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
-    script_message $C013 ; 'I hope you do well!'
+    script_message $C013 ; '*: I hope you do well!'
 Script_0C_7B54:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
@@ -8889,39 +8889,39 @@ Script_0C_7B60:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B63
 Script_0C_7B63:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
-    script_message $402F ; 'Congratulations! You did it! You've won'
-    script_message $C031 ; 'Do you want the right chest?'
+    script_message $402F ; '*: Congratulations! You did it! You've'
+    script_message $C031 ; '*: Do you want the right'
 Script_0C_7B6A:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B7B, Script_0C_7B6E
 Script_0C_7B6E:: ; heuristic: event script entry or jump target; C0
-    script_message $C030 ; 'Do you want the left chest?'
+    script_message $C030 ; '*: Do you want the left'
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B7B, Script_0C_7B75
 Script_0C_7B75:: ; heuristic: event script entry or jump target; C0
-    script_message $C031 ; 'Do you want the right chest?'
+    script_message $C031 ; '*: Do you want the right'
     script_jump Script_0C_7B6A
 Script_0C_7B7B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B81, Script_0C_7B87, Script_0C_7B8D, Script_0C_7B93
 Script_0C_7B81:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8032 ; 'Your prize is one G!'
+    script_message $8032 ; '*: Your prize is one G!'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B87:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8033 ; 'Your prize is a Magic Key!'
+    script_message $8033 ; '*: Your prize is a Magic'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B8D:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8034 ; 'Oh, but you have no room.'
+    script_message $8034 ; '*: Oh, but you have no'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B93:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $8035 ; 'Oh, but your key ring is'
+    script_message $8035 ; '*: Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B99:: ; heuristic: event script entry or jump target; C0
@@ -8929,12 +8929,12 @@ Script_0C_7B99:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7BA3, Script_0C_7B9D
 Script_0C_7B9D:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0029 ; 'You lost? That's too bad. Try'
+    script_message $0029 ; '*: You lost? That's too bad.'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7BA3:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0028 ; 'You lost? That's too bad. Try'
+    script_message $0028 ; '*: You lost? That's too bad.'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7BA9:: ; heuristic: event script entry or jump target; C0
@@ -8943,28 +8943,28 @@ Script_0C_7BA9:: ; heuristic: event script entry or jump target; C0
 Script_0C_7BAD:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BBA
 Script_0C_7BB0:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; 'Ah, you have some TinyMedals? Let'
+    script_message $C011 ; '*: Ah, you have some TinyMedals?'
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BBA, Script_0C_7BB7
 Script_0C_7BB7:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'But, I can't take this many.'
+    script_message $C012 ; '*: But, I can't take this'
 Script_0C_7BBA:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BC1, Script_0C_7BBE
 Script_0C_7BBE:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7C41
 Script_0C_7BC1:: ; heuristic: event script entry or jump target; C0
-    script_message $C013 ; 'I have 0 of your TinyMedals.'
-    script_message $C015 ; 'Want to trade medals for prizes?'
+    script_message $C013 ; '*: I have 0 of your'
+    script_message $C015 ; '*: Want to trade medals for'
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BD1, Script_0C_7BCB
 Script_0C_7BCB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8014 ; 'I hope you'll find many medals!'
+    script_message $8014 ; '*: I hope you'll find many'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0C_7BD1:: ; heuristic: event script entry or jump target; C0
-    script_message $C016 ; 'Which prize do you want?'
+    script_message $C016 ; '*: Which prize do you want?'
 Script_0C_7BD4:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MEDAL_PRIZES
     script_command SCRIPT_MEDAL_PRIZES
@@ -8972,59 +8972,59 @@ Script_0C_7BD4:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7BE4, Script_0C_7BE1, Script_0C_7BDB
 Script_0C_7BDB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8014 ; 'I hope you'll find many medals!'
+    script_message $8014 ; '*: I hope you'll find many'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0C_7BE1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BD4
 Script_0C_7BE4:: ; heuristic: event script entry or jump target; C0
-    script_message $C017 ; 'I'll trade for 0 TinyMedals. OK?'
+    script_message $C017 ; '*: I'll trade for 0 TinyMedals.'
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BF7, Script_0C_7BF0, Script_0C_7BEC
 Script_0C_7BEC:: ; heuristic: event script entry or jump target; C0
-    script_message $C018 ; 'That requires more TinyMedals.'
+    script_message $C018 ; '*: That requires more TinyMedals.'
     script_command SCRIPT_MEDAL_PRIZES
 Script_0C_7BF0:: ; heuristic: event script entry or jump target; C0
-    script_message $C016 ; 'Which prize do you want?'
+    script_message $C016 ; '*: Which prize do you want?'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BD4
 Script_0C_7BF7:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C12, Script_0C_7C0B, Script_0C_7C04, Script_0C_7BFD
 Script_0C_7BFD:: ; heuristic: event script entry or jump target; C0
-    script_message $C01B ; 'You have no more room for'
+    script_message $C01B ; '*: You have no more room'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C04:: ; heuristic: event script entry or jump target; C0
-    script_message $C01A ; 'Your key ring is already full.'
+    script_message $C01A ; '*: Your key ring is already'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C0B:: ; heuristic: event script entry or jump target; C0
-    script_message $C019 ; 'You don't have any room for'
+    script_message $C019 ; '*: You don't have any room'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C12:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C1F, Script_0C_7C16
 Script_0C_7C16:: ; heuristic: event script entry or jump target; C0
-    script_message $C01C ; 'Fine, we shall trade.'
-    script_message $C01D ; 'I'll send the egg to the'
+    script_message $C01C ; '*: Fine, we shall trade.'
+    script_message $C01D ; '*: I'll send the egg to'
     script_jump Script_0C_7C22
 Script_0C_7C1F:: ; heuristic: event script entry or jump target; C0
-    script_message $C01C ; 'Fine, we shall trade.'
+    script_message $C01C ; '*: Fine, we shall trade.'
 Script_0C_7C22:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C3D, Script_0C_7C36, Script_0C_7C2F, Script_0C_7C28
 Script_0C_7C28:: ; heuristic: event script entry or jump target; C0
-    script_message $C020 ; 'You have no more room for'
+    script_message $C020 ; '*: You have no more room'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C2F:: ; heuristic: event script entry or jump target; C0
-    script_message $C01F ; 'You can't hold any more keys.'
+    script_message $C01F ; '*: You can't hold any more'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C36:: ; heuristic: event script entry or jump target; C0
-    script_message $C01E ; 'You can't take any more items.'
+    script_message $C01E ; '*: You can't take any more'
     script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C3D:: ; heuristic: event script entry or jump target; C0
@@ -9032,7 +9032,7 @@ Script_0C_7C3D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BF0
 Script_0C_7C41:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8024 ; 'At minimum, you must have three'
+    script_message $8024 ; '*: At minimum, you must have'
     script_command SCRIPT_BREED_CLOSE
     script_end
     ds $3B9, $00

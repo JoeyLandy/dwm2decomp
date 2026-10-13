@@ -420,7 +420,7 @@ Jump_01C_4295:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; when the Super Game Boy is active, sets the four palette numbers 4 * wC51F + 0-3, sends a PAL_SET ($B1) packet with attribute file wC520, waits, and loads the object palettes (E-0121)
+; when the Super Game Boy is active, sets the four palette numbers 4 * wSGBPaletteSet + 0-3, sends a PAL_SET ($B1) packet with attribute file wSGBAttrFile, waits, and loads the object palettes (E-0121)
 ; 3 call sites from 3 routines (e.g. InnMenu_Morning, BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15, GameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
 ; reads: wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, wSGBPaletteNum3Hi, ...
@@ -564,7 +564,7 @@ Func_01C_431F:: ; address name
     ldh [rSVBK], a
     ret
 
-; with story flag 2, no text, wC468 bit 7 clear, a non-empty party and hFF8C bit 0 clear: hFFB9 = 3, sets bit 1 of the player and object flags and returns A = $FF; otherwise 0 (E-0124)
+; with story flag 2, no text, wFieldActionRequest bit 7 clear, a non-empty party and hPlayerStateFlags bit 0 clear: hSpriteWindowClipMode = 3, sets bit 1 of the player and object flags and returns A = $FF; otherwise 0 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState, wFieldActionRequest, wPartyCount, hPlayerStateFlags
 ; writes: hSpriteWindowClipMode
@@ -684,7 +684,7 @@ Func_01C_4395:: ; address name
     jr nz, .loop
     ret
 
-; compares the 24-bit value wD7F3:wD7F2:wD7F1 (wD7F3 most significant) with wGoldHi:wGoldMid:wGoldLo: wD7F1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
+; compares the 24-bit value wArg3:wArg2:wArg1 (wArg3 most significant) with wGoldHi:wGoldMid:wGoldLo: wArg1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
 ; 10 call sites from 9 routines (e.g. InnMenu_Pay, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17, ...)
 ; reads: wGoldHi, wArg3, wGoldMid, wArg2, wGoldLo, wArg1
 ; writes: wArg1
@@ -797,7 +797,7 @@ Func_01C_4463:: ; address name
     ld [de], a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. CloseInnMenu, CloseShopMenu_Case00_CopyBytesDEToHL_Bank1C, InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C, InnMenu_ShowPrice, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
@@ -967,7 +967,7 @@ Data_01C_4598:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; adds the 24-bit wD7F1-wD7F3 to the gold, capped at 99,999 ($01869F) (E-0127)
+; adds the 24-bit wArg1-wArg3 to the gold, capped at 99,999 ($01869F) (E-0127)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_AddArg1ToGoldCapped99999, ArenaMenu_AddArg1ToGoldCapped99999)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wArg1, wArg2, wArg3
 ; writes: wGoldHi, wGoldMid, wGoldLo
@@ -2105,7 +2105,7 @@ Jump_01C_4B95:: ; address name
     ld [wScreenStep], a
     ret
 
-; cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (cursor drawn by DrawItemGridXCursor / EraseItemGridXCursor) (E-0122)
+; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (cursor drawn by DrawItemGridXCursor / EraseItemGridXCursor) (E-0122)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C)
 ; reads: wSelectedRecord, wItemGridX
 ; writes: wSelectedRecord
@@ -2121,7 +2121,7 @@ Func_01C_4C87:: ; address name
     xor a, a
     ld [wSelectedRecord], a
 
-; writes the cursor tile $BB at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
+; writes the cursor tile $BB at the position for wItemGridX (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 4 call sites from 2 routines (e.g. ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C)
 ; reads: wItemGridX
 DrawItemGridXCursor::
@@ -2129,7 +2129,7 @@ Func_01C_4C9A:: ; address name
     ld b, $BB
     jr DrawItemGridXCursorConfirmed_ReadItemGridX
 
-; writes the blank tile $C3 at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
+; writes the blank tile $C3 at the position for wItemGridX (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 8 call sites from 4 routines (e.g. ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid)
 ; reads: wItemGridX
 EraseItemGridXCursor::
@@ -2137,7 +2137,7 @@ Func_01C_4C9E:: ; address name
     ld b, $C3
     jr DrawItemGridXCursorConfirmed_ReadItemGridX
 
-; writes the confirmed-cursor tile $BC at the position for wD7B5 (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
+; writes the confirmed-cursor tile $BC at the position for wItemGridX (0-3; BG map offsets $00A2, $00E2, $0122, $0162 from the scroll origin, Data_01C_4CC4), via StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C)
 ; reads: wItemGridX
 DrawItemGridXCursorConfirmed::
@@ -2607,7 +2607,7 @@ Jump_01C_4DE0:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; 11 call sites from 1 routine (e.g. ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87)
 ; reads: wCursorBlinkCD, wNumberEditPos, wNumberTens, wNumberOnes
 ; writes: wCursorBlinkCD
@@ -2667,7 +2667,7 @@ Jump_01C_4FAF:: ; address name
     ei
     ret
 
-; writes wD7CA and wD7CB as digit tiles at the scroll offsets in Data_01C_5008 and Data_01C_500A (E-0121)
+; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in Data_01C_5008 and Data_01C_500A (E-0121)
 ; 6 call sites from 1 routine (e.g. ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87)
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtTable5008::
@@ -3107,7 +3107,7 @@ Jump_01C_51A7:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7D2 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkD2 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 2 call sites from 1 routine (e.g. ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0)
 ; reads: wJoypadRepeatTimer, wCursorBlinkD2, wScreenByteD1
 ; writes: wCursorBlinkD2
@@ -3171,7 +3171,7 @@ ShopMenu_Buy_Case0C_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer
 Data_01C_52E4:: ; address name
     db $2F, $01, $6F, $01
 
-; clears two rectangles at scroll + $10E and + $140, wD781 = 6, clears wScriptCommandType and requests script $80 (E-0124)
+; clears two rectangles at scroll + $10E and + $140, wScreenStep = 6, clears wScriptCommandType and requests script $80 (E-0124)
 ; 1 call site from 1 routine (e.g. ShopMenu_Buy_DrawTwoBoxesAndRequestScript80)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
 DrawTwoBoxesAndRequestScript80::
@@ -4513,7 +4513,7 @@ Jump_01C_59AD:: ; address name
     ld [wScreenStep], a
     ret
 
-; cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; 10 call sites from 1 routine (e.g. ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_5B61)
 ; reads: wCursorBlinkCD, wNumberEditPos, wNumberTens, wNumberOnes
 ; writes: wCursorBlinkCD
@@ -4573,7 +4573,7 @@ Jump_01C_5B89:: ; address name
     ei
     ret
 
-; writes wD7CA and wD7CB as digit tiles at the scroll offsets in Data_01C_5008 and Data_01C_5BE4 (E-0121)
+; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in Data_01C_5008 and Data_01C_5BE4 (E-0121)
 ; 6 call sites from 1 routine (e.g. ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_5B61)
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtTable5008And5BE4::
@@ -4881,7 +4881,7 @@ Jump_01C_5D13:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7D2 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkD2 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 2 call sites from 1 routine (e.g. ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_5DA4)
 ; reads: wJoypadRepeatTimer, wCursorBlinkD2, wScreenByteD1
 ; writes: wCursorBlinkD2
@@ -5140,7 +5140,7 @@ Func_01C_5EEC:: ; address name
     pop hl
     ret
 
-; HL and B = the 3-byte far pointer entry wD7FB of Data_0F2_5643 in bank $F2 (ReadFarPointerAtDEInBankB); DE kept (E-0118)
+; HL and B = the 3-byte far pointer entry wScreenTableIndex of Data_0F2_5643 in bank $F2 (ReadFarPointerAtDEInBankB); DE kept (E-0118)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Buy_Case09_WriteThreeDigits, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05)
 ; reads: wScreenTableIndex
 ReadF2FarPointerForScreenTableIndex::
@@ -6108,7 +6108,7 @@ Func_01C_67AF:: ; address name
     add_a_to_hl
     ret
 
-; copies the B x C rectangle at DE to the BG map at HL (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2 switched in (E-0121; a copy, not a clear: E-0226)
+; copies the B x C rectangle at DE to the BG map at HL (Func_01C_6823 with A = 0) and sets wTextCursorLo = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2 switched in (E-0121; a copy, not a clear: E-0226)
 ; 11 call sites from 9 routines (e.g. DrawTwoBoxesAndRequestScript80, ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87, ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C, ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_5B61, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -6149,7 +6149,7 @@ Func_01C_67D0:: ; address name
     ldh [rVBK], a
     ret
 
-; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1 (E-0124)
+; clears a rectangle (Func_01C_6823 with A = 0) and sets wTextCursorLo = HL + $1C1 (E-0124)
 ; 13 call sites from 13 routines (e.g. ShopMenu_Buy_SubtractArg1AmountFromGold, DrawTwoBoxesAndRequestScript80, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08, ...)
 ; writes: wTextCursorLo, wTextCursorHi
 ClearRectSetTextCursorLoPlus1C1_Bank1C::
@@ -6284,7 +6284,7 @@ Func_01C_6823:: ; address name
 .return:
     ret
 
-; clears wD7D5 ($18 bytes) and lists each item id 1-$62 present in the inventory, counting them in wD785 (E-0127)
+; clears wItemGrid ($18 bytes) and lists each item id 1-$62 present in the inventory, counting them in wGlyphListStart (E-0127)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid, DrawRect0140AtBGMap13E0AndStep)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGridCursorX
@@ -6347,7 +6347,7 @@ Func_01C_689A:: ; address name
     ld [wGlyphListStart], a
     jr .next
 
-; HL = wD7F1/wD7F2 = the word at Data_01C_6158 + 2 * wD7FB (E-0118)
+; HL = wArg1/wArg2 = the word at Data_01C_6158 + 2 * wScreenTableIndex (E-0118)
 ; 7 call sites from 7 routines (e.g. ShopMenu_Buy_SubtractArg1AmountFromGold, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A, ShopMenu_Buy_Case09_WriteThreeDigits, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05, ...)
 ; reads: wScreenTableIndex
 ; writes: wArg2, wArg1
@@ -6370,7 +6370,7 @@ Func_01C_68DF:: ; address name
     ld [wArg1], a
     ret
 
-; LoadArg1PointerForScreenTableIndex, then wD7F1 = the byte at that pointer + 4 * wD7B6 + wD7B5 (E-0119)
+; LoadArg1PointerForScreenTableIndex, then wArg1 = the byte at that pointer + 4 * wItemGridY + wItemGridX (E-0119)
 ; 1 call site from 1 routine (e.g. StepItemDescriptionText)
 ; reads: wItemGridY, wItemGridX
 ; writes: wArg1
@@ -6391,7 +6391,7 @@ Func_01C_68FA:: ; address name
     ld [wArg1], a
     ret
 
-; removes 10 * wD7CA + wD7CB copies of the selected item (wD7D5[4 * wD7B6 + wD7B5]) from the inventory and compacts it (E-0128)
+; removes 10 * wNumberTens + wNumberOnes copies of the selected item (wItemGrid[4 * wItemGridY + wItemGridX]) from the inventory and compacts it (E-0128)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_AddArg1ToGoldCapped99999, VaultMenu_Store_ReadScreenState)
 ; reads: wNumberTens, wNumberOnes, wItemGridY, wItemGridX, wCursorBlinkB8, wRecordsFlagged
 ; writes: wRecordsFlagged, wCursorBlinkB8
@@ -6480,7 +6480,7 @@ Func_01C_6919:: ; address name
     jr c, .loop2
     ret
 
-; counts the inventory slots holding the item at wD7D5[4 * wD7B6 + wD7B5]; wD7D3 = count / 10, wD7D4 = count mod 10 (E-0125)
+; counts the inventory slots holding the item at wItemGrid[4 * wItemGridY + wItemGridX]; wCountTens = count / 10, wCountOnes = count mod 10 (E-0125)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap, VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridY, wItemGridX
 ; writes: wCountOnes, wCountTens
@@ -6523,7 +6523,7 @@ Func_01C_6999:: ; address name
     ld [wCountTens], a
     ret
 
-; for each entry from wD783 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then wD781 += 1 (E-0127)
+; for each entry from wScreenCounter of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then wScreenStep += 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Setup_ToCopyTileListFromBank1F_1C, VaultMenu_Setup_ToCopyTileListFromBank1F_1C)
 ; reads: wScreenCounter
 ; writes: wGlyphListPos, wScreenCounter
@@ -6585,7 +6585,7 @@ Func_01C_69D5:: ; address name
     inc [hl]
     ret
 
-; copies $28 bytes from Data_01C_5F5E to wD788, runs Func_01C_4395, counts the inventory items into wD7B0 and its digits into wD7A5/6, wD781 += 1 (E-0125)
+; copies $28 bytes from Data_01C_5F5E to wScreenList, runs Func_01C_4395, counts the inventory items into wListPages and its digits into wItemCountTens/6, wScreenStep += 1 (E-0125)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Setup_ToInitItemListScreenListAndCount, VaultMenu_Setup_ToInitItemListScreenListAndCount)
 ; reads: wDigits
 ; writes: wListPages, wItemCountTens, wItemCountOnes
@@ -6641,7 +6641,7 @@ Func_01C_6A22:: ; address name
     inc [hl]
     ret
 
-; copies the 8 x 5 box at wD788 to wC370, draws it at scroll + $1CC and wD781 += 1 (E-0122)
+; copies the 8 x 5 box at wScreenList to wWindowTileBuffer + $70, draws it at scroll + $1CC and wScreenStep += 1 (E-0122)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Setup_DrawScreenListBoxAtWC370AndStep, VaultMenu_Setup_DrawScreenListBoxAtWC370AndStep)
 ; points at: wScreenList, wScreenStep
 DrawScreenListBoxAtWC370AndStep::
@@ -6705,7 +6705,7 @@ Func_01C_6AAC:: ; address name
     inc [hl]
     ret
 
-; clears wD7C2-wD7C6, wD7C8 and wD7C9, and sets wD7C7 = $3C (60) (E-0072)
+; clears wTextCounter0-wTextCounter4, wTextCounter5 and wTextCounter6, and sets wTextTimer = $3C (60) (E-0072)
 ; 14 call sites from 4 routines (e.g. ShopMenu_Buy_ResetTextCounter0Counters, ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_ResetTextCounter0Counters, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C)
 ; writes: wTextCounter0, wTextCounter1, wTextCounter2, wTextCounter3, wTextCounter4, wTextCounter5, wTextCounter6, wTextTimer
 ResetTextCounter0Counters::
@@ -6902,7 +6902,7 @@ Func_01C_6C78:: ; address name
     pop hl
     ret
 
-; DEHL = A * EHL (24-bit by 8-bit multiply through wD7F1-wD7F4) (E-0121)
+; DEHL = A * EHL (24-bit by 8-bit multiply through wArg1-wArg4) (E-0121)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Buy_Case09_WriteThreeDigits, ShopMenu_Buy_ReadFarPointerAtDEInBankB)
 ; reads: wArg1, wArg2, wArg3, wArg4
 ; writes: wArg1, wArg2, wArg3, wArg4
@@ -7730,7 +7730,7 @@ Jump_01C_718F:: ; address name
     farcall VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc
     ret
 
-; clears the rectangle at scroll + $147, copies a tile, runs Func_01C_7252, wD781 = 3, wTwoChoiceCursor = 2 and requests script $80 (E-0124)
+; clears the rectangle at scroll + $147, copies a tile, runs Func_01C_7252, wScreenStep = 3, wTwoChoiceCursor = 2 and requests script $80 (E-0124)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_ClearRect147AndAskTwoChoice)
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ClearRect147AndAskTwoChoice::
@@ -7847,7 +7847,7 @@ Jump_01C_724B:: ; address name
     farcall VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc
     ret
 
-; copies $20 bytes from Data_01C_5F5E to wD788, counts the inventory items into wD7B0 and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
+; copies $20 bytes from Data_01C_5F5E to wScreenList, counts the inventory items into wListPages and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
 ; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, VaultMenu_Store_InitItemListScreenListAndDraw)
 ; reads: wDigits
 ; writes: wListPages, wItemCountTens, wItemCountOnes

@@ -53,70 +53,70 @@ Data_01D_4018:: ; address name
 String_1D_00_00:: ; heuristic: string; C0
 Data_01D_4048:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Which monster", $F1
+    db $EA, "*: Which monster", $F1
     db "will hibernate?", $F0
 
 String_1D_00_02:: ; heuristic: string; C0
 Data_01D_4069:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Do you need me", $F1
+    db $EA, "*: Do you need me", $F1
     db "for anything else?", $F0
 
 String_1D_00_03:: ; heuristic: string; C0
 Data_01D_408E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " So this one", $F1
+    db $EA, "*: So this one", $F1
     db "should hibernate?", $F0
 
 String_1D_00_04:: ; heuristic: string; C0
 Data_01D_40AF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " OK my friend,", $F1
+    db $EA, "*: OK my friend,", $F1
     db "time to sleep!", $F7
     db $F0
 
 String_1D_00_05:: ; heuristic: string; C0
 Data_01D_40D0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Huh? There's no", $F1
+    db $EA, "*: Huh? There's no", $F1
     db "one on the farm.", $F7
     db $F0
 
 String_1D_00_06:: ; heuristic: string; C0
 Data_01D_40F4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Uh-oh, the", $F1
+    db $EA, "*: Uh-oh, the", $F1
     db "stable is full!", $F7
     db $F0
 
 String_1D_00_07:: ; heuristic: string; C0
 Data_01D_4113:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Want to switch", $F1
+    db $EA, "*: Want to switch", $F1
     db "with someone?", $F0
 
 String_1D_00_08:: ; heuristic: string; C0
 Data_01D_4133:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who should I", $F1
+    db $EA, "*: Who should I", $F1
     db "wake up?", $F0
 
 String_1D_00_09:: ; heuristic: string; C0
 Data_01D_414C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Wake this", $F1
+    db $EA, "*: Wake this", $F1
     db "monster up?", $F0
 
 String_1D_00_0A:: ; heuristic: string; C0
 Data_01D_4165:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Which one should", $F1
+    db $EA, "*: Which one should", $F1
     db "hibernate?", $F0
 
 String_1D_00_0B:: ; heuristic: string; C0
 Data_01D_4184:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " So switch ", $F9, "0", $F1
+    db $EA, "*: So switch ", $F9, "0", $F1
     db "and ", $F9, "G, huh?", $FA, $F7
     db $F2, "OK, I'll do that", $F1
     db "for you.", $F7
@@ -125,52 +125,52 @@ Data_01D_4184:: ; address name
 String_1D_00_0C:: ; heuristic: string; C0
 Data_01D_41BD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who should I", $F1
+    db $EA, "*: Who should I", $F1
     db "wake up?", $F0
 
 String_1D_00_0D:: ; heuristic: string; C0
 Data_01D_41D6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I'll send ", $F9, "G", $F1
+    db $EA, "*: I'll send ", $F9, "G", $F1
     db "to the farm.", $F7
     db $F0
 
 String_1D_00_0E:: ; heuristic: string; C0
 Data_01D_41F3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Huh? No one's", $F1
+    db $EA, "*: Huh? No one's", $F1
     db "sleeping now.", $F7
     db $F0
 
 String_1D_00_0F:: ; heuristic: string; C0
 Data_01D_4212:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Huh? There's no", $F1
+    db $EA, "*: Huh? There's no", $F1
     db "room on the farm.", $F7
     db $F0
 
 String_1D_00_10:: ; heuristic: string; C0
 Data_01D_4237:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Should someone", $F1
+    db $EA, "*: Should someone", $F1
     db "else hibernate?", $F0
 
 String_1D_00_11:: ; heuristic: string; C0
 Data_01D_4259:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who do you want", $F1
+    db $EA, "*: Who do you want", $F1
     db "to check?", $F0
 
 String_1D_00_12:: ; heuristic: string; C0
 Data_01D_4276:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who do you want", $F1
+    db $EA, "*: Who do you want", $F1
     db "to release?", $F0
 
 String_1D_00_13:: ; heuristic: string; C0
 Data_01D_4295:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " It'll disappear.", $F1
+    db $EA, "*: It'll disappear.", $F1
     db "Is that OK?", $F0
 
 String_1D_00_14:: ; heuristic: string; C0
@@ -183,7 +183,7 @@ Data_01D_42B4:: ; address name
 String_1D_00_15:: ; heuristic: string; C0
 Data_01D_42D2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Come see me if", $F1
+    db $EA, "*: Come see me if", $F1
     db "you get more", $FA, $F7
     db $EF, $EE, "monsters.", $EF, $EE, "I'll be waiting.", $F7
     db $F0
@@ -191,7 +191,7 @@ Data_01D_42D2:: ; address name
 String_1D_00_16:: ; heuristic: string; C0
 Data_01D_4310:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " No one else can", $F1
+    db $EA, "*: No one else can", $F1
     db "hibernate,I see.", $F7
     db $F0
 
@@ -203,7 +203,7 @@ Script_1D_4336:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1D_434B, Script_1D_4348, Script_1D_4342, Script_1D_433C
 Script_1D_433C:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE_CLOSE
-    script_message $8015 ; 'Come see me if you get'
+    script_message $8015 ; '*: Come see me if you'
     script_command SCRIPT_HIBERNATE_CLOSE
     script_end
 Script_1D_4342:: ; heuristic: event script entry or jump target; C0
@@ -219,167 +219,167 @@ Script_1D_434B:: ; heuristic: event script entry or jump target; C0
 Script_1D_4350:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_435F
 Script_1D_4353:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Huh? There's no one on the'
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C005 ; '*: Huh? There's no one on'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_435C:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_4389
 Script_1D_435F:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'Which monster will hibernate?'
+    script_message $C001 ; '*: Which monster will hibernate?'
 Script_1D_4362:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_436C, Script_1D_4366
 Script_1D_4366:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_436C:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'So this one should hibernate?'
+    script_message $C003 ; '*: So this one should hibernate?'
 Script_1D_436F:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_437B, Script_1D_437F, Script_1D_4374
 Script_1D_4374:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'Which monster will hibernate?'
+    script_message $C001 ; '*: Which monster will hibernate?'
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_4362
 Script_1D_437B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_436F
 Script_1D_437F:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'OK my friend, time to sleep!'
+    script_message $C004 ; '*: OK my friend, time to'
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_4389:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'Uh-oh, the stable is full!'
-    script_message $C007 ; 'Want to switch with someone?'
+    script_message $C006 ; '*: Uh-oh, the stable is full!'
+    script_message $C007 ; '*: Want to switch with someone?'
 Script_1D_438F:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4399, Script_1D_4393
 Script_1D_4393:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_4399:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Who should I wake up?'
+    script_message $C008 ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_43A7, Script_1D_43A0
 Script_1D_43A0:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
-    script_message $C007 ; 'Want to switch with someone?'
+    script_message $C007 ; '*: Want to switch with someone?'
     script_jump Script_1D_438F
 Script_1D_43A7:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Wake this monster up?'
+    script_message $C009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_43B1, Script_1D_43AE
 Script_1D_43AE:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_4399
 Script_1D_43B1:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
-    script_message $C00A ; 'Which one should hibernate?'
+    script_message $C00A ; '*: Which one should hibernate?'
 Script_1D_43B5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_43BC, Script_1D_43B9
 Script_1D_43B9:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_4399
 Script_1D_43BC:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'So this one should hibernate?'
+    script_message $C003 ; '*: So this one should hibernate?'
 Script_1D_43BF:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_43CB, Script_1D_43CF, Script_1D_43C4
 Script_1D_43C4:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Which one should hibernate?'
+    script_message $C00A ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_43B5
 Script_1D_43CB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_43BF
 Script_1D_43CF:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'So switch 0 and G, huh?'
+    script_message $C00B ; '*: So switch 0 and G,'
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_43D9:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_43F8, Script_1D_43EF, Script_1D_43F2, Script_1D_43E6, Script_1D_43E0
 Script_1D_43E0:: ; heuristic: event script entry or jump target; C0
-    script_message $C017 ; 'No one else can hibernate,I see.'
+    script_message $C017 ; '*: No one else can hibernate,I'
     script_jump Script_1D_43E9
 Script_1D_43E6:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'Huh? No one's sleeping now.'
+    script_message $C00E ; '*: Huh? No one's sleeping now.'
 Script_1D_43E9:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_43EF:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_441B
 Script_1D_43F2:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'Huh? There's no room on the'
+    script_message $C00F ; '*: Huh? There's no room on'
     script_jump Script_1D_43E9
 Script_1D_43F8:: ; heuristic: event script entry or jump target; C0
-    script_message $C00C ; 'Who should I wake up?'
+    script_message $C00C ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4406, Script_1D_43FF
 Script_1D_43FF:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_4406:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Wake this monster up?'
+    script_message $C009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4410, Script_1D_440D
 Script_1D_440D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_43F8
 Script_1D_4410:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; 'I'll send G to the farm.'
+    script_message $C00D ; '*: I'll send G to the'
     script_command SCRIPT_HIBERNATE
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_441B:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'Huh? There's no room on the'
-    script_message $C010 ; 'Should someone else hibernate?'
+    script_message $C00F ; '*: Huh? There's no room on'
+    script_message $C010 ; '*: Should someone else hibernate?'
 Script_1D_4421:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_442B, Script_1D_4425
 Script_1D_4425:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_442B:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Which one should hibernate?'
+    script_message $C00A ; '*: Which one should hibernate?'
 Script_1D_442E:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4438, Script_1D_4432
 Script_1D_4432:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; 'Should someone else hibernate?'
+    script_message $C010 ; '*: Should someone else hibernate?'
     script_jump Script_1D_4421
 Script_1D_4438:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'So this one should hibernate?'
+    script_message $C003 ; '*: So this one should hibernate?'
 Script_1D_443B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4447, Script_1D_444B, Script_1D_4440
 Script_1D_4440:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Which one should hibernate?'
+    script_message $C00A ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_442E
 Script_1D_4447:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_443B
 Script_1D_444B:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Who should I wake up?'
+    script_message $C008 ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4459, Script_1D_4452
 Script_1D_4452:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'Which one should hibernate?'
+    script_message $C00A ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
     script_jump Script_1D_442E
 Script_1D_4459:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Wake this monster up?'
+    script_message $C009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4463, Script_1D_4460
 Script_1D_4460:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_444B
 Script_1D_4463:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'So switch 0 and G, huh?'
+    script_message $C00B ; '*: So switch 0 and G,'
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
     db $EB, $E4, $0A, $00, $00, $05, $C0, $00, $02, $C0, $07, $36, $43, $00, $11, $C0
     db $EB, $E4, $07, $00, $00, $02, $C0, $07, $36, $43, $EB, $07, $7D, $44
@@ -389,19 +389,19 @@ Script_1D_448B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_4498, Script_1D_448F
 Script_1D_448F:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'Huh? No one's sleeping now.'
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C00E ; '*: Huh? No one's sleeping now.'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_4498:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'Who do you want to release?'
+    script_message $C012 ; '*: Who do you want to'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_44A6, Script_1D_449F
 Script_1D_449F:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 Script_1D_44A6:: ; heuristic: event script entry or jump target; C0
-    script_message $C013 ; 'It'll disappear. Is that OK?'
+    script_message $C013 ; '*: It'll disappear. Is that OK?'
     script_command SCRIPT_HIBERNATE
     script_choice_jump Script_1D_44B0, Script_1D_44AD
 Script_1D_44AD:: ; heuristic: event script entry or jump target; C0
@@ -409,7 +409,7 @@ Script_1D_44AD:: ; heuristic: event script entry or jump target; C0
 Script_1D_44B0:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'G was released in the wild.'
     script_command SCRIPT_HIBERNATE
-    script_message $C002 ; 'Do you need me for anything'
+    script_message $C002 ; '*: Do you need me for'
     script_jump Script_1D_4336
 
 ; only called from VaultMenu_Store_Case00 (E-0047)
@@ -824,7 +824,7 @@ Func_01D_47AF:: ; address name
     ld a, $02
     ret
 
-; cycles wD7EF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkEF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 1 call site from 1 routine (e.g. VaultMenu_BlinkCursorBlinkEF_Bank1D_4801)
 ; reads: wJoypadRepeatTimer, wCursorBlinkEF, wScreenByteED
 ; writes: wCursorBlinkEF
@@ -891,7 +891,7 @@ VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: pointer load 
 Data_01D_4842:: ; address name
     db $61, $00, $A1, $00, $E1, $00
 
-; draws rect $0088 (9 x 12) at vBGMap1 + $370 (Func_01D_5917) and wD781 += 1 (E-0122)
+; draws rect $0088 (9 x 12) at vBGMap1 + $370 (Func_01D_5917) and wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -906,7 +906,7 @@ Func_01D_4848:: ; address name
     ld [wScreenStep], a
     ret
 
-; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs Func_01C_689A and Func_0F2_6449; wD781 += 1 (E-0122)
+; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs Func_01C_689A and Func_0F2_6449; wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep)
 ; reads: wScreenState, wScreenStep
 ; writes: wScreenStep
@@ -1111,7 +1111,7 @@ Func_01D_49D4:: ; address name
     ld [wGlyphListPos], a
     ret
 
-; C = the number of non-zero bytes among the $18 bytes at wD7D5 (E-0122)
+; C = the number of non-zero bytes among the $18 bytes at wItemGrid (E-0122)
 ; 2 call sites from 1 routine (e.g. VaultMenu_Store_CountNonZeroItemGridBytes)
 ; points at: wItemGrid
 CountNonZeroItemGridBytes::
@@ -1183,7 +1183,7 @@ Func_01D_4A62:: ; address name
     ld [wListPages], a
     ret
 
-; cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wItemGridX
 ; writes: wSelectedRecord
@@ -1602,7 +1602,7 @@ Func_01D_4BF9:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wJoypadRepeatTimer, wSelectedRecord, wItemGridX
 ; writes: wSelectedRecord
@@ -2006,7 +2006,7 @@ Func_01D_4DC7:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 10 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wJoypadRepeatTimer, wCursorBlinkCD, wNumberEditPos, wNumberTens, wNumberOnes
 ; writes: wCursorBlinkCD
@@ -2073,7 +2073,7 @@ VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: poi
 Data_01D_4FE5:: ; address name
     db $61, $01, $62, $01
 
-; writes wD7CA and wD7CB as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and + $162 (E-0120)
+; writes wNumberTens and wNumberOnes as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and + $162 (E-0120)
 ; 6 call sites from 2 routines (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41, VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtScroll161::
@@ -2102,7 +2102,7 @@ Func_01D_4FE9:: ; address name
     ei
     ret
 
-; A = $FF when wD7B0 + TenTimesNumberTensPlusNumberOnes exceeds $18, else 0 (E-0122)
+; A = $FF when wListPages + TenTimesNumberTensPlusNumberOnes exceeds $18, else 0 (E-0122)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wListPages
 CheckListPagesPlusNumberAtMost18::
@@ -2452,7 +2452,7 @@ Func_01D_5259:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; draws rect $0147 (3 x 13) at vBGMap1 + $370, wD781 += 1, clears wD7CD-wD7D0 and sets wD7CC = 2 (E-0122)
+; draws rect $0147 (3 x 13) at vBGMap1 + $370, wScreenStep += 1, clears wCursorBlinkCD-wThreeDigits + $2 and sets wNumberEditPos = 2 (E-0122)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos)
 ; reads: wScreenStep
 ; writes: wScreenStep, wCursorBlinkCD, wThreeDigits, wNumberEditPos
@@ -3406,7 +3406,7 @@ VaultMenu_Shared02_WriteCursorBlinkCD_Data:: ; heuristic: pointer load in the sa
 Data_01D_58C2:: ; address name
     db $6E, $00, $6F, $00, $70, $00
 
-; writes the three bytes at wD7CE as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)
+; writes the three bytes at wThreeDigits as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)
 ; 8 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc, VaultMenu_WriteNumberEditPosAndThreeDigitsEtc, VaultMenu_Shared02_WriteThreeDigits, VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc)
 ; points at: wThreeDigits
 DrawThreeDigitsAtScrollOffset6E::
@@ -3433,7 +3433,7 @@ Func_01D_58C8:: ; address name
     jr c, .loop
     ret
 
-; takes the byte at wC635 + 8 * wD7B6 + 2 * wD7B5 + 1 and stores its value / 10 in wD7D3 and value mod 10 in wD7D4 (E-0120)
+; takes the byte at wItemStorage + 8 * wItemGridY + 2 * wItemGridX + 1 and stores its value / 10 in wCountTens and value mod 10 in wCountOnes (E-0120)
 ; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridY, wItemGridX
 ; writes: wCountOnes, wCountTens
@@ -3600,7 +3600,7 @@ Func_01D_5965:: ; address name
     xor a, a
     ret
 
-; A = 0 when one of the 100 two-byte entries at wC635 has a non-zero first byte, else $FF (E-0124)
+; A = 0 when one of the 100 two-byte entries at wItemStorage has a non-zero first byte, else $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wItemStorage
 ItemStorageHasNonZeroEntry:: ; heuristic: follows a terminator; C0
@@ -3647,7 +3647,7 @@ Func_01D_59CF:: ; address name
     add_a_to_hl
     ret
 
-; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wC554 = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2 switched in (E-0121; a copy, not a clear: E-0226)
+; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wTextCursorLo = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2 switched in (E-0121; a copy, not a clear: E-0226)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
@@ -3696,7 +3696,7 @@ Func_01D_59F0:: ; address name
     ldh [c], a
     ret
 
-; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wC554 = HL + $21 (E-0124; a copy, not a clear: E-0226)
+; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wTextCursorLo = HL + $21 (E-0124; a copy, not a clear: E-0226)
 ; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc, VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D, ...)
 ; writes: wTextCursorLo, wTextCursorHi
 DrawRectSetTextCursorLoPlus21_Bank1D::
@@ -3768,7 +3768,7 @@ Func_01D_5A4F:: ; address name
 .return:
     ret
 
-; HL = 10 * wD7CA + wD7CB (E-0120)
+; HL = 10 * wNumberTens + wNumberOnes (E-0120)
 ; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes)
 ; reads: wNumberTens, wNumberOnes
 TenTimesNumberTensPlusNumberOnes::
@@ -3909,7 +3909,7 @@ Func_01D_5ADF:: ; address name
 .return:
     ret
 
-; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
+; record wArg1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
 ; 4 call sites from 4 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
 ; reads: wArg1, hTemp0, wDigits, hTemp1
 ; writes: rRAMG2, rRAMB, wWindowTileBuffer
@@ -4004,7 +4004,7 @@ DrawRecordStatsBoxForArg1_Data_5BEA:: ; heuristic: pointer load in the same bank
 Data_01D_5BEA:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
-; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
+; saves wArg1-wMenuInputResult and hTemp0-hSpriteScrollXLo, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
@@ -4057,7 +4057,7 @@ Func_01D_5BF2:: ; address name
     jr nz, .loop4
     ret
 
-; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
+; saves wArg1-wMenuInputResult and hTemp0-hSpriteScrollXLo, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
@@ -4181,7 +4181,7 @@ Jump_01D_5CAF:: ; address name
     ld [de], a
     ret
 
-; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
+; record wArg1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
 ; 11 call sites from 11 routines (e.g. NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
 ; reads: wArg1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
@@ -4246,7 +4246,7 @@ Func_01D_5CD7:: ; address name
     ld [rRAMG2], a
     ret
 
-; entry wD7FC (3 bytes per entry): decompresses the tiles named at Data_01D_5D78 to vTiles2 and copies the $40-byte palette named at Data_01D_5D7E into wBGPaletteBuffer (E-0120)
+; entry wAreaGraphicsIndex (3 bytes per entry): decompresses the tiles named at Data_01D_5D78 to vTiles2 and copies the $40-byte palette named at Data_01D_5D7E into wBGPaletteBuffer (E-0120)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_LoadAreaGraphicsForAreaGraphicsIndex)
 ; reads: wAreaGraphicsIndex
 ; points at: wBGPaletteBuffer
@@ -4293,7 +4293,7 @@ Data_01D_5D7E:: ; address name
     dfar AreaPalettes0 ; id 0
     dfar AreaPalettes1 ; id 1
 
-; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
+; wArg5/wArg6 (big-endian pointer) = wListEntries + 5 * wListPageIndex + wListCursor
 ; 67 call sites from 58 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, DrawListEntriesCell5SpeciesSprite, ShowCategory11StringOfListEntriesCell5Record, ShowSpeciesCategory13StringOfListEntriesCell5Record, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
@@ -4316,7 +4316,7 @@ Func_01D_5D84:: ; address name
     ld [wArg6], a
     ret
 
-; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
+; wArg5/wArg6 (big-endian pointer) = wListEntries + 4 * wListPageIndex + wListCursor
 ; 28 call sites from 28 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
@@ -4373,7 +4373,7 @@ Func_01D_5DBC:: ; address name
     farcall ShowString_Bank08
     ret
 
-; loads the species of the record at WD789 cell 5 (field $0B) and shows string [wD013] of category $0D at $9680 with size $0602 (E-0121)
+; loads the species of the record at WD789 cell 5 (field $0B) and shows string [wSpeciesRecord + $B] of category $0D at $9680 with size $0602 (E-0121)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep)
 ; reads: hTemp0, hTemp1, wSpeciesRecord
 ; writes: rRAMG2, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
@@ -4410,7 +4410,7 @@ Func_01D_5DF9:: ; address name
     farcall ShowString_Bank08
     ret
 
-; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
+; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): wRecordsInUse = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
 ; 13 call sites from 13 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280, HibernateMenu_ChooseToHibernate_RunFunc5925At0280, ...)
 ; reads: wRecordsInUse
 ; writes: wRecordsInUse, rRAMG2, rRAMB
@@ -4453,7 +4453,7 @@ Func_01D_5E3F:: ; address name
     ld [rRAMG2], a
     ret
 
-; clears the wD789 list, then lists the party records whose SRAM record byte 0 is 2 and counts them in wD7A9 (E-0127)
+; clears the wListEntries list, then lists the party records whose SRAM record byte 0 is 2 and counts them in wListCount (E-0127)
 ; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries, HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_ChooseRecords_Multiply8, HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wListCount, wPartyCount
 ; writes: wListCount, rRAMG2, rRAMB
@@ -4516,7 +4516,7 @@ Func_01D_5E79:: ; address name
     ld [rRAMG2], a
     ret
 
-; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wD789, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many state-1 records had byte $6E set (E-0104)
+; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wListEntries, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wListCount = the list length, wRecordsFlagged = how many state-1 records had byte $6E set (E-0104)
 ; 12 call sites from 11 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage, HibernateMenu_ChooseRecords_DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, ...)
 ; reads: wRecordCapacity, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
@@ -4590,7 +4590,7 @@ Func_01D_5ECE:: ; address name
     ld [rRAMG2], a
     ret
 
-; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
+; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): clears wListEntries and wListEntries2 (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wListCount = the list length, wRecordsFlagged = how many in-use records had byte $6E set (E-0104)
 ; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear, BattleEnd_AskToJoin_ClampRecordListPageCursor5, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
@@ -4677,7 +4677,7 @@ Func_01D_5F2D:: ; address name
     xor a, a
     ld [rRAMG2], a
 
-; moves the party records found in the record list wD789 to its front and pads the list to $1E entries with $FF (E-0129)
+; moves the party records found in the record list wListEntries to its front and pads the list to $1E entries with $FF (E-0129)
 ; 3 call sites from 3 routines (e.g. BreedMenu_WriteListCountAndRAMG2Etc, ListAvailableRecordsForSelection, ListAvailableRecordsForSelection_Bank33)
 ; reads: wListCount, wPartyCount
 ; points at: wListEntries, wPartyList, wListEntries2
@@ -4781,7 +4781,7 @@ Func_01D_5F9C:: ; address name
 .return:
     ret
 
-; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)
+; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104)
 ; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
@@ -4859,7 +4859,7 @@ Func_01D_6026:: ; address name
     ld [rRAMG2], a
     ret
 
-; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
+; for the visible entries of page wListPageIndex draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
 ; 8 call sites from 8 routines (e.g. EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames, BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames, BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames, SwapMonstersMenu_ChooseToView_DrawRecordListPageSpeciesNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, hTemp1, wDataBank, wListPages
 ; writes: rRAMG2, rRAMB, wDataBank, wNameGlyphBuf
@@ -4960,7 +4960,7 @@ Func_01D_6088:: ; address name
     ld [rRAMG2], a
     ret
 
-; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
+; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
 ; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, BreedMenu_ChooseParents_ComputeBreedingChild, DrawRecordNameAndSpeciesName)
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
@@ -5200,7 +5200,7 @@ Data_01D_629B:: ; address name
     dw vTiles2 + $7C0, vTiles2 + $7D0, vTiles2 + $7E0, vTiles2 + $7F0, vTiles1 + $400, vTiles1 + $410 ; entry 0
     dw vTiles1 + $420, vTiles1 + $4A0, vTiles1 + $4B0
 
-; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
+; with SRAM enabled, for each of the wPartyCount record numbers in wPartyList copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
 ; 6 call sites from 6 routines (e.g. LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, CloseHibernateMenu_DrawRecordListNameTiles_Bank1D, HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D, CloseBreedMenu_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wPartyCount
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
@@ -5277,7 +5277,7 @@ Func_01D_62FF:: ; address name
     add_a_to_hl
     ret
 
-; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
+; for the visible entries of page wListPageIndex draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
 ; 10 call sites from 10 routines (e.g. EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks, BreedMenu_ChooseEgg_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, wArg2, wArg1, wListPages
 ; writes: rRAMG2, rRAMB
@@ -5534,7 +5534,7 @@ Func_01D_642A:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; cycles wD7B8 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkB8 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wJoypadRepeatTimer, wCursorBlinkB8, wChoiceCursorF0
 ; writes: wCursorBlinkB8
@@ -5602,7 +5602,7 @@ SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_Data:: ;
 Data_01D_64D2:: ; address name
     db $28, $01, $68, $01
 
-; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
+; up/down moves wListCursor over wListCount entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wListPageIndex = 0 (E-0128)
 ; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, RunLinkSession8Case03Steps_HandleListCursorInput_1D)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wListPageIndex, wMenuInputResult, wListCursor
@@ -5678,7 +5678,7 @@ Func_01D_64D6:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks (wD783 counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Cursor positions are BG map offsets $012F and $016F from the scroll origin (E-0068)
+; wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks (wScreenCounter counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Cursor positions are BG map offsets $012F and $016F from the scroll origin (E-0068)
 ; 27 call sites from 27 routines (e.g. ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26, ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
@@ -5749,7 +5749,7 @@ Func_01D_6540:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; once wJoypadRepeatTimer >= $14, counts wD783 up: frames 0-$0F draw the cursor, $10-$17 erase it, then the count restarts (E-0068)
+; once wJoypadRepeatTimer >= $14, counts wScreenCounter up: frames 0-$0F draw the cursor, $10-$17 erase it, then the count restarts (E-0068)
 ; 1 call site from 1 routine (e.g. UpdateTwoChoiceCursor_Bank1D)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
@@ -5817,7 +5817,7 @@ DrawTwoChoiceCursorConfirmed_Data:: ; heuristic: pointer load in the same bank (
 Data_01D_65F2:: ; address name
     db $2F, $01, $6F, $01
 
-; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
+; list cursor over wListCount entries: Up/Down move wListCursor with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
 ; 7 call sites from 7 routines (e.g. SwapMonstersMenu_MoveRecords_UpdateListCursorListCursor, SwapMonstersMenu_ChooseFromFarm_UpdateListCursorListCursor, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wMenuInputResult, wListCursor, wListCursorAux
@@ -5960,7 +5960,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: 
 Data_01D_66AE:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
-; row wD7AB runs 0..wD7B1 and page wD7AF runs 0..wD7B0 - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
+; row wListCursor runs 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
 ; 34 call sites from 34 routines (e.g. EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc, HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case25, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListLastRow, wListCursor, wListPageIndex, wListPages
 ; writes: wMenuInputResult, wListCursor, wListCursorAux, wListPageIndex
@@ -6182,7 +6182,7 @@ Data_01D_67EE:: ; address name
     db $E6, $00, $26, $01, $66, $01, $A6, $01, $A4, $00, $E4, $00, $24, $01, $64, $01
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
-; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
+; for the three records listed at wArg1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
 ; 4 call sites from 4 routines (e.g. PauseMenu_Main_Blocks09And0A_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
@@ -6271,7 +6271,7 @@ LoadPartySpeciesSpriteGraphics_Data_6890:: ; heuristic: pointer load in the same
 Data_01D_6890:: ; address name
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
+; for the three records listed at wArg1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
 ; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Blocks09And0A_UpdateMenuCursor, SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case20, ...)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
@@ -6359,7 +6359,7 @@ DrawPartySpeciesSprites_Data:: ; heuristic: pointer load in the same bank (bank 
 Data_01D_6909:: ; address name
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
-; decompresses the sprite graphics of species hFFC6/7 (far pointer Data_004_4EAA + 3 * id) to the VRAM address in wD7F4/5; on CGB copies its 8-byte palette from bank $27 into wOBJPaletteBuffer + wD7F3 (E-0127)
+; decompresses the sprite graphics of species hTemp0/7 (far pointer Data_004_4EAA + 3 * id) to the VRAM address in wArg4/5; on CGB copies its 8-byte palette from bank $27 into wOBJPaletteBuffer + wArg3 (E-0127)
 ; 1 call site from 1 routine (e.g. LoadPartySpeciesSpriteGraphics)
 ; reads: hTemp0, hTemp1, wArg4, wArg5, wIsCGB, wArg3, rSTAT
 ; writes: wOBJPaletteUploadRequest
@@ -6429,7 +6429,7 @@ Func_01D_6915:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; graphics number = the word wD7F1/wD7F2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wD7F4/wD7F5; on CGB it continues with the palette (not read) (E-0104)
+; graphics number = the word wArg1/wArg2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wArg4/wArg5; on CGB it continues with the palette (not read) (E-0104)
 ; 8 call sites from 8 routines (e.g. DecompressRecordSpeciesGraphicsToTiles0, LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX, RunNameEntryStateWhenNotFading_Setup_CopyArgs, DecompressGraphicsA4ToTiles0, ...)
 ; reads: wArg1, wArg2, wArg4, wArg5, wIsCGB, wArg3, rSTAT
 ; writes: wOBJPaletteUploadRequest
@@ -6503,7 +6503,7 @@ Func_01D_6973:: ; address name
 .return:
     ret
 
-; draws sprite set wD7F1 & $7F (from bank $25, $26 or $27 by wD7F2 and bit 7 of wD7F1) at the scroll position + (L, D), tile offset H, attribute E, alternating two frames (E-0127)
+; draws sprite set wArg1 & $7F (from bank $25, $26 or $27 by wArg2 and bit 7 of wArg1) at the scroll position + (L, D), tile offset H, attribute E, alternating two frames (E-0127)
 ; 2 call sites from 2 routines (e.g. DrawPartySpeciesSprites, DrawListEntriesCell5SpeciesSprite)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi, hScrollY, hScrollYHi, wArg1, wArg2
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
@@ -6643,7 +6643,7 @@ Jump_01D_6A59:: ; address name
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
+; for each party record found on the current list page (wListEntries page wListPageIndex) draws a party mark at its row (scroll offsets Data_01D_6B28 when wArg1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
 ; 14 call sites from 10 routines (e.g. HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames, SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E, ...)
 ; reads: wListPageIndex, wListLastRow, wPartyCount, wArg1
 ; writes: rRAMG2, rRAMB
@@ -6866,7 +6866,7 @@ Func_01D_6B32:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; copies tiles listed at the address in wD7F3/4 to wD7F1/2 + 16 * n, six per call; wD7F5 = $FF when the $FF end is reached, else 0 (E-0128)
+; copies tiles listed at the address in wArg3/4 to wArg1/2 + 16 * n, six per call; wArg5 = $FF when the $FF end is reached, else 0 (E-0128)
 ; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall_Case32, BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wArg3, wArg4, wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart, wArg5
@@ -6961,7 +6961,7 @@ Func_01D_6C79:: ; address name
     jr nz, .loop
     ret
 
-; HL = Data_01D_6D84, wD7F1/2 = $9C/0, DE = vBGMap1, wD784 = 0, then continues at LoadTileList6DC4SixPerFrame_Loop (E-0126)
+; HL = Data_01D_6D84, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then continues at LoadTileList6DC4SixPerFrame_Loop (E-0126)
 ; 2 call sites from 2 routines (e.g. HibernateMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1, SwapMonstersMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
@@ -6978,7 +6978,7 @@ Func_01D_6C8A:: ; address name
     ld [wGlyphListPos], a
     jr LoadTileList6DC4SixPerFrame_Loop
 
-; copies tiles listed in Data_01D_6DC4 to vBGMap1 + $200 onward six per call; at the $FF end resets the counters and wD781 += 1 (E-0127)
+; copies tiles listed in Data_01D_6DC4 to vBGMap1 + $200 onward six per call; at the $FF end resets the counters and wScreenStep += 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ChooseToView_ToLoadTileList6DC4SixPerFrame, RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
@@ -7073,7 +7073,7 @@ Data_01D_6D20:: ; address name
     db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $FF, $FF, $FF ; entry 3
     db $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0, $FF, $C0 ; entry 4
 
-; C = wD7FF = Data_01D_6D81[wC7C7] (E-0073)
+; C = wRecordCapacity = Data_01D_6D81[wFarmLevel] (E-0073)
 ; 10 call sites from 9 routines (e.g. ListRecordsInUseWithByte6ESet, ListRecordsState1WithByte6EClear, ListRecordsInUseWithByte6EClear, ListPartyRecordsWithState2ToListEntries, ...)
 ; reads: wFarmLevel
 ; writes: wRecordCapacity
@@ -7122,7 +7122,7 @@ Data_01D_6DE3:: ; address name
     db $0B, $1C, $1A, $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0
     db $8C, $B0, $8C, $FF, $FF
 
-; wD7F5 = the number of SRAM records (29 in bank 0 from sB356 plus one in bank 1) with bit 7 of byte 0 set (E-0125)
+; wArg5 = the number of SRAM records (29 in bank 0 from sCompactRecords plus one in bank 1) with bit 7 of byte 0 set (E-0125)
 ; 4 call sites from 3 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage)
 ; writes: rRAMG2, rRAMB, wArg5
 ; points at: sCompactRecords, sRecords
@@ -7167,7 +7167,7 @@ Func_01D_6DF8:: ; address name
     ld [rRAMB], a
     ret
 
-; packs SRAM record wD7F1's family, state, mark and other fields into the compact form in SRAM bank wD7F2 (wD7E0 workspace) (E-0131)
+; packs SRAM record wArg1's family, state, mark and other fields into the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0131)
 ; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wPackByteE1, wPackByteE6
 ; writes: rRAMB, rRAMG2, wPackByteE1, wPackFields, wPackWork, wArg5
@@ -7605,7 +7605,7 @@ Jump_01D_70C6:: ; address name
     ld [wPackByteE1], a
     jp Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1
 
-; B = (wD7E2 & 3) << 6 | (wD7E3 & 3) << 4 | (wD7E4 & 3) << 2 | (wD7E5 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)
+; B = (wPackFields & 3) << 6 | (wPackFields + $1 & 3) << 4 | (wPackFields + $2 & 3) << 2 | (wPackFields + $3 & 3), the opposite of unpacking a byte into four 2-bit fields (E-0104)
 ; 7 call sites from 2 routines (e.g. PackRecordFieldsToBank1Slot, Pack2BitFieldsFromPackFields)
 ; reads: wPackFields
 Pack2BitFieldsFromPackFields::
@@ -8215,7 +8215,7 @@ Jump_01D_7121:: ; address name
     ld [wArg5], a
     ret
 
-; unpacks the compact record in SRAM bank wD7F2 back into the record fields (family, state, mark ...) (E-0131)
+; unpacks the compact record in SRAM bank wArg2 back into the record fields (family, state, mark ...) (E-0131)
 ; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wArg5, wArg6, wArg7, wArg8
 ; writes: rRAMB, rRAMG2, wPackWork, wArg5
@@ -9047,7 +9047,7 @@ Jump_01D_75DA:: ; address name
     ld [wArg5], a
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $21 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3 (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $21 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3 (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Shared01, HibernateMenu_ChooseRecords_Case2F_LoadRecordNameEntry0, ShowSaveFileInfoWindow, ...)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9078,7 +9078,7 @@ Func_01D_795D:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $22 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 5-4 of byte $27, and copies the 5-glyph name entry at offset 8 (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $22 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 5-4 of byte $27, and copies the 5-glyph name entry at offset 8 (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9106,7 +9106,7 @@ Func_01D_7991:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $23 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 3-2 of byte $27, and copies the 5-glyph name entry at offset $0D (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $23 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 3-2 of byte $27, and copies the 5-glyph name entry at offset $0D (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9135,7 +9135,7 @@ Func_01D_79C5:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $24 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 1-0 of byte $27, and copies the 5-glyph name entry at offset $12 (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $24 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 1-0 of byte $27, and copies the 5-glyph name entry at offset $12 (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9162,7 +9162,7 @@ Func_01D_79FB:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $25 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $28, and copies the 5-glyph name entry at offset $17 (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $25 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 7-6 of byte $28, and copies the 5-glyph name entry at offset $17 (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9193,7 +9193,7 @@ Func_01D_7A2D:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; record wD7F1 (SRAM bank wD7F2): unpacks byte $26 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 5-4 of byte $28, and copies the 5-glyph name entry at offset $1C (Func_01D_7A90); one of six name entries in the record (E-0120)
+; record wArg1 (SRAM bank wArg2): unpacks byte $26 into the four 2-bit fields wArg5-wArg8, sets wMenuInputResult = bits 5-4 of byte $28, and copies the 5-glyph name entry at offset $1C (Func_01D_7A90); one of six name entries in the record (E-0120)
 ; 1 call site from 1 routine (e.g. UnpackRecordFromBank1Slot)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
@@ -9221,7 +9221,7 @@ Func_01D_7A61:: ; address name
     call BuildFiveGlyphNameWithMarksToNameGlyphBuf
     ret
 
-; fills wC8CF with $F0 and copies up to five glyphs from HL, adding mark $8D or $8E after each glyph whose wD7F5 field is 1 or 2 (E-0127)
+; fills wNameGlyphBuf with $F0 and copies up to five glyphs from HL, adding mark $8D or $8E after each glyph whose wArg5 field is 1 or 2 (E-0127)
 ; 6 call sites from 6 routines (e.g. LoadRecordNameEntry5, LoadRecordNameEntry4, LoadRecordNameEntry3, LoadRecordNameEntry2, ...)
 ; points at: wNameGlyphBuf, wArg5
 BuildFiveGlyphNameWithMarksToNameGlyphBuf::
@@ -9283,7 +9283,7 @@ Func_01D_7A90:: ; address name
     ld [de], a
     ret
 
-; with SRAM bank wD7F2 selected, splits the byte at HL into four 2-bit fields: wD7F5 = bits 7-6, wD7F6 = bits 5-4, wD7F7 = bits 3-2, wD7F8 = bits 1-0 (E-0104)
+; with SRAM bank wArg2 selected, splits the byte at HL into four 2-bit fields: wArg5 = bits 7-6, wArg6 = bits 5-4, wArg7 = bits 3-2, wArg8 = bits 1-0 (E-0104)
 ; 7 call sites from 7 routines (e.g. CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, LoadRecordNameEntry3, ...)
 ; reads: wArg2
 ; writes: rRAMB, wArg5, wArg6, wArg7, wArg8
@@ -9324,7 +9324,7 @@ Func_01D_7B05:: ; address name
     ld [rRAMB], a
     ret
 
-; HL = the word at wD7F3/wD7F4; DE = sA000 + $A5 * wD7F1, the start of SRAM record wD7F1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
+; HL = the word at wArg3/wArg4; DE = sRecords + $A5 * wArg1, the start of SRAM record wArg1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
 ; 27 call sites from 10 routines (e.g. UnpackRecordFromBank1Slot, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
 ; reads: wArg3, wArg4, wArg1
 ; points at: sRecords

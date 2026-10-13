@@ -475,7 +475,7 @@ Jump_00F_42B5:: ; address name
 ; points at: wScriptStep
 SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
 Jump_00F_42CA:: ; address name
-    ld hl, $0DB8 ; 'Warubou Wa-hey I have seen this'
+    ld hl, $0DB8 ; 'Warubou: Wa-hey I have seen this'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -581,7 +581,7 @@ Jump_00F_438B:: ; address name
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0DB7 ; 'Kameha No one's taking this pie'
+    ld hl, $0DB7 ; 'Kameha: No one's taking this pie'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -624,7 +624,7 @@ Jump_00F_439D:: ; address name
     ld [wObject1 + OBJ_STATE], a
     xor a, a
     ld [wObject2 + OBJ_STATE], a
-    ld hl, $0DB6 ; 'Warubou Wa-hey! Now look, warooh! It's'
+    ld hl, $0DB6 ; 'Warubou: Wa-hey! Now look, warooh! It's'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptParam0], a
@@ -690,7 +690,7 @@ Jump_00F_4444:: ; address name
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0DB3 ; 'Kameha You're a glutton! You haven't'
+    ld hl, $0DB3 ; 'Kameha: You're a glutton! You haven't'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -704,7 +704,7 @@ Jump_00F_4456:: ; address name
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0DB2 ; 'Warubou WA-HEY! Some Prince! Always a'
+    ld hl, $0DB2 ; 'Warubou: WA-HEY! Some Prince! Always a'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -718,7 +718,7 @@ Jump_00F_4468:: ; address name
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0DB1 ; 'Kameha I went and faced danger'
+    ld hl, $0DB1 ; 'Kameha: I went and faced danger'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -732,7 +732,7 @@ Jump_00F_447A:: ; address name
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0DB0 ; 'Warubou Wa-hey! I was the plug'
+    ld hl, $0DB0 ; 'Warubou: Wa-hey! I was the plug'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -810,7 +810,7 @@ Jump_00F_44D8:: ; address name
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $0549 ; 'Warubou No one knows how many'
+    ld hl, $0549 ; 'Warubou: No one knows how many'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -842,7 +842,7 @@ Jump_00F_44F3:: ; address name
     ld [wScriptParam0], a
     cp a, $20
     ret nz
-    ld hl, $0548 ; 'Warubou Wa-hey! Instead of a quest'
+    ld hl, $0548 ; 'Warubou: Wa-hey! Instead of a quest'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptParam0], a
@@ -1074,7 +1074,7 @@ Func_00F_4595:: ; address name
 ; points at: wScriptStep
 SceneDarckDefeated_ShowKingEvenThoughThe::
 Jump_00F_46C3:: ; address name
-    ld hl, $053C ; 'King Even though the island's crisis'
+    ld hl, $053C ; 'King: Even though the island's crisis'
     call StartMessageHL_B0F
     ld a, $06
     ldh [hTemp0], a
@@ -1116,7 +1116,7 @@ Jump_00F_46D8:: ; address name
 ; points at: wScriptStep
 SceneDarckDefeated_Msg053B_KingIThankYou::
 Jump_00F_46FE:: ; address name
-    ld hl, $053B ; 'King I thank you all for'
+    ld hl, $053B ; 'King: I thank you all for'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -1224,7 +1224,7 @@ Jump_00F_4774:: ; address name
     inc [hl]
     ret
 
-; ScriptApplyStepDeltaAtDE on wCBAB, copies wCBAB to wCBBB, and when the move finishes (carry) wScriptStep += 1 (E-0119)
+; ScriptApplyStepDeltaAtDE on wObject2 + $C, copies wObject2 + $C to wObject3 + $C, and when the move finishes (carry) wScriptStep += 1 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2
 ; writes: wObject3
@@ -1242,7 +1242,7 @@ Jump_00F_47A8:: ; address name
     inc [hl]
     ret
 
-; alternates wCB9B between $E0 and $40 at a rate that slows with wScriptParam0; after $78 frames sets $40 and advances wScriptStep (E-0125)
+; alternates wObject1 + $C between $E0 and $40 at a rate that slows with wScriptParam0; after $78 frames sets $40 and advances wScriptStep (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wObject1
@@ -2559,7 +2559,7 @@ SceneDarckDefeated_ShowWarubouWaheyGreatLogsLife::
 Jump_00F_4FBB:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
-    ld hl, $053A ; 'Warubou Wa-hey? GreatLog's life force is'
+    ld hl, $053A ; 'Warubou: Wa-hey? GreatLog's life force is'
     call StartMessageHL_B0F
     xor a, a
     ld [wObject5], a
@@ -2575,7 +2575,7 @@ SceneDarckDefeated_ShowWarubouWaheyGetGoing::
 Jump_00F_4FCF:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
-    ld hl, $0539 ; 'Warubou Wa-hey! Get going!'
+    ld hl, $0539 ; 'Warubou: Wa-hey! Get going!'
     call StartMessageHL_B0F
     ld a, $11
     ldh [hTemp0], a
@@ -2627,7 +2627,7 @@ SceneDarckDefeated_ShowWarubouWaheyThatsIt::
 Jump_00F_5020:: ; address name
     ld a, $01
     ld [wSpriteSlots + $7], a
-    ld hl, $0538 ; 'Warubou Wa-hey That's it, then. There's'
+    ld hl, $0538 ; 'Warubou: Wa-hey That's it, then. There's'
     call StartMessageHL_B0F
     ld a, $01
     ld [wFieldEventArg], a
@@ -2701,7 +2701,7 @@ SceneDarckDefeated_ShowWarubouWawaheyWeWere::
 Jump_00F_5087:: ; address name
     ld a, $01
     ld [wFieldEventArg], a
-    ld hl, $0537 ; 'Warubou Wa-wa-hey! We were too late!'
+    ld hl, $0537 ; 'Warubou: Wa-wa-hey! We were too late!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -2738,7 +2738,7 @@ SceneDarckDefeated_ShowWarubouWaheyFeelThat::
 Jump_00F_50A9:: ; address name
     xor a, a
     ld [wFieldEventArg], a
-    ld hl, $0DF7 ; 'Warubou Wa-hey? Feel that, warooh? Did'
+    ld hl, $0DF7 ; 'Warubou: Wa-hey? Feel that, warooh? Did'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -2794,7 +2794,7 @@ Jump_00F_50D9:: ; address name
     xor a, a
     ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0533 ; 'Warubou Wa-hey, you did it, 0!'
+    ld hl, $0533 ; 'Warubou: Wa-hey, you did it, 0!'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptSubStep], a
@@ -2805,7 +2805,7 @@ Jump_00F_50D9:: ; address name
 ; points at: wScriptStep
 SceneDarckDefeated_Msg055B_WaheyCanYouHear::
 Jump_00F_5108:: ; address name
-    ld hl, $055B ; 'Wa-hey! can you hear me, 0?'
+    ld hl, $055B ; '*: Wa-hey! can you hear me,'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3221,7 +3221,7 @@ Jump_00F_549F:: ; address name
     farcall PlayMapMusic
     ld a, $01
     ld [wSpriteSlotCount], a
-    ld hl, $0A7D ; 'Warubou Wa-hey, there is little time'
+    ld hl, $0A7D ; 'Warubou: Wa-hey, there is little time'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3232,7 +3232,7 @@ Jump_00F_549F:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg0A7C_KamehaIIHave::
 Jump_00F_54D5:: ; address name
-    ld hl, $0A7C ; 'Kameha I I have to go'
+    ld hl, $0A7C ; 'Kameha: I I have to go'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3251,7 +3251,7 @@ Jump_00F_54E0:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld hl, $0A7B ; 'Warubou There! All healed now! There'
+    ld hl, $0A7B ; 'Warubou: There! All healed now! There'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3277,7 +3277,7 @@ Jump_00F_550B:: ; address name
     ld a, $04
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0A7A ; 'Warubou Wa-hey! 0 and Kameha! I'
+    ld hl, $0A7A ; 'Warubou: Wa-hey! 0 and Kameha! I'
     call StartMessageHL_B0F
     ret
 
@@ -3286,7 +3286,7 @@ Jump_00F_550B:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg0491_WaheyCanYouHear::
 Jump_00F_5538:: ; address name
-    ld hl, $0491 ; 'Wa-hey! Can you hear me, 0?'
+    ld hl, $0491 ; '*: Wa-hey! Can you hear me,'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3412,7 +3412,7 @@ Jump_00F_55B8:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg048E_DarckIWillBe::
 Jump_00F_55CF:: ; address name
-    ld hl, $048E ; 'Darck I will be readying a'
+    ld hl, $048E ; 'Darck: I will be readying a'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3457,7 +3457,7 @@ Jump_00F_55E5:: ; address name
     ret nz
     xor a, a
     ld [wObject5], a
-    ld hl, $048C ; 'Darck That key will bring you'
+    ld hl, $048C ; 'Darck: That key will bring you'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3498,7 +3498,7 @@ Jump_00F_5612:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg4487_DarckWellForMe::
 Jump_00F_5642:: ; address name
-    ld hl, $4487 ; 'Darck Well, for me, anything that'
+    ld hl, $4487 ; 'Darck: Well, for me, anything that'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3518,7 +3518,7 @@ Jump_00F_564D:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg0485_GreetingsIAmDarck::
 Jump_00F_5657:: ; address name
-    ld hl, $0485 ; 'Greetings! I am Darck, the King'
+    ld hl, $0485 ; '*: Greetings! I am Darck, the'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3574,7 +3574,7 @@ Jump_00F_5662:: ; address name
     ret nc
     ld a, $02
     ld [wSpriteSlots + $7], a
-    ld hl, $0484 ; 'Kameha Who are you to disturb'
+    ld hl, $0484 ; 'Kameha: Who are you to disturb'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3585,7 +3585,7 @@ Jump_00F_5662:: ; address name
 ; points at: wScriptStep
 SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat::
 Jump_00F_56B1:: ; address name
-    ld hl, $0483 ; 'Kameha Wha-wha whaaaat? What just happened'
+    ld hl, $0483 ; 'Kameha: Wha-wha whaaaat? What just happened'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3727,14 +3727,14 @@ Jump_00F_5717:: ; address name
     ld de, $00A0
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
-    ld hl, $040C ; 'Who disturbs my sleep? A visitor'
+    ld hl, $040C ; '*: Who disturbs my sleep? A'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $040D ; 'What? You again? You seem to'
+    ld hl, $040D ; '*: What? You again? You seem'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
@@ -3744,42 +3744,42 @@ Jump_00F_5717:: ; address name
     ld de, $00A0
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f2
-    ld hl, $4415 ; 'Who disturbs my sleep? A visitor'
+    ld hl, $4415 ; '*: Who disturbs my sleep? A'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b0_f2:
-    ld hl, $4418 ; 'Who disturbs my sleep? Oh, it's'
+    ld hl, $4418 ; '*: Who disturbs my sleep? Oh,'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b0_f3:
-    ld hl, $4419 ; 'Well? Will you go look for'
+    ld hl, $4419 ; '*: Well? Will you go look'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b0_f4:
-    ld hl, $0416 ; 'Ah, you'll do it? Excellent! But'
+    ld hl, $0416 ; '*: Ah, you'll do it? Excellent!'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b0_f5:
-    ld hl, $0452 ; 'The Change Staff will open paths.'
+    ld hl, $0452 ; '*: The Change Staff will open'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b0_f6:
-    ld hl, $0493 ; 'Who disturbs my sleep? The visitor'
+    ld hl, $0493 ; '*: Who disturbs my sleep? The'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
@@ -3850,7 +3850,7 @@ Jump_00F_583A:: ; address name
     ret nz
     xor a, a
     ld [wObject5], a
-    ld hl, $0DCB ; 'Warubou Wa-hey, you can now fly'
+    ld hl, $0DCB ; 'Warubou: Wa-hey, you can now fly'
     call StartMessageHL_B0F
     ld de, $001E
     call SetFlagBit
@@ -3914,7 +3914,7 @@ Jump_00F_5890:: ; address name
     xor a, a
     ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $02A7 ; 'Warubou Wa-hey! You did it, 0!'
+    ld hl, $02A7 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptSubStep], a
@@ -3930,7 +3930,7 @@ Jump_00F_58C5:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank0F
     ret nc
-    ld hl, $0A0A ; 'Wa-hey! 0, can you hear me?'
+    ld hl, $0A0A ; '*: Wa-hey! 0, can you hear'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4014,7 +4014,7 @@ Jump_00F_5906:: ; address name
     ret nc
     ld a, $03
     ld [wSpriteSlotCount], a
-    ld hl, $0A07 ; 'The Kingdoms should return to their'
+    ld hl, $0A07 ; '*: The Kingdoms should return to'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4082,7 +4082,7 @@ Jump_00F_5993:: ; address name
     ret nc
     xor a, a
     ld [wObject5], a
-    ld hl, $0DCA ; 'Let me show you my resurrected'
+    ld hl, $0DCA ; '*: Let me show you my'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4159,7 +4159,7 @@ Func_00F_59E6:: ; address name
 ; points at: wScriptStep
 SceneShield_ShowIBoreWitnessTo::
 Jump_00F_5A02:: ; address name
-    ld hl, $0A05 ; 'I bore witness to it all'
+    ld hl, $0A05 ; '*: I bore witness to it'
     call StartMessageHL_B0F
     ld de, $01E4
     call SetFlagBit
@@ -4195,7 +4195,7 @@ Jump_00F_5A13:: ; address name
 ; points at: wScriptStep
 SceneShield_ShowWhaNoMyMonsters::
 Jump_00F_5A31:: ; address name
-    ld hl, $0A04 ; 'Wha No! My monsters! It won't'
+    ld hl, $0A04 ; '*: Wha No! My monsters! It'
     call StartMessageHL_B0F
     ld a, [wObject1 + OBJ_Y]
     ld [wScriptParam1], a
@@ -4283,7 +4283,7 @@ Jump_00F_5A73:: ; address name
     ret nc
     ld a, $20
     ld [wObject1 + OBJ_Y], a
-    ld hl, $4A02 ; 'So it was you holding up'
+    ld hl, $4A02 ; '*: So it was you holding'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4306,7 +4306,7 @@ Jump_00F_5AB9:: ; address name
     ld de, $01E3
     call TestFlagBit
     jr nc, .check_is_cgb
-    ld hl, $0A03 ; 'Tch, obstinate and foolish. You need'
+    ld hl, $0A03 ; '*: Tch, obstinate and foolish. You'
     call StartMessageHL_B0F
     ld a, $01
     ld [wScriptParam1], a
@@ -4364,7 +4364,7 @@ SceneShieldGuardian_ShowHelenIPutYou::
 Jump_00F_5B17:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
-    ld hl, $0AF5 ; 'Helen I put you through trouble'
+    ld hl, $0AF5 ; 'Helen: I put you through trouble'
     call StartMessageHL_B0F
     ld de, $01E2
     call SetFlagBit
@@ -4400,7 +4400,7 @@ Jump_00F_5B3B:: ; address name
     ld [wSpriteSlots + $2], a
     ld a, $01
     ld [wSpriteSlots + $7], a
-    ld hl, $0AF3 ; 'That was a lovely sleep. I'
+    ld hl, $0AF3 ; '*: That was a lovely sleep.'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4425,7 +4425,7 @@ Jump_00F_5B5F:: ; address name
     ld [wSpriteSlotCount], a
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
-    ld hl, $0AF2 ; 'Oh, my goodness! Thank you! You'
+    ld hl, $0AF2 ; '*: Oh, my goodness! Thank you!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4436,7 +4436,7 @@ Jump_00F_5B5F:: ; address name
 ; points at: wScriptStep
 SceneShieldGuardian_Msg0AF0_WhatLoseToA::
 Jump_00F_5B86:: ; address name
-    ld hl, $0AF0 ; 'What? Lose to a child's monsters?'
+    ld hl, $0AF0 ; '*: What? Lose to a child's'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4524,7 +4524,7 @@ Jump_00F_5BC2:: ; address name
     ret nc
     ld a, $03
     ld [wSpriteSlotCount], a
-    ld hl, $4AEE ; 'Our plan called for chaos in'
+    ld hl, $4AEE ; '*: Our plan called for chaos'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4539,7 +4539,7 @@ Jump_00F_5C06:: ; address name
     ld de, $01E1
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
-    ld hl, $0AED ; 'I wish you wouldn't do that'
+    ld hl, $0AED ; '*: I wish you wouldn't do'
     call StartMessageHL_B0F
     ld a, $34
     ldh [hTemp0], a
@@ -4552,7 +4552,7 @@ Jump_00F_5C06:: ; address name
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $0AEF ; 'Heh, such a show of false'
+    ld hl, $0AEF ; '*: Heh, such a show of'
     call StartMessageHL_B0F
     ld a, $05
     ld [wScriptStep], a
@@ -4773,7 +4773,7 @@ Func_00F_5D9D:: ; address name
 ; points at: wScriptStep
 ScenePrincessMedicine_ShowIveFinallyRememberedIm::
 Jump_00F_5DBB:: ; address name
-    ld hl, $0AD5 ; 'I've finally remembered. I'm Yuna, the'
+    ld hl, $0AD5 ; '*: I've finally remembered. I'm Yuna,'
     call StartMessageHL_B0F
     ld de, $009D
     call SetFlagBit
@@ -4809,7 +4809,7 @@ Jump_00F_5DCC:: ; address name
 ; points at: wScriptStep
 ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
 Jump_00F_5DED:: ; address name
-    ld hl, $0AD4 ; 'H-HOW BUT I THIS ISN'T'
+    ld hl, $0AD4 ; '*: H-HOW BUT I THIS ISN'T'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4887,7 +4887,7 @@ Jump_00F_5E3A:: ; address name
     ld de, $009C
     call TestFlagBit
     jr c, .set_script_step_to_06
-    ld hl, $4AD2 ; 'NEVER DID I EXPECT YUNA'S SOUL'
+    ld hl, $4AD2 ; '*: NEVER DID I EXPECT YUNA'S'
     call StartMessageHL_B0F
     ld de, $009C
     call SetFlagBit
@@ -5057,7 +5057,7 @@ Jump_00F_5F4A:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $03A1 ; 'I am the King. What is'
+    ld hl, $03A1 ; '*: I am the King. What'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5138,7 +5138,7 @@ Jump_00F_5FC0:: ; address name
     ld [wObject2 + OBJ_STATE], a
     ld hl, wObject2 + OBJ_FLAGS
     call ClearBit2AtHL_Bank0F
-    ld hl, $03A0 ; 'Enough Enough of that dancing!'
+    ld hl, $03A0 ; '*: Enough Enough of that dancing!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5431,7 +5431,7 @@ Jump_00F_614C:: ; address name
 ; points at: wScriptStep
 SceneExplosion_Msg0348_DarnTakeThisSACRIFICE::
 Jump_00F_619D:: ; address name
-    ld hl, $0348 ; 'Darn! Take this! SACRIFICE!'
+    ld hl, $0348 ; '*: Darn! Take this! SACRIFICE!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5499,7 +5499,7 @@ Jump_00F_61BC:: ; address name
     ld [wScriptParam0], a
     cp a, $20
     ret nz
-    ld hl, $0346 ; 'Don't you touch that. If you'
+    ld hl, $0346 ; '*: Don't you touch that. If'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptParam0], a
@@ -5547,7 +5547,7 @@ Jump_00F_6252:: ; address name
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $0347 ; 'You again? I'll have to get'
+    ld hl, $0347 ; '*: You again? I'll have to'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
@@ -5761,7 +5761,7 @@ Jump_00F_6383:: ; address name
     ld a, [wScriptParam1]
     cp a, $30
     jr z, .read_story_flags
-    ld hl, $0362 ; 'Kameha 0 That wasn't it'
+    ld hl, $0362 ; 'Kameha: 0 That wasn't it'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptParam0], a
@@ -5941,7 +5941,7 @@ Jump_00F_64BA:: ; address name
     inc [hl]
     ldh a, [hPlayerX]
     ld [wScriptParam1], a
-    ld hl, $0361 ; 'Kameha So that's where the exit'
+    ld hl, $0361 ; 'Kameha: So that's where the exit'
     call StartMessageHL_B0F
     ret
 
@@ -6204,7 +6204,7 @@ Jump_00F_6628:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $035B ; 'You're no envoy of the spirit!'
+    ld hl, $035B ; '*: You're no envoy of the'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6226,7 +6226,7 @@ Jump_00F_666A:: ; address name
 ; points at: wScriptStep
 SceneReportToKing_Msg035A_WhatIsItYou::
 Jump_00F_6676:: ; address name
-    ld hl, $035A ; 'What is it, you whelp!? You'
+    ld hl, $035A ; '*: What is it, you whelp!?'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6353,7 +6353,7 @@ Jump_00F_66F4:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $0322 ; 'You're the envoy? Well, no matter!'
+    ld hl, $0322 ; '*: You're the envoy? Well, no'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6508,7 +6508,7 @@ Jump_00F_6845:: ; address name
     ret nz
     xor a, a
     ld [wObject5], a
-    ld hl, $0DC1 ; 'Warubou Wa-hey, you can now crush'
+    ld hl, $0DC1 ; 'Warubou: Wa-hey, you can now crush'
     call StartMessageHL_B0F
     ld de, $001F
     call SetFlagBit
@@ -6577,7 +6577,7 @@ Jump_00F_689B:: ; address name
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
     ld [wObject5 + SCRIPTOBJ_Y], a
-    ld hl, $02A7 ; 'Warubou Wa-hey! You did it, 0!'
+    ld hl, $02A7 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptSubStep], a
@@ -6593,7 +6593,7 @@ Jump_00F_689B:: ; address name
 ; points at: wScriptStep
 SceneMermaidKingdom_Msg0873_WaheyHeroHearMe::
 Jump_00F_68E0:: ; address name
-    ld hl, $0873 ; 'Wa-hey! 0, hear me? I felt'
+    ld hl, $0873 ; '*: Wa-hey! 0, hear me? I'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6748,7 +6748,7 @@ Jump_00F_69A6:: ; address name
     call DecompressToVRAM
     ld a, $03
     ld [wSpriteSlots + $2], a
-    ld hl, $0871 ; 'Kameha I was stupid to trust'
+    ld hl, $0871 ; 'Kameha: I was stupid to trust'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -7001,7 +7001,7 @@ Jump_00F_6B31:: ; address name
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $086E ; 'Kahahaha'
+    ld hl, $086E ; '*: Kahahaha'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -7257,7 +7257,7 @@ Jump_00F_6CAB:: ; address name
     or a, a
     ret z
     farcall RedrawColumnsBesideScreen
-    ld hl, $086C ; 'Kameha Gasp Hack I did it'
+    ld hl, $086C ; 'Kameha: Gasp Hack I did it'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -7843,7 +7843,7 @@ Jump_00F_706C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 32 (SCRIPT_GIVE_ITEM_BLINK): adds item wC928 to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'; reached through ScriptCommand32 in bank $10 (E-0038, E-0245)
+; implements script command type 32 (SCRIPT_GIVE_ITEM_BLINK): adds item wStepPtrLo to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'; reached through ScriptCommand32 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand32)
 ; reads: wScriptStep
 GiveItemBlink::
@@ -8069,7 +8069,7 @@ Jump_00F_71DD:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $0833 ; 'Kameha Hey! You're 0, the farmer!'
+    ld hl, $0833 ; 'Kameha: Hey! You're 0, the farmer!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8094,7 +8094,7 @@ Jump_00F_7210:: ; address name
     ret nc
     ld a, $01
     ld [wObject1 + OBJ_STATE], a
-    ld hl, $0832 ; 'Tch, made me waste my time'
+    ld hl, $0832 ; '*: Tch, made me waste my'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8135,7 +8135,7 @@ Jump_00F_7225:: ; address name
     call ClearBit2AtHL_Bank0F
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
-    ld hl, $0831 ; 'Heh, that old man, he was'
+    ld hl, $0831 ; '*: Heh, that old man, he'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8193,7 +8193,7 @@ Func_00F_729C:: ; address name
     ld a, [wStepPtrLo]
     ld b, a
 
-; shakes hScrollX left and right with the frame counter until the wC921 counter expires, then resets the scroll and advances wScriptStep (E-0125)
+; shakes hScrollX left and right with the frame counter until the wScriptParam0 counter expires, then resets the scroll and advances wScriptStep (E-0125)
 ; 7 call sites from 7 routines (e.g. SceneDarckDefeated_ToScriptStepShakeScreen, SceneThreeItems_ToScriptStepShakeScreen, SceneWallExit_ShowKamehaHeroThatWasnt, SceneExplosion_ToScriptStepShakeScreen, ...)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
@@ -8318,7 +8318,7 @@ Jump_00F_7348:: ; address name
     ret nz
     xor a, a
     ld [wObject5], a
-    ld hl, $0DC0 ; 'Warubou Wa-hey, the ability to cross'
+    ld hl, $0DC0 ; 'Warubou: Wa-hey, the ability to cross'
     call StartMessageHL_B0F
     ld de, $001D
     call SetFlagBit
@@ -8381,7 +8381,7 @@ Jump_00F_739E:: ; address name
     xor a, a
     ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0125 ; 'Warubou Wa-hey! You did it, 0!'
+    ld hl, $0125 ; 'Warubou: Wa-hey! You did it, 0!'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptSubStep], a
@@ -8392,7 +8392,7 @@ Jump_00F_739E:: ; address name
 ; points at: wScriptStep
 SceneRivalDefeated_Msg01A2_WaheyCanYouHear::
 Jump_00F_73CD:: ; address name
-    ld hl, $01A2 ; 'Wa-hey! Can you hear me? I'
+    ld hl, $01A2 ; '*: Wa-hey! Can you hear me?'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8428,7 +8428,7 @@ Jump_00F_73D8:: ; address name
 ; points at: wScriptStep
 SceneRivalDefeated_Msg01A0_KingIveBeenA::
 Jump_00F_7401:: ; address name
-    ld hl, $01A0 ; 'King I've been a burden to'
+    ld hl, $01A0 ; 'King: I've been a burden to'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8472,7 +8472,7 @@ Jump_00F_743A:: ; address name
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $019E ; 'King This is the TidalBell. It's'
+    ld hl, $019E ; 'King: This is the TidalBell. It's'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8520,7 +8520,7 @@ Jump_00F_7473:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $019D ; 'King Wahah! We've bagged the lot!'
+    ld hl, $019D ; 'King: Wahah! We've bagged the lot!'
     call StartMessageHL_B0F
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -8603,7 +8603,7 @@ Jump_00F_74F7:: ; address name
 ; points at: wScriptStep
 SceneRivalDefeated_Msg019C_UrgahMercyISurrender::
 Jump_00F_7530:: ; address name
-    ld hl, $019C ; 'Urgah! Mercy! I surrender!'
+    ld hl, $019C ; '*: Urgah! Mercy! I surrender!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8614,7 +8614,7 @@ Jump_00F_7530:: ; address name
 ; points at: wScriptStep
 SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss::
 Jump_00F_753B:: ; address name
-    ld hl, $019B ; 'Aiyeeh! Help me, boss!'
+    ld hl, $019B ; '*: Aiyeeh! Help me, boss!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8675,7 +8675,7 @@ Jump_00F_756F:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $019A ; 'King Surrender and live!'
+    ld hl, $019A ; 'King: Surrender and live!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8725,7 +8725,7 @@ Jump_00F_75C3:: ; address name
     ret z
     xor a, a
     ldh [hPlayerFacing], a
-    ld hl, $0199 ; 'King You thieves! There's no escape!'
+    ld hl, $0199 ; 'King: You thieves! There's no escape!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8948,7 +8948,7 @@ Jump_00F_7746:: ; address name
     ld a, $03
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0151 ; 'And that was the firebreather! Let's'
+    ld hl, $0151 ; '*: And that was the firebreather!'
     call StartMessageHL_B0F
     ret
 
@@ -8978,7 +8978,7 @@ Jump_00F_777E:: ; address name
     call StepScriptParam0Counter_Bank0F
     ret nc
     farcall RestartMapMusic
-    ld hl, $0152 ; 'Next, monsters will perform some amazing,'
+    ld hl, $0152 ; '*: Next, monsters will perform some'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -9180,7 +9180,7 @@ Jump_00F_78B7:: ; address name
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0093 ; 'Slash That's settled, then! We'll leave'
+    ld hl, $0093 ; 'Slash: That's settled, then! We'll leave'
     call StartMessageHL_B0F
     ret
 
@@ -9222,12 +9222,12 @@ Jump_00F_78E7:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
-    ld hl, $009A ; 'Tara Then it's your job, 0!'
+    ld hl, $009A ; 'Tara: Then it's your job, 0!'
     call StartMessageHL_B0F
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $0092 ; 'Cobi Fine, 0. It's up to'
+    ld hl, $0092 ; 'Cobi: Fine, 0. It's up to'
     call StartMessageHL_B0F
     ret
 
@@ -9254,7 +9254,7 @@ Jump_00F_790A:: ; address name
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0091 ; 'Slash And 0 has potential, I'
+    ld hl, $0091 ; 'Slash: And 0 has potential, I'
     call StartMessageHL_B0F
     ret
 
@@ -9279,7 +9279,7 @@ Jump_00F_7937:: ; address name
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
-    ld hl, $0090 ; 'Slash Don't worry! I'm riding along!'
+    ld hl, $0090 ; 'Slash: Don't worry! I'm riding along!'
     call StartMessageHL_B0F
     xor a, a
     ld [wScriptParam0], a
@@ -9487,12 +9487,12 @@ Jump_00F_7A70:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
-    ld hl, $4094 ; 'Tara If we don't go find'
+    ld hl, $4094 ; 'Tara: If we don't go find'
     call StartMessageHL_B0F
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $4089 ; 'Cobi If we don't find a'
+    ld hl, $4089 ; 'Cobi: If we don't find a'
     call StartMessageHL_B0F
     ret
 
@@ -9900,12 +9900,12 @@ Jump_00F_7CD6:: ; address name
     ld de, $0001
     call TestFlagBit
     jr nc, .call_start_message_hl_b0_f
-    ld hl, $0076 ; 'The island is sinking? Hahah, no'
+    ld hl, $0076 ; '*: The island is sinking? Hahah,'
     call StartMessageHL_B0F
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $0078 ; 'It's pointless if you're dead. I'm'
+    ld hl, $0078 ; '*: It's pointless if you're dead.'
     call StartMessageHL_B0F
     ret
 
@@ -10011,12 +10011,12 @@ Jump_00F_7D6C:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, .call_start_message_hl_b0_f
-    ld hl, $0021 ; 'Tara We'll be OK! I'm going'
+    ld hl, $0021 ; 'Tara: We'll be OK! I'm going'
     call StartMessageHL_B0F
     ret
 
 .call_start_message_hl_b0_f:
-    ld hl, $001F ; 'Cobi Sure, Mama! We'll be fine.'
+    ld hl, $001F ; 'Cobi: Sure, Mama! We'll be fine.'
     call StartMessageHL_B0F
     ret
 
@@ -10208,7 +10208,7 @@ Func_00F_7E1E:: ; address name
     ld [wScriptParam1], a
     ret
 
-; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
+; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 ; 34 call sites from 34 routines (e.g. SceneLandHo_ShowThisIsATale, SceneLandHo_StepScriptParam0Counter_Bank0F, SceneAtSea_StepScriptParam0Counter_Bank0F, ScriptStepDeltaThenMessage, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
@@ -10302,7 +10302,7 @@ Func_00F_7EE9:: ; address name
     scf
     ret
 
-; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStep += 1 (E-0117)
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi) and counts wScriptParam0 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStep += 1 (E-0117)
 ; 4 call sites from 4 routines (e.g. SceneDarckDefeated_ScriptStepDeltaThenNextStep, SceneCheerYuna_ToScriptStepDeltaThenNextStep, SceneReportToKing_ScriptStepDeltaThenNextStep, SceneWhoAreYou_ToScriptStepDeltaThenNextStep)
 ; writes: wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
@@ -10320,7 +10320,7 @@ Func_00F_7F0B:: ; address name
     inc [hl]
     ret
 
-; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, StartMessageHL_B0F with the caller's HL and wScriptStep += 1 (E-0117)
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi) and counts wScriptParam0 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, StartMessageHL_B0F with the caller's HL and wScriptStep += 1 (E-0117)
 ; 7 call sites from 7 routines (e.g. SceneShieldGuardian_ScriptStepDeltaThenMessage, SceneThreeItems_ToScriptStepDeltaThenMessage_Case2A, SceneThreeItems_ToScriptStepDeltaThenMessage_Case18, SceneThreeItems_ToScriptStepDeltaThenMessage, ...)
 ; writes: wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
@@ -10341,7 +10341,7 @@ Func_00F_7F24:: ; address name
     inc [hl]
     ret
 
-; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStartRequest = $80 (E-0117)
+; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wStepPtrLo/wStepPtrHi) and counts wScriptParam0 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStartRequest = $80 (E-0117)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepPtrLo, wStepPtrHi, wScriptStartRequest
 ScriptStepDeltaThenRequestFetch:: ; heuristic: follows a terminator; C0
@@ -10372,7 +10372,7 @@ Func_00F_7F5C:: ; address name
     ld [de], a
     ret
 
-; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0
 ; 127 call sites from 108 routines (e.g. SceneLandHo_ShowThisIsATale, ScriptCommand76_Run_ShowTheIslandIsSinking, SceneVaultSettled_ShowTaraWellBeOK, SceneShieldGuardian_ShowHelenIPutYou, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B0F::
@@ -10385,7 +10385,7 @@ Func_00F_7F68:: ; address name
     ld [wMessageState], a
     ret
 
-; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
+; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 ; 15 call sites from 15 routines (e.g. SceneShieldGuardian_RunMessageBoxFar_Bank0F, SceneThreeItems_RunMessageBoxFar_Bank0F, SceneShield2_ShowWaheyHeroCanYou, SceneShield2_ShowAVoiceEchoedFrom, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo

@@ -447,8 +447,8 @@ Data_037_463A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The MarkStaff", $F1
     db "was sensed at", $F7
-    db $F2, $F9, "0", $A3, " ", $F9, "G and", $F1
-    db $F9, "W", $A3, " ", $F9, "m.", $F7
+    db $F2, $F9, "0: ", $F9, "G and", $F1
+    db $F9, "W: ", $F9, "m.", $F7
     db $F0
 
 String_37_00_2D:: ; heuristic: string; C0
@@ -608,7 +608,7 @@ Data_037_48A4:: ; address name
 String_37_01_0C:: ; heuristic: string; C0
 Data_037_48BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "0", $A3, " There are", $F1
+    db $F9, "0: There are", $F1
     db $F9, "m around.", $FA, $F7
     db $F0
 
@@ -1242,7 +1242,7 @@ Jump_037_4DC2:: ; address name
     and a, a
     ret nz
 
-; runs Func_037_5A5D (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), wD781 += 1 and clears wD7B4 (E-0122)
+; runs Func_037_5A5D (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep += 1 and clears wSelectedRecord (E-0122)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
@@ -1787,7 +1787,7 @@ Jump_037_5136:: ; address name
     call ShowStringIndexA_Bank37
     ret
 
-; when text is idle and not linking: copies the $A5-byte received record at wCAD0 into the record slot at WD789 cell 5 and resets the save counters (E-0128)
+; when text is idle and not linking: copies the $A5-byte received record at wChildRecord into the record slot at WD789 cell 5 and resets the save counters (E-0128)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild)
 ; reads: wTextFlags, wScreenSubStep, wScreenStep, wLinkRole, wItemGridX, wItemGridY, wArg5, wArg6, ...
 ; writes: wScreenSubStep, wScreenStep, wListCursor, wListPageIndex, wArg1, wArg2, rRAMG2, rRAMB, ...
@@ -2109,7 +2109,7 @@ Jump_037_533C:: ; address name
     ld [wScreenStep], a
     ret
 
-; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wD781 += 1 (E-0122)
+; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -2263,7 +2263,7 @@ Jump_037_5424:: ; address name
     ld [wScreenStep], a
     ret
 
-; clears 5 tiles at vTiles1 + $500 and draws the name at wCA2C there (E-0122)
+; clears 5 tiles at vTiles1 + $500 and draws the name at wRecordBufB + $1 there (E-0122)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DrawWCA2CNameAtTiles1500::
@@ -2938,7 +2938,7 @@ Jump_037_5821:: ; address name
     ld [wScreenStep], a
     ret
 
-; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
+; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
@@ -3008,7 +3008,7 @@ Func_037_58FE:: ; address name
     jr c, .loop
     ret
 
-; copies up to 10 bytes from HL to wC8CF, stopping at $F0, and appends $F0 (E-0124)
+; copies up to 10 bytes from HL to wNameGlyphBuf, stopping at $F0, and appends $F0 (E-0124)
 ; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String_Bank37, DrawWCA2CNameAtTiles1500)
 ; points at: wNameGlyphBuf
 CopyF0NameToNameGlyphBuf::
@@ -3033,7 +3033,7 @@ Func_037_5912:: ; address name
     ld [de], a
     ret
 
-; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at vTiles1 + $270 with size $0109 (E-0124)
+; draws the name at wRecordBufB + $1 at vTiles1 + $780 and shows string [wRecordBufB + $B] of category [wRecordBufB + $C] + 2 at vTiles1 + $270 with size $0109 (E-0124)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81_Case1D, RunLinkSession5Exchange_ShowRecordStats_DrawWCA2CNameAndWCA36String_Bank37)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DrawWCA2CNameAndWCA36String_Bank37::
@@ -3061,7 +3061,7 @@ Func_037_5929:: ; address name
     farcall ShowString_Bank08
     ret
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E, RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4, RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case11, RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor, ...)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_Bank37::
@@ -3077,7 +3077,7 @@ Func_037_595F:: ; address name
     farcall DrawTileRectFromArg1Params
     ret
 
-; runs Func_037_5A5D (C = 7, HL = $024F, DE = $0083, wD7F1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
+; runs Func_037_5A5D (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
 ; 2 call sites from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_RunFunc5A5DAt024FAndDrawBox)
 ; writes: wArg1, wArg2
 RunFunc5A5DAt024FAndDrawBox::
@@ -3177,7 +3177,7 @@ Func_037_59A3:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD783 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
+; once the joypad repeat timer reaches $14, cycles wScreenCounter through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
 ; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
@@ -3246,7 +3246,7 @@ DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data:: ; heuristic: pointer load in the s
 Data_037_5A57:: ; address name
     db $EC, $00, $2C, $01, $6C, $01
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 2 call sites from 2 routines (e.g. RunFunc5A5DAt024FAndDrawBox, RunFunc5A5DAt0278AndStep)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -3350,7 +3350,7 @@ Func_037_5AC0:: ; address name
     ldh [rSVBK], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -3439,7 +3439,7 @@ Func_037_5AFA:: ; address name
     ldh [rSVBK], a
     ret
 
-; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM, RunFunc5A5DAt024FAndDrawBox, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
@@ -3543,7 +3543,7 @@ Func_037_5BB6:: ; address name
     ld [de], a
     ret
 
-; unpacks the received partner record at wC986 into wD09D: names, species, family, parents, skills and scaled stats (E-0129)
+; unpacks the received partner record at wRecordBufA into wWorkBuf: names, species, family, parents, skills and scaled stats (E-0129)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf)
 ; reads: wLinkRules
 ; writes: wLinkRules
@@ -3637,7 +3637,7 @@ Func_037_5BC6:: ; address name
     farcall LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes
     ret
 
-; unpacks the received record at wD132 into wCA2B: names, species ids from Data_037_5FC7, family, parents, skills and scaled stats (E-0127)
+; unpacks the received record at wBattlerRecordSlot1 + $F into wRecordBufB: names, species ids from Data_037_5FC7, family, parents, skills and scaled stats (E-0127)
 ; 1 call site from 1 routine (e.g. RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB)
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLinkRules
 ; points at: wRecordBufB
@@ -4384,7 +4384,7 @@ Func_037_5F78:: ; address name
     inc hl
     ret
 
-; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wD034 as the 27th byte (E-0115)
+; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wSpeciesRecord + $2C as the 27th byte (E-0115)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
 ; reads: wSpeciesRecord
 Copy26BytesThenWD034::

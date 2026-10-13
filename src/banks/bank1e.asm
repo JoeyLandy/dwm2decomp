@@ -1011,7 +1011,7 @@ Jump_01E_4517:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; cycles wD7AE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
+; cycles wCursorBlinkAE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
@@ -1075,7 +1075,7 @@ Jump_01E_46C1:: ; address name
     ret
     db $2D, $01, $6D, $01
 
-; copies box $4718 to wC410, runs Func_01E_75F2, blanks the cursor entry wD7AB of table $7880 and wD781 += 1 (E-0124)
+; copies box $4718 to wWindowTileBuffer + $110, runs Func_01E_75F2, blanks the cursor entry wListCursor of table $7880 and wScreenStep += 1 (E-0124)
 ; 5 call sites from 5 routines (e.g. SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_Case29, SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord_Case48, SwapMonstersMenu_ChooseFromFarm_DrawBox4718AndMenuAndStep_1E, ...)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -4036,7 +4036,7 @@ Jump_01E_5BDC:: ; address name
     ld [wScreenStep], a
     ret
 
-; clears tile areas with FillTilesBxC (12 x 1 at vTiles1 + $240, 15 x 1 at + $500, 5 x 1 at + $700, 2 x 1 at + $4E0), then wD782 += 1 (E-0118)
+; clears tile areas with FillTilesBxC (12 x 1 at vTiles1 + $240, 15 x 1 at + $500, 5 x 1 at + $700, 2 x 1 at + $4E0), then wScreenSubStep += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
@@ -4059,7 +4059,7 @@ Func_01E_5C37:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; runs Func_01E_7163 and Func_01F_5C15, wD781 -= 1 and wD782 += 1 (E-0122)
+; runs Func_01E_7163 and Func_01F_5C15, wScreenStep -= 1 and wScreenSubStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles)
 ; reads: wScreenStep, wScreenSubStep
 ; writes: wScreenStep, wScreenSubStep
@@ -5530,7 +5530,7 @@ Jump_01E_65B8:: ; address name
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordParentNames
     dw SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case20
 
-; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wD781 += 1 (E-0120; fill, not a tile map: E-0186)
+; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wScreenStep += 1 (E-0120; fill, not a tile map: E-0186)
 ; 2 call sites from 2 routines (e.g. SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_Case07, SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollX, ...
@@ -5612,7 +5612,7 @@ Jump_01E_664E:: ; address name
     ld [wScreenStep], a
     ret
 
-; for the record at WD789 cell 5, with SRAM enabled, runs Func_01E_725D, 7332 and 7399; wD781 += 1 (E-0122)
+; for the record at WD789 cell 5, with SRAM enabled, runs Func_01E_725D, 7332 and 7399; wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails3_DrawListEntriesCell5RecordDetails)
 ; reads: wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
@@ -5841,7 +5841,7 @@ Jump_01E_67B1:: ; address name
     ld [wScreenStep], a
     ret
 
-; lists the records (Func_01D_5E79 in state 8, else ListRecordsState1WithByte6EClear), loads the family icon of the record at WD789 cell 5 and draws it, then wD781 += 1 (E-0124)
+; lists the records (Func_01D_5E79 in state 8, else ListRecordsState1WithByte6EClear), loads the family icon of the record at WD789 cell 5 and draws it, then wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails3_ListRecordsAndDrawListEntriesCell5Panel)
 ; reads: wScreenState, wScreenStep
 ; writes: wArg1, wScreenStep
@@ -6592,7 +6592,7 @@ Func_01E_6D0F:: ; address name
     call DrawTileRectAtHLFromDE_Bank1E
     ret
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 27 call sites from 19 routines (e.g. SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case1B, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor, SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E, ...)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_Bank1E::
@@ -6816,7 +6816,7 @@ Func_01E_6D70:: ; address name
     ld [rRAMG2], a
     ret
 
-; reads word field wD7F3 of record B, copies that monster name (category 2 of the bank-08 string database) to wC8CF and draws its glyphs at the address in wD7F1/2 (E-0121)
+; reads word field wArg3 of record B, copies that monster name (category 2 of the bank-08 string database) to wNameGlyphBuf and draws its glyphs at the address in wArg1/2 (E-0121)
 ; 2 call sites from 1 routine (e.g. DrawRecordParentNames)
 ; reads: wArg3, hTemp0, hTemp1, wDataBank, wArg1, wArg2
 ; writes: wDataBank
@@ -7173,7 +7173,7 @@ Func_01E_6FEB:: ; address name
     ld [rRAMG2], a
     ret
 
-; BC = wCCCD when the byte at DE is $98 (the '???' placeholder), else wCDCC (E-0122)
+; BC = wNameBufUnknown when the byte at DE is $98 (the '???' placeholder), else wNameBufAlt (E-0122)
 ; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
 ; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte::
@@ -7283,7 +7283,7 @@ Jump_01E_710A:: ; address name
     ei
     ret
 
-; wD7B0 = the number of 5-entry pages of wD7A9 records; clamps the page wD7AF and the cursor wD7AB to the last page (wD7B1) (E-0127)
+; wListPages = the number of 5-entry pages of wListCount records; clamps the page wListPageIndex and the cursor wListCursor to the last page (wListLastRow) (E-0127)
 ; 12 call sites from 12 routines (e.g. SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5, RedrawRecordListAndNextStep, HibernateMenu_ClampRecordListPageCursor5, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, ...)
 ; reads: wListCount, wListPageIndex, wListCursor
 ; writes: wListPages, wListPageIndex, wListLastRow, wListCursor
@@ -7345,7 +7345,7 @@ Func_01E_7163:: ; address name
 .return:
     ret
 
-; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $71D7 + 2 * wD7AB (E-0120)
+; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $71D7 + 2 * wListCursor (E-0120)
 ; 1 call site from 1 routine (e.g. ClampRecordListPageCursor5)
 ; reads: wListCursor
 EraseCursorAt71D7ForListCursor::
@@ -7371,7 +7371,7 @@ Func_01E_71B5:: ; address name
     ret
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
-; wD7B0 = the number of 4-entry pages of wD7A9 records; clamps the page wD7AF and the cursor wD7AB to the last page (wD7B1) (E-0127)
+; wListPages = the number of 4-entry pages of wListCount records; clamps the page wListPageIndex and the cursor wListCursor to the last page (wListLastRow) (E-0127)
 ; 11 call sites from 11 routines (e.g. SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6ESet, SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4, SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4, DrawBox5022WithPageIndicator, ...)
 ; reads: wListCount, wListPageIndex, wListCursor
 ; writes: wListPages, wListPageIndex, wListLastRow, wListCursor
@@ -7433,7 +7433,7 @@ Func_01E_71E1:: ; address name
 .return:
     ret
 
-; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $7255 + 2 * wD7AB (E-0120)
+; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $7255 + 2 * wListCursor (E-0120)
 ; 1 call site from 1 routine (e.g. ClampRecordListPageCursor4)
 ; reads: wListCursor
 EraseCursorAt7255ForListCursor::
@@ -7965,7 +7965,7 @@ Func_01E_748E:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 only when HL = $9800 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi = HL + $1C1 only when HL = $9800 (E-0062)
 ; 38 call sites from 33 routines (e.g. CloseMenuE9_CopyBytesDEToHL_Bank1E, SwapMonstersMenu_SetupPartyList_CountRecordsInUse, SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_Case27, SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -8088,7 +8088,7 @@ Func_01E_7556:: ; address name
     ld [hl], a
     ret
 
-; HL = BGMapAddressAtScroll + the offset in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two entries later, each through StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (current page and page count) (E-0106)
+; HL = BGMapAddressAtScroll + the offset in wArg1 (high) / wArg2 (low): writes tile $E0 + wListPageIndex + 1 there and tile $E0 + wListPages two entries later, each through StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (current page and page count) (E-0106)
 ; 11 call sites from 11 routines (e.g. SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5, SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6ESet, SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case03, ...)
 ; reads: wArg1, wArg2, wListPageIndex, wListPages
 DrawPageOfPagesAtScrollOffset::
@@ -8128,7 +8128,7 @@ Func_01E_7564:: ; address name
     ei
     ret
 
-; HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
+; HL = the address in wArg1 (high) / wArg2 (low): writes tile $E0 + wListPageIndex + 1 there and tile $E0 + wListPages two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
 ; 20 call sites from 20 routines (e.g. SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5, SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6ESet, SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4, SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4, ...)
 ; reads: wArg1, wArg2, wListPageIndex, wListPages
 DrawPageOfPagesAtArg1_Bank1E::
@@ -8149,7 +8149,7 @@ Func_01E_759A:: ; address name
     ld [hl], a
     ret
 
-; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3 (the same effect as the bank-$15 copy, coded through HL): leading zeros become the blank tile once $E0 is added (E-0093)
+; when wDigits is 0 it becomes $E3, and then when wDigits + $1 is 0 too it becomes $E3 (the same effect as the bank-$15 copy, coded through HL): leading zeros become the blank tile once $E0 is added (E-0093)
 ; 21 call sites from 16 routines (e.g. SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6EClear_Case2F, SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6EClear, SwapMonstersMenu_ChooseToView_CountRecordsInUse, SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_Case0D, ...)
 ; points at: wDigits
 BlankLeadingZeroDigits_F::
@@ -8169,7 +8169,7 @@ Func_01E_75B3:: ; address name
 .return:
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 8 call sites from 7 routines (e.g. SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_Case01, SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E, SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E, SwapMonstersMenu_ShowPartyMemberDetails_ListPartyRecordsWithState2ToListEntries, ...)
 ; reads: hTemp0
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -8199,7 +8199,7 @@ Func_01E_75EB:: ; address name
     farcall DrawRecordStatsBoxForArg1
     ret
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E, SwapMonstersMenu_MoveRecords_CopyScreenBufferRectWithAttrs_1E, SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_Case0D, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -8365,7 +8365,7 @@ Func_01E_768E:: ; address name
 .return:
     ret
 
-; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
+; HL = VRAM address: writes the 7 bytes at wArg1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_Case13_LoadRecordThreeBytesToTemp0)
 ; points at: wArg1
 DrawSevenDigitsFromArg1_Bank1E::
@@ -8385,7 +8385,7 @@ Func_01E_76C7:: ; address name
     jr nz, .loop
     ret
 
-; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hFFC6 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
+; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hTemp0 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
 ; 9 call sites from 4 routines (e.g. SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_Case29, SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord_Case48, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord)
 ; points at: hTemp0
 StoreTemp0BytesToSRAMRecord::
@@ -8405,7 +8405,7 @@ Func_01E_76DA:: ; address name
     pop hl
     ret
 
-; far-calls SetArg5ToListEntriesCell5, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
+; far-calls SetArg5ToListEntriesCell5, then HL = wArg5 (high) / wArg6 (low) (E-0075)
 ; 30 call sites from 25 routines (e.g. SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_Case29, SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord_Case48, SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord, ...)
 ; reads: wArg5, wArg6
 GetListEntriesCell5Address::
@@ -8413,7 +8413,7 @@ Func_01E_76EB:: ; address name
     farcall SetArg5ToListEntriesCell5
     jr GetListEntriesCell4Address_ReadArg5
 
-; far-calls SetArg5ToListEntriesCell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
+; far-calls SetArg5ToListEntriesCell4, then HL = wArg5 (high) / wArg6 (low) (E-0075)
 ; 8 call sites from 7 routines (e.g. SwapMonstersMenu_ChooseToView2_DeleteSRAMRecordAndCompact_Case33, SwapMonstersMenu_ShowPartyMemberDetails_ListPartyRecordsWithState2ToListEntries, SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, SwapMonstersMenu_ShowParents2_DrawRect6x6From651BAtScroll41, ...)
 ; reads: wArg5, wArg6
 GetListEntriesCell4Address::
@@ -8457,7 +8457,7 @@ Func_01E_7702:: ; address name
     ld [wWindowTileBuffer + $118], a
     ret
 
-; wD7AF = wD7AB / 4 and wD7AB = wD7AB mod 4 (DivideHLByA) (E-0067) (the same 19 bytes appear in 2 banks)
+; wListPageIndex = wListCursor / 4 and wListCursor = wListCursor mod 4 (DivideHLByA) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D)
 ; reads: wListCursor
 ; writes: wListCursor, wListPageIndex
@@ -8473,7 +8473,7 @@ Func_01E_7732:: ; address name
     ld [wListPageIndex], a
     ret
 
-; wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
+; wSavedSpriteClipMode = hSpriteWindowClipMode, then hSpriteWindowClipMode = hSpriteHideTile = 0; wSavedFieldDrawFlags = hFieldDrawFlags, wSavedSpriteSlotCount = wSpriteSlotCount; then hFieldDrawFlags = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
 ; 10 call sites from 10 routines (e.g. SwapMonstersMenu_ChooseToView_UpdatePagedListCursor_Case1B, SwapMonstersMenu_ChooseToView_SaveAndHideSpriteState_Bank1E, SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E, EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, ...)
 ; reads: hSpriteWindowClipMode, hFieldDrawFlags, wSpriteSlotCount
 ; writes: wSavedSpriteClipMode, hSpriteWindowClipMode, hSpriteHideTile, wSavedFieldDrawFlags, wSavedSpriteSlotCount, hFieldDrawFlags, wSpriteSlotCount
@@ -8494,7 +8494,7 @@ Func_01E_7745:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
-; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = wD7BB: puts back the values SaveAndHideSpriteState stored (hFFBA is set to $80 rather than restored) (E-0078)
+; hSpriteWindowClipMode = wSavedSpriteClipMode, hSpriteHideTile = $80, hFieldDrawFlags = wSavedFieldDrawFlags, wSpriteSlotCount = wSavedSpriteSlotCount: puts back the values SaveAndHideSpriteState stored (hSpriteHideTile is set to $80 rather than restored) (E-0078)
 ; 5 call sites from 5 routines (e.g. SwapMonstersMenu_ShowPartyMemberDetails_ListPartyRecordsWithState2ToListEntries, SwapMonstersMenu_ShowParents2_LoadPlayerAndFollowerSpriteGraphics, SwapMonstersMenu_ShowMonsterDetails_LoadPlayerAndFollowerSpriteGraphics, EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics, ...)
 ; reads: wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
@@ -8584,7 +8584,7 @@ GlyphCopySrcList3::
 Data_01E_7872:: ; address name
     dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
-; E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wD7AB of $7880 (cursor blanking); entries from 5 on are the table at $788A).
+; E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wListCursor of $7880 (cursor blanking); entries from 5 on are the table at $788A).
 ; record: screen buffer address
 CursorCellTable7880::
 Data_01E_7880:: ; address name

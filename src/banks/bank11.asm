@@ -1,7 +1,7 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
     db $11, $C9
 
-; unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored
+; unless a special mode is set (wMapType bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored
 ; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wMapType, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestFacing, ...
 ; writes: wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hPlayerStateFlags, ...
@@ -409,7 +409,7 @@ Func_011_4130:: ; address name
     ld c, $01
     ret
 
-; unless bit 7 of wCC44 is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wC88F when wC891 selects it), C = 1; otherwise C = 0 (E-0125)
+; unless bit 7 of wMapType is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wKeyWorldGoal when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
 ; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoal, wKeyWorldGoalCell, wKeyWorldGoalPos, ...
 ; writes: hMapId, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY
@@ -530,7 +530,7 @@ Jump_011_42D9:: ; address name
     ld c, $01
     ret
 
-; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
+; script command: plays sound $60 and reads a warp destination at DE (wWarpDestX/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wFieldInitStage += 1, wModeState = 4, updates hPlayerStateFlags and returns C = 1 (E-0121)
 ; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hPlayerStateFlags
 ; writes: wWarpPending, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
@@ -576,7 +576,7 @@ Func_011_4340:: ; address name
     ld c, $01
     ret
 
-; wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)
+; wWarpDestFacing = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wFieldTransitionStep, updates hPlayerStateFlags and sets wFieldTransitionKind = 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hPlayerStateFlags
 ; writes: wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, wFieldTransitionKind
@@ -603,7 +603,7 @@ Func_011_438F:: ; address name
     ld [wFieldTransitionKind], a
     ret
 
-; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wC88F); unlisted maps clear bit 5 of hFF8C and return C = 0 (E-0125)
+; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wKeyWorldGoal); unlisted maps clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125)
 ; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
 ; reads: hMapId, hPlayerStateFlags, wKeyWorldActive, wKeyWorldKey
 ; writes: hPlayerStateFlags

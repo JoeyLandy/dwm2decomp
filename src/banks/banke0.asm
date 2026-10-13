@@ -1,7 +1,7 @@
 SECTION "Bank E0", ROMX[$4000], BANK[$E0]
     db $E0
 
-; runs the routine for wC5FE (jump table of six) (E-0122)
+; runs the routine for wDebugSubState (jump table of six) (E-0122)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_ToRunDebugSubState_E0)
 ; reads: wDebugSubState
 RunDebugSubState_E0::
@@ -328,7 +328,7 @@ Func_0E0_41C7:: ; address name
     ret
     db $BB, $C3, $BB
 
-; writes the two nibbles of wC5F9, each plus 1, as tiles at vBGMap0 + $CA; copies string wC5F9 of category 4 (skill names) to wC130 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
+; writes the two nibbles of wDebugValue0, each plus 1, as tiles at vBGMap0 + $CA; copies string wDebugValue0 of category 4 (skill names) to wTextBuf0 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
 ; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugValue0
 ; writes: wStringCategory, wStringIndex
@@ -504,7 +504,7 @@ Func_0E0_42A6:: ; address name
     ds $12, $B4
     db $B5
 
-; runs the routine for wC5FD (jump table of fourteen) (E-0122)
+; runs the routine for wDebugState (jump table of fourteen) (E-0122)
 ; 2 call sites from 2 routines (e.g. CallFunc443BInBankE0, CallFunc443BInBankE0_BankA0)
 ; reads: wDebugState
 RunDebugState_E0::
@@ -803,7 +803,7 @@ Func_0E0_45BE:: ; address name
     call WriteVRAMByte
     ret
 
-; wC8C0/wC8C1 = the word at DE, wC8C2 = 0, then Number24ToPackedBCD; BC, HL kept (E-0118)
+; wDigits/wDigits + $1 = the word at DE, wDigits + $2 = 0, then Number24ToPackedBCD; BC, HL kept (E-0118)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case01_WordAtDEToPackedBCD, DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD)
 ; writes: wDigits
 WordAtDEToPackedBCD::
@@ -1153,7 +1153,7 @@ Jump_0E0_47F9:: ; address name
     ld [wDebugState], a
     ret
 
-; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wC5FD += 1 (E-0124)
+; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wDebugState += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_ToDrawTileMap4946AndStep)
 ; points at: wDebugState
 DrawTileMap4946AndStep::
@@ -1266,7 +1266,7 @@ Func_0E0_488E:: ; address name
     call WriteVRAMByteInc
     ret
 
-; runs Func_0E0_48B7 for B = 0, 1, 2 on the 78-byte records from wD0ED + 3 * $4E (E-0122)
+; runs Func_0E0_48B7 for B = 0, 1, 2 on the 78-byte records from wBattlerRecords + $18 + 3 * $4E (E-0122)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_DrawEightBytesAsHexColumns)
 Run48B7ForThreeBattlerRecords::
 Func_0E0_489C:: ; address name
@@ -1738,7 +1738,7 @@ Jump_0E0_4B54:: ; address name
     jp DrawHexByteAtBGMap8A_CheckJoypadPressed2
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
-; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wC0A0/1 (E-0122)
+; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wTemp0/1 (E-0122)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_BlinkWC0A0Tile)
 ; reads: wTemp0, wTemp1, wFrameCounterLo, wMenuRowCount
 BlinkWC0A0Tile::
@@ -1962,7 +1962,7 @@ Data_0E0_4D95:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $C3, $C3, $C3, $C3, $B7 ; row 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
-; wC5FF = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wC0A0/1 and reads the tile there into wMenuRowCount (E-0121)
+; wDebugCounter = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wTemp0/1 and reads the tile there into wMenuRowCount (E-0121)
 ; 3 call sites from 2 routines (e.g. RunDebugState_E0_BlinkWC0A0Tile, DrawHexByteAtBGMap8A)
 ; reads: wDebugCounter
 ; writes: wTemp0, wTemp1, wMenuRowCount
@@ -1995,7 +1995,7 @@ Func_0E0_4EFD:: ; address name
     ld [wMenuRowCount], a
     ret
 
-; debug: draws the four-tile strip for wC5FE, then the 9 status bytes of slot wC5FE as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
+; debug: draws the four-tile strip for wDebugSubState, then the 9 status bytes of slot wDebugSubState as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_BlinkWC0A0Tile, DrawHexByteAtBGMap8A)
 ; reads: wDebugSubState, wBattleArg0, wBattleArg1
 ; writes: wBattleArg0, wBattleArg1
@@ -2124,7 +2124,7 @@ Func_0E0_4FCE:: ; address name
     farcall DrawSkillByte0AndRun502BAnd53B9_WriteBattleArg0AndBattleArg1Etc
     ret
 
-; loads skill wC5F9's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
+; loads skill wDebugValue0's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
 ; reads: wDebugValue0, wRecordBufferData, wDigits
 ; writes: wBattleArg0, wRecordBuffer, wBattleArg1, wBattleArg2, wBattleArg3
@@ -2350,7 +2350,7 @@ Data_0E0_53EB:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
+; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -2399,7 +2399,7 @@ Func_0E0_558E:: ; address name
     call QueueSoundEffect
     ret
 
-; loads wBattleActor, wBattleTarget, wBattleActionId and wDAD3 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByEffectFlags2Flags (a test or debug entry list) (E-0118)
+; loads wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByEffectFlags2Flags (a test or debug entry list) (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2
 RunEffectTestEntryA:: ; heuristic: follows a terminator; C0
@@ -2985,7 +2985,7 @@ Func_0E0_572D:: ; address name
     jr nz, .loop7
     ret
 
-; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
+; A = wBattleActor, with bit 2 flipped when wLinkMode = 1 and wLinkRole bit 1 is set (the side swap of the battle panels) (E-0118)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRole
@@ -7116,7 +7116,7 @@ Func_0E0_74C5:: ; address name
     ld [hl], c
     ret
 
-; moves sprite slot A's position bytes toward D and E by the steps $7535/$7542 indexed by wD0A7; NZ while still moving (E-0127)
+; moves sprite slot A's position bytes toward D and E by the steps $7535/$7542 indexed by wWorkBuf + $A; NZ while still moving (E-0127)
 ; 1 call site from 1 routine (e.g. DebugStaffRoll_Scene00_DrawSpriteSlots_Case06)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -7184,7 +7184,7 @@ Func_0E0_74D8:: ; address name
     db $01, $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $00, $02, $02, $02
     db $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
 
-; wD0A2 += 1, reset to 0 when it reaches 15
+; wWorkBuf + $5 += 1, reset to 0 when it reaches 15
 ; 31 call sites from 31 routines (e.g. DebugStaffRoll_Scene00_DrawSpriteSlots_Case0F, DebugStaffRoll_Scene00_DrawSpriteSlots_Case0E, DebugStaffRoll_Scene00_DrawSpriteSlots_Case0D, DebugStaffRoll_Scene00_DrawSpriteSlots_Case0B, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -7199,7 +7199,7 @@ Func_0E0_754F:: ; address name
     ld [wWorkBuf + $5], a
     ret
 
-; wD0A2 += 1, reset to 0 when it reaches 30
+; wWorkBuf + $5 += 1, reset to 0 when it reaches 30
 ; 8 call sites from 8 routines (e.g. DebugStaffRoll_Scene01_DrawSpriteSlots_Case05, DebugStaffRoll_Scene02_DrawSpriteSlots_Case16, DebugStaffRoll_Scene02_DrawSpriteSlots_Case14, DebugStaffRoll_Scene03_DrawSpriteSlots_Case08, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -7214,7 +7214,7 @@ Func_0E0_755E:: ; address name
     ld [wWorkBuf + $5], a
     ret
 
-; wD0A2 += 1, reset to 0 when it reaches 45
+; wWorkBuf + $5 += 1, reset to 0 when it reaches 45
 ; 1 call site from 1 routine (e.g. DebugStaffRoll_Scene03_DrawSpriteSlots_Case03)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -7229,7 +7229,7 @@ Func_0E0_756D:: ; address name
     ld [wWorkBuf + $5], a
     ret
 
-; wD0A2 += 1, reset to 0 when it reaches 60
+; wWorkBuf + $5 += 1, reset to 0 when it reaches 60
 ; 6 call sites from 6 routines (e.g. DebugStaffRoll_Scene02_DrawSpriteSlots_Case13, DebugStaffRoll_Scene02_DrawSpriteSlots_Case12, DebugStaffRoll_Scene04_DrawSpriteSlots_Case0B, DebugStaffRoll_Scene04_DrawSpriteSlots_Case06, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -7293,7 +7293,7 @@ Func_0E0_758B:: ; address name
     jr nz, FillBGMapRectWithAWrapped
     ret
 
-; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $7641 to wC4FF (E-0128)
+; sets the DMG palettes $D2/$D2/$E2 (also in wDMGPaletteBytes) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wSGBPaletteSet and copies 8 bytes from $7641 to wOBJPaletteBuffer + $20 (E-0128)
 ; 7 call sites from 7 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00, DebugStaffRoll_Scene00_DecompressToVRAM, DebugStaffRoll_Scene01_DecompressToVRAM, ...)
 ; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: rBGP, rOBP0, rOBP1, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, ...
@@ -7409,7 +7409,7 @@ WorkBufSequence005::
 Data_0E0_76C7:: ; address name
     db $06, $02, $1B, $02, $1B, $01, $1C, $01, $1C, $02, $1D, $02, $1D, $01, $1E, $01, $1E, $00, $1F, $06, $1F, $01, $20, $00, $20 ; id 0
 
-; if wC528 < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2
+; if wStringCategory < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2
 ; 1 call site from 1 routine (e.g. ShowString_BankE0)
 ; reads: wStringCategory
 BeginStringDisplay_BankE0::
@@ -7709,7 +7709,7 @@ Func_0E0_7A00:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
@@ -7730,7 +7730,7 @@ Func_0E0_7A07:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
@@ -7768,7 +7768,7 @@ Func_0E0_7A3D:: ; address name
     ret
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
@@ -7780,7 +7780,7 @@ Func_0E0_7A59:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
@@ -7792,7 +7792,7 @@ Func_0E0_7A66:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_BankE0:: ; heuristic: follows a terminator; C0
@@ -7804,7 +7804,7 @@ Func_0E0_7A73:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor, RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
@@ -7863,7 +7863,7 @@ Func_0E0_7A80:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankE0:: ; heuristic: follows a terminator; C0
@@ -7893,7 +7893,7 @@ Func_0E0_7AD7:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankE0:: ; heuristic: follows a terminator; C0

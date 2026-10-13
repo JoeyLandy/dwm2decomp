@@ -107,7 +107,7 @@ Func_00A_4055:: ; address name
     jr nz, .loop
     ret
 
-; sets bit 7 of wC8BF (E-0114)
+; sets bit 7 of wFieldStepFlags (E-0114)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte, FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02)
 ; reads: wFieldStepFlags
 ; writes: wFieldStepFlags
@@ -382,7 +382,7 @@ Func_00A_4196:: ; address name
 .return:
     ret
 
-; runs the movement routine for wC194 (jump table of eight) (E-0122)
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0122)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: wMapMoveType
 RunPlayerMoveTypeMapMoveType::
@@ -532,7 +532,7 @@ Jump_00A_427B:: ; address name
     ld [wMenuSubState], a
     ret
 
-; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wC88C (E-0129)
+; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wStatusStepFlags (E-0129)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: hPlayerStateFlags, wModeState, wMapType, hMapId, wPartyCount, wStatusStepFlags
 ; writes: rRAMG, wStatusStepFlags, wEncounterCountdown, wModeState, wMenuState, wMenuSubState, wStatusFieldStep
@@ -645,7 +645,7 @@ Func_00A_42BC:: ; address name
     ld [rRAMG], a
     ret
 
-; when wC88C bit 7 is clear: wC88C = ((wC88C + 1) & 1) | $80 (E-0119)
+; when wStatusStepFlags bit 7 is clear: wStatusStepFlags = ((wStatusStepFlags + 1) & 1) | $80 (E-0119)
 ; 2 call sites from 1 routine (e.g. EnterStatusEffectFieldState)
 ; reads: wStatusStepFlags
 ; writes: wStatusStepFlags
@@ -680,7 +680,7 @@ Data_00A_4374:: ; address name
     db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
     db $E2, $FF
 
-; when nothing else runs and wC901 & $7F is set, counts wD069 down; at zero sets wC916 = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
+; when nothing else runs and wEncounterRate & $7F is set, counts wTalkCountdown down; at zero sets wTalkEventGroup = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: wFadeState, wScriptRunning, wEncounterRate, wTalkCountdown
 ; writes: wTalkCountdown, wTalkEventGroup, wTalkEventIndex
@@ -717,7 +717,7 @@ Func_00A_43B5:: ; address name
     farcall DispatchTalkEvent
     ret
 
-; in the field when nothing blocks it: counts down the encounter or talk timers (wC901, wD091) and starts a battle or talk event when they expire (E-0131)
+; in the field when nothing blocks it: counts down the encounter or talk timers (wEncounterRate, wEncounterDelay) and starts a battle or talk event when they expire (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_FieldStateCommonUpdate, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wEncounterRate, wEncounterDelay, wEncounterCountdown, wMapType, ...
 ; writes: wEncounterRate, wEncounterDelay, wTalkEventGroup, wTalkEventIndex, wEncounterCountdown, wBattleIntroKind, wModeState, wBattleTransitionStep, ...
@@ -927,7 +927,7 @@ Data_00A_44FE:: ; address name
     db $00, $FF, $FF, $40, $42, $44, $FF, $FF ; id 34
     db $01, $03, $FF, $FF, $FF, $FF, $FF, $FF ; id 35
 
-; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. TickRandomEncounterCounter, RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank0A::
@@ -966,7 +966,7 @@ Func_00A_461E:: ; address name
     ld [wTilesUnderPoint + $3], a
     ret
 
-; clears wC96C and runs the routine for wC903 & 7 (jump table of eight) (E-0122)
+; clears wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0122)
 ; 1 call site from 1 routine (e.g. RunBattleTransitionStep_WriteGameModeAndModeStateEtc)
 ; reads: wBattleIntroKind
 ; writes: wBattleIntroFlag
@@ -1133,7 +1133,7 @@ Jump_00A_472E:: ; address name
     ld [wBattleKind], a
     ret
 
-; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
+; draws random values until wKeyRandomHi & $3F is below 100, then wEncounterCountdown = 2 * Data_00A_478F[value / 5] (E-0122)
 ; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunGameMode5Case01SubStates_Case02_Case00_RunSaveSteps, StartScriptedEncounterTemp0, SetModeState3AndSaveScreen, ...)
 ; reads: wKeyRandomHi
 ; writes: wEncounterCountdown
@@ -1161,7 +1161,7 @@ Data_00A_478F:: ; address name
     db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
     db $3C, $41, $46, $50, $50
 
-; loads encounter entry $481C + 8 * hFFC6 into wCFDC-wCFE2, sets the battle intro (wC903 = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
+; loads encounter entry $481C + 8 * hTemp0 into wEncounterKind-wEncounterMonsters + $5, sets the battle intro (wBattleIntroKind = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
 ; 14 call sites from 14 routines (e.g. SceneShield_RunMessageBoxFar_Bank0F, SceneShieldGuardian_RunMessageBoxFar_Bank0F, ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep, SceneExplosion_RunMessageBoxFar_Bank0F, ...)
 ; reads: hTemp0
 ; writes: wEncounterKind, wEncounterMonsters, wBattleIntroKind, wModeState, wBattleTransitionStep, wBattleTransitionSubStep, wFieldReturnPhase
@@ -2471,7 +2471,7 @@ Func_00A_5057:: ; address name
     ld a, [hl]
     ld d, a
 
-; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
+; DE += 2; wWorkBuf = the number of non-zero entries (up to 5); copies their monster ids to wWorkBuf + $2 and replaces each with two bytes of its monster table entry (E-0127)
 ; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags)
 ; reads: wWorkBuf, hTemp0, hTemp1
 ; writes: wWorkBuf, wMonsterId, hTemp0
@@ -2772,7 +2772,7 @@ Jump_00A_51F7:: ; address name
     ld [wBattleKind], a
     ret
 
-; runs the routine for wC904 (jump table of three); field mode state 3 (E-0122)
+; runs the routine for wBattleTransitionStep (jump table of three); field mode state 3 (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunBattleTransitionStep)
 ; reads: wBattleTransitionStep
 RunBattleTransitionStep::
@@ -3036,7 +3036,7 @@ Func_00A_533F:: ; address name
     pop af
     ret
 
-; HL = wC909/wC90A + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wC90A (stays inside one 1 KB BG map) (E-0117)
+; HL = wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wTransitionBGPtrHi (stays inside one 1 KB BG map) (E-0117)
 ; 1 call site from 1 routine (e.g. WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap)
 ; reads: wTransitionBGPtrLo, wTransitionBGPtrHi
 AddHLToTransitionBGPtrLoInBGMap::
@@ -3589,7 +3589,7 @@ Data_00A_560C:: ; address name
     dw TransitionRowStep07 ; id 7
     dw TransitionRowStep08 ; id 8
 
-; counts steps in wC7C9 (wrapping at 1000); every 100 steps and at 1000 updates the stored SRAM records by their state byte and field $6E (E-0130)
+; counts steps in wStepCounterLo (wrapping at 1000); every 100 steps and at 1000 updates the stored SRAM records by their state byte and field $6E (E-0130)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: wScriptRunning, wEncounterRate, wStepCounterLo, wStepCounterHi, hTemp0
 ; writes: hTemp0, wStepCounterLo, wStepCounterHi, rRAMG

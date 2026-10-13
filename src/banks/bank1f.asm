@@ -124,7 +124,7 @@ Data_01F_43C0:: ; address name
 Tiles1Plus6F0Tiles_1F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_4450:: ; address name
     db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00 ; id 68
-    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00 ; id 69
+    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00 ; id 69 '*:'
     db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00 ; id 70
 Tiles1Plus7B0Tiles_1F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_4480:: ; address name
@@ -236,7 +236,7 @@ Data_01F_4990:: ; address name
     db $FF, $00, $FF, $00, $FF, $10, $FF, $10, $FF, $7C, $FF, $10, $FF, $10, $FF, $00 ; id 162
 Tiles1Plus7D0Tiles_1F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_4A40:: ; address name
-    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00 ; id 163
+    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00 ; id 163 ':'
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00 ; id 164
 Tiles1Plus6A0Tiles_1F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_4A60:: ; address name
@@ -599,7 +599,7 @@ Data_01F_5225:: ; address name
 String_1F_00_00:: ; heuristic: string; C0
 Data_01F_52A5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Is your", $F1
+    db $EA, "Cobi: Is your", $F1
     db "adventure done?", $FA, $F7
     db $EF, $EE, "Or do you need", $EF, $EE, "something?", $F7
     db $F0
@@ -607,153 +607,153 @@ Data_01F_52A5:: ; address name
 String_1F_00_02:: ; heuristic: string; C0
 Data_01F_52E3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which one's", $F1
+    db $EA, "Cobi: Which one's", $F1
     db "staying here?", $F0
 
 String_1F_00_03:: ; heuristic: string; C0
 Data_01F_5303:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " So this one", $F1
+    db $EA, "Cobi: So this one", $F1
     db "is staying here?", $F0
 
 String_1F_00_04:: ; heuristic: string; C0
 Data_01F_5327:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Check up on", $F1
+    db $EA, "Cobi: Check up on", $F1
     db "the others too.", $F7
     db $F0
 
 String_1F_00_05:: ; heuristic: string; C0
 Data_01F_534B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Do you need", $F1
+    db $EA, "Cobi: Do you need", $F1
     db "anything else?", $F0
 
 String_1F_00_06:: ; heuristic: string; C0
 Data_01F_536D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " No, you can't", $F1
+    db $EA, "Cobi: No, you can't", $F1
     db "go off all alone.", $F7
     db $F0
 
 String_1F_00_07:: ; heuristic: string; C0
 Data_01F_5394:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Switch with", $F1
+    db $EA, "Cobi: Switch with", $F1
     db "one on the farm?", $F0
 
 String_1F_00_08:: ; heuristic: string; C0
 Data_01F_53B8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " What'll you", $F1
+    db $EA, "Cobi: What'll you", $F1
     db "switch it with?", $F0
 
 String_1F_00_09:: ; heuristic: string; C0
 Data_01F_53DA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " So you'll", $F1
+    db $EA, "Cobi: So you'll", $F1
     db "take this one?", $F0
 
 String_1F_00_0A:: ; heuristic: string; C0
 Data_01F_53F9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " I switched", $F1
+    db $EA, "Cobi: I switched", $F1
     db $F9, "0.", $F7
     db $F0
 
 String_1F_00_0B:: ; heuristic: string; C0
 Data_01F_5410:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " The farm has", $F1
+    db $EA, "Cobi: The farm has", $F1
     db "no more room.", $F7
     db $F0
 
 String_1F_00_0C:: ; heuristic: string; C0
 Data_01F_5433:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " What'll you", $F1
+    db $EA, "Cobi: What'll you", $F1
     db "switch it with?", $F0
 
 String_1F_00_0D:: ; heuristic: string; C0
 Data_01F_5455:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which one", $F1
+    db $EA, "Cobi: Which one", $F1
     db "will you take?", $F0
 
 String_1F_00_0E:: ; heuristic: string; C0
 Data_01F_5475:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Is this the", $F1
+    db $EA, "Cobi: Is this the", $F1
     db "one you'll take?", $F0
 
 String_1F_00_0F:: ; heuristic: string; C0
 Data_01F_5498:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " It's eager", $F1
+    db $EA, "Cobi: It's eager", $F1
     db "to go, ", $F9, "0.", $F7
     db $F0
 
 String_1F_00_10:: ; heuristic: string; C0
 Data_01F_54B5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " You haven't", $F1
+    db $EA, "Cobi: You haven't", $F1
     db "left any here.", $F7
     db $F0
 
 String_1F_00_11:: ; heuristic: string; C0
 Data_01F_54D7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " You can't", $F1
+    db $EA, "Cobi: You can't", $F1
     db "take any more.", $F7
     db $F0
 
 String_1F_00_12:: ; heuristic: string; C0
 Data_01F_54F7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " What do you", $F1
+    db $EA, "Cobi: What do you", $F1
     db "want to check?", $F0
 
 String_1F_00_13:: ; heuristic: string; C0
 Data_01F_5519:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " We don't have", $F1
+    db $EA, "Cobi: We don't have", $F1
     db "any of your eggs.", $F7
     db $F0
 
 String_1F_00_14:: ; heuristic: string; C0
 Data_01F_5540:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which one", $F1
+    db $EA, "Cobi: Which one", $F1
     db "will you check?", $F0
 
 String_1F_00_16:: ; heuristic: string; C0
 Data_01F_5561:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which egg", $F1
+    db $EA, "Cobi: Which egg", $F1
     db "will you check?", $F0
 
 String_1F_00_17:: ; heuristic: string; C0
 Data_01F_5582:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " What  do you", $F1
+    db $EA, "Cobi: What  do you", $F1
     db "want to release?", $F0
 
 String_1F_00_18:: ; heuristic: string; C0
 Data_01F_55A7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which one", $F1
+    db $EA, "Cobi: Which one", $F1
     db "will you release?", $F0
 
 String_1F_00_19:: ; heuristic: string; C0
 Data_01F_55CA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Which egg", $F1
+    db $EA, "Cobi: Which egg", $F1
     db "will you release?", $F0
 
 String_1F_00_1A:: ; heuristic: string; C0
 Data_01F_55ED:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " It'll be gone", $F1
+    db $EA, "Cobi: It'll be gone", $F1
     db "forever. Sure?", $F0
 
 String_1F_00_1B:: ; heuristic: string; C0
@@ -772,167 +772,167 @@ Data_01F_5627:: ; address name
 String_1F_00_1D:: ; heuristic: string; C0
 Data_01F_5644:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Cobi", $A3, " Come back", $F1
+    db $EA, "Cobi: Come back", $F1
     db "anytime, sis!", $F7
     db $F0
 
 String_1F_00_1E:: ; heuristic: string; C0
 Data_01F_5664:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Hi, big", $F1
+    db $EB, "Tara: Hi, big", $F1
     db "brother!", $FA, $F7
     db $EF, $EE, "Do you need", $EF, $EE, "anything?", $F0
 
 String_1F_00_22:: ; heuristic: string; C0
 Data_01F_5696:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which one's", $F1
+    db $EB, "Tara: Which one's", $F1
     db "staying here?", $F0
 
 String_1F_00_23:: ; heuristic: string; C0
 Data_01F_56B6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " So this one", $F1
+    db $EB, "Tara: So this one", $F1
     db "is staying here?", $F0
 
 String_1F_00_24:: ; heuristic: string; C0
 Data_01F_56DA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Say bye to", $F1
+    db $EB, "Tara: Say bye to", $F1
     db $F9, "0 for a while.", $F7
     db $F0
 
 String_1F_00_25:: ; heuristic: string; C0
 Data_01F_56FD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Do you need", $F1
+    db $EB, "Tara: Do you need", $F1
     db "anything else?", $F0
 
 String_1F_00_26:: ; heuristic: string; C0
 Data_01F_571F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " You'll be", $F1
+    db $EB, "Tara: You'll be", $F1
     db "left all alone!", $F7
     db $F0
 
 String_1F_00_27:: ; heuristic: string; C0
 Data_01F_5740:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Switch with", $F1
+    db $EB, "Tara: Switch with", $F1
     db "one on the farm?", $F0
 
 String_1F_00_28:: ; heuristic: string; C0
 Data_01F_5764:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " What'll you", $F1
+    db $EB, "Tara: What'll you", $F1
     db "switch it with?", $F0
 
 String_1F_00_29:: ; heuristic: string; C0
 Data_01F_5786:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " So you'll", $F1
+    db $EB, "Tara: So you'll", $F1
     db "take this one?", $F0
 
 String_1F_00_2A:: ; heuristic: string; C0
 Data_01F_57A5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " I switched", $F1
+    db $EB, "Tara: I switched", $F1
     db $F9, "0.", $F7
     db $F0
 
 String_1F_00_2B:: ; heuristic: string; C0
 Data_01F_57BC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " The farm is", $F1
+    db $EB, "Tara: The farm is", $F1
     db "out of room.", $F7
     db $F0
 
 String_1F_00_2C:: ; heuristic: string; C0
 Data_01F_57DD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " What'll you", $F1
+    db $EB, "Tara: What'll you", $F1
     db "switch it with?", $F0
 
 String_1F_00_2D:: ; heuristic: string; C0
 Data_01F_57FF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which one", $F1
+    db $EB, "Tara: Which one", $F1
     db "will you take?", $F0
 
 String_1F_00_2E:: ; heuristic: string; C0
 Data_01F_581F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Is this the", $F1
+    db $EB, "Tara: Is this the", $F1
     db "one you'll take?", $F0
 
 String_1F_00_2F:: ; heuristic: string; C0
 Data_01F_5842:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " ", $F9, "0, it", $F1
+    db $EB, "Tara: ", $F9, "0, it", $F1
     db "really missed you.", $F7
     db $F0
 
 String_1F_00_30:: ; heuristic: string; C0
 Data_01F_5864:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " You haven't", $F1
+    db $EB, "Tara: You haven't", $F1
     db "left any here.", $F7
     db $F0
 
 String_1F_00_31:: ; heuristic: string; C0
 Data_01F_5886:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " You can't", $F1
+    db $EB, "Tara: You can't", $F1
     db "take any more.", $F7
     db $F0
 
 String_1F_00_32:: ; heuristic: string; C0
 Data_01F_58A6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " What do you", $F1
+    db $EB, "Tara: What do you", $F1
     db "want to check?", $F0
 
 String_1F_00_33:: ; heuristic: string; C0
 Data_01F_58C8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " We don't have", $F1
+    db $EB, "Tara: We don't have", $F1
     db "any of your eggs.", $F7
     db $F0
 
 String_1F_00_34:: ; heuristic: string; C0
 Data_01F_58EF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which one", $F1
+    db $EB, "Tara: Which one", $F1
     db "will you check?", $F0
 
 String_1F_00_36:: ; heuristic: string; C0
 Data_01F_5910:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which egg", $F1
+    db $EB, "Tara: Which egg", $F1
     db "will you check?", $F0
 
 String_1F_00_37:: ; heuristic: string; C0
 Data_01F_5931:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " What  do you", $F1
+    db $EB, "Tara: What  do you", $F1
     db "want to release?", $F0
 
 String_1F_00_38:: ; heuristic: string; C0
 Data_01F_5956:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which one", $F1
+    db $EB, "Tara: Which one", $F1
     db "will you release?", $F0
 
 String_1F_00_39:: ; heuristic: string; C0
 Data_01F_5979:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Which egg", $F1
+    db $EB, "Tara: Which egg", $F1
     db "will you release?", $F0
 
 String_1F_00_3A:: ; heuristic: string; C0
 Data_01F_599C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " It'll be gone", $F1
+    db $EB, "Tara: It'll be gone", $F1
     db "forever. OK?", $F0
 
 String_1F_00_3B:: ; heuristic: string; C0
@@ -952,7 +952,7 @@ Data_01F_59D4:: ; address name
 String_1F_00_3D:: ; heuristic: string; C0
 Data_01F_59F2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, "Tara", $A3, " Please tell", $F1
+    db $EB, "Tara: Please tell", $F1
     db "me about your", $FA, $F7
     db $EF, $EE, "adventure next", $EF, $EE, "time, big brother!", $F7
     db $F0
@@ -966,7 +966,7 @@ Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1F_5A51, Script_1F_5A4E, Script_1F_5A4B, Script_1F_5A48, Script_1F_5A42
 Script_1F_5A42:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message_unless_flag0 $801D ; flag 0 set: 'Cobi Come back anytime, sis!'
+    script_message_unless_flag0 $801D ; flag 0 set: 'Cobi: Come back anytime, sis!'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_1F_5A48:: ; heuristic: event script entry or jump target; C0
@@ -981,67 +981,67 @@ Script_1F_5A51:: ; heuristic: event script entry or jump target; C0
 Script_1F_5A55:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5A80
 Script_1F_5A58:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi Which one's staying here?'
+    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi: Which one's staying here?'
 Script_1F_5A5B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A66, Script_1F_5A5F
 Script_1F_5A5F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A3B
 Script_1F_5A66:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi So this one is staying'
+    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi: So this one is staying'
 Script_1F_5A69:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A7C, Script_1F_5A75, Script_1F_5A6E
 Script_1F_5A6E:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi Which one's staying here?'
+    script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi: Which one's staying here?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5B
 Script_1F_5A75:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C004 ; flag 0 set: 'Cobi Check up on the others'
+    script_message_unless_flag0 $C004 ; flag 0 set: 'Cobi: Check up on the others'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5F
 Script_1F_5A7C:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A69
 Script_1F_5A80:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
+    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A87, Script_1F_5A8D
 Script_1F_5A87:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5A8D:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
+    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
 Script_1F_5A90:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A9A, Script_1F_5A94
 Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5A9A:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
 Script_1F_5A9D:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AA7, Script_1F_5AA1
 Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
+    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
     script_jump Script_1F_5A90
 Script_1F_5AA7:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C009 ; flag 0 set: 'Cobi So you'll take this one?'
+    script_message_unless_flag0 $C009 ; flag 0 set: 'Cobi: So you'll take this one?'
 Script_1F_5AAA:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AC1, Script_1F_5AB6, Script_1F_5AAF
 Script_1F_5AAF:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A9D
 Script_1F_5AB6:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi I switched 0.'
+    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi: I switched 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AC1:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
@@ -1050,67 +1050,67 @@ Script_1F_5AC5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5ACA, Script_1F_5AD3, Script_1F_5AD6
 Script_1F_5ACA:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C010 ; flag 0 set: 'Cobi You haven't left any here.'
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C010 ; flag 0 set: 'Cobi: You haven't left any here.'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AD3:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B01
 Script_1F_5AD6:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi Which one will you take?'
+    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi: Which one will you take?'
 Script_1F_5AD9:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AE3, Script_1F_5ADD
 Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AE3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi Is this the one you'll'
+    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi: Is this the one you'll'
 Script_1F_5AE6:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AFD, Script_1F_5AF2, Script_1F_5AEB
 Script_1F_5AEB:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi Which one will you take?'
+    script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi: Which one will you take?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AD9
 Script_1F_5AF2:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00F ; flag 0 set: 'Cobi It's eager to go, 0.'
+    script_message_unless_flag0 $C00F ; flag 0 set: 'Cobi: It's eager to go, 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AFD:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AE6
 Script_1F_5B01:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C011 ; flag 0 set: 'Cobi You can't take any more.'
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
+    script_message_unless_flag0 $C011 ; flag 0 set: 'Cobi: You can't take any more.'
+    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
 Script_1F_5B07:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B11, Script_1F_5B0B
 Script_1F_5B0B:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B11:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
 Script_1F_5B14:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B1F, Script_1F_5B18
 Script_1F_5B18:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
+    script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi: Switch with one on the'
     script_jump Script_1F_5B07
 Script_1F_5B1F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi So this one is staying'
+    script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi: So this one is staying'
 Script_1F_5B22:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B35, Script_1F_5B2E, Script_1F_5B27
 Script_1F_5B27:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B14
 Script_1F_5B2E:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_jump Script_1F_5B39
 Script_1F_5B35:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
@@ -1119,22 +1119,22 @@ Script_1F_5B39:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B43, Script_1F_5B3D
 Script_1F_5B3D:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_jump Script_1F_5B14
 Script_1F_5B43:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi Is this the one you'll'
+    script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi: Is this the one you'll'
 Script_1F_5B46:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B5D, Script_1F_5B52, Script_1F_5B4B
 Script_1F_5B4B:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
+    script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi: What'll you switch it with?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B39
 Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi I switched 0.'
+    script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi: I switched 0.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
@@ -1142,7 +1142,7 @@ Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B61:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5B62:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C012 ; flag 0 set: 'Cobi What do you want to'
+    script_message_unless_flag0 $C012 ; flag 0 set: 'Cobi: What do you want to'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B6B, Script_1F_5B6E, Script_1F_5B71, Script_1F_5B7E
 Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
@@ -1150,16 +1150,16 @@ Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B6E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B8F
 Script_1F_5B71:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi We don't have any of'
+    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi: We don't have any of'
     script_jump Script_1F_5B62
 Script_1F_5B77:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B77
 Script_1F_5B81:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C015 ; flag 0 set: 'Cobi Which one will you check?'
+    script_message_unless_flag0 $C015 ; flag 0 set: 'Cobi: Which one will you check?'
 Script_1F_5B84:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B8B, Script_1F_5B88
@@ -1169,87 +1169,87 @@ Script_1F_5B8B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B84
 Script_1F_5B8F:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C016 ; flag 0 set: 'Cobi Which egg will you check?'
+    script_message_unless_flag0 $C016 ; flag 0 set: 'Cobi: Which egg will you check?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B62
 Script_1F_5B96:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5B97:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C017 ; flag 0 set: 'Cobi What do you want to'
+    script_message_unless_flag0 $C017 ; flag 0 set: 'Cobi: What do you want to'
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BA7, Script_1F_5BAA, Script_1F_5BAD, Script_1F_5BBA, Script_1F_5BA1
 Script_1F_5BA1:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
+    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
     script_jump Script_1F_5B97
 Script_1F_5BA7:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BBD
 Script_1F_5BAA:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BE9
 Script_1F_5BAD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi We don't have any of'
+    script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi: We don't have any of'
     script_jump Script_1F_5B97
 Script_1F_5BB3:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BB3
 Script_1F_5BBD:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi Which one will you release?'
+    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi: Which one will you release?'
 Script_1F_5BC0:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BC7, Script_1F_5BC4
 Script_1F_5BC4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BC7:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi It'll be gone forever. Sure?'
+    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
 Script_1F_5BCA:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BE5, Script_1F_5BDA, Script_1F_5BD3, Script_1F_5BD0
 Script_1F_5BD0:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
+    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
 Script_1F_5BD3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi Which one will you release?'
+    script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi: Which one will you release?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BC0
 Script_1F_5BDA:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C01C ; flag 0 set: '0 was released in the wild.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BE5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BCA
 Script_1F_5BE9:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi Which egg will you release?'
+    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi: Which egg will you release?'
 Script_1F_5BEC:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BF3, Script_1F_5BF0
 Script_1F_5BF0:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BF3:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi It'll be gone forever. Sure?'
+    script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi: It'll be gone forever. Sure?'
 Script_1F_5BF6:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5C11, Script_1F_5C06, Script_1F_5BFF, Script_1F_5BFC
 Script_1F_5BFC:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
+    script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi: No, you can't go off'
 Script_1F_5BFF:: ; heuristic: event script entry or jump target; C0
-    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi Which egg will you release?'
+    script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi: Which egg will you release?'
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BEC
 Script_1F_5C06:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C01B ; flag 0 set: 'The egg was released.'
     script_command SCRIPT_SWAP_MONSTERS
-    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
+    script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi: Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BF6
 
-; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
+; for the visible entries of record-list page wListPageIndex draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
 ; 8 call sites from 8 routines (e.g. HibernateMenu_ChooseRecords_ToDrawRecordListPageNames, BreedMenu_ChooseParents_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
@@ -1348,7 +1348,7 @@ DrawRecordListPageNames_Data:: ; heuristic: pointer load in the same bank (bank 
 Data_01F_5C9C:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
-; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
+; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
 ; 1 call site from 1 routine (e.g. DrawRecordListPageNames)
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
@@ -1401,7 +1401,7 @@ Func_01F_5CA6:: ; address name
     ld [wGlyphListPos], a
     ret
 
-; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wD785, B = $1F (bank), C = 16 (bytes) (E-0120)
+; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wGlyphListStart, B = $1F (bank), C = 16 (bytes) (E-0120)
 ; 2 call sites from 1 routine (e.g. DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F)
 ; reads: wGlyphListStart
 GlyphCopyArgsForA::
@@ -1436,7 +1436,7 @@ GlyphCopyArgsForA_Data:: ; heuristic: pointer load in the same bank (bank assume
 Data_01F_5D20:: ; address name
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
-; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
+; parameters wArg1/wArg2 = source (high, low), wArg3 = width, wArg4 = rows, wArg5/wArg6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
 ; 25 call sites from 18 routines (e.g. DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ClearTilesAndDrawRects6C5FAnd6D37, ...)
 ; reads: wArg6, rSTAT, wIsCGB, wArg7
 ; writes: rVBK
@@ -2215,7 +2215,7 @@ Data_01F_73CC:: ; address name
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
+; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawWCA36MonsterPictureInTwoSteps, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawWCA36MonsterPictureInTwoSteps)
 ; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
@@ -2487,7 +2487,7 @@ Func_01F_7591:: ; address name
     call DrawTileRectFromArg1Params
     ret
 
-; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
+; shows the eight skill names of the record at wRecordBufB (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone, RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone)
 ; reads: wRecordBufB
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
@@ -2758,34 +2758,34 @@ Script_1F_77D5:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1F_77F4, Script_1F_77EE, Script_1F_77E8, Script_1F_77E2, Script_1F_77DC
 Script_1F_77DC:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8005 ; 'May the gods go with you.'
+    script_message $8005 ; '*: May the gods go with'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_1F_77E2:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'But none appear to be cursed'
+    script_message $C003 ; '*: But none appear to be'
     script_jump Script_1F_77F7
 Script_1F_77E8:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Oh? But no one is poisoned.'
+    script_message $C002 ; '*: Oh? But no one is'
     script_jump Script_1F_77F7
 Script_1F_77EE:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'Oh? But none appear to be'
+    script_message $C001 ; '*: Oh? But none appear to'
     script_jump Script_1F_77F7
 Script_1F_77F4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_77FD
 Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Do you need any other help?'
+    script_message $C004 ; '*: Do you need any other'
     script_jump Script_1F_77D5
 Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_780E, Script_1F_7808, Script_1F_7802
 Script_1F_7802:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Who should be freed of a'
+    script_message $C008 ; '*: Who should be freed of'
     script_jump Script_1F_7811
 Script_1F_7808:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; 'Who should be cured of poison?'
+    script_message $C007 ; '*: Who should be cured of'
     script_jump Script_1F_7811
 Script_1F_780E:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'Which monster should be revived?'
+    script_message $C006 ; '*: Which monster should be revived?'
 Script_1F_7811:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7819, Script_1F_7815
@@ -2796,37 +2796,37 @@ Script_1F_7819:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7831, Script_1F_782B, Script_1F_7825, Script_1F_781F
 Script_1F_781F:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'But that monster is not cursed.'
+    script_message $C00B ; '*: But that monster is not'
     script_jump Script_1F_77FD
 Script_1F_7825:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'But that monster is not poisoned.'
+    script_message $C00A ; '*: But that monster is not'
     script_jump Script_1F_77FD
 Script_1F_782B:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'Surely you jest. That one is'
+    script_message $C009 ; '*: Surely you jest. That one'
     script_jump Script_1F_77FD
 Script_1F_7831:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
-    script_message $C00C ; 'I must ask for a small'
+    script_message $C00C ; '*: I must ask for a'
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7845, Script_1F_783E, Script_1F_783A
 Script_1F_783A:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77FD
 Script_1F_783E:: ; heuristic: event script entry or jump target; C0
-    script_message $C014 ; 'Oh, my, my How deplorable! You'
+    script_message $C014 ; '*: Oh, my, my How deplorable!'
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
 Script_1F_7845:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7856, Script_1F_7850, Script_1F_784A
 Script_1F_784A:: ; heuristic: event script entry or jump target; C0
-    script_message $C00F ; 'Gods, I beg you, free 0'
+    script_message $C00F ; '*: Gods, I beg you, free'
     script_jump Script_1F_7859
 Script_1F_7850:: ; heuristic: event script entry or jump target; C0
-    script_message $C00E ; 'Gods, I beg you, purify the'
+    script_message $C00E ; '*: Gods, I beg you, purify'
     script_jump Script_1F_7859
 Script_1F_7856:: ; heuristic: event script entry or jump target; C0
-    script_message $C00D ; 'Gods, the spirits of earth! Please'
+    script_message $C00D ; '*: Gods, the spirits of earth!'
 Script_1F_7859:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_786A, Script_1F_7864, Script_1F_785E
@@ -2856,26 +2856,26 @@ Script_1F_787C:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1F_7890, Script_1F_7887, Script_1F_7881
 Script_1F_7881:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_LIBRARY
-    script_message $8002 ; 'Come back if you need to'
+    script_message $8002 ; '*: Come back if you need'
     script_command SCRIPT_LIBRARY
     script_end
 Script_1F_7887:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'That family is a mystery still'
-    script_message $C004 ; 'Which family will you check?'
+    script_message $C005 ; '*: That family is a mystery'
+    script_message $C004 ; '*: Which family will you check?'
     script_jump Script_1F_787C
 Script_1F_7890:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'Which species will you check?'
+    script_message $C003 ; '*: Which species will you check?'
 Script_1F_7893:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_LIBRARY
     script_choice_jump Script_1F_789F, Script_1F_7897
 Script_1F_7897:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_LIBRARY
-    script_message $C004 ; 'Which family will you check?'
+    script_message $C004 ; '*: Which family will you check?'
     script_command SCRIPT_LIBRARY
     script_jump Script_1F_787C
 Script_1F_789F:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_LIBRARY
-    script_message $C003 ; 'Which species will you check?'
+    script_message $C003 ; '*: Which species will you check?'
     script_command SCRIPT_LIBRARY
     script_jump Script_1F_7893
     ds $759, $00

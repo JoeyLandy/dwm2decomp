@@ -852,7 +852,7 @@ Func_001_4A75:: ; address name
     ldh [c], a
     ret
 
-; on CGB copies the 8-byte palette Data_001_4ACC into wBGPaletteBuffer twice and sets wC526 and wC527 = $7F (E-0117)
+; on CGB copies the 8-byte palette Data_001_4ACC into wBGPaletteBuffer twice and sets wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117)
 ; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_SendSGBPaletteSetPacket, ...)
 ; reads: wIsCGB
 ; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
@@ -1664,7 +1664,7 @@ Jump_001_4ED4:: ; address name
     jr c, DebugShowMonsterRecord
     ld hl, $0000
 
-; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
+; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wDebugCursor/wDebugValue0 and wMonsterId/wMonsterId + $1, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
 ; 1 call site from 1 routine (e.g. DebugMonsterRecordViewer_Init)
 ; reads: wMonsterId, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wRecordBuffer, wRecordBufferData, wScreenAttrBuffer
 ; writes: wDebugCursor, wDebugValue0, wMonsterId, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
@@ -2886,7 +2886,7 @@ Jump_001_56F1:: ; address name
     jr c, .loop4
     ret
 
-; for C up to $1A, loads byte C of wD01A (LoadWD01AByteArg4) and stores it at DE (E-0122)
+; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE (E-0122)
 ; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess)
 ; reads: wArg5
 ; writes: wArg4
@@ -2908,7 +2908,7 @@ Func_001_57C7:: ; address name
     jr c, CopyWD01ABytesFromIndexCToDE
     ret
 
-; debug: toggles wD7F1 between 0 and 2 and writes tile $10 + wD7F1 at vBGMap0 + $81; the following entries are the debug results screen input handlers (E-0131)
+; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following entries are the debug results screen input handlers (E-0131)
 ; 1 call site from 1 routine (e.g. DebugToggleArg1Marker)
 ; reads: wArg1
 ; writes: wArg1
@@ -3380,7 +3380,7 @@ Jump_001_59DC:: ; address name
     ld [wNameEntryState], a
     ret
 
-; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
+; debug: wDebugCounter += 1; below $10 continues at Func_001_5AC0, below $18 at PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
 ; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess, DebugToggleArg1Marker)
 ; reads: wDebugCounter, wDebugCursor
 ; writes: wDebugCounter
@@ -3396,7 +3396,7 @@ Func_001_5AAC:: ; address name
     xor a, a
     ld [wDebugCounter], a
 
-; debug: draws the value of field wC5F8 (Data_001_5B70) at Data_001_5B84[wC5F8] as hex, a tile or BCD (E-0128)
+; debug: draws the value of field wDebugCursor (Data_001_5B70) at Data_001_5B84[wDebugCursor] as hex, a tile or BCD (E-0128)
 ; 3 call sites from 1 routine (e.g. DebugToggleArg1Marker)
 ; reads: wDebugCursor
 DrawDebugFieldValueDebugCursor::
@@ -3552,7 +3552,7 @@ Func_001_5B98:: ; address name
     call CopyGlyphTilesToVRAM
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
 ; 1 call site from 1 routine (e.g. DrawMonsterNameForWordAtDE_Bank01)
 ; reads: wDataBank
 ; writes: wDataBank
@@ -3960,7 +3960,7 @@ Func_001_5DBA:: ; address name
     inc [hl]
     ret
 
-; A = key slot: wC5FD = byte 0 and wC5FE = byte 3 of its wKeyList entry, wC5FA = byte 3 | $80 (E-0120)
+; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry, wDebugValue1 = byte 3 | $80 (E-0120)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
 ; writes: wDebugState, wDebugSubState, wDebugValue1
 LoadKeyEntryFieldsToDebugState::
@@ -5205,7 +5205,7 @@ Jump_001_667A:: ; address name
     inc [hl]
     ret
 
-; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries load the setup into wCFDD-wCFE5 and handle input (E-0131)
+; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries load the setup into wEncounterMonsters-wWildByteE5 and handle input (E-0131)
 ; 6 call sites from 2 routines (e.g. DebugBattleSetup_Update, DebugBattleSetupLoadWords)
 DebugBattleSetupLoadWords::
 Func_001_66AD:: ; address name
@@ -5427,7 +5427,7 @@ Jump_001_66E8:: ; address name
 .return:
     ret
 
-; writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)
+; writes the word wWorkBuf[wMenuState] as three hex digits at the address Data_001_68D3[wMenuState] (E-0122)
 ; 4 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wMenuState
 ; points at: wWorkBuf
@@ -5450,7 +5450,7 @@ Func_001_6809:: ; address name
     call WriteThreeHexDigitsAtDE
     ret
 
-; stores Data_001_68EB[wC46B] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
+; stores Data_001_68EB[wMenuState] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
 ; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wMenuState
 SubtractDEFromDebugLimit::
@@ -5491,7 +5491,7 @@ Func_001_682B:: ; address name
     ld [hl], d
     ret
 
-; clamps the word DE to 0 .. Data_001_68EB[wC46B] (negative becomes the limit) and stores it at HL (E-0124)
+; clamps the word DE to 0 .. Data_001_68EB[wMenuState] (negative becomes the limit) and stores it at HL (E-0124)
 ; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wMenuState
 ClampDebugValueToTableLimit::
@@ -5600,7 +5600,7 @@ Data_001_68EB:: ; address name
     db $02, $00, $AB, $02, $AB, $02, $AB, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
-; debug battle setup: shows the string for field wC46B (wD09D entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)
+; debug battle setup: shows the string for field wMenuState (wWorkBuf entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)
 ; 9 call sites from 2 routines (e.g. DebugBattleSetupLoadWords, DebugBattleSetup_Init)
 ; reads: wMenuState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wWorkBuf
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -6357,7 +6357,7 @@ Func_001_6E31:: ; address name
     ld [hl+], a
     ret
 
-; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
+; with SRAM enabled creates a record from the template Data_001_7098[hTemp1] (wBattleArg1 = hTemp1, level hTemp2); kinds 1 and 2 also set field $6E = 1 (E-0124)
 ; 11 call sites from 11 routines (e.g. GreatLogTalkEvents_ShowTheFarmIsFull, GreatLogTalkEvents_TestFlagBit_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
 ; reads: hTemp1, hTemp2, wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2

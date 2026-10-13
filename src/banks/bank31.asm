@@ -80,7 +80,7 @@ Func_031_4001:: ; address name
     ld a, $0B
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase (1 fight, 2 after), wCFC9 = step)
+; per-frame routine for wGameMode = 4, the battle: in link mode (wLinkMode) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wBattlePhase = phase (1 fight, 2 after), wBattleStep = step)
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode4_Update)
 ; reads: wLinkMode, wEffectId, wEffectAnimState, wBattlePhase
 GameMode4_Update::
@@ -1377,7 +1377,7 @@ Func_031_47C7:: ; address name
     call ClearWindowAndCopyRect7345Far
     ret
 
-; loads the picture of battle monster wDAAB at vTiles2 + $140, uploads palettes, loads name tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default window (E-0121)
+; loads the picture of battle monster wDisplaySlot at vTiles2 + $140, uploads palettes, loads name tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. BattleEnd_Step5_BattleEnd_AddJoinedMonster, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM)
 ; reads: wDisplaySlot
 ; writes: wBattleScreenFlags, wBGPaletteUploadRequest, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
@@ -5343,7 +5343,7 @@ Func_031_5F4E:: ; address name
 .return:
     ret
 
-; up/down/left/right move the battle command cursor entry wCFD5 within wCFD3, wCFD6, wCFD7, blinking it, with sound $69 (E-0131)
+; up/down/left/right move the battle command cursor entry wCommandCursor within wListLastPageSize, wCommandCursorMax, wCommandPageCount, blinking it, with sound $69 (E-0131)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12, RunBattleSetup_CommandMenu_MoveBattleCommandCursor, RunBattleSetup_ItemCommand_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_MoveBattleCommandCursor)
 ; reads: wJoypadPressedRepeat, wCommandCursor, wCommandPageCount, wCommandCursorMax, wFrameCounterLo, wListLastPageSize
 ; writes: wFrameCounterLo, wCommandCursor
@@ -5576,7 +5576,7 @@ Func_031_60CC:: ; address name
     pop hl
     ret
 
-; clears wC46C and writes five consecutive tile numbers starting at Data_031_6102[A] to HL (E-0122)
+; clears wMenuSubState and writes five consecutive tile numbers starting at Data_031_6102[A] to HL (E-0122)
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_CommandMenu_MoveBattleCommandCursor, RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31)
 ; writes: wMenuSubState
 WriteFiveTilesFromTable6102::
@@ -5663,7 +5663,7 @@ Func_031_6105:: ; address name
     ld [wCommandCursor], a
     ret
 
-; shows the four skill names (category 4) of page wCFD5 of monster wCFD4's skills (wD989 + 16 * wCFD4) in the four tile rows; $FF shows string 0 (E-0121)
+; shows the four skill names (category 4) of page wCommandCursor of monster wCommandMonster's skills (wBattleSkills + 16 * wCommandMonster) in the four tile rows; $FF shows string 0 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_CommandMenu_ClearBit6AndCursorEntryTile_Bank31, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10)
 ; reads: wCommandMonster, wCommandCursor
 ; writes: wStringCategory, wBattleArg2, wBattleArg3
@@ -5836,7 +5836,7 @@ Func_031_6245:: ; address name
     pop af
     ret
 
-; shows the four item names of inventory page wCFD5 (category 5) in the four tile rows of ShowStringAAtTiles16D0 ... 2080; an empty slot ($FF) shows string 0 (E-0120)
+; shows the four item names of inventory page wCommandCursor (category 5) in the four tile rows of ShowStringAAtTiles16D0 ... 2080; an empty slot ($FF) shows string 0 (E-0120)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_ItemCommand_ClearBit6AndCursorEntryTile_Bank31, RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor
 ; writes: wStringCategory
@@ -5918,7 +5918,7 @@ Func_031_6288:: ; address name
     call ShowStringBank08AtTilesHL_Bank31
     ret
 
-; wItemId = wInventory[(wCFD5 & $0F) * 4 + (wC471 & 3)], then far-calls LoadItemRecord (E-0118)
+; wItemId = wInventory[(wCommandCursor & $0F) * 4 + (wMenuOption & 3)], then far-calls LoadItemRecord (E-0118)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0F, RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0B, RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_ItemCommand_MoveBattleCommandCursor)
 ; reads: wCommandCursor, wMenuOption
 ; writes: wItemId
@@ -6027,7 +6027,7 @@ Func_031_6331:: ; address name
     call WriteDecimalDigitTiles
     ret
 
-; when wCFD7 is non-zero writes tiles $C5, $E0 + (wCFD5 & 7) + 1, $BE, $E0 + wCFD7 + 1, $C6 at vBGMap0 + $226 (page X of Y) (E-0120)
+; when wCommandPageCount is non-zero writes tiles $C5, $E0 + (wCommandCursor & 7) + 1, $BE, $E0 + wCommandPageCount + 1, $C6 at vBGMap0 + $226 (page X of Y) (E-0120)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12, RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects_Case11, RunBattleSetup_ItemCommand_MoveBattleCommandCursor, RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case01)
 ; reads: wCommandPageCount, wCommandCursor
 DrawInventoryPageIndicator::
@@ -6083,7 +6083,7 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5:: ; 
 Data_031_63C5:: ; address name
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
-; A = value: stores A in wDA43[wCFD4], and also in wDA4B[wCFD4] unless A is 3 (E-0118)
+; A = value: stores A in wSlotTactic[wCommandMonster], and also in wSlotLastTactic[wCommandMonster] unless A is 3 (E-0118)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor)
 ; reads: wCommandMonster
 ; points at: wSlotTactic, wSlotLastTactic
@@ -6105,7 +6105,7 @@ Func_031_63CD:: ; address name
     ld [hl], a
     ret
 
-; wRecordBuffer = the skill at wD989 + 16 * wCFD4 + 2 * (4 * (wCFD5 & 1) + (wC46E & 3)), wCFED = 0, then far-calls LoadSkillRecord (E-0120) (the same 48 bytes appear in 2 banks)
+; wRecordBuffer = the skill at wBattleSkills + 16 * wCommandMonster + 2 * (4 * (wCommandCursor & 1) + (wMenuCursor & 3)), wRecordBuffer + $1 = 0, then far-calls LoadSkillRecord (E-0120) (the same 48 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12)
 ; reads: wMenuCursor, wCommandCursor, wCommandMonster
 ; writes: wRecordBuffer
@@ -6133,7 +6133,7 @@ Func_031_63ED:: ; address name
     farcall LoadSkillRecord
     ret
 
-; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
+; side base = ((wLinkRole << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12, RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31)
 ; reads: wLinkRole
 CountPresentFoesOfLinkRoleSide_Bank31::
@@ -6159,7 +6159,7 @@ Func_031_641D:: ; address name
     jr nz, .loop
     ret
 
-; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
+; side base = (wLinkRole << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12)
 ; reads: wLinkRole
 CountPresentSlotsOfLinkRoleSide_Bank31::
@@ -7006,7 +7006,7 @@ Jump_031_6851:: ; address name
     ld [wBattleArg0], a
     ret
 
-; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of record C, capped at 9,999,999 ($98967F) (E-0125)
+; adds the 24-bit wBattleExpAward-wBattleExpAward + $2 to the 3-byte field $58 of record C, capped at 9,999,999 ($98967F) (E-0125)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_AddExpToRecordCCapped)
 ; reads: wBattleExpAward
 AddExpToRecordCCapped::
@@ -7293,7 +7293,7 @@ Jump_031_6A0A:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; record wD868: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
+; record wBattleArg0: level (field $56) += 1 and the gains wLevelUpGains-wLevelUpGains + $5 are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0, wLevelUpGains
 ApplyLevelUpToRecordBattleArg0::
@@ -7363,7 +7363,7 @@ Func_031_6A8B:: ; address name
     ld [hl], a
     ret
 
-; for record wD868: if field $56 (level) >= field $57, begins showing string $0A of category 5 (BeginStringDisplay_Bank2F) (E-0122)
+; for record wBattleArg0: if field $56 (level) >= field $57, begins showing string $0A of category 5 (BeginStringDisplay_Bank2F) (E-0122)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory
@@ -7382,7 +7382,7 @@ Func_031_6A92:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
-; copies the 8 bytes at wD09D to the skill list (field $34) of record wD868 (E-0122)
+; copies the 8 bytes at wWorkBuf to the skill list (field $34) of record wBattleArg0 (E-0122)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0
 ; points at: wWorkBuf
@@ -7449,7 +7449,7 @@ Jump_031_6AC2:: ; address name
     inc [hl]
     ret
 
-; divides the 24-bit wDA6B-wDA6D by 20, 15 or 10 for wC7C7 = 0, 1 or other (E-0124)
+; divides the 24-bit wBattleExpAward-wBattleExpAward + $2 by 20, 15 or 10 for wFarmLevel = 0, 1 or other (E-0124)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_AddExpToRecordHLCapped)
 ; reads: wBattleExpAward, wFarmLevel
 ; writes: wBattleExpAward
@@ -7486,7 +7486,7 @@ Func_031_6AFE:: ; address name
     ld [wBattleExpAward + $2], a
     ret
 
-; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of the record at HL, capped at 9,999,999 ($98967F) (E-0125)
+; adds the 24-bit wBattleExpAward-wBattleExpAward + $2 to the 3-byte field $58 of the record at HL, capped at 9,999,999 ($98967F) (E-0125)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_AddExpToRecordHLCapped)
 ; reads: wBattleExpAward
 AddExpToRecordHLCapped::
@@ -7607,7 +7607,7 @@ Jump_031_6BAC:: ; address name
     dec [hl]
     ret
 
-; record wD869: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
+; record wBattleArg1: level (field $56) += 1 and the gains wLevelUpGains-wLevelUpGains + $5 are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wLevelUpGains
 ApplyLevelUpToRecordBattleArg1::
@@ -7677,7 +7677,7 @@ Func_031_6C28:: ; address name
     ld [hl], a
     ret
 
-; for SRAM record wD869: field $5B = word field $5D, field $5F = word field $61, field $55 = 0 (E-0121)
+; for SRAM record wBattleArg1: field $5B = word field $5D, field $5F = word field $61, field $55 = 0 (E-0121)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1
 CopyRecordFields5DTo5BAnd61To5F::
@@ -7937,7 +7937,7 @@ Func_031_6D28:: ; address name
     ld [rRAMG], a
     ret
 
-; copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)
+; copies 10 bytes from HL to wTextBuf0 and appends a $F0 terminator (E-0122)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0)
 ; points at: wTextBuf0
 CopyTenByteNameToTextBuf0::
@@ -7955,7 +7955,7 @@ Func_031_6D87:: ; address name
     ld [de], a
     ret
 
-; writes [HL + $4B] + 1 to wC140 and wD095-wD09A to wC150-wC164 as decimal strings (E-0121)
+; writes [HL + $4B] + 1 to wTextBuf1 and wLevelUpGains-wLevelUpGains + $5 to wTextBuf2-wTextBuf3 + $4 as decimal strings (E-0121)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0)
 ; reads: wLevelUpGains
 ; points at: wTextBuf1, wTextBuf2, wTextBuf3
@@ -8003,7 +8003,7 @@ Func_031_6DDD:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
-; with SRAM enabled runs Func_031_6E18 for each of the 30 records ($A5 bytes from sA000) whose first byte is non-zero (E-0124)
+; with SRAM enabled runs Func_031_6E18 for each of the 30 records ($A5 bytes from sRecords) whose first byte is non-zero (E-0124)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case03_FindNewlyLearnableSkills)
 ; writes: rRAMG, rRAMB
 ; points at: sRecords
@@ -8517,7 +8517,7 @@ RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heur
 Data_031_70FD:: ; address name
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
-; shows the name (category 9) of skill wD09D[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wC39E (E-0128)
+; shows the name (category 9) of skill wWorkBuf[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wWindowTileBuffer + $9E (E-0128)
 ; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor, wMenuState, wRecordBuffer, wBattleArg0, wRecordBufferData
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wRecordBuffer, rRAMG, ...
@@ -8597,7 +8597,7 @@ Func_031_7105:: ; address name
     ld [wTextWindowTileHi], a
     ret
 
-; runs Func_031_7105, then writes the three bytes at wC39E to vBGMap0 + $206 (E-0122)
+; runs Func_031_7105, then writes the three bytes at wWindowTileBuffer + $9E to vBGMap0 + $206 (E-0122)
 ; 2 call sites from 1 routine (e.g. RunBattleEndStep4SubSteps_MoveBattleCommandCursor)
 DrawWC39EThreeTilesAtBGMap206::
 Func_031_719E:: ; address name
@@ -8614,7 +8614,7 @@ Func_031_719E:: ; address name
     call WriteVRAMByte
     ret
 
-; writes tile $E1 + (wCFD5 & $0F) at vBGMap0 + $10F (E-0115)
+; writes tile $E1 + (wCommandCursor & $0F) at vBGMap0 + $10F (E-0115)
 ; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor
 DrawCommandCursorPageNumber::
@@ -8626,7 +8626,7 @@ Func_031_71B6:: ; address name
     call WriteVRAMByte
     ret
 
-; when every sound channel slot flag is $FF (all idle), decrements wD2CE (E-0121)
+; when every sound channel slot flag is $FF (all idle), decrements wBattleEndTimer (E-0121)
 ; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle)
 ; reads: wSoundChannelSlots, wBattleEndTimer
 ; writes: wBattleEndTimer
@@ -8710,7 +8710,7 @@ Func_031_71F5:: ; address name
     jr nz, .loop3
     ret
 
-; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
+; Fills the $160 bytes at wScreenTileBuffer + $E0 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
 ; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink, ...)
 FillWC278WithC3_Bank31::
 Func_031_722A:: ; address name
@@ -8792,7 +8792,7 @@ Func_031_7239:: ; address name
     ret
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
-; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
+; picks record wBattlePartyCount - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
 ; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 CopyRectRecordForBattlePartyCount_Bank31::
@@ -8807,7 +8807,7 @@ Func_031_72AC:: ; address name
     call CopyRectToStride32_Bank31
     ret
 
-; E-0221 (C1: CopyRectRecordForBattlePartyCount_Bank31 reads word wD88F - 1 of $72C3 and copies that record into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31); three records, for 1-3 party monsters).
+; E-0221 (C1: CopyRectRecordForBattlePartyCount_Bank31 reads word wBattlePartyCount - 1 of $72C3 and copies that record into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31); three records, for 1-3 party monsters).
 ; record: rectangle record for this party count
 PartyCountRects::
 Data_031_72C3:: ; address name
@@ -8822,7 +8822,7 @@ ClearAndLayoutTileBlocksForBattleFoeCount::
 Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
-; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
+; wBattleFoeCount = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wScreenTileBuffer + $E0 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
 ; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07, ...)
 ; reads: wBattleFoeCount
 LayoutTileBlocksForBattleFoeCount::
@@ -8890,7 +8890,7 @@ LayoutTileBlocksForBattleFoeCount_Data_731D:: ; heuristic: pointer load in the s
 Data_031_731D:: ; address name
     db $82, $C2, $7F, $C2
 
-; on CGB loads the picture attribute blocks for one, two or three battle monsters (wD960, or wBattleMonsterId when bit 1 of wC57F is set) at vBGMap0 + $E1-$ED (E-0125)
+; on CGB loads the picture attribute blocks for one, two or three battle monsters (wBattlePictureIds, or wBattleMonsterId when bit 1 of wLinkRole is set) at vBGMap0 + $E1-$ED (E-0125)
 ; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
 ; reads: wIsCGB, wLinkRole, wBattleFoeCount
 ; points at: wBattlePictureIds, wBattleMonsterId
@@ -8946,7 +8946,7 @@ Func_031_7321:: ; address name
     call LoadMonsterPictureAttributesFromDE
     ret
 
-; hFFC6 = C (palette number), DE = the monster id word stored at [DE], then LoadMonsterPictureAttributes (HL = BG map address from the caller); DE kept (E-0110)
+; hTemp0 = C (palette number), DE = the monster id word stored at [DE], then LoadMonsterPictureAttributes (HL = BG map address from the caller); DE kept (E-0110)
 ; 6 call sites from 1 routine (e.g. LoadBattleMonsterPictureAttributes)
 ; writes: hTemp0
 LoadMonsterPictureAttributesFromDE::
@@ -8965,7 +8965,7 @@ Func_031_7379:: ; address name
     pop de
     ret
 
-; draws the HP, MP and status of the first one, two or three slots (by wD88F) (E-0122)
+; draws the HP, MP and status of the first one, two or three slots (by wBattlePartyCount) (E-0122)
 ; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 DrawPartySlotStatusPanels::
@@ -8981,7 +8981,7 @@ Func_031_7389:: ; address name
     call DrawSlotPanelStats2
     ret
 
-; draws HP, MP and status marks of slot 0 (slot 4 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; draws HP, MP and status marks of slot 0 (slot 4 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. DrawPartySlotStatusPanels)
 ; reads: wLinkMode, wLinkRole
 DrawSlotPanelStats0::
@@ -9003,7 +9003,7 @@ Func_031_739F:: ; address name
     call DrawSlotStatusMarks
     ret
 
-; draws HP, MP and status marks of slot 1 (slot 5 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; draws HP, MP and status marks of slot 1 (slot 5 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. DrawPartySlotStatusPanels)
 ; reads: wLinkMode, wLinkRole
 DrawSlotPanelStats1::
@@ -9025,7 +9025,7 @@ Func_031_73BE:: ; address name
     call DrawSlotStatusMarks
     ret
 
-; draws HP, MP and status marks of slot 2 (slot 6 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; draws HP, MP and status marks of slot 2 (slot 6 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. DrawPartySlotStatusPanels)
 ; reads: wLinkMode, wLinkRole
 DrawSlotPanelStats2::
@@ -9047,7 +9047,7 @@ Func_031_73DD:: ; address name
     call DrawSlotStatusMarks
     ret
 
-; copies the panels of the first one, two or three slots (by wD88F) to VRAM (E-0122)
+; copies the panels of the first one, two or three slots (by wBattlePartyCount) to VRAM (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattlePartyCount
 CopyPartySlotPanelsToVRAM:: ; heuristic: follows a terminator; C0
@@ -9063,7 +9063,7 @@ Func_031_73FC:: ; address name
     call CopySlotPanel2ToVRAM
     ret
 
-; builds and copies the panel row of slot 0 (slot 4 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; builds and copies the panel row of slot 0 (slot 4 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. CopyPartySlotPanelsToVRAM)
 ; reads: wLinkMode, wLinkRole
 CopySlotPanel0ToVRAM::
@@ -9085,7 +9085,7 @@ Func_031_7412:: ; address name
     call CopySlotPanelRowToVRAM
     ret
 
-; builds and copies the panel row of slot 1 (slot 5 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; builds and copies the panel row of slot 1 (slot 5 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. CopyPartySlotPanelsToVRAM)
 ; reads: wLinkMode, wLinkRole
 CopySlotPanel1ToVRAM::
@@ -9107,7 +9107,7 @@ Func_031_7431:: ; address name
     call CopySlotPanelRowToVRAM
     ret
 
-; builds and copies the panel row of slot 2 (slot 6 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)
+; builds and copies the panel row of slot 2 (slot 6 when wLinkMode is 1 and bit 1 of wLinkRole is set) (E-0122)
 ; 1 call site from 1 routine (e.g. CopyPartySlotPanelsToVRAM)
 ; reads: wLinkMode, wLinkRole
 CopySlotPanel2ToVRAM::
@@ -9137,7 +9137,7 @@ Func_031_746F:: ; address name
     farcall CopyRectRecord7345ToScreenBuffer
     ret
 
-; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
+; copies a 20 x 5 rectangle from wWindowTileBuffer + $38 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
 ; 13 call sites from 13 routines (e.g. RunBattleSetup_FleeCommand_ShowNoFleeingFromThis, RunBattleSetup_FleeCommand_ShowRetireNow, RunBattleSetup_FleeCommand_ClearWindowAndCopyRect7345Far, RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07, ...)
 DrawWC338RowsToBGMapRow13::
 Func_031_7479:: ; address name
@@ -9170,7 +9170,7 @@ Func_031_7499:: ; address name
     farcall CopyRectRecord73F7ToScreenBuffer
     ret
 
-; copies a 12 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM (E-0110)
+; copies a 12 x 11 rectangle from wScreenTileBuffer + $E0 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM (E-0110)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01)
 DrawWC278Rect12x11ToBGMapRow7::
 Func_031_74A0:: ; address name
@@ -9187,7 +9187,7 @@ Func_031_74AD:: ; address name
     farcall CopyRectRecord755FToScreenBuffer
     ret
 
-; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1) (E-0078)
+; copies an 8 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1) (E-0078)
 ; 5 call sites from 5 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case07, ...)
 DrawWC2B8LeftToBGMapRow9_74B4::
 Func_031_74B4:: ; address name
@@ -9204,7 +9204,7 @@ Func_031_74C1:: ; address name
     farcall CopyRectRecord7600ToScreenBuffer
     ret
 
-; copies a 20 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM, then wD868 = 1 (E-0077)
+; copies a 20 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM, then wBattleArg0 = 1 (E-0077)
 ; 6 call sites from 5 routines (e.g. RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9AndStep, RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case04, RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9, RunBattleSetup_ItemCommand_MoveBattleCommandCursor, ...)
 ; writes: wBattleArg0
 DrawWC2B8RowsToBGMapRow9::
@@ -9224,7 +9224,7 @@ Func_031_74DA:: ; address name
     farcall CopyRectRecord76ACToScreenBuffer
     ret
 
-; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
+; copies an 8 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
 ; 5 call sites from 5 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_Case19, RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0F, RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0B, ...)
 DrawWC2B8LeftToBGMapRow9::
 Func_031_74E1:: ; address name
@@ -9241,7 +9241,7 @@ Func_031_74EE:: ; address name
     farcall CopyRectRecord76F8ToScreenBuffer
     ret
 
-; copies an 8 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0115)
+; copies an 8 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0115)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11_Case07, RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11)
 DrawWC2F8Rect8x7ToBGMapRow11::
 Func_031_74F5:: ; address name
@@ -9258,7 +9258,7 @@ Func_031_7502:: ; address name
     farcall CopyRectRecords7600And7734ToScreenBuffer
     ret
 
-; copies a 7 x 1 rectangle from wC2A4 to vBGMap0 + $10C (row 8, column 12) and a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), both with CopyRect32StrideToVRAM (E-0110)
+; copies a 7 x 1 rectangle from wScreenTileBuffer + $10C to vBGMap0 + $10C (row 8, column 12) and a 20 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (row 9), both with CopyRect32StrideToVRAM (E-0110)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A, RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31AndStep, RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects, RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects_Case11)
 DrawWC2A4AndWC2B8Rects::
 Func_031_7509:: ; address name
@@ -9279,7 +9279,7 @@ Func_031_7522:: ; address name
     farcall CopyRectRecord7750ToScreenBuffer
     ret
 
-; copies a 14 x 7 rectangle from wC2F8 (rows 32 bytes apart) to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0078)
+; copies a 14 x 7 rectangle from wScreenTileBuffer + $160 (rows 32 bytes apart) to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0078)
 ; 5 call sites from 5 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11, RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case1D, RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0F, RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0D, ...)
 DrawWC2F8RectToBGMapRow11::
 Func_031_7529:: ; address name
@@ -9289,7 +9289,7 @@ Func_031_7529:: ; address name
     call CopyRect32StrideToVRAM
     ret
 
-; copies a 20 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7), falling into CopyRect32StrideToVRAM (E-0075)
+; copies a 20 x 11 rectangle from wScreenTileBuffer + $E0 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7), falling into CopyRect32StrideToVRAM (E-0075)
 ; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31, ...)
 DrawWC278RowsToBGMapRow7::
 Func_031_7536:: ; address name
@@ -9408,7 +9408,7 @@ Data_031_761E:: ; address name
     db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7 ; row 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
-; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
+; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set; slots 3 and 7 never); with wLinkMode = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
 ; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleStatus
@@ -9617,7 +9617,7 @@ DrawSlotStatusMarks_Data:: ; heuristic: pointer load in the same bank (bank assu
 Data_031_77B3:: ; address name
     db $3D, $C2, $43, $C2, $49, $C2
 
-; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
+; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set; slots 3 and 7 never); with wLinkMode = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
 ; 7 call sites from 6 routines (e.g. BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wScreenTileBuffer
@@ -9673,7 +9673,7 @@ Func_031_77B9:: ; address name
 .return:
     ret
 
-; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: writes the slot's HP (wBattleHP) as decimal digit tiles (HLToDecimalDigits) into wScreenTileBuffer at the position from Data_031_7AC8 (E-0111)
+; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set; slots 3 and 7 never); with wLinkMode = 2 the bank-$A0 version is far-called instead: writes the slot's HP (wBattleHP) as decimal digit tiles (HLToDecimalDigits) into wScreenTileBuffer at the position from Data_031_7AC8 (E-0111)
 ; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, RedrawChangedSlotPanels, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleHP, wScreenTileBuffer
@@ -9732,7 +9732,7 @@ Func_031_7806:: ; address name
     pop bc
     ret
 
-; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: writes the slot's MP (wBattleMP) as decimal digit tiles into wScreenTileBuffer at the slot's position (E-0111)
+; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set; slots 3 and 7 never); with wLinkMode = 2 the bank-$A0 version is far-called instead: writes the slot's MP (wBattleMP) as decimal digit tiles into wScreenTileBuffer at the slot's position (E-0111)
 ; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, RedrawChangedSlotPanels, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleMP, wScreenTileBuffer
@@ -10017,7 +10017,7 @@ Func_031_79B6:: ; address name
 .return:
     ret
 
-; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
+; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 7 call sites from 6 routines (e.g. RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31, RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -10054,7 +10054,7 @@ Func_031_7A02:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
+; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
 ; 7 call sites from 7 routines (e.g. RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31, ShowStringAAtTiles2080, ShowStringAAtTiles17F0, ShowStringAAtTiles1760, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -10217,7 +10217,7 @@ Func_031_7AFE:: ; address name
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank31_Skip
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank31:: ; configured code entry (E-0212); C0
@@ -10242,7 +10242,7 @@ Func_031_7B17:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank31:: ; heuristic: follows a terminator; C0
@@ -10263,7 +10263,7 @@ Func_031_7B1E:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank31:: ; heuristic: follows a terminator; C0
@@ -10313,7 +10313,7 @@ Data_031_7B69:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
@@ -10325,7 +10325,7 @@ Func_031_7B70:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
@@ -10337,7 +10337,7 @@ Func_031_7B7D:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
@@ -10349,7 +10349,7 @@ Func_031_7B8A:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank31:: ; configured code entry (E-0212); C0
@@ -10408,7 +10408,7 @@ Func_031_7B97:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_FleeCommand_Case09_CheckSlotStatusBlockWide_Bank31)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank31::
@@ -10438,7 +10438,7 @@ Func_031_7BEE:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank31:: ; heuristic: follows a terminator; C0

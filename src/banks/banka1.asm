@@ -60,7 +60,7 @@ Func_0A1_4038:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
@@ -81,7 +81,7 @@ Func_0A1_403F:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
@@ -131,7 +131,7 @@ Data_0A1_408A:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
@@ -143,7 +143,7 @@ Func_0A1_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
@@ -155,7 +155,7 @@ Func_0A1_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
@@ -167,7 +167,7 @@ Func_0A1_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA1:: ; configured code entry (E-0205); C0
@@ -226,7 +226,7 @@ Func_0A1_40B8:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankA1:: ; configured code entry (E-0205); C0
@@ -256,7 +256,7 @@ Func_0A1_410F:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA1:: ; configured code entry (E-0205); C0
@@ -770,7 +770,7 @@ Func_0A1_43A1:: ; address name
     pop de
     ret
 
-; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wCE93 (E-0125)
+; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wVisitedScreens (E-0125)
 ; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY, RunMenuStateMenuState_InitSoundHardware)
 ; reads: wMapType, hMapScreenY, hMapScreenX
 ; points at: wVisitedScreens
@@ -879,7 +879,7 @@ Func_0A1_4474:: ; address name
     ld [hl], a
     ret
 
-; marks the 5 x 5 map screens around the current one (within wCD0D x wCD0E) as visited (E-0127)
+; marks the 5 x 5 map screens around the current one (within wKeyWorldWidth x wKeyWorldHeight) as visited (E-0127)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer)
 ; reads: hMapScreenX, hMapScreenY, wKeyWorldHeight, wKeyWorldWidth, hTemp0, hTemp1
 ; writes: hTemp0, hMapScreenX, hTemp1, hMapScreenY
@@ -940,7 +940,7 @@ Func_0A1_44C9:: ; address name
     ldh [hMapScreenY], a
     ret
 
-; runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
+; runs the routine for wGameMode2State & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunGameMode2State)
 ; reads: wGameMode2State
 RunGameMode2State::
@@ -1301,7 +1301,7 @@ Func_0A1_46DF:: ; address name
     ldh [hMapScreenX], a
     ret
 
-; runs the routine for wCC44 & 7 (jump table) (E-0122)
+; runs the routine for wMapType & 7 (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01_RunGameMode2MapTypeState)
 ; reads: wMapType
 RunGameMode2MapTypeState::
@@ -1883,7 +1883,7 @@ Func_0A1_4A77:: ; address name
     ldh [hPlayerY], a
     ret
 
-; wC945 = hFFCB, wC946 = hFFCD, wC947 = hFFCC, wC948 = hFFCE (E-0118)
+; wCursorCellX = hTemp5, wCursorCellY = hTemp7, wCursorCellW = hTemp6, wCursorCellH = hTemp8 (E-0118)
 ; 2 call sites from 2 routines (e.g. RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX, RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01)
 ; reads: hTemp5, hTemp7, hTemp6, hTemp8
 ; writes: wCursorCellX, wCursorCellY, wCursorCellW, wCursorCellH
@@ -3456,7 +3456,7 @@ Func_0A1_5394:: ; address name
     call DrawCursorSpriteAtTemp1Cell
     ret
 
-; draws metasprite set $26 at X = 8 * (wC945 + 8 * high nibble of hFFC7), Y = 8 * (wC946 + 8 * low nibble) (E-0121)
+; draws metasprite set $26 at X = 8 * (wCursorCellX + 8 * high nibble of hTemp1), Y = 8 * (wCursorCellY + 8 * low nibble) (E-0121)
 ; 4 call sites from 1 routine (e.g. RunGameMode2State_Case02_WriteTemp1)
 ; reads: hTemp1, wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
@@ -3658,7 +3658,7 @@ Jump_0A1_553D:: ; address name
     call DrawMetaSpriteSet08
     ret
 
-; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
+; hSpriteOriginX = 8 * wCursorCellX + A + 6 (E-0122)
 ; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellX
 ; writes: hSpriteOriginX
@@ -3674,7 +3674,7 @@ Func_0A1_5581:: ; address name
     ldh [hSpriteOriginX], a
     ret
 
-; hSpriteOriginY = 8 * wC946 + A + 6; the next entry dispatches on wCC44 & 7 (E-0124)
+; hSpriteOriginY = 8 * wCursorCellY + A + 6; the next entry dispatches on wMapType & 7 (E-0124)
 ; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellY
 ; writes: hSpriteOriginY
@@ -3767,7 +3767,7 @@ Jump_0A1_55E9:: ; address name
     call SetSpriteXYFromCellA
     ret
 
-; hSpriteOriginX = 8 * wC945 + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wC946 + (A & $0F) * 8 + 6 (E-0124)
+; hSpriteOriginX = 8 * wCursorCellX + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wCursorCellY + (A & $0F) * 8 + 6 (E-0124)
 ; 4 call sites from 3 routines (e.g. SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA)
 ; reads: wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
@@ -4035,7 +4035,7 @@ Func_0A1_5719:: ; address name
     pop de
     ret
 
-; row = 9 - C/2 (wC946), column = 10 - B/2 (wC945); HL = vBGMap0 + 32 * row + column (E-0121)
+; row = 9 - C/2 (wCursorCellY), column = 10 - B/2 (wCursorCellX); HL = vBGMap0 + 32 * row + column (E-0121)
 ; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01)
 ; writes: wCursorCellY, wCursorCellX
 CenteredBGMapOriginForSizeBC::
@@ -4182,7 +4182,7 @@ Data_0A1_5808:: ; address name
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 10
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 11
 
-; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
+; wFieldInitStage = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_ToEnterGameMode1WithDefaultPalettes)
 ; writes: wFieldInitStage, wDataBankSave, wGameMode
 ; points at: wDMGPaletteBGP
@@ -4204,7 +4204,7 @@ Func_0A1_5898:: ; address name
     ld [wGameMode], a
     ret
 
-; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wCE93, else 0 (E-0125)
+; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wVisitedScreens, else 0 (E-0125)
 ; 5 call sites from 5 routines (e.g. RunGameMode2State_Case02_Sub01_Sub04_Multiply8, RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc, RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01, RunGameMode2State_Case02_Sub05_IsMapScreenAVisited, ...)
 ; reads: hTemp0
 ; writes: hTemp0

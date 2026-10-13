@@ -1,7 +1,7 @@
 SECTION "Bank 30", ROMX[$4000], BANK[$30]
     db $30
 
-; battle fight step 2: returns while a message is being drawn (wC52B); otherwise one of 7 sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the command menu loop follows
+; battle fight step 2: returns while a message is being drawn (wTextFlags); otherwise one of 7 sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the command menu loop follows
 ; 1 call site from 1 routine (e.g. BattleFight_Step2)
 ; reads: wTextFlags, wBattleSubPhase
 RunBattleCommandEntry::
@@ -191,7 +191,7 @@ Jump_030_40E7:: ; address name
     inc [hl]
     ret
 
-; uses the preset target when the side is player-controlled, bit 7 of its wDAD8 byte is clear and wBattleTargetChoice is set; otherwise ChooseActionTarget; stores the result (E-0125)
+; uses the preset target when the side is player-controlled, bit 7 of its wSideControl byte is clear and wBattleTargetChoice is set; otherwise ChooseActionTarget; stores the result (E-0125)
 ; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_ChooseTargetForActor, ActionEffect_Chance, RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty, RunMultiHitCounter)
 ; reads: wLinkMode, wMenuState, wBattleActor
 ; points at: wSideControl, wBattleTargetChoice, wCommandBytesE9
@@ -798,7 +798,7 @@ Jump_030_441D:: ; address name
 .return:
     ret
 
-; A = 0 when the actor's wD93F word is below $33, 2 when below $3B6, otherwise 3 (E-0122)
+; A = 0 when the actor's wBattleWordArray3F word is below $33, 2 when below $3B6, otherwise 3 (E-0122)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_AddAx9ToHL)
 ; reads: wBattleActor
 ; points at: wBattleWordArray3F
@@ -864,7 +864,7 @@ Jump_030_451F:: ; address name
     ld [hl], a
     ret
 
-; the word wD868 += Data_030_5587[wPersonalityIndex * 4 + (wDA43[actor] & 3)] (E-0120)
+; the word wBattleArg0 += Data_030_5587[wPersonalityIndex * 4 + (wSlotTactic[actor] & 3)] (E-0120)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_AddAx9ToHL)
 ; reads: wPersonalityIndex
 ; points at: wBattleArg0
@@ -888,7 +888,7 @@ Func_030_4536:: ; address name
     ld [hl], a
     ret
 
-; adds the actor's wD93F word / 16 to the word wD86A (E-0122)
+; adds the actor's wBattleWordArray3F word / 16 to the word wBattleArg2 (E-0122)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_AddAx9ToHL)
 ; reads: wBattleActor, wBattleArg2, wBattleArg3
 ; writes: wBattleArg2, wBattleArg3
@@ -910,7 +910,7 @@ Func_030_4558:: ; address name
     rr l
     jr AddRandom0To63ToBattleArg2_ReadBattleArg2
 
-; adds a random value 0-63 (wC5E7 & $3F) to the word wD86A (E-0122)
+; adds a random value 0-63 (wRandomLo & $3F) to the word wBattleArg2 (E-0122)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_AddAx9ToHL)
 ; reads: wRandomLo, wBattleArg2, wBattleArg3
 ; writes: wBattleArg2, wBattleArg3
@@ -933,7 +933,7 @@ Jump_030_4586:: ; address name
     ld [wBattleArg3], a
     ret
 
-; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
+; when the actor has no forced action and bit 7 of its wSideControl byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case01_WriteRandomLoAndRandomHiEtc)
 ; reads: wBattleActor
 ; writes: wAIFlag
@@ -978,7 +978,7 @@ Data_030_45D0:: ; address name
     dw ScoreActionsWithAIScoreTableA ; id 3
     dw UseAIScoreTableB ; id 4
 
-; clears wD2AD ($14 bytes), sets wDA3C-wDA42 = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wD871 = 0 (E-0124)
+; clears wAIWeights ($14 bytes), sets wAIChoiceWeights-wAIChoiceIndex = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wLoadSlot = 0 (E-0124)
 ; 1 call site from 1 routine (e.g. AIChooseActionResolveStep)
 ; writes: wAIChoiceWeights, wAIChoiceOrder, wAIChoiceIndex, wLoadSlot
 ; points at: wAIWeights
@@ -1009,7 +1009,7 @@ Func_030_45DA:: ; address name
     ld [wLoadSlot], a
     ret
 
-; for player-side actors: with battle command 1 adds $2D to wDA3C[actor's wDA43 mode] (unless 3), otherwise $14 to wDA3C[wDA4B & 3] (E-0127)
+; for player-side actors: with battle command 1 adds $2D to wAIChoiceWeights[actor's wSlotTactic mode] (unless 3), otherwise $14 to wAIChoiceWeights[wSlotLastTactic & 3] (E-0127)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wLinkMode, wBattleActor, wMenuState, wCommandBytesE9
 ; points at: wAIChoiceWeights, wSlotLastTactic, wCommandBytesE9
@@ -1072,7 +1072,7 @@ Func_030_4617:: ; address name
 .return:
     ret
 
-; for the actor's three personality bytes (Hi, Mid, Lo) adds value / 10 to wDA3C + 0, 1, 2 (Func_030_5428) (E-0122)
+; for the actor's three personality bytes (Hi, Mid, Lo) adds value / 10 to wAIChoiceWeights + 0, 1, 2 (Func_030_5428) (E-0122)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wBattleActor
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wAIChoiceWeights
@@ -1087,7 +1087,7 @@ Func_030_4688:: ; address name
     ld hl, wSlotPersonalityLo
     ld a, $02
 
-; B = [HL + actor] / 10, then Func_030_5428 on wDA3C + A with E = B (E-0122)
+; B = [HL + actor] / 10, then Func_030_5428 on wAIChoiceWeights + A with E = B (E-0122)
 ; 2 call sites from 1 routine (e.g. AddActorPersonalityTensToAIChoiceWeights)
 ; reads: wBattleActor
 ; points at: wAIChoiceWeights
@@ -1106,7 +1106,7 @@ Func_030_469D:: ; address name
     call AddSignedEToByteAtHLClamped
     ret
 
-; adds AI weights for the actor's status (wD80D bits) and command mode, and for allies below a sixth of max HP in AI modes 3 and 4 (E-0130)
+; adds AI weights for the actor's status (wBattleStatus1 bits) and command mode, and for allies below a sixth of max HP in AI modes 3 and 4 (E-0130)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wBattleActor, wLinkMode, wMenuState, wCommandBytesE9, wBattleTurn
 ; points at: wBattleStatus1, wAIChoiceWeights, wSlotAIMode, wBattleSkills, wCommandBytesE9
@@ -1269,7 +1269,7 @@ Func_030_478B:: ; address name
     or a, a
     ret
 
-; for player-controlled slots adds random 0-15 to wDA3C-wDA3E; for AI slots adds weights by personality band (AddRandomWeightByValueBand) (E-0125)
+; for player-controlled slots adds random 0-15 to wAIChoiceWeights-wAIChoiceWeights + $2; for AI slots adds weights by personality band (AddRandomWeightByValueBand) (E-0125)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wLinkMode, wBattleActor, wRandomLo
 ; points at: wAIChoiceWeights, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
@@ -1346,7 +1346,7 @@ Func_030_480E:: ; address name
     call AddSignedEToByteAtHLClamped
     ret
 
-; sorts wDA3C-wDA3E in descending order (ties broken by the random bits in wC5E7/8), swapping the matching wDA3F-wDA41 entries (E-0128)
+; sorts wAIChoiceWeights-wAIChoiceWeights + $2 in descending order (ties broken by the random bits in wRandomLo/8), swapping the matching wAIChoiceOrder-wAIChoiceOrder + $2 entries (E-0128)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_AddCommandWeightToAIChoiceWeights)
 ; reads: wRandomLo, wRandomHi, wAIChoiceOrder, wAIChoiceWeights, wBattleActor
 ; writes: wAIChoiceOrder
@@ -1433,7 +1433,7 @@ Func_030_483F:: ; address name
     ld d, a
     ld e, $19
 
-; for each of the actor's skills equal to D adds weight through Func_030_48F3 to wD2AD[index]; for D other than 2 also to wD2BD[D - 1] (E-0125)
+; for each of the actor's skills equal to D adds weight through Func_030_48F3 to wAIWeights[index]; for D other than 2 also to wAIWeights + $10[D - 1] (E-0125)
 ; 1 call site from 1 routine (e.g. SortThreeAIWeightsRandomTies)
 ; reads: wBattleActor
 ; points at: wBattleSkillsPrefix, wAIWeights
@@ -1541,7 +1541,7 @@ Func_030_48F3:: ; address name
     pop de
     ret
 
-; for player-controlled actors in manual mode chooses action 0; otherwise runs the AI routine for the next wDA3C entry (Data_030_4998) and advances wDA42 (E-0125)
+; for player-controlled actors in manual mode chooses action 0; otherwise runs the AI routine for the next wAIChoiceWeights entry (Data_030_4998) and advances wAIChoiceIndex (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wAIChoiceIndex, wLoadSlot
 ; points at: wAIChoiceWeights, wAIChoiceIndex
@@ -1791,7 +1791,7 @@ Func_030_4A58:: ; address name
     ld [wLoadSlot], a
     ret
 
-; wDA6B/wDA6C = AIScoreRoutineTableB, then continues with the scoring loop (E-0122)
+; wBattleExpAward/wBattleExpAward + $1 = AIScoreRoutineTableB, then continues with the scoring loop (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wAIChoiceOrder
 ; writes: wBattleExpAward
@@ -1805,7 +1805,7 @@ Func_030_4AC6:: ; address name
     ld [wBattleExpAward + $1], a
     jr ScoreActionsWithAIScoreTableA_CheckBattleActor
 
-; sets wDA6B/C to AIScoreRoutineTableA; for AI-controlled actors estimates damage, scores the eight skills, attack (0) and $AC into wD2AD, and doubles the weight of the preferred kind (E-0129)
+; sets wBattleExpAward/C to AIScoreRoutineTableA; for AI-controlled actors estimates damage, scores the eight skills, attack (0) and $AC into wAIWeights, and doubles the weight of the preferred kind (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wAIChoiceOrder
 ; writes: wBattleExpAward
@@ -1966,7 +1966,7 @@ ScoreSkillAtHLForAI::
 Func_030_4B9F:: ; address name
     ld a, [hl]
 
-; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wCFF1 bit 0 (in the skill record) is set, clears wDA6E-wDA71 and far-calls the skill's AI scoring routine from the table in wDA6B/wDA6C (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
+; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wRecordBufferData + $3 bit 0 (in the skill record) is set, clears wAISkillScore-wAISkillScore2 + $1 and far-calls the skill's AI scoring routine from the table in wBattleExpAward/wBattleExpAward + $1 (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
 ; 2 call sites from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wRecordBufferData, wBattleExpAward, wAISkillScore, wAISkillScore2
 ; writes: wAISkillScore, wAISkillScore2
@@ -2039,7 +2039,7 @@ Func_030_4BA0:: ; address name
 .return:
     ret
 
-; picks the largest of the ten wD2AD weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
+; picks the largest of the ten wAIWeights weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wRandomLo, wBattleActor, hTemp0
 ; writes: hTemp0
@@ -2109,7 +2109,7 @@ Func_030_4C00:: ; address name
     ld [hl], b
     ret
 
-; for each foe stores (actor ATK - foe DEF / 2) / 2, floored at 0, in wD2C1[foe & 3] (0 for empty slots) (E-0125)
+; for each foe stores (actor ATK - foe DEF / 2) / 2, floored at 0, in wAIDamageEstimates[foe & 3] (0 for empty slots) (E-0125)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
@@ -2165,7 +2165,7 @@ Func_030_4C63:: ; address name
     jr nz, .loop
     ret
 
-; A = skill number: when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to the word at DE and Func_030_4CDB adds a random adjustment; then the skill record is loaded (wRecordBuffer = A, wCFED = 0, LoadSkillRecord); A and DE kept (E-0083)
+; A = skill number: when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to the word at DE and Func_030_4CDB adds a random adjustment; then the skill record is loaded (wRecordBuffer = A, wRecordBuffer + $1 = 0, LoadSkillRecord); A and DE kept (E-0083)
 ; 1 call site from 1 routine (e.g. ScoreSkillForAI)
 ; writes: wRecordBuffer
 AddSkillBaseWeightAndLoadSkill::
@@ -2670,7 +2670,7 @@ Func_030_4FB6:: ; address name
     ld de, $0040
     jr RollSlotTraitLowFlag80_CallAdvanceRandom
 
-; AI trait roll with mask DE = $80: when the actor's wD980 value is below $80 rolls a chance that grows with its distance from $80 (E-0125)
+; AI trait roll with mask DE = $80: when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from $80 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wBattleActor
 ; points at: wSlotTrait, wSlotFlags854
@@ -2914,7 +2914,7 @@ Func_030_50D2:: ; address name
     jr nz, .loop
     ret
 
-; wBattleActor selects the actor; its MP word is at wD8DF + 2 * actor. For each of the 8 skill numbers in wC0A0 it loads the record (LoadSkillRecordPart) and keeps the number only when byte 0 of the record is below that MP word; otherwise it writes $FF to that slot. The comparison is strict: a skill whose cost equals the MP is dropped. Executed on the emulator for MP 0-40 against the ROM's costs (E-0048)
+; wBattleActor selects the actor; its MP word is at wBattleMP + 2 * actor. For each of the 8 skill numbers in wTemp0 it loads the record (LoadSkillRecordPart) and keeps the number only when byte 0 of the record is below that MP word; otherwise it writes $FF to that slot. The comparison is strict: a skill whose cost equals the MP is dropped. Executed on the emulator for MP 0-40 against the ROM's costs (E-0048)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40)
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
@@ -3145,7 +3145,7 @@ Func_030_5209:: ; address name
     ld c, [hl]
     ret
 
-; B = forced action $CD, $CC, $CE or $CF by the actor's status bits (wD80F byte 0 bit 6, byte 1 bit 2, byte 2 bit 4, byte 5 bit 0); Z when none (E-0124)
+; B = forced action $CD, $CC, $CE or $CF by the actor's status bits (wBattleStatus3 byte 0 bit 6, byte 1 bit 2, byte 2 bit 4, byte 5 bit 0); Z when none (E-0124)
 ; 2 call sites from 2 routines (e.g. AIChooseActionResolveStep, RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30)
 ; reads: wBattleActor
 ; points at: wBattleStatus3
@@ -3248,7 +3248,7 @@ Func_030_52B5:: ; address name
     call RunCommandEntryResolveStep_Case01_Sub04_GetActorSlotTacticLow2
     ret
 
-; copies four bytes from HL to hFFC6, negating each when bit 6 of the actor's wDA43 byte is set (CopyByteNegateIfCBit6) (E-0122)
+; copies four bytes from HL to hTemp0, negating each when bit 6 of the actor's wSlotTactic byte is set (CopyByteNegateIfCBit6) (E-0122)
 ; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_WaitLinkMode)
 ; points at: hTemp0
 CopyFourBytesNegatedByActorSlotTactic::
@@ -3394,7 +3394,7 @@ Data_030_53EC:: ; address name
     db $00, $00, $00, $FE ; id 6
     db $00, $00, $00, $FF ; id 7
 
-; A = wDA43[wBattleActor] & 3 (E-0072)
+; A = wSlotTactic[wBattleActor] & 3 (E-0072)
 ; 14 call sites from 13 routines (e.g. ScoreActionsWithAIScoreTableA, AIRunNextChoice, AIPickRandomSkillOfKind3, AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc, ...)
 ; reads: wBattleActor
 ; points at: wSlotTactic
@@ -3445,7 +3445,7 @@ Func_030_5428:: ; address name
     ld [hl], a
     ret
 
-; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wD2CC = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wDA53[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wD2CC = 0 (E-0120)
+; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wAIFlag = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wSlotAIMode[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wAIFlag = 0 (E-0120)
 ; 3 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3, RunDebugState_E0_ChooseActionTargets_Case05_AIChooseActionForActor)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wAIFlag
@@ -3636,7 +3636,7 @@ Func_030_54DA:: ; address name
 .return:
     ret
 
-; advances the random seed; when wC5F8 is set and the random value is below wC5FA, stores wC5F9 as the actor's action choice (E-0122)
+; advances the random seed; when wDebugCursor is set and the random value is below wDebugValue1, stores wDebugValue0 as the actor's action choice (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugCursor, wDebugValue1, wRandomLo, wDebugValue0
 MaybeOverrideActorActionWithDebugValue0:: ; heuristic: follows a terminator; C0
@@ -4365,7 +4365,7 @@ Func_030_5C72:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4386,7 +4386,7 @@ Func_030_5C79:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4428,7 +4428,7 @@ ClearBattleStatusBitsWithMaskD_Bank30_Data:: ; heuristic: pointer load in the sa
 Data_030_5CC4:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
@@ -4440,7 +4440,7 @@ Func_030_5CCB:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
@@ -4452,7 +4452,7 @@ Func_030_5CD8:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank30:: ; heuristic: follows a terminator; C0
@@ -4464,7 +4464,7 @@ Func_030_5CE5:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30, AIChooseActionForActor)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank30::
@@ -4523,7 +4523,7 @@ Func_030_5CF2:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4553,7 +4553,7 @@ Func_030_5D49:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank30:: ; heuristic: follows a terminator; C0

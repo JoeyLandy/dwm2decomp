@@ -296,7 +296,7 @@ Jump_0F2_41C8:: ; address name
     call GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
 ; 1 call site from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGsEgg)
 ; reads: wDataBank
 ; writes: wDataBank
@@ -332,7 +332,7 @@ Func_0F2_41CC:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; clears the default window, wC8CB = 1, wC8CC = 0, hFFB9 = 2, then repeatedly far-calls Func_002_69D0 until wC8CB & 3 = 0 (E-0122)
+; clears the default window, wTextWindowState = 1, wTextWindowStep = 0, hSpriteWindowClipMode = 2, then repeatedly far-calls Func_002_69D0 until wTextWindowState & 3 = 0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
@@ -677,57 +677,57 @@ Data_0F2_43E7:: ; address name
 String_F2_00_00:: ; heuristic: string; C0
 Data_0F2_442F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Hello, how may I", $F1
+    db $EB, "*: Hello, how may I", $F1
     db "serve you?", $F0
 
 String_F2_00_02:: ; heuristic: string; C0
 Data_0F2_444E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Which egg should", $F1
+    db $EB, "*: Which egg should", $F1
     db "I appraise?", $F0
 
 String_F2_00_03:: ; heuristic: string; C0
 Data_0F2_446E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It will cost", $F1
+    db $EB, "*: It will cost", $F1
     db "20G. It that OK?", $F0
 
 String_F2_00_04:: ; heuristic: string; C0
 Data_0F2_448F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " How else may I", $F1
+    db $EB, "*: How else may I", $F1
     db "serve you?", $F0
 
 String_F2_00_05:: ; heuristic: string; C0
 Data_0F2_44AC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Um", $A4, " You don't", $F1
+    db $EB, "*: Um", $A4, " You don't", $F1
     db "have enough gold", $A4, $F7
     db $F0
 
 String_F2_00_06:: ; heuristic: string; C0
 Data_0F2_44CF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Um", $A4, " You don't", $F1
+    db $EB, "*: Um", $A4, " You don't", $F1
     db "have any eggs", $A4, $F7
     db $F0
 
 String_F2_00_07:: ; heuristic: string; C0
 Data_0F2_44EF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Which egg should", $F1
+    db $EB, "*: Which egg should", $F1
     db "I bless?", $F0
 
 String_F2_00_08:: ; heuristic: string; C0
 Data_0F2_450C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It will cost", $F1
+    db $EB, "*: It will cost", $F1
     db $F9, "0G. Is that OK?", $F0
 
 String_F2_00_09:: ; heuristic: string; C0
 Data_0F2_452D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Egg, egg, toss", $F1
+    db $EB, "*: Egg, egg, toss", $F1
     db "and scramble", $A4, $E5, "0", $E4, $D2, $FA, $F7
     db $EF, $EE, $E9, $FF, "There", $A4, $EF, $EE, "That did it.", $FA, $F7
     db $EF, $EE, "You just have to", $EF, $EE, "hatch it now.", $F7
@@ -736,7 +736,7 @@ Data_0F2_452D:: ; address name
 String_F2_00_0A:: ; heuristic: string; C0
 Data_0F2_458F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Please come see", $F1
+    db $EB, "*: Please come see", $F1
     db "me when you get", $FA, $F7
     db $EF, $EE, "more eggs.", $EF, $EE, $F7
     db $F0
@@ -744,133 +744,133 @@ Data_0F2_458F:: ; address name
 String_F2_00_0B:: ; heuristic: string; C0
 Data_0F2_45C3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " OK, I'll evaluate", $F1
+    db $EB, "*: OK, I'll evaluate", $F1
     db "this egg now", $A4, $F7
     db $F0
 
 String_F2_00_0C:: ; heuristic: string; C0
 Data_0F2_45E6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It's fine. There's", $F1
+    db $EB, "*: It's fine. There's", $F1
     db "nothing wrong.", $F7
     db $F0
 
 String_F2_00_0D:: ; heuristic: string; C0
 Data_0F2_460A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It's good, and", $F1
+    db $EB, "*: It's good, and", $F1
     db "growing healthy.", $F7
     db $F0
 
 String_F2_00_0E:: ; heuristic: string; C0
 Data_0F2_462D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Wow, this egg is", $F1
+    db $EB, "*: Wow, this egg is", $F1
     db "really vigorous.", $F7
     db $F0
 
 String_F2_00_0F:: ; heuristic: string; C0
 Data_0F2_4653:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Oh, my! This egg", $F1
+    db $EB, "*: Oh, my! This egg", $F1
     db "is incredible!", $F7
     db $F0
 
 String_F2_00_10:: ; heuristic: string; C0
 Data_0F2_4677:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Don't expect too", $F1
+    db $EB, "*: Don't expect too", $F1
     db "many skills.", $F7
     db $F0
 
 String_F2_00_11:: ; heuristic: string; C0
 Data_0F2_4698:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It has a fair", $F1
+    db $EB, "*: It has a fair", $F1
     db "number of skills.", $F7
     db $F0
 
 String_F2_00_12:: ; heuristic: string; C0
 Data_0F2_46BC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It inherited its", $F1
+    db $EB, "*: It inherited its", $F1
     db "parents' skills.", $F7
     db $F0
 
 String_F2_00_13:: ; heuristic: string; C0
 Data_0F2_46E2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It knows a great", $F1
+    db $EB, "*: It knows a great", $F1
     db "variety of skills!", $F7
     db $F0
 
 String_F2_00_14:: ; heuristic: string; C0
 Data_0F2_470A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Its growth may", $F1
+    db $EB, "*: Its growth may", $F1
     db "be a bit wanting.", $F7
     db $F0
 
 String_F2_00_15:: ; heuristic: string; C0
 Data_0F2_472F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It will grow in", $F1
+    db $EB, "*: It will grow in", $F1
     db "an average way.", $F7
     db $F0
 
 String_F2_00_16:: ; heuristic: string; C0
 Data_0F2_4753:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It will be hard", $F1
+    db $EB, "*: It will be hard", $F1
     db "to raise a little", $A4, $F7
     db $F0
 
 String_F2_00_17:: ; heuristic: string; C0
 Data_0F2_477A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Its growth can't", $F1
+    db $EB, "*: Its growth can't", $F1
     db "be faulted.", $F7
     db $F0
 
 String_F2_00_18:: ; heuristic: string; C0
 Data_0F2_479A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " It appears to be", $F1
+    db $EB, "*: It appears to be", $F1
     db "a hard worker.", $F7
     db $F0
 
 String_F2_00_19:: ; heuristic: string; C0
 Data_0F2_47BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " This one seems", $F1
+    db $EB, "*: This one seems", $F1
     db "to be quite smart.", $F7
     db $F0
 
 String_F2_00_1A:: ; heuristic: string; C0
 Data_0F2_47E4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " I can tell this", $F1
+    db $EB, "*: I can tell this", $F1
     db "one is kind.", $F7
     db $F0
 
 String_F2_00_1B:: ; heuristic: string; C0
 Data_0F2_4805:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " No doubt at", $F1
+    db $EB, "*: No doubt at", $F1
     db "all-it's male.", $F7
     db $F0
 
 String_F2_00_1C:: ; heuristic: string; C0
 Data_0F2_4823:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " No doubt at", $F1
+    db $EB, "*: No doubt at", $F1
     db "all-it's female.", $F7
     db $F0
 
 String_F2_00_1D:: ; heuristic: string; C0
 Data_0F2_4843:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " That's the best", $F1
+    db $EB, "*: That's the best", $F1
     db "I could do now.", $FA, $F7
     db $EF, $EE, "Um", $A4, " I hope I was", $EF, $EE, "useful to you.", $F7
     db $F0
@@ -878,20 +878,20 @@ Data_0F2_4843:: ; address name
 String_F2_00_1E:: ; heuristic: string; C0
 Data_0F2_488A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Should I change", $F1
+    db $EB, "*: Should I change", $F1
     db "someone's name?", $F0
 
 String_F2_00_22:: ; heuristic: string; C0
 Data_0F2_48AC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Come here for", $F1
+    db $EB, "*: Come here for", $F1
     db "renaming monsters.", $F7
     db $F0
 
 String_F2_00_23:: ; heuristic: string; C0
 Data_0F2_48D1:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Pick the monster", $F1
+    db $EB, "*: Pick the monster", $F1
     db "to rename.", $F0, "Is ", $F9, "0 OK?", $F0, "Is ", $F9, "0 OK?", $F0, "That name is", $F1
     db "already in use.", $F7
     db $F0, "That name can't be", $F1
@@ -987,7 +987,7 @@ Func_0F2_4A0B:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wCA3A there (E-0121)
+; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wRecordBufB + $F there (E-0121)
 ; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
 ; writes: wNameGlyphBuf
 DrawWCA3ANameAtTiles2290::
@@ -1044,7 +1044,7 @@ Func_0F2_4A94:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; returns 9 * PersonalityLevelOfA(wCA9A) + 3 * PersonalityLevelOfA(wCA9D) + PersonalityLevelOfA(wCA9B) (E-0121)
+; returns 9 * PersonalityLevelOfA(wRecordBufB + $6F) + 3 * PersonalityLevelOfA(wRecordBufB + $72) + PersonalityLevelOfA(wRecordBufB + $70) (E-0121)
 ; 1 call site from 1 routine (e.g. ShowCombinedPersonalityName)
 ; reads: wRecordBufB
 CombinedPersonalityLevelIndex::
@@ -1088,7 +1088,7 @@ Func_0F2_4AFE:: ; address name
     call DrawWCA3ANameAtTiles2290
     ret
 
-; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
+; writes the EXP wRecordBufB + $58-wRecordBufB + $5A as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
 ; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
 ; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
@@ -1193,7 +1193,7 @@ Func_0F2_4B05:: ; address name
     ld [wArg7], a
     jr .call_bg_map_address_at_scroll_bank_f2_514_d
 
-; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
+; shows string wRecordBufB + $A4 of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4, RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4)
 ; reads: wRecordBufB
 ; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -1218,7 +1218,7 @@ Func_0F2_4BD0:: ; address name
     farcall ShowString_Bank08
     ret
 
-; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
+; loads the species record of wRecordBufB + $B/7 and shows string [wSpeciesRecord + $B] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1A)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -1391,7 +1391,7 @@ Func_0F2_4C3D:: ; address name
     call CopyGlyphTilesToVRAM
     ret
 
-; shows string wCA2B[wD7F3] of category wCA2C[wD7F3] + 2 at the address in wD7F1/2 with size $0109 (E-0121)
+; shows string wRecordBufB[wArg3] of category wRecordBufB + $1[wArg3] + 2 at the address in wArg1/2 with size $0109 (E-0121)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
 ; reads: wArg3, wArg1, wArg2
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -1549,7 +1549,7 @@ Func_0F2_4D72:: ; address name
 .return:
     ret
 
-; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
+; BC = wNameBufUnknown when the byte at DE is $98 (the ??? placeholder), else wNameBufAlt (E-0122)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
 ; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte_BankF2::
@@ -1576,7 +1576,7 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E3A:: ; heuristic: poin
 Data_0F2_4E3A:: ; address name
     db $1C, $A3, $1C, $1A, $98, $1A
 
-; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
+; A = byte offset: hTemp0/hTemp1 = the word at wRecordBufB + A (E-0079)
 ; 5 call sites from 3 routines (e.g. DrawRecordBufBSpeciesSprites, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
@@ -1596,7 +1596,7 @@ Func_0F2_4E40:: ; address name
     ldh [hTemp1], a
     ret
 
-; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
+; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
 ; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
 ; points at: wNameGlyphBuf
 CopyShortStringToNameGlyphBuf_BankF2::
@@ -1618,7 +1618,7 @@ Func_0F2_4E50:: ; address name
     ld [de], a
     ret
 
-; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
+; HL = VRAM address: writes the 7 bytes at wArg1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. DrawWCA83ExpAndToNextLevel)
 ; points at: wArg1
 DrawSevenDigitsFromArg1_BankF2::
@@ -1638,7 +1638,7 @@ Func_0F2_4E63:: ; address name
     jr nz, .loop
     ret
 
-; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
+; for the three species words of wRecordBufB (offsets Data_0F2_4F41 or 4F44 by bit 4 of wRecordBufB + $D) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E)
 ; reads: wRecordBufB, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1, wArg1, wArg2
@@ -1718,7 +1718,7 @@ DecompressRecordBufBSpeciesGraphics_Data_4ED4:: ; heuristic: pointer load in the
 Data_0F2_4ED4:: ; address name
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
-; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
+; for the three species words of wRecordBufB draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
 ; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB, hTemp1, hTemp0
 ; writes: hTemp0, wArg1, wArg2
@@ -1805,7 +1805,7 @@ DecompressRecordBufBSpeciesGraphics_Data_4F44:: ; heuristic: pointer load in the
 Data_0F2_4F44:: ; address name
     db $0B, $1C, $1A
 
-; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
+; writes the level wRecordBufB + $56 (marked $6F at the cap wRecordBufB + $57), its digits and the status marks from wRecordBufB + $55 into the BG map (E-0129)
 ; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81_Case1D, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawLevelAndStatusRowForWCA81, ...)
 ; reads: hTemp1, hTemp0, wDigits, wRecordBufB
 ; writes: hTemp0, hTemp1
@@ -1958,7 +1958,7 @@ Func_0F2_5002:: ; address name
     call DrawFourRecordBufBStatsDigits
     ret
 
-; writes four stat words from wCA2B (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
+; writes four stat words from wRecordBufB (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
 ; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
 ; points at: wRecordBufB
 DrawFourRecordBufBStatsDigits::
@@ -2010,7 +2010,7 @@ DrawFourRecordBufBStatsDigits_Data_5054:: ; heuristic: pointer load in the same 
 Data_0F2_5054:: ; address name
     db $CC, $01, $D0, $01, $0C, $02, $10, $02
 
-; writes five stat words from wCA2B (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
+; writes five stat words from wRecordBufB (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
 ; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
 ; points at: wRecordBufB
 DrawFiveRecordBufBStatsColumn::
@@ -2060,7 +2060,7 @@ DrawFiveRecordBufBStatsColumn_Data:: ; heuristic: pointer load in the same bank 
 Data_0F2_509F:: ; address name
     db $63, $65, $67, $69, $6B
 
-; writes wC8C0, wC8C1, wC8C2 as digit tiles ($E0 + n) at HL (E-0121)
+; writes wDigits, wDigits + $1, wDigits + $2 as digit tiles ($E0 + n) at HL (E-0121)
 ; 2 call sites from 2 routines (e.g. DrawFourRecordBufBStatsDigits, DrawFiveRecordBufBStatsColumn)
 ; reads: wDigits
 WriteThreeDigitsAtHL::
@@ -2085,7 +2085,7 @@ Func_0F2_50A4:: ; address name
     ei
     ret
 
-; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues at DrawFamilyIconAndCountForWCA38_ReadArg1 (E-0126)
+; hTemp0/7 = the word wRecordBufB[wArg5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues at DrawFamilyIconAndCountForWCA38_ReadArg1 (E-0126)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
 ; reads: wArg5, wArg1, wArg2, wArg3, wDigits
 ; writes: hTemp0, hTemp1
@@ -2104,7 +2104,7 @@ Func_0F2_50C6:: ; address name
     pop bc
     jp DrawFamilyIconAndCountForWCA38_ReadArg1
 
-; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
+; loads the family icon of wRecordBufB + $D & $0F into tile wArg4; the next entry draws tile $1E and the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
 ; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
 ; writes: wWorkBuf
@@ -3890,7 +3890,7 @@ Func_0F2_633B:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies $C0 bytes from wD09E to wKeyList (E-0122)
+; copies $C0 bytes from wWorkBuf + $1 to wKeyList (E-0122)
 ; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList)
 ; points at: wKeyList
 CopyWD09EToKeyList::

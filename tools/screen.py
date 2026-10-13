@@ -1,7 +1,7 @@
-"""Draw the background and window layers of a tools/sm83.py GameBoy as a PNG (E-0319).
+"""Draw the background, window and sprite layers of a tools/sm83.py GameBoy as a PNG (E-0319, E-0320).
 
 A diagnostic picture of VRAM at one moment: the CGB tile map attributes (palette, tile bank, flips) and palette
-RAM are used; sprites, mid-frame scroll changes and priority are not. Standard library only."""
+RAM are used, and OAM sprites are drawn on top; mid-frame scroll changes and priority are not. Standard library only."""
 import struct
 import zlib
 from pathlib import Path
@@ -38,6 +38,26 @@ def render(gb) -> list[list[tuple[int, int, int]]]:
             else:
                 row.append(pixel(bg, (x + scx) & 0xFF, (y + scy) & 0xFF))
         out.append(row)
+    if lcdc & 0x02:  # sprites from OAM, drawn over everything (priority ignored); colour 0 is transparent
+        h = 16 if lcdc & 0x04 else 8
+        for i in range(39, -1, -1):
+            sy, sx, tile, attr = (gb.oam[i * 4 + k] for k in range(4))
+            sy, sx = sy - 16, sx - 8
+            if h == 16:
+                tile &= 0xFE
+            bank = v1 if attr & 0x08 else v0
+            for dy in range(h):
+                y = sy + dy
+                if not 0 <= y < 144:
+                    continue
+                ty = h - 1 - dy if attr & 0x40 else dy
+                lo, hi = bank[tile * 16 + ty * 2], bank[tile * 16 + ty * 2 + 1]
+                for dx in range(8):
+                    x = sx + dx
+                    tx = 7 - dx if attr & 0x20 else dx
+                    c = (lo >> (7 - tx) & 1) | (hi >> (7 - tx) & 1) << 1
+                    if c and 0 <= x < 160:
+                        out[y][x] = _rgb(gb.objpal, attr & 7, c)
     return out
 
 

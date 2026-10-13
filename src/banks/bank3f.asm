@@ -51,7 +51,7 @@ Func_03F_4001:: ; address name
     ret c
     farcall SetEffectSpriteXForTargets
 
-; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
+; sets the sprite origin X = wEffectSpriteX, Y = $68, tile offset = wEffectTileOffset, attribute XOR = wEffectSpriteAttrXor, then builds OAM from the local sprite table (E-0121)
 ; 2 call sites from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02)
 ; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX

@@ -324,7 +324,7 @@ Jump_0F1_41E0:: ; address name
     ld [wTemp1], a
     ret
 
-; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
+; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wMenuItemCount) (E-0124)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit, BuildScreenBlock32WithCursor_BankF1)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase_BankF1::
@@ -358,7 +358,7 @@ Func_0F1_41EE:: ; address name
 .return:
     ret
 
-; runs Func_0F1_41EE, copies block $32 and draws the cursor for wC46E & 7 (E-0122)
+; runs Func_0F1_41EE, copies block $32 and draws the cursor for wMenuCursor & 7 (E-0122)
 ; 4 call sites from 4 routines (e.g. PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
 ; reads: wMenuCursor
 BuildScreenBlock32WithCursor_BankF1::
@@ -394,7 +394,7 @@ Func_0F1_4244:: ; address name
     call BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
     ret
 
-; fills tiles, builds the item screen, copies block $10 and draws the cursor for wC46D & 3 (E-0122)
+; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember & 3 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 BuildItemScreenWithRecordCursor_BankF1:: ; heuristic: follows a terminator; C0
@@ -418,7 +418,7 @@ Func_0F1_4290:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; fills tiles, builds blocks $32 and $0F, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
+; fills tiles, builds blocks $32 and $0F, copies block $10 and draws the cursor for wSubMenuCursor & 3 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSubMenuCursor
 BuildScreenBlocks32And0FWithCursor_BankF1:: ; heuristic: follows a terminator; C0
@@ -433,7 +433,7 @@ Func_0F1_429C:: ; address name
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
-; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
+; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor for wSubMenuCursor & 3 (E-0122)
 ; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1)
 ; reads: wSubMenuCursor
 ClearWindowAndBuildBlock32WithCursor_BankF1::
@@ -484,7 +484,7 @@ Func_0F1_42D9:: ; address name
     call ShowStringBank08AtTilesHL_BankF1
     ret
 
-; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
+; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wInventory + $1 entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 2 call sites from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wInventory, wMenuPage
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
@@ -596,7 +596,7 @@ Func_0F1_43A0:: ; address name
 .return:
     ret
 
-; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
+; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
@@ -630,7 +630,7 @@ Func_0F1_43B4:: ; address name
     res 7, [hl]
     ret
 
-; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
+; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wMenuItemCount = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
@@ -953,7 +953,7 @@ Func_0F1_442F:: ; address name
     ld [rRAMG], a
     ret
 
-; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC2_BankF1::
@@ -962,7 +962,7 @@ Func_0F1_459E:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC1_BankF1::
@@ -971,7 +971,7 @@ Func_0F1_45A4:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DETileC0_BankF1::
@@ -1507,7 +1507,7 @@ Func_0F1_4A0D:: ; address name
     ld [wStringIndex], a
     ld de, $0501
 
-; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
+; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
 ; 3 call sites from 2 routines (e.g. ShowSelectedItemDescription_BankF1, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -1598,7 +1598,7 @@ Func_0F1_4AA8:: ; address name
     ldh [rSVBK], a
     ret
 
-; unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)
+; unless a fade is running, runs the routine for wScreenState (jump table of eighteen) (E-0124)
 ; 3 call sites from 3 routines (e.g. RunLinkSession2Exchange_LinkReceiveStepWithBuffer, EggServiceMenu_Bank1B_RunScreenStateWhenNotFading_F1, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D)
 ; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_F1::
@@ -2048,7 +2048,7 @@ Jump_0F1_4D49:: ; address name
     and a, a
     ret nz
 
-; runs Func_0F1_58FA (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), wD781 += 1 and clears wD7B4 (E-0122)
+; runs Func_0F1_58FA (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep += 1 and clears wSelectedRecord (E-0122)
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
@@ -2513,7 +2513,7 @@ Jump_0F1_5037:: ; address name
     ld a, [wTwoChoiceCursor]
     and a, a
     jr z, .return
-    ld a, $16 ; 'Accessories will be in the Vault.'
+    ld a, $16 ; '*: Accessories will be in the'
     call BeginString_Bank0E_Cat0
 
 .return:
@@ -2878,7 +2878,7 @@ Jump_0F1_527D:: ; address name
     ld [wScreenStep], a
     ret
 
-; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wD781 += 1 (E-0122)
+; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3013,7 +3013,7 @@ Jump_0F1_533C:: ; address name
     ld [wScreenStep], a
     ret
 
-; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wCA2C to wC8CF (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500 (E-0116)
+; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wRecordBufB + $1 to wNameGlyphBuf (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500 (E-0116)
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep)
 DrawShortStringWCA2CAtTiles1500::
 Func_0F1_5344:: ; address name
@@ -3641,7 +3641,7 @@ Jump_0F1_56DC:: ; address name
     ld [wScreenStep], a
     ret
 
-; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
+; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
 ; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
@@ -3710,7 +3710,7 @@ Func_0F1_57A7:: ; address name
     jr nz, .loop
     ret
 
-; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
+; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String, DrawShortStringWCA2CAtTiles1500)
 ; points at: wNameGlyphBuf
 CopyShortStringToNameGlyphBuf_BankF1::
@@ -3732,7 +3732,7 @@ Func_0F1_57BA:: ; address name
     ld [de], a
     ret
 
-; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at $8A70 with size $0109 (E-0121)
+; draws the name at wRecordBufB + $1 at vTiles1 + $780 and shows string [wRecordBufB + $B] of category [wRecordBufB + $C] + 2 at $8A70 with size $0109 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawLevelAndStatusRowForWCA81_Case1D, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawWCA2CNameAndWCA36String)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
@@ -3759,7 +3759,7 @@ Func_0F1_57CD:: ; address name
     farcall ShowString_Bank08
     ret
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; wArg5/wArg6 = HL (destination), wArg1/wArg2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wArg3/wArg4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E, RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case11, RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor, ...)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_BankF1::
@@ -3775,7 +3775,7 @@ Func_0F1_57FB:: ; address name
     farcall DrawTileRectFromArg1Params
     ret
 
-; runs Func_0F1_58FA (C = 7, HL = $024F, DE = $0083, wD7F1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
+; runs Func_0F1_58FA (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
 ; 2 call sites from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18)
 ; writes: wArg1, wArg2
 RunFunc58FAAt024FAndDrawBox_BankF1::
@@ -3876,7 +3876,7 @@ Func_0F1_5842:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD783 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
+; once the joypad repeat timer reaches $14, cycles wScreenCounter through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
 ; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
@@ -3944,7 +3944,7 @@ DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data:: ; heuristic: pointer load in the s
 Data_0F1_58F4:: ; address name
     db $EC, $00, $2C, $01, $6C, $01
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 2 call sites from 2 routines (e.g. RunFunc58FAAt024FAndDrawBox_BankF1, RunFunc58FAAt0278AndStep_BankF1)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4042,7 +4042,7 @@ Func_0F1_5957:: ; address name
     ldh [rSVBK], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -4123,7 +4123,7 @@ Func_0F1_5990:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi = HL + $1C1 (E-0062)
 ; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript, RunFunc58FAAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect, RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK

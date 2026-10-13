@@ -2431,6 +2431,44 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0320 — Played in the emulator: story scenes, the debug battle, and the monster record on screen
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), with TOOL changes.
+- **The tool.** tools/play.py steers the ROM by an input recipe and saves the emulator state (a pickle in build/states, local only) plus a picture of the screen. The picture is now drawn with sprites (tools/screen.py).
+  - Each run adds the named routines that executed, and the wGameMode values they ran in, to build/states/coverage.json.
+  - `--poke SYMBOL=VALUE` writes a WRAM byte first. Such a state, and any state continued from it, is marked forced with a `!`.
+- **Story, played by hand from power-on.** New game, default name "Cobi". On the ship:
+  - talking to the mother runs TalkMsg000A_WellSoonBeReachingGreatLog;
+  - talking to Papa shows Message_00_0B (he asks Cobi to stay with Tara);
+  - talking to Tara starts SceneLandHo, which shows the island while SceneLandHo_ShowThisIsATale runs ("This is a tale of children who came");
+  - on the farm, SceneHorsingAround and TalkScript5111_ListenYouTwoQuitYourHorsing run while "Quit your horsing around and go" is on screen.
+
+  So these names given by reading agree with what the game shows when they run. No name of a routine reached in play contradicts its game mode. The only overlaps are generic words: "Slot" for sprite slots, "Field" for record fields, "Title" in LoadBattleMonsterPictureAndTitle.
+- **The debug battle (forced).** wGameMode = 0 with wModeChangeRequest = 1 opens the debug menu (E-0029): GameMode0_Init, DebugMainMenu_Init and DebugMainMenu_Update run.
+  - Its 6:BATTLE entry shows "? BATTLE ?" with No. foe, three Monster rows, Debug, Skill and three Species/Level rows (DebugBattleSetup_Init, DebugBattleSetup_Update).
+  - With one foe, own monster 001 (Slime) and foe species 001 (DrakSlime) at level 5, Start enters wGameMode 4.
+  - In mode 4 the game shows the FIGHT/ITEM/PLAN/FLEE menu. A FIGHT round runs the AI scoring (AIChooseActionForActor, AIScore_*, the AnyFoe*/Actor* condition checks) and the battle end (BattleEnd_GainExperience; BattleEnd_AskToJoin_ShowHeroGotUpLooking while "Slime♀ got up, looking hopeful." is on screen).
+  - Forced from the title screen (frame 800), the same recipe runs 859 named routines by frame 2,680, 785 of them in mode 4, in about 9 s.
+- **The monster record on screen.** The status page then shows a monster: Lv 25 ♂, ATK 84, DEF 149, AGL 115, INT 366, WLD 387, HP 156/156, MP 89/89.
+  - SRAM record 0 holds exactly these at our MON_* offsets: name "Kheri" at $01, MON_SEX bit 0 = 0, level 25 at $56, and HP, max HP, MP, max MP, ATK, DEF, AGL, INT and WLD as words at $5B-$6C in that order.
+  - Battler record 0 (wBattlerRecords, $D0D5) holds the same values at our BATTLER_* offsets ($00, $17, $1B-$2A), and WLD at $2B, a field we had not named; it is now BATTLER_WLD.
+  - MON_NAME, MON_LEVEL, MON_ATK to MON_WLD and the BATTLER_* equivalents are C2. The HP and MP pairs are C2 as pairs; which word of a pair is the current value is not shown, since both were equal.
+- **Glyphs.** The debug menu pictures "1:GOTO PROGRAM" for "1", $A3, "GOTO PROGRAM", so $A3 is ":". $45 is a single character cell holding "*:", the mark before an unnamed speaker's words. Both are in the character table (C2); the bytes are unchanged.
+- **Tests.** tests/test_battle_trace.py replays the forced battle from power-on and checks five things:
+  - the debug-menu names run only in mode 0;
+  - battle, AI and battle-end names run only in mode 4;
+  - field and title code does not run in mode 4;
+  - no Battle/AI routine runs on the title screen;
+  - SRAM record 0 and battler record 0 agree on every field both layouts name.
+- **Scope.** The battle start is forced through the game's own debug menu, so it shows what the battle code does, not how the game reaches a battle in play. The pictures are our emulator's.
+- **Address names in comments.** Notes from config/names.json and config/symbols.json still wrote RAM by address (for example "wC5E8 = (wC5E8 + 1) & $7F" in NextTableByte's note) where the address has had a name for a long time (wRandomHi).
+  - The generator now writes such mentions, after the first `;` of a line only, as the symbol at that address, or as `Buffer + $n` inside a named buffer, as the operands already do. Thousands of comment mentions changed; 6 remain, hFF80 and hFFF8, which have no symbol.
+  - tools/check_note_grounding.py reads those mentions the same way. It now checks 6,669 mentions instead of 4,369, and all are connected to their routine.
+  - Seven notes still named wLinkScreenState and wLinkScreenSubState, replaced in E-0318; the check had skipped them as non-symbols. They now name wTitleScreenState and wTitleScreenSubState.
+  - tests/test_note_grounding.py adds a test that every RAM name in a note is a symbol, the stem of several (wGold for wGoldLo/Mid/Hi), or a former name after "was". It fails on the old notes.
+- Tests OK (203, skipped=3).
+- Binary verification: build/run445 (BATTLER_WLD), build/run446 (glyphs), build/run447 (comment names), build/run448 (notes) and build/run449 (an annotation written with its symbol) PASS, 0 differing bytes.
+
 ### E-0319 — The game's own string lookups and screen pictures check our text reading
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), with TOOL changes.

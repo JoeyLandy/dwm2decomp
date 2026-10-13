@@ -1,7 +1,7 @@
 SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
-; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
+; wPartyStrength = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
 ; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength, RandomGoldOrItem_Case04_NextRandomSeed)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
 ; writes: wPartyStrength, hTemp4, hTemp5, rRAMG
@@ -125,7 +125,7 @@ Func_061_4001:: ; address name
     ld [wPartyStrength], a
     ret
 
-; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
+; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hTemp4-hTemp7 and wPartyStrength for key generation (E-0131)
 ; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthForKey, WriteKeyEntryTemp0)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: wPartyStrength, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
@@ -365,7 +365,7 @@ Func_061_40B4:: ; address name
     ld [wPartyStrength], a
     ret
 
-; runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)
+; runs the routine for wMapType & 7 (jump table; 4 reuses 3) (E-0122)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: wMapType
 LoadMapHeaderByMapType::
@@ -823,7 +823,7 @@ Jump_061_4490:: ; address name
     call DrawDoorTilesForKeyWorldFloor
     ret
 
-; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
+; writes a 2 x 2 tile block ($1A or $1C by the wKeyWorldFloorState + $3 entry, then $1E) at wScreenTileBuffer + $AC, with CGB attribute 5 (E-0127)
 ; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_WriteTemp0, KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor, KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
@@ -1007,7 +1007,7 @@ Jump_061_4533:: ; address name
     call CheckTwoWCDB0EntriesForKeyWorldArea
     ret
 
-; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
+; for the two wKeyWorldFloorState + $4 entries of wKeyWorldFloor matching wKeyWorldArea runs Func_061_462F with C = $80 or the stored value (E-0127)
 ; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK, AreaItemEvent_WriteScriptStartRequestAndStepPtrLo)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
@@ -1227,7 +1227,7 @@ Func_061_462F:: ; address name
     ldh [rSVBK], a
     ret
 
-; hFFC6 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wCDAD[16 * wCC45] + 2 * wCC43] + 2 * hFFC6, packed into one byte (E-0121)
+; hTemp0 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wKeyWorldFloorState + $1[16 * wKeyWorldFloor] + 2 * wKeyWorldArea] + 2 * hTemp0, packed into one byte (E-0121)
 ; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hTemp0
 ; writes: hTemp0
@@ -1276,7 +1276,7 @@ Func_061_4706:: ; address name
     pop hl
     ret
 
-; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
+; draws the exit or stairs tile block for the current screen when it matches the area entry in wKeyWorldRoomTable + $1 (E-0130)
 ; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteTemp0AndSVBK)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
 ; writes: hTemp0, rSVBK
@@ -1779,7 +1779,7 @@ Jump_061_5443:: ; address name
     call DrawKeyWorldGoalAtScreen
     ret
 
-; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
+; on key-world maps draws the goal object for the current screen (from wKeyWorldGoal when the wKeyWorldKey key matches, else from wKeyWorldGoalPos2) (E-0130)
 ; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: wMapType, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
 ; writes: rSVBK
@@ -1910,7 +1910,7 @@ Func_061_54EC:: ; address name
     ldh [rSVBK], a
     ret
 
-; for the wCD7B entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wC240 with CGB attribute 5 (E-0129)
+; for the wKeyWorldObjects entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wScreenTileBuffer + $A8 with CGB attribute 5 (E-0129)
 ; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
@@ -2015,7 +2015,7 @@ Func_061_55AF:: ; address name
 .return:
     ret
 
-; for the wCD8B object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
+; for the wKeyWorldFloorInfo + $3 object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
 ; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_WriteSVBK)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
@@ -2332,7 +2332,7 @@ Func_061_5794:: ; address name
     farcall WarpToLinkedMapForCurrentMap
     ret
 
-; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
+; when wKeyWorldArea is 0, the wKeyWorldFloorInfo + $1 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14)
 ; reads: wKeyWorldArea, wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
@@ -2390,7 +2390,7 @@ Func_061_57A4:: ; address name
     ld c, $01
     ret
 
-; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
+; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wKeyWorldFloorState + $1 entry, plays sound $60, wMapType = $83 and starts the transition; C = 1 (E-0125)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wModeState, wFieldTransitionStep, ...
@@ -2437,7 +2437,7 @@ Func_061_5807:: ; address name
     ld c, $01
     ret
 
-; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
+; on screen row 1: warps to the screen in the wKeyWorldAreaExits entry of wKeyWorldFloor and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
@@ -2494,7 +2494,7 @@ Func_061_585A:: ; address name
     ld c, $01
     ret
 
-; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
+; checks the warp list Data_061_6566[wKeyWorldFloorState entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable)
 ; reads: wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wWarpDestFacing, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
@@ -2616,7 +2616,7 @@ Func_061_58BC:: ; address name
     ld c, $01
     ret
 
-; runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)
+; runs the routine for wMapType & 7 (jump table; 7 reuses 4) (E-0122)
 ; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
 ; reads: wMapType
 CheckWarpsByMapType::
@@ -3732,7 +3732,7 @@ Func_061_5F39:: ; address name
     inc hl
     jp .skip
 
-; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
+; hTemp0 = 1 when bit 7 of wKeyWorldFlags is set; otherwise on map types $80/$85 the wKeyWorldEncounterTable + $3 entry of the current area (wKeyWorldAreaInfo), else 0 (E-0129)
 ; 1 call site from 1 routine (e.g. BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wKeyWorldFlags, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
 ; writes: hTemp0
@@ -3810,7 +3810,7 @@ Func_061_606D:: ; address name
     pop hl
     ret
 
-; E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hFFC6; every non-zero word is $61D8 + 26 * n).
+; E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hTemp0; every non-zero word is $61D8 + 26 * n).
 ; record: special map record ($0000 = none)
 SpecialMapTable::
 Data_061_60D8:: ; address name

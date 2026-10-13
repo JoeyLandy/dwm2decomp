@@ -301,7 +301,7 @@ Jump_085_41CC:: ; address name
     ld a, $F0
     ld [wNameGlyphBuf + $5], a
     ld [wTextBuf1 + $C], a
-    ld hl, $4D0F ; 'Hm, you are quite strong I'
+    ld hl, $4D0F ; '*: Hm, you are quite strong'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -678,7 +678,7 @@ Jump_085_442D:: ; address name
     ld a, $F0
     ld [wNameGlyphBuf + $6], a
     ld [wTextBuf1 + $C], a
-    ld hl, $41B7 ; 'Cooh, I heard from others held'
+    ld hl, $41B7 ; '*: Cooh, I heard from others'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -892,7 +892,7 @@ Data_085_4583:: ; address name
     db $B6, $C3, $EE, $EF, $F0, $F1, $F2, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; for record wC6FE[A]: field $5B = word field $5D, field $5F = word field $61, field $55 = 0, field 0 = 1 (E-0121)
+; for record wPartyList[A]: field $5B = word field $5D, field $5F = word field $61, field $55 = 0, field 0 = 1 (E-0121)
 ; 2 call sites from 2 routines (e.g. SceneWaterReward_StepObjectCoordByDirection16Frames, SceneWatchOut_RestoreScreenBufferFromBGMap1)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG
@@ -1426,7 +1426,7 @@ Jump_085_48C2:: ; address name
     jr z, .set_temp1_to_09
 
 .loop:
-    ld hl, $0B9E ; 'Kameha That was a good warmup!'
+    ld hl, $0B9E ; 'Kameha: That was a good warmup!'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1458,14 +1458,14 @@ Jump_085_48C2:: ; address name
 .call_set_flag_bit:
     ld de, $003C
     call SetFlagBit
-    ld hl, $0B9C ; 'Kameha That was a good warmup!'
+    ld hl, $0B9C ; 'Kameha: That was a good warmup!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $0B97 ; 'Kameha Wahahahah! You're weak! You're a'
+    ld hl, $0B97 ; 'Kameha: Wahahahah! You're weak! You're a'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1539,7 +1539,7 @@ Jump_085_496F:: ; address name
     jr z, .set_temp1_to_07
 
 .loop:
-    ld hl, $0B94 ; 'Kameha Well, uh, luck and status'
+    ld hl, $0B94 ; 'Kameha: Well, uh, luck and status'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1571,14 +1571,14 @@ Jump_085_496F:: ; address name
 .call_set_flag_bit:
     ld de, $003A
     call SetFlagBit
-    ld hl, $0B92 ; 'Kameha Well, uh, luck and status'
+    ld hl, $0B92 ; 'Kameha: Well, uh, luck and status'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $0B97 ; 'Kameha Wahahahah! You're weak! You're a'
+    ld hl, $0B97 ; 'Kameha: Wahahahah! You're weak! You're a'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1619,12 +1619,12 @@ Jump_085_4A04:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, .call_start_message_hl_b85
-    ld hl, $0D82 ; 'Aww I lose. You are good!'
+    ld hl, $0D82 ; '*: Aww I lose. You are'
     call StartMessageHL_B85
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $0D83 ; 'Yay! I won! Am I awesome?'
+    ld hl, $0D83 ; '*: Yay! I won! Am I'
     call StartMessageHL_B85
     ret
 
@@ -1664,7 +1664,7 @@ Jump_085_4A35:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, .call_start_message_hl_b85
-    ld hl, $0BB1 ; 'Terry Well, this proves that I'
+    ld hl, $0BB1 ; 'Terry: Well, this proves that I'
     call StartMessageHL_B85
     ld a, $01
     ld [wLinkByte94], a
@@ -1673,7 +1673,7 @@ Jump_085_4A35:: ; address name
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $0BB2 ; 'Terry Humph Don't take it hard.'
+    ld hl, $0BB2 ; 'Terry: Humph Don't take it hard.'
     call StartMessageHL_B85
     ret
 
@@ -1884,7 +1884,7 @@ Jump_085_4B6F:: ; address name
 ; points at: wScriptStep
 SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
 Jump_085_4BB2:: ; address name
-    ld hl, $0BA7 ; 'Warubou Wa-hey, my kid has a'
+    ld hl, $0BA7 ; 'Warubou: Wa-hey, my kid has a'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -1942,14 +1942,14 @@ Jump_085_4C00:: ; address name
     ld a, [wArg5]
     cp a, $FF
     jr nz, .call_start_message_hl_b85
-    ld hl, $0BA3 ; 'Warubou Wa-hey! I was thinking GreatLog'
+    ld hl, $0BA3 ; 'Warubou: Wa-hey! I was thinking GreatLog'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $4BA4 ; 'Warubou Wa-hey! I was thinking GreatLog'
+    ld hl, $4BA4 ; 'Warubou: Wa-hey! I was thinking GreatLog'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2022,7 +2022,7 @@ Jump_085_4C46:: ; address name
     ld [wScriptParam0], a
     cp a, $40
     ret nz
-    ld hl, $0B2C ; 'Warubou Wa-hey, my kid has a'
+    ld hl, $0B2C ; 'Warubou: Wa-hey, my kid has a'
     call StartMessageHL_B85
     ld a, $04
     ldh [hTemp1], a
@@ -2156,14 +2156,14 @@ Jump_085_4D69:: ; address name
     ld a, [wArg5]
     cp a, $FF
     jr nz, .call_start_message_hl_b85
-    ld hl, $0B28 ; 'Warubou Wa-hey, I have a favor'
+    ld hl, $0B28 ; 'Warubou: Wa-hey, I have a favor'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $4B29 ; 'Warubou Wa-hey, I have a favor'
+    ld hl, $4B29 ; 'Warubou: Wa-hey, I have a favor'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2502,7 +2502,7 @@ SceneGiveBackCyal_ShowHumphHowBoring::
 Jump_085_4F8E:: ; address name
     ld a, $03
     ld [wSpriteSlots + $7], a
-    ld hl, $0737 ; 'Humph How boring'
+    ld hl, $0737 ; '*: Humph How boring'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -2913,7 +2913,7 @@ Jump_085_51A5:: ; address name
 .call_set_flag_bit2:
     ld de, $0163
     call SetFlagBit
-    ld hl, $0779 ; 'PROFE SOR ORDER MUST OBEY'
+    ld hl, $0779 ; '*: PROFE SOR ORDER MUST OBEY'
     call StartMessageHL_B85
     xor a, a
     ld [wScriptParam0], a
@@ -3310,7 +3310,7 @@ Jump_085_53DF:: ; address name
 .loop:
     ld a, $00
     ld [wScriptParam1], a
-    ld hl, $0473 ; 'You! I've never seen you before!'
+    ld hl, $0473 ; '*: You! I've never seen you'
     call StartMessageHL_B85
     ret
 
@@ -3323,7 +3323,7 @@ Jump_085_53DF:: ; address name
     jr nz, .cp_EC
     ld a, $01
     ld [wScriptParam1], a
-    ld hl, $0475 ; 'Oh, you're the cooking crew. Do'
+    ld hl, $0475 ; '*: Oh, you're the cooking crew.'
     call StartMessageHL_B85
     ret
 
@@ -3332,7 +3332,7 @@ Jump_085_53DF:: ; address name
     jr nz, .loop
     ld a, $02
     ld [wScriptParam1], a
-    ld hl, $0474 ; 'Hm? Are you a new recruit?'
+    ld hl, $0474 ; '*: Hm? Are you a new'
     call StartMessageHL_B85
     ret
 
@@ -3363,7 +3363,7 @@ Jump_085_542B:: ; address name
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $085D ; 'Check the wooden crate'
+    ld hl, $085D ; '*: Check the wooden crate'
     call StartMessageHL_B85
     ret
 
@@ -3520,7 +3520,7 @@ Jump_085_5514:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $0186 ; 'King Good! Your valor be praised!'
+    ld hl, $0186 ; 'King: Good! Your valor be praised!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3636,7 +3636,7 @@ Jump_085_55D0:: ; address name
     ld a, $01
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0185 ; 'King The hideout of the thieves'
+    ld hl, $0185 ; 'King: The hideout of the thieves'
     call StartMessageHL_B85
     ret
 
@@ -3726,7 +3726,7 @@ Jump_085_5647:: ; address name
 ; points at: wScriptStep
 SceneCanalGate_Msg0172_KingArrghIKnow::
 Jump_085_5664:: ; address name
-    ld hl, $0172 ; 'King Arrgh! I know that! I'
+    ld hl, $0172 ; 'King: Arrgh! I know that! I'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3822,7 +3822,7 @@ Jump_085_56FF:: ; address name
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
-    ld hl, $0084 ; 'Warubou This you use to come'
+    ld hl, $0084 ; 'Warubou: This you use to come'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3842,7 +3842,7 @@ Jump_085_571A:: ; address name
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
     ld [wObject5 + SCRIPTOBJ_Y], a
-    ld hl, $0083 ; 'Warubou Wa-hey! Forgot something!'
+    ld hl, $0083 ; 'Warubou: Wa-hey! Forgot something!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3944,7 +3944,7 @@ Func_085_5780:: ; address name
     scf
     ret
 
-; stores DE in wC928/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
+; stores DE in wStepPtrLo/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
 ; 2 call sites from 2 routines (e.g. SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85, SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
@@ -3970,7 +3970,7 @@ Func_085_57A2:: ; address name
     inc [hl]
     ret
 
-; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0
 ; 56 call sites from 37 routines (e.g. SceneYouDidIt_StartMessageHL_B85, SceneBarrel_ShowRobosterStoppedMoving, SceneBarrel_SetFlagBit, SceneBarrel_StartMessageHL_B85, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B85::
@@ -3983,7 +3983,7 @@ Func_085_57C8:: ; address name
     ld [wMessageState], a
     ret
 
-; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
+; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. SceneWaterReward_RunMessageBoxFar_Bank85, SceneWatchOut_RunMessageBoxFar_Bank85_Case12, SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, SceneWatchOut_RunMessageBoxFar_Bank85_Case03, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
@@ -4025,7 +4025,7 @@ Jump_085_57F3:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; hFFC6 = 1 when a party record has field $6F >= $C0 and bit 7 of field $55 clear, else 0 (E-0125)
+; hTemp0 = 1 when a party record has field $6F >= $C0 and bit 7 of field $55 clear, else 0 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, hTemp0
 ; writes: hTemp0, rRAMG
@@ -4469,7 +4469,7 @@ Func_085_5A9D:: ; address name
     ret
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
-; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
+; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wWorkBuf into hTemp0/hTemp1 (E-0122)
 ; 14 call sites from 9 routines (e.g. ReadableTalkEvents_TestFlagBit_Case0A, TalkMsg0016_ItSeemsToMeThatThe, GreatLogTalkEvents_TestFlagBit_Case19, TalkMsg0A3C_KingIfYouSee, ...)
 ; writes: hTemp0, hTemp1
 ; points at: wWorkBuf
@@ -4492,7 +4492,7 @@ Func_085_5B04:: ; address name
     ldh [hTemp1], a
     ret
 
-; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
+; hTemp0 = 1 when a used key entry has kind hTemp0, else 0 (E-0125)
 ; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, GreatLogTalkEvents_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_SetFlagBit, SceneKamehaKeyBattle_SetFlagBit)
 ; reads: hTemp0
 ; writes: hTemp0
@@ -4542,7 +4542,7 @@ Func_085_5B23:: ; address name
     ldh [hTemp0], a
     ret
 
-; on map $0B places four monster objects and picks the monster for the wC82C / wD7FF entry (table $5C5E) or a random one (E-0130)
+; on map $0B places four monster objects and picks the monster for the wArenaRank / wRecordCapacity entry (table $5C5E) or a random one (E-0130)
 ; 3 call sites from 2 routines (e.g. InitFieldScreen, ArenaRounds_SetupMap0BMonsterObjects)
 ; reads: hMapId, wArenaFlags, wRecordCapacity, wArenaRank, hTemp0, hTemp1, wKeyRandomHi
 ; writes: wSpriteSlots, wObject1, wObject2, wObject3, wFollowerRecords, wSpriteSlotCount, hTemp0, hTemp1, ...

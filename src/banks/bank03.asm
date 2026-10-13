@@ -532,7 +532,7 @@ Func_003_432F:: ; address name
     call LoadRecordListNameTiles
     ret
 
-; clears the object flag bits, saves the player position to wC8C8/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
+; clears the object flag bits, saves the player position to wWarpDestX/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
 ; 12 call sites from 12 routines (e.g. PauseMenu_Main_ToExitPauseMenuToField, PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_ExitPauseMenuToField, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, rRAMG, wBGPaletteUploadRequest, wFieldInitStage, wGameMode
@@ -574,7 +574,7 @@ Func_003_4339:: ; address name
     ld [wGameMode], a
     ret
 
-; clears bit 1 of hFF8C and of the flags byte of the five objects at wCB8C, wCB9C ... (stride $10) (E-0121)
+; clears bit 1 of hPlayerStateFlags and of the flags byte of the five objects at wSpriteSlots + $D, wObject1 + $D ... (stride $10) (E-0121)
 ; 1 call site from 1 routine (e.g. ExitPauseMenuToField)
 ; reads: hPlayerStateFlags
 ; writes: hPlayerStateFlags
@@ -638,7 +638,7 @@ WithSRAMDrawMemberRecordByte0D_Sub01_WriteTextWindowTileLoAndTextWindowTileHiEtc
 Func_003_43D6:: ; address name
     ld de, $0501
 
-; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
+; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
 ; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03, PauseMenu_Skills_ChooseSkill_SRAMRecordAddressMapped, DrawItemTargetStatPreview, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
@@ -675,7 +675,7 @@ Func_003_43D9:: ; address name
     ld [wTextWindowTileHi], a
     ret
 
-; copies 10 bytes from HL to wC130 and writes $F0 after them; HL advances; BC kept (E-0101)
+; copies 10 bytes from HL to wTextBuf0 and writes $F0 after them; HL advances; BC kept (E-0101)
 ; 4 call sites from 4 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0)
 ; points at: wTextBuf0
 CopyTenBytesToTextBuf0::
@@ -881,7 +881,7 @@ Func_003_4506:: ; address name
     ei
     ret
 
-; writes the cursor tile $BB into wScreenTileBuffer at the position of MenuCursorPositions_Bank03[wC46D & 3] (BG map address + $2998) (E-0101)
+; writes the cursor tile $BB into wScreenTileBuffer at the position of MenuCursorPositions_Bank03[wMenuSelectedMember & 3] (BG map address + $2998) (E-0101)
 ; 4 call sites from 4 routines (e.g. LoadBlankedBlocks00To03WithCursor, LoadBlankedBlocks00And04To06WithCursor, LoadBlankedBlocks00_07_08WithCursor, LoadBlankedBlocks00_09_0AWithCursor)
 ; reads: wMenuSelectedMember
 DrawMenuCursorTileInBuffer::
@@ -1054,7 +1054,7 @@ Func_003_4596:: ; address name
     ld [hl], c
     ret
 
-; ten BG map addresses: rows 3, 5, 7, 9, 11 and 13 of column 1 ($9861 ... $99A1) and rows 1, 3, 5 and 7 of column 9 ($9829 ... $98E9), indexed by the cursor slot (wC46D & 3 or & 7) by the bank-$03 menu cursor routines (E-0101)
+; ten BG map addresses: rows 3, 5, 7, 9, 11 and 13 of column 1 ($9861 ... $99A1) and rows 1, 3, 5 and 7 of column 9 ($9829 ... $98E9), indexed by the cursor slot (wMenuSelectedMember & 3 or & 7) by the bank-$03 menu cursor routines (E-0101)
 ; address loaded by DrawMenuCursorTileInBuffer, PauseMenu_Main_Blocks00To03_UpdateMenuCursor, PauseMenu_Main_Blocks04To06_DrawMetaSpritePartC0, PauseMenu_Main_Blocks07And08_UpdateMenuCursor and 12 more
 MenuCursorPositions_Bank03:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_460B:: ; address name
@@ -1110,7 +1110,7 @@ MenuCursorAddressMenuCursor_Data:: ; heuristic: pointer load in the same bank (b
 Data_003_4649:: ; address name
     db $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99, $8C, $99, $8E, $99, $90, $99
 
-; runs the routine for wC0A4 (jump table of four screens) (E-0122)
+; runs the routine for wPauseMenuScreen (jump table of four screens) (E-0122)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_RecordJourney_RunPauseMenuScreen, PauseMenu_Items_UseItem_RunPauseMenuScreen)
 ; reads: wPauseMenuScreen
 RunPauseMenuScreen::
@@ -1622,7 +1622,7 @@ Jump_003_48EB:: ; address name
     call ExitPauseMenuToField
     ret
 
-; clears the screen tile buffer, copies blocks $00-$03 into it, then wC0A4 += 1 (E-0117)
+; clears the screen tile buffer, copies blocks $00-$03 into it, then wPauseMenuScreen += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks00To03_LoadScreenBlocks00To03)
 ; points at: wPauseMenuScreen
 LoadScreenBlocks00To03::
@@ -1640,7 +1640,7 @@ Func_003_48EF:: ; address name
     inc [hl]
     ret
 
-; clears the screen tile buffer, copies blocks $00, $04, $05, $06, then wC0A4 += 1 (E-0117)
+; clears the screen tile buffer, copies blocks $00, $04, $05, $06, then wPauseMenuScreen += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks04To06_LoadScreenBlocks00And04To06)
 ; points at: wPauseMenuScreen
 LoadScreenBlocks00And04To06::
@@ -1658,7 +1658,7 @@ Func_003_4917:: ; address name
     inc [hl]
     ret
 
-; clears the screen tile buffer, copies blocks $00, $07, $08, then wC0A4 += 1 (E-0117)
+; clears the screen tile buffer, copies blocks $00, $07, $08, then wPauseMenuScreen += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks07And08_LoadScreenBlocks00_07_08)
 ; points at: wPauseMenuScreen
 LoadScreenBlocks00_07_08::
@@ -1674,7 +1674,7 @@ Func_003_493F:: ; address name
     inc [hl]
     ret
 
-; clears the screen tile buffer, copies blocks $00, $09, $0A, then wC0A4 += 1 (E-0117)
+; clears the screen tile buffer, copies blocks $00, $09, $0A, then wPauseMenuScreen += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks09And0A_LoadScreenBlocks00_09_0A)
 ; points at: wPauseMenuScreen
 LoadScreenBlocks00_09_0A::
@@ -1690,7 +1690,7 @@ Func_003_495F:: ; address name
     inc [hl]
     ret
 
-; clears the screen tile buffer, copies block $2D + wC6FD and block $31, then wC0A4 += 1 (E-0117)
+; clears the screen tile buffer, copies block $2D + wPartyCount and block $31, then wPauseMenuScreen += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize)
 ; reads: wPartyCount
 ; points at: wPauseMenuScreen
@@ -1778,7 +1778,7 @@ Func_003_4A27:: ; address name
     call DrawRecordMonsterPictureForMenuSelectedMember
     ret
 
-; loads the picture of the species of record wC46D & $0F at vTiles2 + $5C0; on CGB also uploads palettes and copies its 6 x 6 attribute block to vBGMap0 + $161 (E-0125)
+; loads the picture of the species of record wMenuSelectedMember & $0F at vTiles2 + $5C0; on CGB also uploads palettes and copies its 6 x 6 attribute block to vBGMap0 + $161 (E-0125)
 ; 2 call sites from 2 routines (e.g. DecompressMenuTilesTo16E0, PauseMenu_Main_Blocks00To03_LoadScreenBlocks00To03)
 ; reads: wMenuSelectedMember, wIsCGB
 ; writes: wBGPaletteUploadRequest, hTemp0, rVBK, rSVBK
@@ -1883,7 +1883,7 @@ Func_003_4ABD:: ; address name
     ld [rRAMG], a
     ret
 
-; writes record wC46D's level (field $56, marked with tile $14 at the cap in field $57), status marks from field $55 and the field $0E mark into the row at wC1C1 (E-0127)
+; writes record wMenuSelectedMember's level (field $56, marked with tile $14 at the cap in field $57), status marks from field $55 and the field $0E mark into the row at wScreenTileBuffer + $29 (E-0127)
 ; 2 call sites from 2 routines (e.g. WithSRAMDraw4ACEAnd4B52, WithSRAMDraw4ACEAnd4BE8)
 ; reads: wMenuSelectedMember
 ; writes: wScreenTileBuffer
@@ -1949,7 +1949,7 @@ Func_003_4ACE:: ; address name
     ld [wScreenTileBuffer + $32], a
     ret
 
-; wC1C8 = $C2; AF kept (E-0119)
+; wScreenTileBuffer + $30 = $C2; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wScreenTileBuffer
 SetWC1C8TileC2::
@@ -1960,7 +1960,7 @@ Func_003_4B3A:: ; address name
     pop af
     ret
 
-; wC1C6 = $C0; AF kept (E-0119)
+; wScreenTileBuffer + $2E = $C0; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wScreenTileBuffer
 SetWC1C6TileC0::
@@ -1971,7 +1971,7 @@ Func_003_4B42:: ; address name
     pop af
     ret
 
-; wC1C7 = $C1; AF kept (E-0119)
+; wScreenTileBuffer + $2F = $C1; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wScreenTileBuffer
 SetWC1C7TileC1::
@@ -2271,7 +2271,7 @@ Func_003_4BE8:: ; address name
     call WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros
     ret
 
-; for SRAM record wC46D & $0F: shows the species category $0D string at vTiles2 + $2C0 and the eight skills of field $34 in slots 0-7 (E-0121)
+; for SRAM record wMenuSelectedMember & $0F: shows the species category $0D string at vTiles2 + $2C0 and the eight skills of field $34 in slots 0-7 (E-0121)
 ; 1 call site from 1 routine (e.g. WithSRAMShowRecordSpeciesAndSkillNames)
 ; reads: wMenuSelectedMember, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
@@ -2473,7 +2473,7 @@ Func_003_4E02:: ; address name
     call WithSRAMDrawMemberRecordByte0D_Sub01_WriteTextWindowTileLoAndTextWindowTileHiEtc
     ret
 
-; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from Data_003_4F5D[B], loads the species record, sets wD09D = family, wD09E = Data_003_4F61[B] and far-calls Func_016_7A48 (E-0121)
+; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from Data_003_4F5D[B], loads the species record, sets wWorkBuf = family, wWorkBuf + $1 = Data_003_4F61[B] and far-calls Func_016_7A48 (E-0121)
 ; 2 call sites from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D_ShowSpeciesNameAndIconForSlotB)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wStringIndex, wSpeciesIdHi, wStringCategory, wWorkBuf
@@ -2603,7 +2603,7 @@ WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B:: ; 
 Data_003_4F6B:: ; address name
     db $02, $C2, $22, $C3
 
-; reads field $0B of SRAM record wC46D & $0F and decompresses its graphics to vTiles0 (DecompressGraphicsArg1ToArg4); then sets wD7F3-wD7F6 = $00, $90, $40, $00 and hFFB9 = 0 (E-0121)
+; reads field $0B of SRAM record wMenuSelectedMember & $0F and decompresses its graphics to vTiles0 (DecompressGraphicsArg1ToArg4); then sets wArg3-wArg6 = $00, $90, $40, $00 and hSpriteWindowClipMode = 0 (E-0121)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Blocks04To06_LoadScreenBlocks00And04To06)
 ; reads: wMenuSelectedMember
 ; writes: rRAMG, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, ...
@@ -4071,7 +4071,7 @@ Jump_003_581A:: ; address name
     call ResetInventoryMenuToFirstPage
     ret
 
-; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
+; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wMenuItemCount) (E-0124)
 ; 3 call sites from 3 routines (e.g. PauseMenu_State4_Sub01_ResetInventoryMenuToFirstPage, PauseMenu_Items_MemberList_RefreshRecordListAndNameTiles, BuildScreenBlock0EWithCursor)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase::
@@ -4105,7 +4105,7 @@ Func_003_581E:: ; address name
 .return:
     ret
 
-; runs Func_003_581E, copies screen block $0E to the tile buffer and draws the cursor for wC46E & 7 (E-0122)
+; runs Func_003_581E, copies screen block $0E to the tile buffer and draws the cursor for wMenuCursor & 7 (E-0122)
 ; 4 call sites from 4 routines (e.g. PauseMenu_Items_ChooseItem_BuildScreenBlock0EWithCursorAndStep, BuildItemScreenForWItemId, BuildScreenBlock0EWithSubMenuCursor, BuildScreenBlocks0EAnd0F)
 ; reads: wMenuCursor
 BuildScreenBlock0EWithCursor::
@@ -4141,7 +4141,7 @@ Func_003_5874:: ; address name
     call DrawItemTargetStatPreview
     ret
 
-; fills tiles, builds the item screen, copies block $10 and draws the cursor for wC46D & 3 (E-0122)
+; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember & 3 (E-0122)
 ; 1 call site from 1 routine (e.g. PauseMenu_Items_UseItem_BuildItemScreenWithRecordCursorAndStep)
 ; reads: wMenuSelectedMember
 BuildItemScreenWithRecordCursor::
@@ -4166,7 +4166,7 @@ Func_003_58C0:: ; address name
     ret
     db $CD, $0E, $29
 
-; builds blocks $0E and $0F, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
+; builds blocks $0E and $0F, copies block $10 and draws the cursor for wSubMenuCursor & 3 (E-0122)
 ; 1 call site from 1 routine (e.g. PauseMenu_Items_SubMenu_BuildScreenBlocks0EAnd0FWithCursor)
 ; reads: wSubMenuCursor
 BuildScreenBlocks0EAnd0FWithCursor::
@@ -4180,7 +4180,7 @@ Func_003_58CF:: ; address name
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
-; fills tiles, builds block $0E with the cursor, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
+; fills tiles, builds block $0E with the cursor, copies block $10 and draws the cursor for wSubMenuCursor & 3 (E-0122)
 ; 2 call sites from 2 routines (e.g. PauseMenu_Items_UseItem_BuildScreenBlock0EWithSubMenuCursorAndStep, PauseMenu_Items_SubMenu_BuildScreenBlock0EWithSubMenuCursorAndStep)
 ; reads: wSubMenuCursor
 BuildScreenBlock0EWithSubMenuCursor::
@@ -4195,7 +4195,7 @@ Func_003_58E6:: ; address name
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
-; inventory slot = (wMenuPage & $0F) * 4 + (wC46E & $0F): shows that item's string of category 6 (the item descriptions of the bank-$08 database; item $1F uses string $6F) at vTiles2 + $230 with size $1203 (ShowStringBank08AtTilesHL_Bank03) (E-0101)
+; inventory slot = (wMenuPage & $0F) * 4 + (wMenuCursor & $0F): shows that item's string of category 6 (the item descriptions of the bank-$08 database; item $1F uses string $6F) at vTiles2 + $230 with size $1203 (ShowStringBank08AtTilesHL_Bank03) (E-0101)
 ; 5 call sites from 3 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, PauseMenu_Items_MemberList_UpdateMenuCursor, PauseMenu_Items_MemberList_RefreshRecordListAndNameTiles)
 ; reads: wMenuPage, wMenuCursor
 ; writes: wStringIndex, wStringCategory
@@ -4228,7 +4228,7 @@ Func_003_5900:: ; address name
     call ShowStringBank08AtTilesHL_Bank03
     ret
 
-; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
+; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wInventory + $1 entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 4 call sites from 3 routines (e.g. ShowString0Bank09AtTiles16E0ThenItemDescription, ResetInventoryMenuToFirstPage, PauseMenu_Items_MemberList_UpdateMenuCursor)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wInventory, wMenuPage
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
@@ -4340,7 +4340,7 @@ Func_003_59C7:: ; address name
 .return:
     ret
 
-; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
+; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. PauseMenu_Items_MemberList_UpdateMenuCursor, PauseMenu_Items_MemberList_RefreshRecordListAndNameTiles)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
@@ -4419,7 +4419,7 @@ Func_003_5A07:: ; address name
     call ShowInventoryPageItemNames_Bank03
     ret
 
-; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
+; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wMenuItemCount = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. ResetInventoryMenuToFirstPage, PauseMenu_Items_MemberList_RefreshRecordListAndNameTiles)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
@@ -4742,7 +4742,7 @@ Func_003_5AA7:: ; address name
     ld [rRAMG], a
     ret
 
-; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC2_Bank03_5C16::
@@ -4751,7 +4751,7 @@ Func_003_5C16:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC1_Bank03_5C1C::
@@ -4760,7 +4760,7 @@ Func_003_5C1C:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
 ; writes: wScreenTileBuffer
 SetWC2DETileC0_Bank03_5C22::
@@ -4894,7 +4894,7 @@ Data_003_5E40:: ; address name
     db $41, $01, $0C, $03
     ds $24, $C3
 
-; wMenuPage = 0, wC46E = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wC0A0/1 (E-0124)
+; wMenuPage = 0, wMenuCursor = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wTemp0/1 (E-0124)
 ; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_ResetInventoryMenuToFirstPage, PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_Case21, PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage, PauseMenu_Items_SubMenu_ToResetInventoryMenuToFirstPage, ...)
 ; writes: wMenuPage, wMenuCursor, wTemp0, wTemp1
 ; points at: wMenuPage
@@ -5736,7 +5736,7 @@ Jump_003_6387:: ; address name
     ld a, $01
     ld [wStringCategory], a
     ld a, $0C
-    ld [wStringIndex], a ; '0 There are m around.'
+    ld [wStringIndex], a ; '0: There are m around.'
     farcall BeginStringDisplay_Bank37
     ld hl, wWorkBuf + $1
     ld a, [hl]
@@ -5860,7 +5860,7 @@ Func_003_6432:: ; address name
     ld [hl], $C6
     ret
 
-; loads blocks $1C, $0C and $1D, writes field $5F of record wC46D & 3 as decimal digits at wC3A2 and draws the cursor for wC46D & 3 (E-0122)
+; loads blocks $1C, $0C and $1D, writes field $5F of record wMenuSelectedMember & 3 as decimal digits at wWindowTileBuffer + $A2 and draws the cursor for wMenuSelectedMember & 3 (E-0122)
 ; 2 call sites from 2 routines (e.g. BuildRecordField5FValueScreenWithCursor, PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen)
 ; reads: wMenuSelectedMember
 BuildRecordField5FValueScreen::
@@ -5934,7 +5934,7 @@ Func_003_649C:: ; address name
     call CopyRecordRectToScreenBuffer_Bank03
     ret
 
-; fills tiles, builds the field-$5F screen, draws the cursor for wC46E & 7 and copies block $10 (E-0122)
+; fills tiles, builds the field-$5F screen, draws the cursor for wMenuCursor & 7 and copies block $10 (E-0122)
 ; 2 call sites from 2 routines (e.g. PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreenWithCursorAndStep, PauseMenu_Skills_ChooseTarget_BuildRecordField5FValueScreenWithCursor)
 ; reads: wMenuCursor
 BuildRecordField5FValueScreenWithCursor::
@@ -5949,7 +5949,7 @@ Func_003_650C:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; fills the screen tile buffer: blocks $20 and $0C, cursor marks for wC46E and wC46F, the rectangle chosen by the skill wRecordBuffer (table $6851 to Data_003_6921), then block $10 (E-0121)
+; fills the screen tile buffer: blocks $20 and $0C, cursor marks for wMenuCursor and wSubMenuCursor, the rectangle chosen by the skill wRecordBuffer (table $6851 to Data_003_6921), then block $10 (E-0121)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseTarget_UpdateMenuCursor)
 ; reads: wMenuCursor, wSubMenuCursor, wRecordBuffer
 BuildSkillScreenTileBuffer::
@@ -5988,7 +5988,7 @@ Func_003_6526:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; fills tiles, loads blocks $1C and $0C, draws the cursor for wC46D & 3 and copies block $10 (E-0122)
+; fills tiles, loads blocks $1C and $0C, draws the cursor for wMenuSelectedMember & 3 and copies block $10 (E-0122)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseMember_BuildScreenBlocks1CAnd0CWithCursorAndStep)
 ; reads: wMenuSelectedMember
 BuildScreenBlocks1CAnd0CWithCursor::
@@ -6160,7 +6160,7 @@ Func_003_664A:: ; address name
     call nz, SetWC2DETileC0_Bank03
     ret
 
-; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseTarget_HLToDecimalDigits)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC2_Bank03::
@@ -6169,7 +6169,7 @@ Func_003_66A9:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseTarget_HLToDecimalDigits)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC1_Bank03::
@@ -6178,7 +6178,7 @@ Func_003_66AF:: ; address name
     ld [wScreenTileBuffer + $147], a
     ret
 
-; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
+; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseTarget_HLToDecimalDigits)
 ; writes: wScreenTileBuffer
 SetWC2DETileC0_Bank03::
@@ -6227,7 +6227,7 @@ Func_003_66BB:: ; address name
     bit 7, d
     ret
 
-; wD082 = Data_003_6700[wRecordBuffer]; Z set when it is $FF (E-0119)
+; wInventorySlot = Data_003_6700[wRecordBuffer]; Z set when it is $FF (E-0119)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_ChooseSkill_UpdateMenuCursor)
 ; reads: wRecordBuffer
 ; writes: wInventorySlot
@@ -6249,7 +6249,7 @@ Data_003_6700:: ; address name
     ds $7D, $FF
     db $0C, $0D, $0E, $0F, $10, $11, $12, $13, $FF, $FF, $FF, $FF, $FF, $FF
 
-; shows four skill names of record wC46D & 3 for page wMenuPage (or string $0E when it has none) at vTiles2 + $5C0 onward, preserving the window (E-0129)
+; shows four skill names of record wMenuSelectedMember & 3 for page wMenuPage (or string $0E when it has none) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 5 call sites from 5 routines (e.g. ShowString1Bank09AtTiles16E0ThenDetails, PauseMenu_Skills_ChooseMember_UpdateMenuCursor, PauseMenu_Skills_ChooseMember_RefreshRecordListAndNameTiles, PauseMenu_Skills_ChooseSkill_UpdateMenuCursor, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wMenuSelectedMember, wMenuPage
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
@@ -6498,7 +6498,7 @@ Func_003_69FF:: ; address name
 .return:
     ret
 
-; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
+; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. PauseMenu_Skills_ChooseSkill_UpdateMenuCursor, PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
@@ -7268,7 +7268,7 @@ Jump_003_6E9D:: ; address name
     ld [wMenuCursor], a
     ret
 
-; index = wMenuPage * 4 + (wC46E & 7): A = wD0A7[index], Z clear when its bit 7 is set (E-0117)
+; index = wMenuPage * 4 + (wMenuCursor & 7): A = wWorkBuf + $A[index], Z clear when its bit 7 is set (E-0117)
 ; 4 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10, PauseMenu_State3_ChooseListEntry_TestListEntryBit7, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03)
 ; reads: wMenuPage, wMenuCursor
 TestListEntryBit7::
@@ -7554,7 +7554,7 @@ Func_003_7052:: ; address name
     call WriteVRAMByte
     ret
 
-; HL = the word at Data_003_4649 + 2 * wC46E (the cursor row's VRAM address) (E-0114)
+; HL = the word at Data_003_4649 + 2 * wMenuCursor (the cursor row's VRAM address) (E-0114)
 ; 2 call sites from 2 routines (e.g. DrawMenuCursorMenuCursor, EraseMenuCursorMenuCursor)
 ; reads: wMenuCursor
 MenuCursorAddressMenuCursor::
@@ -8245,7 +8245,7 @@ Func_003_74D1:: ; address name
     call WriteTwoDigitTilesFromWC8C1
     ret
 
-; writes wC8C0 as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank03 (E-0126)
+; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank03 (E-0126)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_ByteAToDecimalDigits, PauseMenu_State3_Block2DNumber_LoadScreenBlock2D)
 ; points at: wDigits
 WriteThreeDigitTilesDigits_Bank03::
@@ -8256,7 +8256,7 @@ Func_003_74DA:: ; address name
     ld [de], a
     inc de
 
-; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
+; writes wDigits + $1 and wDigits + $2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_ByteAToDecimalDigits, PauseMenu_State3_Block2DNumber_LoadScreenBlock2D)
 WriteTwoDigitTilesWC8C1NoBlank_Bank03::
 Func_003_74E2:: ; address name
@@ -8542,7 +8542,7 @@ Func_003_7692:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wC46D & 7] in the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
+; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wMenuSelectedMember & 7] in the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
 ; 4 call sites from 4 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_TileBufferMenu_Case00_LoadScreenBlock21WithCursor, LoadScreenBlock21CursorAnd2C, PauseMenu_State3_PagedMenu_LoadScreenBlock21WithCursor)
 ; reads: wMenuSelectedMember
 LoadScreenBlock21WithCursor::
@@ -8602,7 +8602,7 @@ Func_003_76D5:: ; address name
     call CopyRectToBGMap
     ret
 
-; builds blocks $21-$24, draws the cursor for wC46F & 7 and copies blocks $25 and $10 (E-0122)
+; builds blocks $21-$24, draws the cursor for wSubMenuCursor & 7 and copies blocks $25 and $10 (E-0122)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To25WithCursor)
 ; reads: wSubMenuCursor
 BuildScreenBlocks21To25WithCursor::
@@ -9151,7 +9151,7 @@ Func_003_7978:: ; address name
     or a, a
     ret
 
-; from wD0C7 items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
+; from wPauseListCount items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
 ; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor)
 ; reads: wPauseListCount, wMenuPage, wMenuLastPageRows, wMenuPageCount
 ; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wWindowTileBuffer
@@ -9328,7 +9328,7 @@ Func_003_7B25:: ; address name
     ld [rRAMG], a
     ret
 
-; fills the tiles at vTiles2 + $1E0 (size $0162) through FillTilesFromRequest, preserving the window settings wC52D-wC530 (E-0121)
+; fills the tiles at vTiles2 + $1E0 (size $0162) through FillTilesFromRequest, preserving the window settings wTextWindowTileLo-wTextWindowWidth (E-0121)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Block21Menu_LoadScreenBlock21)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth

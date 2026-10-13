@@ -389,7 +389,7 @@ Data_038_4001:: ; address name
     dfar MonsterPic_Dimensaur ; id 381 Dimensaur
     dfar MonsterPic_Kagebou ; id 382 Kagebou
 
-; E-0041 (C1: Func_000_2090 indexes it with the monster id; the 36 bytes it points at are added to hFFC6 and written to VRAM bank 1 as the picture's tile attributes). Far pointers: address, bank.
+; E-0041 (C1: Func_000_2090 indexes it with the monster id; the 36 bytes it points at are added to hTemp0 and written to VRAM bank 1 as the picture's tile attributes). Far pointers: address, bank.
 ; record: raw 6 x 6 attribute map for the picture (a zero entry selects a default); ROM bank of that data
 MonsterAttributeMapTable::
 Data_038_447E:: ; address name

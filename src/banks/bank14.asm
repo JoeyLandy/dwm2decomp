@@ -595,7 +595,7 @@ Jump_014_428A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; lists the records; with none sets wTwoChoiceCursor = 1 and wD780 = 2, otherwise wD780 += 3; then requests script $80 (the next entry does the same with CountFlaggedSRAMRecords) (E-0127)
+; lists the records; with none sets wTwoChoiceCursor = 1 and wScreenState = 2, otherwise wScreenState += 3; then requests script $80 (the next entry does the same with CountFlaggedSRAMRecords) (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wScreenState
 ; writes: wTwoChoiceCursor, wScreenState, wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest
@@ -1306,7 +1306,7 @@ Jump_014_47E8:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD7AE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; once the joypad repeat timer reaches $14, cycles wCursorBlinkAE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
@@ -1373,7 +1373,7 @@ HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_Data:: ; heuristi
 Data_014_492E:: ; address name
     db $2D, $01, $6D, $01
 
-; copies box Data_014_4965 to wC410, runs Func_014_5925, blanks the cursor entry wD7AB of Data_014_5B1E and wD781 += 1 (E-0124)
+; copies box Data_014_4965 to wWindowTileBuffer + $110, runs Func_014_5925, blanks the cursor entry wListCursor of Data_014_5B1E and wScreenStep += 1 (E-0124)
 ; 5 call sites from 5 routines (e.g. HibernateMenu_ChooseToHibernate_Multiply8, HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_Multiply8, ...)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1610,7 +1610,7 @@ Data_014_4B02:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle Data_014_5B36 to wC364 and wD781 += 1 (E-0124)
+; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle Data_014_5B36 to wWindowTileBuffer + $64 and wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_UpdatePagedListCursor)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3023,7 +3023,7 @@ Jump_014_5501:: ; address name
     ld [wScreenStep], a
     ret
 
-; runs Func_014_5925 (C = 9, HL = $01D4, DE = 8, wD7F1/2 = 0/$0C), copies the 11 x 1 rectangle Data_014_5595 to wC40D and wD781 += 1 (E-0122)
+; runs Func_014_5925 (C = 9, HL = $01D4, DE = 8, wArg1/2 = 0/$0C), copies the 11 x 1 rectangle Data_014_5595 to wWindowTileBuffer + $10D and wScreenStep += 1 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -3540,7 +3540,7 @@ Func_014_5821:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi = HL + $1C1 (E-0062)
 ; 17 call sites from 17 routines (e.g. CloseHibernateMenu_CopyBytesDEToHL_Bank14, HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_Case41, HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case32, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -3687,7 +3687,7 @@ Func_014_5902:: ; address name
     ld [de], a
     ret
 
-; runs Func_014_5925 with C = 2, HL = $0280, DE = $00B4, wD7F1/2 = 0/8 (E-0122)
+; runs Func_014_5925 with C = 2, HL = $0280, DE = $00B4, wArg1/2 = 0/8 (E-0122)
 ; 4 call sites from 4 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_ChooseToHibernate_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280)
 ; writes: wArg1, wArg2
 RunFunc5925At0280::
@@ -3702,7 +3702,7 @@ Func_014_5910:: ; address name
     call CopyScreenBufferRectWithAttrs_Bank14
     ret
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14, DrawBox1D4AndCopyRect5595)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -3766,7 +3766,7 @@ Func_014_5925:: ; address name
     jr nz, CopyScreenBufferRectWithAttrs_Bank14
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5)
 ; reads: hTemp0
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -4013,7 +4013,7 @@ TileCopySrcList_14_5C9A::
 Data_014_5C9A:: ; address name
     dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
-; unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122)
+; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0122)
 ; 5 call sites from 5 routines (e.g. GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading, RenameMenu_LoadSRAMRecordByte, BreedMenu_NameEntry, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, ...)
 ; reads: wFadeState, wNameEntryState
 RunNameEntryStateWhenNotFading::
@@ -4660,7 +4660,7 @@ Jump_014_60CF:: ; address name
     ld [wArg5], a
     ret
 
-; on the last glyph of the name entry wCFAD adds or cycles the marks $8D and $8E when the glyph allows them (lists Data_014_688A and 68CA), with sound $69 (E-0129)
+; on the last glyph of the name entry wNameEntryText adds or cycles the marks $8D and $8E when the glyph allows them (lists Data_014_688A and 68CA), with sound $69 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg5
 ; points at: wNameEntryText
@@ -6037,7 +6037,7 @@ Func_014_68D5:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; cycles wCFBE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; cycles wNameEntryBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case05_BlinkCursorNameEntryBlink_Bank14)
 ; reads: wNameEntryBlink, wNameEntryMenuCursor
 ; writes: wNameEntryBlink
@@ -6171,7 +6171,7 @@ Func_014_6992:: ; address name
     db $C5, $D1, $CD, $40, $2E, $7B, $EA, $33, $C5, $EA, $37, $C5, $7A, $EA, $34, $C5
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
-; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wCFC2, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
+; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wNameEntryLength, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
 ; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter, CopyF0StringAndRedrawNameEntry, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, RunNameEntryStateWhenNotFading_Case01_CallWriteNameEntryByteBC)
 ; reads: wNameEntryLength, rSTAT
 WriteTileBAtScrollOffset47PlusNameEntryLength::
@@ -6638,7 +6638,7 @@ Func_014_6BF8:: ; address name
     ld a, $FF
     ret
 
-; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wCFC2 (CopyTileBytesToVRAM_Bank14) (E-0119)
+; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wNameEntryLength (CopyTileBytesToVRAM_Bank14) (E-0119)
 ; 4 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, ToggleVoicingMarkOnNameEntry)
 ; reads: wNameEntryLength
 CopyTileForNameEntryLength::
@@ -6966,24 +6966,24 @@ Data_014_706F:: ; address name
 String_14_706D_00_00:: ; heuristic: string; C0
 Data_014_7077:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Is ", $F9, "0 OK?", $F0
+    db $EB, "*: Is ", $F9, "0 OK?", $F0
 
 String_14_706D_00_01:: ; heuristic: string; C0
 Data_014_7084:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " Is ", $F9, "0 OK?", $F0
+    db $EB, "*: Is ", $F9, "0 OK?", $F0
 
 String_14_706D_00_02:: ; heuristic: string; C0
 Data_014_7091:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " That name is", $F1
+    db $EB, "*: That name is", $F1
     db "already in use.", $F7
     db $F0
 
 String_14_706D_00_03:: ; heuristic: string; C0
 Data_014_70B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " That name can't", $F1
+    db $EB, "*: That name can't", $F1
     db "be used.", $FA, $F7
     db $F2, "You'll have to use", $F1
     db "another name.", $F7
@@ -8585,7 +8585,7 @@ Func_014_7D7F:: ; address name
     ld [rRAMB], a
     ret
 
-; clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
+; clears SRAM record wArg1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
 ; 19 call sites from 18 routines (e.g. RunLinkSession4ScreenState_ResetAndSignal_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot, ...)
 ; reads: wArg1, wArg2, wPartyCount
 ; writes: rRAMG2, rRAMB, wArg3, wArg5, wArg6, wArg7, wPartyCount

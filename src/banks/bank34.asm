@@ -1,7 +1,7 @@
 SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
-; wCFE6/wCFE7 = monster id: copies its 26-byte MonsterTable record to wCFEC (ids at or above $250 come from bank $A2 through Func_0A2_402D)
+; wMonsterId/wMonsterId + $1 = monster id: copies its 26-byte MonsterTable record to wRecordBuffer (ids at or above $250 come from bank $A2 through Func_0A2_402D)
 ; 20 call sites from 20 routines (e.g. DebugShowMonsterRecord, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4, ...)
 ; points at: wRecordBuffer
 LoadMonsterRecord::
@@ -10,7 +10,7 @@ Func_034_4001:: ; address name
     call LoadMonsterRecordTo
     ret
 
-; copies hFFC6 bytes of the 26-byte entry of monster wMonsterId/wCFE7 plus C from $4075 to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
+; copies hTemp0 bytes of the 26-byte entry of monster wMonsterId/wMonsterId + $1 plus C from $4075 to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
 ; 2 call sites from 2 routines (e.g. LoadEncounterMonsterIdsToWorkBuf, SetupMap0BMonsterObjects)
 ; reads: wMonsterId, hTemp0
 CopyMonsterTableBytesFromMonsterTable::
@@ -90,7 +90,7 @@ Func_034_406E:: ; address name
     jr nz, CopyBytesDEFromHL
     ret
 
-; E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wCFE6/wCFE7); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is confirmed by the pause menu's INFO panel, E-0046). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot). Bytes 22-25 equal the save record's bytes at offsets $6F-$72 for the opening monster (E-0034); the three used by PersonalityIndexOfRecord are the personality axes. The first word is the picture number (E-0041): drawing the pictures it names gave a slime for monster 1 ('Slime'), another slime for monster 2 ('SpotSlime') and a spiky ball for monster 3 ('CactiBall'); monster names are the strings of bank $88 (category = id >> 8, index = id & $FF).
+; E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wMonsterId/wMonsterId + $1); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is confirmed by the pause menu's INFO panel, E-0046). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot). Bytes 22-25 equal the save record's bytes at offsets $6F-$72 for the opening monster (E-0034); the three used by PersonalityIndexOfRecord are the personality axes. The first word is the picture number (E-0041): drawing the pictures it names gave a slime for monster 1 ('Slime'), another slime for monster 2 ('SpotSlime') and a spiky ball for monster 3 ('CactiBall'); monster names are the strings of bank $88 (category = id >> 8, index = id & $FF).
 ; record: picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145); skill id 1 (SkillTable index, $FF = none); skill id 2; skill id 3; skill id 4; EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298); join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306); level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298); base HP; base MP; base ATK; base DEF; base AGL; base INT; byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord); byte 23: personality axis copied to offset $70 (weight 1); byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord); byte 25: personality axis copied to offset $72 (weight 3)
 MonsterTable::
 Data_034_4075:: ; address name

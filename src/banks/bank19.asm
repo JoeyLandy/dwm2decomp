@@ -352,7 +352,7 @@ Func_019_4224:: ; address name
     jr nz, .loop3
     ret
 
-; wDA53[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
+; wSlotAIMode[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
 ; 8 call sites from 8 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
 ; points at: wSlotAIMode, wBattleINT
 SetSlotAIModeFromINT::
@@ -501,7 +501,7 @@ Func_019_42FD:: ; address name
     pop bc
     ret
 
-; C = wD868, then falls into Func_019_434D (E-0126)
+; C = wBattleArg0, then falls into Func_019_434D (E-0126)
 ; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
@@ -511,7 +511,7 @@ Func_019_4349:: ; address name
     ld a, [wBattleArg0]
     ld c, a
 
-; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wD868 = 3) (E-0130)
+; for slot C clears its skill list and copies the skills from its 78-byte battler record, then loads each skill record (with wBattleArg0 = 3) (E-0130)
 ; 6 call sites from 6 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RecomputeTargetMaxHPAndMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo, ...)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
@@ -629,7 +629,7 @@ Func_019_434D:: ; address name
     call nz, AdjustSkillsForBattleStart
     ret
 
-; replaces skill $8F by $AA for slots without wD8AF set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
+; replaces skill $8F by $AA for slots without wSlotNameSuffix set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 ; 2 call sites from 2 routines (e.g. LoadSlotSkillsFromBattlerRecord, GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi)
 ; reads: wLinkMode
 ; points at: wSlotNameSuffix, wBattleSkills
@@ -739,7 +739,7 @@ Func_019_4465:: ; address name
     ld [hl], $AE
     ret
 
-; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wCFC5 = 4, the status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
+; slot C: wBattleSlotOut = 1 when bit 7 of [HL] is set; otherwise 0 and, unless wBattleKind = 4, the status byte gets $20 for bit 0 and bit 0 for bit 2 (E-0125)
 ; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wBattleKind
 ; points at: wBattleSlotOut, wBattleStatus
@@ -828,7 +828,7 @@ Func_019_44AC:: ; address name
     ld [de], a
     ret
 
-; HL = the word wD868, DE = the word wD86A, then falls into Func_019_44C9 (E-0126)
+; HL = the word wBattleArg0, DE = the word wBattleArg2, then falls into Func_019_44C9 (E-0126)
 ; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01, ActionEffect_TatsuCall_AddAx9ToHL, ...)
 ; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 LoadBattleArg0PointersThenRunPackResistanceFieldsToDE::
@@ -842,7 +842,7 @@ Func_019_44B9:: ; address name
     ld a, [wBattleArg3]
     ld d, a
 
-; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wDA72-style record at DE (E-0127)
+; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wSlotResistances-style record at DE (E-0127)
 ; 2 call sites from 2 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8)
 PackResistanceFieldsToDE::
 Func_019_44C9:: ; address name
@@ -1164,7 +1164,7 @@ Func_019_4605:: ; address name
     inc de
     jr .skip
 
-; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
+; increments the byte at HL + the word hTemp0/hTemp1 unless it is already 3 or more (E-0118)
 ; 1 call site from 1 routine (e.g. ApplyIncrementOffsetRows19ForA0DTo13)
 ; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3::
@@ -1273,7 +1273,7 @@ Func_019_46DD:: ; address name
     jr nz, .loop2
     ret
 
-; loads monster wCFDD[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
+; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC, BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC)
 ; reads: wRecordBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
@@ -1467,7 +1467,7 @@ Func_019_4752:: ; address name
     pop bc
     ret
 
-; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
+; advances the random table (NextTableByte) and stores the new wRandomLo at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 ; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wRandomLo
 StoreRandomByteAtHL_Bank19::
@@ -1485,7 +1485,7 @@ Func_019_488D:: ; address name
     ld [hl+], a
     ret
 
-; NextTableByte, then stores (wC5E7 & $7F) + $80 at HL; HL += 1 (E-0118)
+; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wRandomLo
 StoreRandomByte80ToFFAtHL::
@@ -1505,7 +1505,7 @@ Func_019_489D:: ; address name
     ld [hl+], a
     ret
 
-; scales the word hFFC8 by 101 percent and caps it at 999, 600 or 700 depending on wD868 and the battle kind wCFC5, then stores it (E-0128)
+; scales the word hTemp2 by 101 percent and caps it at 999, 600 or 700 depending on wBattleArg0 and the battle kind wBattleKind, then stores it (E-0128)
 ; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: hTemp2, hTemp3, wBattleKind, wBattleArg0, wBattleIntroFlag, wBattleArg1, wSpeciesRecord
 ; writes: hTemp2, hTemp3
@@ -1587,7 +1587,7 @@ Func_019_48B1:: ; address name
     pop bc
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
-; multiplies by 6 (or 12 when wD869 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
+; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3
@@ -1630,7 +1630,7 @@ Jump_019_494B:: ; address name
     ld [hl+], a
     ret
 
-; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
+; stores hTemp2 then hTemp3 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: hTemp2, hTemp3
 StoreTemp2WordAtHL_Bank19::
@@ -1641,7 +1641,7 @@ Func_019_495C:: ; address name
     ld [hl+], a
     ret
 
-; copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
+; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 CopyWD01ARecordToHL_Bank19::
 Func_019_4963:: ; address name
@@ -1656,7 +1656,7 @@ Func_019_4963:: ; address name
     jr nz, .loop
     ret
 
-; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wD068 set bit 4 is cleared (E-0125)
+; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wNewRecordByte0D set bit 4 is cleared (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wBattleArg2, wBattleArg3, wRandomLo, wNewRecordByte0D
 RollRecordField0DState::
@@ -1712,7 +1712,7 @@ Func_019_496F:: ; address name
     ld [hl], a
     ret
 
-; sums the stat word at record + $18 times each level 1..hFFC7 (with a /20 rounding term outside battle kind 3) into the 24-bit hFFCA-hFFCC (E-0130)
+; sums the stat word at record + $18 times each level 1..hTemp1 (with a /20 rounding term outside battle kind 3) into the 24-bit hTemp4-hTemp6 (E-0130)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wBattleArg2, wBattleArg3, hTemp1, hTemp7, hTemp8, wBattleKind, hTemp9, hTemp4, ...
 ; writes: hTemp4, hTemp5, hTemp6, hTemp9, hTemp7, hTemp8
@@ -2118,7 +2118,7 @@ Func_019_4B91:: ; address name
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
-; slot C: copies species, family, AI settings (wDA43/wDA4B outside link battles) and stats from its battler record into the battle arrays (E-0131)
+; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and stats from its battler record into the battle arrays (E-0131)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wLinkMode, wBattleArg0, wLoadSlot
 ; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wSlotLastTactic, wBattleSetupD8, wBattleLevel, wBattleMaxHP, wBattleMaxMP, ...
@@ -2354,7 +2354,7 @@ Func_019_4BA8:: ; address name
     call SetSlotAIModeFromINT
     ret
 
-; slot C: copies species, family, wDA43 and stats from its battler record into the battle arrays and loads its skills (E-0131)
+; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle arrays and loads its skills (E-0131)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wBattleArg0, wLoadSlot
 ; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wBattleLevel, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
@@ -2904,7 +2904,7 @@ Data_019_4E60:: ; address name
     d24 5111999, 5210632, 5309332, 5408100, 5506937, 5605844, 5704822, 5803872, 5902995, 6002192, 6101464
     d24 6200812, 6300237, 6399740, 6499322, 6598984, 6698727, 6798552, 6898460, 6998452, 7098529, 7198692
 
-; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
+; copies the 3 bytes at $4E60 + $129 * hTemp0 + 3 * hTemp1 into hTemp2-hTemp4 (E-0120)
 ; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03, SwapMonstersMenu_ShowMonsterDetails_Case13_LoadRecordThreeBytesToTemp0, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
@@ -2933,7 +2933,7 @@ Func_019_7380:: ; address name
     ldh [hTemp4], a
     ret
 
-; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
+; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121)
 ; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, BattleEnd_Step3)
 ; reads: wRecordBufA, wSpeciesExpCurve
 ; writes: wSpeciesIdLo, wSpeciesIdHi
@@ -2975,7 +2975,7 @@ Func_019_73A2:: ; address name
     ld [de], a
     ret
 
-; loads species record [wCA36] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wCA81] - 1)) to wCA83 (E-0121)
+; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
 ; reads: wRecordBufB, wSpeciesExpCurve
 ; writes: wSpeciesIdLo, wSpeciesIdHi

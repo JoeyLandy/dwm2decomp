@@ -61,7 +61,7 @@ Func_084_4001:: ; address name
 .skip2:
     jr .skip
 
-; debug automap: runs the routine for hFFC6 (jump table of seven) (E-0122)
+; debug automap: runs the routine for hTemp0 (jump table of seven) (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc)
 ; reads: hTemp0
 RunDebugAutomapCaseTemp0::
@@ -600,7 +600,7 @@ Func_084_435C:: ; address name
     pop hl
     ret
 
-; repeats NextRandomSeed until wCD04 & $0F is below C (C must be 1-16); returns A = that value (E-0077)
+; repeats NextRandomSeed until wKeyRandomHi & $0F is below C (C must be 1-16); returns A = that value (E-0077)
 ; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
 ; reads: wKeyRandomHi
 RandomBelowC::
@@ -612,7 +612,7 @@ Func_084_43AC:: ; address name
     jr nc, RandomBelowC
     ret
 
-; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hFFC6 = its value) (E-0125)
+; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hTemp0 = its value) (E-0125)
 ; 3 call sites from 3 routines (e.g. LoadMapScreen, RunOneTimeTreasure_ApplyMapScreenFlagEvents, SetFlagRedraw)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hTemp0
@@ -1789,7 +1789,7 @@ RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data:: ; heuristic: pointer load in t
 Data_084_4C7F:: ; address name
     db $01, $01, $03, $02, $02
 
-; when wC88E is set and key entry hFFC6 matches wC891, clears wC88E (E-0127)
+; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive (E-0127)
 ; 1 call site from 1 routine (e.g. DeleteKeyEntryTemp0)
 ; reads: wKeyWorldActive, hTemp0, wKeyWorldKey
 ; writes: wKeyWorldActive

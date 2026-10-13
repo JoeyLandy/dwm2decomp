@@ -180,7 +180,7 @@ Data_007_4164:: ; address name
 String_07_01_00:: ; heuristic: string; C0
 Data_007_4195:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "DuoOwnWL", $A3, $F0
+    db "DuoOwnWL:", $F0
 
 String_07_01_01:: ; heuristic: string; C0
 Data_007_419F:: ; address name
@@ -1274,7 +1274,7 @@ Func_007_4DEC:: ; address name
     ret
     db $01, $00, $00, $63, $29, $01, $00, $00, $63, $80
 
-; copies the 10 bytes at wD043 to wD04D (E-0122)
+; copies the 10 bytes at wLinkRules to wLinkRulesCopy (E-0122)
 ; 2 call sites from 2 routines (e.g. RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD)
 ; points at: wLinkRules, wLinkRulesCopy
 CopyLinkRulesToLinkRulesCopy::
@@ -1530,7 +1530,7 @@ Jump_007_4F96:: ; address name
     farcall GameMode5_Update_Case07_LinkExchangeJoypadPerFrame
     ret
 
-; blinks the cursor of the list entry [HL] every 8 frames; up/down moves it (wrapping over wC46F entries) with sound $69 (E-0127)
+; blinks the cursor of the list entry [HL] every 8 frames; up/down moves it (wrapping over wSubMenuCursor entries) with sound $69 (E-0127)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case01_SerialSendByte, RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc, RunGameMode5Case01SubStates_SerialSendByte_Case01, RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_Case17, ...)
 ; reads: wFrameCounterLo, wSubMenuCursor, wJoypadPressedRepeat
 ; writes: wFrameCounterLo
@@ -1999,7 +1999,7 @@ OBJPaletteBufferPlus20Init_07_58FA::
 Data_007_58FA:: ; address name
     db $DE, $67, $1F, $33, $3C, $12, $00, $00 ; entry 0
 
-; by wLinkScreenState: steps that decompress screen graphics (two DecompressToVRAM each), one with music, and RunGameMode5Case00SubStates
+; by wTitleScreenState: steps that decompress screen graphics (two DecompressToVRAM each), one with music, and RunGameMode5Case00SubStates
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenState
 GameMode5_Update_LoadScreens::
@@ -2100,7 +2100,7 @@ Jump_007_5976:: ; address name
     and a, $0B
     ret
 
-; wD06B = 0, wD06A = 1 and starts palette fade 4; the following entry advances wD06A instead (E-0122)
+; wTitleScreenSubState = 0, wTitleScreenState = 1 and starts palette fade 4; the following entry advances wTitleScreenState instead (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTitleScreenSubState, wTitleScreenState
 StartFadeToLinkScreenState1:: ; heuristic: follows a terminator; C0
@@ -2211,7 +2211,7 @@ Jump_007_5A1C:: ; address name
     and a, $0B
     ret
 
-; wD06B = 0, wD06A = 2 and starts palette fade 4; the following entry advances wD06A instead (E-0122)
+; wTitleScreenSubState = 0, wTitleScreenState = 2 and starts palette fade 4; the following entry advances wTitleScreenState instead (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTitleScreenSubState, wTitleScreenState
 StartFadeToLinkScreenState2:: ; heuristic: follows a terminator; C0
@@ -2351,7 +2351,7 @@ Jump_007_5AFB:: ; address name
     call StartPaletteFade
     ret
 
-; runs the routine for wD06B (jump table of nine sub-states) (E-0122)
+; runs the routine for wTitleScreenSubState (jump table of nine sub-states) (E-0122)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_LoadScreens_RunGameMode5Case00SubStates)
 ; reads: wTitleScreenSubState
 RunGameMode5Case00SubStates::
@@ -2762,7 +2762,7 @@ Jump_007_5DB6:: ; address name
     call StartPaletteFade
     ret
 
-; draws metasprite set 0, sub-index 0, at X = $50, Y = wD09E (E-0122)
+; draws metasprite set 0, sub-index 0, at X = $50, Y = wWorkBuf + $1 (E-0122)
 ; 2 call sites from 2 routines (e.g. RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWD09E_Case03, RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWD09E)
 ; reads: wWorkBuf
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor
@@ -2780,7 +2780,7 @@ Func_007_5DD6:: ; address name
     farcall DrawMetaSprite
     ret
 
-; hScrollY = wD09E (E-0114)
+; hScrollY = wWorkBuf + $1 (E-0114)
 ; 2 call sites from 2 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_Case07, RunGameMode5Case00SubStates_DecompressToVRAM_Case06)
 ; reads: wWorkBuf
 ; writes: hScrollY
@@ -3158,7 +3158,7 @@ Func_007_5FE8:: ; address name
     farcall RunE15AC0For5ABE
     ret
 
-; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $58FA to wC4FF (E-0128)
+; sets the DMG palettes $D2/$D2/$E2 (also in wDMGPaletteBytes) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wSGBPaletteSet and copies 8 bytes from $58FA to wOBJPaletteBuffer + $20 (E-0128)
 ; 7 call sites from 7 routines (e.g. GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM, GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM, GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM, RunGameMode5Case00SubStates_DecompressToVRAM_Case06, ...)
 ; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: rBGP, rOBP0, rOBP1, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, ...
@@ -3291,7 +3291,7 @@ Jump_007_60B0:: ; address name
 .return2:
     ret
 
-; runs the routine for wD06B (jump table of three sub-states) (E-0122)
+; runs the routine for wTitleScreenSubState (jump table of three sub-states) (E-0122)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_RunGameMode5Case01SubStates)
 ; reads: wTitleScreenSubState
 RunGameMode5Case01SubStates::
@@ -3461,7 +3461,7 @@ Jump_007_6145:: ; address name
 .return:
     ret
 
-; wD781 = 0, sends the byte at $65BD + (wC471 & $0F) through SerialSendByte (stored in wD782), then wD781 = 1 (E-0122)
+; wScreenStep = 0, sends the byte at $65BD + (wMenuOption & $0F) through SerialSendByte (stored in wScreenSubStep), then wScreenStep = 1 (E-0122)
 ; 1 call site from 1 routine (e.g. RunGameMode5Case01SubStates_SerialSendByte_Case01)
 ; reads: wMenuOption
 ; writes: wScreenStep, wScreenSubStep
@@ -3699,7 +3699,7 @@ Jump_007_63A5:: ; address name
     call InitLinkScreenStateBlock
     ret
 
-; clears the $80 bytes from wD780 (E-0122)
+; clears the $80 bytes from wScreenState (E-0122)
 ; 3 call sites from 3 routines (e.g. GameMode5_Update_Case01_SerialSendByte_Case03, RunGameMode5Case01SubStates_Case02_ClearScreenStateBlock, RunGameMode5Case01SubStates_Case02_Case00_RunSaveSteps)
 ; points at: wScreenState
 ClearScreenStateBlock::
@@ -3759,7 +3759,7 @@ Jump_007_63B7:: ; address name
     call WriteTileSound69ThenWD06A7
     ret
 
-; writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 7 (E-0122)
+; writes A to VRAM at HL, plays sound $69, clears wLinkScreenStep and wSubMenuCursor2 and sets wTitleScreenState = 7 (E-0122)
 ; 6 call sites from 6 routines (e.g. RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case07, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case06, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case05, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case04, ...)
 ; writes: wLinkScreenStep, wTitleScreenState, wSubMenuCursor2
 WriteTileSound69ThenWD06A7::
@@ -4000,7 +4000,7 @@ Jump_007_6558:: ; address name
     call WriteTileSound69ThenWD06A7
     ret
 
-; writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 4 (E-0122)
+; writes A to VRAM at HL, plays sound $69, clears wLinkScreenStep and wSubMenuCursor2 and sets wTitleScreenState = 4 (E-0122)
 ; 6 call sites from 6 routines (e.g. RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case07, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case06, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case05, RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case04, ...)
 ; writes: wLinkScreenStep, wTitleScreenState, wSubMenuCursor2
 WriteTileSound69ThenWD06A4::
@@ -4043,7 +4043,7 @@ Jump_007_65C5:: ; address name
     and a, $01
     ret z
 
-; wD06A = 6 and the three bytes after it = 0 (E-0114)
+; wTitleScreenState = 6 and the three bytes after it = 0 (E-0114)
 ; 1 call site from 1 routine (e.g. RunGameMode5Case01SubStates_Case02_ClearScreenStateBlock)
 ; points at: wTitleScreenState
 InitLinkScreenStateBlock::
@@ -4057,7 +4057,7 @@ Func_007_65F1:: ; address name
     ld [hl], a
     ret
 
-; by wLinkScreenSubState: 'Saved data has been lost.', then clears memory
+; by wTitleScreenSubState: 'Saved data has been lost.', then clears memory
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 GameMode5_Update_SaveDataLost::
@@ -4299,7 +4299,7 @@ Jump_007_6759:: ; address name
     ld a, $00
     ld [wStringCategory], a
     ld a, $08
-    ld [wStringIndex], a ; 'DuoOwnWL'
+    ld [wStringIndex], a ; 'DuoOwnWL:'
     farcall BeginStringDisplay_Bank07
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
@@ -4363,7 +4363,7 @@ Jump_007_681C:: ; address name
     ld [wTitleScreenSubState], a
     ret
 
-; by wLinkScreenSubState: fades, sets a flag, runs name entry, then InitGoldAndClearInventory
+; by wTitleScreenSubState: fades, sets a flag, runs name entry, then InitGoldAndClearInventory
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 GameMode5_Update_NewPlayerSetup::
@@ -4996,7 +4996,7 @@ Jump_007_6BC3:: ; address name
     farcall DrawRecordBufBSpeciesSprites
     ret
 
-; runs the routine for wD06A (jump table of nine states) (E-0122)
+; runs the routine for wTitleScreenState (jump table of nine states) (E-0122)
 ; 1 call site from 1 routine (e.g. RunLinkSession4Exchange_LinkReceiveStepWithBuffer)
 ; reads: wTitleScreenState
 RunLinkSession4ScreenState::
@@ -5013,7 +5013,7 @@ Func_007_6C12:: ; address name
     dw RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B
     dw RunLinkSession4ScreenState_ResetAndSignal
 
-; by wLinkScreenSubState: RunSaveSteps, then a link message wait
+; by wTitleScreenSubState: RunSaveSteps, then a link message wait
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 RunLinkSession4ScreenState_SaveAndSync::
@@ -5263,7 +5263,7 @@ Jump_007_6CCD:: ; address name
 .return:
     ret
 
-; stores 0, 0, 0, $63, $29, $01, 0, 0, $63, $80 at wD043-wD04C (E-0120)
+; stores 0, 0, 0, $63, $29, $01, 0, 0, $63, $80 at wLinkRules-wLinkRules + $9 (E-0120)
 ; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
 ; points at: wLinkRules
 InitLinkRulesPresetA::
@@ -5287,7 +5287,7 @@ Func_007_6DA9:: ; address name
     ld [hl], $80
     ret
 
-; stores $01, $81, $01, $63, $29, $01, $80, $01, $9E, $00 at wD043-wD04C (E-0120)
+; stores $01, $81, $01, $63, $29, $01, $80, $01, $9E, $00 at wLinkRules-wLinkRules + $9 (E-0120)
 ; 6 call sites from 5 routines (e.g. RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc, RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_SetBattleKindAndSync_CheckLinkMessage, RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, ...)
 ; points at: wLinkRules
 InitLinkRulesPresetB::
@@ -5314,7 +5314,7 @@ Func_007_6DC2:: ; address name
     ld [hl], $00
     ret
 
-; wD09D = 0, then wD09E-wD0A2 = the inverted bit 7 of wD044, wD048, wD049, wD04B and wD04C (E-0121)
+; wWorkBuf = 0, then wWorkBuf + $1-wWorkBuf + $5 = the inverted bit 7 of wLinkRules + $1, wLinkRules + $5, wLinkRules + $6, wLinkRuleTurnLimit and wLinkRules + $9 (E-0121)
 ; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD, RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD)
 ; reads: wLinkRules, wLinkRuleTurnLimit
 ; points at: wWorkBuf
@@ -5350,7 +5350,7 @@ Func_007_6DE3:: ; address name
     ld [hl], a
     ret
 
-; by wLinkScreenSubState: writes wBattleKind and the link screen state, copies a record rectangle, shows a string and waits for the partner
+; by wTitleScreenSubState: writes wBattleKind and the link screen state, copies a record rectangle, shows a string and waits for the partner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 RunLinkSession4ScreenState_SetBattleKindAndSync::
@@ -5560,7 +5560,7 @@ Jump_007_6EFB:: ; address name
     call StartPaletteFade
     ret
 
-; by wLinkScreenSubState: a vertical list cursor over the link battle rules; its steps read and write wLinkRules (19 uses) and wLinkRuleTurnLimit, mark entries (WriteBCTileAtWordTableEntry_Bank07) and exchange bytes and messages over the link
+; by wTitleScreenSubState: a vertical list cursor over the link battle rules; its steps read and write wLinkRules (19 uses) and wLinkRuleTurnLimit, mark entries (WriteBCTileAtWordTableEntry_Bank07) and exchange bytes and messages over the link
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 RunLinkSession4ScreenState_EditRules::
@@ -7068,7 +7068,7 @@ Jump_007_7845:: ; address name
     ld [wTitleScreenSubState], a
     ret
 
-; by wLinkScreenSubState: InitLinkRulesPresetA, a message, then link message exchange
+; by wTitleScreenSubState: InitLinkRulesPresetA, a message, then link message exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTitleScreenSubState
 RunLinkSession4ScreenState_StartWithPresetRules::
@@ -7490,7 +7490,7 @@ Jump_007_7ACD:: ; address name
     farcall EggServiceMenu_Bank1B
     ret
 
-; draws a tile at wC200, wC266, wC2A6, wC2E6, wC326 or wC366 (or 6/3 past it) depending on wD09D-wD0A2, then runs the four panel routines Func_007_7B30, 7B9D, 7C07 and 7C5F (E-0121)
+; draws a tile at wScreenTileBuffer + $68, wScreenTileBuffer + $CE, wScreenTileBuffer + $10E, wScreenTileBuffer + $14E, wWindowTileBuffer + $26 or wWindowTileBuffer + $66 (or 6/3 past it) depending on wWorkBuf-wWorkBuf + $5, then runs the four panel routines Func_007_7B30, 7B9D, 7C07 and 7C5F (E-0121)
 ; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD, RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD)
 ; reads: wWorkBuf
 DrawWorkBufSelectionTilesAndPanels::

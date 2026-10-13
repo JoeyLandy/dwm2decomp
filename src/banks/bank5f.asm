@@ -326,7 +326,7 @@ Map43Attrs0_Y0X2:: ; heuristic: stream in a run of back-to-back compressed strea
 Data_05F_68C8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17E8C8, $6E
 
-; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then ShowMessageFromMessageIndex starts the text; 2 waits until wC52B bit 0 clears (text done), then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wC928 is 0, state 0 also calls Func_004_4470 and state 3 ClearBit1OfPlayerAndObjectFlags (probably freezing and releasing the player and objects). The steps after state 3 are not read (E-0079)
+; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then ShowMessageFromMessageIndex starts the text; 2 waits until wTextFlags bit 0 clears (text done), then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wStepPtrLo is 0, state 0 also calls Func_004_4470 and state 3 ClearBit1OfPlayerAndObjectFlags (probably freezing and releasing the player and objects). The steps after state 3 are not read (E-0079)
 ; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, SceneWarubouFood2_RunMessageBox, ...)
 ; reads: wMessageState
 RunMessageBox::
@@ -471,7 +471,7 @@ Func_05F_69F3:: ; address name
     ld a, [wMessageGroup]
     ld h, a
 
-; L = string index (wStringIndex, category 0), H & $3F = message group, which selects one of 12 table entries (rst $00); when wCC44 has bit 7 set and is not $80 another path is taken (not read) (E-0079)
+; L = string index (wStringIndex, category 0), H & $3F = message group, which selects one of 12 table entries (rst $00); when wMapType has bit 7 set and is not $80 another path is taken (not read) (E-0079)
 ; 1 call site from 1 routine (e.g. RunOneTimeTreasure_ShowMessageHL)
 ; reads: wMapType
 ; writes: wStringIndex, wStringCategory
@@ -601,7 +601,7 @@ Jump_05F_6A85:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
-; sets bit 2 of hFF8C (moving) and hPlayerFacing = 0; calls Func_05F_6B43 with the coordinate; then hPlayerY += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
+; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 0; calls Func_05F_6B43 with the coordinate; then hPlayerY += 1; when it equals wStepPtrLo bit 2 is cleared and wStepArrived = 1, else wStepArrived = 0 (E-0071)
 ; 11 call sites from 9 routines (e.g. SceneDarckDefeated_StepPlayerDownTowardWC928, SceneSpiritEnvoy_StepPlayerDownTowardWC928_Case06, SceneSpiritEnvoy_StepPlayerDownTowardWC928, SceneMermaidKingdom_StepPlayerDownTowardWC928, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
@@ -633,7 +633,7 @@ Func_05F_6A94:: ; address name
     ld [wStepArrived], a
     ret
 
-; sets bit 2 of hFF8C (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
+; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wStepPtrLo bit 2 is cleared and wStepArrived = 1, else wStepArrived = 0 (E-0071)
 ; 7 call sites from 6 routines (e.g. SceneDarckDefeated_StepPlayerDownTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case03, SceneMermaidKingdom_StepPlayerDownTowardWC928, SceneHorsingAround_StepPlayerLeftTowardWC928, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
@@ -665,7 +665,7 @@ Func_05F_6ABF:: ; address name
     ld [wStepArrived], a
     ret
 
-; sets bit 2 of hFF8C (moving) and hPlayerFacing = 2; calls Func_05F_6B43 with the coordinate; then hPlayerY -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
+; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 2; calls Func_05F_6B43 with the coordinate; then hPlayerY -= 1; when it equals wStepPtrLo bit 2 is cleared and wStepArrived = 1, else wStepArrived = 0 (E-0071)
 ; 15 call sites from 12 routines (e.g. SceneDarckDefeated_StepPlayerLeftTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case03, SceneMedicineGiven_StepObjectTowardCoord_Case02, SceneMedicineGiven_StepObjectTowardCoord, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
@@ -697,7 +697,7 @@ Func_05F_6AEB:: ; address name
     ld [wStepArrived], a
     ret
 
-; sets bit 2 of hFF8C (moving) and hPlayerFacing = 3; calls Func_05F_6B43 with the coordinate; then hPlayerX -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
+; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 3; calls Func_05F_6B43 with the coordinate; then hPlayerX -= 1; when it equals wStepPtrLo bit 2 is cleared and wStepArrived = 1, else wStepArrived = 0 (E-0071)
 ; 16 call sites from 13 routines (e.g. SceneHomecoming_ClearBit2AtHL_Bank0F, SceneDarckDefeated_StepPlayerLeftTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case02, SceneMedicineGiven_StepObjectTowardCoord, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
@@ -741,7 +741,7 @@ Func_05F_6B43:: ; address name
     farcall StepFollowersTowardTargets
     ret
 
-; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
+; wStepPtrHi = object number (16-byte entries): sets bit 2 of wSpriteSlots + $D + 16n, stores direction wStepTarget & 3 at wSpriteSlots + $7 + 16n and moves the object one pixel, two when wStepTarget bit 7 is set: direction 0 adds the step to Y (wSpriteSlots + $C + 16n), 1 adds it to X (wSpriteSlots + $B + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wStepPtrLo it clears bit 2 and sets wStepArrived = 1, else wStepArrived = 0 (E-0061)
 ; 145 call sites from 78 routines (e.g. ScenePendantSeller_StepObjectTowardCoord, SceneHomecoming_StepObjectTowardCoord, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
 ; reads: wStepPtrHi, wStepTarget, wStepPtrLo
 ; writes: wStepArrived
@@ -847,7 +847,7 @@ Func_05F_6B54:: ; address name
     ld [wStepArrived], a
     ret
 
-; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
+; the byte at the address in wStepPtrLo/wStepPtrHi += the byte at Func_05F_6BE8 + wScriptParam0 / 2
 ; 66 call sites from 54 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08, ...)
 ; reads: wStepPtrLo, wStepPtrHi, wScriptParam0
 AddStepDeltaToPointedByte::
@@ -872,7 +872,7 @@ AddStepDeltaToPointedByte_Data:: ; heuristic: pointer load in the same bank (ban
 Data_05F_6BE8:: ; address name
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
-; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
+; for $78 frames blinks object hTemp0 by alternating byte wSpriteSlots + $C[16 * obj] between hTemp1 and $E0 (hidden) at a slowing rate; hTemp0 = 1 when done (E-0127)
 ; 20 call sites from 19 routines (e.g. SceneDarckDefeated_ScriptStepBlinkObjectTemp0, SceneGrave_ScriptStepBlinkObjectTemp0, SceneShield_ShowABeautifulVoiceEchoed, SceneShieldGuardian_ShowOhMyGoodnessThank, ...)
 ; reads: wScriptParam0, hTemp0, hTemp1
 ; writes: wScriptParam0, hTemp0
@@ -935,7 +935,7 @@ Func_05F_6BF8:: ; address name
     ldh [hTemp0], a
     ret
 
-; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
+; StartPaletteFade with A = $0F, wModeState = 4, wFieldTransitionStep = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
 ; 53 call sites from 50 routines (e.g. SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F, SceneDarckDefeated_ScriptStartFadeAndAdvanceStep, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
@@ -953,7 +953,7 @@ Func_05F_6C5A:: ; address name
     inc [hl]
     ret
 
-; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
+; wModeState = 3, wBattleTransitionStep = 0, wFieldReturnPhase = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
 ; 5 call sites from 5 routines (e.g. RandomBattleEvent, ArenaRounds_StepScriptParam0Counter_Bank12, KeyWorldBossBattle_RunMessageBoxFar_Bank12, KeyWorldFloorBattle_RunMessageBoxFar_Bank12, ...)
 ; writes: wModeState, wBattleTransitionStep, wFieldReturnPhase
 SetModeState3AndSaveScreen::
@@ -968,7 +968,7 @@ Func_05F_6C71:: ; address name
     farcall PickRandomEncounterCountdownFromTable478F
     ret
 
-; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
+; stores wStepPtrLo in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wGameFlags836; HL kept (E-0071)
 ; 19 call sites from 18 routines (e.g. GiveItemBlink_TestFlagBit, RandomGoldOrItem_AddGoldCapped, KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo, AreaItemEvent_WriteScriptStartRequestAndStepPtrLo, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
@@ -1116,7 +1116,7 @@ Func_05F_6D0D:: ; address name
     ld [rRAMG], a
     ret
 
-; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
+; with hFieldDrawFlags bits 1-3 set: wArg1 = wPartyList[hTemp0] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wOBJPaletteUploadRequest = $7F, then clears hFieldDrawFlags bits 1-3 (E-0121)
 ; 3 call sites from 3 routines (e.g. RewardItemOrKey2_LoadListedRecordNameTilesForTemp0, RewardItemOrKey_LoadListedRecordNameTilesForTemp0, SceneMasterThanks_LoadListedRecordNameTilesForTemp0)
 ; reads: hFieldDrawFlags, hTemp0
 ; writes: hFieldDrawFlags, wArg1, wArg2, wOBJPaletteUploadRequest
@@ -1144,7 +1144,7 @@ Func_05F_6D3F:: ; address name
     ldh [hFieldDrawFlags], a
     ret
 
-; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
+; for record $FF in bank 1 (Func_014_7E96): if wArg5 is not $FF and is >= Data_05F_6DA8[wFarmLevel & 3], sets wArg5 = $FF (E-0121)
 ; 9 call sites from 9 routines (e.g. GreatLogTalkEvents_ShowTheFarmIsFull, GreatLogTalkEvents_TestFlagBit_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
 ; reads: wArg5, wFarmLevel
 ; writes: wArg1, wArg2, wArg5
@@ -1176,7 +1176,7 @@ ClearArg5IfAtOrAboveLimitForFarmLevel_Data:: ; heuristic: pointer load in the sa
 Data_05F_6DA8:: ; address name
     db $0A, $14, $1E, $1E
 
-; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
+; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hTemp0 (E-0125)
 ; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_RunMessageBoxFar_Bank0F, SceneShield2_SetFlagBit, ...)
 ; reads: hTemp0
 ; points at: wKeyList
@@ -1666,7 +1666,7 @@ Jump_05F_701C:: ; address name
     call ScriptStepMoveTwoObjectsByTable
     ret
 
-; every fourth step moves wC8F5/wC8F6 and wC8FA/wC8FB in opposite directions by the table at HL; after 32 steps advances wC92D (E-0125)
+; every fourth step moves wFollowerRecords + $6/wFollowerRecords + $7 and wFollowerRecords + $B/wFollowerRecords + $C in opposite directions by the table at HL; after 32 steps advances wScriptSubStep (E-0125)
 ; 1 call site from 1 routine (e.g. SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable)
 ; reads: wScriptParam0, wFollowerRecords
 ; writes: wFollowerRecords, wScriptParam0
@@ -1721,7 +1721,7 @@ Data_05F_7092:: ; address name
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
     db $00, $02, $00, $01, $FF, $02, $FF, $01, $FF, $01, $FE, $01, $FF, $00, $FE, $00
 
-; runs the routine for wC92D (jump table of eight) (E-0122)
+; runs the routine for wScriptSubStep (jump table of eight) (E-0122)
 ; 2 call sites from 2 routines (e.g. SceneCheerYuna_ToRunScriptSubStep, SceneMonsterInspection_ToRunScriptSubStep)
 ; reads: wScriptSubStep
 RunScriptSubStep::
@@ -2128,7 +2128,7 @@ Jump_05F_7345:: ; address name
     inc [hl]
     ret
 
-; runs the routine for wC92D (jump table of eighteen) (E-0124)
+; runs the routine for wScriptSubStep (jump table of eighteen) (E-0124)
 ; 4 call sites from 4 routines (e.g. SceneDarckDefeated_ToRunSceneScriptSubStep, SceneShield2_ToRunSceneScriptSubStep, SceneMermaidKingdom_ToRunSceneScriptSubStep, SceneRivalDefeated_ToRunSceneScriptSubStep)
 ; reads: wScriptSubStep
 RunSceneScriptSubStep::
@@ -2163,7 +2163,7 @@ Jump_05F_738B:: ; address name
     inc [hl]
     ret
 
-; starts message 6 and advances wC92D when wC552 is 0, otherwise message 7 and steps wC92D back (E-0126)
+; starts message 6 and advances wScriptSubStep when wTextYesNoResult is 0, otherwise message 7 and steps wScriptSubStep back (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; points at: wScriptSubStep
@@ -2186,7 +2186,7 @@ Func_05F_7390:: ; address name
     call StartMessageFromTable7787
     ret
 
-; starts message 5 from Data_05F_7787 and advances wC92D (E-0126)
+; starts message 5 from Data_05F_7787 and advances wScriptSubStep (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptSubStep
 StartMessage5AndAdvanceScriptSubStep:: ; heuristic: follows a terminator; C0
@@ -2770,7 +2770,7 @@ Jump_05F_7700:: ; address name
     inc [hl]
     ret
 
-; starts the message whose index and group are at Data_05F_7787 + 2 * A + 16 * wC92E (wMessageState = 0) (E-0124)
+; starts the message whose index and group are at Data_05F_7787 + 2 * A + 16 * wScriptMsgSelect (wMessageState = 0) (E-0124)
 ; 7 call sites from 7 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08, RunSceneScriptSubStep_AddStepDeltaToPointedByte, ...)
 ; reads: wScriptMsgSelect
 ; writes: wMessageIndex, wMessageGroup, wMessageState
@@ -2813,7 +2813,7 @@ Data_05F_7787:: ; address name
     db $A8, $02, $E9, $02, $AA, $02, $AB, $02, $EC, $02, $00, $00, $00, $00, $00, $00
     db $34, $05, $35, $05, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; wC928 = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
+; wStepPtrLo = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
 ; 5 call sites from 5 routines (e.g. RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
@@ -2831,7 +2831,7 @@ Func_05F_77C7:: ; address name
     scf
     ret
 
-; script commands 02 and 03 (and 05 through Func_05F_787C): wScriptParam0 low nibble is an object number (16-byte entries from wCB7F), its high nibble a direction 0-3; sets bit 2 of the object's flag byte and moves the object's position by one unit in that direction
+; script commands 02 and 03 (and 05 through Func_05F_787C): wScriptParam0 low nibble is an object number (16-byte entries from wSpriteSlots), its high nibble a direction 0-3; sets bit 2 of the object's flag byte and moves the object's position by one unit in that direction
 ; 2 call sites from 2 routines (e.g. ScriptCommand03, ScriptCommand02)
 ; reads: wScriptParam0, wScriptStep, wScriptParam1
 ; writes: wScriptStep, wScriptParam1, wScriptCommandType, wScriptStartRequest
@@ -3005,7 +3005,7 @@ Func_05F_787C:: ; address name
     ld [wJoypadHeld], a
     ret
 
-; script command 06: wScriptParam0 picks the target (0 = the player's hPlayerFacing, 1-n = the first byte of the n-th 5-byte record at wC8EF, bit 7 set = byte 7 of the 16-byte object entry numbered by the low bits); wScriptParam1 is stored there; then wScriptStartRequest = $80 so the next script byte is fetched (the opening used it with parameters 129/130 and 2/1)
+; script command 06: wScriptParam0 picks the target (0 = the player's hPlayerFacing, 1-n = the first byte of the n-th 5-byte record at wFollowerRecords, bit 7 set = byte 7 of the 16-byte object entry numbered by the low bits); wScriptParam1 is stored there; then wScriptStartRequest = $80 so the next script byte is fetched (the opening used it with parameters 129/130 and 2/1)
 ; 1 call site from 1 routine (e.g. ScriptCommand06)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptStartRequest
@@ -3048,7 +3048,7 @@ Func_05F_78CE:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; script command 0C: for 32 frames adds the per-frame step from the table at Data_05F_7959 (indexed by wScriptParam0 / 2) to a Y coordinate chosen by wScriptParam1 (0 = hPlayerY, 1-n = the n-th 5-byte record from wC8F1, bit 7 = an object entry's byte at wCB8B + 16 * number), counting wScriptParam0 up; at $20 it ends the command
+; script command 0C: for 32 frames adds the per-frame step from the table at Data_05F_7959 (indexed by wScriptParam0 / 2) to a Y coordinate chosen by wScriptParam1 (0 = hPlayerY, 1-n = the n-th 5-byte record from wFollowerRecords + $2, bit 7 = an object entry's byte at wSpriteSlots + $C + 16 * number), counting wScriptParam0 up; at $20 it ends the command
 ; 1 call site from 1 routine (e.g. ScriptCommand0C)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: wScriptParam0, wScriptCommandType, wScriptStartRequest

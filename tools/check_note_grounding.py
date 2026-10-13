@@ -3,8 +3,9 @@
 Every RAM symbol and routine name a note mentions must be connected to the named routine in the generated code:
 in its body or its own sub-labels, its xref comment lines, its callers (direct, or through a `dw`/`dfar` table and
 the routine that owns that table), its callees up to three levels, or mentioned only as a comparison ("like X",
-"as X", "see X"). A negative control (`check(control=...)`) replaces each note's mentions by random symbols to show
-the check rejects unrelated names."""
+"as X", "see X"). Address-form RAM mentions (wC5E8) are read as the symbol at that address, as the generated comments
+show them (E-0320). A negative control (`check(control=...)`) replaces each note's mentions by random symbols to
+show the check rejects unrelated names."""
 import bisect
 import json
 import re
@@ -21,6 +22,7 @@ class Source:
         self.names = json.loads((ROOT / 'config/names.json').read_text(encoding='utf-8'))
         ram = (ROOT / 'src/ram.asm').read_text(encoding='utf-8')
         self.ramsyms = set(re.findall(r'^DEF ([wsh][A-Z]\w*) EQU', ram, re.M))
+        self.ram_at = {a: n for n, a in re.findall(r'^DEF ([wsh]\w+) EQU \$([0-9A-F]{4})', ram, re.M)}
         self.banks = {p.name: p.read_text(encoding='utf-8').split('\n')
                       for p in sorted((ROOT / 'src/banks').glob('bank*.asm'))}
         self.regions: dict[str, tuple[str, int, int]] = {}
@@ -100,7 +102,7 @@ def check(control=None, src: Source | None = None):
         nm = v['name']
         if nm not in src.regions:
             continue
-        note = v.get('note', '')
+        note = re.sub(r'\b[wsh]([0-9A-F]{4})\b', lambda m: src.ram_at.get(m.group(1), m.group(0)), v.get('note', ''))
         near = src.closure(nm)
         cl: set[str] = set()
         for n in src.family(nm):

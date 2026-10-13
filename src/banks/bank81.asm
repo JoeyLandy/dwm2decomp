@@ -2482,7 +2482,7 @@ SpeciesPairChecks140::
 Data_081_5451:: ; address name
     db $FF, $0A ; id 0
 
-; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
+; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1)) to wLinkMenuEntryBytes (E-0121)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWorkBuf)
 ; reads: wWorkBuf, wLinkMenuEntry
 ; points at: wLinkMenuEntryBytes

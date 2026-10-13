@@ -1452,7 +1452,7 @@ Jump_012_4863:: ; address name
     ld [wArenaFlags], a
     ret
 
-; starts the message at Data_012_48B9 + 2 * A + 16 * wC82C (16 * 5 when bit 7 of wC94A is set) (E-0125)
+; starts the message at Data_012_48B9 + 2 * A + 16 * wArenaRank (16 * 5 when bit 7 of wArenaFlags is set) (E-0125)
 ; 13 call sites from 11 routines (e.g. ArenaRounds_StartArenaRankMessage, ArenaRounds_StartArenaRankMessage_Case0D, ArenaRounds_StartArenaRankMessage_Case05, ArenaGridBattle_StartArenaRankMessage, ...)
 ; reads: wArenaFlags, wArenaRank
 StartArenaRankMessage::
@@ -2307,7 +2307,7 @@ Jump_012_4DDC:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; copies wCB86, the player position and facing, wFollowerRecords and wC8F0-wC8FB fields into wC937-wC943, then advances wScriptStep (E-0121)
+; copies wSpriteSlots + $7, the player position and facing, wFollowerRecords and wFollowerRecords + $1-wFollowerRecords + $C fields into wSavedPlayerState-wSavedPlayerState + $C, then advances wScriptStep (E-0121)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords
 ; writes: wSavedPlayerState
@@ -3410,7 +3410,7 @@ Func_012_55E8:: ; address name
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
     dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
 
-; with bit 7 of wCC44 saves the wCD07 record; sets the position ($50, $30), wC8C6 = 3 (story flag $25) or 4, wC957 = 1 and starts the fade (E-0126)
+; with bit 7 of wMapType saves the wKeyWorldFlags record; sets the position ($50, $30), wFieldTransitionKind = 3 (story flag $25) or 4, wReturnWarpFlag = 1 and starts the fade (E-0126)
 ; 2 call sites from 2 routines (e.g. ReturnWarp_StartReturnWarpByFlag25, PartyDefeatedReturn_StartReturnWarpByFlag25)
 ; reads: wMapType
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, wFieldTransitionKind, wReturnWarpFlag
@@ -3951,7 +3951,7 @@ KeyWorldBossBattle_ShowWarubouWaheyNoGood::
 Jump_012_58E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0129 ; 'Warubou Wa-hey! No good, no good!'
+    ld hl, $0129 ; 'Warubou: Wa-hey! No good, no good!'
     call StartMessageHL_B0F_Bank12
     ret
 
@@ -4108,7 +4108,7 @@ KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
 Jump_012_59D3:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $012A ; 'Warubou Wa-hey That was no good.'
+    ld hl, $012A ; 'Warubou: Wa-hey That was no good.'
     call StartMessageHL_B0F_Bank12
     ret
 
@@ -4507,7 +4507,7 @@ Func_012_5C27:: ; address name
     inc [hl]
     ret
 
-; A = wC195 >> 4, DE = KeyWorldBossBattle_Case00, B = $7E, then continues at SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM (E-0126)
+; A = wMapSpriteKind >> 4, DE = KeyWorldBossBattle_Case00, B = $7E, then continues at SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM (E-0126)
 ; 1 call site from 1 routine (e.g. SceneStrongestMaster_SetupScriptSpriteFromMapSpriteKind)
 ; reads: wMapSpriteKind, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, wFollowerRecords, wScriptParam0
@@ -5351,7 +5351,7 @@ Jump_012_60DB:: ; address name
     ldh [hFieldDrawFlags], a
     ret
 
-; draws metasprite set $21 (or $22 unless wC195 & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
+; draws metasprite set $21 (or $22 unless wMapSpriteKind & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
 ; 4 call sites from 4 routines (e.g. FieldScene01_Sub03_AddStepDeltaToPointedByte, FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset)
 ; reads: wMapSpriteKind, hPlayerFacing, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
@@ -5486,7 +5486,7 @@ Jump_012_616C:: ; address name
     inc [hl]
     ret
 
-; script step: first frame sets the follower targets from the leader; later frames step the followers until the wC921 counter reaches $11, then advances wScriptStep (E-0122)
+; script step: first frame sets the follower targets from the leader; later frames step the followers until the wScriptParam0 counter reaches $11, then advances wScriptStep (E-0122)
 ; 7 call sites from 7 routines (e.g. SceneWallExit_ToScriptStepMoveFollowersToLeader, SceneKamehaFlees_ScriptStepMoveFollowersToLeader, SceneKamehaStole_ToScriptStepMoveFollowersToLeader, GatherFollowers_ScriptStepMoveFollowersToLeader, ...)
 ; reads: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
@@ -6132,7 +6132,7 @@ Func_012_653F:: ; address name
     inc [hl]
     ret
 
-; wC921 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
+; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear; returns A = 0 either way (the same 18 bytes appear in 3 banks)
 ; 10 call sites from 10 routines (e.g. ArenaRounds_StepScriptParam0Counter_Bank12, BreedChildScene_StepScriptParam0Counter_Bank12, LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05, LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
@@ -6231,7 +6231,7 @@ Func_012_65FF:: ; address name
     farcall StepFollowersTowardTargets
     ret
 
-; the bank-$12 message runner: the same four states as RunMessageBox, with A on the stack as the freeze flag instead of wC928 (state 0 also reads hMapId; not compared in full) (E-0079)
+; the bank-$12 message runner: the same four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state 0 also reads hMapId; not compared in full) (E-0079)
 ; 1 call site from 1 routine (e.g. RunMessageBoxCarryWhenIdle_Bank12)
 ; reads: wMessageState
 RunMessageBox_Bank12::
@@ -6622,7 +6622,7 @@ Func_012_6820:: ; address name
     ld [wMessageState], a
     ret
 
-; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
+; wStepPtrLo = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. KeyWorldFloorBattle_RunMessageBoxFar_Bank12, KeyWorldBossBattle_RunMessageBoxFar_Bank12)
 ; reads: wMessageState
 ; writes: wStepPtrLo
@@ -6675,7 +6675,7 @@ Func_012_684F:: ; address name
     call KeyWorldBossBattle_Case05_Sub01_ReadMessageState
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
 
-; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. FieldScene01_Sub03_WaitFieldActionRequest)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12_6854::
@@ -6722,7 +6722,7 @@ Func_012_6893:: ; address name
     call RunFunc722AAnd6EB7_WaitFieldActionRequest
     ret
 
-; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
+; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wKeySeeds; hTemp0 = 1, or 0 when the list is full (E-0129)
 ; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, GreatLogTalkEvents_ClearArenaData_Case65, ...)
 ; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
@@ -6823,7 +6823,7 @@ Func_012_689A:: ; address name
     ld [wGameFlags836], a
     ret
 
-; hFFC6 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
+; hTemp0 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
 ; 3 call sites from 3 routines (e.g. GenerateNewKeyEntry, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
 ; writes: hTemp0
 ; points at: wKeyList
@@ -6869,7 +6869,7 @@ Func_012_691F:: ; address name
     ldh [hTemp0], a
     ret
 
-; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
+; writes key entry hTemp0: byte 0 = hTemp1 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hTemp1-hTemp3 (E-0125)
 ; 15 call sites from 11 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ArenaMenu_SetFlagBit, SceneThreeItems_RunMessageBoxFar_Bank0F, ...)
 ; reads: hTemp0, hTemp1, wPartyStrength, hTemp2, hTemp3
 ; writes: hTemp0
@@ -6913,7 +6913,7 @@ Func_012_6955:: ; address name
     ld [hl], a
     ret
 
-; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
+; counts the 4-byte wKeyList entries before the first $FF: hTemp0 = the count, or $80 when all 32 are in use (E-0074)
 ; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ArenaMenu_SetFlagBit, SceneThreeItems_RunMessageBoxFar_Bank0F, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hTemp0
 ; points at: wKeyList
@@ -6941,7 +6941,7 @@ Func_012_6990:: ; address name
     ldh [hTemp0], a
     ret
 
-; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
+; removes key entry hTemp0: clears the matching wKeyWorldActive link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0, wCurrentKeyIndex
 ; writes: rRAMB, rRAMG
@@ -7086,7 +7086,7 @@ Func_012_69B0:: ; address name
     dec [hl]
     ret
 
-; on map $7F or $92 at screen (0, 0), or with wCC44 = $82, runs field command $12 and places objects at wCBD3/4 and wCBCF (E-0127)
+; on map $7F or $92 at screen (0, 0), or with wMapType = $82, runs field command $12 and places objects at wObject5 + $4/4 and wObject5 (E-0127)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY
 ; writes: hTemp0, wObject5
@@ -7151,7 +7151,7 @@ Func_012_6A6A:: ; address name
     ld [wObject5], a
     ret
 
-; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
+; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hTemp0 is set), wSpriteFloatY = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
 ; 2 call sites from 2 routines (e.g. RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0, SceneWarubouFood2_AddStepDeltaToPointedByte)
 ; reads: hTemp0, wIsCGB
 ; writes: wSpriteFloatY, wOBJPaletteUploadRequest
@@ -7203,7 +7203,7 @@ Func_012_6AD9:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; wC949 -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
+; wSpriteFloatY -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
 ; 11 call sites from 11 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B, ...)
 ; reads: wSpriteFloatY
 ; writes: wSpriteFloatY
@@ -7219,7 +7219,7 @@ Func_012_6B22:: ; address name
     ld [wSpriteFloatY], a
     ret
 
-; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wC949 + $10) (E-0125)
+; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wSpriteFloatY + $10) (E-0125)
 ; 11 call sites from 11 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B, ...)
 ; reads: hTemp0, wFrameCounterLo, wFrameCounterHi, wSpriteFloatY
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
@@ -7268,7 +7268,7 @@ Data_012_6B7A:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
-; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
+; runs the field command for hTemp0 (jump table of 22; called from 49 routines) (E-0124)
 ; 53 call sites from 51 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_WaitMapType, StartScript4F7CAndSetFlag06, ...)
 ; reads: hTemp0
 RunFieldCommandTemp0::
@@ -7888,7 +7888,7 @@ Func_012_6EB7:: ; address name
     ret z
     jr DrawFieldSprites_SetSpriteTileOffset
 
-; unless the map is loading or wCBCF bit 7 is clear: reads the sprite entries starting at wCBCF (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes), sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with DrawMetaSprite
+; unless the map is loading or wObject5 bit 7 is clear: reads the sprite entries starting at wObject5 (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes), sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with DrawMetaSprite
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_DrawFieldSprites, FieldModeStateDispatch_RunBattleTransitionStep, ...)
 ; reads: wFieldActionRequest, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
@@ -8188,7 +8188,7 @@ Data_012_704C:: ; address name
     dw Gfx_7E_5870 ; id 21
     db $A0, $00
 
-; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
+; wTriggerKind = $FF; on town maps (or special maps of type 0) finds the wMapObjects entry for the current screen and sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wMapObjectCount, wTriggerKind, wIsCGB
 ; writes: wTriggerKind, wTriggerIndex, wTriggerCell, wOBJPaletteUploadRequest
@@ -8262,7 +8262,7 @@ Func_012_70A4:: ; address name
     ld [wTriggerIndex], a
     jr FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell
 
-; on maps from $30 (or special map $85) finds the wCCEB entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
+; on maps from $30 (or special map $85) finds the wScreenTriggers entry for the current screen and sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen)
 ; reads: wMapType, hMapId, wScreenTriggerCount, hMapScreenX, hMapScreenY, wTriggerKind, wIsCGB
 ; writes: wScreenTriggerCount, wTriggerIndex, wTriggerCell, wTriggerKind, wOBJPaletteUploadRequest
@@ -8442,7 +8442,7 @@ Data_012_71EE:: ; address name
     db $40 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
 
-; unless bit 7 of wC468 is set or no trigger is active (wC8FE = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wC8FF (E-0130)
+; unless bit 7 of wFieldActionRequest is set or no trigger is active (wTriggerKind = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wTriggerCell (E-0130)
 ; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_FieldStateCommonUpdate)
 ; reads: wFieldActionRequest, wTriggerKind, wTriggerMarkerFlags, wScreenTriggerCount, wMapType, hScrollX, hScrollXHi, wTriggerCell, ...
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
@@ -8676,7 +8676,7 @@ Func_012_7333:: ; address name
 .return:
     ret
 
-; when the player stands on a trigger (Func_012_7536) and nothing blocks it, sets wC916 = $0F and far-calls DispatchTalkEvent, clearing the joypad state (E-0125)
+; when the player stands on a trigger (Func_012_7536) and nothing blocks it, sets wTalkEventGroup = $0F and far-calls DispatchTalkEvent, clearing the joypad state (E-0125)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_FieldStateCommonUpdate, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7)
 ; reads: wTriggerEnable, wFieldStepFlags, wTriggerKind, hPlayerX, hPlayerY, wScriptRunning, wTalkEventIndex, wTalkEventGroup
 ; writes: wEncounterDelay, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
@@ -8929,7 +8929,7 @@ FieldModeStateDispatch_Case05_WaitTextWindowState_Data:: ; heuristic: pointer lo
 Data_012_752E:: ; address name
     db $01, $10, $12, $13, $20, $21, $23, $32
 
-; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wC8FF (or its Data_012_7581 entry on special maps), else 0 (E-0127)
+; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wTriggerCell (or its Data_012_7581 entry on special maps), else 0 (E-0127)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_WaitTextWindowState, CheckStepTriggerAndDispatchTalk)
 ; reads: wMapType, wTriggerCell
 IsPlayerOnTriggerCell::
@@ -8992,7 +8992,7 @@ Data_012_7581:: ; address name
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
-; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
+; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. RunPendingFieldEventPendingFieldEvent, FieldModeStateDispatch_Case05_WaitTextWindowState)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12::
@@ -9031,7 +9031,7 @@ Func_012_75A1:: ; address name
     ld [wTilesUnderPoint + $3], a
     ret
 
-; on town maps, every 100 calls (wC832), tries the gold, party-stat and digit events in turn until one sets wC935 (E-0128)
+; on town maps, every 100 calls (wTownEventTimer), tries the gold, party-stat and digit events in turn until one sets wPendingFieldEvent (E-0128)
 ; 3 call sites from 3 routines (e.g. RunPendingFieldEventPendingFieldEvent, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords)
 ; reads: wScriptRunning, wPendingFieldEvent, wMapType, hMapId, wTownEventTimer
 ; writes: wTownEventTimer
@@ -9111,7 +9111,7 @@ Func_012_75E0:: ; address name
     sub a, a
     ret
 
-; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wC935 = $CC and carry set; otherwise A = 0 and carry clear (E-0075)
+; when story flag $192 is set, flag $193 is clear and gold >= 10,000 ($2710): wPendingFieldEvent = $CC and carry set; otherwise A = 0 and carry clear (E-0075)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wGoldLo
 ; writes: wPendingFieldEvent
@@ -9147,7 +9147,7 @@ Func_012_7662:: ; address name
     sub a, a
     ret
 
-; with story flag $195 set and $196 clear: when the party's total HP is below 100, wC935 = $CD and carry (E-0127)
+; with story flag $195 set and $196 clear: when the party's total HP is below 100, wPendingFieldEvent = $CD and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG, wPendingFieldEvent
@@ -9212,7 +9212,7 @@ Func_012_7693:: ; address name
     sub a, a
     ret
 
-; with story flag $198 set and $199 clear: when the party's total MP is below 100, wC935 = $CE and carry (E-0127)
+; with story flag $198 set and $199 clear: when the party's total MP is below 100, wPendingFieldEvent = $CE and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG, wPendingFieldEvent
@@ -9277,7 +9277,7 @@ Func_012_76F1:: ; address name
     sub a, a
     ret
 
-; with story flag $19B set and $19C clear: when the party's total level is below 100, wC935 = $CF and carry (E-0127)
+; with story flag $19B set and $19C clear: when the party's total level is below 100, wPendingFieldEvent = $CF and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wPartyCount, hTemp0, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG, wPendingFieldEvent
@@ -9341,7 +9341,7 @@ Func_012_774F:: ; address name
     sub a, a
     ret
 
-; with at least 1000 gold: when a party member's EXP has its last three decimal digits equal, wC935 = $C9 and carry (E-0128)
+; with at least 1000 gold: when a party member's EXP has its last three decimal digits equal, wPendingFieldEvent = $C9 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wPartyCount, hTemp0, hTemp1, hTemp2, wGoldLo
 ; writes: rRAMG, wDigits, wPendingFieldEvent
@@ -9621,7 +9621,7 @@ Func_012_789E:: ; address name
     sub a, a
     ret
 
-; when wC627 is $FF or 0, the gold is at least 1000 and no inventory slot before the first empty one holds items $19-$1C: wC935 = $C7 and carry (E-0125)
+; when wEventItemSlot is $FF or 0, the gold is at least 1000 and no inventory slot before the first empty one holds items $19-$1C: wPendingFieldEvent = $C7 and carry (E-0125)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wEventItemSlot, wGoldHi, wGoldMid, wGoldLo
 ; writes: wPendingFieldEvent
@@ -9678,7 +9678,7 @@ Func_012_7934:: ; address name
     sub a, a
     ret
 
-; when wC627 is $FF or 0 and the gold is at least 5000, wC935 = $C6 and carry; otherwise A = 0, no carry (E-0124)
+; when wEventItemSlot is $FF or 0 and the gold is at least 5000, wPendingFieldEvent = $C6 and carry; otherwise A = 0, no carry (E-0124)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wEventItemSlot, wGoldHi, wGoldMid, wGoldLo
 ; writes: wPendingFieldEvent
@@ -9715,7 +9715,7 @@ Func_012_797C:: ; address name
     sub a, a
     ret
 
-; when the gold is at least 1000 and wC634 is $FF or 0: wC935 = $C4 or $C5 at random and carry (E-0125)
+; when the gold is at least 1000 and wInventory + $17 is $FF or 0: wPendingFieldEvent = $C4 or $C5 at random and carry (E-0125)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wInventory, wRandomHi, wGoldLo
 ; writes: wPendingFieldEvent
@@ -9758,7 +9758,7 @@ Func_012_79A7:: ; address name
     scf
     ret
 
-; with at least 5000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at least 30, wC935 = $C3 and carry (E-0128)
+; with at least 5000 gold and wInventory + $17 $FF or 0: when the gold's decimal digits sum to at least 30, wPendingFieldEvent = $C3 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wInventory, wGoldLo, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: wDigits, wPendingFieldEvent
@@ -9835,7 +9835,7 @@ Func_012_79DC:: ; address name
     scf
     ret
 
-; with at least 1000 gold: when every party member's HP ends in the same decimal digit, wC935 = $C2 and carry (E-0128)
+; with at least 1000 gold: when every party member's HP ends in the same decimal digit, wPendingFieldEvent = $C2 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wGoldHi, wGoldMid, wPartyCount, wPartyList, hTemp0, hTemp1, wDigits, wGoldLo
 ; writes: rRAMG, wPendingFieldEvent
@@ -9918,7 +9918,7 @@ Func_012_7A4D:: ; address name
     sub a, a
     ret
 
-; with at least 1000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at most 12, wC935 = $C1 and carry (E-0128)
+; with at least 1000 gold and wInventory + $17 $FF or 0: when the gold's decimal digits sum to at most 12, wPendingFieldEvent = $C1 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wInventory, wGoldHi, wGoldMid, wGoldLo, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: wDigits, wPendingFieldEvent
@@ -9996,7 +9996,7 @@ Func_012_7AD0:: ; address name
     scf
     ret
 
-; when a party member's HP has all decimal digits equal (for example 77 or 333), wC935 = $C0 and carry (E-0127)
+; when a party member's HP has all decimal digits equal (for example 77 or 333), wPendingFieldEvent = $C0 and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
 ; reads: wPartyCount, hTemp0, hTemp1, wDigits
 ; writes: rRAMG, wPendingFieldEvent
@@ -10063,7 +10063,7 @@ Func_012_7B45:: ; address name
     scf
     ret
 
-; when wC935 has bit 7 set and bit 6 clear: wC935 = 0 and wC832 = 0 (E-0117)
+; when wPendingFieldEvent has bit 7 set and bit 6 clear: wPendingFieldEvent = 0 and wTownEventTimer = 0 (E-0117)
 ; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, CheckWarpsAtPlayerPosition, ScriptWarpToMapFromBytesAtDE, CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc, ...)
 ; reads: wPendingFieldEvent
 ; writes: wPendingFieldEvent, wTownEventTimer
@@ -10079,7 +10079,7 @@ Func_012_7B9F:: ; address name
     ld [wTownEventTimer], a
     ret
 
-; returns unless Func_012_7D5E is 0, wC8FE is $FF and no script runs; then, unless bit 7 of wCC44 is set, wC935 = 0 (E-0122)
+; returns unless Func_012_7D5E is 0, wTriggerKind is $FF and no script runs; then, unless bit 7 of wMapType is set, wPendingFieldEvent = 0 (E-0122)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen)
 ; reads: wTriggerKind, wScriptRunning, wMapType, wPendingFieldEvent, wRandomHi, wSpriteSlots, wInventory
 ; writes: wPendingFieldEvent, wSpriteSlots, wSpriteSlotCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
@@ -10101,7 +10101,7 @@ Func_012_7BB0:: ; address name
     ld [wPendingFieldEvent], a
     ret
 
-; on town maps runs the pending event in wC935 (bits 7 and 6 select the stage; some kinds need wC634); otherwise clears it (E-0130)
+; on town maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage; some kinds need wInventory + $17); otherwise clears it (E-0130)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent, hMapId, wRandomHi, wSpriteSlots, wInventory
 ; writes: wPendingFieldEvent, wSpriteSlots, wSpriteSlotCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
@@ -10243,7 +10243,7 @@ Jump_012_7BFF:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
+; on map type 1, standing on tiles at or above wMapTallTileMin, a 1-in-8 roll sets event $0A in wPendingFieldEvent unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
 ; 1 call site from 1 routine (e.g. RunPendingFieldEventPendingFieldEvent)
 ; reads: wMapSpriteKind, wMapTallTileMin, wKeyRandomHi, hTemp0, wInventory, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hTemp0, wPendingFieldEvent
@@ -10366,7 +10366,7 @@ Func_012_7D5E:: ; address name
     xor a, a
     ret
 
-; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
+; hTemp0 = the party index whose record species (field $0B) equals the word hTemp0/7, or $80 when none (E-0125)
 ; 7 call sites from 7 routines (e.g. TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit, GreatLogTalkEvents_TestFlagBit_Case27, GreatLogTalkEvents_TestFlagBit_Case7F, LoadListedRecordNameTilesForTemp0, ...)
 ; reads: hTemp0, hTemp1, wPartyCount
 ; writes: rRAMG, hTemp0
@@ -10411,7 +10411,7 @@ Func_012_7D95:: ; address name
     ld [rRAMG], a
     ret
 
-; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
+; hTemp0 = the index of the first byte of the 24-entry list at wInventory equal to hTemp0; $FF when an entry is $00 or $FF first or no entry matches
 ; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, YoldTalkEvents_ShowHeroCheckedThePedestal, YoldTalkEvents_StartScriptAtHL_B04_Case6A, KalkaTalkEvents_TestFlagBit_Case38, ...)
 ; reads: hTemp0
 ; writes: hTemp0
@@ -10447,7 +10447,7 @@ Func_012_7DCE:: ; address name
     ldh [hTemp0], a
     ret
 
-; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
+; hTemp0 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wInventory + $17 = $FF; nothing moves when the slot is $17 (E-0106)
 ; 18 call sites from 11 routines (e.g. YoldTalkEvents_StartScriptAtHL_B04_Case6A, KalkaTalkEvents_StartScriptAtHL_B04_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hTemp0
 ; writes: wInventory
@@ -10478,7 +10478,7 @@ Func_012_7DF1:: ; address name
     ld [wInventory + $17], a
     ret
 
-; hFFC7 = the index of the first party member knowing skill $76-$7D or $92 and hFFC8 = that skill, or hFFC7 = $80 (E-0128)
+; hTemp1 = the index of the first party member knowing skill $76-$7D or $92 and hTemp2 = that skill, or hTemp1 = $80 (E-0128)
 ; 1 call site from 1 routine (e.g. YoldTalkEvents_TestFlagBit_Case13)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG, hTemp1, hTemp2
@@ -10567,7 +10567,7 @@ Func_012_7E80:: ; address name
     ldh [hTemp1], a
     ret
 
-; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
+; wGold -= the word hTemp0/hTemp1; when gold is smaller than the amount it becomes 0 instead (E-0075)
 ; 5 call sites from 5 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters, GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf, GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo, GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn, ...)
 ; reads: hTemp0, hTemp1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
@@ -10610,7 +10610,7 @@ Func_012_7E84:: ; address name
     ld [wGoldHi], a
     ret
 
-; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
+; adds the word hTemp0/hTemp1 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
 ; 13 call sites from 6 routines (e.g. RandomGoldOrItem_AddGoldCapped, ScriptFetch0E, StepTriggerReward_AddGoldCapped, TalkMsg0A3C_KingIfYouSee, ...)
 ; reads: hTemp0, hTemp1, wGoldLo, wGoldMid, wGoldHi
 ; writes: wGoldLo, wGoldMid, wGoldHi

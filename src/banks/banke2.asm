@@ -1,7 +1,7 @@
 SECTION "Bank E2", ROMX[$4000], BANK[$E2]
     db $E2
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 0 (no name). It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 0 (no name). It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Skill00:: ; heuristic: follows a terminator; C0
 Func_0E2_4001:: ; address name
@@ -101,7 +101,7 @@ Func_0E2_4001:: ; address name
 .return:
     ret
 
-; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Blaze:: ; heuristic: follows a terminator; C0
 Func_0E2_40BF:: ; address name
@@ -152,7 +152,7 @@ Func_0E2_40BF:: ; address name
 .return:
     ret
 
-; AI scoring routine for 15 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 4 Firebal, 5 Firebane, 6 Firebolt, 7 Bang, 8 Boom, 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 15 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 4 Firebal, 5 Firebane, 6 Firebolt, 7 Bang, 8 Boom, 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Firebal:: ; heuristic: follows a terminator; C0
 Func_0E2_411C:: ; address name
@@ -261,7 +261,7 @@ Func_0E2_41C5:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_Beat)
 AIScore_Beat::
 Func_0E2_41E0:: ; address name
@@ -341,7 +341,7 @@ Func_0E2_41E0:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 21 Sacrifice. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 21 Sacrifice. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sacrifice:: ; heuristic: follows a terminator; C0
 Func_0E2_4279:: ; address name
@@ -420,7 +420,7 @@ Func_0E2_4279:: ; address name
 .return:
     ret
 
-; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Heal:: ; heuristic: follows a terminator; C0
@@ -490,7 +490,7 @@ Func_0E2_432D:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_HealUs:: ; heuristic: follows a terminator; C0
 Func_0E2_438D:: ; address name
@@ -519,7 +519,7 @@ Func_0E2_438D:: ; address name
 .return:
     ret
 
-; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MPass:: ; heuristic: follows a terminator; C0
 Func_0E2_43BE:: ; address name
@@ -529,7 +529,7 @@ Func_0E2_43BE:: ; address name
     ret z
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 30 Vivify, 31 Revive. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 30 Vivify, 31 Revive. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Vivify:: ; heuristic: follows a terminator; C0
 Func_0E2_43C8:: ; address name
@@ -550,7 +550,7 @@ Func_0E2_43C8:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 32 Farewell. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 32 Farewell. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Farewell:: ; heuristic: follows a terminator; C0
 Func_0E2_43E9:: ; address name
@@ -581,7 +581,7 @@ Func_0E2_43E9:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 33 Antidote. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 33 Antidote. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Antidote:: ; heuristic: follows a terminator; C0
 Func_0E2_4420:: ; address name
@@ -594,7 +594,7 @@ Func_0E2_4420:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 34 DeChaos. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 34 DeChaos. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DeChaos:: ; heuristic: follows a terminator; C0
 Func_0E2_4433:: ; address name
@@ -607,7 +607,7 @@ Func_0E2_4433:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 35 NumbOff. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 35 NumbOff. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_NumbOff:: ; heuristic: follows a terminator; C0
 Func_0E2_4446:: ; address name
@@ -620,7 +620,7 @@ Func_0E2_4446:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 36 CurseOff. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 36 CurseOff. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CurseOff:: ; heuristic: follows a terminator; C0
 Func_0E2_4459:: ; address name
@@ -633,7 +633,7 @@ Func_0E2_4459:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Upper:: ; heuristic: follows a terminator; C0
 Func_0E2_446C:: ; address name
@@ -661,7 +661,7 @@ Func_0E2_446C:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sap:: ; heuristic: follows a terminator; C0
 Func_0E2_449C:: ; address name
@@ -741,7 +741,7 @@ Func_0E2_449C:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Speed:: ; heuristic: follows a terminator; C0
 Func_0E2_4536:: ; address name
@@ -770,7 +770,7 @@ Func_0E2_4536:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Slow:: ; heuristic: follows a terminator; C0
 Func_0E2_4567:: ; address name
@@ -869,7 +869,7 @@ Func_0E2_45FE:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 45 TwinHits. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 45 TwinHits. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_TwinHits)
 AIScore_TwinHits::
 Func_0E2_4619:: ; address name
@@ -919,7 +919,7 @@ Func_0E2_4619:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 46 Surround. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 46 Surround. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Surround:: ; heuristic: follows a terminator; C0
 Func_0E2_4674:: ; address name
@@ -1008,7 +1008,7 @@ Func_0E2_4674:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sleep:: ; heuristic: follows a terminator; C0
 Func_0E2_4721:: ; address name
@@ -1067,7 +1067,7 @@ Func_0E2_4721:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 49 TakeMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 49 TakeMagic. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TakeMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_478E:: ; address name
@@ -1086,7 +1086,7 @@ Func_0E2_478E:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 50 RobMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 50 RobMagic. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RobMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_47AB:: ; address name
@@ -1107,7 +1107,7 @@ Func_0E2_47AB:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 51 StopSpell. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 51 StopSpell. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_StopSpell:: ; heuristic: follows a terminator; C0
 Func_0E2_47CE:: ; address name
@@ -1178,7 +1178,7 @@ Func_0E2_47CE:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 52 PanicAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 52 PanicAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PanicAll:: ; heuristic: follows a terminator; C0
 Func_0E2_4855:: ; address name
@@ -1227,7 +1227,7 @@ Func_0E2_4855:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 53 Ironize. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 53 Ironize. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ironize:: ; heuristic: follows a terminator; C0
 Func_0E2_48AE:: ; address name
@@ -1248,7 +1248,7 @@ Func_0E2_48AE:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MagicBack:: ; heuristic: follows a terminator; C0
 Func_0E2_48CF:: ; address name
@@ -1276,7 +1276,7 @@ Func_0E2_48CF:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 56 Barrier. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 56 Barrier. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Barrier:: ; heuristic: follows a terminator; C0
 Func_0E2_48FD:: ; address name
@@ -1297,7 +1297,7 @@ Func_0E2_48FD:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 57 MagicWall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 57 MagicWall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MagicWall:: ; heuristic: follows a terminator; C0
 Func_0E2_491E:: ; address name
@@ -1318,7 +1318,7 @@ Func_0E2_491E:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 58 Transform. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 58 Transform. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Transform:: ; heuristic: follows a terminator; C0
 Func_0E2_493F:: ; address name
@@ -1357,7 +1357,7 @@ Func_0E2_493F:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 59 BeDragon. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 59 BeDragon. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BeDragon:: ; heuristic: follows a terminator; C0
 Func_0E2_4984:: ; address name
@@ -1386,7 +1386,7 @@ Func_0E2_4984:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 60 Chance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 60 Chance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Chance:: ; heuristic: follows a terminator; C0
 Func_0E2_49B5:: ; address name
@@ -1431,7 +1431,7 @@ Func_0E2_49B5:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 61 MegaMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 61 MegaMagic. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MegaMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_4A08:: ; address name
@@ -1523,7 +1523,7 @@ Func_0E2_4A08:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BigBang:: ; heuristic: follows a terminator; C0
 Func_0E2_4AB6:: ; address name
@@ -1618,7 +1618,7 @@ Func_0E2_4AB6:: ; address name
 .return:
     ret
 
-; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire, 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire, 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_FireAir:: ; heuristic: follows a terminator; C0
 Func_0E2_4B6B:: ; address name
@@ -1721,7 +1721,7 @@ Func_0E2_4B6B:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 72 WindBeast. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 72 WindBeast. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_WindBeast:: ; heuristic: follows a terminator; C0
 Func_0E2_4C30:: ; address name
@@ -1785,7 +1785,7 @@ Func_0E2_4C49:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Vacuum:: ; heuristic: follows a terminator; C0
 Func_0E2_4CA1:: ; address name
@@ -1824,7 +1824,7 @@ Func_0E2_4CA1:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 75 RockThrow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 75 RockThrow. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RockThrow:: ; heuristic: follows a terminator; C0
 Func_0E2_4CE6:: ; address name
@@ -1903,7 +1903,7 @@ Func_0E2_4CE6:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 76 Watershot. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 76 Watershot. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Watershot:: ; heuristic: follows a terminator; C0
 Func_0E2_4D7B:: ; address name
@@ -1964,7 +1964,7 @@ Func_0E2_4D7B:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 77 Tidalwave. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 77 Tidalwave. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Tidalwave:: ; heuristic: follows a terminator; C0
 Func_0E2_4DEC:: ; address name
@@ -2035,7 +2035,7 @@ Func_0E2_4DEC:: ; address name
 .return:
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CallHelp:: ; heuristic: follows a terminator; C0
 Func_0E2_4E71:: ; address name
@@ -2134,7 +2134,7 @@ Func_0E2_4E71:: ; address name
 .return:
     ret
 
-; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83 IceSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83 IceSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_FireSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_4F30:: ; address name
@@ -2227,7 +2227,7 @@ Func_0E2_4F30:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 84 SlimeBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 84 SlimeBlow. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SlimeBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_4FE1:: ; address name
@@ -2299,7 +2299,7 @@ Jump_0E2_4FF0:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 85 DrakSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 85 DrakSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DrakSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_5068:: ; address name
@@ -2311,7 +2311,7 @@ Func_0E2_5068:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 86 BeastCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 86 BeastCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BeastCut:: ; heuristic: follows a terminator; C0
 Func_0E2_507A:: ; address name
@@ -2323,7 +2323,7 @@ Func_0E2_507A:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 87 BirdBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 87 BirdBlow. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BirdBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_508C:: ; address name
@@ -2335,7 +2335,7 @@ Func_0E2_508C:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 88 BugBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 88 BugBlow. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BugBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_509E:: ; address name
@@ -2347,7 +2347,7 @@ Func_0E2_509E:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 89 Shears. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 89 Shears. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Shears:: ; heuristic: follows a terminator; C0
 Func_0E2_50B0:: ; address name
@@ -2359,7 +2359,7 @@ Func_0E2_50B0:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 90 DevilCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 90 DevilCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DevilCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50C2:: ; address name
@@ -2371,7 +2371,7 @@ Func_0E2_50C2:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 91 ZombieCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 91 ZombieCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ZombieCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50D4:: ; address name
@@ -2383,7 +2383,7 @@ Func_0E2_50D4:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 92 CleanCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 92 CleanCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CleanCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50E6:: ; address name
@@ -2395,7 +2395,7 @@ Func_0E2_50E6:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 93 AquaCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 93 AquaCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_AquaCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50F8:: ; address name
@@ -2407,7 +2407,7 @@ Func_0E2_50F8:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 94 MetalCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 94 MetalCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MetalCut:: ; heuristic: follows a terminator; C0
 Func_0E2_510A:: ; address name
@@ -2419,7 +2419,7 @@ Func_0E2_510A:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 95 PoisonHit. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 95 PoisonHit. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonHit:: ; heuristic: follows a terminator; C0
 Func_0E2_511C:: ; address name
@@ -2503,7 +2503,7 @@ Jump_0E2_512B:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 96 Paralyze. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 96 Paralyze. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Paralyze:: ; heuristic: follows a terminator; C0
 Func_0E2_51B7:: ; address name
@@ -2515,7 +2515,7 @@ Func_0E2_51B7:: ; address name
     call AccumulateBank6WordToDA6E
     jp AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 97 NapAttack. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 97 NapAttack. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_NapAttack:: ; heuristic: follows a terminator; C0
 Func_0E2_51C9:: ; address name
@@ -2547,7 +2547,7 @@ Func_0E2_51DB:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 98 SquallHit. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 98 SquallHit. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_SquallHit)
 AIScore_SquallHit::
 Func_0E2_51F6:: ; address name
@@ -2611,7 +2611,7 @@ Func_0E2_51F6:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 99 BiAttack, 100 QuadHits. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 99 BiAttack, 100 QuadHits. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BiAttack:: ; heuristic: follows a terminator; C0
 Func_0E2_526D:: ; address name
@@ -2696,7 +2696,7 @@ Func_0E2_526D:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 101 RainSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 101 RainSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RainSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_530E:: ; address name
@@ -2759,7 +2759,7 @@ Func_0E2_530E:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 102 MultiCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 102 MultiCut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MultiCut:: ; heuristic: follows a terminator; C0
 Func_0E2_5385:: ; address name
@@ -2831,7 +2831,7 @@ Jump_0E2_53A2:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 103 GigaSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 103 GigaSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_GigaSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_540A:: ; address name
@@ -2849,7 +2849,7 @@ Func_0E2_540A:: ; address name
 .skip:
     jp AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 104 ChargeUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 104 ChargeUp. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ChargeUp:: ; heuristic: follows a terminator; C0
 Func_0E2_5426:: ; address name
@@ -2880,7 +2880,7 @@ Func_0E2_5426:: ; address name
     call WeighWD044RuleBit1
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 105 PsycheUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 105 PsycheUp. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PsycheUp:: ; heuristic: follows a terminator; C0
 Func_0E2_545D:: ; address name
@@ -2935,7 +2935,7 @@ Func_0E2_545D:: ; address name
     call WeighWD044RuleBit1
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 106 HighJump. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 106 HighJump. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_HighJump:: ; heuristic: follows a terminator; C0
 Func_0E2_54C4:: ; address name
@@ -2990,7 +2990,7 @@ Func_0E2_54C4:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 107 EvilSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 107 EvilSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_EvilSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_5529:: ; address name
@@ -3077,7 +3077,7 @@ Func_0E2_5529:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 108 Massacre. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 108 Massacre. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Massacre:: ; heuristic: follows a terminator; C0
 Func_0E2_55CE:: ; address name
@@ -3120,7 +3120,7 @@ Func_0E2_55CE:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 109 TwinSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 109 TwinSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TwinSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_561B:: ; address name
@@ -3209,7 +3209,7 @@ Func_0E2_561B:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 110 Berserker. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 110 Berserker. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Berserker:: ; heuristic: follows a terminator; C0
 Func_0E2_56C6:: ; address name
@@ -3326,7 +3326,7 @@ Func_0E2_56C6:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 111 Ramming. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 111 Ramming. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Ramming:: ; heuristic: follows a terminator; C0
@@ -3417,7 +3417,7 @@ Jump_0E2_57E6:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 112 Kamikaze. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 112 Kamikaze. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Kamikaze:: ; heuristic: follows a terminator; C0
@@ -3438,7 +3438,7 @@ Func_0E2_5856:: ; address name
 .skip:
     jp AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 113 SleepAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 113 SleepAir. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SleepAir:: ; heuristic: follows a terminator; C0
 Func_0E2_5876:: ; address name
@@ -3499,7 +3499,7 @@ Jump_0E2_5892:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 114 PalsyAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 114 PalsyAir. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PalsyAir:: ; heuristic: follows a terminator; C0
 Func_0E2_58DF:: ; address name
@@ -3509,7 +3509,7 @@ Func_0E2_58DF:: ; address name
     ret z
     jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonGas:: ; heuristic: follows a terminator; C0
 Func_0E2_58EA:: ; address name
@@ -3519,7 +3519,7 @@ Func_0E2_58EA:: ; address name
     ret z
     jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonAir:: ; heuristic: follows a terminator; C0
 Func_0E2_58F5:: ; address name
@@ -3529,7 +3529,7 @@ Func_0E2_58F5:: ; address name
     ret z
     jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 117 Curse. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 117 Curse. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Curse:: ; heuristic: follows a terminator; C0
 Func_0E2_5900:: ; address name
@@ -3548,7 +3548,7 @@ Func_0E2_5900:: ; address name
     call WeighWD044RuleBit5
     jp AIScore_SleepAir_CallFewerThanTwoFoesPresent
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_OddDance:: ; heuristic: follows a terminator; C0
 Func_0E2_591F:: ; address name
@@ -3591,7 +3591,7 @@ Func_0E2_591F:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 120 PaniDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 120 PaniDance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PaniDance:: ; heuristic: follows a terminator; C0
 Func_0E2_5970:: ; address name
@@ -3652,7 +3652,7 @@ Func_0E2_5970:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 121 K.O.Dance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 121 K.O.Dance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_KODance:: ; heuristic: follows a terminator; C0
 Func_0E2_59E5:: ; address name
@@ -3732,7 +3732,7 @@ Func_0E2_5A68:: ; address name
     call AIAddScoresFor5ECEAnd5FC7
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 122 LureDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 122 LureDance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_LureDance)
 AIScore_LureDance::
 Func_0E2_5A72:: ; address name
@@ -3793,7 +3793,7 @@ Func_0E2_5A72:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 123 LifeDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 123 LifeDance. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_LifeDance:: ; heuristic: follows a terminator; C0
 Func_0E2_5AE6:: ; address name
@@ -3840,7 +3840,7 @@ Func_0E2_5AE6:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 124 Hustle. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 124 Hustle. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Hustle:: ; heuristic: follows a terminator; C0
@@ -3912,7 +3912,7 @@ Func_0E2_5B3D:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 125 SideStep. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 125 SideStep. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SideStep:: ; heuristic: follows a terminator; C0
 Func_0E2_5BC4:: ; address name
@@ -3965,7 +3965,7 @@ Func_0E2_5BC4:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 126 SandStorm. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 126 SandStorm. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SandStorm:: ; heuristic: follows a terminator; C0
 Func_0E2_5C25:: ; address name
@@ -4051,7 +4051,7 @@ Jump_0E2_5C2E:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 127 Radiant. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 127 Radiant. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Radiant:: ; heuristic: follows a terminator; C0
 Func_0E2_5CC2:: ; address name
@@ -4061,7 +4061,7 @@ Func_0E2_5CC2:: ; address name
     ret z
     jp AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 128 EerieLite. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 128 EerieLite. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_EerieLite:: ; heuristic: follows a terminator; C0
 Func_0E2_5CCE:: ; address name
@@ -4120,7 +4120,7 @@ Func_0E2_5CCE:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 129 Surge. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 129 Surge. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Surge:: ; heuristic: follows a terminator; C0
 Func_0E2_5D3D:: ; address name
@@ -4141,7 +4141,7 @@ Func_0E2_5D3D:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 130 UltraDown. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 130 UltraDown. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_UltraDown:: ; heuristic: follows a terminator; C0
 Func_0E2_5D60:: ; address name
@@ -4162,7 +4162,7 @@ Func_0E2_5D60:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 131 DeMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 131 DeMagic. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DeMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_5D83:: ; address name
@@ -4193,7 +4193,7 @@ Func_0E2_5D83:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 132 ThickFog. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 132 ThickFog. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ThickFog:: ; heuristic: follows a terminator; C0
 Func_0E2_5DBC:: ; address name
@@ -4222,7 +4222,7 @@ Func_0E2_5DBC:: ; address name
 .return:
     ret
 
-; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TatsuCall:: ; heuristic: follows a terminator; C0
 Func_0E2_5DED:: ; address name
@@ -4269,7 +4269,7 @@ Func_0E2_5DED:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 137 SuckAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 137 SuckAir. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SuckAir:: ; heuristic: follows a terminator; C0
 Func_0E2_5E46:: ; address name
@@ -4304,7 +4304,7 @@ Func_0E2_5E46:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 138 Focus. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 138 Focus. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Focus:: ; heuristic: follows a terminator; C0
 Func_0E2_5E83:: ; address name
@@ -4344,7 +4344,7 @@ Func_0E2_5EB6:: ; address name
     call AIAddScoresFor5ECEAnd5FC7
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 139 LushLicks. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 139 LushLicks. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_LushLicks)
 AIScore_LushLicks::
 Func_0E2_5EC0:: ; address name
@@ -4385,7 +4385,7 @@ Func_0E2_5EC0:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 140 SickLick. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 140 SickLick. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SickLick:: ; heuristic: follows a terminator; C0
 Func_0E2_5F0A:: ; address name
@@ -4464,7 +4464,7 @@ Func_0E2_5F8A:: ; address name
     call AIAddScoresFor5ECEAnd5FC7
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_LegSweep)
 AIScore_LegSweep::
 Func_0E2_5F94:: ; address name
@@ -4516,7 +4516,7 @@ Func_0E2_5FDE:: ; address name
     call AIAddScoresFor5ECEAnd5FC7
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; 1 call site from 1 routine (e.g. AIScoreB_Ahhh)
 AIScore_Ahhh::
 Func_0E2_5FE8:: ; address name
@@ -4563,7 +4563,7 @@ Func_0E2_5FE8:: ; address name
     ld c, $01
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 145 Geyser. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 145 Geyser. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Geyser:: ; heuristic: follows a terminator; C0
 Func_0E2_6044:: ; address name
@@ -4602,7 +4602,7 @@ Func_0E2_6044:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 146 DanceShut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 146 DanceShut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DanceShut:: ; heuristic: follows a terminator; C0
 Func_0E2_6089:: ; address name
@@ -4621,7 +4621,7 @@ Func_0E2_6089:: ; address name
     call WeighWD044RuleBit2
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 147 MouthShut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 147 MouthShut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MouthShut:: ; heuristic: follows a terminator; C0
 Func_0E2_60A6:: ; address name
@@ -4650,7 +4650,7 @@ Func_0E2_60A6:: ; address name
     call WeighWD044RuleBit3
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 148 StrongD. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 148 StrongD. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_StrongD:: ; heuristic: follows a terminator; C0
@@ -4684,7 +4684,7 @@ Func_0E2_60D7:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 149 Dodge. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 149 Dodge. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Dodge:: ; heuristic: follows a terminator; C0
 Func_0E2_6112:: ; address name
@@ -4707,7 +4707,7 @@ Func_0E2_6112:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 150 BladeD. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 150 BladeD. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BladeD:: ; heuristic: follows a terminator; C0
 Func_0E2_6139:: ; address name
@@ -4730,7 +4730,7 @@ Func_0E2_6139:: ; address name
     call WeighWD044RuleBit4
     ret
 
-; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Cover:: ; heuristic: follows a terminator; C0
@@ -4756,7 +4756,7 @@ Func_0E2_6160:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 153 TailWind. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 153 TailWind. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TailWind:: ; heuristic: follows a terminator; C0
 Func_0E2_618D:: ; address name
@@ -4790,7 +4790,7 @@ Jump_0E2_619A:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 154 StormWind. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 154 StormWind. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_StormWind:: ; heuristic: follows a terminator; C0
 Func_0E2_61C2:: ; address name
@@ -4800,7 +4800,7 @@ Func_0E2_61C2:: ; address name
     ret z
     jr AIScore_TailWind_CallFailIfFoeKnowsSkills42To47
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 155 AquaWall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 155 AquaWall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_AquaWall:: ; heuristic: follows a terminator; C0
@@ -4814,7 +4814,7 @@ Func_0E2_61CD:: ; address name
     call WeighWD044RuleBit5
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 156 SealPray. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 156 SealPray. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SealPray:: ; heuristic: follows a terminator; C0
 Func_0E2_61E0:: ; address name
@@ -4871,7 +4871,7 @@ Func_0E2_61E0:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 157 SuckAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 157 SuckAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_SuckAll:: ; heuristic: follows a terminator; C0
@@ -4921,7 +4921,7 @@ Func_0E2_6249:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 158 Imitate. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 158 Imitate. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Imitate:: ; heuristic: follows a terminator; C0
 Func_0E2_62A4:: ; address name
@@ -4972,7 +4972,7 @@ Func_0E2_62A4:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 159 Meditate. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 159 Meditate. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_Meditate:: ; heuristic: follows a terminator; C0
@@ -5014,7 +5014,7 @@ Func_0E2_6303:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 160 LifeSong. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 160 LifeSong. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_LifeSong:: ; heuristic: follows a terminator; C0
 Func_0E2_6350:: ; address name
@@ -5045,7 +5045,7 @@ Func_0E2_6350:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 161 LoveRain. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 161 LoveRain. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AIScore_LoveRain:: ; heuristic: follows a terminator; C0
@@ -5105,14 +5105,14 @@ Func_0E2_6387:: ; address name
 .return:
     ret
 
-; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 162 Whistle, 163 Pheromone, 164 StepGuard, 165 Outside, 166 Informer, 167 Errand, 168 EagleEye, 169 MapMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 162 Whistle, 163 Pheromone, 164 StepGuard, 165 Outside, 166 Informer, 167 Errand, 168 EagleEye, 169 MapMagic. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Whistle:: ; heuristic: follows a terminator; C0
 Func_0E2_63FA:: ; address name
     farcall AINeverUsableResetAISkillScore
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 170 Ahhh. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 170 Ahhh. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ahhh_6401:: ; heuristic: follows a terminator; C0
 Func_0E2_6401:: ; address name
@@ -5131,14 +5131,14 @@ Func_0E2_6401:: ; address name
     call WeighWD044RuleBit1
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 171 ZoneOut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 171 ZoneOut. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ZoneOut:: ; heuristic: follows a terminator; C0
 Func_0E2_641E:: ; address name
     farcall AINeverUsableResetAISkillScore
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 172 Guard. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 172 Guard. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Guard:: ; heuristic: follows a terminator; C0
 Func_0E2_6425:: ; address name
@@ -5182,7 +5182,7 @@ Func_0E2_6425:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 173 PanicAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 173 PanicAll. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PanicAll_6473:: ; heuristic: follows a terminator; C0
 Func_0E2_6473:: ; address name
@@ -5200,7 +5200,7 @@ Func_0E2_6473:: ; address name
 .return:
     ret
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 174 Ironize. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 174 Ironize. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Ironize_648D:: ; heuristic: follows a terminator; C0
 Func_0E2_648D:: ; address name
@@ -5254,7 +5254,7 @@ Func_0E2_64C1:: ; address name
     ret
     db $C9
 
-; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
+; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wAISkillScore; a positive word is added to wAISkillScore; a negative word's magnitude is added to wAISkillScore2
 ; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore, wAISkillScore2
 AccumulateBank6WordToDA6E::
@@ -5288,7 +5288,7 @@ Func_0E2_64CE:: ; address name
 .return:
     ret
 
-; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
+; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wAISkillScore2, negative words' magnitude goes to wAISkillScore
 ; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore2, wAISkillScore
 AccumulateBank6WordToDA70::
@@ -5353,7 +5353,7 @@ Func_0E2_6540:: ; address name
     ld [hl+], a
     ret
 
-; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wD2C7 (rows of 27 words); A = its low byte; clobbers HL, E
+; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wPersonalityIndex (rows of 27 words); A = its low byte; clobbers HL, E
 ; 2 call sites from 2 routines (e.g. AccumulateBank6WordToDA70, AccumulateBank6WordToDA6E)
 ; reads: wPersonalityIndex
 ; writes: wDataBank
@@ -5626,7 +5626,7 @@ AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF:: ; heuristic: pointer lo
 Data_0E2_66BF:: ; address name
     db $AB, $AC, $AD, $AE, $AF, $AF
 
-; for the three slots of the side in A (bit 2), runs Func_0E2_66DC with hFFC6 = slot for each occupied one (E-0122)
+; for the three slots of the side in A (bit 2), runs Func_0E2_66DC with hTemp0 = slot for each occupied one (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Hustle, AIScore_LoveRain)
 ; writes: hTemp0
 ForEachPresentSlotOfSideRun66DC::
@@ -5804,7 +5804,7 @@ Func_0E2_678C:: ; address name
 .return:
     ret
 
-; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
+; C = (wAIFlag & 1) ^ 1 and returns when non-zero; when bit 0 is set: wAISkillScore = 0, wAISkillScore2/wAISkillScore2 + $1 = $FFFF, C = 0 (E-0118)
 ; 4 call sites from 4 routines (e.g. AIScoreGuardSkill_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
 ; reads: wAIFlag
 ; writes: wAISkillScore, wAISkillScore2
@@ -5848,7 +5848,7 @@ Func_0E2_67CF:: ; address name
     ret z
     jr AIScore_TailWind_AccumulateBank6WordToDA70
 
-; WeighWD044RuleBit4, then adds score word $29 to wDA6E when Func_005_5758 fails and again when Func_005_5CF1 fails (E-0122)
+; WeighWD044RuleBit4, then adds score word $29 to wAISkillScore when Func_005_5758 fails and again when Func_005_5CF1 fails (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Vivify, AIScore_Farewell)
 AIAddPenaltyFor5758And5CF1::
 Func_0E2_67D5:: ; address name
@@ -5897,7 +5897,7 @@ Func_0E2_67F9:: ; address name
 .return:
     ret
 
-; adds score word $0E to wDA70 when Func_005_55BE fails and $0F to wDA6E when Func_005_5731 fails (E-0122)
+; adds score word $0E to wAISkillScore2 when Func_005_55BE fails and $0F to wAISkillScore when Func_005_5731 fails (E-0122)
 ; 3 call sites from 3 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_Beat)
 AIAddScoresFor55BEAnd5731::
 Func_0E2_6822:: ; address name
@@ -5933,7 +5933,7 @@ Func_0E2_6843:: ; address name
 .return:
     ret
 
-; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
+; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 36 call sites from 36 routines (e.g. AIScore_Upper, AIScore_Sap, AIScore_Speed, AIScore_Slow, ...)
 WeighWD044RuleBit5:: ; heuristic: follows a terminator; C0
 Func_0E2_6854:: ; address name
@@ -5947,7 +5947,7 @@ Func_0E2_6854:: ; address name
 .return:
     ret
 
-; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
+; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 12 call sites from 12 routines (e.g. AIScore_HealUs_AnyFoeLacksStatus0MaskCC, AIAddPenaltyFor5758And5CF1, AIScore_Antidote, AIScore_DeChaos, ...)
 WeighWD044RuleBit4:: ; heuristic: follows a terminator; C0
 Func_0E2_6865:: ; address name
@@ -5961,7 +5961,7 @@ Func_0E2_6865:: ; address name
 .return:
     ret
 
-; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
+; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 5 call sites from 5 routines (e.g. AIScore_FireAir, AIScore_SleepAir, AIScore_SuckAir, AIScore_MouthShut, ...)
 WeighWD044RuleBit3:: ; heuristic: follows a terminator; C0
 Func_0E2_6876:: ; address name
@@ -5975,7 +5975,7 @@ Func_0E2_6876:: ; address name
 .return:
     ret
 
-; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
+; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 8 call sites from 8 routines (e.g. AIScore_OddDance, AIScore_PaniDance, AIScore_KODance, AIScore_LureDance, ...)
 WeighWD044RuleBit2:: ; heuristic: follows a terminator; C0
 Func_0E2_6887:: ; address name
@@ -5989,7 +5989,7 @@ Func_0E2_6887:: ; address name
 .return:
     ret
 
-; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
+; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 22 call sites from 22 routines (e.g. AIScore_BigBang, AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_RockThrow, AIScore_Watershot, ...)
 WeighWD044RuleBit1:: ; heuristic: follows a terminator; C0
 Func_0E2_6898:: ; address name
@@ -6062,7 +6062,7 @@ Func_0E2_68E0:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0
@@ -6083,7 +6083,7 @@ Func_0E2_68E7:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0
@@ -6125,7 +6125,7 @@ ClearBattleStatusBitsWithMaskD_BankE2_Data:: ; heuristic: pointer load in the sa
 Data_0E2_6932:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
@@ -6137,7 +6137,7 @@ Func_0E2_6939:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
@@ -6149,7 +6149,7 @@ Func_0E2_6946:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:40AB; C0
@@ -6161,7 +6161,7 @@ Func_0E2_6953:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:40B8; C0
@@ -6220,7 +6220,7 @@ Func_0E2_6960:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:410F; C0
@@ -6250,7 +6250,7 @@ Func_0E2_69B7:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:412E; C0

@@ -5158,6 +5158,37 @@ class Rom:
         self.ram_used[addr] = name
         return name
 
+    RAM_MENTION = re.compile(r"\b([wsh])([0-9A-F]{4})\b")
+
+    def comment_ram_names(self, text: str) -> str:
+        """E-0320: address-form RAM names in comments (wC5E8, hFFC6, sA000) become the symbol at that address, or
+        `Buffer + $n` inside a named buffer, as the operands already do; a mention with no symbol stays. Only
+        the part of each line after the first `;` is changed, and nothing is added to the RAM symbol list."""
+        ranges = {"w": (0xC000, 0xDFFF), "s": (0xA000, 0xBFFF), "h": (0xFF80, 0xFFFE)}
+
+        def name(m: re.Match) -> str:
+            addr = int(m.group(2), 16)
+            lo, hi = ranges[m.group(1)]
+            if not lo <= addr <= hi:
+                return m.group(0)
+            info = self.symbols.get(addr)
+            if info and "of" in info:
+                return f"{self.symbols[info['of']]['name']} + ${addr - info['of']:X}"
+            if info:
+                return info["name"]
+            for base, binfo in self._sized:
+                if base < addr < base + binfo["size"]:
+                    return f"{binfo['name']} + ${addr - base:X}"
+            return m.group(0)
+
+        out = []
+        for ln in text.split("\n"):
+            i = ln.find(";")
+            if i >= 0 and self.RAM_MENTION.search(ln, i):
+                ln = ln[:i] + self.RAM_MENTION.sub(name, ln[i:])
+            out.append(ln)
+        return "\n".join(out)
+
     @property
     def _sized(self) -> list[tuple[int, dict]]:
         if not hasattr(self, "_sized_cache"):
@@ -5291,7 +5322,7 @@ class Rom:
             for a in used:
                 info = self.symbols.get(a)
                 note = f" ; {info['note']} ({info['evidence']})" if info else ""
-                lines.append(f"DEF {self.ram_used[a]} EQU ${a:04X}{note}")
+                lines.append(self.comment_ram_names(f"DEF {self.ram_used[a]} EQU ${a:04X}{note}"))
             lines.append("")
         path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
@@ -5730,6 +5761,7 @@ def main() -> int:
     tot_code = 0
     reached = []
     for b, text in enumerate(texts):
+        text = rom.comment_ram_names(text)
         (out / f"bank{b:02x}.asm").write_text(text, encoding="utf-8", newline="\n")
         code = sum(v[0] if v[0] != "dw" else 2 for v in rom.insn[b].values())
         tot_code += code

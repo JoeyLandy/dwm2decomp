@@ -57,7 +57,7 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 
 ## Readability state (2026-10-12, after E-0308)
 
-Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run444). Tests: 197 run, 3 skipped. The figures below are measured from the generated `src/`:
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run449). Tests: 203 run, 3 skipped. The figures below are measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -78,7 +78,7 @@ How far the names can be trusted (E-0316):
 | --- | --- | --- |
 | Rule-made names that describe their instructions: branch targets (`.loop`, `.set_x`, `.call_x`, ...) and steps (`Parent_To<X>`, `_Set<V>To<NN>`, `_Write<V>`, `_Wait<V>`, ...) | 12,814 | C2: tests/test_name_claims.py checks every claim against the code |
 | Strings and messages named by their identity (`String_BB_CC_II`, `Message_GG_II`, ...), plus streams, screens, sound tracks and table records named from their contents | 6,090 strings and messages, plus over 1,000 others | C2: named from the bytes themselves (E-0249 to E-0267) |
-| Names given by reading (config/names.json): game meaning of routines and data | 5,443 | C1 or C2 as each entry's evidence states. Every routine or RAM name their notes mention (4,369) is connected to the code, with a negative control (E-0317). 10 readings executed in tools/sm83.py (E-0314, E-0315). A power-on run places the title, name-entry, field and opening-scene names in the game modes they claim, 413 named routines executed (E-0318). Every string the game looks up in an exploring run (13) sits at its String_/Message_ label, each talk routine entered looks up the message its name quotes, and screen pictures confirm the text reading, adding the glyphs 'v ($42) and ' ($95) (E-0319) |
+| Names given by reading (config/names.json): game meaning of routines and data | 5,443 | C1 or C2 as each entry's evidence states. Every routine or RAM name their notes mention (6,669, address forms read as their symbols) is connected to the code, with a negative control (E-0317). 10 readings executed in tools/sm83.py (E-0314, E-0315). A power-on run places the title, name-entry, field and opening-scene names in the game modes they claim, 413 named routines executed (E-0318). Every string the game looks up in an exploring run (13) sits at its String_/Message_ label, each talk routine entered looks up the message its name quotes, and screen pictures confirm the text reading, adding the glyphs 'v ($42) and ' ($95) (E-0319). Played in the emulator, story scenes run with the text their names quote, and a debug-menu battle runs 785 named routines in battle mode 4; the status page confirms the monster and battler record stat fields (C2) (E-0320) |
 
 Open questions:
 - Answered since E-0308: MON_SEX bit 0 is 0 male, 1 female (E-0311); MON_EGG is 0 none, 1 unappraised egg, 2 appraised egg (E-0311); gifts go to an Egg whose record is wGiftRecord: they raise its max HP and shift its family scores, which pick its species (E-0312).

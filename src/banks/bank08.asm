@@ -1,7 +1,7 @@
 SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
-; if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650
+; if wStringCategory < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650
 ; 12 call sites from 11 routines (e.g. ShowString_Bank08, ShowStringHL_Bank08, DebugMessageTest_Update_ToBeginStringDisplay_Bank08, PauseMenu_Items_UseItem_BeginStringDisplay_Bank08AndStep, ...)
 ; reads: wStringCategory
 BeginStringDisplay_Bank08::
@@ -17,7 +17,7 @@ Func_008_4001:: ; address name
     call BeginStringDisplay
     ret
 
-; if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
+; if wStringCategory < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
 ; 3 call sites from 3 routines (e.g. CopyStringHLToDE, BreedChildScene_CopyStringToBuffer_Bank08, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC)
 ; reads: wStringCategory
 CopyStringToBuffer_Bank08::
@@ -1261,18 +1261,17 @@ Data_008_492A:: ; address name
 String_08_00_01:: ; heuristic: string; C0
 Data_008_493B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "  DEBUG MODE        SELECT       1", $A3, "GOTO PROGRAM  2", $A3, "EDIT "
-    db "         3", $A3, "AUTOMAP CHECK 4", $A3, "GRAFHICS      5", $A3, "SOUNDS     "
-    db "   6", $A3, "BATTLE        7", $A3, "HAIGOU        8", $A3, "STAFF ROLL    9", $A3
-    db "TOKUGI CHECK  A", $A3, "ENEMY TBL CHK B", $A3, "MESSAGE CHK  ?  RETURN  "
-    db "?  ", $F0
+    db "  DEBUG MODE        SELECT       1:GOTO PROGRAM  2:EDIT     "
+    db "     3:AUTOMAP CHECK 4:GRAFHICS      5:SOUNDS        6:BATTL"
+    db "E        7:HAIGOU        8:STAFF ROLL    9:TOKUGI CHECK  A:E"
+    db "NEMY TBL CHK B:MESSAGE CHK  ?  RETURN  ?  ", $F0
 
 String_08_00_02:: ; heuristic: string; C0
 Data_008_4A1A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "  ? EDIT ?                      WORLD", $A3, "          MAP X", $A3, "  "
-    db "            Y", $A3, "          POS X", $A3, "              Y", $A3, "        "
-    db "  NOT DATA", $9F, $F0
+    db "  ? EDIT ?                      WORLD:          MAP X:      "
+    db "        Y:          POS X:              Y:          NOT DATA"
+    db $9F, $F0
 
 String_08_00_03:: ; heuristic: string; C0
 Data_008_4A94:: ; address name
@@ -1282,9 +1281,9 @@ Data_008_4A94:: ; address name
 String_08_00_04:: ; heuristic: string; C0
 Data_008_4AAC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "  ? AUTOMAP ?                   KEY  ", $A3, "          KEYID", $A3, "  "
-    db "        LEVEL", $A3, "          POS X", $A3, "          POS Y", $A3, "        "
-    db "  NOT DATA", $9F, $F0
+    db "  ? AUTOMAP ?                   KEY  :          KEYID:      "
+    db "    LEVEL:          POS X:          POS Y:          NOT DATA"
+    db $9F, $F0
 
 String_08_00_05:: ; heuristic: string; C0
 Data_008_4B26:: ; address name

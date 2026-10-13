@@ -231,7 +231,7 @@ Jump_015_4167:: ; address name
     dw DrawGoldBoxAndStep_Bank15
     dw BreedMenu_Setup_CopyRectTo20ByteRows_Bank15
 
-; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
+; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wScreenStep += 1 (E-0122)
 ; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -245,7 +245,7 @@ Func_015_4171:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies box Data_015_7291 to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0125)
+; copies box Data_015_7291 to wWindowTileBuffer + $70 and writes the gold as five digit tiles at wWindowTileBuffer + $86, then wScreenStep += 1 (E-0125)
 ; 6 call sites from 6 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15, BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -618,7 +618,7 @@ Jump_015_4418:: ; address name
     ld [wScreenStep], a
     ret
 
-; DrawScreenBufferRect_Bank15 (20 x 13 from buffer offset $01CC at the scroll origin), then wD781 += 1 (E-0119)
+; DrawScreenBufferRect_Bank15 (20 x 13 from buffer offset $01CC at the scroll origin), then wScreenStep += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -1087,7 +1087,7 @@ Jump_015_4768:: ; address name
     call BreedMenu_WriteListCountAndRAMG2Etc
     jp BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5
 
-; for the record at WD789 cell 5 loads its family icon tile and draws its mark and level at wC426, then wD781 += 1 (E-0124)
+; for the record at WD789 cell 5 loads its family icon tile and draws its mark and level at wWindowTileBuffer + $126, then wScreenStep += 1 (E-0124)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
@@ -1125,7 +1125,7 @@ Jump_015_479C:: ; address name
     ld [wScreenStep], a
     ret
 
-; draws the name and species name of the record at WD789 cell 5, clears wCFA8 and wCFA9 and wD781 += 1 (E-0122)
+; draws the name and species name of the record at WD789 cell 5, clears wNameEntryState and wNameEntrySubState and wScreenStep += 1 (E-0122)
 ; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0, BreedMenu_ShowSelectedRecord_ClearThreeTileRows)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wNameEntryState, wNameEntrySubState, wScreenStep
@@ -1748,7 +1748,7 @@ Jump_015_4BBE:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; if wC58A is set, copies and draws rectangle $70C5 at wC364; wD781 += 1 (E-0122)
+; if wLinkMode is set, copies and draws rectangle $70C5 at wWindowTileBuffer + $64; wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep)
 ; reads: wLinkMode, wScreenStep
 ; writes: wScreenStep
@@ -2251,7 +2251,7 @@ Jump_015_4E47:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; removes record B from the party list wC6FE (wC6FD -= 1), compacts the three entries and zeroes the unused ones (E-0127)
+; removes record B from the party list wPartyList (wPartyCount -= 1), compacts the three entries and zeroes the unused ones (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: wPartyCount
@@ -2558,7 +2558,7 @@ Jump_015_50FB:: ; address name
     ld [wScreenStep], a
     ret
 
-; clears four tile rows, sets the default window ($8800, $1202) and wD781 += 1 (E-0124)
+; clears four tile rows, sets the default window ($8800, $1202) and wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -3042,7 +3042,7 @@ Jump_015_53B3:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD7AE through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
+; once the joypad repeat timer reaches $14, cycles wCursorBlinkAE through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
 ; 2 call sites from 1 routine (e.g. BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
@@ -3417,7 +3417,7 @@ Jump_015_56F6:: ; address name
     call RestorePlayerPositionState
     ret
 
-; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
+; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wScreenStep += 1 (E-0122)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_Case1F, BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -4841,7 +4841,7 @@ Jump_015_60AC:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies a tile from bank $1F to vTiles1 + $4E0, runs Func_01D_6320 with wD7F1 = wD7F2 = 1, then wD781 += 1 (E-0122)
+; copies a tile from bank $1F to vTiles1 + $4E0, runs Func_01D_6320 with wArg1 = wArg2 = 1, then wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. BreedMenu_ChooseEgg_LoadTile4990AndRun6320)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -5238,7 +5238,7 @@ Jump_015_6359:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; copies the 8 x 5 rectangle Data_015_7351 into wC410 (CopyRectTo20ByteRows_Bank15), then wD781 += 1 (E-0119)
+; copies the 8 x 5 rectangle Data_015_7351 into wWindowTileBuffer + $110 (CopyRectTo20ByteRows_Bank15), then wScreenStep += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -5253,7 +5253,7 @@ Func_015_6360:: ; address name
     ld [wScreenStep], a
     ret
 
-; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
+; for each entry from wGlyphListStart of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wGlyphListPos/5 (E-0125)
 ; 6 call sites from 6 routines (e.g. CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15, DrawPair72A9And72C5AndStep_570C, BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15, ...)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
@@ -5381,7 +5381,7 @@ Func_015_6403:: ; address name
     farcall DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc
     ret
 
-; outside link battles only sets wD782 = 2; otherwise copies the row Data_015_727D when wD782 is set, sets wD782 = 2 and draws the box at scroll + $1CC (E-0124)
+; outside link battles only sets wScreenSubStep = 2; otherwise copies the row Data_015_727D when wScreenSubStep is set, sets wScreenSubStep = 2 and draws the box at scroll + $1CC (E-0124)
 ; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep, KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep, RunLinkSession8Exchange_Case01_Sub01_Table4_Case03)
 ; reads: wLinkMode, wScreenSubStep
 ; writes: wScreenSubStep
@@ -5415,7 +5415,7 @@ Func_015_642D:: ; address name
     call DrawScreenBufferRect_Bank15
     ret
 
-; copies the 20 x 11 rectangle Data_015_70C5 into wC364, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119)
+; copies the 20 x 11 rectangle Data_015_70C5 into wWindowTileBuffer + $64, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119)
 ; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, KeyAppraisalMenu_ChooseKey_ToCopyRect70C5ToWC364AndDrawAndStep, RunLinkSession8Exchange_Case01_Sub01_Table4_Case01)
 CopyRect70C5ToWC364AndDraw::
 Func_015_645F:: ; address name
@@ -5429,7 +5429,7 @@ Func_015_645F:: ; address name
     call DrawScreenBufferRect_Bank15
     ret
 
-; up/down moves wD786 over three options with sound $69; A chooses (option 2 cancels), sets wTwoChoiceCursor and requests script $80; B cancels (E-0129)
+; up/down moves wGridCursorX over three options with sound $69; A chooses (option 2 cancels), sets wTwoChoiceCursor and requests script $80; B cancels (E-0129)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ToHandleThreeOptionMenuInput_15, EggServiceMenu_HandleThreeOptionMenuInput_15)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wThreeOptionResult, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, ...
@@ -5525,7 +5525,7 @@ Func_015_6478:: ; address name
     ld [wThreeOptionResult], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD787 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
+; once the joypad repeat timer reaches $14, cycles wGridCursorY through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
 ; 4 call sites from 1 routine (e.g. HandleThreeOptionMenuInput_15)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
@@ -5556,7 +5556,7 @@ Func_015_6542:: ; address name
     ld b, $C3
     jr DrawArrowTileBCAtGridCursorXEntry_Bank15_ReadGridCursorX
 
-; B = $BC, then writes B at the scroll position + Data_015_6566[wD786] (E-0124)
+; B = $BC, then writes B at the scroll position + Data_015_6566[wGridCursorX] (E-0124)
 ; 1 call site from 1 routine (e.g. HandleThreeOptionMenuInput_15)
 ; reads: wGridCursorX
 DrawArrowTileBCAtGridCursorXEntry_Bank15::
@@ -5702,7 +5702,7 @@ Func_015_65B7:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 unchanged when wStringIndex is $10-$12; otherwise HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi unchanged when wStringIndex is $10-$12; otherwise HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
 ; 41 call sites from 35 routines (e.g. CloseBreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15, BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_Case3B, BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15, ...)
 ; reads: wStringIndex, wTextCursorHi, wTextCursorLo, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -5790,7 +5790,7 @@ Func_015_6655:: ; address name
     add_a_to_hl
     ret
 
-; wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
+; wArg1 = hTemp3, then the high and low digits of hTemp2, hTemp1 and hTemp0 go to wArg2-wArg7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
 ; 9 call sites from 9 routines (e.g. TenTimesTemp0PlusTenToDigits, DrawGoldBoxAndStep_Bank15, EggServiceMenu_DrawPrice_Number24ToPackedBCD, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, ...)
 ; points at: hTemp3, wArg1
 UnpackBCDToDigitsArg1::
@@ -6127,7 +6127,7 @@ Func_015_67E5:: ; address name
     jr c, .loop
     ret
 
-; TenTimesTemp0PlusTen, then converts it to packed BCD (Number24ToPackedBCD) and unpacks the digits to wD7F1 onward (E-0117)
+; TenTimesTemp0PlusTen, then converts it to packed BCD (Number24ToPackedBCD) and unpacks the digits to wArg1 onward (E-0117)
 ; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits, BreedMenu_ChooseEgg_UpdatePagedListCursor, BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4)
 ; writes: wDigits
 TenTimesTemp0PlusTenToDigits::
@@ -6143,7 +6143,7 @@ Func_015_67F9:: ; address name
     call UnpackBCDToDigitsArg1
     ret
 
-; HL = 10 * hFFC6 + 10 (E-0117)
+; HL = 10 * hTemp0 + 10 (E-0117)
 ; 5 call sites from 5 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_Case3F, TenTimesTemp0PlusTenToDigits, BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10, ...)
 ; reads: hTemp0
 TenTimesTemp0PlusTen::
@@ -6186,7 +6186,7 @@ Func_015_6822:: ; address name
     ld [de], a
     ret
 
-; wGold -= the 24-bit amount wD7F3:wD7F2:wD7F1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106)
+; wGold -= the 24-bit amount wArg3:wArg2:wArg1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106)
 ; 9 call sites from 9 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10, ArenaMenu_SubtractArg1AmountFromGold, ArenaMenu_SubtractArg1AmountFromGold_Case19, ...)
 ; reads: wArg3, wArg2, wArg1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldHi, wGoldMid, wGoldLo
@@ -6217,7 +6217,7 @@ Func_015_683C:: ; address name
     ld [wGoldLo], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = field $0D of SRAM record B & $0F (its family), wWorkBuf + $1 = wArg1, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 5 call sites from 4 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5, BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -6240,7 +6240,7 @@ Func_015_6866:: ; address name
     ld [rRAMG2], a
     ret
 
-; record wD7F1 (bank 0): writes tile $CC + (field $0E & 1) at the address in wD7F2/3 and, three tiles on, field $56 as two digits with leading blanks (E-0121)
+; record wArg1 (bank 0): writes tile $CC + (field $0E & 1) at the address in wArg2/3 and, three tiles on, field $56 as two digits with leading blanks (E-0121)
 ; 5 call sites from 5 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5, NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5, RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5, ...)
 ; reads: wArg1, wArg2, wArg3, hTemp0, wDigits
 ; writes: rRAMG2, rRAMB
@@ -6292,7 +6292,7 @@ Func_015_688D:: ; address name
     pop bc
     ret
 
-; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
+; when wDigits is 0 it becomes $E3, and then when wDigits + $1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
 ; 7 call sites from 7 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordField0EMarkAndField56Digits, MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc, DrawArenaWinsLoCountBoxAndStep, ...)
 ; reads: wDigits
 ; writes: wDigits
@@ -6312,7 +6312,7 @@ Func_015_68DC:: ; address name
 .return:
     ret
 
-; TestBitInFieldAtArg3, then ORs its mask into the byte, setting bit wD7F1/wD7F2 of the field at wD7F3/wD7F4 (E-0114)
+; TestBitInFieldAtArg3, then ORs its mask into the byte, setting bit wArg1/wArg2 of the field at wArg3/wArg4 (E-0114)
 ; 5 call sites from 5 routines (e.g. BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc, RunLinkSession4ScreenState_ResetAndSignal_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc, StoreReceivedRecordIntoSRAM, ...)
 SetBitInFieldAtArg3::
 Func_015_68F3:: ; address name
@@ -6322,7 +6322,7 @@ Func_015_68F3:: ; address name
     ld [hl], a
     ret
 
-; index = the word wD7F1/wD7F2, field = the address in wD7F3/wD7F4: wD7F5 = $FF when bit index of the field is set (bit order $80 first within each byte), else 0 (E-0074)
+; index = the word wArg1/wArg2, field = the address in wArg3/wArg4: wArg5 = $FF when bit index of the field is set (bit order $80 first within each byte), else 0 (E-0074)
 ; 12 call sites from 9 routines (e.g. SetBitInFieldAtArg3, BreedMenu_ChooseParents_TestBitInFieldAtArg3_Case28, BreedMenu_ChooseParents_TestBitInFieldAtArg3, BreedMenu_ChooseParents_ComputeBreedingChild, ...)
 ; reads: wArg1, wArg2, wArg3, wArg4
 ; writes: wArg5
@@ -6477,7 +6477,7 @@ Func_015_693F:: ; address name
     farcall MovePartyRecordsToFrontOfList
     ret
 
-; with SRAM bank 0 enabled: wD7F1 = bit 0 of byte $0E of record wD7B4 (LoadSRAMRecordByte) (E-0119)
+; with SRAM bank 0 enabled: wArg1 = bit 0 of byte $0E of record wSelectedRecord (LoadSRAMRecordByte) (E-0119)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0, BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0)
 ; reads: wSelectedRecord, hTemp0
 ; writes: rRAMG2, rRAMB, wArg1
@@ -6541,7 +6541,7 @@ Func_015_6A1A:: ; address name
     call FillTilesBxC
     ret
 
-; record wD7F1: draws its name (field 1) as text line 2 and the name of its species (field $0B) as line 3 (Func_01D_6129) (E-0121)
+; record wArg1: draws its name (field 1) as text line 2 and the name of its species (field $0B) as line 3 (Func_01D_6129) (E-0121)
 ; 1 call site from 1 routine (e.g. DrawListEntriesCell5RecordNamesAndStep)
 ; reads: wArg1, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg5
@@ -6633,7 +6633,7 @@ Func_015_6A82:: ; address name
     ld [rRAMG2], a
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
 ; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordNameAndSpeciesName, BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15, BreedMenu_ChooseParents_ComputeBreedingChild)
 ; reads: wDataBank
 ; writes: wDataBank
@@ -7081,7 +7081,7 @@ Func_015_6DD6:: ; address name
     jr c, WriteDigitTilesFromDEToVRAM
     ret
 
-; with SRAM bank 1 selected, HL = sA06F + $6F * [HL + C] (a $6F-byte record in bank 1); then selects bank 0 and disables SRAM (E-0117)
+; with SRAM bank 1 selected, HL = sBank1Records + $6F * [HL + C] (a $6F-byte record in bank 1); then selects bank 0 and disables SRAM (E-0117)
 ; 3 call sites from 1 routine (e.g. ShowSaveFileInfoWindow)
 ; writes: rRAMG2, rRAMB
 ; points at: sBank1Records
@@ -7113,7 +7113,7 @@ ShowSaveFileInfoWindow_Data_6E0E:: ; heuristic: pointer load in the same bank (b
 Data_015_6E0E:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D
 
-; restores the player position, facing, wFollowerRecords, wC8F0-wC8FB and wCB86 from wC937-wC943 and clears wC936 (E-0121)
+; restores the player position, facing, wFollowerRecords, wFollowerRecords + $1-wFollowerRecords + $C and wSpriteSlots + $7 from wSavedPlayerState-wSavedPlayerState + $C and clears wSavedPositionValid (E-0121)
 ; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_LoadMapHeader, BreedMenu_ReturnToMap_DecompressToVRAM)
 ; reads: wSavedPlayerState
 ; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wSpriteSlots, wSavedPositionValid
@@ -7149,7 +7149,7 @@ Func_015_6E14:: ; address name
     ld [wSavedPositionValid], a
     ret
 
-; for each of the pointers wCF8B and wCF8E (when set): increments the byte it points to, up to 99, and stores wCF8D / wCF90 in the byte before (E-0125)
+; for each of the pointers wCounterPtr0Lo and wCounterPtr1Lo (when set): increments the byte it points to, up to 99, and stores wCounterArg0 / wCounterArg1 in the byte before (E-0125)
 ; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc, NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc, RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case1E)
 ; reads: wCounterPtr0Hi, wCounterPtr0Lo, wCounterArg0, wCounterPtr1Hi, wCounterPtr1Lo, wCounterArg1
 ; points at: wCounterPtr0Lo, wCounterPtr1Lo
@@ -7200,7 +7200,7 @@ Func_015_6E64:: ; address name
     ld [hl], a
     ret
 
-; clears wCF8B-wCF90, fills them through Func_015_6EFD for wCA2A and (outside link battles) wCACF, wTwoChoiceCursor = wD7F1, wD782 += 1 and requests script $80 (E-0125)
+; clears wCounterPtr0Lo-wCounterArg1, fills them through Func_015_6EFD for wRecordBufA + $A4 and (outside link battles) wRecordBufB + $A4, wTwoChoiceCursor = wArg1, wScreenSubStep += 1 and requests script $80 (E-0125)
 ; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript, NpcBreedMenu_ChooseAndBreed_PrepareWCF8BCountersAndRequestScript, RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript)
 ; reads: wRecordBufA, wLinkMode, wRecordBufB, wArg1, wScreenSubStep
 ; writes: wCounterPtr0Lo, wCounterPtr0Hi, wCounterArg0, wCounterPtr1Lo, wCounterPtr1Hi, wCounterArg1, rRAMG, rRAMB, ...
@@ -7679,27 +7679,27 @@ Script_15_764C:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_15_765A, Script_15_7657, Script_15_7651
 Script_15_7651:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8020 ; 'Become a great master!'
+    script_message $8020 ; '*: Become a great master!'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_15_7657:: ; heuristic: event script entry or jump target; C0
     script_jump Script_15_7724
 Script_15_765A:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Which will be the base monster?'
+    script_message $C002 ; '*: Which will be the base'
 Script_15_765D:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7668, Script_15_7661
 Script_15_7661:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 Script_15_7668:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'This is the one you want?'
+    script_message $C003 ; '*: This is the one you'
     script_command SCRIPT_BREED
 Script_15_766C:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_15_7677, Script_15_767B, Script_15_7670
 Script_15_7670:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Which will be the base monster?'
+    script_message $C002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
     script_jump Script_15_765D
 Script_15_7677:: ; heuristic: event script entry or jump target; C0
@@ -7709,34 +7709,34 @@ Script_15_767B:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7697, Script_15_7691, Script_15_768B, Script_15_7681
 Script_15_7681:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'There's no potential mate.'
+    script_message $C008 ; '*: There's no potential mate.'
 Script_15_7684:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Which will be the base monster?'
+    script_message $C002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
     script_jump Script_15_765D
 Script_15_768B:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'That's too low in level to'
+    script_message $C006 ; '*: That's too low in level'
     script_jump Script_15_7684
 Script_15_7691:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'You won't have a monster with'
+    script_message $C005 ; '*: You won't have a monster'
     script_jump Script_15_7684
 Script_15_7697:: ; heuristic: event script entry or jump target; C0
-    script_message $C007 ; 'And what will its mate be?'
+    script_message $C007 ; '*: And what will its mate'
 Script_15_769A:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76A5, Script_15_769E
 Script_15_769E:: ; heuristic: event script entry or jump target; C0
-    script_message $C002 ; 'Which will be the base monster?'
+    script_message $C002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
     script_jump Script_15_765D
 Script_15_76A5:: ; heuristic: event script entry or jump target; C0
-    script_message $C003 ; 'This is the one you want?'
+    script_message $C003 ; '*: This is the one you'
 Script_15_76A8:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76B5, Script_15_76B9, Script_15_76AD
 Script_15_76AD:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
-    script_message $C007 ; 'And what will its mate be?'
+    script_message $C007 ; '*: And what will its mate'
     script_command SCRIPT_BREED
     script_jump Script_15_769A
 Script_15_76B5:: ; heuristic: event script entry or jump target; C0
@@ -7746,87 +7746,87 @@ Script_15_76B9:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76CB, Script_15_76C5, Script_15_76C5, Script_15_76BF
 Script_15_76BF:: ; heuristic: event script entry or jump target; C0
-    script_message $C006 ; 'That's too low in level to'
+    script_message $C006 ; '*: That's too low in level'
     script_jump Script_15_76AD
 Script_15_76C5:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'You won't have a monster with'
+    script_message $C005 ; '*: You won't have a monster'
     script_jump Script_15_76AD
 Script_15_76CB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76D5, Script_15_76CF
 Script_15_76CF:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'A great monster will be born!'
+    script_message $C00A ; '*: A great monster will be'
     script_jump Script_15_76E5
 Script_15_76D5:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; '0 will result from this.'
+    script_message $C009 ; '*: 0 will result from this.'
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76E2, Script_15_76DC
 Script_15_76DC:: ; heuristic: event script entry or jump target; C0
-    script_message $C00C ; 'You've never had that monster.'
+    script_message $C00C ; '*: You've never had that monster.'
     script_jump Script_15_76E5
 Script_15_76E2:: ; heuristic: event script entry or jump target; C0
-    script_message $C00B ; 'You already had that monster.'
+    script_message $C00B ; '*: You already had that monster.'
 Script_15_76E5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76E9, Script_15_76EC
 Script_15_76E9:: ; heuristic: event script entry or jump target; C0
     script_jump Script_15_76EF
 Script_15_76EC:: ; heuristic: event script entry or jump target; C0
-    script_message $C029 ; 'Accessories will be in the Vault.'
+    script_message $C029 ; '*: Accessories will be in the'
 Script_15_76EF:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76FC, Script_15_76F4
 Script_15_76F4:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 Script_15_76FC:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
-    script_message $C00F ; 'Hatching that will cost 0G. Should'
+    script_message $C00F ; '*: Hatching that will cost 0G.'
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7706, Script_15_7712, Script_15_770C
 Script_15_7706:: ; heuristic: event script entry or jump target; C0
-    script_message $C010 ; 'I'll hatch the egg too, then.'
+    script_message $C010 ; '*: I'll hatch the egg too,'
     script_jump Script_15_7764
 Script_15_770C:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'You don't have enough gold, so'
+    script_message $C012 ; '*: You don't have enough gold,'
     script_jump Script_15_7715
 Script_15_7712:: ; heuristic: event script entry or jump target; C0
-    script_message $C011 ; 'I won't hatch the egg, then.'
+    script_message $C011 ; '*: I won't hatch the egg,'
 Script_15_7715:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
-    script_message $401E ; 'You got the egg of 0.'
-    script_message $C019 ; '0 is going to the farm.'
+    script_message $401E ; '*: You got the egg of'
+    script_message $C019 ; '*: 0 is going to the'
     script_command SCRIPT_BREED
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_jump Script_15_764C
 Script_15_7724:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7731, Script_15_7728
 Script_15_7728:: ; heuristic: event script entry or jump target; C0
-    script_message $C01C ; 'There isn't a single egg here.'
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C01C ; '*: There isn't a single egg'
+    script_message $C004 ; '*: Is there anything else?'
     script_jump Script_15_764C
 Script_15_7731:: ; heuristic: event script entry or jump target; C0
-    script_message $C01A ; 'Which egg should I hatch?'
+    script_message $C01A ; '*: Which egg should I hatch?'
 Script_15_7734:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_773F, Script_15_7738
 Script_15_7738:: ; heuristic: event script entry or jump target; C0
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 Script_15_773F:: ; heuristic: event script entry or jump target; C0
-    script_message $C01B ; 'That will cost 0G. OK?'
+    script_message $C01B ; '*: That will cost 0G. OK?'
 Script_15_7742:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_774E, Script_15_7752, Script_15_7747
 Script_15_7747:: ; heuristic: event script entry or jump target; C0
-    script_message $C01A ; 'Which egg should I hatch?'
+    script_message $C01A ; '*: Which egg should I hatch?'
     script_command SCRIPT_BREED
     script_jump Script_15_7734
 Script_15_774E:: ; heuristic: event script entry or jump target; C0
@@ -7836,35 +7836,35 @@ Script_15_7752:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7761, Script_15_7756
 Script_15_7756:: ; heuristic: event script entry or jump target; C0
-    script_message $C01D ; 'You don't have enough gold.'
+    script_message $C01D ; '*: You don't have enough gold.'
     script_command SCRIPT_BREED
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 Script_15_7761:: ; heuristic: event script entry or jump target; C0
-    script_message $C021 ; 'Fine, fine. Just wait here.'
+    script_message $C021 ; '*: Fine, fine. Just wait here.'
 Script_15_7764:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
 Script_15_7766:: ; heuristic: event script entry or jump target; C0
-    script_message $4014 ; 'Will you take 0 with you?'
+    script_message $4014 ; '*: Will you take 0 with'
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7778, Script_15_776D
 Script_15_776D:: ; heuristic: event script entry or jump target; C0
-    script_message $C016 ; 'I'll send 0 to the farm,'
+    script_message $C016 ; '*: I'll send 0 to the'
 Script_15_7770:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 Script_15_7778:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_7782, Script_15_777C
 Script_15_777C:: ; heuristic: event script entry or jump target; C0
-    script_message $C015 ; 'Raise it with love and care!'
+    script_message $C015 ; '*: Raise it with love and'
     script_jump Script_15_7770
 Script_15_7782:: ; heuristic: event script entry or jump target; C0
-    script_message $C017 ; 'Which will go back to the'
+    script_message $C017 ; '*: Which will go back to'
 Script_15_7785:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_778D, Script_15_7789
@@ -7872,22 +7872,22 @@ Script_15_7789:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_jump Script_15_7766
 Script_15_778D:: ; heuristic: event script entry or jump target; C0
-    script_message $C018 ; 'Is this the one to send'
+    script_message $C018 ; '*: Is this the one to'
 Script_15_7790:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_779C, Script_15_77A0, Script_15_7795
 Script_15_7795:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
-    script_message $C017 ; 'Which will go back to the'
+    script_message $C017 ; '*: Which will go back to'
     script_jump Script_15_7785
 Script_15_779C:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_jump Script_15_7790
 Script_15_77A0:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
-    script_message $C019 ; '0 is going to the farm.'
+    script_message $C019 ; '*: 0 is going to the'
     script_command SCRIPT_BREED
-    script_message $C004 ; 'Is there anything else?'
+    script_message $C004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
     script_jump Script_15_764C
 
@@ -8134,7 +8134,7 @@ Func_015_78C5:: ; address name
     ld [wGlyphListPos], a
     ret
 
-; DE = $4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_015_794A + 2 * wD785, B = $1F (bank), C = 16 (bytes) (E-0121)
+; DE = $4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_015_794A + 2 * wGlyphListStart, B = $1F (bank), C = 16 (bytes) (E-0121)
 ; 2 call sites from 1 routine (e.g. HibernateMenu_ChooseRecords_Case03_Sub01_GlyphCopyArgsForA_Bank15)
 ; reads: wGlyphListStart
 GlyphCopyArgsForA_Bank15::
@@ -8174,7 +8174,7 @@ GlyphCopyArgsForA_Bank15_Data:: ; heuristic: pointer load in the same bank (bank
 Data_015_794A:: ; address name
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
-; wD09D = the family nibble of the record selected by wD7F1 (Func_015_7A43), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
+; wWorkBuf = the family nibble of the record selected by wArg1 (Func_015_7A43), wWorkBuf + $1 = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5)
 ; reads: wArg1
 ; writes: rRAMG2, wWorkBuf
@@ -8315,7 +8315,7 @@ HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D_Data:: ; heurist
 Data_015_7A3B:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
-; HL = sB356 + $6F * B in SRAM bank 0, except record $1D, which is at sA000 in SRAM bank 1 (E-0122)
+; HL = sCompactRecords + $6F * B in SRAM bank 0, except record $1D, which is at sRecords in SRAM bank 1 (E-0122)
 ; 3 call sites from 3 routines (e.g. HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D, LoadFamilyIconTileForArg1Record, HibernateMenu_ChooseRecords_Case06_RecordAddressWithBank1Slot1D)
 ; writes: rRAMB
 ; points at: sCompactRecords, sRecords
@@ -8410,7 +8410,7 @@ Func_015_7A5F:: ; address name
     ld [rRAMG2], a
     ret
 
-; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
+; when wDigits is 0 it becomes $E3, and then when wDigits + $1 is 0 too it becomes $E3: a digit byte of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros are blanked (E-0093) (the same 23 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D)
 ; reads: wDigits
 ; writes: wDigits

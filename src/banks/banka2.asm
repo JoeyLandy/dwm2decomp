@@ -1,7 +1,7 @@
 SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $A2
 
-; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hFFC6 bytes from HL to DE (E-0121)
+; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121)
 ; 1 call site from 1 routine (e.g. CopyMonsterTableBytesFromMonsterTable)
 ; reads: wMonsterId, hTemp0
 CopyMonsterTableBytesFrom4056::

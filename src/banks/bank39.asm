@@ -1,7 +1,7 @@
 SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
-; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
+; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wSlotAIMode[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wLinkMode is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
 ; 8 call sites from 7 routines (e.g. ChooseTargetForActor, PickRandomActionWhenUncontrolled, RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02, RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc, ...)
 ; reads: wBattleActor, wLinkMode
 ; writes: wBattleActionId
@@ -45,7 +45,7 @@ Func_039_4001:: ; address name
     call JumpToWordAtHL
     ret
 
-; target = a present slot of the opposite three (slots 4-6 for actors 0-3, 0-2 for 4-7): the first present one, then each later present one replaces it when wC5E7 bit 7 is set after AdvanceRandom, so the last is favoured; $FF when none is present (E-0061)
+; target = a present slot of the opposite three (slots 4-6 for actors 0-3, 0-2 for 4-7): the first present one, then each later present one replaces it when wRandomLo bit 7 is set after AdvanceRandom, so the last is favoured; $FF when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
@@ -56,7 +56,7 @@ Func_039_404B:: ; address name
     xor a, $04
     jp TargetRandomOtherSlot_Skip
 
-; target = the slot in wDA2D[2 * actor] when that slot is present, else TargetRandomFoe (E-0061)
+; target = the slot in wSavedActionChoices + $1[2 * actor] when that slot is present, else TargetRandomFoe (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
@@ -145,7 +145,7 @@ Func_039_40A2:: ; address name
     ld [hl], c
     ret
 
-; target = one of the actor's own three slots by coin flips (wC5E7 bit 7), the later ones favoured; presence is not checked (E-0061)
+; target = one of the actor's own three slots by coin flips (wRandomLo bit 7), the later ones favoured; presence is not checked (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
@@ -256,7 +256,7 @@ Func_039_413C:: ; address name
     ld [hl], a
     ret
 
-; target = a random slot (wC5E7 & 7 after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7; retries until one is found (E-0061)
+; target = a random slot (wRandomLo & 7 after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7; retries until one is found (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
@@ -5887,7 +5887,7 @@ Func_039_65CD:: ; address name
     ld [hl], a
     ret
 
-; after AdvanceRandom, lists the present opposite slots in slot order (count in hFFC6, slots in hFFC7-hFFC9, unused entries $FF) and lets PickWeightedTargetCandidate choose (E-0061)
+; after AdvanceRandom, lists the present opposite slots in slot order (count in hTemp0, slots in hTemp1-hTemp3, unused entries $FF) and lets PickWeightedTargetCandidate choose (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
@@ -7313,7 +7313,7 @@ Func_039_6CE9:: ; address name
     ld [hl], a
     ret
 
-; A = slot: A = its status byte 4 (wD810) & $0C; Z set when both bits are clear (E-0116)
+; A = slot: A = its status byte 4 (wBattleStatus4) & $0C; Z set when both bits are clear (E-0116)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; points at: wBattleStatus4
 SlotStatus4Bits23::
@@ -7324,7 +7324,7 @@ Func_039_6D6A:: ; address name
     and a, $0C
     ret
 
-; wD87F = 0, hFFC7 = 0, stores HP + DEF of three slots from the target in wD874 and falls into PickWeakestEstimatedTarget (E-0126)
+; wBattleTemp7F = 0, hTemp1 = 0, stores HP + DEF of three slots from the target in wTargetEstimates and falls into PickWeakestEstimatedTarget (E-0126)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget, wTargetEstimates, hTemp0, wRandomLo
 ; writes: wBattleTemp7F, hTemp1, hTemp0
@@ -7345,7 +7345,7 @@ Func_039_6D74:: ; address name
     dec b
     jr nz, .loop
 
-; picks the smallest of the three wD874 estimates (ties broken randomly) and adds its index to wBattleTarget (E-0125)
+; picks the smallest of the three wTargetEstimates estimates (ties broken randomly) and adds its index to wBattleTarget (E-0125)
 ; 3 call sites from 3 routines (e.g. EstimateThreeTargets, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wTargetEstimates, hTemp0, wRandomLo
 ; writes: hTemp0
@@ -7393,7 +7393,7 @@ Func_039_6D89:: ; address name
     ld [hl], a
     ret
 
-; slot C: stores HP + DEF (DEF halved when hFFC7 is set and bit 2 of its wD812 byte is set) in wD874[C & 3], or $FFFF when empty (E-0124)
+; slot C: stores HP + DEF (DEF halved when hTemp1 is set and bit 2 of its wBattleStatus6 byte is set) in wTargetEstimates[C & 3], or $FFFF when empty (E-0124)
 ; 2 call sites from 2 routines (e.g. EstimateAndPickWeakestTarget, EstimateThreeTargets)
 ; reads: hTemp1
 ; points at: wBattleStatus6, wTargetEstimates
@@ -7432,7 +7432,7 @@ StoreFFFFToTargetEstimatesSlotC::
 Func_039_6DF1:: ; address name
     ld hl, $FFFF
 
-; stores HL in the word wD874[C & 3] (E-0122)
+; stores HL in the word wTargetEstimates[C & 3] (E-0122)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; points at: wTargetEstimates
 StoreHLToTargetEstimatesSlotC::
@@ -7522,7 +7522,7 @@ Func_039_6E27:: ; address name
     pop bc
     ret
 
-; if bit 0 of wD8A7[C] is set, the damage word (wBattleDamageLo, wD873) = damage * 50 (Multiply8By16); registers preserved (E-0121)
+; if bit 0 of wSlotBodyFlags[C] is set, the damage word (wBattleDamageLo, wBattleDamageHi) = damage * 50 (Multiply8By16); registers preserved (E-0121)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; reads: wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
@@ -7554,7 +7554,7 @@ Func_039_6E61:: ; address name
     pop af
     ret
 
-; hFFC7 = 1; for three slots from the target stores HP + DEF in wD874, or $FFFF for slots with wD80F status bits $C0 or $0C; then Func_039_6D89 (E-0124)
+; hTemp1 = 1; for three slots from the target stores HP + DEF in wTargetEstimates, or $FFFF for slots with wBattleStatus3 status bits $C0 or $0C; then Func_039_6D89 (E-0124)
 ; 4 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget
 ; writes: hTemp1
@@ -7765,7 +7765,7 @@ Func_039_6F9A:: ; address name
     pop bc
     ret
 
-; wBattleTargetChoice[2 * actor] = (hFFC6, or hFFC9 when hFFC6 is $FF) | hFFD0 (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
+; wBattleTargetChoice[2 * actor] = (hTemp0, or hTemp3 when hTemp0 is $FF) | hTempA (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
 ; 5 call sites from 5 routines (e.g. TargetRandomFoeOfFamilyD, ChooseTarget_Ramming, ChooseTarget_MetalCut, TargetWeakestFoeOfFamilyD, ...)
 ; reads: wBattleActor, hTemp0, hTemp3, hTempA
 ; points at: wBattleTargetChoice
@@ -7787,7 +7787,7 @@ Func_039_6FC8:: ; address name
     ld [hl], a
     ret
 
-; HL = wBattleTargetChoice + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
+; HL = wBattleTargetChoice + 2 * wBattleActor; A = hTemp0, or hTemp3 when hTemp0 is $FF, or hTemp2 when both are $FF; stores A | hTempA at HL. What the bytes mean is not known (E-0060)
 ; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_LushLicks, ChooseTarget_UltraDown, ChooseTarget_OddDance, ...)
 ; reads: wBattleActor, hTemp0, hTemp3, hTemp2, hTempA
 ; points at: wBattleTargetChoice
@@ -7812,7 +7812,7 @@ Func_039_6FE2:: ; address name
     ld [hl], a
     ret
 
-; wBattleTargetChoice[2 * actor] = (the first of hFFC6, hFFCA, hFFC9 that is not $FF, else hFFC8) | hFFD0 (the four-choice form of SetActorTargetFromHRAMChoice) (E-0096)
+; wBattleTargetChoice[2 * actor] = (the first of hTemp0, hTemp4, hTemp3 that is not $FF, else hTemp2) | hTempA (the four-choice form of SetActorTargetFromHRAMChoice) (E-0096)
 ; 5 call sites from 5 routines (e.g. ChooseTarget_PanicAll, ChooseTarget_MouthShut, ChooseTarget_LegSweep, ChooseTarget_SickLick, ...)
 ; reads: wBattleActor, hTemp0, hTemp4, hTemp3, hTemp2, hTempA
 ; points at: wBattleTargetChoice
@@ -7868,7 +7868,7 @@ Func_039_7028:: ; address name
     ld [hl], a
     ret
 
-; hFFC6 = candidate count, hFFC7-hFFC9 = candidates in priority order: target = the first for one; with two the first when wC5E7 < $AB (171/256), else the second; with three the first when wC5E7 < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hFFC7 ($FF) (E-0061)
+; hTemp0 = candidate count, hTemp1-hTemp3 = candidates in priority order: target = the first for one; with two the first when wRandomLo < $AB (171/256), else the second; with three the first when wRandomLo < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hTemp1 ($FF) (E-0061)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_66C5, TargetAllyWithStatusBit20, TargetFoeWeightedBySlotOrder)
 ; reads: hTemp0, hTemp1, wBattleActor, wRandomLo, hTemp2
 ; points at: wBattleTargetChoice, hTemp1
@@ -7915,7 +7915,7 @@ Func_039_704E:: ; address name
     ld [hl], b
     ret
 
-; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hFFC9) is used (SetActorTargetFromTemp0OrTemp3). Used by the family-slaying moves' target routines (E-0096)
+; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hTemp3) is used (SetActorTargetFromTemp0OrTemp3). Used by the family-slaying moves' target routines (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut, ChooseTarget_ZombieCut, ChooseTarget_DevilCut, ChooseTarget_Shears, ...)
 ; reads: wBattleActor, wSpeciesRecord, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wSpeciesIdLo, wSpeciesIdHi
@@ -8211,7 +8211,7 @@ Func_039_7203:: ; address name
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank39_Skip
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank39:: ; heuristic: follows a terminator; C0
@@ -8236,7 +8236,7 @@ Func_039_721C:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0
@@ -8257,7 +8257,7 @@ Func_039_7223:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0
@@ -8299,7 +8299,7 @@ ClearBattleStatusBitsWithMaskD_Bank39_Data:: ; heuristic: pointer load in the sa
 Data_039_726E:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
@@ -8311,7 +8311,7 @@ Func_039_7275:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
@@ -8323,7 +8323,7 @@ Func_039_7282:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:40AB; C0
@@ -8335,7 +8335,7 @@ Func_039_728F:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:40B8; C0
@@ -8394,7 +8394,7 @@ Func_039_729C:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:410F; C0
@@ -8424,7 +8424,7 @@ Func_039_72F3:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:412E; C0

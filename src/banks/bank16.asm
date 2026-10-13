@@ -1,7 +1,7 @@
 SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
-; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
+; wItemId (wItemId) = item id: copies the 13-byte ItemTable record to wItemRecord (wItemRecord)
 ; 4 call sites from 4 routines (e.g. PauseMenu_Items_MemberList_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wItemId
 ; points at: wItemRecord
@@ -411,7 +411,7 @@ Jump_016_4249:: ; address name
     ld [wItemId], a
     ret
 
-; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wC160 and wD08E = $32 + their count; otherwise wItemId = $FF (E-0127)
+; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wTextBuf3 and wItemRecordByte0A = $32 + their count; otherwise wItemId = $FF (E-0127)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0)
 ; reads: wPartyCount
 ; writes: wItemId, wItemRecordByte0A
@@ -473,7 +473,7 @@ Func_016_425E:: ; address name
     ld [wItemRecordByte0A], a
     ret
 
-; if record A (< wC6FD) has field $55 bit 7 clear and bit 0 set, copies its name and marks (field 1) to wC160 + 16 * D and increments D (E-0121)
+; if record A (< wPartyCount) has field $55 bit 7 clear and bit 0 set, copies its name and marks (field 1) to wTextBuf3 + 16 * D and increments D (E-0121)
 ; 3 call sites from 1 routine (e.g. ListPartyMembersWithField55Bit0)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
@@ -1169,7 +1169,7 @@ Jump_016_462F:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret
 
-; A = wD083, then CheckRecordFlag55Bit7 (E-0066)
+; A = wTargetRecord, then CheckRecordFlag55Bit7 (E-0066)
 ; 22 call sites from 22 routines (e.g. ItemApply_WorldDew_CheckTargetRecordFlag55Bit7, ItemUsable_VITbelt, ItemUsable_BeefJerky, ItemUsable_Comedy, ...)
 ; reads: wTargetRecord
 ; writes: wItemId
@@ -1221,7 +1221,7 @@ Func_016_4645:: ; address name
 .return:
     ret
 
-; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes min(HL - BC, wD08F) (wD08F when the difference is 256 or more) as a decimal string at wC160 (WriteDecimalByteString) (E-0103)
+; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes min(HL - BC, wItemEffectAmount) (wItemEffectAmount when the difference is 256 or more) as a decimal string at wTextBuf3 (WriteDecimalByteString) (E-0103)
 ; 6 call sites from 6 routines (e.g. ItemUsable_MysticNut, ItemUsable_LifeAcorn, ItemUsable_INTseed, ItemUsable_AGLseed, ...)
 ; reads: wItemEffectAmount
 ; writes: wItemId
@@ -1256,7 +1256,7 @@ Func_016_466A:: ; address name
     ld [wItemId], a
     ret
 
-; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id. The Herb entry adds (wC5E7 after NextTableByte) / 11 + wD08F to record wD083 (Func_016_57D1) and then runs ConsumeSelectedItemByChance; CheckItemUsable is the matching usability check (E-0089)
+; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id. The Herb entry adds (wRandomLo after NextTableByte) / 11 + wItemEffectAmount to record wTargetRecord (Func_016_57D1) and then runs ConsumeSelectedItemByChance; CheckItemUsable is the matching usability check (E-0089)
 ; 3 call sites from 3 routines (e.g. PauseMenu_Items_UseItem_ApplyItemEffect, PauseMenu_Items_UseItem_ApplyItemEffect_Case19, PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D)
 ; reads: wItemId
 ApplyItemEffect::
@@ -2072,7 +2072,7 @@ ItemApply_Item62::
 Jump_016_4A47:: ; address name
     ret
 
-; stores item wItemId - $3F in field $A4 of record wD083: an empty field consumes the item (hFFC6 = 0); otherwise the old item goes back to the inventory and its name to wC160 (hFFC6 = 1) (E-0125)
+; stores item wItemId - $3F in field $A4 of record wTargetRecord: an empty field consumes the item (hTemp0 = 0); otherwise the old item goes back to the inventory and its name to wTextBuf3 (hTemp0 = 1) (E-0125)
 ; 15 call sites from 15 routines (e.g. ItemApply_Life, ItemApply_DScale, ItemApply_MagicCape, ItemApply_Wise, ...)
 ; reads: wTargetRecord, wItemId, wInventorySlot
 ; writes: hTemp0, wItemId
@@ -2310,7 +2310,7 @@ ApplyEquipmentEffectKeepA_ByItem_Return_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
-; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: the word there += A, capped at 999 (CapDETo999) (E-0103)
+; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: the word there += A, capped at 999 (CapDETo999) (E-0103)
 ; 9 call sites from 9 routines (e.g. ItemApply_DScale, ItemApply_Wise, ItemApply_Smart_4A1D, ItemApply_Starry, ...)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
@@ -2337,7 +2337,7 @@ Func_016_4B4D:: ; address name
     ld [hl], a
     ret
 
-; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: adds A to the word at field C and to the word two bytes before it, each capped at 999 (E-0103)
+; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: adds A to the word at field C and to the word two bytes before it, each capped at 999 (E-0103)
 ; 4 call sites from 4 routines (e.g. ItemApply_OddBelt, ItemApply_MagicBelt, ItemApply_DracoBelt, ItemApply_VITbelt)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
@@ -2382,7 +2382,7 @@ Func_016_4B68:: ; address name
     ld [hl], a
     ret
 
-; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
+; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
 ; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09, ...)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
@@ -2424,7 +2424,7 @@ Func_016_4B97:: ; address name
     ld [hl], a
     ret
 
-; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
+; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
 ; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
@@ -2508,7 +2508,7 @@ Func_016_4C0E:: ; address name
     ld d, $03
     ret
 
-; advances the random table (NextTableByte), takes A = (wC5E8:wC5E7) mod 100 and, when A < wD087, sets wItemId = $FF, clears wInventory[wD082] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
+; advances the random table (NextTableByte), takes A = (wRandomHi:wRandomLo) mod 100 and, when A < wItemRecord + $3, sets wItemId = $FF, clears wInventory[wInventorySlot] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
 ; 33 call sites from 33 routines (e.g. EquipItemOnRecordTargetRecord, ItemApply_LogTwig, ItemApply_Bookmark, ItemApply_ExitBell, ...)
 ; reads: wRandomLo, wRandomHi, wInventorySlot
 ; writes: wItemId
@@ -2534,7 +2534,7 @@ Func_016_4C1D:: ; address name
     call CompactInventory
     ret
 
-; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
+; copies the 24 wInventory bytes to wWorkBuf, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
 ; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordTargetRecord, RemoveWItemIdFromInventory, PauseMenu_Items_SubMenu_BeginStringDisplay_Bank08, ...)
 ; points at: wWorkBuf, wInventory
 CompactInventory::
@@ -2635,7 +2635,7 @@ Func_016_4C9E:: ; address name
     call CompactInventory
     ret
 
-; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
+; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wItemId) to wItemRecord; RunItemEffect dispatches on the same id; wInventory is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
 ; record: byte 0 (0, 1, 2 or 6); 16-bit amount (10, 50, 500, 200, 2000 for the first five items); byte 3 (usually $64); byte 4; byte 5 (never read); byte 6; byte 7; byte 8; byte 9; byte 10; byte 11; byte 12
 ItemTable::
 Data_016_4CC2:: ; address name
@@ -3214,7 +3214,7 @@ Jump_016_53C7:: ; address name
     call SetWD08D14IfItemRefused
     ret
 
-; when wItemId is $FF (refused): wD08D = $12 (E-0119)
+; when wItemId is $FF (refused): wItemMessage = $12 (E-0119)
 ; 6 call sites from 6 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion, ...)
 ; reads: wItemId
 ; writes: wItemMessage
@@ -3227,7 +3227,7 @@ Func_016_53CE:: ; address name
     ld [wItemMessage], a
     ret
 
-; when wItemId is $FF (refused): wD08D = $14 (E-0119)
+; when wItemId is $FF (refused): wItemMessage = $14 (E-0119)
 ; 5 call sites from 5 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell, ...)
 ; reads: wItemId
 ; writes: wItemMessage
@@ -3299,7 +3299,7 @@ Jump_016_542B:: ; address name
     ld [wItemMessage], a
     ret
 
-; record wD083: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wD08D = 6 (E-0117)
+; record wTargetRecord: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wItemMessage = 6 (E-0117)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord)
 ; reads: wTargetRecord
 ; writes: wItemMessage
@@ -3335,7 +3335,7 @@ Jump_016_5457:: ; address name
     call HealPartyRecordAIfHurt
     ld a, $02
 
-; A = party index: returns when it is not below wC6FD, when record byte $55 bit 7 is set, or when HP ($5B) already equals max HP ($5D); otherwise Func_016_56AF (a random heal) (E-0120)
+; A = party index: returns when it is not below wPartyCount, when record byte $55 bit 7 is set, or when HP ($5B) already equals max HP ($5D); otherwise Func_016_56AF (a random heal) (E-0120)
 ; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
@@ -3383,7 +3383,7 @@ Jump_016_549B:: ; address name
     call FullHealPartyRecordA
     ld a, $02
 
-; A = party index: returns when it is not below wC6FD or the record's byte $55 bit 7 is set; otherwise wD083 = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
+; A = party index: returns when it is not below wPartyCount or the record's byte $55 bit 7 is set; otherwise wTargetRecord = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
 ; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
@@ -3518,7 +3518,7 @@ Jump_016_554A:: ; address name
     call ClearPartyRecordFlag55Bit0
     ld a, $02
 
-; A = party index: returns when it is not below wC6FD or byte $55 bit 7 is set; otherwise clears bit 0 of the record's byte $55 (E-0117)
+; A = party index: returns when it is not below wPartyCount or byte $55 bit 7 is set; otherwise clears bit 0 of the record's byte $55 (E-0117)
 ; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
@@ -3740,7 +3740,7 @@ Jump_016_569E:: ; address name
     ld [wItemId], a
     ret
 
-; reads the next table byte, then heals record wD083's HP by wC5E7 / (wD08F + 1) + wD090 (capped at max HP) (E-0122)
+; reads the next table byte, then heals record wTargetRecord's HP by wRandomLo / (wItemEffectAmount + 1) + wItemEffectRange (capped at max HP) (E-0122)
 ; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount)
 ; reads: wRandomLo, wItemEffectAmount, wItemEffectRange, wTargetRecord
 HealRecordHPByRandomAmount::
@@ -3760,7 +3760,7 @@ Func_016_56AF:: ; address name
     call AddHLToRecordHPCapped
     ret
 
-; heals record wD083's MP by wD08F (capped at max MP) (E-0122)
+; heals record wTargetRecord's MP by wItemEffectAmount (capped at max MP) (E-0122)
 ; 3 call sites from 3 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount)
 ; reads: wItemEffectAmount, wTargetRecord
 HealRecordMPByItemEffectAmount::
@@ -3772,7 +3772,7 @@ Func_016_56CC:: ; address name
     call AddHLToRecordMPCapped
     ret
 
-; Z clear when bit 7 of byte $55 of record wD083 is set (SRAMRecordAddressMapped); HL points at it (E-0114)
+; Z clear when bit 7 of byte $55 of record wTargetRecord is set (SRAMRecordAddressMapped); HL points at it (E-0114)
 ; 3 call sites from 3 routines (e.g. ClearPartyRecordFlag55Bit0, FullHealPartyRecordA, HealPartyRecordAIfHurt)
 ; reads: wTargetRecord
 TestTargetRecordFlag55Bit7::
@@ -3783,7 +3783,7 @@ Func_016_56D9:: ; address name
     bit 7, [hl]
     ret
 
-; for special maps copies the eight monster entries of the current screen (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wD09F, removes duplicates and stores the count in wD09D; normal maps use Func_00A_4D5E (E-0129)
+; for special maps copies the eight monster entries of the current screen (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, removes duplicates and stores the count in wWorkBuf; normal maps use Func_00A_4D5E (E-0129)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent)
 ; reads: wMapType, wWorkBuf
 ; writes: wWorkBuf
@@ -3890,7 +3890,7 @@ Func_016_56E4:: ; address name
     ld [wWorkBuf + $1], a
     ret
 
-; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
+; HL = wKeyWorldMonsters + 2 * an index from the current map screen and the wKeyWorldAreas table (index $20 when bit 3 of hPlayerStateFlags is set) (E-0127)
 ; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
 ; reads: hPlayerStateFlags, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
 ; points at: wKeyWorldAreas, wKeyWorldMonsters, wKeyWorldFloorInfo
@@ -4121,7 +4121,7 @@ Func_016_587E:: ; address name
     call SubtractFromRecordFieldByteFloored
     ret
 
-; for the record selected through wC6FE, applies Func_016_58E0 to field $6B (E-0122)
+; for the record selected through wPartyList, applies Func_016_58E0 to field $6B (E-0122)
 ; 2 call sites from 2 routines (e.g. ItemApply_BadMeat, ItemApply_BeefJerky)
 ApplyMeatToRecordField6B::
 Func_016_5889:: ; address name
@@ -4283,7 +4283,7 @@ Func_016_5906:: ; address name
     pop hl
     ret
 
-; toggles the sort order in wC836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
+; toggles the sort order in wGameFlags836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
 ; 3 call sites from 3 routines (e.g. PauseMenu_Items_MemberList_UpdateMenuCursor, RunBattleSetup_ItemCommand_MoveBattleCommandCursor, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wGameFlags836, wWorkBuf
 ; writes: wWorkBuf, wGameFlags836
@@ -4661,7 +4661,7 @@ TestSpeciesFlag_Data:: ; heuristic: pointer load in the same bank (bank assumed)
 Data_016_5AA7:: ; address name
     db $01, $02, $04, $08, $10, $20, $40, $80
 
-; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
+; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wSpeciesFlagCount (E-0070)
 ; 8 call sites from 8 routines (e.g. RunBattleEndStep5SubSteps_FillBytes, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4, ...)
 ; reads: wSpeciesFlagCount
 ; writes: wSpeciesFlagCount
@@ -4678,7 +4678,7 @@ Func_016_5AAF:: ; address name
     pop af
     ret
 
-; zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
+; zeroes the 11 per-family counters at wWorkBuf, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wWorkBuf[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wMonsterLibraryBuf (wArg5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wArg5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg1, wArg2, wArg3, wArg4
@@ -6104,7 +6104,7 @@ Func_016_6480:: ; address name
     ld [de], a
     ret
 
-; counts the first Data_016_75EB[wC7C7] SRAM records: wC0A1 = those with field $6E set, wC0A0 = the others (E-0125)
+; counts the first Data_016_75EB[wFarmLevel] SRAM records: wTemp1 = those with field $6E set, wTemp0 = the others (E-0125)
 ; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_ShowChooseAnEggTo, BattleEnd_AskToJoin_ShowYouHaveNoEggs, BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB, wTemp0, wTemp1
@@ -6160,7 +6160,7 @@ Func_016_6493:: ; address name
     ld [rRAMG], a
     ret
 
-; lists the party records and then the stored records (state 1, field $6E clear) in wD789 and sets the page counts wCFD0-wCFD3 (E-0130)
+; lists the party records and then the stored records (state 1, field $6E clear) in wListEntries and sets the page counts wListPageSize-wListLastPageSize (E-0130)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_ShowChooseAMonsterTo)
 ; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
 ; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
@@ -6289,7 +6289,7 @@ Func_016_64DC:: ; address name
 .return:
     ret
 
-; fills wD789 ($1E bytes) with $FF, then lists the indexes of the first Data_016_75EB[wC7C7] SRAM records that have field $6E set (E-0127)
+; fills wListEntries ($1E bytes) with $FF, then lists the indexes of the first Data_016_75EB[wFarmLevel] SRAM records that have field $6E set (E-0127)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_ShowChooseAnEggTo)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB
@@ -6345,7 +6345,7 @@ Func_016_65B1:: ; address name
     ld [rRAMG], a
     ret
 
-; up/down/left/right move the cursor at [DE] and the page wCFD1 within the page sizes wCFD0/wCFD3 and page count wCFD2 (E-0130)
+; up/down/left/right move the cursor at [DE] and the page wListPage within the page sizes wListPageSize/wListLastPageSize and page count wListPageCount (E-0130)
 ; 8 call sites from 8 routines (e.g. BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A, BattleEnd_AddJoinedMonster_MovePagedListCursor, BattleEnd_AskToJoin_MovePagedListCursor_Case19, ...)
 ; reads: wJoypadPressedRepeat, wListPageCount, wListPage, wListLastPageSize, wListPageSize, wFrameCounterLo
 ; writes: wFrameCounterLo, wListPage
@@ -6527,7 +6527,7 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data:: ; heuristic: pointer load in the sa
 Data_016_6701:: ; address name
     db $2B, $99, $6B, $99
 
-; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
+; shows five record names of page wListPage at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
 ; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_MovePagedListCursor, BattleEnd_AskToJoin_ShowChooseAMonsterTo)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListPage, wPartyCount, wListPageCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
@@ -6617,7 +6617,7 @@ Func_016_6705:: ; address name
 .return:
     ret
 
-; draws four values from wD868 at vTiles2 + $3B0 with size $0105 (Func_016_67E0), preserving the window settings (E-0121)
+; draws four values from wBattleArg0 at vTiles2 + $3B0 with size $0105 (Func_016_67E0), preserving the window settings (E-0121)
 ; 1 call site from 1 routine (e.g. CopyRect7923AndDrawBattleArg0Values)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
@@ -6713,7 +6713,7 @@ Func_016_67E0:: ; address name
     ld [rRAMG], a
     ret
 
-; for the four entries of WD789 page wCFD1 runs Func_016_6891 with wD868 = 0-3, draws the page digit, then restores the default window (E-0121)
+; for the four entries of WD789 page wListPage runs Func_016_6891 with wBattleArg0 = 0-3, draws the page digit, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18, BattleEnd_AskToJoin_MovePagedListCursor_Case17, BattleEnd_AskToJoin_ShowChooseAnEggTo)
 ; reads: wListPage
 ; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wBattleArg0, wTextWindowTileLo, wTextWindowTileHi
@@ -6834,7 +6834,7 @@ Func_016_68E5:: ; address name
     add a, $02
     ld b, a
 
-; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wD868, then ShowString_Bank08 (E-0118)
+; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wBattleArg0, then ShowString_Bank08 (E-0118)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageListPage_SRAMRecordAddress)
 ; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi
@@ -6860,7 +6860,7 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data:: ; heuristic: pointer
 Data_016_690F:: ; address name
     db $43, $C2, $83, $C2, $C3, $C2, $03, $C3
 
-; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
+; when wListCount is 5 or more: wWindowTileBuffer + $20 = $E1 + wListPage (the page number tile) (E-0119)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageListPage)
 ; reads: wListCount, wListPage
 ; writes: wWindowTileBuffer
@@ -6874,7 +6874,7 @@ Func_016_6917:: ; address name
     ld [wWindowTileBuffer + $20], a
     ret
 
-; removes the $FF entry from the party list wC6FE, wC6FD -= 1, wD88F = new count, and terminates the list with $FF (E-0124)
+; removes the $FF entry from the party list wPartyList, wPartyCount -= 1, wBattlePartyCount = new count, and terminates the list with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: wPartyCount, wBattlePartyCount
@@ -6934,7 +6934,7 @@ Func_016_6961:: ; address name
     farcall ShowString_Bank2F
     ret
 
-; copies the name of record wD789[5 * wC470 + wC46B] to wC140 and shows string $12 of category 5 (E-0125)
+; copies the name of record wListEntries[5 * wSubMenuCursor2 + wMenuState] to wTextBuf1 and shows string $12 of category 5 (E-0125)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_MovePagedListCursor)
 ; reads: wSubMenuCursor2, wMenuState
 ; writes: rRAMG, rRAMB, wStringIndex
@@ -6976,7 +6976,7 @@ Func_016_696D:: ; address name
     call ShowStringCategory5Immediate_Bank16
     ret
 
-; copies the monster name of record wD789[wC471 * 4 + wCFD6] (its id word at field $0B) into wC140, then shows string $17 of category 5 (ShowStringCategory5Immediate_Bank16) (E-0120)
+; copies the monster name of record wListEntries[wMenuOption * 4 + wCommandCursorMax] (its id word at field $0B) into wTextBuf1, then shows string $17 of category 5 (ShowStringCategory5Immediate_Bank16) (E-0120)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18)
 ; reads: wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex
@@ -7009,7 +7009,7 @@ Func_016_69AB:: ; address name
     call ShowStringCategory5Immediate_Bank16
     ret
 
-; copies the name of record wD868[wC46C] to wC130 and shows string $1D of category 5 (E-0124)
+; copies the name of record wBattleArg0[wMenuSubState] to wTextBuf0 and shows string $1D of category 5 (E-0124)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B)
 ; reads: wMenuSubState
 ; writes: rRAMG, rRAMB, wStringIndex
@@ -7040,7 +7040,7 @@ Func_016_69E2:: ; address name
     call ShowStringCategory5_Bank16
     ret
 
-; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
+; copies the name of battle slot wDisplaySlot to DE and appends tile $A7 + (wSlotNameSuffix[slot] & 1) before the terminator (E-0124)
 ; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_ShowPleaseNameHero, BattleEnd_AskToJoin_ShowHeroDepartedSadly, BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wDisplaySlot
 ; points at: wSlotNameSuffix
@@ -7071,7 +7071,7 @@ Func_016_6A10:: ; address name
     ld [hl], $F0
     ret
 
-; copies the name of the monster in slot wDAAB to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)
+; copies the name of the monster in slot wDisplaySlot to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)
 ; 1 call site from 1 routine (e.g. CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wDisplaySlot
 ; points at: wBattleMonsterId
@@ -8044,7 +8044,7 @@ Jump_016_7051:: ; address name
     ld [wMenuState], a
     ret
 
-; copies rectangle record $7923 to the screen buffer and draws the wD868 values at vTiles2 + $3B0 (E-0122)
+; copies rectangle record $7923 to the screen buffer and draws the wBattleArg0 values at vTiles2 + $3B0 (E-0122)
 ; 3 call sites from 3 routines (e.g. BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo)
 CopyRect7923AndDrawBattleArg0Values::
 Func_016_7078:: ; address name
@@ -8277,7 +8277,7 @@ Func_016_7183:: ; address name
     ld [de], a
     ret
 
-; A = 1 when Data $71AC[battle monster id of wDAAB] is at least 6, else 0 (E-0124)
+; A = 1 when Data $71AC[battle monster id of wDisplaySlot] is at least 6, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex, BattleEnd_AddJoinedMonster_ShowHeroWasSentTo)
 ; reads: wDisplaySlot
 ; points at: wBattleMonsterId
@@ -8716,7 +8716,7 @@ Func_016_7321:: ; address name
     jr nz, CopyRect32StrideToVRAM_Bank16
     ret
 
-; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines for wD88F and wD890) (E-0122)
+; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines for wBattlePartyCount and wBattleFoeCount) (E-0122)
 ; 11 call sites from 11 routines (e.g. BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13, BattleEnd_AddJoinedMonster_RestoreRecordAFully, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, ...)
 BuildBattleMenuScreen_733F::
 Func_016_733F:: ; address name
@@ -9100,7 +9100,7 @@ BattleEnd_AskToJoin_WriteVRAMByte_Data:: ; heuristic: pointer load in the same b
 Data_016_75EB:: ; address name
     db $0A, $14, $1E
 
-; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
+; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wBattlerRecords onward (E-0129)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: hTemp0, sSavedPartyCount, sSavedPartyList, sSaveData, sSavedArenaByte37, sSavedMapType, sSavedMapId, sSavedKeyIndex
 ; writes: wBattlerRecords, rRAMG, rRAMB, wTitlePartyCount, wWorkBuf, wTitleByte0A, wTitleKeyFlag, wTitleStringIndex, ...
@@ -9208,7 +9208,7 @@ Func_016_76B6:: ; address name
     jr nz, CopyBytesDEFromHL_Bank16
     ret
 
-; for SRAM bank-1 record wD09D writes its family nibble, a packed field from bytes $21/$27 (Func_016_7720) and field $62 & $7F to the buffer at wD09E (E-0127)
+; for SRAM bank-1 record wWorkBuf writes its family nibble, a packed field from bytes $21/$27 (Func_016_7720) and field $62 & $7F to the buffer at wWorkBuf + $1 (E-0127)
 ; 3 call sites from 1 routine (e.g. LoadSaveFileSummary)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
@@ -9543,7 +9543,7 @@ Jump_016_77A6:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; writes wC8C0 as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank16 (E-0126)
+; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank16 (E-0126)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; points at: wDigits
 WriteThreeDigitTilesDigits_Bank16::
@@ -9554,7 +9554,7 @@ Func_016_78C7:: ; address name
     ld [de], a
     inc de
 
-; writes wC8C1 and wC8C2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
+; writes wDigits + $1 and wDigits + $2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank) (E-0117) (the same 13 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. DrawTitleSaveSummaryScreen, DrawSaveSummaryPartyEntryC)
 WriteTwoDigitTilesWC8C1NoBlank_Bank16::
 Func_016_78CF:: ; address name
@@ -9568,7 +9568,7 @@ Func_016_78CF:: ; address name
     ld [de], a
     ret
 
-; window at DE: copies 10 bytes from HL to wC130 with a $F0 terminator and shows it (ShowString_Bank08) (E-0122)
+; window at DE: copies 10 bytes from HL to wTextBuf0 with a $F0 terminator and shows it (ShowString_Bank08) (E-0122)
 ; 2 call sites from 2 routines (e.g. DrawTitleSaveSummaryScreen, DrawSaveSummaryPartyEntryC)
 ; writes: wTextWindowTileLo, wTextWindowTileHi
 ; points at: wTextBuf0
@@ -9694,7 +9694,7 @@ Func_016_78F9:: ; address name
     pop bc
     ret
 
-; writes $C3 to wC227/8 and wC247/8, or to wC267/8 and wC287/8 in game mode 5 (E-0122)
+; writes $C3 to wScreenTileBuffer + $8F/8 and wScreenTileBuffer + $AF/8, or to wScreenTileBuffer + $CF/8 and wScreenTileBuffer + $EF/8 in game mode 5 (E-0122)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode
 ; writes: wScreenTileBuffer
@@ -9718,7 +9718,7 @@ Func_016_7990:: ; address name
     ld [wScreenTileBuffer + $F0], a
     ret
 
-; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wD10C + $0A, or builds a two-word key name from wD10E/wD10F (E-0127)
+; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wTitleStringIndex + $0A, or builds a two-word key name from wTitleKeyWord1/wTitleKeyWord2 (E-0127)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode, wTitleKeyFlag, wTitleStringIndex, wTitleKeyByte3, wTitleKeyWord1, wTitleKeyWord2, wTitleKeyEntry
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
@@ -9811,7 +9811,7 @@ DrawSaveSummaryPartyEntryC_Data_7A42:: ; heuristic: pointer load in the same ban
 Data_016_7A42:: ; address name
     db $62, $C2, $A2, $C2, $E2, $C2
 
-; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
+; writes the 16-byte icon tile of family wWorkBuf (Data_016_7ACD + 16 * family) to VRAM tile wWorkBuf + $1 through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
 ; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050, LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6, ...)
 ; reads: wWorkBuf
 LoadFamilyIconTileForWorkBuf::
@@ -9829,7 +9829,7 @@ Func_016_7A48:: ; address name
     call WriteBytesToVRAMTileWD09E
     ret
 
-; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wD09E; corrected in E-0124 (E-0122)
+; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wWorkBuf + $1; corrected in E-0124 (E-0122)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
 LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
@@ -9838,7 +9838,7 @@ Func_016_7A5B:: ; address name
     call WriteBytesToVRAMTileWD09E
     ret
 
-; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
+; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wPartyCount entries; then disables SRAM (E-0103)
 ; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_State3_Block21Menu_LoadScreenBlock21, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ...)
 ; reads: wPartyCount
 ; writes: rRAMG, rRAMB
@@ -9890,7 +9890,7 @@ Func_016_7A97:: ; address name
     pop af
     jr WriteBytesToVRAMTileWD09E_Skip
 
-; writes B bytes from DE to VRAM tile wD09E ($8000 + 16 * index; indices below $80 use the $9000 area) (E-0124)
+; writes B bytes from DE to VRAM tile wWorkBuf + $1 ($8000 + 16 * index; indices below $80 use the $9000 area) (E-0124)
 ; 2 call sites from 2 routines (e.g. LoadFamilyIconTileForWorkBuf, LoadAllFamilyIconTiles)
 ; reads: wWorkBuf
 WriteBytesToVRAMTileWD09E::

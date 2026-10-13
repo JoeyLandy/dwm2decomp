@@ -57,7 +57,7 @@ Func_005_401F:: ; address name
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024, AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
@@ -82,7 +82,7 @@ Func_005_4038:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
@@ -103,7 +103,7 @@ Func_005_403F:: ; address name
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wLinkMode = 1 and wLinkRole bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
@@ -153,7 +153,7 @@ Data_005_408A:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -165,7 +165,7 @@ Func_005_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -177,7 +177,7 @@ Func_005_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -189,7 +189,7 @@ Func_005_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
+; A = slot 0-7: returns A = 9 * g(wSlotPersonalityHi[A]) + 3 * g(wSlotPersonalityMid[A]) + g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank05:: ; configured code entry (E-0205); C0
@@ -248,7 +248,7 @@ Func_005_40B8:: ; address name
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wBattleStatus3 + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank05:: ; configured code entry (E-0205); C0
@@ -278,7 +278,7 @@ Func_005_410F:: ; address name
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
+; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank05:: ; configured code entry (E-0205); C0
@@ -332,7 +332,7 @@ Func_005_413F:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when bit 6 of wCFF3 (skill record buffer) is set and the actor's status byte 1 (wD80D) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
+; C = 0 when bit 6 of wRecordBufferData + $5 (skill record buffer) is set and the actor's status byte 1 (wBattleStatus1) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
 ; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
@@ -353,7 +353,7 @@ Func_005_4169:: ; address name
     ld c, $FF
     ret
 
-; C = $00 when bit 4 of wCFF3 and bit 7 of the actor's status byte 0 are both set, else $FF (E-0122)
+; C = $00 when bit 4 of wRecordBufferData + $5 and bit 7 of the actor's status byte 0 are both set, else $FF (E-0122)
 ; 4 call sites from 4 routines (e.g. AIScore_FireAir_AIAttackSkillUsable_74D1, AIFunc770AAndPassUnlessWCFF3Bit4, AIScore_Curse_Conditions, AIScore_SuckAir_Conditions)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
@@ -374,7 +374,7 @@ Func_005_4183:: ; address name
     ld c, $FF
     ret
 
-; C = $00 when bit 5 of wCFF3 and bit 6 of the actor's status byte 0 are both set, else $FF (E-0122)
+; C = $00 when bit 5 of wRecordBufferData + $5 and bit 6 of the actor's status byte 0 are both set, else $FF (E-0122)
 ; 5 call sites from 5 routines (e.g. AIDanceUsable, AIScore_LifeDance_Conditions, AIScore_Hustle_Conditions, AIScore_SideStep_Conditions, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
@@ -395,7 +395,7 @@ Func_005_419E:: ; address name
     ld c, $FF
     ret
 
-; when bit 3 is set in wD80A or wD80B (either side), C = 0 if the skill wRecordBuffer is $84 or wCFF3 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
+; when bit 3 is set in wSideFlags0 or wSideFlags1 (either side), C = 0 if the skill wRecordBuffer is $84 or wRecordBufferData + $5 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
 ; 6 call sites from 6 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBuffer, wRecordBufferData
 ; points at: wSideFlags0
@@ -421,7 +421,7 @@ Func_005_41B9:: ; address name
     ld c, $FF
     ret
 
-; when bit 7 of wCFF6 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
+; when bit 7 of wRecordBufferData + $8 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
 ; 20 call sites from 20 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBufferData, wRecordBuffer
 SkillPassesRepeatCheck::
@@ -439,7 +439,7 @@ Func_005_41D6:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wD80E) & $22 clear (AnySlotLacksStatusMask), else 0 (E-0114)
+; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wBattleStatus2) & $22 clear (AnySlotLacksStatusMask), else 0 (E-0114)
 ; 4 call sites from 4 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIUsableAndFoeLacksStatus2And5)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -454,7 +454,7 @@ Func_005_41EB:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $C0 clear (AnySlotLacksStatusMask), else 0 (E-0071)
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wBattleStatus5) & $C0 clear (AnySlotLacksStatusMask), else 0 (E-0071)
 ; 23 call sites from 23 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIAttackSkillUsable_74D1, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus5
@@ -469,7 +469,7 @@ Func_005_41FD:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wD80E) bit 3 clear (AnySlotLacksStatusMask), else 0 (E-0071)
+; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wBattleStatus2) bit 3 clear (AnySlotLacksStatusMask), else 0 (E-0071)
 ; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIAttackSkillUsable_74D1, CheckSkillUsableElseResetAISkillScore, AIAttackSkillUsable_770A, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -484,7 +484,7 @@ Func_005_420F:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) & $C0 and byte 4 (wD810) & $0C both clear, else 0 (E-0071)
+; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wBattleStatus3) & $C0 and byte 4 (wBattleStatus4) & $0C both clear, else 0 (E-0071)
 ; 11 call sites from 11 routines (e.g. AIScore_Skill00_Conditions, AIFunc74D1AndFoeLacksStatus3And4, CheckSkillUsableElseResetAISkillScore, AIScore_PsycheUp_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus3, wBattleStatus4
@@ -685,7 +685,7 @@ Func_005_431C:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = 1 when wDA53[actor] (the AI mode) is below 2; otherwise C = $FF when one of the actor's three opposite slots is present with status byte 1 (wD80D) bit 0 clear and a skill whose record part has bit 6 set (SlotHasSkillWithFlagD, D = $40), else 0; wRecordBuffer kept (E-0099)
+; C = 1 when wSlotAIMode[actor] (the AI mode) is below 2; otherwise C = $FF when one of the actor's three opposite slots is present with status byte 1 (wBattleStatus1) bit 0 clear and a skill whose record part has bit 6 set (SlotHasSkillWithFlagD, D = $40), else 0; wRecordBuffer kept (E-0099)
 ; 4 call sites from 4 routines (e.g. AIScore_StopSpell_Conditions, AIScore_MagicBack_Conditions, AIScore_MagicWall_Conditions, AIScore_ThickFog_Conditions)
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
@@ -832,7 +832,7 @@ Func_005_43AD:: ; address name
     ld c, $01
     ret
 
-; C = $FF when wCFEF is 0 or an occupied foe's resistance field for skill wCFEF is below 3, else $00 (E-0127)
+; C = $FF when wRecordBufferData + $1 is 0 or an occupied foe's resistance field for skill wRecordBufferData + $1 is below 3, else $00 (E-0127)
 ; 11 call sites from 11 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIAttackSkillUsable_74D1, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wSlotResistances
@@ -1084,7 +1084,7 @@ Func_005_44E1:: ; address name
     ld c, $01
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $03 clear (AnySlotLacksStatusMask), else 0 (E-0094)
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wBattleStatus5) & $03 clear (AnySlotLacksStatusMask), else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus5
@@ -1099,7 +1099,7 @@ Func_005_4527:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) bit 0 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0094)
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wBattleStatus5) bit 0 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus5, wBattleStatus1
@@ -1139,7 +1139,7 @@ Func_005_4539:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) bit 1 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0094)
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wBattleStatus5) bit 1 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus5, wBattleStatus1
@@ -1179,7 +1179,7 @@ Func_005_456B:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $03 clear and status byte 1 (wD80D) bit 1 clear, else 0 (E-0100)
+; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wBattleStatus5) & $03 clear and status byte 1 (wBattleStatus1) bit 1 clear, else 0 (E-0100)
 ; 6 call sites from 6 routines (e.g. AIScore_Surround_Conditions, AIScore_SandStorm_Conditions, AIScore_Radiant_Conditions, AIScore_Dodge_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus5, wBattleStatus1
@@ -1219,7 +1219,7 @@ Func_005_459D:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 1 (wD80D) bit 0 clear, else 0 (E-0099)
+; C = $FF when one of the actor's three opposite slots is present with status byte 1 (wBattleStatus1) bit 0 clear, else 0 (E-0099)
 ; 2 call sites from 2 routines (e.g. AIScore_StopSpell_Conditions, AIScore_MagicWall_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -1234,7 +1234,7 @@ Func_005_45CF:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 1 (wD80D) bit 7 clear, else 0 (E-0099)
+; C = $FF when one of the actor's three opposite slots is present with status byte 1 (wBattleStatus1) bit 7 clear, else 0 (E-0099)
 ; 3 call sites from 3 routines (e.g. AIScore_Barrier_Conditions, AIScore_MouthShut_Conditions, AIScore_SuckAll_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -1343,7 +1343,7 @@ Func_005_461F:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) entirely clear (AnySlotLacksStatusMask with mask $FF), else 0 (E-0078)
+; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wBattleStatus3) entirely clear (AnySlotLacksStatusMask with mask $FF), else 0 (E-0078)
 ; 6 call sites from 6 routines (e.g. AILickSkillUsable_7AD8, AIStatusLickUsable, AIScore_Geyser_Conditions, AIScore_HealUs_AnyFoeLacksStatus0MaskCC, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus3
@@ -1358,7 +1358,7 @@ Func_005_4664:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = 1 when the AI mode is below 2; in mode 3 with wCFEF set, $00 when a foe has status 1 mask $22; otherwise $FF (E-0125)
+; C = 1 when the AI mode is below 2; in mode 3 with wRecordBufferData + $1 set, $00 when a foe has status 1 mask $22; otherwise $FF (E-0125)
 ; 7 call sites from 7 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Firebal, AIScore_Beat, AIScore_Slow, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -1457,7 +1457,7 @@ Func_005_46B4:: ; address name
     ld c, $01
     ret
 
-; C = 0 when the actor's status byte 4 (wD810) & $03 is set, else C = $FF (the correct form of the test ActorStatus4CheckReadsAddress gets wrong) (E-0094)
+; C = 0 when the actor's status byte 4 (wBattleStatus4) & $03 is set, else C = $FF (the correct form of the test ActorStatus4CheckReadsAddress gets wrong) (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
@@ -1476,7 +1476,7 @@ Func_005_46F3:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 4 (wD810 + 9 * actor) & $C0 is set, else C = $FF (E-0071)
+; C = 0 when the actor's status byte 4 (wBattleStatus4 + 9 * actor) & $C0 is set, else C = $FF (E-0071)
 ; 17 call sites from 17 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_ChargeUp_Conditions, AIScore_PsycheUp_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
@@ -1495,7 +1495,7 @@ Func_005_4707:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 1 (wD80D) bit 2 is set, else C = $FF (E-0094)
+; C = 0 when the actor's status byte 1 (wBattleStatus1) bit 2 is set, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -1513,7 +1513,7 @@ Func_005_471B:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 1 (wD80D) bit 3 is set, else C = $FF (E-0094)
+; C = 0 when the actor's status byte 1 (wBattleStatus1) bit 3 is set, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -1567,7 +1567,7 @@ Func_005_4754:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 (wD80E) bit 6 clear, else 0 (E-0099)
+; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 (wBattleStatus2) bit 6 clear, else 0 (E-0099)
 ; 2 call sites from 2 routines (e.g. AIScore_StormWind_Conditions, AIScore_SuckAll_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -1677,7 +1677,7 @@ Func_005_47D5:: ; address name
     call AnySlotHasStatusMask
     ret
 
-; walks the actor's own three slots through their 7-byte wDA76 entries: C = $FF when a present slot's entry & $3C is not $3C, else 0 (E-0094)
+; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when a present slot's entry & $3C is not $3C, else 0 (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 AnyAllyWDA76Bits2To5NotAllSet:: ; heuristic: follows a terminator; C0
@@ -1895,7 +1895,7 @@ Func_005_4880:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 1 bit 1 clear, status byte 5 & $03 clear and the low 2 bits of its wDA73 entry not 3, else 0 (E-0099)
+; C = $FF when one of the actor's three opposite slots is present with status byte 1 bit 1 clear, status byte 5 & $03 clear and the low 2 bits of its wSlotResistances + $1 entry not 3, else 0 (E-0099)
 ; 3 call sites from 3 routines (e.g. AIScore_Surround_Conditions, AIScore_SandStorm_Conditions, AIScore_Radiant_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -1990,7 +1990,7 @@ Func_005_4904:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with non-zero MP (GetBattleMP_Bank05) and bits 3-2 of its wDA74 entry not both set, else 0 (E-0100)
+; C = $FF when one of the actor's three opposite slots is present with non-zero MP (GetBattleMP_Bank05) and bits 3-2 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
 ; 2 call sites from 2 routines (e.g. AIScore_RobMagic_Conditions, AIScore_OddDance_Conditions)
 ; reads: wBattleActor
 AnyFoeWithMPOpenToWDA74Field1:: ; heuristic: follows a terminator; C0
@@ -2111,7 +2111,7 @@ Func_005_49AA:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 0 & $03 clear and the low 2 bits of its wDA76 entry not 3, else 0 (E-0099)
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 & $03 clear and the low 2 bits of its wSlotResistances + $4 entry not 3, else 0 (E-0099)
 ; 3 call sites from 3 routines (e.g. AIScore_PoisonHit_Conditions, AIScore_PoisonGas_Conditions, AIScore_PoisonAir_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus
@@ -2151,7 +2151,7 @@ Func_005_49DD:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 6 clear and bits 7-6 of its wDA77 entry not both set, else 0 (E-0099)
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 6 clear and bits 7-6 of its wSlotResistances + $5 entry not both set, else 0 (E-0099)
 ; 2 call sites from 2 routines (e.g. AIScore_Paralyze_Conditions, AIScore_PalsyAir_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus
@@ -2280,7 +2280,7 @@ Func_005_4A76:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when an occupied foe without status bit 7 has a skill with flag $10 and bits 6-7 of its wDA78 field below 3, else $00 (wRecordBuffer preserved) (E-0125)
+; C = $FF when an occupied foe without status bit 7 has a skill with flag $10 and bits 6-7 of its wSlotResistances + $6 field below 3, else $00 (wRecordBuffer preserved) (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
@@ -2634,7 +2634,7 @@ Func_005_4C40:: ; address name
     ld c, $FF
     ret
 
-; counts the present slots among the actor's three opposite slots (D = the last one found); when fewer than two are present and that foe's HP (GetBattleHP_Bank05) is below the word wD2C1[2 * (slot & 3)], C = 0; otherwise C = $FF. With no foe present D is not set by this routine (E-0091)
+; counts the present slots among the actor's three opposite slots (D = the last one found); when fewer than two are present and that foe's HP (GetBattleHP_Bank05) is below the word wAIDamageEstimates[2 * (slot & 3)], C = 0; otherwise C = $FF. With no foe present D is not set by this routine (E-0091)
 ; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Conditions, AIIronizeUsable, AIScore_Dodge_Sub01_Conditions, AIScore_Skill00, ...)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
@@ -2735,7 +2735,7 @@ Func_005_4C9C:: ; address name
     ld c, $FF
     ret
 
-; C = 1 when the AI mode (wDA53[actor]) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 7 (wD813) bit 2 set, else $FF (E-0099)
+; C = 1 when the AI mode (wSlotAIMode[actor]) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 7 (wBattleStatus7) bit 2 set, else $FF (E-0099)
 ; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow)
 ; reads: wBattleActor
 ; points at: wBattleStatus6
@@ -2780,7 +2780,7 @@ Func_005_4CE5:: ; address name
     ld c, $01
     ret
 
-; C = $FF when one of the actor's own three slots is present (the actor included) with status byte 1 (wD80D) & $0C clear and status byte 4 & $03 clear, else 0 (E-0099)
+; C = $FF when one of the actor's own three slots is present (the actor included) with status byte 1 (wBattleStatus1) & $0C clear and status byte 4 & $03 clear, else 0 (E-0099)
 ; 2 call sites from 2 routines (e.g. AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore, AIScore_MegaMagic)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -2958,7 +2958,7 @@ Func_005_4DA5:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's side byte (wC984 for slots 0-3, wC985 for 4-7) is 1, else C = $FF (E-0099)
+; C = 0 when the actor's side byte (wSide0Flag for slots 0-3, wSide1Flag for 4-7) is 1, else C = $FF (E-0099)
 ; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Farewell_Conditions, AIScore_LifeDance_Conditions, AIScore_LifeSong_Conditions)
 ; reads: wBattleActor
 ; points at: wSide0Flag
@@ -2980,7 +2980,7 @@ Func_005_4DF5:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when wCFC5 is 4 or 5, else C = $FF (E-0094)
+; C = 0 when wBattleKind is 4 or 5, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleKind
 CheckBattleKindNot4Or5:: ; heuristic: follows a terminator; C0
@@ -3030,7 +3030,7 @@ Func_005_4E20:: ; address name
     ld c, $FF
     ret
 
-; C = $00 when an occupied foe's wD2C1 word is at least Func_005_4E7C for it, else $FF (E-0125)
+; C = $00 when an occupied foe's wAIDamageEstimates word is at least Func_005_4E7C for it, else $FF (E-0125)
 ; 12 call sites from 12 routines (e.g. InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate, AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, ...)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
@@ -3379,7 +3379,7 @@ Func_005_5034:: ; address name
     cp a, $09
     ret
 
-; C = $FF when wCFEF is 0 or the occupied foes' average resistance level for skill wCFEF is at least 2, else $00 (E-0128)
+; C = $FF when wRecordBufferData + $1 is 0 or the occupied foes' average resistance level for skill wRecordBufferData + $1 is at least 2, else $00 (E-0128)
 ; 14 call sites from 14 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_RobMagic, AIScore_MegaMagic, ...)
 ; reads: wRecordBufferData, wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
@@ -3886,7 +3886,7 @@ Func_005_5275:: ; address name
     ld c, $01
     ret
 
-; hFFC6 = battle slot: C = 0 when its HP >= 2/3 of its max HP, 1 when >= 1/2, 2 when >= 1/3, 3 when >= 1/4, 4 when >= 1/10, else 5 (GetBattleHP_Bank05, GetBattleMaxHP_Bank05, divisions rounded down) (E-0092)
+; hTemp0 = battle slot: C = 0 when its HP >= 2/3 of its max HP, 1 when >= 1/2, 2 when >= 1/3, 3 when >= 1/4, 4 when >= 1/10, else 5 (GetBattleHP_Bank05, GetBattleMaxHP_Bank05, divisions rounded down) (E-0092)
 ; 8 call sites from 8 routines (e.g. AIScore_StrongD_HPBandOfSlotTemp0, AIScore_AquaWall_HPBandOfSlotTemp0, AIScore_SuckAll_Sub01_HPBandOfSlotTemp0, AIScore_Meditate_HPBandOfSlotTemp0, ...)
 ; reads: hTemp0
 HPBandOfSlotTemp0::
@@ -4025,7 +4025,7 @@ Func_005_53A5:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 1 (wD80D) & $0C or byte 4 & $03 is set, else C = $FF (E-0072)
+; C = 0 when the actor's status byte 1 (wBattleStatus1) & $0C or byte 4 & $03 is set, else C = $FF (E-0072)
 ; 14 call sites from 14 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Skill00, AIScore_CallHelp, AIScore_FireSlash, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
@@ -4052,7 +4052,7 @@ Func_005_53CA:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 4 (wD810) & $30 is set, else C = $FF (E-0100)
+; C = 0 when the actor's status byte 4 (wBattleStatus4) & $30 is set, else C = $FF (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_SuckAir_Conditions, AIScore_SuckAll_Conditions, AIScore_FireAir)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
@@ -4256,7 +4256,7 @@ Func_005_54FD:: ; address name
     ld c, $00
     ret
 
-; C = 1 when the AI mode is below 2; otherwise $00 when a foe knowing skill $3D has 2 * MP + 2 * wD8B7 at least the actor's HP, else $FF (E-0128)
+; C = 1 when the AI mode is below 2; otherwise $00 when a foe knowing skill $3D has 2 * MP + 2 * wBattleLevel at least the actor's HP, else $FF (E-0128)
 ; 2 call sites from 2 routines (e.g. AIScore_StrongD, AIScore_SealPray)
 ; reads: wBattleActor
 ; points at: wBattleSkills, wBattleMP, wBattleLevel, wBattleHP
@@ -4406,7 +4406,7 @@ Func_005_55AA:: ; address name
     ld c, $FF
     ret
 
-; link battles only: C = $00 when rule bits 7 and 6 of wD044 are set and the side's wD057 flag (or wD045 bit 6) allows it; otherwise $FF (E-0124)
+; link battles only: C = $00 when rule bits 7 and 6 of wLinkRules + $1 are set and the side's wLinkRuleWork57 flag (or wLinkRules + $2 bit 6) allows it; otherwise $FF (E-0124)
 ; 2 call sites from 2 routines (e.g. AIAddScoresFor55BEAnd5731, AIScore_Sacrifice_LinkRuleCheckWD044Bit6)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4442,7 +4442,7 @@ Func_005_55BE:: ; address name
     ld c, $FF
     ret
 
-; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 5 are set, and either wD045 bit 5 is clear or bit 5 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 5 are set, and either wLinkRules + $2 bit 5 is clear or bit 5 is set in the actor side's byte wLinkRuleWork57[actor / 4]; otherwise C = $FF (E-0091)
 ; 2 call sites from 2 routines (e.g. AIScore_MagicBack_Conditions, WeighWD044RuleBit5)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4478,7 +4478,7 @@ Func_005_55F3:: ; address name
     ld c, $FF
     ret
 
-; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 4 are set, and either wD045 bit 4 is clear or bit 4 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 4 are set, and either wLinkRules + $2 bit 4 is clear or bit 4 is set in the actor side's byte wLinkRuleWork57[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit4)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4514,7 +4514,7 @@ Func_005_5628:: ; address name
     ld c, $FF
     ret
 
-; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 3 are set, and either wD045 bit 3 is clear or bit 3 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 3 are set, and either wLinkRules + $2 bit 3 is clear or bit 3 is set in the actor side's byte wLinkRuleWork57[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit3)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4550,7 +4550,7 @@ Func_005_565D:: ; address name
     ld c, $FF
     ret
 
-; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 2 are set, and either wD045 bit 2 is clear or bit 2 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 2 are set, and either wLinkRules + $2 bit 2 is clear or bit 2 is set in the actor side's byte wLinkRuleWork57[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit2)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4586,7 +4586,7 @@ Func_005_5692:: ; address name
     ld c, $FF
     ret
 
-; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 1 are set, and either wD045 bit 1 is clear or bit 1 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 1 are set, and either wLinkRules + $2 bit 1 is clear or bit 1 is set in the actor side's byte wLinkRuleWork57[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit1)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
@@ -4658,7 +4658,7 @@ Func_005_56FC:: ; address name
     ld c, $FF
     ret
 
-; link battles only: C = $00 when the wD04B rule is on and wD891 is less than 4 past its limit; otherwise $FF (E-0124)
+; link battles only: C = $00 when the wLinkRuleTurnLimit rule is on and wBattleTurn is less than 4 past its limit; otherwise $FF (E-0124)
 ; 3 call sites from 3 routines (e.g. AIScore_MegaMagic, AIScore_BigBang, AIAddScoresFor55BEAnd5731)
 ; reads: wLinkMode, wBattleTurn
 ; points at: wLinkRuleTurnLimit
@@ -4799,7 +4799,7 @@ Func_005_57A1:: ; address name
     ld c, $01
     ret
 
-; C = 1 when wDA53[actor] (the AI mode) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 6 (wD812) bit 3 set, else C = $FF (E-0092)
+; C = 1 when wSlotAIMode[actor] (the AI mode) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 6 (wBattleStatus6) bit 3 set, else C = $FF (E-0092)
 ; 11 call sites from 11 routines (e.g. AIScore_Firebal, AIScore_BigBang, AIScore_FireAir, AIScore_Vacuum, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus6
@@ -5699,7 +5699,7 @@ Func_005_5C50:: ; address name
     ld c, $FF
     ret
 
-; C = $00 when an occupied foe's HP is at most four fifths of its wD2C1 word, else $FF (E-0125)
+; C = $00 when an occupied foe's HP is at most four fifths of its wAIDamageEstimates word, else $FF (E-0125)
 ; 2 call sites from 2 routines (e.g. AIScore_SquallHit, AIScore_BiAttack)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
@@ -5753,7 +5753,7 @@ Func_005_5C8C:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when wCFC5 is 2 or 3, else C = $FF (E-0100)
+; C = 0 when wBattleKind is 2 or 3, else C = $FF (E-0100)
 ; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Beat_Conditions, AIScore_PalsyAir_Conditions, AIScore_BigBang)
 ; reads: wBattleKind
 CheckBattleKindNot2Or3::
@@ -5790,7 +5790,7 @@ Func_005_5CE1:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when the side's wC984/wC985 flag is 1 or another ally slot is empty, else $00 (E-0124)
+; C = $FF when the side's wSide0Flag/wSide1Flag flag is 1 or another ally slot is empty, else $00 (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_LifeDance, AIAddPenaltyFor5758And5CF1)
 ; reads: wBattleActor, wSide0Flag, wSide1Flag
 PassIfSide0FlagOrAllySlotEmpty:: ; heuristic: follows a terminator; C0
@@ -5831,7 +5831,7 @@ Func_005_5CF1:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 (wD80E) bit 2 clear (AnySlotLacksStatusMask), else 0 (E-0100)
+; C = $FF when one of the actor's own three slots (the actor included) is present with status byte 2 (wBattleStatus2) bit 2 clear (AnySlotLacksStatusMask), else 0 (E-0100)
 ; 2 call sites from 2 routines (e.g. AIScore_Barrier_Conditions, AIScore_SuckAll)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -5918,7 +5918,7 @@ Func_005_5D44:: ; address name
     ld c, $01
     ret
 
-; C = $00 when wC58A is 0 and bit 3 of hFF8C is set, else $FF (E-0122)
+; C = $00 when wLinkMode is 0 and bit 3 of hPlayerStateFlags is set, else $FF (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, hPlayerStateFlags
 FailIfLinkModeZeroAndPlayerStateFlagsBit3:: ; heuristic: follows a terminator; C0
@@ -5936,7 +5936,7 @@ Func_005_5D89:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and bits 7-6 of its wDA74 entry not both set, else 0 (E-0100)
+; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and bits 7-6 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_NapAttack_Conditions, AIScore_Sleep_Conditions, AIScore_SleepAir_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus
@@ -5975,7 +5975,7 @@ Func_005_5D9B:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when an occupied foe has a zero wD80F byte and bits 2-3 of its wDA77 field below 3, else $00 (E-0124)
+; C = $FF when an occupied foe has a zero wBattleStatus3 byte and bits 2-3 of its wSlotResistances + $5 field below 3, else $00 (E-0124)
 ; 3 call sites from 3 routines (e.g. AIScore_LureDance_Conditions, AILickSkillUsable_7AD8, AIStatusLickUsable)
 ; reads: wBattleActor
 ; points at: wBattleStatus3
@@ -6067,7 +6067,7 @@ Func_005_5DFF:: ; address name
     ld c, $FF
     ret
 
-; C = $FF when wD891 is non-zero, else $00 (E-0122)
+; C = $FF when wBattleTurn is non-zero, else $00 (E-0122)
 ; 5 call sites from 5 routines (e.g. AIScore_SquallHit_Conditions, AIScore_Dodge_Sub01_Conditions, AIGuardSkillUsable_7C45, AIScore_Imitate_Conditions, ...)
 ; reads: wBattleTurn
 PassIfBattleTurnNonZero:: ; heuristic: follows a terminator; C0
@@ -6107,7 +6107,7 @@ Func_005_5E4B:: ; address name
     call AnySlotLacksStatusMask
     ret
 
-; C = $FF when an occupied foe lacks status bit 4 and has bits 6-7 of its wDA75 field below 3, else $00 (E-0124)
+; C = $FF when an occupied foe lacks status bit 4 and has bits 6-7 of its wSlotResistances + $3 field below 3, else $00 (E-0124)
 ; 1 call site from 1 routine (e.g. AIPanicAllUsable)
 ; reads: wBattleActor
 ; points at: wBattleStatus
@@ -6260,7 +6260,7 @@ Func_005_5F13:: ; address name
     cp a, $93
     ret
 
-; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
+; C = index: Z set when bits 2 and 3 are both set in the byte at wSlotResistances + $5 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05)
 WDA77EntryHasBits2And3_Bank05_5F2A::
 Func_005_5F2A:: ; address name
@@ -6276,7 +6276,7 @@ Func_005_5F2A:: ; address name
     cp a, $0C
     ret
 
-; C = 1 when the AI mode is below 4; with wD2CC set, $00 when another ally that can act knows skill $63 or $64 with enough MP; otherwise $FF (E-0127)
+; C = 1 when the AI mode is below 4; with wAIFlag set, $00 when another ally that can act knows skill $63 or $64 with enough MP; otherwise $FF (E-0127)
 ; 2 call sites from 2 routines (e.g. AIScoreB_TwinHits, AIScore_TwinHits)
 ; reads: wBattleActor, wAIFlag
 ; points at: wBattleStatus1, wSlotMarks
@@ -6472,7 +6472,7 @@ Func_005_600E:: ; address name
     xor a, a
     ret
 
-; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
+; C = index: Z set when bits 2 and 3 are both set in the byte at wSlotResistances + $5 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
 WDA77EntryHasBits2And3_Bank05::
 Func_005_6039:: ; address name
@@ -6651,7 +6651,7 @@ Func_005_60BA:: ; address name
     jr c, .loop2
     ret
 
-; C = slot: NZ when its status byte 1 bit 0 is set; otherwise the result of testing bit 3 of its side flag (wD80A for slots 0-3, wD80B for 4-7) (E-0117)
+; C = slot: NZ when its status byte 1 bit 0 is set; otherwise the result of testing bit 3 of its side flag (wSideFlags0 for slots 0-3, wSideFlags1 for 4-7) (E-0117)
 ; 1 call site from 1 routine (e.g. SlotCHasCastableHealSkill)
 ; points at: wBattleStatus1, wSideFlags0
 TestSlotStatus1Bit0OrSideFlagBit3::
@@ -6670,7 +6670,7 @@ Func_005_6127:: ; address name
     bit 3, [hl]
     ret
 
-; C = slot: Z clear when bit 6 of its status byte 1 (wD80D) is set; HL points at the byte (E-0114)
+; C = slot: Z clear when bit 6 of its status byte 1 (wBattleStatus1) is set; HL points at the byte (E-0114)
 ; 1 call site from 1 routine (e.g. SlotCHasCastableHealSkill)
 ; points at: wBattleStatus1
 TestSlotStatus1Bit6::
@@ -6686,7 +6686,7 @@ SlotCHasCastableHealSkill_Data:: ; heuristic: pointer load in the same bank (ban
 Data_005_614B:: ; address name
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
-; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe without status 1 mask $2A has bits 4-5 of its wDA74 byte clear, else $FF (E-0125)
+; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe without status 1 mask $2A has bits 4-5 of its wSlotResistances + $2 byte clear, else $FF (E-0125)
 ; 3 call sites from 3 routines (e.g. AIScoreB_Beat, AIScore_Beat, AIScore_KODance)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -6738,7 +6738,7 @@ Func_005_6153:: ; address name
     ld c, $01
     ret
 
-; C = 1 when wDA53[actor] (the AI mode) is below 3; otherwise C = 0 when wD2CC is non-zero, $FF when it is zero (E-0092)
+; C = 1 when wSlotAIMode[actor] (the AI mode) is below 3; otherwise C = 0 when wAIFlag is non-zero, $FF when it is zero (E-0092)
 ; 7 call sites from 7 routines (e.g. AIScore_SquallHit_Conditions, AIIronizeUsable, AIScore_Dodge_Sub01_Conditions, AIGuardSkillUsable_7C45, ...)
 ; reads: wBattleActor, wAIFlag
 CheckAIFlagSetModeGated:: ; heuristic: follows a terminator; C0
@@ -7292,7 +7292,7 @@ Func_005_640A:: ; address name
     pop bc
     ret
 
-; C = $00 when the side's wC984/wC985 flag is 1 or no other ally slot is occupied, else $FF (E-0125)
+; C = $00 when the side's wSide0Flag/wSide1Flag flag is 1 or no other ally slot is occupied, else $FF (E-0125)
 ; 10 call sites from 10 routines (e.g. AIIronizeUsable, AIScore_LureDance_Conditions, AIScore_StrongD_Conditions, AIScore_Cover_Conditions, ...)
 ; reads: wBattleActor, wSide0Flag, wSide1Flag
 AllyCheckSide0FlagAndOtherSlots:: ; heuristic: follows a terminator; C0
@@ -7335,7 +7335,7 @@ Func_005_6452:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when wC58A is 0 and wCFC5 is below 2, else C = $FF (E-0100)
+; C = 0 when wLinkMode is 0 and wBattleKind is below 2, else C = $FF (E-0100)
 ; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wLinkMode, wBattleKind
 CheckBattleKindAtLeast2OrLinkModeSet::
@@ -7398,7 +7398,7 @@ Func_005_6494:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when wC58A is 0 and the actor is in slots 4-7, else C = $FF (E-0100)
+; C = 0 when wLinkMode is 0 and the actor is in slots 4-7, else C = $FF (E-0100)
 ; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_RockThrow, AIScore_PoisonHit)
 ; reads: wLinkMode, wBattleActor
 CheckActorSlot0To3OrLinkModeSet::
@@ -7439,7 +7439,7 @@ Func_005_64DF:: ; address name
     ld c, $FF
     ret
 
-; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill wCFEF is 3; $FF when wCFEF is 0 or none is (E-0127)
+; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill wRecordBufferData + $1 is 3; $FF when wRecordBufferData + $1 is 0 or none is (E-0127)
 ; 21 call sites from 21 routines (e.g. AIScore_Firebal, AIScore_Beat, AIScore_Sacrifice, AIScore_Sap, ...)
 ; reads: wBattleActor, wRecordBufferData, hTemp0
 ; writes: hTemp0, hTemp1
@@ -7854,7 +7854,7 @@ Func_005_6720:: ; address name
     or a, a
     ret
 
-; adds MaxHP + MaxMP + ATK + DEF of slot C to the 24-bit total at hFFC6-hFFC8; D += 1 (E-0121)
+; adds MaxHP + MaxMP + ATK + DEF of slot C to the 24-bit total at hTemp0-hTemp2; D += 1 (E-0121)
 ; 2 call sites from 1 routine (e.g. AIGateCompareAllyStatAverages)
 ; reads: hTemp0, hTemp1, hTemp2
 ; writes: hTemp0, hTemp1, hTemp2
@@ -8238,7 +8238,7 @@ Func_005_689C:: ; address name
     ld c, $01
     ret
 
-; apparently meant to test the actor's status byte 4 (wD810 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)
+; apparently meant to test the actor's status byte 4 (wBattleStatus4 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)
 ; 8 call sites from 8 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
@@ -8317,7 +8317,7 @@ Func_005_6985:: ; address name
     ld c, $FF
     ret
 
-; C = 0 when the actor's status byte 2 (wD80E) bit 1 or byte 4 & $03 is set, else C = $FF (E-0072)
+; C = 0 when the actor's status byte 2 (wBattleStatus2) bit 1 or byte 4 & $03 is set, else C = $FF (E-0072)
 ; 14 call sites from 14 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
@@ -8516,7 +8516,7 @@ Func_005_6A6B:: ; address name
     ld c, $01
     ret
 
-; wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF
+; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF
 ; 108 call sites from 108 routines (e.g. AIScore_Skill00_Conditions, AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, ...)
 ; writes: wAISkillScore, wAISkillScore2
 ResetAISkillScore::
@@ -8529,7 +8529,7 @@ Func_005_6AE8:: ; address name
     ld [wAISkillScore2 + $1], a
     ret
 
-; the word wDA6E/wDA6F += BC (E-0094)
+; the word wAISkillScore/wAISkillScore + $1 += BC (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wAISkillScore
 ; writes: wAISkillScore
@@ -8543,7 +8543,7 @@ Func_005_6AF8:: ; address name
     ld [wAISkillScore + $1], a
     ret
 
-; the word wDA70/wDA71 += BC (E-0094)
+; the word wAISkillScore2/wAISkillScore2 + $1 += BC (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wAISkillScore2
 ; writes: wAISkillScore2
@@ -8557,7 +8557,7 @@ Func_005_6B07:: ; address name
     ld [wAISkillScore2 + $1], a
     ret
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; 36 call sites from 36 routines (e.g. UnreferencedEstimateStrongestFoeHit, FailIfAbleAllyKnowsSkill42To47, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05::
@@ -8767,7 +8767,7 @@ Func_005_6BF8:: ; address name
     cp a, $01
     ret
 
-; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wD989 + 16 * C), loading part of each skill record into hFFC6 (LoadSkillRecordPart with wD868 = 5, wD869 = 1); returns A = hFFC6 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
+; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wBattleSkills + 16 * C), loading part of each skill record into hTemp0 (LoadSkillRecordPart with wBattleArg0 = 5, wBattleArg1 = 1); returns A = hTemp0 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
 ; 8 call sites from 8 routines (e.g. AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD, AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05, ...)
 ; reads: hTemp0
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBuffer
@@ -9202,7 +9202,7 @@ Func_005_6DFF:: ; address name
     call DivideHLByA
     ret
 
-; D = the number of set status bits and fields in slot C's 9-byte wD80D record (checks 16 flags across bytes 0, 1, 4, 5 and 7) (E-0121)
+; D = the number of set status bits and fields in slot C's 9-byte wBattleStatus1 record (checks 16 flags across bytes 0, 1, 4, 5 and 7) (E-0121)
 ; 1 call site from 1 routine (e.g. PassIfSkill83OrNoAllyHasStatus)
 ; points at: wBattleStatus1
 CountActiveStatusEffectsOfSlotC::
@@ -9343,7 +9343,7 @@ Func_005_6ED1:: ; address name
     or a, a
     ret
 
-; A = battle slot: counts the skills numbered $40-$47 among the slot's 8 skills (every other byte of wD989 + 16 * slot): A = the count, Z set when there are none; BC kept (E-0094)
+; A = battle slot: counts the skills numbered $40-$47 among the slot's 8 skills (every other byte of wBattleSkills + 16 * slot): A = the count, Z set when there are none; BC kept (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSkills
 CountSlotSkills40To47:: ; heuristic: follows a terminator; C0
@@ -9573,7 +9573,7 @@ Func_005_701B:: ; address name
     pop de
     ret
 
-; A = wCFEF, Z set when it is zero (E-0114)
+; A = wRecordBufferData + $1, Z set when it is zero (E-0114)
 ; 2 call sites from 2 routines (e.g. AIGateFoeStatus1Mask22, AIScore_FireAir_ReadSlotAIModeIndexed_Bank05)
 ; reads: wRecordBufferData
 TestWCFEF::
@@ -9582,7 +9582,7 @@ Func_005_702D:: ; address name
     or a, a
     ret
 
-; reads the 2-bit field selected by Data_005_6F6B[A - 1] from the actor's wDA72 record into A, with NZ (E-0124)
+; reads the 2-bit field selected by Data_005_6F6B[A - 1] from the actor's wSlotResistances record into A, with NZ (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wSlotResistances
@@ -9662,7 +9662,7 @@ Func_005_7080:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the MP, status-1, side-flag and repeat checks pass, a foe lacks status 2 mask $22, status 5 bits 6-7 and status 2 bit 3, and Func_005_43F2 passes; otherwise resets wDA6E (E-0125)
+; usable when the MP, status-1, side-flag and repeat checks pass, a foe lacks status 2 mask $22, status 5 bits 6-7 and status 2 bit 3, and Func_005_43F2 passes; otherwise resets wAISkillScore (E-0125)
 ; 2 call sites from 2 routines (e.g. AIScore_Blaze, AIScore_Firebal)
 AIFireSkillUsable:: ; heuristic: follows a terminator; C0
 Func_005_708C:: ; address name
@@ -9804,7 +9804,7 @@ Func_005_7109:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost and the status-1, side-flag, repeat and Func_005_626B checks pass; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost and the status-1, side-flag, repeat and Func_005_626B checks pass; otherwise resets wAISkillScore (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_Heal, AIScore_HealUs)
 AIHealUsable:: ; heuristic: follows a terminator; C0
 Func_005_715F:: ; address name
@@ -10027,7 +10027,7 @@ Func_005_724F:: ; address name
     call ResetAISkillScore
     ret
 
-; usable only when the skill is usable and a foe lacks status 2 mask $22 and a foe lacks status 5 bits 6-7; otherwise resets wDA6E (E-0122)
+; usable only when the skill is usable and a foe lacks status 2 mask $22 and a foe lacks status 5 bits 6-7; otherwise resets wAISkillScore (E-0122)
 ; 6 call sites from 6 routines (e.g. AIScore_Sap_Conditions, AIScore_Slow_Conditions, AIScore_Surround_Conditions, AIScore_Sleep_Conditions, ...)
 AIUsableAndFoeLacksStatus2And5::
 Func_005_7261:: ; address name
@@ -10253,7 +10253,7 @@ Func_005_7345:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when AIUsableAndFoeLacksStatus2And5, a foe lacks status 0 bit 6, Func_005_43F2, a foe lacks status 0 bit 4 and AnyFoeVulnerableByWDA75Bits67 pass; otherwise resets wDA6E (E-0124)
+; usable when AIUsableAndFoeLacksStatus2And5, a foe lacks status 0 bit 6, Func_005_43F2, a foe lacks status 0 bit 4 and AnyFoeVulnerableByWDA75Bits67 pass; otherwise resets wAISkillScore (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_PanicAll, AIScore_PanicAll_6473)
 AIPanicAllUsable:: ; heuristic: follows a terminator; C0
 Func_005_7370:: ; address name
@@ -10283,7 +10283,7 @@ Func_005_7370:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the skill is usable and the foe, block, actor-status, lone-foe HP, wD2CC and ally checks pass; otherwise resets wDA6E (E-0125)
+; usable when the skill is usable and the foe, block, actor-status, lone-foe HP, wAIFlag and ally checks pass; otherwise resets wAISkillScore (E-0125)
 ; 2 call sites from 2 routines (e.g. AIScore_Ironize, AIScore_Ironize_648D)
 AIIronizeUsable:: ; heuristic: follows a terminator; C0
 Func_005_7397:: ; address name
@@ -10455,7 +10455,7 @@ Func_005_7449:: ; address name
     call ResetAISkillScore
     ret
 
-; usable only when the skill is usable and the actor lacks status 4 bits 6-7; otherwise resets wDA6E (E-0122)
+; usable only when the skill is usable and the actor lacks status 4 bits 6-7; otherwise resets wAISkillScore (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Transform, AIScore_BeDragon)
 AIUsableAndActorLacksStatus4Bits67:: ; heuristic: follows a terminator; C0
 Func_005_7482:: ; address name
@@ -10521,7 +10521,7 @@ Func_005_74B5:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and status 2 bit 3, and Func_005_43F2 passes; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and status 2 bit 3, and Func_005_43F2 passes; otherwise resets wAISkillScore (E-0124)
 ; 6 call sites from 6 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_FireAir_AIAttackSkillUsable_74D1, AIFunc74D1AndFoeLacksStatus3And4, AIScore_BigBang, ...)
 AIAttackSkillUsable_74D1::
 Func_005_74D1:: ; address name
@@ -10573,7 +10573,7 @@ Func_005_74F9:: ; address name
     call ResetAISkillScore
     ret
 
-; usable only when Func_005_74D1 passes and a foe lacks the status 3 and 4 bits; otherwise resets wDA6E (E-0122)
+; usable only when Func_005_74D1 passes and a foe lacks the status 3 and 4 bits; otherwise resets wAISkillScore (E-0122)
 ; 6 call sites from 6 routines (e.g. AIScore_RockThrow, AIScore_Watershot, AIScore_Tidalwave, AIScore_CallHelp, ...)
 AIFunc74D1AndFoeLacksStatus3And4:: ; heuristic: follows a terminator; C0
 Func_005_7512:: ; address name
@@ -10904,7 +10904,7 @@ Func_005_7671:: ; address name
     ld c, $00
     ret
 
-; C = $FF when the skill is usable, a foe lacks status 0 mask $CC and a foe is not blocked; otherwise resets wDA6E and C = $00 (E-0124)
+; C = $FF when the skill is usable, a foe lacks status 0 mask $CC and a foe is not blocked; otherwise resets wAISkillScore and C = $00 (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_Paralyze_Conditions, AIScore_NapAttack_Conditions)
 AIParalyzeUsable::
 Func_005_7686:: ; address name
@@ -11019,7 +11019,7 @@ Func_005_76F8:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits 6-7 and status 2 bit 3; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits 6-7 and status 2 bit 3; otherwise resets wAISkillScore (E-0124)
 ; 3 call sites from 3 routines (e.g. AIScore_MultiCut_Conditions, AIScore_HighJump_Conditions, AIFunc770AAndPassUnlessWCFF3Bit4)
 AIAttackSkillUsable_770A::
 Func_005_770A:: ; address name
@@ -11138,7 +11138,7 @@ Func_005_7786:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and the status 3/4 bits, and the actor lacks status 4 bits 6-7; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and the status 3/4 bits, and the actor lacks status 4 bits 6-7; otherwise resets wAISkillScore (E-0124)
 ; 3 call sites from 3 routines (e.g. AIScore_TwinSlash_Conditions, AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Berserker)
 AIAttackSkillUsable_779F::
 Func_005_779F:: ; address name
@@ -11168,7 +11168,7 @@ Func_005_779F:: ; address name
     call ResetAISkillScore
     ret
 
-; usable only when Func_005_779F and Func_005_43F2 pass and the actor's HP is not 1; otherwise resets wDA6E (E-0122)
+; usable only when Func_005_779F and Func_005_43F2 pass and the actor's HP is not 1; otherwise resets wAISkillScore (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Ramming)
 AIFunc779FAnd43F2AndActorHPNotOne:: ; heuristic: follows a terminator; C0
 Func_005_77C7:: ; address name
@@ -11234,7 +11234,7 @@ Func_005_77F9:: ; address name
     call ResetAISkillScore
     ret
 
-; usable only when Func_005_770A and PassUnlessWCFF3Bit4AndActorStatusBit7 pass; otherwise resets wDA6E (E-0122)
+; usable only when Func_005_770A and PassUnlessWCFF3Bit4AndActorStatusBit7 pass; otherwise resets wAISkillScore (E-0122)
 ; 4 call sites from 4 routines (e.g. AIScore_SleepAir_Conditions, AIScore_PalsyAir_Conditions, AIScore_PoisonGas_Conditions, AIScore_PoisonAir_Conditions)
 AIFunc770AAndPassUnlessWCFF3Bit4::
 Func_005_7812:: ; address name
@@ -11410,7 +11410,7 @@ Func_005_78CC:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, PassUnlessWCFF3Bit5AndActorStatusBit6 and the repeat check pass and a foe lacks status 5 bits 6-7; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, PassUnlessWCFF3Bit5AndActorStatusBit6 and the repeat check pass and a foe lacks status 5 bits 6-7; otherwise resets wAISkillScore (E-0124)
 ; 4 call sites from 4 routines (e.g. AIScore_OddDance_Conditions, AIScore_KODance_Conditions, AIScore_PaniDance_Conditions, AIScore_LureDance_Conditions)
 AIDanceUsable::
 Func_005_78EC:: ; address name
@@ -11808,7 +11808,7 @@ Func_005_7ACC:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the MP and repeat checks pass, a foe lacks status 5 bits 6-7 and the 3/4 bits, has clear status 3, is vulnerable by wDA77 bits 2-3, and AllyCheckSide0FlagAndOtherSlots passes; otherwise resets wDA6E (E-0125)
+; usable when the MP and repeat checks pass, a foe lacks status 5 bits 6-7 and the 3/4 bits, has clear status 3, is vulnerable by wSlotResistances + $5 bits 2-3, and AllyCheckSide0FlagAndOtherSlots passes; otherwise resets wAISkillScore (E-0125)
 ; 3 call sites from 3 routines (e.g. AIScore_LegSweep_Conditions, AIScore_LushLicks, AIScore_Ahhh)
 AILickSkillUsable_7AD8:: ; heuristic: follows a terminator; C0
 Func_005_7AD8:: ; address name
@@ -11846,7 +11846,7 @@ Func_005_7AD8:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and the status 3/4 bits, a foe has clear status 3, and AnyFoeVulnerableByWDA77Bits23 passes; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and the status 3/4 bits, a foe has clear status 3, and AnyFoeVulnerableByWDA77Bits23 passes; otherwise resets wAISkillScore (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_SickLick, AIScore_Ahhh_6401)
 AIStatusLickUsable:: ; heuristic: follows a terminator; C0
 Func_005_7B11:: ; address name
@@ -12062,7 +12062,7 @@ Func_005_7C12:: ; address name
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits 6-7 and status 0 bit 6; otherwise resets wDA6E (E-0124)
+; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits 6-7 and status 0 bit 6; otherwise resets wAISkillScore (E-0124)
 ; 4 call sites from 4 routines (e.g. AIScore_Dodge_Sub01_Conditions, AIGuardSkillUsable_7C45, AIScore_TailWind_Conditions, AIScore_StormWind_Conditions)
 AIBuffSkillUsable_7C24::
 Func_005_7C24:: ; address name
@@ -12088,7 +12088,7 @@ Func_005_7C24:: ; address name
     call ResetAISkillScore
     ret
 
-; AIBuffSkillUsable_7C24, a foe not blocked, the gated wD2CC check and PassIfBattleTurnNonZero; otherwise resets wDA6E (E-0124)
+; AIBuffSkillUsable_7C24, a foe not blocked, the gated wAIFlag check and PassIfBattleTurnNonZero; otherwise resets wAISkillScore (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_Cover_Conditions, AIScore_BladeD)
 AIGuardSkillUsable_7C45:: ; heuristic: follows a terminator; C0
 Func_005_7C45:: ; address name
@@ -12410,7 +12410,7 @@ Func_005_7DC2:: ; address name
     call ResetAISkillScore
     ret
 
-; C = 0 (SetCToZero) and resets wDA6E: the skill is never chosen by the AI (E-0122)
+; C = 0 (SetCToZero) and resets wAISkillScore: the skill is never chosen by the AI (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Whistle, AIScore_ZoneOut)
 AINeverUsableResetAISkillScore:: ; heuristic: follows a terminator; C0
 Func_005_7DDC:: ; address name

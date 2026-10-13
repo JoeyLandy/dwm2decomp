@@ -87,7 +87,7 @@ Func_060_4076:: ; address name
     call RollKeyWorldEncounterTable
     ret
 
-; fills 32 two-byte entries from wCD10 with random monster ids from the wCCF7 band lists (rows from Data_060_4123 by wCD02) (E-0130)
+; fills 32 two-byte entries from wKeyWorldMonsters with random monster ids from the wKeyWorldMonsterBands band lists (rows from Data_060_4123 by wKeyWorldBandAdjust) (E-0130)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldBandAdjust, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
@@ -245,7 +245,7 @@ Data_060_4123:: ; address name
     db $00, $01, $02, $03, $04, $05, $06, $07 ; id 32
     db $07, $06, $05, $04, $03, $02, $01, $00 ; id 33
 
-; for 32 entries from wCD11 ORs 2 * min(wC969 + (32 - n) * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0125)
+; for 32 entries from wKeyWorldMonsters + $1 ORs 2 * min(wKeyWorldLevelBase + (32 - n) * (wPartyStrength + 10) / 150 / 2, 99) into every other byte (E-0125)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD11LevelsForPartyStrength::
@@ -296,7 +296,7 @@ Func_060_4233:: ; address name
     jr nz, .loop
     ret
 
-; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
+; fills 8 two-byte entries from wKeyWorldBossMonsters with random monster ids from the band lists (Data_060_4123 row wKeyWorldBandAdjust) (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyRandomHi, wKeyWorldBandAdjust, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
@@ -401,7 +401,7 @@ Func_060_4274:: ; address name
     jp nz, .loop
     ret
 
-; for 8 entries from wCD51 ORs 2 * min(wC969 + 15 * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0127)
+; for 8 entries from wKeyWorldBossMonsters + $1 ORs 2 * min(wKeyWorldLevelBase + 15 * (wPartyStrength + 10) / 150 / 2, 99) into every other byte (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD51LevelsSlope::
@@ -457,7 +457,7 @@ Func_060_42F2:: ; address name
     jr nz, .loop
     ret
 
-; for 8 entries from wCD51 ORs 2 * min(wCD05 + 3 * (wCD05 / 10), 99) into every other byte (E-0125)
+; for 8 entries from wKeyWorldBossMonsters + $1 ORs 2 * min(wPartyStrength + 3 * (wPartyStrength / 10), 99) into every other byte (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyStrength
 FillWCD51LevelsForPartyStrength:: ; heuristic: follows a terminator; C0
@@ -501,7 +501,7 @@ Func_060_4338:: ; address name
     jr nz, .loop
     ret
 
-; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
+; from the wKeyList + $1 entry wCurrentKeyIndex: wKeyWorldBandAdjust = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wKeyWorldMonsterBands (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wCurrentKeyIndex, wKeyWorldBandAdjust
 ; writes: wKeyWorldBandAdjust
@@ -567,7 +567,7 @@ Func_060_436B:: ; address name
     ld [wKeyWorldBandAdjust], a
     ret
 
-; E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by byte 0 of the current key's 4-byte entry at wC708 + 4 * wCurrentKeyIndex: values -2 to 13).
+; E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by byte 0 of the current key's 4-byte entry at wKeyList + $1 + 4 * wCurrentKeyIndex: values -2 to 13).
 ; record: signed starting value of wKeyWorldBandAdjust
 KeyWorldBandAdjustTable::
 Data_060_43C7:: ; address name
@@ -649,7 +649,7 @@ Data_060_43D7:: ; address name
     db $07, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 54
     db $08, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 55
 
-; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
+; clears wKeyWorldEncounterTable ($10 bytes) and fills a 4-byte entry per map area (from wKeyWorldObjects) with a random monster id and level from the band lists (E-0128)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength, wKeyWorldLevelArea, hTemp2
 ; writes: hTemp0, hTemp2
@@ -735,7 +735,7 @@ Func_060_4597:: ; address name
     inc hl
     jp .skip
 
-; like RollKeyWorldEncounterTable, with each entry's level from wCD05 / 5 * 7 plus the area value, capped at 99 (E-0129)
+; like RollKeyWorldEncounterTable, with each entry's level from wPartyStrength / 5 * 7 plus the area value, capped at 99 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyStrength, hTemp2
 ; writes: hTemp0, hTemp2
@@ -844,7 +844,7 @@ Func_060_4607:: ; address name
     inc hl
     jp .skip
 
-; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
+; picks random monster ids for the key world from the wKeyWorldMonsterBands lists by band (Func_060_4724) into wKeyWorldEncounter-wKeyWorldEncounter + $7, and wKeyWorldEncounter + $2/wKeyWorldEncounter + $5/wKeyWorldEncounter + $8 from wKeyWorldLevelMonster (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength, wKeyRandomLo, wKeyWorldLevelMonster, hTemp0
 ; writes: hTemp0, wKeyWorldEncounter
@@ -915,7 +915,7 @@ Func_060_4698:: ; address name
     ld [wKeyWorldEncounter + $8], a
     ret
 
-; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
+; hTemp1 = wKeyWorldMonsterBands[random & 1], stepping back over $FF entries (E-0124)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 ; reads: wKeyRandomLo
 ; writes: hTemp1
@@ -942,7 +942,7 @@ Func_060_4709:: ; address name
     ldh [hTemp1], a
     ret
 
-; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
+; DE = a random entry of the list Data_060_6D6D[16 * hTemp1 + 2 * hTemp0]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 ; reads: hTemp1, hTemp0, wKeyRandomHi
 PickRandomMonsterFromBandList::
@@ -1063,7 +1063,7 @@ Func_060_4773:: ; address name
     ld a, $07
     ret
 
-; copies three bytes of entry wCD05 of the 8-byte table at $47C5 to wC969-wC96B (E-0121)
+; copies three bytes of entry wPartyStrength of the 8-byte table at $47C5 to wKeyWorldLevelBase-wKeyWorldLevelMonster (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength
 ; writes: wKeyWorldLevelBase, wKeyWorldLevelArea, wKeyWorldLevelMonster
@@ -1377,7 +1377,7 @@ Data_060_4C58:: ; address name
     db $00, $0F, $08, $0F, $08, $0F, $10, $1F, $10, $1F, $10, $1F, $10, $1F, $10, $1F
     db $10, $1F, $10, $1F
 
-; when wC88E is set and wC891 has bit 7 with low bits equal to wCC42, clears wC88E (E-0122)
+; when wKeyWorldActive is set and wKeyWorldKey has bit 7 with low bits equal to wKeyWorldSlot, clears wKeyWorldActive (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot
 ; writes: wKeyWorldActive
@@ -1398,7 +1398,7 @@ Func_060_4C6C:: ; address name
     ld [wKeyWorldActive], a
     ret
 
-; repeatedly picks entry (wCD03 & 3) of the 4-byte row of Data_060_4CC1 selected by the second byte of the wC708 entry wC833 until it is non-zero; wCD0B = entry - 1 (E-0121)
+; repeatedly picks entry (wKeyRandomLo & 3) of the 4-byte row of Data_060_4CC1 selected by the second byte of the wKeyList + $1 entry wCurrentKeyIndex until it is non-zero; wKeyWorldGoalKind = entry - 1 (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc)
 ; reads: wKeyRandomLo, wCurrentKeyIndex
 ; writes: wKeyWorldGoalKind
@@ -1437,7 +1437,7 @@ Func_060_4C85:: ; address name
     ld [wKeyWorldGoalKind], a
     ret
 
-; E-0192 (C1: PickRandomNonzeroFromKeyWorldGoalKindRows reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes).
+; E-0192 (C1: PickRandomNonzeroFromKeyWorldGoalKindRows reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wKeyList + $1) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes).
 ; record: four choices of wKeyWorldGoalKind + 1 (0 = no choice; drawn again)
 KeyWorldGoalKindRows::
 Data_060_4CC1:: ; address name
@@ -1830,7 +1830,7 @@ Func_060_4E0A:: ; address name
     jr nz, .loop7
     ret
 
-; swaps [DE] with the first of the four wCD70 bytes whose high nibble matches [DE]'s (E-0124)
+; swaps [DE] with the first of the four wKeyWorldAreas bytes whose high nibble matches [DE]'s (E-0124)
 ; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_NextRandomSeed)
 ; reads: hTemp1
 ; writes: hTemp1
@@ -1960,7 +1960,7 @@ Func_060_4F7C:: ; address name
     ld [hl], $FF
     ret
 
-; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hFFC7 and hFFC8, avoiding the previous cell, and stores their positions (E-0129)
+; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hTemp1 and hTemp2, avoiding the previous cell, and stores their positions (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc)
 ; reads: hTemp1, wKeyRandomHi, hTemp4, hTemp3, hTemp2
 ; writes: hTemp4, hTemp3
@@ -2052,7 +2052,7 @@ Func_060_4FEA:: ; address name
     ld [hl+], a
     ret
 
-; reads the cell at (hFFC9, hFFCA) from the area map chunk in wCD60; A = 1 when its byte is not $FF, else 0 (E-0128)
+; reads the cell at (hTemp3, hTemp4) from the area map chunk in wKeyWorldChunks; A = 1 when its byte is not $FF, else 0 (E-0128)
 ; 3 call sites from 2 routines (e.g. PlaceObjectInAreaC, PlaceTwoRandomOpenCells)
 ; reads: hTemp4, hTemp3
 ReadKeyWorldCellIsSolid::
@@ -2410,7 +2410,7 @@ Func_060_51B7:: ; address name
     pop hl
     ret
 
-; finds area C in wCD70 and picks a random free cell inside it for the object (avoiding wCD7B and wCD8B entries) (E-0131)
+; finds area C in wKeyWorldAreas and picks a random free cell inside it for the object (avoiding wKeyWorldObjects and wKeyWorldFloorInfo + $3 entries) (E-0131)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08)
 ; reads: hTemp3, wKeyRandomHi, hTemp4, hTempA, hTemp8, hTemp9, wKeyWorldAreaCount, hTemp6
 ; writes: hTempA, hTemp6, hTemp4, hTemp3, hTemp8, hTemp9
@@ -2635,7 +2635,7 @@ DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data:: ; heuristic: pointer 
 Data_060_53B3:: ; address name
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
+; wKeyWorldBand = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; writes: wKeyWorldBand
 SetKeyWorldBandForA::
@@ -2665,7 +2665,7 @@ Func_060_53C3:: ; address name
     ld [wKeyWorldBand], a
     ret
 
-; picks a random open cell within wCD0D x wCD0E not used by another object and stores it for object hFFC6 (E-0130)
+; picks a random open cell within wKeyWorldWidth x wKeyWorldHeight not used by another object and stores it for object hTemp0 (E-0130)
 ; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; reads: wKeyWorldWidth, wKeyRandomHi, wKeyWorldHeight, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTemp5, ...
 ; writes: wKeyWorldPlaceFlag, hTemp3, hTemp4, hTemp5
@@ -2805,7 +2805,7 @@ Func_060_53E5:: ; address name
     ld a, $01
     ret
 
-; picks an object kind for the key level band wCD0F from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
+; picks an object kind for the key level band wKeyWorldBand from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveMapObjectsEntryMatching, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
@@ -3641,7 +3641,7 @@ Jump_060_609E:: ; address name
     ld a, $01
     ret
 
-; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
+; copies three bytes at DE to the address in hTemp0/hTemp1 minus 3 and to hTemp2-hTemp4 (E-0121)
 ; 4 call sites from 4 routines (e.g. RunRandomPatternCase_WriteTempA_Case03, RunRandomPatternCase_WriteTempA_Case02, RunRandomPatternCase_WriteTempA, RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
@@ -3667,7 +3667,7 @@ Func_060_60E0:: ; address name
     ldh [hTemp4], a
     ret
 
-; HL += the word hFFC6/hFFC7, then stores hFFC8, hFFC9, hFFCA at HL - 3 onward (E-0119)
+; HL += the word hTemp0/hTemp1, then stores hTemp2, hTemp3, hTemp4 at HL - 3 onward (E-0119)
 ; 5 call sites from 3 routines (e.g. RunRandomPatternCase_WriteTempA_Case03, RunRandomPatternCase_WriteTempA_Case02, RunRandomPatternCase_WriteTempA)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 StoreTemp2To3BytesBeforeHLPlusTemp0::
@@ -3864,7 +3864,7 @@ Data_060_6245:: ; address name
     dfar KeyWorldChunkGroup56 ; id 162
     dfar KeyWorldChunkGroup57 ; id 163
 
-; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
+; on key-world maps with bit 7 of wKeyWorldRefresh set: sets the object count wMapObjectCount from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wKeyWorldGoalCell object (E-0129)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Morning)
 ; reads: wMapType, wKeyWorldRefresh, wCurrentKeyIndex, wKeyWorldBand, wMapObjectCount, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, ...
 ; writes: wKeyWorldRefresh, wMapObjectCount, hTemp0
@@ -3970,7 +3970,7 @@ RefreshKeyWorldObjectsOnEntry_Data:: ; heuristic: pointer load in the same bank 
 Data_060_638D:: ; address name
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
-; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
+; on town maps with bit 7 of wKeyWorldRefresh set: sets the object count and band for the map, drops listed objects and marks the wKeyWorldGoalCell one (E-0130)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Morning)
 ; reads: wMapType, wKeyWorldRefresh, hMapId
 ; writes: wMapObjectCount, wKeyWorldBand, hTemp0
@@ -4096,7 +4096,7 @@ Func_060_639D:: ; address name
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-; clears bit 7 of wC893; walks the wCC47 8-byte entries at wCC48 and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
+; clears bit 7 of wKeyWorldRefresh; walks the wMapObjectCount 8-byte entries at wMapObjects and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
 ; reads: wKeyWorldRefresh, wMapObjectCount
 ; writes: hTemp6, hTemp7, wKeyWorldRefresh, hTemp0, wMapObjectCount
@@ -4144,7 +4144,7 @@ Func_060_6488:: ; address name
     ld [wMapObjectCount], a
     ret
 
-; when wC88E is set and wC891 equals hFFC6, sets bit 7 of the entry whose byte 4 equals wC890 (E-0125)
+; when wKeyWorldActive is set and wKeyWorldKey equals hTemp0, sets bit 7 of the entry whose byte 4 equals wKeyWorldGoalCell (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
 ; reads: wKeyWorldActive, wKeyWorldKey, hTemp0, wKeyWorldGoalCell, wMapObjectCount
 MarkMapObjectsEntryForKeyWorldGoalCell::
@@ -4422,7 +4422,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F
 Data_060_663F:: ; address name
     db $2B, $38, $39, $3A, $53, $5D, $82, $83, $AD, $AE, $FF
 
-; DE += 2; writes the word at $669C + 16 * hFFC8 + 2 * Data_060_6677[hFFC9] at DE (E-0121)
+; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * Data_060_6677[hTemp3] at DE (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc)
 ; reads: hTemp2, hTemp3
 WriteKeyContentsWordRowsEntryForTemp2Temp3::
@@ -4583,7 +4583,7 @@ Func_060_686C:: ; address name
     ld [wScreenTriggerCount], a
     ret
 
-; DE += 2; advances the random seed; hFFC6 = wCD04 & 7; writes Data_060_690E[hFFC6] at DE, calls Func_061_4706, then writes hFFC6 at the next byte (E-0121)
+; DE += 2; advances the random seed; hTemp0 = wKeyRandomHi & 7; writes Data_060_690E[hTemp0] at DE, calls Func_061_4706, then writes hTemp0 at the next byte (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending)
 ; reads: wKeyRandomHi, hTemp0
 ; writes: hTemp0
@@ -4612,7 +4612,7 @@ WriteRandomEntryFromTable690E_Data:: ; heuristic: pointer load in the same bank 
 Data_060_690E:: ; address name
     db $01, $10, $12, $13, $20, $21, $23, $32
 
-; hFFC9 = hFFC6; picks hFFC7 from the chance row Data_060_6969[level / 10] and hFFC8 from row Data_060_6A09 + $3C * (level / 10) (E-0125)
+; hTemp3 = hTemp0; picks hTemp1 from the chance row Data_060_6969[level / 10] and hTemp2 from row Data_060_6A09 + $3C * (level / 10) (E-0125)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, WriteKeyEntryTemp0)
 ; reads: hTemp0
 ; writes: hTemp3, hTemp1, hTemp2
@@ -4668,7 +4668,7 @@ Func_060_6916:: ; address name
     ldh [hTemp2], a
     ret
 
-; repeats NextRandomSeed until wCD04 & $7F is below 100; returns A = that value (E-0116)
+; repeats NextRandomSeed until wKeyRandomHi & $7F is below 100; returns A = that value (E-0116)
 ; 2 call sites from 1 routine (e.g. RollKeyContentsForLevelTemp0)
 ; reads: wKeyRandomHi
 RandomBelow100::
@@ -4730,7 +4730,7 @@ Data_060_6A09:: ; address name
     db $00, $00, $43, $00, $46, $47, $00, $00, $48, $4B, $00, $00, $4D, $00, $4E, $4F, $50, $00, $51, $52
     db $53, $00, $54, $00, $55, $57, $58, $5A, $5B, $00, $5E, $60, $62, $00, $00, $64, $00, $00, $00, $00
 
-; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
+; hTemp0 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
 ; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex, DebugAutomap_Update_RollKeyContentsForLevelTemp0, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0
 ; writes: rRAMB, rRAMG, hTemp0
@@ -4772,7 +4772,7 @@ Func_060_6C61:: ; address name
     ld [rRAMB], a
     ret
 
-; when wCC42 < 20, writes wCC42 + $50 and the $194 bytes at wCD07 to SRAM bank 2 at $A000 + $195 * wCC42 (E-0121)
+; when wKeyWorldSlot < 20, writes wKeyWorldSlot + $50 and the $194 bytes at wKeyWorldFlags to SRAM bank 2 at $A000 + $195 * wKeyWorldSlot (E-0121)
 ; 7 call sites from 6 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunFieldReturnPhase_ResetLeadRecordFields55And5B, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, RunMenuStateMenuState_InitSoundHardware, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
@@ -4809,7 +4809,7 @@ Func_060_6C96:: ; address name
     ld [rRAMB], a
     ret
 
-; when wCC42 < 20 and SRAM bank 2 slot wCC42 is marked wCC42 + $50, copies its $194 bytes to wCD07; counterpart of SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot (E-0124)
+; when wKeyWorldSlot < 20 and SRAM bank 2 slot wKeyWorldSlot is marked wKeyWorldSlot + $50, copies its $194 bytes to wKeyWorldFlags; counterpart of SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot (E-0124)
 ; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunMenuStateMenuState_InitSoundHardware, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG

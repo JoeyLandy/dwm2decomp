@@ -80,7 +80,7 @@ Data_00D_4018:: ; address name
 String_0D_00_00:: ; heuristic: string; C0
 Data_00D_4078:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Welcome to the", $F1
+    db $EA, "*: Welcome to the", $F1
     db "Key Shop.", $FA, $F7
     db $EF, $EE, "Do you need any", $EF, $EE, "keys appraised?", $F0
 
@@ -95,7 +95,7 @@ Data_00D_40B8:: ; address name
 String_0D_00_03:: ; heuristic: string; C0
 Data_00D_40EB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Don't come if", $F1
+    db $EA, "*: Don't come if", $F1
     db "you have no keys.", $F7
     db $F0
 
@@ -109,13 +109,13 @@ Data_00D_410E:: ; address name
 String_0D_00_05:: ; heuristic: string; C0
 Data_00D_412D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Appraisal will", $F1
+    db $EA, "*: Appraisal will", $F1
     db "cost ", $F9, "0G. OK?", $F0
 
 String_0D_00_06:: ; heuristic: string; C0
 Data_00D_414D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Hah? I'm not", $F1
+    db $EA, "*: Hah? I'm not", $F1
     db "appraising any", $FA, $F7
     db $EF, $EE, "key if you don't", $EF, $EE, "pay my fee.", $F7
     db $F0
@@ -123,20 +123,20 @@ Data_00D_414D:: ; address name
 String_0D_00_08:: ; heuristic: string; C0
 Data_00D_418C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Which Magic Key", $F1
+    db $EA, "*: Which Magic Key", $F1
     db "should I appraise?", $F0
 
 String_0D_00_09:: ; heuristic: string; C0
 Data_00D_41B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " That key's been", $F1
+    db $EA, "*: That key's been", $F1
     db "appraised already.", $F7
     db $F0
 
 String_0D_00_0A:: ; heuristic: string; C0
 Data_00D_41D8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You have no more", $F1
+    db $EA, "*: You have no more", $F1
     db "Magic Keys that", $FA, $F7
     db $EF, $EE, "need appraisal, it", $EF, $EE, "seems to me.", $F7
     db $F0
@@ -144,13 +144,13 @@ Data_00D_41D8:: ; address name
 String_0D_00_0B:: ; heuristic: string; C0
 Data_00D_4221:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Should I save", $F1
+    db $EA, "*: Should I save", $F1
     db "the results?", $F0
 
 String_0D_00_0C:: ; heuristic: string; C0
 Data_00D_423F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Let's see the", $F1
+    db $EA, "*: Let's see the", $F1
     db "Magic Key, then.", $FA, $F7
     db $EF, $EE, $A4, "Hmmm", $A4, " Hah?", $EF, $EE, "Oh, right", $A4, $FA, $F7
     db $EF, $EE, "I got it! This is", $EF, $EE, "the ", $F9, "0!", $E5, "0", $E4, $D4, $F7
@@ -159,7 +159,7 @@ Data_00D_423F:: ; address name
 String_0D_00_10:: ; heuristic: string; C0
 Data_00D_42A0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Ah, you have", $F1
+    db $EA, "*: Ah, you have", $F1
     db "some TinyMedals?", $FA, $F7
     db $EF, $EE, "Let me relieve you", $EF, $EE, "of them.", $F7
     db $F0
@@ -167,102 +167,102 @@ Data_00D_42A0:: ; address name
 String_0D_00_12:: ; heuristic: string; C0
 Data_00D_42E2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " ", $A4, "But, I can't", $F1
+    db $EA, "*: ", $A4, "But, I can't", $F1
     db "take this many.", $F7
     db $F0
 
 String_0D_00_13:: ; heuristic: string; C0
 Data_00D_4303:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I have ", $F9, "0 of", $F1
+    db $EA, "*: I have ", $F9, "0 of", $F1
     db "your TinyMedals.", $F7
     db $F0
 
 String_0D_00_14:: ; heuristic: string; C0
 Data_00D_4325:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I hope you'll", $F1
+    db $EA, "*: I hope you'll", $F1
     db "find many medals!", $F7
     db $F0
 
 String_0D_00_15:: ; heuristic: string; C0
 Data_00D_4348:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Want to trade", $F1
+    db $EA, "*: Want to trade", $F1
     db "medals for prizes?", $F0
 
 String_0D_00_16:: ; heuristic: string; C0
 Data_00D_436C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Which prize do", $F1
+    db $EA, "*: Which prize do", $F1
     db "you want?", $F0
 
 String_0D_00_17:: ; heuristic: string; C0
 Data_00D_4388:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I'll trade for", $F1
+    db $EA, "*: I'll trade for", $F1
     db $F9, "0 TinyMedals. OK?", $F0
 
 String_0D_00_18:: ; heuristic: string; C0
 Data_00D_43AC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " That requires", $F1
+    db $EA, "*: That requires", $F1
     db "more TinyMedals.", $F7
     db $F0
 
 String_0D_00_19:: ; heuristic: string; C0
 Data_00D_43CF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You don't have", $F1
+    db $EA, "*: You don't have", $F1
     db "any room for that.", $F7
     db $F0
 
 String_0D_00_1A:: ; heuristic: string; C0
 Data_00D_43F4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Your key ring is", $F1
+    db $EA, "*: Your key ring is", $F1
     db "already full.", $F7
     db $F0
 
 String_0D_00_1B:: ; heuristic: string; C0
 Data_00D_4417:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You have no more", $F1
+    db $EA, "*: You have no more", $F1
     db "room for monsters.", $F7
     db $F0
 
 String_0D_00_1C:: ; heuristic: string; C0
 Data_00D_443F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Fine, we shall", $F1
+    db $EA, "*: Fine, we shall", $F1
     db "trade.", $F7
     db $F0
 
 String_0D_00_1D:: ; heuristic: string; C0
 Data_00D_4459:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I'll send the egg", $F1
+    db $EA, "*: I'll send the egg", $F1
     db "to the farm.", $F7
     db $F0
 
 String_0D_00_1E:: ; heuristic: string; C0
 Data_00D_447B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You can't take", $F1
+    db $EA, "*: You can't take", $F1
     db "any more items.", $F7
     db $F0
 
 String_0D_00_1F:: ; heuristic: string; C0
 Data_00D_449D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You can't hold any", $F1
+    db $EA, "*: You can't hold any", $F1
     db "more keys.", $F7
     db $F0
 
 String_0D_00_20:: ; heuristic: string; C0
 Data_00D_44BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You have no more", $F1
+    db $EA, "*: You have no more", $F1
     db "room for monsters.", $F7
     db $F0
 
@@ -286,7 +286,7 @@ Data_00D_4521:: ; address name
 String_0D_00_24:: ; heuristic: string; C0
 Data_00D_452A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " At minimum, you", $F1
+    db $EA, "*: At minimum, you", $F1
     db "must have three", $FA, $F7
     db $EF, $EE, "TinyMedals if you", $EF, $EE, "want me to trade.", $FA, $F7
     db $EF, $EE, "I hope you'll find", $EF, $EE, "many medals!", $F7
@@ -409,7 +409,7 @@ Jump_00D_4635:: ; address name
     dw EggServiceMenu_DrawPrice_Number24ToPackedBCD
     dw EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D
 
-; runs Func_00D_4F3D for Data_00D_4F81 and Data_00D_4F9F, then wD781 += 1 (E-0122)
+; runs Func_00D_4F3D for Data_00D_4F81 and Data_00D_4F9F, then wScreenStep += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -857,7 +857,7 @@ Jump_00D_4869:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; copies box Data_00D_5022 to wC3BB, runs Func_01E_71E1, draws the page-of-pages indicator when wD7B0 >= 2, and wD781 += 1 (E-0124)
+; copies box Data_00D_5022 to wWindowTileBuffer + $BB, runs Func_01E_71E1, draws the page-of-pages indicator when wListPages >= 2, and wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. EggServiceMenu_DrawListAndPrice_DrawBox5022WithPageIndicator)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -1224,7 +1224,7 @@ Jump_00D_4ACF:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; enables SRAM (bank 0), far-calls SetArg5ToListEntriesCell4 and returns HL = wD7F5 (high) / wD7F6 (low) (E-0119)
+; enables SRAM (bank 0), far-calls SetArg5ToListEntriesCell4 and returns HL = wArg5 (high) / wArg6 (low) (E-0119)
 ; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case05, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case04, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case03, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case02, ...)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB
@@ -1241,7 +1241,7 @@ Func_00D_4B18:: ; address name
     ld l, a
     ret
 
-; wD782 += 1, wScriptCommandType = 0, wScriptStartRequest = $80 (E-0119)
+; wScreenSubStep += 1, wScriptCommandType = 0, wScriptStartRequest = $80 (E-0119)
 ; 2 call sites from 2 routines (e.g. EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM, EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep, wScriptCommandType, wScriptStartRequest
@@ -1560,7 +1560,7 @@ Func_00D_4CF4:: ; address name
     add_a_to_hl
     ret
 
-; up/down moves wD7AD between two entries; A sets wD7F5 = $FF (with sound $69 and the arrow tile), B sets $FE; otherwise blinks the cursor and wD7F5 = 0 (E-0127)
+; up/down moves wChoiceCursor between two entries; A sets wArg5 = $FF (with sound $69 and the arrow tile), B sets $FE; otherwise blinks the cursor and wArg5 = 0 (E-0127)
 ; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A, GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D, GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wChoiceCursor
 ; writes: wArg5, wChoiceCursor
@@ -1626,7 +1626,7 @@ Func_00D_4D24:: ; address name
     ld [wArg5], a
     ret
 
-; once the joypad repeat timer reaches $14, cycles wD7AE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
+; once the joypad repeat timer reaches $14, cycles wCursorBlinkAE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
 ; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
@@ -1661,7 +1661,7 @@ Func_00D_4DA4:: ; address name
     ld b, $C3
     jr DrawArrowTileBCAtChoiceCursorEntry_ReadChoiceCursor
 
-; B = $BC, then writes B at the scroll position + Data_00D_4DC7[wD7AD] (the shared tile-at-entry draw) (E-0124)
+; B = $BC, then writes B at the scroll position + Data_00D_4DC7[wChoiceCursor] (the shared tile-at-entry draw) (E-0124)
 ; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wChoiceCursor
 DrawArrowTileBCAtChoiceCursorEntry::
@@ -1751,7 +1751,7 @@ Func_00D_4DCB:: ; address name
     ldh [rSVBK], a
     ret
 
-; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
+; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wScreenAttrBuffer + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wTextCursorLo/wTextCursorHi = HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
 ; 30 call sites from 27 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics, ...)
 ; reads: wTextCursorLo, wTextCursorHi, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
@@ -1926,7 +1926,7 @@ Func_00D_4EC7:: ; address name
     ld [hl], a
     ret
 
-; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
+; copies a wArg1 x wArg2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D, KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10, RunFunc4ED5At0278AndStep_0D)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -2012,7 +2012,7 @@ Func_00D_4F29:: ; address name
     jr c, .loop
     ret
 
-; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
+; for each entry from wGlyphListStart of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wGlyphListPos/5 (E-0125)
 ; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F, NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
@@ -2239,7 +2239,7 @@ Jump_00D_5172:: ; address name
     dw LoadFourFrameTilesAndStep
     dw RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D
 
-; copies four tiles from bank $1F to vTiles1 + $700-$730, then wD781 += 1 (E-0124)
+; copies four tiles from bank $1F to vTiles1 + $700-$730, then wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. RenameMenu_PickMonster_LoadFourFrameTilesAndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
@@ -2372,7 +2372,7 @@ Jump_00D_522B:: ; address name
     ld [wScreenStep], a
     ret
 
-; sets the string window to tile destination vTiles1 + $500 and size word $0F01, then FillTilesFromRequest (clears it); then wD781 += 1 (E-0117)
+; sets the string window to tile destination vTiles1 + $500 and size word $0F01, then FillTilesFromRequest (clears it); then wScreenStep += 1 (E-0117)
 ; 1 call site from 1 routine (e.g. RenameMenu_PickMonster_LoadFourFrameTilesAndStep)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
@@ -2587,7 +2587,7 @@ Jump_00D_53A4:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $23
-    ld [wStringIndex], a ; 'Pick the monster to rename.'
+    ld [wStringIndex], a ; '*: Pick the monster to rename.'
     farcall ShowString_BankF2
     ld a, [wScreenStep]
     inc a
@@ -2921,7 +2921,7 @@ Jump_00D_5633:: ; address name
     dw DrawGoldBoxAndStep
     dw KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D
 
-; copies box Data_00D_4FBD to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0124)
+; copies box Data_00D_4FBD to wWindowTileBuffer + $70 and writes the gold as five digit tiles at wWindowTileBuffer + $86, then wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wScreenStep
 ; writes: wDigits, wScreenStep
@@ -3801,7 +3801,7 @@ Jump_00D_5C17:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; writes $C3 to wC3B0-wC3B1 and wC3C4-wC3C5, then DrawScreenBufferRect_Bank0D (20 x 13 at the scroll origin) (E-0119)
+; writes $C3 to wWindowTileBuffer + $B0-wWindowTileBuffer + $B1 and wWindowTileBuffer + $C4-wWindowTileBuffer + $C5, then DrawScreenBufferRect_Bank0D (20 x 13 at the scroll origin) (E-0119)
 ; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw, KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_Case0D)
 BlankTwoTilePairsAndDraw::
 Func_00D_5C47:: ; address name
@@ -3856,7 +3856,7 @@ Func_00D_5C60:: ; address name
     ld a, $FF
     ret
 
-; wD7B0 = the number of 4-entry pages of wD7A9 keys; clamps the page wD7AF and the cursor wD7AB to the last page's size (wD7B1) (E-0127)
+; wListPages = the number of 4-entry pages of wListCount keys; clamps the page wListPageIndex and the cursor wListCursor to the last page's size (wListLastRow) (E-0127)
 ; 3 call sites from 3 routines (e.g. KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor, LinkKeyTrade_ClampKeyListPageCursor)
 ; reads: wListCount, wListPageIndex, wListCursor
 ; writes: wListPages, wListPageIndex, wListLastRow, wListCursor
@@ -3918,7 +3918,7 @@ Func_00D_5C87:: ; address name
 .return:
     ret
 
-; writes blank $C3 at the scroll position + the cursor offset for wD7AB from table Data_00D_5D0E, 5D16 or 5D1E (by wD7F5) (E-0125)
+; writes blank $C3 at the scroll position + the cursor offset for wListCursor from table Data_00D_5D0E, 5D16 or 5D1E (by wArg5) (E-0125)
 ; 1 call site from 1 routine (e.g. ClampKeyListPageCursor)
 ; reads: wArg5, wListCursor
 EraseCursorForArg5Layout::
@@ -3973,7 +3973,7 @@ EraseCursorForArg5Layout_Data_5D1E:: ; heuristic: pointer load in the same bank 
 Data_00D_5D1E:: ; address name
     db $A2, $00, $C2, $00, $E2, $00, $02, $01
 
-; blanks the four mark positions and draws marks for the keys on the current page of wD789 (E-0130)
+; blanks the four mark positions and draws marks for the keys on the current page of wListEntries (E-0130)
 ; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames, LinkKeyTrade_DrawKeyListPageNames)
 ; reads: wArg5, wListPageIndex, wListLastRow, wListCount, wListPages
 ; points at: wListEntries, wKeyList
@@ -4120,7 +4120,7 @@ DrawKeyListPageMarks_Data_5DE5:: ; heuristic: pointer load in the same bank (ban
 Data_00D_5DE5:: ; address name
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
-; for the keys on the current page writes their names to wC8CF and draws them; generated keys (kind $FE) are shown as "Magic Key" (E-0130)
+; for the keys on the current page writes their names to wNameGlyphBuf and draws them; generated keys (kind $FE) are shown as "Magic Key" (E-0130)
 ; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames, LinkKeyTrade_DrawKeyListPageNames)
 ; reads: wListPageIndex, wListLastRow, wListCount, wDataBank, wListPages
 ; writes: wDataBank, wNameGlyphBuf
@@ -4277,7 +4277,7 @@ Func_00D_5DED:: ; address name
 .return:
     ret
 
-; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile instead of taking a new one (E-0125)
+; draws the $F0-terminated text at wNameGlyphBuf glyph by glyph; marks $8D and $8E are ORed onto the previous tile instead of taking a new one (E-0125)
 ; 2 call sites from 2 routines (e.g. DrawKeyListPageNames, MedalPrizeMenu_ChoosePrize_Case03_ReadListPageIndexAndListLastRowEtc)
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
@@ -4527,7 +4527,7 @@ Data_00D_60AB:: ; address name
     dw vTiles2 + $600, vTiles2 + $610, vTiles2 + $620, vTiles2 + $630, vTiles2 + $640, vTiles2 + $650 ; entry 0
     dw vTiles2 + $660, vTiles2 + $670, vTiles2 + $680, vTiles2 + $690, vTiles2 + $6A0, vTiles2 + $6B0
 
-; clears wD789 ($20 bytes), then lists the indexes of the used wKeyList entries there and stores their count in wD7A9 (E-0125)
+; clears wListEntries ($20 bytes), then lists the indexes of the used wKeyList entries there and stores their count in wListCount (E-0125)
 ; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries, LinkKeyTrade_BuildKeyListIndexListEntries)
 ; writes: wListCount
 ; points at: wListEntries, wKeyList
@@ -4743,7 +4743,7 @@ Script_0D_62BE:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_0D_62C4:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8003 ; 'Don't come if you have no'
+    script_message $8003 ; '*: Don't come if you have'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0D_62CA:: ; heuristic: event script entry or jump target; C0
@@ -4754,20 +4754,20 @@ Script_0D_62CD:: ; heuristic: event script entry or jump target; C0
 Script_0D_62D2:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0D_62BE
 Script_0D_62D5:: ; heuristic: event script entry or jump target; C0
-    script_message $C009 ; 'That key's been appraised already.'
-    script_message $C008 ; 'Which Magic Key should I appraise?'
+    script_message $C009 ; '*: That key's been appraised already.'
+    script_message $C008 ; '*: Which Magic Key should I'
     script_jump Script_0D_62CD
 Script_0D_62DE:: ; heuristic: event script entry or jump target; C0
-    script_message $C005 ; 'Appraisal will cost 0G. OK?'
+    script_message $C005 ; '*: Appraisal will cost 0G. OK?'
     script_command SCRIPT_KEY_APPRAISAL
     script_choice_jump Script_0D_62F3, Script_0D_62ED, Script_0D_62E6
 Script_0D_62E6:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Which Magic Key should I appraise?'
+    script_message $C008 ; '*: Which Magic Key should I'
     script_command SCRIPT_KEY_APPRAISAL
     script_jump Script_0D_62CD
 Script_0D_62ED:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED_CLOSE
-    script_message $8007 ; 'Hah? I'm not appraising any key'
+    script_message $8007 ; '*: Hah? I'm not appraising any'
     script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0D_62F3:: ; heuristic: event script entry or jump target; C0
@@ -4779,14 +4779,14 @@ Script_0D_62F8:: ; heuristic: event script entry or jump target; C0
 Script_0D_62FB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_KEY_APPRAISAL
     script_command SCRIPT_KEY_APPRAISAL
-    script_message $C00F ; 'Let's see the Magic Key, then.'
+    script_message $C00F ; '*: Let's see the Magic Key,'
     script_command SCRIPT_KEY_APPRAISAL
     script_choice_jump Script_0D_630A, Script_0D_6304
 Script_0D_6304:: ; heuristic: event script entry or jump target; C0
-    script_message $C00A ; 'You have no more Magic Keys'
+    script_message $C00A ; '*: You have no more Magic'
     script_jump Script_0D_62BE
 Script_0D_630A:: ; heuristic: event script entry or jump target; C0
-    script_message $C008 ; 'Which Magic Key should I appraise?'
+    script_message $C008 ; '*: Which Magic Key should I'
     script_jump Script_0D_62CD
 
 ; implements script command type F3 (SCRIPT_MEDAL_PRIZES): the TinyMedal prize exchange: 'Which prize do you want?', 'I'll trade for 0 TinyMedals. OK?' (mode 7); reached through ScriptCommandF3 in bank $10 (E-0038, E-0244)
@@ -5133,7 +5133,7 @@ Jump_00D_64A6:: ; address name
     ld [wScreenStep], a
     ret
 
-; copies box Data_00D_6EB7 to wC36D and writes the word wC838 as three digits (leading blanks) at wC388, then wD781 += 1 (E-0124)
+; copies box Data_00D_6EB7 to wWindowTileBuffer + $6D and writes the word wArenaWinsLo as three digits (leading blanks) at wWindowTileBuffer + $88, then wScreenStep += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D)
 ; reads: wArenaWinsLo, wArenaWinsHi, wScreenStep
 ; writes: wScreenStep
@@ -5958,7 +5958,7 @@ Jump_00D_6A63:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; if the key list is full (FindFreeKeySlotToTemp0 returns bit 7), wTwoChoiceCursor = 2, steps wD781 back and requests script $80; otherwise continues at MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop (E-0126)
+; if the key list is full (FindFreeKeySlotToTemp0 returns bit 7), wTwoChoiceCursor = 2, steps wScreenStep back and requests script $80; otherwise continues at MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
@@ -6531,7 +6531,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc_Data:: ; heuristic
 Data_00D_6D9F:: ; address name
     db $D7, $C3, $FF, $C3, $27, $C4, $4F, $C4
 
-; writes B at BGMapAddressAtScroll + the offset from Data_00D_6DC8[wD7AB] (WaitForVRAMAccess, interrupts off); BC kept (E-0120)
+; writes B at BGMapAddressAtScroll + the offset from Data_00D_6DC8[wListCursor] (WaitForVRAMAccess, interrupts off); BC kept (E-0120)
 ; 3 call sites from 2 routines (e.g. MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_Case06, MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor)
 ; reads: wListCursor
 WriteTileBAtCursorListCursor::
@@ -6988,7 +6988,7 @@ Jump_00D_71FF:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; runs Func_00D_4ED5 (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), then wD781 += 1 (E-0126)
+; runs Func_00D_4ED5 (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), then wScreenStep += 1 (E-0126)
 ; 1 call site from 1 routine (e.g. NpcBreedMenu_ChooseAndBreed_PrepareWCF8BCountersAndRequestScript)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
@@ -7747,7 +7747,7 @@ Func_00D_76D0:: ; address name
     ld [de], a
     ret
 
-; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
+; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wNameGlyphBuf; wDataBank is restored
 ; 1 call site from 1 routine (e.g. NpcBreedMenu_ChooseAndBreed_Case14_TestBitInFieldAtArg3)
 ; reads: wDataBank
 ; writes: wDataBank

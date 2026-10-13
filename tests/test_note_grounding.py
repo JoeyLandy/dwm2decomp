@@ -1,5 +1,6 @@
 """The notes of names given by reading are grounded in the code they describe (E-0317)."""
 import random
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -19,6 +20,21 @@ class NoteGrounding(unittest.TestCase):
         grounded, total, bad = cng.check(src=self.src)
         self.assertGreater(total, 4000)
         self.assertEqual(bad[:20], [], f"{len(bad)} of {total} mentions are not connected to their routine")
+
+    def test_notes_name_only_ram_symbols_that_exist(self):
+        """E-0320: a RAM name in a note is a symbol of src/ram.asm, the stem of several (wGold for wGoldLo/Mid/Hi),
+        or a former name after "was"; seven notes still used names E-0318 had replaced."""
+        stale = []
+        for key, v in self.src.names.items():
+            if key.startswith("_") or not isinstance(v, dict):
+                continue
+            note = v.get("note", "")
+            for t in re.findall(r"\b([wsh][A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*)\b", note):
+                if t in self.src.ramsyms or re.search(r"\bwas\s+" + t, note):
+                    continue
+                if not any(s.startswith(t) for s in self.src.ramsyms):
+                    stale.append((v["name"], t))
+        self.assertEqual(stale, [])
 
     def test_the_check_rejects_unrelated_symbols(self):
         """Negative control: one random RAM symbol, or one random routine, per note is accepted rarely."""
