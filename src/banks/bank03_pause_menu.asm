@@ -1018,7 +1018,7 @@ RunPauseMenuScreen::
     dw RunPauseMenuScreen_SetMenuLastPageRows
     dw RunPauseMenuScreen_AdvancePauseMenuScreen
     dw RunPauseMenuScreen_RunSaveGameSteps_7347
-    dw RunPauseMenuScreen_AdvancePauseMenuScreen_Case03_AdvancePauseMenuScreen
+    dw RunPauseMenuScreen_AdvancePauseMenuScreen_AdvancePauseMenuScreen
 
 RunPauseMenuScreen_SetMenuLastPageRows::
     ld a, [wCurrentMusic]
@@ -1044,7 +1044,7 @@ RunPauseMenuScreen_RunSaveGameSteps_7347::
     inc [hl]
     ret
 
-RunPauseMenuScreen_AdvancePauseMenuScreen_Case03_AdvancePauseMenuScreen::
+RunPauseMenuScreen_AdvancePauseMenuScreen_AdvancePauseMenuScreen::
     ld hl, wPauseMenuScreen
     inc [hl]
     ret
@@ -2145,11 +2145,11 @@ WithSRAMDrawMemberRecordByte0D_ShowSpeciesNameAndIconForSlotB::
     ld h, a
     ld a, [wMenuLastPageRows]
     ld b, a
-    call WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_DerefWordTableEntryA_Bank03
+    call WithSRAMDrawMemberRecordByte0D_DerefWordTableEntryA_Bank03
     ld a, [wMenuLastPageRows]
     xor $01
     ld b, a
-    call WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_DerefWordTableEntryA_Bank03
+    call WithSRAMDrawMemberRecordByte0D_DerefWordTableEntryA_Bank03
     ld a, [wMenuLastPageRows]
     add $cc
     ld [wScreenTileBuffer + $6e], a
@@ -2247,7 +2247,7 @@ WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0::
     pop hl
     ret
 
-WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_DerefWordTableEntryA_Bank03::
+WithSRAMDrawMemberRecordByte0D_DerefWordTableEntryA_Bank03::
     call CopyTenBytesToTextBuf0
     push hl
     push bc
@@ -2921,31 +2921,31 @@ PauseMenu_Items_UseItem::
     dw PauseMenu_Items_UseItem_BuildItemScreenWithRecordCursorAndStep
     dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37
     dw PauseMenu_Items_UseItem_CheckItemUsable
-    dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_Case09_ButNothingHappened
+    dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_SetStringIndex
     dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage
     dw PauseMenu_Items_UseItem_ApplyItemEffect
     dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage
     dw PauseMenu_Items_UseItem_BuildScreenBlock0EWithSubMenuCursorAndStep
     dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37
     dw PauseMenu_Items_UseItem_CheckItemUsable
-    dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_Case09_ButNothingHappened
+    dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_SetStringIndex
     dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage
     dw PauseMenu_Items_UseItem_ApplyItemEffect
     dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage
     dw PauseMenu_Items_UseItem_BuildScreenBlock0EWithSubMenuCursorAndStep
     dw PauseMenu_Items_UseItem_BeginStringDisplay_Bank37
-    dw PauseMenu_Items_UseItem_CheckItemUsable_Case16_AdvanceTemp1
+    dw PauseMenu_Items_UseItem_CheckItemUsable_AdvanceTemp1
     dw PauseMenu_Items_UseItem_ShowButNothingHappened
-    dw PauseMenu_Items_UseItem_WaitTextFlags_Case18_SetTemp0
-    dw PauseMenu_Items_UseItem_ApplyItemEffect_Case19_BeginStringDisplay_Bank37
+    dw PauseMenu_Items_UseItem_WaitTextFlags_SetTemp0
+    dw PauseMenu_Items_UseItem_ApplyItemEffect_SetStringIndex
     dw PauseMenu_Items_UseItem_ExitPauseMenuToField
     dw PauseMenu_Items_UseItem_ShowButItCouldntBe
     dw PauseMenu_Items_UseItem_LoadScreenBlock2B
-    dw PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ApplyItemEffect
+    dw PauseMenu_Items_UseItem_UpdateMenuCursor_SetItemMenuByte6D
     dw PauseMenu_Items_UseItem_RunPauseMenuScreen
     dw PauseMenu_Items_UseItem_WaitTextFlags_Case1F
     dw PauseMenu_Items_UseItem_ShowYourProgressHasBeen
-    dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_Case21_SetSpriteSlotCount
+    dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_SetSpriteSlotCount
 
 PauseMenu_Items_UseItem_WriteTemp1::
     ld a, [wItemRecord + $4]
@@ -3121,7 +3121,7 @@ PauseMenu_Items_UseItem_CheckItemUsable::
     ld [wTemp1], a
     ret
 
-PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_Case09_ButNothingHappened::
+PauseMenu_Items_UseItem_BeginStringDisplay_Bank37_SetStringIndex::
     ld a, [wInventorySlot]
     ld hl, wInventory
     add_a_to_hl
@@ -3187,7 +3187,7 @@ PauseMenu_Items_UseItem_ApplyItemEffect::
     ld [wStringIndex], a
     jr .loop
 
-PauseMenu_Items_UseItem_CheckItemUsable_Case16_AdvanceTemp1::
+PauseMenu_Items_UseItem_CheckItemUsable_AdvanceTemp1::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3226,7 +3226,7 @@ PauseMenu_Items_UseItem_ShowButNothingHappened::
     inc [hl]
     ret
 
-PauseMenu_Items_UseItem_WaitTextFlags_Case18_SetTemp0::
+PauseMenu_Items_UseItem_WaitTextFlags_SetTemp0::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3235,7 +3235,7 @@ PauseMenu_Items_UseItem_WaitTextFlags_Case18_SetTemp0::
     ld [wTemp1], a
     ret
 
-PauseMenu_Items_UseItem_ApplyItemEffect_Case19_BeginStringDisplay_Bank37::
+PauseMenu_Items_UseItem_ApplyItemEffect_SetStringIndex::
     ld a, $0a
     ld [rRAMG], a
     ld a, $00
@@ -3301,7 +3301,7 @@ PauseMenu_Items_UseItem_LoadScreenBlock2B::
     inc [hl]
     ret
 
-PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ApplyItemEffect::
+PauseMenu_Items_UseItem_UpdateMenuCursor_SetItemMenuByte6D::
     ld hl, wSubMenuCursor
     ld de, PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_Data
     call UpdateMenuCursor
@@ -3312,7 +3312,7 @@ PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ApplyItemEffect::
     call QueueSoundEffect
     ld a, [wSubMenuCursor]
     and $01
-    jr nz, PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ClearTemp0
+    jr nz, PauseMenu_Items_UseItem_UpdateMenuCursor_SetItemMenuByte6D_ClearTemp0
     ld a, [wMapType]
     cp $80
     jr nz, .skip
@@ -3345,7 +3345,7 @@ PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ApplyItemEffect::
     bit 1, a
     ret z
 
-PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ClearTemp0::
+PauseMenu_Items_UseItem_UpdateMenuCursor_SetItemMenuByte6D_ClearTemp0::
     xor a
     ld [wTemp0], a
     ld [wTemp1], a
@@ -3366,7 +3366,7 @@ PauseMenu_Items_UseItem_WaitTextFlags_Case1F::
     ld a, [wTextFlags]
     or a
     ret nz
-    jr PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_ClearTemp0
+    jr PauseMenu_Items_UseItem_UpdateMenuCursor_SetItemMenuByte6D_ClearTemp0
 
 PauseMenu_Items_UseItem_ShowYourProgressHasBeen::
     ld a, $26
@@ -3378,7 +3378,7 @@ PauseMenu_Items_UseItem_ShowYourProgressHasBeen::
     inc [hl]
     ret
 
-PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_Case21_SetSpriteSlotCount::
+PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_SetSpriteSlotCount::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -4753,12 +4753,12 @@ PauseMenu_Skills_UseFieldSkill::
     dw PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap
     dw PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37
     dw PauseMenu_Skills_UseFieldSkill_WaitTextFlags
-    dw PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Case03_SetStringIndex
-    dw PauseMenu_Skills_UseFieldSkill_WaitTextFlags_Case04_SetTemp0
+    dw PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_SetStringIndex
+    dw PauseMenu_Skills_UseFieldSkill_WaitTextFlags_SetTemp0
     dw PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped
     dw PauseMenu_Skills_UseFieldSkill_QueueSoundEffect
     dw PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc
-    dw PauseMenu_Skills_UseFieldSkill_WaitTextFlags_Case08_AdvanceTemp1
+    dw PauseMenu_Skills_UseFieldSkill_WaitTextFlags_AdvanceTemp1
     dw PauseMenu_Skills_UseFieldSkill_CopyStringHLToDE
     dw PauseMenu_Skills_UseFieldSkill_ShowHeroReturnedWithAn
     dw PauseMenu_Skills_UseFieldSkill_ExitPauseMenuToField
@@ -4832,7 +4832,7 @@ PauseMenu_Skills_UseFieldSkill_WaitTextFlags::
     inc [hl]
     ret
 
-PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Case03_SetStringIndex::
+PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_SetStringIndex::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -4845,7 +4845,7 @@ PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Case03_SetStringIndex::
     inc [hl]
     ret
 
-PauseMenu_Skills_UseFieldSkill_WaitTextFlags_Case04_SetTemp0::
+PauseMenu_Skills_UseFieldSkill_WaitTextFlags_SetTemp0::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -4953,7 +4953,7 @@ PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc::
     inc [hl]
     ret
 
-PauseMenu_Skills_UseFieldSkill_WaitTextFlags_Case08_AdvanceTemp1::
+PauseMenu_Skills_UseFieldSkill_WaitTextFlags_AdvanceTemp1::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5859,20 +5859,20 @@ PauseMenu_Plan_ChooseListEntry::
     dw PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To23
     dw PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor
     dw PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24
-    dw PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03_TestListEntryBit7
+    dw PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_AdvanceTemp1
     dw PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24
     dw PauseMenu_Plan_ChooseListEntry_TestListEntryBit7
     dw PauseMenu_Plan_ChooseListEntry_ExitPauseMenuToField
-    dw PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_Case07
+    dw PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_AdvanceTemp1
     dw PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep
     dw PauseMenu_Plan_ChooseListEntry_WaitTextFlags
     dw PauseMenu_Plan_ChooseListEntry_WriteMenuRowCountAndMenuPageCount
-    dw PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0B_SetStringCategory
-    dw PauseMenu_Plan_ChooseListEntry_WaitTextFlags_Case0C_AdvanceTemp1
+    dw PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_SetStringCategory
+    dw PauseMenu_Plan_ChooseListEntry_WaitTextFlags_AdvanceTemp1
     dw PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To25WithCursor
-    dw PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case0E_WriteBCTileAtWordTableEntry_Bank03
-    dw PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0F_SetStringIndex
-    dw PauseMenu_Plan_ChooseListEntry_TestListEntryBit7_Case10_DeleteKeyEntryTemp0
+    dw PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_WriteBCTileAtWordTableEntry_Bank03
+    dw PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_SetStringIndex
+    dw PauseMenu_Plan_ChooseListEntry_TestListEntryBit7_SetTemp1
 
 PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To23::
     ld hl, vTiles2 + $710
@@ -6002,7 +6002,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24::
     inc [hl]
     ret
 
-PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03_TestListEntryBit7::
+PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_AdvanceTemp1::
     ld hl, wSubMenuCursor
     ld de, PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03_Data
     call UpdateMenuCursor
@@ -6104,7 +6104,7 @@ PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case03_TestListEntryBit7::
     ret
 
 PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24::
-    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_Shared01_CopyBlockToTileBuffer
+    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_CopyBlockToTileBuffer
     ld hl, wTemp1
     inc [hl]
     ret
@@ -6174,8 +6174,8 @@ PauseMenu_Plan_ChooseListEntry_ExitPauseMenuToField::
     call ExitPauseMenuToField
     ret
 
-PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_Case07::
-    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_Shared01_CopyBlockToTileBuffer
+PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24_AdvanceTemp1::
+    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_CopyBlockToTileBuffer
     ld hl, wTemp1
     inc [hl]
     ret
@@ -6199,7 +6199,7 @@ PauseMenu_Plan_ChooseListEntry_WaitTextFlags::
     ret
 
 PauseMenu_Plan_ChooseListEntry_WriteMenuRowCountAndMenuPageCount::
-    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_Shared01_CopyBlockToTileBuffer
+    call PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_CopyBlockToTileBuffer
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -6208,7 +6208,7 @@ PauseMenu_Plan_ChooseListEntry_WriteMenuRowCountAndMenuPageCount::
     inc [hl]
     ret
 
-PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0B_SetStringCategory::
+PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_SetStringCategory::
     ld a, $08
     ld [wStringCategory], a
     ld a, $07
@@ -6218,7 +6218,7 @@ PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0B_SetString
     inc [hl]
     ret
 
-PauseMenu_Plan_ChooseListEntry_WaitTextFlags_Case0C_AdvanceTemp1::
+PauseMenu_Plan_ChooseListEntry_WaitTextFlags_AdvanceTemp1::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -6246,7 +6246,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To25WithCursor::
     inc [hl]
     ret
 
-PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case0E_WriteBCTileAtWordTableEntry_Bank03::
+PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_WriteBCTileAtWordTableEntry_Bank03::
     ld hl, wSubMenuCursor2
     ld de, PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case0E_Data
     call UpdateMenuCursor
@@ -6291,7 +6291,7 @@ PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case0E_WriteBCTileAtWordTableEnt
     ld [wTemp1], a
     ret
 
-PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0F_SetStringIndex::
+PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_SetStringIndex::
     ld a, $04
     ld [wStringIndex], a
     ld a, $08
@@ -6301,7 +6301,7 @@ PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0F_SetString
     inc [hl]
     ret
 
-PauseMenu_Plan_ChooseListEntry_TestListEntryBit7_Case10_DeleteKeyEntryTemp0::
+PauseMenu_Plan_ChooseListEntry_TestListEntryBit7_SetTemp1::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7442,7 +7442,7 @@ BuildScreenBlocks21To24::
     farcall CopyBlockToTileBuffer
     ret
 
-PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_Shared01_CopyBlockToTileBuffer::
+PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_CopyBlockToTileBuffer::
     call BuildScreenBlocks21To24
     call FillTilesFromRequest
     ld e, $10

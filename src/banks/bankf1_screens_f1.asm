@@ -1528,7 +1528,7 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster::
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor
-    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_Case03_SetScreenStep
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_SetScreenStep
 
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
     ld a, [wTextFlags]
@@ -1565,7 +1565,7 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_Case03_SetScreenStep::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1595,27 +1595,27 @@ RunScreenStateWhenNotFading_F1_LinkBreed::
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case0E_YourPalRefusedBreeding
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13_SetScreenStep
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14_YourPalRefusedBreeding
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_Case15_SetLinkReady
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed
     dw RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourPalRefusedBreeding
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case19_AccessoriesWillBeIn
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_AccessoriesWillBeIn
     dw RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13_SetScreenStep
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case1C_YourPalRefusedBreeding
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case1E_SetArg5ToListEntriesCell5
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13_SetScreenStep
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case20_SetLinkSendByte
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte
 
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case0E_YourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1932,7 +1932,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
     call DrawScreenBufferRect_BankF1
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13_SetScreenStep::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1981,7 +1981,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14_YourP
     ld [wLinkReady], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_Case15_SetLinkReady::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2195,7 +2195,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourP
     ld [wScreenState], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case19_AccessoriesWillBeIn::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_AccessoriesWillBeIn::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2297,7 +2297,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
     call BeginString_Bank0E_Cat0
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case1E_SetArg5ToListEntriesCell5::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2454,7 +2454,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
     ld [wScreenState], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case20_SetLinkSendByte::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2579,19 +2579,19 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToFillTilesBxCAndStep
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTilesBxC
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case10
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case11_SetArg3
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_SetArg3
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStepAndArg1Etc
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteArg1AndArg2Etc
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case15_DrawRects662BAnd653F
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case16
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1A
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCategory13StringAtTiles2680
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D_DrawLevelAndStatusRowForRecordBufBLevel
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case20_SetJoypadPressedRepeat
@@ -2750,7 +2750,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case10::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case11_SetArg3::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_SetArg3::
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
     add hl, de
@@ -2818,7 +2818,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case15_DrawRects662BAnd653F::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2852,7 +2852,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case15_Draw
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case16::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld a, $0f
     ld [wScreenStep], a
@@ -2878,14 +2878,14 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone::
     inc a
     ld [wScreenStep], a
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1A::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCategory13StringAtTiles2680::
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2947,7 +2947,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF::
     ld [wScreenSubStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D_DrawLevelAndStatusRowForRecordBufBLevel::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -3044,7 +3044,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString::
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_SetArg5ToListEntriesCell5
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E
-    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_Case09_SetScreenState
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_SetScreenState
 
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor::
     ld a, [wItemGridX]
@@ -3056,7 +3056,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_Case09_SetScreenState::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_SetScreenState::
     ld a, [wScreenState]
     push af
     ld a, $11

@@ -21,7 +21,7 @@ FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
     jr .check_status_field_step
 
 .call_field_state_step_checks_sub01_load_sram:
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02_SetFieldStepFlagsBit7
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02
     call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
 
 .check_status_field_step:
@@ -107,7 +107,7 @@ SetFieldStepFlagsBit7::
     ld [wFieldStepFlags], a
     ret
 
-FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02_SetFieldStepFlagsBit7::
+FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -363,13 +363,13 @@ RunPlayerMoveTypeMapMoveType::
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03_SetTemp1
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04_SetTemp1
     dw RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07_SetTemp1
 
 RunPlayerMoveTypeMapMoveType_Return::
     ret
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06_SetTemp1::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld a, $50
     ldh [hTemp1], a
     ld a, $80

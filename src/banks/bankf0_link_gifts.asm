@@ -596,7 +596,7 @@ RunLinkSession8Exchange_Case01_WriteTitleScreenState::
     ld a, [wScreenState]
     jumptable
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc
-    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case02_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps
     dw RunLinkSession8Exchange_ShowMessage
@@ -625,16 +625,16 @@ RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc::
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case00_SetScreenStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case01_SetLinkSendByte
+    dw RunLinkSession8Exchange_SetScreenStep
+    dw RunLinkSession8Exchange_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case02_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case03_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case04_SetScreenStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case05_ShowString_BankF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case06_SetChoiceCursorF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case07_OKToSaveThe
+    dw RunLinkSession8Exchange_Case01_Sub01_Table2_Case05_SetStringCategory
+    dw RunLinkSession8Exchange_SetChoiceCursorF0
+    dw RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0
 
-RunLinkSession8Exchange_Case01_Sub01_Table2_Case00_SetScreenStep::
+RunLinkSession8Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -642,7 +642,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case00_SetScreenStep::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table2_Case01_SetLinkSendByte::
+RunLinkSession8Exchange_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $ba
     ret nz
@@ -733,7 +733,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case04_SetScreenStep::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table2_Case05_ShowString_BankF0::
+RunLinkSession8Exchange_Case01_Sub01_Table2_Case05_SetStringCategory::
     ld hl, wFamilyRankTaken
     ld b, $35
 
@@ -780,7 +780,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case05_ShowString_BankF0::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table2_Case06_SetChoiceCursorF0::
+RunLinkSession8Exchange_SetChoiceCursorF0::
     ld de, TileRect_F0_663F
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
@@ -795,7 +795,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case06_SetChoiceCursorF0::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table2_Case07_OKToSaveThe::
+RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0::
     ld a, $02
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -831,7 +831,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case07_OKToSaveThe::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01_SetScreenStep::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .call_run_link_session8_case01_steps
@@ -864,21 +864,21 @@ RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case02_S
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case00_IsItOKTo
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_ShowString_BankF0
+    dw RunLinkSession8Exchange_IsItOKTo
+    dw RunLinkSession8Exchange_SetStringCategory
     dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case02_SetChoiceCursorF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case03_OKToSaveThe
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case04_ShowString_BankF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_SetScreenSubStep
+    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case03_HandleTwoChoiceCursorInput_F0
+    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case04_SetStringCategory
+    dw RunLinkSession8Exchange_SetScreenSubStep
 
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case00_IsItOKTo::
+RunLinkSession8Exchange_IsItOKTo::
     ld a, $06 ; 'Is it OK to transfer the'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_ShowString_BankF0::
+RunLinkSession8Exchange_SetStringCategory::
     ld de, TileRect_F0_665D
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
@@ -935,7 +935,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case02_SetChoiceCursorF0::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case03_OKToSaveThe::
+RunLinkSession8Exchange_Case01_Sub01_Table3_Case03_HandleTwoChoiceCursorInput_F0::
     xor a
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -975,7 +975,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case03_OKToSaveThe::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case04_ShowString_BankF0::
+RunLinkSession8Exchange_Case01_Sub01_Table3_Case04_SetStringCategory::
     ld de, TileRect_F0_6685
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
@@ -1015,7 +1015,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case04_ShowString_BankF0::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_SetScreenSubStep::
+RunLinkSession8Exchange_SetScreenSubStep::
     ld de, TileRect_F0_65FB
     ld hl, wWindowTileBuffer + $125
     lb bc, $07, $04
@@ -1045,11 +1045,11 @@ RunLinkSession8Exchange_ShowMessage::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0
-    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case01_SetLinkSendByte
+    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case02_SetLinkSendByte
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
-RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case01_SetLinkSendByte::
+RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1144,20 +1144,20 @@ RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05_S
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case00_CopyScreenBufferRectWithAttrs_F0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case01_CopyRect70C5ToWindowTileBufferRow5AndDraw
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case02_ShowSaveFileInfoWindow
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case03_DrawBottomBoxForLinkAndSetScreenSubStep
+    dw RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0
+    dw RunLinkSession8Exchange_CopyRect70C5ToWindowTileBufferRow5AndDraw
+    dw RunLinkSession8Exchange_ShowSaveFileInfoWindow
+    dw RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case04_SetChoiceCursorF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case05_PleaseWait
+    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case05_HandleTwoChoiceCursorInput_F0
 
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case01_CopyRect70C5ToWindowTileBufferRow5AndDraw::
+RunLinkSession8Exchange_CopyRect70C5ToWindowTileBufferRow5AndDraw::
     farcall CopyRect70C5ToWindowTileBufferRow5AndDraw
     ld hl, wScreenStep
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case02_ShowSaveFileInfoWindow::
+RunLinkSession8Exchange_ShowSaveFileInfoWindow::
     farcall ShowSaveFileInfoWindow
     ld hl, wScreenStep
     inc [hl]
@@ -1165,7 +1165,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case02_ShowSaveFileInfoWindow::
     ld [wPickCount], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case03_DrawBottomBoxForLinkAndSetScreenSubStep::
+RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep::
     farcall DrawBottomBoxForLinkAndSetScreenSubStep
     ld hl, wTextWindowTileLo
     xor a
@@ -1179,7 +1179,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case03_DrawBottomBoxForLinkAndSetScr
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case00_CopyScreenBufferRectWithAttrs_F0::
+RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
     ld c, $09
     ld hl, $01d3
     ld de, $0007
@@ -1250,7 +1250,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case04_SetChoiceCursorF0::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case05_PleaseWait::
+RunLinkSession8Exchange_Case01_Sub01_Table4_Case05_HandleTwoChoiceCursorInput_F0::
     ld a, $02
     ld [wArg2], a
     call HandleTwoChoiceCursorInput_F0
@@ -1302,13 +1302,13 @@ RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06_S
 .read_screen_step:
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case00_MarkBitBInFamilyBitsAndCount
+    dw RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case01_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case02_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case03_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case04_SetLinkSendByte
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case05_MAlreadyHasA
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case06_PleaseWait
+    dw RunLinkSession8Exchange_MAlreadyHasA
+    dw RunLinkSession8Exchange_PleaseWait
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case01_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case02_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case09_SetScreenStep
@@ -1319,13 +1319,13 @@ RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06_S
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case04_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case01_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case02_SetLinkSendByte
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case11_TestFlagBit
+    dw RunLinkSession8Exchange_TestFlagBit
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case04_SetLinkSendByte
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case13_SetF0ScreenKind
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case14_AdvanceScreenStep
+    dw RunLinkSession8Exchange_SetF0ScreenKind
+    dw RunLinkSession8Exchange_AdvanceScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case15_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case16_SetLinkSendByte
-    dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case17_FillTileRectWithArg1Tile
+    dw RunLinkSession8Exchange_SetArg5
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case18_SetScreenStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case19_SetLinkSendByte
     dw RunLinkSession8Exchange_Case01_Sub01_Table5_Case1A_SetScreenStep
@@ -1456,7 +1456,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case0D_SetScreenStep::
     ld [wLinkReady], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case11_TestFlagBit::
+RunLinkSession8Exchange_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .set_bank_f0_block_a7_to_01
@@ -1548,7 +1548,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case02_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case00_MarkBitBInFamilyBitsAndCount::
+RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
     ld a, [wF0ScreenKind]
     ld [wLinkRecvBuffer], a
     ld a, [wGiftRecord]
@@ -1601,7 +1601,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case04_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case05_MAlreadyHasA::
+RunLinkSession8Exchange_MAlreadyHasA::
     ld a, [wGiftRecord]
     and a
     jr nz, .check_link_partner_byte1
@@ -1635,7 +1635,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case05_MAlreadyHasA::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case06_PleaseWait::
+RunLinkSession8Exchange_PleaseWait::
     ld a, $12 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     xor a
@@ -1646,7 +1646,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case06_PleaseWait::
     ld [wScreenState], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case13_SetF0ScreenKind::
+RunLinkSession8Exchange_SetF0ScreenKind::
     ld a, [wBankF0Byte99]
     and a
     jr nz, .skip
@@ -1676,7 +1676,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case13_SetF0ScreenKind::
     inc [hl]
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case14_AdvanceScreenStep::
+RunLinkSession8Exchange_AdvanceScreenStep::
     ld a, [wF0ScreenKind]
     and a
     jr z, .skip
@@ -1731,7 +1731,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case14_AdvanceScreenStep::
     ld [wPickCount], a
     ret
 
-RunLinkSession8Exchange_Case01_Sub01_Table5_Case17_FillTileRectWithArg1Tile::
+RunLinkSession8Exchange_SetArg5::
     call BGMapAddressAtScroll_BankF0
     ld a, h
     ld [wArg5], a
@@ -1775,10 +1775,10 @@ RunLinkSession8Exchange_ObjectSceneThenSave::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
@@ -1858,7 +1858,7 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5::
+RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -1867,7 +1867,7 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A_SetScreenSubStep::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_SetScreenSubStep::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
     ld [wObject1 + OBJ_FLAGS], a
@@ -1913,7 +1913,7 @@ RunLinkSession8Exchange_ObtainedEgg::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep
@@ -1966,13 +1966,13 @@ RunLinkSession8Exchange_EggsTraded::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5
     dw RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0
     dw RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
@@ -2063,15 +2063,15 @@ RunLinkSession8Exchange_ObjectScene::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_WriteObject2AndScreenSubStep
@@ -2212,7 +2212,7 @@ RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep::
+RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
     ld a, [wScreenSubStep]
@@ -2384,11 +2384,11 @@ RunLinkSession8Exchange_EggHatched::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F_SetScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_SetScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
@@ -2913,16 +2913,16 @@ RunLinkSession8Case03Steps::
     dw RunLinkSession8Case03Steps_ClearBGMapAtScrollAndResetScroll_BankF0
     dw RunLinkSession8Case03Steps_WriteScreenStep
     dw RunLinkSession8Case03Steps_OrFromBankWaitVRAM
-    dw RunLinkSession8Case03Steps_FillTilesBxC_Case03_SetListCursor
+    dw RunLinkSession8Case03Steps_FillTilesBxC_SetListCursor
     dw RunLinkSession8Case03Steps_UploadTilesFromData6D20
-    dw RunLinkSession8Case03Steps_Case05_DrawRecordParentNames_Case05_GetListEntriesCell4Address_BankF0
+    dw RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0
     dw RunLinkSession8Case03Steps_DrawRect6x6From651BAtScroll41_BankF0
     dw RunLinkSession8Case03Steps_HandleListCursorInput_1D
     dw RunLinkSession8Case03Steps_FillTilesBxC
     dw ClearBGMapAtScrollAndResetScroll_BankF0
-    dw RunLinkSession8Case03Steps_WriteScreenStep_Case0A_RunLinkSession8Case03Steps_WriteGlyphListPos
+    dw RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyphListPos
     dw RunLinkSession8Case03Steps_ShowString_BankF0
-    dw RunLinkSession8Case03Steps_FillTilesBxC_Case0C_SetScreenStep
+    dw RunLinkSession8Case03Steps_FillTilesBxC_SetScreenStep
     dw RunLinkSession8Case03Steps_ClampRecordListPageCursor4
     dw RunLinkSession8Case03Steps_DrawRecordListPageSpeciesNames
     dw RunLinkSession8Case03Steps_DrawRecordListPageMarks
@@ -3016,7 +3016,7 @@ RunLinkSession8Case03Steps_OrFromBankWaitVRAM::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Case03Steps_FillTilesBxC_Case03_SetListCursor::
+RunLinkSession8Case03Steps_FillTilesBxC_SetListCursor::
     ld hl, vTiles2 + $200
     ld bc, $1304
     call FillTilesBxC
@@ -3061,7 +3061,7 @@ RunLinkSession8Case03Steps_UploadTilesFromData6D20::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Case03Steps_Case05_DrawRecordParentNames_Case05_GetListEntriesCell4Address_BankF0::
+RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0::
     call GetListEntriesCell4Address_BankF0
     ld a, [hl]
     ld e, a
@@ -3249,7 +3249,7 @@ RunLinkSession8Case03Steps_FillTilesBxC::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Case03Steps_WriteScreenStep_Case0A_RunLinkSession8Case03Steps_WriteGlyphListPos::
+RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyphListPos::
     ld hl, TileCopyDestList_F0_64C2
     ld de, TileCopySrcList_F0_64D2
     call RunLinkSession8Case03Steps_WriteGlyphListPos
@@ -3287,7 +3287,7 @@ RunLinkSession8Case03Steps_ShowString_BankF0::
     ld [wScreenStep], a
     ret
 
-RunLinkSession8Case03Steps_FillTilesBxC_Case0C_SetScreenStep::
+RunLinkSession8Case03Steps_FillTilesBxC_SetScreenStep::
     ld hl, vTiles1 + $3f0
     ld bc, $0401
     call FillTilesBxC

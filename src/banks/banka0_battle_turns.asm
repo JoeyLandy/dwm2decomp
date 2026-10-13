@@ -119,7 +119,7 @@ GameMode7_Init_Sub01_FillBytes::
     ld [wEffectId], a
     ld [wQueuedActionId], a
     ld [wBattleByteAD], a
-    ld [wBattleFlag92], a
+    ld [wBattleItemTarget], a
     ld hl, wMenuState
     ld bc, $0008
     xor a
@@ -644,8 +644,8 @@ IncrementOffsetRows_A0::
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; runs RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0 for slots 0-3 or
-; RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02_LoadSlotSkillsFromBattlerRecord for slots
-; 4-7, clears the species record buffer and restores wBattleArg0 (E-0122)
+; RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02 for slots 4-7, clears the species record
+; buffer and restores wBattleArg0 (E-0122)
 RunA04410Or456FBySlotC::
     ld a, [wBattleArg0]
     push af
@@ -656,7 +656,7 @@ RunA04410Or456FBySlotC::
     jr .call_clear_species_record_buffer_bank_a0
 
 .call_run_a04410_or456_f_by_slot_c_battler:
-    call RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02_LoadSlotSkillsFromBattlerRecord
+    call RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02
 
 .call_clear_species_record_buffer_bank_a0:
     call ClearSpeciesRecordBuffer_BankA0
@@ -886,7 +886,7 @@ RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0::
     farcall SetSlotAIModeFromINT
     ret
 
-RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02_LoadSlotSkillsFromBattlerRecord::
+RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02::
     push bc
     call BattlerRecordAddress_BankA0
     pop bc
@@ -2325,7 +2325,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitFadeState
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03_SetLinkSendByte
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case05_SetLinkSendByte
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount
@@ -2337,10 +2337,10 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteBattleStepAndTemp0
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheThirdMonsterIs
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_Case0F
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_SetBGPaletteUploadRequest
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case10
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowPleaseWait
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case12_SetBattleStep
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep
 
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitFadeState::
     ld a, [wFadeState]
@@ -2387,7 +2387,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo::
     ld [wLinkReady], a
     ret
 
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03_SetLinkSendByte::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2647,7 +2647,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheThirdMonsterIs::
     inc [hl]
     ret
 
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_Case0F::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_SetBGPaletteUploadRequest::
     ld a, [wBattlePictureIds + $4]
     ld e, a
     ld a, [wBattlePictureIds + $5]
@@ -2697,7 +2697,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowPleaseWait::
     inc [hl]
     ret
 
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case12_SetBattleStep::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -2768,13 +2768,13 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink::
     jumptable
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage
-    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_Case02_SetBattleSlotOut
+    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetBattleSlotOut
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL
-    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty_Case04_PleaseWait
+    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep
-    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_Case08_SetLinkSendByte
+    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetLinkSendByte
 
 RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte::
     ld a, $01
@@ -2805,7 +2805,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage::
     inc [hl]
     ret
 
-RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_Case02_SetBattleSlotOut::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetBattleSlotOut::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2882,7 +2882,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL::
     ld [wBattleStep], a
     ret
 
-RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty_Case04_PleaseWait::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -2996,7 +2996,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep::
     ld [wLinkSendByte], a
     ret
 
-RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_Case08_SetLinkSendByte::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -3074,7 +3074,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_Case05_FillTilesRequest
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTilesRequest
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG
@@ -3353,7 +3353,7 @@ WriteTwoDigitsFromDEStepRow::
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles_Data::
     db $04, $f7, $04, $0e, $04, $12, $04, $16
 
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_Case05_FillTilesRequest::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTilesRequest::
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0
     ld hl, vTiles1
@@ -4385,8 +4385,8 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytes::
     ld a, $ff
     call FillBytes
     ld a, $ff
-    ld [wBattleFlag92], a
-    ld [wBattleFlag93], a
+    ld [wBattleItemTarget], a
+    ld [wBattleItemId], a
     ld a, $00
     ld [wMenuState], a
     ld bc, $0200
@@ -4462,7 +4462,7 @@ RunBattleSetup_BankA0::
     dw RunBattleSetup_BankA0_AdvanceRandom
     dw RunBattleSetup_BankA0_WaitLinkMessage
     dw RunBattleSetup_BankA0_SetBattleSubPhase
-    dw RunBattleSetup_BankA0_WaitLinkMessage_Case08_SetLinkSendByte
+    dw RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte
     dw RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo
     dw RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte
     dw RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase
@@ -4475,7 +4475,7 @@ RunBattleSetup_BankA0_EntrySelect::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount
-    dw RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0_Case01_AdvanceBattleResolveStep
+    dw RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0_AdvanceBattleResolveStep
     dw RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount_Case02
     dw RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0AndStep
     dw RunBattleSetup_BankA0_EntrySelect_WriteBattleSetupDBAndStringIndexEtc
@@ -4506,7 +4506,7 @@ RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount::
     inc [hl]
     ret
 
-RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0_Case01_AdvanceBattleResolveStep::
+RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0_AdvanceBattleResolveStep::
     call RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0
     ld hl, RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0_Case01_Data
     ld a, [wMenuState]
@@ -4664,21 +4664,21 @@ RunBattleSetup_BankA0_CommandMenu::
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep
     dw RunBattleSetup_BankA0_CommandMenu_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     dw RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case0A
-    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_Case0B
+    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep
+    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleArg1AndMenuCursorEtc
     dw RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize
     dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case0E
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStepAndBattleArg1
     dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case10
     dw RunBattleSetup_BankA0_CommandMenu_WriteStringCategory
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case12
+    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case12_AdvanceBattleResolveStep
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_Case13
     dw RunBattleSetup_BankA0_CommandMenu_SetBattleResolveStep
     dw RunBattleSetup_BankA0_CommandMenu_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     dw RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo
-    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case0A
-    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_Case0B
+    dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep
+    dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
 
 RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0::
     ld hl, vTiles1 + $6d0
@@ -4985,7 +4985,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo::
     inc [hl]
     ret
 
-RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case0A::
+RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -4994,7 +4994,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case
     inc [hl]
     ret
 
-RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_Case0B::
+RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $04
     ld [wBattleResolveStep], a
@@ -5194,7 +5194,7 @@ RunBattleSetup_BankA0_CommandMenu_WriteStringCategory::
     inc [hl]
     ret
 
-RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case12::
+RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Case12_AdvanceBattleResolveStep::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5332,7 +5332,7 @@ RunBattleSetup_BankA0_SetBattleSubPhase::
     ld [wLinkReady], a
     ret
 
-RunBattleSetup_BankA0_WaitLinkMessage_Case08_SetLinkSendByte::
+RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
     ret nz

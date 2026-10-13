@@ -501,7 +501,7 @@ RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld [wMultiHitCount], a
     xor a
     ld [wSlotsOccupiedFlag], a
-    ld a, [wBattleFlag92]
+    ld a, [wBattleItemTarget]
     cp $10
     jr z, .check_link_role
     cp $20
@@ -509,10 +509,10 @@ RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     and $07
     ld [wBattleTarget], a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, .read_battle_flag93
-    ld a, [wBattleFlag93]
-    cp $0c
-    jr z, .read_battle_flag93
+    jr nc, .read_battle_item_id
+    ld a, [wBattleItemId]
+    cp ITEM_WORLDLEAF
+    jr z, .read_battle_item_id
     jr .set_battle_action_id
 
 .check_link_role:
@@ -535,8 +535,8 @@ RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     ld [wBattleTarget], a
 
-.read_battle_flag93:
-    ld a, [wBattleFlag93]
+.read_battle_item_id:
+    ld a, [wBattleItemId]
     ld [wBattleActionId], a
     ret
 
@@ -877,18 +877,18 @@ RunBattleActions_UseItem_ToRunBattleSubStep2_6764::
 RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ld hl, wBattleResolveStep
     inc [hl]
-    ld a, [wBattleFlag93]
-    cp $1f
+    ld a, [wBattleItemId]
+    cp ITEM_BEASTTAIL
     jr z, .check_multi_hit_count
-    cp $1d
+    cp ITEM_BADMEAT
     jr z, .check_battle_target
-    ld a, [wBattleFlag92]
+    ld a, [wBattleItemTarget]
     cp $10
     jr z, .call_run_once4650_then4673
     cp $20
     ret nz
-    ld a, [wBattleFlag93]
-    cp $1e
+    ld a, [wBattleItemId]
+    cp ITEM_METEORB
     jr nz, .call_run_once4650_then4673
     ret
 
@@ -950,9 +950,8 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ret
 
 ; runs RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of
-; wMultiHitCount), then
-; RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount each time; returns
-; wMultiHitCount & $7F (E-0122)
+; wMultiHitCount), then RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount each
+; time; returns wMultiHitCount & $7F (E-0122)
 RunOnce4650Then4673::
     ld a, [wMultiHitCount]
     bit 7, a
@@ -963,7 +962,7 @@ RunOnce4650Then4673::
     ld [wMultiHitCount], a
 
 .call_run_once4650_then4673_carry_unless:
-    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount
+    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount
     ld a, [wMultiHitCount]
     and $7f
     ret
@@ -996,7 +995,7 @@ RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount::
+RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
     ld c, a
@@ -1033,13 +1032,13 @@ RunBattleActions_UseItem_LoadItemRecord::
     inc [hl]
     ld a, [wResolveMsgArg]
     bit 0, a
-    jr nz, .read_battle_flag93
+    jr nz, .read_battle_item_id
     ld a, [wSlotsOccupiedFlag]
     or a
     ret z
 
-.read_battle_flag93:
-    ld a, [wBattleFlag93]
+.read_battle_item_id:
+    ld a, [wBattleItemId]
     ld [wItemId], a
     ld a, [wCommandCursor]
     and $0f
@@ -1058,8 +1057,8 @@ RunBattleActions_UseItem_LoadItemRecord::
     ld a, [wItemRecord + $3]
     cp $64
     jr nz, .call_show_battle_text
-    ld a, [wBattleFlag93]
-    cp $1e
+    ld a, [wBattleItemId]
+    cp ITEM_METEORB
     jr z, .call_show_battle_text
     ret
 

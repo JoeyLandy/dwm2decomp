@@ -4825,7 +4825,7 @@ DebugBattleSetup_Update_ClearMenuState::
     ld a, [wWorkBuf + $8]
     or a
     jr nz, .call_debug_battle_setup_update_write_map_id
-    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01_CheckSaveData
+    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01
     jr .set_game_mode_to_04
 
 .call_debug_battle_setup_update_write_map_id:
@@ -5157,7 +5157,7 @@ ClampDebugValueToTableLimit::
     ld [hl], d
     ret
 
-DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01_CheckSaveData::
+DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
     ld a, [wPartyCount]
     or a
     jr z, .call_check_save_data

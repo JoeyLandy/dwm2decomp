@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0341 — Shorter step names; battle scratch and item bytes
+
+- Kind: READING and generator naming rules.
+- **Step names.** name_steps_by_text (E-0340) now runs in two places:
+  - right after the idioms are folded, before branch targets are named after the routines they call, so those local labels see the final names;
+  - again at the end, only for labels no instruction calls (jump-table steps).
+- **Name forms.**
+  - A described step is named <routine>_<description> when that name is free (RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780). Otherwise it keeps the full structural chain before the description.
+  - A call description takes the first non-generic routine among the first 12 instructions. That routine must not be a sibling in the same family, an address name, or another label still to be described.
+- **Counts.** 803 steps are described. Undescribed labels number 189, and labels with any structural part 3,927, down from 4,384.
+- **RAM read.**
+  - $D87A/$D87B are wBattleTempPtrLo/Hi: a scratch pointer kept by RunBattleCommandEntry (into wBattleTempBuf) and CopyBattlerNameToHL.
+  - $D87C is wBattleTempSlot.
+  - $D87D is wBattleTempBuf, an 18-byte scratch buffer: RunBattleCommandEntry clears it, and the battle end keeps two words in it. Its bytes $D87E-$D880 are now offsets into it.
+  - $D893 is wBattleItemId, the item chosen in battle. It comes from wItemId, and RunBattleActions_UseItem makes it the action id, so its comparisons use ITEM_* names.
+  - $D892 is wBattleItemTarget: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2.
+- **Tests.** tests/test_step_names.py reads each description from build/listing/step_names.json (old → new). It checks that a Set/Advance description writes its variable and that a routine description is called. tests/test_name_claims.py still checks every rule-made name and local label.
+- Binary verification: build/run503 PASS, 0 differing bytes.
+
 ### E-0340 — Names without addresses; structural steps described
 
 - Kind: READING and generator naming rules; no new behavioural claim beyond the RAM readings below.

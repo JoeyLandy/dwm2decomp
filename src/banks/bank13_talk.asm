@@ -201,7 +201,7 @@ FhuntTalkEvents::
     dw ChestMagicKey
     dw TalkScript600A_Kweeeeh
     dw FhuntTalkEvents_ShowHeroCheckedBehindThe
-    dw FhuntTalkEvents_TestFlagBit_Case16_HmYou
+    dw FhuntTalkEvents_TestFlagBit_HmYou
     dw TalkMsg041E_ThisIsTheTownOfPei
     dw TalkMsg041F_NyaTravelersThatsRare
     dw TalkMsg0420_ToTheWestIsAMountain
@@ -220,7 +220,7 @@ FhuntTalkEvents::
     dw TalkMsg04AA_HeroReadTheSignDetermine
     dw TalkMsg0DD3_InnDownstairsRoomsAvailable
     dw TalkScript6048_WelcomeToTheTravelersInn
-    dw FhuntTalkEvents_TestFlagBit_Case29_FhuntTalkEvents_Case29_WriteTemp0AndRAMG
+    dw FhuntTalkEvents_TestFlagBit_FhuntTalkEvents_Case29_WriteTemp0AndRAMG
     dw FhuntTalkEvents_ShowWhenIPassedToo
     dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw ChestItem_WorldDew_Flag00AA
@@ -231,13 +231,13 @@ FhuntTalkEvents::
     dw TalkMsg043E_TheCaveToTheSouthThat
     dw TalkMsg043F_TheNewMonsterKingIsSaid
     dw TalkMsg0440_HardlyNoOneHasSeenThe
-    dw FhuntTalkEvents_TestFlagBit_Case34_ThisIsOnlyFor
-    dw FhuntTalkEvents_TestFlagBit_Case35_IfYouWishTo
+    dw FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList
+    dw FhuntTalkEvents_TestFlagBit_Case35_FindTemp0InInventoryList
     dw TalkMsg0445_IfYouHaveTheLightOrbYou
     dw TalkMsg0446_IfIHadTheLightOrbEven
     dw TalkScript606F_WantToKnowTheMostFundamental
     dw TalkMsg044A_HearMeOutIfYouWish
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case3A_SetScreenTableIndex
+    dw FhuntTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex
     dw TalkScript6083_HowMayOurChurchHelpYou
     dw TalkMsg044D_HeroReadTheSignTheFinder
     dw TalkMsg0450_HeroPeeredIntoTheVaseA
@@ -253,9 +253,9 @@ FhuntTalkEvents::
     dw FhuntTalkEvents_ShowHeroCheckedTheSmall
     dw ChestItem_SilvrCape_Flag00AB
     dw ChestItem_Heaven
-    dw FhuntTalkEvents_TestFlagBit_Case4A_StartScriptAtHL_B13
+    dw FhuntTalkEvents_TestFlagBit_StartScriptAtHL_B13
     dw ChestItem_Heaven_Flag00AF
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case4C_StepOnceOnEach
+    dw FhuntTalkEvents_StartScriptAtHL_B13_FhuntTalkEvents_WriteTemp0AndTemp1
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
     dw TalkScript60CE
     dw TalkMsg04A8_WhereIsMyCasketWhereRing
@@ -263,13 +263,13 @@ FhuntTalkEvents::
     dw TalkScript60D0
     dw TalkMsg0463_HeroCheckedTheNoticeFollow
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E
-    dw FhuntTalkEvents_TestFlagBit_Case54_HeroCheckedTheGrave
+    dw FhuntTalkEvents_TestFlagBit_Case54_StartScriptAtHL_B13
     dw FhuntTalkEvents_TestFlagBit_Case55_StartScriptAtHL_B13
     dw ChestItem_Heaven_Flag00B5
     dw TalkMsg046D_TheMonsterArmysGeneralIs
     dw TalkMsg046E_OurKingsCastleIsAnInvincible
     dw TalkMsg046F_WhatYouveGotTheThree
-    dw FhuntTalkEvents_TestFlagBit_Case5A_HmHowDidYou
+    dw FhuntTalkEvents_TestFlagBit_Case5A_FindTemp0InInventoryList
     dw VaseItem_TinyMedal_Flag0200
     dw TalkScript6131
     dw TalkScript6059_Kweeeeeh
@@ -282,15 +282,15 @@ FhuntTalkEvents::
     dw ChestItem_Thief_Flag00BD
     dw ChestItem_Bolt
     dw ChestItem_SteelFang_Flag00BF
-    dw FhuntTalkEvents_TestFlagBit_Case67_AhSoGoodOf
+    dw FhuntTalkEvents_TestFlagBit_Case67_FindTemp0InInventoryList
     dw TalkScript6152_KamehaSoItWasYouWho
     dw TalkScript6198_ThisWayHereHere
     dw FhuntTalkEvents_StartScriptAtHL_B13_Case6A
     dw TalkMsg04A6_IWasTakingAWalkOutside
     dw TalkMsg04A4_SouthBeyondTheMountainsIs
     dw TalkMsg04A5_SeveralAncientRuinsRemain
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6E_TheCastle
-    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6F_AButtonHidesBehind
+    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6E_FhuntTalkEvents_WriteTemp0AndTemp1
+    dw FhuntTalkEvents_StartScriptAtHL_B13_Case6F_FhuntTalkEvents_WriteTemp0AndTemp1
     dw TalkMsg0413_HeroCheckedTheTreasureChest_1349CE
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
@@ -559,7 +559,7 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case16_HmYou::
+FhuntTalkEvents_TestFlagBit_HmYou::
     ld de, $0209
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -780,7 +780,7 @@ TalkScript6048_WelcomeToTheTravelersInn::
     call StartScriptAtHL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case29_FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
+FhuntTalkEvents_TestFlagBit_FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
     ret nc
@@ -916,7 +916,7 @@ TalkMsg0440_HardlyNoOneHasSeenThe::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case34_ThisIsOnlyFor::
+FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -963,7 +963,7 @@ FhuntTalkEvents_TestFlagBit_Case34_ThisIsOnlyFor::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case35_IfYouWishTo::
+FhuntTalkEvents_TestFlagBit_Case35_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b134
@@ -1069,7 +1069,7 @@ TalkMsg044A_HearMeOutIfYouWish::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case3A_SetScreenTableIndex::
+FhuntTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex::
     ld a, $0e
     ld [wScreenTableIndex], a
     ld a, $10
@@ -1248,7 +1248,7 @@ ChestItem_Heaven::
     ret
 
 ; starts Script_6096: '*: You can take this treasure,'
-FhuntTalkEvents_TestFlagBit_Case4A_StartScriptAtHL_B13::
+FhuntTalkEvents_TestFlagBit_StartScriptAtHL_B13::
     ld de, EVENT_YOU_CAN_TAKE_THIS_TREASURE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1274,7 +1274,7 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case4C_StepOnceOnEach::
+FhuntTalkEvents_StartScriptAtHL_B13_FhuntTalkEvents_WriteTemp0AndTemp1::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
@@ -1344,7 +1344,7 @@ TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E::
     ret
 
 ; starts Script_60D4: '0 checked the gravestone. There was'
-FhuntTalkEvents_TestFlagBit_Case54_HeroCheckedTheGrave::
+FhuntTalkEvents_TestFlagBit_Case54_StartScriptAtHL_B13::
     ld de, EVENT_SET_FLAG_322
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -1418,7 +1418,7 @@ TalkMsg046F_WhatYouveGotTheThree::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case5A_HmHowDidYou::
+FhuntTalkEvents_TestFlagBit_Case5A_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -1583,7 +1583,7 @@ ChestItem_SteelFang_Flag00BF::
     call StartTreasureFlagDE_B13
     ret
 
-FhuntTalkEvents_TestFlagBit_Case67_AhSoGoodOf::
+FhuntTalkEvents_TestFlagBit_Case67_FindTemp0InInventoryList::
     ld de, EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     call TestFlagBit
     jr c, .call_start_script_at_hl_b13
@@ -1683,7 +1683,7 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case6E_TheCastle::
+FhuntTalkEvents_StartScriptAtHL_B13_Case6E_FhuntTalkEvents_WriteTemp0AndTemp1::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
@@ -1697,7 +1697,7 @@ FhuntTalkEvents_StartScriptAtHL_B13_Case6E_TheCastle::
     call StartMessageCommand09HL_B13
     ret
 
-FhuntTalkEvents_StartScriptAtHL_B13_Case6F_AButtonHidesBehind::
+FhuntTalkEvents_StartScriptAtHL_B13_Case6F_FhuntTalkEvents_WriteTemp0AndTemp1::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
     or a
@@ -1786,13 +1786,13 @@ NordenTalkEvents::
     dw VaseItem_TinyMedal_Flag01E6
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt
     dw TalkMsg0314_HeroTriedToOpenTheChest_134C97
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case12_SetDataBank
+    dw NordenTalkEvents_StartScriptAtHL_B13_SetDataBank
     dw TalkMsg0315_TheBorderIsClosedSoI
     dw NordenTalkEvents_TestFlagBit
     dw TalkMsg031E_HisMajestyHasBeenCrankyIs
     dw TalkMsg031F_AfterTheGoldDiscoveryOur
     dw TalkMsg0320_IRememberTheKingToBe
-    dw NordenTalkEvents_TestFlagBit_Case18_HisMajestyIsFurious
+    dw NordenTalkEvents_TestFlagBit_HisMajestyIsFurious
     dw TalkMsg0ABD_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABE_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt
@@ -1809,7 +1809,7 @@ NordenTalkEvents::
     dw TalkMsg032E_DoYouKnowLadyYunaOf
     dw TalkMsg032F_TheScholarInTheTavernSaid
     dw TalkMsg0330_DontYouThinkItsTooExpensive
-    dw NordenTalkEvents_StartScriptAtHL_B13_Case29_SetScreenTableIndex
+    dw NordenTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex
     dw NordenTalkEvents_StartScriptAtHL_B13_Case2A_SetScreenTableIndex
     dw NordenTalkEvents_StartScriptAtHL_B13_Case2B_SetScreenTableIndex
     dw TalkScript5DCC_HowMayOurChurchServeYou
@@ -1872,7 +1872,7 @@ NordenTalkEvents::
     dw TalkMsg0391_IHurlKnivesWithIncredible
     dw TalkMsg0392_PleaseLineUpAndQuitPushing
     dw TalkMsg0393_OhLadyYunaToThinkThat
-    dw NordenTalkEvents_TestFlagBit_Case68_HeroReadTheSign
+    dw NordenTalkEvents_TestFlagBit_StartScriptAtHL_B13
     dw TalkMsg0397_TheCastleIsInAnUproar
     dw TalkMsg0398_LadyYunaUsedToBeVery
     dw TalkMsg0399_InTheEastLivesAnOld
@@ -1924,7 +1924,7 @@ NordenTalkEvents::
     dw NordenTalkEvents_TestFlagBit_Case99_StartScriptAtHL_B13
     dw NordenTalkEvents_ShowHeroCheckedTheMarionette
     dw TalkMsg0A16_MyMaidIsAngryThatI
-    dw NordenTalkEvents_TestFlagBit_Case9C_HeroCheckedTheBlue
+    dw NordenTalkEvents_TestFlagBit_HeroCheckedTheBlue
     dw ChestMagicKey_Flag01E0
     dw NordenTalkEvents_SetObject2Plus7
     dw TalkScript5FD2
@@ -2168,7 +2168,7 @@ TalkMsg0314_HeroTriedToOpenTheChest_134C97::
     ret
 
 ; starts Script_5D6F: '*: Welcome to our inn!'
-NordenTalkEvents_StartScriptAtHL_B13_Case12_SetDataBank::
+NordenTalkEvents_StartScriptAtHL_B13_SetDataBank::
     ld hl, Script_5D6F
     call StartScriptAtHL_B13
     ld a, $10
@@ -2290,7 +2290,7 @@ TalkMsg0320_IRememberTheKingToBe::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_Case18_HisMajestyIsFurious::
+NordenTalkEvents_TestFlagBit_HisMajestyIsFurious::
     ld de, EVENT_SCENE_PLAN_RUINED_094
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
@@ -2524,7 +2524,7 @@ TalkMsg0330_DontYouThinkItsTooExpensive::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_StartScriptAtHL_B13_Case29_SetScreenTableIndex::
+NordenTalkEvents_StartScriptAtHL_B13_SetScreenTableIndex::
     ld a, $0a
     ld [wScreenTableIndex], a
     ld a, $10
@@ -3428,7 +3428,7 @@ TalkMsg0393_OhLadyYunaToThinkThat::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_Case68_HeroReadTheSign::
+NordenTalkEvents_TestFlagBit_StartScriptAtHL_B13::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -4282,7 +4282,7 @@ TalkMsg0A16_MyMaidIsAngryThatI::
     call StartMessageCommand09HL_B13
     ret
 
-NordenTalkEvents_TestFlagBit_Case9C_HeroCheckedTheBlue::
+NordenTalkEvents_TestFlagBit_HeroCheckedTheBlue::
     ld de, $009f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -4510,21 +4510,21 @@ GreatLogTalkEvents::
     dw TalkMsg003F_InsideTheWellIsTheLogs
     dw GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit
     dw GreatLogTalkEvents_ShowImPrinceKamehaOf
-    dw GreatLogTalkEvents_TestFlagBit_Case19_WarubouANewPlug
+    dw GreatLogTalkEvents_TestFlagBit_WarubouANewPlug
     dw TalkMsg001A_IAccidentallyWentOutside
     dw GreatLogTalkEvents_ShowCobiHeroWhileYoure
     dw GreatLogTalkEvents_ShowTaraBigBrotherWhile
     dw TalkMsg011E_IfYourPartyIsWipedOut
     dw TalkMsg021F_DoYouKnowAboutLogTwigIts
     dw TalkMsg04D0_HeroReadTheSignMonsterArena
-    dw GreatLogTalkEvents_TestFlagBit_Case20_GreatLog
-    dw GreatLogTalkEvents_TestFlagBit_Case21_It
+    dw GreatLogTalkEvents_TestFlagBit_GreatLog
+    dw GreatLogTalkEvents_TestFlagBit_StartScriptAtHL_B13
     dw TalkMsg021C_MonstersHateBeingAwayFrom
     dw TalkMsg0221_HelloThereYoungsterTakeThese
     dw TalkMsg0222_HeyALittleBittyMasterHi
-    dw GreatLogTalkEvents_TestFlagBit_Case25_WellYou
+    dw GreatLogTalkEvents_TestFlagBit_WellYou
     dw TalkMsg0224_TakeCareToFindTinyMedals
-    dw GreatLogTalkEvents_TestFlagBit_Case27_OhYou
+    dw GreatLogTalkEvents_TestFlagBit_SetTemp0
     dw TalkMsg0D8C_WataWataTerryBattledInThe
     dw TalkMsg0D8D_FwahahahahaHowAmusingEven
     dw TalkMsg022D_WarpWingReturnsYouInstantly
@@ -4532,10 +4532,10 @@ GreatLogTalkEvents::
     dw TalkMsg022C_ThereAreBooksThatChangeYour
     dw TalkMsg0005_YouFolksRunAMonsterFarm
     dw TalkMsg0006_TheresASpiritInGreatLogThats
-    dw GreatLogTalkEvents_TestFlagBit_Case2F_StartMessageCommand09HL_B13
+    dw GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13
     dw TalkScript5120_SailingIsSureExhilarating
     dw TalkMsg000A_WellSoonBeReachingGreatLog
-    dw GreatLogTalkEvents_TestFlagBit_Case32_WhenOurFarmGets
+    dw GreatLogTalkEvents_TestFlagBit_Case32_StartMessageCommand09HL_B13
     dw GreatLogTalkEvents_ShowTheFarmIsFull
     dw GreatLogTalkEvents_ShowTheFarmIsFull
     dw GreatLogTalkEvents_ShowTheFarmIsFull
@@ -4547,11 +4547,11 @@ GreatLogTalkEvents::
     dw TalkMsg0243_HeroCheckedTheBookshelfBookmark
     dw TalkMsg0244_HeroCheckedTheBookshelfJournal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt
-    dw GreatLogTalkEvents_TestFlagBit_Case3E_IfGreatLogWereTo
+    dw GreatLogTalkEvents_TestFlagBit_Case3E_StartScriptAtHL_B13
     dw TalkMsg0249_HeroCheckedTheBookshelfDiary
     dw TalkMsg0256_HeroCheckedTheDresserItWas
     dw TalkMsg02B0_HeroPeeredIntoTheBarrelIt
-    dw GreatLogTalkEvents_TestFlagBit_Case42_Everyone
+    dw GreatLogTalkEvents_TestFlagBit_Case42_StartScriptAtHL_B13
     dw TalkMsg025A_HeroCheckedTheDresserItWas
     dw TalkMsg025B_HeroCheckedTheBookshelfThis
     dw IfFlag134Msg0314_HeroTriedToOpenTheChest
@@ -4582,16 +4582,16 @@ GreatLogTalkEvents::
     dw TalkMsg0294_IfYouWinAnArenaTourney
     dw TalkMsg0290_SirloinIsTheTopsHarrumph
     dw TalkMsg0291_IIDidntFallForAny
-    dw GreatLogTalkEvents_TestFlagBit_Case61_YouHaveToPay
+    dw GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
-    dw GreatLogTalkEvents_ClearArenaData_Case65_GenerateNewKeyEntry
+    dw GreatLogTalkEvents_ClearArenaData_SetDataBank
     dw GreatLogTalkEvents_SaveScreenBufferToBGMap1
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
     dw GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13
-    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1_Case6A_SavePlayerPositionState
+    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState
     dw TalkScript55CE_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
@@ -4612,7 +4612,7 @@ GreatLogTalkEvents::
     dw TalkMsg0A33_HaveYouBeenToTheStarry
     dw TalkMsg020A_ImChoppingSomeTreesDownTo
     dw TalkMsg08BF_MasterOnlyMakesMeChargeIt
-    dw GreatLogTalkEvents_TestFlagBit_Case7F_IWantToOpen
+    dw GreatLogTalkEvents_TestFlagBit_SetFlagBit
     dw TalkMsg0A39_TheManHereHasRareKeys
     dw TalkMsg0A3C_KingIfYouSee
     dw TalkMsg0A3E_YoureFreeToGo
@@ -4689,7 +4689,7 @@ GreatLogTalkEvents::
     dw TalkMsg0225_HeroPeeredIntoTheVaseThere
     dw VaseItem_TinyMedal_Flag0130
     dw TalkMsg024A_HeroCheckedThePlushDollIt
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_CaseCC_GreatLogTalkEvents_CaseCC_WriteTemp1
+    dw GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_CaseCC_WriteTemp1
     dw GreatLogTalkEvents_ShowHereItIstheTinyMedal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt_137A93
     dw Talk00FC_YouHaveToEat
@@ -4714,7 +4714,7 @@ GreatLogTalkEvents::
     dw TalkMsg055E_HeroCheckedTheBookshelfMagic
     dw TalkMsg0DD5_MonsterSkillsArePassedOn
     dw GreatLogTalkEvents_RunFieldCommandTemp0
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_CaseE5_CopyItemNameToDE
+    dw GreatLogTalkEvents_StartScriptAtHL_B13_CopyItemNameToDE
     dw GreatLogTalkEvents_StartMessageCommand09HL_B13
     dw GreatLogTalkEvents_SetScriptByte68
     dw $0000 ; unused index (E-0207)
@@ -6114,7 +6114,7 @@ GreatLogTalkEvents_ShowImPrinceKamehaOf::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case19_WarubouANewPlug::
+GreatLogTalkEvents_TestFlagBit_WarubouANewPlug::
     ld de, $0025
     call TestFlagBit
     jp c, .call_test_flag_bit5
@@ -6569,7 +6569,7 @@ TalkMsg04D0_HeroReadTheSignMonsterArena::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case20_GreatLog::
+GreatLogTalkEvents_TestFlagBit_GreatLog::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_test_flag_bit2
@@ -6622,7 +6622,7 @@ GreatLogTalkEvents_TestFlagBit_Case20_GreatLog::
     call StartScriptAtHL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case21_It::
+GreatLogTalkEvents_TestFlagBit_StartScriptAtHL_B13::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -6714,7 +6714,7 @@ TalkMsg0222_HeyALittleBittyMasterHi::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case25_WellYou::
+GreatLogTalkEvents_TestFlagBit_WellYou::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -6740,7 +6740,7 @@ TalkMsg0224_TakeCareToFindTinyMedals::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case27_OhYou::
+GreatLogTalkEvents_TestFlagBit_SetTemp0::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_script_at_hl_b132
@@ -6852,7 +6852,7 @@ TalkMsg0006_TheresASpiritInGreatLogThats::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case2F_StartMessageCommand09HL_B13::
+GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13::
     ld de, $0013
     call TestFlagBit
     jr c, .skip
@@ -6899,7 +6899,7 @@ TalkMsg000A_WellSoonBeReachingGreatLog::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case32_WhenOurFarmGets::
+GreatLogTalkEvents_TestFlagBit_Case32_StartMessageCommand09HL_B13::
     ld de, $0013
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
@@ -7052,7 +7052,7 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case3E_IfGreatLogWereTo::
+GreatLogTalkEvents_TestFlagBit_Case3E_StartScriptAtHL_B13::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b132
@@ -7096,7 +7096,7 @@ TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case42_Everyone::
+GreatLogTalkEvents_TestFlagBit_Case42_StartScriptAtHL_B13::
     ld de, $0025
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -7456,7 +7456,7 @@ TalkMsg0291_IIDidntFallForAny::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case61_YouHaveToPay::
+GreatLogTalkEvents_TestFlagBit_Case61_StartScriptAtHL_B13::
     ld a, [wArenaRank]
     or a
     jr nz, .skip
@@ -7574,7 +7574,7 @@ TalkMsg027A_ListenThisIsASecretTheres::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_ClearArenaData_Case65_GenerateNewKeyEntry::
+GreatLogTalkEvents_ClearArenaData_SetDataBank::
     ld a, $0c
     ld [wDataBank], a
     xor a
@@ -7755,7 +7755,7 @@ GreatLogTalkEvents_TestFlagBit_Case69_StartScriptAtHL_B13::
     call StartScriptAtHL_B13
     ret
 
-GreatLogTalkEvents_SaveScreenBufferToBGMap1_Case6A_SavePlayerPositionState::
+GreatLogTalkEvents_SaveScreenBufferToBGMap1_SavePlayerPositionState::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $15
@@ -8044,7 +8044,7 @@ TalkMsg08BF_MasterOnlyMakesMeChargeIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_TestFlagBit_Case7F_IWantToOpen::
+GreatLogTalkEvents_TestFlagBit_SetFlagBit::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
     jr c, .set_screen_table_index_to_01
@@ -9647,7 +9647,7 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
     call StartMessageCommand09HL_B13
     ret
 
-GreatLogTalkEvents_StartScriptAtHL_B13_CaseCC_GreatLogTalkEvents_CaseCC_WriteTemp1::
+GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_CaseCC_WriteTemp1::
     farcall GreatLogTalkEvents_CaseCC_WriteTemp1
     ldh a, [hTemp1]
     bit 7, a
@@ -10127,7 +10127,7 @@ GreatLogTalkEvents_RunFieldCommandTemp0::
     farcall RunFieldCommandTemp0
     ret
 
-GreatLogTalkEvents_StartScriptAtHL_B13_CaseE5_CopyItemNameToDE::
+GreatLogTalkEvents_StartScriptAtHL_B13_CopyItemNameToDE::
     ld a, [wGiftRecord]
     cp $01
     ret nz

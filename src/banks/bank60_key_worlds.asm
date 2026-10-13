@@ -41,7 +41,7 @@ DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas::
     call DebugAutomap_Update_MergeKeyWorldAreas
     call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc
     call DebugAutomap_Update_Sub01_Sub01_Return
-    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08_ReadByteInBank
+    call DebugAutomap_Update_SetTemp0
     or a
     jr nz, DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas
     farcall DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc
@@ -2159,7 +2159,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data::
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53
     db $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
-DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub08_ReadByteInBank::
+DebugAutomap_Update_SetTemp0::
     ldh a, [hTemp7]
     cp $01
     jr z, .read_key_world_area_count
@@ -3170,23 +3170,23 @@ RunRandomPatternCase::
     jumptable
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_WriteTempA_Case03_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
+    dw RunRandomPatternCase_WriteTempA_SetTempA
+    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_WriteTempA_Case03_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
+    dw RunRandomPatternCase_WriteTempA_SetTempA
+    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer
-    dw RunRandomPatternCase_WriteTempA_Case03_StoreThreeBytesBeforeTemp0Pointer
+    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
+    dw RunRandomPatternCase_WriteTempA_SetTempA
     db $c9, $c9
 
-RunRandomPatternCase_WriteTempA_Case03_StoreThreeBytesBeforeTemp0Pointer::
+RunRandomPatternCase_WriteTempA_SetTempA::
     ld a, b
     and $01
     cp $01
@@ -3298,7 +3298,7 @@ RunRandomPatternCase_WriteTempA_Case03_StoreThreeBytesBeforeTemp0Pointer::
     ld a, $01
     ret
 
-RunRandomPatternCase_WriteTempA_Case02_StoreThreeBytesBeforeTemp0Pointer::
+RunRandomPatternCase_WriteTempA_Case02_SetTempA::
     ld a, b
     and $01
     cp $01

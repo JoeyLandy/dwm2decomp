@@ -3336,7 +3336,7 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld c, $01
     ret
 
-AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02::
+AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
@@ -5850,7 +5850,7 @@ SlotCLacksSkill63Or64WithMP::
     jr c, .loop2
     ret
 
-AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $04

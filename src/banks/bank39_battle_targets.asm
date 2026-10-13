@@ -2924,7 +2924,7 @@ ChooseTarget_Heal_Loop::
     ld d, a
     ld a, $03
     sub d
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     add a
     add_a_to_hl
     ld [hl], c
@@ -3031,9 +3031,9 @@ ChooseTarget_Heal_5593::
     ld a, [wBattleArg0]
     call Divide24ByA
     ld a, l
-    ld [wBattleTemp7D], a
+    ld [wBattleTempBuf], a
     ld a, h
-    ld [wBattleTemp7E], a
+    ld [wBattleTempBuf + $1], a
     ld a, [wBattleActor]
     and $04
     ld e, a
@@ -3060,17 +3060,17 @@ ChooseTarget_Heal_5593::
     call GetBattleHP_Bank39
     call CompareHLToBC
     jr z, .read_battle_arg0
-    ld a, [wBattleTemp7D]
+    ld a, [wBattleTempBuf]
     ld c, a
-    ld a, [wBattleTemp7E]
+    ld a, [wBattleTempBuf + $1]
     ld b, a
     call CompareHLToBC
     jr z, .call_advance_random
     jr nc, .read_battle_arg0
     ld a, l
-    ld [wBattleTemp7D], a
+    ld [wBattleTempBuf], a
     ld a, h
-    ld [wBattleTemp7E], a
+    ld [wBattleTempBuf + $1], a
     ld a, [wBattleArg0]
     ld [wBattleArg2], a
     jr .read_battle_arg0
@@ -7033,11 +7033,11 @@ SlotStatus4Bits23::
     and $0c
     ret
 
-; wBattleTemp7F = 0, hTemp1 = 0, stores HP + DEF of three slots from the target in wTargetEstimates
-; and falls into PickWeakestEstimatedTarget (E-0126)
+; wBattleTempBuf + $2 = 0, hTemp1 = 0, stores HP + DEF of three slots from the target in
+; wTargetEstimates and falls into PickWeakestEstimatedTarget (E-0126)
 EstimateAndPickWeakestTarget::
     ld a, $00
-    ld [wBattleTemp7F], a
+    ld [wBattleTempBuf + $2], a
     xor a
     ldh [hTemp1], a
     ld b, $03
@@ -7295,14 +7295,14 @@ ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
     jr c, .read_temp1
     jr nz, .check_temp2
     ldh a, [hTemp1]
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     add a
     add_a_to_hl
     ld c, [hl]
     inc hl
     ld b, [hl]
     ldh a, [hTemp0]
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     add a
     add_a_to_hl
     deref_hl

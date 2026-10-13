@@ -66,8 +66,8 @@ Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays 
 | Ids | 9,278 uses of `MONSTER_*`, `SKILL_*`, `ITEM_*`, `ACTION_*` and `RESIST_*` (D-007, E-0338), in code comparisons and data tables |
 | Story flags and status | 229 story flags named `EVENT_*` after their setters (1,150 uses) and 36 battle status bits named `BSTATn_*` (112 uses), from forcing each bit in a battle or from the one skill that sets it (D-009, E-0339) |
 | Assets | 3,550 graphics and map files included by name (`gfx/monster_sprites/drak_slime.lz`), extracted from the reference at build time (D-008); no offset into the ROM is left in `src/` |
-| Labels | 33,212 global labels, none an address name and none spelling a RAM address (E-0340). 235 (0.7%) have no description beyond their structural part (`Parent_Case05`); the other structural names say what the step shows, calls or writes (`..._Case0F_SetDataBankSave`, `..._Table4_Case02_ShowSaveFileInfoWindow`) |
-| RAM | 961 named addresses; 120 still spell a byte number, mostly menu and battle work bytes reused for different values by different routines (`wScreenByteBD` holds price digits in the shop and an SRAM address in hibernation), where one name would mislead |
+| Labels | 33,212 global labels, none an address name and none spelling a RAM address (E-0340). 189 (0.6%) have no description beyond their structural part (`Parent_Case05`). The other steps say what they show, call or write (`RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780`, `..._SetDataBankSave`); 3,927 still carry a `_CaseNN`/`_SubNN` part, the step's index in its state machine (E-0340, E-0341) |
+| RAM | 958 named addresses; 111 still spell a byte number, mostly menu and battle work bytes reused for different values by different routines (`wScreenByteBD` holds price digits in the shop and an SRAM address in hibernation), where one name would mislead |
 | Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
 
 ## Source presentation (2026-10-13, decision D-005)

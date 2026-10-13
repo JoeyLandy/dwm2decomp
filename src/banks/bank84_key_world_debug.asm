@@ -66,8 +66,8 @@ RunDebugAutomapCaseTemp0::
     dw RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_RunDebugAutomapCaseTemp0_RandomBelowC
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_RunDebugAutomapCaseTemp0_RandomBelowC
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
 RunDebugAutomapCaseTemp0_Return::
@@ -169,7 +169,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
     jr nz, .loop
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_RunDebugAutomapCaseTemp0_RandomBelowC::
+RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -233,7 +233,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_RunDebugAutomapCaseTemp0_RandomBe
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_RunDebugAutomapCaseTemp0_RandomBelowC::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -424,7 +424,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01_SetTemp4
+    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -451,7 +451,7 @@ KeyWorldMonsterBaseRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01_SetTemp4::
+RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
     push hl
     ld a, e
     add $01

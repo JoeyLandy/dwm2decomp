@@ -189,7 +189,7 @@ GameMode6_Update::
     dw GameMode6_Update_Return
     dw GameMode6_Update_Return
     dw GameMode6_Update_SwapMonstersMenu
-    dw GameMode6_Update_SwapMonstersMenu_Case0D_SetScreenStep
+    dw GameMode6_Update_SwapMonstersMenu_SetScreenStep
     dw GameMode6_Update_SwitchEgg
     dw GameMode6_Update_SwitchMonster
 
@@ -321,7 +321,7 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable
     dw GameMode6_Update_SavePrompt_RunSaveGameSteps
     dw GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep
-    dw GameMode6_Update_SavePrompt_ShowYesNo_Case04_ReturnStub_51A3
+    dw GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_51A3
     dw GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D
     dw GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     dw GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg
@@ -331,7 +331,7 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_ReturnStub_51A3
     dw GameMode6_Update_SavePrompt_DecompressToVRAM
     dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep
-    dw GameMode6_Update_SavePrompt_ObjectScene_Case0E_GameMode6_Update_UpdateAndDrawSpriteSlots
+    dw GameMode6_Update_SavePrompt_ObjectScene_GameMode6_Update_UpdateAndDrawSpriteSlots
     dw GameMode6_Update_SavePrompt_SetScreenStep
 
 GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep::
@@ -428,7 +428,7 @@ GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ShowYesNo_Case04_ReturnStub_51A3::
+GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_51A3::
     ld a, $6c
     call QueueSoundEffect
     call GameMode6_Update_SavePrompt_ShowYesNo
@@ -596,7 +596,7 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
     jr .call_bg_map_address_at_scroll_bank24
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
@@ -670,7 +670,7 @@ GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ObjectScene_Case0E_GameMode6_Update_UpdateAndDrawSpriteSlots::
+GameMode6_Update_SavePrompt_ObjectScene_GameMode6_Update_UpdateAndDrawSpriteSlots::
     call GameMode6_Update_UpdateAndDrawSpriteSlots
     call GameMode6_Update_SavePrompt_ObjectScene
     ret
@@ -1356,7 +1356,7 @@ GameMode6_Update_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
-GameMode6_Update_SwapMonstersMenu_Case0D_SetScreenStep::
+GameMode6_Update_SwapMonstersMenu_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -1412,7 +1412,7 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     jr .skip
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
 
 .skip:
     ld de, TileRect_24_5B10
@@ -1581,7 +1581,7 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld a, [wBattleScene]
     cp $08
     jr z, .check_battle_scene
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
 
 .check_battle_scene:
     ld a, [wBattleScene]
@@ -1668,7 +1668,7 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     farcall EggServiceMenu_Bank1B
     ret
 
-GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM::
+GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM::
     ld a, [wLinkByteEB]
     and a
     ret nz
@@ -4391,7 +4391,7 @@ PriestMenu_PayForService_CopyBuffers::
     ld a, [wScreenSubStep]
     jumptable
     dw PriestMenu_PayForService_CopyBuffers_CopyBytes
-    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01_RestartMapMusic
+    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_SetBGPaletteUploadRequest
 
 PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld a, [wIsCGB]
@@ -4408,7 +4408,7 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld [wScreenSubStep], a
     ret
 
-PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01_RestartMapMusic::
+PriestMenu_PayForService_CopyBuffers_CopyBytes_SetBGPaletteUploadRequest::
     ld a, [wScreenCounter]
     sra a
     sra a

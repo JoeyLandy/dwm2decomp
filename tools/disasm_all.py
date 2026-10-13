@@ -519,7 +519,7 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
 
 
 ID_LOAD = re.compile(r"^\s+ld a, \[(\w+)\]$")
-ID_VARS = {"wBattleActionId": "SKILL", "wItemId": "ITEM"}  # D-007: RAM bytes that hold an id of that kind
+ID_VARS = {"wBattleActionId": "SKILL", "wItemId": "ITEM", "wBattleItemId": "ITEM"}  # D-007: RAM bytes that hold an id of that kind
 ACTION_CP = re.compile(r"^(\s+cp a, )\$([0-9A-F]{2})(\s*;.*)?$")
 ACTION_KEEPS_A = re.compile(r"^\s+(?:cp a, |jr (?:z|nz|c|nc), |jp (?:z|nz|c|nc), |ret (?:z|nz|c|nc)$)")
 
@@ -634,18 +634,20 @@ PURE_STRUCT = re.compile(r"^([A-Za-z_]\w*?)((?:_(?:Case|Sub|Shared)[0-9A-F]{2}|_
 QUOTE = re.compile(r";(?: [a-z ]+)? '([^']{3,})'")
 
 
-def name_steps_by_text(texts: list[str]) -> tuple[list[str], int]:
+def name_steps_by_text(texts: list[str], uncalled_only: bool = False) -> tuple[list[str], int]:
     """E-0340: a label whose name is still only structural (Parent_Case05, Parent_Sub01_Table2_Case00) and whose
     body, up to the next global label, quotes a string (message, battle text or string display) gets the first
     words of the first quote appended: GreatLogTalkEvents_TestFlagBit_Case20_GreatLogsMajorFacilities."""
     labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+    called = ({m for t in texts for m in re.findall(r"^\s+(?:call|farcall|farcall_b)(?: \w+,)? (\w+)", t, re.M)}
+              if uncalled_only else set())  # a late rename must not change a callee that local labels are named after
     rename: dict[str, str] = {}
     for text in texts:
         ls = text.split("\n")
         heads = [i for i, ln in enumerate(ls) if re.match(r"^[A-Za-z_]\w*::", ln) and "address name" not in ln]
         for j, i in enumerate(heads):
             lab = ls[i].split("::")[0]
-            if not PURE_STRUCT.match(lab):
+            if not PURE_STRUCT.match(lab) or lab in called:
                 continue
             end = heads[j + 1] if j + 1 < len(heads) else len(ls)
             body = [x for x in ls[i + 1:end] if x.startswith("    ")]
@@ -654,8 +656,10 @@ def name_steps_by_text(texts: list[str]) -> tuple[list[str], int]:
                 words = re.sub(r"[^A-Za-z0-9 ]", "", q.group(1).replace("0", "Hero ")).split()[:4]
                 tag = "".join(w[:1].upper() + w[1:] for w in words)
             else:  # else the first routine it calls that is not a generic helper and not already in the name
-                calls = [m.group(1) for x in body for m in [STEP_CALL.match(x)] if m]
-                tag = next((c for c in calls if not STEP_GENERIC.match(c) and c not in lab), "")
+                calls = [m.group(1) for x in body[:12] for m in [STEP_CALL.match(x)] if m]
+                root0 = re.split(r"_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d", lab)[0]
+                tag = next((c for c in calls if not STEP_GENERIC.match(c) and c not in lab and not c.startswith(root0)
+                            and not re.match(r"(?:Func|Jump|Data)_", c) and not PURE_STRUCT.match(c)), "")
                 if not tag:  # else its first write to a named RAM byte: Advance<X> (inc [hl]) or Set<X>
                     for k, x in enumerate(body):
                         mw = re.match(r"^\s+ldh? \[([wh]([A-Z]\w*))\], a", x)
@@ -666,13 +670,17 @@ def name_steps_by_text(texts: list[str]) -> tuple[list[str], int]:
                         if mw:
                             tag = "Set" + mw.group(2)
                             break
-            new = f"{lab}_{tag}" if tag else None
-            if new and new not in labels and new not in rename.values() and len(new) <= 100:
-                rename[lab] = new
+            if not tag:
+                continue
+            root = re.split(r"_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d", lab)[0]  # the routine's own name
+            for new in (f"{root}_{tag}", f"{lab}_{tag}"):  # shortest first; the full chain when that is taken
+                if new not in labels and new not in rename.values() and len(new) <= 110:
+                    rename[lab] = new
+                    break
     if not rename:
         return texts, 0
     pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
-    name_steps_by_text.renames = rename  # main() records them for tests/test_step_names.py
+    name_steps_by_text.renames = {**getattr(name_steps_by_text, "renames", {}), **rename}  # for tests/test_step_names.py
     return [pat.sub(lambda m: rename[m.group(1)], t) for t in texts], len(rename)
 
 
@@ -6024,6 +6032,8 @@ def main() -> int:
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
     texts, folded = fold_idioms(texts)
     log(f"folded idioms: {folded}")
+    texts, nsteps = name_steps_by_text(texts)  # E-0340, before branch targets are named after their callees
+    log(f"structural steps named after what they show, call or write: {nsteps}")
     texts, nlocal = localize_jump_labels(texts)
     log(f"branch targets made local labels: {nlocal}")
     rec_path = ROOT / "config/record_fields.json"
@@ -6050,8 +6060,9 @@ def main() -> int:
     bstat = {(b["byte"], b["bit"]): f"BSTAT{b['byte']}_{b['name']}" for b in bstat_cfg}
     texts, nbs = name_status_bits(texts, bstat)
     log(f"battle status bits named: {nbs} uses")
-    texts, nsteps = name_steps_by_text(texts)
-    log(f"structural steps named after the text they show: {nsteps}")
+    texts, nsteps2 = name_steps_by_text(texts, uncalled_only=True)  # E-0340: the rest, once every name is final
+    log(f"structural steps named in the final pass: {nsteps2}")
+
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")

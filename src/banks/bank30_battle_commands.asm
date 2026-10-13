@@ -17,7 +17,7 @@ RunBattleCommandEntry::
     dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_ChooseTargetForActor
-    dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04
+    dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
     dw RunBattleCommandEntry_CompareHLToBC
     dw RunBattleCommandEntry_AddWordAtHLToBC_Bank30
 
@@ -221,7 +221,7 @@ ChooseTargetForActor::
     ld d, [hl]
     ret
 
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04::
+RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
     ld a, $ff
@@ -230,18 +230,18 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld bc, $0009
     ld a, $ff
     call FillBytes
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld bc, $0012
     ld a, $00
     call FillBytes
     xor a
     ld [wActionQueuePos], a
     ld [wLoadSlot], a
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld a, l
-    ld [wBattleTemp7A], a
+    ld [wBattleTempPtrLo], a
     ld a, h
-    ld [wBattleTemp7B], a
+    ld [wBattleTempPtrHi], a
     ld de, $0800
 
 .loop:
@@ -257,7 +257,7 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld a, e
     call RunBattleCommandEntry_Case04_AdvanceRandom
     call RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
     ld [hli], a
@@ -268,16 +268,16 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld [hl], e
     ld hl, wLoadSlot
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
 
 .next:
     inc e
     dec d
     jp nz, .loop
-    call RunBattleCommandEntry_Case04_WaitBattleFlag92
+    call RunBattleCommandEntry_Case04_WaitBattleItemTarget
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -392,12 +392,12 @@ RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc::
     pop de
     ret
 
-RunBattleCommandEntry_Case04_WaitBattleFlag92::
-    ld a, [wBattleFlag92]
+RunBattleCommandEntry_Case04_WaitBattleItemTarget::
+    ld a, [wBattleItemTarget]
     cp $ff
     ret z
     ld bc, $07da
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
     ld [hli], a
@@ -412,15 +412,15 @@ RunBattleCommandEntry_CompareHLToBC::
     ld d, $08
 
 .loop:
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld a, l
-    ld [wBattleTemp7A], a
+    ld [wBattleTempPtrLo], a
     ld a, h
-    ld [wBattleTemp7B], a
+    ld [wBattleTempPtrHi], a
     ld a, [hli]
     ld b, [hl]
     ld c, a
-    ld hl, wBattleTemp7F
+    ld hl, wBattleTempBuf + $2
     deref_hl
     ld e, $00
 
@@ -435,9 +435,9 @@ RunBattleCommandEntry_CompareHLToBC::
     ld [wTargetEstimates], a
     ld a, b
     ld [wTargetEstimates + $1], a
-    ld a, [wBattleTemp7A]
+    ld a, [wBattleTempPtrLo]
     ld l, a
-    ld a, [wBattleTemp7B]
+    ld a, [wBattleTempPtrHi]
     ld h, a
     ld a, [wBattleDamageLo]
     ld [hli], a
@@ -460,9 +460,9 @@ RunBattleCommandEntry_CompareHLToBC::
     ld a, e
     cp d
     jr z, .next2
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
     deref_hl
     ld a, [hli]

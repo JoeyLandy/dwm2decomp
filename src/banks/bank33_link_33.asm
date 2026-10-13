@@ -759,9 +759,9 @@ RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
     dw RunLinkSession6Exchange_ChooseTeamMonster
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09
-    dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A_SetLinkSendByte
+    dw RunLinkSession6Exchange_BackTitleScreenSubState
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09_YourPalRefusedThe
+    dw RunLinkSession6Exchange_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo
     dw RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D_SetLinkSendByte
@@ -772,20 +772,20 @@ RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case00_AdvanceScreenState
+    dw RunLinkSession6Exchange_AdvanceScreenState
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case01_AdvanceScreenState
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case03_AdvanceScreenState
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D_RunScreenStateWhenNotFading_F1
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_SwapMonstersMenu
+    dw RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F
 
@@ -1044,7 +1044,7 @@ RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08::
+RunLinkSession6Exchange_BackTitleScreenSubState::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1067,7 +1067,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Cas
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1092,7 +1092,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Cas
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
@@ -1218,7 +1218,7 @@ BeginString_Bank07_Cat5::
     farcall BeginStringDisplay_Bank07
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case00_AdvanceScreenState::
+RunLinkSession6Exchange_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
     ret
@@ -1236,10 +1236,10 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case02::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01_PleaseWait
+    dw RunLinkSession6Exchange_PleaseWait
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case04_AdvanceModeChangeRequest
+    dw RunLinkSession6Exchange_AdvanceModeChangeRequest
 
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00_SetLinkSendByte::
     ld a, [wLinkMessage]
@@ -1252,7 +1252,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01_PleaseWait::
+RunLinkSession6Exchange_PleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1282,7 +1282,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03_SetLinkSendByte::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case04_AdvanceModeChangeRequest::
+RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1316,31 +1316,31 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case03_AdvanceScreenState::
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00_BreedMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00_BreedMenu
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02_DrawRecordListPageIndicators_1B
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00_BreedMenu
+    dw RunLinkSession6Exchange_BreedMenu
+    dw RunLinkSession6Exchange_BreedMenu
+    dw RunLinkSession6Exchange_DrawRecordListPageIndicators_1B
+    dw RunLinkSession6Exchange_BreedMenu
     dw CallDrawListEntriesCell5RecordPanel
     dw CallClearAndDrawListEntriesCell5Name
     dw CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_RunFunc6204FourTimes
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09_InfoOKYesN
+    dw RunLinkSession6Exchange_RunFunc6204FourTimes
+    dw RunLinkSession6Exchange_YourPalRefusedThe
+    dw RunLinkSession6Exchange_InfoOKYesN
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B_ChooseAMonsterFor
+    dw RunLinkSession6Exchange_ChooseAMonsterFor
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C_PleaseWait
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0D_SetLinkTimeoutLo
+    dw RunLinkSession6Exchange_SetLinkTimeoutLo
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E_YourPalRefusedThe
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F_AdvanceScreenState
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case00_BreedMenu::
+RunLinkSession6Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
     ret nz
     farcall BreedMenu
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02_DrawRecordListPageIndicators_1B::
+RunLinkSession6Exchange_DrawRecordListPageIndicators_1B::
     farcall DrawRecordListPageIndicators_1B
     ret
 
@@ -1366,7 +1366,7 @@ CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_RunFunc6204FourTimes::
+RunLinkSession6Exchange_RunFunc6204FourTimes::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1391,7 +1391,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_RunFunc6204FourTimes::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_menu_input_result
@@ -1462,7 +1462,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08_YourPalRefusedThe::
     call ShowStringA10_Bank33
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09_InfoOKYesN::
+RunLinkSession6Exchange_InfoOKYesN::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1553,7 +1553,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A_YourPalRefusedThe::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B_ChooseAMonsterFor::
+RunLinkSession6Exchange_ChooseAMonsterFor::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1585,7 +1585,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C_PleaseWait::
     call FinishPickedRecordsEntryAndStep_33
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0D_SetLinkTimeoutLo::
+RunLinkSession6Exchange_SetLinkTimeoutLo::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -1665,26 +1665,26 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F_AdvanceScreenState::
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case00_AdvanceScreenStep
+    dw RunLinkSession6Exchange_AdvanceScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case01_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02_SetLinkTimeoutLo
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04_FightInfoEx
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case05_BattleInTeamMode
+    dw RunLinkSession6Exchange_FightInfoEx
+    dw RunLinkSession6Exchange_BattleInTeamMode
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case07_TheBattleResultsWill
+    dw RunLinkSession6Exchange_TheBattleResultsWill
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08_YourPalRefusedThe
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09_PleaseWait
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A_AdvanceScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C_VerifySaveChecksum
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D_SetArg5ToListEntriesCell5
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0E_SetScreenStep
+    dw RunLinkSession6Exchange_VerifySaveChecksum
+    dw RunLinkSession6Exchange_SetArg5ToListEntriesCell5
+    dw RunLinkSession6Exchange_SetScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0F_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10_SetScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11_SetLinkSendByte
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case00_AdvanceScreenStep::
+RunLinkSession6Exchange_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
     xor a
@@ -1746,7 +1746,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03_SetLinkSendByte::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04_FightInfoEx::
+RunLinkSession6Exchange_FightInfoEx::
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
@@ -1813,7 +1813,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04_FightInfoEx::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case05_BattleInTeamMode::
+RunLinkSession6Exchange_BattleInTeamMode::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -1895,7 +1895,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06_YourPalRefusedThe::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case07_TheBattleResultsWill::
+RunLinkSession6Exchange_TheBattleResultsWill::
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -1989,7 +1989,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B_YourPalRefusedThe::
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C_VerifySaveChecksum::
+RunLinkSession6Exchange_VerifySaveChecksum::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2013,7 +2013,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C_VerifySaveChecksum::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D_SetArg5ToListEntriesCell5::
+RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ld a, [wLinkMessage]
     cp $05
     ret nz
@@ -2035,7 +2035,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D_SetArg5ToListEntriesCe
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0E_SetScreenStep::
+RunLinkSession6Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2124,7 +2124,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11_SetLinkSendByte::
     ld [wLinkMessage], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu::
+RunLinkSession6Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -2137,7 +2137,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case06_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D_RunScreenStateWhenNotFading_F1::
+RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
     cp $0e
@@ -2151,16 +2151,16 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D_RunScreenStateWhenNotFading_F
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00_ClearRecordPanelTiles
+    dw RunLinkSession6Exchange_ClearRecordPanelTiles
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01_AdvanceScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01_AdvanceScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03_SetArg5ToListEntriesCell5
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04
+    dw RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05_RunFunc6204FourTimes
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06_FightInfoEx
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case07_SetDefaultStringWindow_Bank33
+    dw RunLinkSession6Exchange_SetSpriteHideTile
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00_ClearRecordPanelTiles::
+RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
@@ -2287,7 +2287,7 @@ TileRect_33_5D5F::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04::
+RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
@@ -2358,7 +2358,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06_FightInfoEx::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case07_SetDefaultStringWindow_Bank33::
+RunLinkSession6Exchange_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -2384,13 +2384,13 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00_ClearRecordPanelTiles
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01_ListAvailableRecordsForSelection_Bank33
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02_DrawRecordListPageNames
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case03_CallDrawListEntriesCell5RecordPanel
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case04_CallClearAndDrawListEntriesCell5Name
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05
+    dw RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33
+    dw RunLinkSession6Exchange_DrawRecordListPageNames
+    dw RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel
+    dw RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name
+    dw RunLinkSession6Exchange_CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetDefaultStringWindow_Bank33
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetSpriteHideTile
 
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
@@ -2408,11 +2408,11 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00_ClearRecordPanelTiles:
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case03_CallDrawListEntriesCell5RecordPanel::
+RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01_ListAvailableRecordsForSelection_Bank33::
+RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -2433,18 +2433,18 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01_ListAvailableRecordsFo
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02_DrawRecordListPageNames::
+RunLinkSession6Exchange_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case04_CallClearAndDrawListEntriesCell5Name::
+RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05::
+RunLinkSession6Exchange_CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep::
     call CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
@@ -2484,7 +2484,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetDefaultStringWindow_Bank33::
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc

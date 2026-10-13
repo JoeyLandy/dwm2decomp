@@ -2307,7 +2307,7 @@ RunBattleActions_StatusChecks_CheckAction::
     jumptable
     dw RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3
     dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA
-    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02_ReadSlotAIModeIndexed_Bank32
+    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_SetBattleTarget
     dw RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches
     dw RunBattleActions_StatusChecks_CheckAction_CheckSkillMPCost
 
@@ -2512,7 +2512,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
     db $41, $42, $43, $44, $45, $46, $47, $49, $4a, $4b, $4d, $4e, $4f, $64, $65, $66
     db $67, $6b, $6c, $6d, $6f, $70, $71, $72, $73, $74, $79, $7a, $8e, $90, $ff
 
-RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02_ReadSlotAIModeIndexed_Bank32::
+RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_SetBattleTarget::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a

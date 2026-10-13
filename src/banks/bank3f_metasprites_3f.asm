@@ -4,7 +4,7 @@
 SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
     db $3f
 
-DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
+DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot::
     ld a, [wEffectTileOffset]
     cp $15
     jr nz, DrawEffectSpriteAtEffectSpriteX_Bank3F

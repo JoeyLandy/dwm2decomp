@@ -1866,7 +1866,7 @@ LinkKeyTrade::
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc
     dw LinkKeyTrade_WaitForPartner
     dw LinkKeyTrade_QueueSoundEffect
-    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case08_UpdateTwoChoiceCursor_Bank1D
+    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep
     dw LinkKeyTrade_ShowPleaseChooseTheKey
     dw LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B
     dw LinkKeyTrade_KeyCannotBeTraded
@@ -1877,24 +1877,24 @@ LinkKeyTrade::
     dw LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc
     dw LinkKeyTrade_KeysSameName
     dw LinkKeyTrade_ShowIsItOKTo
-    dw LinkKeyTrade_QueueSoundEffect_Case13_SetTwoChoiceCursor
+    dw LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor
     dw LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc
     dw LinkKeyTrade_QueueSoundEffect
-    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16_IsItOKTo
-    dw LinkKeyTrade_QueueSoundEffect_Case17_SetScreenStep
+    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16_SetScreenStep
+    dw LinkKeyTrade_QueueSoundEffect_SetScreenStep
     dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep
     dw LinkKeyTrade_WaitTextFlags
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByte
-    dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_Case1B_ReadyingTradePleaseWait
+    dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait
     dw LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE
-    dw LinkKeyTrade_KeyEntryAddressForListEntriesCell4_Case1D_SetScreenStep
+    dw LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep
     dw LinkKeyTrade_RunScreenCounterStep_61A7
-    dw LinkKeyTrade_WaitLinkMessage_Case1F_SetLinkReady
-    dw LinkKeyTrade_WaitLinkMessage_Case20_RunScreenCounterStep_61A7
-    dw LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_KeysWillNowBe
+    dw LinkKeyTrade_WaitLinkMessage_SetLinkReady
+    dw LinkKeyTrade_WaitLinkMessage_SetWorkBuf
+    dw LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_KeyEntryAddressForListEntriesCell4
     dw LinkKeyTrade_ShowPleaseWait
-    dw LinkKeyTrade_WaitTextFlags_Case23_SetLinkSendByte
-    dw LinkKeyTrade_WaitLinkMessage_Case24_SetLinkSendByte
+    dw LinkKeyTrade_WaitTextFlags_SetLinkSendByte
+    dw LinkKeyTrade_WaitLinkMessage_SetLinkSendByte
 
 LinkKeyTrade_BuildKeyListIndexListEntries::
     ld a, [wTextFlags]
@@ -2127,7 +2127,7 @@ LinkKeyTrade_WaitForPartner::
     dw LinkKeyTrade_WaitForPartner_ShowPleaseWait
     dw LinkKeyTrade_WaitForPartner_WaitTextFlags
     dw LinkKeyTrade_WaitForPartner_WaitLinkMessage
-    dw LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04_SetGameMode
+    dw LinkKeyTrade_WaitForPartner_WaitTextFlags_SetGameMode
 
 LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0::
     ld a, [wLinkMessage]
@@ -2193,7 +2193,7 @@ LinkKeyTrade_WaitForPartner_WaitLinkMessage::
     ld [wScreenSubStep], a
     ret
 
-LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04_SetGameMode::
+LinkKeyTrade_WaitForPartner_WaitTextFlags_SetGameMode::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -2236,7 +2236,7 @@ LinkKeyTrade_QueueSoundEffect::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case08_UpdateTwoChoiceCursor_Bank1D::
+LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -2569,7 +2569,7 @@ LinkKeyTrade_KeyEntryAddressForListEntriesCell4::
     ld [wLinkReady], a
     ret
 
-LinkKeyTrade_WaitTextFlags_Case23_SetLinkSendByte::
+LinkKeyTrade_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2899,7 +2899,7 @@ LinkKeyTrade_ShowIsItOKTo::
     call BeginString_Bank1B_Cat0
     ret
 
-LinkKeyTrade_QueueSoundEffect_Case13_SetTwoChoiceCursor::
+LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -3014,7 +3014,7 @@ ShowTwoChoiceBox65E9WhenTextIdle::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16_IsItOKTo::
+LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16_SetScreenStep::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -3072,7 +3072,7 @@ LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case16_IsItOKTo::
     ld [wTextWindowWidth], a
     ret
 
-LinkKeyTrade_QueueSoundEffect_Case17_SetScreenStep::
+LinkKeyTrade_QueueSoundEffect_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -3099,7 +3099,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_Case1B_ReadyingTradePleaseWait::
+LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait::
     ld a, $0b ; 'Readying trade… Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -3107,7 +3107,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_Case1B_ReadyingTradePleaseWait::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_KeyEntryAddressForListEntriesCell4_Case1D_SetScreenStep::
+LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep::
     ld a, [wLinkMessage]
     cp $02
     ret nz
@@ -3202,7 +3202,7 @@ LinkKeyTrade_RunScreenCounterStep_61A7::
     ld [wLinkReady], a
     ret
 
-LinkKeyTrade_WaitLinkMessage_Case1F_SetLinkReady::
+LinkKeyTrade_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -3215,7 +3215,7 @@ LinkKeyTrade_WaitLinkMessage_Case1F_SetLinkReady::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_WaitLinkMessage_Case20_RunScreenCounterStep_61A7::
+LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -3268,7 +3268,7 @@ LinkKeyTrade_WaitLinkMessage_Case20_RunScreenCounterStep_61A7::
     ld [wScreenStep], a
     ret
 
-LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_KeysWillNowBe::
+LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_KeyEntryAddressForListEntriesCell4::
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ld a, [wScreenStep]
@@ -3483,7 +3483,7 @@ LinkKeyTrade_ShowPleaseWait::
     call BeginString_Bank1B_Cat0
     ret
 
-LinkKeyTrade_WaitLinkMessage_Case24_SetLinkSendByte::
+LinkKeyTrade_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $05
     ret nz
@@ -4479,8 +4479,8 @@ EggServiceMenu_Bank1B_WaitForPartner::
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage
     dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03_SetLinkSendByte
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04_SetGameMode
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_SetGameMode
 
 EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
     ld a, [wLinkMessage]
@@ -4515,7 +4515,7 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
     ld [wScreenStep], a
     ret
 
-EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03_SetLinkSendByte::
+EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -4526,7 +4526,7 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04_SetGameMode::
+EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_SetGameMode::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -4568,7 +4568,7 @@ EggServiceMenu_Bank1B_PickRecords::
     dw EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B
     dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo
     dw EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN
-    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo
     dw EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B
     dw EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount
     dw EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D_YourPalRefusedTo
@@ -4883,7 +4883,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
     ld [wScreenStep], a
     ret
 
-EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A_YourPalRefusedTo::
+EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_arg5
@@ -5041,9 +5041,9 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D_YourPalRefusedTo::
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_WaitTextFlags
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait
-    dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait_Case05_PleaseWait
+    dw EggServiceMenu_Bank1B_PickRecords_PleaseWait
     dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_QueueSoundEffect
-    dw EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo_Case07_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_PickRecords_YourPalRefusedTo
 
 EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowChooseOneMoreMember::
     ld a, [wPickCount]
@@ -5190,7 +5190,7 @@ EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait::
     ld [wTwoChoiceCursor], a
     ret
 
-EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait_Case05_PleaseWait::
+EggServiceMenu_Bank1B_PickRecords_PleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5199,7 +5199,7 @@ EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowPleaseWait_Case05_PleaseWait:
     call ShowStringA10_Bank1B
     ret
 
-EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ShowYourPalRefusedTo_Case07_YourPalRefusedTo::
+EggServiceMenu_Bank1B_PickRecords_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -5259,23 +5259,23 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07_YourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo
     dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags
     dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case0C_YourPalRefusedTo
     dw EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_Case10_SetLinkReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11_StartingBattle
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBattle
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
     dw EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc
 
-EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11_StartingBattle::
+EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBattle::
     ld a, $09 ; 'Starting battle…'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
@@ -5291,7 +5291,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
     ld [wScreenStep], a
     ret
 
-EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A_SetScreenStep::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -5408,7 +5408,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
     ld [wLinkReady], a
     ret
 
-EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_Case10_SetLinkReady::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -5473,7 +5473,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     ld [wScreenStep], a
     ret
 
-EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07_YourPalRefusedTo::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1

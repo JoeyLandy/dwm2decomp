@@ -75,7 +75,7 @@ GameMode4_Init_Sub01_FillBytes::
     ld [wEffectId], a
     ld [wQueuedActionId], a
     ld [wBattleByteAD], a
-    ld [wBattleFlag92], a
+    ld [wBattleItemTarget], a
     ld hl, wMenuState
     ld bc, $0008
     xor a

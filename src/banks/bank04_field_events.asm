@@ -841,9 +841,9 @@ UpdateSpriteSlots_Loop::
     dw UpdateSpriteSlots_RestoreRegisters
     dw UpdateSpriteSlots_Return
     dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
-    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03_RunPendingFieldEventType0AOrOther
+    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03
     dw UpdateSpriteSlots_WriteTemp0AndTemp1
-    dw UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_SetTemp0
+    dw UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0
 
 UpdateSpriteSlots_Restore::
     pop hl
@@ -1121,7 +1121,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
 UpdateSpriteSlots_Return::
     ret
 
-UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03_RunPendingFieldEventType0AOrOther::
+UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03::
     pop hl
     push hl
     ld a, $0d
@@ -1388,16 +1388,16 @@ UpdateSpriteSlots_WriteTemp0AndTemp1::
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    jr UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_Restore
+    jr UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
 
-UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_SetTemp0::
+UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
     ld hl, $48fa
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
-UpdateSpriteSlots_WriteTemp0AndTemp1_Case05_Restore::
+UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
     pop hl
     ld a, $0d
     add_a_to_hl
@@ -3255,7 +3255,7 @@ ReadableTalkEvents::
     dw Talk0046_ThanksForComingBy
     dw TalkMsg0047_HeroReadTheNoticeWeGuarantee
     dw TalkScript5441_HeroCheckedThePedestalIts
-    dw ReadableTalkEvents_TestFlagBit_Case0A_StartScriptAtHL_B04
+    dw ReadableTalkEvents_TestFlagBit_SetDataBank
     dw TalkMsg0233_HeroCheckedTheBookshelfMonster
     dw TalkMsg0234_HeroCheckedTheBookshelfMonster
     dw TalkMsg0235_HeroCheckedTheBookshelfPersonalities
@@ -3268,7 +3268,7 @@ ReadableTalkEvents::
     dw TalkMsg023C_HeroCheckedTheBookshelfAccessory
     dw TalkMsg023D_HeroCheckedTheBookshelfHidden
     dw TalkMsg023E_HeroReadTheNoticePleaseReturn
-    dw ReadableTalkEvents_TestFlagBit_Case17_HeroReadTheSign
+    dw ReadableTalkEvents_TestFlagBit_HeroReadTheSign
     dw TalkMsg0010_HeroPeeredIntoTheVaseFreshly
     dw TalkMsg000F_HeroPeeredIntoTheBarrelIt
     dw MapEventCountKeysAndStartScript5039
@@ -3421,7 +3421,7 @@ TalkScript5441_HeroCheckedThePedestalIts::
     call StartScriptAtHL_B04
     ret
 
-ReadableTalkEvents_TestFlagBit_Case0A_StartScriptAtHL_B04::
+ReadableTalkEvents_TestFlagBit_SetDataBank::
     ldh a, [hPlayerX]
     cp $40
     jr z, .clear_sprite_slots
@@ -3573,7 +3573,7 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
     call StartMessageCommand09HL_B04
     ret
 
-ReadableTalkEvents_TestFlagBit_Case17_HeroReadTheSign::
+ReadableTalkEvents_TestFlagBit_HeroReadTheSign::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -3735,8 +3735,8 @@ YoldTalkEvents::
     dw TalkMsg080D_YouCouldMeetMermaidsHere
     dw TalkMsg080E_ImFromThePortInThe
     dw TalkMsg080F_YoureNotSupposedToGoNear
-    dw YoldTalkEvents_TestFlagBit_Case13_I
-    dw YoldTalkEvents_StartScriptAtHL_B04_Case14_SetDataBank
+    dw YoldTalkEvents_TestFlagBit_FindPartyMemberWithSkill76To7DOr92
+    dw YoldTalkEvents_StartScriptAtHL_B04_SetDataBank
     dw TalkScript5B9B_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
@@ -3748,7 +3748,7 @@ YoldTalkEvents::
     dw TalkScript5BA8_HowMayOurChurchServeYou
     dw TalkMsg0821_AllSortsOfPeopleComeHere
     dw TalkMsg0822_IWentToPolonaAWhile
-    dw YoldTalkEvents_StartScriptAtHL_B04_Case20_SetScreenTableIndex
+    dw YoldTalkEvents_StartScriptAtHL_B04_SetScreenTableIndex
     dw TalkMsg0824_ThereIsALighthouseToThe
     dw TalkMsg0825_MyShipSankInTheEastern
     dw TalkMsg0826_TheOldManInTheTaverns
@@ -3768,7 +3768,7 @@ YoldTalkEvents::
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
     dw YoldTalkEvents_ShowHnnnrHicGnnZzz
-    dw YoldTalkEvents_TestFlagBit_Case34_StartScriptAtHL_B04
+    dw YoldTalkEvents_TestFlagBit_StartScriptAtHL_B04
     dw ChestItem_Rib
     dw ChestItem_LoveWater
     dw ChestItem_LoveWater_Flag0069
@@ -3785,14 +3785,14 @@ YoldTalkEvents::
     dw TalkMsg0852_TheMoonRockFellFromTheSky
     dw TalkMsg0853_ThePiratesSankWithTheirShip
     dw TalkMsg0854_WeMermaidsArePeacefulBeings
-    dw YoldTalkEvents_TestFlagBit_Case45_TheMoonRockIsOn
+    dw YoldTalkEvents_TestFlagBit_Case45_StartScriptAtHL_B04
     dw TalkScript5C88
     dw TalkScript5C8A_HowCouldWeDieBeforeEnjoying
     dw TalkScript5C94_TheTreasuresAreOursNoOne
     dw TalkScript5C9E_ItNagsAndNagsThatWe
     dw YoldTalkEvents_TestFlagBit_Case4A_StartScriptAtHL_B04
     dw YoldTalkEvents_ShowHeroCheckedTheTreasure
-    dw YoldTalkEvents_StartScriptAtHL_B04_Case4C_SetFlagBit
+    dw YoldTalkEvents_StartScriptAtHL_B04_SetFlagBit
     dw YoldTalkEvents_SetSpriteSlotsPlus7
     dw ChestItem_LogTwig
     dw YoldTalkEvents_ShowHeroCheckedThePedestal
@@ -3822,7 +3822,7 @@ YoldTalkEvents::
     dw BarrelItem_INTseed
     dw TalkMsg0862_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
-    dw YoldTalkEvents_StartScriptAtHL_B04_Case6A_FindTemp0InInventoryList
+    dw YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
     dw TalkMsg00FF_Composing
     dw TalkScript5D44_ThickSuctionCuppedTentacles
     dw YoldTalkEvents_TestFlagBit_Case6D_StartScriptAtHL_B04
@@ -4042,7 +4042,7 @@ TalkMsg080F_YoureNotSupposedToGoNear::
     call StartMessageCommand09HL_B04
     ret
 
-YoldTalkEvents_TestFlagBit_Case13_I::
+YoldTalkEvents_TestFlagBit_FindPartyMemberWithSkill76To7DOr92::
     ld de, $006f
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
@@ -4099,7 +4099,7 @@ YoldTalkEvents_TestFlagBit_Case13_I::
     ret
 
 ; starts Script_5B94: '*: Welcome to our inn!'
-YoldTalkEvents_StartScriptAtHL_B04_Case14_SetDataBank::
+YoldTalkEvents_StartScriptAtHL_B04_SetDataBank::
     ld hl, Script_5B94
     call StartScriptAtHL_B04
     ld a, $10
@@ -4213,7 +4213,7 @@ TalkMsg0822_IWentToPolonaAWhile::
     call StartMessageCommand09HL_B04
     ret
 
-YoldTalkEvents_StartScriptAtHL_B04_Case20_SetScreenTableIndex::
+YoldTalkEvents_StartScriptAtHL_B04_SetScreenTableIndex::
     ld a, $06
     ld [wScreenTableIndex], a
     ld a, $10
@@ -4536,7 +4536,7 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
     scf
     ret
 
-YoldTalkEvents_TestFlagBit_Case34_StartScriptAtHL_B04::
+YoldTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
     jr c, .call_start_script_at_hl_b042
@@ -4760,7 +4760,7 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
     call StartMessageCommand09HL_B04
     ret
 
-YoldTalkEvents_TestFlagBit_Case45_TheMoonRockIsOn::
+YoldTalkEvents_TestFlagBit_Case45_StartScriptAtHL_B04::
     ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -4864,7 +4864,7 @@ YoldTalkEvents_ShowHeroCheckedTheTreasure::
     ret
 
 ; starts Script_5CCA: '0 checked the crate. There was'
-YoldTalkEvents_StartScriptAtHL_B04_Case4C_SetFlagBit::
+YoldTalkEvents_StartScriptAtHL_B04_SetFlagBit::
     ld hl, Script_5CCA
     call StartScriptAtHL_B04
     ld de, $0077
@@ -5216,7 +5216,7 @@ TalkMsg0864_HeroCheckedTheLedgerVoyage::
     ret
 
 ; starts Script_5CCF
-YoldTalkEvents_StartScriptAtHL_B04_Case6A_FindTemp0InInventoryList::
+YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
     ld hl, Script_5CCF
     call StartScriptAtHL_B04
     ld a, $31
@@ -5288,8 +5288,8 @@ KalkaTalkEvents::
     dw TalkMsg0141_IfYouWantToGetIn
     dw TalkMsg0142_DidYouWantSomethingHoney
     dw TalkMsg0143_WhenWeGetAHotSpell
-    dw KalkaTalkEvents_TestFlagBit_Case17_StartScriptAtHL_B04
-    dw KalkaTalkEvents_TestFlagBit_Case18_OhYouNeedA
+    dw KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04
+    dw KalkaTalkEvents_TestFlagBit_SetWStepArrivedIfPartyHasField55Bit7
     dw TalkMsg014F_HeroPeeredIntoTheVaseIt
     dw VaseItem_Antidote_Flag0047
     dw TalkMsg0137_HeroCheckedTheOvenASharp_046456
@@ -5304,11 +5304,11 @@ KalkaTalkEvents::
     dw TalkMsg0157_HehDidYouSeeTheLooks
     dw TalkMsg0158_ThisIsTheKingsTreasuryNo
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
-    dw KalkaTalkEvents_TestFlagBit_Case27_OurKingWorkedTo
+    dw KalkaTalkEvents_TestFlagBit_Case27_StartScriptAtHL_B04
     dw TalkMsg015A_HisMajestyIsHonestAndMost
     dw KalkaTalkEvents_StartScriptAtHL_B04_Case29
     dw TalkMsg015F_HeroCheckedTheDresserThere
-    dw KalkaTalkEvents_TestFlagBit_Case2B_KingInvestigateWhatConcerns
+    dw KalkaTalkEvents_TestFlagBit_KingInvestigateWhatConcerns
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
     dw TalkMsg0167_HumphAMirageLakeHeSays
     dw KalkaTalkEvents_TestFlagBit_Case2E_StartScriptAtHL_B04
@@ -5321,8 +5321,8 @@ KalkaTalkEvents::
     dw ChestItem_WarpWing
     dw ChestItem_AGL
     dw KalkaTalkEvents_TestFlagBit_Case37_StartScriptAtHL_B04
-    dw KalkaTalkEvents_TestFlagBit_Case38_Don
-    dw KalkaTalkEvents_StartScriptAtHL_B04_Case39_FindTemp0InInventoryList
+    dw KalkaTalkEvents_TestFlagBit_FindTemp0InInventoryList
+    dw KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList
     dw TalkMsg0194_ThievesDroveUsFromOurHomes
     dw TalkMsg0195_TheLeaderOfTheThievesIs
     dw KalkaTalkEvents_RunFieldCommandTemp0
@@ -5726,7 +5726,7 @@ TalkMsg0143_WhenWeGetAHotSpell::
     call StartMessageCommand09HL_B04
     ret
 
-KalkaTalkEvents_TestFlagBit_Case17_StartScriptAtHL_B04::
+KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld a, $1f
     ld [wDataBank], a
     ld de, $0041
@@ -5743,7 +5743,7 @@ KalkaTalkEvents_TestFlagBit_Case17_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-KalkaTalkEvents_TestFlagBit_Case18_OhYouNeedA::
+KalkaTalkEvents_TestFlagBit_SetWStepArrivedIfPartyHasField55Bit7::
     ld de, EVENT_DID_YOU_SAY_YES_YES
     call TestFlagBit
     jr c, .check_party_count
@@ -5987,7 +5987,7 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
     call StartMessageCommand09HL_B04
     ret
 
-KalkaTalkEvents_TestFlagBit_Case27_OurKingWorkedTo::
+KalkaTalkEvents_TestFlagBit_Case27_StartScriptAtHL_B04::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b042
@@ -6051,7 +6051,7 @@ TalkMsg015F_HeroCheckedTheDresserThere::
     call StartMessageCommand09HL_B04
     ret
 
-KalkaTalkEvents_TestFlagBit_Case2B_KingInvestigateWhatConcerns::
+KalkaTalkEvents_TestFlagBit_KingInvestigateWhatConcerns::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b044
@@ -6275,7 +6275,7 @@ KalkaTalkEvents_TestFlagBit_Case37_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-KalkaTalkEvents_TestFlagBit_Case38_Don::
+KalkaTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     ret nc
@@ -6321,7 +6321,7 @@ KalkaTalkEvents_TestFlagBit_Case38_Don::
     ret
 
 ; starts Script_5B37
-KalkaTalkEvents_StartScriptAtHL_B04_Case39_FindTemp0InInventoryList::
+KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
     ld a, [wStoryFlags + $61]
     set 4, a
     ld [wStoryFlags + $61], a
@@ -6476,7 +6476,7 @@ DarckTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
     dw DarckTalkEvents_TestFlagBit
-    dw DarckTalkEvents_TestFlagBit_Case01_StartScriptAtHL_B04
+    dw DarckTalkEvents_TestFlagBit_StartScriptAtHL_B04
 
 DarckTalkEvents_TestFlagBit::
     ld de, EVENT_TAKE_ITEM
@@ -6515,7 +6515,7 @@ DarckTalkEvents_TestFlagBit::
     ret
 
 ; starts Script_61E9: 'Darck: Fawahahah! You chased your treasures'
-DarckTalkEvents_TestFlagBit_Case01_StartScriptAtHL_B04::
+DarckTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld de, EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6561,14 +6561,14 @@ FieldTalkEvents::
     dw TalkScript5169
     dw TalkScript516B
     dw FieldTalkEvents_TestFlagBit
-    dw FieldTalkEvents_TestFlagBit_Case1C_StartScriptAtHL_B04
+    dw FieldTalkEvents_TestFlagBit_StartScriptAtHL_B04
     dw TalkScript5171
     dw TalkScript5173
     dw TalkScript5164
     dw TalkScript515B
     dw TalkScript515D
     dw FieldTalkEvents_StartScriptAtHL_B04
-    dw FieldTalkEvents_StartScriptAtHL_B04_Case23_SetScriptParam1
+    dw FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1
     dw FieldTalkEvents_StartScriptAtHL_B04_Case24_SetScriptParam1
     dw FieldTalkEvents_StartScriptAtHL_B04_Case25
     dw FieldTalkEvents_SetFollowerDelay
@@ -6588,7 +6588,7 @@ TalkScript5171::
     call StartScriptAtHL_B04
     ret
 
-FieldTalkEvents_TestFlagBit_Case1C_StartScriptAtHL_B04::
+FieldTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
@@ -6688,7 +6688,7 @@ FieldTalkEvents_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-FieldTalkEvents_StartScriptAtHL_B04_Case23_SetScriptParam1::
+FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -6871,7 +6871,7 @@ ElvenVillageTalkEvents::
     jumptable
     dw ElvenVillageTalkEvents_TestFlagBit
     dw ElvenVillageTalkEvents_ShowYoureAHumanHow
-    dw ElvenVillageTalkEvents_TestFlagBit_Case02_CyalWe
+    dw ElvenVillageTalkEvents_TestFlagBit_CyalWe
     dw TalkMsg0708_HelloMunchkinEnjoyYourStay
     dw TalkMsg0709_AHumanHereItsBeenSeveral
     dw TalkMsg070A_YoureNotLikeUsYouScare
@@ -6881,7 +6881,7 @@ ElvenVillageTalkEvents::
     dw TalkMsg0752_IveHeardThatHumansAre
     dw ElvenVillageTalkEvents_StartScriptAtHL_B04
     dw ElvenVillageTalkEvents_ShowWellWellItIs
-    dw ElvenVillageTalkEvents_TestFlagBit_Case0C_StartScriptAtHL_B04
+    dw ElvenVillageTalkEvents_TestFlagBit_StartScriptAtHL_B04
     dw TalkMsg0723_TchWeHaveToEatThe
     dw ElvenVillageTalkEvents_TestFlagBit_Case0E_StartScriptAtHL_B04
     dw TalkMsg072F_ThisIsElvensLookoutPostWe
@@ -7140,7 +7140,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
     call StartMessageCommand09HL_B04
     ret
 
-ElvenVillageTalkEvents_TestFlagBit_Case02_CyalWe::
+ElvenVillageTalkEvents_TestFlagBit_CyalWe::
     ld de, $0152
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b043
@@ -7457,7 +7457,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     ret
 
 ; starts Script_626A: '*: Master AgDevil, a human, ruff!'
-ElvenVillageTalkEvents_TestFlagBit_Case0C_StartScriptAtHL_B04::
+ElvenVillageTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld de, EVENT_CYAL_EEEK_HERO_HELP_ME
     call TestFlagBit
     ret nc
@@ -9736,7 +9736,7 @@ KeyWorldTalkEvents::
     jumptable
     dw TalkScript5133
     dw KeyWorldTalkEvents_StartScriptAtHL_B04
-    dw KeyWorldTalkEvents_StartScriptAtHL_B04_Case02_IsPlayerAtKeyWorldGoalKindTriggerColumn
+    dw KeyWorldTalkEvents_StartScriptAtHL_B04_IsPlayerAtKeyWorldGoalKindTriggerColumn
     dw TalkScript5135
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
@@ -9786,7 +9786,7 @@ KeyWorldTalkEvents_StartScriptAtHL_B04::
     ret
 
 ; starts Script_65AA: 'Warubou: Wa-hey! You did it, 0!'
-KeyWorldTalkEvents_StartScriptAtHL_B04_Case02_IsPlayerAtKeyWorldGoalKindTriggerColumn::
+KeyWorldTalkEvents_StartScriptAtHL_B04_IsPlayerAtKeyWorldGoalKindTriggerColumn::
     ld a, [wMapType]
     cp $84
     jr nz, .call_is_player_at_key_world_goal_kind_trigger

@@ -883,7 +883,7 @@ SetWStepArrivedIfPartyHasField55Bit7::
     ld [rRAMG], a
     ret
 
-GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01_SetStepArrived::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -1472,10 +1472,10 @@ RunScriptSubStep::
     dw RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc
     dw RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
     dw RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc
-    dw RunScriptSubStep_AddStepDeltaToPointedByte_Case06_SetStepPtrLo
-    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07_SetFollowerRecords
+    dw RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo
+    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords
 
-RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07_SetFollowerRecords::
+RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
     ld a, $01
     ld [wFollowerRecords], a
     ld a, [wFollowerRecords + $1]
@@ -1517,7 +1517,7 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07_SetFollowerRecord
     inc [hl]
     ret
 
-RunScriptSubStep_AddStepDeltaToPointedByte_Case06_SetStepPtrLo::
+RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
@@ -1824,19 +1824,19 @@ RunSceneScriptSubStep::
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
     dw RunSceneScriptSubStep_CopyBytes
     dw RunSceneScriptSubStep_FullyHealParty
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04_SetObject5
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5
     dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06_DecompressToVRAM
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_NextTableByte
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B_DrawAnimatedMetaSprite1B
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E_SetScriptParam0
-    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F_CycleSpriteFloatYDown
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0
+    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_AdvanceScriptStep
 
 RunSceneScriptSubStep_AdvanceScriptStep::
@@ -1872,7 +1872,7 @@ StartMessage5AndAdvanceScriptSubStep::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F_CycleSpriteFloatYDown::
+RunSceneScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo
@@ -1934,7 +1934,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F_CycleSpriteFloatYDown::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E_SetScriptParam0::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -1944,7 +1944,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E_SetScriptParam0::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D_DrawAnimatedMetaSprite1B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2067,7 +2067,7 @@ RunSceneScriptSubStep_NextTableByte::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2141,7 +2141,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06_DecompressToVRAM::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2178,7 +2178,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04_SetObject5::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc

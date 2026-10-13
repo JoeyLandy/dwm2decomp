@@ -367,7 +367,7 @@ LoadMapHeaderByMapType::
     jumptable
     dw LoadKeyWorldTilesetAndHeader
     dw LoadMapHeaderByMapType_DecompressToVRAM
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02_SetTemp0
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
     dw LoadMapType5TilesetAndHeader
@@ -581,7 +581,7 @@ LoadMapHeaderByMapType_DecompressToVRAM::
     ld [wMapMoveType], a
     ret
 
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02_SetTemp0::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -714,7 +714,7 @@ LoadMapScreen_ReadMapType::
     jumptable
     dw LoadMapScreen_Sub03_WriteSVBK
     dw LoadMapScreen_Sub03_Return
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02_SetTemp0
+    dw LoadMapScreen_SetTemp0
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
     dw LoadMapScreen_Sub03_WriteTemp0AndSVBK
@@ -1556,7 +1556,7 @@ LoadMapScreen_Sub03_Return::
     ret
     db $c9
 
-LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02_SetTemp0::
+LoadMapScreen_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]

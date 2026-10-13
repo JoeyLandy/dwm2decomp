@@ -255,10 +255,10 @@ RunBattleCommandEntry_BankA1::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01_SetBattleActor
+    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetBattleActor
     dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_BankA1_ChooseActionTarget
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04
+    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
     dw RunBattleCommandEntry_BankA1_CompareHLToBC
     dw RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1
 
@@ -296,7 +296,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
     inc [hl]
     ret
 
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01_SetBattleActor::
+RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetBattleActor::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp $08
@@ -355,7 +355,7 @@ RunBattleCommandEntry_BankA1_ChooseActionTarget::
     inc [hl]
     ret
 
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04::
+RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
     ld a, $ff
@@ -364,18 +364,18 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld bc, $0009
     ld a, $ff
     call FillBytes
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld bc, $0012
     ld a, $00
     call FillBytes
     xor a
     ld [wActionQueuePos], a
     ld [wLoadSlot], a
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld a, l
-    ld [wBattleTemp7A], a
+    ld [wBattleTempPtrLo], a
     ld a, h
-    ld [wBattleTemp7B], a
+    ld [wBattleTempPtrHi], a
     ld de, $0800
 
 .loop:
@@ -391,7 +391,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld a, e
     call RunBattleCommandEntry_BankA1_Case04_RandomInRange
     call RunBattleCommandEntry_BankA1_Case04_WriteRecordBufferAndBattleArg0Etc
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
     ld [hli], a
@@ -402,9 +402,9 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04::
     ld [hl], e
     ld hl, wLoadSlot
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
 
 .next:
@@ -419,15 +419,15 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
     ld d, $08
 
 .loop:
-    ld hl, wBattleTemp7D
+    ld hl, wBattleTempBuf
     ld a, l
-    ld [wBattleTemp7A], a
+    ld [wBattleTempPtrLo], a
     ld a, h
-    ld [wBattleTemp7B], a
+    ld [wBattleTempPtrHi], a
     ld a, [hli]
     ld b, [hl]
     ld c, a
-    ld hl, wBattleTemp7F
+    ld hl, wBattleTempBuf + $2
     deref_hl
     ld e, $00
 
@@ -442,9 +442,9 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
     ld [wTargetEstimates], a
     ld a, b
     ld [wTargetEstimates + $1], a
-    ld a, [wBattleTemp7A]
+    ld a, [wBattleTempPtrLo]
     ld l, a
-    ld a, [wBattleTemp7B]
+    ld a, [wBattleTempPtrHi]
     ld h, a
     ld a, [wBattleDamageLo]
     ld [hli], a
@@ -467,9 +467,9 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
     ld a, e
     cp d
     jr z, .next2
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
-    ld hl, wBattleTemp7A
+    ld hl, wBattleTempPtrLo
     inc [hl]
     deref_hl
     ld a, [hli]
@@ -855,11 +855,11 @@ RunWorldMapState::
     dw RunWorldMapState_CopyScrollToHardware
     dw RunWorldMapState_WriteWorldMapState
     dw RunWorldMapState_UploadBGPalettes
-    dw RunWorldMapState_CopyScrollToHardware_Case04_DecompressToVRAM
+    dw RunWorldMapState_CopyScrollToHardware_DecompressToVRAM
     dw RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest
     dw RunWorldMapState_ToEnterGameMode1WithDefaultPalettes
 
-RunWorldMapState_CopyScrollToHardware_Case04_DecompressToVRAM::
+RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -2580,12 +2580,12 @@ RunWorldMapState_CopyScrollToHardware::
     call RunWorldMapState_Case01_WriteVRAMByteInc
     ld a, [wMapType]
     bit 7, a
-    jr nz, .call_run_world_map_state_case01_centered_bg
+    jr nz, .call_run_world_map_state_set_temp0
     call RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC
     jr .skip
 
-.call_run_world_map_state_case01_centered_bg:
-    call RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01_RunWorldMapState_Case01_Sub01_WriteTemp0
+.call_run_world_map_state_set_temp0:
+    call RunWorldMapState_SetTemp0
 
 .skip:
     ld hl, wDMGPaletteBGP
@@ -2662,7 +2662,7 @@ RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
     call EnterGameMode1WithDefaultPalettes
     ret
 
-RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01_RunWorldMapState_Case01_Sub01_WriteTemp0::
+RunWorldMapState_SetTemp0::
     ld a, [wKeyWorldHeight]
     ld c, a
     ld a, [wKeyWorldWidth]

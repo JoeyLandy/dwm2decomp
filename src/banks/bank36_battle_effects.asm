@@ -1615,7 +1615,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
     ret nz
     ld a, [wBattleSubStep]
     or a
-    jr z, .call_resolve_step_damage_message_sub04_sub01
+    jr z, .call_resolve_step_damage_message_set_slot
     ld hl, wBattleSubPhase
     inc [hl]
     xor a
@@ -1643,8 +1643,8 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
     call ResolveStepDamageMessage_SetSubPhase3AndRestartResolve
     ret
 
-.call_resolve_step_damage_message_sub04_sub01:
-    call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01_SetSlotStatus6Bit7
+.call_resolve_step_damage_message_set_slot:
+    call ResolveStepDamageMessage_SetSlotStatus6Bit7
     ld a, [wResolveMsgFlags]
     bit 4, a
     ld a, $87
@@ -3534,7 +3534,7 @@ ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call RollChanceByFlagsAtHLSided
     ret
 
-ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01_ActionEffect_Transform_Sub01_GetBaseHP::
+ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
     ld a, [wBattleTarget]
     call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
@@ -3636,7 +3636,7 @@ ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01_ActionEffect_Trans
     ld [wBattleArg3], a
     farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04_LoadMonsterRecord
+    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04
     ld a, [wBattleActor]
     ld de, wBattleSkillsPrefix
     swap a
@@ -4557,9 +4557,9 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ld hl, wBattleATK
     call AddDoubleAToHL_Bank36
     ld a, l
-    ld [wBattleTemp7F], a
+    ld [wBattleTempBuf + $2], a
     ld a, h
-    ld [wBattleTemp80], a
+    ld [wBattleTempBuf + $3], a
     deref_hl
     push hl
     ld c, l
@@ -4574,15 +4574,15 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ld c, l
     call ShiftBCRight2
     add hl, bc
-    jr .read_battle_temp7_f
+    jr .read_battle_temp_buf
 
 .call_scale_hl_to75_percent:
     call ScaleHLTo75Percent
 
-.read_battle_temp7_f:
-    ld a, [wBattleTemp7F]
+.read_battle_temp_buf:
+    ld a, [wBattleTempBuf + $2]
     ld c, a
-    ld a, [wBattleTemp80]
+    ld a, [wBattleTempBuf + $3]
     ld b, a
     ld a, l
     ld [bc], a
@@ -4612,9 +4612,9 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ld a, h
     ld [wBattleDamageHi], a
     pop hl
-    ld a, [wBattleTemp7F]
+    ld a, [wBattleTempBuf + $2]
     ld c, a
-    ld a, [wBattleTemp80]
+    ld a, [wBattleTempBuf + $3]
     ld b, a
     ld a, l
     ld [bc], a
@@ -6114,7 +6114,7 @@ ActionEffect_Transform_Sub01_BattlerRecordFieldAddress::
 .return:
     ret
 
-ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04_LoadMonsterRecord::
+ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04::
     ld b, a
     and $03
     cp $03
@@ -7299,7 +7299,7 @@ ActionEffect_Slow::
     call RollVsSlowResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
-ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01_SetSlotStatus6Bit7::
+ResolveStepDamageMessage_SetSlotStatus6Bit7::
     call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA
     jr nc, .skip
     ld a, [wBattleTarget]
@@ -7698,7 +7698,7 @@ ActionEffect_Transform::
     ld l, $52
     ld bc, $4090
     call ClearDamageAndStoreResolveMsgFlags_Bank36
-    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01_ActionEffect_Transform_Sub01_GetBaseHP
+    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01
     ld a, [wBattleActor]
     ld hl, wSideControl
     add_a_to_hl

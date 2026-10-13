@@ -19,14 +19,14 @@ LibraryMenu::
     dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc
     dw LibraryMenu_LoadMapHeader
     dw LibraryMenu_CopyBytesDEToHL_Bank0C
-    dw LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08_DrawRecordListNameTiles_Bank1D
+    dw LibraryMenu_DrawRecordListNameTiles_Bank1D
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_GridIndexFromGridCursorXGridCursorY
     dw LibraryMenu_WriteScreenState
-    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C_LibraryMenu_Case0C_WriteListEntries
-    dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D_LibraryMenu_HLToDecimalDigits
+    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY
+    dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits
     dw LibraryMenu_StoreBAtWordTableEntry_Bank0C
-    dw LibraryMenu_WriteScreenState_Case0F_LibraryMenu_FillTileRectWithArg1Tile
+    dw LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile
     dw LibraryMenu_ShowMonsterEntry
 
 LibraryMenu_WriteMessageModeAndScreenStateEtc::
@@ -562,7 +562,7 @@ LibraryMenu_CopyBytesDEToHL_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08_DrawRecordListNameTiles_Bank1D::
+LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ld hl, $2940
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
@@ -648,7 +648,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_LibraryMenu_TestBitInFieldAtArg3
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -661,7 +661,7 @@ LibraryMenu_WriteScreenState::
     ld [wScreenState], a
     ret
 
-LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C_LibraryMenu_Case0C_WriteListEntries::
+LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .call_grid_index_from_grid_cursor_x_grid
@@ -888,7 +888,7 @@ LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_ReadGrid2CursorX::
 LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00, $29, $01, $69, $01
 
-LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D_LibraryMenu_HLToDecimalDigits::
+LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
     ld de, TileRect_0C_57EA
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
@@ -936,7 +936,7 @@ LibraryMenu_StoreBAtWordTableEntry_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_WriteScreenState_Case0F_LibraryMenu_FillTileRectWithArg1Tile::
+LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile::
     call LibraryMenu_FillTileRectWithArg1Tile
     call LibraryMenu_WriteSVBK
     ld a, [wScreenState]
@@ -950,14 +950,14 @@ LibraryMenu_ShowMonsterEntry::
     ld a, [wScreenStep]
     jumptable
     dw LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
-    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01_LoadBGPalettesFrom5E04
+    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo
     dw LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params
     dw LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX
     dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_GridCellAddressFromGridCursorXAndGrid2CursorX
     dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06
     dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_SetGrid2CursorX
     dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM
     dw LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C
     dw LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C
@@ -965,7 +965,7 @@ LibraryMenu_ShowMonsterEntry::
     dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01_SetTextWindowTileLo
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1023,7 +1023,7 @@ Tiles_0C_4718::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $ff, $ff, $ff, $ff, $60, $ff, $60, $ff, $60 ; id 4
     db $ff, $60, $ff, $60, $ff, $60, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; id 5
 
-LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01_LoadBGPalettesFrom5E04::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld a, [wScreenSubStep]
     and a
     jr nz, .skip
@@ -1373,7 +1373,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050::
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Data::
     db $40, $94, $d0, $94, $60, $95
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_GridCellAddressFromGridCursorXAndGrid2CursorX::
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     call LibraryMenu_TestBitInFieldAtArg3
@@ -1484,7 +1484,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07::
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_SetGrid2CursorX::
     call DrawThreeMetaSpritePartsFor5050
     ld a, [wGridCursorY]
     add a
@@ -1575,7 +1575,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
     jr z, .loop
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01_SetTextWindowTileLo
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1653,7 +1653,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
     jr z, .loop3
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01_SetTextWindowTileLo
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1743,7 +1743,7 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
 LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C::
     call WriteBGPalette0From555C
     call LibraryMenu_WriteWorkBuf
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_LibraryMenu_TestBitInFieldAtArg3
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1916,7 +1916,7 @@ LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6::
     call CopyFromBankWaitVRAM
     ret
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_LibraryMenu_TestBitInFieldAtArg3::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
     call GridIndexFromGridCursorXGridCursorY
     add a
     ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
@@ -2569,7 +2569,7 @@ ClearStringWindowAt2200::
     call FillTilesFromRequest
     ret
 
-LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01_SetTextWindowTileLo::
+LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles2
     ld a, l
     ld [wTextWindowTileLo], a
@@ -5270,33 +5270,33 @@ ArenaMenu::
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_CallArenaMenu_DispatchTalkEvent
     dw ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
-    dw ArenaMenu_AdvanceScreenState_Case0D_SetScreenState
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_SetTwoChoiceCursor
+    dw ArenaMenu_AdvanceScreenState_SetScreenState
     dw ArenaMenu_SetScreenState
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10_ArenaMenu_Number24ToPackedBCD
+    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD
     dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11_ArenaMenu_Number24ToPackedBCD
     dw ArenaMenu_WriteTextBuf0AndScreenStateEtc
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13_SetArg1
     dw ArenaMenu_AdvanceScreenState_Case14_SetScreenState
     dw ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_IsAmountInArg1AboveGold
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_ArenaMenu_WriteTwoChoiceCursor
-    dw ArenaMenu_SubtractArg1AmountFromGold_Case19_ArenaMenu_Number24ToPackedBCD
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor
+    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1
+    dw ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD
     dw ArenaMenu_RedrawFullScreenBoxes_0C
     dw ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     dw ArenaMenu_ToArenaMenu_Case1C_ReadArenaRound
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_RedrawFullScreenBoxes_0C_Case1E_ArenaMenu_DispatchTalkEvent
+    dw ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent
     dw ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_ToArenaMenu_DispatchTalkEvent
-    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case22_SetTwoChoiceCursor
+    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor
     dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case23
     dw ArenaMenu_SetFlagBit
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26_CopyScreenBufferRectWithAttrs_0C
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor
     dw ArenaMenu_RandomModulo52
 
 ArenaMenu_RandomModulo52::
@@ -5379,7 +5379,7 @@ ArenaMenu_RandomModulo52::
     ld [wAreaGraphicsIndex], a
     ret
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26_CopyScreenBufferRectWithAttrs_0C::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5767,7 +5767,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01_SetArg1
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -5831,7 +5831,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01_SetArg1::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -5852,7 +5852,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01_SetArg1::
     ret
 
 ArenaMenu_BGMapAddressAtScroll_Bank0C::
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01_SetArg1
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
     ld c, $04
     ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
     call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
@@ -5871,7 +5871,7 @@ ArenaMenu_AdvanceScreenState::
     ret
 
 ArenaMenu_SubtractArg1AmountFromGold::
-    call ArenaMenu_DispatchTalkEvent_Shared04_ClearBit1OfPlayerAndObjectFlags
+    call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ld a, [wGridCursorX]
     sla a
     ld de, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data
@@ -5954,7 +5954,7 @@ ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity::
     ret
 
 ArenaMenu_CallArenaMenu_DispatchTalkEvent::
-    call ArenaMenu_DispatchTalkEvent_Shared04_ClearBit1OfPlayerAndObjectFlags
+    call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ret
 
 ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
@@ -5962,7 +5962,7 @@ ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     call ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     ret
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_SetTwoChoiceCursor::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5986,7 +5986,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_ArenaMenu_CopyScreenBufferRectWith
     ld a, [wTwoChoiceCursor]
     and a
     jr nz, .loop
-    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01_SetArg1
+    call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
@@ -5998,7 +5998,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_ArenaMenu_CopyScreenBufferRectWith
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_AdvanceScreenState_Case0D_SetScreenState::
+ArenaMenu_AdvanceScreenState_SetScreenState::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6049,7 +6049,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10_ArenaMenu_Number24ToPackedBCD::
+ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
@@ -6286,7 +6286,7 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
 ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data::
     db $e8, $03, $d0, $07, $b8, $0b, $88, $13
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_IsAmountInArg1AboveGold::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6347,7 +6347,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_IsAmountInArg1AboveGold::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_ArenaMenu_WriteTwoChoiceCursor::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -6377,7 +6377,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_ArenaMenu_WriteTwoChoiceCursor
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_SubtractArg1AmountFromGold_Case19_ArenaMenu_Number24ToPackedBCD::
+ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
     xor a
     ld [wArg3], a
     ld a, [wArenaByte87]
@@ -6460,7 +6460,7 @@ ArenaMenu_ToArenaMenu_Case1C_ReadArenaRound::
     call ArenaMenu_Case1C_ReadArenaRound
     ret
 
-ArenaMenu_RedrawFullScreenBoxes_0C_Case1E_ArenaMenu_DispatchTalkEvent::
+ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent::
     call ArenaMenu_DispatchTalkEvent
     ld a, [wScreenState]
     inc a
@@ -6479,7 +6479,7 @@ ArenaMenu_ToArenaMenu_DispatchTalkEvent::
     call ArenaMenu_DispatchTalkEvent
     ret
 
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case22_SetTwoChoiceCursor::
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor::
     ld a, [wBattleScene]
     and a
     jr nz, .check_arena_rank
@@ -7384,7 +7384,7 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind::
     jr nz, .loop
     ret
 
-ArenaMenu_DispatchTalkEvent_Shared04_ClearBit1OfPlayerAndObjectFlags::
+ArenaMenu_DispatchTalkEvent_SetScriptReturnBank::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
@@ -7402,7 +7402,7 @@ ArenaMenu_DispatchTalkEvent_Shared04_ClearBit1OfPlayerAndObjectFlags::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02_SetBattleIntroKind::
+ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02

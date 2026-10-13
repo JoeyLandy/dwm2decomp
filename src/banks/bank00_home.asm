@@ -9426,7 +9426,7 @@ SoundNextEvent::
     ld a, [wSoundHwChannel]
     cp $02
     jr z, .call_return_twice_if_sound_skip_mask_a_and
-    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged
+    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged
     ret
 
 .call_return_twice_if_sound_skip_mask_a_and:
@@ -9753,7 +9753,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05::
     jr nz, .check_sound_hw_channel
     ldh a, [hSndFreqHi]
     and $7f
-    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged
+    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged
 
 .check_sound_hw_channel:
     ld a, [wSoundHwChannel]
@@ -9884,7 +9884,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDela
     or b
     jp WriteChannelEnvelopeIfChanged
 
-SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged::
+SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
     jp WriteChannelEnvelopeIfChanged

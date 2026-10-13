@@ -4306,7 +4306,7 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ld a, h
     adc $c1
     ld h, a
-    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02
+    call RunFieldActionRequestActionIfBit7_SetBGWriteDestLo
     ldh a, [hScrollY]
     add $08
     ldh [hScrollY], a
@@ -4365,7 +4365,7 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ld a, h
     adc $c1
     ld h, a
-    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02
+    call RunFieldActionRequestActionIfBit7_SetBGWriteDestLo
     ldh a, [hScrollY]
     sub $08
     ldh [hScrollY], a
@@ -4446,7 +4446,7 @@ RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     jr nz, .loop2
     ret
 
-RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02::
+RunFieldActionRequestActionIfBit7_SetBGWriteDestLo::
     ld a, e
     ld [wBGWriteDestLo], a
     ld a, d
@@ -4842,8 +4842,8 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_TestFlagBit
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case05_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case05
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -4851,18 +4851,18 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -5091,7 +5091,7 @@ PlayMapMusic_TestFlagBit::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case05_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_TestFlagBit_Case05::
     ldh a, [hMapScreenX]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic
@@ -5112,11 +5112,11 @@ PlayMapMusic_TestFlagBit_Case05_PlayMapMusic_CheckCurrentMusic::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic::
     ld c, $0c
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic::
     ld de, $00cc
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
@@ -6250,8 +6250,8 @@ StepTextWindowOpenClose::
     jumptable
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01
-    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02
-    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02
+    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
+    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
 
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     ld a, [wTextWindowState]
@@ -6311,7 +6311,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02::
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState::
     ld a, [wTextWindowState]
     bit 0, a
     jr z, .skip

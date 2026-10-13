@@ -726,14 +726,14 @@ AIScore_Sap::
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp $01
-    jr z, .call_ai_score_sap_sub01_carry_unless_battle
+    jr z, .call_ai_score_sap_accumulate_bank6_word_to
     and a
-    jr nz, .call_ai_score_sap_sub01_carry_unless_battle
+    jr nz, .call_ai_score_sap_accumulate_bank6_word_to
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-.call_ai_score_sap_sub01_carry_unless_battle:
-    call AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01_AccumulateBank6WordToDA70
+.call_ai_score_sap_accumulate_bank6_word_to:
+    call AIScore_Sap_AccumulateBank6WordToDA70
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -904,7 +904,7 @@ AIScore_TwinHits::
     call AccumulateBank6WordToDA6E
 
 .call_ai_score_twin_hits_read_slot_ai_mode:
-    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02
+    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     cp $01
     jr z, .call_set_c_to_zero
@@ -5798,7 +5798,7 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
 .return:
     ret
 
-AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01_AccumulateBank6WordToDA70::
+AIScore_Sap_AccumulateBank6WordToDA70::
     farcall AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a
@@ -5873,8 +5873,8 @@ AIAddPenaltyFor5758And5CF1::
     ret
 
 ; adds score word $B1 when AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05 fails and $B2 when
-; AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock fails (results
-; of 1 count as passing) (E-0124)
+; AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02 fails (results of 1 count as passing)
+; (E-0124)
 AIAddScoresFor5ECEAnd5FC7::
     farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05
     ld a, c
@@ -5886,7 +5886,7 @@ AIAddScoresFor5ECEAnd5FC7::
     call AccumulateBank6WordToDA6E
 
 .call_ai_add_scores_for5_ece_and5_fc7_read:
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp $01
     jr z, .return

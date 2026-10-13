@@ -99,10 +99,10 @@ GameMode8_Update::
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_SetObject5_Case08_SetObject5
+    dw GameMode8_Update_SetObject5_SetObject5
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B_SetScreenSubStep
+    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
 
@@ -174,7 +174,7 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-GameMode8_Update_SetObject5_Case08_SetObject5::
+GameMode8_Update_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -183,7 +183,7 @@ GameMode8_Update_SetObject5_Case08_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B_SetScreenSubStep::
+GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -1072,10 +1072,10 @@ ShowSpeciesCategory13StringAtTiles2680::
     ret
 
 ; runs RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB and
-; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry (E-0126)
+; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02 (E-0126)
 RunF24C3DAnd4D72::
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry
+    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
     ret
 
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
@@ -1242,7 +1242,7 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1::
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
@@ -2391,10 +2391,9 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 383 ?
 
 ; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
-; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_ReadF2FarPointerForScreenTableIndex.skip
-; adds 3 * entry (after ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits,
-; Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not
-; confirmed (E-0208, C1)
+; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetArg3.skip adds 3 * entry (after
+; ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the
+; lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
     dw ScreenNumberList000 ; id 0

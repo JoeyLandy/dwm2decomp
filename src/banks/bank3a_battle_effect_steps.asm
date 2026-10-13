@@ -1712,9 +1712,9 @@ RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wEffectSpriteX]
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget
-    dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01_CopyVRAMRectToBuffer
+    dw RunEffectRoutineEffectEvery5Frames_SetEffectStep
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget
-    dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01_CopyVRAMRectToBuffer
+    dw RunEffectRoutineEffectEvery5Frames_SetEffectStep
     dw RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
 
 RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget::
@@ -1736,7 +1736,7 @@ RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget::
     inc [hl]
     ret
 
-RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01_CopyVRAMRectToBuffer::
+RunEffectRoutineEffectEvery5Frames_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
@@ -1897,7 +1897,7 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake::
     ld a, [wEffectSpriteX]
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_Case01_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc
 
@@ -1920,7 +1920,7 @@ SetScroll0_1AndIncEffectSpriteX::
     inc [hl]
     ret
 
-RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_Case01_SetScrollY::
+RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_SetScrollY::
     xor a
     ldh [hScrollY], a
     xor a
@@ -2211,30 +2211,30 @@ RunEffectRoutineEffectEvery5Frames_Case08_WaitEffectSpriteX::
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case01_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteEffectSpriteXAndScrollYEtc
 
 RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX::
@@ -2246,7 +2246,7 @@ RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX::
     inc [hl]
     ret
 
-RunEffectRoutineEffectEvery5Frames_Case08_Sub01_WriteScrollYAndScrollX_Case02_SetScrollY::
+RunEffectRoutineEffectEvery5Frames_SetScrollY::
     ld a, $00
     ldh [hScrollY], a
     ld a, $03
@@ -2469,7 +2469,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case02_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case04_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
@@ -2479,19 +2479,19 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case0A_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc
@@ -2511,7 +2511,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX::
     inc [hl]
     ret
 
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case02_SetScrollX::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
     ld a, $02
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2546,7 +2546,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case0A_SetScrollX::
     inc [hl]
     ret
 
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C_SetScrollX::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX::
     ld a, $f8
     ldh [hScrollX], a
     ld a, $02
@@ -2601,9 +2601,9 @@ RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_Case0D::
     ld a, [wEffectSpriteX]
     jumptable
     dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01_CopyVRAMRectToBuffer
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep
     dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01_CopyVRAMRectToBuffer
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep
     dw LightenDMGPaletteOneStep_SetEffectId
 
 LightenDMGPaletteOneStep_EffectPositionIndexForActor::
@@ -2625,7 +2625,7 @@ LightenDMGPaletteOneStep_EffectPositionIndexForActor::
     inc [hl]
     ret
 
-LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01_CopyVRAMRectToBuffer::
+LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
@@ -2809,7 +2809,7 @@ DrawEffectSpriteForEffectTileOffsetRange::
     ret
 
 .call_draw_effect_sprite_for_effect_tile:
-    farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02
+    farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot
     ret
 
 .call_draw_effect_sprite_for_effect_tile2:
@@ -5662,14 +5662,14 @@ RunBattleStep4_Case03_WriteBattleTargetAndBattleSubPhaseEtc::
 RunBattleStep4_Case03_Sub01_WriteMultiHitCountAndSavedActorSlotEtc::
     ld a, [wMultiHitCount]
     bit 7, a
-    jr nz, .call_run_battle_step4_case03_sub01_sub01
+    jr nz, .call_run_battle_step4_back_multi_hit_count
     call RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wMultiHitCount]
     or $80
     ld [wMultiHitCount], a
 
-.call_run_battle_step4_case03_sub01_sub01:
-    call RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount
+.call_run_battle_step4_back_multi_hit_count:
+    call RunBattleStep4_BackMultiHitCount
     ld a, [wMultiHitCount]
     and $7f
     ret nz
@@ -5761,7 +5761,7 @@ RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount::
+RunBattleStep4_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
     ld c, a
@@ -6058,14 +6058,14 @@ RunActionResolveStep::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
     dw RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A
     dw RunActionResolveStep_CheckActionBDOrRun63B2And63D2
-    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04_HeroCouldn
+    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0
     dw RunActionResolveStep_ToRunBattleSubStep_6662
     dw RunActionResolveStep_AddDoubleAToHL_Bank3A
     dw RunActionResolveStep_RunDefeatStepMinus1Step
-    dw RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08_AdvanceBattleResolveStep
+    dw RunActionResolveStep_CheckActionBDOrRun63B2And63D2_AdvanceBattleResolveStep
     dw RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A_Case09
 
 RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
@@ -6075,19 +6075,19 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 0, [hl]
-    jp z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    jp z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    jp c, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
     ld a, [wRecordBufferData + $7]
     bit 0, a
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
     ld a, [wFollowUpAction]
     bit 2, a
     jr z, .read_battle_target
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -6097,7 +6097,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     call GetBattleMP_Bank3A
     pop bc
     call CompareHLToBC
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp
+    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wBattleDamageHi]
@@ -6153,7 +6153,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     ld [wBattleDamageHi], a
     ret
 
-RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01_HeroWokeUp::
+RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -6220,14 +6220,14 @@ RunActionResolveStep_CheckActionBDOrRun63B2And63D2::
     ld hl, wBattleResolveStep
     inc [hl]
     call CheckActionBDOrRun63B2And63D2
-    jr nc, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04_HeroCouldn
+    jr nc, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04_HeroCouldn::
+RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0::
     ld a, [wFollowUpAction]
     or a
     jp nz, .skip4
@@ -6425,7 +6425,7 @@ RunActionResolveStep_RunDefeatStepMinus1Step::
     inc [hl]
     ret
 
-RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08_AdvanceBattleResolveStep::
+RunActionResolveStep_CheckActionBDOrRun63B2And63D2_AdvanceBattleResolveStep::
     call CheckActionBDOrRun63B2And63D2
     jr c, .clear_multi_hit_count
     ld hl, wBattleResolveStep
@@ -8580,7 +8580,7 @@ CopyBattlerNameToHL_Skip::
     ret
 
 CopyBattlerNameToHL_CopyStringHLToDE::
-    ld [wBattleTemp7C], a
+    ld [wBattleTempSlot], a
     push hl
     ld hl, wBattleMonsterId
     add a
@@ -8595,9 +8595,9 @@ CopyBattlerNameToHL_CopyStringHLToDE::
     pop bc
     pop de
     ld a, e
-    ld [wBattleTemp7A], a
+    ld [wBattleTempPtrLo], a
     ld a, d
-    ld [wBattleTemp7B], a
+    ld [wBattleTempPtrHi], a
     call CopyStringHLToDE
     ret
 
@@ -8684,7 +8684,7 @@ CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
     ld c, $04
     xor a
     ld [wTemp0], a
-    ld a, [wBattleTemp7C]
+    ld a, [wBattleTempSlot]
     add a
     ld hl, wBattleMonsterId
     add_a_to_hl
@@ -8703,7 +8703,7 @@ CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
     ld a, [hl]
     cp d
     jr nz, .next
-    ld a, [wBattleTemp7C]
+    ld a, [wBattleTempSlot]
     cp c
     jp z, .check_temp0
     ld hl, wTemp0
@@ -8718,7 +8718,7 @@ CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
 .check_temp0:
     ld a, [wTemp0]
     or a
-    jr nz, .read_battle_temp7_a
+    jr nz, .read_battle_temp_ptr_lo
     inc c
 
 .loop2:
@@ -8731,7 +8731,7 @@ CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
     jr nz, .next2
     ld a, [hl]
     cp d
-    jr z, .read_battle_temp7_a
+    jr z, .read_battle_temp_ptr_lo
 
 .next2:
     inc c
@@ -8739,10 +8739,10 @@ CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
     jr nz, .loop2
     ret
 
-.read_battle_temp7_a:
-    ld a, [wBattleTemp7A]
+.read_battle_temp_ptr_lo:
+    ld a, [wBattleTempPtrLo]
     ld l, a
-    ld a, [wBattleTemp7B]
+    ld a, [wBattleTempPtrHi]
     ld h, a
     ld a, [wTemp0]
     add $0a
@@ -8900,7 +8900,7 @@ WriteMonstersWordToTextBuf0::
     ld [hl], $f0
     ret
 
-RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02_RunBattleSetup_Shared02_CopySlotNameToHL::
+RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02::
     ld a, $ff
     ld hl, wSlotChoices
     ld bc, $0003

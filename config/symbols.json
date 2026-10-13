@@ -4367,39 +4367,25 @@
     "evidence": "E-0137"
   },
   "D87A": {
-    "name": "wBattleTemp7A",
-    "note": "battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL)",
-    "evidence": "E-0137"
+    "name": "wBattleTempPtrLo",
+    "note": "scratch pointer, low byte: RunBattleCommandEntry keeps a pointer into wBattleTempBuf here, CopyBattlerNameToHL its destination (E-0340; was wBattleTemp7A)",
+    "evidence": "E-0137; E-0340"
   },
   "D87B": {
-    "name": "wBattleTemp7B",
-    "note": "battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL)",
-    "evidence": "E-0137"
+    "name": "wBattleTempPtrHi",
+    "note": "scratch pointer, high byte (E-0340; was wBattleTemp7B)",
+    "evidence": "E-0137; E-0340"
   },
   "D87C": {
-    "name": "wBattleTemp7C",
-    "note": "battle work byte (CopyBattlerNameToHL)",
-    "evidence": "E-0137"
+    "name": "wBattleTempSlot",
+    "note": "scratch slot number of CopyBattlerNameToHL (E-0340; was wBattleTemp7C)",
+    "evidence": "E-0137; E-0340"
   },
   "D87D": {
-    "name": "wBattleTemp7D",
-    "note": "battle work byte (BattleEnd_Step3, ChooseTarget_Heal_5593)",
-    "evidence": "E-0137"
-  },
-  "D87E": {
-    "name": "wBattleTemp7E",
-    "note": "battle work byte (BattleEnd_Step3)",
-    "evidence": "E-0137"
-  },
-  "D87F": {
-    "name": "wBattleTemp7F",
-    "note": "battle work byte (BattleEnd_Step3, BiAttack, EstimateAndPickWeakestTarget)",
-    "evidence": "E-0137"
-  },
-  "D880": {
-    "name": "wBattleTemp80",
-    "note": "battle work byte (BattleEnd_Step3, BiAttack)",
-    "evidence": "E-0137"
+    "name": "wBattleTempBuf",
+    "note": "18-byte battle scratch buffer: RunBattleCommandEntry clears and fills it; the battle end keeps two words of a calculation in its first four bytes (BattleEnd_Step3) (E-0340; was wBattleTemp7D, with $D87E-$D880)",
+    "evidence": "E-0137; E-0340",
+    "size": "12"
   },
   "D88B": {
     "name": "wSpeciesGroups",
@@ -4423,14 +4409,14 @@
     "evidence": "E-0137"
   },
   "D892": {
-    "name": "wBattleFlag92",
-    "note": "battle flag (BattleFight_Step0_Sub01, AllThreeSlotsFromCOccupied)",
-    "evidence": "E-0137"
+    "name": "wBattleItemTarget",
+    "note": "target of the item chosen in battle: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2 (RunBattleSetup_ItemCommand_*, RunBattleActions_UseItem) (E-0340; was wBattleFlag92)",
+    "evidence": "E-0137; E-0340"
   },
   "D893": {
-    "name": "wBattleFlag93",
-    "note": "battle flag (BattleFight_Step0_Sub01, SetResolveStep0A)",
-    "evidence": "E-0137"
+    "name": "wBattleItemId",
+    "note": "the item chosen in battle (from wItemId); RunBattleActions_UseItem makes it the action id (E-0340; was wBattleFlag93)",
+    "evidence": "E-0137; E-0340"
   },
   "D894": {
     "name": "wBattleEndFlag",

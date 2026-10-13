@@ -730,7 +730,7 @@ DEF ITEM_6F EQU $6F
 ; what their first setter says: a talk routine's message, a scene, a script's last scene command or
 ; message before the flag is set (D-009). Flags only tested, or set by routines whose names say
 ; nothing, keep their numbers.
-DEF EVENT_SCENE_LONG_FACES EQU $002 ; set by SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B
+DEF EVENT_SCENE_LONG_FACES EQU $002 ; set by SceneLongFaces_RunMessageBoxFar_Bank0F_ScriptStartFadeAndAdvanceStep
 DEF EVENT_SCENE_VAULT_SETTLED EQU $003 ; set by Script_4FA4
 DEF EVENT_YO_DID_YOU_ENJOY EQU $004 ; set by GreatLogTalkEvents_ShowYoDidYouEnjoy
 DEF EVENT_THANKS_FOR_COMING_BY EQU $007 ; set by Talk0046_ThanksForComingBy
@@ -748,17 +748,17 @@ DEF EVENT_FOLLOWER_FACE_PLAYER EQU $014 ; set by Script_4FB7, Script_4FD0
 DEF EVENT_SCENE_WARUBOU_LEAVES EQU $015 ; set by Script_4F54
 DEF EVENT_WARUBOU_NO_THEN_FIND_SOMEONE EQU $016 ; set by Script_5006
 DEF EVENT_SCENE_OASIS_KEY EQU $01A ; set by Script_5017
-DEF EVENT_SCENE_LAND_HO EQU $01B ; set by SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D, ScriptCommand76_Run_SetFlagBit
+DEF EVENT_SCENE_LAND_HO EQU $01B ; set by SceneLandHo_ScriptStartFadeAndAdvanceStep_SetMapId, ScriptCommand76_Run_SetFlagBit
 DEF EVENT_SCENE_RIVAL_DEFEATED EQU $01D ; set by SceneRivalDefeated_ShowWarubouWaheyTheAbility
 DEF EVENT_SCENE_SHIELD2 EQU $01E ; set by SceneShield2_ShowWarubouWaheyYouCan
 DEF EVENT_SCENE_MERMAID_KINGDOM EQU $01F ; set by SceneMermaidKingdom_ShowWarubouWaheyYouCan
 DEF EVENT_SCENE_RIVAL_DEFEATED_021 EQU $021 ; set by SceneRivalDefeated_SetFlagBit
-DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_SetFlagBit_Case31
+DEF EVENT_SCENE_MERMAID_KINGDOM_022 EQU $022 ; set by SceneMermaidKingdom_SetFlagBit_MarkKeyEntryKindTemp0Bit6
 DEF EVENT_SCENE_SHIELD2_023 EQU $023 ; set by SceneShield2_SetFlagBit
 DEF EVENT_SCENE_THREE_ITEMS EQU $024 ; set by SceneThreeItems_ShowWarubouWaheyHeroAnd
 DEF EVENT_GIVE_MONSTER EQU $029 ; set by Script_5814
 DEF EVENT_SCENE_LIMBO_MONSTER EQU $02A ; set by SceneLimboMonster_AddStepDeltaToPointedByte
-DEF EVENT_SCENE_LIMBO_MONSTER2 EQU $02B ; set by SceneLimboMonster2_StepObjectTowardCoord_Case0F
+DEF EVENT_SCENE_LIMBO_MONSTER2 EQU $02B ; set by SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags
 DEF EVENT_THAT_KEY_IUSED EQU $02E ; set by Talk04CB_ThatKeyIUsed
 DEF EVENT_SCENE_KEY_SHOP EQU $02F ; set by Script_56A0
 DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_SetFlagBitAndStep
@@ -784,7 +784,7 @@ DEF EVENT_SCENE_RIVAL_DEFEATED_05A EQU $05A ; set by SceneRivalDefeated_ScriptSt
 DEF EVENT_SCENE_WATER_REWARD EQU $05C ; set by SceneWaterReward_RunMessageBoxFar_Bank85
 DEF EVENT_HERO_RECEIVED_THE_SAILOR_RING EQU $05E ; set by Script_5C7E
 DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
-DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09
+DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_SetScriptParam0
 DEF EVENT_SCENE_WATCH_OUT EQU $066 ; set by Script_5BE8, Script_5BF2
 DEF EVENT_THE_PIRATES EQU $06D ; set by Script_5C0C
 DEF EVENT_SCENE_MERMAID_SONG EQU $06E ; set by SceneMermaidSong_ShowHeroReceivedATinyMedal
@@ -794,7 +794,7 @@ DEF EVENT_THE_TREASURES_ARE_OURS_NO EQU $072 ; set by Script_5C94
 DEF EVENT_IT_NAGS_AND_NAGS_THAT EQU $073 ; set by Script_5C9E
 DEF EVENT_GIVE_ITEM_BLINK EQU $075 ; set by Script_5CA8, Script_5CB5
 DEF EVENT_SCENE_CRATE EQU $076 ; set by Script_5CC2
-DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel
+DEF EVENT_SCENE_WATCH_OUT_078 EQU $078 ; set by SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel
 DEF EVENT_SCENE_CREW_FOLLOWS EQU $07C ; set by Script_5CDD
 DEF EVENT_SCENE_CREW_FOLLOWS_07D EQU $07D ; set by SceneCrewFollows_StepScriptParam0Counter_Bank0F
 DEF EVENT_SCENE_KAMEHA_FLEES EQU $07E ; set by SceneKamehaFlees_SetFlagBit
@@ -885,7 +885,7 @@ DEF EVENT_YOURE_AHUMAN_HOW_145 EQU $145 ; set by ElvenVillageTalkEvents_ShowYour
 DEF EVENT_SCENE_ROLT_ELDER EQU $146 ; set by Script_6218, Script_622C
 DEF EVENT_CYAL_LISTEN_HERO_WE_SHOULD EQU $147 ; set by Script_6240
 DEF EVENT_CYAL_EEEK_HERO_HELP_ME EQU $148 ; set by Script_624B
-DEF EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_Case12, Script_626A
+DEF EVENT_HUMAN_THEY_TASTE_HORRIBLE_YOU EQU $149 ; set by ElvenVillageTalkEvents_TestFlagBit_Case12_StartScriptAtHL_B04, Script_626A
 DEF EVENT_THAT EQU $14A ; set by Script_6290
 DEF EVENT_SCENE_TOO_STRONG EQU $14B ; set by Script_6290, Script_62A0
 DEF EVENT_ROLT_WAIT_GONE_ALREADY EQU $14C ; set by Script_62AD

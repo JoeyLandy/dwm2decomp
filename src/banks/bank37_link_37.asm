@@ -572,7 +572,7 @@ RunLinkSession5Exchange_Case01_WaitFadeState::
     dw RunLinkSession5Exchange_Case01_Sub01_SetScreenState
     dw RunLinkSession5Exchange_ShowMessages
     dw RunLinkSession5Exchange_LinkBreed
-    dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags_Case05_SetLinkSendByte
+    dw RunLinkSession5Exchange_SetLinkSendByte
     dw RunLinkSession5Exchange_Case01_Sub01_WaitLinkMessage
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
@@ -615,7 +615,7 @@ RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags::
     ld [wModeChangeRequest], a
     ret
 
-RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags_Case05_SetLinkSendByte::
+RunLinkSession5Exchange_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -650,9 +650,9 @@ RunLinkSession5Exchange_ShowMessages::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags
-    dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_Case01_SetScreenState
+    dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_SetScreenState
     dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags_Case03_SetScreenStep
+    dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags_SetScreenStep
 
 RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
     ld a, [wTextFlags]
@@ -663,7 +663,7 @@ RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_Case01_SetScreenState::
+RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_SetScreenState::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -696,7 +696,7 @@ RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowMessages_WaitTextFlags_Case03_SetScreenStep::
+RunLinkSession5Exchange_ShowMessages_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -724,30 +724,30 @@ RunLinkSession5Exchange_LinkBreed::
     dw RunLinkSession5Exchange_LinkBreed_WaitLinkMessage
     dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags
     dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0C_BreedMenu
+    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenSubStep
     dw RunLinkSession5Exchange_LinkBreed_BreedMenu
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0E_BreedMenu
+    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_Case0F
-    dw RunLinkSession5Exchange_LinkBreed_BreedMenu_Case10_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_Case11_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_Case13_SetScreenStep
+    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case14_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16_ShowString_Bank0E
+    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37
     dw RunLinkSession5Exchange_LinkBreed_RunFunc5A5DAt024FAndDrawBox
     dw RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM
     dw RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D
-    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_Case13_SetScreenStep
-    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C
+    dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep
+    dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C_SetScreenStep
     dw RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild
     dw StoreReceivedRecordIntoSRAM
     dw RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc
     dw RunLinkSession5Exchange_LinkBreed_WriteLinkSendByteAndLinkSceneByte4BEtc
-    dw RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_Case21_SetLinkSendByte
+    dw RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_SetLinkSendByte
 
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0E_BreedMenu::
+RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -807,7 +807,7 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu::
     farcall BreedMenu
     ret
 
-RunLinkSession5Exchange_LinkBreed_BreedMenu_Case10_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
     ld a, [wSelectedRecord]
     cp $ff
     jr z, .read_screen_sub_step
@@ -822,19 +822,19 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu_Case10_ShowStringIndexA_Bank37::
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case01_SetScreenSubStep
+    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_SetScreenSubStep
     dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case02_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case01_SetScreenSubStep
+    dw RunLinkSession5Exchange_BreedMenu
+    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_SetScreenSubStep
     dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case02_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_BreedMenu
+    dw RunLinkSession5Exchange_ShowStringIndexA_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case09_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03_BreedMenu
+    dw RunLinkSession5Exchange_BreedMenu
 
-RunLinkSession5Exchange_Case01_Sub01_Table2_Case00_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_ShowStringIndexA_Bank37::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -847,7 +847,7 @@ RunLinkSession5Exchange_Case01_Sub01_Table2_Case00_ShowStringIndexA_Bank37::
     call ShowStringIndexA_Bank37
     ret
 
-RunLinkSession5Exchange_Case01_Sub01_Table2_Case01_SetScreenSubStep::
+RunLinkSession5Exchange_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -871,7 +871,7 @@ RunLinkSession5Exchange_Case01_Sub01_Table2_Case02_ShowStringIndexA_Bank37::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession5Exchange_Case01_Sub01_Table2_Case03_BreedMenu::
+RunLinkSession5Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -894,7 +894,7 @@ RunLinkSession5Exchange_Case01_Sub01_Table2_Case09_ShowStringIndexA_Bank37::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0C_BreedMenu::
+RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -977,7 +977,7 @@ RunFunc5A5DAt0278AndStep::
     ld [wSelectedRecord], a
     ret
 
-RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_Case11_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1089,7 +1089,7 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
     call DrawScreenBufferRectToBGMap_37
     ret
 
-RunLinkSession5Exchange_LinkBreed_WaitTextFlags_Case13_SetScreenStep::
+RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1176,7 +1176,7 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16_ShowString_Bank0E::
+RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16_SetScreenStep::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1521,7 +1521,7 @@ StoreReceivedRecordIntoSRAM::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C::
+RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C_SetScreenStep::
     ld a, [wLinkMessage]
     cp $01
     jr z, .check_screen_step
@@ -1552,7 +1552,7 @@ RunLinkSession5Exchange_LinkBreed_WaitLinkMessage::
     ld [wScreenStep], a
     jr RunLinkSession5Exchange_LinkBreed_WaitTextFlags
 
-RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_Case21_SetLinkSendByte::
+RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -1776,22 +1776,22 @@ RunLinkSession5Exchange_ShowRecordStats::
     dw RunLinkSession5Exchange_ShowRecordStats_Return
     dw RunLinkSession5Exchange_ShowRecordStats_Return
     dw RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest
-    dw RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_Case0F_SetTextWindowTileLo
+    dw RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_SetTextWindowTileLo
     dw RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case11_SetArg3
+    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_SetArg3
     dw RunLinkSession5Exchange_ShowRecordStats_WriteScreenStepAndArg1Etc
     dw RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc
     dw RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4
-    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case15_DrawRects662BAnd653F
+    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat
     dw RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel
     dw RunLinkSession5Exchange_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep
     dw RunLinkSession5Exchange_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37
     dw RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone
     dw RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680
-    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B_UploadTilesFromData58AE
+    dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat
     dw RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_Case1D
-    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E
+    dw RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo
+    dw RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_DecompressRecordBufBSpeciesGraphics
     dw RunLinkSession5Exchange_ShowRecordStats_RunF24C3DAnd4D72
     dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case20_SetJoypadPressedRepeat
 
@@ -1944,7 +1944,7 @@ RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_Case0F_SetTextWindowTileLo::
+RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles1 + $270
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1979,7 +1979,7 @@ RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case11_SetArg3::
+RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_SetArg3::
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
     add hl, de
@@ -2047,7 +2047,7 @@ RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case15_DrawRects662BAnd653F::
+RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2114,7 +2114,7 @@ RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B_UploadTilesFromData58AE::
+RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2178,7 +2178,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF::
     ld [wScreenSubStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_Case1D::
+RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
     ld a, l
@@ -2211,7 +2211,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E::
+RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_DecompressRecordBufBSpeciesGraphics::
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
     add hl, de
@@ -2284,7 +2284,7 @@ RunLinkSession5Exchange_ResetListAndShowString::
     dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
     dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
     dw RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37
-    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_Case09_SetScreenState
+    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState
 
 RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
     ld a, [wItemGridX]
@@ -2296,7 +2296,7 @@ RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
     ld [wScreenStep], a
     ret
 
-RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_Case09_SetScreenState::
+RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState::
     ld a, [wScreenState]
     push af
     ld a, $11

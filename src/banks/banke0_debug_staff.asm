@@ -469,8 +469,8 @@ RunDebugState_E0::
     dw RunDebugState_E0_WaitJoypadPressed
     dw DrawTileMap4946AndStep
     dw RunDebugState_E0_DrawEightBytesAsHexColumns
-    dw RunDebugState_E0_WaitJoypadPressed_Case09_SetDebugState
-    dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A_AdvanceDebugSubState
+    dw RunDebugState_E0_WaitJoypadPressed_SetDebugState
+    dw RunDebugState_E0_AdvanceDebugSubState
     dw RunDebugState_E0_BlinkTemp0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
     dw RunDebugState_E0_ChooseActionTargets
@@ -1227,7 +1227,7 @@ Run48B7ForThreeBattlerRecords_Number24ToPackedBCD::
     ret
     db $e2, $99, $e8, $99, $ee, $99
 
-RunDebugState_E0_WaitJoypadPressed_Case09_SetDebugState::
+RunDebugState_E0_WaitJoypadPressed_SetDebugState::
     ld a, [wJoypadPressed]
     and $02
     ret z
@@ -1266,7 +1266,7 @@ RunDebugState_E0_WaitJoypadPressed_Case09_SetDebugState::
     ds $12, $b4
     db $b5
 
-RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A_AdvanceDebugSubState::
+RunDebugState_E0_AdvanceDebugSubState::
     ld a, [wEffectId]
     cp $ff
     jr z, .check_joypad_pressed
@@ -2931,7 +2931,7 @@ ShowStringBank09AtHLSizeDEThenDefault_BankE0::
 DebugStaffRoll_Update_RunFieldEventFieldEventKind::
     ld a, [wWorkBuf]
     or a
-    jp z, DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_CheckWorkBuf
+    jp z, DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_StepSpriteSlotToward_CheckWorkBuf
     farcall RunFieldEventFieldEventKind
     call IncrementSpriteSlotCounters
     ld a, [wWorkBuf + $2]
@@ -2949,11 +2949,11 @@ DebugStaffRoll_Scene00::
     jumptable
     dw DebugStaffRoll_Scene00_DecompressToVRAM
     dw DebugStaffRoll_Scene00_DrawSpriteSlots
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case02_StepSpriteSlotToward
+    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case03_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case04_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case05_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case06_StepSpriteSlotTowardDE
+    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case07_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case08_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case09_StepSpriteSlotToward
@@ -2961,7 +2961,7 @@ DebugStaffRoll_Scene00::
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case0B_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case0C_StepSpriteSlotToward
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case0D_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case0E_StepWorkBuf5Mod15
+    dw DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15
     dw DebugStaffRoll_Scene00_DrawSpriteSlots_Case0F_StepSpriteSlotToward
 
 DebugStaffRoll_Scene00_DecompressToVRAM::
@@ -3125,7 +3125,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene00_DrawSpriteSlots_Case02_StepSpriteSlotToward::
+DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
     inc a
@@ -3189,7 +3189,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_Case05_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene00_DrawSpriteSlots_Case06_StepSpriteSlotTowardDE::
+DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE::
     call DrawSpriteSlots
     ld a, $02
     ld de, $6030
@@ -3311,7 +3311,7 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_Case0D_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene00_DrawSpriteSlots_Case0E_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15::
     call DrawSpriteSlots
     call StepWorkBuf5Mod15
     ret nz
@@ -3384,9 +3384,9 @@ DebugStaffRoll_Scene01::
     jumptable
     dw DebugStaffRoll_Scene01_DecompressToVRAM
     dw DebugStaffRoll_Scene01_DrawSpriteSlots
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case02_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case03_StepWorkBuf5Mod15
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case04_StepSpriteSlotToward
+    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5
+    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15
+    dw DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case05_StepSpriteSlotToward
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case06_StepSpriteSlotToward
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case07_StepSpriteSlotToward
@@ -3405,9 +3405,9 @@ DebugStaffRoll_Scene01::
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case14_SetSpriteSlotByte5
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case15_StepSpriteSlotToward
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case16_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case17_StepWorkBuf5Mod15
+    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case17
     dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case18_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene01_DrawSpriteSlots_Case19_StepWorkBuf5Mod15
+    dw DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotCount
 
 DebugStaffRoll_Scene01_DecompressToVRAM::
     ld b, $7d
@@ -3543,7 +3543,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
+DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
@@ -3581,7 +3581,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
     ret
     db $03, $02, $03, $00, $03, $01, $00, $01, $02, $01
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Case03_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15::
     call DrawSpriteSlots
     ld a, $03
     ld [wSpriteSlotCount], a
@@ -3591,7 +3591,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case03_StepWorkBuf5Mod15::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Case04_StepSpriteSlotToward::
+DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld d, $60
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
@@ -3738,7 +3738,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case18_SetSpriteSlotByte5::
     ld [wObject1 + OBJ_STATE], a
     ret
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Case19_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotCount::
     call DrawSpriteSlots
     ld a, [wSpriteSlots + $2]
     cp $f0
@@ -3883,7 +3883,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case08_StepSpriteSlotToward::
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-DebugStaffRoll_Scene01_DrawSpriteSlots_Case17_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene01_DrawSpriteSlots_Case17::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -3923,8 +3923,8 @@ DebugStaffRoll_Scene02::
     jumptable
     dw DebugStaffRoll_Scene02_DecompressToVRAM
     dw DebugStaffRoll_Scene02_DrawSpriteSlots
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case02_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case03_StepSpriteSlotToward
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case04_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case05_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case06_StepSpriteSlotToward
@@ -3938,12 +3938,12 @@ DebugStaffRoll_Scene02::
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case0E_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case0F_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case10_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case11_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case12_StepWorkBuf5Mod60
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case13_StepWorkBuf5Mod60
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case14_StepWorkBuf5Mod30
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case11
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case12
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case15_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case16_StepWorkBuf5Mod30
+    dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case16
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case17_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case18_StepSpriteSlotToward
     dw DebugStaffRoll_Scene02_DrawSpriteSlots_Case19_StepSpriteSlotToward
@@ -4156,7 +4156,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
+DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
@@ -4196,7 +4196,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
     ret
     db $03, $02, $01, $02, $03, $01, $00, $03, $00, $01
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case03_StepSpriteSlotToward::
+DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, $02
     ld de, $4020
@@ -4258,7 +4258,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case0B_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case11_SetSpriteSlotByte5::
+DebugStaffRoll_Scene02_DrawSpriteSlots_Case11::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4291,7 +4291,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case11_SetSpriteSlotByte5::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case16_StepWorkBuf5Mod30::
+DebugStaffRoll_Scene02_DrawSpriteSlots_Case16::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4593,7 +4593,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case1A_StepSpriteSlotToward::
     ld [wWorkBuf + $1], a
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case12_StepWorkBuf5Mod60::
+DebugStaffRoll_Scene02_DrawSpriteSlots_Case12::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -4623,7 +4623,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case12_StepWorkBuf5Mod60::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case13_StepWorkBuf5Mod60::
+DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -4637,7 +4637,7 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Case13_StepWorkBuf5Mod60::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene02_DrawSpriteSlots_Case14_StepWorkBuf5Mod30::
+DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30::
     call DrawSpriteSlots
     call StepWorkBuf5Mod30
     ret nz
@@ -4677,11 +4677,11 @@ DebugStaffRoll_Scene03::
     jumptable
     dw DebugStaffRoll_Scene03_DecompressToVRAM
     dw DebugStaffRoll_Scene03_DrawSpriteSlots
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case02_SetSpriteSlotByte5
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case03_StepWorkBuf5Mod45
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case04_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case05_StepWorkBuf5Mod15
-    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case06_StepWorkBuf5Mod30
+    dw DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5
+    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45
+    dw DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward
+    dw DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotCount
+    dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case06_SetSpriteSlotCount
     dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case07_SetSpriteSlotByte5
     dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case08_StepSpriteSlotToward
     dw DebugStaffRoll_Scene03_DrawSpriteSlots_Case09_StepSpriteSlotToward
@@ -4924,7 +4924,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene03_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
+DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     srl a
@@ -4963,7 +4963,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Case02_SetSpriteSlotByte5::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene03_DrawSpriteSlots_Case03_StepWorkBuf5Mod45::
+DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45::
     call DrawSpriteSlots
     call StepWorkBuf5Mod45
     ret nz
@@ -4976,7 +4976,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Case03_StepWorkBuf5Mod45::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene03_DrawSpriteSlots_Case04_StepSpriteSlotToward::
+DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, $00
     ld de, $4040
@@ -4991,7 +4991,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Case04_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene03_DrawSpriteSlots_Case05_StepWorkBuf5Mod15::
+DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotCount::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5029,7 +5029,7 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Case05_StepWorkBuf5Mod15::
     ret
     db $03, $02, $01, $00
 
-DebugStaffRoll_Scene03_DrawSpriteSlots_Case06_StepWorkBuf5Mod30::
+DebugStaffRoll_Scene03_DrawSpriteSlots_Case06_SetSpriteSlotCount::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5160,16 +5160,16 @@ DebugStaffRoll_Scene04::
     jumptable
     dw DebugStaffRoll_Scene04_DecompressToVRAM
     dw DebugStaffRoll_Scene04_DrawSpriteSlots
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case02_StepSpriteSlotToward
+    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case03_StepSpriteSlotToward
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case04_StepWorkBuf5Mod60
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case05_StepWorkBuf5Mod60
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case06_StepWorkBuf5Mod60
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case07_StepSpriteSlotToward
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case09_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0A_StepSpriteSlotToward
-    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0B_StepWorkBuf5Mod60
+    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0A
+    dw DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0C_StepSpriteSlotToward
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0D_StepSpriteSlotToward
     dw DebugStaffRoll_Scene04_DrawSpriteSlots_Case0E_StepSpriteSlotToward
@@ -5337,7 +5337,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene04_DrawSpriteSlots_Case02_StepSpriteSlotToward::
+DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     inc a
@@ -5400,7 +5400,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_Case03_StepSpriteSlotToward::
     call SetSpriteSlotByte5
     ret
 
-DebugStaffRoll_Scene04_DrawSpriteSlots_Case09_StepSpriteSlotToward::
+DebugStaffRoll_Scene04_DrawSpriteSlots_Case09::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $20
@@ -5482,7 +5482,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_Case09_StepSpriteSlotToward::
     db $fd, $fd, $fd, $fd, $fe, $fe, $fe, $fe, $ff, $ff, $ff, $ff, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
 
-DebugStaffRoll_Scene04_DrawSpriteSlots_Case0A_StepSpriteSlotToward::
+DebugStaffRoll_Scene04_DrawSpriteSlots_Case0A::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp $10
@@ -5523,7 +5523,7 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_Case0A_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene04_DrawSpriteSlots_Case0B_StepWorkBuf5Mod60::
+DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
     ret nz
@@ -5662,24 +5662,24 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_StepSpriteSlotToward::
     inc [hl]
     ret
 
-DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_CheckWorkBuf::
+DebugStaffRoll_Scene04_DrawSpriteSlots_Case08_StepSpriteSlotToward_CheckWorkBuf::
     ld a, [wWorkBuf + $2]
     or a
     jr z, .read_work_buf
     ld a, [wWorkBuf + $1]
     jumptable
-    dw DebugStaffRoll_Update_Sub01_Table2_Case00_FillTilesRequest
-    dw DebugStaffRoll_Update_Sub01_Table2_Case01_StartPaletteFade
+    dw DebugStaffRoll_Update_FillTilesRequest
+    dw DebugStaffRoll_Update_SetMapId
     dw DebugStaffRoll_Update_Sub01_Table2_Case02_AdvanceWorkBuf
 
 .read_work_buf:
     ld a, [wWorkBuf + $1]
     jumptable
     dw DebugStaffRoll_Update_Sub01_Table3_Case00_FillTilesRequest
-    dw DebugStaffRoll_Update_Sub01_Table3_Case01_StartPaletteFade
-    dw DebugStaffRoll_Update_Sub01_Table3_Case02_AdvanceWorkBuf
+    dw DebugStaffRoll_Update_StartPaletteFade
+    dw DebugStaffRoll_Update_AdvanceWorkBuf
 
-DebugStaffRoll_Update_Sub01_Table2_Case00_FillTilesRequest::
+DebugStaffRoll_Update_FillTilesRequest::
     ld a, [wWorkBuf + $4]
     or a
     jr nz, .read_work_buf
@@ -6067,7 +6067,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00_FillTilesRequest::
     call StartPaletteFade
     ret
 
-DebugStaffRoll_Update_Sub01_Table2_Case01_StartPaletteFade::
+DebugStaffRoll_Update_SetMapId::
     ld hl, wWorkBuf + $5
     ld a, [hli]
     and [hl]
@@ -6212,7 +6212,7 @@ DebugStaffRoll_Update_Sub01_Table3_Case00_FillTilesRequest::
     inc [hl]
     ret
 
-DebugStaffRoll_Update_Sub01_Table3_Case01_StartPaletteFade::
+DebugStaffRoll_Update_StartPaletteFade::
     ld a, [wWorkBuf + $5]
     sub $01
     ld [wWorkBuf + $5], a
@@ -6229,7 +6229,7 @@ DebugStaffRoll_Update_Sub01_Table3_Case01_StartPaletteFade::
     inc [hl]
     ret
 
-DebugStaffRoll_Update_Sub01_Table3_Case02_AdvanceWorkBuf::
+DebugStaffRoll_Update_AdvanceWorkBuf::
     ld a, [wFadeState]
     or a
     ret nz
@@ -6651,7 +6651,7 @@ ResetScreenPalettes_E0::
 Palette_E0_7641::
     dw $67de, $331f, $123c, $0000 ; entry 0
 
-; DebugStaffRoll_Update_Sub01_Table2_Case00_FillTilesRequest reads word wWorkBuf + 2 - 1 of $7649
+; DebugStaffRoll_Update_FillTilesRequest reads word wWorkBuf + 2 - 1 of $7649
 ; (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as
 ; count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair
 ; meaning is not read (E-0213, C1)
