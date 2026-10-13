@@ -1960,7 +1960,8 @@ LoadSixteenGlyphTilesFromTable73BC_Data2::
 
 ; first call: draws the 6 x 6 frame TileRect_1F_651B and loads the picture of species wRecordBufB +
 ; $B at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-DrawWCA36MonsterPictureInTwoSteps::
+; (E-0340: the address in its name read as its RAM name; was DrawWCA36MonsterPictureInTwoSteps)
+DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld a, [wScreenSubStep]
     and a
     jp nz, .check_is_cgb

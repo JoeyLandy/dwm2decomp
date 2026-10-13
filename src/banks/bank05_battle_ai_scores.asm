@@ -316,8 +316,9 @@ SkillPassesStatus1Bit0Check::
     ret
 
 ; C = $00 when bit 4 of wRecordBufferData + $5 and bit 7 of the actor's status byte 0 are both set,
-; else $FF (E-0122)
-PassUnlessWCFF3Bit4AndActorStatusBit7::
+; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
+; PassUnlessWCFF3Bit4AndActorStatusBit7)
+PassUnlessRecordBufferData5Bit4AndActorStatusBit7::
     ld a, [wRecordBufferData + $5]
     bit 4, a
     jr z, .done
@@ -334,8 +335,9 @@ PassUnlessWCFF3Bit4AndActorStatusBit7::
     ret
 
 ; C = $00 when bit 5 of wRecordBufferData + $5 and bit 6 of the actor's status byte 0 are both set,
-; else $FF (E-0122)
-PassUnlessWCFF3Bit5AndActorStatusBit6::
+; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
+; PassUnlessWCFF3Bit5AndActorStatusBit6)
+PassUnlessRecordBufferData5Bit5AndActorStatusBit6::
     ld a, [wRecordBufferData + $5]
     bit 5, a
     jr z, .done
@@ -1217,7 +1219,7 @@ AIGateFoeStatus1Mask22::
     call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done3
-    call TestWCFEF
+    call TestRecordBufferData1
     jr z, .done2
     cp $03
     jr nz, .done2
@@ -1261,7 +1263,7 @@ AIScore_FireAir_ReadSlotAIModeIndexed_Bank05::
     call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done3
-    call TestWCFEF
+    call TestRecordBufferData1
     jr z, .done2
     cp $03
     jr nz, .done2
@@ -1473,12 +1475,13 @@ AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
     ret
 
 ; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when
-; a present slot's entry & $3C is not $3C, else 0 (E-0094)
-AnyAllyWDA76Bits2To5NotAllSet::
+; a present slot's entry & $3C is not $3C, else 0 (E-0094) (E-0340: the address in its name read as
+; its RAM name; was AnyAllyWDA76Bits2To5NotAllSet)
+AnyAllySlotResistances4Bits2To5NotAllSet::
     ld a, [wBattleActor]
     and $04
 
-AnyAllyWDA76Bits2To5NotAllSet_Skip::
+AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, a
     ld b, $03
     ld hl, wSlotResistances + $4
@@ -1514,7 +1517,7 @@ AIScore_SuckAir_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
     xor $04
-    jp AnyAllyWDA76Bits2To5NotAllSet_Skip
+    jp AnyAllySlotResistances4Bits2To5NotAllSet_Skip
 
 AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $00
@@ -1645,8 +1648,8 @@ AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 1 bit 1 clear,
 ; status byte 5 & $03 clear and the low 2 bits of its wSlotResistances + $1 entry not 3, else 0
-; (E-0099)
-AnyFoeOpenToWDA73Field0::
+; (E-0099) (E-0340: the address in its name read as its RAM name; was AnyFoeOpenToWDA73Field0)
+AnyFoeOpenToSlotResistances1Field0::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1732,7 +1735,8 @@ AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when one of the actor's three opposite slots is present with non-zero MP
 ; (GetBattleMP_Bank05) and bits 3-2 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
-AnyFoeWithMPOpenToWDA74Field1::
+; (E-0340: the address in its name read as its RAM name; was AnyFoeWithMPOpenToWDA74Field1)
+AnyFoeWithMPOpenToSlotResistances2Field1::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1842,8 +1846,9 @@ AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 & $03 clear and
-; the low 2 bits of its wSlotResistances + $4 entry not 3, else 0 (E-0099)
-AnyFoeOpenToWDA76Field0::
+; the low 2 bits of its wSlotResistances + $4 entry not 3, else 0 (E-0099) (E-0340: the address in
+; its name read as its RAM name; was AnyFoeOpenToWDA76Field0)
+AnyFoeOpenToSlotResistances4Field0::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1879,8 +1884,9 @@ AnyFoeOpenToWDA76Field0::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 6 clear and
-; bits 7-6 of its wSlotResistances + $5 entry not both set, else 0 (E-0099)
-AnyFoeOpenToWDA77Field3::
+; bits 7-6 of its wSlotResistances + $5 entry not both set, else 0 (E-0099) (E-0340: the address in
+; its name read as its RAM name; was AnyFoeOpenToWDA77Field3)
+AnyFoeOpenToSlotResistances5Field3::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1994,8 +2000,9 @@ AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; C = $FF when an occupied foe without status bit 7 has a skill with flag $10 and bits 6-7 of its
-; wSlotResistances + $6 field below 3, else $00 (wRecordBuffer preserved) (E-0125)
-AnyFoeWithSkillFlag10VulnerableWDA78::
+; wSlotResistances + $6 field below 3, else $00 (wRecordBuffer preserved) (E-0125) (E-0340: the
+; address in its name read as its RAM name; was AnyFoeWithSkillFlag10VulnerableWDA78)
+AnyFoeWithSkillFlag10VulnerableSlotResistances6::
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -3971,8 +3978,9 @@ AIScore_MagicBack_Conditions_AddAx9ToHL::
     ret
 
 ; link battles only: C = $00 when rule bits 7 and 6 of wLinkRules + $1 are set and the side's
-; wLinkRuleWork57 flag (or wLinkRules + $2 bit 6) allows it; otherwise $FF (E-0124)
-LinkRuleCheckWD044Bit6::
+; wLinkRuleWork57 flag (or wLinkRules + $2 bit 6) allows it; otherwise $FF (E-0124) (E-0340: the
+; address in its name read as its RAM name; was LinkRuleCheckWD044Bit6)
+LinkRuleCheckLinkRules1Bit6::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4005,8 +4013,9 @@ LinkRuleCheckWD044Bit6::
 
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 5 are set, and either
 ; wLinkRules + $2 bit 5 is clear or bit 5 is set in the actor side's byte wLinkRuleWork57[actor /
-; 4]; otherwise C = $FF (E-0091)
-CheckWD044RuleBit5::
+; 4]; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
+; CheckWD044RuleBit5)
+CheckLinkRules1RuleBit5::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4039,8 +4048,9 @@ CheckWD044RuleBit5::
 
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 4 are set, and either
 ; wLinkRules + $2 bit 4 is clear or bit 4 is set in the actor side's byte wLinkRuleWork57[actor /
-; 4]; otherwise C = $FF (E-0091)
-CheckWD044RuleBit4::
+; 4]; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
+; CheckWD044RuleBit4)
+CheckLinkRules1RuleBit4::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4073,8 +4083,9 @@ CheckWD044RuleBit4::
 
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 3 are set, and either
 ; wLinkRules + $2 bit 3 is clear or bit 3 is set in the actor side's byte wLinkRuleWork57[actor /
-; 4]; otherwise C = $FF (E-0091)
-CheckWD044RuleBit3::
+; 4]; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
+; CheckWD044RuleBit3)
+CheckLinkRules1RuleBit3::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4107,8 +4118,9 @@ CheckWD044RuleBit3::
 
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 2 are set, and either
 ; wLinkRules + $2 bit 2 is clear or bit 2 is set in the actor side's byte wLinkRuleWork57[actor /
-; 4]; otherwise C = $FF (E-0091)
-CheckWD044RuleBit2::
+; 4]; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
+; CheckWD044RuleBit2)
+CheckLinkRules1RuleBit2::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -4141,8 +4153,9 @@ CheckWD044RuleBit2::
 
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 1 are set, and either
 ; wLinkRules + $2 bit 1 is clear or bit 1 is set in the actor side's byte wLinkRuleWork57[actor /
-; 4]; otherwise C = $FF (E-0091)
-CheckWD044RuleBit1::
+; 4]; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
+; CheckWD044RuleBit1)
+CheckLinkRules1RuleBit1::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -5424,8 +5437,9 @@ FailIfLinkModeZeroAndPlayerStateFlagsBit3::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and
-; bits 7-6 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
-AnyFoeOpenToWDA74Field3::
+; bits 7-6 of its wSlotResistances + $2 entry not both set, else 0 (E-0100) (E-0340: the address in
+; its name read as its RAM name; was AnyFoeOpenToWDA74Field3)
+AnyFoeOpenToSlotResistances2Field3::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -5460,8 +5474,9 @@ AnyFoeOpenToWDA74Field3::
     ret
 
 ; C = $FF when an occupied foe has a zero wBattleStatus3 byte and bits 2-3 of its wSlotResistances +
-; $5 field below 3, else $00 (E-0124)
-AnyFoeVulnerableByWDA77Bits23::
+; $5 field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
+; AnyFoeVulnerableByWDA77Bits23)
+AnyFoeVulnerableBySlotResistances5Bits23::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -5578,8 +5593,9 @@ AnyFoeLacksStatus4Bits23ThenStatus3Bits67::
     ret
 
 ; C = $FF when an occupied foe lacks status bit 4 and has bits 6-7 of its wSlotResistances + $3
-; field below 3, else $00 (E-0124)
-AnyFoeVulnerableByWDA75Bits67::
+; field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
+; AnyFoeVulnerableByWDA75Bits67)
+AnyFoeVulnerableBySlotResistances3Bits67::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -5677,7 +5693,7 @@ AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05::
     jr nz, .next
     call SlotActionIs9C33Or92Or93
     jr nz, .next
-    call WDA77EntryHasBits2And3_Bank05_5F2A
+    call SlotResistances5EntryHasBits2And3_Bank05_5F2A
     jr nz, .done2
 
 .next:
@@ -5718,7 +5734,7 @@ SlotActionIs9C33Or92Or93::
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wSlotResistances + $5 + 7 * C
 ; (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2
 ; banks)
-WDA77EntryHasBits2And3_Bank05_5F2A::
+SlotResistances5EntryHasBits2And3_Bank05_5F2A::
     ld a, c
     ld hl, wSlotResistances + $5
     add a
@@ -5834,7 +5850,7 @@ SlotCLacksSkill63Or64WithMP::
     jr c, .loop2
     ret
 
-AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $04
@@ -5862,7 +5878,7 @@ AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
     jr nc, .next
     call SlotCHasMP3AndSkill6B
     jr c, .next
-    call WDA77EntryHasBits2And3_Bank05
+    call SlotResistances5EntryHasBits2And3_Bank05
     jr nz, .done2
 
 .next:
@@ -5916,7 +5932,7 @@ SlotCHasMP3AndSkill6B::
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wSlotResistances + $5 + 7 * C
 ; (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2
 ; banks)
-WDA77EntryHasBits2And3_Bank05::
+SlotResistances5EntryHasBits2And3_Bank05::
     ld a, c
     ld hl, wSlotResistances + $5
     add a
@@ -6116,8 +6132,9 @@ SlotCHasCastableHealSkill_Data::
     db $02, $05, $07, $12, $24, $01, $0c, $1c
 
 ; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe without status 1 mask $2A
-; has bits 4-5 of its wSlotResistances + $2 byte clear, else $FF (E-0125)
-AIGateFoeWDA74Bits45::
+; has bits 4-5 of its wSlotResistances + $2 byte clear, else $FF (E-0125) (E-0340: the address in
+; its name read as its RAM name; was AIGateFoeWDA74Bits45)
+AIGateFoeSlotResistances2Bits45::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $04
@@ -8794,8 +8811,9 @@ ScaleHLToFourFifths::
     pop de
     ret
 
-; A = wRecordBufferData + $1, Z set when it is zero (E-0114)
-TestWCFEF::
+; A = wRecordBufferData + $1, Z set when it is zero (E-0114) (E-0340: the address in its name read
+; as its RAM name; was TestWCFEF)
+TestRecordBufferData1::
     ld a, [wRecordBufferData + $1]
     or a
     ret
@@ -9328,7 +9346,7 @@ AIScore_Surround_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA73Field0
+    call AnyFoeOpenToSlotResistances1Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9350,7 +9368,7 @@ AIScore_Sleep_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA74Field3
+    call AnyFoeOpenToSlotResistances2Field3
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9406,7 +9424,7 @@ AIScore_RobMagic_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeWithMPOpenToWDA74Field1
+    call AnyFoeWithMPOpenToSlotResistances2Field1
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9474,7 +9492,7 @@ AIPanicAllUsable::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeVulnerableByWDA75Bits67
+    call AnyFoeVulnerableBySlotResistances3Bits67
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9561,7 +9579,7 @@ AIScore_MagicBack_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call CheckWD044RuleBit5
+    call CheckLinkRules1RuleBit5
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9751,7 +9769,7 @@ AIScore_FireAir_AIAttackSkillUsable_74D1::
     ld a, c
     and a
     ret z
-    call PassUnlessWCFF3Bit4AndActorStatusBit7
+    call PassUnlessRecordBufferData5Bit4AndActorStatusBit7
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10044,7 +10062,7 @@ AIScore_PoisonHit_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA76Field0
+    call AnyFoeOpenToSlotResistances4Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10064,7 +10082,7 @@ AIScore_Paralyze_Conditions::
     ld a, c
     and a
     ret z
-    call AnyFoeOpenToWDA77Field3
+    call AnyFoeOpenToSlotResistances5Field3
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10084,7 +10102,7 @@ AIScore_NapAttack_Conditions::
     ld a, c
     and a
     ret z
-    call AnyFoeOpenToWDA74Field3
+    call AnyFoeOpenToSlotResistances2Field3
     ld a, c
     jr z, .call_reset_ai_skill_score
     ld c, $ff
@@ -10398,7 +10416,7 @@ AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne::
 ; AnyFoeLacksStatus0MaskCC, AnyFoeOpenToWDA74Field3 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_SleepAir_Conditions::
-    call AIFunc770AAndPassUnlessWCFF3Bit4
+    call AIFunc770AAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
     ret z
@@ -10406,7 +10424,7 @@ AIScore_SleepAir_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA74Field3
+    call AnyFoeOpenToSlotResistances2Field3
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10417,13 +10435,14 @@ AIScore_SleepAir_Conditions::
     ret
 
 ; usable only when AIAttackSkillUsable_770A and PassUnlessWCFF3Bit4AndActorStatusBit7 pass;
-; otherwise resets wAISkillScore (E-0122)
-AIFunc770AAndPassUnlessWCFF3Bit4::
+; otherwise resets wAISkillScore (E-0122) (E-0340: the address in its name read as its RAM name; was
+; AIFunc770AAndPassUnlessWCFF3Bit4)
+AIFunc770AAndPassUnlessRecordBufferData5Bit4::
     call AIAttackSkillUsable_770A
     ld a, c
     and a
     ret z
-    call PassUnlessWCFF3Bit4AndActorStatusBit7
+    call PassUnlessRecordBufferData5Bit4AndActorStatusBit7
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10437,7 +10456,7 @@ AIFunc770AAndPassUnlessWCFF3Bit4::
 ; AnyFoeLacksStatus0Bit6, AnyFoeOpenToWDA77Field3 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PalsyAir_Conditions::
-    call AIFunc770AAndPassUnlessWCFF3Bit4
+    call AIFunc770AAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
     ret z
@@ -10445,7 +10464,7 @@ AIScore_PalsyAir_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA77Field3
+    call AnyFoeOpenToSlotResistances5Field3
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10463,7 +10482,7 @@ AIScore_PalsyAir_Conditions::
 ; AnyFoeLacksStatus0Bits01, AnyFoeOpenToWDA76Field0 in turn and tests C after each (zero: stop; the
 ; failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PoisonGas_Conditions::
-    call AIFunc770AAndPassUnlessWCFF3Bit4
+    call AIFunc770AAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
     ret z
@@ -10471,7 +10490,7 @@ AIScore_PoisonGas_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA76Field0
+    call AnyFoeOpenToSlotResistances4Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10485,7 +10504,7 @@ AIScore_PoisonGas_Conditions::
 ; AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask, AnyFoeOpenToWDA76Field0 in turn and tests C after
 ; each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PoisonAir_Conditions::
-    call AIFunc770AAndPassUnlessWCFF3Bit4
+    call AIFunc770AAndPassUnlessRecordBufferData5Bit4
     ld a, c
     and a
     ret z
@@ -10493,7 +10512,7 @@ AIScore_PoisonAir_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA76Field0
+    call AnyFoeOpenToSlotResistances4Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10511,7 +10530,7 @@ AIScore_Curse_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit4AndActorStatusBit7
+    call PassUnlessRecordBufferData5Bit4AndActorStatusBit7
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10549,7 +10568,7 @@ AIScore_OddDance_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeWithMPOpenToWDA74Field1
+    call AnyFoeWithMPOpenToSlotResistances2Field1
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10598,7 +10617,7 @@ AIDanceUsable::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit5AndActorStatusBit6
+    call PassUnlessRecordBufferData5Bit5AndActorStatusBit6
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10649,7 +10668,7 @@ AIScore_LureDance_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeVulnerableByWDA77Bits23
+    call AnyFoeVulnerableBySlotResistances5Bits23
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10671,7 +10690,7 @@ AIScore_LifeDance_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit5AndActorStatusBit6
+    call PassUnlessRecordBufferData5Bit5AndActorStatusBit6
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10705,7 +10724,7 @@ AIScore_Hustle_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit5AndActorStatusBit6
+    call PassUnlessRecordBufferData5Bit5AndActorStatusBit6
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10731,7 +10750,7 @@ AIScore_SideStep_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit5AndActorStatusBit6
+    call PassUnlessRecordBufferData5Bit5AndActorStatusBit6
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10773,7 +10792,7 @@ AIScore_SandStorm_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA73Field0
+    call AnyFoeOpenToSlotResistances1Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10803,7 +10822,7 @@ AIScore_Radiant_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeOpenToWDA73Field0
+    call AnyFoeOpenToSlotResistances1Field0
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10947,7 +10966,7 @@ AIScore_TatsuCall_Conditions::
 ; ActorLacksStatus4Bits67, AIScore_SuckAir_Sub01_Sub01 in turn and tests C after each (zero: stop;
 ; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_SuckAir_Conditions::
-    call PassUnlessWCFF3Bit4AndActorStatusBit7
+    call PassUnlessRecordBufferData5Bit4AndActorStatusBit7
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11011,7 +11030,7 @@ AILickSkillUsable_7AD8::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeVulnerableByWDA77Bits23
+    call AnyFoeVulnerableBySlotResistances5Bits23
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11049,7 +11068,7 @@ AIStatusLickUsable::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AnyFoeVulnerableByWDA77Bits23
+    call AnyFoeVulnerableBySlotResistances5Bits23
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11119,7 +11138,7 @@ AIScore_DanceShut_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call PassUnlessWCFF3Bit5AndActorStatusBit6
+    call PassUnlessRecordBufferData5Bit5AndActorStatusBit6
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score

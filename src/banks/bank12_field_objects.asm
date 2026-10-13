@@ -83,14 +83,14 @@ ObjectPath1C::
     jumptable
     dw ObjectPath1C_SetBit2AtHL_B12
     dw ObjectPath1C_UpdateFollowersOnStep_Bank12
-    dw ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02
+    dw ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02_AddStepDeltaToPointedByte
     dw ObjectPath1C_AddStepDeltaToPointedByte
     dw ObjectPath1C_WriteFollowerRecordsAndMapIdEtc
-    dw ObjectPath1C_SetBit2AtHL_B12_Case05
+    dw ObjectPath1C_SetBit2AtHL_B12_Case05_SetPlayerFacing
     dw ObjectPath1C_WritePlayerY
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07_SetPlayerFacing
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08_SetFollowerRecords
+    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09_SetScriptStep
     dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12
     dw ObjectPath1C_ClearBit2AtHL_Bank12
 
@@ -104,7 +104,7 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12::
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09_SetScriptStep::
     xor a
     ld [wFollowerRecords + $5], a
     ld de, wFollowerRecords + $7
@@ -125,7 +125,7 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case09::
     ld [wScriptStep], a
     ret
 
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08_SetFollowerRecords::
     xor a
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -147,7 +147,7 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case08::
     ld [wScriptStep], a
     ret
 
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07::
+ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_Case07_SetPlayerFacing::
     xor a
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -179,7 +179,7 @@ ObjectPath1C_WritePlayerY::
     inc [hl]
     ret
 
-ObjectPath1C_SetBit2AtHL_B12_Case05::
+ObjectPath1C_SetBit2AtHL_B12_Case05_SetPlayerFacing::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -249,7 +249,7 @@ ObjectPath1C_AddStepDeltaToPointedByte::
     farcall AddStepDeltaToPointedByte
     jp ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
 
-ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02::
+ObjectPath1C_UpdateFollowersOnStep_Bank12_Case02_AddStepDeltaToPointedByte::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld a, $02
@@ -302,14 +302,14 @@ ObjectPath1B::
     jumptable
     dw ObjectPath1B_SetBit2AtHL_B12
     dw ObjectPath1B_UpdateFollowersOnStep_Bank12
-    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02
+    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02_AddStepDeltaToPointedByte
     dw ObjectPath1B_AddStepDeltaToPointedByte
     dw ObjectPath1B_WriteFollowerRecordsAndMapIdEtc
-    dw ObjectPath1B_SetBit2AtHL_B12_Case05
-    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09
+    dw ObjectPath1B_SetBit2AtHL_B12_Case05_SetPlayerFacing
+    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06_SetPlayerY
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07_SetPlayerFacing
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08_SetFollowerRecords
+    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09_SetScriptStep
     dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12
     dw ObjectPath1C_ClearBit2AtHL_Bank12
 
@@ -330,7 +330,7 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12::
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09_SetScriptStep::
     ld a, $03
     ld [wFollowerRecords + $5], a
     ld de, wFollowerRecords + $7
@@ -350,7 +350,7 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case09::
     ld [wScriptStep], a
     ret
 
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08_SetFollowerRecords::
     ld a, $03
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -372,7 +372,7 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case08::
     ld [wScriptStep], a
     ret
 
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07::
+ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_Case07_SetPlayerFacing::
     ld a, $03
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -408,7 +408,7 @@ ScriptApplyStepDeltaAtDE_Bank12::
     inc [hl]
     ret
 
-ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06::
+ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06_SetPlayerY::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ldh a, [hPlayerY]
@@ -420,7 +420,7 @@ ObjectPath1B_UpdateFollowersOnStep_Bank12_Case06::
     inc [hl]
     ret
 
-ObjectPath1B_SetBit2AtHL_B12_Case05::
+ObjectPath1B_SetBit2AtHL_B12_Case05_SetPlayerFacing::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -484,7 +484,7 @@ ObjectPath1B_AddStepDeltaToPointedByte::
     farcall AddStepDeltaToPointedByte
     jr ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
 
-ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02::
+ObjectPath1B_UpdateFollowersOnStep_Bank12_Case02_AddStepDeltaToPointedByte::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -544,11 +544,11 @@ ArenaRounds::
     ld a, [wScriptStep]
     jumptable
     dw ArenaRounds_ScriptStartFadeAndAdvanceStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A_Case01
+    dw ArenaRounds_RunMessageBoxThenContinue_684A_Case01_SetBit2AtHL_B12
     dw ArenaRounds_SetBit2AtHL_B12
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage_Case05
+    dw ArenaRounds_StartArenaRankMessage_Case05_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
@@ -556,12 +556,12 @@ ArenaRounds::
     dw ArenaRounds_ToStartArenaRankMessageAndStep
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage_Case0D
+    dw ArenaRounds_StartArenaRankMessage_Case0D_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12
+    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12_AdvanceScriptStep
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaRounds_StartArenaRankMessage
@@ -579,7 +579,7 @@ ArenaRounds_StartArenaRankMessage::
     dec [hl]
     ret
 
-ArenaRounds_StartArenaRankMessage_Case0D::
+ArenaRounds_StartArenaRankMessage_Case0D_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld hl, wRecordCapacity
     dec [hl]
     ld a, [wRecordCapacity]
@@ -602,7 +602,7 @@ ArenaRounds_StartArenaRankMessage_Case0D::
     farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
     ret
 
-ArenaRounds_StartArenaRankMessage_Case05::
+ArenaRounds_StartArenaRankMessage_Case05_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld hl, wRecordCapacity
     dec [hl]
     ld a, [wRecordCapacity]
@@ -625,7 +625,7 @@ ArenaRounds_StartArenaRankMessage_Case05::
     farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
     ret
 
-ArenaRounds_RunMessageBoxThenContinue_684A_Case01::
+ArenaRounds_RunMessageBoxThenContinue_684A_Case01_SetBit2AtHL_B12::
     ld a, $0e
     ldh [hFieldDrawFlags], a
     xor a
@@ -680,11 +680,11 @@ ArenaGridBattle::
     jumptable
     dw ArenaGridBattle_ScriptStartFadeAndAdvanceStep
     dw ArenaGridBattle_RunMessageBoxThenContinue_684A
-    dw ArenaGridBattle_RunMessageBoxThenContinue_684A_Case02
+    dw ArenaGridBattle_RunMessageBoxThenContinue_684A_Case02_SetBit2AtHL_B12
     dw ArenaRounds_SetBit2AtHL_B12
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_Case06
+    dw ArenaGridBattle_StartArenaRankMessage_Case06_SetupScreenCountPlusOneFromRecordCapacity
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
@@ -692,12 +692,12 @@ ArenaGridBattle::
     dw ArenaRounds_ToStartArenaRankMessageAndStep
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_Case0E
+    dw ArenaGridBattle_StartArenaRankMessage_Case0E_SetupScreenCountPlusOneFromRecordCapacity
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12
+    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12_AdvanceScriptStep
     dw ArenaRounds_RunMessageBoxThenContinue_684A
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaGridBattle_StartArenaRankMessage
@@ -771,14 +771,14 @@ ArenaGridBattle_StartArenaRankMessage::
     dec [hl]
     ret
 
-ArenaRounds_ToStartArenaRankMessageAndStep_Case12::
+ArenaRounds_ToStartArenaRankMessageAndStep_Case12_AdvanceScriptStep::
     ld a, $06
     call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ret
 
-ArenaGridBattle_StartArenaRankMessage_Case0E::
+ArenaGridBattle_StartArenaRankMessage_Case0E_SetupScreenCountPlusOneFromRecordCapacity::
     ld a, $05
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -794,7 +794,7 @@ ArenaGridBattle_StartArenaRankMessage_Case0E::
 
 .call_setup_screen_count_plus_one_from_record:
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02
+    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02_SetBattleIntroKind
     ret
 
 ArenaRounds_ToStartArenaRankMessageAndStep::
@@ -956,7 +956,7 @@ ArenaRounds_SetupMap0BMonsterObjects::
     inc [hl]
     ret
 
-ArenaGridBattle_StartArenaRankMessage_Case06::
+ArenaGridBattle_StartArenaRankMessage_Case06_SetupScreenCountPlusOneFromRecordCapacity::
     ld a, $03
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -972,7 +972,7 @@ ArenaGridBattle_StartArenaRankMessage_Case06::
 
 .call_setup_screen_count_plus_one_from_record:
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02
+    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Shared02_SetBattleIntroKind
     ret
 
 ArenaRounds_StepScriptParam0Counter_Bank12::
@@ -1131,7 +1131,7 @@ ArenaRounds_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-ArenaGridBattle_RunMessageBoxThenContinue_684A_Case02::
+ArenaGridBattle_RunMessageBoxThenContinue_684A_Case02_SetBit2AtHL_B12::
     xor a
     call RunMessageBoxThenContinue_684A
     ret nc
@@ -1250,25 +1250,25 @@ LinkMessageEvent::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetSaveStateFlag
 
 LinkMessageEvent_SetSaveStateFlag::
@@ -1294,25 +1294,25 @@ NpcBreedWarp::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw NpcBreedWarp_WriteMapIdAndMapScreenXEtc
     dw NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc
 
@@ -1386,27 +1386,27 @@ BreedChildScene::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_DecompressGraphicsTemp0ToTemp4
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -1450,17 +1450,17 @@ BreedChildSprite::
     dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
     dw BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedChildSprite_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -1644,25 +1644,25 @@ BreedFade::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
     dw BreedFade_StartPaletteFade
     dw BreedFade_WaitFadeState
 
@@ -1776,7 +1776,7 @@ LinkMessageEvent_WriteObject2AndScriptParam0::
     inc [hl]
     ret
 
-LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_Case05_AdvanceScriptStep::
     ld b, $3c
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -1807,7 +1807,7 @@ LinkMessageEvent_WriteObject1AndScriptParam0::
     inc [hl]
     ret
 
-LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -1946,7 +1946,7 @@ FollowersStep14::
     jumptable
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12
 
 ; implements script command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event
 ; (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the
@@ -1958,7 +1958,7 @@ WarpWithFollowers::
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
     dw WarpWithFollowers_ScriptStartFadeAndAdvanceStep
     dw WarpWithFollowers_SetBit1AtHL_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12
 
 WarpWithFollowers_SetBit1AtHL_Bank12::
     ld hl, hPlayerStateFlags
@@ -2029,9 +2029,9 @@ PlayerAndFollowersStep::
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
     dw PlayerAndFollowersStep_UpdatePlayerMovement
-    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03
+    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03_RunFieldActionRequestActionIfBit7
     dw PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12
 
 PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12::
     ldh a, [hPlayerY]
@@ -2056,7 +2056,7 @@ FollowersStep11::
     jumptable
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep11_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12
 
 FollowersStep11_UpdateFollowersOnStep_Bank12::
     ldh a, [hPlayerY]
@@ -2082,11 +2082,11 @@ FollowersStep10::
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
     dw PlayerAndFollowersStep_UpdatePlayerMovement
-    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03
+    dw PlayerAndFollowersStep_UpdatePlayerMovement_Case03_RunFieldActionRequestActionIfBit7
     dw FollowersStep10_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02
+    dw FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12
 
-FollowersStep14_UpdateFollowersOnStep_Bank12_Case02::
+FollowersStep14_UpdateFollowersOnStep_Bank12_Case02_ClearBit1AtHL_Bank12::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ldh a, [hPlayerY]
@@ -2126,7 +2126,7 @@ FollowersStep10_UpdateFollowersOnStep_Bank12::
     inc [hl]
     ret
 
-PlayerAndFollowersStep_UpdatePlayerMovement_Case03::
+PlayerAndFollowersStep_UpdatePlayerMovement_Case03_RunFieldActionRequestActionIfBit7::
     farcall UpdatePlayerMovement
     farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
@@ -2715,15 +2715,15 @@ MapExitDestinationTable::
 HealPartyEvent::
     ld a, [wScriptStep]
     jumptable
-    dw HealPartyEvent_TestFlagBit_Case00
+    dw HealPartyEvent_TestFlagBit_Case00_AdvanceScriptStep
     dw HealPartyEvent_TestFlagBit
     dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06_SetScriptStartRequest
 
-HealPartyEvent_TestFlagBit_Case00::
+HealPartyEvent_TestFlagBit_Case00_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ld a, $03
@@ -2748,7 +2748,7 @@ ReturnWarp::
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06_SetScriptStartRequest
 
 HealPartyEvent_TestFlagBit::
     ld hl, wScriptStep
@@ -2852,7 +2852,7 @@ ReturnMessage::
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06
+    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06_SetScriptStartRequest
 
 ; with bit 7 of wMapType saves the wKeyWorldFlags record; sets the position ($50, $30),
 ; wFieldTransitionKind = 3 (story flag $25) or 4, wReturnWarpFlag = 1 and starts the fade (E-0126)
@@ -3015,7 +3015,7 @@ HealPartyEvent_MoveIncapacitatedPartyMembersBack::
     call StartMessageA
     ret
 
-HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06::
+HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_Case06_SetScriptStartRequest::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -3033,7 +3033,7 @@ PartyDefeatedReturn::
     dw PartyDefeatedReturn_WriteScriptParam0AndScriptParam1
     dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc
     dw PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12
-    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03
+    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03_BackScriptStep
     dw PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc
     dw PartyDefeatedReturn_QueueMusic
     dw PartyDefeatedReturn_StepScriptParam0Counter_Bank12
@@ -3094,7 +3094,7 @@ PartyDefeatedReturn_QueueMusic::
     ld [wScriptStartRequest], a
     ret
 
-PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03::
+PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_Case03_BackScriptStep::
     ld hl, wScriptStep
     dec [hl]
     ld de, wShadowOAM + $b
@@ -3513,7 +3513,7 @@ RandomGoldOrItem_AddGoldCapped::
 .read_script_param1:
     ld a, [wScriptParam1]
     ld [wStepPtrLo], a
-    farcall AppendItemWC928ToInventory
+    farcall AppendItemStepPtrLoToInventory
 
 .clear_trigger_marker_flags:
     xor a
@@ -3902,14 +3902,14 @@ FieldScene01::
 .skip:
     dec a
     jr nz, .call_field_scene01_write_joypad_held_and
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03_SetJoypadHeld
     ret
 
 .call_field_scene01_write_joypad_held_and:
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01_SetJoypadHeld
     ret
 
-FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01::
+FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub01_SetJoypadHeld::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4028,10 +4028,10 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed::
     dw FieldScene01_Sub02_StepScriptParam0Counter_Bank12
     dw FieldScene01_Sub02_AddStepDeltaToPointedByte
     dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
-    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
-    dw FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08
+    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_QueueMusic
+    dw FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08_DrawScriptMetaSprite21AtScrollOffset
 
-FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08::
+FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08_DrawScriptMetaSprite21AtScrollOffset::
     ld de, hPlayerY
     ld a, e
     ld [wStepPtrLo], a
@@ -4095,7 +4095,7 @@ FieldScene01_Sub02_AddStepDeltaToPointedByte_Case08::
     dec [hl]
     ret
 
-FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07::
+FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_QueueMusic::
     call DrawScriptMetaSprite21AtScrollOffset
     ld hl, wScriptStep
     inc [hl]
@@ -4200,7 +4200,7 @@ FieldScene01_Sub02_DecompressToVRAM::
     inc [hl]
     ret
 
-FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03::
+FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03_SetJoypadHeld::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4215,7 +4215,7 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03::
     dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
     dw FieldScene01_Sub03_AddStepDeltaToPointedByte
     dw FieldScene01_Sub03_WaitFieldActionRequest
-    dw FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09
+    dw FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09_SetTriggerEnable
 
 FieldScene01_Sub02_StepScriptParam0Counter_Bank12::
     ld b, $1e
@@ -4256,7 +4256,7 @@ FieldScene01_Sub02_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09::
+FieldScene01_Sub03_AddStepDeltaToPointedByte_Case09_SetTriggerEnable::
     ld a, $01
     ld [wTriggerEnable], a
     ldh a, [hPlayerStateFlags]
@@ -4727,7 +4727,7 @@ KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo::
     bit 7, a
     jr nz, .call_draw_door_tiles_for_key_world_floor
     ld [wStepPtrLo], a
-    farcall AppendItemWC928ToInventory
+    farcall AppendItemStepPtrLoToInventory
     jr .call_draw_door_tiles_for_key_world_floor
 
 .call_draw_door_tiles_for_key_world_floor:
@@ -4846,8 +4846,8 @@ AreaItemEvent_WriteScriptStartRequestAndStepPtrLo::
     inc hl
     inc hl
     ld [hl], $01
-    farcall AppendItemWC928ToInventory
-    farcall CheckTwoWCDB0EntriesForKeyWorldArea
+    farcall AppendItemStepPtrLoToInventory
+    farcall CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -4916,7 +4916,7 @@ StepTriggerReward::
     dw StepTriggerReward_CopyItemNameToDE
     dw StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12
     dw StepTriggerReward_AddGoldCapped
-    dw StepTriggerReward_AppendItemWC928ToInventory
+    dw StepTriggerReward_AppendItemStepPtrLoToInventory
     dw StepTriggerReward_SetModeState3AndSaveScreen
     dw StepTriggerReward_SetScriptStartRequestTo80
 
@@ -4939,7 +4939,7 @@ StepTriggerReward_SetModeState3AndSaveScreen::
     ld [wScriptStartRequest], a
     ret
 
-StepTriggerReward_AppendItemWC928ToInventory::
+StepTriggerReward_AppendItemStepPtrLoToInventory::
     call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     inc hl
     ld a, [hl]
@@ -4950,7 +4950,7 @@ StepTriggerReward_AppendItemWC928ToInventory::
     ld [hl], a
     ld a, $ff
     ld [wTriggerKind], a
-    farcall AppendItemWC928ToInventory
+    farcall AppendItemStepPtrLoToInventory
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -5803,9 +5803,9 @@ GenerateNewKeyEntry::
     ld [hli], a
     ld a, [wKeyRandomHi]
     ld [hl], a
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     set 7, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
     ret
 
 ; hTemp0 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack
@@ -6229,29 +6229,29 @@ RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
     dw RunFieldCommandTemp0_WriteObject5
-    dw RunFieldCommandTemp0_WriteObject5_Case01
-    dw RunFieldCommandTemp0_WriteObject5_Case02
-    dw RunFieldCommandTemp0_WriteObject5_Case03
-    dw RunFieldCommandTemp0_WriteObject5_Case04
-    dw RunFieldCommandTemp0_WriteObject5_Case05
-    dw RunFieldCommandTemp0_WriteObject5_Case06
-    dw RunFieldCommandTemp0_WriteObject5_Case07
-    dw RunFieldCommandTemp0_WriteObject5_Case08
-    dw RunFieldCommandTemp0_WriteObject5_Case09
-    dw RunFieldCommandTemp0_WriteObject5_Case0A
-    dw RunFieldCommandTemp0_WriteObject5_Case0B
-    dw RunFieldCommandTemp0_WriteObject5_Case0C
-    dw RunFieldCommandTemp0_WriteObject5_Case0D
-    dw RunFieldCommandTemp0_WriteObject5_Case0D
-    dw RunFieldCommandTemp0_WriteObject5_Case0F
-    dw RunFieldCommandTemp0_WriteObject5_Case10
-    dw RunFieldCommandTemp0_WriteObject5_Case11
-    dw RunFieldCommandTemp0_WriteObject5_Case12
-    dw RunFieldCommandTemp0_WriteObject5_Case13
-    dw RunFieldCommandTemp0_WriteObject5_Case14
-    dw RunFieldCommandTemp0_WriteObject5_Case14
+    dw RunFieldCommandTemp0_WriteObject5_Case01_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case02_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case03_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case04_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case05_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case06_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case07_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case08_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case09_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case0A_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case0B_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case0C_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case0D_RunFieldCommandTemp0_DecompressToVRAM_Shared02
+    dw RunFieldCommandTemp0_WriteObject5_Case0D_RunFieldCommandTemp0_DecompressToVRAM_Shared02
+    dw RunFieldCommandTemp0_WriteObject5_Case0F_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case10_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case11_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case12_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case13_RunFieldCommandTemp0_DecompressToVRAM_Shared02
+    dw RunFieldCommandTemp0_WriteObject5_Case14_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_Case14_RunFieldCommandTemp0_DecompressToVRAM
 
-RunFieldCommandTemp0_WriteObject5_Case14::
+RunFieldCommandTemp0_WriteObject5_Case14_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6274,8 +6274,8 @@ RunFieldCommandTemp0_WriteObject5_Case14::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case13::
-    call RunFieldCommandTemp0_DecompressToVRAM_Shared02
+RunFieldCommandTemp0_WriteObject5_Case13_RunFieldCommandTemp0_DecompressToVRAM_Shared02::
+    call RunFieldCommandTemp0_DecompressToVRAM_Shared02_CopyFromBank
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
@@ -6288,7 +6288,7 @@ RunFieldCommandTemp0_WriteObject5_Case13::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case12::
+RunFieldCommandTemp0_WriteObject5_Case12_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6307,7 +6307,7 @@ RunFieldCommandTemp0_WriteObject5_Case12::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case11::
+RunFieldCommandTemp0_WriteObject5_Case11_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6326,7 +6326,7 @@ RunFieldCommandTemp0_WriteObject5_Case11::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case10::
+RunFieldCommandTemp0_WriteObject5_Case10_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6344,7 +6344,7 @@ RunFieldCommandTemp0_WriteObject5_Case10::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0F::
+RunFieldCommandTemp0_WriteObject5_Case0F_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6362,8 +6362,8 @@ RunFieldCommandTemp0_WriteObject5_Case0F::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0D::
-    call RunFieldCommandTemp0_DecompressToVRAM_Shared02
+RunFieldCommandTemp0_WriteObject5_Case0D_RunFieldCommandTemp0_DecompressToVRAM_Shared02::
+    call RunFieldCommandTemp0_DecompressToVRAM_Shared02_CopyFromBank
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
@@ -6387,7 +6387,7 @@ RunFieldCommandTemp0_WriteObject5_Case0D::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0C::
+RunFieldCommandTemp0_WriteObject5_Case0C_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6412,7 +6412,7 @@ RunFieldCommandTemp0_WriteObject5_Case0C::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0B::
+RunFieldCommandTemp0_WriteObject5_Case0B_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6437,7 +6437,7 @@ RunFieldCommandTemp0_WriteObject5_Case0B::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0A::
+RunFieldCommandTemp0_WriteObject5_Case0A_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6455,7 +6455,7 @@ RunFieldCommandTemp0_WriteObject5_Case0A::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case09::
+RunFieldCommandTemp0_WriteObject5_Case09_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6473,7 +6473,7 @@ RunFieldCommandTemp0_WriteObject5_Case09::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case08::
+RunFieldCommandTemp0_WriteObject5_Case08_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6491,7 +6491,7 @@ RunFieldCommandTemp0_WriteObject5_Case08::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case07::
+RunFieldCommandTemp0_WriteObject5_Case07_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6509,7 +6509,7 @@ RunFieldCommandTemp0_WriteObject5_Case07::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case06::
+RunFieldCommandTemp0_WriteObject5_Case06_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6532,7 +6532,7 @@ RunFieldCommandTemp0_WriteObject5_Case06::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case05::
+RunFieldCommandTemp0_WriteObject5_Case05_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6550,7 +6550,7 @@ RunFieldCommandTemp0_WriteObject5_Case05::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case04::
+RunFieldCommandTemp0_WriteObject5_Case04_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6568,7 +6568,7 @@ RunFieldCommandTemp0_WriteObject5_Case04::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case03::
+RunFieldCommandTemp0_WriteObject5_Case03_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6582,7 +6582,7 @@ RunFieldCommandTemp0_WriteObject5_Case03::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case02::
+RunFieldCommandTemp0_WriteObject5_Case02_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6600,7 +6600,7 @@ RunFieldCommandTemp0_WriteObject5_Case02::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case01::
+RunFieldCommandTemp0_WriteObject5_Case01_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6682,7 +6682,7 @@ RunFieldCommandTemp0_DecompressToVRAM::
     ld a, [hl]
     ret
 
-RunFieldCommandTemp0_DecompressToVRAM_Shared02::
+RunFieldCommandTemp0_DecompressToVRAM_Shared02_CopyFromBank::
     ldh a, [hTemp0]
     and $7f
     add a

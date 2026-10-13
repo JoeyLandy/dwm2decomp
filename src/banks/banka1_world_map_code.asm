@@ -255,7 +255,7 @@ RunBattleCommandEntry_BankA1::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01
+    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01_SetBattleActor
     dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_BankA1_ChooseActionTarget
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case04
@@ -296,7 +296,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
     inc [hl]
     ret
 
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01::
+RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_Case01_SetBattleActor::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp $08
@@ -855,11 +855,11 @@ RunWorldMapState::
     dw RunWorldMapState_CopyScrollToHardware
     dw RunWorldMapState_WriteWorldMapState
     dw RunWorldMapState_UploadBGPalettes
-    dw RunWorldMapState_CopyScrollToHardware_Case04
+    dw RunWorldMapState_CopyScrollToHardware_Case04_DecompressToVRAM
     dw RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest
     dw RunWorldMapState_ToEnterGameMode1WithDefaultPalettes
 
-RunWorldMapState_CopyScrollToHardware_Case04::
+RunWorldMapState_CopyScrollToHardware_Case04_DecompressToVRAM::
     xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -2585,7 +2585,7 @@ RunWorldMapState_CopyScrollToHardware::
     jr .skip
 
 .call_run_world_map_state_case01_centered_bg:
-    call RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01
+    call RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01_RunWorldMapState_Case01_Sub01_WriteTemp0
 
 .skip:
     ld hl, wDMGPaletteBGP
@@ -2662,7 +2662,7 @@ RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
     call EnterGameMode1WithDefaultPalettes
     ret
 
-RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01::
+RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC_Sub01_RunWorldMapState_Case01_Sub01_WriteTemp0::
     ld a, [wKeyWorldHeight]
     ld c, a
     ld a, [wKeyWorldWidth]

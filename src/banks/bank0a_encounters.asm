@@ -21,7 +21,7 @@ FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
     jr .check_status_field_step
 
 .call_field_state_step_checks_sub01_load_sram:
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02
+    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02_SetFieldStepFlagsBit7
     call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
 
 .check_status_field_step:
@@ -107,7 +107,7 @@ SetFieldStepFlagsBit7::
     ld [wFieldStepFlags], a
     ret
 
-FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02::
+FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02_SetFieldStepFlagsBit7::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -359,17 +359,17 @@ RunPlayerMoveTypeMapMoveType::
     jumptable
     dw RunPlayerMoveTypeMapMoveType_Return
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04_SetTemp1
     dw RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07_SetTemp1
 
 RunPlayerMoveTypeMapMoveType_Return::
     ret
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06_SetTemp1::
     ld a, $50
     ldh [hTemp1], a
     ld a, $80
@@ -378,7 +378,7 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case06::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07_SetTemp1::
     ld a, $52
     ldh [hTemp1], a
     xor a
@@ -392,21 +392,21 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02_SetTemp1::
     ld a, $56
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03_SetTemp1::
     ld a, $44
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04_SetTemp1::
     ld a, $44
     ldh [hTemp1], a
     ld a, $80
@@ -1893,7 +1893,7 @@ RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
     ld [wEncounterKind], a
     ret
 
-CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags::
+CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
     jp z, .call_read_map_cell_word_for_screen_xy_5057

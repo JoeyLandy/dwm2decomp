@@ -1826,7 +1826,7 @@ FindNewlyLearnableSkills::
     push hl
     push bc
     push de
-    call FindCInWD09D38
+    call FindCInWorkBuf38
     pop de
     jp z, .restore
     ld a, [de]
@@ -2067,8 +2067,9 @@ FindByteAtHLInEightAtDE_Bank1A_6232::
     inc b
     ret
 
-; searches the $38 bytes at wWorkBuf for C: Z when found, else B = 1 and NZ (E-0122)
-FindCInWD09D38::
+; searches the $38 bytes at wWorkBuf for C: Z when found, else B = 1 and NZ (E-0122) (E-0340: the
+; address in its name read as its RAM name; was FindCInWD09D38)
+FindCInWorkBuf38::
     ld de, wWorkBuf
     ld b, $38
 
@@ -2269,15 +2270,15 @@ TryAddSkillIfPrerequisitesKnown::
 .loop:
     ld a, [hli]
     cp $ff
-    jr z, .call_find_c_in_wd09_d8
+    jr z, .call_find_c_in_work_buf8
     push hl
-    call AIsCOrInWD09D8
+    call AIsCOrInWorkBuf8
     pop hl
     jr c, .loop
     jr .clear_temp0
 
-.call_find_c_in_wd09_d8:
-    call FindCInWD09D8
+.call_find_c_in_work_buf8:
+    call FindCInWorkBuf8
     jr c, .call_add_skill_c_to_free_slot_unless_excluded
 
 .clear_temp0:
@@ -2291,8 +2292,9 @@ TryAddSkillIfPrerequisitesKnown::
 .return:
     ret
 
-; A = 0 and NC if A equals C or one of the 8 bytes at wWorkBuf; otherwise carry (E-0122)
-AIsCOrInWD09D8::
+; A = 0 and NC if A equals C or one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340:
+; the address in its name read as its RAM name; was AIsCOrInWD09D8)
+AIsCOrInWorkBuf8::
     cp c
     jr z, .return_0
     ld b, $08
@@ -2311,8 +2313,9 @@ AIsCOrInWD09D8::
     xor a
     ret
 
-; A = 0 and NC if C is one of the 8 bytes at wWorkBuf; otherwise carry (E-0122)
-FindCInWD09D8::
+; A = 0 and NC if C is one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340: the address
+; in its name read as its RAM name; was FindCInWD09D8)
+FindCInWorkBuf8::
     ld a, c
     ld b, $08
     ld hl, wWorkBuf

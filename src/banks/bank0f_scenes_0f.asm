@@ -13,9 +13,9 @@ ScenePendantSeller::
     dw ScenePendantSeller_SetBit2AtHL_B0F
     dw ScenePendantSeller_StepObjectTowardCoord
     dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F
-    dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F_Case03
+    dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F_Case03_SetScriptParam0
 
-ScenePendantSeller_UpdateFollowersOnStep_Bank0F_Case03::
+ScenePendantSeller_UpdateFollowersOnStep_Bank0F_Case03_SetScriptParam0::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -145,7 +145,7 @@ SceneHomecoming::
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneHomecoming_StepScriptParam0Counter_Bank0F
     dw SceneHomecoming_StartPaletteFadeAndStep
-    dw SceneHomecoming_RunFieldCommandTemp0_Case08
+    dw SceneHomecoming_RunFieldCommandTemp0_Case08_SetTemp0
     dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
     dw SceneHomecoming_ShowWarubouWaheyIWas
     dw SceneHomecoming_ShowWarubouWaheyIWas
@@ -175,7 +175,7 @@ SceneHomecoming::
     dw SceneHomecoming_WriteObject2AndPlayerXEtc
     dw SceneHomecoming_WriteObject2AndPlayerXEtc_Case1D
     dw SceneHomecoming_WriteObject2AndPlayerXEtc
-    dw SceneHomecoming_ScriptApplyStepDeltaAtDE_Case26
+    dw SceneHomecoming_ScriptApplyStepDeltaAtDE_Case26_SetBit1AtHL_Bank0F
     dw SceneHomecoming_ToStartPaletteFadeAndStep
     dw SceneHomecoming_WaitFadeState
     dw SceneHomecoming_ShowTHEEND
@@ -349,7 +349,7 @@ SceneHomecoming_ToStartPaletteFadeAndStep::
     inc [hl]
     ret
 
-SceneHomecoming_ScriptApplyStepDeltaAtDE_Case26::
+SceneHomecoming_ScriptApplyStepDeltaAtDE_Case26_SetBit1AtHL_Bank0F::
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ld hl, wObject2 + OBJ_FLAGS
@@ -549,7 +549,7 @@ SceneHomecoming_ClearBit2AtHL_Bank0F::
     call ClearBit2AtHL_Bank0F
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -606,7 +606,7 @@ SceneHomecoming_ToScriptStepSetObjectBit2AndWait::
     farcall ScriptStepSetObjectBit2AndWait
     ret
 
-SceneHomecoming_RunFieldCommandTemp0_Case08::
+SceneHomecoming_RunFieldCommandTemp0_Case08_SetTemp0::
     ld a, $01
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -743,7 +743,7 @@ SceneDarckDefeated::
     jumptable
     dw SceneDarckDefeated_ScriptStepBlinkObjectTemp0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepPlayerLeftTowardWC928
+    dw SceneDarckDefeated_StepPlayerLeftTowardStepPtrLo
     dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
@@ -768,15 +768,15 @@ SceneDarckDefeated::
     dw SceneDarckDefeated_ScriptStepDeltaThenNextStep
     dw SceneDarckDefeated_SetFieldEventArg
     dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B_SetStepPtrHi
     dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B_SetStepPtrHi
     dw SceneDarckDefeated_StepObjectTowardCoord
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case1B_SetStepPtrHi
     dw SceneDarckDefeated_StepObjectTowardCoord
     dw SceneDarckDefeated_ShowWarubouWaheyThatsIt
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneDarckDefeated_StepPlayerDownTowardWC928
+    dw SceneDarckDefeated_StepPlayerDownTowardStepPtrLo
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_ShowWarubouWaheyGetGoing
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
@@ -787,104 +787,104 @@ SceneDarckDefeated::
     dw SceneDarckDefeated_WriteFieldEventArgAndObject5
     dw SceneDarckDefeated_WriteFieldEventArgAndMapIdEtc
     dw SceneDarckDefeated_RunFieldCommandTemp0
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case2E
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F
+    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case2E_AdvanceScriptStep
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case34
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case35
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case36
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case37
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case38
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case39
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case3A
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case34_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case35_SetTemp0
+    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case36_AdvanceScriptStep
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepPtrHi
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case38_AdvanceScriptStep
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case39_SetStepPtrHi
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case3A_ScriptApplyStepDeltaAtDE
     dw SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case3C
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case3C_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case41
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case42
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case43
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case41_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case42_SetTemp0
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case43_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45_AdvanceScriptStep
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case48
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case48_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case4A
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case4B
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case4A_SetStepPtrLo
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case4B_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case50
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case51
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case50_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case51_SetTemp0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject1AndObject2Etc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case54
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case54_AdvanceScriptStep
     dw SceneDarckDefeated_WriteScriptParam0AndObject1Etc
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case56
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case56_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case5B
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case5C
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case5B_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case5C_SetTemp0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case5F
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case60
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case5F_SetStepPtrHi
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case60_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case62
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case62_SetStepPtrHi
     dw SceneDarckDefeated_AddStepDeltaToPointedByte
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case65
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case66
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case65_SetStepPtrHi
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case66_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68
+    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68_AdvanceScriptStep
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case6D
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case6E
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case6D_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case6E_SetTemp0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case70
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case71
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case70_SetStepPtrHi
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case71_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case73
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrLo
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteStepPtrLoAndStepTargetEtc
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case76
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case76_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case78
-    dw SceneDarckDefeated_StepObjectTowardCoord_Case79
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case78_SetStepPtrHi
+    dw SceneDarckDefeated_StepObjectTowardCoord_Case79_SetStepPtrHi
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case7E
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case7F
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case7E_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case7F_SetTemp0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw ScriptStepMoveObjects2And3To0340
     dw ScriptStepFlickerObjectCB9B
-    dw ScriptStepDeltaWCBABThenCopy
+    dw ScriptStepDeltaObject2CThenCopy
     dw ScriptStepMoveObjects2And3To81B0
     dw SceneDarckDefeated_WriteObject5AndScriptParam0
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case88
-    dw SceneDarckDefeated_RunFieldCommandTemp0_Case89
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A
-    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case88_SetMapId
+    dw SceneDarckDefeated_RunFieldCommandTemp0_Case89_SetTemp0
+    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A_SetFieldEventArg
+    dw SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A_SetFieldEventArg
     dw SceneDarckDefeated_SetObject5
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
-    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F
+    dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F_StartPaletteFade
     dw SceneDarckDefeated_Msg053B_KingIThankYou
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneDarckDefeated_QueueSoundEffect
@@ -930,7 +930,7 @@ SceneDarckDefeated_Msg053B_KingIThankYou::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F_StartPaletteFade::
     xor a
     ld [wFieldEventArg], a
     ld a, [wStoryFlags + $60]
@@ -958,7 +958,7 @@ SceneDarckDefeated_SetObject5::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case89::
+SceneDarckDefeated_RunFieldCommandTemp0_Case89_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -972,7 +972,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case89::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case88::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case88_SetMapId::
     ld a, $03
     ldh [hMapId], a
     xor a
@@ -1010,8 +1010,9 @@ ScriptStepMoveObjects2And3To81B0::
     ret
 
 ; ScriptApplyStepDeltaAtDE on wObject2 + $C, copies wObject2 + $C to wObject3 + $C, and when the
-; move finishes (carry) wScriptStep += 1 (E-0119)
-ScriptStepDeltaWCBABThenCopy::
+; move finishes (carry) wScriptStep += 1 (E-0119) (E-0340: the address in its name read as its RAM
+; name; was ScriptStepDeltaWCBABThenCopy)
+ScriptStepDeltaObject2CThenCopy::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     push af
@@ -1088,7 +1089,7 @@ ScriptStepMoveObjects2And3To0340::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case7F::
+SceneDarckDefeated_RunFieldCommandTemp0_Case7F_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1102,7 +1103,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case7F::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case7E::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case7E_SetMapId::
     ld a, $71
     ldh [hMapId], a
     xor a
@@ -1115,7 +1116,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case7E::
     call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case79::
+SceneDarckDefeated_StepObjectTowardCoord_Case79_SetStepPtrHi::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $60
@@ -1130,7 +1131,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case79::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case78::
+SceneDarckDefeated_StepObjectTowardCoord_Case78_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $30
@@ -1155,7 +1156,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case78::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case76::
+SceneDarckDefeated_StepObjectTowardCoord_Case76_SetStepPtrHi::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $50
@@ -1180,7 +1181,7 @@ SceneDarckDefeated_WriteStepPtrLoAndStepTargetEtc::
     ld [wStepTarget], a
     jr SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrHiTo04
 
-SceneDarckDefeated_StepObjectTowardCoord_Case73::
+SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrLo::
     ld a, $50
     ld [wStepPtrLo], a
     ld a, $01
@@ -1199,7 +1200,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrHiTo04::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case71::
+SceneDarckDefeated_StepObjectTowardCoord_Case71_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $40
@@ -1224,7 +1225,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case71::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case70::
+SceneDarckDefeated_StepObjectTowardCoord_Case70_SetStepPtrHi::
     ld a, $04
     ld [wStepPtrHi], a
     ld a, $70
@@ -1239,7 +1240,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case70::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case6E::
+SceneDarckDefeated_RunFieldCommandTemp0_Case6E_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1253,7 +1254,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case6E::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case6D::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case6D_SetMapId::
     ld a, $60
     ldh [hMapId], a
     xor a
@@ -1266,7 +1267,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case6D::
     call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68::
+SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68_AdvanceScriptStep::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -1305,7 +1306,7 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case66::
+SceneDarckDefeated_StepObjectTowardCoord_Case66_SetStepPtrHi::
     ld a, $03
     ld [wStepPtrHi], a
     ld a, $b0
@@ -1327,7 +1328,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case66::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case65::
+SceneDarckDefeated_StepObjectTowardCoord_Case65_SetStepPtrHi::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_hi_to_02
@@ -1410,7 +1411,7 @@ SceneDarckDefeated_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case62::
+SceneDarckDefeated_StepObjectTowardCoord_Case62_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $70
@@ -1427,7 +1428,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case62::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case60::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case60_AdvanceScriptStep::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1435,7 +1436,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case60::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case5F::
+SceneDarckDefeated_StepObjectTowardCoord_Case5F_SetStepPtrHi::
     ld a, $03
     ld [wStepPtrHi], a
     ld a, $80
@@ -1459,7 +1460,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case5F::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case5C::
+SceneDarckDefeated_RunFieldCommandTemp0_Case5C_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1473,7 +1474,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case5C::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case5B::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case5B_SetMapId::
     ld a, $49
     ldh [hMapId], a
     xor a
@@ -1482,7 +1483,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case5B::
     call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case56::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case56_AdvanceScriptStep::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_script_apply_step_delta_at_de
@@ -1539,7 +1540,7 @@ SceneDarckDefeated_WriteScriptParam0AndObject1Etc::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case54::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case54_AdvanceScriptStep::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_script_apply_step_delta_at_de
@@ -1592,7 +1593,7 @@ SceneDarckDefeated_WriteObject1AndObject2Etc::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case51::
+SceneDarckDefeated_RunFieldCommandTemp0_Case51_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1606,7 +1607,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case51::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case50::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case50_SetMapId::
     ld a, $41
     ldh [hMapId], a
     xor a
@@ -1615,7 +1616,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case50::
     call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case4B::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case4B_AdvanceScriptStep::
     ld de, wObject3 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1623,7 +1624,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case4B::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case4A::
+SceneDarckDefeated_StepObjectTowardCoord_Case4A_SetStepPtrLo::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
@@ -1712,7 +1713,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case4A::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case48::
+SceneDarckDefeated_StepObjectTowardCoord_Case48_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
@@ -1760,7 +1761,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case48::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45_AdvanceScriptStep::
     ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -1768,7 +1769,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case45::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case43::
+SceneDarckDefeated_StepObjectTowardCoord_Case43_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
@@ -1816,7 +1817,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case43::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case42::
+SceneDarckDefeated_RunFieldCommandTemp0_Case42_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1832,7 +1833,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case42::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case41::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case41_SetMapId::
     ld a, $33
     ldh [hMapId], a
     xor a
@@ -1841,7 +1842,7 @@ SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case41::
     call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case3C::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case3C_AdvanceScriptStep::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
     ld a, [wObject2 + OBJ_X]
@@ -1863,7 +1864,7 @@ SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc::
     ld [wStepPtrLo], a
     jr SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80
 
-SceneDarckDefeated_StepObjectTowardCoord_Case3A::
+SceneDarckDefeated_StepObjectTowardCoord_Case3A_ScriptApplyStepDeltaAtDE::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $e0
@@ -1886,7 +1887,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case3A::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case39::
+SceneDarckDefeated_StepObjectTowardCoord_Case39_SetStepPtrHi::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $e0
@@ -1900,7 +1901,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case39::
     ld [wStepPtrLo], a
     jr SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case38::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case38_AdvanceScriptStep::
     ld hl, wSpriteSlots + $b
     dec [hl]
     ld de, wSpriteSlots + $c
@@ -1912,7 +1913,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case38::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case37::
+SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepPtrHi::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $60
@@ -1931,7 +1932,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case36::
+SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case36_AdvanceScriptStep::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -1941,7 +1942,7 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case36::
     inc [hl]
     ret
 
-SceneDarckDefeated_RunFieldCommandTemp0_Case35::
+SceneDarckDefeated_RunFieldCommandTemp0_Case35_SetTemp0::
     ld a, $11
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1955,7 +1956,7 @@ SceneDarckDefeated_RunFieldCommandTemp0_Case35::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case34::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case34_SetMapId::
     ld a, $2f
     ldh [hMapId], a
     ld a, $01
@@ -1988,7 +1989,7 @@ SceneDarckDefeated_WriteObject5AndScriptParam0::
     inc [hl]
     ret
 
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F_AdvanceScriptStep::
     ld a, [wScriptParam0]
     and $07
     jr nz, .call_script_apply_step_delta_at_de
@@ -2009,7 +2010,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case2E::
+SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case2E_AdvanceScriptStep::
     ld a, [wScriptParam0]
     and $03
     jr nz, .call_step_script_param0_counter_bank0_f
@@ -2091,7 +2092,7 @@ SceneDarckDefeated_ShowWarubouWaheyGetGoing::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepPlayerDownTowardWC928::
+SceneDarckDefeated_StepPlayerDownTowardStepPtrLo::
     xor a
     ld [wFieldEventArg], a
     ldh a, [hPlayerY]
@@ -2099,13 +2100,13 @@ SceneDarckDefeated_StepPlayerDownTowardWC928::
     jr z, .set_step_ptr_lo_to_80
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerRightTowardWC928
+    farcall StepPlayerRightTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -2130,7 +2131,7 @@ SceneDarckDefeated_ShowWarubouWaheyThatsIt::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepObjectTowardCoord_Case1B::
+SceneDarckDefeated_StepObjectTowardCoord_Case1B_SetStepPtrHi::
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $00
@@ -2266,19 +2267,19 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE::
     inc [hl]
     ret
 
-SceneDarckDefeated_StepPlayerLeftTowardWC928::
+SceneDarckDefeated_StepPlayerLeftTowardStepPtrLo::
     ldh a, [hPlayerX]
     cp $40
     jr z, .set_step_ptr_lo_to_20
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_20:
     ld a, $20
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -2321,7 +2322,7 @@ SceneDarckDefeated_ScriptStepBlinkObjectTemp0::
     inc [hl]
     ret
 
-SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A::
+SceneDarckDefeated_WriteFieldEventArgAndObject5_Case8A_SetFieldEventArg::
     xor a
     ld [wFieldEventArg], a
     ld a, $80
@@ -2551,9 +2552,9 @@ SceneThreeItems_RunMessageBoxFar_Bank0F::
     ld a, $06
     ldh [hTemp1], a
     farcall WriteKeyEntryTemp0
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     set 7, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3038,12 +3039,12 @@ SceneShield2::
     dw SceneShield2_ShowLetMeShowYou
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneShield2_StepScriptParam0Counter_Bank0F
-    dw SceneShield2_ScriptStartFadeAndAdvanceStep_Case06
+    dw SceneShield2_ScriptStartFadeAndAdvanceStep_Case06_SetMapId
     dw SceneShield2_StepScriptParam0Counter_Bank0F
     dw SceneShield2_ScriptStartFadeAndAdvanceStep
     dw SceneShield2_StepScriptParam0Counter_Bank0F
-    dw SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A
-    dw SceneShield2_StepScriptParam0Counter_Bank0F_Case0B
+    dw SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A_SetMapId
+    dw SceneShield2_StepScriptParam0Counter_Bank0F_Case0B_TheKingdomsShouldReturn
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneShield2_ShowHeroReceivedTheSky
     dw SceneShield2_ShowAVoiceEchoedFrom
@@ -3051,7 +3052,7 @@ SceneShield2::
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneShield2_ShowWarubouWaheyYouDid
     dw SceneShield2_ToRunSceneScriptSubStep
-    dw SceneShield2_RunFieldCommandTemp0_Case13
+    dw SceneShield2_RunFieldCommandTemp0_Case13_SetTemp0
     dw SceneShield2_ShowWarubouWaheyYouCan
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneShield2_SetFlagBit
@@ -3087,7 +3088,7 @@ SceneShield2_ShowWarubouWaheyYouCan::
     inc [hl]
     ret
 
-SceneShield2_RunFieldCommandTemp0_Case13::
+SceneShield2_RunFieldCommandTemp0_Case13_SetTemp0::
     ldh a, [hPlayerFacing]
     inc a
     inc a
@@ -3173,7 +3174,7 @@ SceneShield2_ShowHeroReceivedTheSky::
     inc [hl]
     ret
 
-SceneShield2_StepScriptParam0Counter_Bank0F_Case0B::
+SceneShield2_StepScriptParam0Counter_Bank0F_Case0B_TheKingdomsShouldReturn::
     ld a, $18
     ld [wObject2 + OBJ_Y], a
     ld a, [wScriptParam0]
@@ -3216,7 +3217,7 @@ SceneShield2_StepScriptParam0Counter_Bank0F_Case0B::
     inc [hl]
     ret
 
-SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A::
+SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A_SetMapId::
     ld a, $49
     ldh [hMapId], a
     ld a, $00
@@ -3235,7 +3236,7 @@ SceneShield2_ScriptStartFadeAndAdvanceStep::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-SceneShield2_ScriptStartFadeAndAdvanceStep_Case06::
+SceneShield2_ScriptStartFadeAndAdvanceStep_Case06_SetMapId::
     ld a, $48
     ldh [hMapId], a
     ld a, $07
@@ -3639,10 +3640,10 @@ SceneMedicineGiven::
     jumptable
     dw SceneMedicineGiven_StepObjectTowardCoord
     dw SceneMedicineGiven_UpdatePlayerMovement
-    dw SceneMedicineGiven_StepObjectTowardCoord_Case02
-    dw SceneMedicineGiven_StepObjectTowardCoord_Case03
+    dw SceneMedicineGiven_StepObjectTowardCoord_Case02_StepPlayerUpTowardStepPtrLo
+    dw SceneMedicineGiven_StepObjectTowardCoord_Case03_StepPlayerUpTowardStepPtrLo
 
-SceneMedicineGiven_StepObjectTowardCoord_Case03::
+SceneMedicineGiven_StepObjectTowardCoord_Case03_StepPlayerUpTowardStepPtrLo::
     ld a, [wObject1 + OBJ_Y]
     cp $40
     jr z, .set_step_ptr_hi_to_01
@@ -3670,13 +3671,13 @@ SceneMedicineGiven_StepObjectTowardCoord_Case03::
     jr z, .set_step_ptr_lo_to_40
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerRightTowardWC928
+    farcall StepPlayerRightTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -3687,7 +3688,7 @@ SceneMedicineGiven_StepObjectTowardCoord_Case03::
     ld [wScriptStartRequest], a
     ret
 
-SceneMedicineGiven_StepObjectTowardCoord_Case02::
+SceneMedicineGiven_StepObjectTowardCoord_Case02_StepPlayerUpTowardStepPtrLo::
     ld a, [wObject1 + OBJ_X]
     cp $30
     jr z, .set_step_ptr_hi_to_01
@@ -3715,13 +3716,13 @@ SceneMedicineGiven_StepObjectTowardCoord_Case02::
     jr z, .set_step_ptr_lo_to_30
     ld a, $70
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -3767,13 +3768,13 @@ SceneMedicineGiven_StepObjectTowardCoord::
     jr z, .set_step_ptr_lo_to_00
     ld a, $30
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_00:
     ld a, $00
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -4002,14 +4003,14 @@ SceneCheerYuna::
     dw SceneCheerYuna_StepObjectTowardCoord
     dw SceneCheerYuna_SetBit2AtHL_B0F
     dw SceneCheerYuna_StepScriptParam0Counter_Bank0F
-    dw SceneCheerYuna_SetBit2AtHL_B0F_Case03
-    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04
-    dw SceneCheerYuna_SetBit2AtHL_B0F_Case03
-    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04
+    dw SceneCheerYuna_SetBit2AtHL_B0F_Case03_StepScriptParam0Counter_Bank0F
+    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04_ClearBit1AtHL_Bank0F
+    dw SceneCheerYuna_SetBit2AtHL_B0F_Case03_StepScriptParam0Counter_Bank0F
+    dw SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04_ClearBit1AtHL_Bank0F
     dw SceneCheerYuna_ShowEnoughEnoughOfThat
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneCheerYuna_ToScriptStepDeltaThenNextStep
-    dw SceneCheerYuna_StepObjectTowardCoord_Case0A
+    dw SceneCheerYuna_StepObjectTowardCoord_Case0A_SetBit2AtHL_B0F
     dw SceneCheerYuna_WritePlayerFacing
     dw SceneCheerYuna_ShowIAmTheKing
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
@@ -4040,7 +4041,7 @@ SceneCheerYuna_SetScriptSubStep::
 SceneCheerYuna_ShowIAmTheKing::
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -4077,7 +4078,7 @@ SceneCheerYuna_WritePlayerFacing::
     dec [hl]
     ret
 
-SceneCheerYuna_StepObjectTowardCoord_Case0A::
+SceneCheerYuna_StepObjectTowardCoord_Case0A_SetBit2AtHL_B0F::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $00
@@ -4111,7 +4112,7 @@ SceneCheerYuna_ShowEnoughEnoughOfThat::
     inc [hl]
     ret
 
-SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04::
+SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04_ClearBit1AtHL_Bank0F::
     ld b, $4b
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4123,7 +4124,7 @@ SceneCheerYuna_StepScriptParam0Counter_Bank0F_Case04::
     inc [hl]
     ret
 
-SceneCheerYuna_SetBit2AtHL_B0F_Case03::
+SceneCheerYuna_SetBit2AtHL_B0F_Case03_StepScriptParam0Counter_Bank0F::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld b, $1e
@@ -4558,14 +4559,14 @@ SceneWallExit::
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneWallExit_SetBit2AtHL_B0F_Case07
+    dw SceneWallExit_SetBit2AtHL_B0F_Case07_StepObjectTowardCoord
     dw SceneWallExit_WriteScriptParam0AndObject1
     dw SceneWallExit_StepObjectTowardCoord
     dw SceneWallExit_ShowKamehaHeroThatWasnt
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneWallExit_StepObjectTowardCoord_Case0C
+    dw SceneWallExit_StepObjectTowardCoord_Case0C_SetBit2AtHL_B0F
 
-SceneWallExit_StepObjectTowardCoord_Case0C::
+SceneWallExit_StepObjectTowardCoord_Case0C_SetBit2AtHL_B0F::
     ld a, [wObject1 + OBJ_Y]
     cp $50
     jr z, .check_object1
@@ -4686,7 +4687,7 @@ SceneWallExit_WriteScriptParam0AndObject1::
     inc [hl]
     ret
 
-SceneWallExit_SetBit2AtHL_B0F_Case07::
+SceneWallExit_SetBit2AtHL_B0F_Case07_StepObjectTowardCoord::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B0F
     ld a, [wScriptParam1]
@@ -4794,17 +4795,17 @@ SceneReportToKing::
     jumptable
     dw SceneReportToKing_StepObjectTowardCoord
     dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneReportToKing_StepObjectTowardCoord_Case02
+    dw SceneReportToKing_StepObjectTowardCoord_Case02_You
     dw SceneReportToKing_Msg035A_WhatIsItYou
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneReportToKing_ScriptStepDeltaThenNextStep
-    dw SceneReportToKing_StepObjectTowardCoord_Case06
+    dw SceneReportToKing_StepObjectTowardCoord_Case06_You
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneReportToKing_DrawFullScreenBufferAtScroll
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_Case0C
+    dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_Case0C_AdvanceScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlags
     dw SceneReportToKing_ScriptStartFadeAndAdvanceStep
@@ -4919,7 +4920,7 @@ SceneReportToKing_WriteFieldDrawFlags::
     inc [hl]
     ret
 
-SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_Case0C::
+SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_Case0C_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ld a, $07
@@ -4959,7 +4960,7 @@ SceneReportToKing_DrawFullScreenBufferAtScroll::
     inc [hl]
     ret
 
-SceneReportToKing_StepObjectTowardCoord_Case06::
+SceneReportToKing_StepObjectTowardCoord_Case06_You::
     ld a, [wObject1 + OBJ_X]
     cp $40
     jr z, .set_step_ptr_lo_to_A0
@@ -5011,11 +5012,11 @@ SceneSpiritEnvoy::
     jumptable
     dw SceneReportToKing_StepObjectTowardCoord
     dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneReportToKing_StepObjectTowardCoord_Case02
+    dw SceneReportToKing_StepObjectTowardCoord_Case02_You
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneSpiritEnvoy_StepPlayerDownTowardWC928
+    dw SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo
     dw SceneReportToKing_UpdatePlayerMovement
-    dw SceneSpiritEnvoy_StepPlayerDownTowardWC928_Case06
+    dw SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo_Case06_SetStepPtrLo
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
@@ -5026,10 +5027,10 @@ SceneSpiritEnvoy_SetScriptStartRequestTo80::
     ld [wScriptStartRequest], a
     ret
 
-SceneSpiritEnvoy_StepPlayerDownTowardWC928_Case06::
+SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo_Case06_SetStepPtrLo::
     ld a, $10
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5037,10 +5038,10 @@ SceneSpiritEnvoy_StepPlayerDownTowardWC928_Case06::
     inc [hl]
     ret
 
-SceneSpiritEnvoy_StepPlayerDownTowardWC928::
+SceneSpiritEnvoy_StepPlayerDownTowardStepPtrLo::
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5064,7 +5065,7 @@ SceneSpiritEnvoy_StepPlayerDownTowardWC928::
     inc [hl]
     ret
 
-SceneReportToKing_StepObjectTowardCoord_Case02::
+SceneReportToKing_StepObjectTowardCoord_Case02_You::
     ld a, [wObject1 + OBJ_Y]
     cp $60
     jr z, .check_object1
@@ -5097,7 +5098,7 @@ SceneReportToKing_StepObjectTowardCoord_Case02::
 .set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5127,7 +5128,7 @@ SceneReportToKing_StepObjectTowardCoord::
     farcall StepObjectTowardCoord
     ld a, $00
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5175,26 +5176,26 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case12
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
     dw SceneMermaidKingdom_SetFlagBit
     dw SceneMermaidKingdom_QueueSoundEffect
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case20
-    dw SceneMermaidKingdom_StepPlayerDownTowardWC928
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case20_SetSpriteSlotCount
+    dw SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo
     dw SceneMermaidKingdom_ShowKamehaIWasStupid
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc
-    dw SceneMermaidKingdom_StepPlayerLeftTowardWC928
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case26
-    dw SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_Case27
+    dw SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case26_AdvanceScriptStep
+    dw SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_Case27_AdvanceScriptStep
     dw SceneMermaidKingdom_ShowAVoiceEchoedFrom
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
@@ -5204,9 +5205,9 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_RunFieldCommandTemp0
     dw SceneMermaidKingdom_ShowWarubouWaheyYouCan
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_SetFlagBit_Case31
+    dw SceneMermaidKingdom_SetFlagBit_Case31_MarkKeyEntryKindTemp0Bit6
 
-SceneMermaidKingdom_SetFlagBit_Case31::
+SceneMermaidKingdom_SetFlagBit_Case31_MarkKeyEntryKindTemp0Bit6::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call SetFlagBit
     ld a, $03
@@ -5317,7 +5318,7 @@ SceneMermaidKingdom_ShowAVoiceEchoedFrom::
     inc [hl]
     ret
 
-SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_Case27::
+SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_Case27_AdvanceScriptStep::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -5325,7 +5326,7 @@ SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_Case27::
     inc [hl]
     ret
 
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case26::
+SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case26_AdvanceScriptStep::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     ld hl, wObject5 + SCRIPTOBJ_Y
@@ -5337,10 +5338,10 @@ SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case26::
     inc [hl]
     ret
 
-SceneMermaidKingdom_StepPlayerLeftTowardWC928::
+SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo::
     ld a, $50
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5427,13 +5428,13 @@ SceneMermaidKingdom_ShowKamehaIWasStupid::
     inc [hl]
     ret
 
-SceneMermaidKingdom_StepPlayerDownTowardWC928::
+SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
     ld a, $10
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5446,7 +5447,7 @@ SceneMermaidKingdom_StepPlayerDownTowardWC928::
     jr nz, .set_step_ptr_lo_to_30
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerRightTowardWC928
+    farcall StepPlayerRightTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5457,7 +5458,7 @@ SceneMermaidKingdom_StepPlayerDownTowardWC928::
 .set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5467,7 +5468,7 @@ SceneMermaidKingdom_StepPlayerDownTowardWC928::
     inc [hl]
     ret
 
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case20::
+SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case20_SetSpriteSlotCount::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
     dec a
@@ -5537,7 +5538,7 @@ SceneMermaidKingdom_ToScriptStepShakeScreen::
     call ScriptStepShakeScreen
     ret
 
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14::
+SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_Case14_AdvanceScriptStep::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -5865,7 +5866,7 @@ SceneMermaidKingdom_WriteScriptStepAndStepPtrLoEtc::
 .set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -5887,7 +5888,7 @@ SceneKamehaFlees::
     dw SceneKamehaFlees_StepScriptParam0Counter_Bank0F
     dw SceneKamehaFlees_ClearBit2AtHL_Bank0F
     dw SceneKamehaFlees_UpdateFollowersOnStep_Bank0F
-    dw SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_Case06
+    dw SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_Case06_ClearBit1AtHL_Bank0F
     dw SceneKamehaFlees_StepScriptParam0Counter_Bank0F
     dw SceneKamehaFlees_WriteObject2AndTemp0Etc
     dw SceneKamehaFlees_RedrawColumnsBesideScreen
@@ -6084,7 +6085,7 @@ SceneKamehaFlees_StepScriptParam0Counter_Bank0F::
     inc [hl]
     ret
 
-SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_Case06::
+SceneKamehaFlees_UpdateFollowersOnStep_Bank0F_Case06_ClearBit1AtHL_Bank0F::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -6371,7 +6372,7 @@ GiveItemBlink_TestFlagBit::
     jr nc, .clear_sprite_slot_count
     ld a, $33
     ld [wStepPtrLo], a
-    farcall AppendItemWC928ToInventory
+    farcall AppendItemStepPtrLoToInventory
 
 .clear_sprite_slot_count:
     xor a
@@ -6396,9 +6397,9 @@ SceneWhoAreYou::
     dw SceneWhoAreYou_StepObjectTowardCoord
     dw SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc
     dw SceneWhoAreYou_UpdateFollowersOnStep_Bank0F
-    dw SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09
+    dw SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09_SetFlagBit
 
-SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09::
+SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09_SetFlagBit::
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerX]
@@ -6663,7 +6664,7 @@ SceneRivalDefeated::
     dw SceneRivalDefeated_ScriptStepBlinkObjectTemp0
     dw SceneRivalDefeated_ShowKingYouThievesTheres
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_StepPlayerLeftTowardWC928
+    dw SceneRivalDefeated_StepPlayerLeftTowardStepPtrLo
     dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
     dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
     dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
@@ -7005,10 +7006,10 @@ SceneRivalDefeated_ShowKingSurrenderAndLive::
     inc [hl]
     ret
 
-SceneRivalDefeated_StepPlayerLeftTowardWC928::
+SceneRivalDefeated_StepPlayerLeftTowardStepPtrLo::
     ld a, $30
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7067,10 +7068,10 @@ SceneRivalDefeated_ScriptStepBlinkObjectTemp0::
 SceneWaterShortage::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWaterShortage_StepPlayerLeftTowardWC928
+    dw SceneWaterShortage_StepPlayerLeftTowardStepPtrLo
     dw SceneWaterShortage_ScriptStartFadeAndAdvanceStep
-    dw SceneWaterShortage_StepPlayerDownTowardWC928
-    dw SceneWaterShortage_StepPlayerLeftTowardWC928_Case03
+    dw SceneWaterShortage_StepPlayerDownTowardStepPtrLo
+    dw SceneWaterShortage_StepPlayerLeftTowardStepPtrLo_Case03_ScriptStartFadeAndAdvanceStep
     dw SceneWaterShortage_SetScriptStartRequestTo80
 
 SceneWaterShortage_SetScriptStartRequestTo80::
@@ -7078,10 +7079,10 @@ SceneWaterShortage_SetScriptStartRequestTo80::
     ld [wScriptStartRequest], a
     ret
 
-SceneWaterShortage_StepPlayerLeftTowardWC928_Case03::
+SceneWaterShortage_StepPlayerLeftTowardStepPtrLo_Case03_ScriptStartFadeAndAdvanceStep::
     ld a, $20
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7101,13 +7102,13 @@ SceneWaterShortage_StepPlayerLeftTowardWC928_Case03::
     call QueueSoundEffect
     ret
 
-SceneWaterShortage_StepPlayerDownTowardWC928::
+SceneWaterShortage_StepPlayerDownTowardStepPtrLo::
     ld a, [wScriptParam0]
     and $0f
     jr nz, .set_step_ptr_lo_to_30
     ld a, $60
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     jr z, .set_step_ptr_hi_to_00
@@ -7118,7 +7119,7 @@ SceneWaterShortage_StepPlayerDownTowardWC928::
 .set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
 
 .set_step_ptr_hi_to_00:
     ld a, $00
@@ -7173,19 +7174,19 @@ SceneWaterShortage_ScriptStartFadeAndAdvanceStep::
     call QueueSoundEffect
     ret
 
-SceneWaterShortage_StepPlayerLeftTowardWC928::
+SceneWaterShortage_StepPlayerLeftTowardStepPtrLo::
     ldh a, [hPlayerX]
     cp $40
     jr z, .set_step_ptr_lo_to_80
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
     ret
 
 .set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7203,11 +7204,11 @@ SceneMonsterInspection::
     dw SceneMonsterInspection_RunMessageBoxFar_Bank0F
     dw SceneMonsterInspection_ShowNextMonstersWillPerform
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMonsterInspection_StepPlayerUpTowardWC928
-    dw SceneMonsterInspection_StepPlayerUpTowardWC928_Case05
+    dw SceneMonsterInspection_StepPlayerUpTowardStepPtrLo
+    dw SceneMonsterInspection_StepPlayerUpTowardStepPtrLo_Case05_ClearBit2AtHL_Bank0F
     dw SceneMonsterInspection_StepScriptParam0Counter_Bank0F
     dw SceneMonsterInspection_ToRunScriptSubStep
-    dw SceneMonsterInspection_StepPlayerDownTowardWC928
+    dw SceneMonsterInspection_StepPlayerDownTowardStepPtrLo
     dw SceneMonsterInspection_PlayMapMusic
 
 SceneMonsterInspection_ShowAndThatWasThe::
@@ -7250,10 +7251,10 @@ SceneMonsterInspection_ShowNextMonstersWillPerform::
     inc [hl]
     ret
 
-SceneMonsterInspection_StepPlayerUpTowardWC928::
+SceneMonsterInspection_StepPlayerUpTowardStepPtrLo::
     ld a, $00
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7273,10 +7274,10 @@ SceneMonsterInspection_StepPlayerUpTowardWC928::
     call QueueSoundEffect
     ret
 
-SceneMonsterInspection_StepPlayerUpTowardWC928_Case05::
+SceneMonsterInspection_StepPlayerUpTowardStepPtrLo_Case05_ClearBit2AtHL_Bank0F::
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7307,7 +7308,7 @@ SceneMonsterInspection_ToRunScriptSubStep::
     farcall RunScriptSubStep
     ret
 
-SceneMonsterInspection_StepPlayerDownTowardWC928::
+SceneMonsterInspection_StepPlayerDownTowardStepPtrLo::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo_to_80
@@ -7319,7 +7320,7 @@ SceneMonsterInspection_StepPlayerDownTowardWC928::
 .set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -7370,7 +7371,7 @@ SceneLongFaces::
     dw SceneLongFaces_ShowTaraThenItsYour
     dw SceneLongFaces_ScriptApplyStepDeltaAtDE
     dw SceneLongFaces_ShowSlashThatsSettledThen
-    dw SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B
+    dw SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B_ScriptStartFadeAndAdvanceStep
     dw SceneLongFaces_WriteStoryFlagsAndScriptStartRequest
 
 SceneLongFaces_WriteStoryFlagsAndScriptStartRequest::
@@ -7381,7 +7382,7 @@ SceneLongFaces_WriteStoryFlagsAndScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B::
+SceneLongFaces_RunMessageBoxFar_Bank0F_Case0B_ScriptStartFadeAndAdvanceStep::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
@@ -7702,7 +7703,7 @@ SceneLandHo::
     dw SceneLandHo_WriteScriptParam0AndScrollY
     dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D
+    dw SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D_SetFlagBit
     dw SceneLandHo_DispatchTalkEvent
 
 SceneLandHo_DispatchTalkEvent::
@@ -7713,7 +7714,7 @@ SceneLandHo_DispatchTalkEvent::
     farcall DispatchTalkEvent
     ret
 
-SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D::
+SceneLandHo_ScriptStartFadeAndAdvanceStep_Case0D_SetFlagBit::
     ld a, $00
     ldh [hMapId], a
     ld a, $01
@@ -8121,7 +8122,7 @@ SceneHorsingAround::
     dw SceneHorsingAround_ScriptApplyStepDeltaAtDE
 
 SceneHorsingAround_ScriptApplyStepDeltaAtDE::
-    call SceneHorsingAround_StepPlayerLeftTowardWC928
+    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -8132,7 +8133,7 @@ SceneHorsingAround_ScriptApplyStepDeltaAtDE::
     ret
 
 SceneHorsingAround_WriteMessageIndex::
-    call SceneHorsingAround_StepPlayerLeftTowardWC928
+    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld a, [wMessageIndex]
     inc a
     ld [wMessageIndex], a
@@ -8145,7 +8146,7 @@ SceneHorsingAround_WriteMessageIndex::
     ret
 
 SceneHorsingAround_StepObjectTowardCoord::
-    call SceneHorsingAround_StepPlayerLeftTowardWC928
+    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld a, $00
     ld [wStepTarget], a
     ld a, $00
@@ -8163,7 +8164,7 @@ SceneHorsingAround_StepObjectTowardCoord::
     ret
 
 SceneHorsingAround_WriteMessageIndexAndMessageGroup::
-    call SceneHorsingAround_StepPlayerLeftTowardWC928
+    call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -8186,14 +8187,14 @@ SceneHorsingAround_WriteMessageIndexAndMessageGroup::
     inc [hl]
     ret
 
-SceneHorsingAround_StepPlayerLeftTowardWC928::
+SceneHorsingAround_StepPlayerLeftTowardStepPtrLo::
     ld a, [wScriptParam1]
     or a
     jr nz, .skip
     ld a, $40
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
+    farcall StepPlayerLeftTowardStepPtrLo
     jr .check_step_arrived
 
 .skip:
@@ -8201,8 +8202,8 @@ SceneHorsingAround_StepPlayerLeftTowardWC928::
     jr nz, .skip2
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerDownTowardWC928
-    farcall StepPlayerDownTowardWC928
+    farcall StepPlayerDownTowardStepPtrLo
+    farcall StepPlayerDownTowardStepPtrLo
     jr .check_step_arrived
 
 .skip2:
@@ -8210,8 +8211,8 @@ SceneHorsingAround_StepPlayerLeftTowardWC928::
     jr nz, .skip3
     ld a, $80
     ld [wStepPtrLo], a
-    farcall StepPlayerRightTowardWC928
-    farcall StepPlayerRightTowardWC928
+    farcall StepPlayerRightTowardStepPtrLo
+    farcall StepPlayerRightTowardStepPtrLo
     jr .check_step_arrived
 
 .skip3:
@@ -8219,8 +8220,8 @@ SceneHorsingAround_StepPlayerLeftTowardWC928::
     jr nz, .skip4
     ld a, $60
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
+    farcall StepPlayerUpTowardStepPtrLo
     jr .check_step_arrived
 
 .skip4:
@@ -8228,15 +8229,15 @@ SceneHorsingAround_StepPlayerLeftTowardWC928::
     jr nz, .set_step_ptr_lo_to_50
     ld a, $70
     ld [wStepPtrLo], a
-    farcall StepPlayerLeftTowardWC928
-    farcall StepPlayerLeftTowardWC928
+    farcall StepPlayerLeftTowardStepPtrLo
+    farcall StepPlayerLeftTowardStepPtrLo
     jr .check_step_arrived
 
 .set_step_ptr_lo_to_50:
     ld a, $50
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
+    farcall StepPlayerUpTowardStepPtrLo
 
 .check_step_arrived:
     ld a, [wStepArrived]

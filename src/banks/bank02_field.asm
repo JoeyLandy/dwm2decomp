@@ -4842,8 +4842,8 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_TestFlagBit
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case04
-    dw PlayMapMusic_TestFlagBit_Case05
+    dw PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case05_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -4851,18 +4851,18 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case0D
+    dw PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case0D
+    dw PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case04
+    dw PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -4870,44 +4870,44 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadSoundEffectRequest
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw PlayMapMusic_InitSoundHardware
-    dw PlayMapMusic_TestFlagBit_Case39
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_TestFlagBit_Case3B
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_TestFlagBit_Case39_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case3B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag23_631A
@@ -4921,27 +4921,27 @@ PlayMapMusic_ReadMapId::
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23_631A
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByFlag23_631A
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -4950,121 +4950,121 @@ PlayMapMusic_ReadMapId::
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_TestFlagBit_Case9B
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case9B_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag25
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
     dw MapMusicByFlag25
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     db $00, $00
 
 PlayMapMusic_ReadCurrentMusic::
@@ -5091,7 +5091,7 @@ PlayMapMusic_TestFlagBit::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case05::
+PlayMapMusic_TestFlagBit_Case05_PlayMapMusic_CheckCurrentMusic::
     ldh a, [hMapScreenX]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic
@@ -5112,11 +5112,11 @@ PlayMapMusic_TestFlagBit_Case05::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case0D::
+PlayMapMusic_ReadCurrentMusic_Case0D_PlayMapMusic_CheckCurrentMusic::
     ld c, $0c
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case04::
+PlayMapMusic_TestFlagBit_Case04_PlayMapMusic_CheckCurrentMusic::
     ld de, $00cc
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
@@ -5133,7 +5133,7 @@ PlayMapMusic_ReadSoundEffectRequest::
 PlayMapMusic_Return::
     ret
 
-PlayMapMusic_ReadCurrentMusic_Case21::
+PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic::
     ld c, $19
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5141,7 +5141,7 @@ PlayMapMusic_ReadCurrentMusic_Case21::
 MapMusicByFlag23::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case21
+    jr c, PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
     ld c, $2e
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5160,7 +5160,7 @@ MapMusicByScreenAndFlags87And8A::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case20::
+PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic::
     ld c, $1c
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5177,7 +5177,7 @@ MapMusicByPlayerStateFlagsBit3::
 MapMusicByFlag23_631A::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case20
+    jr c, PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     ld c, $2e
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5185,62 +5185,62 @@ MapMusicByFlag23_631A::
 MapMusicByFlag25::
     ld de, $0025
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case20
+    jr c, PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
     ld c, $1f
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_CaseA1::
+PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic::
     ld c, $cc
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case2B::
+PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic::
     ld c, $25
     jp PlayMapMusic_CheckCurrentMusic
 
 PlayMapMusic_InitSoundHardware::
     ldh a, [hMapScreenX]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     call InitSoundHardware
     ret
 
-PlayMapMusic_TestFlagBit_Case39::
+PlayMapMusic_TestFlagBit_Case39_PlayMapMusic_CheckCurrentMusic::
     ldh a, [hMapScreenX]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     ldh a, [hMapScreenY]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     ld de, EVENT_SCENE_CREW_FOLLOWS
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr c, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case3B::
+PlayMapMusic_TestFlagBit_Case3B_PlayMapMusic_CheckCurrentMusic::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case2B
+    jr c, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case37::
+PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic::
     ld c, $22
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case9B::
+PlayMapMusic_TestFlagBit_Case9B_PlayMapMusic_CheckCurrentMusic::
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case37
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic_Case37
+    jr nc, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case37
+    jr c, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5853,7 +5853,7 @@ ShowIdlePartyStatusWindow::
 
 .call_build_party_status_window_rows:
     call BuildPartyStatusWindowRows
-    call DrawBottomWindowWC364AtScroll
+    call DrawBottomWindowWindowTileBufferRow5AtScroll
     farcall LoadTilesForPartyRecords
     ret
 
@@ -5886,11 +5886,11 @@ BuildPartyStatusWindowRows::
     ld de, wWindowTileBuffer + $64
     add e
     ld e, a
-    jr nc, .call_write_two_digit_tiles_from_wc8_c1
+    jr nc, .call_write_two_digit_tiles_from_digits1
     inc d
 
-.call_write_two_digit_tiles_from_wc8_c1:
-    call WriteTwoDigitTilesFromWC8C1
+.call_write_two_digit_tiles_from_digits1:
+    call WriteTwoDigitTilesFromDigits1
     ldh a, [hTemp5]
     ld c, MON_HP
     call LoadSRAMRecordWord
@@ -5980,8 +5980,9 @@ BuildPartyStatusWindowRows_Data::
     db $54, $2b, $3f, $51, $5a, $31, $45, $57, $60, $37, $4b, $5d
 
 ; draws the 20 x 6 window wWindowTileBuffer + $64 at the scroll position + $180 (and its CGB
-; attributes from wWindowAttrBuffer + $64) (E-0127)
-DrawBottomWindowWC364AtScroll::
+; attributes from wWindowAttrBuffer + $64) (E-0127) (E-0340: the address in its name read as its RAM
+; name; was DrawBottomWindowWC364AtScroll)
+DrawBottomWindowWindowTileBufferRow5AtScroll::
     ldh a, [hScrollY]
     and $f8
     ld e, a

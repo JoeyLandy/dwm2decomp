@@ -133,7 +133,7 @@ BattlePhase0_Step0::
 ; wBattlePhase 0, wBattleStep 1 (E-0044)
 BattlePhase0_Step1::
     call ClearWindowAndCopyRect7345Far
-    call DrawWC278RowsToBGMapRow7
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -602,7 +602,7 @@ BattleEnd_Step0::
     ld a, $02
     call QueueMusic
     call ClearWindowAndCopyRect7345Far
-    call DrawWC278RowsToBGMapRow7
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -611,7 +611,7 @@ BattleEnd_Step0::
 BattleEnd_Step1::
     ld a, $01
     ld [wTextSpeed], a
-    call BattleEnd_Step1_CountSlots_Sub02
+    call BattleEnd_Step1_CountSlots_Sub02_BattleEnd_Step1_Sub02_AddAx9ToHL
     ld a, [wBattleScene]
     and $01
     jr z, .call_battle_end_step1_write_battle_arg0
@@ -695,7 +695,7 @@ BattleEnd_Step2_WriteBattleEndTimer::
 
 ; wBattlePhase 2, wBattleStep 3 (E-0044)
 BattleEnd_Step3::
-    call BattleEnd_Step3_SubtractBattleMP_Sub05
+    call BattleEnd_Step3_SubtractBattleMP_Sub05_BattleEnd_Step3_Sub05_WriteBattleResultByte
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -807,7 +807,7 @@ BattleEnd_Step3::
     ld [hli], a
     farcall BattleEnd_Step3_LoadSpeciesRecord
     farcall BattleEnd_Step3_NextTableByte
-    farcall LoadTable4E60EntryForWC991ToWC9DE
+    farcall LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
@@ -1247,7 +1247,7 @@ BattleEnd_Step6::
     jumptable
     dw BattleEnd_Step6_QueueMusic
     dw BattleEnd_Step6_WaitFadeState
-    dw BattleEnd_Step6_QueueMusic_Case02
+    dw BattleEnd_Step6_QueueMusic_Case02_SetFollowersToPlayer
 
 BattleEnd_Step6_QueueMusic::
     ld a, [wTextFlags]
@@ -1279,7 +1279,7 @@ BattleEnd_Step6_WaitFadeState::
     inc [hl]
     ret
 
-BattleEnd_Step6_QueueMusic_Case02::
+BattleEnd_Step6_QueueMusic_Case02_SetFollowersToPlayer::
     ld a, [wCurrentMusic]
     ld hl, wTransitionByteCD
     cp [hl]
@@ -1697,7 +1697,7 @@ RunBattleSetup::
     dw RunBattleSetup_FleeCommand
     dw RunBattleSetup_CommandMenu
     dw RunBattleSetup_ItemCommand
-    dw RunBattleSetup_FillWC278WithC3_Bank31
+    dw RunBattleSetup_FillScreenTileBufferRow11Col4WithC3_Bank31
     dw RunBattleSetup_ShowSelectingHeroSMove
     dw RunBattleSetup_WriteLinkSendByte
     dw RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc
@@ -1714,22 +1714,22 @@ RunBattleSetup_FleeCommand::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole
-    dw RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31
-    dw RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02
+    dw RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31
+    dw RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02_AdvanceBattleResolveStep
     dw RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink
     dw RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAMAndStep
     dw RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc
     dw RunBattleSetup_FleeCommand_ClearWindowAndCopyRect7345FarAndStep
-    dw RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07
+    dw RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case07
     dw RunBattleSetup_FleeCommand_ClearWindowAndCopyRect7345Far
     dw RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A
+    dw RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A_SetBattleSubPhase
     dw RunBattleSetup_FleeCommand_ShowRetireNow
     dw RunBattleSetup_FleeCommand_LoadCursorTileAndRect7826
-    dw RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D
+    dw RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_YouThrewInThe
     dw RunBattleSetup_FleeCommand_WaitTextFlags
     dw RunBattleSetup_FleeCommand_ShowNoFleeingFromThis
-    dw RunBattleSetup_FleeCommand_WaitTextFlags_Case10
+    dw RunBattleSetup_FleeCommand_WaitTextFlags_Case10_SetBattleResolveStep
 
 RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole::
     ld a, [wLinkMode]
@@ -1772,7 +1772,7 @@ RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole::
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31::
+RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld a, [wLinkRole]
     rlca
     and $04
@@ -1785,9 +1785,9 @@ RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31::
     set 7, [hl]
     inc hl
     set 7, [hl]
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC278RowsToBGMapRow7
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, vTiles1 + $6d0
     ld de, $0701
     ld a, $02
@@ -1800,7 +1800,7 @@ RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31::
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02::
+RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02_AdvanceBattleResolveStep::
     call RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM
     ld hl, RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02_Data
     ld a, [wMenuState]
@@ -1831,7 +1831,7 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink::
     ld bc, $0007
     ld a, $00
     call FillBytes
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2022,19 +2022,19 @@ RunBattleSetup_FleeCommand_Case05_ReadLinkModeAndLinkRole::
 
 RunBattleSetup_FleeCommand_ClearWindowAndCopyRect7345FarAndStep::
     call ClearWindowAndCopyRect7345Far
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07::
+RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case07::
     ld a, [wTextFlags]
     or a
     ret nz
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     call RunBattleSetup_FleeCommand_CopyRectRecord73ADToScreenBuffer
     ld a, $02
     ld [wBattleResolveStep], a
@@ -2042,7 +2042,7 @@ RunBattleSetup_FleeCommand_FillWC278WithC3_Bank31_Case07::
 
 RunBattleSetup_FleeCommand_ClearWindowAndCopyRect7345Far::
     call ClearWindowAndCopyRect7345Far
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld hl, wTextBuf0
     ld de, wPlayerName
     ld b, $0a
@@ -2265,7 +2265,7 @@ RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data1::
 RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data2::
     db $08, $00, $00, $0f, $06, $00, $00, $0a, $04, $00, $00, $05, $02, $00, $00, $03
 
-RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
+RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A_SetBattleSubPhase::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -2297,7 +2297,7 @@ RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
 
 RunBattleSetup_FleeCommand_ShowRetireNow::
     call ClearWindowAndCopyRect7345Far
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $27
@@ -2324,7 +2324,7 @@ RunBattleSetup_FleeCommand_LoadCursorTileAndRect7826::
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D::
+RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_YouThrewInThe::
     ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data2
     ld hl, wMenuSubState
     call ToggleEntryBitsByJoypadAndBlink
@@ -2342,9 +2342,9 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D::
     ld a, [wMenuSubState]
     and $01
     jr z, .set_string_category_to_00
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC278Rect12x11ToBGMapRow7
+    call DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
     ld a, $01
     ld [wBattleResolveStep], a
     xor a
@@ -2385,7 +2385,7 @@ RunBattleSetup_FleeCommand_WaitTextFlags::
 
 RunBattleSetup_FleeCommand_ShowNoFleeingFromThis::
     call ClearWindowAndCopyRect7345Far
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $20
@@ -2395,7 +2395,7 @@ RunBattleSetup_FleeCommand_ShowNoFleeingFromThis::
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_WaitTextFlags_Case10::
+RunBattleSetup_FleeCommand_WaitTextFlags_Case10_SetBattleResolveStep::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -2409,41 +2409,41 @@ RunBattleSetup_CommandMenu::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31
-    dw RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_SetMenuSubState
     dw RunBattleSetup_CommandMenu_MoveBattleCommandCursor
-    dw RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7
-    dw RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case07
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case04
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case07
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case08
     dw RunBattleSetup_CommandMenu_ShowItHasNoUsable
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0A
-    dw RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C
-    dw RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0D
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0E
-    dw RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0F
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10
-    dw RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects_Case11
-    dw RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12
-    dw RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31AndStep
-    dw RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case16
-    dw RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13_Case17
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0A
+    dw RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case0C
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case0D
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0E
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case0F
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case10
+    dw RunBattleSetup_CommandMenu_WriteListLastPageSize
+    dw RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12_FillScreenTileBufferRow11Col4WithC3_Bank31
+    dw RunBattleSetup_CommandMenu_WriteBattleResolveStepAndBattleArg1
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31AndStep
+    dw RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case16
+    dw RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_Case17_SetBattleResolveStep
     dw RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_Case19
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A
-    dw RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case19
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case1A
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     dw RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar
-    dw RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case1D
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1E
-    dw RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case1D
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case1E
+    dw RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11
     dw RunBattleSetup_CommandMenu_WriteCommandMonsterAndBattleResolveStepEtc
-    dw RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep_Case21
-    dw RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case16
-    dw RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13_Case23
+    dw RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep_Case21
+    dw RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case16
+    dw RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_Case23_SetBattleResolveStep
 
 RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31::
     ld hl, vTiles1 + $6d0
@@ -2478,15 +2478,15 @@ RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01::
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_SetMenuSubState::
     ld a, [wCommandMonster]
     and $03
     ld hl, wBattleSetupD8
     add_a_to_hl
     ld a, [hl]
     ld [wMenuSubState], a
-    call DrawWC278Rect12x11ToBGMapRow7
-    ld hl, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    call DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuSubState]
     and $03
     add a
@@ -2505,7 +2505,7 @@ RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01::
     ret
 
 RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuSubState
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -2525,7 +2525,7 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
     jr nz, .read_command_monster
     ld a, [wBattleSetupD7]
     or a
-    jr z, .call_fill_wc278_with_c3_bank31
+    jr z, .call_fill_screen_tile_buffer_row11_col4_with
     ld a, [wCommandMonster]
     ld hl, wBattleActionChoice
     add a
@@ -2533,8 +2533,8 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
     ld [hl], $00
     jr .read_command_monster2
 
-.call_fill_wc278_with_c3_bank31:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2571,7 +2571,7 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
 .set_battle_arg1_to_00:
     ld a, $00
     ld [wBattleArg1], a
-    jr .call_fill_wc278_with_c3_bank312
+    jr .call_fill_screen_tile_buffer_row11_col4_with2
 
 .read_command_monster:
     ld a, [wCommandMonster]
@@ -2591,8 +2591,8 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
     ld [wBattleResolveStep], a
     jr .return
 
-.call_fill_wc278_with_c3_bank312:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with2:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2600,18 +2600,18 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7::
-    call DrawWC278Rect12x11ToBGMapRow7
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7::
+    call DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
     ld a, $01
     ld [wBattleResolveStep], a
     xor a
     ld [wBattleSubPhase], a
     ret
 
-RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04::
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case04::
     ld a, [wBattleArg1]
     or a
-    call z, DrawWC278Rect12x11ToBGMapRow7
+    call z, DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
     xor a
     ld [wBattleArg1], a
     ld hl, vTiles1 + $6d0
@@ -2637,9 +2637,9 @@ RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case04::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4::
-    call DrawWC2B8LeftToBGMapRow9_74B4
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     ld a, [wMenuSelectedMember]
     and $03
     add a
@@ -2655,8 +2655,8 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31::
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     ld hl, wMenuSelectedMember
     call RunBattleSetup_CommandMenu_Case06_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
@@ -2664,7 +2664,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
     jr z, .check_bit0
     ld a, $00
     ld [wBattleArg1], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2698,7 +2698,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
     call CountPresentFoesOfLinkRoleSide_Bank31
     ld a, d
     cp $01
-    jr nz, .call_fill_wc278_with_c3_bank31
+    jr nz, .call_fill_screen_tile_buffer_row11_col4_with
     ld a, [wCommandMonster]
     ld hl, wBattleActionChoice
     add a
@@ -2708,8 +2708,8 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
     ld [hl], e
     jr .set_battle_arg1_to_01
 
-.call_fill_wc278_with_c3_bank31:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $0c
     ld [wBattleResolveStep], a
@@ -2721,15 +2721,15 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
     call RunBattleSetup_CommandMenu_Case06_WriteBattleArg2AndBattleArg3Etc
     ld a, d
     or a
-    jr nz, .call_fill_wc278_with_c3_bank312
-    call FillWC278WithC3_Bank31
+    jr nz, .call_fill_screen_tile_buffer_row11_col4_with2
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $08
     ld [wBattleResolveStep], a
     jr .return
 
-.call_fill_wc278_with_c3_bank312:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with2:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     xor a
     ld [wBattleArg1], a
@@ -2750,7 +2750,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
 .set_battle_arg1_to_01:
     ld a, $01
     ld [wBattleArg1], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -2758,8 +2758,8 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case07::
-    call DrawWC2B8LeftToBGMapRow9_74B4
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case07::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
     ld a, [wBattleArg1]
     or a
     jr z, .set_battle_resolve_step
@@ -2769,15 +2769,15 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case07::
     ld [wBattleResolveStep], a
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep::
-    call DrawWC2B8LeftToBGMapRow9_74B4
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case08::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
     call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
 RunBattleSetup_CommandMenu_ShowItHasNoUsable::
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $00
     ld [wStringCategory], a
     ld a, $29
@@ -2787,36 +2787,36 @@ RunBattleSetup_CommandMenu_ShowItHasNoUsable::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0A::
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0A::
     ld a, [wTextFlags]
     or a
     ret nz
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $04
     ld [wBattleResolveStep], a
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C::
-    call DrawWC2B8LeftToBGMapRow9_74B4
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case0C::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
     call CopyRectRecord7750ToScreenBufferFar
     xor a
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02_RunBattleSetup_Shared02_CopySlotNameToHL
     xor a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0D::
-    call DrawWC2F8RectToBGMapRow11
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case0D::
+    call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     xor a
     ld [wNameSlot], a
     ld a, [wLinkRole]
@@ -2828,7 +2828,7 @@ RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0D::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     and $03
     add a
     add_a_to_hl
@@ -2843,19 +2843,19 @@ RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0D::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0E::
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0E::
     ld a, [wLinkRole]
     sla a
     and $04
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
@@ -2868,7 +2868,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0E::
     jr z, .return
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, [wCommandMonster]
     ld hl, wBattleActionChoice
@@ -2885,7 +2885,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0E::
     xor $04
     or b
     ld [hl], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $01
     ld [wBattleArg0], a
@@ -2895,8 +2895,8 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case0E::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0F::
-    call DrawWC2F8RectToBGMapRow11
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case0F::
+    call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wBattleArg0]
     or a
     jr z, .set_battle_resolve_step_to_04
@@ -2910,10 +2910,10 @@ RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case0F::
     ld [wBattleResolveStep], a
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10::
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Case10::
     ld a, [wBattleArg1]
     or a
-    call z, DrawWC2B8LeftToBGMapRow9_74B4
+    call z, DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4
     xor a
     ld [wBattleArg1], a
     ld a, [wCommandMonster]
@@ -2929,7 +2929,7 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10::
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     call ShowSkillPageNames
     call RunBattleSetup_CommandMenu_ClearBit6AndCursorEntryTile_Bank31
     call CopyRectRecords7600And7734ToScreenBufferFar
@@ -2954,9 +2954,9 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Case10::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects_Case11::
-    call DrawWC2A4AndWC2B8Rects
-    ld hl, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+RunBattleSetup_CommandMenu_WriteListLastPageSize::
+    call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuCursor]
     and $03
     add a
@@ -2975,8 +2975,8 @@ RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects_Case11::
     ld [wListLastPageSize], a
     ret
 
-RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12::
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12_FillScreenTileBufferRow11Col4WithC3_Bank31::
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuCursor
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -2984,7 +2984,7 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12::
     jp z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg1], a
@@ -3139,7 +3139,7 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .call_run_battle_setup_command_menu_clear_bit6
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $04
     ld [wBattleArg1], a
@@ -3176,25 +3176,25 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor_Case12::
     inc [hl]
     jr .return
 
-RunBattleSetup_CommandMenu_DrawWC2A4AndWC2B8Rects::
-    call DrawWC2A4AndWC2B8Rects
+RunBattleSetup_CommandMenu_WriteBattleResolveStepAndBattleArg1::
+    call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     ld a, [wBattleArg1]
     ld [wBattleResolveStep], a
     xor a
     ld [wBattleArg1], a
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31AndStep::
-    call FillWC278WithC3_Bank31
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31AndStep::
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC2A4AndWC2B8Rects
+    call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -3202,18 +3202,18 @@ RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case16::
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case16::
     ld a, [wTextFlags]
     or a
     ret nz
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13_Case17::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_Case17_SetBattleResolveStep::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $10
     ld [wBattleResolveStep], a
     ret
@@ -3233,8 +3233,8 @@ RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_Case19::
-    call DrawWC2B8LeftToBGMapRow9
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case19::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wRecordBuffer]
     cp $1e
     jr z, .set_name_slot
@@ -3252,7 +3252,7 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_Case19::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     and $03
     add a
     add_a_to_hl
@@ -3267,18 +3267,18 @@ RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_Case19::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A::
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case1A::
     ld a, [wLinkRole]
     sla a
     and $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleArg0], a
@@ -3309,9 +3309,9 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A::
     and $03
     cp c
     jr nz, .read_command_monster
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC2A4AndWC2B8Rects
+    call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     call ClearWindowAndCopyRect7345Far
     ld a, $65
     ld [wStringIndex], a
@@ -3331,7 +3331,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A::
     and $04
     or b
     ld [hl], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg0], a
@@ -3341,8 +3341,8 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1A::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9::
-    call DrawWC2B8LeftToBGMapRow9
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
     ld [wBattleResolveStep], a
     ret
@@ -3358,7 +3358,7 @@ RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar::
 
 .set_battle_arg1:
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02_RunBattleSetup_Shared02_CopySlotNameToHL
     xor a
     ld [wBattleArg1], a
     xor a
@@ -3367,8 +3367,8 @@ RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case1D::
-    call DrawWC2F8RectToBGMapRow11
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_Case1D::
+    call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wRecordBuffer]
     cp $1e
     jr z, .set_name_slot
@@ -3387,7 +3387,7 @@ RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case1D::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     and $03
     add a
     add_a_to_hl
@@ -3402,19 +3402,19 @@ RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11_Case1D::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1E::
+RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_Case1E::
     ld a, [wLinkRole]
     sla a
     and $04
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleArg0], a
@@ -3427,7 +3427,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1E::
     jr z, .return
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, [wCommandMonster]
     ld hl, wBattleTargetChoice
@@ -3442,7 +3442,7 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1E::
     xor $04
     or b
     ld [hl], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg0], a
@@ -3452,8 +3452,8 @@ RunBattleSetup_CommandMenu_FillWC278WithC3_Bank31_Case1E::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC2F8RectToBGMapRow11::
-    call DrawWC2F8RectToBGMapRow11
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
+    call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wBattleArg0]
     ld [wBattleResolveStep], a
     ret
@@ -3488,8 +3488,8 @@ RunBattleSetup_CommandMenu_WriteCommandMonsterAndBattleResolveStepEtc::
 .return:
     ret
 
-RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep_Case21::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep_Case21::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     xor a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
@@ -3497,8 +3497,8 @@ RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13AndStep_Case21::
     inc [hl]
     ret
 
-RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13_Case23::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_Case23_SetBattleResolveStep::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $18
     ld [wBattleResolveStep], a
     ret
@@ -3508,34 +3508,34 @@ RunBattleSetup_CommandMenu_DrawWC338RowsToBGMapRow13_Case23::
 RunBattleSetup_ItemCommand::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31
-    dw RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case01
+    dw RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_Case01
     dw RunBattleSetup_ItemCommand_MoveBattleCommandCursor
-    dw RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9
-    dw RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case04
-    dw RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_Case04
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11
     dw RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink
-    dw RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11_Case07
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11_Case07
     dw RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep
-    dw RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9
-    dw RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0A
-    dw RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0B
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9
+    dw RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0A
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case0B
     dw RunBattleSetup_ItemCommand_CopyRectRecord7750ToScreenBufferFar
-    dw RunBattleSetup_ItemCommand_DrawWC2F8RectToBGMapRow11
-    dw RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0E
-    dw RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0F
-    dw RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9AndStep
-    dw RunBattleSetup_ItemCommand_ToDrawWC338RowsToBGMapRow13AndStep
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12RectToBGMapRow11
+    dw RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0E
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case0F
+    dw RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9AndStep
+    dw RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep
     dw RunBattleSetup_ItemCommand_BeginStringDisplay_Bank2F
-    dw RunBattleSetup_ItemCommand_DrawWC338RowsToBGMapRow13
+    dw RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13
 
-RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31::
-    call FillWC278WithC3_Bank31
+RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC278RowsToBGMapRow7
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     call ShowInventoryPageItemNames
     call RunBattleSetup_ItemCommand_ClearBit6AndCursorEntryTile_Bank31
     call CopyRectRecord7600ToScreenBufferFar
@@ -3560,14 +3560,14 @@ RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31::
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case01::
-    call DrawWC2B8RowsToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_Case01::
+    call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     ld a, [wBattleArg0]
     or a
     ret z
     xor a
     ld [wBattleArg0], a
-    ld hl, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuOption]
     and $03
     add a
@@ -3587,7 +3587,7 @@ RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case01::
     ret
 
 RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuOption
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -3595,7 +3595,7 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     jp z, .check_bit1
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg1], a
@@ -3604,14 +3604,14 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     ld [wBattleFlag93], a
     ld a, [wItemRecord + $4]
     bit 0, a
-    jr nz, .call_fill_wc278_with_c3_bank31
+    jr nz, .call_fill_screen_tile_buffer_row11_col4_with
     ld a, [wItemRecord + $6]
     or a
-    jr z, .call_fill_wc278_with_c3_bank312
+    jr z, .call_fill_screen_tile_buffer_row11_col4_with2
     cp $01
     jr z, .set_battle_flag92_to_10
     cp $02
-    jr z, .call_draw_wc2_b8_rows_to_bg_map_row9
+    jr z, .call_draw_screen_tile_buffer_row14_col8_rows
     cp $03
     jr z, .set_battle_flag92_to_20
     cp $04
@@ -3622,8 +3622,8 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     jr z, .set_battle_sub_phase_to_03
     jp .set_battle_flag92_to_20
 
-.call_fill_wc278_with_c3_bank31:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleResolveStep], a
@@ -3631,10 +3631,10 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     ld [wStringIndex], a
     jr .return
 
-.call_fill_wc278_with_c3_bank312:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with2:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
-    call DrawWC2B8RowsToBGMapRow9
+    call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     ld a, $08
     ld [wBattleResolveStep], a
     jr .return
@@ -3648,8 +3648,8 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     ld [wBattleResolveStep], a
     jr .return
 
-.call_draw_wc2_b8_rows_to_bg_map_row9:
-    call DrawWC2B8RowsToBGMapRow9
+.call_draw_screen_tile_buffer_row14_col8_rows:
+    call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     ld a, $0c
     ld [wBattleResolveStep], a
     jr .return
@@ -3677,7 +3677,7 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
 .check_bit1:
     bit 1, a
     jr z, .check_bit2
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $ff
     ld [wBattleFlag92], a
@@ -3690,7 +3690,7 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     bit 2, a
     jr z, .call_run_battle_setup_item_command_clear_bit6
     farcall SortInventory
-    ld de, RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wCommandCursor
     set 7, [hl]
 
@@ -3702,21 +3702,21 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
 .return:
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9::
-    call DrawWC2B8RowsToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9::
+    call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     xor a
     ld [wBattleResolveStep], a
     xor a
     ld [wBattleSubPhase], a
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case04::
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_Case04::
     ld a, [wSubMenuCursor]
     and $01
     ld [wSubMenuCursor], a
     ld a, [wBattleArg1]
     or a
-    call z, DrawWC2B8RowsToBGMapRow9
+    call z, DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     xor a
     ld [wBattleArg1], a
     ld hl, vTiles1 + $6d0
@@ -3731,8 +3731,8 @@ RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9_Case04::
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11::
-    call DrawWC2F8Rect8x7ToBGMapRow11
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11::
+    call DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11
     ld hl, RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02_Data
     ld a, [wSubMenuCursor]
     and $03
@@ -3805,7 +3805,7 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
 .set_battle_arg0_to_01:
     ld a, $01
     ld [wBattleArg0], a
-    jr .call_fill_wc278_with_c3_bank31
+    jr .call_fill_screen_tile_buffer_row11_col4_with
 
 .check_bit1:
     bit 1, a
@@ -3815,8 +3815,8 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
     ld a, $00
     ld [wBattleArg0], a
 
-.call_fill_wc278_with_c3_bank31:
-    call FillWC278WithC3_Bank31
+.call_fill_screen_tile_buffer_row11_col4_with:
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3824,8 +3824,8 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
 .return:
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2F8Rect8x7ToBGMapRow11_Case07::
-    call DrawWC2F8Rect8x7ToBGMapRow11
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11_Case07::
+    call DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11
     ld a, [wBattleArg0]
     or a
     jr z, .set_battle_resolve_step
@@ -3852,8 +3852,8 @@ RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep::
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9::
-    call DrawWC2B8LeftToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wItemId]
     cp ITEM_WORLDLEAF
     jr z, .set_name_slot
@@ -3869,7 +3869,7 @@ RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     and $03
     add a
     add_a_to_hl
@@ -3884,18 +3884,18 @@ RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9::
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0A::
+RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0A::
     ld a, [wLinkRole]
     sla a
     and $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
@@ -3908,7 +3908,7 @@ RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0A::
     jr z, .return
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, [wSubMenuCursor2]
     and $03
@@ -3922,8 +3922,8 @@ RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0A::
 .return:
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0B::
-    call DrawWC2B8LeftToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case0B::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
     or a
     jr nz, .set_battle_sub_phase_to_03
@@ -3962,15 +3962,15 @@ RunBattleSetup_ItemCommand_CopyRectRecord7750ToScreenBufferFar::
 
 .set_battle_arg1:
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02_RunBattleSetup_Shared02_CopySlotNameToHL
     xor a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2F8RectToBGMapRow11::
-    call DrawWC2F8RectToBGMapRow11
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
+    call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wItemId]
     cp ITEM_WORLDLEAF
     jr z, .set_name_slot
@@ -3987,7 +3987,7 @@ RunBattleSetup_ItemCommand_DrawWC2F8RectToBGMapRow11::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     and $03
     add a
     add_a_to_hl
@@ -4002,19 +4002,19 @@ RunBattleSetup_ItemCommand_DrawWC2F8RectToBGMapRow11::
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0E::
+RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_Case0E::
     ld a, [wLinkRole]
     sla a
     and $04
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data
+    ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
@@ -4027,7 +4027,7 @@ RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0E::
     jr z, .return
     ld a, $69
     call QueueSoundEffect
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, [wSubMenuCursor2]
     and $03
@@ -4042,8 +4042,8 @@ RunBattleSetup_ItemCommand_FillWC278WithC3_Bank31_Case0E::
 .return:
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0F::
-    call DrawWC2B8LeftToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_Case0F::
+    call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
     or a
     jr nz, .set_battle_sub_phase_to_03
@@ -4073,15 +4073,15 @@ RunBattleSetup_ItemCommand_DrawWC2B8LeftToBGMapRow9_Case0F::
     ld [wBattleArg0], a
     ret
 
-RunBattleSetup_ItemCommand_DrawWC2B8RowsToBGMapRow9AndStep::
-    call DrawWC2B8RowsToBGMapRow9
+RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9AndStep::
+    call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-RunBattleSetup_ItemCommand_ToDrawWC338RowsToBGMapRow13AndStep::
-    call DrawWC338RowsToBGMapRow13
+RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep::
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4092,20 +4092,20 @@ RunBattleSetup_ItemCommand_BeginStringDisplay_Bank2F::
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ret
 
-RunBattleSetup_ItemCommand_DrawWC338RowsToBGMapRow13::
+RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
     ld a, [wTextFlags]
     or a
     ret nz
-    call DrawWC338RowsToBGMapRow13
+    call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     xor a
     ld [wBattleResolveStep], a
     ret
 
-RunBattleSetup_FillWC278WithC3_Bank31::
+RunBattleSetup_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld b, $08
     ld hl, wSlotMarks
 
@@ -4121,10 +4121,10 @@ RunBattleSetup_FillWC278WithC3_Bank31::
     jr nz, .loop
     xor a
     ld [wBattleActor], a
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     call ClearWindowAndCopyRect7345Far
-    call DrawWC278RowsToBGMapRow7
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     ld hl, wBattleSubPhase
     inc [hl]
     xor a
@@ -5249,10 +5249,10 @@ DrawInventoryPageIndicator::
 RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Case02_Data::
     db $c1, $01, $01, $02, $c8, $01, $08, $02
 
-RunBattleSetup_CommandMenu_DrawWC278Rect12x11ToBGMapRow7_Case01_Data::
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Case01_Data::
     db $41, $01, $81, $01, $c1, $01, $01, $02
 
-RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4_Data::
+RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4_Data::
     db $81, $01, $c1, $01, $01, $02
 
 RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink_Data::
@@ -5560,7 +5560,7 @@ CallFunc443BInBankE0::
     farcall RunDebugState_E0
     ret
 
-BattleEnd_Step1_CountSlots_Sub02::
+BattleEnd_Step1_CountSlots_Sub02_BattleEnd_Step1_Sub02_AddAx9ToHL::
     ld a, [wDataBankSave]
     ld [wDataBank], a
     xor a
@@ -5694,7 +5694,7 @@ BattleEnd_Step1_CountSlots::
     cp $01
     ret
 
-BattleEnd_Step3_SubtractBattleMP_Sub05::
+BattleEnd_Step3_SubtractBattleMP_Sub05_BattleEnd_Step3_Sub05_WriteBattleResultByte::
     ld a, [wLinkMode]
     or a
     jr nz, .return
@@ -7078,7 +7078,7 @@ RunBattleEndStep4SubSteps::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31
-    dw RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31
+    dw RunBattleEndStep4SubSteps_FillScreenTileBufferRow11Col4WithC3_Bank31
     dw RunBattleEndStep4SubSteps_MoveBattleCommandCursor
     dw RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer
     dw RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826
@@ -7154,12 +7154,12 @@ RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31::
     ld [wMenuState], a
     ret
 
-RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31::
+RunBattleEndStep4SubSteps_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld a, [wTextFlags]
     or a
     ret nz
-    call FillWC278WithC3_Bank31
-    call DrawWC278RowsToBGMapRow7
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
+    call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
     call RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
     farcall CopyRectRecords77B6And79CBAndPlaySound6C
     ld a, $0a
@@ -7224,7 +7224,7 @@ RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
     ld a, [wJoypadPressedRepeat]
     and $c0
     jr z, .check_joypad_pressed_repeat2
-    call DrawWC39EThreeTilesAtBGMap206
+    call DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206
     ret
 
 .check_joypad_pressed_repeat2:
@@ -7234,7 +7234,7 @@ RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
     ld hl, wCommandCursor
     res 7, [hl]
     call RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
-    call DrawWC39EThreeTilesAtBGMap206
+    call DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206
     call DrawCommandCursorPageNumber
     ret
 
@@ -7499,8 +7499,9 @@ ShowSelectedSkillNameAndCost::
     ret
 
 ; runs ShowSelectedSkillNameAndCost, then writes the three bytes at wWindowTileBuffer + $9E to
-; vBGMap0 + $206 (E-0122)
-DrawWC39EThreeTilesAtBGMap206::
+; vBGMap0 + $206 (E-0122) (E-0340: the address in its name read as its RAM name; was
+; DrawWC39EThreeTilesAtBGMap206)
+DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206::
     call ShowSelectedSkillNameAndCost
     ld hl, vBGMap0 + $206
     ld de, wWindowTileBuffer + $9e
@@ -7601,7 +7602,7 @@ ClearAttributesAndScreenBuffer_Bank31::
 
 ; Fills the $160 bytes at wScreenTileBuffer + $E0 with $C3; clobbers A, BC, HL (the same 15 bytes
 ; appear in 2 banks)
-FillWC278WithC3_Bank31::
+FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld hl, wScreenTileBuffer + $e0
     ld bc, $0160
 
@@ -7698,7 +7699,7 @@ PartyCountRects::
 
 ; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForBattleFoeCount (E-0071)
 ClearAndLayoutTileBlocksForBattleFoeCount::
-    call FillWC278WithC3_Bank31
+    call FillScreenTileBufferRow11Col4WithC3_Bank31
 
 ; wBattleFoeCount = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting
 ; at $14 ($24 per block), into the 32-byte-wide buffer at wScreenTileBuffer + $E0 (row 0); left
@@ -7984,8 +7985,9 @@ ClearWindowAndCopyRect7345Far::
     ret
 
 ; copies a 20 x 5 rectangle from wWindowTileBuffer + $38 (rows 32 bytes apart) to vBGMap0 + $1A0
-; (row 13) with CopyRect32StrideToVRAM (E-0073)
-DrawWC338RowsToBGMapRow13::
+; (row 13) with CopyRect32StrideToVRAM (E-0073) (E-0340: the address in its name read as its RAM
+; name; was DrawWC338RowsToBGMapRow13)
+DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
     lb bc, $14, $05
@@ -8008,8 +8010,9 @@ CopyRectRecord73F7ToScreenBufferFar::
     ret
 
 ; copies a 12 x 11 rectangle from wScreenTileBuffer + $E0 (rows 32 bytes apart) to vBGMap0 + $E0
-; (row 7) with CopyRect32StrideToVRAM (E-0110)
-DrawWC278Rect12x11ToBGMapRow7::
+; (row 7) with CopyRect32StrideToVRAM (E-0110) (E-0340: the address in its name read as its RAM
+; name; was DrawWC278Rect12x11ToBGMapRow7)
+DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7::
     ld de, wScreenTileBuffer + $e0
     ld hl, vBGMap0 + $e0
     lb bc, $0c, $0b
@@ -8023,8 +8026,8 @@ CopyRectRecord755FToScreenBufferFar::
 
 ; copies an 8 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120
 ; (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1)
-; (E-0078)
-DrawWC2B8LeftToBGMapRow9_74B4::
+; (E-0078) (E-0340: the address in its name read as its RAM name; was DrawWC2B8LeftToBGMapRow9_74B4)
+DrawScreenTileBufferRow14Col8LeftToBGMapRow9_74B4::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     lb bc, $08, $09
@@ -8037,8 +8040,9 @@ CopyRectRecord7600ToScreenBufferFar::
     ret
 
 ; copies a 20 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120
-; (row 9) with CopyRect32StrideToVRAM, then wBattleArg0 = 1 (E-0077)
-DrawWC2B8RowsToBGMapRow9::
+; (row 9) with CopyRect32StrideToVRAM, then wBattleArg0 = 1 (E-0077) (E-0340: the address in its
+; name read as its RAM name; was DrawWC2B8RowsToBGMapRow9)
+DrawScreenTileBufferRow14Col8RowsToBGMapRow9::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     lb bc, $14, $09
@@ -8053,8 +8057,9 @@ CopyRectRecord76ACToScreenBufferFar::
     ret
 
 ; copies an 8 x 9 rectangle from wScreenTileBuffer + $120 (rows 32 bytes apart) to vBGMap0 + $120
-; (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
-DrawWC2B8LeftToBGMapRow9::
+; (row 9, column 0) with CopyRect32StrideToVRAM (E-0078) (E-0340: the address in its name read as
+; its RAM name; was DrawWC2B8LeftToBGMapRow9)
+DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     lb bc, $08, $09
@@ -8067,8 +8072,9 @@ CopyRectRecord76F8ToScreenBufferFar::
     ret
 
 ; copies an 8 x 7 rectangle from wScreenTileBuffer + $160 to vBGMap0 + $160 (row 11) with
-; CopyRect32StrideToVRAM (E-0115)
-DrawWC2F8Rect8x7ToBGMapRow11::
+; CopyRect32StrideToVRAM (E-0115) (E-0340: the address in its name read as its RAM name; was
+; DrawWC2F8Rect8x7ToBGMapRow11)
+DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     lb bc, $08, $07
@@ -8082,8 +8088,9 @@ CopyRectRecords7600And7734ToScreenBufferFar::
 
 ; copies a 7 x 1 rectangle from wScreenTileBuffer + $10C to vBGMap0 + $10C (row 8, column 12) and a
 ; 20 x 9 rectangle from wScreenTileBuffer + $120 to vBGMap0 + $120 (row 9), both with
-; CopyRect32StrideToVRAM (E-0110)
-DrawWC2A4AndWC2B8Rects::
+; CopyRect32StrideToVRAM (E-0110) (E-0340: the address in its name read as its RAM name; was
+; DrawWC2A4AndWC2B8Rects)
+DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects::
     ld de, wScreenTileBuffer + $10c
     ld hl, vBGMap0 + $10c
     lb bc, $07, $01
@@ -8100,8 +8107,9 @@ CopyRectRecord7750ToScreenBufferFar::
     ret
 
 ; copies a 14 x 7 rectangle from wScreenTileBuffer + $160 (rows 32 bytes apart) to vBGMap0 + $160
-; (row 11) with CopyRect32StrideToVRAM (E-0078)
-DrawWC2F8RectToBGMapRow11::
+; (row 11) with CopyRect32StrideToVRAM (E-0078) (E-0340: the address in its name read as its RAM
+; name; was DrawWC2F8RectToBGMapRow11)
+DrawScreenTileBufferRow17Col12RectToBGMapRow11::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     lb bc, $0e, $07
@@ -8109,8 +8117,9 @@ DrawWC2F8RectToBGMapRow11::
     ret
 
 ; copies a 20 x 11 rectangle from wScreenTileBuffer + $E0 (rows 32 bytes apart) to vBGMap0 + $E0
-; (row 7), falling into CopyRect32StrideToVRAM (E-0075)
-DrawWC278RowsToBGMapRow7::
+; (row 7), falling into CopyRect32StrideToVRAM (E-0075) (E-0340: the address in its name read as its
+; RAM name; was DrawWC278RowsToBGMapRow7)
+DrawScreenTileBufferRow11Col4RowsToBGMapRow7::
     ld de, wScreenTileBuffer + $e0
     ld hl, vBGMap0 + $e0
     ld bc, $140b
@@ -8613,7 +8622,7 @@ DrawSlotStatusMarks_DrawSlotLevel_BankA0::
     call HLToDecimalDigits
     pop bc
     pop de
-    call WriteTwoDigitTilesFromWC8C1
+    call WriteTwoDigitTilesFromDigits1
 
 .done:
     pop bc

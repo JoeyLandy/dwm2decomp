@@ -367,9 +367,9 @@ LoadMapHeaderByMapType::
     jumptable
     dw LoadKeyWorldTilesetAndHeader
     dw LoadMapHeaderByMapType_DecompressToVRAM
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02_SetTemp0
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
     dw LoadMapType5TilesetAndHeader
     dw LoadMapHeaderByMapType_WriteTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
@@ -581,7 +581,7 @@ LoadMapHeaderByMapType_DecompressToVRAM::
     ld [wMapMoveType], a
     ret
 
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -597,7 +597,7 @@ LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02::
     call LoadSpecialMapHeader
     ret
 
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
@@ -714,9 +714,9 @@ LoadMapScreen_ReadMapType::
     jumptable
     dw LoadMapScreen_Sub03_WriteSVBK
     dw LoadMapScreen_Sub03_Return
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02_SetTemp0
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
     dw LoadMapScreen_Sub03_WriteTemp0AndSVBK
     dw LoadMapScreen_Sub03_WriteTemp0
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
@@ -944,12 +944,13 @@ LoadMapScreen_Sub03_WriteTemp0AndSVBK::
 
 .call_draw_key_world_exit_tile:
     call DrawKeyWorldExitTile
-    call CheckTwoWCDB0EntriesForKeyWorldArea
+    call CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea
     ret
 
 ; for the two wKeyWorldFloorState + $4 entries of wKeyWorldFloor matching wKeyWorldArea runs
-; CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK with C = $80 or the stored value (E-0127)
-CheckTwoWCDB0EntriesForKeyWorldArea::
+; SetKeyWorldEntryTileOnScreen with C = $80 or the stored value (E-0127) (E-0340: the address in its
+; name read as its RAM name; was CheckTwoWCDB0EntriesForKeyWorldArea)
+CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea::
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $4
@@ -968,7 +969,7 @@ CheckTwoWCDB0EntriesForKeyWorldArea::
     or a
     jr z, .next
     ld c, $80
-    jr .call_check_two_wcdb0_entries_for_key_world
+    jr .call_set_key_world_entry_tile_on_screen
 
 .next:
     dec hl
@@ -976,9 +977,9 @@ CheckTwoWCDB0EntriesForKeyWorldArea::
     ld a, [hl]
     ld c, a
 
-.call_check_two_wcdb0_entries_for_key_world:
+.call_set_key_world_entry_tile_on_screen:
     push hl
-    call CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
+    call SetKeyWorldEntryTileOnScreen
     pop hl
 
 .restore:
@@ -1000,7 +1001,7 @@ CheckTwoWCDB0EntriesForKeyWorldArea::
     or a
     jr z, .next2
     ld c, $80
-    jr CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
+    jr SetKeyWorldEntryTileOnScreen
 
 .next2:
     dec hl
@@ -1008,7 +1009,10 @@ CheckTwoWCDB0EntriesForKeyWorldArea::
     ld a, [hl]
     ld c, a
 
-CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK::
+; B = entry: when KeyWorldEntryScreenXY[B] is the current map screen (hMapScreenX/Y nibbles), writes
+; the entry's tile: $2C unless bit 7 of C asks for the stored value, in WRAM bank 2 (E-0340; was
+; CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK)
+SetKeyWorldEntryTileOnScreen::
     ld a, b
     ld hl, KeyWorldEntryScreenXY
     add_a_to_hl
@@ -1351,8 +1355,8 @@ KeyWorldEntryScreenXY::
 
 ; LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 *
 ; floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles;
-; CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK reads byte $4819 + 16 * n + 2 * B the same way; 192
-; records end at the code at $5418 (E-0195, C1)
+; SetKeyWorldEntryTileOnScreen reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at
+; the code at $5418 (E-0195, C1)
 ; record: eight spots as (X, Y) byte pairs; all-zero records are unused
 KeyWorldScreenSpotRecords::
     db $04, $04, $05, $01, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04 ; id 0
@@ -1552,7 +1556,7 @@ LoadMapScreen_Sub03_Return::
     ret
     db $c9
 
-LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02::
+LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
@@ -1565,7 +1569,7 @@ LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02::
     call LoadMapScreenFromChunk
     ret
 
-LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03::
+LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
@@ -1680,7 +1684,7 @@ LoadMapScreen_Sub03_WriteSVBK::
 
 .call_draw_key_world_objects_entry_tiles_for:
     call DrawKeyWorldObjectsEntryTilesForScreen
-    call DrawWCD8BObjectTilesForScreen
+    call DrawKeyWorldFloorInfo3ObjectTilesForScreen
     call DrawKeyWorldGoalAtScreen
     ret
 
@@ -1914,8 +1918,9 @@ DrawKeyWorldObjectsEntryTilesForScreen::
     ret
 
 ; for the wKeyWorldFloorInfo + $3 object on the current screen draws its 4 x 2 or 2 x 2 tile blocks
-; by kind (E-0130)
-DrawWCD8BObjectTilesForScreen::
+; by kind (E-0130) (E-0340: the address in its name read as its RAM name; was
+; DrawWCD8BObjectTilesForScreen)
+DrawKeyWorldFloorInfo3ObjectTilesForScreen::
     ld hl, wKeyWorldFloorInfo + $3
 
 .skip:
@@ -2151,7 +2156,7 @@ CheckWarpAtPlayer_ReadMapType::
     dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
     dw CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable
     dw CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83
-    dw CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14
+    dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldFloorInfo1EntryAtScreen14
     dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
     dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
 
@@ -2175,8 +2180,8 @@ CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83::
     call WarpToScreen01Event83
     ret
 
-CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14::
-    call WarpByWCD89EntryAtScreen14
+CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
+    call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 
 CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1::
@@ -2196,8 +2201,9 @@ CallF4268OnScreenY1::
     ret
 
 ; when wKeyWorldArea is 0, the wKeyWorldFloorInfo + $1 entry is 5 and the player is at screen (1,
-; 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
-WarpByWCD89EntryAtScreen14::
+; 4): warps to the stored screen and starts the transition; C = 1 (E-0127) (E-0340: the address in
+; its name read as its RAM name; was WarpByWCD89EntryAtScreen14)
+WarpByKeyWorldFloorInfo1EntryAtScreen14::
     ld a, [wKeyWorldArea]
     or a
     jr z, .read_key_world_floor

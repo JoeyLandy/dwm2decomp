@@ -99,10 +99,10 @@ GameMode8_Update::
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_SetObject5_Case08
+    dw GameMode8_Update_SetObject5_Case08_SetObject5
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B
+    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B_SetScreenSubStep
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
 
@@ -174,7 +174,7 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-GameMode8_Update_SetObject5_Case08::
+GameMode8_Update_SetObject5_Case08_SetObject5::
     ld a, $00
     ld [wObject5], a
     ld [wArg1], a
@@ -183,7 +183,7 @@ GameMode8_Update_SetObject5_Case08::
     ld [wScreenSubStep], a
     ret
 
-GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B::
+GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -830,8 +830,8 @@ ShowString0EBank0EAtTiles2700AndLoadTiles::
     ret
 
 ; clears five tiles at vTiles2 + $290 (copying $2940) and draws the name at wRecordBufB + $F there
-; (E-0121)
-DrawWCA3ANameAtTiles2290::
+; (E-0121) (E-0340: the address in its name read as its RAM name; was DrawWCA3ANameAtTiles2290)
+DrawRecordBufBMasterNameNameAtTiles2290::
     ld hl, $2940
     ld de, vTiles2 + $290
     call CopyTileBytesToVRAMCounted_BankF2
@@ -914,15 +914,17 @@ PersonalityLevelOfA::
     inc c
     ret
 
-; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-ShowPersonalityNameAndWCA3AName::
+; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122) (E-0340: the address in its
+; name read as its RAM name; was ShowPersonalityNameAndWCA3AName)
+ShowPersonalityNameAndRecordBufBMasterNameName::
     call ShowCombinedPersonalityName
-    call DrawWCA3ANameAtTiles2290
+    call DrawRecordBufBMasterNameNameAtTiles2290
     ret
 
 ; writes the EXP wRecordBufB + $58-wRecordBufB + $5A as seven digits and, below the level cap, the
-; EXP still needed for the next level (E-0129)
-DrawWCA83ExpAndToNextLevel::
+; EXP still needed for the next level (E-0129) (E-0340: the address in its name read as its RAM
+; name; was DrawWCA83ExpAndToNextLevel)
+DrawRecordBufBExpExpAndToNextLevel::
     ld a, [wRecordBufB + MON_EXP]
     ld [wDigits], a
     ld a, [wRecordBufB + MON_EXP + 1]
@@ -1022,8 +1024,9 @@ DrawWCA83ExpAndToNextLevel::
     jr .call_bg_map_address_at_scroll_bank_f2_514_d
 
 ; shows string wRecordBufB + $A4 of category $0B (ShowString_Bank08) at vTiles2 + $320 with size
-; $0206 (E-0121)
-ShowWCACFCategory11StringAtTiles2320::
+; $0206 (E-0121) (E-0340: the address in its name read as its RAM name; was
+; ShowWCACFCategory11StringAtTiles2320)
+ShowRecordBufBItemCategory11StringAtTiles2320::
     ld a, [wRecordBufB + MON_ITEM]
     ld [wStringIndex], a
     ld a, $0b
@@ -1069,10 +1072,10 @@ ShowSpeciesCategory13StringAtTiles2680::
     ret
 
 ; runs RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB and
-; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02 (E-0126)
+; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry (E-0126)
 RunF24C3DAnd4D72::
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
+    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry
     ret
 
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
@@ -1239,7 +1242,7 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1::
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_DrawSpeciesIconForRecordBufBEntry::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
@@ -1578,8 +1581,9 @@ DecompressRecordBufBSpeciesGraphics_Data3::
     db $0b, $1c, $1a
 
 ; writes the level wRecordBufB + $56 (marked $6F at the cap wRecordBufB + $57), its digits and the
-; status marks from wRecordBufB + $55 into the BG map (E-0129)
-DrawLevelAndStatusRowForWCA81::
+; status marks from wRecordBufB + $55 into the BG map (E-0129) (E-0340: the address in its name read
+; as its RAM name; was DrawLevelAndStatusRowForWCA81)
+DrawLevelAndStatusRowForRecordBufBLevel::
     ld hl, wRecordBufB + MON_LEVEL
     ld a, [hli]
     ldh [hTemp0], a
@@ -1714,10 +1718,10 @@ WriteTileC2AtHL_BankF2::
     ei
     ret
 
-; runs DrawLevelAndStatusRowForWCA81, DrawFiveRecordBufBStatsColumn and
+; runs DrawLevelAndStatusRowForRecordBufBLevel, DrawFiveRecordBufBStatsColumn and
 ; DrawFourRecordBufBStatsDigits (E-0126)
 DrawRecordBufBStatsScreen::
-    call DrawLevelAndStatusRowForWCA81
+    call DrawLevelAndStatusRowForRecordBufBLevel
     call DrawFiveRecordBufBStatsColumn
     call DrawFourRecordBufBStatsDigits
     ret
@@ -1837,7 +1841,7 @@ WriteThreeDigitsAtHL::
     ret
 
 ; hTemp0/7 = the word wRecordBufB[wArg5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues
-; at DrawFamilyIconAndCountForWCA38_ReadArg1 (E-0126)
+; at DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1 (E-0126)
 DrawSpeciesIconForRecordBufBEntry::
     push bc
     ld hl, wRecordBufB
@@ -1849,11 +1853,12 @@ DrawSpeciesIconForRecordBufBEntry::
     ldh [hTemp1], a
     farcall DrawSpeciesAndFamilyIconForTemp0
     pop bc
-    jp DrawFamilyIconAndCountForWCA38_ReadArg1
+    jp DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1
 
 ; loads the family icon of wRecordBufB + $D & $0F into tile wArg4; the next entry draws tile $1E and
-; the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127)
-DrawFamilyIconAndCountForWCA38::
+; the count wRecordBufB[wArg1] at the scroll offset wArg2/3 (E-0127) (E-0340: the address in its
+; name read as its RAM name; was DrawFamilyIconAndCountForWCA38)
+DrawFamilyIconAndCountForRecordBufBFamily::
     push bc
     ld a, [wRecordBufB + MON_FAMILY]
     and $0f
@@ -1863,7 +1868,7 @@ DrawFamilyIconAndCountForWCA38::
     farcall LoadFamilyIconTileForWorkBuf
     pop bc
 
-DrawFamilyIconAndCountForWCA38_ReadArg1::
+DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     ld a, [wArg1]
     ld hl, wRecordBufB
     add_a_to_hl
@@ -2386,9 +2391,10 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 383 ?
 
 ; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
-; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05.skip adds 3 * entry (after
-; ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the
-; lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed (E-0208, C1)
+; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_ReadF2FarPointerForScreenTableIndex.skip
+; adds 3 * entry (after ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits,
+; Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not
+; confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
     dw ScreenNumberList000 ; id 0
@@ -3578,15 +3584,16 @@ ReturnStub_6333::
     ret
     db $cd, $55, $63, $cd, $46, $63, $c9
 
-KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList::
+KeyAppraisalMenu_ChooseKey_Case05_CopyWorkBuf1ToKeyList::
     call KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf
-    call CopyWD09EToKeyList
+    call CopyWorkBuf1ToKeyList
     xor a
     ld [wScreenStep], a
     ret
 
-; copies $C0 bytes from wWorkBuf + $1 to wKeyList (E-0122)
-CopyWD09EToKeyList::
+; copies $C0 bytes from wWorkBuf + $1 to wKeyList (E-0122) (E-0340: the address in its name read as
+; its RAM name; was CopyWD09EToKeyList)
+CopyWorkBuf1ToKeyList::
     ld hl, wWorkBuf + $1
     ld de, wKeyList
     ld c, $c0

@@ -1093,7 +1093,7 @@ ResolveStepComputeDamage::
 ; (wSoundChannelSlots and wSoundChannel1 not both $FF). Otherwise it advances the step twice,
 ; updates bit 4 or 6 of wResolveMsgFlags from wBattleDamageLo/Hi and wBattleDamageHi when
 ; wResolveMsgFlags bit 5 is set, and for action $CF rewinds the step while wResolveMsgFlags bit 4 is
-; set and wDefeatFlagsBA is zero. It then stores $40 or $41 in wEffectFlags, farcalls
+; set and wMultiHitCount is zero. It then stores $40 or $41 in wEffectFlags, farcalls
 ; SelectEffectByEffectFlags and SelectEffectByEffectFlags2Flags (E-0053)
 ResolveStepSoundWaitAndMessage::
     ld a, [wBattleActionId]
@@ -1142,7 +1142,7 @@ ResolveStepSoundWaitAndMessage::
     ret z
     ld hl, wBattleResolveStep
     dec [hl]
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or a
     ret nz
 
@@ -1644,7 +1644,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
     ret
 
 .call_resolve_step_damage_message_sub04_sub01:
-    call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01
+    call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01_SetSlotStatus6Bit7
     ld a, [wResolveMsgFlags]
     bit 4, a
     ld a, $87
@@ -2123,7 +2123,7 @@ LoadBattleMonsterPictureForSlotB::
 .return:
     ret
 
-; after a bounce: saves the actor, the target, wDefeatFlagsBA and both slots' action choices at
+; after a bounce: saves the actor, the target, wMultiHitCount and both slots' action choices at
 ; wSavedActorTarget, gives the target the actor's action aimed back at the actor, swaps wBattleActor
 ; and wBattleTarget, and ORs D (1 wind, 4 wall of light) into wFollowUpAction (E-0337)
 TurnActionBackOnActor::
@@ -2133,7 +2133,7 @@ TurnActionBackOnActor::
     ld [hli], a
     ld a, [wBattleTarget]
     ld [hli], a
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     ld [hli], a
     ld a, [wBattleActor]
     ld de, wBattleActionChoice
@@ -2315,8 +2315,8 @@ ResolveStepEffectChecks_ShowMissHeroAvoidedDamage::
     ret
 
 ; for action $CC clears bits 0-1 of the actor's wBattleStatus4 byte when bits 2-3 equal 4; for an
-; action in $D0-$E3 it farcalls RunA3414FAndMarkWDA5B3 first. Then it sets wBattleSubPhase to 2 and
-; clears wBattleResolveStep (E-0055)
+; action in $D0-$E3 it farcalls RunA3414FAndMarkSlotMarks3 first. Then it sets wBattleSubPhase to 2
+; and clears wBattleResolveStep (E-0055)
 SetSubPhase2AndRestartResolve::
     ld a, [wBattleActionId]
     cp SKILL_HIGHJUMP_CC
@@ -2326,7 +2326,7 @@ SetSubPhase2AndRestartResolve::
     jr c, .loop
     cp $e4
     jr nc, .loop
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
 
 .loop:
     ld a, $02
@@ -3534,7 +3534,7 @@ ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call RollChanceByFlagsAtHLSided
     ret
 
-ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
+ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01_ActionEffect_Transform_Sub01_GetBaseHP::
     ld a, [wBattleTarget]
     call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
@@ -3636,7 +3636,7 @@ ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
     ld [wBattleArg3], a
     farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04
+    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04_LoadMonsterRecord
     ld a, [wBattleActor]
     ld de, wBattleSkillsPrefix
     swap a
@@ -6114,7 +6114,7 @@ ActionEffect_Transform_Sub01_BattlerRecordFieldAddress::
 .return:
     ret
 
-ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04::
+ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04_LoadMonsterRecord::
     ld b, a
     and $03
     cp $03
@@ -6459,7 +6459,7 @@ ActionEffectTable::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD0::
     call RollSkillDamageScaledByBoltResistance
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6467,7 +6467,7 @@ ActionEffect_ActionD0::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD1::
     call ActionEffect_ActionD1_RollSkillDamageFromRecord
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6475,7 +6475,7 @@ ActionEffect_ActionD1::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD2::
     call ActionEffect_ActionD2_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6483,7 +6483,7 @@ ActionEffect_ActionD2::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD3::
     call ActionEffect_ActionD3_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6491,7 +6491,7 @@ ActionEffect_ActionD3::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD4::
     call ActionEffect_ActionD4_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6499,21 +6499,21 @@ ActionEffect_ActionD4::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD5::
     call SkillDamageScaledByGigaSlashResistance
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $D6; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD6::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp ActionEffect_Sacrifice
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $D7; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD7::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     call ActionEffect_ActionD7_AdvanceRandom
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6521,7 +6521,7 @@ ActionEffect_ActionD7::
 ; wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD8::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     call ActionEffect_ActionD8_ComputeAttackDamage
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6530,14 +6530,14 @@ ActionEffect_ActionD8::
 ; interpreted (E-0126)
 ActionEffect_ActionD9::
     call ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDA::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     xor a
     ldh [hTemp0], a
     call ClearDamageAndReadTargetStatus0_Bank36
@@ -6603,7 +6603,7 @@ ActionEffect_ActionDA::
 ; wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDB::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     call ClearDamageAndReadTargetStatus0_Bank36
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -6676,7 +6676,7 @@ ActionEffect_ActionDC::
 ; wBattleActionId) for action(s) $DD; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDD::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -6714,7 +6714,7 @@ ActionEffect_ActionDD::
 ; wBattleActionId) for action(s) $DE; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDE::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -6729,14 +6729,14 @@ ActionEffect_ActionDE::
 ; wBattleActionId) for action(s) $DF; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDF::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp ActionEffect_RobMagic
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E0; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE0::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToTemp0
@@ -6751,14 +6751,14 @@ ActionEffect_ActionE0::
 ; wBattleActionId) for action(s) $E1; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE1::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     jp ActionEffect_PanicAll
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE2::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ld a, [wBattleActor]
     and $04
     ldh [hTemp0], a
@@ -6785,7 +6785,7 @@ ActionEffect_ActionE2::
 ; wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE3::
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ld a, [wBattleActor]
     and $04
     ldh [hTemp0], a
@@ -7299,7 +7299,7 @@ ActionEffect_Slow::
     call RollVsSlowResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
-ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01::
+ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01_SetSlotStatus6Bit7::
     call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA
     jr nc, .skip
     ld a, [wBattleTarget]
@@ -7698,7 +7698,7 @@ ActionEffect_Transform::
     ld l, $52
     ld bc, $4090
     call ClearDamageAndStoreResolveMsgFlags_Bank36
-    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01
+    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01_ActionEffect_Transform_Sub01_GetBaseHP
     ld a, [wBattleActor]
     ld hl, wSideControl
     add_a_to_hl
@@ -8370,7 +8370,7 @@ ActionEffect_LureDance::
 ; wBattleActionId) for action(s) 123 LifeDance; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_LifeDance::
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or a
     jr nz, .call_action_effect_farewell
     call AdvanceRandom
@@ -9093,15 +9093,15 @@ ActionEffect_LifeSong::
     call AddAx9ToHL
     ld a, [hl]
     and $10
-    jr nz, ActionEffect_LifeSong_CheckDefeatFlagsBA
+    jr nz, ActionEffect_LifeSong_CheckMultiHitCount
     ld a, [hl]
     and $cf
     or $20
     ld [hl], a
     jp SetSubPhase7AndResetResolveStep
 
-ActionEffect_LifeSong_CheckDefeatFlagsBA::
-    ld a, [wDefeatFlagsBA]
+ActionEffect_LifeSong_CheckMultiHitCount::
+    ld a, [wMultiHitCount]
     or a
     jr nz, .read_battle_target
     call AdvanceRandom
@@ -9583,7 +9583,7 @@ ActionEffect_ActionCD::
 ; wBattleActionId) for action(s) $CE; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionCE::
-    jp ActionEffect_LifeSong_CheckDefeatFlagsBA
+    jp ActionEffect_LifeSong_CheckMultiHitCount
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames;

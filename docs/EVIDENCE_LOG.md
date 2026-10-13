@@ -2431,6 +2431,29 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0340 — Names without addresses; structural steps described
+
+- Kind: READING and generator naming rules; no new behavioural claim beyond the RAM readings below.
+- **Addresses inside names.** 130 names in config/names.json and 7 family names in config/name_families.json spelled a RAM address (StepPlayerDownTowardWC928, FillWC278WithC3). The address is now read as its RAM name:
+  - the symbol itself (wStepPtrLo → StepPtrLo);
+  - inside a monster-record buffer, the MON_ field (wRecordBufB + $0B → RecordBufBSpecies);
+  - inside a screen buffer, its row and column (wScreenTileBuffer + $E0 → ScreenTileBufferRow11Col4);
+  - otherwise the buffer and offset (wLinkRules + 1 → LinkRules1).
+  - Each changed entry's note keeps the old name ("was ...").
+- **Structural steps.** tools/disasm_all.py's last naming pass, name_steps_by_text, gives a label whose name is only structural (Parent_Case05, Parent_Sub01_Table2_Case00) a description from its body, in this order:
+  - the first words of the first string it shows;
+  - the first routine it calls that is not a generic helper and not already in its name;
+  - its first write to a named RAM byte (Set<X>, or Advance<X> for `ld hl, wX` / `inc [hl]`).
+  - 761 labels are described this way; build/listing/step_names.json records them. Labels with no description at all fall from 790 to 235 (tools/readability.py "undescribed_labels").
+- **RAM read.**
+  - $C836 wInventorySortFlags (was wGameFlags836): bit 0 the sort table, toggled by SortInventory; bit 7 keep the order; bit 6 an item was added or changed (AppendItemWC928ToInventory, CheckItem, the treasure events); bit 1 the plan list's order.
+  - $DABA wMultiHitCount (was wDefeatFlagsBA): RollRepeatCountForAction rolls 1-4 hits into bits 0-6 with bit 7 set, and RunMultiHitCounter counts down.
+  - $D7B2/$D7B3 wReturnScreenState/wReturnScreenStep (were wScreenByteB2/B3): the record-list menus save the state and step to return to after a sub-screen and copy them back.
+  - $C83C-$C83E wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell and wLogTwigKeyWorldKey: the Log Twig saves those key-world bytes, and the field return phase compares them back.
+  - Menu work bytes such as wScreenByteBD-$C1 hold different things in different menus (a price's digits in the shop, an SRAM bank and address in hibernation), so no single name fits; they keep their byte names.
+- **Tests.** tests/test_step_names.py checks every recorded step name against its body: a Set<X> or Advance<X> step writes or advances X, and a routine-name step calls that routine.
+- Binary verification: build/run497 PASS, 0 differing bytes.
+
 ### E-0339 — Battle status bits, story flags, field states and the world map
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware; battles forced through the debug menu as in E-0332, the field by location pokes as in E-0321), plus READING and a naming DECISION (D-009).

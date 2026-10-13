@@ -1195,9 +1195,9 @@ ComputeBreedingChild::
     ld [hl], a
     ld hl, wChildRecord + MON_EGG
     ld [hl], a
-    call CopyFourNamesByWCADDBit4Table
-    call CopyPlayerNameToWCADF
-    call CopySixBytesByWCADDBit4Table
+    call CopyFourNamesByChildRecordFamilyBit4Table
+    call CopyPlayerNameToChildRecordMasterName
+    call CopySixBytesByChildRecordFamilyBit4Table
     ld hl, wRecordBufA
     ld de, wRecordBufB
     ld c, $00
@@ -1243,7 +1243,7 @@ ComputeBreedingChild::
     ld d, b
     pop bc
     push bc
-    call AdjustStatForWCA2AAndWCACF
+    call AdjustStatForRecordBufAByte7133AndRecordBufBItem
     add hl, de
     srl h
     rr l
@@ -1399,8 +1399,8 @@ ComputeBreedingChild::
     ld [hl], a
     call RollChildSexFromSpecies
     call ApplyBreedingBonusToChildStats
-    call RollChildResistancesToWCB43
-    call BuildWCB0CCandidateList
+    call RollChildResistancesToChildRecordResistances
+    call BuildChildRecordSkillListCandidateList
     ld a, [wNameEntryState]
     inc a
     ld [wNameEntryState], a
@@ -1409,9 +1409,10 @@ ComputeBreedingChild::
     ret
 
 ; when wRecordBufA + $A4 or wRecordBufB + $A4 is set and listed for stat C
-; (AdjustStatForWCA2AAndWCACF_Data1), subtracts AdjustStatForWCA2AAndWCACF_Data2[value] from DE
-; (unless it is at 999) (E-0130)
-AdjustStatForWCA2AAndWCACF::
+; (AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1), subtracts
+; AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2[value] from DE (unless it is at 999)
+; (E-0130) (E-0340: the address in its name read as its RAM name; was AdjustStatForWCA2AAndWCACF)
+AdjustStatForRecordBufAByte7133AndRecordBufBItem::
     ld a, [wRecordBufA + MON_ITEM]
     and a
     jr z, .check_record_buf_b2
@@ -1419,7 +1420,7 @@ AdjustStatForWCA2AAndWCACF::
     push hl
     ld a, c
     add a
-    ld hl, AdjustStatForWCA2AAndWCACF_Data1
+    ld hl, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1
     add_a_to_hl
     push de
     ld e, [hl]
@@ -1451,7 +1452,7 @@ AdjustStatForWCA2AAndWCACF::
 
 .skip2:
     ld a, b
-    ld hl, AdjustStatForWCA2AAndWCACF_Data2
+    ld hl, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2
     add_a_to_hl
     ld a, [hl]
     ld b, a
@@ -1473,7 +1474,7 @@ AdjustStatForWCA2AAndWCACF::
     push de
     ld a, c
     add a
-    ld de, AdjustStatForWCA2AAndWCACF_Data1
+    ld de, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1
     add e
     ld e, a
     jr nc, .skip3
@@ -1512,7 +1513,7 @@ AdjustStatForWCA2AAndWCACF::
 
 .skip5:
     ld a, b
-    ld de, AdjustStatForWCA2AAndWCACF_Data2
+    ld de, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2
     add e
     ld e, a
     jr nc, .skip6
@@ -1532,42 +1533,43 @@ AdjustStatForWCA2AAndWCACF::
     pop de
     ret
 
-AdjustStatForWCA2AAndWCACF_Data1::
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry00
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry00
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry02
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry02
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry04
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry05
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry06
-    dw AdjustStatForWCA2AAndWCACF_Data1_Entry07
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1::
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry04
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry05
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry06
+    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry07
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry00::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00::
     db $01, $02, $ff
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry02::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02::
     db $03, $04, $ff
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry04::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry04::
     db $05, $06, $ff
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry05::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry05::
     db $07, $08, $14, $ff
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry06::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry06::
     db $09, $0a, $ff
 
-AdjustStatForWCA2AAndWCACF_Data1_Entry07::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry07::
     db $0b, $0c, $ff
 
-AdjustStatForWCA2AAndWCACF_Data2::
+AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2::
     db $00, $1e, $50, $1e, $50, $0a, $32, $0a, $32, $0a, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
 ; fills wChildRecord + $34 with $FF, appends species bytes 8-10 of wChildRecord + $B, wRecordBufA +
 ; $B and wRecordBufB + $B and eight bytes each from wRecordBufA + $34 and wRecordBufB + $34 to
-; wChildRecord + $3C, maps them through SkillLineBaseTable and compacts the list (E-0124)
-BuildWCB0CCandidateList::
+; wChildRecord + $3C, maps them through SkillLineBaseTable and compacts the list (E-0124) (E-0340:
+; the address in its name read as its RAM name; was BuildWCB0CCandidateList)
+BuildChildRecordSkillListCandidateList::
     ld hl, wChildRecord + MON_SKILLS
     ld c, $08
 
@@ -1594,15 +1596,16 @@ BuildWCB0CCandidateList::
     call CopyEightBytesDEToHL
     ld de, wRecordBufB + MON_SKILLS
     call CopyEightBytesDEToHL
-    call MapWCB0CEntriesThroughTable5B03
-    call BuildWCB0CCandidateList_RemoveDuplicateSkills
-    call CompactWCB0CRemovingFF
-    call BuildWCB0CCandidateList_RemoveDuplicateSkills
+    call MapChildRecordSkillListEntriesThroughTable5B03
+    call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
+    call CompactChildRecordSkillListRemovingFF
+    call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
     ret
 
 ; replaces each of the $19 bytes at wChildRecord + $3C (other than $FF) by SkillLineBaseTable[byte]
-; (E-0124)
-MapWCB0CEntriesThroughTable5B03::
+; (E-0124) (E-0340: the address in its name read as its RAM name; was
+; MapWCB0CEntriesThroughTable5B03)
+MapChildRecordSkillListEntriesThroughTable5B03::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $19
 
@@ -1644,8 +1647,9 @@ SkillLineBaseTable::
     db $90, $91, $92, $93, $94, $95, $96, $97, $97, $99, $99, $9b, $9c, $9d, $9e, $9f ; id 9
     db $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af ; id 10
 
-; moves the non-$FF bytes of the $19-byte list at wChildRecord + $3C to its front (E-0124)
-CompactWCB0CRemovingFF::
+; moves the non-$FF bytes of the $19-byte list at wChildRecord + $3C to its front (E-0124) (E-0340:
+; the address in its name read as its RAM name; was CompactWCB0CRemovingFF)
+CompactChildRecordSkillListRemovingFF::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld de, wChildRecord + MON_SKILL_LIST
     ld c, $19
@@ -1668,8 +1672,9 @@ CompactWCB0CRemovingFF::
     ret
 
 ; in the child's skill list (wChildRecord + MON_SKILL_LIST, 25 entries) turns zeros and repeated
-; skills into $FF
-BuildWCB0CCandidateList_RemoveDuplicateSkills::
+; skills into $FF (E-0340: the address in its name read as its RAM name; was
+; BuildWCB0CCandidateList_RemoveDuplicateSkills)
+BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $00
 
@@ -1811,7 +1816,7 @@ RefreshRecordResistancesFromSpecies::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadWD01AByteArg4
+    call LoadSpeciesExpCurveBByteArg4
     ld a, [wArg5]
     pop bc
     pop hl
@@ -1833,8 +1838,9 @@ RefreshRecordResistancesFromSpecies::
     ret
 
 ; for each of the 27 resistances of species wChildRecord + $B: levels below 3 may rise by the parent
-; rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wChildRecord + $73 (E-0127)
-RollChildResistancesToWCB43::
+; rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wChildRecord + $73 (E-0127) (E-0340:
+; the address in its name read as its RAM name; was RollChildResistancesToWCB43)
+RollChildResistancesToChildRecordResistances::
     ld hl, wChildRecord + MON_SPECIES
     ld a, [hli]
     ld [wArg2], a
@@ -1850,7 +1856,7 @@ RollChildResistancesToWCB43::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadWD01AByteArg4
+    call LoadSpeciesExpCurveBByteArg4
     ld a, [wArg5]
     cp $03
     jr nc, .restore
@@ -1858,22 +1864,22 @@ RollChildResistancesToWCB43::
     push bc
     ld a, [wArg5]
     cp $02
-    jr z, .call_sum_func5_dcd_of_wc9_f9_and_wca9_e
+    jr z, .call_sum_func5_dcd_of_record_buf_a_byte712
     ld b, $03
-    call SumFunc5DCDOfWC9F9AndWCA9E
+    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances
     ld a, b
     cp $ff
     jr z, .restore
-    call RollWCB3DForCaseB_5D16
+    call RollChildRecordPlusForCaseB_5D16
     jr .restore
 
-.call_sum_func5_dcd_of_wc9_f9_and_wca9_e:
+.call_sum_func5_dcd_of_record_buf_a_byte712:
     ld b, $05
-    call SumFunc5DCDOfWC9F9AndWCA9E
+    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances
     ld a, b
     cp $ff
     jr z, .restore
-    call RollWCB3DForCaseB_5D77
+    call RollChildRecordPlusForCaseB_5D77
 
 .restore:
     pop bc
@@ -1894,8 +1900,9 @@ RollChildResistancesToWCB43::
     ret
 
 ; when wChildRecord + $6D is set rolls RollWCB3DChanceOrIncArg5 with factor 1, 3 or 10 (then 3) for
-; B = 3, 4, 5, or 5 after counting otherwise (E-0125)
-RollWCB3DForCaseB_5D16::
+; B = 3, 4, 5, or 5 after counting otherwise (E-0125) (E-0340: the address in its name read as its
+; RAM name; was RollWCB3DForCaseB_5D16)
+RollChildRecordPlusForCaseB_5D16::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -1911,14 +1918,14 @@ RollWCB3DForCaseB_5D16::
     cp $04
     jr z, .skip3
     cp $05
-    jr z, .call_roll_wcb3_d_chance_or_inc_arg52
+    jr z, .call_roll_child_record_plus_chance_or_inc2
     ld a, [wArg5]
     inc a
     ld [wArg5], a
     ld a, $05
 
-.call_roll_wcb3_d_chance_or_inc_arg5:
-    call RollWCB3DChanceOrIncArg5
+.call_roll_child_record_plus_chance_or_inc:
+    call RollChildRecordPlusChanceOrIncArg5
 
 .loop:
     pop bc
@@ -1926,22 +1933,23 @@ RollWCB3DForCaseB_5D16::
 
 .skip2:
     ld a, $01
-    jr .call_roll_wcb3_d_chance_or_inc_arg5
+    jr .call_roll_child_record_plus_chance_or_inc
 
 .skip3:
     ld a, $03
-    jr .call_roll_wcb3_d_chance_or_inc_arg5
+    jr .call_roll_child_record_plus_chance_or_inc
 
-.call_roll_wcb3_d_chance_or_inc_arg52:
+.call_roll_child_record_plus_chance_or_inc2:
     ld a, $0a
-    call RollWCB3DChanceOrIncArg5
+    call RollChildRecordPlusChanceOrIncArg5
     cp $ff
     jr z, .loop
     jr .skip3
 
 ; chance = A * wChildRecord + $6D; if below 100 and a random value is below it, A = $FF; otherwise
-; wArg5 += 1 and A = 0 (E-0124)
-RollWCB3DChanceOrIncArg5::
+; wArg5 += 1 and A = 0 (E-0124) (E-0340: the address in its name read as its RAM name; was
+; RollWCB3DChanceOrIncArg5)
+RollChildRecordPlusChanceOrIncArg5::
     ld c, a
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -1971,8 +1979,9 @@ RollWCB3DChanceOrIncArg5::
     ret
 
 ; when wChildRecord + $6D is set: B = 5 rolls a random value against wChildRecord + $6D (A = $FF on
-; success), other values roll factor 2 (E-0125)
-RollWCB3DForCaseB_5D77::
+; success), other values roll factor 2 (E-0125) (E-0340: the address in its name read as its RAM
+; name; was RollWCB3DForCaseB_5D77)
+RollChildRecordPlusForCaseB_5D77::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -1988,7 +1997,7 @@ RollWCB3DForCaseB_5D77::
     cp $05
     jr z, .skip2
     ld a, $02
-    call RollWCB3DChanceOrIncArg5
+    call RollChildRecordPlusChanceOrIncArg5
     pop bc
     ret
 
@@ -2017,17 +2026,18 @@ RollWCB3DForCaseB_5D77::
     pop bc
     ret
 
-; B = SumFunc5DCDOfWC9F9AndWCA9E_TestEntry(wRecordBufA + $73) +
-; SumFunc5DCDOfWC9F9AndWCA9E_TestEntry(wRecordBufB + $73) when both are valid and the sum is at
-; least B; otherwise B = $FF (E-0124)
-SumFunc5DCDOfWC9F9AndWCA9E::
+; B = SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry(wRecordBufA + $73) +
+; SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry(wRecordBufB + $73) when both are
+; valid and the sum is at least B; otherwise B = $FF (E-0124) (E-0340: the address in its name read
+; as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E)
+SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances::
     ld hl, wRecordBufA + MON_RESISTANCES
-    call SumFunc5DCDOfWC9F9AndWCA9E_TestEntry
+    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry
     cp $ff
     jr z, .done
     ld e, a
     ld hl, wRecordBufB + MON_RESISTANCES
-    call SumFunc5DCDOfWC9F9AndWCA9E_TestEntry
+    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry
     cp $ff
     jr z, .done
     add e
@@ -2041,7 +2051,8 @@ SumFunc5DCDOfWC9F9AndWCA9E::
     ret
 
 ; for entry C: when it is 2 and the byte $31 later is 1-$1B and its table byte equals C, returns $FF
-SumFunc5DCDOfWC9F9AndWCA9E_TestEntry::
+; (E-0340: the address in its name read as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E_TestEntry)
+SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry::
     push hl
     ld a, c
     add_a_to_hl
@@ -2065,7 +2076,7 @@ SumFunc5DCDOfWC9F9AndWCA9E_TestEntry::
     cp $1c
     jr nc, .restore2
     dec a
-    ld hl, SumFunc5DCDOfWC9F9AndWCA9E_TestEntry_Data
+    ld hl, SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry_Data
     add_a_to_hl
     ld a, [hl]
     cp c
@@ -2079,12 +2090,13 @@ SumFunc5DCDOfWC9F9AndWCA9E_TestEntry::
     pop af
     jr .done
 
-SumFunc5DCDOfWC9F9AndWCA9E_TestEntry_Data::
+SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
 
-; wArg5 = the byte at wSpeciesRecord + $12 + wArg4 (E-0114)
-LoadWD01AByteArg4::
+; wArg5 = the byte at wSpeciesRecord + $12 + wArg4 (E-0114) (E-0340: the address in its name read as
+; its RAM name; was LoadWD01AByteArg4)
+LoadSpeciesExpCurveBByteArg4::
     ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, [wArg4]
     add_a_to_hl
@@ -2092,19 +2104,21 @@ LoadWD01AByteArg4::
     ld [wArg5], a
     ret
 
-; copies six bytes from the addresses in CopySixBytesByWCADDBit4Table_Data1 (or 5E6D when bit 4 of
-; wChildRecord + $D is set) to the addresses in CopySixBytesByWCADDBit4Table_Data3 (E-0125)
-CopySixBytesByWCADDBit4Table::
+; copies six bytes from the addresses in CopySixBytesByChildRecordFamilyBit4Table_Data1 (or 5E6D
+; when bit 4 of wChildRecord + $D is set) to the addresses in
+; CopySixBytesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
+; its RAM name; was CopySixBytesByWCADDBit4Table)
+CopySixBytesByChildRecordFamilyBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and $10
     and a
     jr nz, .skip
-    ld de, CopySixBytesByWCADDBit4Table_Data1
+    ld de, CopySixBytesByChildRecordFamilyBit4Table_Data1
     jr .skip2
 
 .skip:
-    ld de, CopySixBytesByWCADDBit4Table_Data2
+    ld de, CopySixBytesByChildRecordFamilyBit4Table_Data2
 
 .skip2:
     ld c, $00
@@ -2120,7 +2134,7 @@ CopySixBytesByWCADDBit4Table::
     push hl
     ld a, c
     add a
-    ld hl, CopySixBytesByWCADDBit4Table_Data3
+    ld hl, CopySixBytesByChildRecordFamilyBit4Table_Data3
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2136,17 +2150,18 @@ CopySixBytesByWCADDBit4Table::
     jr nz, .loop
     ret
 
-CopySixBytesByWCADDBit4Table_Data1::
+CopySixBytesByChildRecordFamilyBit4Table_Data1::
     db $91, $c9, $92, $c9, $36, $ca, $37, $ca, $f3, $c9, $98, $ca
 
-CopySixBytesByWCADDBit4Table_Data2::
+CopySixBytesByChildRecordFamilyBit4Table_Data2::
     db $36, $ca, $37, $ca, $91, $c9, $92, $c9, $98, $ca, $f3, $c9
 
-CopySixBytesByWCADDBit4Table_Data3::
+CopySixBytesByChildRecordFamilyBit4Table_Data3::
     db $ea, $ca, $eb, $ca, $ec, $ca, $ed, $ca, $68, $cb, $73, $cb
 
-; copies the 10-byte player name wPlayerName to wChildRecord + $F (E-0122)
-CopyPlayerNameToWCADF::
+; copies the 10-byte player name wPlayerName to wChildRecord + $F (E-0122) (E-0340: the address in
+; its name read as its RAM name; was CopyPlayerNameToWCADF)
+CopyPlayerNameToChildRecordMasterName::
     ld hl, wPlayerName
     ld de, wChildRecord + MON_MASTER_NAME
     ld c, $0a
@@ -2159,19 +2174,21 @@ CopyPlayerNameToWCADF::
     jr nz, .loop
     ret
 
-; copies four 10-byte names from the addresses in CopyFourNamesByWCADDBit4Table_Data1 (or 5ED8 with
-; bit 4 of wChildRecord + $D) to the addresses in CopyFourNamesByWCADDBit4Table_Data3 (E-0125)
-CopyFourNamesByWCADDBit4Table::
+; copies four 10-byte names from the addresses in CopyFourNamesByChildRecordFamilyBit4Table_Data1
+; (or 5ED8 with bit 4 of wChildRecord + $D) to the addresses in
+; CopyFourNamesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
+; its RAM name; was CopyFourNamesByWCADDBit4Table)
+CopyFourNamesByChildRecordFamilyBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and $10
     and a
     jr nz, .skip
-    ld de, CopyFourNamesByWCADDBit4Table_Data1
+    ld de, CopyFourNamesByChildRecordFamilyBit4Table_Data1
     jr .skip2
 
 .skip:
-    ld de, CopyFourNamesByWCADDBit4Table_Data2
+    ld de, CopyFourNamesByChildRecordFamilyBit4Table_Data2
 
 .skip2:
     ld c, $00
@@ -2185,7 +2202,7 @@ CopyFourNamesByWCADDBit4Table::
     ld a, [de]
     ld h, a
     push hl
-    ld hl, CopyFourNamesByWCADDBit4Table_Data3
+    ld hl, CopyFourNamesByChildRecordFamilyBit4Table_Data3
     ld a, c
     add a
     add_a_to_hl
@@ -2211,13 +2228,13 @@ CopyFourNamesByWCADDBit4Table::
     jr nz, .loop
     ret
 
-CopyFourNamesByWCADDBit4Table_Data1::
+CopyFourNamesByChildRecordFamilyBit4Table_Data1::
     db $87, $c9, $2c, $ca, $95, $c9, $3a, $ca
 
-CopyFourNamesByWCADDBit4Table_Data2::
+CopyFourNamesByChildRecordFamilyBit4Table_Data2::
     db $2c, $ca, $87, $c9, $3a, $ca, $95, $c9
 
-CopyFourNamesByWCADDBit4Table_Data3::
+CopyFourNamesByChildRecordFamilyBit4Table_Data3::
     db $5e, $cb, $69, $cb, $ee, $ca, $f9, $ca
 
 ; computes a bonus from personality compatibility, matching parent fields and wArg1, and adds it to

@@ -5510,8 +5510,9 @@ LoadMonsterPictureAttributes::
     ds $24, $00
 
 ; DE = destination: writes wDigits + $1 as tile $E0 + digit, or blank tile $C3 when it is 0, then
-; wDigits + $2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-WriteTwoDigitTilesFromWC8C1::
+; wDigits + $2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077) (E-0340: the address
+; in its name read as its RAM name; was WriteTwoDigitTilesFromWC8C1)
+WriteTwoDigitTilesFromDigits1::
     push hl
     ld hl, wDigits + $1
     ld a, [hli]
@@ -9425,7 +9426,7 @@ SoundNextEvent::
     ld a, [wSoundHwChannel]
     cp $02
     jr z, .call_return_twice_if_sound_skip_mask_a_and
-    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01
+    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged
     ret
 
 .call_return_twice_if_sound_skip_mask_a_and:
@@ -9752,7 +9753,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05::
     jr nz, .check_sound_hw_channel
     ldh a, [hSndFreqHi]
     and $7f
-    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01
+    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged
 
 .check_sound_hw_channel:
     ld a, [wSoundHwChannel]
@@ -9883,7 +9884,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDela
     or b
     jp WriteChannelEnvelopeIfChanged
 
-SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01::
+SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01_WriteChannelEnvelopeIfChanged::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
     jp WriteChannelEnvelopeIfChanged

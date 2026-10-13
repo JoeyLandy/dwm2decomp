@@ -1340,7 +1340,7 @@ GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc::
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
-    call CopyWD01ARecordToHL_Bank19
+    call CopySpeciesExpCurveBRecordToHL_Bank19
     ld a, $00
     ld [hli], a
     push hl
@@ -1526,7 +1526,7 @@ StoreTemp2WordAtHL_Bank19::
 
 ; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE
 ; (E-0065) (the same 12 bytes appear in 2 banks)
-CopyWD01ARecordToHL_Bank19::
+CopySpeciesExpCurveBRecordToHL_Bank19::
     ld de, wSpeciesRecord + SPECIES_RESISTANCES
     ld b, $1b
 
@@ -2782,8 +2782,9 @@ LoadExpTableEntryToTemp2::
     ret
 
 ; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry
-; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121)
-LoadTable4E60EntryForWC991ToWC9DE::
+; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121) (E-0340:
+; the address in its name read as its RAM name; was LoadTable4E60EntryForWC991ToWC9DE)
+LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp::
     ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufA + MON_SPECIES + 1]
@@ -2821,8 +2822,9 @@ LoadTable4E60EntryForWC991ToWC9DE::
     ret
 
 ; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry
-; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121)
-LoadTable4E60EntryForWCA36ToWCA83::
+; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121) (E-0340:
+; the address in its name read as its RAM name; was LoadTable4E60EntryForWCA36ToWCA83)
+LoadTable4E60EntryForRecordBufBSpeciesToRecordBufBExp::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufB + MON_SPECIES + 1]

@@ -624,6 +624,58 @@ def name_story_flags(texts: list[str]) -> tuple[list[str], dict[int, tuple[str, 
     return out, names, n
 
 
+STEP_CALL = re.compile(r"^\s+(?:call|farcall|farcall_b|jp)(?: (?:z|nz|c|nc),)? ([A-Z]\w+)")
+STEP_GENERIC = re.compile(r"^(?:BGMapAddressAtScroll|StoreBAtWordTableEntry|CopyRectTo20ByteRows|CopyFromBankWaitVRAM|"
+                          r"QueueSoundEffect|FillTilesBxC|CopyBytesDEToHL|CopyLow3BitsToWRAMBank2|WaitForVRAMAccess|"
+                          r"FillTilesFromRequest|CopyTileBytesToVRAM|CopyBytes|Multiply|Divide|CopyBBytes|FillBytes|"
+                          r"DrawScreenBufferRect|LoadSRAMRecord|SRAMRecordAddress|AddDoubleAToHL|ReadWordTableEntry|"
+                          r"AddAx9ToHL|CompareHLToBC|NextRandomSeed|NextTableByte|AdvanceRandom|WriteVRAMByte)")
+PURE_STRUCT = re.compile(r"^([A-Za-z_]\w*?)((?:_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d)+)$")
+QUOTE = re.compile(r";(?: [a-z ]+)? '([^']{3,})'")
+
+
+def name_steps_by_text(texts: list[str]) -> tuple[list[str], int]:
+    """E-0340: a label whose name is still only structural (Parent_Case05, Parent_Sub01_Table2_Case00) and whose
+    body, up to the next global label, quotes a string (message, battle text or string display) gets the first
+    words of the first quote appended: GreatLogTalkEvents_TestFlagBit_Case20_GreatLogsMajorFacilities."""
+    labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+    rename: dict[str, str] = {}
+    for text in texts:
+        ls = text.split("\n")
+        heads = [i for i, ln in enumerate(ls) if re.match(r"^[A-Za-z_]\w*::", ln) and "address name" not in ln]
+        for j, i in enumerate(heads):
+            lab = ls[i].split("::")[0]
+            if not PURE_STRUCT.match(lab):
+                continue
+            end = heads[j + 1] if j + 1 < len(heads) else len(ls)
+            body = [x for x in ls[i + 1:end] if x.startswith("    ")]
+            q = next((QUOTE.search(x) for x in body if QUOTE.search(x)), None)
+            if q:
+                words = re.sub(r"[^A-Za-z0-9 ]", "", q.group(1).replace("0", "Hero ")).split()[:4]
+                tag = "".join(w[:1].upper() + w[1:] for w in words)
+            else:  # else the first routine it calls that is not a generic helper and not already in the name
+                calls = [m.group(1) for x in body for m in [STEP_CALL.match(x)] if m]
+                tag = next((c for c in calls if not STEP_GENERIC.match(c) and c not in lab), "")
+                if not tag:  # else its first write to a named RAM byte: Advance<X> (inc [hl]) or Set<X>
+                    for k, x in enumerate(body):
+                        mw = re.match(r"^\s+ldh? \[([wh]([A-Z]\w*))\], a", x)
+                        mi = re.match(r"^\s+ld hl, ([wh]([A-Z]\w*))$", x)
+                        if mi and k + 1 < len(body) and body[k + 1].strip() in ("inc [hl]", "dec [hl]"):
+                            tag = ("Advance" if "inc" in body[k + 1] else "Back") + mi.group(2)
+                            break
+                        if mw:
+                            tag = "Set" + mw.group(2)
+                            break
+            new = f"{lab}_{tag}" if tag else None
+            if new and new not in labels and new not in rename.values() and len(new) <= 100:
+                rename[lab] = new
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    name_steps_by_text.renames = rename  # main() records them for tests/test_step_names.py
+    return [pat.sub(lambda m: rename[m.group(1)], t) for t in texts], len(rename)
+
+
 STATUS_LD = re.compile(r"^\s+ld hl, wBattleStatus(\d?)\s*(?:;.*)?$")
 STATUS_HELPER = re.compile(r"^\s+call (?:TargetStatus(\d)Address|HLToBattleStatus(8)EntryOf\w+)\s*(?:;.*)?$")
 STATUS_OP = re.compile(r"^(\s+(?:bit|set|res) )(\d)(, \[hl\].*)$")
@@ -5998,9 +6050,13 @@ def main() -> int:
     bstat = {(b["byte"], b["bit"]): f"BSTAT{b['byte']}_{b['name']}" for b in bstat_cfg}
     texts, nbs = name_status_bits(texts, bstat)
     log(f"battle status bits named: {nbs} uses")
+    texts, nsteps = name_steps_by_text(texts)
+    log(f"structural steps named after the text they show: {nsteps}")
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")
+    (out / "step_names.json").write_text(json.dumps(getattr(name_steps_by_text, "renames", {}), indent=0),
+                                         encoding="utf-8")
     tot_code = 0
     reached = []
     for b, text in enumerate(texts):

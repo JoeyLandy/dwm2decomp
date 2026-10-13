@@ -2551,7 +2551,7 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wGridCursorY
-    call CopyWD01ABytesFromIndexCToDE
+    call CopySpeciesExpCurveBBytesFromIndexCToDE
     ld a, [wDebugValue3]
     ld [wArg2], a
     ld a, [wDebugState]
@@ -2563,7 +2563,7 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wDebugResultsBuf
-    call CopyWD01ABytesFromIndexCToDE
+    call CopySpeciesExpCurveBBytesFromIndexCToDE
     ld hl, wGridCursorY
     ld de, vBGMap0 + $186
     ld c, $00
@@ -2629,13 +2629,13 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
     ret
 
 ; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE
-; (E-0122)
-CopyWD01ABytesFromIndexCToDE::
+; (E-0122) (E-0340: the address in its name read as its RAM name; was CopyWD01ABytesFromIndexCToDE)
+CopySpeciesExpCurveBBytesFromIndexCToDE::
     push bc
     push de
     ld a, c
     ld [wArg4], a
-    farcall LoadWD01AByteArg4
+    farcall LoadSpeciesExpCurveBByteArg4
     pop de
     pop bc
     ld a, [wArg5]
@@ -2644,7 +2644,7 @@ CopyWD01ABytesFromIndexCToDE::
     inc c
     ld a, c
     cp $1b
-    jr c, CopyWD01ABytesFromIndexCToDE
+    jr c, CopySpeciesExpCurveBBytesFromIndexCToDE
     ret
 
 ; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following
@@ -4825,7 +4825,7 @@ DebugBattleSetup_Update_ClearMenuState::
     ld a, [wWorkBuf + $8]
     or a
     jr nz, .call_debug_battle_setup_update_write_map_id
-    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01
+    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01_CheckSaveData
     jr .set_game_mode_to_04
 
 .call_debug_battle_setup_update_write_map_id:
@@ -5157,7 +5157,7 @@ ClampDebugValueToTableLimit::
     ld [hl], d
     ret
 
-DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
+DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01_CheckSaveData::
     ld a, [wPartyCount]
     or a
     jr z, .call_check_save_data
@@ -5891,7 +5891,7 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
     ld [wRecordBufA + MON_SPECIES], a
     ld a, h
     ld [wRecordBufA + MON_SPECIES + 1], a
-    farcall LoadTable4E60EntryForWC991ToWC9DE
+    farcall LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp
     ld a, [wBattleArg0]
     ld c, MON_EXP
     call SRAMRecordAddress

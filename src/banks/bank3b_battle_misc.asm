@@ -491,14 +491,14 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ToRunBattleSubStep2_6764
     dw RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc
     dw RunBattleActions_UseItem_LoadItemRecord
-    dw RunBattleActions_UseItem_SetDefeatFlagsBA
+    dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
 RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     xor a
     ld [wSlotsOccupiedFlag], a
     ld a, [wBattleFlag92]
@@ -879,7 +879,7 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     inc [hl]
     ld a, [wBattleFlag93]
     cp $1f
-    jr z, .check_defeat_flags_ba
+    jr z, .check_multi_hit_count
     cp $1d
     jr z, .check_battle_target
     ld a, [wBattleFlag92]
@@ -898,8 +898,8 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ret c
     jr .call_run_once4650_then4673
 
-.check_defeat_flags_ba:
-    ld a, [wDefeatFlagsBA]
+.check_multi_hit_count:
+    ld a, [wMultiHitCount]
     bit 7, a
     call z, GroupTargetsBySpeciesToSpeciesGroups
     ld a, [wBattleTarget]
@@ -923,7 +923,7 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     farcall ShowBattleTextCategory0
 
 .skip:
-    ld hl, wDefeatFlagsBA
+    ld hl, wMultiHitCount
     dec [hl]
     ld a, [hl]
     cp $80
@@ -950,20 +950,21 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ret
 
 ; runs RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of
-; wDefeatFlagsBA), then RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02 each time;
-; returns wDefeatFlagsBA & $7F (E-0122)
+; wMultiHitCount), then
+; RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount each time; returns
+; wMultiHitCount & $7F (E-0122)
 RunOnce4650Then4673::
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     bit 7, a
     jr nz, .call_run_once4650_then4673_carry_unless
     call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or $80
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
 
 .call_run_once4650_then4673_carry_unless:
-    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02
-    ld a, [wDefeatFlagsBA]
+    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount
+    ld a, [wMultiHitCount]
     and $7f
     ret
 
@@ -984,7 +985,7 @@ RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
     jr .next
 
 .skip:
-    ld hl, wDefeatFlagsBA
+    ld hl, wMultiHitCount
     inc [hl]
 
 .next:
@@ -995,11 +996,11 @@ RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
+RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
     ld c, a
-    ld hl, wDefeatFlagsBA
+    ld hl, wMultiHitCount
     dec [hl]
     ld a, [hl]
     and $7f
@@ -1067,9 +1068,9 @@ RunBattleActions_UseItem_LoadItemRecord::
     farcall ShowBattleText
     ret
 
-RunBattleActions_UseItem_SetDefeatFlagsBA::
+RunBattleActions_UseItem_SetMultiHitCount::
     xor a
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     ld a, $07
     ld [wBattleSubPhase], a
     xor a
@@ -1096,7 +1097,7 @@ GroupTargetsBySpeciesToSpeciesGroups::
     ld hl, wSpeciesGroups
     ld bc, $0003
     call FillBytes
-    farcall ListSideMonsterIdsToWC0A0
+    farcall ListSideMonsterIdsToTemp0
     ld a, d
     cp $03
     jr z, .read_battle_target
@@ -1249,7 +1250,7 @@ GroupTargetsBySpeciesToSpeciesGroups::
 
 .skip3:
     ld a, $01
-    jr .set_defeat_flags_ba
+    jr .set_multi_hit_count
 
 .set_species_groups:
     ld a, e
@@ -1259,7 +1260,7 @@ GroupTargetsBySpeciesToSpeciesGroups::
 
 .skip4:
     ld a, $02
-    jr .set_defeat_flags_ba
+    jr .set_multi_hit_count
 
 .set_species_groups2:
     dec c
@@ -1273,9 +1274,9 @@ GroupTargetsBySpeciesToSpeciesGroups::
     ld [wSpeciesGroups], a
     ld a, $03
 
-.set_defeat_flags_ba:
+.set_multi_hit_count:
     or $80
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     ret
 
 ; sets the damage word to the target's max HP for action $03, a random 30-40 for actions $01 and
@@ -1606,7 +1607,7 @@ RollTableDamageScaledByResistance_Data::
 
 InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
-    call TargetWDA74Byte
+    call TargetSlotResistances2Byte
     and $03
     call RollChanceByHLBits6And7_Bank3B
     ret
@@ -1639,8 +1640,8 @@ TargetSlotResistancesByte1_Bank3B::
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; A = byte 2 of the target's 7-byte wSlotResistances record (wSlotResistances + $2 + 7 * target)
-; (E-0124)
-TargetWDA74Byte::
+; (E-0124) (E-0340: the address in its name read as its RAM name; was TargetWDA74Byte)
+TargetSlotResistances2Byte::
     ld de, wSlotResistances + $2
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
@@ -2051,7 +2052,7 @@ ApplyTargetBattleWordArray3FReduction::
     ld a, [wBattleTarget]
     cp $03
     jr c, .skip
-    farcall ListSideMonsterIdsToWC0A0
+    farcall ListSideMonsterIdsToTemp0
     ld a, b
     cp $01
     jr z, .skip
@@ -2067,32 +2068,32 @@ ApplyTargetBattleWordArray3FReduction::
 .skip2:
     ld h, $e6
     ld bc, $0080
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; reduces the target's wBattleWordArray3F (or adds to wBattleMeter for local targets); when status
 ; bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
 InflictStatus0Bit0WithBattleWordArray3FReduction::
     call TargetOnLocalSide_Bank3B
     jr c, .read_battle_target
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or a
     jr nz, .read_battle_target2
     call AddActionAmountToBattleMeter
@@ -2123,26 +2124,26 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
     call AddAx9ToHL
     ld a, [hl]
     and $03
-    jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
+    jr nz, .call_set_resolve_msg_target_b5_and_resolve
     push hl
     farcall RollVsPoisonGasResistance
     pop hl
     ld a, e
     or a
-    jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
+    jr nz, .call_set_resolve_msg_target_b5_and_resolve
     set 0, [hl]
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank3B
     ld l, $75
     ld bc, $0090
     call ClearDamageAndStoreResolveMsgFlags_Bank3B
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or a
     ret nz
     ld a, [wBattleTarget]
     cp $03
     jr c, .call_show_battle_text
-    farcall ListSideMonsterIdsToWC0A0
+    farcall ListSideMonsterIdsToTemp0
     ld a, b
     cp $01
     jr z, .call_show_battle_text
@@ -2155,15 +2156,15 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
     farcall ShowBattleText
     ret
 
-.call_set_wdac3_b5_and_resolve_msg_flags:
-    call SetWDAC3B5AndResolveMsgFlagsTo0180
-    ld a, [wDefeatFlagsBA]
+.call_set_resolve_msg_target_b5_and_resolve:
+    call SetResolveMsgTargetB5AndResolveMsgFlagsTo0180
+    ld a, [wMultiHitCount]
     or a
     ret nz
     ld a, [wBattleTarget]
     cp $03
     jr c, .call_show_battle_text2
-    farcall ListSideMonsterIdsToWC0A0
+    farcall ListSideMonsterIdsToTemp0
     ld a, b
     cp $01
     jr z, .call_show_battle_text2
@@ -2179,25 +2180,25 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
 .skip:
     ld h, $e6
     ld bc, $0080
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
+    jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; wBattleEndFlag = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
 SetBattleEndFlagAndMessage98::
@@ -2346,23 +2347,24 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
     ld h, $cc
     ld bc, $0080
-    jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
     ld h, $b5
     ld bc, $0080
-    jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
+    jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
-; wResolveMsgTarget = $B5 and the word wResolveMsgFlags = $0180 (E-0122)
-SetWDAC3B5AndResolveMsgFlagsTo0180::
+; wResolveMsgTarget = $B5 and the word wResolveMsgFlags = $0180 (E-0122) (E-0340: the address in its
+; name read as its RAM name; was SetWDAC3B5AndResolveMsgFlagsTo0180)
+SetResolveMsgTargetB5AndResolveMsgFlagsTo0180::
     ld h, $b5
     ld bc, $0180
 
-SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
+SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
     ld a, h
     ld [wResolveMsgTarget], a
 
-SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
+SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b

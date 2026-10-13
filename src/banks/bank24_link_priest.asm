@@ -189,7 +189,7 @@ GameMode6_Update::
     dw GameMode6_Update_Return
     dw GameMode6_Update_Return
     dw GameMode6_Update_SwapMonstersMenu
-    dw GameMode6_Update_SwapMonstersMenu_Case0D
+    dw GameMode6_Update_SwapMonstersMenu_Case0D_SetScreenStep
     dw GameMode6_Update_SwitchEgg
     dw GameMode6_Update_SwitchMonster
 
@@ -321,7 +321,7 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable
     dw GameMode6_Update_SavePrompt_RunSaveGameSteps
     dw GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep
-    dw GameMode6_Update_SavePrompt_ShowYesNo_Case04
+    dw GameMode6_Update_SavePrompt_ShowYesNo_Case04_ReturnStub_51A3
     dw GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D
     dw GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     dw GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg
@@ -331,7 +331,7 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_ReturnStub_51A3
     dw GameMode6_Update_SavePrompt_DecompressToVRAM
     dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep
-    dw GameMode6_Update_SavePrompt_ObjectScene_Case0E
+    dw GameMode6_Update_SavePrompt_ObjectScene_Case0E_GameMode6_Update_UpdateAndDrawSpriteSlots
     dw GameMode6_Update_SavePrompt_SetScreenStep
 
 GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep::
@@ -428,7 +428,7 @@ GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ShowYesNo_Case04::
+GameMode6_Update_SavePrompt_ShowYesNo_Case04_ReturnStub_51A3::
     ld a, $6c
     call QueueSoundEffect
     call GameMode6_Update_SavePrompt_ShowYesNo
@@ -472,7 +472,7 @@ GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D::
 
 .call_game_mode6_update_save_prompt_show_yes:
     call GameMode6_Update_SavePrompt_ShowYesNo
-    call CopyWCA2CNameToTextBuf0
+    call CopyRecordBufBNameNameToTextBuf0
     ld a, $06
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenStep]
@@ -596,7 +596,7 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
     jr .call_bg_map_address_at_scroll_bank24
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
@@ -670,7 +670,7 @@ GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ObjectScene_Case0E::
+GameMode6_Update_SavePrompt_ObjectScene_Case0E_GameMode6_Update_UpdateAndDrawSpriteSlots::
     call GameMode6_Update_UpdateAndDrawSpriteSlots
     call GameMode6_Update_SavePrompt_ObjectScene
     ret
@@ -919,9 +919,9 @@ GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
     and a
     jr nz, .check_party_count
     ld a, [wScreenState]
-    ld [wScreenByteB2], a
+    ld [wReturnScreenState], a
     ld a, [wScreenStep]
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -1239,9 +1239,9 @@ GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
     and a
     jr nz, .call_set_arg5_to_list_entries_cell4
     ld a, [wScreenState]
-    ld [wScreenByteB2], a
+    ld [wReturnScreenState], a
     ld a, [wScreenStep]
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -1356,7 +1356,7 @@ GameMode6_Update_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
-GameMode6_Update_SwapMonstersMenu_Case0D::
+GameMode6_Update_SwapMonstersMenu_Case0D_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a
@@ -1412,7 +1412,7 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     jr .skip
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
 
 .skip:
     ld de, TileRect_24_5B10
@@ -1518,9 +1518,9 @@ GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_52CE::
     ldh [hSpriteHideTile], a
     xor a
     ld [wScreenSubStep], a
-    ld a, [wScreenByteB2]
+    ld a, [wReturnScreenState]
     ld [wScreenState], a
-    ld a, [wScreenByteB3]
+    ld a, [wReturnScreenStep]
     ld [wScreenStep], a
     ld hl, vTiles1
     ld a, l
@@ -1581,7 +1581,7 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld a, [wBattleScene]
     cp $08
     jr z, .check_battle_scene
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM
 
 .check_battle_scene:
     ld a, [wBattleScene]
@@ -1668,7 +1668,7 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     farcall EggServiceMenu_Bank1B
     ret
 
-GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01::
+GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01_GameMode6_Update_Shared01_DecompressToVRAM::
     ld a, [wLinkByteEB]
     and a
     ret nz
@@ -1994,16 +1994,18 @@ ShowStringAInDefaultWindow_Bank24::
     ret
 
 ; HL = wRecordBufB + $1, then copies up to 10 name bytes to wTextBuf0 with a $F0 terminator (E-0124)
-CopyWCA2CNameToTextBuf0::
+; (E-0340: the address in its name read as its RAM name; was CopyWCA2CNameToTextBuf0)
+CopyRecordBufBNameNameToTextBuf0::
     ld hl, wRecordBufB + MON_NAME
-    jp CopyWC987NameToTextBuf0_Skip
+    jp CopyRecordBufANameNameToTextBuf0_Skip
 
 ; copies up to 10 name bytes from wRecordBufA + $1 (stopping at $F0) to wTextBuf0 with a $F0
-; terminator (E-0124)
-CopyWC987NameToTextBuf0::
+; terminator (E-0124) (E-0340: the address in its name read as its RAM name; was
+; CopyWC987NameToTextBuf0)
+CopyRecordBufANameNameToTextBuf0::
     ld hl, wRecordBufA + MON_NAME
 
-CopyWC987NameToTextBuf0_Skip::
+CopyRecordBufANameNameToTextBuf0_Skip::
     ld de, wTextBuf0
     ld b, $0a
 
@@ -2379,16 +2381,18 @@ GameMode6_Init_Sub01_ReadScreenByteBD_Data3::
 ReturnStub_51A3::
     ret
 
-; on CGB with wBattleScene = 8: copies the 6 x 6 block CopyAttributeBlock51D3ToWD25F_Data into the
-; WRAM-bank-2 buffer at wWindowAttrBuffer + $F7 (20-byte rows) (E-0124)
-CopyAttributeBlock51D3ToWD25F::
+; on CGB with wBattleScene = 8: copies the 6 x 6 block
+; CopyAttributeBlock51D3ToBattlerRecordSlot64_Data into the WRAM-bank-2 buffer at wWindowAttrBuffer
+; + $F7 (20-byte rows) (E-0124) (E-0340: the address in its name read as its RAM name; was
+; CopyAttributeBlock51D3ToWD25F)
+CopyAttributeBlock51D3ToBattlerRecordSlot64::
     ld a, [wIsCGB]
     and a
     ret z
     ld a, [wBattleScene]
     cp $08
     ret nz
-    ld hl, CopyAttributeBlock51D3ToWD25F_Data
+    ld hl, CopyAttributeBlock51D3ToBattlerRecordSlot64_Data
     ld de, wWindowAttrBuffer + $f7
     ld a, $02
     ldh [rSVBK], a
@@ -2413,7 +2417,7 @@ CopyAttributeBlock51D3ToWD25F::
     ldh [rSVBK], a
     ret
 
-CopyAttributeBlock51D3ToWD25F_Data::
+CopyAttributeBlock51D3ToBattlerRecordSlot64_Data::
     ds $24, $01
 
 GameMode6_Init_ReadLinkSceneByte4B::
@@ -2713,7 +2717,7 @@ GameMode6_Update_Save_ObjectScene::
     dw GameMode6_Update_Save_ObjectScene_WriteObject5AndScreenSubStep
     dw GameMode6_Update_Save_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_Save_ObjectScene_WriteObject2AndScreenSubStep
-    dw GameMode6_Update_Save_ObjectScene_CopyWC987NameToTextBuf0
+    dw GameMode6_Update_Save_ObjectScene_CopyRecordBufANameNameToTextBuf0
     dw GameMode6_Update_Save_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_Save_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_Save_ObjectScene_WriteObject5AndObject1Etc
@@ -2801,8 +2805,8 @@ GameMode6_Update_Save_ObjectScene_WriteObject2AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-GameMode6_Update_Save_ObjectScene_CopyWC987NameToTextBuf0::
-    call CopyWC987NameToTextBuf0
+GameMode6_Update_Save_ObjectScene_CopyRecordBufANameNameToTextBuf0::
+    call CopyRecordBufANameNameToTextBuf0
     ld a, $03
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenSubStep]
@@ -2881,7 +2885,7 @@ GameMode6_Update_SavePrompt_ObjectScene::
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteObject5AndScreenSubStep
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndScreenSubStep
-    dw GameMode6_Update_SavePrompt_ObjectScene_CopyWCA2CNameToTextBuf0
+    dw GameMode6_Update_SavePrompt_ObjectScene_CopyRecordBufBNameNameToTextBuf0
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteScreenCounterAndScreenSubStep
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteObject1AndScreenSubStep
@@ -2973,8 +2977,8 @@ GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-GameMode6_Update_SavePrompt_ObjectScene_CopyWCA2CNameToTextBuf0::
-    call CopyWCA2CNameToTextBuf0
+GameMode6_Update_SavePrompt_ObjectScene_CopyRecordBufBNameNameToTextBuf0::
+    call CopyRecordBufBNameNameToTextBuf0
     ld a, $04
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenSubStep]
@@ -4387,7 +4391,7 @@ PriestMenu_PayForService_CopyBuffers::
     ld a, [wScreenSubStep]
     jumptable
     dw PriestMenu_PayForService_CopyBuffers_CopyBytes
-    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01
+    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01_RestartMapMusic
 
 PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld a, [wIsCGB]
@@ -4404,7 +4408,7 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld [wScreenSubStep], a
     ret
 
-PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01::
+PriestMenu_PayForService_CopyBuffers_CopyBytes_Case01_RestartMapMusic::
     ld a, [wScreenCounter]
     sra a
     sra a

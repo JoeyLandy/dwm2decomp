@@ -66,8 +66,8 @@ RunDebugAutomapCaseTemp0::
     dw RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_RunDebugAutomapCaseTemp0_RandomBelowC
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_RunDebugAutomapCaseTemp0_RandomBelowC
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
 RunDebugAutomapCaseTemp0_Return::
@@ -169,7 +169,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
     jr nz, .loop
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case04::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_RunDebugAutomapCaseTemp0_RandomBelowC::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -233,7 +233,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case04::
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_RunDebugAutomapCaseTemp0_RandomBelowC::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -424,7 +424,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01
+    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01_SetTemp4
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -451,7 +451,7 @@ KeyWorldMonsterBaseRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
+RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01_SetTemp4::
     push hl
     ld a, e
     add $01
@@ -1110,11 +1110,11 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     or a
     jr z, .next
     ld a, [wKeyWorldGoal]
-    ld [wSnapshotByte3C], a
+    ld [wLogTwigKeyWorldGoal], a
     ld a, [wKeyWorldGoalCell]
-    ld [wSnapshotByte3D], a
+    ld [wLogTwigKeyWorldGoalCell], a
     ld a, [wKeyWorldKey]
-    ld [wSnapshotByte3E], a
+    ld [wLogTwigKeyWorldKey], a
     ld a, [wKeyWorldKey]
     bit 7, a
     jr nz, .next
@@ -1248,11 +1248,11 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     or a
     jr z, .check_key_world_goal_screen
     ld a, [wKeyWorldGoal]
-    ld [wSnapshotByte3C], a
+    ld [wLogTwigKeyWorldGoal], a
     ld a, [wKeyWorldGoalCell]
-    ld [wSnapshotByte3D], a
+    ld [wLogTwigKeyWorldGoalCell], a
     ld a, [wKeyWorldKey]
-    ld [wSnapshotByte3E], a
+    ld [wLogTwigKeyWorldKey], a
     ld a, [wKeyWorldKey]
     bit 7, a
     jr z, .check_key_world_goal_screen
@@ -1432,14 +1432,14 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc::
     ld a, [wSpriteSnapshot]
     or a
     jr z, .next
-    ld a, [wSnapshotByte3E]
+    ld a, [wLogTwigKeyWorldKey]
     dec a
     cp b
     jr nz, .next
-    ld a, [wSnapshotByte3D]
+    ld a, [wLogTwigKeyWorldGoalCell]
     cp c
     jp nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
-    ld a, [wSnapshotByte3C]
+    ld a, [wLogTwigKeyWorldGoal]
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
@@ -1471,7 +1471,7 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScre
     ld a, [wSpriteSnapshot]
     or a
     jr z, .check_key_world_goal_screen
-    ld a, [wSnapshotByte3E]
+    ld a, [wLogTwigKeyWorldKey]
     bit 7, a
     jr z, .check_key_world_goal_screen
     and $7f
@@ -1479,10 +1479,10 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScre
     ld a, [wKeyWorldSlot]
     cp b
     jr nz, .check_key_world_goal_screen
-    ld a, [wSnapshotByte3D]
+    ld a, [wLogTwigKeyWorldGoalCell]
     cp c
     jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
-    ld a, [wSnapshotByte3C]
+    ld a, [wLogTwigKeyWorldGoal]
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
     jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal

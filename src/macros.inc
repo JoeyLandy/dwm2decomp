@@ -211,7 +211,7 @@ DEF SCRIPT_SCENE_OASIS_KEY EQU $1A ; SceneOasisKey: a cutscene step named after 
 DEF SCRIPT_SCENE_WARUBOU_LEAVES EQU $1B ; SceneWarubouLeaves: a cutscene step named after the scene its only script shows: 'C'mon, Warubou!' ... 'Have you heard about Magic Keys?' (E-0245)
 DEF SCRIPT_SCENE_WARUBOU_WARNING EQU $1C ; SceneWarubouWarning: a cutscene step named after the scene its only script shows: 'Warubou Dangerous are other worlds!' ... 'Slash Hey, why the long faces?' (E-0245)
 DEF SCRIPT_SCENE_LONG_FACES EQU $1D ; SceneLongFaces: a cutscene step named after the scene its only script shows: 'Slash Hey, why the long faces?' (E-0245)
-DEF SCRIPT_CHECK_ITEM EQU $1E ; CheckItem: sets wGameFlags836 from whether item hTemp0 is in the inventory (FindTemp0InInventoryList) (E-0245)
+DEF SCRIPT_CHECK_ITEM EQU $1E ; CheckItem: looks items up in the inventory (FindTemp0InInventoryList) and, after changing a slot, sets bit 6 of wInventorySortFlags (E-0340) (E-0245)
 DEF SCRIPT_SCENE_MONSTER_INSPECTION EQU $1F ; SceneMonsterInspection: a cutscene step named after the scene its only script shows: 'Ah, three healthy monsters! Very well' ... 'Very good show! That was splendid' (E-0245)
 DEF SCRIPT_SCENE_KING_AUDIENCE EQU $21 ; SceneKingAudience: a cutscene step named after the scene its only script shows: 'King You wish to see our...' ... 'King I see. This is what...' (E-0245)
 DEF SCRIPT_SCENE_CANAL_GATE EQU $22 ; SceneCanalGate: a cutscene step named after the scene its only script shows: 'What? Open the Canal Gate more?' (E-0245)

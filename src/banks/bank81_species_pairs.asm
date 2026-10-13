@@ -1918,8 +1918,9 @@ SpeciesPairChecks_Anemon::
     db $ff, $0a ; id 0
 
 ; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1))
-; to wLinkMenuEntryBytes (E-0121)
-LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes::
+; to wLinkMenuEntryBytes (E-0121) (E-0340: the address in its name read as its RAM name; was
+; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes)
+LoadTable555DEntryForWorkBuf9ToLinkMenuEntryBytes::
     ld a, [wWorkBuf + $9]
     ld l, a
     ld h, $00

@@ -246,8 +246,9 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
     pop hl
     ret
 
-; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122)
-RunA3414FAndMarkWDA5B3::
+; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122) (E-0340: the address in its
+; name read as its RAM name; was RunA3414FAndMarkWDA5B3)
+RunA3414FAndMarkSlotMarks3::
     call ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld hl, wSlotMarks

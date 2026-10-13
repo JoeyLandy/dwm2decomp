@@ -2022,9 +2022,9 @@
     "evidence": "E-0133"
   },
   "C836": {
-    "name": "wGameFlags836",
-    "note": "flag byte: bit 7 set by key events, low bit toggles the inventory sort order",
-    "evidence": "E-0133"
+    "name": "wInventorySortFlags",
+    "note": "inventory sort state: bit 0 picks the sort key table (InventorySortKeysA or B) and SortInventory toggles it; bit 7 makes the next sort keep the order (key events, the plan list); bit 6 is set when an item is added (AppendItemWC928ToInventory and the treasure events); bit 1 is toggled by the plan list (E-0128, E-0340; was wGameFlags836)",
+    "evidence": "E-0133; E-0340"
   },
   "C837": {
     "name": "wArenaByte37",
@@ -2052,19 +2052,19 @@
     "evidence": "E-0133"
   },
   "C83C": {
-    "name": "wSnapshotByte3C",
-    "note": "byte of the snapshot area (set by the Log Twig item)",
-    "evidence": "E-0133"
+    "name": "wLogTwigKeyWorldGoal",
+    "note": "the Log Twig's saved copy of wKeyWorldGoal (ItemUsable_LogTwig_*), compared back by the field return phase (E-0340; was wSnapshotByte3C)",
+    "evidence": "E-0133; E-0340"
   },
   "C83D": {
-    "name": "wSnapshotByte3D",
-    "note": "byte of the snapshot area (set by the Log Twig item)",
-    "evidence": "E-0133"
+    "name": "wLogTwigKeyWorldGoalCell",
+    "note": "the Log Twig's saved copy of wKeyWorldGoalCell (E-0340; was wSnapshotByte3D)",
+    "evidence": "E-0133; E-0340"
   },
   "C83E": {
-    "name": "wSnapshotByte3E",
-    "note": "byte of the snapshot area (set by the Log Twig item)",
-    "evidence": "E-0133"
+    "name": "wLogTwigKeyWorldKey",
+    "note": "the Log Twig's saved copy of wKeyWorldKey; bit 7 is tested on return (E-0340; was wSnapshotByte3E)",
+    "evidence": "E-0133; E-0340"
   },
   "C848": {
     "name": "wSnapshotSlot1",
@@ -3881,14 +3881,14 @@
     "evidence": "E-0136"
   },
   "D7B2": {
-    "name": "wScreenByteB2",
-    "note": "screen work byte (script commands $EB, $ED, $EF)",
-    "evidence": "E-0136"
+    "name": "wReturnScreenState",
+    "note": "the screen state to return to after a sub-screen (detail pages, redraws) of the record-list menus: breeding, hibernation, the swap menu, the egg service and the shop write it; their redraw copies it back into wScreenState (E-0340; was wScreenByteB2)",
+    "evidence": "E-0136; E-0340"
   },
   "D7B3": {
-    "name": "wScreenByteB3",
-    "note": "screen work byte (script commands $EB, $ED, $EF)",
-    "evidence": "E-0136"
+    "name": "wReturnScreenStep",
+    "note": "the screen step to return to with wReturnScreenState (copied back into wScreenStep) (E-0340; was wScreenByteB3)",
+    "evidence": "E-0136; E-0340"
   },
   "D7B4": {
     "name": "wSelectedRecord",
@@ -4638,9 +4638,9 @@
     "evidence": "E-0137"
   },
   "DABA": {
-    "name": "wDefeatFlagsBA",
-    "note": "defeat bookkeeping byte (DefeatTarget_Sub01, CheckLinkRuleViolation)",
-    "evidence": "E-0137"
+    "name": "wMultiHitCount",
+    "note": "multi-hit counter of the current action: RollRepeatCountForAction rolls 1-4 hits into bits 0-6 with bit 7 set, RunMultiHitCounter counts down; while it is non-zero effects such as LifeSong and the action text take the repeat path (E-0126, E-0128, E-0340; was wDefeatFlagsBA)",
+    "evidence": "E-0137; E-0340"
   },
   "DABD": {
     "name": "wFollowUpAction",

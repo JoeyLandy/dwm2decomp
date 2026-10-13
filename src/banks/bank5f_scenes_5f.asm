@@ -475,8 +475,9 @@ ShowMessageHL_ToBeginStringDisplay_Bank89_SetStringIndex::
 
 ; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 0; calls UpdateFollowersOnStep_Bank5F
 ; with the coordinate; then hPlayerY += 1; when it equals wStepPtrLo bit 2 is cleared and
-; wStepArrived = 1, else wStepArrived = 0 (E-0071)
-StepPlayerDownTowardWC928::
+; wStepArrived = 1, else wStepArrived = 0 (E-0071) (E-0340: the address in its name read as its RAM
+; name; was StepPlayerDownTowardWC928)
+StepPlayerDownTowardStepPtrLo::
     ldh a, [hPlayerStateFlags]
     or $04
     ldh [hPlayerStateFlags], a
@@ -505,8 +506,9 @@ StepPlayerDownTowardWC928::
 
 ; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 1; calls UpdateFollowersOnStep_Bank5F
 ; with the coordinate; then hPlayerX += 1; when it equals wStepPtrLo bit 2 is cleared and
-; wStepArrived = 1, else wStepArrived = 0 (E-0071)
-StepPlayerRightTowardWC928::
+; wStepArrived = 1, else wStepArrived = 0 (E-0071) (E-0340: the address in its name read as its RAM
+; name; was StepPlayerRightTowardWC928)
+StepPlayerRightTowardStepPtrLo::
     ldh a, [hPlayerStateFlags]
     or $04
     ldh [hPlayerStateFlags], a
@@ -535,8 +537,9 @@ StepPlayerRightTowardWC928::
 
 ; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 2; calls UpdateFollowersOnStep_Bank5F
 ; with the coordinate; then hPlayerY -= 1; when it equals wStepPtrLo bit 2 is cleared and
-; wStepArrived = 1, else wStepArrived = 0 (E-0071)
-StepPlayerUpTowardWC928::
+; wStepArrived = 1, else wStepArrived = 0 (E-0071) (E-0340: the address in its name read as its RAM
+; name; was StepPlayerUpTowardWC928)
+StepPlayerUpTowardStepPtrLo::
     ldh a, [hPlayerStateFlags]
     or $04
     ldh [hPlayerStateFlags], a
@@ -565,8 +568,9 @@ StepPlayerUpTowardWC928::
 
 ; sets bit 2 of hPlayerStateFlags (moving) and hPlayerFacing = 3; calls UpdateFollowersOnStep_Bank5F
 ; with the coordinate; then hPlayerX -= 1; when it equals wStepPtrLo bit 2 is cleared and
-; wStepArrived = 1, else wStepArrived = 0 (E-0071)
-StepPlayerLeftTowardWC928::
+; wStepArrived = 1, else wStepArrived = 0 (E-0071) (E-0340: the address in its name read as its RAM
+; name; was StepPlayerLeftTowardWC928)
+StepPlayerLeftTowardStepPtrLo::
     ldh a, [hPlayerStateFlags]
     or $04
     ldh [hPlayerStateFlags], a
@@ -820,8 +824,9 @@ SetModeState3AndSaveScreen::
     ret
 
 ; stores wStepPtrLo in the first wInventory slot that is $00 or $FF (no bound check), then sets bit
-; 6 of wGameFlags836; HL kept (E-0071)
-AppendItemWC928ToInventory::
+; 6 of wInventorySortFlags; HL kept (E-0071) (E-0340: the address in its name read as its RAM name;
+; was AppendItemWC928ToInventory)
+AppendItemStepPtrLoToInventory::
     push hl
     ld hl, wInventory
 
@@ -838,9 +843,9 @@ AppendItemWC928ToInventory::
     ld a, [wStepPtrLo]
     ld [hl], a
     pop hl
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     set 6, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
@@ -878,7 +883,7 @@ SetWStepArrivedIfPartyHasField55Bit7::
     ld [rRAMG], a
     ret
 
-GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01_SetStepArrived::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -1467,10 +1472,10 @@ RunScriptSubStep::
     dw RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc
     dw RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
     dw RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc
-    dw RunScriptSubStep_AddStepDeltaToPointedByte_Case06
-    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07
+    dw RunScriptSubStep_AddStepDeltaToPointedByte_Case06_SetStepPtrLo
+    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07_SetFollowerRecords
 
-RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07::
+RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07_SetFollowerRecords::
     ld a, $01
     ld [wFollowerRecords], a
     ld a, [wFollowerRecords + $1]
@@ -1512,7 +1517,7 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_Case07::
     inc [hl]
     ret
 
-RunScriptSubStep_AddStepDeltaToPointedByte_Case06::
+RunScriptSubStep_AddStepDeltaToPointedByte_Case06_SetStepPtrLo::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
@@ -1819,19 +1824,19 @@ RunSceneScriptSubStep::
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
     dw RunSceneScriptSubStep_CopyBytes
     dw RunSceneScriptSubStep_FullyHealParty
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04_SetObject5
     dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06_DecompressToVRAM
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit
     dw RunSceneScriptSubStep_NextTableByte
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E
-    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E_SetScriptParam0
+    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F_CycleSpriteFloatYDown
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit
     dw RunSceneScriptSubStep_AdvanceScriptStep
 
 RunSceneScriptSubStep_AdvanceScriptStep::
@@ -1867,7 +1872,7 @@ StartMessage5AndAdvanceScriptSubStep::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F::
+RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F_CycleSpriteFloatYDown::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo
@@ -1929,7 +1934,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E_SetScriptParam0::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -1939,7 +1944,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -1961,7 +1966,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2008,7 +2013,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2062,7 +2067,7 @@ RunSceneScriptSubStep_NextTableByte::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09_TestFlagBit::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2077,7 +2082,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09::
     ld [wScriptSubStep], a
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2136,7 +2141,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06_DecompressToVRAM::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2173,7 +2178,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04_SetObject5::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2739,9 +2744,9 @@ RunOneTimeTreasure_CopyItemNameToDE::
 .read_script_param1:
     ld a, [wScriptParam1]
     ld [hl], a
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     set 6, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
 
 .read_message_index:
     ld a, [wMessageIndex]

@@ -25,6 +25,8 @@ def measure() -> dict:
     texts = [p.read_text(encoding="utf-8") for p in sorted((ROOT / "src/banks").glob("bank*.asm"))]
     labels = [m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)]
     mech = [n for n in labels if STRUCT.search(n)]
+    # no description at all: only a parent and structural parts (Parent_Case05, Parent_Sub01_Table2_Case00)
+    bare = [n for n in labels if re.search(r"(?:_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d)+$", n)]
     ram = re.findall(r"^DEF ([wsh]\w+) EQU", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M)
     ram_mech = [n for n in ram if RAM_MECH.search(n[1:])]
     code = [ln.split(";")[0] for t in texts for ln in t.split("\n") if ln.startswith("    ") and not
@@ -33,7 +35,8 @@ def measure() -> dict:
     data = sum(1 for c in code if re.match(r"\s+(?:db|dw) ", c))
     incbin = sum(1 for c in code if c.lstrip().startswith("INCBIN"))
     lines = sum(len(t.split("\n")) for t in texts)
-    return {"lines": lines, "labels": len(labels), "mechanical_labels": len(mech), "ram": len(ram),
+    return {"lines": lines, "labels": len(labels), "mechanical_labels": len(mech), "undescribed_labels": len(bare),
+            "ram": len(ram),
             "mechanical_ram": len(ram_mech), "raw_pointer_operands": raw_ptr, "data_lines": data,
             "incbin": incbin, "examples": (Counter(re.sub(r"[0-9A-F]{2,}", "#", STRUCT.search(n).group(0))
                                                     for n in mech).most_common(8), ram_mech[:12])}

@@ -256,7 +256,7 @@ AIScoreB_Beat::
     ld a, c
     and a
     ret z
-    farcall AIGateFoeWDA74Bits45
+    farcall AIGateFoeSlotResistances2Bits45
     ld a, c
     cp $01
     jr z, .return
@@ -301,12 +301,12 @@ AIScore_Beat::
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
-    jr nz, .call_ai_gate_foe_wda74_bits45
+    jr nz, .call_ai_gate_foe_slot_resistances2_bits45
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-.call_ai_gate_foe_wda74_bits45:
-    farcall AIGateFoeWDA74Bits45
+.call_ai_gate_foe_slot_resistances2_bits45:
+    farcall AIGateFoeSlotResistances2Bits45
     ld a, c
     cp $01
     jr z, .call_fail_if_any_foe_fully_resistant
@@ -401,14 +401,14 @@ AIScore_Sacrifice::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_score_sacrifice_link_rule_check_wd044
+    jr nz, .call_ai_score_sacrifice_link_rule_check_link
     ld bc, $00cd
     call AccumulateBank6WordToDA6E
     ld bc, $00cf
     call AccumulateBank6WordToDA70
 
-.call_ai_score_sacrifice_link_rule_check_wd044:
-    call AIScore_Sacrifice_LinkRuleCheckWD044Bit6
+.call_ai_score_sacrifice_link_rule_check_link:
+    call AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6
     farcall AIScore_Sacrifice_GetBattleMaxHP_Bank05
     ld a, c
     and a
@@ -485,14 +485,14 @@ AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $0024
     call AccumulateBank6WordToDA6E
     ld bc, $00c8
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -601,7 +601,7 @@ AIScore_Antidote::
     ret z
     ld bc, $002a
     call AccumulateBank6WordToDA6E
-    call WeighWD044RuleBit4
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -615,7 +615,7 @@ AIScore_DeChaos::
     ret z
     ld bc, $002a
     call AccumulateBank6WordToDA6E
-    call WeighWD044RuleBit4
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -629,7 +629,7 @@ AIScore_NumbOff::
     ret z
     ld bc, $002a
     call AccumulateBank6WordToDA6E
-    call WeighWD044RuleBit4
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -643,7 +643,7 @@ AIScore_CurseOff::
     ret z
     ld bc, $002a
     call AccumulateBank6WordToDA6E
-    call WeighWD044RuleBit4
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -658,12 +658,12 @@ AIScore_Upper::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     call AIScore_Upper_CompareFoeAverageATKWithAllyDEF
     farcall SetCToZero
     ld a, c
@@ -715,14 +715,14 @@ AIScore_Sap::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00cc
     call AccumulateBank6WordToDA6E
     ld bc, $00d1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp $01
@@ -733,7 +733,7 @@ AIScore_Sap::
     call AccumulateBank6WordToDA70
 
 .call_ai_score_sap_sub01_carry_unless_battle:
-    call AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01
+    call AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01_AccumulateBank6WordToDA70
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -776,14 +776,14 @@ AIScore_Speed::
     farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit5
+    jr z, .call_weigh_link_rules1_rule_bit5
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $002c
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -826,14 +826,14 @@ AIScore_Slow::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00cc
     call AccumulateBank6WordToDA6E
     ld bc, $00d1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp $01
@@ -917,12 +917,12 @@ AIScore_TwinHits::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00ba
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FailIfAllyCanUseSkill63Or64
     ld a, c
     cp $01
@@ -976,7 +976,7 @@ AIScore_Surround::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00ba
     call AccumulateBank6WordToDA70
     ld bc, $00cc
@@ -984,8 +984,8 @@ AIScore_Surround::
     ld bc, $00d1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a
@@ -1058,12 +1058,12 @@ AIScore_Sleep::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00bc
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -1098,12 +1098,12 @@ AIScore_TakeMagic::
     farcall ActorMPBelowThreeQuarters
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0034
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1120,12 +1120,12 @@ AIScore_RobMagic::
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1140,14 +1140,14 @@ AIScore_StopSpell::
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit5
+    jr z, .call_weigh_link_rules1_rule_bit5
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall SetCToZero
     ld a, c
     and a
@@ -1212,12 +1212,12 @@ AIScore_PanicAll::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00ca
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp $01
@@ -1264,12 +1264,12 @@ AIScore_Ironize::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00d0
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1313,14 +1313,14 @@ AIScore_Barrier::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit5
+    jr z, .call_weigh_link_rules1_rule_bit5
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $003a
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1332,7 +1332,7 @@ AIScore_MagicWall::
     ld a, c
     and a
     ret z
-    call WeighWD044RuleBit5
+    call WeighLinkRules1RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp $01
@@ -1377,12 +1377,12 @@ AIScore_Transform::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00ce
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -1397,14 +1397,14 @@ AIScore_BeDragon::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit5
+    jr z, .call_weigh_link_rules1_rule_bit5
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $003a
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AIScore_BeDragon_GetBattleMaxHP_Bank05
     ld a, c
     and a
@@ -1443,14 +1443,14 @@ AIScore_Chance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00bf
     call AccumulateBank6WordToDA6E
     ld bc, $00c5
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -1590,12 +1590,12 @@ AIScore_BigBang::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall LinkRuleCheckLinkRuleTurnLimitTurnLimit
     ld a, c
     and a
@@ -1711,12 +1711,12 @@ AIScore_FireAir::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit3
+    jr nz, .call_weigh_link_rules1_rule_bit3
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit3:
-    call WeighWD044RuleBit3
+.call_weigh_link_rules1_rule_bit3:
+    call WeighLinkRules1RuleBit3
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -1799,12 +1799,12 @@ AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FailIfFoeHPAtLeast150PercentOfActor
     ld a, c
     cp $01
@@ -1893,12 +1893,12 @@ AIScore_RockThrow::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -1973,12 +1973,12 @@ AIScore_Watershot::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2035,12 +2035,12 @@ AIScore_Tidalwave::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2125,12 +2125,12 @@ AIScore_CallHelp::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2225,12 +2225,12 @@ AIScore_FireSlash::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a
@@ -2299,12 +2299,12 @@ AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $0053
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a
@@ -2483,12 +2483,12 @@ AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $0055
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a
@@ -2618,12 +2618,12 @@ AIScore_SquallHit::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c8
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FailIfFoeHPAtMostFourFifthsAIDamageEstimates
     ld a, c
     and a
@@ -2689,12 +2689,12 @@ AIScore_BiAttack::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c8
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2767,14 +2767,14 @@ AIScore_RainSlash::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c3
     call AccumulateBank6WordToDA6E
     ld bc, $00cb
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2857,12 +2857,12 @@ AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -2924,14 +2924,14 @@ AIScore_ChargeUp::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00ba
     call AccumulateBank6WordToDA6E
     ld bc, $00bf
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -2980,14 +2980,14 @@ AIScore_PsycheUp::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00ba
     call AccumulateBank6WordToDA6E
     ld bc, $00bf
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -3030,12 +3030,12 @@ AIScore_HighJump::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $000a
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a
@@ -3110,12 +3110,12 @@ AIScore_EvilSlash::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00bd
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a
@@ -3162,12 +3162,12 @@ AIScore_Massacre::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c4
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a
@@ -3242,14 +3242,14 @@ AIScore_TwinSlash::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c7
     call AccumulateBank6WordToDA6E
     ld bc, $00d0
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a
@@ -3342,14 +3342,14 @@ AIScore_Berserker::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c7
     call AccumulateBank6WordToDA6E
     ld bc, $00d0
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -3450,14 +3450,14 @@ AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00c7
     call AccumulateBank6WordToDA6E
     ld bc, $00d0
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a
@@ -3509,12 +3509,12 @@ AIScore_SleepAir::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, AIScore_SleepAir_CallWeighWD044RuleBit3
+    jr nz, AIScore_SleepAir_CallWeighLinkRules1RuleBit3
     ld bc, $00bc
     call AccumulateBank6WordToDA70
 
-AIScore_SleepAir_CallWeighWD044RuleBit3::
-    call WeighWD044RuleBit3
+AIScore_SleepAir_CallWeighLinkRules1RuleBit3::
+    call WeighLinkRules1RuleBit3
 
 AIScore_SleepAir_CallFewerThanTwoFoesPresent::
     farcall FewerThanTwoFoesPresent
@@ -3566,7 +3566,7 @@ AIScore_PalsyAir::
     ld a, c
     and a
     ret z
-    jr AIScore_SleepAir_CallWeighWD044RuleBit3
+    jr AIScore_SleepAir_CallWeighLinkRules1RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to
@@ -3577,7 +3577,7 @@ AIScore_PoisonGas::
     ld a, c
     and a
     ret z
-    jr AIScore_SleepAir_CallWeighWD044RuleBit3
+    jr AIScore_SleepAir_CallWeighLinkRules1RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to
@@ -3588,7 +3588,7 @@ AIScore_PoisonAir::
     ld a, c
     and a
     ret z
-    jr AIScore_SleepAir_CallWeighWD044RuleBit3
+    jr AIScore_SleepAir_CallWeighLinkRules1RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 117 Curse. It runs checks and adds weights to
@@ -3602,12 +3602,12 @@ AIScore_Curse::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00bd
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     jp AIScore_SleepAir_CallFewerThanTwoFoesPresent
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -3624,14 +3624,14 @@ AIScore_OddDance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00c2
     call AccumulateBank6WordToDA70
     ld bc, $00d2
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -3666,7 +3666,7 @@ AIScore_PaniDance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00c2
     call AccumulateBank6WordToDA70
     ld bc, $00ca
@@ -3674,8 +3674,8 @@ AIScore_PaniDance::
     ld bc, $00d2
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -3728,23 +3728,23 @@ AIScore_KODance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00cd
     call AccumulateBank6WordToDA6E
     ld bc, $00cf
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
-    jr nz, .call_ai_gate_foe_wda74_bits45
+    jr nz, .call_ai_gate_foe_slot_resistances2_bits45
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-.call_ai_gate_foe_wda74_bits45:
-    farcall AIGateFoeWDA74Bits45
+.call_ai_gate_foe_slot_resistances2_bits45:
+    farcall AIGateFoeSlotResistances2Bits45
     ld a, c
     cp $01
     jr z, .call_fail_if_any_foe_fully_resistant
@@ -3807,14 +3807,14 @@ AIScore_LureDance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00c2
     call AccumulateBank6WordToDA70
     ld bc, $00d2
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -3869,14 +3869,14 @@ AIScore_LifeDance::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00bc
     call AccumulateBank6WordToDA6E
     ld bc, $00c4
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -3959,12 +3959,12 @@ AIScore_Hustle::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $0024
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp $01
@@ -4015,12 +4015,12 @@ AIScore_SideStep::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $00be
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a
@@ -4063,12 +4063,12 @@ AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00ba
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -4140,14 +4140,14 @@ AIScore_EerieLite::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00cc
     call AccumulateBank6WordToDA6E
     ld bc, $00d1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -4202,12 +4202,12 @@ AIScore_Surge::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $00ca
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4224,12 +4224,12 @@ AIScore_UltraDown::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00cc
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4254,14 +4254,14 @@ AIScore_DeMagic::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00c9
     call AccumulateBank6WordToDA70
     ld bc, $00cb
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4276,12 +4276,12 @@ AIScore_ThickFog::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00c9
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp $01
@@ -4322,7 +4322,7 @@ AIScore_TatsuCall::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0074
     call AccumulateBank6WordToDA6E
     ld bc, $00bb
@@ -4330,8 +4330,8 @@ AIScore_TatsuCall::
     ld bc, $00c7
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -4362,12 +4362,12 @@ AIScore_SuckAir::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit3
+    jr nz, .call_weigh_link_rules1_rule_bit3
     ld bc, $0076
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit3:
-    call WeighWD044RuleBit3
+.call_weigh_link_rules1_rule_bit3:
+    call WeighLinkRules1RuleBit3
     farcall AnyAllyLacksStatus2Bit2_5D31
     ld a, c
     and a
@@ -4398,14 +4398,14 @@ AIScore_Focus::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00c2
     call AccumulateBank6WordToDA6E
     ld bc, $00d2
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; table-B AI score: AIScore_LushLicks, then AIAddScoresFor5ECEAnd5FC7 when usable (E-0122)
@@ -4429,12 +4429,12 @@ AIScore_LushLicks::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0078
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -4499,12 +4499,12 @@ AIScore_SickLick::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0078
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -4549,12 +4549,12 @@ AIScore_LegSweep::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $007b
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -4600,7 +4600,7 @@ AIScore_Ahhh::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00c0
     call AccumulateBank6WordToDA6E
     ld bc, $00c3
@@ -4610,8 +4610,8 @@ AIScore_Ahhh::
     ld bc, $00d3
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -4648,12 +4648,12 @@ AIScore_Geyser::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $007d
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp $01
@@ -4688,12 +4688,12 @@ AIScore_DanceShut::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit2
+    jr nz, .call_weigh_link_rules1_rule_bit2
     ld bc, $007e
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit2:
-    call WeighWD044RuleBit2
+.call_weigh_link_rules1_rule_bit2:
+    call WeighLinkRules1RuleBit2
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4718,12 +4718,12 @@ AIScore_MouthShut::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit3
+    jr nz, .call_weigh_link_rules1_rule_bit3
     ld bc, $0080
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit3:
-    call WeighWD044RuleBit3
+.call_weigh_link_rules1_rule_bit3:
+    call WeighLinkRules1RuleBit3
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4750,14 +4750,14 @@ AIScore_StrongD::
     farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit4
+    jr z, .call_weigh_link_rules1_rule_bit4
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $0000
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4774,14 +4774,14 @@ AIScore_Dodge::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $0088
     call AccumulateBank6WordToDA6E
     ld bc, $00c1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4798,14 +4798,14 @@ AIScore_BladeD::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $008a
     call AccumulateBank6WordToDA6E
     ld bc, $00c1
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4824,14 +4824,14 @@ AIScore_Cover::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00cd
     call AccumulateBank6WordToDA70
     ld bc, $00d1
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4852,7 +4852,7 @@ AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
     cp $01
     jr z, .call_set_c_to_zero
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $003a
     call AccumulateBank6WordToDA6E
 
@@ -4860,12 +4860,12 @@ AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $008c
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4890,7 +4890,7 @@ AIScore_AquaWall::
     ret z
     ld a, [wBattleActor]
     call AIScore_AquaWall_HPBandOfSlotTemp0
-    call WeighWD044RuleBit5
+    call WeighLinkRules1RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4931,14 +4931,14 @@ AIScore_SealPray::
     farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit5
+    jr z, .call_weigh_link_rules1_rule_bit5
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $008f
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp $01
@@ -4983,14 +4983,14 @@ AIScore_SuckAll::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp $01
-    jr z, .call_weigh_wd044_rule_bit3
+    jr z, .call_weigh_link_rules1_rule_bit3
     and a
-    jr nz, .call_weigh_wd044_rule_bit3
+    jr nz, .call_weigh_link_rules1_rule_bit3
     ld bc, $008e
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit3:
-    call WeighWD044RuleBit3
+.call_weigh_link_rules1_rule_bit3:
+    call WeighLinkRules1RuleBit3
     farcall AnyAllyLacksStatus2Bit2
     ld a, c
     and a
@@ -5033,14 +5033,14 @@ AIScore_Imitate::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit5
+    jr nz, .call_weigh_link_rules1_rule_bit5
     ld bc, $00bb
     call AccumulateBank6WordToDA70
     ld bc, $00c6
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit5:
-    call WeighWD044RuleBit5
+.call_weigh_link_rules1_rule_bit5:
+    call WeighLinkRules1RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp $01
@@ -5075,14 +5075,14 @@ AIScore_Meditate::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $00c2
     call AccumulateBank6WordToDA6E
     ld bc, $00d2
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp $01
@@ -5107,14 +5107,14 @@ AIScore_LifeSong::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $00cc
     call AccumulateBank6WordToDA70
     ld bc, $00d3
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp $01
@@ -5165,7 +5165,7 @@ AIScore_LoveRain::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit4
+    jr nz, .call_weigh_link_rules1_rule_bit4
     ld bc, $00cc
     call AccumulateBank6WordToDA70
     ld bc, $00cf
@@ -5173,8 +5173,8 @@ AIScore_LoveRain::
     ld bc, $00d3
     call AccumulateBank6WordToDA70
 
-.call_weigh_wd044_rule_bit4:
-    call WeighWD044RuleBit4
+.call_weigh_link_rules1_rule_bit4:
+    call WeighLinkRules1RuleBit4
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp $01
@@ -5208,12 +5208,12 @@ AIScore_Ahhh_6401::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_weigh_wd044_rule_bit1
+    jr nz, .call_weigh_link_rules1_rule_bit1
     ld bc, $00a5
     call AccumulateBank6WordToDA6E
 
-.call_weigh_wd044_rule_bit1:
-    call WeighWD044RuleBit1
+.call_weigh_link_rules1_rule_bit1:
+    call WeighLinkRules1RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -5798,7 +5798,7 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
 .return:
     ret
 
-AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01::
+AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01_AccumulateBank6WordToDA70::
     farcall AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a
@@ -5853,7 +5853,7 @@ AIScoreGuardSkill_67CF::
 ; AllySlotsCheckThenFewerThanTwoFoes fails and again when PassIfSide0FlagOrAllySlotEmpty fails
 ; (E-0122)
 AIAddPenaltyFor5758And5CF1::
-    call WeighWD044RuleBit4
+    call WeighLinkRules1RuleBit4
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -5873,8 +5873,8 @@ AIAddPenaltyFor5758And5CF1::
     ret
 
 ; adds score word $B1 when AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05 fails and $B2 when
-; AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02 fails (results of 1 count as passing)
-; (E-0124)
+; AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock fails (results
+; of 1 count as passing) (E-0124)
 AIAddScoresFor5ECEAnd5FC7::
     farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05
     ld a, c
@@ -5886,7 +5886,7 @@ AIAddScoresFor5ECEAnd5FC7::
     call AccumulateBank6WordToDA6E
 
 .call_ai_add_scores_for5_ece_and5_fc7_read:
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02_CheckSlotStatusBlock
     ld a, c
     cp $01
     jr z, .return
@@ -5898,10 +5898,10 @@ AIAddScoresFor5ECEAnd5FC7::
 .return:
     ret
 
-; adds score word $0E to wAISkillScore2 when LinkRuleCheckWD044Bit6 fails and $0F to wAISkillScore
-; when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122)
+; adds score word $0E to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails and $0F to
+; wAISkillScore when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122)
 AIAddScoresFor55BEAnd5731::
-    farcall LinkRuleCheckWD044Bit6
+    farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
     and a
     jr nz, .call_link_rule_check_link_rule_turn_limit
@@ -5919,8 +5919,8 @@ AIAddScoresFor55BEAnd5731::
 .return:
     ret
 
-AIScore_Sacrifice_LinkRuleCheckWD044Bit6::
-    farcall LinkRuleCheckWD044Bit6
+AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6::
+    farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
     and a
     jr nz, .return
@@ -5931,9 +5931,10 @@ AIScore_Sacrifice_LinkRuleCheckWD044Bit6::
     ret
 
 ; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-WeighWD044RuleBit5::
-    farcall CheckWD044RuleBit5
+; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
+; name read as its RAM name; was WeighWD044RuleBit5)
+WeighLinkRules1RuleBit5::
+    farcall CheckLinkRules1RuleBit5
     ld a, c
     and a
     jr nz, .return
@@ -5944,9 +5945,10 @@ WeighWD044RuleBit5::
     ret
 
 ; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-WeighWD044RuleBit4::
-    farcall CheckWD044RuleBit4
+; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
+; name read as its RAM name; was WeighWD044RuleBit4)
+WeighLinkRules1RuleBit4::
+    farcall CheckLinkRules1RuleBit4
     ld a, c
     and a
     jr nz, .return
@@ -5957,9 +5959,10 @@ WeighWD044RuleBit4::
     ret
 
 ; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-WeighWD044RuleBit3::
-    farcall CheckWD044RuleBit3
+; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
+; name read as its RAM name; was WeighWD044RuleBit3)
+WeighLinkRules1RuleBit3::
+    farcall CheckLinkRules1RuleBit3
     ld a, c
     and a
     jr nz, .return
@@ -5970,9 +5973,10 @@ WeighWD044RuleBit3::
     ret
 
 ; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-WeighWD044RuleBit2::
-    farcall CheckWD044RuleBit2
+; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
+; name read as its RAM name; was WeighWD044RuleBit2)
+WeighLinkRules1RuleBit2::
+    farcall CheckLinkRules1RuleBit2
     ld a, c
     and a
     jr nz, .return
@@ -5983,9 +5987,10 @@ WeighWD044RuleBit2::
     ret
 
 ; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-WeighWD044RuleBit1::
-    farcall CheckWD044RuleBit1
+; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
+; name read as its RAM name; was WeighWD044RuleBit1)
+WeighLinkRules1RuleBit1::
+    farcall CheckLinkRules1RuleBit1
     ld a, c
     and a
     jr nz, .return

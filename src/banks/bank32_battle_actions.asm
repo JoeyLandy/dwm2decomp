@@ -2163,7 +2163,7 @@ PickRandomActionWhenUncontrolled_Data2::
     db $08, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c6
 
 ; wEffectFlags = 0, wDefeatStep = 0, wEffectId = $FF, wBattleSubStep = 0; unless wFollowUpAction is
-; set, also wDefeatFlagsBA = 0, wRedirectFlags = 0, wOriginalTarget = $FF, wActionRepeatFlag = 0
+; set, also wMultiHitCount = 0, wRedirectFlags = 0, wOriginalTarget = $FF, wActionRepeatFlag = 0
 ; (E-0120)
 ResetEffectStateForAction::
     xor a
@@ -2178,7 +2178,7 @@ ResetEffectStateForAction::
     or a
     ret nz
     xor a
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     xor a
     ld [wRedirectFlags], a
     ld a, $ff
@@ -2307,7 +2307,7 @@ RunBattleActions_StatusChecks_CheckAction::
     jumptable
     dw RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3
     dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA
-    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02
+    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02_ReadSlotAIModeIndexed_Bank32
     dw RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches
     dw RunBattleActions_StatusChecks_CheckAction_CheckSkillMPCost
 
@@ -2335,7 +2335,7 @@ ApplyActionResultAndMarkFormation::
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ret
 
 .call_show_special_action_message:
@@ -2345,7 +2345,7 @@ ApplyActionResultAndMarkFormation::
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
-    farcall RunA3414FAndMarkWDA5B3
+    farcall RunA3414FAndMarkSlotMarks3
     ret
     db $21, $cc, $cf, $34, $c9
 
@@ -2512,7 +2512,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
     db $41, $42, $43, $44, $45, $46, $47, $49, $4a, $4b, $4d, $4e, $4f, $64, $65, $66
     db $67, $6b, $6c, $6d, $6f, $70, $71, $72, $73, $74, $79, $7a, $8e, $90, $ff
 
-RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02::
+RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Case02_ReadSlotAIModeIndexed_Bank32::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a
@@ -3345,7 +3345,7 @@ CheckLinkRuleViolation::
     ld a, [wLinkRules]
     or a
     ret z
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     or a
     ret nz
     call ActionIsSpecialBFOrC9ToCF
@@ -3551,7 +3551,7 @@ LoadActorChosenActionRecord::
 RunBattleStep4_ResolveSkill::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc
+    dw RunBattleStep4_ResolveSkill_WriteFollowUpActionAndMultiHitCountEtc
     dw RunBattleStep4_ResolveSkill_CheckSkillMPCost
     dw RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable
     dw RunBattleStep4_ResolveSkill_SelectEffectByEffectFlags
@@ -3560,7 +3560,7 @@ RunBattleStep4_ResolveSkill::
     dw RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation
     dw RunBattleStep4_ResolveSkill_CheckActionD0ToE3OrSpecial
 
-RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc::
+RunBattleStep4_ResolveSkill_WriteFollowUpActionAndMultiHitCountEtc::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wSavedActorTarget
@@ -3568,7 +3568,7 @@ RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc::
     ld [hli], a
     ld a, [wBattleTarget]
     ld [hli], a
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     ld [hli], a
     ld a, [wBattleActor]
     ld de, wBattleActionChoice
@@ -3609,7 +3609,7 @@ RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc::
     ld a, $01
     ld [wFollowUpAction], a
     xor a
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld a, [wBattleActor]
@@ -4019,7 +4019,7 @@ BlankTargetMonsterPicture::
     ret
 
 ; target slot wBattleTarget: re-derives its stats (RecomputeTargetMaxHPAndMP,
-; DefeatTarget_WriteDefeatFlagsBA, ResetTargetAGLAndDEFToBase clear 'buff' bits), sets
+; DefeatTarget_WriteMultiHitCount, ResetTargetAGLAndDEFToBase clear 'buff' bits), sets
 ; wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record
 ; (wBattleStatus + 9 * slot)
 DefeatTarget::
@@ -4029,14 +4029,14 @@ DefeatTarget::
     call AddAx9ToHL
     ld a, [hl]
     and $c0
-    jr z, .call_defeat_target_write_defeat_flags_ba
+    jr z, .call_defeat_target_write_multi_hit_count
     ld a, [hl]
     and $3f
     ld [hl], a
     call ResetTargetAGLAndDEFToBase
 
-.call_defeat_target_write_defeat_flags_ba:
-    call DefeatTarget_WriteDefeatFlagsBA
+.call_defeat_target_write_multi_hit_count:
+    call DefeatTarget_WriteMultiHitCount
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -4096,7 +4096,7 @@ DefeatTarget::
 .return:
     ret
 
-DefeatTarget_WriteDefeatFlagsBA::
+DefeatTarget_WriteMultiHitCount::
     ld a, [wRecordBufferData + $4]
     and $0f
     cp $02
@@ -4112,13 +4112,13 @@ DefeatTarget_WriteDefeatFlagsBA::
     cp c
     jr c, .read_battle_target
     jr z, .read_battle_target
-    ld a, [wDefeatFlagsBA]
+    ld a, [wMultiHitCount]
     bit 7, a
     jr z, .read_battle_target
     cp $81
     jr z, .read_battle_target
     dec a
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -5711,7 +5711,7 @@ RunBattleSubStep2_66F1_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, $81
-    ld [wDefeatFlagsBA], a
+    ld [wMultiHitCount], a
     ret
 
 ; when the actor's slot is absent (CarryUnlessBattleSlotOutSlotEmpty) runs SetBattleSubStep1 and

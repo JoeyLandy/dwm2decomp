@@ -1077,7 +1077,7 @@ ShopMenu_Setup::
     dw ShopMenu_Setup_AdvanceScreenStep
     dw ShopMenu_Setup_ToCopyTileListFromBank1F_1C
     dw ShopMenu_Setup_ToInitItemListScreenListAndCount
-    dw ShopMenu_Setup_DrawScreenListBoxAtWC370AndStep
+    dw ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
     dw ShopMenu_Setup_SetScreenStep
 
 ; increments wScreenStep
@@ -1095,12 +1095,12 @@ ShopMenu_Setup_ToInitItemListScreenListAndCount::
     call InitItemListScreenListAndCount
     ret
 
-ShopMenu_Setup_DrawScreenListBoxAtWC370AndStep::
+ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
     ld de, TileRect_1C_4738
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRowsJp_Bank1C
-    call DrawScreenListBoxAtWC370AndStep
+    call DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
     xor a
     ld [wScreenStep], a
     ld [wTwoChoiceCursor], a
@@ -1148,7 +1148,7 @@ ShopMenu_ChooseAction::
     jr nz, .call_shop_menu_choose_action_step_bg_map
     bit 1, a
     jp nz, .set_two_choice_cursor_to_02
-    call ShopMenu_ChooseAction_WriteScreenByteB3
+    call ShopMenu_ChooseAction_WriteReturnScreenStep
     ret
 
 .call_shop_menu_choose_action_read_list_last:
@@ -1161,7 +1161,7 @@ ShopMenu_ChooseAction::
 .set_list_last_row:
     ld [wListLastRow], a
     xor a
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     call ShopMenu_ChooseAction_ReadListLastRow
     ld a, $69
     call QueueSoundEffect
@@ -1190,18 +1190,18 @@ ShopMenu_ChooseAction::
     ld a, [wListLastRow]
     ld [wTwoChoiceCursor], a
     ld b, a
-    ld a, [wScreenByteB2]
+    ld a, [wReturnScreenState]
     cp b
-    jr z, .set_screen_byte_b2
+    jr z, .set_return_screen_state
     ld a, [wListLastRow]
     ld b, a
     xor a
     ld [wItemGridX], a
     ld [wItemGridY], a
 
-.set_screen_byte_b2:
+.set_return_screen_state:
     ld a, b
-    ld [wScreenByteB2], a
+    ld [wReturnScreenState], a
     ld a, [wListLastRow]
     and a
     jr z, .check_list_pages
@@ -1251,19 +1251,19 @@ ShopMenu_ChooseAction::
     ld [wTwoChoiceCursor], a
     jp .clear_script_command_type
 
-ShopMenu_ChooseAction_WriteScreenByteB3::
+ShopMenu_ChooseAction_WriteReturnScreenStep::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, ShopMenu_ChooseAction_ReadListLastRow
-    ld a, [wScreenByteB3]
+    ld a, [wReturnScreenStep]
     inc a
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     cp $10
     jr c, ShopMenu_ChooseAction_ReadListLastRow
     cp $18
     jr c, ShopMenu_ChooseAction_ReadListLastRow_Sub03
     xor a
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
 
 ShopMenu_ChooseAction_ReadListLastRow::
     ld b, $bb
@@ -1308,18 +1308,18 @@ ShopMenu_Buy::
     dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex
     dw ShopMenu_Buy_WriteGlyphListPosAndCursorBlinkB8Etc
     dw ShopMenu_Buy_AdvanceScreenStep
-    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05
+    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_ReadF2FarPointerForScreenTableIndex
     dw ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C
     dw ShopMenu_Buy_ResetTextCounter0Counters
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08
+    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08_ClearRectSetTextCursorLoPlus1C1_Bank1C
     dw ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87
-    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A
+    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A_Number24ToPackedBCD
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap
     dw ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0
     dw DrawTwoBoxesAndRequestScript80
     dw ShopMenu_Buy_SubtractArg1AmountFromGold
     dw ShopMenu_Buy_DrawTwoBoxesAndRequestScript80
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10
+    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10_SetScreenStep
 
 ShopMenu_Buy_WriteVBKAndScreenStep::
     ld hl, ShopMenu_Buy_WriteVBKAndScreenStep_Data
@@ -1656,7 +1656,7 @@ ShopMenu_Buy_AdvanceScreenStep::
     ld [wScreenStep], a
     ret
 
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05::
+ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_ReadF2FarPointerForScreenTableIndex::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
     ld e, a
@@ -2001,7 +2001,7 @@ ShopMenu_Buy_ResetTextCounter0Counters::
     ld [wScriptStartRequest], a
     ret
 
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08::
+ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08_ClearRectSetTextCursorLoPlus1C1_Bank1C::
     xor a
     ld [wNumberTens], a
     ld a, $01
@@ -2551,7 +2551,7 @@ ShopMenu_Buy_Case09_WriteThreeDigits::
     ld [wThreeDigits], a
     ret
 
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A::
+ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A_Number24ToPackedBCD::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
     ld e, a
@@ -2932,7 +2932,7 @@ ShopMenu_Buy_DrawTwoBoxesAndRequestScript80::
     ld [wScreenStep], a
     ret
 
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10::
+ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10_SetScreenStep::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $00a2
     add hl, de
@@ -6079,8 +6079,9 @@ InitItemListScreenListAndCount::
     ret
 
 ; copies the 8 x 5 box at wScreenList to wWindowTileBuffer + $70, draws it at scroll + $1CC and
-; wScreenStep += 1 (E-0122)
-DrawScreenListBoxAtWC370AndStep::
+; wScreenStep += 1 (E-0122) (E-0340: the address in its name read as its RAM name; was
+; DrawScreenListBoxAtWC370AndStep)
+DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
     ld de, wScreenList
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $05
@@ -6415,7 +6416,7 @@ VaultMenu_Setup::
     dw VaultMenu_Setup_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep
     dw VaultMenu_Setup_CopyFromBankWaitVRAM
     dw VaultMenu_Setup_ToInitItemListScreenListAndCount
-    dw VaultMenu_Setup_DrawScreenListBoxAtWC370AndStep
+    dw VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
 
 VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C::
     ld hl, vTiles1 + $240
@@ -6470,12 +6471,12 @@ VaultMenu_Setup_ToInitItemListScreenListAndCount::
     call InitItemListScreenListAndCount
     ret
 
-VaultMenu_Setup_DrawScreenListBoxAtWC370AndStep::
+VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
     ld de, TileRect_1C_6DEF
     ld hl, wWindowTileBuffer + $64
     lb bc, $0b, $07
     call CopyRectTo20ByteRowsJp_Bank1C
-    call DrawScreenListBoxAtWC370AndStep
+    call DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
     xor a
     ld [wScreenStep], a
     ld [wTwoChoiceCursor], a
@@ -6510,7 +6511,7 @@ VaultMenu_ChooseAction::
     jr nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .set_two_choice_cursor_to_02
-    call VaultMenu_ChooseAction_WriteScreenByteB3
+    call VaultMenu_ChooseAction_WriteReturnScreenStep
     ret
 
 .call_vault_menu_choose_action_read_list_last:
@@ -6526,7 +6527,7 @@ VaultMenu_ChooseAction::
 
 .set_list_last_row2:
     ld [wListLastRow], a
-    call VaultMenu_ChooseAction_WriteScreenByteB3
+    call VaultMenu_ChooseAction_WriteReturnScreenStep
     ld a, $69
     call QueueSoundEffect
     ret
@@ -6549,18 +6550,18 @@ VaultMenu_ChooseAction::
     call VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_67AF
     ld a, [wListLastRow]
     ld b, a
-    ld a, [wScreenByteB2]
+    ld a, [wReturnScreenState]
     cp b
-    jr z, .set_screen_byte_b2
+    jr z, .set_return_screen_state
     ld a, [wListLastRow]
     ld b, a
     xor a
     ld [wItemGridX], a
     ld [wItemGridY], a
 
-.set_screen_byte_b2:
+.set_return_screen_state:
     ld a, b
-    ld [wScreenByteB2], a
+    ld [wReturnScreenState], a
     ld a, [wListLastRow]
     and a
     jr z, .check_screen_state
@@ -6598,19 +6599,19 @@ VaultMenu_ChooseAction::
     ld [wTwoChoiceCursor], a
     jp .clear_script_command_type
 
-VaultMenu_ChooseAction_WriteScreenByteB3::
+VaultMenu_ChooseAction_WriteReturnScreenStep::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .skip
-    ld a, [wScreenByteB3]
+    ld a, [wReturnScreenStep]
     inc a
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     cp $10
     jr c, .skip
     cp $18
     jr c, VaultMenu_ChooseAction_ReadListLastRow
     xor a
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
 
 .skip:
     ld b, $bb
@@ -6662,11 +6663,11 @@ VaultMenu_Store::
     dw VaultMenu_Store_WriteCursorBlinkB8AndGlyphListPosEtc
     dw VaultMenu_Store_ToVaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc
     dw VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C_SetScreenStep
     dw VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10_SetTwoChoiceCursor
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
@@ -6894,7 +6895,7 @@ VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
     farcall VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
     ret
 
-VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C::
+VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C_SetScreenStep::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0088
     add hl, de
@@ -6937,7 +6938,7 @@ VaultMenu_Store_InitItemListScreenListAndDraw::
     farcall VaultMenu_Store_Case0F_WriteScreenStepAndScriptCommandTypeEtc
     ret
 
-VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10::
+VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10_SetTwoChoiceCursor::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0088
     add hl, de
@@ -7061,11 +7062,11 @@ VaultMenu_TakeOut::
     dw VaultMenu_Store_WriteCursorBlinkB8AndGlyphListPosEtc
     dw VaultMenu_Store_ToVaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc
     dw VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C_SetScreenStep
     dw VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10_SetTwoChoiceCursor
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD

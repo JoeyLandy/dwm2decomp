@@ -610,9 +610,9 @@ EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D::
     and a
     jp nz, .set_two_choice_cursor_to_01
     ld a, $05
-    ld [wScreenByteB2], a
+    ld [wReturnScreenState], a
     ld a, $0c
-    ld [wScreenByteB3], a
+    ld [wReturnScreenStep], a
     ld a, $0d
     ld [wScreenState], a
     xor a
@@ -1280,9 +1280,9 @@ EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics::
     ldh [hSpriteHideTile], a
     xor a
     ld [wScreenSubStep], a
-    ld a, [wScreenByteB2]
+    ld a, [wReturnScreenState]
     ld [wScreenState], a
-    ld a, [wScreenByteB3]
+    ld a, [wReturnScreenStep]
     ld [wScreenStep], a
     ld hl, wTextWindowTileLo
     xor a
@@ -2658,7 +2658,7 @@ KeyAppraisalMenu_ChooseKey::
     dw KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D
     dw KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D
     dw KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D
-    dw KeyAppraisalMenu_ChooseKey_ToCopyRect70C5ToWC364AndDrawAndStep
+    dw KeyAppraisalMenu_ChooseKey_ToCopyRect70C5ToWindowTileBufferRow5AndDrawAndStep
     dw KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow
     dw KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep
     dw KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D
@@ -2666,7 +2666,7 @@ KeyAppraisalMenu_ChooseKey::
     dw KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_7347
     dw KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw
     dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10
-    dw KeyAppraisalMenu_ChooseKey_CountKeys_Case11
+    dw KeyAppraisalMenu_ChooseKey_CountKeys_Case11_SetTwoChoiceCursor
     dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics
 
 KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics::
@@ -2835,7 +2835,7 @@ KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
     ret
 
 .call_key_appraisal_menu_choose_key_case05:
-    farcall KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList
+    farcall KeyAppraisalMenu_ChooseKey_Case05_CopyWorkBuf1ToKeyList
     ret
 
 .read_screen_step:
@@ -3028,8 +3028,8 @@ KeyAppraisalMenu_ChooseKey_Case07_StoreC5BEC6AtHLStride2_Bank0D::
     call DrawScreenBufferRect_Bank0D
     ret
 
-KeyAppraisalMenu_ChooseKey_ToCopyRect70C5ToWC364AndDrawAndStep::
-    farcall CopyRect70C5ToWC364AndDraw
+KeyAppraisalMenu_ChooseKey_ToCopyRect70C5ToWindowTileBufferRow5AndDrawAndStep::
+    farcall CopyRect70C5ToWindowTileBufferRow5AndDraw
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3256,7 +3256,7 @@ KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10::
     ld [wScriptStartRequest], a
     ret
 
-KeyAppraisalMenu_ChooseKey_CountKeys_Case11::
+KeyAppraisalMenu_ChooseKey_CountKeys_Case11_SetTwoChoiceCursor::
     call KeyAppraisalMenu_ChooseKey_CountKeys
     cp $ff
     jr nz, .set_two_choice_cursor_to_01
@@ -4202,7 +4202,7 @@ MedalPrizeMenu::
     ld a, [wScreenState]
     jumptable
     dw MedalPrizeMenu_CopyBytesDEToHL_Bank0D
-    dw MedalPrizeMenu_CountItem2C_Case01
+    dw MedalPrizeMenu_CountItem2C_Case01_MedalPrizeMenu_RemoveItem2C
     dw MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc
     dw MedalPrizeMenu_DrawCountBox
     dw MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D
@@ -4268,7 +4268,7 @@ MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_CountItem2C_Case01::
+MedalPrizeMenu_CountItem2C_Case01_MedalPrizeMenu_RemoveItem2C::
     call MedalPrizeMenu_CountItem2C
     push af
     ld a, [wTinyMedalsLo]
@@ -4620,14 +4620,14 @@ MedalPrizeMenu_ChoosePrize::
     dw MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep
     dw MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D
     dw MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor
-    dw MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_Case06
+    dw MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_Case06_ShowString_Bank0D
     dw MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc
-    dw MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Case08
+    dw MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Case08_SetTwoChoiceCursor
     dw MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D
     dw MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D
     dw MedalPrizeMenu_ChoosePrize_WriteScreenStepAndScriptCommandTypeEtc
     dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4
-    dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D
+    dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D_DrawTinyMedalCountBoxAndStep
     dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0E
 
 MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
@@ -4849,7 +4849,7 @@ MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor::
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_Case06::
+MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_Case06_ShowString_Bank0D::
     ld b, $bb
     call WriteTileBAtCursorListCursor
     ld a, [wJoypadPressedRepeat]
@@ -5047,7 +5047,7 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Case08::
+MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Case08_SetTwoChoiceCursor::
     ld de, TileRect_0D_6189
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
@@ -5266,7 +5266,7 @@ ScriptStepCheckKeyListFull_6A80::
     ld [wScriptStartRequest], a
     ret
 
-MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D::
+MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Case0D_DrawTinyMedalCountBoxAndStep::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
@@ -6052,7 +6052,7 @@ NpcBreedMenu::
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
-    dw NpcBreedMenu_SwapMonstersMenu_Case0C
+    dw NpcBreedMenu_SwapMonstersMenu_Case0C_SetScreenStep
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
@@ -6093,8 +6093,8 @@ NpcBreedMenu_ChooseAndBreed::
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
     dw RunFunc4ED5At0278AndStep_0D
     dw NpcBreedMenu_ChooseAndBreed_ToBreedMenu
-    dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_Case11
-    dw NpcBreedMenu_ChooseAndBreed_PrepareWCF8BCountersAndRequestScript
+    dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_Case11_SetTwoChoiceCursor
+    dw NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript
     dw NpcBreedMenu_ChooseAndBreed_WriteScreenStep
     dw NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild
     dw NpcBreedMenu_ChooseAndBreed_QueueSoundEffect
@@ -6177,7 +6177,7 @@ RunFunc4ED5At0278AndStep_0D::
     ld [wScreenStep], a
     ret
 
-NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_Case11::
+NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_Case11_SetTwoChoiceCursor::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -6260,12 +6260,12 @@ NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_Case11::
     ld [wScriptStartRequest], a
     ret
 
-NpcBreedMenu_ChooseAndBreed_PrepareWCF8BCountersAndRequestScript::
+NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript::
     ld a, [wScreenSubStep]
     and a
     jr nz, .clear_screen_sub_step
     call NpcBreedMenu_ChooseAndBreed_Multiply8
-    farcall PrepareWCF8BCountersAndRequestScript
+    farcall PrepareCounterPtr0LoCountersAndRequestScript
     ret
 
 .clear_screen_sub_step:
@@ -6569,7 +6569,7 @@ NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D::
     ld [wScriptStartRequest], a
     ret
 
-NpcBreedMenu_SwapMonstersMenu_Case0C::
+NpcBreedMenu_SwapMonstersMenu_Case0C_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp $0a

@@ -58,7 +58,7 @@ SceneWatchOut::
     dw SceneWatchOut_ShowHmYouAreQuite
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWatchOut_ShowTheFarmHasNo
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_RunMessageBoxFar_Bank85
@@ -70,10 +70,10 @@ SceneWatchOut::
     dw SceneWatchOut_ReadScriptMsgSelect
     dw SceneWatchOut_RestoreScreenBufferFromBGMap1
     dw SceneWatchOut_CreateMonsterRecordOfKindTemp1
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case0F
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case0F_RestoreScreenBufferFromBGMap1
     dw SceneWatchOut_ShowNHeadedOffTo
     dw SceneWatchOut_StepObjectCoordByDirection16Frames
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case12
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case12_SetScriptStep
 
 SceneWatchOut_ShowNHeadedOffTo::
     ld a, $05
@@ -91,7 +91,7 @@ SceneWatchOut_ShowNHeadedOffTo::
     dec [hl]
     ret
 
-SceneWatchOut_RunMessageBoxFar_Bank85_Case0F::
+SceneWatchOut_RunMessageBoxFar_Bank85_Case0F_RestoreScreenBufferFromBGMap1::
     xor a
     call RunMessageBoxFar_Bank85
     ret nc
@@ -265,7 +265,7 @@ SceneWaterReward::
     dw SceneWaterReward_ShowCoohIHeardFrom
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWaterReward_ShowWaitTheFarmIs
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_RunMessageBoxFar_Bank85
@@ -280,9 +280,9 @@ SceneWaterReward::
     dw SceneWaterReward_RunMessageBoxFar_Bank85
     dw SceneWaterReward_ShowNHeadedOffTo
     dw SceneWatchOut_StepObjectCoordByDirection16Frames
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case12
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case12_SetScriptStep
 
-SceneWatchOut_RunMessageBoxFar_Bank85_Case12::
+SceneWatchOut_RunMessageBoxFar_Bank85_Case12_SetScriptStep::
     xor a
     call RunMessageBoxFar_Bank85
     ret nc
@@ -812,11 +812,11 @@ SceneWarubouLeaves::
     ld a, [wScriptStep]
     jumptable
     dw SceneWarubouLeaves_StepObjectTowardCoord
-    dw SceneWarubouLeaves_StepObjectTowardCoord_Case01
-    dw SceneWarubouLeaves_StepObjectTowardCoord_Case02
-    dw SceneWarubouLeaves_StepObjectTowardCoord_Case03
+    dw SceneWarubouLeaves_StepObjectTowardCoord_Case01_SetStepPtrHi
+    dw SceneWarubouLeaves_StepObjectTowardCoord_Case02_SetStepPtrHi
+    dw SceneWarubouLeaves_StepObjectTowardCoord_Case03_SetStepPtrHi
 
-SceneWarubouLeaves_StepObjectTowardCoord_Case03::
+SceneWarubouLeaves_StepObjectTowardCoord_Case03_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $03
@@ -838,7 +838,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_Case03::
     ld [wScriptStartRequest], a
     ret
 
-SceneWarubouLeaves_StepObjectTowardCoord_Case02::
+SceneWarubouLeaves_StepObjectTowardCoord_Case02_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $03
@@ -855,7 +855,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_Case02::
     farcall StepObjectTowardCoord
     jr SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived
 
-SceneWarubouLeaves_StepObjectTowardCoord_Case01::
+SceneWarubouLeaves_StepObjectTowardCoord_Case01_SetStepPtrHi::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $02
@@ -1006,9 +1006,9 @@ SceneChestServant::
     ld a, [wScriptStep]
     jumptable
     dw SceneChestServant_QueueSoundEffectAndStep
-    dw SceneChestServant_StepPlayerUpTowardWC928
-    dw SceneChestServant_StepPlayerUpTowardWC928
-    dw SceneChestServant_StepPlayerUpTowardWC928
+    dw SceneChestServant_StepPlayerUpTowardStepPtrLo
+    dw SceneChestServant_StepPlayerUpTowardStepPtrLo
+    dw SceneChestServant_StepPlayerUpTowardStepPtrLo
     dw SceneChestServant_ScriptStartFadeAndAdvanceStep
     dw SceneChestServant_SetScriptStartRequestTo80
 
@@ -1040,14 +1040,14 @@ SceneChestServant_ScriptStartFadeAndAdvanceStep::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-SceneChestServant_StepPlayerUpTowardWC928::
+SceneChestServant_StepPlayerUpTowardStepPtrLo::
     ld a, [wScriptParam0]
     swap a
     ld c, a
     ld a, $10
     sub c
     ld [wStepPtrLo], a
-    farcall StepPlayerUpTowardWC928
+    farcall StepPlayerUpTowardStepPtrLo
     ld a, [wStepArrived]
     or a
     ret z
@@ -1179,7 +1179,7 @@ SceneKamehaKeyBattle2::
     dw SceneKamehaKeyBattle2_SetFlagBit
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
     ld hl, $0b9d
@@ -1275,7 +1275,7 @@ SceneKamehaKeyBattle::
     dw SceneKamehaKeyBattle_SetFlagBit
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneKamehaKeyBattle_ShowHeroReceivedTheMagic
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
     ld hl, $0b93
@@ -1369,7 +1369,7 @@ SceneArenaChallenge::
     jumptable
     dw SceneArenaChallenge_StartScriptedEncounterTemp0AndStep
     dw SceneArenaChallenge_ShowAwwILoseYou
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneArenaChallenge_ShowAwwILoseYou::
     ld hl, wScriptStep
@@ -1402,7 +1402,7 @@ SceneTerryBattle::
     jumptable
     dw SceneTerryBattle_SetFlagBitAndStep
     dw SceneTerryBattle_ShowTerryWellThisProves
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneTerryBattle_ShowTerryWellThisProves::
     ld hl, wScriptStep
@@ -1527,7 +1527,7 @@ SceneLimboMonster2::
     ld a, [wScriptStep]
     jumptable
     dw SceneLimboMonster2_ShowWarubouWaheyIWas
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimboMonster2_ShowWarubouWaheyGoodGood
     dw SceneWatchOut_RunMessageBoxFar_Bank85
@@ -1541,9 +1541,9 @@ SceneLimboMonster2::
     dw SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimboMonster2_StepObjectTowardCoord
-    dw SceneLimboMonster2_StepObjectTowardCoord_Case0F
+    dw SceneLimboMonster2_StepObjectTowardCoord_Case0F_CreateMonsterRecordOfKindTemp1
 
-SceneLimboMonster2_StepObjectTowardCoord_Case0F::
+SceneLimboMonster2_StepObjectTowardCoord_Case0F_CreateMonsterRecordOfKindTemp1::
     xor a
     ldh [hFieldDrawFlags], a
     ld a, $01
@@ -1666,7 +1666,7 @@ SceneLimboMonster::
     ld a, [wScriptStep]
     jumptable
     dw SceneLimboMonster_ShowWarubouWaheyIHave
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimboMonster_ShowWarubouWaheyGoodGood
     dw SceneWatchOut_RunMessageBoxFar_Bank85
@@ -1679,7 +1679,7 @@ SceneLimboMonster::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimboMonster_AddStepDeltaToPointedByte
     dw SceneWatchOut_RunMessageBoxFar_Bank85
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneLimboMonster_AddStepDeltaToPointedByte::
     ld a, [wScriptParam0]
@@ -2215,7 +2215,7 @@ SceneYouDidIt::
     ld a, [wScriptStep]
     jumptable
     dw SceneYouDidIt_StartMessageHL_B85
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneYouDidIt_StartMessageHL_B85::
     ld hl, wScriptStep
@@ -2356,7 +2356,7 @@ SceneBarrel::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneBarrel_WriteSpriteSlotsAndObject1Etc
     dw SceneBarrel_ShowRobosterStoppedMoving
-    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03
+    dw SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest
 
 SceneBarrel_ShowRobosterStoppedMoving::
     ld a, $e0
@@ -2555,21 +2555,21 @@ SceneLimbo::
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03_SetObject5
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03_SetObject5
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03_SetObject5
     dw SceneWatchOut_RunMessageBoxFar_Bank85
-    dw SceneLimbo_WriteGameFlags836AndScriptStartRequest
+    dw SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest
 
-SceneLimbo_WriteGameFlags836AndScriptStartRequest::
+SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
     ld hl, wInventory
 
 .skip:
@@ -2587,14 +2587,14 @@ SceneLimbo_WriteGameFlags836AndScriptStartRequest::
     ld [hl], $37
     inc hl
     ld [hl], $38
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     set 6, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03::
+SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_Case03_SetObject5::
     ld a, [wSpriteSlots + $7]
     or a
     jr nz, .skip
@@ -2893,9 +2893,9 @@ SceneTreasureTheft::
     dw SceneTreasureTheft_WriteScriptParam0
     dw SceneTreasureTheft_ShowKingGoodYourValor
     dw SceneWatchOut_RunMessageBoxFar_Bank85
-    dw SceneTreasureTheft_StepObjectTowardCoord_Case08
+    dw SceneTreasureTheft_StepObjectTowardCoord_Case08_SetStepPtrHi
 
-SceneTreasureTheft_StepObjectTowardCoord_Case08::
+SceneTreasureTheft_StepObjectTowardCoord_Case08_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
     ld b, $03
@@ -3379,7 +3379,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85::
     inc [hl]
     ret
 
-SceneWatchOut_RunMessageBoxFar_Bank85_Case03::
+SceneWatchOut_RunMessageBoxFar_Bank85_Case03_SetScriptStartRequest::
     xor a
     call RunMessageBoxFar_Bank85
     ret nc

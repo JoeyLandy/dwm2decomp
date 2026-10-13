@@ -14629,7 +14629,7 @@
           "name": "sort key for this item id"
         }
       ],
-      "note": "E-0229 (C1: SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of wGameFlags836); 112 bytes end at InventorySortKeysB)."
+      "note": "E-0229 (C1: SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of wInventorySortFlags); 112 bytes end at InventorySortKeysB)."
     },
     {
       "bank": "16",

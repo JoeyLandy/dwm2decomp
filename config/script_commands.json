@@ -82,7 +82,7 @@
     "1E": {
       "const": "SCRIPT_CHECK_ITEM",
       "routine": "CheckItem",
-      "note": "sets wGameFlags836 from whether item hTemp0 is in the inventory (FindTemp0InInventoryList)",
+      "note": "looks items up in the inventory (FindTemp0InInventoryList) and, after changing a slot, sets bit 6 of wInventorySortFlags (E-0340)",
       "evidence": "E-0245"
     },
     "1F": {

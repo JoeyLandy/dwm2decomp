@@ -2981,12 +2981,12 @@ PauseMenu_Skills_UseFieldSkill_Case02_WriteItemId::
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb::
     call ItemUsable_Herb
-    call SetWD08D12IfItemRefused
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew::
     call ItemUsable_WorldDew
-    call SetWD08D12IfItemRefused
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion::
@@ -2997,28 +2997,28 @@ PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion::
     jr nz, .call_item_usable_potion
     ld a, $ff
     ld [wItemId], a
-    jr .call_set_wd08_d12_if_item_refused
+    jr .call_set_item_message12_if_item_refused
 
 .call_item_usable_potion:
     call ItemUsable_Potion
 
-.call_set_wd08_d12_if_item_refused:
-    call SetWD08D12IfItemRefused
+.call_set_item_message12_if_item_refused:
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf::
     call ItemUsable_WorldLeaf
-    call SetWD08D12IfItemRefused
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote::
     call ItemUsable_Antidote
-    call SetWD08D12IfItemRefused
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0::
     call ListPartyMembersWithField55Bit0
-    call SetWD08D12IfItemRefused
+    call SetItemMessage12IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent::
@@ -3026,29 +3026,29 @@ PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent::
     ld a, [wInventorySlot]
     cp $10
     jr z, .check_item_id
-    call SetWD08D14IfItemRefused
+    call SetItemMessage14IfItemRefused
     ret
 
 .check_item_id:
     ld a, [wItemId]
     cp $ff
-    jr nz, .call_collect_unique_encounter_ids_to_wd09_f
+    jr nz, .call_collect_unique_encounter_ids_to_work
     ld a, $15
     ld [wItemMessage], a
     ret
 
-.call_collect_unique_encounter_ids_to_wd09_f:
-    call CollectUniqueEncounterIdsToWD09F
+.call_collect_unique_encounter_ids_to_work:
+    call CollectUniqueEncounterIdsToWorkBuf2
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell::
     call ItemUsable_ExitBell
-    call SetWD08D14IfItemRefused
+    call SetItemMessage14IfItemRefused
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11::
     call ItemUsable_Repellent
-    call SetWD08D14IfItemRefused
+    call SetItemMessage14IfItemRefused
     ret z
     ld a, [wGoldHi]
     or a
@@ -3079,7 +3079,7 @@ PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11::
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp::
     call ItemUsable_Warp
-    call SetWD08D14IfItemRefused
+    call SetItemMessage14IfItemRefused
     ret z
     ld a, [wMapObjectCount]
     or a
@@ -3112,11 +3112,12 @@ PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp::
 
 PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing::
     call ItemUsable_WarpWing
-    call SetWD08D14IfItemRefused
+    call SetItemMessage14IfItemRefused
     ret
 
-; when wItemId is $FF (refused): wItemMessage = $12 (E-0119)
-SetWD08D12IfItemRefused::
+; when wItemId is $FF (refused): wItemMessage = $12 (E-0119) (E-0340: the address in its name read
+; as its RAM name; was SetWD08D12IfItemRefused)
+SetItemMessage12IfItemRefused::
     ld a, [wItemId]
     cp $ff
     ret nz
@@ -3124,8 +3125,9 @@ SetWD08D12IfItemRefused::
     ld [wItemMessage], a
     ret
 
-; when wItemId is $FF (refused): wItemMessage = $14 (E-0119)
-SetWD08D14IfItemRefused::
+; when wItemId is $FF (refused): wItemMessage = $14 (E-0119) (E-0340: the address in its name read
+; as its RAM name; was SetWD08D14IfItemRefused)
+SetItemMessage14IfItemRefused::
     ld a, [wItemId]
     cp $ff
     ret nz
@@ -3140,21 +3142,21 @@ PauseMenu_Skills_UseFieldSkill_Case07_WaitItemId::
     ld a, [wInventorySlot]
     jumptable
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount
-    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01_SetItemEffectAmount
     dw FullHealRecordTargetRecord
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07
-    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08_SetItemMessage
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave
-    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D_SetDataBankSave
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetTalkCountdown
-    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F_SetDataBankSave
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetItemMessageTo0B
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte
     dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetGameMode2Byte50
@@ -3170,7 +3172,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount::
     ld [wItemMessage], a
     ret
 
-PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01_SetItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
     ld a, $4b
@@ -3288,7 +3290,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case0
     ld [wItemMessage], a
     ret
 
-PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08_SetItemMessage::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
@@ -3368,7 +3370,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave::
     ld [wItemId], a
     ret
 
-PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D_SetDataBankSave::
     ld a, $01
     ld [wDataBankSave], a
     ld a, [wMenuSelectedMember]
@@ -3394,7 +3396,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetTalkCountdown::
     ld [wItemId], a
     ret
 
-PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F_SetDataBankSave::
     ld a, $04
     ld [wDataBankSave], a
     ld a, $ff
@@ -3566,12 +3568,13 @@ TestTargetRecordFlag55Bit7::
 ; for special maps copies the eight monster entries of the current screen
 ; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, removes duplicates and stores
 ; the count in wWorkBuf; normal maps use
-; CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags (E-0129)
-CollectUniqueEncounterIdsToWD09F::
+; CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags (E-0129) (E-0340: the address in
+; its name read as its RAM name; was CollectUniqueEncounterIdsToWD09F)
+CollectUniqueEncounterIdsToWorkBuf2::
     ld a, [wMapType]
     bit 7, a
     jr nz, .call_address_of_key_world_monsters_entry_for
-    farcall CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags
+    farcall CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags
     ret
 
 .call_address_of_key_world_monsters_entry_for:
@@ -4004,7 +4007,7 @@ MapIndexViaPartyListKeepHL::
     pop hl
     ret
 
-; toggles the sort order in wGameFlags836 and sorts the 24 inventory slots by the key table
+; toggles the sort order in wInventorySortFlags and sorts the 24 inventory slots by the key table
 ; InventorySortKeysA or InventorySortKeysB (empty slots last) (E-0128)
 SortInventory::
     ld hl, wWorkBuf + $2
@@ -4015,14 +4018,14 @@ SortInventory::
     ld bc, $0018
     ld a, $ff
     call FillBytes
-    ld a, [wGameFlags836]
+    ld a, [wInventorySortFlags]
     bit 7, a
-    jr nz, .set_game_flags836
+    jr nz, .set_inventory_sort_flags
     xor $01
 
-.set_game_flags836:
+.set_inventory_sort_flags:
     res 7, a
-    ld [wGameFlags836], a
+    ld [wInventorySortFlags], a
     ld de, InventorySortKeysA
     bit 0, a
     jr z, .skip
@@ -4108,7 +4111,7 @@ SwapInventorySlotCWithNext::
     ret
 
 ; SortInventory sorts the 24 inventory slots by the byte at $599E + item id (one sort order of
-; wGameFlags836); 112 bytes end at InventorySortKeysB (E-0229, C1)
+; wInventorySortFlags); 112 bytes end at InventorySortKeysB (E-0229, C1)
 ; record: sort key for this item id
 InventorySortKeysA::
     db $ff ; id 0
@@ -4740,21 +4743,21 @@ BattleEnd_AskToJoin::
     dw BattleEnd_AskToJoin_ShowYouHaveNoEggs
     dw BattleEnd_AskToJoin_ShowChooseAMonsterTo
     dw BattleEnd_AskToJoin_MovePagedListCursor
-    dw BattleEnd_AskToJoin_WriteVRAMByte_Case0E
-    dw BattleEnd_AskToJoin_MovePagedListCursor_Case0F
+    dw BattleEnd_AskToJoin_WriteVRAMByte_Case0E_CopyRectRecord787EAndPlaySound6C
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case0F_CopyRectRecord7848ToScreenBuffer
     dw BattleEnd_AskToJoin_ClampRecordListPageCursor5
     dw BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C
-    dw BattleEnd_AskToJoin_WriteVRAMByte_Case12
+    dw BattleEnd_AskToJoin_WriteVRAMByte_Case12_YouCan
     dw BattleEnd_AskToJoin_AdvanceBattleSubStep
     dw BattleEnd_AskToJoin_ShowGWasSetFree
-    dw BattleEnd_AskToJoin_WaitTextFlags_Case15
+    dw BattleEnd_AskToJoin_WaitTextFlags_Case15_DeleteSRAMRecordAndCompact
     dw BattleEnd_AskToJoin_ShowChooseAnEggTo
-    dw BattleEnd_AskToJoin_MovePagedListCursor_Case17
-    dw BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18
-    dw BattleEnd_AskToJoin_MovePagedListCursor_Case19
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case17_DrawFourListEntriesForPageListPage
+    dw BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18_CopyRectRecord78AAToScreenBuffer
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case19_CopyStringHLToDE
     dw BattleEnd_AskToJoin_ClampRecordListPageCursor4
     dw BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer
-    dw BattleEnd_AskToJoin_WaitTextFlags_Case1C
+    dw BattleEnd_AskToJoin_WaitTextFlags_Case1C_DeleteSRAMRecordAndCompact
 
 BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     ld hl, wBattleSubStep
@@ -5020,7 +5023,7 @@ BattleEnd_AskToJoin_MovePagedListCursor::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AskToJoin_WriteVRAMByte_Case0E::
+BattleEnd_AskToJoin_WriteVRAMByte_Case0E_CopyRectRecord787EAndPlaySound6C::
     ld a, [wMenuState]
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     add a
@@ -5049,7 +5052,7 @@ BattleEnd_AskToJoin_WriteVRAMByte_Case0E::
     inc [hl]
     ret
 
-BattleEnd_AskToJoin_MovePagedListCursor_Case0F::
+BattleEnd_AskToJoin_MovePagedListCursor_Case0F_CopyRectRecord7848ToScreenBuffer::
     ld de, wMenuSubState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     call MovePagedListCursor
@@ -5157,7 +5160,7 @@ BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AskToJoin_WriteVRAMByte_Case12::
+BattleEnd_AskToJoin_WriteVRAMByte_Case12_YouCan::
     ld a, $bc
     ld hl, vBGMap0 + $16d
     call WriteVRAMByte
@@ -5254,7 +5257,7 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
     call ShowStringCategory5_Bank16
     ret
 
-BattleEnd_AskToJoin_WaitTextFlags_Case15::
+BattleEnd_AskToJoin_WaitTextFlags_Case15_DeleteSRAMRecordAndCompact::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -5366,7 +5369,7 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     inc [hl]
     ret
 
-BattleEnd_AskToJoin_MovePagedListCursor_Case17::
+BattleEnd_AskToJoin_MovePagedListCursor_Case17_DrawFourListEntriesForPageListPage::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case17_Data
     call MovePagedListCursor
@@ -5407,7 +5410,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_Case17::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18::
+BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18_CopyRectRecord78AAToScreenBuffer::
     call BuildBattleMenuScreen_733F
     farcall CopyRectRecord78AAToScreenBuffer
     farcall CopyRectRecord787EAndPlaySound6C
@@ -5456,7 +5459,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18::
     inc [hl]
     ret
 
-BattleEnd_AskToJoin_MovePagedListCursor_Case19::
+BattleEnd_AskToJoin_MovePagedListCursor_Case19_CopyStringHLToDE::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
@@ -5584,7 +5587,7 @@ BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AskToJoin_WaitTextFlags_Case1C::
+BattleEnd_AskToJoin_WaitTextFlags_Case1C_DeleteSRAMRecordAndCompact::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -6792,7 +6795,7 @@ BattleEnd_AddJoinedMonster::
     ld a, [wBattleSubStep]
     jumptable
     dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01_SetListPageSize
     dw BattleEnd_AddJoinedMonster_MovePagedListCursor
     dw BattleEnd_AddJoinedMonster_ShowHeroWasSentTo
     dw BattleEnd_AddJoinedMonster_SetBattleStep
@@ -6800,17 +6803,17 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_SetRecordState2ForB
     dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16
     dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09
-    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B
-    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09_SetListPageSize
+    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A_CopyRectRecord787EAndPlaySound6C
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B_ShowRecordNameString1D
+    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C_HeroWasSentBack
     dw BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5
     dw BattleEnd_AddJoinedMonster_SwapMonstersMenu
-    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F
+    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F_CopyRect7923AndDrawBattleArg0Values
     dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero
-    dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11
+    dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11_ChooseTheMonsterTo
     dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
-    dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13
+    dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13_WillYouTakeHero
 
 BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F::
     call BuildBattleMenuScreen_733F
@@ -6862,7 +6865,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F::
     ld [wMenuState], a
     ret
 
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01_SetListPageSize::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7005,7 +7008,7 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     inc [hl]
     ret
 
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09_SetListPageSize::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7032,7 +7035,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09::
     inc [hl]
     ret
 
-BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A::
+BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A_CopyRectRecord787EAndPlaySound6C::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     ld de, wMenuSubState
     call MovePagedListCursor
@@ -7075,7 +7078,7 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A::
     inc [hl]
     ret
 
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B_ShowRecordNameString1D::
     xor a
     ld [wMenuSelectedMember], a
     ld hl, vBGMap0 + $10c
@@ -7105,7 +7108,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B::
     inc [hl]
     ret
 
-BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C::
+BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C_HeroWasSentBack::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
@@ -7219,7 +7222,7 @@ BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     inc [hl]
     ret
 
-BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F::
+BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F_CopyRect7923AndDrawBattleArg0Values::
     call BuildBattleMenuScreen_733F
     call CopyRect7923AndDrawBattleArg0Values
     ld a, [wListCursor]
@@ -7268,7 +7271,7 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11::
+BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11_ChooseTheMonsterTo::
     call CopyRect7923AndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12f
     ld [hl], $bc
@@ -7319,7 +7322,7 @@ BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     ld [wBattleSubStep], a
     ret
 
-BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13::
+BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13_WillYouTakeHero::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -8070,7 +8073,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_MAX_MP + 1]
     ld b, a
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufA + MON_MAX_MP], a
     ld a, h
@@ -8083,7 +8086,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_ATK + 1]
     ld b, a
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufA + MON_ATK], a
     ld a, h
@@ -8092,7 +8095,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_DEF + 1]
     ld b, a
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufA + MON_DEF], a
     ld a, h
@@ -8101,7 +8104,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_AGL + 1]
     ld b, a
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufA + MON_AGL], a
     ld a, h
@@ -8110,7 +8113,7 @@ BattleEnd_Step3_NextTableByte::
     ld c, a
     ld a, [wRecordBufA + MON_INT + 1]
     ld b, a
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufA + MON_INT], a
     ld a, h
@@ -8118,7 +8121,7 @@ BattleEnd_Step3_NextTableByte::
     ld a, [wRecordBufAByte71]
     ld c, a
     ld b, $00
-    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
+    call BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D
     ld a, l
     ld [wRecordBufAByte71], a
 
@@ -8199,7 +8202,7 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
-BattleEnd_Step3_Sub01_Multiply8By16_Sub02::
+BattleEnd_Step3_Sub01_Multiply8By16_Sub02_SetBattleTemp7D::
     ld hl, $03e7
     ld a, l
     sub c
@@ -8742,11 +8745,11 @@ DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
     ld de, wScreenTileBuffer + $51
     ld a, [wGameMode]
     cp $05
-    jr nz, .call_write_two_digit_tiles_wc8_c1_no_blank
+    jr nz, .call_write_two_digit_tiles_digits1_no_blank
     ld de, wScreenTileBuffer + $91
 
-.call_write_two_digit_tiles_wc8_c1_no_blank:
-    call WriteTwoDigitTilesWC8C1NoBlank_Bank16
+.call_write_two_digit_tiles_digits1_no_blank:
+    call WriteTwoDigitTilesDigits1NoBlank_Bank16
     ld a, [wTitlePartyCount]
     ld b, a
     ld c, $00
@@ -8782,7 +8785,7 @@ WriteThreeDigitTilesDigits_Bank16::
 
 ; writes wDigits + $1 and wDigits + $2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank)
 ; (E-0117) (the same 13 bytes appear in 2 banks)
-WriteTwoDigitTilesWC8C1NoBlank_Bank16::
+WriteTwoDigitTilesDigits1NoBlank_Bank16::
     ld hl, wDigits + $1
     ld a, [hli]
     add $e0
@@ -8884,7 +8887,7 @@ DrawSaveSummaryPartyEntryC::
     ld e, [hl]
     inc hl
     ld d, [hl]
-    call WriteTwoDigitTilesWC8C1NoBlank_Bank16
+    call WriteTwoDigitTilesDigits1NoBlank_Bank16
     ret
 
 .check_game_mode:
@@ -9013,7 +9016,7 @@ DrawSaveSummaryPartyEntryC_Data4::
     db $62, $c2, $a2, $c2, $e2, $c2
 
 ; writes the 16-byte icon tile of family wWorkBuf (FamilyIconTiles + 16 * family) to VRAM tile
-; wWorkBuf + $1 through WriteBytesToVRAMTileWD09E; corrected in E-0124, first named as a palette
+; wWorkBuf + $1 through WriteBytesToVRAMTileWorkBuf1; corrected in E-0124, first named as a palette
 ; load (E-0122)
 LoadFamilyIconTileForWorkBuf::
     ld a, [wWorkBuf]
@@ -9021,12 +9024,12 @@ LoadFamilyIconTileForWorkBuf::
     ld de, FamilyIconTiles
     add e
     ld e, a
-    jr nc, .call_write_bytes_to_vram_tile_wd09_e
+    jr nc, .call_write_bytes_to_vram_tile_work_buf1
     inc d
 
-.call_write_bytes_to_vram_tile_wd09_e:
+.call_write_bytes_to_vram_tile_work_buf1:
     ld b, $10
-    call WriteBytesToVRAMTileWD09E
+    call WriteBytesToVRAMTileWorkBuf1
     ret
 
 ; writes the $B0 bytes at FamilyIconTiles (the eleven family icon tiles) to VRAM from tile wWorkBuf
@@ -9034,7 +9037,7 @@ LoadFamilyIconTileForWorkBuf::
 LoadAllFamilyIconTiles::
     ld de, FamilyIconTiles
     ld b, $b0
-    call WriteBytesToVRAMTileWD09E
+    call WriteBytesToVRAMTileWorkBuf1
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H
@@ -9067,7 +9070,7 @@ LoadTilesForPartyRecords::
 
 ; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from
 ; FamilyIconTiles by the low nibble of record byte $0D and copies them on through the shared copy
-; loop at WriteBytesToVRAMTileWD09E_Skip (not read to its end) (E-0103)
+; loop at WriteBytesToVRAMTileWorkBuf1_Skip (not read to its end) (E-0103)
 LoadTileForRecordByte0D::
     push hl
     ld c, MON_FAMILY
@@ -9084,14 +9087,15 @@ LoadTileForRecordByte0D::
 .skip:
     ld b, $10
     pop af
-    jr WriteBytesToVRAMTileWD09E_Skip
+    jr WriteBytesToVRAMTileWorkBuf1_Skip
 
 ; writes B bytes from DE to VRAM tile wWorkBuf + $1 ($8000 + 16 * index; indices below $80 use the
-; $9000 area) (E-0124)
-WriteBytesToVRAMTileWD09E::
+; $9000 area) (E-0124) (E-0340: the address in its name read as its RAM name; was
+; WriteBytesToVRAMTileWD09E)
+WriteBytesToVRAMTileWorkBuf1::
     ld a, [wWorkBuf + $1]
 
-WriteBytesToVRAMTileWD09E_Skip::
+WriteBytesToVRAMTileWorkBuf1_Skip::
     swap a
     ld h, a
     and $f0

@@ -783,7 +783,7 @@ DEF EVENT_HEH_YOU_HAVE_MONSTERS_IN EQU $059 ; set by Script_5B3C
 DEF EVENT_SCENE_RIVAL_DEFEATED_05A EQU $05A ; set by SceneRivalDefeated_ScriptStepBlinkObjectTemp0
 DEF EVENT_SCENE_WATER_REWARD EQU $05C ; set by SceneWaterReward_RunMessageBoxFar_Bank85
 DEF EVENT_HERO_RECEIVED_THE_SAILOR_RING EQU $05E ; set by Script_5C7E
-DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_StepPlayerLeftTowardWC928
+DEF EVENT_SCENE_MERMAID_KINGDOM_05F EQU $05F ; set by SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
 DEF EVENT_SCENE_WHO_ARE_YOU EQU $064 ; set by SceneWhoAreYou_UpdateFollowersOnStep_Bank0F_Case09
 DEF EVENT_SCENE_WATCH_OUT EQU $066 ; set by Script_5BE8, Script_5BF2
 DEF EVENT_THE_PIRATES EQU $06D ; set by Script_5C0C
