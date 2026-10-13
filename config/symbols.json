@@ -2027,9 +2027,9 @@
     "evidence": "E-0133; E-0340"
   },
   "C837": {
-    "name": "wArenaByte37",
-    "note": "read by script command $F3",
-    "evidence": "E-0133"
+    "name": "wGameCompleted",
+    "note": "1 once the ending has shown 'THE END' (SceneHomecoming_ShowTHEEND); saved (sSavedGameCompleted), shown on the title summary (wTitleGameCompleted), and read by the TinyMedal prize menu and script command $F3 (E-0343; was wArenaByte37)",
+    "evidence": "E-0133; E-0343"
   },
   "C838": {
     "name": "wTinyMedalsLo",
@@ -2755,9 +2755,9 @@
     "evidence": "E-0134"
   },
   "CC46": {
-    "name": "wKeyWorldByte46",
-    "note": "key-world byte",
-    "evidence": "E-0134"
+    "name": "wKeyWorldGenRoom",
+    "note": "the room being generated in a key world: an index into wKeyWorldRoomTable for the debug automap's generator (E-0343; was wKeyWorldByte46)",
+    "evidence": "E-0134; E-0343"
   },
   "CC47": {
     "name": "wMapObjectCount",
@@ -3454,9 +3454,9 @@
     "evidence": "E-0136"
   },
   "D08E": {
-    "name": "wItemRecordByte0A",
-    "note": "item record byte $0A (written by ItemUsable_WorldDew and ListPartyMembersWithField55Bit0)",
-    "evidence": "E-0136"
+    "name": "wItemUseMessage",
+    "note": "the message of the item being used (item record byte $0A, written by ItemUsable_*): copied to wStringIndex or wItemMessage when the item is applied; $FF none; the field skills reuse it (E-0343; was wItemRecordByte0A)",
+    "evidence": "E-0136; E-0343"
   },
   "D08F": {
     "name": "wItemEffectAmount",
@@ -3556,9 +3556,9 @@
     "evidence": "E-0136"
   },
   "D10A": {
-    "name": "wTitleByte0A",
-    "note": "title summary byte copied from sBD3A (also read by the pause menu and link screens)",
-    "evidence": "E-0136"
+    "name": "wTitleGameCompleted",
+    "note": "the title summary's copy of sSavedGameCompleted (also read by the pause menu and link screens) (E-0343; was wTitleByte0A)",
+    "evidence": "E-0136; E-0343"
   },
   "D10B": {
     "name": "wTitleKeyFlag",
@@ -4069,9 +4069,9 @@
     "evidence": "E-0136"
   },
   "D7E1": {
-    "name": "wPackByteE1",
-    "note": "PackRecordFieldsToBank1Slot work byte",
-    "evidence": "E-0136"
+    "name": "wPackFieldIndex",
+    "note": "the field PackRecordFieldsToBank1Slot is packing: it counts up through the record fields, and the packing step chosen depends on it (E-0343; was wPackByteE1)",
+    "evidence": "E-0136; E-0343"
   },
   "D7E2": {
     "name": "wPackFields",
@@ -4080,9 +4080,9 @@
     "size": "4"
   },
   "D7E6": {
-    "name": "wPackByteE6",
-    "note": "PackRecordFieldsToBank1Slot input byte",
-    "evidence": "E-0136"
+    "name": "wPackValue",
+    "note": "the value packed into a 2-bit field of the compact record (& 3, shifted into place by PackRecordFieldsToBank1Slot) (E-0343; was wPackByteE6)",
+    "evidence": "E-0136; E-0343"
   },
   "D7E8": {
     "name": "wLinkByteE8",
@@ -4919,9 +4919,9 @@
     "evidence": "E-0137"
   },
   "BD3A": {
-    "name": "sSavedArenaByte37",
-    "note": "saved wArenaByte37",
-    "evidence": "E-0137"
+    "name": "sSavedGameCompleted",
+    "note": "the saved wGameCompleted (E-0343; was sSavedArenaByte37)",
+    "evidence": "E-0137; E-0343"
   },
   "BD97": {
     "name": "sSavedLinkByte94",

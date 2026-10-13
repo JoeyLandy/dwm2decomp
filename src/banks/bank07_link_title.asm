@@ -3188,7 +3188,7 @@ RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc::
     ld a, [wBattlerRecords]
     or a
     jr z, .skip
-    ld a, [wTitleByte0A]
+    ld a, [wTitleGameCompleted]
     or a
     jr z, .skip
     ld a, $29

@@ -4687,7 +4687,7 @@ MedalPrizeMenu_ChoosePrize_FillTilesFromRequest::
 MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
     ld a, [wListPageIndex]
     and a
-    jr nz, .check_arena_byte37
+    jr nz, .check_game_completed
     ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
@@ -4695,8 +4695,8 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
     ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
-.check_arena_byte37:
-    ld a, [wArenaByte37]
+.check_game_completed:
+    ld a, [wGameCompleted]
     and a
     jr nz, .loop
     ld de, TileRect_0D_6FDA
@@ -4731,7 +4731,7 @@ MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep::
     ld a, $01
     ld [wArg5], a
     call MedalPrizeMenu_ChoosePrize_Case03_ReadListPageIndexAndListLastRowEtc
-    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc
+    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5144,7 +5144,7 @@ MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
 MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01::
     ld a, [wListPageIndex]
     and a
-    jr nz, .check_arena_byte37
+    jr nz, .check_game_completed
     ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
@@ -5152,8 +5152,8 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01::
     ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
-.check_arena_byte37:
-    ld a, [wArenaByte37]
+.check_game_completed:
+    ld a, [wGameCompleted]
     and a
     jr nz, .loop
     ld de, TileRect_0D_70E8
@@ -5162,7 +5162,7 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01::
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
-    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc
+    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc
     call MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -5698,7 +5698,7 @@ KeyListHasFreeSlot::
     xor a
     ret
 
-MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc::
+MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
     ld a, [wListPageIndex]
     add a
     add a
@@ -5712,7 +5712,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc::
     ld a, [wListPageIndex]
     and a
     jr z, .skip
-    ld a, [wArenaByte37]
+    ld a, [wGameCompleted]
     and a
     jr nz, .skip2
     ld a, [wListPageIndex]
@@ -5740,7 +5740,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc::
     ld h, $00
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F_Bank15
-    ld de, MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc_Data
+    ld de, MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc_Data
     pop bc
     push bc
     ld a, c
@@ -5771,7 +5771,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc::
     jr c, .loop
     ret
 
-MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndArenaByte37Etc_Data::
+MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc_Data::
     db $d7, $c3, $ff, $c3, $27, $c4, $4f, $c4
 
 ; writes B at BGMapAddressAtScroll + the offset from WriteTileBAtCursorListCursor_Data[wListCursor]
@@ -5835,7 +5835,7 @@ MedalPrizeMenu_CountItem2C::
     ret
 
 MedalPrizeMenu_ChoosePrize_Case00_WriteListCount::
-    ld a, [wArenaByte37]
+    ld a, [wGameCompleted]
     and a
     jr nz, .skip
     ld b, $06

@@ -44,7 +44,7 @@ DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas::
     call DebugAutomap_Update_SetTemp0
     or a
     jr nz, DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas
-    farcall DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc
+    farcall DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGenRoomAndTemp8Etc
     call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
     call DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
     call DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength

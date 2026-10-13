@@ -3163,7 +3163,7 @@ PauseMenu_Items_UseItem_ApplyItemEffect::
     farcall ApplyItemEffect
     xor a
     ld [rRAMG], a
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     ld [wStringIndex], a
     cp $27
     jr z, .check_temp0
@@ -3209,7 +3209,7 @@ PauseMenu_Items_UseItem_CheckItemUsable_AdvanceTemp1::
     inc [hl]
     ld hl, wTemp1
     inc [hl]
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     or a
     ret nz
     ld hl, wTemp1
@@ -3243,7 +3243,7 @@ PauseMenu_Items_UseItem_ApplyItemEffect_SetStringIndex::
     farcall ApplyItemEffect
     xor a
     ld [rRAMG], a
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     ld [wStringIndex], a
     cp $ff
     jr z, .done
@@ -7368,7 +7368,7 @@ PauseMenu_Plan_RecordJourney_WriteRAMGAndRAMBEtc::
     ld a, [wBattlerRecords]
     or a
     jr z, .skip
-    ld a, [wTitleByte0A]
+    ld a, [wTitleGameCompleted]
     or a
     jr z, .skip
     ld a, $29

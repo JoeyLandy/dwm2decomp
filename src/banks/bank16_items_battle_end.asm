@@ -270,7 +270,7 @@ ItemUsable_WorldDew::
     call ItemUsable_WorldDew_SRAMRecordAddressMapped
     ld a, $27
     add d
-    ld [wItemRecordByte0A], a
+    ld [wItemUseMessage], a
     ret
 
 ItemUsable_WorldDew_SRAMRecordAddressMapped::
@@ -393,7 +393,7 @@ ItemUsable_Laurel::
     ret
 
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to
-; wTextBuf3 and wItemRecordByte0A = $32 + their count; otherwise wItemId = $FF (E-0127)
+; wTextBuf3 and wItemUseMessage = $32 + their count; otherwise wItemId = $FF (E-0127)
 ListPartyMembersWithField55Bit0::
     ld a, [wPartyCount]
     and a
@@ -448,7 +448,7 @@ ListPartyMembersWithField55Bit0::
     call CopyEligibleRecordNameToTextBuf3Row
     ld a, $32
     add d
-    ld [wItemRecordByte0A], a
+    ld [wItemUseMessage], a
     ret
 
 ; if record A (< wPartyCount) has field $55 bit 7 clear and bit 0 set, copies its name and marks
@@ -3201,7 +3201,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt::
     ld [wItemEffectAmount], a
     ld a, $5a
     ld [wItemEffectRange], a
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     ld [wItemMessage], a
     ld a, $00
     call HealPartyRecordAIfHurt
@@ -3240,7 +3240,7 @@ HealPartyRecordAIfHurt::
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA::
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     ld [wItemMessage], a
     ld a, $00
     call FullHealPartyRecordA
@@ -3338,7 +3338,7 @@ PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped::
     ret
 
 PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0::
-    ld a, [wItemRecordByte0A]
+    ld a, [wItemUseMessage]
     ld [wItemMessage], a
     ld a, $00
     call ClearPartyRecordFlag55Bit0
@@ -8394,7 +8394,7 @@ LoadSaveFileSummary::
     call BuildRecordSummaryForWorkBuf
     pop af
     cp $01
-    jr z, .read_saved_arena_byte37
+    jr z, .read_saved_game_completed
     push af
     ld a, [sSaveData + $101]
     ld [wWorkBuf], a
@@ -8406,7 +8406,7 @@ LoadSaveFileSummary::
     call BuildRecordSummaryForWorkBuf
     pop af
     cp $02
-    jr z, .read_saved_arena_byte37
+    jr z, .read_saved_game_completed
     ld a, [sSaveData + $102]
     ld [wWorkBuf], a
     ld de, wBattlerRecords + BATTLER_INT
@@ -8416,9 +8416,9 @@ LoadSaveFileSummary::
     ld [wWorkBuf + $2], a
     call BuildRecordSummaryForWorkBuf
 
-.read_saved_arena_byte37:
-    ld a, [sSavedArenaByte37]
-    ld [wTitleByte0A], a
+.read_saved_game_completed:
+    ld a, [sSavedGameCompleted]
+    ld [wTitleGameCompleted], a
     ld a, [sSavedMapType]
     ld [wTitleKeyFlag], a
     ld a, [sSavedMapId]

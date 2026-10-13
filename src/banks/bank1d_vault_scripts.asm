@@ -6732,7 +6732,7 @@ PackRecordFieldsToBank1Slot_Skip::
     call SRAMRecordAddressOfArg1
     ld a, $03
     add_a_to_hl
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     ld b, a
     sla a
     sla a
@@ -6741,7 +6741,7 @@ PackRecordFieldsToBank1Slot_Skip::
     ld bc, $0000
     call EnableSRAMBank0
     push hl
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     ld hl, PackRecordFieldsToBank1Slot_Data
     add_a_to_hl
     ld a, [hl]
@@ -6822,7 +6822,7 @@ PackRecordFieldsToBank1Slot_Skip::
     ld a, b
     cp $0a
     jr c, .loop2
-    jr .check_pack_byte_e1
+    jr .check_pack_field_index
 
 .restore3:
     pop bc
@@ -6830,7 +6830,7 @@ PackRecordFieldsToBank1Slot_Skip::
     pop de
     ld a, c
     cp $05
-    jr nc, .check_pack_byte_e1
+    jr nc, .check_pack_field_index
     push af
     ld a, [wArg2]
     ld [rRAMB], a
@@ -6838,8 +6838,8 @@ PackRecordFieldsToBank1Slot_Skip::
     ld a, $f0
     ld [hl], a
 
-.check_pack_byte_e1:
-    ld a, [wPackByteE1]
+.check_pack_field_index:
+    ld a, [wPackFieldIndex]
     and a
     jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1
     cp $01
@@ -6870,7 +6870,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
     ld [hl], a
     ld a, $06
     add_a_to_hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     swap a
     sla a
@@ -6879,9 +6879,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     inc a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
@@ -6899,7 +6899,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
     ld [hl], a
     ld a, $05
     add_a_to_hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     swap a
     ld b, a
@@ -6909,9 +6909,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     inc a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
@@ -6929,7 +6929,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
     ld [hl], a
     ld a, $04
     add_a_to_hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     sla a
     sla a
@@ -6940,9 +6940,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     inc a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
@@ -6961,7 +6961,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
     inc hl
     inc hl
     inc hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     ld b, a
     ld a, [hl]
@@ -6970,9 +6970,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     inc a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
@@ -6991,7 +6991,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
     inc hl
     inc hl
     inc hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     swap a
     sla a
@@ -7000,9 +7000,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld a, [wPackByteE1]
+    ld a, [wPackFieldIndex]
     inc a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16::
@@ -7020,7 +7020,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16::
     ld [hl], a
     inc hl
     inc hl
-    ld a, [wPackByteE6]
+    ld a, [wPackValue]
     and $03
     swap a
     ld b, a
@@ -7030,7 +7030,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     jp Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1
 
 ; B = (wPackFields & 3) << 6 | (wPackFields + $1 & 3) << 4 | (wPackFields + $2 & 3) << 2 |
@@ -7195,7 +7195,7 @@ Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1::
     xor a
     ld [rRAMG2], a
     ld [rRAMB], a
-    ld [wPackByteE1], a
+    ld [wPackFieldIndex], a
     call SRAMRecordAddressOfArg1
     call EnableSRAMBank0
     push hl

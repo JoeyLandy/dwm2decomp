@@ -324,7 +324,7 @@ SceneHomecoming_ShowTHEEND::
     ld a, h
     ld [wScriptParam1], a
     ld a, $01
-    ld [wArenaByte37], a
+    ld [wGameCompleted], a
     ld hl, wScriptStep
     inc [hl]
     ret

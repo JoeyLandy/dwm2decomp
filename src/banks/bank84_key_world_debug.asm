@@ -4,9 +4,9 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc::
+DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGenRoomAndTemp8Etc::
     xor a
-    ld [wKeyWorldByte46], a
+    ld [wKeyWorldGenRoom], a
     ld a, [wKeyWorldAreaCount]
     add a
     ld hl, KeyWorldAreaLayoutTable
@@ -180,7 +180,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ldh [hTemp0], a
     push hl
     inc de
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     ld [de], a
     inc de
     ld a, [wKeyWorldGoalKind]
@@ -244,7 +244,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0::
     ldh [hTemp0], a
     push hl
     inc de
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     ld [de], a
     inc de
     call NextRandomSeed
@@ -309,7 +309,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data::
 
 RunDebugAutomapCaseTemp0_RandomBelowC::
     push af
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     add a
     ld hl, wKeyWorldRoomTable
     add_a_to_hl
@@ -346,9 +346,9 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ld [hli], a
     ld a, $0f
     ldh [hTemp3], a
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     inc a
-    ld [wKeyWorldByte46], a
+    ld [wKeyWorldGenRoom], a
     jr .check_temp0
 
 .clear_temp2:
@@ -382,9 +382,9 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ldh a, [hTemp3]
     or c
     ld [hli], a
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     inc a
-    ld [wKeyWorldByte46], a
+    ld [wKeyWorldGenRoom], a
 
 .check_temp0:
     ldh a, [hTemp0]
@@ -431,9 +431,9 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     swap a
     or c
     ld [hli], a
-    ld a, [wKeyWorldByte46]
+    ld a, [wKeyWorldGenRoom]
     inc a
-    ld [wKeyWorldByte46], a
+    ld [wKeyWorldGenRoom], a
     pop bc
     dec b
     jr nz, .loop

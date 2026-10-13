@@ -2431,6 +2431,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0343 — Completion flag, item use message, packing and key-world generator bytes
+
+- Kind: READING (C1).
+- **The game-completed flag.**
+  - $C837 is wGameCompleted (was wArenaByte37). SceneHomecoming_ShowTHEEND sets it to 1 when the ending shows "THE END".
+  - It is saved at $BD3A, sSavedGameCompleted (was sSavedArenaByte37).
+  - The title summary copies it to $D10A, wTitleGameCompleted (was wTitleByte0A).
+  - The TinyMedal prize menu and script command $F3 read it.
+- **The item's use message.** $D08E is wItemUseMessage (was wItemRecordByte0A). It holds item record byte $0A, which the ItemUsable_* routines write. It is copied to wStringIndex or wItemMessage when the item is applied ($FF none), and the field skills reuse it.
+- **Record packing.**
+  - $D7E1 is wPackFieldIndex (was wPackByteE1): the record field PackRecordFieldsToBank1Slot is packing.
+  - $D7E6 is wPackValue (was wPackByteE6): the value put into a 2-bit field.
+- **Key-world generator.** $CC46 is wKeyWorldGenRoom (was wKeyWorldByte46): the room index into wKeyWorldRoomTable while the debug automap generates a key world.
+- RAM names that still spell a byte number: 104 of 958.
+- Binary verification: build/run508 PASS, 0 differing bytes.
+
 ### E-0342 — Interrupt handlers; jump-table entries named after their id
 
 - Kind: READING and a generator naming rule.
