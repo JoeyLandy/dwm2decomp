@@ -2431,6 +2431,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0338 — The 27 resistances, named by the skills that read them
+
+- Kind: READING of bank $36's effect helpers and bank $19's PackResistanceFieldsToDE, plus a TOOL check.
+- **Packing.** A monster record keeps 27 resistance levels, one byte each (MON_RESISTANCES at $73, copied from SPECIES_RESISTANCES). PackResistanceFieldsToDE packs them into a battle slot's 7-byte record in wSlotResistances:
+  - index 26 goes in byte 0 bits 7-6;
+  - indexes 0-2 go in byte 0 bits 5-4, 3-2 and 1-0;
+  - from index 3, four per byte, bits 7-6 first;
+  - byte 6 bits 1-0 stay 0.
+- **Readers.** Each effect helper loads one byte (GetTargetSlotResistancesByteN), isolates a 2-bit field with rotates and `and $03`, and scales damage or rolls a chance by it. The skills whose effects do so are C2 from E-0333 (which routine runs for which skill). They name the 27, in record order: Blaze, Firebal, Bang, Vacuum, Bolt, IceBolt, Radiant, Sleep, Beat, RobMagic, StopSpell, PanicAll, Sap, Slow, Sacrifice, MegaMagic, FireAir, FrigidAir, PoisonGas, PalsyAir, Curse, LegSweep, DanceShut, MouthShut, RockThrow, GigaSlash, Watershot. Each name is the skill, or the first of several, whose effect reads the field:
+  - Blaze reads index 0 (byte 0 bits 5-4), Firebal index 1, Bang index 2;
+  - Watershot and Geyser read index 26;
+  - FireSlash, VacuSlash, BoltSlash and IceSlash read the same fields as Blaze, Vacuum, Bolt and IceBolt;
+  - Ahhh, LegSweep, LureDance, LushLicks and WarCry share index 21;
+  - GigaSlash and actions $D2-$D5 share index 25.
+- **Names.**
+  - src/records.inc gains RESIST_BLAZE ... RESIST_WATERSHOT (0-26) and NUM_RESISTANCES, from config/record_fields.json.
+  - 23 helpers are renamed from their byte and bits to their resistance: RollVsSleepResistance, ScaleDamageByVacuumResistance, AttackDamageScaledByBlazeResistance, SkillDamageScaledByGigaSlashResistance, and so on.
+  - GetTargetSlotResistancesByte6_ReadBattleTarget is now GetTargetResistanceByte.
+  - wSlotResistances's note lists every field.
+- **Confidence.** C1 for the names as game meaning: a field is named by the skill that reads it, not by an observed in-game resistance screen. The field positions are checked mechanically.
+- **Tests.** tests/test_resistances.py checks:
+  - the packing formula;
+  - that every `...<Name>Resistance` reader isolates RESIST_<NAME>'s packed field (17 readers);
+  - a control: with the names shifted by one index, the readers fail.
+- Binary verification: build/run479 PASS, 0 differing bytes.
+
 ### E-0337 — Personality acts and the target's reactions in battle
 
 - Kind: READING of banks $30, $32, $36 and $3A plus EMULATION (tools/sm83.py, our own emulator; not checked against hardware). The battle is forced through the debug menu, as in E-0332, with template 95.

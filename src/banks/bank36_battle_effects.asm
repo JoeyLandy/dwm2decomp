@@ -1622,7 +1622,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
     ld [wBattleResolveStep], a
     xor a
     ld [wBattleSubStep], a
-    call ResolveStepDamageMessage_Sub04_RollTargetSlotResistancesByte1Bits01Chance
+    call ResolveStepDamageMessage_RollVsRadiantResistance
     ld a, [wBattleSubPhase]
     cp $05
     ret z
@@ -2454,8 +2454,9 @@ ActionEffect_ActionD1_RollSkillDamageFromRecord::
     call ScaleDamageByFlagsAtHL
     ret
 
-ActionEffect_ActionD2_SkillDamageScaledBySlotResistancesByte6Bits32::
-    call SkillDamageScaledBySlotResistancesByte6Bits32
+; SkillDamageScaledByGigaSlashResistance for action $D2 (E-0338)
+ActionEffect_ActionD2_ScaleByGigaSlashResistance::
+    call SkillDamageScaledByGigaSlashResistance
     call GetTargetSpeciesFamily
     cp $00
     jr z, .call_scale_damage_by3_over2
@@ -2468,8 +2469,9 @@ ActionEffect_ActionD2_SkillDamageScaledBySlotResistancesByte6Bits32::
     call ScaleDamageBy3Over2
     ret
 
-ActionEffect_ActionD3_SkillDamageScaledBySlotResistancesByte6Bits32::
-    call SkillDamageScaledBySlotResistancesByte6Bits32
+; SkillDamageScaledByGigaSlashResistance for action $D3 (E-0338)
+ActionEffect_ActionD3_ScaleByGigaSlashResistance::
+    call SkillDamageScaledByGigaSlashResistance
     call GetTargetSpeciesFamily
     cp $01
     jr z, .call_scale_damage_by3_over2
@@ -2482,8 +2484,9 @@ ActionEffect_ActionD3_SkillDamageScaledBySlotResistancesByte6Bits32::
     call ScaleDamageBy3Over2
     ret
 
-ActionEffect_ActionD4_SkillDamageScaledBySlotResistancesByte6Bits32::
-    call SkillDamageScaledBySlotResistancesByte6Bits32
+; SkillDamageScaledByGigaSlashResistance for action $D4 (E-0338)
+ActionEffect_ActionD4_ScaleByGigaSlashResistance::
+    call SkillDamageScaledByGigaSlashResistance
     call GetTargetSpeciesFamily
     cp $02
     jr z, .call_scale_damage_by3_over2
@@ -2646,9 +2649,9 @@ ActionEffect_Bang_RollSkillDamageFromRecord::
 ActionEffect_Infernos_RollSkillDamageFromRecord::
     call RollSkillDamageFromRecord
 
-; level = bits 7-6 of the target's wSlotResistances byte 1, then ScaleDamageByFlagsAtHL (HL from the
-; caller) (E-0115)
-ScaleDamageBySlotResistancesByte1Bits76::
+; scales the skill damage in HL by the target's Vacuum (byte 1, bits 7-6) resistance level (2 bits);
+; used by Vacuum and WindBeast (E-0338)
+ScaleDamageByVacuumResistance::
     call GetTargetSlotResistancesByte1
     rlca
     rlca
@@ -2656,12 +2659,14 @@ ScaleDamageBySlotResistancesByte1Bits76::
     call ScaleDamageByFlagsAtHL
     ret
 
-; RollSkillDamageFromRecord, then falls into the scale by bits 4-5 of the target's wSlotResistances
-; byte 1 (E-0126)
-RollSkillDamageThenScaleBySlotResistancesByte1::
+; rolls the skill's damage from its record, then ScaleDamageByBoltResistance; used by Bolt and
+; action $D0 (E-0338)
+RollSkillDamageScaledByBoltResistance::
     call RollSkillDamageFromRecord
 
-ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1::
+; scales the skill damage in HL by the target's Bolt (byte 1, bits 5-4) resistance level (2 bits);
+; used by Bolt, Lightning and action $D0 (E-0338)
+ScaleDamageByBoltResistance::
     call GetTargetSlotResistancesByte1
     swap a
     and $03
@@ -2939,9 +2944,10 @@ RaiseTargetDEF::
     xor a
     ret
 
-; level = bits 4-5 of the target's wSlotResistances byte 3 (stored in wBattleArg2; 4 when forced)
-; returns carry at 4; otherwise rolls the chance (sided for action $8C) (E-0124)
-RollTargetSlotResistancesByte3Bits45Chance::
+; rolls whether the action gets through the target's Sap (byte 3, bits 5-4) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by Sap and LushLicks; carry = it
+; gets through (E-0095, E-0338)
+RollVsSapResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte3
     swap a
@@ -3100,9 +3106,10 @@ RaiseTargetAGL::
     xor a
     ret
 
-; level = bits 2-3 of the target's wSlotResistances byte 3 (forced to 4 by bit 2 of the actor's
-; wPersonalityActs); level 4 returns carry, otherwise rolls the chance by the flags at HL (E-0122)
-RollTargetSlotResistancesByte3Bits23Chance::
+; rolls whether the action gets through the target's Slow (byte 3, bits 3-2) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by Slow; carry = it gets through
+; (E-0095, E-0338)
+RollVsSlowResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte3
     rrca
@@ -3188,9 +3195,9 @@ ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA::
     xor a
     ret
 
-; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wBattleStatus8 entry
-; and level = bits 5-4 of the target's wSlotResistances byte 0 (E-0115)
-AttackDamageScaledBySlotResistancesByte0Bits54::
+; scales the attack damage in HL by the target's Blaze (byte 0, bits 5-4) resistance level (2 bits);
+; used by FireSlash (E-0338)
+AttackDamageScaledByBlazeResistance::
     call ComputeAttackDamage
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte0
@@ -3199,9 +3206,9 @@ AttackDamageScaledBySlotResistancesByte0Bits54::
     call ScaleDamageByFlagsAtHLBit6
     ret
 
-; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wBattleStatus8 entry
-; and level = bits 7-6 of the target's wSlotResistances byte 1 (E-0115)
-AttackDamageScaledBySlotResistancesByte1Bits76::
+; scales the attack damage in HL by the target's Vacuum (byte 1, bits 7-6) resistance level (2
+; bits); used by VacuSlash (E-0338)
+AttackDamageScaledByVacuumResistance::
     call ComputeAttackDamage
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
@@ -3211,9 +3218,9 @@ AttackDamageScaledBySlotResistancesByte1Bits76::
     call ScaleDamageByFlagsAtHLBit6
     ret
 
-; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wBattleStatus8 entry
-; and level = bits 5-4 of the target's wSlotResistances byte 1 (E-0115)
-AttackDamageScaledBySlotResistancesByte1Bits54::
+; scales the attack damage in HL by the target's Bolt (byte 1, bits 5-4) resistance level (2 bits);
+; used by BoltSlash (E-0338)
+AttackDamageScaledByBoltResistance::
     call ComputeAttackDamage
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
@@ -3222,9 +3229,9 @@ AttackDamageScaledBySlotResistancesByte1Bits54::
     call ScaleDamageByFlagsAtHLBit6
     ret
 
-; ComputeAttackDamage, then ScaleDamageByFlagsAtHLBit6 with HL = the target's wBattleStatus8 entry
-; and level = bits 3-2 of the target's wSlotResistances byte 1 (E-0115)
-AttackDamageScaledBySlotResistancesByte1Bits32::
+; scales the attack damage in HL by the target's IceBolt (byte 1, bits 3-2) resistance level (2
+; bits); used by IceSlash (E-0338)
+AttackDamageScaledByIceBoltResistance::
     call ComputeAttackDamage
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
@@ -3337,9 +3344,10 @@ AttackDamageTimes1_5IfSlotDamageFlagsBit0::
 .return:
     ret
 
-; carry for action $82 or level 4; otherwise rolls by bits 0-1 of the target's wSlotResistances byte
-; 1 (RollChanceByHLBits6And7 for action $7E) (E-0124)
-RollTargetSlotResistancesByte1Bits01Chance::
+; rolls whether the action gets through the target's Radiant (byte 1, bits 1-0) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by Radiant; carry = it gets
+; through (E-0095, E-0338)
+RollVsRadiantResistance::
     ld a, [wBattleActionId]
     cp $82
     jr z, .return_carry
@@ -3368,9 +3376,10 @@ RollTargetSlotResistancesByte1Bits01Chance::
     call RollChanceByHLBits6And7
     ret
 
-; level = bits 2-3 of the target's wSlotResistances byte 2 (wBattleArg2; forced to 4): carry at 4,
-; otherwise RollChanceByFlagsAtHL (E-0127)
-RollTargetSlotResistancesByte2Bits23Chance::
+; rolls whether the action gets through the target's RobMagic (byte 2, bits 3-2) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by RobMagic and OddDance; carry
+; = it gets through (E-0095, E-0338)
+RollVsRobMagicResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte2
     rrca
@@ -3842,7 +3851,7 @@ ActionEffect_WindBeast_ShiftBCRight1::
     ld a, h
     ld [wBattleDamageHi], a
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
-    call ScaleDamageBySlotResistancesByte1Bits76
+    call ScaleDamageByVacuumResistance
     ret
 
 ActionEffect_Vacuum_ShiftBCRight1::
@@ -3900,7 +3909,7 @@ ActionEffect_Vacuum_ShiftBCRight1::
     ld a, h
     ld [wBattleDamageHi], a
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
-    call ScaleDamageBySlotResistancesByte1Bits76
+    call ScaleDamageByVacuumResistance
     ret
 
 ActionEffect_Lightning_ShiftBCRight1::
@@ -3971,7 +3980,7 @@ ActionEffect_Lightning_ShiftBCRight1::
     ld a, h
     ld [wBattleDamageHi], a
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
-    call ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1
+    call ScaleDamageByBoltResistance
     ret
 
 ActionEffect_MultiCut_LoadSkillRecord::
@@ -4025,9 +4034,9 @@ ActionEffect_MultiCut_LoadSkillRecord::
     call ScaleDamageByFlagsAtHLAlt
     ret
 
-; RollSkillDamageFromRecord, then ScaleDamageByFlagsAtHL with level = bits 3-2 of the target's
-; wSlotResistances byte 6 (E-0115)
-SkillDamageScaledBySlotResistancesByte6Bits32::
+; scales the skill damage in HL by the target's GigaSlash (byte 6, bits 3-2) resistance level (2
+; bits); used by GigaSlash and actions $D2-$D5 (E-0338)
+SkillDamageScaledByGigaSlashResistance::
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte6
     rrca
@@ -4135,10 +4144,10 @@ ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call RollChanceByFlagsAtHLSided
     ret
 
-; skips allies in modes 2/3; level = bits 4-5 of the target's wSlotResistances byte 2 (wBattleArg2):
-; carry at 4, else the chance (sided for actions below $13, $14 and $79; RollChanceByHLBits6And7 for
-; $82) (E-0125)
-RollTargetSlotResistancesByte2Bits45Chance::
+; rolls whether the action gets through the target's Beat (byte 2, bits 5-4) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by Beat and UltraDown; carry =
+; it gets through (E-0095, E-0338)
+RollVsBeatResistance::
     call ZIfAllyActorInBattleKindMode2Or3
     jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
@@ -4176,11 +4185,12 @@ RollTargetSlotResistancesByte2Bits45Chance::
     call RollChanceByHLBits6And7
     ret
 
-; HL = the target's wBattleStatus8 entry; level = bits 3-2 of the target's wSlotResistances byte 5
-; (GetTargetSlotResistancesByte5); for actions $7A, $8E and $90 success is certain when
-; ForceLevel4IfActorConcentrated returns 4, else RollChanceByFlagsAtHLSided; other actions use
-; RollChanceByFlagsAtHL; carry = success (E-0096)
-RollChanceVsTargetSlotResistancesByte5Bits23::
+; HL = the target's wBattleStatus8 entry; level = the target's LegSweep resistance (byte 5, bits
+; 3-2); for actions $7A, $8E and $90 success is certain when ForceLevel4IfActorConcentrated returns
+; 4, else RollChanceByFlagsAtHLSided; other actions use RollChanceByFlagsAtHL; used by Ahhh,
+; LegSweep, LureDance, LushLicks and WarCry; carry = success (E-0096, E-0338; was
+; RollChanceVsTargetSlotResistancesByte5Bits23)
+RollVsLegSweepResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte5
     rrca
@@ -4468,13 +4478,14 @@ StoreBCAtWordEntryLoadSlot::
     ld [hl], b
     ret
 
-ActionEffect_LegSweep_RollChanceVsTargetSlotResistancesByte5Bits23::
+; RollVsLegSweepResistance for LegSweep (E-0338)
+ActionEffect_LegSweep_RollVsLegSweepResistance::
     ld a, [wBattleTarget]
     ld hl, wSlotBodyFlags
     add_a_to_hl
     bit 4, [hl]
     ret nz
-    call RollChanceVsTargetSlotResistancesByte5Bits23
+    call RollVsLegSweepResistance
     ret
 
 ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36::
@@ -4688,9 +4699,10 @@ ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3::
     call RollChanceForLevelA_6346
     ret
 
-; rolls skill damage, then by bits 6-7 of the target's wSlotResistances byte 2 (wBattleArg2): carry
-; at level 4, else the chance (unsided for action $2F) (E-0124)
-RollTargetSlotResistancesByte2Bits67Chance::
+; rolls whether the action gets through the target's Sleep (byte 2, bits 7-6) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by Sleep and
+; ResolveStep0EEffect; carry = it gets through (E-0095, E-0338)
+RollVsSleepResistance::
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte2
     rlca
@@ -4942,10 +4954,11 @@ ActionEffect_Watershot_RollSkillDamageFromRecord::
     call ScaleDamageByFlagsAtHL
     ret
 
-; level = bits 0-1 of the target's wSlotResistances byte 4 (forced to 4 by bit 2 of the actor's
-; wPersonalityActs); level 4 returns carry; otherwise rolls the sided chance, E = 0 on carry else 1
-; (E-0122)
-RollTargetSlotResistancesByte4Bits01ChanceToE::
+; rolls whether the action gets through the target's PoisonGas (byte 4, bits 1-0) resistance (a
+; 2-bit level; certain when ForceLevel4IfActorConcentrated gives 4); used by PoisonGas,
+; InflictStatus0Bit0... and ResolveStep0EEffect; carry = it gets through (E-0095, E-0338) (sided
+; roll)
+RollVsPoisonGasResistance::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte4
     and $03
@@ -4962,9 +4975,10 @@ RollTargetSlotResistancesByte4Bits01ChanceToE::
     ld e, $01
     ret
 
-; skips allies in modes 2/3; otherwise level = bits 6-7 of the target's wSlotResistances byte 5:
-; carry at 4, else the sided chance with E = 0 on carry, 1 otherwise (E-0124)
-RollTargetSlotResistancesByte5Bits67ChanceToE::
+; rolls whether the action gets through the target's PalsyAir (byte 5, bits 7-6) resistance (a 2-bit
+; level; certain when ForceLevel4IfActorConcentrated gives 4); used by PalsyAir and
+; ResolveStep0EEffect; carry = it gets through (E-0095, E-0338) (sided roll)
+RollVsPalsyAirResistance::
     call ZIfAllyActorInBattleKindMode2Or3
     jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
@@ -4985,8 +4999,9 @@ RollTargetSlotResistancesByte5Bits67ChanceToE::
     ld e, $01
     ret
 
-ResolveStep0EEffect_Case00_RollTargetSlotResistancesByte2Bits67Chance::
-    call RollTargetSlotResistancesByte2Bits67Chance
+; RollVsSleepResistance for resolve step $0E (E-0338)
+ResolveStep0EEffect_RollVsSleepResistance::
+    call RollVsSleepResistance
     ld e, $00
     ret c
     ld e, $01
@@ -5098,48 +5113,50 @@ RollDamageBaseToBasePlusBattleArg2::
     ld [wBattleDamageHi], a
     ret
 
-; A = byte 0 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + 7 * target); DE points at it (E-0095)
+; A = byte 0 of the target's 7-byte resistance record (wSlotResistances + 0 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte0::
     ld de, wSlotResistances
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 1 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $1 + 7 * target); DE points at it (E-0095)
+; A = byte 1 of the target's 7-byte resistance record (wSlotResistances + 1 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte1::
     ld de, wSlotResistances + $1
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 2 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $2 + 7 * target); DE points at it (E-0095)
+; A = byte 2 of the target's 7-byte resistance record (wSlotResistances + 2 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte2::
     ld de, wSlotResistances + $2
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 3 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $3 + 7 * target); DE points at it (E-0095)
+; A = byte 3 of the target's 7-byte resistance record (wSlotResistances + 3 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte3::
     ld de, wSlotResistances + $3
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 4 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $4 + 7 * target); DE points at it (E-0095)
+; A = byte 4 of the target's 7-byte resistance record (wSlotResistances + 4 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte4::
     ld de, wSlotResistances + $4
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 5 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $5 + 7 * target); DE points at it (E-0095)
+; A = byte 5 of the target's 7-byte resistance record (wSlotResistances + 5 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte5::
     ld de, wSlotResistances + $5
-    jr GetTargetSlotResistancesByte6_ReadBattleTarget
+    jr GetTargetResistanceByte
 
-; A = byte 6 of wBattleTarget's 7-byte record at wSlotResistances + 7 * target (that is,
-; wSlotResistances + $6 + 7 * target); DE points at it (E-0095)
+; A = byte 6 of the target's 7-byte resistance record (wSlotResistances + 6 + 7 * wBattleTarget); DE
+; points at it; its four 2-bit fields are in wSlotResistances's note (E-0095, E-0338)
 GetTargetSlotResistancesByte6::
     ld de, wSlotResistances + $6
 
-GetTargetSlotResistancesByte6_ReadBattleTarget::
+; A = the byte at DE + 7 * wBattleTarget: byte DE - wSlotResistances of the target's resistance
+; record (GetTargetSlotResistancesByte0-6 load DE); DE points at it (E-0095, E-0338)
+GetTargetResistanceByte::
     ld a, [wBattleTarget]
     ld b, a
     add a
@@ -6242,7 +6259,7 @@ ActionEffectTable::
     dw ActionEffect_Slow ; entry 43
     dw ActionEffect_Slow ; entry 44
     dw ActionEffect_TwinHits ; entry 45
-    dw ResolveStepDamageMessage_Sub04_RollTargetSlotResistancesByte1Bits01Chance ; entry 46
+    dw ResolveStepDamageMessage_RollVsRadiantResistance ; entry 46
     dw ActionEffect_Sleep ; entry 47
     dw ActionEffect_Sleep ; entry 48
     dw ActionEffect_TakeMagic ; entry 49
@@ -6441,7 +6458,7 @@ ActionEffectTable::
 ; wBattleActionId) for action(s) $D0; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD0::
-    call RollSkillDamageThenScaleBySlotResistancesByte1
+    call RollSkillDamageScaledByBoltResistance
     farcall RunA3414FAndMarkWDA5B3
     jp ActionEffect_ActionCF_Skip
 
@@ -6457,7 +6474,7 @@ ActionEffect_ActionD1::
 ; wBattleActionId) for action(s) $D2; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD2::
-    call ActionEffect_ActionD2_SkillDamageScaledBySlotResistancesByte6Bits32
+    call ActionEffect_ActionD2_ScaleByGigaSlashResistance
     farcall RunA3414FAndMarkWDA5B3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6465,7 +6482,7 @@ ActionEffect_ActionD2::
 ; wBattleActionId) for action(s) $D3; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD3::
-    call ActionEffect_ActionD3_SkillDamageScaledBySlotResistancesByte6Bits32
+    call ActionEffect_ActionD3_ScaleByGigaSlashResistance
     farcall RunA3414FAndMarkWDA5B3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6473,7 +6490,7 @@ ActionEffect_ActionD3::
 ; wBattleActionId) for action(s) $D4; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD4::
-    call ActionEffect_ActionD4_SkillDamageScaledBySlotResistancesByte6Bits32
+    call ActionEffect_ActionD4_ScaleByGigaSlashResistance
     farcall RunA3414FAndMarkWDA5B3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6481,7 +6498,7 @@ ActionEffect_ActionD4::
 ; wBattleActionId) for action(s) $D5; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD5::
-    call SkillDamageScaledBySlotResistancesByte6Bits32
+    call SkillDamageScaledByGigaSlashResistance
     farcall RunA3414FAndMarkWDA5B3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6844,7 +6861,7 @@ ActionEffect_Infernos::
 ; wBattleActionId) for action(s) 13 Bolt, 14 Zap, 15 Thordain, 63 Hellblast; ids below 175 are
 ; skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_Bolt::
-    call RollSkillDamageThenScaleBySlotResistancesByte1
+    call RollSkillDamageScaledByBoltResistance
     jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6858,7 +6875,7 @@ ActionEffect_IceBolt::
 ; wBattleActionId) for action(s) 19 Beat, 20 Defeat, 121 K.O.Dance; ids below 175 are skills named
 ; from StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_Beat::
-    call RollTargetSlotResistancesByte2Bits45Chance
+    call RollVsBeatResistance
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleHP
@@ -7234,7 +7251,7 @@ ActionEffect_Upper::
 ; wBattleActionId) for action(s) 39 Sap, 40 Defense; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_Sap::
-    call RollTargetSlotResistancesByte3Bits45Chance
+    call RollVsSapResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ActionEffect_UltraDown_SetSlotStatus6Bit7::
@@ -7279,7 +7296,7 @@ ActionEffect_Speed::
 ; for action(s) 43 Slow, 44 SlowAll; the misaligned decoding before E-0126 hid this entry; the body
 ; is not interpreted (E-0126)
 ActionEffect_Slow::
-    call RollTargetSlotResistancesByte3Bits23Chance
+    call RollVsSlowResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01::
@@ -7313,13 +7330,14 @@ ActionEffect_TwinHits::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
-ResolveStepDamageMessage_Sub04_RollTargetSlotResistancesByte1Bits01Chance::
+; RollVsRadiantResistance during the damage message step (E-0338)
+ResolveStepDamageMessage_RollVsRadiantResistance::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
     jr nz, .check_resolve_msg_flags
-    call RollTargetSlotResistancesByte1Bits01Chance
+    call RollVsRadiantResistance
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -7349,7 +7367,7 @@ ActionEffect_Sleep::
     and $8c
     jr nz, .skip2
     push hl
-    call RollTargetSlotResistancesByte2Bits67Chance
+    call RollVsSleepResistance
     pop hl
     jr nc, .check_battle_action_id
     ld a, [hl]
@@ -7404,7 +7422,7 @@ ActionEffect_RobMagic::
     jp z, .skip3
     ld a, [wBattleActionId]
     cp $df
-    jr z, .call_roll_target_slot_resistances_byte2
+    jr z, .call_roll_vs_rob_magic_resistance
     ld a, [wBattleActor]
     call GetBattleMP
     ld a, [wBattleActor]
@@ -7424,8 +7442,8 @@ ActionEffect_RobMagic::
     call CompareHLToBC
     jr nc, .skip3
 
-.call_roll_target_slot_resistances_byte2:
-    call RollTargetSlotResistancesByte2Bits23Chance
+.call_roll_vs_rob_magic_resistance:
+    call RollVsRobMagicResistance
     jr nc, .skip3
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -7878,28 +7896,28 @@ ActionEffect_CallHelp::
 ; for action(s) 80 FireSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_FireSlash::
-    call AttackDamageScaledBySlotResistancesByte0Bits54
+    call AttackDamageScaledByBlazeResistance
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 81 VacuSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_VacuSlash::
-    call AttackDamageScaledBySlotResistancesByte1Bits76
+    call AttackDamageScaledByVacuumResistance
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 82 BoltSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_BoltSlash::
-    call AttackDamageScaledBySlotResistancesByte1Bits54
+    call AttackDamageScaledByBoltResistance
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 83 IceSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_IceSlash::
-    call AttackDamageScaledBySlotResistancesByte1Bits32
+    call AttackDamageScaledByIceBoltResistance
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -8051,7 +8069,7 @@ ActionEffect_MultiCut::
 ; for action(s) 103 GigaSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_GigaSlash::
-    call SkillDamageScaledBySlotResistancesByte6Bits32
+    call SkillDamageScaledByGigaSlashResistance
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -8215,7 +8233,7 @@ ActionEffect_PalsyAir::
     bit 6, [hl]
     jr nz, .skip2
     push hl
-    call RollTargetSlotResistancesByte5Bits67ChanceToE
+    call RollVsPalsyAirResistance
     pop hl
     jr c, .skip
     ld h, $b5
@@ -8244,15 +8262,15 @@ ActionEffect_PoisonGas::
     ld a, [hl]
     and $03
     jr nz, .skip4
-    jr .call_roll_target_slot_resistances_byte4
+    jr .call_roll_vs_poison_gas_resistance
 
 .skip:
     bit 1, [hl]
     jr nz, .skip4
 
-.call_roll_target_slot_resistances_byte4:
+.call_roll_vs_poison_gas_resistance:
     push hl
-    call RollTargetSlotResistancesByte4Bits01ChanceToE
+    call RollVsPoisonGasResistance
     pop hl
     jr c, .check_battle_action_id
     ld h, $b5
@@ -8316,7 +8334,7 @@ ActionEffect_OddDance::
     ld a, [hli]
     or [hl]
     jr z, .skip
-    call RollTargetSlotResistancesByte2Bits23Chance
+    call RollVsRobMagicResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
     call DrainTargetMPAmount
     ld l, $57
@@ -8333,7 +8351,7 @@ ActionEffect_LureDance::
     call TargetStatus3Address
     bit 1, [hl]
     jr nz, .skip2
-    call RollChanceVsTargetSlotResistancesByte5Bits23
+    call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
     set 1, [hl]
@@ -8424,7 +8442,7 @@ ActionEffect_Radiant_ReadBattleTarget::
     bit 1, [hl]
     jr nz, .skip2
     push de
-    call RollTargetSlotResistancesByte1Bits01Chance
+    call RollVsRadiantResistance
     pop de
     jr nc, .skip
     ld a, [wBattleTarget]
@@ -8489,7 +8507,7 @@ ActionEffect_Surge::
 ; wBattleActionId) for action(s) 130 UltraDown; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ActionEffect_UltraDown::
-    call RollTargetSlotResistancesByte2Bits45Chance
+    call RollVsBeatResistance
     jr nc, .skip
     call ActionEffect_UltraDown_ReadBattleTarget
     jr nc, .skip
@@ -8610,12 +8628,12 @@ ActionEffect_LushLicks::
     jr nz, .skip3
     ld a, [wBattleActionId]
     cp $8c
-    jr z, .call_roll_target_slot_resistances_byte3
-    call RollChanceVsTargetSlotResistancesByte5Bits23
+    jr z, .call_roll_vs_sap_resistance
+    call RollVsLegSweepResistance
     jr .skip
 
-.call_roll_target_slot_resistances_byte3:
-    call RollTargetSlotResistancesByte3Bits45Chance
+.call_roll_vs_sap_resistance:
+    call RollVsSapResistance
 
 .skip:
     jr nc, .skip2
@@ -8656,7 +8674,7 @@ ActionEffect_LegSweep::
     call TargetStatus3Address
     bit 2, [hl]
     jp nz, SetSubPhase2AndResetResolveStep_CheckOriginalTarget
-    call ActionEffect_LegSweep_RollChanceVsTargetSlotResistancesByte5Bits23
+    call ActionEffect_LegSweep_RollVsLegSweepResistance
     jr nc, .read_battle_target
     call TargetStatus3Address
     set 2, [hl]
@@ -8685,7 +8703,7 @@ ActionEffect_Ahhh::
     call TargetStatus3Address
     bit 5, [hl]
     jr nz, .skip2
-    call RollChanceVsTargetSlotResistancesByte5Bits23
+    call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
     set 5, [hl]
@@ -8709,7 +8727,7 @@ ActionEffect_WarCry::
     call TargetStatus3Address
     bit 4, [hl]
     jr nz, .skip2
-    call RollChanceVsTargetSlotResistancesByte5Bits23
+    call RollVsLegSweepResistance
     jr nc, .skip
     call TargetStatus3Address
     set 4, [hl]
@@ -9833,10 +9851,10 @@ EffectHandlerTable::
     dw ActionEffect_Watershot_RollSkillDamageFromRecord ; entry 6
     dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 7
     dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 8
-    dw AttackDamageScaledBySlotResistancesByte0Bits54 ; entry 9
-    dw AttackDamageScaledBySlotResistancesByte1Bits76 ; entry 10
-    dw AttackDamageScaledBySlotResistancesByte1Bits54 ; entry 11
-    dw AttackDamageScaledBySlotResistancesByte1Bits32 ; entry 12
+    dw AttackDamageScaledByBlazeResistance ; entry 9
+    dw AttackDamageScaledByVacuumResistance ; entry 10
+    dw AttackDamageScaledByBoltResistance ; entry 11
+    dw AttackDamageScaledByIceBoltResistance ; entry 12
     dw AttackDamageHalvedDEFVsSlime ; entry 13
     dw AttackDamageHalvedDEFVsDragon ; entry 14
     dw AttackDamageHalvedDEFVsBeast ; entry 15
@@ -9856,7 +9874,7 @@ EffectHandlerTable::
     dw ActionEffect_BiAttack_ShiftHLRight1 ; entry 29
     dw ComputeAttackDamage ; entry 30
     dw ComputeAttackDamage ; entry 31
-    dw SkillDamageScaledBySlotResistancesByte6Bits32 ; entry 32
+    dw SkillDamageScaledByGigaSlashResistance ; entry 32
     dw ComputeAttackDamage ; entry 33
     dw ActionEffect_PsycheUp ; entry 34
     dw ComputeAttackDamage ; entry 35

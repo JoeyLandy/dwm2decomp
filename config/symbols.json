@@ -4276,7 +4276,7 @@
   },
   "D814": {
     "name": "wBattleStatus8",
-    "note": "status byte 8 (array base, stride 9; RollChanceVsTargetSlotResistancesByte5Bits23)",
+    "note": "status byte 8 (array base, stride 9; RollVsLegSweepResistance)",
     "evidence": "E-0137"
   },
   "D854": {
@@ -4588,8 +4588,8 @@
   },
   "DA72": {
     "name": "wSlotResistances",
-    "note": "8 seven-byte resistance records, one per slot (GetTargetSlotResistancesByte0-6; 2-bit levels)",
-    "evidence": "E-0137",
+    "note": "8 seven-byte resistance records, one per battle slot: 27 two-bit levels (0 none to 3 strongest), named by the skills whose effects read them: byte 0: bits 1-0 Bang, 3-2 Firebal, 5-4 Blaze, 7-6 Watershot (Geyser); byte 1: 1-0 Radiant, 3-2 IceBolt, 5-4 Bolt, 7-6 Vacuum; byte 2: 1-0 StopSpell, 3-2 RobMagic, 5-4 Beat, 7-6 Sleep; byte 3: 1-0 Sacrifice, 3-2 Slow, 5-4 Sap, 7-6 PanicAll; byte 4: 1-0 PoisonGas, 3-2 FrigidAir, 5-4 FireAir, 7-6 MegaMagic; byte 5: 1-0 DanceShut, 3-2 LegSweep (Ahhh, LureDance, LushLicks, WarCry), 5-4 Curse, 7-6 PalsyAir; byte 6: 3-2 GigaSlash, 5-4 RockThrow (CallHelp), 7-6 MouthShut, 1-0 not read by an effect (E-0137; fields E-0338: each effect's shift and mask read; the skill of each effect routine is C2 from E-0333; RESIST_* in records.inc give the record order)",
+    "evidence": "E-0137; E-0338",
     "size": "38"
   },
   "DAAA": {

@@ -2125,7 +2125,7 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
     and $03
     jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
     push hl
-    farcall RollTargetSlotResistancesByte4Bits01ChanceToE
+    farcall RollVsPoisonGasResistance
     pop hl
     ld a, e
     or a

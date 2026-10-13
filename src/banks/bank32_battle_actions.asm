@@ -4610,7 +4610,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     and $03
     jp nz, SetBattleSubStep1
     push hl
-    farcall RollTargetSlotResistancesByte4Bits01ChanceToE
+    farcall RollVsPoisonGasResistance
     pop hl
     ld a, e
     or a
@@ -4638,7 +4638,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     bit 6, [hl]
     jp nz, SetBattleSubStep1
     push hl
-    farcall RollTargetSlotResistancesByte5Bits67ChanceToE
+    farcall RollVsPalsyAirResistance
     pop hl
     ld a, e
     or a
@@ -4666,7 +4666,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     bit 7, [hl]
     jp nz, SetBattleSubStep1
     push hl
-    farcall ResolveStep0EEffect_Case00_RollTargetSlotResistancesByte2Bits67Chance
+    farcall ResolveStep0EEffect_RollVsSleepResistance
     pop hl
     ld a, e
     or a

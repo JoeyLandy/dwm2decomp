@@ -115,5 +115,6 @@
       "04": {"const": "SCRIPTOBJ_X", "note": "X position (hSpriteOriginX = this + 8 + scroll)", "evidence": "E-0300"},
       "05": {"const": "SCRIPTOBJ_Y", "note": "Y position (hSpriteOriginY = this + 16 + scroll)", "evidence": "E-0300"}
     }
-  }
+  },
+  "resistances": {"note": "the 27 resistances in record order (MON_RESISTANCES, BATTLER_RESISTANCES, SPECIES_RESISTANCES), named by the skills whose effects read each packed field; PackResistanceFieldsToDE puts index 26 in byte 0 bits 7-6, indexes 0-2 in byte 0 bits 5-0, then four per byte from index 3 (E-0338)", "names": ["BLAZE", "FIREBAL", "BANG", "VACUUM", "BOLT", "ICEBOLT", "RADIANT", "SLEEP", "BEAT", "ROBMAGIC", "STOPSPELL", "PANICALL", "SAP", "SLOW", "SACRIFICE", "MEGAMAGIC", "FIREAIR", "FRIGIDAIR", "POISONGAS", "PALSYAIR", "CURSE", "LEGSWEEP", "DANCESHUT", "MOUTHSHUT", "ROCKTHROW", "GIGASLASH", "WATERSHOT"]}
 }

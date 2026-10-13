@@ -5807,7 +5807,11 @@ def main() -> int:
         + "\n; Offsets into a 16-byte field object slot (wObject1-4; config/record_fields.json \"object\", E-0300).\n"
         + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(extra["object"].items()))
         + "\n; Offsets into the script meta-sprite object (wObject5; \"script_object\", E-0300).\n"
-        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(extra["script_object"].items())),
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(extra["script_object"].items()))
+        + ("\n; The resistances, by index into MON_RESISTANCES, BATTLER_RESISTANCES and SPECIES_RESISTANCES: "
+           + rec_cfg["resistances"]["note"] + "\n"
+           + "".join(f"DEF RESIST_{n} EQU {i}\n" for i, n in enumerate(rec_cfg["resistances"]["names"]))
+           + f"DEF NUM_RESISTANCES EQU {len(rec_cfg['resistances']['names'])}\n" if "resistances" in rec_cfg else ""),
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
