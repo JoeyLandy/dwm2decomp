@@ -4517,8 +4517,8 @@
   },
   "D989": {
     "name": "wBattleSkills",
-    "note": "skills of the 8 battle slots, 16 bytes each (8 skill numbers at even offsets; SlotHasSkillWithFlagD)",
-    "evidence": "E-0137",
+    "note": "skills of the 8 battle slots, 16 bytes each (8 skill numbers at even offsets; SlotHasSkillWithFlagD) (C2 from E-0332: every skill the AI scores in a battle, other than Fight and Guard, is among these eight per slot)",
+    "evidence": "E-0137; E-0332",
     "size": "80"
   },
   "DA2C": {

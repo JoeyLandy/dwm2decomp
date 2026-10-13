@@ -485,7 +485,7 @@ Func_005_420F:: ; address name
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wBattleStatus3) & $C0 and byte 4 (wBattleStatus4) & $0C both clear, else 0 (E-0071)
-; 11 call sites from 11 routines (e.g. AIScore_Skill00_Conditions, AIFunc74D1AndFoeLacksStatus3And4, CheckSkillUsableElseResetAISkillScore, AIScore_PsycheUp_Conditions, ...)
+; 11 call sites from 11 routines (e.g. AIScore_Fight_Conditions, AIFunc74D1AndFoeLacksStatus3And4, CheckSkillUsableElseResetAISkillScore, AIScore_PsycheUp_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus3, wBattleStatus4
 AnyFoeLacksStatus3And4Bits::
@@ -890,7 +890,7 @@ Func_005_43F2:: ; address name
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with DEF (GetBattleDEF_Bank05) of 2 or more, else 0 (E-0099)
-; 3 call sites from 3 routines (e.g. AIScore_TwinSlash_Conditions, AIScore_Skill00, AIScore_SickLick)
+; 3 call sites from 3 routines (e.g. AIScore_TwinSlash_Conditions, AIScore_Fight, AIScore_SickLick)
 ; reads: wBattleActor
 AnyFoeHasDEFAtLeast2::
 Func_005_443B:: ; address name
@@ -2381,7 +2381,7 @@ Func_005_4B00:: ; address name
     ret
 
 ; C = $FF when at least two of the actor's three opposite slots are present, else 0 (the opposite of FewerThanTwoFoesPresent) (E-0100)
-; 5 call sites from 5 routines (e.g. AIScore_RainSlash_Conditions, AIScore_Skill00, AIScore_Sacrifice, AIScore_FireAir, ...)
+; 5 call sites from 5 routines (e.g. AIScore_RainSlash_Conditions, AIScore_Fight, AIScore_Sacrifice, AIScore_FireAir, ...)
 ; reads: wBattleActor
 AtLeastTwoFoesPresent::
 Func_005_4B3D:: ; address name
@@ -2635,7 +2635,7 @@ Func_005_4C40:: ; address name
     ret
 
 ; counts the present slots among the actor's three opposite slots (D = the last one found); when fewer than two are present and that foe's HP (GetBattleHP_Bank05) is below the word wAIDamageEstimates[2 * (slot & 3)], C = 0; otherwise C = $FF. With no foe present D is not set by this routine (E-0091)
-; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Conditions, AIIronizeUsable, AIScore_Dodge_Sub01_Conditions, AIScore_Skill00, ...)
+; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Conditions, AIIronizeUsable, AIScore_Dodge_Sub01_Conditions, AIScore_Fight, ...)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
 CheckLoneFoeHPNotBelowAIDamageEstimates::
@@ -2736,7 +2736,7 @@ Func_005_4C9C:: ; address name
     ret
 
 ; C = 1 when the AI mode (wSlotAIMode[actor]) is below 3; otherwise C = 0 when one of the actor's three opposite slots is present with status byte 7 (wBattleStatus7) bit 2 set, else $FF (E-0099)
-; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow)
+; 3 call sites from 3 routines (e.g. AIScore_Fight, AIScore_FireSlash, AIScore_SlimeBlow)
 ; reads: wBattleActor
 ; points at: wBattleStatus6
 CheckFoeStatus7Bit2::
@@ -4026,7 +4026,7 @@ Func_005_53A5:: ; address name
     ret
 
 ; C = 0 when the actor's status byte 1 (wBattleStatus1) & $0C or byte 4 & $03 is set, else C = $FF (E-0072)
-; 14 call sites from 14 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Skill00, AIScore_CallHelp, AIScore_FireSlash, ...)
+; 14 call sites from 14 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Fight, AIScore_CallHelp, AIScore_FireSlash, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
 ActorLacksStatus1Bits23And4Bits01::
@@ -4250,7 +4250,7 @@ Func_005_544F:: ; address name
     ret
 
 ; C = 0
-; 73 call sites from 73 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AINeverUsableResetAISkillScore, AIScore_Skill00, AIScore_Blaze, ...)
+; 73 call sites from 73 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AINeverUsableResetAISkillScore, AIScore_Fight, AIScore_Blaze, ...)
 SetCToZero::
 Func_005_54FD:: ; address name
     ld c, $00
@@ -7336,7 +7336,7 @@ Func_005_6452:: ; address name
     ret
 
 ; C = 0 when wLinkMode is 0 and wBattleKind is below 2, else C = $FF (E-0100)
-; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
+; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_Fight, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wLinkMode, wBattleKind
 CheckBattleKindAtLeast2OrLinkModeSet::
 Func_005_6481:: ; address name
@@ -7354,7 +7354,7 @@ Func_005_6481:: ; address name
     ret
 
 ; meant to give C = $00 when a foe's HP is below 4 * its wAIDamageEstimates word; it never advances C (first foe only, three times) and deref_hl leaves the estimate's low byte in A, so GetBattleHP_Bank05 reads the HP of that slot number: C = $00 when HP[estimate & $FF] < 4 * estimate, else $FF (a likely game bug; executed, test FoeHPCheckReadsWrongSlot) (E-0125, E-0154)
-; 4 call sites from 4 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit)
+; 4 call sites from 4 routines (e.g. AIScore_Fight, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
 FoeHPCheckReadsWrongSlot::
@@ -7399,7 +7399,7 @@ Func_005_6494:: ; address name
     ret
 
 ; C = 0 when wLinkMode is 0 and the actor is in slots 4-7, else C = $FF (E-0100)
-; 3 call sites from 3 routines (e.g. AIScore_Skill00, AIScore_RockThrow, AIScore_PoisonHit)
+; 3 call sites from 3 routines (e.g. AIScore_Fight, AIScore_RockThrow, AIScore_PoisonHit)
 ; reads: wLinkMode, wBattleActor
 CheckActorSlot0To3OrLinkModeSet::
 Func_005_64CC:: ; address name
@@ -8239,7 +8239,7 @@ Func_005_689C:: ; address name
     ret
 
 ; apparently meant to test the actor's status byte 4 (wBattleStatus4 + 9 * actor) & $03 like the neighbouring checks, but it never loads the byte: it tests A & 3 where A is the low byte of that address left by AddAx9ToHL. So C = $FF for slots 0 and 4 and C = 0 for slots 1, 2, 5 and 6 whatever the status (a likely bug; executed, test Status4CheckReadsAddress) (E-0075)
-; 8 call sites from 8 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
+; 8 call sites from 8 routines (e.g. AIScore_ChargeUp_Conditions, AIScore_Fight, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
 ActorStatus4CheckReadsAddress::
@@ -8318,7 +8318,7 @@ Func_005_6985:: ; address name
     ret
 
 ; C = 0 when the actor's status byte 2 (wBattleStatus2) bit 1 or byte 4 & $03 is set, else C = $FF (E-0072)
-; 14 call sites from 14 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit, ...)
+; 14 call sites from 14 routines (e.g. AIScore_Fight, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
 ActorLacksStatus2Bit1And4Bits01::
@@ -8517,7 +8517,7 @@ Func_005_6A6B:: ; address name
     ret
 
 ; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF
-; 108 call sites from 108 routines (e.g. AIScore_Skill00_Conditions, AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, ...)
+; 108 call sites from 108 routines (e.g. AIScore_Fight_Conditions, AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, ...)
 ; writes: wAISkillScore, wAISkillScore2
 ResetAISkillScore::
 Func_005_6AE8:: ; address name
@@ -9648,9 +9648,9 @@ Func_005_7058:: ; address name
     xor a, a
     ret
 
-; the conditions of AIScore_Skill00: calls AnyFoeLacksStatus3And4Bits, ResetAISkillScore in turn and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
-; 1 call site from 1 routine (e.g. AIScore_Skill00)
-AIScore_Skill00_Conditions::
+; the conditions of AIScore_Fight: calls AnyFoeLacksStatus3And4Bits, ResetAISkillScore in turn and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; 1 call site from 1 routine (e.g. AIScore_Fight)
+AIScore_Fight_Conditions::
 Func_005_7080:: ; address name
     call AnyFoeLacksStatus3And4Bits
     ld a, c

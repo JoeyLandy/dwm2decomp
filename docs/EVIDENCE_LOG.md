@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0332 — The AI's per-skill scoring routines, checked in battle
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware) and TOOL, forced through the debug battle.
+- **Varying the foes.** The debug battle screen keeps its fields as words in wWorkBuf. +$0 is the foe count and +$2 the first "Monster" row, a MonsterTable template id: the foes of the first debug battle were Slimes, template 1. +$C and +$E are the first Species and Level rows.
+  - Writing +$C/+$E changed nothing in 25 battles. Writing +$2 changes the foes.
+  - A sweep over templates (every sixth id) adds several hundred named routines (build/states/coverage.json; not pinned).
+- **The check.** tools/ai_check.py records the skill number in A at each call of ScoreSkillForAI (30:$4BA0) and pairs it with the next AIScore_* routine that starts. Each pair must match two things:
+  - the ROM table that ScoreSkillForAI indexes (AIScoreRoutineTableA or B, three bytes per skill);
+  - a skill held by some battle slot in wBattleSkills (8 slots of 16 bytes, skills at even offsets).
+- **Result.** Over seven templates there are 550 calls to 25 routines and no mismatch.
+  - My first version took the held skills from the battler records' four BATTLER_SKILLS. That missed skills such as BigBang, FireAir and DeMagic, which are in wBattleSkills, so wBattleSkills is the list the battle uses (C2).
+- **Fight and Guard.** Skills 0 (no name in the skill table) and $AC ("Guard") are scored on every monster's turn although no record holds them, as the Command menu offers Fight / Skill / Guard. So skill 0 is the plain attack, and AIScore_Skill00 and its conditions are renamed AIScore_Fight and AIScore_Fight_Conditions (C2).
+- **Tests.** tests/test_ai_check.py runs three battles (templates 95, 295, 370; about 110 s). It requires no mismatch and more than 10 routines, and has a negative control: a routine paired with a random other skill is that skill's table entry less than 15% of the time.
+- Binary verification: build/run467 PASS, 0 differing bytes; tests OK (231, skipped=3).
+
 ### E-0331 — Hibernation, TinyMedals, key appraisal and the swap menu; two RAM names corrected
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: each script is started by its RAM bytes on Main Street.

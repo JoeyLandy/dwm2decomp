@@ -3899,7 +3899,7 @@ Data_030_55F3:: ; address name
 ; record: AI scoring routine for this skill number; its ROM bank
 AIScoreRoutineTableA::
 Data_030_5785:: ; address name
-    dfar AIScore_Skill00 ; id 0
+    dfar AIScore_Fight ; id 0
     dfar AIScore_Blaze ; id 1
     dfar AIScore_Blaze ; id 2
     dfar AIScore_Blaze ; id 3
@@ -4105,7 +4105,7 @@ Data_030_5785:: ; address name
 ; record: AI scoring routine for this skill number; its ROM bank
 AIScoreRoutineTableB::
 Data_030_59E0:: ; address name
-    dfar AIScore_Skill00 ; id 0
+    dfar AIScore_Fight ; id 0
     dfar AIScore_Blaze ; id 1
     dfar AIScore_Blaze ; id 2
     dfar AIScore_Blaze ; id 3

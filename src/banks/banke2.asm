@@ -1,11 +1,11 @@
 SECTION "Bank E2", ROMX[$4000], BANK[$E2]
     db $E2
 
-; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 0 (no name). It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 0 (no name). It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083) (E-0332: skill 0 is Fight, the plain attack: with Guard (skill $AC) it is scored on every monster's turn whether or not any record holds it, as the Command menu offers Fight / Skill / Guard; C2) (was AIScore_Skill00)
 ; no direct call (reached through a table, a jump or a vector)
-AIScore_Skill00:: ; heuristic: follows a terminator; C0
+AIScore_Fight:: ; heuristic: follows a terminator; C0
 Func_0E2_4001:: ; address name
-    farcall AIScore_Skill00_Conditions
+    farcall AIScore_Fight_Conditions
     ld a, c
     and a, a
     ret z
@@ -5255,7 +5255,7 @@ Func_0E2_64C1:: ; address name
     db $C9
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wAISkillScore; a positive word is added to wAISkillScore; a negative word's magnitude is added to wAISkillScore2
-; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 304 call sites from 118 routines (e.g. AIScore_Fight, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore, wAISkillScore2
 AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
@@ -5289,7 +5289,7 @@ Func_0E2_64CE:: ; address name
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wAISkillScore2, negative words' magnitude goes to wAISkillScore
-; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 223 call sites from 89 routines (e.g. AIScore_Fight, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore2, wAISkillScore
 AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
