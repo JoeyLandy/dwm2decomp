@@ -91,6 +91,12 @@ MACRO jumptable
     rst $00
 ENDM
 
+; Two bytes into a register pair, as pret writes it: `lb bc, 20, 8` is `ld bc, $1408` (B = 20, C = 8).
+; src/ uses it before calls to the rectangle routines, which take B = width and C = rows (D-008).
+MACRO lb
+    ld \\1, ((\\2) & $FF) << 8 | ((\\3) & $FF)
+ENDM
+
 ; Event script commands (E-0152). FetchScriptCommand (bank $10) reads one opcode byte and
 ; the inline bytes of the dedicated opcodes; any other opcode is a command type with no
 ; inline bytes. Relative targets are forward offsets from the byte after the offset
@@ -4894,7 +4900,7 @@ class Rom:
             def suffix(f: dict | None) -> str:
                 if not fc or f is None:
                     return "" if tagged else tag
-                return (tag + ": " if not tagged else " ; ") + f["name"]
+                return (tag + ": " if not tagged else " ; ") + f.get("short", f["name"])  # a short per-line name
 
             def flush(f: dict | None = None) -> None:
                 nonlocal tagged

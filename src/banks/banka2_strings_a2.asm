@@ -84,564 +84,1680 @@ CopyBytesDEFromHL_BankA2::
 ; personality axis copied to offset $70 (weight 1); byte 24: copied to offset $71 (not used by
 ; PersonalityIndexOfRecord); byte 25: personality axis copied to offset $72 (weight 3)
 MonsterTableA2::
-    db $18, $00 ; id 592 GoldSlime
-    db SKILL_CHANCE
-    db SKILL_HUSTLE
-    db SKILL_DEMAGIC
-    db SKILL_DODGE
-    db $ee, $d9, $06, $55, $e8, $01, $9d, $00, $11, $02, $e7, $03, $f5, $01, $13, $03, $46, $be, $c8, $96
-    db $40, $00 ; id 593 Divinegon
-    db SKILL_HELLBLAST
-    db SKILL_HIGHJUMP
-    db SKILL_BAZOOCALL
-    db SKILL_STORMWIND
-    db $a8, $9b, $06, $57, $19, $03, $52, $00, $c6, $02, $d0, $02, $03, $02, $e3, $02, $aa, $be, $96, $96
-    db $60, $00 ; id 594 KingLeo
-    db SKILL_BOUNCE
-    db SKILL_AQUACUT
-    db SKILL_WARCRY
-    db SKILL_LIFESONG
-    db $e1, $86, $06, $56, $46, $03, $47, $01, $a5, $02, $ae, $01, $fe, $01, $e4, $02, $c8, $b4, $96, $96
-    db $81, $00 ; id 595 RainHawk
-    db SKILL_BEAT
-    db SKILL_BIGBANG
-    db SKILL_MULTICUT
-    db SKILL_SURGE
-    db $59, $7e, $06, $58, $ef, $02, $6f, $00, $87, $02, $6c, $02, $1a, $02, $cf, $02, $82, $c8, $78, $96
-    db $a2, $00 ; id 596 Rosevine
-    db SKILL_DEFENSE
-    db SKILL_WHITEAIR
-    db SKILL_GIGASLASH
-    db SKILL_SLEEPAIR
-    db $73, $8b, $06, $5c, $19, $03, $80, $00, $9f, $02, $41, $02, $fa, $01, $14, $03, $50, $6e, $c8, $96
-    db $c6, $00 ; id 597 Armorpion
-    db SKILL_TAKEMAGIC
-    db SKILL_PARALYZE
-    db SKILL_MASSACRE
-    db SKILL_SEALPRAY
-    db $f1, $85, $06, $5b, $d9, $02, $08, $02, $66, $02, $80, $02, $30, $02, $ec, $02, $8c, $8c, $aa, $96
-    db $ee, $00 ; id 598 Durran
-    db SKILL_IRONIZE
-    db SKILL_MULTICUT
-    db SKILL_EERIELITE
-    db SKILL_BAZOOCALL
-    db $8d, $b7, $06, $5d, $00, $03, $18, $02, $dd, $02, $17, $02, $40, $02, $fc, $02, $c8, $1e, $c8, $96
-    db $56, $01 ; id 599 Aquadon
-    db SKILL_TIDALWAVE
-    db SKILL_ULTRADOWN
-    db SKILL_GEYSER
-    db SKILL_STRONGD
-    db $a4, $9c, $06, $5c, $22, $03, $10, $01, $b1, $02, $10, $02, $1a, $02, $de, $02, $5a, $c8, $c8, $96
-    db $a4, $00 ; id 600 Warubou
-    db SKILL_MPASSMOST
-    db SKILL_DEMAGIC
-    db $ff
-    db $ff
-    db $00, $00, $00, $32, $ac, $01, $4c, $02, $8f, $01, $b0, $01, $6a, $01, $a6, $01, $96, $96, $96, $64
-    db $a4, $00 ; id 601 Warubou
-    db SKILL_MPASS
-    db SKILL_PHEROMONE
-    db $ff
-    db $ff
-    db $00, $00, $00, $28, $41, $01, $78, $01, $08, $01, $3f, $01, $17, $01, $5d, $01, $c8, $32, $32, $96
-    db $0a, $01 ; id 602 Skeletor
-    db SKILL_FIRESLASH
-    db SKILL_VACUSLASH
-    db SKILL_BOLTSLASH
-    db $ff
-    db $00, $00, $00, $2b, $55, $01, $35, $01, $5d, $01, $3d, $01, $0b, $01, $91, $01, $78, $82, $5a, $64
-    db $33, $01 ; id 603 StoneMan
-    db SKILL_RAMMING
-    db SKILL_SURGE
-    db SKILL_GEYSER
-    db $ff
-    db $00, $00, $00, $36, $d3, $01, $ba, $01, $ac, $01, $78, $01, $4b, $01, $e0, $01, $78, $a0, $82, $64
-    db $80, $00 ; id 604 FunkyBird
-    db SKILL_KODANCE
-    db SKILL_LIFEDANCE
-    db SKILL_DANCESHUT
-    db $ff
-    db $00, $00, $00, $2e, $74, $01, $5f, $01, $69, $01, $47, $01, $cb, $01, $b1, $01, $64, $96, $82, $64
-    db $0d, $01 ; id 605 Copycat
-    db SKILL_TRANSFORM
-    db SKILL_BEDRAGON
-    db SKILL_LIFESONG
-    db $ff
-    db $00, $00, $00, $35, $73, $01, $46, $02, $f8, $00, $a1, $01, $ca, $01, $f4, $01, $14, $c8, $b4, $64
-    db $33, $00 ; id 606 Andreal
-    db SKILL_HEALUS
-    db SKILL_ULTRADOWN
-    db SKILL_SEALPRAY
-    db $ff
-    db $00, $00, $00, $3b, $f6, $01, $47, $01, $ad, $01, $bf, $01, $e9, $01, $ab, $01, $b4, $8c, $8c, $64
-    db $2c, $00 ; id 607 Drygon
-    db SKILL_WHITEAIR
-    db SKILL_METALCUT
-    db SKILL_SICKLICK
-    db $ff
-    db $00, $00, $07, $28, $e0, $01, $d2, $00, $b0, $01, $a5, $02, $0e, $01, $f4, $01, $64, $28, $6e, $96
-    db $1b, $00 ; id 608 Butch
-    db SKILL_THORDAIN
-    db SKILL_BEDRAGON
-    db SKILL_DEMAGIC
-    db $ff
-    db $28, $00, $07, $00, $f3, $02, $42, $01, $23, $02, $ee, $00, $84, $02, $f4, $01, $c8, $c8, $c8, $96
-    db $5a, $01 ; id 609 Pumpoise
-    db SKILL_THORDAIN
-    db SKILL_BOUNCE
-    db SKILL_HUSTLE
-    db $ff
-    db $00, $00, $07, $28, $20, $03, $84, $01, $ee, $00, $ff, $00, $4a, $01, $f4, $01, $50, $96, $96, $96
-    db $61, $01 ; id 610 LordDraco
-    db SKILL_EVILSLASH
-    db SKILL_EERIELITE
-    db SKILL_SUCKALL
-    db $ff
-    db $00, $00, $07, $46, $e7, $03, $2c, $01, $58, $02, $fa, $00, $18, $01, $e7, $03, $fa, $c8, $c8, $c8
-    db $df, $00 ; id 611 Lionex
-    db SKILL_BOLT
-    db SKILL_MASSACRE
-    db SKILL_ULTRADOWN
-    db $ff
-    db $00, $00, $00, $01, $32, $00, $19, $00, $28, $00, $1e, $00, $1e, $00, $50, $00, $fa, $c8, $c8, $64
-    db $7f, $00 ; id 612 WhipBird
-    db SKILL_WINDBEAST
-    db SKILL_DANCESHUT
-    db SKILL_SEALPRAY
-    db $ff
-    db $00, $00, $00, $01, $1e, $00, $32, $00, $1e, $00, $23, $00, $28, $00, $64, $00, $64, $96, $c8, $64
-    db $33, $01 ; id 613 StoneMan
-    db SKILL_STRONGD
-    db SKILL_SUCKALL
-    db $ff
-    db $ff
-    db $b5, $1c, $05, $2a, $56, $01, $01, $01, $f8, $00, $c5, $00, $dc, $00, $fa, $00, $96, $14, $46, $64
-    db $07, $01 ; id 614 DeadNoble
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $00, $00, $00, $01, $78, $00, $5e, $00, $71, $00, $5b, $00, $52, $00, $69, $00, $1e, $14, $0f, $64
-    db $17, $00 ; id 615 MetalKing
-    db SKILL_HEALUSALL
-    db SKILL_HELLBLAST
-    db SKILL_SURGE
-    db SKILL_DANCESHUT
-    db $d4, $c6, $06, $54, $42, $01, $61, $00, $7a, $01, $e7, $03, $fd, $01, $86, $02, $1e, $64, $5a, $96
-    db $3f, $00 ; id 616 Serpentia
-    db SKILL_VACUUM
-    db SKILL_NAPATTACK
-    db SKILL_FOCUS
-    db SKILL_SUCKALL
-    db $01, $60, $06, $53, $de, $02, $d1, $00, $58, $02, $a9, $01, $f1, $01, $3d, $02, $6e, $6e, $6e, $96
-    db $52, $00 ; id 617 IronTurt
-    db SKILL_BLAZEMOST
-    db SKILL_TAKEMAGIC
-    db SKILL_METALCUT
-    db SKILL_SICKLICK
-    db $cf, $53, $06, $53, $88, $02, $ac, $01, $a3, $01, $6b, $02, $57, $01, $7a, $02, $64, $78, $64, $96
-    db $7d, $00 ; id 618 ZapBird
-    db SKILL_MPASSMOST
-    db SKILL_VACUSLASH
-    db SKILL_MULTICUT
-    db SKILL_SICKLICK
-    db $7b, $60, $06, $55, $75, $02, $93, $00, $73, $02, $d8, $01, $41, $02, $a7, $02, $5a, $14, $64, $96
-    db $a7, $00 ; id 619 FooHero
-    db SKILL_EXPLODET
-    db SKILL_YELLHELP
-    db SKILL_PALSYAIR
-    db SKILL_PHEROMONE
-    db $7f, $57, $06, $56, $d8, $02, $a7, $00, $59, $02, $f1, $01, $99, $01, $87, $02, $c8, $c8, $1e, $96
-    db $e0, $00 ; id 620 GoatHorn
-    db SKILL_INFERMOST
-    db SKILL_QUADHITS
-    db SKILL_GEYSER
-    db SKILL_GUARDIAN
-    db $ad, $5b, $06, $55, $74, $02, $5c, $01, $73, $02, $08, $02, $41, $02, $a7, $02, $5a, $14, $64, $96
-    db $04, $01 ; id 621 Inverzon
-    db SKILL_SHEARS
-    db SKILL_CHARGEUP
-    db SKILL_SLEEPAIR
-    db SKILL_ROBDANCE
-    db $41, $66, $06, $56, $89, $02, $9e, $00, $38, $02, $cd, $01, $be, $01, $08, $02, $1e, $1e, $1e, $96
-    db $23, $01 ; id 622 Voodoll
-    db SKILL_ANTIDOTE
-    db SKILL_DECHAOS
-    db SKILL_NUMBOFF
-    db SKILL_POISONAIR
-    db $ae, $68, $06, $57, $9a, $02, $4e, $01, $26, $02, $06, $02, $a1, $01, $b0, $02, $0a, $0a, $0a, $96
-    db $51, $01 ; id 623 AxeShark
-    db SKILL_FIREBOLT
-    db SKILL_RAINSLASH
-    db SKILL_MASSACRE
-    db SKILL_STRONGD
-    db $12, $87, $06, $56, $2b, $03, $e9, $00, $bd, $02, $f2, $01, $ab, $01, $0a, $02, $c8, $78, $c8, $96
-    db $54, $01 ; id 624 Digong
-    db SKILL_TWINHITS
-    db SKILL_HELLBLAST
-    db SKILL_BEASTCUT
-    db SKILL_SANDSTORM
-    db $4d, $96, $06, $58, $e7, $02, $84, $00, $60, $02, $c4, $01, $97, $01, $0a, $02, $14, $c8, $c8, $96
-    db $2b, $00 ; id 625 Swordgon
-    db SKILL_REVIVE
-    db SKILL_CURSEOFF
-    db SKILL_LIGHTNING
-    db SKILL_AQUACUT
-    db $e9, $85, $06, $55, $e8, $01, $48, $00, $56, $02, $08, $02, $f5, $01, $6d, $02, $fa, $3c, $1e, $96
-    db $42, $00 ; id 626 GigaDraco
-    db SKILL_PANICALL
-    db SKILL_WHITEAIR
-    db SKILL_DEVILCUT
-    db SKILL_LOVERAIN
-    db $3c, $a0, $06, $57, $19, $03, $55, $00, $cb, $02, $e9, $01, $47, $01, $5a, $02, $32, $28, $0a, $96
-    db $51, $00 ; id 627 SuperTen
-    db SKILL_LIFEDANCE
-    db SKILL_HUSTLE
-    db SKILL_THICKFOG
-    db SKILL_DANCESHUT
-    db $e1, $86, $06, $57, $7e, $02, $62, $00, $fd, $01, $93, $01, $f9, $01, $e4, $02, $c8, $78, $c8, $96
-    db $75, $00 ; id 628 BigRoost
-    db SKILL_HEALUS
-    db SKILL_STOPSPELL
-    db SKILL_ROCKTHROW
-    db SKILL_BUGBLOW
-    db $59, $7e, $06, $58, $6b, $02, $72, $00, $00, $02, $c0, $01, $1a, $02, $1b, $02, $28, $c8, $28, $96
-    db $a1, $00 ; id 629 GhosTree
-    db SKILL_DEFEAT
-    db SKILL_SLEEPALL
-    db SKILL_DRAKSLASH
-    db SKILL_CURSE
-    db $43, $7a, $06, $5c, $dd, $02, $3a, $00, $0a, $02, $a2, $01, $92, $01, $61, $02, $1e, $a0, $0a, $96
-    db $c3, $00 ; id 630 WarMantis
-    db SKILL_SLOWALL
-    db SKILL_METALCUT
-    db SKILL_GIGASLASH
-    db SKILL_RADIANT
-    db $f1, $85, $06, $5b, $4d, $02, $8f, $00, $4c, $02, $db, $01, $97, $01, $a1, $02, $c8, $c8, $28, $96
-    db $0b, $00 ; id 631 Healer
-    db SKILL_HEAL
-    db $ff
-    db $ff
-    db $ff
-    db $69, $00, $01, $08, $1f, $00, $09, $00, $15, $00, $14, $00, $12, $00, $5b, $00, $14, $46, $46, $64
-    db $7e, $01 ; id 632 Kagebou
-    db SKILL_BEDRAGON
-    db SKILL_CHANCE
-    db SKILL_TATSUCALL
-    db $ff
-    db $00, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $bc, $02, $64, $00, $c8, $32, $96, $c8
-    db $7d, $01 ; id 633 Dimensaur
-    db SKILL_MEGAMAGIC
-    db SKILL_HELLBLAST
-    db SKILL_WHITEFIRE
-    db $ff
-    db $00, $00, $00, $01, $0a, $00, $0a, $00, $bc, $02, $0a, $00, $0a, $00, $0a, $00, $c8, $c8, $96, $c8
-    db $7c, $01 ; id 634 Lamia
-    db SKILL_HEALUS
-    db SKILL_MPASS
-    db SKILL_VIVIFY
-    db $ff
-    db $00, $00, $00, $32, $f4, $01, $bc, $02, $f4, $01, $bc, $02, $58, $02, $58, $02, $64, $fa, $c8, $c8
-    db $5f, $01 ; id 635 DracoLord
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $60, $01 ; id 636 DracoLord
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $61, $01 ; id 637 LordDraco
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $62, $01 ; id 638 Hargon
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $63, $01 ; id 639 Sidoh
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $64, $01 ; id 640 Genosidoh
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $65, $01 ; id 641 Baramos
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $66, $01 ; id 642 Zoma
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $67, $01 ; id 643 AsuraZoma
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $19, $c8
-    db $68, $01 ; id 644 Pizzaro
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $69, $01 ; id 645 PsychoPiz
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6a, $01 ; id 646 Esterk
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6b, $01 ; id 647 Mirudraas
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6c, $01 ; id 648 Mirudraas
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6d, $01 ; id 649 Mudou
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6e, $01 ; id 650 DeathMore
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $6f, $01 ; id 651 DeathMore
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $70, $01 ; id 652 DeathMore
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $71, $01 ; id 653 Darkdrium
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $72, $01 ; id 654 Orgodemir
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $73, $01 ; id 655 Orgodemir
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $74, $01 ; id 656 Darck
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $16, $00 ; id 657 HaloSlime
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $18, $00 ; id 658 GoldSlime
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $19, $00 ; id 659 GranSlime
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $1a, $00 ; id 660 WonderEgg
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $41, $00 ; id 661 Orligon
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $42, $00 ; id 662 GigaDraco
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $61, $00 ; id 663 DarkHorn
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $64, $00 ; id 664 Gorago
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $81, $00 ; id 665 RainHawk
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $82, $00 ; id 666 Azurile
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $83, $00 ; id 667 Shantak
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $a5, $00 ; id 668 Watabou
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $a4, $00 ; id 669 Warubou
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $a3, $00 ; id 670 Egdracil
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $c7, $00 ; id 671 Digster
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $c8, $00 ; id 672 Skularach
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $ef, $00 ; id 673 Titanis
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $f0, $00 ; id 674 LampGenie
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $10, $01 ; id 675 Niterich
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $08, $01 ; id 676 WhiteKing
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $0c, $01 ; id 677 Lazamanus
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $35, $01 ; id 678 GoldGolem
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $36, $01 ; id 679 DarkMate
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $52, $01 ; id 680 Octogon
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $57, $01 ; id 681 Octoraid
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $58, $01 ; id 682 Grakos
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $59, $01 ; id 683 Poseidon
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $64, $00, $00, $0a, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $64, $00, $fa, $fa, $fa, $c8
-    db $0a, $00 ; id 684 Slime
-    db $ff
-    db $ff
-    db $ff
-    db $ff
-    db $ff, $ff, $07, $01, $01, $00, $01, $00, $01, $00, $01, $00, $01, $00, $01, $00, $01, $01, $01, $01
+    dw MONSTER_GOLDSLIME ; id 592 GoldSlime: picture: monster id
+    db SKILL_CHANCE ; skill 1
+    db SKILL_HUSTLE ; skill 2
+    db SKILL_DEMAGIC ; skill 3
+    db SKILL_DODGE ; skill 4
+    dw 55790 ; EXP
+    db $06 ; join-chance class
+    db $55 ; level
+    dw 488 ; base HP
+    dw 157 ; base MP
+    dw 529 ; base ATK
+    dw 999 ; base DEF
+    dw 501 ; base AGL
+    dw 787 ; base INT
+    db $46 ; personality axis $6F
+    db $be ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_DIVINEGON ; id 593 Divinegon: picture: monster id
+    db SKILL_HELLBLAST ; skill 1
+    db SKILL_HIGHJUMP ; skill 2
+    db SKILL_BAZOOCALL ; skill 3
+    db SKILL_STORMWIND ; skill 4
+    dw 39848 ; EXP
+    db $06 ; join-chance class
+    db $57 ; level
+    dw 793 ; base HP
+    dw 82 ; base MP
+    dw 710 ; base ATK
+    dw 720 ; base DEF
+    dw 515 ; base AGL
+    dw 739 ; base INT
+    db $aa ; personality axis $6F
+    db $be ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_KINGLEO ; id 594 KingLeo: picture: monster id
+    db SKILL_BOUNCE ; skill 1
+    db SKILL_AQUACUT ; skill 2
+    db SKILL_WARCRY ; skill 3
+    db SKILL_LIFESONG ; skill 4
+    dw 34529 ; EXP
+    db $06 ; join-chance class
+    db $56 ; level
+    dw 838 ; base HP
+    dw 327 ; base MP
+    dw 677 ; base ATK
+    dw 430 ; base DEF
+    dw 510 ; base AGL
+    dw 740 ; base INT
+    db $c8 ; personality axis $6F
+    db $b4 ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_RAINHAWK ; id 595 RainHawk: picture: monster id
+    db SKILL_BEAT ; skill 1
+    db SKILL_BIGBANG ; skill 2
+    db SKILL_MULTICUT ; skill 3
+    db SKILL_SURGE ; skill 4
+    dw 32345 ; EXP
+    db $06 ; join-chance class
+    db $58 ; level
+    dw 751 ; base HP
+    dw 111 ; base MP
+    dw 647 ; base ATK
+    dw 620 ; base DEF
+    dw 538 ; base AGL
+    dw 719 ; base INT
+    db $82 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $78 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_ROSEVINE ; id 596 Rosevine: picture: monster id
+    db SKILL_DEFENSE ; skill 1
+    db SKILL_WHITEAIR ; skill 2
+    db SKILL_GIGASLASH ; skill 3
+    db SKILL_SLEEPAIR ; skill 4
+    dw 35699 ; EXP
+    db $06 ; join-chance class
+    db $5c ; level
+    dw 793 ; base HP
+    dw 128 ; base MP
+    dw 671 ; base ATK
+    dw 577 ; base DEF
+    dw 506 ; base AGL
+    dw 788 ; base INT
+    db $50 ; personality axis $6F
+    db $6e ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_ARMORPION ; id 597 Armorpion: picture: monster id
+    db SKILL_TAKEMAGIC ; skill 1
+    db SKILL_PARALYZE ; skill 2
+    db SKILL_MASSACRE ; skill 3
+    db SKILL_SEALPRAY ; skill 4
+    dw 34289 ; EXP
+    db $06 ; join-chance class
+    db $5b ; level
+    dw 729 ; base HP
+    dw 520 ; base MP
+    dw 614 ; base ATK
+    dw 640 ; base DEF
+    dw 560 ; base AGL
+    dw 748 ; base INT
+    db $8c ; personality axis $6F
+    db $8c ; personality axis $70
+    db $aa ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_DURRAN ; id 598 Durran: picture: monster id
+    db SKILL_IRONIZE ; skill 1
+    db SKILL_MULTICUT ; skill 2
+    db SKILL_EERIELITE ; skill 3
+    db SKILL_BAZOOCALL ; skill 4
+    dw 46989 ; EXP
+    db $06 ; join-chance class
+    db $5d ; level
+    dw 768 ; base HP
+    dw 536 ; base MP
+    dw 733 ; base ATK
+    dw 535 ; base DEF
+    dw 576 ; base AGL
+    dw 764 ; base INT
+    db $c8 ; personality axis $6F
+    db $1e ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_AQUADON ; id 599 Aquadon: picture: monster id
+    db SKILL_TIDALWAVE ; skill 1
+    db SKILL_ULTRADOWN ; skill 2
+    db SKILL_GEYSER ; skill 3
+    db SKILL_STRONGD ; skill 4
+    dw 40100 ; EXP
+    db $06 ; join-chance class
+    db $5c ; level
+    dw 802 ; base HP
+    dw 272 ; base MP
+    dw 689 ; base ATK
+    dw 528 ; base DEF
+    dw 538 ; base AGL
+    dw 734 ; base INT
+    db $5a ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_WARUBOU ; id 600 Warubou: picture: monster id
+    db SKILL_MPASSMOST ; skill 1
+    db SKILL_DEMAGIC ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $32 ; level
+    dw 428 ; base HP
+    dw 588 ; base MP
+    dw 399 ; base ATK
+    dw 432 ; base DEF
+    dw 362 ; base AGL
+    dw 422 ; base INT
+    db $96 ; personality axis $6F
+    db $96 ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_WARUBOU ; id 601 Warubou: picture: monster id
+    db SKILL_MPASS ; skill 1
+    db SKILL_PHEROMONE ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $28 ; level
+    dw 321 ; base HP
+    dw 376 ; base MP
+    dw 264 ; base ATK
+    dw 319 ; base DEF
+    dw 279 ; base AGL
+    dw 349 ; base INT
+    db $c8 ; personality axis $6F
+    db $32 ; personality axis $70
+    db $32 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_SKELETOR ; id 602 Skeletor: picture: monster id
+    db SKILL_FIRESLASH ; skill 1
+    db SKILL_VACUSLASH ; skill 2
+    db SKILL_BOLTSLASH ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $2b ; level
+    dw 341 ; base HP
+    dw 309 ; base MP
+    dw 349 ; base ATK
+    dw 317 ; base DEF
+    dw 267 ; base AGL
+    dw 401 ; base INT
+    db $78 ; personality axis $6F
+    db $82 ; personality axis $70
+    db $5a ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_STONEMAN ; id 603 StoneMan: picture: monster id
+    db SKILL_RAMMING ; skill 1
+    db SKILL_SURGE ; skill 2
+    db SKILL_GEYSER ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $36 ; level
+    dw 467 ; base HP
+    dw 442 ; base MP
+    dw 428 ; base ATK
+    dw 376 ; base DEF
+    dw 331 ; base AGL
+    dw 480 ; base INT
+    db $78 ; personality axis $6F
+    db $a0 ; personality axis $70
+    db $82 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_FUNKYBIRD ; id 604 FunkyBird: picture: monster id
+    db SKILL_KODANCE ; skill 1
+    db SKILL_LIFEDANCE ; skill 2
+    db SKILL_DANCESHUT ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $2e ; level
+    dw 372 ; base HP
+    dw 351 ; base MP
+    dw 361 ; base ATK
+    dw 327 ; base DEF
+    dw 459 ; base AGL
+    dw 433 ; base INT
+    db $64 ; personality axis $6F
+    db $96 ; personality axis $70
+    db $82 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_COPYCAT ; id 605 Copycat: picture: monster id
+    db SKILL_TRANSFORM ; skill 1
+    db SKILL_BEDRAGON ; skill 2
+    db SKILL_LIFESONG ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $35 ; level
+    dw 371 ; base HP
+    dw 582 ; base MP
+    dw 248 ; base ATK
+    dw 417 ; base DEF
+    dw 458 ; base AGL
+    dw 500 ; base INT
+    db $14 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $b4 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_ANDREAL ; id 606 Andreal: picture: monster id
+    db SKILL_HEALUS ; skill 1
+    db SKILL_ULTRADOWN ; skill 2
+    db SKILL_SEALPRAY ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $3b ; level
+    dw 502 ; base HP
+    dw 327 ; base MP
+    dw 429 ; base ATK
+    dw 447 ; base DEF
+    dw 489 ; base AGL
+    dw 427 ; base INT
+    db $b4 ; personality axis $6F
+    db $8c ; personality axis $70
+    db $8c ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_DRYGON ; id 607 Drygon: picture: monster id
+    db SKILL_WHITEAIR ; skill 1
+    db SKILL_METALCUT ; skill 2
+    db SKILL_SICKLICK ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $07 ; join-chance class
+    db $28 ; level
+    dw 480 ; base HP
+    dw 210 ; base MP
+    dw 432 ; base ATK
+    dw 677 ; base DEF
+    dw 270 ; base AGL
+    dw 500 ; base INT
+    db $64 ; personality axis $6F
+    db $28 ; personality axis $70
+    db $6e ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_BUTCH ; id 608 Butch: picture: monster id
+    db SKILL_THORDAIN ; skill 1
+    db SKILL_BEDRAGON ; skill 2
+    db SKILL_DEMAGIC ; skill 3
+    db $ff ; skill 4
+    dw 40 ; EXP
+    db $07 ; join-chance class
+    db $00 ; level
+    dw 755 ; base HP
+    dw 322 ; base MP
+    dw 547 ; base ATK
+    dw 238 ; base DEF
+    dw 644 ; base AGL
+    dw 500 ; base INT
+    db $c8 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_PUMPOISE ; id 609 Pumpoise: picture: monster id
+    db SKILL_THORDAIN ; skill 1
+    db SKILL_BOUNCE ; skill 2
+    db SKILL_HUSTLE ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $07 ; join-chance class
+    db $28 ; level
+    dw 800 ; base HP
+    dw 388 ; base MP
+    dw 238 ; base ATK
+    dw 255 ; base DEF
+    dw 330 ; base AGL
+    dw 500 ; base INT
+    db $50 ; personality axis $6F
+    db $96 ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_LORDDRACO ; id 610 LordDraco: picture: monster id
+    db SKILL_EVILSLASH ; skill 1
+    db SKILL_EERIELITE ; skill 2
+    db SKILL_SUCKALL ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $07 ; join-chance class
+    db $46 ; level
+    dw 999 ; base HP
+    dw 300 ; base MP
+    dw 600 ; base ATK
+    dw 250 ; base DEF
+    dw 280 ; base AGL
+    dw 999 ; base INT
+    db $fa ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_LIONEX ; id 611 Lionex: picture: monster id
+    db SKILL_BOLT ; skill 1
+    db SKILL_MASSACRE ; skill 2
+    db SKILL_ULTRADOWN ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $01 ; level
+    dw 50 ; base HP
+    dw 25 ; base MP
+    dw 40 ; base ATK
+    dw 30 ; base DEF
+    dw 30 ; base AGL
+    dw 80 ; base INT
+    db $fa ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_WHIPBIRD ; id 612 WhipBird: picture: monster id
+    db SKILL_WINDBEAST ; skill 1
+    db SKILL_DANCESHUT ; skill 2
+    db SKILL_SEALPRAY ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $01 ; level
+    dw 30 ; base HP
+    dw 50 ; base MP
+    dw 30 ; base ATK
+    dw 35 ; base DEF
+    dw 40 ; base AGL
+    dw 100 ; base INT
+    db $64 ; personality axis $6F
+    db $96 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_STONEMAN ; id 613 StoneMan: picture: monster id
+    db SKILL_STRONGD ; skill 1
+    db SKILL_SUCKALL ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 7349 ; EXP
+    db $05 ; join-chance class
+    db $2a ; level
+    dw 342 ; base HP
+    dw 257 ; base MP
+    dw 248 ; base ATK
+    dw 197 ; base DEF
+    dw 220 ; base AGL
+    dw 250 ; base INT
+    db $96 ; personality axis $6F
+    db $14 ; personality axis $70
+    db $46 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_DEADNOBLE ; id 614 DeadNoble: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $01 ; level
+    dw 120 ; base HP
+    dw 94 ; base MP
+    dw 113 ; base ATK
+    dw 91 ; base DEF
+    dw 82 ; base AGL
+    dw 105 ; base INT
+    db $1e ; personality axis $6F
+    db $14 ; personality axis $70
+    db $0f ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_METALKING ; id 615 MetalKing: picture: monster id
+    db SKILL_HEALUSALL ; skill 1
+    db SKILL_HELLBLAST ; skill 2
+    db SKILL_SURGE ; skill 3
+    db SKILL_DANCESHUT ; skill 4
+    dw 50900 ; EXP
+    db $06 ; join-chance class
+    db $54 ; level
+    dw 322 ; base HP
+    dw 97 ; base MP
+    dw 378 ; base ATK
+    dw 999 ; base DEF
+    dw 509 ; base AGL
+    dw 646 ; base INT
+    db $1e ; personality axis $6F
+    db $64 ; personality axis $70
+    db $5a ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_SERPENTIA ; id 616 Serpentia: picture: monster id
+    db SKILL_VACUUM ; skill 1
+    db SKILL_NAPATTACK ; skill 2
+    db SKILL_FOCUS ; skill 3
+    db SKILL_SUCKALL ; skill 4
+    dw 24577 ; EXP
+    db $06 ; join-chance class
+    db $53 ; level
+    dw 734 ; base HP
+    dw 209 ; base MP
+    dw 600 ; base ATK
+    dw 425 ; base DEF
+    dw 497 ; base AGL
+    dw 573 ; base INT
+    db $6e ; personality axis $6F
+    db $6e ; personality axis $70
+    db $6e ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_IRONTURT ; id 617 IronTurt: picture: monster id
+    db SKILL_BLAZEMOST ; skill 1
+    db SKILL_TAKEMAGIC ; skill 2
+    db SKILL_METALCUT ; skill 3
+    db SKILL_SICKLICK ; skill 4
+    dw 21455 ; EXP
+    db $06 ; join-chance class
+    db $53 ; level
+    dw 648 ; base HP
+    dw 428 ; base MP
+    dw 419 ; base ATK
+    dw 619 ; base DEF
+    dw 343 ; base AGL
+    dw 634 ; base INT
+    db $64 ; personality axis $6F
+    db $78 ; personality axis $70
+    db $64 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_ZAPBIRD ; id 618 ZapBird: picture: monster id
+    db SKILL_MPASSMOST ; skill 1
+    db SKILL_VACUSLASH ; skill 2
+    db SKILL_MULTICUT ; skill 3
+    db SKILL_SICKLICK ; skill 4
+    dw 24699 ; EXP
+    db $06 ; join-chance class
+    db $55 ; level
+    dw 629 ; base HP
+    dw 147 ; base MP
+    dw 627 ; base ATK
+    dw 472 ; base DEF
+    dw 577 ; base AGL
+    dw 679 ; base INT
+    db $5a ; personality axis $6F
+    db $14 ; personality axis $70
+    db $64 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_FOOHERO ; id 619 FooHero: picture: monster id
+    db SKILL_EXPLODET ; skill 1
+    db SKILL_YELLHELP ; skill 2
+    db SKILL_PALSYAIR ; skill 3
+    db SKILL_PHEROMONE ; skill 4
+    dw 22399 ; EXP
+    db $06 ; join-chance class
+    db $56 ; level
+    dw 728 ; base HP
+    dw 167 ; base MP
+    dw 601 ; base ATK
+    dw 497 ; base DEF
+    dw 409 ; base AGL
+    dw 647 ; base INT
+    db $c8 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $1e ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_GOATHORN ; id 620 GoatHorn: picture: monster id
+    db SKILL_INFERMOST ; skill 1
+    db SKILL_QUADHITS ; skill 2
+    db SKILL_GEYSER ; skill 3
+    db SKILL_GUARDIAN ; skill 4
+    dw 23469 ; EXP
+    db $06 ; join-chance class
+    db $55 ; level
+    dw 628 ; base HP
+    dw 348 ; base MP
+    dw 627 ; base ATK
+    dw 520 ; base DEF
+    dw 577 ; base AGL
+    dw 679 ; base INT
+    db $5a ; personality axis $6F
+    db $14 ; personality axis $70
+    db $64 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_INVERZON ; id 621 Inverzon: picture: monster id
+    db SKILL_SHEARS ; skill 1
+    db SKILL_CHARGEUP ; skill 2
+    db SKILL_SLEEPAIR ; skill 3
+    db SKILL_ROBDANCE ; skill 4
+    dw 26177 ; EXP
+    db $06 ; join-chance class
+    db $56 ; level
+    dw 649 ; base HP
+    dw 158 ; base MP
+    dw 568 ; base ATK
+    dw 461 ; base DEF
+    dw 446 ; base AGL
+    dw 520 ; base INT
+    db $1e ; personality axis $6F
+    db $1e ; personality axis $70
+    db $1e ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_VOODOLL ; id 622 Voodoll: picture: monster id
+    db SKILL_ANTIDOTE ; skill 1
+    db SKILL_DECHAOS ; skill 2
+    db SKILL_NUMBOFF ; skill 3
+    db SKILL_POISONAIR ; skill 4
+    dw 26798 ; EXP
+    db $06 ; join-chance class
+    db $57 ; level
+    dw 666 ; base HP
+    dw 334 ; base MP
+    dw 550 ; base ATK
+    dw 518 ; base DEF
+    dw 417 ; base AGL
+    dw 688 ; base INT
+    db $0a ; personality axis $6F
+    db $0a ; personality axis $70
+    db $0a ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_AXESHARK ; id 623 AxeShark: picture: monster id
+    db SKILL_FIREBOLT ; skill 1
+    db SKILL_RAINSLASH ; skill 2
+    db SKILL_MASSACRE ; skill 3
+    db SKILL_STRONGD ; skill 4
+    dw 34578 ; EXP
+    db $06 ; join-chance class
+    db $56 ; level
+    dw 811 ; base HP
+    dw 233 ; base MP
+    dw 701 ; base ATK
+    dw 498 ; base DEF
+    dw 427 ; base AGL
+    dw 522 ; base INT
+    db $c8 ; personality axis $6F
+    db $78 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_DIGONG ; id 624 Digong: picture: monster id
+    db SKILL_TWINHITS ; skill 1
+    db SKILL_HELLBLAST ; skill 2
+    db SKILL_BEASTCUT ; skill 3
+    db SKILL_SANDSTORM ; skill 4
+    dw 38477 ; EXP
+    db $06 ; join-chance class
+    db $58 ; level
+    dw 743 ; base HP
+    dw 132 ; base MP
+    dw 608 ; base ATK
+    dw 452 ; base DEF
+    dw 407 ; base AGL
+    dw 522 ; base INT
+    db $14 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_SWORDGON ; id 625 Swordgon: picture: monster id
+    db SKILL_REVIVE ; skill 1
+    db SKILL_CURSEOFF ; skill 2
+    db SKILL_LIGHTNING ; skill 3
+    db SKILL_AQUACUT ; skill 4
+    dw 34281 ; EXP
+    db $06 ; join-chance class
+    db $55 ; level
+    dw 488 ; base HP
+    dw 72 ; base MP
+    dw 598 ; base ATK
+    dw 520 ; base DEF
+    dw 501 ; base AGL
+    dw 621 ; base INT
+    db $fa ; personality axis $6F
+    db $3c ; personality axis $70
+    db $1e ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_GIGADRACO ; id 626 GigaDraco: picture: monster id
+    db SKILL_PANICALL ; skill 1
+    db SKILL_WHITEAIR ; skill 2
+    db SKILL_DEVILCUT ; skill 3
+    db SKILL_LOVERAIN ; skill 4
+    dw 41020 ; EXP
+    db $06 ; join-chance class
+    db $57 ; level
+    dw 793 ; base HP
+    dw 85 ; base MP
+    dw 715 ; base ATK
+    dw 489 ; base DEF
+    dw 327 ; base AGL
+    dw 602 ; base INT
+    db $32 ; personality axis $6F
+    db $28 ; personality axis $70
+    db $0a ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_SUPERTEN ; id 627 SuperTen: picture: monster id
+    db SKILL_LIFEDANCE ; skill 1
+    db SKILL_HUSTLE ; skill 2
+    db SKILL_THICKFOG ; skill 3
+    db SKILL_DANCESHUT ; skill 4
+    dw 34529 ; EXP
+    db $06 ; join-chance class
+    db $57 ; level
+    dw 638 ; base HP
+    dw 98 ; base MP
+    dw 509 ; base ATK
+    dw 403 ; base DEF
+    dw 505 ; base AGL
+    dw 740 ; base INT
+    db $c8 ; personality axis $6F
+    db $78 ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_BIGROOST ; id 628 BigRoost: picture: monster id
+    db SKILL_HEALUS ; skill 1
+    db SKILL_STOPSPELL ; skill 2
+    db SKILL_ROCKTHROW ; skill 3
+    db SKILL_BUGBLOW ; skill 4
+    dw 32345 ; EXP
+    db $06 ; join-chance class
+    db $58 ; level
+    dw 619 ; base HP
+    dw 114 ; base MP
+    dw 512 ; base ATK
+    dw 448 ; base DEF
+    dw 538 ; base AGL
+    dw 539 ; base INT
+    db $28 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $28 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_GHOSTREE ; id 629 GhosTree: picture: monster id
+    db SKILL_DEFEAT ; skill 1
+    db SKILL_SLEEPALL ; skill 2
+    db SKILL_DRAKSLASH ; skill 3
+    db SKILL_CURSE ; skill 4
+    dw 31299 ; EXP
+    db $06 ; join-chance class
+    db $5c ; level
+    dw 733 ; base HP
+    dw 58 ; base MP
+    dw 522 ; base ATK
+    dw 418 ; base DEF
+    dw 402 ; base AGL
+    dw 609 ; base INT
+    db $1e ; personality axis $6F
+    db $a0 ; personality axis $70
+    db $0a ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_WARMANTIS ; id 630 WarMantis: picture: monster id
+    db SKILL_SLOWALL ; skill 1
+    db SKILL_METALCUT ; skill 2
+    db SKILL_GIGASLASH ; skill 3
+    db SKILL_RADIANT ; skill 4
+    dw 34289 ; EXP
+    db $06 ; join-chance class
+    db $5b ; level
+    dw 589 ; base HP
+    dw 143 ; base MP
+    dw 588 ; base ATK
+    dw 475 ; base DEF
+    dw 407 ; base AGL
+    dw 673 ; base INT
+    db $c8 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $28 ; byte 24 ($71)
+    db $96 ; personality axis $72
+    dw MONSTER_HEALER ; id 631 Healer: picture: monster id
+    db SKILL_HEAL ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 105 ; EXP
+    db $01 ; join-chance class
+    db $08 ; level
+    dw 31 ; base HP
+    dw 9 ; base MP
+    dw 21 ; base ATK
+    dw 20 ; base DEF
+    dw 18 ; base AGL
+    dw 91 ; base INT
+    db $14 ; personality axis $6F
+    db $46 ; personality axis $70
+    db $46 ; byte 24 ($71)
+    db $64 ; personality axis $72
+    dw MONSTER_KAGEBOU ; id 632 Kagebou: picture: monster id
+    db SKILL_BEDRAGON ; skill 1
+    db SKILL_CHANCE ; skill 2
+    db SKILL_TATSUCALL ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 700 ; base AGL
+    dw 100 ; base INT
+    db $c8 ; personality axis $6F
+    db $32 ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DIMENSAUR ; id 633 Dimensaur: picture: monster id
+    db SKILL_MEGAMAGIC ; skill 1
+    db SKILL_HELLBLAST ; skill 2
+    db SKILL_WHITEFIRE ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $01 ; level
+    dw 10 ; base HP
+    dw 10 ; base MP
+    dw 700 ; base ATK
+    dw 10 ; base DEF
+    dw 10 ; base AGL
+    dw 10 ; base INT
+    db $c8 ; personality axis $6F
+    db $c8 ; personality axis $70
+    db $96 ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_LAMIA ; id 634 Lamia: picture: monster id
+    db SKILL_HEALUS ; skill 1
+    db SKILL_MPASS ; skill 2
+    db SKILL_VIVIFY ; skill 3
+    db $ff ; skill 4
+    dw 0 ; EXP
+    db $00 ; join-chance class
+    db $32 ; level
+    dw 500 ; base HP
+    dw 700 ; base MP
+    dw 500 ; base ATK
+    dw 700 ; base DEF
+    dw 600 ; base AGL
+    dw 600 ; base INT
+    db $64 ; personality axis $6F
+    db $fa ; personality axis $70
+    db $c8 ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DRACOLORD ; id 635 DracoLord: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DRACOLORD_160 ; id 636 DracoLord: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_LORDDRACO ; id 637 LordDraco: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_HARGON ; id 638 Hargon: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_SIDOH ; id 639 Sidoh: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GENOSIDOH ; id 640 Genosidoh: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_BARAMOS ; id 641 Baramos: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ZOMA ; id 642 Zoma: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ASURAZOMA ; id 643 AsuraZoma: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $19 ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_PIZZARO ; id 644 Pizzaro: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_PSYCHOPIZ ; id 645 PsychoPiz: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ESTERK ; id 646 Esterk: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_MIRUDRAAS ; id 647 Mirudraas: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_MIRUDRAAS_16C ; id 648 Mirudraas: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_MUDOU ; id 649 Mudou: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DEATHMORE ; id 650 DeathMore: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DEATHMORE_16F ; id 651 DeathMore: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DEATHMORE_170 ; id 652 DeathMore: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DARKDRIUM ; id 653 Darkdrium: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ORGODEMIR ; id 654 Orgodemir: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ORGODEMIR_173 ; id 655 Orgodemir: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DARCK ; id 656 Darck: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_HALOSLIME ; id 657 HaloSlime: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GOLDSLIME ; id 658 GoldSlime: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GRANSLIME ; id 659 GranSlime: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_WONDEREGG ; id 660 WonderEgg: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_ORLIGON ; id 661 Orligon: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GIGADRACO ; id 662 GigaDraco: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DARKHORN ; id 663 DarkHorn: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GORAGO ; id 664 Gorago: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_RAINHAWK ; id 665 RainHawk: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_AZURILE ; id 666 Azurile: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_SHANTAK ; id 667 Shantak: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_WATABOU ; id 668 Watabou: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_WARUBOU ; id 669 Warubou: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_EGDRACIL ; id 670 Egdracil: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DIGSTER ; id 671 Digster: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_SKULARACH ; id 672 Skularach: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_TITANIS ; id 673 Titanis: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_LAMPGENIE ; id 674 LampGenie: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_NITERICH ; id 675 Niterich: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_WHITEKING ; id 676 WhiteKing: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_LAZAMANUS ; id 677 Lazamanus: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GOLDGOLEM ; id 678 GoldGolem: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_DARKMATE ; id 679 DarkMate: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_OCTOGON ; id 680 Octogon: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_OCTORAID ; id 681 Octoraid: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_GRAKOS ; id 682 Grakos: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_POSEIDON ; id 683 Poseidon: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 100 ; EXP
+    db $00 ; join-chance class
+    db $0a ; level
+    dw 100 ; base HP
+    dw 100 ; base MP
+    dw 100 ; base ATK
+    dw 100 ; base DEF
+    dw 100 ; base AGL
+    dw 100 ; base INT
+    db $fa ; personality axis $6F
+    db $fa ; personality axis $70
+    db $fa ; byte 24 ($71)
+    db $c8 ; personality axis $72
+    dw MONSTER_SLIME ; id 684 Slime: picture: monster id
+    db $ff ; skill 1
+    db $ff ; skill 2
+    db $ff ; skill 3
+    db $ff ; skill 4
+    dw 65535 ; EXP
+    db $07 ; join-chance class
+    db $01 ; level
+    dw 1 ; base HP
+    dw 1 ; base MP
+    dw 1 ; base ATK
+    dw 1 ; base DEF
+    dw 1 ; base AGL
+    dw 1 ; base INT
+    db $01 ; personality axis $6F
+    db $01 ; personality axis $70
+    db $01 ; byte 24 ($71)
+    db $01 ; personality axis $72
 
 BeginStringDisplay_BankE0_BeginStringDisplay::
     ld de, StringCategories_A2_49F8

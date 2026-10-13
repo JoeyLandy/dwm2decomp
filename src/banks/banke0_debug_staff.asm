@@ -1859,7 +1859,7 @@ DrawFourTileStripForA::
     ld d, [hl]
     ld e, a
     ld hl, vBGMap0 + $27
-    ld bc, $0401
+    lb bc, $04, $01
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
@@ -2023,7 +2023,7 @@ DrawSkillByte0AndRun502BAnd53B9_LoadSkillRecord::
 DrawFullScreenFromBankE0_511B::
     ld hl, vBGMap0
     ld de, $511b
-    ld bc, $1412
+    lb bc, $14, $12
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
@@ -2032,7 +2032,7 @@ DrawFullScreenFromBankE0_511B::
 DrawFullScreenFromBankE0_5283::
     ld hl, vBGMap0
     ld de, $5283
-    ld bc, $1412
+    lb bc, $14, $12
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
@@ -2040,7 +2040,7 @@ DrawFullScreenFromBankE0_5283::
 DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM::
     ld hl, vBGMap0
     ld de, $53eb
-    ld bc, $1412
+    lb bc, $14, $12
     ld a, $e0
     call CopyRectFromBankToVRAM
     ret
@@ -5813,7 +5813,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00::
     ldh [rVBK], a
     ld a, $00
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
@@ -5821,7 +5821,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00::
 .skip2:
     ld a, $7f
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld bc, vBGMap0 + $41
     ld a, c
@@ -5955,7 +5955,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00::
     ldh [rVBK], a
     ld a, $00
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
@@ -5963,7 +5963,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00::
 .skip5:
     ld a, $7f
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld hl, wWorkBuf + $b
     ld a, [hld]
@@ -6179,7 +6179,7 @@ DebugStaffRoll_Update_Sub01_Table3_Case00::
     ldh [rVBK], a
     ld a, $00
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld a, $00
     ldh [rVBK], a
@@ -6187,12 +6187,12 @@ DebugStaffRoll_Update_Sub01_Table3_Case00::
 .skip:
     ld a, $7f
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call FillBGMapRectWithAWrapped
     ld a, $80
     ld hl, vBGMap0 + $e3
     ld de, $0040
-    ld bc, $0e02
+    lb bc, $0e, $02
     call FillVRAMRectWithTileSequence
     ld a, [wSGBActive]
     or a

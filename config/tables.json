@@ -241,102 +241,129 @@
       "id_base": 0,
       "fields": [
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)"
+          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)",
+          "short": "picture: monster id",
+          "enum": "monster"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 1 (SkillTable index, $FF = none)"
+          "name": "skill id 1 (SkillTable index, $FF = none)",
+          "short": "skill 1"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 2"
+          "name": "skill id 2",
+          "short": "skill 2"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 3"
+          "name": "skill id 3",
+          "short": "skill 3"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 4"
+          "name": "skill id 4",
+          "short": "skill 4"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)"
+          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)",
+          "short": "EXP",
+          "decimal": true
         },
         {
           "type": "db",
           "size": 1,
-          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)"
+          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)",
+          "short": "join-chance class"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)"
+          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)",
+          "short": "level"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base HP"
+          "name": "base HP",
+          "short": "base HP",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base MP"
+          "name": "base MP",
+          "short": "base MP",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base ATK"
+          "name": "base ATK",
+          "short": "base ATK",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base DEF"
+          "name": "base DEF",
+          "short": "base DEF",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base AGL"
+          "name": "base AGL",
+          "short": "base AGL",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base INT"
+          "name": "base INT",
+          "short": "base INT",
+          "decimal": true
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord)"
+          "name": "byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord)",
+          "short": "personality axis $6F"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 23: personality axis copied to offset $70 (weight 1)"
+          "name": "byte 23: personality axis copied to offset $70 (weight 1)",
+          "short": "personality axis $70"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord)"
+          "name": "byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord)",
+          "short": "byte 24 ($71)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 25: personality axis copied to offset $72 (weight 3)"
+          "name": "byte 25: personality axis copied to offset $72 (weight 3)",
+          "short": "personality axis $72"
         }
       ],
       "note": "E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wCFE6/wCFE7); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is confirmed by the pause menu's INFO panel, E-0046). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot). Bytes 22-25 equal the save record's bytes at offsets $6F-$72 for the opening monster (E-0034); the three used by PersonalityIndexOfRecord are the personality axes. The first word is the picture number (E-0041): drawing the pictures it names gave a slime for monster 1 ('Slime'), another slime for monster 2 ('SpotSlime') and a spiky ball for monster 3 ('CactiBall'); monster names are the strings of bank $88 (category = id >> 8, index = id & $FF).",
-      "id_names": "monster_table"
+      "id_names": "monster_table",
+      "field_comments": true
     },
     {
       "bank": "16",
@@ -351,8 +378,9 @@
           "name": "byte 0 (0, 1, 2 or 6)"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
+          "decimal": true,
           "name": "16-bit amount (10, 50, 500, 200, 2000 for the first five items)"
         },
         {
@@ -19575,102 +19603,129 @@
       "id_base": 592,
       "fields": [
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)"
+          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)",
+          "short": "picture: monster id",
+          "enum": "monster"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 1 (SkillTable index, $FF = none)"
+          "name": "skill id 1 (SkillTable index, $FF = none)",
+          "short": "skill 1"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 2"
+          "name": "skill id 2",
+          "short": "skill 2"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 3"
+          "name": "skill id 3",
+          "short": "skill 3"
         },
         {
           "type": "db",
           "size": 1,
           "enum": "skill",
-          "name": "skill id 4"
+          "name": "skill id 4",
+          "short": "skill 4"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)"
+          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)",
+          "short": "EXP",
+          "decimal": true
         },
         {
           "type": "db",
           "size": 1,
-          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)"
+          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)",
+          "short": "join-chance class"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)"
+          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)",
+          "short": "level"
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base HP"
+          "name": "base HP",
+          "short": "base HP",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base MP"
+          "name": "base MP",
+          "short": "base MP",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base ATK"
+          "name": "base ATK",
+          "short": "base ATK",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base DEF"
+          "name": "base DEF",
+          "short": "base DEF",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base AGL"
+          "name": "base AGL",
+          "short": "base AGL",
+          "decimal": true
         },
         {
-          "type": "db",
+          "type": "words",
           "size": 2,
-          "name": "base INT"
+          "name": "base INT",
+          "short": "base INT",
+          "decimal": true
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord)"
+          "name": "byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord)",
+          "short": "personality axis $6F"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 23: personality axis copied to offset $70 (weight 1)"
+          "name": "byte 23: personality axis copied to offset $70 (weight 1)",
+          "short": "personality axis $70"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord)"
+          "name": "byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord)",
+          "short": "byte 24 ($71)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 25: personality axis copied to offset $72 (weight 3)"
+          "name": "byte 25: personality axis copied to offset $72 (weight 3)",
+          "short": "personality axis $72"
         }
       ],
       "note": "E-0240 (C1: CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_Sub01 read the 26-byte record at $4056 + 26 * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93 records up to the code at $49E2, the same layout as MonsterTable).",
-      "id_names": "monster_table"
+      "id_names": "monster_table",
+      "field_comments": true
     },
     {
       "bank": "32",

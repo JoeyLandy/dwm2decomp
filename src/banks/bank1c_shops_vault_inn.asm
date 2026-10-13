@@ -34,7 +34,7 @@ CloseInnMenu::
 
 .call_bg_map_address_at_scroll_bank1_c:
     call BGMapAddressAtScroll_Bank1C
-    ld bc, $1408
+    lb bc, $14, $08
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1C
     ld bc, $001a
@@ -146,27 +146,27 @@ InnMenu_ShowPrice::
     jr nz, .skip
     ld de, wScreenSubStep
     ld hl, wWindowTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wScreenSubStep
     ld hl, wScreenTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     jr .call_bg_map_address_at_scroll_bank1_c
 
 .skip:
     ld de, wScreenSubStep
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wScreenSubStep
     ld hl, wScreenTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
 
 .call_bg_map_address_at_scroll_bank1_c:
     call BGMapAddressAtScroll_Bank1C
-    ld bc, $1408
+    lb bc, $14, $08
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1C
     xor a
@@ -852,27 +852,27 @@ InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C::
     jr nz, .skip
     ld de, wScreenSubStep
     ld hl, wWindowTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wScreenSubStep
     ld hl, wScreenTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     jr .call_bg_map_address_at_scroll_bank1_c
 
 .skip:
     ld de, wScreenSubStep
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wScreenSubStep
     ld hl, wScreenTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank1C
 
 .call_bg_map_address_at_scroll_bank1_c:
     call BGMapAddressAtScroll_Bank1C
-    ld bc, $1408
+    lb bc, $14, $08
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1C
     ret
@@ -1098,7 +1098,7 @@ ShopMenu_Setup_ToInitItemListScreenListAndCount::
 ShopMenu_Setup_DrawScreenListBoxAtWC370AndStep::
     ld de, TileRect_1C_4738
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRowsJp_Bank1C
     call DrawScreenListBoxAtWC370AndStep
     xor a
@@ -1376,7 +1376,7 @@ ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0081
     add hl, de
-    ld bc, $1309
+    lb bc, $13, $09
     ld de, vBGMap1 + $300
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, [wScreenStep]
@@ -2127,7 +2127,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0403
+    lb bc, $04, $03
     ld de, wScreenList
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wScreenStep]
@@ -2157,7 +2157,7 @@ ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0403
+    lb bc, $04, $03
     ld de, vBGMap1 + $3b0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
@@ -2704,7 +2704,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
     pop hl
     pop hl
     ld de, TileRect_1C_6302
-    ld bc, $0605
+    lb bc, $06, $05
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, $6c
     call QueueSoundEffect
@@ -2838,7 +2838,7 @@ ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $010e
     add hl, de
-    ld bc, $0605
+    lb bc, $06, $05
     ld de, vBGMap1 + $3d0
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wScreenStep]
@@ -2909,13 +2909,13 @@ DrawTwoBoxesAndRequestScript80::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $010e
     add hl, de
-    ld bc, $0605
+    lb bc, $06, $05
     ld de, vBGMap1 + $3d0
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0403
+    lb bc, $04, $03
     ld de, vBGMap1 + $3b0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $06
@@ -3126,7 +3126,7 @@ ShopMenu_Buy_SubtractArg1AmountFromGold::
     ld a, $0c
     add_a_to_hl
     ld de, wScreenList
-    ld bc, $0804
+    lb bc, $08, $04
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     xor a
     ld [wScriptCommandType], a
@@ -3917,7 +3917,7 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, wScreenList
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wScreenStep]
@@ -3947,7 +3947,7 @@ ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_5B61::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, vBGMap1 + $3b0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
@@ -4511,7 +4511,7 @@ ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_5DA4::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $010e
     add hl, de
-    ld bc, $0605
+    lb bc, $06, $05
     ld de, vBGMap1 + $3d0
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wScreenStep]
@@ -4580,13 +4580,13 @@ ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $010e
     add hl, de
-    ld bc, $0605
+    lb bc, $06, $05
     ld de, vBGMap1 + $3d0
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, vBGMap1 + $3b0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
@@ -4699,7 +4699,7 @@ ShopMenu_Sell_AddArg1ToGoldCapped99999::
     ld a, $0c
     add_a_to_hl
     ld de, wScreenList
-    ld bc, $0804
+    lb bc, $08, $04
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     xor a
     ld [wItemGridX], a
@@ -6083,10 +6083,10 @@ InitItemListScreenListAndCount::
 DrawScreenListBoxAtWC370AndStep::
     ld de, wScreenList
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1C
     ld hl, wScreenStep
@@ -6123,7 +6123,7 @@ CloseShopMenu_Case00_CopyBytesDEToHL_Bank1C::
 
 .call_bg_map_address_at_scroll_bank1_c_67_af:
     call BGMapAddressAtScroll_Bank1C_67AF
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1C
     ld hl, wGridCursorY
@@ -6203,7 +6203,7 @@ ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, TileRect_1C_6B7D
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld c, $24
@@ -6240,7 +6240,7 @@ ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, TileRect_1C_6C0C
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wTextCounter0]
@@ -6473,7 +6473,7 @@ VaultMenu_Setup_ToInitItemListScreenListAndCount::
 VaultMenu_Setup_DrawScreenListBoxAtWC370AndStep::
     ld de, TileRect_1C_6DEF
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b07
+    lb bc, $0b, $07
     call CopyRectTo20ByteRowsJp_Bank1C
     call DrawScreenListBoxAtWC370AndStep
     xor a
@@ -6682,7 +6682,7 @@ VaultMenu_Store_ToVaultMenu_Store_Case00_WaitForVRAMAccess::
 
 VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1::
     call BGMapAddressAtScroll_Bank1C_67AF
-    ld bc, $0b09
+    lb bc, $0b, $09
     ld de, vBGMap1 + $300
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, [wScreenStep]
@@ -6898,13 +6898,13 @@ VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0088
     add hl, de
-    ld bc, $0c09
+    lb bc, $0c, $09
     ld de, vBGMap1 + $370
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, vBGMap1 + $3e0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $03
@@ -6941,13 +6941,13 @@ VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0088
     add hl, de
-    ld bc, $0c09
+    lb bc, $0c, $09
     ld de, vBGMap1 + $370
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, vBGMap1 + $3e0
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     xor a
@@ -6993,7 +6993,7 @@ ClearRect147AndAskTwoChoice::
     ld de, $0147
     add hl, de
     ld de, vBGMap1 + $370
-    ld bc, $0d03
+    lb bc, $0d, $03
     call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld hl, vTiles2 + $700
     ld de, vTiles1 + $4c0
@@ -7028,7 +7028,7 @@ VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C::
     ld a, $0c
     add_a_to_hl
     ld de, wScreenList
-    ld bc, $0802
+    lb bc, $08, $02
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     farcall VaultMenu_Store_Number24ToPackedBCD
     xor a
@@ -7137,7 +7137,7 @@ InitItemListScreenListAndDraw::
     ld a, $0c
     add_a_to_hl
     ld de, wScreenList
-    ld bc, $0804
+    lb bc, $08, $04
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ret
 

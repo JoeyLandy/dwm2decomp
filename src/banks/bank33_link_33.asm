@@ -792,11 +792,11 @@ RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
 RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
     ld de, TileRect_33_62AB
     ld hl, wScreenTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, TileRect_33_62C3
     ld hl, wScreenTileBuffer
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     call DrawPlayerNameAndString0Category1
     call SetDefaultStringWindow_Bank33
@@ -812,7 +812,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep::
     ld hl, wScreenTileBuffer + $43
     call RunFunc6204FourTimes
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
     ld hl, wTitleScreenSubState
@@ -973,7 +973,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
 
 RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
     ld a, $08 ; 'Choose a monster for the Team'
@@ -1359,7 +1359,7 @@ CallClearAndDrawListEntriesCell5Name::
 CopyRect62C3ToWC36EAndIncScreenStep::
     ld de, TileRect_33_62C3
     ld hl, wWindowTileBuffer + $6e
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld hl, wScreenStep
     inc [hl]
@@ -1377,7 +1377,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07::
     ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, [wListCursor]
@@ -1484,10 +1484,10 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case09::
     call QueueSoundEffect
     ld de, TileRect_33_63C7
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call SetDefaultStringWindow_Bank33
@@ -1561,7 +1561,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B::
     call WriteC3AtWordTableEntries_Bank33
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, $08 ; 'Choose a monster for the Team'
@@ -1574,7 +1574,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B::
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C::
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld hl, wPickCount
@@ -1748,7 +1748,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03::
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04::
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld hl, vTiles2 + $50
     ld a, l
@@ -1791,7 +1791,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04::
     farcall ShowString_Bank1B_481A
     ld de, TileRect_33_63F9
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
     ld hl, vTiles1 + $4e0
     ld a, l
@@ -1814,7 +1814,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04::
 
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case05::
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, $0d ; 'Battle in Team Mode?'
@@ -2163,7 +2163,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00::
     farcall ClearRecordPanelTiles
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     call DrawPlayerNameAndString0Category1
     ld hl, vTiles1 + $4e0
@@ -2219,7 +2219,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03::
     ld [rRAMG2], a
     ld de, TileRect_33_5D5F
     ld hl, wWindowTileBuffer + $140
-    ld bc, $0d02
+    lb bc, $0d, $02
     call CopyRectTo20ByteRowsJp_Bank33
     pop af
     ld [wArg1], a
@@ -2293,14 +2293,14 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04::
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05::
     ld de, TileRect_33_62C3
     ld hl, wWindowTileBuffer + $6e
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
     call RunFunc6204FourTimes
     ld de, TileRect_33_6331
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a0b
+    lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $a7
@@ -2346,7 +2346,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06::
     farcall ShowString_Bank1B_481A
     ld de, TileRect_33_63F9
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     call SetDefaultStringWindow_Bank33
@@ -2359,13 +2359,13 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06::
 
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case07::
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_33
     ld a, $70
@@ -2395,7 +2395,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00::
     farcall ClearRecordPanelTiles
     ld de, TileRect_33_6438
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wListCursor]
     ld b, $bc
@@ -2474,7 +2474,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06::
     call RunFunc6204FourTimes
     ld de, TileRect_33_63C7
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
     xor a
     ld [wChoiceCursor], a
@@ -2485,13 +2485,13 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06::
 
 RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07::
     call BGMapAddressAtScroll_Bank33
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_33
     ld a, $70
@@ -2525,7 +2525,7 @@ LoadRecordByteForPickedRecords::
 DrawBox639FAndKeyRows::
     ld de, TileRect_33_639F
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1

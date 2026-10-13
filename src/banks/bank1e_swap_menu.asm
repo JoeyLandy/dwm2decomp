@@ -30,7 +30,7 @@ CloseMenuE9_CopyBytesDEToHL_Bank1E::
 
 .call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenList]
@@ -151,10 +151,10 @@ SwapMonstersMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep
 SwapMonstersMenu_SetupPartyList_CountRecordsInUse::
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
@@ -382,7 +382,7 @@ SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc::
 SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip::
     ld de, $4333
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank1E
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -438,7 +438,7 @@ SwapMonstersMenu_ShowMonsterDetails3_Case07_CopyRecordNameToNameGlyphBuf_CallLis
     ld c, $28
     call SwapMonstersMenu_LoadSRAMRecordByte
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     xor a
@@ -471,7 +471,7 @@ SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_Case01::
     call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795c
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank1E
     pop af
     ld b, a
@@ -520,7 +520,7 @@ SwapMonstersMenu_MoveRecords_StoreBAtWordTableEntry_Bank1E::
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wListCursor]
@@ -596,7 +596,7 @@ SwapMonstersMenu_MoveRecords_CopyScreenBufferRectWithAttrs_1E::
 
 SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -634,10 +634,10 @@ SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_Case0A:
 SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_Case0B::
     ld de, $44ef
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $6c
@@ -925,7 +925,7 @@ SwapMonstersMenu_MoveRecords_Case0C_StepBGMapAddressBackOnScrollWrap_ReadChoiceC
 DrawBox4718AndMenuAndStep_1E::
     ld de, $4718
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0801
+    lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank1E
     ld c, $04
     ld hl, $028c
@@ -952,7 +952,7 @@ TileRect_1E_4718::
 
 SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_Case0E::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $05
@@ -1103,14 +1103,14 @@ SwapMonstersMenu_MoveRecords_CopyFromBankWaitVRAM::
     call QueueSoundEffect
     ld de, $4872
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $bc
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -1194,7 +1194,7 @@ SwapMonstersMenu_MoveRecords_Case12_BGMapAddressAtScroll_Bank1E::
 
 .call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ret
@@ -1224,10 +1224,10 @@ SwapMonstersMenu_MoveRecords_Case12_Sub01_CopyBytesDEToHL_Bank1E::
 SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E::
     ld de, $495a
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     xor a
@@ -1269,7 +1269,7 @@ SwapMonstersMenu_MoveRecords_FillTilesBxC::
     call FillTilesBxC
     ld de, $7a41
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wScreenStep]
     inc a
@@ -1326,7 +1326,7 @@ SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E::
     call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795c
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank1E
     pop af
     ld b, a
@@ -1429,14 +1429,14 @@ SwapMonstersMenu_MoveRecords_DrawRecordListNameTiles_Bank1D::
 SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22::
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $c3
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
@@ -1452,7 +1452,7 @@ SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22::
 
 SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_Case27::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $1b
@@ -1595,10 +1595,10 @@ SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_Case29::
 SwapMonstersMenu_MoveRecords_CountRecordsInUse::
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
@@ -1702,7 +1702,7 @@ SwapMonstersMenu_ChooseFromFarm::
 
 SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $08
@@ -1821,14 +1821,14 @@ SwapMonstersMenu_ChooseFromFarm_UpdateListCursorListCursor::
 SwapMonstersMenu_ChooseFromFarm_CountRecordsInUse::
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $bc
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
@@ -1844,7 +1844,7 @@ SwapMonstersMenu_ChooseFromFarm_CountRecordsInUse::
 
 SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_Case2E::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $25
@@ -1857,7 +1857,7 @@ SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_Case2E::
 
 SwapMonstersMenu_ChooseFromFarm_ListRecordsState1WithByte6EClear::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -1883,10 +1883,10 @@ SwapMonstersMenu_ChooseFromFarm_ListRecordsState1WithByte6EClear::
 SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E::
     ld de, $7a99
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -1906,14 +1906,14 @@ SwapMonstersMenu_ChooseFromFarm_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
 SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E_Case3C::
     ld de, $7af1
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wItemGridX]
     ld [wListCursor], a
     xor a
     ld [wListPageIndex], a
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -1923,7 +1923,7 @@ SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E_Case3C::
 
 SwapMonstersMenu_ChooseFromFarm_ListPartyRecordsWithState2ToListEntries::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $25
@@ -2024,7 +2024,7 @@ SwapMonstersMenu_ChooseFromFarm_WriteScreenSubStepAndScreenStepEtc::
 
 SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_Case46::
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $39
@@ -2148,7 +2148,7 @@ SwapMonstersMenu_ChooseToView_WriteScreenStepAndChoiceCursorF0::
 SwapMonstersMenu_ChooseToView_ListRecordsInUseWithByte6EClear::
     ld de, $7bbe
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d05
+    lb bc, $0d, $05
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6c
     call QueueSoundEffect
@@ -2182,7 +2182,7 @@ SwapMonstersMenu_ChooseToView_ListRecordsInUseWithByte6EClear::
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     xor a
@@ -2302,7 +2302,7 @@ SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E::
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld de, Tiles1Plus7F0Tiles_1F_4A70
@@ -2317,10 +2317,10 @@ SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E::
     call CopyFromBankWaitVRAM
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
@@ -2342,7 +2342,7 @@ SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E::
     call LoadFamilyIconTileForRecordB_Bank1E
     ld de, $795c
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank1E
     xor a
     ld [wArg1], a
@@ -2431,7 +2431,7 @@ SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_Case0D::
     call CopyScreenBufferRectWithAttrs_1E
     ld de, $5343
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d03
+    lb bc, $0d, $03
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wListCount]
     ld l, a
@@ -2461,20 +2461,20 @@ TileRect_1E_5343::
 SwapMonstersMenu_ChooseToView_CountRecordsInUse::
     ld de, $79c8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0b0b
+    lb bc, $0b, $0b
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $bc
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall CountRecordsInUse
     ld de, $7bbe
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d05
+    lb bc, $0d, $05
     call CopyRectTo20ByteRows_Bank1E
     ld a, $6c
     call QueueSoundEffect
@@ -2508,7 +2508,7 @@ SwapMonstersMenu_ChooseToView_CountRecordsInUse::
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     xor a
@@ -2543,14 +2543,14 @@ SwapMonstersMenu_ChooseToView_ToLoadTileList6DC4SixPerFrame::
 SwapMonstersMenu_ChooseToView_ListRecordsInUseWithByte6ESet::
     ld de, $5461
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wChoiceCursorF0]
     ld b, $bc
     ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     farcall ListRecordsInUseWithByte6ESet
@@ -2605,7 +2605,7 @@ SwapMonstersMenu_ChooseToView_FillTilesBxC::
 SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4::
     ld de, $7b49
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank1E
     call ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -2630,7 +2630,7 @@ SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4::
 
 .call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $1409
+    lb bc, $14, $09
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -2714,10 +2714,10 @@ SwapMonstersMenu_ChooseToView_UpdatePagedListCursor_Case1B::
 SwapMonstersMenu_ChooseToView_CopyRectTo20ByteRows_Bank1E::
     ld de, $7bff
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0408
+    lb bc, $04, $08
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $1409
+    lb bc, $14, $09
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld de, Tiles2Plus710Tiles_1F_4290
@@ -2897,15 +2897,15 @@ SwapMonstersMenu_ChooseToView2_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6EClear::
     ld de, $7bbe
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d05
+    lb bc, $0d, $05
     call CopyRectTo20ByteRows_Bank1E
     ld de, $57dc
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d01
+    lb bc, $0d, $01
     call CopyRectTo20ByteRows_Bank1E
     ld de, $57e9
     ld hl, wWindowTileBuffer + $11f
-    ld bc, $0102
+    lb bc, $01, $02
     call CopyRectTo20ByteRows_Bank1E
     farcall ListRecordsInUseWithByte6EClear
     ld a, [wListCount]
@@ -2958,7 +2958,7 @@ SwapMonstersMenu_ChooseToView2_StoreBAtWordTableEntry_Bank1E::
     ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $0c
@@ -3116,11 +3116,11 @@ SwapMonstersMenu_ChooseToView2_UpdatePagedListCursor::
 SwapMonstersMenu_ChooseToView2_ListRecordsInUseWithByte6EClear_Case2F::
     ld de, $7bbe
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d05
+    lb bc, $0d, $05
     call CopyRectTo20ByteRows_Bank1E
     ld de, $5987
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0d01
+    lb bc, $0d, $01
     call CopyRectTo20ByteRows_Bank1E
     farcall ListRecordsInUseWithByte6EClear
     ld a, [wListCount]
@@ -3197,7 +3197,7 @@ SwapMonstersMenu_ChooseToView2_StoreBAtWordTableEntry_Bank1E_Case31::
     ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, $28
@@ -3243,7 +3243,7 @@ SwapMonstersMenu_ChooseToView2_DeleteSRAMRecordAndCompact_Case33::
 SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E::
     ld de, $5a80
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0801
+    lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank1E
     ld c, $05
     ld hl, $0287
@@ -3326,14 +3326,14 @@ SwapMonstersMenu_ChooseToView2_CopyFromBankWaitVRAM::
 SwapMonstersMenu_ChooseToView2_CopyRectTo20ByteRows_Bank1E::
     ld de, $7bff
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0408
+    lb bc, $04, $08
     call CopyRectTo20ByteRows_Bank1E
     ld de, $7c1f
     ld hl, wWindowTileBuffer + $10b
-    ld bc, $0403
+    lb bc, $04, $03
     call CopyRectTo20ByteRows_Bank1E
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     ld a, [wScreenStep]
@@ -3565,13 +3565,13 @@ SwapMonstersMenu_ShowMonsterDetails_LoadPlayerAndFollowerSpriteGraphics::
 
 .call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
     call RestoreSpriteStateFromSavedFieldDrawFlags
@@ -4619,13 +4619,13 @@ SwapMonstersMenu_ShowParents2_LoadPlayerAndFollowerSpriteGraphics::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
     call RestoreSpriteStateFromSavedFieldDrawFlags
@@ -4657,7 +4657,7 @@ SwapMonstersMenu_ShowParents2_LoadPlayerAndFollowerSpriteGraphics::
 SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4::
     ld de, $7b49
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank1E
     call ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -4689,7 +4689,7 @@ SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4::
 .skip:
     ld de, $6567
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0801
+    lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank1E
     jr .loop
 
@@ -5103,13 +5103,13 @@ SwapMonstersMenu_ShowPartyMemberDetails_ListPartyRecordsWithState2ToListEntries:
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     call BGMapAddressAtScroll_Bank1E
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
     call RestoreSpriteStateFromSavedFieldDrawFlags

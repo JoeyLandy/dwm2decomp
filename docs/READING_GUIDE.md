@@ -52,6 +52,7 @@ The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit t
   ```
 
 - `farcall Label` calls a routine in another bank; `dfar Label` is a pointer with its bank in data.
+- `lb bc, $14, $08` loads B and C separately (B = 20, C = 8). The source uses it before calls to the rectangle routines, which take a width in B and a number of rows in C.
 - `add_a_to_hl` (`hl += a`) and `deref_hl` (`hl = [hl]`, a word) are short helper idioms.
 - `script_*` macros write the event-script language that runs scenes and conversations: `script_message`, `script_walk`, `script_set_flag`, `script_jump`, and the command types named in `macros.inc`.
 - `objsel_*` macros write the map object selectors, which choose which people and objects a map shows from story flags.

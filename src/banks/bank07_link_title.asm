@@ -2975,7 +2975,7 @@ RunGameMode5Case01SubStates_SerialSendByte_Case01::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wTitleScreenState], a
@@ -3695,7 +3695,7 @@ GameMode5_Update_Case01_ShowGameLinkCannotBe::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wTitleScreenState], a
@@ -3748,7 +3748,7 @@ GameMode5_Update_Case01_SerialSendByte_Case08::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
     ld [wTitleScreenState], a
@@ -3774,7 +3774,7 @@ GameMode5_Update_Case01_ShowGameLinkIsNot::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wTitleScreenState
     inc [hl]
@@ -4769,7 +4769,7 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wTitleScreenSubState
     inc [hl]
@@ -5117,7 +5117,7 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep:
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wTitleScreenSubState
     inc [hl]
@@ -5576,7 +5576,7 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07_Case16:
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $e0
     ld de, wScreenTileBuffer + $e0
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     call RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_Shared01
     call RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_Shared02
@@ -5821,7 +5821,7 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $62
     ld de, wScreenTileBuffer + $62
-    ld bc, $0f0b
+    lb bc, $0f, $0b
     call CopyRect32StrideToVRAM_Bank07
     call RunLinkSession4ScreenState_EditRules_Case19_CallDrawRuleMark
     ld hl, wTitleScreenSubState
@@ -6047,7 +6047,7 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $e1
     ld de, wScreenTileBuffer + $e1
-    ld bc, $1205
+    lb bc, $12, $05
     call CopyRect32StrideToVRAM_Bank07
     call RunLinkSession4ScreenState_EditRules_HLToDecimalDigits
     ld hl, wTitleScreenSubState
@@ -6212,7 +6212,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA::
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wTitleScreenSubState
     inc [hl]

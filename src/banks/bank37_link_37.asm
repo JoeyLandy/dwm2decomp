@@ -938,7 +938,7 @@ RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     call LoadFamilyIconTileForRecordB_Bank37
     ld de, TileRect_37_647D
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectToScreenBufferAndClearAttributes_37
     pop af
     ld [wArg1], a
@@ -1084,7 +1084,7 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
     call ShowStringIndexA_Bank37
     call RunFunc5A5DAt0278AndStep
     call BGMapAddressAtScroll_Bank37
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_37
     ret
@@ -1276,10 +1276,10 @@ RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
     call QueueSoundEffect
     ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectToScreenBufferAndClearAttributes_37
     call BGMapAddressAtScroll_Bank37
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_37
     ld a, [wScreenStep]
@@ -1390,10 +1390,10 @@ RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
     ld [wTwoChoiceCursor], a
     ld de, TileRect_37_64B9
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectToScreenBufferAndClearAttributes_37
     call BGMapAddressAtScroll_Bank37
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_37
     ld a, [wScreenStep]
@@ -2317,7 +2317,7 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37::
     ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectToScreenBufferAndClearAttributes_37
     ld a, $0f
     ld [wStringIndex], a
@@ -2488,7 +2488,7 @@ RunFunc5A5DAt024FAndDrawBox::
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_37
     call BGMapAddressAtScroll_Bank37
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_37
     ret

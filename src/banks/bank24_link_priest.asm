@@ -66,7 +66,7 @@ GameMode6_Init::
     ldh [hScrollY], a
     ldh [hScrollX], a
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     farcall LoadPalette0FromData53C6
@@ -217,11 +217,11 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
 
 .call_copy_rect_to20_byte_rows_jp_bank24:
     ld hl, wWindowTileBuffer + $7a
-    ld bc, $1102
+    lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
     call GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess
     call BGMapAddressAtScroll_Bank24
-    ld bc, $1406
+    lb bc, $14, $06
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wScreenStep]
@@ -242,7 +242,7 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
-    ld bc, $1406
+    lb bc, $14, $06
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wScreenStep]
@@ -298,10 +298,10 @@ GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24::
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f0
-    ld bc, $1406
+    lb bc, $14, $06
     call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wBattleScene]
@@ -434,11 +434,11 @@ GameMode6_Update_SavePrompt_ShowYesNo_Case04::
     call GameMode6_Update_SavePrompt_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     xor a
@@ -490,11 +490,11 @@ GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
     call GameMode6_Update_ShowMonsterEg
     ld de, TileRect_24_5A50
     ld hl, wWindowTileBuffer + $10e
-    ld bc, $0a05
+    lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     xor a
@@ -535,7 +535,7 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
     call GameMode6_Update_SavePrompt_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRowsJp_Bank24
     xor a
     ld b, $bc
@@ -543,7 +543,7 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
     call StoreBAtWordTableEntry_Bank24_52CE
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     xor a
@@ -591,7 +591,7 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
     jr nz, .call_game_mode6_update_copy_rect_to20_byte
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f7
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectTo20ByteRowsJp_Bank24
     jr .call_bg_map_address_at_scroll_bank24
 
@@ -600,18 +600,18 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld de, TileRect_24_5942
     ld hl, wWindowTileBuffer
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_24
     ld a, [wScreenStep]
@@ -636,13 +636,13 @@ GameMode6_Update_SavePrompt_DecompressToVRAM::
     jr nz, .loop
     ld de, TileRect_24_59A6
     ld hl, wWindowTileBuffer
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
@@ -760,7 +760,7 @@ GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE::
     ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
@@ -841,7 +841,7 @@ GameMode6_Update_Case04_PageList_UpdatePagedListCursor::
 GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
     ld de, TileRect_24_5814
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0e0d
+    lb bc, $0e, $0d
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wTwoChoiceCursor]
     ld b, $bb
@@ -852,7 +852,7 @@ GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
     jr nz, .check_link_byte_eb
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f7
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectTo20ByteRowsJp_Bank24
     jr .skip
 
@@ -862,16 +862,16 @@ GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
     jr nz, .skip
     ld de, TileRect_24_57F2
     ld hl, wWindowTileBuffer + $7a
-    ld bc, $1102
+    lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip:
     ld de, TileRect_24_5A50
     ld hl, wWindowTileBuffer + $10e
-    ld bc, $0a05
+    lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
@@ -955,7 +955,7 @@ GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
 GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
     ld de, TileRect_24_5A28
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     xor a
     ld b, $bc
@@ -963,7 +963,7 @@ GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
@@ -1055,7 +1055,7 @@ GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_FillTilesFromRequestAndS
 GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep::
     ld de, TileRect_24_5B10
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wScreenStep]
     inc a
@@ -1078,7 +1078,7 @@ GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4::
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wScreenStep]
@@ -1192,10 +1192,10 @@ GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN::
     call QueueSoundEffect
     ld de, TileRect_24_5B85
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld hl, vTiles1
@@ -1267,7 +1267,7 @@ GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
 GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
     ld de, TileRect_24_5A82
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, $01
     ld b, $bc
@@ -1275,7 +1275,7 @@ GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
@@ -1407,7 +1407,7 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     jr nz, .call_game_mode6_update_copy_rect_to20_byte
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f7
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectTo20ByteRowsJp_Bank24
     jr .skip
 
@@ -1417,7 +1417,7 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
 .skip:
     ld de, TileRect_24_5B10
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $bb
@@ -1477,7 +1477,7 @@ GameMode6_Update_SwitchEgg_DrawRecordListPageMarks::
 GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg::
     ld de, TileRect_24_5B85
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     ld hl, vTiles1
     ld a, l
@@ -1505,13 +1505,13 @@ GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_52CE::
     ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     call BGMapAddressAtScroll_Bank24
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_24
     ld a, $70
@@ -1593,13 +1593,13 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
 .skip:
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f7
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip2:
     ld de, TileRect_24_5AB8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $bc
@@ -1675,7 +1675,7 @@ GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01::
     call GameMode6_Update_Shared01_DecompressToVRAM
     ld de, TileRect_24_57F2
     ld hl, wWindowTileBuffer + $7a
-    ld bc, $1102
+    lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
     ret
 
@@ -3691,7 +3691,7 @@ PriestMenu_ShowServices_ShowRviDoxUncurt::
 PriestMenu_ShowServices_DrawGoldPanel_Bank24::
     ld de, TileRect_24_6B8B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank24
     call DrawGoldPanel_Bank24
     ld a, [wScreenStep]
@@ -3701,7 +3701,7 @@ PriestMenu_ShowServices_DrawGoldPanel_Bank24::
 
 PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_6866::
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     xor a
@@ -3849,11 +3849,11 @@ Tiles_24_6259::
 PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
     ld de, TileRect_24_6C49
     ld hl, wWindowTileBuffer + $dc
-    ld bc, $0b07
+    lb bc, $0b, $07
     call CopyRectTo20ByteRows_Bank24
     call PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, [wScreenStep]
@@ -3908,7 +3908,7 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
     call PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24
     ld de, TileRect_24_6B8B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank24
     call DrawGoldPanel_Bank24
     ld a, [wListCursor]
@@ -3916,7 +3916,7 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
     ld hl, PriestMenu_PayForService_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, [wListCursor]
@@ -4093,14 +4093,14 @@ PriestMenu_PayForService_QueueSoundEffect::
     call QueueSoundEffect
     ld de, TileRect_24_6479
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank24
     ld a, [wChoiceCursor]
     ld b, $bc
     ld hl, PriestMenu_PayForService_QueueSoundEffect_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, [wScreenStep]
@@ -4220,7 +4220,7 @@ PriestMenu_PayForService_SubtractArg1AmountFromGold::
     farcall SubtractArg1AmountFromGold
     call DrawGoldPanel_Bank24
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     call PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf
@@ -4324,13 +4324,13 @@ PriestMenu_PayForService_QueueMusic::
 
 .call_bg_map_address_at_scroll_bank24_6866:
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectNoOrigin_Bank24
     xor a
@@ -4354,12 +4354,12 @@ PriestMenu_PayForService_FillTilesFromRequest::
     call FillTilesFromRequest
     ld de, TileRect_24_6BE5
     ld hl, wWindowTileBuffer
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectTo20ByteRows_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, $02
@@ -4744,7 +4744,7 @@ StoreBAtWordTableEntry_Bank24::
 DrawGoldPanel_Bank24::
     ld de, TileRect_24_68EB
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank24
     ld a, [wGoldLo]
     ld [wDigits], a
@@ -5116,7 +5116,7 @@ PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866::
 
 .call_bg_map_address_at_scroll_bank24_6866:
     call BGMapAddressAtScroll_Bank24_6866
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     ret

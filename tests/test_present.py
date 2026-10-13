@@ -82,7 +82,7 @@ class PresentedTreeTest(unittest.TestCase):
     def test_no_code_or_data_line_is_lost(self):
         titles = present.bank_titles()
         for p in sorted(LISTING.glob("bank*.asm")):
-            want = _code(p.read_text(encoding="utf-8"))
+            want = present.rect_sizes(_code(p.read_text(encoding="utf-8")))
             got = [present.split_code(ln)[0].rstrip()
                    for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
@@ -113,6 +113,12 @@ class PresentedTreeTest(unittest.TestCase):
         slices = sorted((int(o, 16), int(n, 16)) for o, n in
                         re.findall(r'INCBIN "dwm2-cobi-us\.gbc", \$([0-9A-F]+), \$([0-9A-F]+)', listing))
         self.assertEqual(sorted(manifest.values()), slices)
+
+    def test_rect_sizes(self):
+        lines = ["    ld bc, $1408", "    ld de, $0168", "    call DrawScreenBufferRect_Bank1C",
+                 "    ld bc, $00a0", "    call CopyBytes"]
+        self.assertEqual(present.rect_sizes(lines)[0], "    lb bc, $14, $08")
+        self.assertEqual(present.rect_sizes(lines)[3], "    ld bc, $00a0")  # a count, not a rectangle
 
     def test_asset_paths(self):
         self.assertEqual(present.asset_path("MonsterSprite_DrakSlime", True), "gfx/monster_sprites/drak_slime.lz")

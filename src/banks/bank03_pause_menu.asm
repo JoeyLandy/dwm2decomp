@@ -104,7 +104,7 @@ PauseMenu_State4_CheckGameMode2State::
     ld l, e
     ld h, d
     ld de, wScreenTileBuffer
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRectToBGMap
     xor a
     ldh [hScrollX], a
@@ -1104,7 +1104,7 @@ PauseMenu_Info_Blocks00To03_LoadScreenBlocks00To03::
     ld [rRAMG], a
     call WithSRAMDraw4ACEAnd4B52
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     ld de, wScreenTileBuffer
     call CopyRectToBGMap
     ld hl, wTemp1
@@ -1182,7 +1182,7 @@ PauseMenu_Info_Blocks04To06_LoadScreenBlocks00And04To06::
 .call_with_sram_draw4_ace_and4_be8:
     call WithSRAMDraw4ACEAnd4BE8
     ld hl, vBGMap0 + $21
-    ld bc, $1311
+    lb bc, $13, $11
     ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     call DecompressRecordSpeciesGraphicsToTiles0
@@ -1266,7 +1266,7 @@ PauseMenu_Info_Blocks07And08_LoadScreenBlocks00_07_08::
 .call_with_sram_show_record_species_and_skill:
     call WithSRAMShowRecordSpeciesAndSkillNames
     ld hl, vBGMap0 + $21
-    ld bc, $1311
+    lb bc, $13, $11
     ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     ld hl, wTemp1
@@ -1348,7 +1348,7 @@ PauseMenu_Info_Blocks09And0A_LoadScreenBlocks00_09_0A::
 .call_with_sram_draw_member_record_byte0_d:
     call WithSRAMDrawMemberRecordByte0D
     ld hl, vBGMap0 + $21
-    ld bc, $1311
+    lb bc, $13, $11
     ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     call PauseMenu_Info_Blocks09And0A_Case01_LoadPartySpeciesSpriteGraphics
@@ -1585,7 +1585,7 @@ DrawRecordMonsterPictureForMenuSelectedMember::
     ldh [rSVBK], a
     ld hl, vBGMap0 + $161
     ld de, wScreenAttrBuffer
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, $00
     ldh [rSVBK], a
@@ -2662,14 +2662,14 @@ PauseMenu_Info_Blocks09And0A_Case01_Sub01_CopyTileBufferToBGMap::
     jr z, .skip
     ld hl, vBGMap0 + $e7
     ld de, wScreenAttrBuffer + $80
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wPartyCount]
     cp $02
     jr z, .skip
     ld hl, vBGMap0 + $ed
     ld de, wScreenAttrBuffer + $100
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
 
 .skip:
@@ -3023,7 +3023,7 @@ PauseMenu_Items_UseItem_UpdateMenuCursor::
     jr z, .check_joypad_pressed
     call DrawItemTargetStatPreview
     ld hl, vBGMap0 + $141
-    ld bc, $0903
+    lb bc, $09, $03
     ld de, wScreenTileBuffer + $141
     call CopyRectToBGMap
     ret
@@ -4441,7 +4441,7 @@ PauseMenu_Skills_ChooseMember_UpdateMenuCursor::
 PauseMenu_Skills_ChooseMember_BuildScreenBlocks1CAnd0CWithCursorAndStep::
     call BuildScreenBlocks1CAnd0CWithCursor
     ld hl, vBGMap0 + $1a0
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, wWindowTileBuffer + $38
     call CopyRectToBGMap
     ld hl, wTemp1
@@ -4541,7 +4541,7 @@ PauseMenu_Skills_ChooseSkill_UpdateMenuCursor::
     ld a, $00
     ld [rRAMG], a
     ld hl, vBGMap0 + $206
-    ld bc, $0301
+    lb bc, $03, $01
     ld de, wWindowTileBuffer + $9e
     call CopyRectToBGMap
     ret
@@ -4560,7 +4560,7 @@ PauseMenu_Skills_ChooseSkill_UpdateMenuCursor::
     call ShowRecordSkillPageNames_Bank03
     call PauseMenu_Skills_CopyRectToBGMap_Shared02
     ld hl, vBGMap0 + $206
-    ld bc, $0301
+    lb bc, $03, $01
     ld de, wWindowTileBuffer + $9e
     call CopyRectToBGMap
     ld a, $00
@@ -4695,7 +4695,7 @@ PauseMenu_Skills_ChooseTarget_UpdateMenuCursor::
     ld a, $00
     ld [rRAMG], a
     ld hl, vBGMap0 + $141
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, wScreenTileBuffer + $141
     call CopyRectToBGMap
     ret
@@ -5074,7 +5074,7 @@ PauseMenu_Skills_CopyRectToBGMap::
 
 .loop:
     ld de, TileRect_03_6A98
-    ld bc, $0501
+    lb bc, $05, $01
     ld hl, wScreenTileBuffer + $10e
     call CopyRectToBGMap
     ret
@@ -5713,7 +5713,7 @@ PauseMenu_Skills_CopyRectToBGMap_Shared02::
 
 .loop:
     ld de, TileRect_03_6A98
-    ld bc, $0501
+    lb bc, $05, $01
     ld hl, wScreenTileBuffer + $10e
     call CopyRectToBGMap
     ret
@@ -5822,7 +5822,7 @@ PauseMenu_Plan_Block21Menu_UpdateMenuCursor::
 PauseMenu_Plan_Block21Menu_CopyRectToBGMap::
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectToBGMap
     ld a, $08
     ld [wStringCategory], a
@@ -5987,7 +5987,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24::
     call BuildScreenBlocks21To24
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $0709
+    lb bc, $07, $09
     call CopyRectToBGMap
     ld a, $02
     ld [wMenuRowCount], a
@@ -6227,7 +6227,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To25WithCursor::
     call BuildScreenBlocks21To25WithCursor
     ld hl, vBGMap0 + $e0
     ld de, wScreenTileBuffer + $e0
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectToBGMap
     ld a, $6c
     call QueueSoundEffect
@@ -6271,11 +6271,11 @@ PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Case0E::
     call BuildScreenBlocks21To24
     ld hl, vBGMap0 + $80
     ld de, wScreenTileBuffer + $80
-    ld bc, $0609
+    lb bc, $06, $09
     call CopyRectToBGMap
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectToBGMap
     call PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc
     ld a, $02
@@ -6374,7 +6374,7 @@ PauseMenu_Plan_TileBufferMenu_CopyRectToBGMap::
     ld [hl], a
     ld hl, vBGMap0 + $ea
     ld de, wScreenTileBuffer + $ea
-    ld bc, $090a
+    lb bc, $09, $0a
     call CopyRectToBGMap
     ld a, $0a
     ld [rRAMG], a
@@ -6721,7 +6721,7 @@ PauseMenu_Plan_PagedMenu_LoadScreenBlock21AndStep::
     call PauseMenu_Plan_PagedMenu_LoadScreenBlock28
     ld de, wScreenTileBuffer + $128
     ld hl, vBGMap0 + $128
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectToBGMap
     ld hl, wTemp1
     inc [hl]
@@ -6815,7 +6815,7 @@ PauseMenu_Plan_PagedMenu_LoadScreenBlock28::
     call PauseMenu_Plan_PagedMenu_Shared01_CpFF_Sub02
     ld de, wScreenTileBuffer + $63
     ld hl, vBGMap0 + $63
-    ld bc, $1005
+    lb bc, $10, $05
     call CopyRectToBGMap
     ret
 
@@ -6951,7 +6951,7 @@ PauseMenu_Plan_PagedMenu_ShowStringBank08AtTilesHL_Bank03::
     ld [rRAMG], a
     ld hl, vBGMap0 + $149
     ld de, wScreenTileBuffer + $149
-    ld bc, $0a07
+    lb bc, $0a, $07
     call CopyRectToBGMap
     ret
 
@@ -7133,7 +7133,7 @@ PauseMenu_Plan_Block2DNumber_ByteAToDecimalDigits::
     call WriteThreeDigitTilesDigits_Bank03
     ld de, wScreenTileBuffer + $68
     ld hl, vBGMap0 + $68
-    ld bc, $0601
+    lb bc, $06, $01
     call CopyRectToBGMap
     ret
 
@@ -7450,11 +7450,11 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24_Shared01::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld hl, vBGMap0 + $80
     ld de, wScreenTileBuffer + $80
-    ld bc, $0609
+    lb bc, $06, $09
     call CopyRectToBGMap
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectToBGMap
     ret
 

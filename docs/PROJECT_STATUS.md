@@ -55,6 +55,20 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
+## Readability state (2026-10-13, after D-008)
+
+Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run486).
+
+| Measure | State |
+| --- | --- |
+| Source form | pret style (D-005): no address aliases or machine bookkeeping in `src/`, `xor a` / `cp $10` / `[hli]` spelling, `jumptable` and `lb` macros, wrapped notes; one file per bank named by its contents (D-006) |
+| Text | 25,715 lines use the printer's command tokens (`<LINE>`, `<NEXT>`, `<PROMPT>`, `@`, ...; E-0336); no control byte is left raw in prose |
+| Ids | 9,278 uses of `MONSTER_*`, `SKILL_*`, `ITEM_*`, `ACTION_*` and `RESIST_*` (D-007, E-0338), in code comparisons and data tables |
+| Assets | 3,550 graphics and map files included by name (`gfx/monster_sprites/drak_slime.lz`), extracted from the reference at build time (D-008); no offset into the ROM is left in `src/` |
+| Labels | 33,212 global labels, none an address name. 4,458 (13%) are still structural or mechanical: `_CaseNN` state steps of large state machines (link sessions, name entry, menus, the staff roll), `Etc` names that list a step's writes, and per-bank copies (`_BankNN`) |
+| RAM | 961 named addresses; 127 still spell a byte number (`wScreenByteB2`), mostly work bytes reused by several menus |
+| Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
+
 ## Source presentation (2026-10-13, decision D-005)
 
 `src/` is now written for readers, with the pret disassemblies (pokered) as the model. `tools/disasm_all.py` writes the annotated analysis listing to `build/listing/` (untracked, regenerated on every run), and `tools/present.py` writes `src/banks/` from it:

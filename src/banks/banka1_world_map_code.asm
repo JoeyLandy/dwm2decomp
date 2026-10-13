@@ -2572,7 +2572,7 @@ RunGameMode2State_CopyScrollToHardware::
     call DecompressToVRAM
     ld de, $4238
     ld a, $5e
-    ld bc, $1412
+    lb bc, $14, $12
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
     call DrawRect12x12FromBankA1
@@ -3833,7 +3833,7 @@ RunGameMode2State_Case01_WriteVRAMByteInc::
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
 DrawRect12x12FromBankA1::
     ld de, $5808
-    ld bc, $0c0c
+    lb bc, $0c, $0c
     ld hl, vBGMap0 + $64
     ld a, $a1
     call CopyRectFromBankToVRAM

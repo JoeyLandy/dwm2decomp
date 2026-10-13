@@ -1902,7 +1902,7 @@ LinkKeyTrade_BuildKeyListIndexListEntries::
     ret nz
     ld de, TileRect_1B_6483
     ld hl, wWindowTileBuffer + $b4
-    ld bc, $0f09
+    lb bc, $0f, $09
     call CopyRectTo20ByteRows
     farcall BuildKeyListIndexListEntries
     ld a, $0e
@@ -1931,7 +1931,7 @@ LinkKeyTrade_BuildKeyListIndexListEntries::
     ld a, h
     ld [wTextWindowWidth], a
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     xor a
@@ -1983,7 +1983,7 @@ LinkKeyTrade_FillTilesFromRequest::
 LinkKeyTrade_ClampKeyListPageCursor::
     ld de, TileRect_1B_650A
     ld hl, wWindowTileBuffer + $c9
-    ld bc, $0d07
+    lb bc, $0d, $07
     call CopyRectTo20ByteRows
     ld a, $02
     ld [wArg5], a
@@ -2014,7 +2014,7 @@ LinkKeyTrade_ClampKeyListPageCursor::
     ld hl, LinkKeyTrade_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
@@ -2036,7 +2036,7 @@ LinkKeyTrade_DrawKeyListPageNames::
 
 LinkKeyTrade_BGMapAddressAtScroll_Bank1B::
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
@@ -2223,10 +2223,10 @@ LinkKeyTrade_QueueSoundEffect::
     call QueueSoundEffect
     ld de, TileRect_1B_65E9
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     xor a
@@ -2878,18 +2878,18 @@ LinkKeyTrade_ShowIsItOKTo::
     call LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc
     ld de, TileRect_1B_6483
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0f01
+    lb bc, $0f, $01
     call CopyRectTo20ByteRows
     ld de, TileRect_1B_65CE
     ld hl, wWindowTileBuffer + $78
-    ld bc, $0f01
+    lb bc, $0f, $01
     call CopyRectTo20ByteRows
     ld de, LinkKeyTrade_ShowIsItOKTo_Data
     ld hl, wWindowTileBuffer + $8c
-    ld bc, $0f01
+    lb bc, $0f, $01
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
@@ -2907,10 +2907,10 @@ LinkKeyTrade_QueueSoundEffect_Case13::
     call QueueSoundEffect
     ld de, TileRect_1B_65A6
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     xor a
@@ -3001,10 +3001,10 @@ ShowTwoChoiceBox65E9WhenTextIdle::
     ret nz
     ld de, TileRect_1B_65E9
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     xor a
@@ -3080,10 +3080,10 @@ LinkKeyTrade_QueueSoundEffect_Case17::
     call QueueSoundEffect
     ld de, TileRect_1B_65A6
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
@@ -3848,10 +3848,10 @@ LinkKeyTrade_CopyRectTo20ByteRows::
     call LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B
     ld de, TileRect_1B_6565
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0105
+    lb bc, $01, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ret
@@ -4635,11 +4635,11 @@ DrawListEntriesCell5RecordPanel::
     call LoadFamilyIconTileForRecordB_Bank1B
     ld de, TileRect_1B_7738
     ld hl, wWindowTileBuffer + $134
-    ld bc, $0501
+    lb bc, $05, $01
     call CopyRectTo20ByteRows
     ld de, TileRect_1B_773D
     ld hl, wWindowTileBuffer + $140
-    ld bc, $0d02
+    lb bc, $0d, $02
     call CopyRectTo20ByteRows
     pop af
     ld [wArg1], a
@@ -4682,14 +4682,14 @@ DrawRuleBoxByWD04CBit7::
     jr nz, .skip
     ld de, TileRect_1B_7757
     ld hl, wWindowTileBuffer + $6e
-    ld bc, $0a07
+    lb bc, $0a, $07
     call CopyRectTo20ByteRows
     jr .check_screen_step
 
 .skip:
     ld de, TileRect_1B_779D
     ld hl, wWindowTileBuffer + $6e
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows
 
 .check_screen_step:
@@ -4707,7 +4707,7 @@ EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
@@ -4858,10 +4858,10 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
     call QueueSoundEffect
     ld de, TileRect_1B_7847
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld hl, vTiles1
@@ -4989,7 +4989,7 @@ EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B::
 EggServiceMenu_Bank1B_PickRecords_Case0A_EraseCEntriesOfWordTable_Bank1B_CallEggServiceMenu_Bank1B_PickRecords_CopyRe::
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenStep]
@@ -5003,7 +5003,7 @@ EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount::
     ret nz
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wPickCount]
@@ -5072,10 +5072,10 @@ EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_QueueSoundEffect::
     call QueueSoundEffect
     ld de, TileRect_1B_78CB
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wScreenSubStep]
@@ -5457,10 +5457,10 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     call QueueSoundEffect
     ld de, TileRect_1B_78E9
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     call SetDefaultStringWindow_Bank1B
@@ -5731,7 +5731,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
     farcall ShowString_Bank1B_481A
     ld de, TileRect_1B_78E9
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRows
     call SetDefaultStringWindow_Bank1B
     ld a, $01
@@ -5758,7 +5758,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
     call ClearRecordPanelTiles
     ld de, TileRect_1B_7928
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows
     ld a, [wListCursor]
     ld b, $bc
@@ -5852,7 +5852,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
     farcall ShowString_Bank1B_481A
     ld de, TileRect_1B_7847
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
     xor a
     ld [wChoiceCursor], a
@@ -5863,13 +5863,13 @@ EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
 
 EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     call BGMapAddressAtScroll_Bank1B
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1B
     ld a, $70
@@ -6217,19 +6217,19 @@ DrawChoiceBoxByWD04CBit7::
     jr nz, .skip
     ld de, TileRect_1B_788F
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows
     jr .call_bg_map_address_at_scroll_bank1_b
 
 .skip:
     ld de, TileRect_1B_78AD
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows
 
 .call_bg_map_address_at_scroll_bank1_b:
     call BGMapAddressAtScroll_Bank1B
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B
     ret
@@ -6240,14 +6240,14 @@ EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows::
     jr nz, .skip
     ld de, TileRect_1B_77F7
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
     jr .return
 
 .skip:
     ld de, TileRect_1B_781F
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows
 
 .return:

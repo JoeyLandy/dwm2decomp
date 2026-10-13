@@ -125,7 +125,7 @@ DebugMessageTest_Init::
     ld a, $01
     ld de, TileRect_01_412F
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRectFromBankToVRAM
     xor a
     ld [wMenuState], a
@@ -169,7 +169,7 @@ DebugMonsterRecordViewer_Init::
     ld a, $01
     ld de, TileRect_01_42BC
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRectFromBankToVRAM
     ld hl, $0000
     call DebugShowMonsterRecord
@@ -208,7 +208,7 @@ DebugSkillViewer_Init::
     ld a, $01
     ld de, TileRect_01_6F30
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a
@@ -275,15 +275,15 @@ DebugResultsDisplay_Init::
     ld [wStringIndex], a ; 'RESULTS DISPLAY Species Gender'
     farcall ShowString_Bank1B_4C94
     ld hl, vBGMap0 + $60
-    ld bc, $1001
+    lb bc, $10, $01
     ld a, $80
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $a0
-    ld bc, $1004
+    lb bc, $10, $04
     ld a, $90
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $120
-    ld bc, $1002
+    lb bc, $10, $02
     ld a, $b0
     call FillRectWithTileSequence
     ld a, $fc
@@ -357,19 +357,19 @@ DebugResultsDisplay_Init::
     ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld hl, vBGMap0 + $8a
-    ld bc, $0901
+    lb bc, $09, $01
     ld a, $20
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $ea
-    ld bc, $0901
+    lb bc, $09, $01
     ld a, $30
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $12a
-    ld bc, $0901
+    lb bc, $09, $01
     ld a, $40
     call FillRectWithTileSequence
     ld hl, vBGMap0 + $aa
-    ld bc, $0901
+    lb bc, $09, $01
     ld a, $50
     call FillRectWithTileSequence
     xor a
@@ -414,7 +414,7 @@ DebugMainMenu_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld hl, vBGMap0 + $a3
-    ld bc, $1002
+    lb bc, $10, $02
     ld a, $80
     call FillRectWithTileSequence
     ret
@@ -452,13 +452,13 @@ DebugMapEditor_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld hl, vBGMap0 + $a3
-    ld bc, $1007
+    lb bc, $10, $07
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
     ld de, TileRect_01_46A4
     ld hl, vBGMap0 + $ea
-    ld bc, $1001
+    lb bc, $10, $01
     call CopyRectFromBankToVRAM
     xor a
     ld [wDebugCursor], a
@@ -515,13 +515,13 @@ DebugAutomap_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld hl, vBGMap0 + $a3
-    ld bc, $1007
+    lb bc, $10, $07
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
     ld de, TileRect_01_4733
     ld hl, vBGMap0 + $ea
-    ld bc, $1001
+    lb bc, $10, $01
     call CopyRectFromBankToVRAM
     xor a
     ld [wDebugCursor], a
@@ -577,13 +577,13 @@ DebugMonsterPictureViewer_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld hl, vBGMap0 + $a3
-    ld bc, $1002
+    lb bc, $10, $02
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
     ld de, TileRect_01_47DE
     ld hl, vBGMap0 + $124
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a
@@ -594,7 +594,7 @@ DebugMonsterPictureViewer_Init::
     ld a, $01
     ld de, TileRect_01_4802
     ld hl, vBGMap0 + $124
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRectFromBankToVRAM
     ld c, $4f
     ld a, $00
@@ -667,7 +667,7 @@ DebugSoundTest_Init::
     ld a, $01
     ld de, TileRect_01_488A
     ld hl, vBGMap0 + $a3
-    ld bc, $0b04
+    lb bc, $0b, $04
     call CopyRectFromBankToVRAM
     xor a
     ld [wMenuState], a
@@ -721,7 +721,7 @@ DebugBattleSetup_Init::
     ld a, $01
     ld de, TileRect_01_495D
     ld hl, vBGMap0 + $40
-    ld bc, $140e
+    lb bc, $14, $0e
     call CopyRectFromBankToVRAM
     xor a
     ld hl, wWorkBuf

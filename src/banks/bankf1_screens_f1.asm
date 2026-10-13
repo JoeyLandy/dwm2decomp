@@ -1784,7 +1784,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5::
     call LoadFamilyIconTileForRecordB_BankF1
     ld de, TileRect_F1_5A36
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_BankF1
     pop af
     ld [wArg1], a
@@ -1927,7 +1927,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
     call BeginString_Bank0E_Cat0
     call RunFunc58FAAt0278AndStep_BankF1
     call BGMapAddressAtScroll_BankF1
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF1
     ret
@@ -2113,10 +2113,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect::
     call QueueSoundEffect
     ld de, TileRect_F1_5A90
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF1
     ld a, [wScreenStep]
@@ -2252,10 +2252,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript::
     ld [wTwoChoiceCursor], a
     ld de, TileRect_F1_5A72
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF1
     ld a, [wScreenStep]
@@ -3077,7 +3077,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E::
     ld de, TileRect_F1_5A90
     ld hl, wWindowTileBuffer + $e7
-    ld bc, $0907
+    lb bc, $09, $07
     call CopyRectTo20ByteRows_BankF1
     ld a, $0f
     ld [wStringIndex], a
@@ -3237,7 +3237,7 @@ RunFunc58FAAt024FAndDrawBox_BankF1::
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_F1
     call BGMapAddressAtScroll_BankF1
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF1
     ret

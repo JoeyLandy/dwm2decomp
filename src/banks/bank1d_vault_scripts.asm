@@ -436,19 +436,19 @@ LoadThreeTilesAndDrawRows4603To460B::
     call BGMapAddressAtScroll_Bank1D
     ld de, $0062
     add hl, de
-    ld bc, $0401
+    lb bc, $04, $01
     ld de, TileRect_1D_4603
     call DrawRectSetTextCursorLoPlus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00a2
     add hl, de
-    ld bc, $0401
+    lb bc, $04, $01
     ld de, TileRect_1D_4607
     call DrawRectSetTextCursorLoPlus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00e2
     add hl, de
-    ld bc, $0401
+    lb bc, $04, $01
     ld de, TileRect_1D_460B
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ret
@@ -804,7 +804,7 @@ VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data::
 DrawRect0088AtBGMap1370AndStep::
     ld hl, $0088
     ld de, vBGMap1 + $370
-    ld bc, $090c
+    lb bc, $09, $0c
     call SaveBGMapRectWithAttrs
     ld a, [wScreenStep]
     inc a
@@ -816,7 +816,7 @@ DrawRect0088AtBGMap1370AndStep::
 DrawRect0140AtBGMap13E0AndStep::
     ld hl, $0140
     ld de, vBGMap1 + $3e0
-    ld bc, $0307
+    lb bc, $03, $07
     call SaveBGMapRectWithAttrs
     ld a, [wScreenState]
     cp $03
@@ -840,7 +840,7 @@ VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
     call BGMapAddressAtScroll_Bank1D
     ld de, $0088
     add hl, de
-    ld bc, $0c09
+    lb bc, $0c, $09
     ld de, TileRect_1D_48FC
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
@@ -850,7 +850,7 @@ VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
     call BGMapAddressAtScroll_Bank1D
     ld de, $0088
     add hl, de
-    ld bc, $0c09
+    lb bc, $0c, $09
     ld de, TileRect_1D_4968
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
@@ -1216,7 +1216,7 @@ VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
     call BGMapAddressAtScroll_Bank1D
     ld de, $0140
     add hl, de
-    ld bc, $0703
+    lb bc, $07, $03
     ld de, wScreenList
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ld a, [wIsCGB]
@@ -2245,7 +2245,7 @@ VaultMenu_Store_Case0F_WriteScreenStepAndScriptCommandTypeEtc::
 DrawRect0147AndResetNumberEditPos::
     ld hl, $0147
     ld de, vBGMap1 + $370
-    ld bc, $030d
+    lb bc, $03, $0d
     call SaveBGMapRectWithAttrs
     ld a, [wScreenStep]
     inc a
@@ -2346,7 +2346,7 @@ VaultMenu_Store_Number24ToPackedBCD::
     ld de, $014b
     add hl, de
     ld de, wScreenList
-    ld bc, $0903
+    lb bc, $09, $03
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ld a, [wIsCGB]
     and a
@@ -2432,7 +2432,7 @@ VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
     ld de, $006c
     add hl, de
     ld de, wScreenList
-    ld bc, $0802
+    lb bc, $08, $02
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ld a, [wScreenState]
     cp $03

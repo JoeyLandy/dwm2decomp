@@ -1108,14 +1108,14 @@ BattleEnd_Step5_DrawThenAskToJoin::
 BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRect32StrideToVRAM
     call LoadBattleMonsterPictureAndTitle
     call LayoutTileBlocksForBattleFoeCount
     call LoadBattleMonsterPictureAttributes
     ld de, wScreenTileBuffer + $e7
     ld hl, vBGMap0 + $e7
-    ld bc, $0606
+    lb bc, $06, $06
     call CopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1169,7 +1169,7 @@ BuildAndDrawBattleScreen::
     call BuildBattleScreenBuffer
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRect32StrideToVRAM
     ret
 
@@ -2318,7 +2318,7 @@ RunBattleSetup_FleeCommand_LoadCursorTileAndRect7826::
     ld [wMenuSubState], a
     ld de, wScreenTileBuffer + $10e
     ld hl, vBGMap0 + $10e
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
     inc [hl]
@@ -7181,11 +7181,11 @@ RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31::
     call ShowSelectedSkillNameAndCost
     ld de, wScreenTileBuffer + $8
     ld hl, vBGMap0 + $8
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRect32StrideToVRAM
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $1409
+    lb bc, $14, $09
     call CopyRect32StrideToVRAM
     call DrawCommandCursorPageNumber
     ld hl, wBattleSubStep
@@ -7255,7 +7255,7 @@ RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer::
     farcall CopyRectRecord7345ToScreenBuffer
     ld hl, vBGMap0 + $1a0
     ld de, wWindowTileBuffer + $38
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM
     ld hl, $0508
     call ShowStringHL_Bank31
@@ -7272,7 +7272,7 @@ RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826::
     ld [wWindowTileBuffer + $7], a
     ld hl, vBGMap0 + $10e
     ld de, wScreenTileBuffer + $10e
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRect32StrideToVRAM
     ld a, $01
     ld [wMenuSubState], a
@@ -7988,7 +7988,7 @@ ClearWindowAndCopyRect7345Far::
 DrawWC338RowsToBGMapRow13::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM
     ret
 
@@ -7998,7 +7998,7 @@ RunBattleSetup_FleeCommand_CopyRectRecord73ADToScreenBuffer::
 RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
-    ld bc, $0e05
+    lb bc, $0e, $05
     call CopyRect32StrideToVRAM
     ret
 
@@ -8012,7 +8012,7 @@ CopyRectRecord73F7ToScreenBufferFar::
 DrawWC278Rect12x11ToBGMapRow7::
     ld de, wScreenTileBuffer + $e0
     ld hl, vBGMap0 + $e0
-    ld bc, $0c0b
+    lb bc, $0c, $0b
     call CopyRect32StrideToVRAM
     ret
 
@@ -8027,7 +8027,7 @@ CopyRectRecord755FToScreenBufferFar::
 DrawWC2B8LeftToBGMapRow9_74B4::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $0809
+    lb bc, $08, $09
     call CopyRect32StrideToVRAM
     ret
 
@@ -8041,7 +8041,7 @@ CopyRectRecord7600ToScreenBufferFar::
 DrawWC2B8RowsToBGMapRow9::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $1409
+    lb bc, $14, $09
     call CopyRect32StrideToVRAM
     ld a, $01
     ld [wBattleArg0], a
@@ -8057,7 +8057,7 @@ CopyRectRecord76ACToScreenBufferFar::
 DrawWC2B8LeftToBGMapRow9::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $0809
+    lb bc, $08, $09
     call CopyRect32StrideToVRAM
     ret
 
@@ -8071,7 +8071,7 @@ CopyRectRecord76F8ToScreenBufferFar::
 DrawWC2F8Rect8x7ToBGMapRow11::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRect32StrideToVRAM
     ret
 
@@ -8086,11 +8086,11 @@ CopyRectRecords7600And7734ToScreenBufferFar::
 DrawWC2A4AndWC2B8Rects::
     ld de, wScreenTileBuffer + $10c
     ld hl, vBGMap0 + $10c
-    ld bc, $0701
+    lb bc, $07, $01
     call CopyRect32StrideToVRAM
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $1409
+    lb bc, $14, $09
     call CopyRect32StrideToVRAM
     ret
 
@@ -8104,7 +8104,7 @@ CopyRectRecord7750ToScreenBufferFar::
 DrawWC2F8RectToBGMapRow11::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
-    ld bc, $0e07
+    lb bc, $0e, $07
     call CopyRect32StrideToVRAM
     ret
 

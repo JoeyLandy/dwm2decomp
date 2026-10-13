@@ -2032,14 +2032,14 @@ BuildAndCopySlotPanel_A0::
 DrawWC338RowsToBGMapRow13_BankA0::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRect32StrideToVRAM_BankA0
     ret
 
 RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
-    ld bc, $0e05
+    lb bc, $0e, $05
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2048,7 +2048,7 @@ RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0::
 DrawWC278Rect20x11ToBGMapRow7_BankA0::
     ld de, wScreenTileBuffer + $e0
     ld hl, vBGMap0 + $e0
-    ld bc, $140b
+    lb bc, $14, $0b
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2057,7 +2057,7 @@ DrawWC278Rect20x11ToBGMapRow7_BankA0::
 DrawWC2B8Rect11x9ToBGMapRow9_BankA0::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $0b09
+    lb bc, $0b, $09
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2066,7 +2066,7 @@ DrawWC2B8Rect11x9ToBGMapRow9_BankA0::
 DrawWC2B8RowsToBGMapRow9_BankA0::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $1409
+    lb bc, $14, $09
     call CopyRect32StrideToVRAM_BankA0
     ld a, $01
     ld [wBattleArg0], a
@@ -2076,7 +2076,7 @@ DrawWC2B8RowsToBGMapRow9_BankA0::
 DrawWC2B8LeftToBGMapRow9_BankA0::
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $0809
+    lb bc, $08, $09
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2084,7 +2084,7 @@ DrawWC2B8LeftToBGMapRow9_BankA0::
 DrawWC2F8Rect7x7ToBGMapRow11_BankA0::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
-    ld bc, $0707
+    lb bc, $07, $07
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2093,11 +2093,11 @@ DrawWC2F8Rect7x7ToBGMapRow11_BankA0::
 DrawWC2A4AndWC2B8Rects_BankA0::
     ld de, wScreenTileBuffer + $10c
     ld hl, vBGMap0 + $10c
-    ld bc, $0701
+    lb bc, $07, $01
     call CopyRect32StrideToVRAM_BankA0
     ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
-    ld bc, $1409
+    lb bc, $14, $09
     call CopyRect32StrideToVRAM_BankA0
     ret
 
@@ -2105,7 +2105,7 @@ DrawWC2A4AndWC2B8Rects_BankA0::
 DrawWC2F8Rect13x7ToBGMapRow11_BankA0::
     ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
-    ld bc, $0d07
+    lb bc, $0d, $07
     call CopyRect32StrideToVRAM_BankA0
     ret
 

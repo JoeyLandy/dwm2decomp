@@ -98,7 +98,7 @@ LibraryMenu_ToClearStringWindowAt2020AndStep::
 LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld de, TileRect_0C_56D9
     ld hl, wWindowTileBuffer + $64
-    ld bc, $090d
+    lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGridCursorY]
     and a
@@ -112,7 +112,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld b, $bb
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wGridCursorX]
@@ -122,7 +122,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     call BGMapAddressAtScroll_Bank0C
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
     call LibraryMenu_WriteWorkBuf
@@ -528,13 +528,13 @@ LibraryMenu_CopyBytesDEToHL_Bank0C::
 
 .call_bg_map_address_at_scroll_bank0_c:
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenByte99]
@@ -623,7 +623,7 @@ LibraryMenu_ToClearStringWindowAt2200AndStep::
 LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld de, TileRect_0C_574E
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c0d
+    lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
     call GridIndexFromGridCursorXGridCursorY
     ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
@@ -641,7 +641,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld b, $bb
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wGrid2CursorX]
@@ -891,13 +891,13 @@ LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data::
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D::
     ld de, TileRect_0C_57EA
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c0d
+    lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
     ld a, $01
     ld [wArg1], a
     call LibraryMenu_HLToDecimalDigits
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -925,7 +925,7 @@ LibraryMenu_StoreBAtWordTableEntry_Bank0C::
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, $05
@@ -1073,45 +1073,45 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01::
 .skip:
     ld de, TileRect_0C_48AB
     ld hl, wWindowTileBuffer + $81
-    ld bc, $0a01
+    lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48B5
     ld hl, wWindowTileBuffer + $bd
-    ld bc, $0a01
+    lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48BF
     ld hl, wWindowTileBuffer + $e5
-    ld bc, $0a01
+    lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48C9
     ld hl, wWindowTileBuffer + $10d
-    ld bc, $0901
+    lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48D2
     ld hl, wWindowTileBuffer + $135
-    ld bc, $0901
+    lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48DB
     ld hl, wWindowTileBuffer + $15d
-    ld bc, $0901
+    lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48E4
     ld hl, wWindowTileBuffer + $15
-    ld bc, $1201
+    lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
     ld de, TileRect_0C_48F6
     ld hl, wWindowTileBuffer + $3d
-    ld bc, $1201
+    lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
     call LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $108
-    ld bc, $0201
+    lb bc, $02, $01
     call CopyRectTo20ByteRows_Bank0C
     call LibraryMenu_ShowMonsterEntry_LoadClassBlock
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $130
-    ld bc, $0401
+    lb bc, $04, $01
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wIsCGB]
     and a
@@ -1132,13 +1132,13 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01::
 
 .call_bg_map_address_at_scroll_bank0_c:
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenStep]
@@ -1695,7 +1695,7 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
 LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld de, TileRect_0C_56D9
     ld hl, wWindowTileBuffer + $64
-    ld bc, $090d
+    lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGridCursorY]
     and a
@@ -1713,7 +1713,7 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld [wWindowTileBuffer + $156], a
     ld de, TileRect_0C_574E
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c0d
+    lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGrid2CursorX]
     ld b, $bc
@@ -1754,17 +1754,17 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     ld [wArg1], a
     call LibraryMenu_HLToDecimalDigits
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld de, TileRect_0C_589A
     ld hl, wWindowTileBuffer
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyRectTo20ByteRows_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
@@ -1793,7 +1793,7 @@ LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140c
+    lb bc, $14, $0c
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     xor a
@@ -5406,7 +5406,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26::
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     xor a
@@ -5564,12 +5564,12 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
 ArenaMenu_CopyRectTo20ByteRows_Bank0C::
     ld de, TileRect_0C_762E
     ld hl, wWindowTileBuffer + $b4
-    ld bc, $1109
+    lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
     call ArenaMenu_Case01_ReadArenaRank
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -5671,7 +5671,7 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -5741,10 +5741,10 @@ ShowTwoChoiceBoxAtWC412::
     call QueueSoundEffect
     ld de, TileRect_0C_7831
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -5842,10 +5842,10 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01::
     call CopyScreenBufferRectWithAttrs_0C
     ld de, TileRect_0C_76C7
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0305
+    lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ret
@@ -5856,7 +5856,7 @@ ArenaMenu_BGMapAddressAtScroll_Bank0C::
     ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
     call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, $02
@@ -6036,7 +6036,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -6051,15 +6051,15 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
 ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10::
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $b4
-    ld bc, $1109
+    lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call ArenaMenu_WriteTwoChoiceCursor
@@ -6076,15 +6076,15 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10::
 ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11::
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $b4
-    ld bc, $1109
+    lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -6161,7 +6161,7 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -6236,7 +6236,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13::
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, $0d
@@ -6358,10 +6358,10 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18::
     call CopyScreenBufferRectWithAttrs_0C
     ld de, TileRect_0C_776F
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0305
+    lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call ArenaMenu_WriteTwoChoiceCursor
@@ -6386,7 +6386,7 @@ ArenaMenu_SubtractArg1AmountFromGold_Case19::
     farcall SubtractArg1AmountFromGold
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wScreenState]
@@ -6641,13 +6641,13 @@ RedrawFullScreenBoxes_0C::
 
 .call_bg_map_address_at_scroll_bank0_c:
     call BGMapAddressAtScroll_Bank0C
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
     ret
@@ -6725,7 +6725,7 @@ ArenaMenu_Case01_ReadArenaRank::
 ArenaMenu_Number24ToPackedBCD::
     ld de, TileRect_0C_777E
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGoldLo]
     ld [wDigits], a

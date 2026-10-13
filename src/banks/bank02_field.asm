@@ -5488,11 +5488,11 @@ OpenFieldMenuOnA::
 .skip:
     ld de, TileRect_02_6606
     ld hl, wWindowTileBuffer
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectToScreenBufferAndClearAttributes_65C3
     ld de, TileRect_02_6642
     ld hl, wWindowTileBuffer + $c
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectToScreenBufferAndClearAttributes_65C3
     ldh a, [hScrollY]
     and $f8
@@ -5521,7 +5521,7 @@ OpenFieldMenuOnA::
     ld l, e
     ld h, d
     push hl
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ld a, $b3
     ld [wPartyWindowTimer], a
@@ -5806,21 +5806,21 @@ ShowIdlePartyStatusWindow::
 .skip:
     ld de, TileRect_02_68E6
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0706
+    lb bc, $07, $06
     call CopyRectToScreenBufferAndClearAttributes_68A3
     jr .call_build_party_status_window_rows
 
 .skip2:
     ld de, TileRect_02_6910
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0d06
+    lb bc, $0d, $06
     call CopyRectToScreenBufferAndClearAttributes_68A3
     jr .call_build_party_status_window_rows
 
 .skip3:
     ld de, TileRect_02_695E
     ld hl, wWindowTileBuffer + $64
-    ld bc, $1306
+    lb bc, $13, $06
     call CopyRectToScreenBufferAndClearAttributes_68A3
 
 .call_build_party_status_window_rows:
@@ -5994,7 +5994,7 @@ DrawBottomWindowWC364AtScroll::
     ld h, d
     push hl
     ld de, wWindowTileBuffer + $64
-    ld bc, $1406
+    lb bc, $14, $06
     xor a
     call CopyRectFromBankToBGMapWrapped
     pop hl
@@ -6006,7 +6006,7 @@ DrawBottomWindowWC364AtScroll::
     ld a, $02
     ldh [rSVBK], a
     ld de, wWindowAttrBuffer + $64
-    ld bc, $1406
+    lb bc, $14, $06
     xor a
     call CopyRectFromBankToBGMapWrapped
     ld a, $00
@@ -6236,7 +6236,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     pop de
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
@@ -6249,7 +6249,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     pop de
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
@@ -6265,7 +6265,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
     pop de
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
@@ -6278,7 +6278,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
     pop de
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
@@ -6294,7 +6294,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02::
     pop de
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ld a, [wTextWindowState]
     and $80
@@ -6306,7 +6306,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02::
 .skip:
     ld l, e
     ld h, d
-    ld bc, $1405
+    lb bc, $14, $05
     call CopyScreenRectToBGMapSetTextCursorLo
     ld a, [wTextWindowState]
     and $80

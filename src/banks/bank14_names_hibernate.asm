@@ -29,7 +29,7 @@ CloseHibernateMenu_CopyBytesDEToHL_Bank14::
 
 .call_bg_map_address_at_scroll_bank14:
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wScreenList]
@@ -196,11 +196,11 @@ HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
 HibernateMenu_SetupPartyList_RunFunc5925At0280::
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank14
     call RunFunc5925At0280
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     farcall CountRecordsInUse
@@ -930,7 +930,7 @@ HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
     ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wListCursor]
@@ -958,7 +958,7 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
 
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wScreenStep]
@@ -989,10 +989,10 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Cas
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E::
     ld de, TileRect_14_47C0
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, $6c
@@ -1213,7 +1213,7 @@ HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_Data::
 DrawBox4965AndMenuAndStep::
     ld de, TileRect_14_4965
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0801
+    lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank14
     ld c, $04
     ld hl, $028c
@@ -1248,14 +1248,14 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_Case1B::
     call QueueSoundEffect
     ld de, TileRect_14_49AE
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank14
     ld a, [wGridCursorX]
     ld b, $bc
     ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wScreenStep]
@@ -1339,7 +1339,7 @@ HibernateMenu_ChooseRecords_Case1C_BGMapAddressAtScroll_Bank14::
 
 .call_bg_map_address_at_scroll_bank14:
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ret
@@ -1371,14 +1371,14 @@ HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14::
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14::
     ld de, TileRect_14_4AA8
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank14
     ld de, TileRect_14_4B02
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     xor a
@@ -1434,7 +1434,7 @@ ClearTilesAndDrawRect5B36AndStep::
     call FillTilesBxC
     ld de, TileRect_14_5B36
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank14
     ld a, [wScreenStep]
     inc a
@@ -1490,7 +1490,7 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21::
     call LoadFamilyIconTileForRecordB_Bank14
     ld de, TileRect_14_5B8E
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wArg1], a
@@ -1597,7 +1597,7 @@ HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
 HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C::
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank14
     call RunFunc5925At0280
     ld a, [wGridCursorX]
@@ -1605,7 +1605,7 @@ HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C::
     ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     farcall CountRecordsInUse
@@ -1621,7 +1621,7 @@ HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C::
 
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case31::
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, $25
@@ -1635,11 +1635,11 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case31::
 HibernateMenu_ChooseRecords_RunFunc5925At0280::
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank14
     call RunFunc5925At0280
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     farcall CountRecordsInUse
@@ -1758,7 +1758,7 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
     farcall LoadFamilyIconTileForArg1Record
     ld de, TileRect_14_5B8E
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wArg1], a
@@ -1858,7 +1858,7 @@ HibernateMenu_WriteSVBK::
 
 .call_bg_map_address_at_scroll_bank14:
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld de, Tiles2Plus210Tiles_1F_4130
@@ -1913,7 +1913,7 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM::
     call QueueSoundEffect
     ld de, TileRect_14_4FAE
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank14
     ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles2 + $700
@@ -1931,7 +1931,7 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM::
     ld c, $10
     call CopyFromBankWaitVRAM
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wScreenStep]
@@ -2105,7 +2105,7 @@ HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
 
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, $08
@@ -2267,7 +2267,7 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor::
 HibernateMenu_ChooseToHibernate_RunFunc5925At0280::
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0a09
+    lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank14
     call RunFunc5925At0280
     ld a, [wGridCursorX]
@@ -2275,7 +2275,7 @@ HibernateMenu_ChooseToHibernate_RunFunc5925At0280::
     ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     farcall CountRecordsInUse
@@ -2291,7 +2291,7 @@ HibernateMenu_ChooseToHibernate_RunFunc5925At0280::
 
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_Case32::
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, [wScreenStep]
@@ -2398,7 +2398,7 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case3B::
 
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_Case41::
     call BGMapAddressAtScroll_Bank14
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank14
     ld a, $3b
@@ -2572,7 +2572,7 @@ HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
     call LoadFamilyIconTileForRecordB_Bank14
     ld de, TileRect_14_5B8E
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank14
     xor a
     ld [wArg1], a
@@ -2664,7 +2664,7 @@ DrawBox1D4AndCopyRect5595::
     call CopyScreenBufferRectWithAttrs_Bank14
     ld de, TileRect_14_5595
     ld hl, wWindowTileBuffer + $10d
-    ld bc, $0b01
+    lb bc, $0b, $01
     call CopyRectTo20ByteRows_Bank14
     ld a, [wScreenStep]
     inc a

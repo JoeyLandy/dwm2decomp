@@ -2386,105 +2386,303 @@ RemoveWItemIdFromInventory::
 ; byte 3 (usually $64); byte 4; byte 5 (never read); byte 6; byte 7; byte 8; byte 9; byte 10; byte
 ; 11; byte 12
 ItemTable::
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
-    db $00, $0a, $00, $64, $00, $00, $04, $02, $00, $03, $04, $1e, $28 ; id 1
-    db $00, $32, $00, $64, $00, $00, $04, $03, $00, $03, $04, $3c, $46 ; id 2
-    db $00, $f4, $01, $64, $00, $00, $05, $03, $00, $06, $04, $ff, $ff ; id 3
-    db $00, $c8, $00, $64, $00, $00, $04, $03, $00, $03, $07, $14, $1e ; id 4
-    db $00, $d0, $07, $64, $00, $00, $04, $03, $00, $03, $07, $ff, $ff ; id 5
-    db $01, $04, $00, $64, $00, $00, $04, $02, $00, $03, $08, $00, $00 ; id 6
-    db $01, $14, $00, $64, $00, $00, $04, $02, $00, $03, $09, $00, $00 ; id 7
-    db $01, $14, $00, $64, $00, $00, $04, $02, $00, $03, $0b, $00, $00 ; id 8
-    db $01, $14, $00, $64, $00, $00, $04, $03, $00, $03, $0c, $00, $00 ; id 9
-    db $01, $14, $00, $64, $00, $00, $04, $04, $00, $03, $0a, $00, $00 ; id 10
-    db $00, $e8, $03, $14, $02, $00, $05, $00, $00, $05, $04, $2d, $37 ; id 11
-    db $01, $e8, $03, $64, $00, $00, $04, $02, $00, $03, $0d, $00, $00 ; id 12
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $10, $03, $00 ; id 13
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $11, $03, $00 ; id 14
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $12, $03, $00 ; id 15
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $13, $03, $00 ; id 16
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $0e, $05, $00 ; id 17
-    db $02, $14, $00, $64, $01, $00, $00, $05, $00, $03, $0f, $05, $00 ; id 18
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $1b, $32, $32 ; id 19
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $1c, $32, $32 ; id 20
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $1d, $32, $32 ; id 21
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $1e, $32, $32 ; id 22
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $1f, $32, $32 ; id 23
-    db $02, $10, $27, $64, $01, $00, $00, $00, $00, $1a, $20, $32, $32 ; id 24
-    db $03, $0a, $00, $64, $00, $01, $04, $06, $00, $14, $15, $05, $0a ; id 25
-    db $03, $28, $00, $64, $00, $01, $04, $06, $00, $14, $15, $0a, $1e ; id 26
-    db $03, $c8, $00, $64, $00, $01, $04, $06, $00, $14, $15, $14, $64 ; id 27
-    db $03, $e8, $03, $64, $00, $01, $04, $06, $00, $14, $15, $64, $ff ; id 28
-    db $06, $14, $00, $64, $00, $01, $04, $06, $04, $14, $16, $05, $05 ; id 29
-    db $03, $88, $13, $64, $02, $01, $03, $00, $00, $21, $22, $00, $ff ; id 30
-    db $06, $20, $03, $00, $02, $01, $07, $00, $00, $2b, $2c, $00, $00 ; id 31
-    db $06, $64, $00, $64, $01, $00, $07, $03, $00, $06, $23, $00, $00 ; id 32
-    db $06, $b0, $04, $00, $01, $00, $07, $00, $01, $24, $ff, $00, $00 ; id 33
-    db $04, $bc, $02, $14, $02, $00, $03, $07, $00, $00, $00, $00, $00 ; id 34
-    db $04, $20, $03, $3c, $02, $00, $00, $07, $00, $00, $00, $00, $00 ; id 35
-    db $04, $dc, $05, $0a, $02, $00, $03, $07, $00, $00, $00, $08, $18 ; id 36
-    db $04, $b8, $0b, $14, $02, $00, $03, $07, $00, $00, $00, $23, $32 ; id 37
-    db $04, $a0, $0f, $14, $02, $00, $03, $07, $00, $00, $00, $78, $8c ; id 38
-    db $04, $88, $13, $14, $02, $00, $02, $07, $00, $00, $00, $b4, $c8 ; id 39
-    db $05, $32, $00, $64, $01, $00, $07, $07, $00, $17, $ff, $00, $00 ; id 40
-    db $05, $19, $00, $64, $01, $00, $07, $08, $00, $18, $ff, $00, $00 ; id 41
-    db $05, $32, $00, $64, $01, $00, $07, $04, $00, $19, $ff, $00, $00 ; id 42
-    db $06, $32, $00, $64, $01, $00, $07, $00, $00, $25, $25, $00, $00 ; id 43
-    db $06, $01, $00, $64, $03, $00, $07, $09, $05, $19, $00, $00, $00 ; id 44
-    db $06, $01, $00, $00, $03, $00, $07, $00, $05, $00, $00, $00, $00 ; id 45
-    db $06, $32, $00, $64, $01, $00, $07, $00, $00, $19, $ff, $00, $00 ; id 46
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 47
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 48
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 49
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 50
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $00, $00, $00 ; id 51
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 52
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 53
-    db $06, $00, $00, $00, $01, $00, $07, $00, $07, $19, $2f, $00, $00 ; id 54
-    db $06, $00, $00, $00, $02, $00, $03, $00, $07, $19, $ff, $00, $00 ; id 55
-    db $06, $00, $00, $00, $02, $00, $01, $00, $07, $21, $ff, $00, $00 ; id 56
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 57
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 58
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $00, $00, $00, $00 ; id 59
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 60
-    db $06, $00, $00, $00, $03, $00, $07, $00, $07, $19, $ff, $00, $00 ; id 61
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 62
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 63
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 64
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 65
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 66
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 67
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 68
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 69
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 70
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 71
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 72
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 73
-    db $06, $c8, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 74
-    db $06, $f4, $01, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 75
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 76
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 77
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 78
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 79
-    db $06, $88, $13, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 80
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 81
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 82
-    db $06, $14, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 83
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 84
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 85
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 86
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 87
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 88
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 89
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 90
-    db $06, $e8, $03, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 91
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 92
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 93
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 94
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 95
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 96
-    db $06, $d0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 97
-    db $06, $0d, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 98
+    db $00 ; id 0
+    dw 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00 ; id 1
+    dw 10
+    db $64, $00, $00, $04, $02, $00, $03, $04, $1e, $28
+    db $00 ; id 2
+    dw 50
+    db $64, $00, $00, $04, $03, $00, $03, $04, $3c, $46
+    db $00 ; id 3
+    dw 500
+    db $64, $00, $00, $05, $03, $00, $06, $04, $ff, $ff
+    db $00 ; id 4
+    dw 200
+    db $64, $00, $00, $04, $03, $00, $03, $07, $14, $1e
+    db $00 ; id 5
+    dw 2000
+    db $64, $00, $00, $04, $03, $00, $03, $07, $ff, $ff
+    db $01 ; id 6
+    dw 4
+    db $64, $00, $00, $04, $02, $00, $03, $08, $00, $00
+    db $01 ; id 7
+    dw 20
+    db $64, $00, $00, $04, $02, $00, $03, $09, $00, $00
+    db $01 ; id 8
+    dw 20
+    db $64, $00, $00, $04, $02, $00, $03, $0b, $00, $00
+    db $01 ; id 9
+    dw 20
+    db $64, $00, $00, $04, $03, $00, $03, $0c, $00, $00
+    db $01 ; id 10
+    dw 20
+    db $64, $00, $00, $04, $04, $00, $03, $0a, $00, $00
+    db $00 ; id 11
+    dw 1000
+    db $14, $02, $00, $05, $00, $00, $05, $04, $2d, $37
+    db $01 ; id 12
+    dw 1000
+    db $64, $00, $00, $04, $02, $00, $03, $0d, $00, $00
+    db $02 ; id 13
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $10, $03, $00
+    db $02 ; id 14
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $11, $03, $00
+    db $02 ; id 15
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $12, $03, $00
+    db $02 ; id 16
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $13, $03, $00
+    db $02 ; id 17
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $0e, $05, $00
+    db $02 ; id 18
+    dw 20
+    db $64, $01, $00, $00, $05, $00, $03, $0f, $05, $00
+    db $02 ; id 19
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $1b, $32, $32
+    db $02 ; id 20
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $1c, $32, $32
+    db $02 ; id 21
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $1d, $32, $32
+    db $02 ; id 22
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $1e, $32, $32
+    db $02 ; id 23
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $1f, $32, $32
+    db $02 ; id 24
+    dw 10000
+    db $64, $01, $00, $00, $00, $00, $1a, $20, $32, $32
+    db $03 ; id 25
+    dw 10
+    db $64, $00, $01, $04, $06, $00, $14, $15, $05, $0a
+    db $03 ; id 26
+    dw 40
+    db $64, $00, $01, $04, $06, $00, $14, $15, $0a, $1e
+    db $03 ; id 27
+    dw 200
+    db $64, $00, $01, $04, $06, $00, $14, $15, $14, $64
+    db $03 ; id 28
+    dw 1000
+    db $64, $00, $01, $04, $06, $00, $14, $15, $64, $ff
+    db $06 ; id 29
+    dw 20
+    db $64, $00, $01, $04, $06, $04, $14, $16, $05, $05
+    db $03 ; id 30
+    dw 5000
+    db $64, $02, $01, $03, $00, $00, $21, $22, $00, $ff
+    db $06 ; id 31
+    dw 800
+    db $00, $02, $01, $07, $00, $00, $2b, $2c, $00, $00
+    db $06 ; id 32
+    dw 100
+    db $64, $01, $00, $07, $03, $00, $06, $23, $00, $00
+    db $06 ; id 33
+    dw 1200
+    db $00, $01, $00, $07, $00, $01, $24, $ff, $00, $00
+    db $04 ; id 34
+    dw 700
+    db $14, $02, $00, $03, $07, $00, $00, $00, $00, $00
+    db $04 ; id 35
+    dw 800
+    db $3c, $02, $00, $00, $07, $00, $00, $00, $00, $00
+    db $04 ; id 36
+    dw 1500
+    db $0a, $02, $00, $03, $07, $00, $00, $00, $08, $18
+    db $04 ; id 37
+    dw 3000
+    db $14, $02, $00, $03, $07, $00, $00, $00, $23, $32
+    db $04 ; id 38
+    dw 4000
+    db $14, $02, $00, $03, $07, $00, $00, $00, $78, $8c
+    db $04 ; id 39
+    dw 5000
+    db $14, $02, $00, $02, $07, $00, $00, $00, $b4, $c8
+    db $05 ; id 40
+    dw 50
+    db $64, $01, $00, $07, $07, $00, $17, $ff, $00, $00
+    db $05 ; id 41
+    dw 25
+    db $64, $01, $00, $07, $08, $00, $18, $ff, $00, $00
+    db $05 ; id 42
+    dw 50
+    db $64, $01, $00, $07, $04, $00, $19, $ff, $00, $00
+    db $06 ; id 43
+    dw 50
+    db $64, $01, $00, $07, $00, $00, $25, $25, $00, $00
+    db $06 ; id 44
+    dw 1
+    db $64, $03, $00, $07, $09, $05, $19, $00, $00, $00
+    db $06 ; id 45
+    dw 1
+    db $00, $03, $00, $07, $00, $05, $00, $00, $00, $00
+    db $06 ; id 46
+    dw 50
+    db $64, $01, $00, $07, $00, $00, $19, $ff, $00, $00
+    db $00 ; id 47
+    dw 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $06 ; id 48
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 49
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 50
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 51
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $19, $00, $00, $00
+    db $06 ; id 52
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 53
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 54
+    dw 0
+    db $00, $01, $00, $07, $00, $07, $19, $2f, $00, $00
+    db $06 ; id 55
+    dw 0
+    db $00, $02, $00, $03, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 56
+    dw 0
+    db $00, $02, $00, $01, $00, $07, $21, $ff, $00, $00
+    db $06 ; id 57
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $00, $00, $00, $00
+    db $06 ; id 58
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $00, $00, $00, $00
+    db $06 ; id 59
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $00, $00, $00, $00
+    db $06 ; id 60
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $06 ; id 61
+    dw 0
+    db $00, $03, $00, $07, $00, $07, $19, $ff, $00, $00
+    db $00 ; id 62
+    dw 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00 ; id 63
+    dw 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $06 ; id 64
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 65
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 66
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 67
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 68
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 69
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 70
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 71
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 72
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 73
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 74
+    dw 200
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 75
+    dw 500
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 76
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 77
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 78
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 79
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 80
+    dw 5000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 81
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 82
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 83
+    dw 20
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 84
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 85
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 86
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 87
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 88
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 89
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 90
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 91
+    dw 1000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 92
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 93
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 94
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 95
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 96
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 97
+    dw 2000
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
+    db $06 ; id 98
+    dw 13
+    db $64, $01, $00, $00, $00, $00, $30, $27, $00, $00
 
 ; ItemUsable_WarpWing tests bit 6, the ExitBell check (ItemUsable_ExitBell, E-0085) bit 5 and
 ; SaveForbiddenHere bit 4 of the byte at $51C9 + hMapId; a clear bit refuses the item (wItemId =
@@ -4619,7 +4817,7 @@ BattleEnd_AskToJoin_LoadCursorTileAndRect7826::
     farcall LoadCursorTileAndRect7826
     ld de, wScreenTileBuffer + $10e
     ld hl, vBGMap0 + $10e
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRect32StrideToVRAM_Bank16
     xor a
     ld [wMenuState], a
@@ -4709,7 +4907,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_733F::
     call QueueSoundEffect
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     xor a
     ld [wMenuState], a
@@ -4764,7 +4962,7 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, $06
     ld [wBattleSubStep], a
@@ -4780,7 +4978,7 @@ BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRect32StrideToVRAM_Bank16
     ld hl, vBGMap0 + $12b
     ld a, $bc
@@ -4835,7 +5033,7 @@ BattleEnd_AskToJoin_WriteVRAMByte_Case0E::
     ld [wScreenTileBuffer + $12d], a
     ld de, wScreenTileBuffer + $10c
     ld hl, vBGMap0 + $10c
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRect32StrideToVRAM_Bank16
     xor a
     ld [wMenuSubState], a
@@ -4893,7 +5091,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_Case0F::
     ld [wScreenTileBuffer + $12b], a
     ld de, wScreenTileBuffer + $10a
     ld hl, vBGMap0 + $10a
-    ld bc, $0a05
+    lb bc, $0a, $05
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wSubMenuCursor2]
     ld [wListPage], a
@@ -4944,7 +5142,7 @@ BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C::
     call DrawRecordListPageWithNumbers
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRect32StrideToVRAM_Bank16
     call ShowRecordNameString12
     ld a, $02
@@ -5162,7 +5360,7 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     call DrawFourListEntriesForPageListPage
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld hl, wBattleSubStep
     inc [hl]
@@ -5178,7 +5376,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_Case17::
     call DrawFourListEntriesForPageListPage
     ld hl, vBGMap0 + $ab
     ld de, wScreenTileBuffer + $ab
-    ld bc, $0107
+    lb bc, $01, $07
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wWindowTileBuffer + $20]
     ld hl, vBGMap0 + $188
@@ -5203,7 +5401,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_Case17::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, $09
     ld [wBattleSubStep], a
@@ -5241,7 +5439,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18::
     ld [hl], $bc
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     xor a
     ld [wMenuSelectedMember], a
@@ -5371,7 +5569,7 @@ BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer::
     call DrawFourListEntriesForPageListPage
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wListPageSize], a
@@ -6618,7 +6816,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wWorkBuf]
     push af
@@ -6670,7 +6868,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01::
     ret nz
     ld hl, vBGMap0 + $10e
     ld de, wScreenTileBuffer + $10e
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wListPageSize], a
@@ -6788,7 +6986,7 @@ BattleEnd_AddJoinedMonster_SetRecordState2ForB::
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, $04
     ld [wBattleSubStep], a
@@ -6821,7 +7019,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09::
     ld [wListLastPageSize], a
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wMenuSubState]
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
@@ -6882,7 +7080,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B::
     ld [wMenuSelectedMember], a
     ld hl, vBGMap0 + $10c
     ld de, wScreenTileBuffer + $10c
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
     ld [wListPageSize], a
@@ -7034,7 +7232,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F::
     farcall CopyRectRecord787EAndPlaySound6C
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $1412
+    lb bc, $14, $12
     call CopyRect32StrideToVRAM_Bank16
     call ShowRecordNameString1D
     ld a, $0c
@@ -7061,7 +7259,7 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     farcall LoadCursorTileAndRect7826
     ld hl, vBGMap0 + $10c
     ld hl, wScreenTileBuffer + $10c
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRect32StrideToVRAM_Bank16
     ld a, $19
     ld [wStringIndex], a ; 'Will you take 0 with you?'
@@ -7115,7 +7313,7 @@ BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     ld a, $04
     ld [wBattleSubStep], a
@@ -7125,7 +7323,7 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13::
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRect32StrideToVRAM_Bank16
     farcall LoadCursorTileAndRect7826
     ld a, $19

@@ -33,7 +33,7 @@ GameMode8_Init::
     ldh [hScrollY], a
     ldh [hScrollX], a
     call BGMapAddressAtScroll_BankF2
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B_BankF2
     farcall LoadPalette0FromData53C6

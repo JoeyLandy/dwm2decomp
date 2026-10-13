@@ -29,7 +29,7 @@ CloseBreedMenu_CopyBytesDEToHL_Bank15::
 
 .call_bg_map_address_at_scroll_bank15:
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenList]
@@ -218,7 +218,7 @@ DrawPair72A9And72C5AndStep::
 DrawGoldBoxAndStep_Bank15::
     ld de, TileRect_15_7291
     ld hl, wWindowTileBuffer + $70
-    ld bc, $0803
+    lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank15
     ld hl, wGoldLo
     ld de, wDigits
@@ -253,10 +253,10 @@ DrawGoldBoxAndStep_Bank15::
 BreedMenu_Setup_CopyRectTo20ByteRows_Bank15::
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
@@ -393,10 +393,10 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case00::
     call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_42F4
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
@@ -429,7 +429,7 @@ BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0::
     call ClearTileAreas1240_1700_14E0
     ld de, TileRect_15_747D
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -484,7 +484,7 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5::
     call LoadFamilyIconTileForRecordB_Bank15
     ld de, TileRect_15_74D5
     ld hl, wWindowTileBuffer + $bc
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank15
     pop af
     ld [wArg1], a
@@ -537,7 +537,7 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06::
 ; wScreenStep += 1 (E-0119)
 DrawScreenBufferAtScrollAndIncScreenStep::
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -637,10 +637,10 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case09::
     call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_6FA3
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -652,14 +652,14 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A::
     call DrawPair72A9And72C5AndStep
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
     ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $01
@@ -673,10 +673,10 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A::
 BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15::
     ld de, TileRect_15_7379
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -692,10 +692,10 @@ BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15::
     call CopyGlyphTileListFromBank1F_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
@@ -709,7 +709,7 @@ BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15::
 BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep::
     ld de, BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep_Data
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -721,7 +721,7 @@ BreedMenu_ChooseParents_BlankWordTableTargets_Case10::
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $08
@@ -870,17 +870,17 @@ BreedMenu_ChooseParents_BlankWordTableTargets_Case12::
     ld [wWindowTileBuffer + $c8], a
     ld de, TileRect_15_7541
     ld hl, wWindowTileBuffer + $94
-    ld bc, $0c03
+    lb bc, $0c, $03
     call CopyRectTo20ByteRows_Bank15
     ld de, BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep_Data
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
     ld c, $05
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -896,11 +896,11 @@ BreedMenu_ChooseParents_ClearThreeTileRows::
     call ClearThreeTileRows
     ld de, TileRect_15_7565
     ld hl, wWindowTileBuffer + $94
-    ld bc, $0c03
+    lb bc, $0c, $03
     call CopyRectTo20ByteRows_Bank15
     ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -919,7 +919,7 @@ BreedMenu_ChooseParents_FillTilesBxC_Case15::
     call FillTilesBxC
     ld de, TileRect_15_747D
     ld hl, wWindowTileBuffer + $64
-    ld bc, $080b
+    lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -1162,18 +1162,18 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15::
     call DrawGoldBoxAndStep_Bank15
     ld de, TileRect_15_74D5
     ld hl, wWindowTileBuffer + $bc
-    ld bc, $0c01
+    lb bc, $0c, $01
     call CopyRectTo20ByteRows_Bank15
     ld de, BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_Data
     ld hl, wWindowTileBuffer + $120
-    ld bc, $0c04
+    lb bc, $0c, $04
     call CopyRectTo20ByteRows_Bank15
     ld de, TileRect_15_4985
     ld hl, wWindowTileBuffer + $93
-    ld bc, $0102
+    lb bc, $01, $02
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld hl, wTextWindowTileLo
@@ -1231,25 +1231,25 @@ BreedMenu_ChooseParents_LoadTileListSixPerCall::
 BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
     ld de, TileRect_15_75F5
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
     ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call DrawListEntriesCell5IconAndLevelAndStep
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $25
@@ -1273,7 +1273,7 @@ BreedMenu_ChooseParents_BlankWordTableTargets_Case25::
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $1e
@@ -1616,25 +1616,25 @@ BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript::
     jr z, .set_screen_step_to_2A
     ld de, TileRect_15_75F5
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
     ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c05
+    lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call DrawListEntriesCell5IconAndLevelAndStep
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
 
@@ -1687,7 +1687,7 @@ BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D::
 BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep::
     ld de, TileRect_15_761D
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
     call DrawRect70C5IfLinkModeAndStep
     farcall LoadPlayerAndFollowerSpriteGraphics
@@ -1724,7 +1724,7 @@ BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15::
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -1737,7 +1737,7 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep::
     call DrawGoldBoxAndStep_Bank15
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     dec a
@@ -1750,7 +1750,7 @@ BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15::
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld hl, wTextWindowTileLo
@@ -1780,7 +1780,7 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A::
 
 BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_Case3B::
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld hl, wTextWindowTileLo
@@ -2221,14 +2221,14 @@ BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc::
 BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet::
     ld de, TileRect_15_6FDB
     ld hl, wWindowTileBuffer + $bb
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
     ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     farcall ListRecordsInUseWithByte6ESet
@@ -2267,7 +2267,7 @@ ClearTileRowsAndResetWindowAndStep::
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03::
     ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $bb
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
     farcall ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -2296,7 +2296,7 @@ BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03::
     ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wListCursor]
@@ -2435,7 +2435,7 @@ BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
     jr z, .skip
     ld de, TileRect_15_7345
     ld hl, wWindowTileBuffer + $bb
-    ld bc, $0403
+    lb bc, $04, $03
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -2445,7 +2445,7 @@ BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
 .skip:
     ld de, TileRect_15_733F
     ld hl, wWindowTileBuffer + $ba
-    ld bc, $0203
+    lb bc, $02, $03
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -2461,7 +2461,7 @@ BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15::
     dec a
     ld [wScreenStep], a
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenSubStep]
@@ -2523,10 +2523,10 @@ BreedMenu_ChooseEgg_QueueSoundEffect::
     call QueueSoundEffect
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
@@ -2721,7 +2721,7 @@ BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_Data::
 BreedMenu_ChooseEgg_LoadTile4990AndRun6320::
     call LoadTile4990AndRun6320
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $06
@@ -3054,13 +3054,13 @@ BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15::
 
 .call_bg_map_address_at_scroll_bank15:
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call BGMapAddressAtScroll_Bank15
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank15
     ld a, $70
@@ -3113,10 +3113,10 @@ BreedMenu_ChooseParents_CopyFromBankWaitVRAM_Case3E::
     call QueueSoundEffect
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -3191,7 +3191,7 @@ BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Shared01::
 
 .call_bg_map_address_at_scroll_bank15:
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ret
@@ -3253,14 +3253,14 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM::
     call CopyFromBankWaitVRAM
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
     ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -3344,10 +3344,10 @@ BreedMenu_ReturnToMap_SRAMRecordAddress::
 BreedMenu_ReturnToMap_CopySixteenTiles_Case0B::
     ld de, TileRect_15_59E5
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0809
+    lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call BreedMenu_ReturnToMap_CopySixteenTiles
@@ -3448,7 +3448,7 @@ BreedMenu_ReturnToMap_FillTilesBxC_Case0C::
     ld [hl], $12
     ld de, TileRect_15_73C9
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0809
+    lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -3490,7 +3490,7 @@ BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5::
     call LoadFamilyIconTileForRecordB_Bank15
     ld de, TileRect_15_7411
     ld hl, wWindowTileBuffer + $6c
-    ld bc, $0c09
+    lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank15
     pop af
     ld [wArg1], a
@@ -3539,7 +3539,7 @@ BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11::
 
 BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15::
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140b
+    lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, [wScreenStep]
@@ -3637,7 +3637,7 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case14::
     call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0601
+    lb bc, $06, $01
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -3646,7 +3646,7 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case14::
 
 BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C::
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call DrawPair72A9And72C5AndStep_570C
@@ -3681,11 +3681,11 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19::
     call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
     ld de, BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_Data
     ld hl, wWindowTileBuffer + $10c
-    ld bc, $0c01
+    lb bc, $0c, $01
     call CopyRectTo20ByteRows_Bank15
     xor a
     ld b, $bc
@@ -3701,7 +3701,7 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19::
 
 BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Case1A::
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld a, $13
@@ -3856,7 +3856,7 @@ BreedMenu_ReturnToMap_DrawGoldBoxAndStep_Bank15::
     call CopyFromBankWaitVRAM
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
-    ld bc, $0807
+    lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     call DrawGoldBoxAndStep_Bank15
     ret
@@ -3868,7 +3868,7 @@ BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_Case1F::
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
@@ -4050,7 +4050,7 @@ BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
     inc a
     ld [wScreenStep], a
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ld hl, vTiles1
@@ -4176,7 +4176,7 @@ BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
     ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $bb
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
     farcall ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -4230,7 +4230,7 @@ BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15::
     call StoreBAtWordTableEntry_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -4279,13 +4279,13 @@ BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     call BGMapAddressAtScroll_Bank15
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank15
     farcall RestoreSpriteStateFromSavedFieldDrawFlags
@@ -4390,7 +4390,7 @@ BreedMenu_ClearListMarks_BlankWordTableTargets::
     call StoreBAtWordTableEntry_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -4530,7 +4530,7 @@ BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
 CopyRect7351ToWC410AndIncScreenStep::
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
     ld a, [wScreenStep]
     inc a
@@ -4670,14 +4670,14 @@ DrawBottomBoxForLinkAndSetScreenSubStep::
 .skip:
     ld de, TileRect_15_727D
     ld hl, wWindowTileBuffer + $c8
-    ld bc, $1401
+    lb bc, $14, $01
     call CopyRectTo20ByteRows_Bank15
 
 .set_screen_sub_step_to_02:
     ld a, $02
     ld [wScreenSubStep], a
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ret
@@ -4687,10 +4687,10 @@ DrawBottomBoxForLinkAndSetScreenSubStep::
 CopyRect70C5ToWC364AndDraw::
     ld de, TileRect_15_70C5
     ld hl, wWindowTileBuffer + $64
-    ld bc, $140b
+    lb bc, $14, $0b
     call CopyRectTo20ByteRows_Bank15
     call BGMapAddressAtScroll_Bank15
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     ret
@@ -5890,7 +5890,7 @@ ShowSaveFileInfoWindow::
     ld [rRAMB], a
     ld de, TileRect_15_71A1
     ld hl, wWindowTileBuffer + $64
-    ld bc, $140b
+    lb bc, $14, $0b
     call CopyRectTo20ByteRows_Bank15
     ld hl, sSavedPlayerName
     ld de, $022b

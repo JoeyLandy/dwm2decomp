@@ -783,10 +783,10 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case05::
 RunLinkSession8Exchange_Case01_Sub01_Table2_Case06::
     ld de, TileRect_F0_663F
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -881,14 +881,14 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case00::
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case01::
     ld de, TileRect_F0_665D
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $bc
     ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -922,10 +922,10 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case01::
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case02::
     ld de, TileRect_F0_6617
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -978,14 +978,14 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case03::
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case04::
     ld de, TileRect_F0_6685
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $c3
     ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -1018,14 +1018,14 @@ RunLinkSession8Exchange_Case01_Sub01_Table3_Case04::
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case05::
     ld de, TileRect_F0_65FB
     ld hl, wWindowTileBuffer + $125
-    ld bc, $0704
+    lb bc, $07, $04
     call CopyRectTo20ByteRows_BankF0
     ld a, [wChoiceCursorF0]
     ld b, $bc
     ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -1200,10 +1200,10 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case00::
     call CopyFromBankWaitVRAM
     ld de, TileRect_F0_66AD
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0805
+    lb bc, $08, $05
     call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -1238,10 +1238,10 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case00::
 RunLinkSession8Exchange_Case01_Sub01_Table4_Case04::
     ld de, TileRect_F0_663F
     ld hl, wWindowTileBuffer + $112
-    ld bc, $0605
+    lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     xor a
@@ -2097,7 +2097,7 @@ RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
 RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0::
     ld de, TileRect_F0_68E6
     ld hl, wWindowTileBuffer + $64
-    ld bc, $140d
+    lb bc, $14, $0d
     call CopyRectTo20ByteRows_BankF0
     ld a, [wScreenSubStep]
     inc a
@@ -2654,14 +2654,14 @@ RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame::
 RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet::
     ld de, TileRect_F0_5BA0
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
     ld a, [wChoiceCursorF0]
     ld b, $bc
     ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     farcall ListRecordsInUseWithByte6ESet
@@ -2716,7 +2716,7 @@ RunLinkSession8Case01Steps_FillTilesBxC::
 RunLinkSession8Case01Steps_ClampRecordListPageCursor4::
     ld de, TileRect_F0_6530
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
     farcall ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -2741,7 +2741,7 @@ RunLinkSession8Case01Steps_ClampRecordListPageCursor4::
 
 .call_bg_map_address_at_scroll_bank_f0:
     call BGMapAddressAtScroll_BankF0
-    ld bc, $1409
+    lb bc, $14, $09
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     ld a, [wScreenStep]
@@ -2828,7 +2828,7 @@ RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0::
     call CopyScreenBufferRectWithAttrs_F0
     ld de, TileRect_F0_5D51
     ld hl, wWindowTileBuffer + $111
-    ld bc, $0701
+    lb bc, $07, $01
     call CopyRectTo20ByteRows_BankF0
     ld a, [wScreenStep]
     inc a
@@ -2843,7 +2843,7 @@ TileRect_F0_5D51::
 
 RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0::
     call BGMapAddressAtScroll_BankF0
-    ld bc, $1409
+    lb bc, $14, $09
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     ld de, Tiles1Plus4F0Tiles_1F_4260
@@ -3319,7 +3319,7 @@ RunLinkSession8Case03Steps_FillTilesBxC_Case0C::
 RunLinkSession8Case03Steps_ClampRecordListPageCursor4::
     ld de, TileRect_F0_6530
     ld hl, wWindowTileBuffer + $6b
-    ld bc, $0d09
+    lb bc, $0d, $09
     call CopyRectTo20ByteRows_BankF0
     farcall ClampRecordListPageCursor4
     jr DrawPageIndicatorWhenTwoPagesAndStep_Skip
@@ -3348,7 +3348,7 @@ DrawPageIndicatorWhenTwoPagesAndStep_CheckScreenStep::
 DrawPageIndicatorWhenTwoPagesAndStep_Skip::
     ld de, TileRect_F0_616E
     ld hl, wWindowTileBuffer + $110
-    ld bc, $0801
+    lb bc, $08, $01
     call CopyRectTo20ByteRows_BankF0
     jr DrawPageIndicatorWhenTwoPagesAndStep_CheckScreenStep
 
@@ -3389,13 +3389,13 @@ RunLinkSession8Case03Steps_DrawRecordListPageMarks::
 
 RunLinkSession8Case03Steps_RestoreSpriteStateClearCount_BankF0::
     call BGMapAddressAtScroll_BankF0
-    ld bc, $140d
+    lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_BankF0
     call BGMapAddressAtScroll_BankF0
     ld de, $01a0
     add hl, de
-    ld bc, $1405
+    lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_BankF0
     call RestoreSpriteStateClearCount_BankF0

@@ -11,7 +11,9 @@ identical, but writes them in the style of the pret disassemblies (pokered is th
   repeats on every record of a table is written once. Address names and `BB:AAAA` addresses in comments become
   the label at that address, evidence ids move to the end, and long comments are wrapped;
 - instructions as pret writes them: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, `jumptable` for `rst $00`;
-- each bank file is named and headed by what it holds (config/banks.json, D-006): bank36_battle_effects.asm.
+- each bank file is named and headed by what it holds (config/banks.json, D-006): bank36_battle_effects.asm;
+- graphics and maps are INCBINs of named asset files listed in src/assets.txt (D-008), and lb bc, W, R gives
+  the width and rows a rectangle routine takes in B and C.
 
 The confidence and evidence of every name stay in config/ (names.json, symbols.json, tables.json) and in the
 listing. Run after disasm_all, or alone to re-present an existing listing:
@@ -197,7 +199,31 @@ def present(text: str, names: Names) -> str:
         if ln == "" and out and out[-1] == "":
             continue  # a dropped block can leave two blank lines
         out.append(ln)
-    return "\n".join(out)
+    return "\n".join(rect_sizes(out))
+
+
+LD_BC = re.compile(r"^(\s+)ld bc, \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
+CALL_TO = re.compile(r"^\s+(?:call|farcall|farcall_b|jp)(?: \w+,)? (\w+)")
+
+
+def rect_sizes(lines: list[str]) -> list[str]:
+    """`ld bc, $WWRR` before a call to a rectangle routine (a name with "Rect": B = width, C = rows) is written
+    `lb bc, $WW, $RR`, when no label or other use of BC comes between."""
+    out = list(lines)
+    for i, ln in enumerate(lines):
+        m = LD_BC.match(ln)
+        if not m:
+            continue
+        code = [nx for nx in lines[i + 1:i + 12] if nx.strip() and not nx.lstrip().startswith(";")][:3]
+        for nx in code:
+            c = CALL_TO.match(nx)
+            if c:
+                if "Rect" in c.group(1):
+                    out[i] = f"{m.group(1)}lb bc, ${m.group(2)}, ${m.group(3)}{m.group(4) or ''}"
+                break
+            if not nx.startswith("    ") or "bc" in nx or nx.lstrip().startswith(("ret", "jr", "jp")):
+                break
+    return out
 
 
 def bank_titles() -> dict[int, dict]:
