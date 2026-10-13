@@ -7,7 +7,9 @@ label is not compared: a message in an overflow table (E-0243) has a String_ lab
 carry the first one's number. An observation of our own emulator: it shows that each name quotes the message its
 routine really starts, on the routine's flag-clear path (the story flags are cleared before each call).
 
-    python -I tools/talk_check.py [RECIPE STATE] [--limit N]
+    python -I tools/talk_check.py [RECIPE STATE] [--limit N] [--quoted]
+
+`--quoted` checks the other labels named from a string quote instead (see quoted_labels).
 """
 import pickle
 import re
@@ -89,16 +91,73 @@ def run(recipe: str, state: str, limit: int | None = None):
     return out
 
 
+QUOTED_TAIL = re.compile(r"(?:Show|Msg[0-9A-F]{4}_|TalkScript[0-9A-F]{4}_)([A-Z][A-Za-z0-9]+)$")
+LABEL = re.compile(r"^([A-Za-z_]\w*)::(?! ; address name)")
+QUOTE = re.compile(r"; '(.+?)'$")
+
+
+def quoted_labels() -> list[tuple[str, str]]:
+    """Labels other than TalkMsg* whose name ends in words taken from a string quote (…Show<Words>,
+    …MsgNNNN_<Words>, TalkScriptNNNN_<Words>): the quote comment within the label's first 12 lines must begin with
+    those words. Returns [(name, words in lower case)]."""
+    out = []
+    for p in sorted((ROOT / "src/banks").glob("bank*.asm")):
+        lines = p.read_text(encoding="utf-8").split("\n")
+        for i, ln in enumerate(lines):
+            m = LABEL.match(ln)
+            if not m or m.group(1).startswith("TalkMsg"):
+                continue
+            t = QUOTED_TAIL.search(m.group(1))
+            if not t:
+                continue
+            words = t.group(1).lower()
+            for later in lines[i + 1:i + 13]:
+                q = QUOTE.search(later)
+                if q:
+                    text = re.sub(r"(?<![0-9A-Za-z])0(?![0-9])", "Hero", q.group(1).replace("*:", " "))
+                    if re.sub(r"[^a-z0-9]", "", text.lower()).startswith(words):
+                        out.append((m.group(1), words))
+                    break
+    return out
+
+
+def run_quoted(recipe: str, state: str, limit: int | None = None):
+    """As run(), for quoted_labels(): calls each label and compares the first text the game looks up."""
+    kept, _ran = play.replay(recipe, {state}, stop_when_kept=True)
+    base = pickle.dumps(kept[state])
+    by_name = {v: k for k, v in boot_trace.load_labels().items()}
+    out = []
+    for name, words in quoted_labels()[:limit]:
+        if name not in by_name:
+            out.append((name, "not in the .sym file", ""))
+            continue
+        try:
+            r = check_one(base, *by_name[name])
+        except RuntimeError as e:  # a label entered out of its context can run into data
+            out.append((name, f"stopped before a lookup ({e})", ""))
+            continue
+        if r is None:
+            out.append((name, "no lookup", ""))
+        elif not words_of(r[4]).startswith(words):
+            out.append((name, f"text {words_of(r[4])[:len(words) + 8]!r}", words_of(r[4])))
+        else:
+            out.append((name, None, words_of(r[4])))
+    return out
+
+
 if __name__ == "__main__":
     argv = sys.argv[1:]
+    quoted = "--quoted" in argv
+    argv = [a for a in argv if a != "--quoted"]
     limit = None
     if "--limit" in argv:
         i = argv.index("--limit")
         limit = int(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
     recipe, state = argv[:2] if len(argv) >= 2 else (str(ROOT / "tools/recipes/e0320_farm_battle.txt"), "s26")
-    res = run(recipe, state, limit)
+    res = (run_quoted if quoted else run)(recipe, state, limit)
     bad = [(n, p) for n, p, _t in res if p]
-    print(f"{len(res) - len(bad)} of {len(res)} TalkMsg routines look up the message their name quotes")
+    what = "quote-named labels" if quoted else "TalkMsg routines"
+    print(f"{len(res) - len(bad)} of {len(res)} {what} look up the text their name quotes")
     for n, p in bad:
         print(f"  {n}: {p}")

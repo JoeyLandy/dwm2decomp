@@ -2444,6 +2444,11 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Ten names corrected.** Nine had been read in E-0268 before $42 was known as "'v" (E-0319), e.g. TalkMsg0327_InAllMyYearsIE is now TalkMsg0327_InAllMyYearsIve, and TalkMsg0402_YouEComeAllThisWay is now TalkMsg0402_YouveComeAllThisWay. TalkMsg0512_KamehaYo0Thanks is now TalkMsg0512_KamehaYoHeroThanks, the convention of the other names. Twelve quotes in notes that still showed the gap ("I e never") now read "I've".
 - **Negative control.** Each name compared with the text its neighbour looked up passes 14 times in 466 (3.0%). Those are neighbouring messages that begin alike, such as "Hero peered into the vase".
 - **Tests.** tests/test_talk_check.py runs the check (about 100 s) and the control (below 10%).
+- **Other quote names, measured only.** `python -I tools/talk_check.py --quoted` applies the same call to the 201 other labels whose name ends in words from a quote comment in their first lines (…Show<Words>, …MsgNNNN_<Words>, TalkScriptNNNN_<Words>).
+  - 57 look up their text.
+  - 133 reach no lookup within 240 frames. These are mostly scene and event-table labels whose message waits for a scene engine that is not running.
+  - 10 look up other text, and 1 runs into data. These are dispatcher cases and mid-routine labels entered out of their context.
+  - This shows no wrong name, but it does not raise these names either, so they keep their confidence.
 - Binary verification: build/run457 PASS, 0 differing bytes; tests OK (218, skipped=3).
 
 ### E-0323 — Saving and continuing: the checksums recomputed, the records round-tripped
