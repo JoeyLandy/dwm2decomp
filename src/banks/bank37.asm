@@ -834,7 +834,7 @@ Jump_037_4B6A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wLinkSendByte
-; points at: wLinkScreenState
+; points at: wTitleScreenState
 RunLinkSession5Exchange_Case01_Sub01_SetScreenState::
 Jump_037_4B7A:: ; address name
     ld a, [wScreenState]
@@ -842,7 +842,7 @@ Jump_037_4B7A:: ; address name
     ld [wScreenState], a
     ld a, $02
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenState
+    ld hl, wTitleScreenState
     inc [hl]
     ret
 

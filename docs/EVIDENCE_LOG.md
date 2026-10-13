@@ -2431,6 +2431,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0318 — A power-on run: names agree with where the code runs
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware).
+- **The run.** tools/boot_trace.py runs the reference ROM from power-on with scripted presses: A for four frames every 120 frames, Start in between. It records each named routine the first time it executes, together with wGameMode at that moment. 40,000,000 instructions (10,073 frames, about 55 s) reach 413 named routines; the counts below are from the 60,000,000-instruction run, which reaches the same 413.
+- **What runs where.**
+  - Mode 0, power-on (8 routines): ROMEntryPoint, BootAndMainLoop, InstallOamDmaRoutine, ClearWRAMHRAMAndSRAMBanks0And2, and others.
+  - Mode 5 (254 routines): GameMode5_Init, the opening screens (GameMode5_Update_LoadScreens with QueueMusic), name entry (44 RunNameEntryStateWhenNotFading routines), GameMode5_Update_NewPlayerSetup, CheckSaveData.
+  - Mode 1 (151 routines): the field (FieldModeStateDispatch, UpdatePlayerMovement, map-screen code), the event-script engine (FetchScriptCommand, ExecuteScriptCommand, ScriptCommand01-09), and the opening scene SceneAtSea.
+  - No battle routine runs (RunBattleSetup*, BattleEnd_*), as expected before any battle.
+- **Names corrected.** wLinkScreenState and wLinkScreenSubState drive the opening, title and name-entry flow of mode 5 before any link screen, so they are now wTitleScreenState and wTitleScreenSubState. wGameMode's note records the observed meanings of modes 5 and 1.
+- **Tests.** tests/test_boot_trace.py pins the title flow in mode 5, the field and SceneAtSea in mode 1, and no battle code. These game-meaning names are now C2 within the emulator's scope.
+- Binary verification: build/run441 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0317 — Reading notes are grounded in the code they describe (with a negative control)
 
 - Kind: TOOL (a consistency check of the 4,318 code names in config/names.json).

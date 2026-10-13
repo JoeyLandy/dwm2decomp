@@ -754,11 +754,11 @@ Data_0F0_4C83:: ; address name
 ; only called from RunLinkSession8Exchange_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_LinkReceiveStepWithBuffer)
 ; reads: wFadeState, wScreenState, wTextFlags
-; writes: wLinkScreenState
-RunLinkSession8Exchange_Case01_WriteLinkScreenState::
+; writes: wTitleScreenState
+RunLinkSession8Exchange_Case01_WriteTitleScreenState::
 Func_0F0_4CA0:: ; address name
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, [wFadeState]
     and a, a
     ret nz

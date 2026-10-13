@@ -3,7 +3,7 @@ SECTION "Bank 1B", ROMX[$4000], BANK[$1B]
 
 ; unless wLinkStatus bit 7 is set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial transfer; 1-8: RunLinkSessionNExchange when wLinkMode is set and wLinkRole bit 0 is set); called from ComputeSpriteScrollOffsets (E-0259)
 ; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets)
-; reads: wLinkStatus, wLinkSession, wScreenStep, rSB, wLinkScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, ...
+; reads: wLinkStatus, wLinkSession, wScreenStep, rSB, wTitleScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, ...
 ; writes: wLinkStatus, wGlyphListPos, wScreenCounter, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
 ; points at: wGameMode
 RunLinkSession::
@@ -33,7 +33,7 @@ Func_01B_4001:: ; address name
 
 ; entry 0 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, rSB, wLinkScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, wLinkRole, wMapType, ...
+; reads: wScreenStep, rSB, wTitleScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, wLinkRole, wMapType, ...
 ; writes: wGlyphListPos, wScreenCounter, wLinkStatus, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
 ; points at: wGameMode
 RunLinkSession_WaitSerialTransferDone::
@@ -60,7 +60,7 @@ Jump_01B_402A:: ; address name
     jp z, .call_link_check_screen_counter_state4
     cp a, $DC
     jp z, .call_link_check_screen_counter_state5
-    jp .check_link_screen_sub_state
+    jp .check_title_screen_sub_state
 
 .call_link_check_screen_counter_state:
     call LinkCheckScreenCounterState
@@ -185,8 +185,8 @@ Jump_01B_402A:: ; address name
     ld [wLinkRole], a
     jp .call_queue_sound_effect
 
-.check_link_screen_sub_state:
-    ld a, [wLinkScreenSubState]
+.check_title_screen_sub_state:
+    ld a, [wTitleScreenSubState]
     cp a, $02
     jr z, .check_link_timer_lo
     jp .set_link_status_to_03
@@ -478,7 +478,7 @@ Func_01B_4388:: ; address name
 
 ; A = 0 when the link state allows continuing (wD06B = 1 in mode 5 state 1 with wD06A and wD06C clear), else $FF; wD783 = A on entry (E-0125)
 ; 6 call sites from 1 routine (e.g. RunLinkSession_WaitSerialTransferDone)
-; reads: wLinkTimerLo, wLinkScreenSubState, wGameMode, wModeState, wLinkScreenState, wLinkScreenFlag
+; reads: wLinkTimerLo, wTitleScreenSubState, wGameMode, wModeState, wTitleScreenState, wLinkScreenFlag
 ; writes: wScreenCounter
 LinkCheckScreenCounterState::
 Func_01B_4394:: ; address name
@@ -487,7 +487,7 @@ Func_01B_4394:: ; address name
     ld a, [wLinkTimerLo]
     cp a, c
     jr nz, .check_game_mode
-    ld a, [wLinkScreenSubState]
+    ld a, [wTitleScreenSubState]
     cp a, $01
     jr z, .check_game_mode
     jr .return_FF
@@ -499,13 +499,13 @@ Func_01B_4394:: ; address name
     ld a, [wModeState]
     cp a, $01
     jr nz, .return_FF
-    ld a, [wLinkScreenState]
+    ld a, [wTitleScreenState]
     or a, a
     jr nz, .return_FF
     ld a, [wLinkScreenFlag]
     or a, a
     jr nz, .return_FF
-    ld a, [wLinkScreenSubState]
+    ld a, [wTitleScreenSubState]
     cp a, $01
     jr z, .return_0
     jr .return_FF
@@ -830,7 +830,7 @@ Jump_01B_4519:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkSession6Exchange_Case01_ReadLinkScreenStateAndLinkScreenSubStateEtc
+    farcall RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
@@ -928,7 +928,7 @@ Jump_01B_4587:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkSession8Exchange_Case01_WriteLinkScreenState
+    farcall RunLinkSession8Exchange_Case01_WriteTitleScreenState
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
@@ -2135,7 +2135,7 @@ Jump_01B_53E9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-; points at: wLinkScreenState
+; points at: wTitleScreenState
 LinkKeyTrade_Start_ShowStartingKeyTrade::
 Jump_01B_5429:: ; address name
     ld a, $01 ; 'Starting key trade'
@@ -2145,7 +2145,7 @@ Jump_01B_5429:: ; address name
     ld [wScreenStep], a
     xor a, a
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenState
+    ld hl, wTitleScreenState
     inc [hl]
     ret
 

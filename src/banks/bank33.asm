@@ -771,11 +771,11 @@ Data_033_505A:: ; address name
 
 ; only called from GameMode5_Update_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_ToGameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
-; reads: wLinkScreenState, wScreenState, wScreenStep, wScreenSubStep
+; reads: wTitleScreenState, wScreenState, wScreenStep, wScreenSubStep
 GameMode5_Update_Case05_LinkExchangeJoypadPerFrame::
 Func_033_51C6:: ; address name
     call LinkExchangeJoypadPerFrame
-    ld a, [wLinkScreenState]
+    ld a, [wTitleScreenState]
     or a, a
     jr nz, .check_screen_state
     ret
@@ -825,28 +825,28 @@ Func_033_51C6:: ; address name
 
 ; only called from RunLinkSession6Exchange_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_LinkReceiveStepWithBuffer)
-; reads: wLinkScreenState, wLinkScreenSubState, wFadeState, wScreenState
-RunLinkSession6Exchange_Case01_ReadLinkScreenStateAndLinkScreenSubStateEtc::
+; reads: wTitleScreenState, wTitleScreenSubState, wFadeState, wScreenState
+RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
 Func_033_5215:: ; address name
-    ld a, [wLinkScreenState]
+    ld a, [wTitleScreenState]
     or a, a
     jr nz, .check_fade_state
-    ld a, [wLinkScreenSubState]
+    ld a, [wTitleScreenSubState]
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
     dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep
     dw RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
     dw RunLinkSession6Exchange_ChooseTeamMonster
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D
 
 .check_fade_state:
     ld a, [wFadeState]
@@ -873,7 +873,7 @@ Func_033_5215:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wScreenTileBuffer, wLinkScreenSubState
+; points at: wScreenTileBuffer, wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
 Jump_033_5264:: ; address name
     ld de, TileRect_33_62AB
@@ -886,14 +886,14 @@ Jump_033_5264:: ; address name
     call CopyRectTo20ByteRowsJp_Bank33
     call DrawPlayerNameAndString0Category1
     call SetDefaultStringWindow_Bank33
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
-; points at: wKeyNameBuf, wLinkScreenSubState
+; points at: wKeyNameBuf, wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep::
 Jump_033_5287:: ; address name
     xor a, a
@@ -906,7 +906,7 @@ Jump_033_5287:: ; address name
     ld bc, $140D
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -914,7 +914,7 @@ Jump_033_5287:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; writes: wLinkSendByte
-; points at: wLinkScreenSubState
+; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero::
 Jump_033_52A8:: ; address name
     ld a, [wFadeState]
@@ -922,7 +922,7 @@ Jump_033_52A8:: ; address name
     ret nz
     ld a, $19 ; 'For Team Mode, 1000G is charged.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     xor a, a
     ld [wLinkSendByte], a
@@ -930,9 +930,9 @@ Jump_033_52A8:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi, wLinkScreenSubState
-; writes: wLinkSendByte, wLinkScreenState, wScreenState, wLinkScreenSubState, wGoldHi, wGoldMid, wGoldLo
-; points at: wLinkScreenSubState
+; reads: wLinkMessage, wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi, wTitleScreenSubState
+; writes: wLinkSendByte, wTitleScreenState, wScreenState, wTitleScreenSubState, wGoldHi, wGoldMid, wGoldLo
+; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe::
 Jump_033_52BB:: ; address name
     ld a, [wLinkMessage]
@@ -941,7 +941,7 @@ Jump_033_52BB:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -958,7 +958,7 @@ Jump_033_52BB:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $09 ; 'You refused the Team Mode.'
@@ -977,9 +977,9 @@ Jump_033_52BB:: ; address name
     jr nc, .set_gold_hi
     ld a, $00 ; 'Not enough money. Please wait.'
     call BeginString_Bank07_Cat5
-    ld a, [wLinkScreenSubState]
+    ld a, [wTitleScreenSubState]
     add a, $08
-    ld [wLinkScreenSubState], a
+    ld [wTitleScreenSubState], a
     ld a, $10
     ld [wLinkSendByte], a
     ret
@@ -992,7 +992,7 @@ Jump_033_52BB:: ; address name
     ld [wGoldLo], a
     ld a, $0C ; 'Please wait.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ld a, $01
     ld [wLinkSendByte], a
@@ -1001,9 +1001,9 @@ Jump_033_52BB:: ; address name
 ; entry 4 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkScreenState, wScreenState
-; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc::
+; writes: wLinkSendByte, wTitleScreenState, wScreenState
+; points at: wTitleScreenSubState
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc::
 Jump_033_5338:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1018,7 +1018,7 @@ Jump_033_5338:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -1028,7 +1028,7 @@ Jump_033_5338:: ; address name
 .call_begin_string_bank07_cat5:
     ld a, $07 ; 'You paid the 1000G battle fee.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     xor a, a
     ld [wLinkSendByte], a
@@ -1037,23 +1037,23 @@ Jump_033_5338:: ; address name
 .call_begin_string_bank07_cat52:
     ld a, $01 ; 'Your pal doesn't have enough gold.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
 ; entry 5 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte, wLinkScreenFlag
-; points at: wLinkScreenSubState
+; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte::
 Jump_033_537D:: ; address name
     xor a, a
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     xor a, a
     ld [wLinkScreenFlag], a
@@ -1068,7 +1068,7 @@ Jump_033_538A:: ; address name
     rst $00
     dw RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags
     dw RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor
-    dw RunLinkSession6Exchange_ChooseTeamMonster_SetLinkScreenSubState
+    dw RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState
 
 ; entry 0 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
 ; no direct call (reached through a table, a jump or a vector)
@@ -1110,15 +1110,15 @@ Jump_033_53AC:: ; address name
 
 ; entry 2 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkScreenSubState, wLinkScreenFlag, wLinkScreenState, wScreenState
-RunLinkSession6Exchange_ChooseTeamMonster_SetLinkScreenSubState::
+; writes: wTitleScreenSubState, wLinkScreenFlag, wTitleScreenState, wScreenState
+RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
 Jump_033_53C2:: ; address name
     xor a, a
-    ld [wLinkScreenSubState], a
+    ld [wTitleScreenSubState], a
     xor a, a
     ld [wLinkScreenFlag], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     xor a, a
     ld [wScreenState], a
     ret
@@ -1127,7 +1127,7 @@ Jump_033_53C2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi
 ; writes: wLinkSendByte, wGoldHi, wGoldMid, wGoldLo
-; points at: wLinkScreenSubState
+; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay::
 Jump_033_53D4:: ; address name
     ld a, [wTextFlags]
@@ -1140,9 +1140,9 @@ Jump_033_53D4:: ; address name
     call BeginString_Bank07_Cat5
     ld a, $40
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1160,9 +1160,9 @@ Jump_033_53D4:: ; address name
     call BeginString_Bank07_Cat5
     ld a, $30
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1176,25 +1176,25 @@ Jump_033_53D4:: ; address name
     call BeginString_Bank07_Cat5
     ld a, $20
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
 ; entry 8 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkScreenState, wScreenState
-; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08::
+; writes: wLinkSendByte, wTitleScreenState, wScreenState
+; points at: wTitleScreenSubState
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08::
 Jump_033_5433:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
     jr z, .set_link_send_byte_to_FE
     cp a, $20
     ret nz
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     dec [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     dec [hl]
     ret
 
@@ -1202,7 +1202,7 @@ Jump_033_5433:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -1212,9 +1212,9 @@ Jump_033_5433:: ; address name
 ; entry 9 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkScreenState, wScreenState
-; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09::
+; writes: wLinkSendByte, wTitleScreenState, wScreenState
+; points at: wTitleScreenSubState
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09::
 Jump_033_545B:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1225,7 +1225,7 @@ Jump_033_545B:: ; address name
     ret nz
 
 .done:
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1233,7 +1233,7 @@ Jump_033_545B:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -1242,15 +1242,15 @@ Jump_033_545B:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wLinkSendByte, wLinkScreenState, wLinkScreenSubState, wScreenState
+; writes: wLinkSendByte, wTitleScreenState, wTitleScreenSubState, wScreenState
 RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A::
 Jump_033_5483:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     xor a, a
-    ld [wLinkScreenSubState], a
+    ld [wTitleScreenSubState], a
     ld a, $02
     ld [wScreenState], a
     ret
@@ -1258,8 +1258,8 @@ Jump_033_5483:: ; address name
 ; entry 11 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkScreenState, wScreenState
-; points at: wLinkScreenSubState
+; writes: wLinkSendByte, wTitleScreenState, wScreenState
+; points at: wTitleScreenSubState
 RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo::
 Jump_033_5497:: ; address name
     ld a, [wLinkMessage]
@@ -1276,9 +1276,9 @@ Jump_033_5497:: ; address name
     ld [wLinkSendByte], a
     ld a, $06 ; 'Your pal refused to pay the'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1286,9 +1286,9 @@ Jump_033_5497:: ; address name
     ld [wLinkSendByte], a
     ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1296,7 +1296,7 @@ Jump_033_5497:: ; address name
     ld [wLinkSendByte], a
     ld a, $03 ; 'Your pal paid your battle fee.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1304,9 +1304,9 @@ Jump_033_5497:: ; address name
     ld [wLinkSendByte], a
     ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
-    ld hl, wLinkScreenSubState
+    ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
@@ -1314,7 +1314,7 @@ Jump_033_5497:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -1324,27 +1324,27 @@ Jump_033_5497:: ; address name
 ; entry 12 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkScreenSubState, wLinkSendByte, wLinkScreenState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc::
+; writes: wTitleScreenSubState, wLinkSendByte, wTitleScreenState, wScreenState
+RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc::
 Jump_033_5502:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
     jr z, .set_link_send_byte_to_FE
     or a, a
-    jr z, .set_link_screen_sub_state_to_05
+    jr z, .set_title_screen_sub_state_to_05
     cp a, $20
     ret nz
 
-.set_link_screen_sub_state_to_05:
+.set_title_screen_sub_state_to_05:
     ld a, $05
-    ld [wLinkScreenSubState], a
+    ld [wTitleScreenSubState], a
     ret
 
 .set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     ld a, $02
     ld [wScreenState], a
     ld a, $0A ; 'Your pal refused the Team Mode.'
@@ -1354,8 +1354,8 @@ Jump_033_5502:: ; address name
 ; entry 13 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkScreenState, wLinkScreenSubState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D::
+; writes: wLinkSendByte, wTitleScreenState, wTitleScreenSubState, wScreenState
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D::
 Jump_033_552A:: ; address name
     ld a, [wLinkMessage]
     cp a, $10
@@ -1371,15 +1371,15 @@ Jump_033_552A:: ; address name
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wLinkScreenState], a
+    ld [wTitleScreenState], a
     xor a, a
-    ld [wLinkScreenSubState], a
+    ld [wTitleScreenSubState], a
     ld a, $02
     ld [wScreenState], a
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
-; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08, ...)
+; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case08, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank07_Cat5::
 Func_033_5550:: ; address name

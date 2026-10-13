@@ -211,8 +211,8 @@
   },
   "C5DB": {
     "name": "wGameMode",
-    "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot",
-    "evidence": "reading"
+    "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot: the opening, title, name entry and new-player setup; 1: the field with its event scripts (C2: tools/boot_trace.py runs from power-on into the opening scene SceneAtSea in mode 1)",
+    "evidence": "reading; E-0318"
   },
   "C5DF": {
     "name": "wModeChangeRequest",
@@ -3429,14 +3429,14 @@
     "evidence": "E-0136"
   },
   "D06A": {
-    "name": "wLinkScreenState",
-    "note": "state of the link and title screens of game mode 5 (StartFadeToLinkScreenState1/2)",
-    "evidence": "E-0136"
+    "name": "wTitleScreenState",
+    "note": "state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToLinkScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState)",
+    "evidence": "E-0136, E-0318"
   },
   "D06B": {
-    "name": "wLinkScreenSubState",
-    "note": "sub-state of those screens (RunWD06BSubState_* tables)",
-    "evidence": "E-0136"
+    "name": "wTitleScreenSubState",
+    "note": "sub-state of game mode 5's screens (RunWD06BSubState_* tables); see wTitleScreenState (was wLinkScreenSubState)",
+    "evidence": "E-0136, E-0318"
   },
   "D06C": {
     "name": "wLinkScreenFlag",

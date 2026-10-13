@@ -1671,7 +1671,7 @@ Jump_0F1_4B0B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wStringCategory, wLinkSendByte
-; points at: wLinkScreenState
+; points at: wTitleScreenState
 RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding::
 Jump_0F1_4B2E:: ; address name
     ld a, [wScreenState]
@@ -1683,7 +1683,7 @@ Jump_0F1_4B2E:: ; address name
     call BeginString_Bank0E_Cat0
     xor a, a
     ld [wLinkSendByte], a
-    ld hl, wLinkScreenState
+    ld hl, wTitleScreenState
     inc [hl]
     ret
 
@@ -4246,12 +4246,12 @@ Data_0F1_5ACF:: ; address name
 
 ; only called from GameMode5_Update_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_ToGameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
-; reads: wLinkScreenState, wScreenByteEE, wScreenState
+; reads: wTitleScreenState, wScreenByteEE, wScreenState
 ; writes: wScreenByteEE
 GameMode5_Update_Case07_LinkExchangeJoypadPerFrame::
 Func_0F1_5AD5:: ; address name
     call LinkExchangeJoypadPerFrame
-    ld a, [wLinkScreenState]
+    ld a, [wTitleScreenState]
     cp a, $01
     jr z, .check_screen_byte_ee
     ret
