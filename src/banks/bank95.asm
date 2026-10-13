@@ -430,854 +430,856 @@ StringTable95_Cat14_Usable::
     dw String_95_0B_03 ; id 3
 
 String_95_00_00::
-    db "Attacks an enemy", $f1
-    db "with a fireball.", $f1
-    db $f0
+    db "Attacks an enemy<LINE>"
+    db "with a fireball.<LINE>"
+    db "@"
 
 String_95_00_02::
-    db "Attacks an enemy", $f1
-    db "with a large", $f1
-    db "fireball.", $f0
+    db "Attacks an enemy<LINE>"
+    db "with a large<LINE>"
+    db "fireball.@"
 
 String_95_00_03::
-    db "A towering pillar", $f1
-    db "of fire roasts an", $f1
-    db "enemy.", $f0
+    db "A towering pillar<LINE>"
+    db "of fire roasts an<LINE>"
+    db "enemy.@"
 
 String_95_00_04::
-    db "Attacks enemies", $f1
-    db "with a blast of", $f1
-    db "fire ", $a0, "all", $a1, ".", $f0
+    db "Attacks enemies<LINE>"
+    db "with a blast of<LINE>"
+    db "fire (all).@"
 
 String_95_00_05::
-    db "Attacks enemies", $f1
-    db "with a wall of", $f1
-    db "fire ", $a0, "all", $a1, ".", $f0
+    db "Attacks enemies<LINE>"
+    db "with a wall of<LINE>"
+    db "fire (all).@"
 
 String_95_00_06::
-    db "A huge wall of", $f1
-    db "fire incinerates", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "A huge wall of<LINE>"
+    db "fire incinerates<LINE>"
+    db "enemies (all).@"
 
 String_95_00_07::
-    db "Small explosions", $f1
-    db "strike enemies", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Small explosions<LINE>"
+    db "strike enemies<LINE>"
+    db "(all).@"
 
 String_95_00_08::
-    db "A succession of", $f1
-    db "explosions strikes", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "A succession of<LINE>"
+    db "explosions strikes<LINE>"
+    db "enemies (all).@"
 
 String_95_00_09::
-    db "Huge explosions", $f1
-    db "blast enemies", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Huge explosions<LINE>"
+    db "blast enemies<LINE>"
+    db "(all).@"
 
 String_95_00_0A::
-    db "Razor sharp", $f1
-    db "whirlwinds slash", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Razor sharp<LINE>"
+    db "whirlwinds slash<LINE>"
+    db "enemies (all).@"
 
 String_95_00_0B::
-    db "Twisters tear", $f1
-    db "through enemies", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Twisters tear<LINE>"
+    db "through enemies<LINE>"
+    db "(all).@"
 
 String_95_00_0C::
-    db "A huge tornado", $f1
-    db "roars through", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0, " "
+    db "A huge tornado<LINE>"
+    db "roars through<LINE>"
+    db "enemies (all).@"
+    db " "
 
 String_95_00_0D::
-    db "Lightning strikes", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Lightning strikes<LINE>"
+    db "enemies (all).<LINE>"
+    db "@"
 
 String_95_00_0E::
-    db "Powerful bolts of", $f1
-    db "lightning lash", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Powerful bolts of<LINE>"
+    db "lightning lash<LINE>"
+    db "enemies (all).@"
 
 String_95_00_0F::
-    db "Huge shards of", $f1
-    db "lightning rip", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Huge shards of<LINE>"
+    db "lightning rip<LINE>"
+    db "enemies (all).@"
 
 String_95_00_10::
-    db "Small chunks of", $f1
-    db "ice hail down on", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Small chunks of<LINE>"
+    db "ice hail down on<LINE>"
+    db "enemies (all).@"
 
 String_95_00_11::
-    db "Enemies are flash", $f1
-    db "frozen ", $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Enemies are flash<LINE>"
+    db "frozen (all).<LINE>"
+    db "@"
 
 String_95_00_12::
-    db "A wicked blizzard", $f1
-    db "howls through", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "A wicked blizzard<LINE>"
+    db "howls through<LINE>"
+    db "enemies (all).@"
 
 String_95_00_13::
-    db "Instantly slays an", $f1
-    db "enemy.", $f1
-    db $f0
+    db "Instantly slays an<LINE>"
+    db "enemy.<LINE>"
+    db "@"
 
 String_95_00_14::
-    db "Instantly slays", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Instantly slays<LINE>"
+    db "enemies (all).<LINE>"
+    db "@"
 
 String_95_00_15::
-    db "The user explodes", $f1
-    db "to inflict damage", $f1
-    db "on all enemies.", $f0
+    db "The user explodes<LINE>"
+    db "to inflict damage<LINE>"
+    db "on all enemies.@"
 
 String_95_00_16::
-    db "Restores HP by", $f1
-    db "30", $9d, "40.", $f1
-    db $f0
+    db "Restores HP by<LINE>"
+    db "30~40.<LINE>"
+    db "@"
 
 String_95_00_17::
-    db "Restores HP by", $f1
-    db "75", $9d, "90.", $f1
-    db $f0
+    db "Restores HP by<LINE>"
+    db "75~90.<LINE>"
+    db "@"
 
 String_95_00_18::
-    db "Fully restores", $f1
-    db "HP.", $f1
-    db $f0
+    db "Fully restores<LINE>"
+    db "HP.<LINE>"
+    db "@"
 
 String_95_00_19::
-    db "Restores HP by", $f1
-    db "90", $9d, "120 ", $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Restores HP by<LINE>"
+    db "90~120 (all).<LINE>"
+    db "@"
 
 String_95_00_1A::
-    db "Fully restores HP", $f1
-    db $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Fully restores HP<LINE>"
+    db "(all).<LINE>"
+    db "@"
 
 String_95_00_1B::
-    db "Gives 15MP to a", $f1
-    db "party monster.", $f1
-    db $f0
+    db "Gives 15MP to a<LINE>"
+    db "party monster.<LINE>"
+    db "@"
 
 String_95_00_1C::
-    db "Gives 30MP to a", $f1
-    db "party monster.", $f1
-    db $f0
+    db "Gives 30MP to a<LINE>"
+    db "party monster.<LINE>"
+    db "@"
 
 String_95_00_1D::
-    db "Gives 80MP to a", $f1
-    db "party monster.", $f1
-    db $f0
+    db "Gives 80MP to a<LINE>"
+    db "party monster.<LINE>"
+    db "@"
 
 String_95_00_1E::
-    db "May revive a dead", $f1
-    db "monster.", $f1
-    db $f0
+    db "May revive a dead<LINE>"
+    db "monster.<LINE>"
+    db "@"
 
 String_95_00_1F::
-    db "Revives a dead", $f1
-    db "monster.", $f1
-    db $f0
+    db "Revives a dead<LINE>"
+    db "monster.<LINE>"
+    db "@"
 
 String_95_00_20::
-    db "Revives dead mates", $f1
-    db "in exchange for", $f1
-    db "own life ", $a0, "all", $a1, ".", $f0
+    db "Revives dead mates<LINE>"
+    db "in exchange for<LINE>"
+    db "own life (all).@"
 
 String_95_00_21::
-    db "Cures one monster", $f1
-    db "of poison.", $f1
-    db $f0
+    db "Cures one monster<LINE>"
+    db "of poison.<LINE>"
+    db "@"
 
 String_95_00_22::
-    db "Clears confusion", $f1
-    db "in all party", $f1
-    db "monsters.", $f0
+    db "Clears confusion<LINE>"
+    db "in all party<LINE>"
+    db "monsters.@"
 
 String_95_00_23::
-    db "Cures paralysis", $f1
-    db "and sleep ", $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Cures paralysis<LINE>"
+    db "and sleep (all).<LINE>"
+    db "@"
 
 String_95_00_24::
-    db "Lifts a curse", $f1
-    db $a0, "all", $a1, ".", $f1
-    db $f0
+    db "Lifts a curse<LINE>"
+    db "(all).<LINE>"
+    db "@"
 
 String_95_00_25::
-    db "Raises DEF of one", $f1
-    db "monster.", $f1
-    db $f0
+    db "Raises DEF of one<LINE>"
+    db "monster.<LINE>"
+    db "@"
 
 String_95_00_26::
-    db "Raises DEF of", $f1
-    db "party monsters", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Raises DEF of<LINE>"
+    db "party monsters<LINE>"
+    db "(all).@"
 
 String_95_00_27::
-    db "Lowers DEF of one", $f1
-    db "enemy.", $f1
-    db $f0
+    db "Lowers DEF of one<LINE>"
+    db "enemy.<LINE>"
+    db "@"
 
 String_95_00_28::
-    db "Lowers DEF of all", $f1
-    db "enemy monsters.", $f1
-    db $f0
+    db "Lowers DEF of all<LINE>"
+    db "enemy monsters.<LINE>"
+    db "@"
 
 String_95_00_29::
-    db "Raises AGL of one", $f1
-    db "monster.", $f1
-    db $f0
+    db "Raises AGL of one<LINE>"
+    db "monster.<LINE>"
+    db "@"
 
 String_95_00_2A::
-    db "Raises AGL of", $f1
-    db "party monsters", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Raises AGL of<LINE>"
+    db "party monsters<LINE>"
+    db "(all).@"
 
 String_95_00_2B::
-    db "Lowers AGL of one", $f1
-    db "enemy.", $f1
-    db $f0
+    db "Lowers AGL of one<LINE>"
+    db "enemy.<LINE>"
+    db "@"
 
 String_95_00_2C::
-    db "Lowers AGL of all", $f1
-    db "enemy monsters.", $f1
-    db $f0
+    db "Lowers AGL of all<LINE>"
+    db "enemy monsters.<LINE>"
+    db "@"
 
 String_95_00_2D::
-    db "Doubles the ATK of", $f1
-    db "one monster.", $f1
-    db $f0
+    db "Doubles the ATK of<LINE>"
+    db "one monster.<LINE>"
+    db "@"
 
 String_95_00_2E::
-    db "Surrounds all", $f1
-    db "enemies in a", $f1
-    db "mirage.", $f0
+    db "Surrounds all<LINE>"
+    db "enemies in a<LINE>"
+    db "mirage.@"
 
 String_95_00_2F::
-    db "Makes a single", $f1
-    db "enemy sleep.", $f1
-    db $f0
+    db "Makes a single<LINE>"
+    db "enemy sleep.<LINE>"
+    db "@"
 
 String_95_00_30::
-    db "Makes all enemies", $f1
-    db "sleep.", $f1
-    db $f0
+    db "Makes all enemies<LINE>"
+    db "sleep.<LINE>"
+    db "@"
 
 String_95_00_31::
-    db "Absorbs the MP of", $f1
-    db "a spell cast", $f1
-    db "against the user.", $f0
+    db "Absorbs the MP of<LINE>"
+    db "a spell cast<LINE>"
+    db "against the user.@"
 
 String_95_00_32::
-    db "Steals MP from an", $f1
-    db "enemy.", $f1
-    db $f0
+    db "Steals MP from an<LINE>"
+    db "enemy.<LINE>"
+    db "@"
 
 String_95_00_33::
-    db "Prevents spell", $f1
-    db "casting by all", $f1
-    db "enemies.", $f0
+    db "Prevents spell<LINE>"
+    db "casting by all<LINE>"
+    db "enemies.@"
 
 String_95_00_34::
-    db "Confuses all", $f1
-    db "enemies.", $f1
-    db $f0
+    db "Confuses all<LINE>"
+    db "enemies.<LINE>"
+    db "@"
 
 String_95_00_35::
-    db "Changes all party", $f1
-    db "monsters into", $f1
-    db "chunks of iron.", $f0
+    db "Changes all party<LINE>"
+    db "monsters into<LINE>"
+    db "chunks of iron.@"
 
 String_95_00_36::
-    db "Bounces back a", $f1
-    db "spell once.", $f1
-    db $f0
+    db "Bounces back a<LINE>"
+    db "spell once.<LINE>"
+    db "@"
 
 String_95_00_37::
-    db "Bounces back all", $f1
-    db "enemy spells.", $f1
-    db $f0
+    db "Bounces back all<LINE>"
+    db "enemy spells.<LINE>"
+    db "@"
 
 String_95_00_38::
-    db "Reduces damage", $f1
-    db "from breath", $f1
-    db "attacks ", $a0, "all", $a1, ".", $f0
+    db "Reduces damage<LINE>"
+    db "from breath<LINE>"
+    db "attacks (all).@"
 
 String_95_00_39::
-    db "Raises protection", $f1
-    db "against magic", $f1
-    db "spells ", $a0, "all", $a1, ".", $f0
+    db "Raises protection<LINE>"
+    db "against magic<LINE>"
+    db "spells (all).@"
 
 String_95_00_3A::
-    db "Transforms the", $f1
-    db "user into a chosen", $f1
-    db "enemy.", $f0
+    db "Transforms the<LINE>"
+    db "user into a chosen<LINE>"
+    db "enemy.@"
 
 String_95_00_3B::
-    db "Transforms the", $f1
-    db "user into a", $f1
-    db "ferocious dragon.", $f0
+    db "Transforms the<LINE>"
+    db "user into a<LINE>"
+    db "ferocious dragon.@"
 
 String_95_00_3C::
-    db "There is no", $f1
-    db "telling what may", $f1
-    db "happen.", $f0
+    db "There is no<LINE>"
+    db "telling what may<LINE>"
+    db "happen.@"
 
 String_95_00_3D::
-    db "The ultimate", $f1
-    db "attack spell.", $f1
-    db $f0
+    db "The ultimate<LINE>"
+    db "attack spell.<LINE>"
+    db "@"
 
 String_95_00_3E::
-    db "Creates an", $f1
-    db "enormous explosion", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Creates an<LINE>"
+    db "enormous explosion<LINE>"
+    db "(all).@"
 
 String_95_00_3F::
-    db "Strikes all", $f1
-    db "enemies with huge", $f1
-    db "lightning.", $f0
+    db "Strikes all<LINE>"
+    db "enemies with huge<LINE>"
+    db "lightning.@"
 
 String_95_00_40::
-    db "Inflicts damage", $f1
-    db "with a breath of", $f1
-    db "fire ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with a breath of<LINE>"
+    db "fire (all).@"
 
 String_95_00_41::
-    db "Inflicts damage", $f1
-    db "with a blast of", $f1
-    db "fire ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with a blast of<LINE>"
+    db "fire (all).@"
 
 String_95_00_42::
-    db "Inflicts damage", $f1
-    db "with a huge blast", $f1
-    db "of fire ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with a huge blast<LINE>"
+    db "of fire (all).@"
 
 String_95_00_43::
-    db "Inflicts damage", $f1
-    db "with incredible", $f1
-    db "fire ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with incredible<LINE>"
+    db "fire (all).@"
 
 String_95_00_44::
-    db "Inflicts damage", $f1
-    db "with a breath of", $f1
-    db "ice ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with a breath of<LINE>"
+    db "ice (all).@"
 
 String_95_00_45::
-    db "Inflicts damage", $f1
-    db "with a freezing", $f1
-    db "breath ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage<LINE>"
+    db "with a freezing<LINE>"
+    db "breath (all).@"
 
 String_95_00_46::
-    db "Inflicts damage by", $f1
-    db "exhaling a", $f1
-    db "blizzard ", $a0, "all", $a1, ".", $f0
+    db "Inflicts damage by<LINE>"
+    db "exhaling a<LINE>"
+    db "blizzard (all).@"
 
 String_95_00_47::
-    db "Looses a white,", $f1
-    db "shining breath of", $f1
-    db "ice ", $a0, "all", $a1, ".", $f0
+    db "Looses a white,<LINE>"
+    db "shining breath of<LINE>"
+    db "ice (all).@"
 
 String_95_00_48::
-    db "Slashes a single", $f1
-    db "monster with sharp", $f1
-    db "whirlwinds.", $f0
+    db "Slashes a single<LINE>"
+    db "monster with sharp<LINE>"
+    db "whirlwinds.@"
 
 String_95_00_49::
-    db "Creates a tornado", $f1
-    db "with vicious winds", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Creates a tornado<LINE>"
+    db "with vicious winds<LINE>"
+    db "(all).@"
 
 String_95_00_4A::
-    db "Summons a", $f1
-    db "lightning storm", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Summons a<LINE>"
+    db "lightning storm<LINE>"
+    db "(all).@"
 
 String_95_00_4B::
-    db "Hurls giant", $f1
-    db "boulders at", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Hurls giant<LINE>"
+    db "boulders at<LINE>"
+    db "enemies (all).@"
 
 String_95_00_4C::
-    db "Shoots a high", $f1
-    db "volume of water at", $f1
-    db "an enemy.", $f0
+    db "Shoots a high<LINE>"
+    db "volume of water at<LINE>"
+    db "an enemy.@"
 
 String_95_00_4D::
-    db "Summons a towering", $f1
-    db "wall of water", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "Summons a towering<LINE>"
+    db "wall of water<LINE>"
+    db "(all).@"
 
 String_95_00_4E::
-    db "Summons friends", $f1
-    db "who attack in", $f1
-    db "droves.", $f0
+    db "Summons friends<LINE>"
+    db "who attack in<LINE>"
+    db "droves.@"
 
 String_95_00_4F::
-    db "Summons a mass of", $f1
-    db "friends that", $f1
-    db "attack in droves.", $f0
+    db "Summons a mass of<LINE>"
+    db "friends that<LINE>"
+    db "attack in droves.@"
 
 String_95_00_50::
-    db "A fiery sword", $f1
-    db "attack.", $f1
-    db $f0
+    db "A fiery sword<LINE>"
+    db "attack.<LINE>"
+    db "@"
 
 String_95_00_51::
-    db "A sword attack", $f1
-    db "enhanced by", $f1
-    db "whirlwinds.", $f0
+    db "A sword attack<LINE>"
+    db "enhanced by<LINE>"
+    db "whirlwinds.@"
 
 String_95_00_52::
-    db "A sword attack", $f1
-    db "made stronger by", $f1
-    db "lightning.", $f0
+    db "A sword attack<LINE>"
+    db "made stronger by<LINE>"
+    db "lightning.@"
 
 String_95_00_53::
-    db "A sword attack", $f1
-    db "made stronger by", $f1
-    db "the power of ice.", $f0
+    db "A sword attack<LINE>"
+    db "made stronger by<LINE>"
+    db "the power of ice.@"
 
 String_95_00_54::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "slime family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "slime family.@"
 
 String_95_00_55::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "dragon family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "dragon family.@"
 
 String_95_00_56::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "beast family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "beast family.@"
 
 String_95_00_57::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "bird family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "bird family.@"
 
 String_95_00_58::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "bug family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "bug family.@"
 
 String_95_00_59::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "plant family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "plant family.@"
 
 String_95_00_5A::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "devil family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "devil family.@"
 
 String_95_00_5B::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "zombie family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "zombie family.@"
 
 String_95_00_5C::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "material family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "material family.@"
 
 String_95_00_5D::
-    db "Inflicts severe", $f1
-    db "damage on the", $f1
-    db "water family.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the<LINE>"
+    db "water family.@"
 
 String_95_00_5E::
-    db "Inflicts damage", $f1
-    db "on a high DEF", $f1
-    db "enemy.", $f0
+    db "Inflicts damage<LINE>"
+    db "on a high DEF<LINE>"
+    db "enemy.@"
 
 String_95_00_5F::
-    db "A physical attack", $f1
-    db "that may poison", $f1
-    db "the target.", $f0
+    db "A physical attack<LINE>"
+    db "that may poison<LINE>"
+    db "the target.@"
 
 String_95_00_60::
-    db "A physical attack", $f1
-    db "that may paralyze", $f1
-    db "the target.", $f0
+    db "A physical attack<LINE>"
+    db "that may paralyze<LINE>"
+    db "the target.@"
 
 String_95_00_61::
-    db "A physical attack", $f1
-    db "that may put the", $f1
-    db "target to sleep.", $f0
+    db "A physical attack<LINE>"
+    db "that may put the<LINE>"
+    db "target to sleep.@"
 
 String_95_00_62::
-    db "A physical attack", $f1
-    db "that hits first.", $f1
-    db $f0
+    db "A physical attack<LINE>"
+    db "that hits first.<LINE>"
+    db "@"
 
 String_95_00_63::
-    db "A physical attack", $f1
-    db "that strikes twice", $f1
-    db "in succession.", $f0
+    db "A physical attack<LINE>"
+    db "that strikes twice<LINE>"
+    db "in succession.@"
 
 String_95_00_64::
-    db "A physical attack", $f1
-    db "that strikes four", $f1
-    db "times.", $f0
+    db "A physical attack<LINE>"
+    db "that strikes four<LINE>"
+    db "times.@"
 
 String_95_00_65::
-    db "A sword attack", $f1
-    db "that hits all", $f1
-    db "enemies.", $f0, $f0
+    db "A sword attack<LINE>"
+    db "that hits all<LINE>"
+    db "enemies.@"
+    db "@"
 
 String_95_00_66::
-    db "A cross-cutting", $f1
-    db "sword attack", $f1
-    db $a0, "all", $a1, ".", $f0
+    db "A cross-cutting<LINE>"
+    db "sword attack<LINE>"
+    db "(all).@"
 
 String_95_00_67::
-    db "The ultimate sword", $f1
-    db "attack.", $f1
-    db $f0
+    db "The ultimate sword<LINE>"
+    db "attack.<LINE>"
+    db "@"
 
 String_95_00_68::
-    db "Inflicts severe", $f1
-    db "damage on the next", $f1
-    db "turn.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on the next<LINE>"
+    db "turn.@"
 
 String_95_00_69::
-    db "Inflicts severe", $f1
-    db "damage at the end", $f1
-    db "of the turn.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage at the end<LINE>"
+    db "of the turn.@"
 
 String_95_00_6A::
-    db "The user leaps and", $f1
-    db "attacks in the", $f1
-    db "next turn.", $f0
+    db "The user leaps and<LINE>"
+    db "attacks in the<LINE>"
+    db "next turn.@"
 
 String_95_00_6B::
-    db "A powerful, but", $f1
-    db "wildly aimed,", $f1
-    db "sword attack.", $f0
+    db "A powerful, but<LINE>"
+    db "wildly aimed,<LINE>"
+    db "sword attack.@"
 
 String_95_00_6C::
-    db "Inflicts severe", $f1
-    db "damage on one", $f1
-    db "friend or foe.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage on one<LINE>"
+    db "friend or foe.@"
 
 String_95_00_6D::
-    db "Inflicts severe", $f1
-    db "damage, but also", $f1
-    db "hurts the user.", $f0
+    db "Inflicts severe<LINE>"
+    db "damage, but also<LINE>"
+    db "hurts the user.@"
 
 String_95_00_6E::
-    db "A powerful attack", $f1
-    db "that leaves the", $f1
-    db "user vulnerable.", $f0
+    db "A powerful attack<LINE>"
+    db "that leaves the<LINE>"
+    db "user vulnerable.@"
 
 String_95_00_6F::
-    db "A full-body tackle", $f1
-    db "that also hurts", $f1
-    db "the user.", $f0
+    db "A full-body tackle<LINE>"
+    db "that also hurts<LINE>"
+    db "the user.@"
 
 String_95_00_70::
-    db "Leaves the user", $f1
-    db "and target on the", $f1
-    db "verge of death.", $f0
+    db "Leaves the user<LINE>"
+    db "and target on the<LINE>"
+    db "verge of death.@"
 
 String_95_00_71::
-    db "A breath that", $f1
-    db "induces sleep in", $f1
-    db "all enemies.", $f0
+    db "A breath that<LINE>"
+    db "induces sleep in<LINE>"
+    db "all enemies.@"
 
 String_95_00_72::
-    db "A breath that", $f1
-    db "paralyzes all", $f1
-    db "enemies.", $f0
+    db "A breath that<LINE>"
+    db "paralyzes all<LINE>"
+    db "enemies.@"
 
 String_95_00_73::
-    db "A breath that", $f1
-    db "poisons all", $f1
-    db "enemies.", $f0
+    db "A breath that<LINE>"
+    db "poisons all<LINE>"
+    db "enemies.@"
 
 String_95_00_74::
-    db "A breath that", $f1
-    db "badly poisons all", $f1
-    db "enemies.", $f0
+    db "A breath that<LINE>"
+    db "badly poisons all<LINE>"
+    db "enemies.@"
 
 String_95_00_75::
-    db "Lays a curse on", $f1
-    db "all enemies.", $f1
-    db $f0
+    db "Lays a curse on<LINE>"
+    db "all enemies.<LINE>"
+    db "@"
 
 String_95_00_76::
-    db "A dance that", $f1
-    db "reduces an enemy's", $f1
-    db "MP.", $f0
+    db "A dance that<LINE>"
+    db "reduces an enemy's<LINE>"
+    db "MP.@"
 
 String_95_00_77::
-    db "A dance that", $f1
-    db "steals an enemy's", $f1
-    db "MP.", $f0
+    db "A dance that<LINE>"
+    db "steals an enemy's<LINE>"
+    db "MP.@"
 
 String_95_00_78::
-    db "A dance that", $f1
-    db "confuses all", $f1
-    db "enemies.", $f0
+    db "A dance that<LINE>"
+    db "confuses all<LINE>"
+    db "enemies.@"
 
 String_95_00_79::
-    db "A dance that", $f1
-    db "induces death in", $f1
-    db "all enemies.", $f0
+    db "A dance that<LINE>"
+    db "induces death in<LINE>"
+    db "all enemies.@"
 
 String_95_00_7A::
-    db "A dance that makes", $f1
-    db "all enemies want", $f1
-    db "to join in.", $f0
+    db "A dance that makes<LINE>"
+    db "all enemies want<LINE>"
+    db "to join in.@"
 
 String_95_00_7B::
-    db "A sacrificial", $f1
-    db "dance to revive", $f1
-    db "dead friends.", $f0
+    db "A sacrificial<LINE>"
+    db "dance to revive<LINE>"
+    db "dead friends.@"
 
 String_95_00_7C::
-    db "A dance that", $f1
-    db "restores HP by", $f1
-    db "70", $9d, "80 ", $a0, "all", $a1, ".", $f0
+    db "A dance that<LINE>"
+    db "restores HP by<LINE>"
+    db "70~80 (all).@"
 
 String_95_00_7D::
-    db "A quick-footed", $f1
-    db "skill for dodging", $f1
-    db "attacks.", $f0
+    db "A quick-footed<LINE>"
+    db "skill for dodging<LINE>"
+    db "attacks.@"
 
 String_95_00_7E::
-    db "Obscures the", $f1
-    db "visibility of all", $f1
-    db "enemies.", $f0
+    db "Obscures the<LINE>"
+    db "visibility of all<LINE>"
+    db "enemies.@"
 
 String_95_00_7F::
-    db "A blast of light", $f1
-    db "blinds all the", $f1
-    db "enemies.", $f0
+    db "A blast of light<LINE>"
+    db "blinds all the<LINE>"
+    db "enemies.@"
 
 String_95_00_80::
-    db "Weakens all", $f1
-    db "enemies to magic", $f1
-    db "spells.", $f0
+    db "Weakens all<LINE>"
+    db "enemies to magic<LINE>"
+    db "spells.@"
 
 String_95_00_81::
-    db "Eliminates all", $f1
-    db "status problems", $f1
-    db "among friends.", $f0
+    db "Eliminates all<LINE>"
+    db "status problems<LINE>"
+    db "among friends.@"
 
 String_95_00_82::
-    db "Greatly weakens an", $f1
-    db "enemy.", $f1
-    db $f0
+    db "Greatly weakens an<LINE>"
+    db "enemy.<LINE>"
+    db "@"
 
 String_95_00_83::
-    db "Lifts the effects", $f1
-    db "of all spells on", $f1
-    db "enemies ", $a0, "all", $a1, ".", $f0
+    db "Lifts the effects<LINE>"
+    db "of all spells on<LINE>"
+    db "enemies (all).@"
 
 String_95_00_84::
-    db "Creates a fog that", $f1
-    db "prevents the use", $f1
-    db "of all spells.", $f0
+    db "Creates a fog that<LINE>"
+    db "prevents the use<LINE>"
+    db "of all spells.@"
 
 String_95_00_85::
-    db "Summons Tatsu to", $f1
-    db "battle.", $f1
-    db $f0
+    db "Summons Tatsu to<LINE>"
+    db "battle.<LINE>"
+    db "@"
 
 String_95_00_86::
-    db "Summons Diago to", $f1
-    db "battle.", $f1
-    db $f0
+    db "Summons Diago to<LINE>"
+    db "battle.<LINE>"
+    db "@"
 
 String_95_00_87::
-    db "Summons Samsi to", $f1
-    db "battle.", $f1
-    db $f0
+    db "Summons Samsi to<LINE>"
+    db "battle.<LINE>"
+    db "@"
 
 String_95_00_88::
-    db "Summons Bazoo to", $f1
-    db "battle.", $f1
-    db $f0
+    db "Summons Bazoo to<LINE>"
+    db "battle.<LINE>"
+    db "@"
 
 String_95_00_89::
-    db "Holds in a breath", $f1
-    db "to inflict severe", $f1
-    db "damage next turn.", $f0
+    db "Holds in a breath<LINE>"
+    db "to inflict severe<LINE>"
+    db "damage next turn.@"
 
 String_95_00_8A::
-    db "Enables two moves", $f1
-    db "in the next turn.", $f1
-    db $f0
+    db "Enables two moves<LINE>"
+    db "in the next turn.<LINE>"
+    db "@"
 
 String_95_00_8B::
-    db "Licks one enemy to", $f1
-    db "stop it for one", $f1
-    db "turn.", $f0
+    db "Licks one enemy to<LINE>"
+    db "stop it for one<LINE>"
+    db "turn.@"
 
 String_95_00_8C::
-    db "Licks one enemy to", $f1
-    db "reduce its DEF.", $f1
-    db $f0
+    db "Licks one enemy to<LINE>"
+    db "reduce its DEF.<LINE>"
+    db "@"
 
 String_95_00_8D::
-    db "Sweeps the leg out", $f1
-    db "from under one", $f1
-    db "enemy.", $f0
+    db "Sweeps the leg out<LINE>"
+    db "from under one<LINE>"
+    db "enemy.@"
 
 String_95_00_8E::
-    db "Sweeps the legs", $f1
-    db "out from under all", $f1
-    db "enemies.", $f0
+    db "Sweeps the legs<LINE>"
+    db "out from under all<LINE>"
+    db "enemies.@"
 
 String_95_00_8F::
-    db "Soft, plushy and", $f1
-    db "very pleasant.", $f1
-    db $f0
+    db "Soft, plushy and<LINE>"
+    db "very pleasant.<LINE>"
+    db "@"
 
 String_95_00_90::
-    db "A terrifying cry", $f1
-    db "that stops all", $f1
-    db "enemies.", $f0
+    db "A terrifying cry<LINE>"
+    db "that stops all<LINE>"
+    db "enemies.@"
 
 String_95_00_91::
-    db "Opens a geyser to", $f1
-    db "send an enemy", $f1
-    db "flying.", $f0
+    db "Opens a geyser to<LINE>"
+    db "send an enemy<LINE>"
+    db "flying.@"
 
 String_95_00_92::
-    db "Prevents all", $f1
-    db "enemies from", $f1
-    db "dancing.", $f0
+    db "Prevents all<LINE>"
+    db "enemies from<LINE>"
+    db "dancing.@"
 
 String_95_00_93::
-    db "Prevents all", $f1
-    db "enemies from using", $f1
-    db "breath attacks.", $f0
+    db "Prevents all<LINE>"
+    db "enemies from using<LINE>"
+    db "breath attacks.@"
 
 String_95_00_94::
-    db "Strongly protects", $f1
-    db "the user against", $f1
-    db "all attacks.", $f0
+    db "Strongly protects<LINE>"
+    db "the user against<LINE>"
+    db "all attacks.@"
 
 String_95_00_95::
-    db "Deflects any", $f1
-    db "physical attack to", $f1
-    db "another monster.", $f0
+    db "Deflects any<LINE>"
+    db "physical attack to<LINE>"
+    db "another monster.@"
 
 String_95_00_96::
-    db "Protects the user", $f1
-    db "and enables", $f1
-    db "retaliation.", $f0
+    db "Protects the user<LINE>"
+    db "and enables<LINE>"
+    db "retaliation.@"
 
 String_95_00_97::
-    db "Takes all attacks", $f1
-    db "meant for another", $f1
-    db "monster.", $f0
+    db "Takes all attacks<LINE>"
+    db "meant for another<LINE>"
+    db "monster.@"
 
 String_95_00_98::
-    db "Takes all attacks", $f1
-    db "meant for party", $f1
-    db "monsters.", $f0
+    db "Takes all attacks<LINE>"
+    db "meant for party<LINE>"
+    db "monsters.@"
 
 String_95_00_99::
-    db "Bounces back a", $f1
-    db "breath attack to", $f1
-    db "an enemy.", $f0
+    db "Bounces back a<LINE>"
+    db "breath attack to<LINE>"
+    db "an enemy.@"
 
 String_95_00_9A::
-    db "Bounces back all", $f1
-    db "breath attacks to", $f1
-    db "all enemies.", $f0
+    db "Bounces back all<LINE>"
+    db "breath attacks to<LINE>"
+    db "all enemies.@"
 
 String_95_00_9B::
-    db "Creates a barrier", $f1
-    db "that blocks an", $f1
-    db "attack.", $f0
+    db "Creates a barrier<LINE>"
+    db "that blocks an<LINE>"
+    db "attack.@"
 
 String_95_00_9C::
-    db "Seals a skill used", $f1
-    db "by the enemy.", $f1
-    db $f0
+    db "Seals a skill used<LINE>"
+    db "by the enemy.<LINE>"
+    db "@"
 
 String_95_00_9D::
-    db "Inhales all breath", $f1
-    db "attacks meant for", $f1
-    db "the party.", $f0
+    db "Inhales all breath<LINE>"
+    db "attacks meant for<LINE>"
+    db "the party.@"
 
 String_95_00_9E::
-    db "Imitates the", $f1
-    db "enemy's moves.", $f1
-    db $f0
+    db "Imitates the<LINE>"
+    db "enemy's moves.<LINE>"
+    db "@"
 
 String_95_00_9F::
-    db "Meditates to", $f1
-    db "restore HP by 500.", $f1
-    db $f0
+    db "Meditates to<LINE>"
+    db "restore HP by 500.<LINE>"
+    db "@"
 
 String_95_00_A0::
-    db "Revives all dead", $f1
-    db "friends in the", $f1
-    db "next turn.", $f0
+    db "Revives all dead<LINE>"
+    db "friends in the<LINE>"
+    db "next turn.@"
 
 String_95_00_A1::
-    db "Summons rain that", $f1
-    db "restores HP.", $f1
-    db $f0
+    db "Summons rain that<LINE>"
+    db "restores HP.<LINE>"
+    db "@"
 
 String_95_00_A2::
-    db "Attracts enemy", $f1
-    db "monsters.", $f1
-    db $f0
+    db "Attracts enemy<LINE>"
+    db "monsters.<LINE>"
+    db "@"
 
 String_95_00_A3::
-    db "Attracts enemy", $f1
-    db "monsters of the", $f1
-    db "opposite gender.", $f0
+    db "Attracts enemy<LINE>"
+    db "monsters of the<LINE>"
+    db "opposite gender.@"
 
 String_95_00_A4::
-    db "Protects the party", $f1
-    db "from injurious", $f1
-    db "terrain.", $f0
+    db "Protects the party<LINE>"
+    db "from injurious<LINE>"
+    db "terrain.@"
 
 String_95_00_A5::
-    db "Instantly warps", $f1
-    db "the party out from", $f1
-    db "caves and towers.", $f0
+    db "Instantly warps<LINE>"
+    db "the party out from<LINE>"
+    db "caves and towers.@"
 
 String_95_00_A6::
-    db "Use to obtain", $f1
-    db "information on", $f1
-    db "monsters.", $f0
+    db "Use to obtain<LINE>"
+    db "information on<LINE>"
+    db "monsters.@"
 
 String_95_00_A7::
-    db "Makes the monster", $f1
-    db "run an errand for", $f1
-    db "100G.", $f0
+    db "Makes the monster<LINE>"
+    db "run an errand for<LINE>"
+    db "100G.@"
 
 String_95_00_A8::
-    db "Determines the", $f1
-    db "presence of items", $f1
-    db "nearby.", $f0
+    db "Determines the<LINE>"
+    db "presence of items<LINE>"
+    db "nearby.@"
 
 String_95_00_A9::
-    db "Checks the", $f1
-    db "surrounding area's", $f1
-    db "terrain.", $f0
+    db "Checks the<LINE>"
+    db "surrounding area's<LINE>"
+    db "terrain.@"
 
 String_95_00_AA::
-    db "Soft, plushy and", $f1
-    db "very pleasant.", $f1
-    db $f0
+    db "Soft, plushy and<LINE>"
+    db "very pleasant.<LINE>"
+    db "@"
 
 String_95_00_AB::
     db $f0
@@ -1286,123 +1288,123 @@ String_95_01_00::
     db $f0
 
 String_95_02_00::
-    db "None", $f1
-    db $f0
+    db "None<LINE>"
+    db "@"
 
 String_95_02_01::
-    db "VIT", $f1
-    db "Belt", $f0
+    db "VIT<LINE>"
+    db "Belt@"
 
 String_95_02_02::
-    db "Draco", $f1
-    db "Belt", $f0
+    db "Draco<LINE>"
+    db "Belt@"
 
 String_95_02_03::
-    db "Magic", $f1
-    db "Belt", $f0
+    db "Magic<LINE>"
+    db "Belt@"
 
 String_95_02_04::
-    db "Odd", $f1
-    db "Belt", $f0
+    db "Odd<LINE>"
+    db "Belt@"
 
 String_95_02_05::
-    db "Stone", $f1
-    db "Fang", $f0
+    db "Stone<LINE>"
+    db "Fang@"
 
 String_95_02_06::
-    db "Steel", $f1
-    db "Fang", $f0
+    db "Steel<LINE>"
+    db "Fang@"
 
 String_95_02_07::
-    db "Merm", $f1
-    db "Scale", $f0
+    db "Merm<LINE>"
+    db "Scale@"
 
 String_95_02_08::
-    db "Drak", $f1
-    db "Scale", $f0
+    db "Drak<LINE>"
+    db "Scale@"
 
 String_95_02_09::
-    db "AGL", $f1
-    db "Bangle", $f0
+    db "AGL<LINE>"
+    db "Bangle@"
 
 String_95_02_0A::
-    db "Starry", $f1
-    db "Bangle", $f0
+    db "Starry<LINE>"
+    db "Bangle@"
 
 String_95_02_0B::
-    db "Smart", $f1
-    db "Hat", $f0
+    db "Smart<LINE>"
+    db "Hat@"
 
 String_95_02_0C::
-    db "Wise", $f1
-    db "Hat", $f0
+    db "Wise<LINE>"
+    db "Hat@"
 
 String_95_02_0D::
-    db "Magic", $f1
-    db "Cape", $f0
+    db "Magic<LINE>"
+    db "Cape@"
 
 String_95_02_0E::
-    db "Draco", $f1
-    db "Cape", $f0
+    db "Draco<LINE>"
+    db "Cape@"
 
 String_95_02_0F::
-    db "Silver", $f1
-    db "Cape", $f0
+    db "Silver<LINE>"
+    db "Cape@"
 
 String_95_02_10::
-    db "Gold", $f1
-    db "Cape", $f0
+    db "Gold<LINE>"
+    db "Cape@"
 
 String_95_02_11::
-    db "Pltnm", $f1
-    db "Cape", $f0
+    db "Pltnm<LINE>"
+    db "Cape@"
 
 String_95_02_12::
-    db "Orca", $f1
-    db "Cape", $f0
+    db "Orca<LINE>"
+    db "Cape@"
 
 String_95_02_13::
-    db "Brave", $f1
-    db "Cape", $f0
+    db "Brave<LINE>"
+    db "Cape@"
 
 String_95_02_14::
-    db "D-", $f1
-    db "Scale", $f0
+    db "D-<LINE>"
+    db "Scale@"
 
 String_95_02_15::
     db $f1, $f0
 
 String_95_02_1B::
-    db "Life", $f1
-    db "Ring", $f0
+    db "Life<LINE>"
+    db "Ring@"
 
 String_95_02_1C::
-    db "Divine", $f1
-    db "Ring", $f0
+    db "Divine<LINE>"
+    db "Ring@"
 
 String_95_02_1D::
-    db "War", $f1
-    db "Ring", $f0
+    db "War<LINE>"
+    db "Ring@"
 
 String_95_02_1E::
-    db "Mage", $f1
-    db "Ring", $f0
+    db "Mage<LINE>"
+    db "Ring@"
 
 String_95_02_1F::
-    db "Fight", $f1
-    db "Ring", $f0
+    db "Fight<LINE>"
+    db "Ring@"
 
 String_95_02_20::
-    db "Sailor", $f1
-    db "Ring", $f0
+    db "Sailor<LINE>"
+    db "Ring@"
 
 String_95_02_21::
-    db "Thief", $f1
-    db "Ring", $f0
+    db "Thief<LINE>"
+    db "Ring@"
 
 String_95_02_22::
-    db "Cleric", $f1
-    db "Ring", $f0
+    db "Cleric<LINE>"
+    db "Ring@"
 
 String_95_02_23::
     db $f1, $f0
@@ -1411,225 +1413,225 @@ String_95_03_00::
     db $f0
 
 String_95_04_00::
-    db "None", $f1
-    db $f0
+    db "None<LINE>"
+    db "@"
 
 String_95_04_01::
-    db "Call", $f1
-    db "ship", $f0
+    db "Call<LINE>"
+    db "ship@"
 
 String_95_04_02::
-    db "Call", $f1
-    db "cloud", $f0
+    db "Call<LINE>"
+    db "cloud@"
 
 String_95_04_03::
-    db "Smash", $f1
-    db "rock", $f0
+    db "Smash<LINE>"
+    db "rock@"
 
 String_95_04_04::
-    db "Burn", $f1
-    db $f0
+    db "Burn<LINE>"
+    db "@"
 
 String_95_04_05::
-    db "Cut", $f1
-    db $f0
+    db "Cut<LINE>"
+    db "@"
 
 String_95_04_06::
-    db "Open", $f1
-    db "door", $f0
+    db "Open<LINE>"
+    db "door@"
 
 String_95_05_00::
-    db "Attack", $f0
+    db "Attack@"
 
 String_95_05_02::
-    db "Charge", $f0
+    db "Charge@"
 
 String_95_05_03::
-    db "Mixed", $f0
+    db "Mixed@"
 
 String_95_05_04::
-    db "Cautious", $f0
+    db "Cautious@"
 
 String_95_05_05::
-    db "Command", $f0
+    db "Command@"
 
 String_95_06_00::
     db $f0
 
 String_95_07_01::
-    db "Charge", $f0
+    db "Charge@"
 
 String_95_07_02::
-    db "Mixed", $f0
+    db "Mixed@"
 
 String_95_07_03::
-    db "Cautious", $f0
+    db "Cautious@"
 
 String_95_07_04::
-    db "ZoneOut", $f0
+    db "ZoneOut@"
 
 String_95_07_05::
-    db "Chance", $f0
+    db "Chance@"
 
 String_95_07_06::
-    db "Confusion", $f0
+    db "Confusion@"
 
 String_95_07_07::
-    db "Auto", $f0
+    db "Auto@"
 
 String_95_07_08::
-    db "Item", $f0
+    db "Item@"
 
 String_95_08_00::
-    db "No area", $f0
+    db "No area@"
 
 String_95_08_01::
-    db "1 enemy", $f0
+    db "1 enemy@"
 
 String_95_08_02::
-    db "All enemies", $f0
+    db "All enemies@"
 
 String_95_08_03::
-    db "Foes multi-hit", $f0
+    db "Foes multi-hit@"
 
 String_95_08_04::
-    db "1 friend", $f0
+    db "1 friend@"
 
 String_95_08_05::
-    db "All friends", $f0
+    db "All friends@"
 
 String_95_08_06::
-    db "Choose 1", $f0
+    db "Choose 1@"
 
 String_95_08_07::
-    db "Choose all", $f0
+    db "Choose all@"
 
 String_95_08_08::
-    db "Self", $f0
+    db "Self@"
 
 String_95_08_09::
-    db "All", $f0
+    db "All@"
 
 String_95_08_0A::
-    db "Random", $f0
+    db "Random@"
 
 String_95_09_00::
-    db "None", $f0
+    db "None@"
 
 String_95_09_01::
-    db "Blaze", $f0
+    db "Blaze@"
 
 String_95_09_02::
-    db "Firebal", $f0
+    db "Firebal@"
 
 String_95_09_03::
-    db "Bang", $f0
+    db "Bang@"
 
 String_95_09_04::
-    db "Infernos", $f0
+    db "Infernos@"
 
 String_95_09_05::
-    db "Bolt", $f0
+    db "Bolt@"
 
 String_95_09_06::
-    db "IceBolt", $f0
+    db "IceBolt@"
 
 String_95_09_07::
-    db "Surround", $f0
+    db "Surround@"
 
 String_95_09_08::
-    db "Sleep", $f0
+    db "Sleep@"
 
 String_95_09_09::
-    db "Beat", $f0
+    db "Beat@"
 
 String_95_09_0A::
-    db "RobMagic", $f0
+    db "RobMagic@"
 
 String_95_09_0B::
-    db "StopSpell", $f0
+    db "StopSpell@"
 
 String_95_09_0C::
-    db "PanicAll", $f0
+    db "PanicAll@"
 
 String_95_09_0D::
-    db "Sap", $f0
+    db "Sap@"
 
 String_95_09_0E::
-    db "SlowAll", $f0
+    db "SlowAll@"
 
 String_95_09_0F::
-    db "Sacrifice", $f0
+    db "Sacrifice@"
 
 String_95_09_10::
-    db "MegaMagic", $f0
+    db "MegaMagic@"
 
 String_95_09_11::
-    db "Fire", $f0
+    db "Fire@"
 
 String_95_09_12::
-    db "Blizzard", $f0
+    db "Blizzard@"
 
 String_95_09_13::
-    db "Poison", $f0
+    db "Poison@"
 
 String_95_09_14::
-    db "Paralysis", $f0
+    db "Paralysis@"
 
 String_95_09_15::
-    db "Curse", $f0
+    db "Curse@"
 
 String_95_09_16::
-    db "Rest", $f0
+    db "Rest@"
 
 String_95_09_17::
-    db "Dance", $f0
+    db "Dance@"
 
 String_95_09_18::
-    db "Breath", $f0
+    db "Breath@"
 
 String_95_09_19::
-    db "Friend", $f0
+    db "Friend@"
 
 String_95_09_1A::
-    db "Bash", $f0
+    db "Bash@"
 
 String_95_09_1B::
-    db "Water", $f0
+    db "Water@"
 
 String_95_0A_00::
-    db "Type A", $f0
+    db "Type A@"
 
 String_95_0A_01::
-    db "Type B", $f0
+    db "Type B@"
 
 String_95_0A_02::
-    db "Type C", $f0
+    db "Type C@"
 
 String_95_0A_03::
-    db "Type D", $f0
+    db "Type D@"
 
 String_95_0A_04::
-    db "Type E", $f0
+    db "Type E@"
 
 String_95_0A_05::
-    db "Type F", $f0
+    db "Type F@"
 
 String_95_0A_06::
-    db "Type G", $f0
+    db "Type G@"
 
 String_95_0A_07::
-    db "Type H", $f0
+    db "Type H@"
 
 String_95_0B_00::
-    db "None", $f0
+    db "None@"
 
 String_95_0B_01::
-    db "Battle", $f0
+    db "Battle@"
 
 String_95_0B_02::
-    db "Field", $f0
+    db "Field@"
 
 String_95_0B_03::
-    db "Anytime", $f0
+    db "Anytime@"
     ds $19cd, $00

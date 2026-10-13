@@ -185,7 +185,7 @@ GameMode7_Init_Sub01_FillBytes::
     ld a, [wBattleResultByte]
     ld [wBattleSetupDB], a
     ld a, $03
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     ret
 
 GameMode7_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31::
@@ -3058,7 +3058,7 @@ StoreBattleStateToPartyRecords::
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     ld a, [wBattleStep]
     jumptable
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
@@ -3070,9 +3070,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
     ld a, $01
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     ld a, [wBattleResultStep]
     ld l, a
     ld a, [wBattleResultCounter]
@@ -3202,7 +3202,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
     ld a, $01
     ld [wStringCategory], a
     ld a, $03
-    ld [wStringIndex], a ; 'RESULTSDuoW LevelTurnsWin RankOwnWDuoLOwnL'
+    ld [wStringIndex], a ; 'RESULTSDuoW+LevelTurnsWin RankOwnWDuoLOwnL'
     farcall ShowString_Bank07
     ld hl, vTiles2 + $200
     ld a, l
@@ -5240,7 +5240,7 @@ RunBattleSetup_BankA0_ShowSelectingHeroSMove::
     ld a, $00
     ld [wStringCategory], a
     ld a, $22
-    ld [wStringIndex], a ; 'Selecting 0's move'
+    ld [wStringIndex], a ; 'Selecting 0's move…'
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleSubPhase
     inc [hl]

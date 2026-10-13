@@ -607,7 +607,7 @@ BattleEnd_Step0::
 ; wBattlePhase 2, wBattleStep 1 (E-0044)
 BattleEnd_Step1::
     ld a, $01
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     call BattleEnd_Step1_CountSlots_Sub02
     ld a, [wBattleScene]
     and $01
@@ -2156,7 +2156,7 @@ RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, $03
     ld [wBattleStep], a
     ld a, $01
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     ld a, [wDataBankSave]
     ld [wDataBank], a
     xor a
@@ -4138,7 +4138,7 @@ RunBattleSetup_ShowSelectingHeroSMove::
     ld a, $00
     ld [wStringCategory], a
     ld a, $22
-    ld [wStringIndex], a ; 'Selecting 0's move'
+    ld [wStringIndex], a ; 'Selecting 0's move…'
     farcall BeginStringDisplay_Bank2F
     xor a
     ld [wLinkSendByte], a

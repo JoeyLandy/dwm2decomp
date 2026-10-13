@@ -1085,13 +1085,13 @@ LinkReceiveStepWithBuffer::
     call SerialSendByte
     ret
 
-; calls StepStringDisplayUntilDone when wTextFlags is non-zero, then StepFade; adds 1 to the 16-bit
+; calls StepTextPrinter when wTextFlags is non-zero, then StepFade; adds 1 to the 16-bit
 ; wFrameCounterLo/Hi and clears wLinkFrameCounterLo and wLinkFrameCounterHi (E-0073)
 RunFrameTickFadeAndCounter_Bank1B::
     ld a, [wTextFlags]
     or a
     jr z, .call_step_fade
-    call StepStringDisplayUntilDone
+    call StepTextPrinter
 
 .call_step_fade:
     call StepFade
@@ -1190,153 +1190,157 @@ StringList_1B_4823::
     dw String_1B_4821_00_27 ; id 39
 
 String_1B_4821_00_00::
-    db "Starting key", $f1
-    db "trade", $a4, $fa, $f7
-    db $f0
+    db "Starting key<LINE>"
+    db "trade…<PROMPT>"
+    db "@"
 
 String_1B_4821_00_02::
-    db "You refused to", $f1
-    db "trade keys.", $fa, $f7
-    db $f0
+    db "You refused to<LINE>"
+    db "trade keys.<PROMPT>"
+    db "@"
 
 String_1B_4821_00_03::
-    db "Your pal refused", $f1
-    db "to trade keys.", $fa, $f7
-    db $f0
+    db "Your pal refused<LINE>"
+    db "to trade keys.<PROMPT>"
+    db "@"
 
 String_1B_4821_00_04::
-    db "Is it OK to trade", $f1
-    db "this key?", $f0
+    db "Is it OK to trade<LINE>"
+    db "this key?@"
 
 String_1B_4821_00_05::
-    db "That key cannot be", $f1
-    db "traded.", $f7
-    db $f0
+    db "That key cannot be<LINE>"
+    db "traded.<WAIT>"
+    db "@"
 
 String_1B_4821_00_06::
-    db "Please choose the", $f1
-    db "key to trade.", $f0
+    db "Please choose the<LINE>"
+    db "key to trade.@"
 
 String_1B_4821_00_07::
-    db "Please wait.", $f0
+    db "Please wait.@"
 
 String_1B_4821_00_08::
-    db "Keys can't have", $f1
-    db "the same name.", $f7
-    db $f0
+    db "Keys can't have<LINE>"
+    db "the same name.<WAIT>"
+    db "@"
 
 String_1B_4821_00_09::
-    db "Is it OK to trade", $f1
-    db "keys?", $f0
+    db "Is it OK to trade<LINE>"
+    db "keys?@"
 
 String_1B_4821_00_0A::
-    db "Is it OK to record", $f1
-    db "the results?", $f0
+    db "Is it OK to record<LINE>"
+    db "the results?@"
 
 String_1B_4821_00_0B::
-    db "Readying trade", $a4, $f1
-    db "Please wait.", $f0
+    db "Readying trade…<LINE>"
+    db "Please wait.@"
 
 String_1B_4821_00_0C::
-    db "Keys will now be", $f1
-    db "traded.", $f7
-    db $f0
+    db "Keys will now be<LINE>"
+    db "traded.<WAIT>"
+    db "@"
 
 String_1B_4821_00_0D::
-    db "Your pal has a key", $f1
-    db "of the same name.", $f7
-    db $f0
+    db "Your pal has a key<LINE>"
+    db "of the same name.<WAIT>"
+    db "@"
 
 String_1B_4821_00_0E::
-    db "TradeExit", $f0
+    db "TradeExit@"
 
 String_1B_4821_00_0F::
-    db "You can't hold any", $f1
-    db "more keys.", $f7
-    db $f0
+    db "You can't hold any<LINE>"
+    db "more keys.<WAIT>"
+    db "@"
 
 String_1B_4821_00_10::
-    db "Choose the members", $f1
-    db "for VS battle.", $f0
+    db "Choose the members<LINE>"
+    db "for VS battle.@"
 
 String_1B_4821_00_12::
-    db "Pick ", $f9, "0 for the", $f1
-    db "team?", $f0
+    db "Pick <BUF0> for the<LINE>"
+    db "team?@"
 
 String_1B_4821_00_13::
-    db "Choose one more", $f1
-    db "member for battle?", $f0
+    db "Choose one more<LINE>"
+    db "member for battle?@"
 
 String_1B_4821_00_14::
-    db "Will you put up a", $f1
-    db "prize?", $f0
+    db "Will you put up a<LINE>"
+    db "prize?@"
 
 String_1B_4821_00_15::
-    db "You have no", $f1
-    db "monsters on the", $fa, $f7
-    db $ef, $ee, "farm to serve as", $ef, $ee, "the prize.", $f7
-    db $f0
+    db "You have no<LINE>"
+    db "monsters on the<PROMPT>"
+    db "<NEXT>farm to serve as"
+    db "<NEXT>the prize.<WAIT>"
+    db "@"
 
 String_1B_4821_00_16::
-    db "Select a monster", $f1
-    db "as the prize.", $f0
+    db "Select a monster<LINE>"
+    db "as the prize.@"
 
 String_1B_4821_00_17::
-    db "Put up ", $f9, "0 as a", $f1
-    db "prize?", $f0
+    db "Put up <BUF0> as a<LINE>"
+    db "prize?@"
 
 String_1B_4821_00_18::
-    db "Begin battle?", $f0
+    db "Begin battle?@"
 
 String_1B_4821_00_19::
-    db "Starting battle", $a4, $f0
+    db "Starting battle…@"
 
 String_1B_4821_00_1A::
-    db "You refused to", $f1
-    db "battle.", $f0
+    db "You refused to<LINE>"
+    db "battle.@"
 
 String_1B_4821_00_1B::
-    db "Your pal refused", $f1
-    db "to battle.", $f0
+    db "Your pal refused<LINE>"
+    db "to battle.@"
 
 String_1B_4821_00_1C::
-    db "Please wait.", $f0
+    db "Please wait.@"
 
 String_1B_4821_00_1D::
-    db "InfoOKYesN", $f0
+    db "InfoOKYesN@"
 
 String_1B_4821_00_1F::
-    db "BattlePrizeExit", $f0
+    db "BattlePrizeExit@"
 
 String_1B_4821_00_20::
-    db "FightInfoEx", $f0
+    db "FightInfoEx@"
 
 String_1B_4821_00_21::
-    db "Monster level", $f1
-    db "limit exceeded.", $fa, $f7
-    db $ef, $ee, "Pick another", $ef, $ee, "monster please.", $f0
+    db "Monster level<LINE>"
+    db "limit exceeded.<PROMPT>"
+    db "<NEXT>Pick another"
+    db "<NEXT>monster please.@"
 
 String_1B_4821_00_22::
-    db "That family is not", $f1
-    db "permitted.", $f0
+    db "That family is not<LINE>"
+    db "permitted.@"
 
 String_1B_4821_00_23::
-    db "You already chose", $f1
-    db "from that family.", $fa, $f7
-    db $ef, $ee, "Pick another", $ef, $ee, "monster please.", $f0
+    db "You already chose<LINE>"
+    db "from that family.<PROMPT>"
+    db "<NEXT>Pick another"
+    db "<NEXT>monster please.@"
 
 String_1B_4821_00_24::
-    db "There is no prize", $f1
-    db "for this battle.", $f0
+    db "There is no prize<LINE>"
+    db "for this battle.@"
 
 String_1B_4821_00_25::
-    db "There is no prize.", $f0
+    db "There is no prize.@"
 
 String_1B_4821_00_26::
-    db "Your pal's key ring", $f1
-    db "is full.", $fa, $f7
-    db $ef, $ee, "Keys can't be", $ef, $ee, "traded.", $f7
-    db $f0
+    db "Your pal's key ring<LINE>"
+    db "is full.<PROMPT>"
+    db "<NEXT>Keys can't be"
+    db "<NEXT>traded.<WAIT>"
+    db "@"
 
 String_1B_4821_00_27::
     db $f9, $00, $f0
@@ -1407,180 +1411,182 @@ StringList_1B_4C9D::
     dw Text_1B_5190 ; id 41
 
 String_1B_4C9B_00_00::
-    db $ea, "*: Welcome. What", $f1
-    db "would you like?", $f0
+    db "<VOICE1>*: Welcome. What<LINE>"
+    db "would you like?@"
 
 String_1B_4C9B_00_02::
-    db $ea, "*: Which will be", $f1
-    db "the base monster?", $f0
+    db "<VOICE1>*: Which will be<LINE>"
+    db "the base monster?@"
 
 String_1B_4C9B_00_03::
-    db $ea, "*: This is the one", $f1
-    db "you want?", $f0
+    db "<VOICE1>*: This is the one<LINE>"
+    db "you want?@"
 
 String_1B_4C9B_00_04::
-    db $ea, "*: Is there", $f1
-    db "anything else?", $f0
+    db "<VOICE1>*: Is there<LINE>"
+    db "anything else?@"
 
 String_1B_4C9B_00_05::
-    db $ea, "*: You won't have a", $f1
-    db "monster with you!", $f7
-    db $f0
+    db "<VOICE1>*: You won't have a<LINE>"
+    db "monster with you!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_06::
-    db $ea, "*: That's too low", $f1
-    db "in level to breed.", $f7
-    db $f0
+    db "<VOICE1>*: That's too low<LINE>"
+    db "in level to breed.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_07::
-    db $ea, "*: And what will", $f1
-    db "its mate be?", $f0
+    db "<VOICE1>*: And what will<LINE>"
+    db "its mate be?@"
 
 String_1B_4C9B_00_08::
-    db $ea, "*: There's no", $f1
-    db "potential mate.", $f7
-    db $f0
+    db "<VOICE1>*: There's no<LINE>"
+    db "potential mate.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_09::
-    db $ea, "*: ", $f9, "0", $f1
-    db "will result from", $fa, $f7
-    db $ef, $ee, "this.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: <BUF0><LINE>"
+    db "will result from<PROMPT>"
+    db "<NEXT>this."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_1B_4C9B_00_0A::
-    db $ea, "*: A great monster", $f1
-    db "will be born!", $f7
-    db $f0
+    db "<VOICE1>*: A great monster<LINE>"
+    db "will be born!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_0B::
-    db $ea, "*: You already had", $f1
-    db "that monster.", $f7
-    db $f0
+    db "<VOICE1>*: You already had<LINE>"
+    db "that monster.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_0C::
-    db $ea, "*: You've never had", $f1
-    db "that monster.", $f7
-    db $f0
+    db "<VOICE1>*: You've never had<LINE>"
+    db "that monster.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_0D::
-    db $ea, "*: OK to record in", $f1
-    db "your Journal?", $f0
+    db "<VOICE1>*: OK to record in<LINE>"
+    db "your Journal?@"
 
 String_1B_4C9B_00_0E::
-    db $ea, "*: Fine, fine!", $f1
-    db "I'll do it!", $f7
-    db $f0
+    db "<VOICE1>*: Fine, fine!<LINE>"
+    db "I'll do it!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_0F::
-    db $ea, "*: Hatching that", $f1
-    db "will cost ", $f9, "0G.", $fa, $f7
-    db $f2, "Should I hatch it", $f1
-    db "too?", $f0
+    db "<VOICE1>*: Hatching that<LINE>"
+    db "will cost <BUF0>G.<PROMPT>"
+    db "<CLEAR>Should I hatch it<LINE>"
+    db "too?@"
 
 String_1B_4C9B_00_10::
-    db $ea, "*: I'll hatch the", $f1
-    db "egg too, then.", $f7
-    db $f0
+    db "<VOICE1>*: I'll hatch the<LINE>"
+    db "egg too, then.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_11::
-    db $ea, "*: I won't hatch", $f1
-    db "the egg, then.", $f7
-    db $f0
+    db "<VOICE1>*: I won't hatch<LINE>"
+    db "the egg, then.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_12::
-    db $ea, "*: You don't have", $f1
-    db "enough gold, so", $fa, $f7
-    db $f2, "I'll just do the", $f1
-    db "breeding.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "enough gold, so<PROMPT>"
+    db "<CLEAR>I'll just do the<LINE>"
+    db "breeding.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_13::
-    db $ea, "*: I'll send the", $f1
-    db "egg to the farm.", $f7
-    db $f0
+    db "<VOICE1>*: I'll send the<LINE>"
+    db "egg to the farm.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_14::
-    db $ea, "*: Will you take", $f1
-    db $f9, "0 with you?", $f0
+    db "<VOICE1>*: Will you take<LINE>"
+    db "<BUF0> with you?@"
 
 String_1B_4C9B_00_15::
-    db $ea, "*: Raise it with", $f1
-    db "love and care!", $f7
-    db $f0
+    db "<VOICE1>*: Raise it with<LINE>"
+    db "love and care!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_16::
-    db $ea, "*: I'll send ", $f9, "0", $f1
-    db "to the farm, then.", $f7
-    db $f0
+    db "<VOICE1>*: I'll send <BUF0><LINE>"
+    db "to the farm, then.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_17::
-    db $ea, "*: Which will go", $f1
-    db "back to the farm?", $f0
+    db "<VOICE1>*: Which will go<LINE>"
+    db "back to the farm?@"
 
 String_1B_4C9B_00_18::
-    db $ea, "*: Is this the one", $f1
-    db "to send home?", $f0
+    db "<VOICE1>*: Is this the one<LINE>"
+    db "to send home?@"
 
 String_1B_4C9B_00_19::
-    db $ea, "*: ", $f9, "0 is", $f1
-    db "going to the farm.", $f7
-    db $f0
+    db "<VOICE1>*: <BUF0> is<LINE>"
+    db "going to the farm.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_1A::
-    db $ea, "*: Which egg should", $f1
-    db "I hatch?", $f0
+    db "<VOICE1>*: Which egg should<LINE>"
+    db "I hatch?@"
 
 String_1B_4C9B_00_1B::
-    db $ea, "*: That will cost", $f1
-    db $f9, "0G. OK?", $f0
+    db "<VOICE1>*: That will cost<LINE>"
+    db "<BUF0>G. OK?@"
 
 String_1B_4C9B_00_1C::
-    db $ea, "*: There isn't a", $f1
-    db "single egg here.", $f7
-    db $f0
+    db "<VOICE1>*: There isn't a<LINE>"
+    db "single egg here.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_1D::
-    db $ea, "*: You don't have", $f1
-    db "enough gold.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "enough gold.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_1E::
-    db $ea, "*: You got the egg", $f1
-    db "of ", $f9, "0.", $f7
-    db $f0
+    db "<VOICE1>*: You got the egg<LINE>"
+    db "of <BUF0>.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_1F::
-    db $ea, "*: Become a great", $f1
-    db "master!", $f7
-    db $f0
+    db "<VOICE1>*: Become a great<LINE>"
+    db "master!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_21::
-    db $ea, "*: Fine, fine.", $f1
-    db "Just wait here.", $f7
-    db $f0
+    db "<VOICE1>*: Fine, fine.<LINE>"
+    db "Just wait here.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_22::
-    db $f9, "0 hatched!", $f7
-    db $f0
+    db "<BUF0> hatched!<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_25::
-    db "Please name it.", $f7
-    db $f0
+    db "Please name it.<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_26::
-    db $f9, "0 went", $f1
-    db "away quietly", $a4, $f7
-    db $f0
+    db "<BUF0> went<LINE>"
+    db "away quietly…<WAIT>"
+    db "@"
 
 String_1B_4C9B_00_27::
-    db "RESULTS", $f1
-    db "DISPLAY", $f1
-    db $f1
-    db "Species", $f1
-    db "Gender", $f0
+    db "RESULTS<LINE>"
+    db "DISPLAY<LINE>"
+    db "<LINE>"
+    db "Species<LINE>"
+    db "Gender@"
 
 String_1B_4C9B_00_28::
-    db "Unused.", $f0, "No save data.", $f0
+    db "Unused.@"
+    db "No save data.@"
 
 ; the last target of the bank-$1B message pointer table, laid out like its other entries: two
 ; control bytes, then text up to $F0 (E-0197, C1)
@@ -1588,96 +1594,96 @@ String_1B_4C9B_00_28::
 Text_1B_5190::
 String_1B_4C9B_00_29::
     db $ea, $45 ; entry 0
-    db " Accessories will", $f1, "be in the Vault.", $f7, $f0
+    db " Accessories will<LINE>", "be in the Vault.<WAIT>", "@"
 
 ; no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with
 ; no padding; an unreferenced routine follows at $5352 (E-0197, C1)
 ; record: 84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding
 RejectedNameListCopy_1B::
-    db "Ass", $f0 ; entry 0: word 0
-    db "ASS", $f0 ; word 1
-    db "Dink", $f0 ; word 2
-    db "DINK", $f0 ; word 3
-    db "Dork", $f0 ; word 4
-    db "DORK", $f0 ; word 5
-    db "Cunt", $f0 ; word 6
-    db "CUNT", $f0 ; word 7
-    db "Kunt", $f0 ; word 8
-    db "KUNT", $f0 ; word 9
-    db "Fuck", $f0 ; word 10
-    db "FUCK", $f0 ; word 11
-    db "Shit", $f0 ; word 12
-    db "SHIT", $f0 ; word 13
-    db "Sex", $f0 ; word 14
-    db "SEX", $f0 ; word 15
-    db "Poop", $f0 ; word 16
-    db "POOP", $f0 ; word 17
-    db "Dong", $f0 ; word 18
-    db "DONG", $f0 ; word 19
-    db "Pene", $f0 ; word 20
-    db "PENE", $f0 ; word 21
-    db "Clit", $f0 ; word 22
-    db "CLIT", $f0 ; word 23
-    db "Twat", $f0 ; word 24
-    db "TWAT", $f0 ; word 25
-    db "Snot", $f0 ; word 26
-    db "SNOT", $f0 ; word 27
-    db "Fag", $f0 ; word 28
-    db "FAG", $f0 ; word 29
-    db "Homo", $f0 ; word 30
-    db "HOMO", $f0 ; word 31
-    db "Poon", $f0 ; word 32
-    db "POON", $f0 ; word 33
-    db "Piss", $f0 ; word 34
-    db "PISS", $f0 ; word 35
-    db "Prick", $f0 ; word 36
-    db "PRICK", $f0 ; word 37
-    db "Fukk", $f0 ; word 38
-    db "FUKK", $f0 ; word 39
-    db "Coon", $f0 ; word 40
-    db "COON", $f0 ; word 41
-    db "Nazi", $f0 ; word 42
-    db "NAZI", $f0 ; word 43
-    db "Niga", $f0 ; word 44
-    db "NIGA", $f0 ; word 45
-    db "Nigga", $f0 ; word 46
-    db "NIGGA", $f0 ; word 47
-    db "Jap", $f0 ; word 48
-    db "JAP", $f0 ; word 49
-    db "Jew", $f0 ; word 50
-    db "JEW", $f0 ; word 51
-    db "Wop", $f0 ; word 52
-    db "WOP", $f0 ; word 53
-    db "Spic", $f0 ; word 54
-    db "SPIC", $f0 ; word 55
-    db "Butt", $f0 ; word 56
-    db "BUTT", $f0 ; word 57
-    db "Perv", $f0 ; word 58
-    db "PERV", $f0 ; word 59
-    db "Dumb", $f0 ; word 60
-    db "DUMB", $f0 ; word 61
-    db "Dolt", $f0 ; word 62
-    db "DOLT", $f0 ; word 63
-    db "Anus", $f0 ; word 64
-    db "ANUS", $f0 ; word 65
-    db "Anal", $f0 ; word 66
-    db "ANAL", $f0 ; word 67
-    db "Jerk", $f0 ; word 68
-    db "JERK", $f0 ; word 69
-    db "Puke", $f0 ; word 70
-    db "PUKE", $f0 ; word 71
-    db "Snot", $f0 ; word 72
-    db "SNOT", $f0 ; word 73
-    db "Barf", $f0 ; word 74
-    db "BARF", $f0 ; word 75
-    db "Pus", $f0 ; word 76
-    db "PUS", $f0 ; word 77
-    db "Pussy", $f0 ; word 78
-    db "PUSSY", $f0 ; word 79
-    db "Bung", $f0 ; word 80
-    db "BUNG", $f0 ; word 81
-    db "Suck", $f0 ; word 82
-    db "SUCK", $f0 ; word 83
+    db "Ass@" ; entry 0: word 0
+    db "ASS@" ; word 1
+    db "Dink@" ; word 2
+    db "DINK@" ; word 3
+    db "Dork@" ; word 4
+    db "DORK@" ; word 5
+    db "Cunt@" ; word 6
+    db "CUNT@" ; word 7
+    db "Kunt@" ; word 8
+    db "KUNT@" ; word 9
+    db "Fuck@" ; word 10
+    db "FUCK@" ; word 11
+    db "Shit@" ; word 12
+    db "SHIT@" ; word 13
+    db "Sex@" ; word 14
+    db "SEX@" ; word 15
+    db "Poop@" ; word 16
+    db "POOP@" ; word 17
+    db "Dong@" ; word 18
+    db "DONG@" ; word 19
+    db "Pene@" ; word 20
+    db "PENE@" ; word 21
+    db "Clit@" ; word 22
+    db "CLIT@" ; word 23
+    db "Twat@" ; word 24
+    db "TWAT@" ; word 25
+    db "Snot@" ; word 26
+    db "SNOT@" ; word 27
+    db "Fag@" ; word 28
+    db "FAG@" ; word 29
+    db "Homo@" ; word 30
+    db "HOMO@" ; word 31
+    db "Poon@" ; word 32
+    db "POON@" ; word 33
+    db "Piss@" ; word 34
+    db "PISS@" ; word 35
+    db "Prick@" ; word 36
+    db "PRICK@" ; word 37
+    db "Fukk@" ; word 38
+    db "FUKK@" ; word 39
+    db "Coon@" ; word 40
+    db "COON@" ; word 41
+    db "Nazi@" ; word 42
+    db "NAZI@" ; word 43
+    db "Niga@" ; word 44
+    db "NIGA@" ; word 45
+    db "Nigga@" ; word 46
+    db "NIGGA@" ; word 47
+    db "Jap@" ; word 48
+    db "JAP@" ; word 49
+    db "Jew@" ; word 50
+    db "JEW@" ; word 51
+    db "Wop@" ; word 52
+    db "WOP@" ; word 53
+    db "Spic@" ; word 54
+    db "SPIC@" ; word 55
+    db "Butt@" ; word 56
+    db "BUTT@" ; word 57
+    db "Perv@" ; word 58
+    db "PERV@" ; word 59
+    db "Dumb@" ; word 60
+    db "DUMB@" ; word 61
+    db "Dolt@" ; word 62
+    db "DOLT@" ; word 63
+    db "Anus@" ; word 64
+    db "ANUS@" ; word 65
+    db "Anal@" ; word 66
+    db "ANAL@" ; word 67
+    db "Jerk@" ; word 68
+    db "JERK@" ; word 69
+    db "Puke@" ; word 70
+    db "PUKE@" ; word 71
+    db "Snot@" ; word 72
+    db "SNOT@" ; word 73
+    db "Barf@" ; word 74
+    db "BARF@" ; word 75
+    db "Pus@" ; word 76
+    db "PUS@" ; word 77
+    db "Pussy@" ; word 78
+    db "PUSSY@" ; word 79
+    db "Bung@" ; word 80
+    db "BUNG@" ; word 81
+    db "Suck@" ; word 82
+    db "SUCK@" ; word 83
 
 ; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes
 ; after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress
@@ -1796,7 +1802,7 @@ LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B::
     ret
 
 LinkKeyTrade_Start_ShowStartingKeyTrade::
-    ld a, $01 ; 'Starting key trade'
+    ld a, $01 ; 'Starting key trade…'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
     inc a
@@ -3091,7 +3097,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
     ret
 
 LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_Case1B::
-    ld a, $0b ; 'Readying trade Please wait.'
+    ld a, $0b ; 'Readying trade… Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
     inc a
@@ -5265,7 +5271,7 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc
 
 EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11::
-    ld a, $09 ; 'Starting battle'
+    ld a, $09 ; 'Starting battle…'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
     inc a

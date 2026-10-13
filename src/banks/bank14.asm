@@ -6154,13 +6154,13 @@ NameEntryKeyboard::
     db "ABCDEFGHIJKLM0123" ; id 0
     db "NOPQRSTUVWXYZ4567" ; id 1
     db "abcdefghijklm89!?" ; id 2
-    db "nopqrstuvwxyz", $fe, $ff, $ff, $ff ; id 3
-    db "',.", $94, $93, " ", $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff ; id 4
-    db $56, $58, $5a, $5c, $5e, $75, $76, $77, $78, $79, $57, $59, $5b, $5d, $5f, $ff, $60 ; id 5
-    db $61, $62, $63, $64, $7a, $7b, $7c, $7d, $7e, $80, $82, $84, $8d, $8e, $ff, $65, $66 ; id 6
-    db $67, $68, $69, $7f, $ff, $81, $ff, $83, $ff, $ff, $ff, $ff, $ff, $ff, $6a, $6b, $6c ; id 7
-    db $6e, $6f, $85, $86, $87, $88, $89, $fd, $ff, $ff, $ff, $ff, $ff, $70, $71, $72, $73 ; id 8
-    db $74, $8a, $8b, $8c, $6d, "-", $fe, $ff, $ff, $ff, $ff, $ff, "12345" ; id 9
+    db "nopqrstuvwxyz<BEEP_OFF><CHOICE>", "<CHOICE>", "<CHOICE>" ; id 3
+    db "',.", $94, $93, " <CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>" ; id 4
+    db $56, $58, $5a, $5c, $5e, $75, $76, $77, $78, $79, $57, $59, $5b, $5d, $5f, "<CHOICE>", $60 ; id 5
+    db $61, $62, $63, $64, $7a, $7b, $7c, $7d, $7e, $80, $82, $84, $8d, $8e, "<CHOICE>", $65, $66 ; id 6
+    db $67, $68, $69, $7f, "<CHOICE>", $81, "<CHOICE>", $83, "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", $6a, $6b, $6c ; id 7
+    db $6e, $6f, $85, $86, $87, $88, $89, "<BEEP_ON><CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", $70, $71, $72, $73 ; id 8
+    db $74, $8a, $8b, $8c, $6d, "-<BEEP_OFF><CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "<CHOICE>", "12345" ; id 9
     db $06, $07, $08, $09, $00, $ff, $ff, $ff, $ff, $ff, $ff ; end
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
@@ -6178,20 +6178,20 @@ StringList_14_7005::
     dw String_14_7003_00_03 ; id 3
 
 String_14_7003_00_00::
-    db "Is ", $f9, "0 correct?", $f0
+    db "Is <BUF0> correct?@"
 
 String_14_7003_00_01::
-    db "Is ", $f9, "0 correct?", $f0
+    db "Is <BUF0> correct?@"
 
 String_14_7003_00_02::
-    db "A monster already", $f1
-    db "has that name.", $f7
-    db $f0
+    db "A monster already<LINE>"
+    db "has that name.<WAIT>"
+    db "@"
 
 String_14_7003_00_03::
-    db "Sorry, that name", $f1
-    db "can't be used.", $f7
-    db $f0
+    db "Sorry, that name<LINE>"
+    db "can't be used.<WAIT>"
+    db "@"
 
 StringCategories_14_706D::
     dw StringList_14_706F ; id 0
@@ -6204,112 +6204,112 @@ StringList_14_706F::
     dw String_14_706D_00_03 ; id 3
 
 String_14_706D_00_00::
-    db $eb, "*: Is ", $f9, "0 OK?", $f0
+    db "<VOICE2>*: Is <BUF0> OK?@"
 
 String_14_706D_00_01::
-    db $eb, "*: Is ", $f9, "0 OK?", $f0
+    db "<VOICE2>*: Is <BUF0> OK?@"
 
 String_14_706D_00_02::
-    db $eb, "*: That name is", $f1
-    db "already in use.", $f7
-    db $f0
+    db "<VOICE2>*: That name is<LINE>"
+    db "already in use.<WAIT>"
+    db "@"
 
 String_14_706D_00_03::
-    db $eb, "*: That name can't", $f1
-    db "be used.", $fa, $f7
-    db $f2, "You'll have to use", $f1
-    db "another name.", $f7
-    db $f0
+    db "<VOICE2>*: That name can't<LINE>"
+    db "be used.<PROMPT>"
+    db "<CLEAR>You'll have to use<LINE>"
+    db "another name.<WAIT>"
+    db "@"
 
 ; RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a first
 ; byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records,
 ; each in mixed case and capitals, then the $FF terminator (E-0191, C1)
 ; record: a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes
 RejectedNameList::
-    db "Ass", $f0, $00, $00, $00, $00, $00, $00 ; id 0
-    db "ASS", $f0, $00, $00, $00, $00, $00, $00 ; id 1
-    db "Dink", $f0, $00, $00, $00, $00, $00 ; id 2
-    db "DINK", $f0, $00, $00, $00, $00, $00 ; id 3
-    db "Dork", $f0, $00, $00, $00, $00, $00 ; id 4
-    db "DORK", $f0, $00, $00, $00, $00, $00 ; id 5
-    db "Cunt", $f0, $00, $00, $00, $00, $00 ; id 6
-    db "CUNT", $f0, $00, $00, $00, $00, $00 ; id 7
-    db "Kunt", $f0, $00, $00, $00, $00, $00 ; id 8
-    db "KUNT", $f0, $00, $00, $00, $00, $00 ; id 9
-    db "Fuck", $f0, $00, $00, $00, $00, $00 ; id 10
-    db "FUCK", $f0, $00, $00, $00, $00, $00 ; id 11
-    db "Shit", $f0, $00, $00, $00, $00, $00 ; id 12
-    db "SHIT", $f0, $00, $00, $00, $00, $00 ; id 13
-    db "Sex", $f0, $00, $00, $00, $00, $00, $00 ; id 14
-    db "SEX", $f0, $00, $00, $00, $00, $00, $00 ; id 15
-    db "Poop", $f0, $00, $00, $00, $00, $00 ; id 16
-    db "POOP", $f0, $00, $00, $00, $00, $00 ; id 17
-    db "Dong", $f0, $00, $00, $00, $00, $00 ; id 18
-    db "DONG", $f0, $00, $00, $00, $00, $00 ; id 19
-    db "Pene", $f0, $00, $00, $00, $00, $00 ; id 20
-    db "PENE", $f0, $00, $00, $00, $00, $00 ; id 21
-    db "Clit", $f0, $00, $00, $00, $00, $00 ; id 22
-    db "CLIT", $f0, $00, $00, $00, $00, $00 ; id 23
-    db "Twat", $f0, $00, $00, $00, $00, $00 ; id 24
-    db "TWAT", $f0, $00, $00, $00, $00, $00 ; id 25
-    db "Snot", $f0, $00, $00, $00, $00, $00 ; id 26
-    db "SNOT", $f0, $00, $00, $00, $00, $00 ; id 27
-    db "Fag", $f0, $00, $00, $00, $00, $00, $00 ; id 28
-    db "FAG", $f0, $00, $00, $00, $00, $00, $00 ; id 29
-    db "Homo", $f0, $00, $00, $00, $00, $00 ; id 30
-    db "HOMO", $f0, $00, $00, $00, $00, $00 ; id 31
-    db "Poon", $f0, $00, $00, $00, $00, $00 ; id 32
-    db "POON", $f0, $00, $00, $00, $00, $00 ; id 33
-    db "Piss", $f0, $00, $00, $00, $00, $00 ; id 34
-    db "PISS", $f0, $00, $00, $00, $00, $00 ; id 35
-    db "Prick", $f0, $00, $00, $00, $00 ; id 36
-    db "PRICK", $f0, $00, $00, $00, $00 ; id 37
-    db "Fukk", $f0, $00, $00, $00, $00, $00 ; id 38
-    db "FUKK", $f0, $00, $00, $00, $00, $00 ; id 39
-    db "Coon", $f0, $00, $00, $00, $00, $00 ; id 40
-    db "COON", $f0, $00, $00, $00, $00, $00 ; id 41
-    db "Nazi", $f0, $00, $00, $00, $00, $00 ; id 42
-    db "NAZI", $f0, $00, $00, $00, $00, $00 ; id 43
-    db "Niga", $f0, $00, $00, $00, $00, $00 ; id 44
-    db "NIGA", $f0, $00, $00, $00, $00, $00 ; id 45
-    db "Nigga", $f0, $00, $00, $00, $00 ; id 46
-    db "NIGGA", $f0, $00, $00, $00, $00 ; id 47
-    db "Jap", $f0, $00, $00, $00, $00, $00, $00 ; id 48
-    db "JAP", $f0, $00, $00, $00, $00, $00, $00 ; id 49
-    db "Jew", $f0, $00, $00, $00, $00, $00, $00 ; id 50
-    db "JEW", $f0, $00, $00, $00, $00, $00, $00 ; id 51
-    db "Wop", $f0, $00, $00, $00, $00, $00, $00 ; id 52
-    db "WOP", $f0, $00, $00, $00, $00, $00, $00 ; id 53
-    db "Spic", $f0, $00, $00, $00, $00, $00 ; id 54
-    db "SPIC", $f0, $00, $00, $00, $00, $00 ; id 55
-    db "Butt", $f0, $00, $00, $00, $00, $00 ; id 56
-    db "BUTT", $f0, $00, $00, $00, $00, $00 ; id 57
-    db "Perv", $f0, $00, $00, $00, $00, $00 ; id 58
-    db "PERV", $f0, $00, $00, $00, $00, $00 ; id 59
-    db "Dumb", $f0, $00, $00, $00, $00, $00 ; id 60
-    db "DUMB", $f0, $00, $00, $00, $00, $00 ; id 61
-    db "Dolt", $f0, $00, $00, $00, $00, $00 ; id 62
-    db "DOLT", $f0, $00, $00, $00, $00, $00 ; id 63
-    db "Anus", $f0, $00, $00, $00, $00, $00 ; id 64
-    db "ANUS", $f0, $00, $00, $00, $00, $00 ; id 65
-    db "Anal", $f0, $00, $00, $00, $00, $00 ; id 66
-    db "ANAL", $f0, $00, $00, $00, $00, $00 ; id 67
-    db "Jerk", $f0, $00, $00, $00, $00, $00 ; id 68
-    db "JERK", $f0, $00, $00, $00, $00, $00 ; id 69
-    db "Puke", $f0, $00, $00, $00, $00, $00 ; id 70
-    db "PUKE", $f0, $00, $00, $00, $00, $00 ; id 71
-    db "Snot", $f0, $00, $00, $00, $00, $00 ; id 72
-    db "SNOT", $f0, $00, $00, $00, $00, $00 ; id 73
-    db "Barf", $f0, $00, $00, $00, $00, $00 ; id 74
-    db "BARF", $f0, $00, $00, $00, $00, $00 ; id 75
-    db "Pus", $f0, $00, $00, $00, $00, $00, $00 ; id 76
-    db "PUS", $f0, $00, $00, $00, $00, $00, $00 ; id 77
-    db "Pussy", $f0, $00, $00, $00, $00 ; id 78
-    db "PUSSY", $f0, $00, $00, $00, $00 ; id 79
-    db "Bung", $f0, $00, $00, $00, $00, $00 ; id 80
-    db "BUNG", $f0, $00, $00, $00, $00, $00 ; id 81
-    db "Suck", $f0, $00, $00, $00, $00, $00 ; id 82
-    db "SUCK", $f0, $00, $00, $00, $00, $00 ; id 83
+    db "Ass@", $00, $00, $00, $00, $00, $00 ; id 0
+    db "ASS@", $00, $00, $00, $00, $00, $00 ; id 1
+    db "Dink@", $00, $00, $00, $00, $00 ; id 2
+    db "DINK@", $00, $00, $00, $00, $00 ; id 3
+    db "Dork@", $00, $00, $00, $00, $00 ; id 4
+    db "DORK@", $00, $00, $00, $00, $00 ; id 5
+    db "Cunt@", $00, $00, $00, $00, $00 ; id 6
+    db "CUNT@", $00, $00, $00, $00, $00 ; id 7
+    db "Kunt@", $00, $00, $00, $00, $00 ; id 8
+    db "KUNT@", $00, $00, $00, $00, $00 ; id 9
+    db "Fuck@", $00, $00, $00, $00, $00 ; id 10
+    db "FUCK@", $00, $00, $00, $00, $00 ; id 11
+    db "Shit@", $00, $00, $00, $00, $00 ; id 12
+    db "SHIT@", $00, $00, $00, $00, $00 ; id 13
+    db "Sex@", $00, $00, $00, $00, $00, $00 ; id 14
+    db "SEX@", $00, $00, $00, $00, $00, $00 ; id 15
+    db "Poop@", $00, $00, $00, $00, $00 ; id 16
+    db "POOP@", $00, $00, $00, $00, $00 ; id 17
+    db "Dong@", $00, $00, $00, $00, $00 ; id 18
+    db "DONG@", $00, $00, $00, $00, $00 ; id 19
+    db "Pene@", $00, $00, $00, $00, $00 ; id 20
+    db "PENE@", $00, $00, $00, $00, $00 ; id 21
+    db "Clit@", $00, $00, $00, $00, $00 ; id 22
+    db "CLIT@", $00, $00, $00, $00, $00 ; id 23
+    db "Twat@", $00, $00, $00, $00, $00 ; id 24
+    db "TWAT@", $00, $00, $00, $00, $00 ; id 25
+    db "Snot@", $00, $00, $00, $00, $00 ; id 26
+    db "SNOT@", $00, $00, $00, $00, $00 ; id 27
+    db "Fag@", $00, $00, $00, $00, $00, $00 ; id 28
+    db "FAG@", $00, $00, $00, $00, $00, $00 ; id 29
+    db "Homo@", $00, $00, $00, $00, $00 ; id 30
+    db "HOMO@", $00, $00, $00, $00, $00 ; id 31
+    db "Poon@", $00, $00, $00, $00, $00 ; id 32
+    db "POON@", $00, $00, $00, $00, $00 ; id 33
+    db "Piss@", $00, $00, $00, $00, $00 ; id 34
+    db "PISS@", $00, $00, $00, $00, $00 ; id 35
+    db "Prick@", $00, $00, $00, $00 ; id 36
+    db "PRICK@", $00, $00, $00, $00 ; id 37
+    db "Fukk@", $00, $00, $00, $00, $00 ; id 38
+    db "FUKK@", $00, $00, $00, $00, $00 ; id 39
+    db "Coon@", $00, $00, $00, $00, $00 ; id 40
+    db "COON@", $00, $00, $00, $00, $00 ; id 41
+    db "Nazi@", $00, $00, $00, $00, $00 ; id 42
+    db "NAZI@", $00, $00, $00, $00, $00 ; id 43
+    db "Niga@", $00, $00, $00, $00, $00 ; id 44
+    db "NIGA@", $00, $00, $00, $00, $00 ; id 45
+    db "Nigga@", $00, $00, $00, $00 ; id 46
+    db "NIGGA@", $00, $00, $00, $00 ; id 47
+    db "Jap@", $00, $00, $00, $00, $00, $00 ; id 48
+    db "JAP@", $00, $00, $00, $00, $00, $00 ; id 49
+    db "Jew@", $00, $00, $00, $00, $00, $00 ; id 50
+    db "JEW@", $00, $00, $00, $00, $00, $00 ; id 51
+    db "Wop@", $00, $00, $00, $00, $00, $00 ; id 52
+    db "WOP@", $00, $00, $00, $00, $00, $00 ; id 53
+    db "Spic@", $00, $00, $00, $00, $00 ; id 54
+    db "SPIC@", $00, $00, $00, $00, $00 ; id 55
+    db "Butt@", $00, $00, $00, $00, $00 ; id 56
+    db "BUTT@", $00, $00, $00, $00, $00 ; id 57
+    db "Perv@", $00, $00, $00, $00, $00 ; id 58
+    db "PERV@", $00, $00, $00, $00, $00 ; id 59
+    db "Dumb@", $00, $00, $00, $00, $00 ; id 60
+    db "DUMB@", $00, $00, $00, $00, $00 ; id 61
+    db "Dolt@", $00, $00, $00, $00, $00 ; id 62
+    db "DOLT@", $00, $00, $00, $00, $00 ; id 63
+    db "Anus@", $00, $00, $00, $00, $00 ; id 64
+    db "ANUS@", $00, $00, $00, $00, $00 ; id 65
+    db "Anal@", $00, $00, $00, $00, $00 ; id 66
+    db "ANAL@", $00, $00, $00, $00, $00 ; id 67
+    db "Jerk@", $00, $00, $00, $00, $00 ; id 68
+    db "JERK@", $00, $00, $00, $00, $00 ; id 69
+    db "Puke@", $00, $00, $00, $00, $00 ; id 70
+    db "PUKE@", $00, $00, $00, $00, $00 ; id 71
+    db "Snot@", $00, $00, $00, $00, $00 ; id 72
+    db "SNOT@", $00, $00, $00, $00, $00 ; id 73
+    db "Barf@", $00, $00, $00, $00, $00 ; id 74
+    db "BARF@", $00, $00, $00, $00, $00 ; id 75
+    db "Pus@", $00, $00, $00, $00, $00, $00 ; id 76
+    db "PUS@", $00, $00, $00, $00, $00, $00 ; id 77
+    db "Pussy@", $00, $00, $00, $00 ; id 78
+    db "PUSSY@", $00, $00, $00, $00 ; id 79
+    db "Bung@", $00, $00, $00, $00, $00 ; id 80
+    db "BUNG@", $00, $00, $00, $00, $00 ; id 81
+    db "Suck@", $00, $00, $00, $00, $00 ; id 82
+    db "SUCK@", $00, $00, $00, $00, $00 ; id 83
     db $ff ; end
 
 ; the code before RunNameEntryStateWhenNotFading_Case01_Case03_CheckArg1.skip3 indexes it with wArg3
@@ -6354,33 +6354,33 @@ DefaultMonsterNames_Slime::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Slime::
 DefaultName_Slime_00::
-    db "Slib", $9f, $f0 ; id 0
+    db "Slib", $9f, "@" ; id 0
 DefaultName_Slime_01::
-    db "Darce", $f0 ; id 1
+    db "Darce@" ; id 1
 DefaultName_Slime_02::
-    db "Bono", $9f, $f0 ; id 2
+    db "Bono", $9f, "@" ; id 2
 DefaultName_Slime_03::
-    db "Miles", $f0 ; id 3
+    db "Miles@" ; id 3
 DefaultName_Slime_04::
-    db "Rabba", $f0 ; id 4
+    db "Rabba@" ; id 4
 DefaultName_Slime_05::
-    db "Terio", $f0 ; id 5
+    db "Terio@" ; id 5
 DefaultName_Slime_06::
-    db "Oneo", $9f, $f0 ; id 6
+    db "Oneo", $9f, "@" ; id 6
 DefaultName_Slime_07::
-    db "Slari", $f0 ; id 7
+    db "Slari@" ; id 7
 DefaultName_Slime_08::
-    db "Stera", $f0 ; id 8
+    db "Stera@" ; id 8
 DefaultName_Slime_09::
-    db "Purla", $f0 ; id 9
+    db "Purla@" ; id 9
 DefaultName_Slime_0A::
-    db "Cikor", $f0 ; id 10
+    db "Cikor@" ; id 10
 DefaultName_Slime_0B::
-    db "Ripp", $9f, $f0 ; id 11
+    db "Ripp", $9f, "@" ; id 11
 DefaultName_Slime_0C::
-    db "Petti", $f0 ; id 12
+    db "Petti@" ; id 12
 DefaultName_Slime_0D::
-    db "Chalo", $f0 ; id 13
+    db "Chalo@" ; id 13
 
 ; family 1 (Dragon) of DefaultMonsterNameTable (E-0254, C1)
 DefaultMonsterNames_Dragon::
@@ -6402,33 +6402,33 @@ DefaultMonsterNames_Dragon::
 ; the 14 six-byte names of DefaultMonsterNames_Dragon (E-0254, C1)
 DefaultMonsterNameStrings_Dragon::
 DefaultName_Dragon_00::
-    db "Horry", $f0 ; id 0
+    db "Horry@" ; id 0
 DefaultName_Dragon_01::
-    db "Kabel", $f0 ; id 1
+    db "Kabel@" ; id 1
 DefaultName_Dragon_02::
-    db "Galet", $f0 ; id 2
+    db "Galet@" ; id 2
 DefaultName_Dragon_03::
-    db "Porpo", $f0 ; id 3
+    db "Porpo@" ; id 3
 DefaultName_Dragon_04::
-    db "Kejet", $f0 ; id 4
+    db "Kejet@" ; id 4
 DefaultName_Dragon_05::
-    db "Dorad", $f0 ; id 5
+    db "Dorad@" ; id 5
 DefaultName_Dragon_06::
-    db "Baron", $f0 ; id 6
+    db "Baron@" ; id 6
 DefaultName_Dragon_07::
-    db "Rouge", $f0 ; id 7
+    db "Rouge@" ; id 7
 DefaultName_Dragon_08::
-    db "Azari", $f0 ; id 8
+    db "Azari@" ; id 8
 DefaultName_Dragon_09::
-    db "Chabo", $f0 ; id 9
+    db "Chabo@" ; id 9
 DefaultName_Dragon_0A::
-    db "Triss", $f0 ; id 10
+    db "Triss@" ; id 10
 DefaultName_Dragon_0B::
-    db "Runar", $f0 ; id 11
+    db "Runar@" ; id 11
 DefaultName_Dragon_0C::
-    db "Rudi", $9f, $f0 ; id 12
+    db "Rudi", $9f, "@" ; id 12
 DefaultName_Dragon_0D::
-    db "Vuy", $9f, $9f, $f0 ; id 13
+    db "Vuy", $9f, $9f, "@" ; id 13
 
 ; family 2 (Beast) of DefaultMonsterNameTable (E-0254, C1)
 ; record: name
@@ -6452,33 +6452,33 @@ DefaultMonsterNames_Beast::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Beast::
 DefaultName_Beast_00::
-    db "Uwing", $f0 ; id 0
+    db "Uwing@" ; id 0
 DefaultName_Beast_01::
-    db "Iver", $9f, $f0 ; id 1
+    db "Iver", $9f, "@" ; id 1
 DefaultName_Beast_02::
-    db "Rodma", $f0 ; id 2
+    db "Rodma@" ; id 2
 DefaultName_Beast_03::
-    db "Didie", $f0 ; id 3
+    db "Didie@" ; id 3
 DefaultName_Beast_04::
-    db "Margg", $f0 ; id 4
+    db "Margg@" ; id 4
 DefaultName_Beast_05::
-    db "Ogami", $f0 ; id 5
+    db "Ogami@" ; id 5
 DefaultName_Beast_06::
-    db "Carro", $f0 ; id 6
+    db "Carro@" ; id 6
 DefaultName_Beast_07::
-    db "Nikit", $f0 ; id 7
+    db "Nikit@" ; id 7
 DefaultName_Beast_08::
-    db "Messa", $f0 ; id 8
+    db "Messa@" ; id 8
 DefaultName_Beast_09::
-    db "Larma", $f0 ; id 9
+    db "Larma@" ; id 9
 DefaultName_Beast_0A::
-    db "Jannu", $f0 ; id 10
+    db "Jannu@" ; id 10
 DefaultName_Beast_0B::
-    db "Fevri", $f0 ; id 11
+    db "Fevri@" ; id 11
 DefaultName_Beast_0C::
-    db "Javel", $f0 ; id 12
+    db "Javel@" ; id 12
 DefaultName_Beast_0D::
-    db "Gurri", $f0 ; id 13
+    db "Gurri@" ; id 13
 
 ; family 3 (Bird) of DefaultMonsterNameTable (E-0254, C1)
 DefaultMonsterNames_Bird::
@@ -6500,33 +6500,33 @@ DefaultMonsterNames_Bird::
 ; the 14 six-byte names of DefaultMonsterNames_Bird (E-0254, C1)
 DefaultMonsterNameStrings_Bird::
 DefaultName_Bird_00::
-    db "Patta", $f0 ; id 0
+    db "Patta@" ; id 0
 DefaultName_Bird_01::
-    db "Venjy", $f0 ; id 1
+    db "Venjy@" ; id 1
 DefaultName_Bird_02::
-    db "Angy", $9f, $f0 ; id 2
+    db "Angy", $9f, "@" ; id 2
 DefaultName_Bird_03::
-    db "Rovyn", $f0 ; id 3
+    db "Rovyn@" ; id 3
 DefaultName_Bird_04::
-    db "Leit", $9f, $f0 ; id 4
+    db "Leit", $9f, "@" ; id 4
 DefaultName_Bird_05::
-    db "Cyron", $f0 ; id 5
+    db "Cyron@" ; id 5
 DefaultName_Bird_06::
-    db "Nilse", $f0 ; id 6
+    db "Nilse@" ; id 6
 DefaultName_Bird_07::
-    db "Pakin", $f0 ; id 7
+    db "Pakin@" ; id 7
 DefaultName_Bird_08::
-    db "Aerr", $9f, $f0 ; id 8
+    db "Aerr", $9f, "@" ; id 8
 DefaultName_Bird_09::
-    db "Samar", $f0 ; id 9
+    db "Samar@" ; id 9
 DefaultName_Bird_0A::
-    db "Kacis", $f0 ; id 10
+    db "Kacis@" ; id 10
 DefaultName_Bird_0B::
-    db "Taki", $9f, $f0 ; id 11
+    db "Taki", $9f, "@" ; id 11
 DefaultName_Bird_0C::
-    db "Ralli", $f0 ; id 12
+    db "Ralli@" ; id 12
 DefaultName_Bird_0D::
-    db "Moko", $9f, $f0 ; id 13
+    db "Moko", $9f, "@" ; id 13
 
 ; family 4 (Plant) of DefaultMonsterNameTable (E-0254, C1)
 ; record: name
@@ -6550,33 +6550,33 @@ DefaultMonsterNames_Plant::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Plant::
 DefaultName_Plant_00::
-    db "Ganim", $f0 ; id 0
+    db "Ganim@" ; id 0
 DefaultName_Plant_01::
-    db "Belri", $f0 ; id 1
+    db "Belri@" ; id 1
 DefaultName_Plant_02::
-    db "Taim", $9f, $f0 ; id 2
+    db "Taim", $9f, "@" ; id 2
 DefaultName_Plant_03::
-    db "Sarzz", $f0 ; id 3
+    db "Sarzz@" ; id 3
 DefaultName_Plant_04::
-    db "Cita", $9f, $f0 ; id 4
+    db "Cita", $9f, "@" ; id 4
 DefaultName_Plant_05::
-    db "Peyot", $f0 ; id 5
+    db "Peyot@" ; id 5
 DefaultName_Plant_06::
-    db "Muppa", $f0 ; id 6
+    db "Muppa@" ; id 6
 DefaultName_Plant_07::
-    db "Laven", $f0 ; id 7
+    db "Laven@" ; id 7
 DefaultName_Plant_08::
-    db "Sarad", $f0 ; id 8
+    db "Sarad@" ; id 8
 DefaultName_Plant_09::
-    db "Gyam", $9f, $f0 ; id 9
+    db "Gyam", $9f, "@" ; id 9
 DefaultName_Plant_0A::
-    db "Gummy", $f0 ; id 10
+    db "Gummy@" ; id 10
 DefaultName_Plant_0B::
-    db "Pupul", $f0 ; id 11
+    db "Pupul@" ; id 11
 DefaultName_Plant_0C::
-    db "Vanyl", $f0 ; id 12
+    db "Vanyl@" ; id 12
 DefaultName_Plant_0D::
-    db "Popla", $f0 ; id 13
+    db "Popla@" ; id 13
 
 ; family 5 (Bug) of DefaultMonsterNameTable (E-0254, C1)
 DefaultMonsterNames_Bug::
@@ -6598,33 +6598,33 @@ DefaultMonsterNames_Bug::
 ; the 14 six-byte names of DefaultMonsterNames_Bug (E-0254, C1)
 DefaultMonsterNameStrings_Bug::
 DefaultName_Bug_00::
-    db "Abii", $9f, $f0 ; id 0
+    db "Abii", $9f, "@" ; id 0
 DefaultName_Bug_01::
-    db "Ulrik", $f0 ; id 1
+    db "Ulrik@" ; id 1
 DefaultName_Bug_02::
-    db "Werth", $f0 ; id 2
+    db "Werth@" ; id 2
 DefaultName_Bug_03::
-    db "Grunt", $f0 ; id 3
+    db "Grunt@" ; id 3
 DefaultName_Bug_04::
-    db "Glath", $f0 ; id 4
+    db "Glath@" ; id 4
 DefaultName_Bug_05::
-    db "Gamha", $f0 ; id 5
+    db "Gamha@" ; id 5
 DefaultName_Bug_06::
-    db "Moahm", $f0 ; id 6
+    db "Moahm@" ; id 6
 DefaultName_Bug_07::
-    db "Maron", $f0 ; id 7
+    db "Maron@" ; id 7
 DefaultName_Bug_08::
-    db "Quii", $9f, $f0 ; id 8
+    db "Quii", $9f, "@" ; id 8
 DefaultName_Bug_09::
-    db "Kokis", $f0 ; id 9
+    db "Kokis@" ; id 9
 DefaultName_Bug_0A::
-    db "Juddi", $f0 ; id 10
+    db "Juddi@" ; id 10
 DefaultName_Bug_0B::
-    db "Sherr", $f0 ; id 11
+    db "Sherr@" ; id 11
 DefaultName_Bug_0C::
-    db "Pliss", $f0 ; id 12
+    db "Pliss@" ; id 12
 DefaultName_Bug_0D::
-    db "Guvri", $f0 ; id 13
+    db "Guvri@" ; id 13
 
 ; family 6 (Demon) of DefaultMonsterNameTable (E-0254, C1)
 ; record: name
@@ -6648,33 +6648,33 @@ DefaultMonsterNames_Demon::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Demon::
 DefaultName_Demon_00::
-    db "Damia", $f0 ; id 0
+    db "Damia@" ; id 0
 DefaultName_Demon_01::
-    db "Qube", $9f, $f0 ; id 1
+    db "Qube", $9f, "@" ; id 1
 DefaultName_Demon_02::
-    db "Rigg", $9f, $f0 ; id 2
+    db "Rigg", $9f, "@" ; id 2
 DefaultName_Demon_03::
-    db "Jaxon", $f0 ; id 3
+    db "Jaxon@" ; id 3
 DefaultName_Demon_04::
-    db "Phel", $9f, $f0 ; id 4
+    db "Phel", $9f, "@" ; id 4
 DefaultName_Demon_05::
-    db "Fauss", $f0 ; id 5
+    db "Fauss@" ; id 5
 DefaultName_Demon_06::
-    db "Ancho", $f0 ; id 6
+    db "Ancho@" ; id 6
 DefaultName_Demon_07::
-    db "Iyan", $9f, $f0 ; id 7
+    db "Iyan", $9f, "@" ; id 7
 DefaultName_Demon_08::
-    db "Irris", $f0 ; id 8
+    db "Irris@" ; id 8
 DefaultName_Demon_09::
-    db "Kerig", $f0 ; id 9
+    db "Kerig@" ; id 9
 DefaultName_Demon_0A::
-    db "Kaico", $f0 ; id 10
+    db "Kaico@" ; id 10
 DefaultName_Demon_0B::
-    db "Calor", $f0 ; id 11
+    db "Calor@" ; id 11
 DefaultName_Demon_0C::
-    db "Aknes", $f0 ; id 12
+    db "Aknes@" ; id 12
 DefaultName_Demon_0D::
-    db "Nivel", $f0 ; id 13
+    db "Nivel@" ; id 13
 
 ; family 7 (Zombie) of DefaultMonsterNameTable (E-0254, C1)
 DefaultMonsterNames_Zombie::
@@ -6696,33 +6696,33 @@ DefaultMonsterNames_Zombie::
 ; the 14 six-byte names of DefaultMonsterNames_Zombie (E-0254, C1)
 DefaultMonsterNameStrings_Zombie::
 DefaultName_Zombie_00::
-    db "Gley", $9f, $f0 ; id 0
+    db "Gley", $9f, "@" ; id 0
 DefaultName_Zombie_01::
-    db "Veron", $f0 ; id 1
+    db "Veron@" ; id 1
 DefaultName_Zombie_02::
-    db "Donad", $f0 ; id 2
+    db "Donad@" ; id 2
 DefaultName_Zombie_03::
-    db "Fobos", $f0 ; id 3
+    db "Fobos@" ; id 3
 DefaultName_Zombie_04::
-    db "Junas", $f0 ; id 4
+    db "Junas@" ; id 4
 DefaultName_Zombie_05::
-    db "Dupel", $f0 ; id 5
+    db "Dupel@" ; id 5
 DefaultName_Zombie_06::
-    db "Drolo", $f0 ; id 6
+    db "Drolo@" ; id 6
 DefaultName_Zombie_07::
-    db "Tumi", $9f, $f0 ; id 7
+    db "Tumi", $9f, "@" ; id 7
 DefaultName_Zombie_08::
-    db "Kyar", $9f, $f0 ; id 8
+    db "Kyar", $9f, "@" ; id 8
 DefaultName_Zombie_09::
-    db "Rozar", $f0 ; id 9
+    db "Rozar@" ; id 9
 DefaultName_Zombie_0A::
-    db "Kyrie", $f0 ; id 10
+    db "Kyrie@" ; id 10
 DefaultName_Zombie_0B::
-    db "Pina", $9f, $f0 ; id 11
+    db "Pina", $9f, "@" ; id 11
 DefaultName_Zombie_0C::
-    db "Myran", $f0 ; id 12
+    db "Myran@" ; id 12
 DefaultName_Zombie_0D::
-    db "Pando", $f0 ; id 13
+    db "Pando@" ; id 13
 
 ; family 8 (Material) of DefaultMonsterNameTable (E-0254, C1)
 ; record: name
@@ -6746,33 +6746,33 @@ DefaultMonsterNames_Material::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Material::
 DefaultName_Material_00::
-    db "Kheri", $f0 ; id 0
+    db "Kheri@" ; id 0
 DefaultName_Material_01::
-    db "Nesta", $f0 ; id 1
+    db "Nesta@" ; id 1
 DefaultName_Material_02::
-    db "Anvar", $f0 ; id 2
+    db "Anvar@" ; id 2
 DefaultName_Material_03::
-    db "Vyng", $9f, $f0 ; id 3
+    db "Vyng", $9f, "@" ; id 3
 DefaultName_Material_04::
-    db "Olyva", $f0 ; id 4
+    db "Olyva@" ; id 4
 DefaultName_Material_05::
-    db "Fridz", $f0 ; id 5
+    db "Fridz@" ; id 5
 DefaultName_Material_06::
-    db "Iwan", $9f, $f0 ; id 6
+    db "Iwan", $9f, "@" ; id 6
 DefaultName_Material_07::
-    db "Yssa", $9f, $f0 ; id 7
+    db "Yssa", $9f, "@" ; id 7
 DefaultName_Material_08::
-    db "Revvi", $f0 ; id 8
+    db "Revvi@" ; id 8
 DefaultName_Material_09::
-    db "Opall", $f0 ; id 9
+    db "Opall@" ; id 9
 DefaultName_Material_0A::
-    db "Jidda", $f0 ; id 10
+    db "Jidda@" ; id 10
 DefaultName_Material_0B::
-    db "Murri", $f0 ; id 11
+    db "Murri@" ; id 11
 DefaultName_Material_0C::
-    db "Thina", $f0 ; id 12
+    db "Thina@" ; id 12
 DefaultName_Material_0D::
-    db "Yoori", $f0 ; id 13
+    db "Yoori@" ; id 13
 
 ; family 9 (Water) of DefaultMonsterNameTable (E-0254, C1)
 DefaultMonsterNames_Water::
@@ -6794,33 +6794,33 @@ DefaultMonsterNames_Water::
 ; the 14 six-byte names of DefaultMonsterNames_Water (E-0254, C1)
 DefaultMonsterNameStrings_Water::
 DefaultName_Water_00::
-    db "Izak", $9f, $f0 ; id 0
+    db "Izak", $9f, "@" ; id 0
 DefaultName_Water_01::
-    db "Walli", $f0 ; id 1
+    db "Walli@" ; id 1
 DefaultName_Water_02::
-    db "Soda", $9f, $f0 ; id 2
+    db "Soda", $9f, "@" ; id 2
 DefaultName_Water_03::
-    db "Evi", $9f, $9f, $f0 ; id 3
+    db "Evi", $9f, $9f, "@" ; id 3
 DefaultName_Water_04::
-    db "Reny", $9f, $f0 ; id 4
+    db "Reny", $9f, "@" ; id 4
 DefaultName_Water_05::
-    db "Jawah", $f0 ; id 5
+    db "Jawah@" ; id 5
 DefaultName_Water_06::
-    db "Tavin", $f0 ; id 6
+    db "Tavin@" ; id 6
 DefaultName_Water_07::
-    db "Cyaci", $f0 ; id 7
+    db "Cyaci@" ; id 7
 DefaultName_Water_08::
-    db "Mizur", $f0 ; id 8
+    db "Mizur@" ; id 8
 DefaultName_Water_09::
-    db "Purll", $f0 ; id 9
+    db "Purll@" ; id 9
 DefaultName_Water_0A::
-    db "Oasiz", $f0 ; id 10
+    db "Oasiz@" ; id 10
 DefaultName_Water_0B::
-    db "Nadea", $f0 ; id 11
+    db "Nadea@" ; id 11
 DefaultName_Water_0C::
-    db "Lua", $9f, $9f, $f0 ; id 12
+    db "Lua", $9f, $9f, "@" ; id 12
 DefaultName_Water_0D::
-    db "Dovin", $f0 ; id 13
+    db "Dovin@" ; id 13
 
 ; family 10 (Boss) of DefaultMonsterNameTable (E-0254, C1)
 ; record: name
@@ -6844,33 +6844,33 @@ DefaultMonsterNames_Boss::
 ; record: name, then $F0 (and padding)
 DefaultMonsterNameStrings_Boss::
 DefaultName_Boss_00::
-    db "Hevnz", $f0 ; id 0
+    db "Hevnz@" ; id 0
 DefaultName_Boss_01::
-    db "Hadez", $f0 ; id 1
+    db "Hadez@" ; id 1
 DefaultName_Boss_02::
-    db "Makro", $f0 ; id 2
+    db "Makro@" ; id 2
 DefaultName_Boss_03::
-    db "Oskro", $f0 ; id 3
+    db "Oskro@" ; id 3
 DefaultName_Boss_04::
-    db "Mirio", $f0 ; id 4
+    db "Mirio@" ; id 4
 DefaultName_Boss_05::
-    db "Fasis", $f0 ; id 5
+    db "Fasis@" ; id 5
 DefaultName_Boss_06::
-    db "Akull", $f0 ; id 6
+    db "Akull@" ; id 6
 DefaultName_Boss_07::
-    db "Ledah", $f0 ; id 7
+    db "Ledah@" ; id 7
 DefaultName_Boss_08::
-    db "Ulph", $9f, $f0 ; id 8
+    db "Ulph", $9f, "@" ; id 8
 DefaultName_Boss_09::
-    db "Wyll", $9f, $f0 ; id 9
+    db "Wyll", $9f, "@" ; id 9
 DefaultName_Boss_0A::
-    db "Wev", $9f, $9f, $f0 ; id 10
+    db "Wev", $9f, $9f, "@" ; id 10
 DefaultName_Boss_0B::
-    db "Sesil", $f0 ; id 11
+    db "Sesil@" ; id 11
 DefaultName_Boss_0C::
-    db "Syall", $f0 ; id 12
+    db "Syall@" ; id 12
 DefaultName_Boss_0D::
-    db "Waltz", $f0 ; id 13
+    db "Waltz@" ; id 13
 
 ; the routine ending at $6CE9 copies the name at word [$791F + 2 * (70 * (wArg2 & 1) + B)] to
 ; wNameEntryText (CopyF0StringAndRedrawNameEntry); 140 words, two sets of 70 (E-0254, C1)
@@ -7020,285 +7020,285 @@ NameEntrySuggestionTable::
 ; the 140 six-byte names of NameEntrySuggestionTable, $7A37-$7D7F (E-0254, C1)
 NameEntrySuggestions::
 SuggestedName_00::
-    db "Ryken", $f0 ; id 0
+    db "Ryken@" ; id 0
 SuggestedName_01::
-    db "Li", $9f, $9f, $9f, $f0 ; id 1
+    db "Li", $9f, $9f, $9f, "@" ; id 1
 SuggestedName_02::
-    db "Pynn", $9f, $f0 ; id 2
+    db "Pynn", $9f, "@" ; id 2
 SuggestedName_03::
-    db "Pazu", $9f, $f0 ; id 3
+    db "Pazu", $9f, "@" ; id 3
 SuggestedName_04::
-    db "Kordi", $f0 ; id 4
+    db "Kordi@" ; id 4
 SuggestedName_05::
-    db "Symbo", $f0 ; id 5
+    db "Symbo@" ; id 5
 SuggestedName_06::
-    db "Whest", $f0 ; id 6
+    db "Whest@" ; id 6
 SuggestedName_07::
-    db "Zerro", $f0 ; id 7
+    db "Zerro@" ; id 7
 SuggestedName_08::
-    db "Alyah", $f0 ; id 8
+    db "Alyah@" ; id 8
 SuggestedName_09::
-    db "Cerol", $f0 ; id 9
+    db "Cerol@" ; id 9
 SuggestedName_0A::
-    db "Varel", $f0 ; id 10
+    db "Varel@" ; id 10
 SuggestedName_0B::
-    db "Garon", $f0 ; id 11
+    db "Garon@" ; id 11
 SuggestedName_0C::
-    db "Altho", $f0 ; id 12
+    db "Altho@" ; id 12
 SuggestedName_0D::
-    db "Munon", $f0 ; id 13
+    db "Munon@" ; id 13
 SuggestedName_0E::
-    db "Alfer", $f0 ; id 14
+    db "Alfer@" ; id 14
 SuggestedName_0F::
-    db "Totum", $f0 ; id 15
+    db "Totum@" ; id 15
 SuggestedName_10::
-    db "Junno", $f0 ; id 16
+    db "Junno@" ; id 16
 SuggestedName_11::
-    db "Weib", $9f, $f0 ; id 17
+    db "Weib", $9f, "@" ; id 17
 SuggestedName_12::
-    db "Torma", $f0 ; id 18
+    db "Torma@" ; id 18
 SuggestedName_13::
-    db "Hukku", $f0 ; id 19
+    db "Hukku@" ; id 19
 SuggestedName_14::
-    db "Gettu", $f0 ; id 20
+    db "Gettu@" ; id 20
 SuggestedName_15::
-    db "Pidza", $f0 ; id 21
+    db "Pidza@" ; id 21
 SuggestedName_16::
-    db "Nakk", $9f, $f0 ; id 22
+    db "Nakk", $9f, "@" ; id 22
 SuggestedName_17::
-    db "Sulo", $9f, $f0 ; id 23
+    db "Sulo", $9f, "@" ; id 23
 SuggestedName_18::
-    db "Olgan", $f0 ; id 24
+    db "Olgan@" ; id 24
 SuggestedName_19::
-    db "Sefti", $f0 ; id 25
+    db "Sefti@" ; id 25
 SuggestedName_1A::
-    db "Oshan", $f0 ; id 26
+    db "Oshan@" ; id 26
 SuggestedName_1B::
-    db "Nocko", $f0 ; id 27
+    db "Nocko@" ; id 27
 SuggestedName_1C::
-    db "Oltho", $f0 ; id 28
+    db "Oltho@" ; id 28
 SuggestedName_1D::
-    db "Mazer", $f0 ; id 29
+    db "Mazer@" ; id 29
 SuggestedName_1E::
-    db "Hyde", $9f, $f0 ; id 30
+    db "Hyde", $9f, "@" ; id 30
 SuggestedName_1F::
-    db "Orora", $f0 ; id 31
+    db "Orora@" ; id 31
 SuggestedName_20::
-    db "Varli", $f0 ; id 32
+    db "Varli@" ; id 32
 SuggestedName_21::
-    db "Offsi", $f0 ; id 33
+    db "Offsi@" ; id 33
 SuggestedName_22::
-    db "Kapta", $f0 ; id 34
+    db "Kapta@" ; id 34
 SuggestedName_23::
-    db "Jass", $9f, $f0 ; id 35
+    db "Jass", $9f, "@" ; id 35
 SuggestedName_24::
-    db "Zeik", $9f, $f0 ; id 36
+    db "Zeik", $9f, "@" ; id 36
 SuggestedName_25::
-    db "Yunn", $9f, $f0 ; id 37
+    db "Yunn", $9f, "@" ; id 37
 SuggestedName_26::
-    db "Junia", $f0 ; id 38
+    db "Junia@" ; id 38
 SuggestedName_27::
-    db "Vul", $9f, $9f, $f0 ; id 39
+    db "Vul", $9f, $9f, "@" ; id 39
 SuggestedName_28::
-    db "Piell", $f0 ; id 40
+    db "Piell@" ; id 40
 SuggestedName_29::
-    db "Bolto", $f0 ; id 41
+    db "Bolto@" ; id 41
 SuggestedName_2A::
-    db "Vulo", $9f, $f0 ; id 42
+    db "Vulo", $9f, "@" ; id 42
 SuggestedName_2B::
-    db "Jikil", $f0 ; id 43
+    db "Jikil@" ; id 43
 SuggestedName_2C::
-    db "Sevin", $f0 ; id 44
+    db "Sevin@" ; id 44
 SuggestedName_2D::
-    db "Betha", $f0 ; id 45
+    db "Betha@" ; id 45
 SuggestedName_2E::
-    db "Raiss", $f0 ; id 46
+    db "Raiss@" ; id 46
 SuggestedName_2F::
-    db "Kunon", $f0 ; id 47
+    db "Kunon@" ; id 47
 SuggestedName_30::
-    db "Zakul", $f0 ; id 48
+    db "Zakul@" ; id 48
 SuggestedName_31::
-    db "Kirua", $f0 ; id 49
+    db "Kirua@" ; id 49
 SuggestedName_32::
-    db "Corbi", $f0 ; id 50
+    db "Corbi@" ; id 50
 SuggestedName_33::
-    db "Fitey", $f0 ; id 51
+    db "Fitey@" ; id 51
 SuggestedName_34::
-    db "Evin", $9f, $f0 ; id 52
+    db "Evin", $9f, "@" ; id 52
 SuggestedName_35::
-    db "Kuloe", $f0 ; id 53
+    db "Kuloe@" ; id 53
 SuggestedName_36::
-    db "Tudi", $9f, $f0 ; id 54
+    db "Tudi", $9f, "@" ; id 54
 SuggestedName_37::
-    db "Ithy", $9f, $f0 ; id 55
+    db "Ithy", $9f, "@" ; id 55
 SuggestedName_38::
-    db "Ruu", $9f, $9f, $f0 ; id 56
+    db "Ruu", $9f, $9f, "@" ; id 56
 SuggestedName_39::
-    db "Garri", $f0 ; id 57
+    db "Garri@" ; id 57
 SuggestedName_3A::
-    db "Dabu", $9f, $f0 ; id 58
+    db "Dabu", $9f, "@" ; id 58
 SuggestedName_3B::
-    db "Vehda", $f0 ; id 59
+    db "Vehda@" ; id 59
 SuggestedName_3C::
-    db "Karto", $f0 ; id 60
+    db "Karto@" ; id 60
 SuggestedName_3D::
-    db "Bia", $9f, $9f, $f0 ; id 61
+    db "Bia", $9f, $9f, "@" ; id 61
 SuggestedName_3E::
-    db "Mutah", $f0 ; id 62
+    db "Mutah@" ; id 62
 SuggestedName_3F::
-    db "Monsu", $f0 ; id 63
+    db "Monsu@" ; id 63
 SuggestedName_40::
-    db "Pulk", $9f, $f0 ; id 64
+    db "Pulk", $9f, "@" ; id 64
 SuggestedName_41::
-    db "Saiz", $9f, $f0 ; id 65
+    db "Saiz", $9f, "@" ; id 65
 SuggestedName_42::
-    db "Zeil", $9f, $f0 ; id 66
+    db "Zeil", $9f, "@" ; id 66
 SuggestedName_43::
-    db "Kazna", $f0 ; id 67
+    db "Kazna@" ; id 67
 SuggestedName_44::
-    db "Pikka", $f0 ; id 68
+    db "Pikka@" ; id 68
 SuggestedName_45::
-    db "Derzo", $f0 ; id 69
+    db "Derzo@" ; id 69
 SuggestedName_46::
-    db "Muey", $9f, $f0 ; id 70
+    db "Muey", $9f, "@" ; id 70
 SuggestedName_47::
-    db "Mysti", $f0 ; id 71
+    db "Mysti@" ; id 71
 SuggestedName_48::
-    db "Saman", $f0 ; id 72
+    db "Saman@" ; id 72
 SuggestedName_49::
-    db "Iana", $9f, $f0 ; id 73
+    db "Iana", $9f, "@" ; id 73
 SuggestedName_4A::
-    db "Mikko", $f0 ; id 74
+    db "Mikko@" ; id 74
 SuggestedName_4B::
-    db "Topaz", $f0 ; id 75
+    db "Topaz@" ; id 75
 SuggestedName_4C::
-    db "Pulam", $f0 ; id 76
+    db "Pulam@" ; id 76
 SuggestedName_4D::
-    db "Nyar", $9f, $f0 ; id 77
+    db "Nyar", $9f, "@" ; id 77
 SuggestedName_4E::
-    db "Zonia", $f0 ; id 78
+    db "Zonia@" ; id 78
 SuggestedName_4F::
-    db "Pulin", $f0 ; id 79
+    db "Pulin@" ; id 79
 SuggestedName_50::
-    db "Knull", $f0 ; id 80
+    db "Knull@" ; id 80
 SuggestedName_51::
-    db "Rauli", $f0 ; id 81
+    db "Rauli@" ; id 81
 SuggestedName_52::
-    db "Carin", $f0 ; id 82
+    db "Carin@" ; id 82
 SuggestedName_53::
-    db "Mylki", $f0 ; id 83
+    db "Mylki@" ; id 83
 SuggestedName_54::
-    db "Alfua", $f0 ; id 84
+    db "Alfua@" ; id 84
 SuggestedName_55::
-    db "Furil", $f0 ; id 85
+    db "Furil@" ; id 85
 SuggestedName_56::
-    db "Hamen", $f0 ; id 86
+    db "Hamen@" ; id 86
 SuggestedName_57::
-    db "Ligg", $9f, $f0 ; id 87
+    db "Ligg", $9f, "@" ; id 87
 SuggestedName_58::
-    db "Limme", $f0 ; id 88
+    db "Limme@" ; id 88
 SuggestedName_59::
-    db "Hohmi", $f0 ; id 89
+    db "Hohmi@" ; id 89
 SuggestedName_5A::
-    db "Liset", $f0 ; id 90
+    db "Liset@" ; id 90
 SuggestedName_5B::
-    db "Katua", $f0 ; id 91
+    db "Katua@" ; id 91
 SuggestedName_5C::
-    db "Paela", $f0 ; id 92
+    db "Paela@" ; id 92
 SuggestedName_5D::
-    db "Putti", $f0 ; id 93
+    db "Putti@" ; id 93
 SuggestedName_5E::
-    db "Mymee", $f0 ; id 94
+    db "Mymee@" ; id 94
 SuggestedName_5F::
-    db "Annis", $f0 ; id 95
+    db "Annis@" ; id 95
 SuggestedName_60::
-    db "Makki", $f0 ; id 96
+    db "Makki@" ; id 96
 SuggestedName_61::
-    db "Jemni", $f0 ; id 97
+    db "Jemni@" ; id 97
 SuggestedName_62::
-    db "Chaar", $f0 ; id 98
+    db "Chaar@" ; id 98
 SuggestedName_63::
-    db "Mafin", $f0 ; id 99
+    db "Mafin@" ; id 99
 SuggestedName_64::
-    db "Piann", $f0 ; id 100
+    db "Piann@" ; id 100
 SuggestedName_65::
-    db "Malin", $f0 ; id 101
+    db "Malin@" ; id 101
 SuggestedName_66::
-    db "Capli", $f0 ; id 102
+    db "Capli@" ; id 102
 SuggestedName_67::
-    db "Multy", $f0 ; id 103
+    db "Multy@" ; id 103
 SuggestedName_68::
-    db "Schai", $f0 ; id 104
+    db "Schai@" ; id 104
 SuggestedName_69::
-    db "Hylda", $f0 ; id 105
+    db "Hylda@" ; id 105
 SuggestedName_6A::
-    db "Sharo", $f0 ; id 106
+    db "Sharo@" ; id 106
 SuggestedName_6B::
-    db "Millk", $f0 ; id 107
+    db "Millk@" ; id 107
 SuggestedName_6C::
-    db "Milda", $f0 ; id 108
+    db "Milda@" ; id 108
 SuggestedName_6D::
-    db "Konni", $f0 ; id 109
+    db "Konni@" ; id 109
 SuggestedName_6E::
-    db "Sundi", $f0 ; id 110
+    db "Sundi@" ; id 110
 SuggestedName_6F::
-    db "Komet", $f0 ; id 111
+    db "Komet@" ; id 111
 SuggestedName_70::
-    db "Melan", $f0 ; id 112
+    db "Melan@" ; id 112
 SuggestedName_71::
-    db "Moura", $f0 ; id 113
+    db "Moura@" ; id 113
 SuggestedName_72::
-    db "Monez", $f0 ; id 114
+    db "Monez@" ; id 114
 SuggestedName_73::
-    db "Ellan", $f0 ; id 115
+    db "Ellan@" ; id 115
 SuggestedName_74::
-    db "Eriss", $f0 ; id 116
+    db "Eriss@" ; id 116
 SuggestedName_75::
-    db "Suloe", $f0 ; id 117
+    db "Suloe@" ; id 117
 SuggestedName_76::
-    db "Flora", $f0 ; id 118
+    db "Flora@" ; id 118
 SuggestedName_77::
-    db "Nithe", $f0 ; id 119
+    db "Nithe@" ; id 119
 SuggestedName_78::
-    db "Yuwmi", $f0 ; id 120
+    db "Yuwmi@" ; id 120
 SuggestedName_79::
-    db "Yurro", $f0 ; id 121
+    db "Yurro@" ; id 121
 SuggestedName_7A::
-    db "Paize", $f0 ; id 122
+    db "Paize@" ; id 122
 SuggestedName_7B::
-    db "Celen", $f0 ; id 123
+    db "Celen@" ; id 123
 SuggestedName_7C::
-    db "Heren", $f0 ; id 124
+    db "Heren@" ; id 124
 SuggestedName_7D::
-    db "Velah", $f0 ; id 125
+    db "Velah@" ; id 125
 SuggestedName_7E::
-    db "Minto", $f0 ; id 126
+    db "Minto@" ; id 126
 SuggestedName_7F::
-    db "Ritto", $f0 ; id 127
+    db "Ritto@" ; id 127
 SuggestedName_80::
-    db "Luman", $f0 ; id 128
+    db "Luman@" ; id 128
 SuggestedName_81::
-    db "Venni", $f0 ; id 129
+    db "Venni@" ; id 129
 SuggestedName_82::
-    db "Teryl", $f0 ; id 130
+    db "Teryl@" ; id 130
 SuggestedName_83::
-    db "Krim", $9f, $f0 ; id 131
+    db "Krim", $9f, "@" ; id 131
 SuggestedName_84::
-    db "Atch", $9f, $f0 ; id 132
+    db "Atch", $9f, "@" ; id 132
 SuggestedName_85::
-    db "Arle", $9f, $f0 ; id 133
+    db "Arle", $9f, "@" ; id 133
 SuggestedName_86::
-    db "Phes", $9f, $f0 ; id 134
+    db "Phes", $9f, "@" ; id 134
 SuggestedName_87::
-    db "Riza", $9f, $f0 ; id 135
+    db "Riza", $9f, "@" ; id 135
 SuggestedName_88::
-    db "Pestl", $f0 ; id 136
+    db "Pestl@" ; id 136
 SuggestedName_89::
-    db "Almmo", $f0 ; id 137
+    db "Almmo@" ; id 137
 SuggestedName_8A::
-    db "Forte", $f0 ; id 138
+    db "Forte@" ; id 138
 SuggestedName_8B::
-    db "Soffi", $f0 ; id 139
+    db "Soffi@" ; id 139
 
 HibernateMenu_Multiply8::
     ld a, [wArg1]

@@ -6726,7 +6726,7 @@ UnreferencedScriptStepDispatch_73_6D52_ShowOhButICan::
     ret
 
 UnreferencedScriptStepDispatch_73_6D52_Msg4D0F_HmYouAreQuite::
-    ld hl, $4d0f ; '*: Hm, you are quite strong'
+    ld hl, $4d0f ; '*: Hm, you are quite strong…'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]

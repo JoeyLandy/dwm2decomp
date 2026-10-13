@@ -8068,7 +8068,7 @@ Script_0C_7ACF::
     script_end
 Script_0C_7AD5::
     script_command SCRIPT_MENU_CLOSE
-    script_message $802b ; '*: Oh, but your key ring'
+    script_message $802b ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ADB::
@@ -8081,7 +8081,7 @@ Script_0C_7ADF::
     script_end
 Script_0C_7AE5::
     script_command SCRIPT_MENU_CLOSE
-    script_message $802b ; '*: Oh, but your key ring'
+    script_message $802b ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AEB::
@@ -8104,7 +8104,7 @@ Script_0C_7AFE::
     script_choice_jump Script_0C_7B08, Script_0C_7B02
 Script_0C_7B02::
     script_command SCRIPT_MENU_CLOSE
-    script_message $8009 ; '*: Oh The crowd wanted to'
+    script_message $8009 ; '*: Oh… The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B08::
@@ -8134,7 +8134,7 @@ Script_0C_7B32::
     script_choice_jump Script_0C_7B3C, Script_0C_7B36
 Script_0C_7B36::
     script_command SCRIPT_MENU_CLOSE
-    script_message $8009 ; '*: Oh The crowd wanted to'
+    script_message $8009 ; '*: Oh… The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B3C::
@@ -8191,12 +8191,12 @@ Script_0C_7B87::
     script_end
 Script_0C_7B8D::
     script_command SCRIPT_MENU_CLOSE
-    script_message $8034 ; '*: Oh, but you have no'
+    script_message $8034 ; '*: …Oh, but you have no'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B93::
     script_command SCRIPT_MENU_CLOSE
-    script_message $8035 ; '*: Oh, but your key ring'
+    script_message $8035 ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B99::
@@ -8222,7 +8222,7 @@ Script_0C_7BB0::
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BBA, Script_0C_7BB7
 Script_0C_7BB7::
-    script_message $c012 ; '*: But, I can't take this'
+    script_message $c012 ; '*: …But, I can't take this'
 Script_0C_7BBA::
     script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BC1, Script_0C_7BBE

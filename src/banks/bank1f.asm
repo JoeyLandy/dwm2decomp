@@ -196,15 +196,15 @@ Tiles2Plus420Tiles_1F_4990::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $40, $ff, $60, $ff, $60 ; id 154
     db $ff, $00, $ff, $00, $ff, $00, $ff, $18, $ff, $18, $ff, $00, $ff, $00, $ff, $00 ; id 155
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $fe, $ff, $00, $ff, $00, $ff, $00 ; id 156 '-'
-    db $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $92, $ff, $0c, $ff, $00, $ff, $00 ; id 157
-    db $ff, $00, $ff, $02, $ff, $04, $ff, $08, $ff, $10, $ff, $20, $ff, $40, $ff, $80 ; id 158
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $92, $ff, $0c, $ff, $00, $ff, $00 ; id 157 '~'
+    db $ff, $00, $ff, $02, $ff, $04, $ff, $08, $ff, $10, $ff, $20, $ff, $40, $ff, $80 ; id 158 '/'
     db $ff, $00, $ff, $10, $ff, $92, $ff, $54, $ff, $38, $ff, $54, $ff, $92, $ff, $10 ; id 159
-    db $ff, $00, $ff, $08, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $08 ; id 160
-    db $ff, $00, $ff, $10, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $10 ; id 161
-    db $ff, $00, $ff, $00, $ff, $10, $ff, $10, $ff, $7c, $ff, $10, $ff, $10, $ff, $00 ; id 162
+    db $ff, $00, $ff, $08, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $10, $ff, $08 ; id 160 '('
+    db $ff, $00, $ff, $10, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $08, $ff, $10 ; id 161 ')'
+    db $ff, $00, $ff, $00, $ff, $10, $ff, $10, $ff, $7c, $ff, $10, $ff, $10, $ff, $00 ; id 162 '+'
 Tiles1Plus7D0Tiles_1F_4A40::
     db $ff, $00, $ff, $18, $ff, $18, $ff, $00, $ff, $00, $ff, $18, $ff, $18, $ff, $00 ; id 163 ':'
-    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $92, $ff, $00 ; id 164
+    db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $92, $ff, $00 ; id 164 '…'
 Tiles1Plus6A0Tiles_1F_4A60::
     db $ff, $00, $ff, $80, $ff, $80, $ff, $80, $ff, $8a, $ff, $8a, $ff, $84, $ff, $f4 ; id 165
 Tiles1Plus7F0Tiles_1F_4A70::
@@ -218,7 +218,7 @@ Tiles2Plus20Tiles_1F_4AA0::
     db $ff, $00, $ff, $6c, $ff, $6c, $ff, $24, $ff, $48, $ff, $00, $ff, $00, $ff, $00 ; id 170
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $60, $ff, $60, $ff, $20, $ff, $40 ; id 171 ','
 Tiles1Plus4A0Tiles_1F_4AD0::
-    db $ff, $00, $ff, $10, $ff, $10, $ff, $fe, $ff, $7c, $ff, $38, $ff, $7c, $ff, $c6 ; id 172
+    db $ff, $00, $ff, $10, $ff, $10, $ff, $fe, $ff, $7c, $ff, $38, $ff, $7c, $ff, $c6 ; id 172 '★'
 Tiles2Plus30Tiles_1F_4AE0::
     db $ff, $38, $ff, $38, $ff, $38, $ff, $fe, $ff, $7c, $ff, $38, $ff, $10, $ff, $00 ; id 173
     db $ff, $00, $ff, $10, $ff, $30, $ff, $7e, $ff, $fe, $ff, $7e, $ff, $30, $ff, $10 ; id 174
@@ -231,7 +231,7 @@ Tiles2Plus30Tiles_1F_4AE0::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $18, $ff, $18 ; id 181 '.'
     db $ff, $00, $ff, $20, $ff, $50, $ff, $50, $ff, $20, $ff, $54, $ff, $8c, $ff, $72 ; id 182
     db $ff, $00, $ff, $06, $ff, $06, $ff, $02, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 183
-    db $ff, $00, $ff, $38, $ff, $44, $ff, $ba, $ff, $a2, $ff, $ba, $ff, $44, $ff, $38 ; id 184
+    db $ff, $00, $ff, $38, $ff, $44, $ff, $ba, $ff, $a2, $ff, $ba, $ff, $44, $ff, $38 ; id 184 '©'
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 185
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 186
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 187
@@ -533,253 +533,256 @@ StringList_1F_5225::
     dw Script_1F_5A3A ; id 63
 
 String_1F_00_00::
-    db $ea, "Cobi: Is your", $f1
-    db "adventure done?", $fa, $f7
-    db $ef, $ee, "Or do you need", $ef, $ee, "something?", $f7
-    db $f0
+    db "<VOICE1>Cobi: Is your<LINE>"
+    db "adventure done?<PROMPT>"
+    db "<NEXT>Or do you need"
+    db "<NEXT>something?<WAIT>"
+    db "@"
 
 String_1F_00_02::
-    db $ea, "Cobi: Which one's", $f1
-    db "staying here?", $f0
+    db "<VOICE1>Cobi: Which one's<LINE>"
+    db "staying here?@"
 
 String_1F_00_03::
-    db $ea, "Cobi: So this one", $f1
-    db "is staying here?", $f0
+    db "<VOICE1>Cobi: So this one<LINE>"
+    db "is staying here?@"
 
 String_1F_00_04::
-    db $ea, "Cobi: Check up on", $f1
-    db "the others too.", $f7
-    db $f0
+    db "<VOICE1>Cobi: Check up on<LINE>"
+    db "the others too.<WAIT>"
+    db "@"
 
 String_1F_00_05::
-    db $ea, "Cobi: Do you need", $f1
-    db "anything else?", $f0
+    db "<VOICE1>Cobi: Do you need<LINE>"
+    db "anything else?@"
 
 String_1F_00_06::
-    db $ea, "Cobi: No, you can't", $f1
-    db "go off all alone.", $f7
-    db $f0
+    db "<VOICE1>Cobi: No, you can't<LINE>"
+    db "go off all alone.<WAIT>"
+    db "@"
 
 String_1F_00_07::
-    db $ea, "Cobi: Switch with", $f1
-    db "one on the farm?", $f0
+    db "<VOICE1>Cobi: Switch with<LINE>"
+    db "one on the farm?@"
 
 String_1F_00_08::
-    db $ea, "Cobi: What'll you", $f1
-    db "switch it with?", $f0
+    db "<VOICE1>Cobi: What'll you<LINE>"
+    db "switch it with?@"
 
 String_1F_00_09::
-    db $ea, "Cobi: So you'll", $f1
-    db "take this one?", $f0
+    db "<VOICE1>Cobi: So you'll<LINE>"
+    db "take this one?@"
 
 String_1F_00_0A::
-    db $ea, "Cobi: I switched", $f1
-    db $f9, "0.", $f7
-    db $f0
+    db "<VOICE1>Cobi: I switched<LINE>"
+    db "<BUF0>.<WAIT>"
+    db "@"
 
 String_1F_00_0B::
-    db $ea, "Cobi: The farm has", $f1
-    db "no more room.", $f7
-    db $f0
+    db "<VOICE1>Cobi: The farm has<LINE>"
+    db "no more room.<WAIT>"
+    db "@"
 
 String_1F_00_0C::
-    db $ea, "Cobi: What'll you", $f1
-    db "switch it with?", $f0
+    db "<VOICE1>Cobi: What'll you<LINE>"
+    db "switch it with?@"
 
 String_1F_00_0D::
-    db $ea, "Cobi: Which one", $f1
-    db "will you take?", $f0
+    db "<VOICE1>Cobi: Which one<LINE>"
+    db "will you take?@"
 
 String_1F_00_0E::
-    db $ea, "Cobi: Is this the", $f1
-    db "one you'll take?", $f0
+    db "<VOICE1>Cobi: Is this the<LINE>"
+    db "one you'll take?@"
 
 String_1F_00_0F::
-    db $ea, "Cobi: It's eager", $f1
-    db "to go, ", $f9, "0.", $f7
-    db $f0
+    db "<VOICE1>Cobi: It's eager<LINE>"
+    db "to go, <BUF0>.<WAIT>"
+    db "@"
 
 String_1F_00_10::
-    db $ea, "Cobi: You haven't", $f1
-    db "left any here.", $f7
-    db $f0
+    db "<VOICE1>Cobi: You haven't<LINE>"
+    db "left any here.<WAIT>"
+    db "@"
 
 String_1F_00_11::
-    db $ea, "Cobi: You can't", $f1
-    db "take any more.", $f7
-    db $f0
+    db "<VOICE1>Cobi: You can't<LINE>"
+    db "take any more.<WAIT>"
+    db "@"
 
 String_1F_00_12::
-    db $ea, "Cobi: What do you", $f1
-    db "want to check?", $f0
+    db "<VOICE1>Cobi: What do you<LINE>"
+    db "want to check?@"
 
 String_1F_00_13::
-    db $ea, "Cobi: We don't have", $f1
-    db "any of your eggs.", $f7
-    db $f0
+    db "<VOICE1>Cobi: We don't have<LINE>"
+    db "any of your eggs.<WAIT>"
+    db "@"
 
 String_1F_00_14::
-    db $ea, "Cobi: Which one", $f1
-    db "will you check?", $f0
+    db "<VOICE1>Cobi: Which one<LINE>"
+    db "will you check?@"
 
 String_1F_00_16::
-    db $ea, "Cobi: Which egg", $f1
-    db "will you check?", $f0
+    db "<VOICE1>Cobi: Which egg<LINE>"
+    db "will you check?@"
 
 String_1F_00_17::
-    db $ea, "Cobi: What  do you", $f1
-    db "want to release?", $f0
+    db "<VOICE1>Cobi: What  do you<LINE>"
+    db "want to release?@"
 
 String_1F_00_18::
-    db $ea, "Cobi: Which one", $f1
-    db "will you release?", $f0
+    db "<VOICE1>Cobi: Which one<LINE>"
+    db "will you release?@"
 
 String_1F_00_19::
-    db $ea, "Cobi: Which egg", $f1
-    db "will you release?", $f0
+    db "<VOICE1>Cobi: Which egg<LINE>"
+    db "will you release?@"
 
 String_1F_00_1A::
-    db $ea, "Cobi: It'll be gone", $f1
-    db "forever. Sure?", $f0
+    db "<VOICE1>Cobi: It'll be gone<LINE>"
+    db "forever. Sure?@"
 
 String_1F_00_1B::
-    db "The egg was", $f1
-    db "released.", $f7
-    db $f0
+    db "The egg was<LINE>"
+    db "released.<WAIT>"
+    db "@"
 
 String_1F_00_1C::
-    db $f9, "0 was released", $f1
-    db "in the wild.", $f0
+    db "<BUF0> was released<LINE>"
+    db "in the wild.@"
 
 String_1F_00_1D::
-    db $ea, "Cobi: Come back", $f1
-    db "anytime, sis!", $f7
-    db $f0
+    db "<VOICE1>Cobi: Come back<LINE>"
+    db "anytime, sis!<WAIT>"
+    db "@"
 
 String_1F_00_1E::
-    db $eb, "Tara: Hi, big", $f1
-    db "brother!", $fa, $f7
-    db $ef, $ee, "Do you need", $ef, $ee, "anything?", $f0
+    db "<VOICE2>Tara: Hi, big<LINE>"
+    db "brother!<PROMPT>"
+    db "<NEXT>Do you need"
+    db "<NEXT>anything?@"
 
 String_1F_00_22::
-    db $eb, "Tara: Which one's", $f1
-    db "staying here?", $f0
+    db "<VOICE2>Tara: Which one's<LINE>"
+    db "staying here?@"
 
 String_1F_00_23::
-    db $eb, "Tara: So this one", $f1
-    db "is staying here?", $f0
+    db "<VOICE2>Tara: So this one<LINE>"
+    db "is staying here?@"
 
 String_1F_00_24::
-    db $eb, "Tara: Say bye to", $f1
-    db $f9, "0 for a while.", $f7
-    db $f0
+    db "<VOICE2>Tara: Say bye to<LINE>"
+    db "<BUF0> for a while.<WAIT>"
+    db "@"
 
 String_1F_00_25::
-    db $eb, "Tara: Do you need", $f1
-    db "anything else?", $f0
+    db "<VOICE2>Tara: Do you need<LINE>"
+    db "anything else?@"
 
 String_1F_00_26::
-    db $eb, "Tara: You'll be", $f1
-    db "left all alone!", $f7
-    db $f0
+    db "<VOICE2>Tara: You'll be<LINE>"
+    db "left all alone!<WAIT>"
+    db "@"
 
 String_1F_00_27::
-    db $eb, "Tara: Switch with", $f1
-    db "one on the farm?", $f0
+    db "<VOICE2>Tara: Switch with<LINE>"
+    db "one on the farm?@"
 
 String_1F_00_28::
-    db $eb, "Tara: What'll you", $f1
-    db "switch it with?", $f0
+    db "<VOICE2>Tara: What'll you<LINE>"
+    db "switch it with?@"
 
 String_1F_00_29::
-    db $eb, "Tara: So you'll", $f1
-    db "take this one?", $f0
+    db "<VOICE2>Tara: So you'll<LINE>"
+    db "take this one?@"
 
 String_1F_00_2A::
-    db $eb, "Tara: I switched", $f1
-    db $f9, "0.", $f7
-    db $f0
+    db "<VOICE2>Tara: I switched<LINE>"
+    db "<BUF0>.<WAIT>"
+    db "@"
 
 String_1F_00_2B::
-    db $eb, "Tara: The farm is", $f1
-    db "out of room.", $f7
-    db $f0
+    db "<VOICE2>Tara: The farm is<LINE>"
+    db "out of room.<WAIT>"
+    db "@"
 
 String_1F_00_2C::
-    db $eb, "Tara: What'll you", $f1
-    db "switch it with?", $f0
+    db "<VOICE2>Tara: What'll you<LINE>"
+    db "switch it with?@"
 
 String_1F_00_2D::
-    db $eb, "Tara: Which one", $f1
-    db "will you take?", $f0
+    db "<VOICE2>Tara: Which one<LINE>"
+    db "will you take?@"
 
 String_1F_00_2E::
-    db $eb, "Tara: Is this the", $f1
-    db "one you'll take?", $f0
+    db "<VOICE2>Tara: Is this the<LINE>"
+    db "one you'll take?@"
 
 String_1F_00_2F::
-    db $eb, "Tara: ", $f9, "0, it", $f1
-    db "really missed you.", $f7
-    db $f0
+    db "<VOICE2>Tara: <BUF0>, it<LINE>"
+    db "really missed you.<WAIT>"
+    db "@"
 
 String_1F_00_30::
-    db $eb, "Tara: You haven't", $f1
-    db "left any here.", $f7
-    db $f0
+    db "<VOICE2>Tara: You haven't<LINE>"
+    db "left any here.<WAIT>"
+    db "@"
 
 String_1F_00_31::
-    db $eb, "Tara: You can't", $f1
-    db "take any more.", $f7
-    db $f0
+    db "<VOICE2>Tara: You can't<LINE>"
+    db "take any more.<WAIT>"
+    db "@"
 
 String_1F_00_32::
-    db $eb, "Tara: What do you", $f1
-    db "want to check?", $f0
+    db "<VOICE2>Tara: What do you<LINE>"
+    db "want to check?@"
 
 String_1F_00_33::
-    db $eb, "Tara: We don't have", $f1
-    db "any of your eggs.", $f7
-    db $f0
+    db "<VOICE2>Tara: We don't have<LINE>"
+    db "any of your eggs.<WAIT>"
+    db "@"
 
 String_1F_00_34::
-    db $eb, "Tara: Which one", $f1
-    db "will you check?", $f0
+    db "<VOICE2>Tara: Which one<LINE>"
+    db "will you check?@"
 
 String_1F_00_36::
-    db $eb, "Tara: Which egg", $f1
-    db "will you check?", $f0
+    db "<VOICE2>Tara: Which egg<LINE>"
+    db "will you check?@"
 
 String_1F_00_37::
-    db $eb, "Tara: What  do you", $f1
-    db "want to release?", $f0
+    db "<VOICE2>Tara: What  do you<LINE>"
+    db "want to release?@"
 
 String_1F_00_38::
-    db $eb, "Tara: Which one", $f1
-    db "will you release?", $f0
+    db "<VOICE2>Tara: Which one<LINE>"
+    db "will you release?@"
 
 String_1F_00_39::
-    db $eb, "Tara: Which egg", $f1
-    db "will you release?", $f0
+    db "<VOICE2>Tara: Which egg<LINE>"
+    db "will you release?@"
 
 String_1F_00_3A::
-    db $eb, "Tara: It'll be gone", $f1
-    db "forever. OK?", $f0
+    db "<VOICE2>Tara: It'll be gone<LINE>"
+    db "forever. OK?@"
 
 String_1F_00_3B::
-    db "The egg was", $f1
-    db "released.", $f7
-    db $f0
+    db "The egg was<LINE>"
+    db "released.<WAIT>"
+    db "@"
 
 String_1F_00_3C::
-    db $f9, "0 was released", $f1
-    db "in the wild.", $f7
-    db $f0
+    db "<BUF0> was released<LINE>"
+    db "in the wild.<WAIT>"
+    db "@"
 
 String_1F_00_3D::
-    db $eb, "Tara: Please tell", $f1
-    db "me about your", $fa, $f7
-    db $ef, $ee, "adventure next", $ef, $ee, "time, big brother!", $f7
-    db $f0
+    db "<VOICE2>Tara: Please tell<LINE>"
+    db "me about your<PROMPT>"
+    db "<NEXT>adventure next"
+    db "<NEXT>time, big brother!<WAIT>"
+    db "@"
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_1F_5A3A::
@@ -2530,7 +2533,7 @@ Script_1F_783A::
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77FD
 Script_1F_783E::
-    script_message $c014 ; '*: Oh, my, my How deplorable!'
+    script_message $c014 ; '*: Oh, my, my… How deplorable!'
     script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
 Script_1F_7845::

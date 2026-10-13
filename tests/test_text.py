@@ -45,7 +45,22 @@ class Charmap(unittest.TestCase):
 
     def test_lines_break_after_end_of_message_codes(self):
         lines = T.render(encode("a") + bytes([0xF7]) + encode("b"))
-        self.assertEqual(lines, ['"a", $F7', '"b"'])
+        self.assertEqual(lines, ['"a<WAIT>"', '"b"'])
+
+    def test_printer_commands_render_as_tokens(self):
+        """E-0336: pairs before single codes, argument bytes as $XX, a line before <NEXT>, @ for $F0."""
+        raw = (bytes([0xEA]) + encode("Hi ") + bytes([0xF9, 0x00]) + encode("!") + bytes([0xF1]) + encode("ok")
+               + bytes([0xFA, 0xF7, 0xEF, 0xEE]) + encode("x") + bytes([0xE4, 0x7E, 0xF9, 0x22]) + encode("y")
+               + bytes([0xF0]))
+        self.assertEqual(T.render(raw), ['"<VOICE1>Hi <BUF0>!<LINE>"', '"ok<PROMPT>"',
+                                         '"<NEXT>x<SFX_WAIT>", $7E, "<BUF>", $22, "y@"'])
+        self.assertEqual(b"".join(T.parse(ln) for ln in T.render(raw)), raw)
+
+    def test_every_printer_byte_has_a_token_and_no_character_shares_it(self):
+        singles = {seq[0] for seq, _t, _n, _d in T.TOKENS if len(seq) == 1}
+        self.assertEqual(singles, set(range(0xE0, 0x100)))
+        self.assertFalse(singles & set(T.CHARMAP.values()))
+        self.assertEqual(len(T.TOKEN_BYTES), len(T.TOKENS))
 
 
 class Detection(unittest.TestCase):
@@ -73,7 +88,7 @@ class Detection(unittest.TestCase):
 
 
 REF = ROOT / "local" / "roms" / "dwm2-cobi-us.gbc"
-BANKS = ROOT / "src" / "banks"
+BANKS = ROOT / "build" / "listing"
 
 
 @unittest.skipUnless(REF.exists(), "reference ROM not present")
@@ -94,11 +109,12 @@ class RealRom(unittest.TestCase):
         self.assertGreater(total, 40000)
 
 
-@unittest.skipUnless(BANKS.is_dir(), "src/banks has not been generated")
+@unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GeneratedText(unittest.TestCase):
     def test_charmap_is_included_before_the_banks_and_defines_each_byte_once(self):
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8").splitlines()
-        self.assertLess(main.index('INCLUDE "charmap.inc"'), main.index('INCLUDE "banks/bank00.asm"'))
+        first_bank = next(i for i, ln in enumerate(main) if ln.startswith('INCLUDE "banks/bank00'))
+        self.assertLess(main.index('INCLUDE "charmap.inc"'), first_bank)
         codes = re.findall(r'^CHARMAP ".+", \$([0-9A-F]{2})$',
                            (ROOT / "src" / "charmap.inc").read_text(encoding="utf-8"), re.M)
         self.assertEqual(len(codes), len(set(codes)))

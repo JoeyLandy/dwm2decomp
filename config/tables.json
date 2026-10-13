@@ -19183,7 +19183,7 @@
         }
       ],
       "record": "one 6-tile row and its separator",
-      "note": "E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
+      "note": "E-0239 (C1: OpenTextChoice writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
     },
     {
       "bank": "00",
@@ -19200,7 +19200,7 @@
         }
       ],
       "record": "one 6-tile row and its separator",
-      "note": "E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
+      "note": "E-0239 (C1: OpenTextChoice writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
     },
     {
       "bank": "F1",

@@ -180,1006 +180,1328 @@ StringList_2B_4034::
     dw Message_03_89 ; id 137
 
 Message_03_00::
-    db $ea, "*: This is Norden,", $f1
-    db "the kingdom of the", $fa, $f7
-    db $ef, $ee, "north.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: This is Norden,<LINE>"
+    db "the kingdom of the<PROMPT>"
+    db "<NEXT>north."
+    db "<NEXT><WAIT>"
+    db "@"
 
 Message_03_01::
-    db $ea, "*: There are three", $f1
-    db "kingdoms situated", $fa, $f7
-    db $ef, $ee, "around a lake.", $ef, $ee, "They are to the", $fa, $f7
-    db $ef, $ee, "north, east and", $ef, $ee, "west.", $f7
-    db $f0
+    db "<VOICE1>*: There are three<LINE>"
+    db "kingdoms situated<PROMPT>"
+    db "<NEXT>around a lake."
+    db "<NEXT>They are to the<PROMPT>"
+    db "<NEXT>north, east and"
+    db "<NEXT>west.<WAIT>"
+    db "@"
 
 Message_03_02::
-    db $ea, "*: Travel north", $f1
-    db "along the mountain", $fa, $f7
-    db $ef, $ee, "range, and you'll", $ef, $ee, "find a spring.", $fa, $f7
-    db $ef, $ee, "An elemental", $ef, $ee, "spirit of great", $fa, $f7
-    db $ef, $ee, "beauty is said to", $ef, $ee, "live there.", $fa, $f7
-    db $ef, $ee, "She is supposed to", $ef, $ee, "be a kindly spirit", $fa, $f7
-    db $ef, $ee, "who watches over", $ef, $ee, "people.", $fa, $f7
-    db $ef, $ee, "I", $44, " like to see", $ef, $ee, "her before I die", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Travel north<LINE>"
+    db "along the mountain<PROMPT>"
+    db "<NEXT>range, and you'll"
+    db "<NEXT>find a spring.<PROMPT>"
+    db "<NEXT>An elemental"
+    db "<NEXT>spirit of great<PROMPT>"
+    db "<NEXT>beauty is said to"
+    db "<NEXT>live there.<PROMPT>"
+    db "<NEXT>She is supposed to"
+    db "<NEXT>be a kindly spirit<PROMPT>"
+    db "<NEXT>who watches over"
+    db "<NEXT>people.<PROMPT>"
+    db "<NEXT>I", $44, " like to see"
+    db "<NEXT>her before I die…<WAIT>"
+    db "@"
 
 Message_03_03::
-    db $ea, "*: The winter here", $f1
-    db "is harsh.", $fa, $f7
-    db $ef, $ee, "Stay outside and", $ef, $ee, "your eyelashes'll", $fa, $f7
-    db $ef, $ee, "freeze and clamp", $ef, $ee, "your eyes shut!", $f7
-    db $f0
+    db "<VOICE1>*: The winter here<LINE>"
+    db "is harsh.<PROMPT>"
+    db "<NEXT>Stay outside and"
+    db "<NEXT>your eyelashes'll<PROMPT>"
+    db "<NEXT>freeze and clamp"
+    db "<NEXT>your eyes shut!<WAIT>"
+    db "@"
 
 Message_03_04::
-    db $eb, "*: Listen, did you", $f1
-    db "hear?", $fa, $f7
-    db $ef, $ee, "They found gold on", $ef, $ee, "the border with", $fa, $f7
-    db $ef, $ee, "the kingdom in the", $ef, $ee, "west.", $fa, $f7
-    db $ef, $ee, "The northern", $ef, $ee, "kingdom found it", $fa, $f7
-    db $ef, $ee, "first, but the", $ef, $ee, "western kingdom is", $fa, $f7
-    db $ef, $ee, "trying to hoard", $ef, $ee, "all the gold!", $f7
-    db $f0
+    db "<VOICE2>*: Listen, did you<LINE>"
+    db "hear?<PROMPT>"
+    db "<NEXT>They found gold on"
+    db "<NEXT>the border with<PROMPT>"
+    db "<NEXT>the kingdom in the"
+    db "<NEXT>west.<PROMPT>"
+    db "<NEXT>The northern"
+    db "<NEXT>kingdom found it<PROMPT>"
+    db "<NEXT>first, but the"
+    db "<NEXT>western kingdom is<PROMPT>"
+    db "<NEXT>trying to hoard"
+    db "<NEXT>all the gold!<WAIT>"
+    db "@"
 
 Message_03_05::
-    db $ea, "*: Urrrrrgh! The", $f1
-    db "western wretches!", $fa, $f7
-    db $ef, $ee, "The mine on the", $ef, $ee, "border is on a", $fa, $f7
-    db $ef, $ee, "rich vein of pure", $ef, $ee, "gold!", $fa, $f7
-    db $ef, $ee, "We should dig up", $ef, $ee, "the gold before", $fa, $f7
-    db $ef, $ee, "the westerners", $ef, $ee, "take it!", $f7
-    db $f0
+    db "<VOICE1>*: Urrrrrgh! The<LINE>"
+    db "western wretches!<PROMPT>"
+    db "<NEXT>The mine on the"
+    db "<NEXT>border is on a<PROMPT>"
+    db "<NEXT>rich vein of pure"
+    db "<NEXT>gold!<PROMPT>"
+    db "<NEXT>We should dig up"
+    db "<NEXT>the gold before<PROMPT>"
+    db "<NEXT>the westerners"
+    db "<NEXT>take it!<WAIT>"
+    db "@"
 
 Message_03_06::
-    db $ea, "*: Everyone's been", $f1
-    db "acting strangely", $fa, $f7
-    db $ef, $ee, "since they found", $ef, $ee, "gold in the mine.", $fa, $f7
-    db $ef, $ee, "Even the King has", $ef, $ee, "changed", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Everyone's been<LINE>"
+    db "acting strangely<PROMPT>"
+    db "<NEXT>since they found"
+    db "<NEXT>gold in the mine.<PROMPT>"
+    db "<NEXT>Even the King has"
+    db "<NEXT>changed…<WAIT>"
+    db "@"
 
 Message_03_07::
-    db $eb, "*: The spring in", $f1
-    db "the north, where", $fa, $f7
-    db $ef, $ee, "the elemental", $ef, $ee, "lives, has frozen.", $fa, $f7
-    db $ef, $ee, "It has never done", $ef, $ee, "that before, even", $fa, $f7
-    db $ef, $ee, "in the worst cold", $ef, $ee, "spells.", $fa, $f7
-    db $ef, $ee, "The spring froze", $ef, $ee, "when the gold was", $fa, $f7
-    db $ef, $ee, "found. Could it be", $ef, $ee, "mere coincidence?", $f7
-    db $f0
+    db "<VOICE2>*: The spring in<LINE>"
+    db "the north, where<PROMPT>"
+    db "<NEXT>the elemental"
+    db "<NEXT>lives, has frozen.<PROMPT>"
+    db "<NEXT>It has never done"
+    db "<NEXT>that before, even<PROMPT>"
+    db "<NEXT>in the worst cold"
+    db "<NEXT>spells.<PROMPT>"
+    db "<NEXT>The spring froze"
+    db "<NEXT>when the gold was<PROMPT>"
+    db "<NEXT>found. Could it be"
+    db "<NEXT>mere coincidence?<WAIT>"
+    db "@"
 
 Message_03_08::
-    db $ea, "*: Have you heard", $f1
-    db "about the spirit", $fa, $f7
-    db $ef, $ee, "in the spring?", $ef, $ee, $ff, $f0
+    db "<VOICE1>*: Have you heard<LINE>"
+    db "about the spirit<PROMPT>"
+    db "<NEXT>in the spring?"
+    db "<NEXT><CHOICE>"
+    db "@"
 
 Message_03_09::
-    db $ea, "*: A long time ago", $f1
-    db "the spirit made a", $fa, $f7
-    db $ef, $ee, "shield using her", $ef, $ee, "mystical powers.", $fa, $f7
-    db $ef, $ee, "The shield floated", $ef, $ee, "into the sky where", $fa, $f7
-    db $ef, $ee, "it grew to an", $ef, $ee, "enormous size.", $fa, $f7
-    db $ef, $ee, "The shield guarded", $ef, $ee, "people for many", $fa, $f7
-    db $ef, $ee, "years from awful", $ef, $ee, "blizzards.", $fa, $f7
-    db $ef, $ee, "Over time, the", $ef, $ee, "shield shrank back", $fa, $f7
-    db $ef, $ee, "in size and fell", $ef, $ee, "from the sky.", $fa, $f7
-    db $ef, $ee, "It was called the", $ef, $ee, "SkyShield.", $fa, $f7
-    db $ef, $ee, "It is now interred", $ef, $ee, "in the spring.", $f7
-    db $f0
+    db "<VOICE1>*: A long time ago<LINE>"
+    db "the spirit made a<PROMPT>"
+    db "<NEXT>shield using her"
+    db "<NEXT>mystical powers.<PROMPT>"
+    db "<NEXT>The shield floated"
+    db "<NEXT>into the sky where<PROMPT>"
+    db "<NEXT>it grew to an"
+    db "<NEXT>enormous size.<PROMPT>"
+    db "<NEXT>The shield guarded"
+    db "<NEXT>people for many<PROMPT>"
+    db "<NEXT>years from awful"
+    db "<NEXT>blizzards.<PROMPT>"
+    db "<NEXT>Over time, the"
+    db "<NEXT>shield shrank back<PROMPT>"
+    db "<NEXT>in size and fell"
+    db "<NEXT>from the sky.<PROMPT>"
+    db "<NEXT>It was called the"
+    db "<NEXT>SkyShield.<PROMPT>"
+    db "<NEXT>It is now interred"
+    db "<NEXT>in the spring.<WAIT>"
+    db "@"
 
 Message_03_0A::
-    db $ea, "*: Many years ago,", $f1
-    db "our ancestors came", $fa, $f7
-    db $ef, $ee, "to this land after", $ef, $ee, "a long journey.", $fa, $f7
-    db $ef, $ee, "They were in a", $ef, $ee, "precarious state", $fa, $f7
-    db $ef, $ee, "because of the", $ef, $ee, "vicious cold.", $fa, $f7
-    db $ef, $ee, "The spring's", $ef, $ee, "spirit took pity", $fa, $f7
-    db $ef, $ee, "on them and used", $ef, $ee, "her power to melt", $fa, $f7
-    db $ef, $ee, "the ice and", $ef, $ee, "relieve the cold.", $fa, $f7
-    db $ef, $ee, "Since then, the", $ef, $ee, "spirit has never", $fa, $f7
-    db $ef, $ee, "appeared before", $ef, $ee, "us, but she still", $fa, $f7
-    db $ef, $ee, "watches over us", $ef, $ee, "with compassion.", $f7
-    db $f0
+    db "<VOICE1>*: Many years ago,<LINE>"
+    db "our ancestors came<PROMPT>"
+    db "<NEXT>to this land after"
+    db "<NEXT>a long journey.<PROMPT>"
+    db "<NEXT>They were in a"
+    db "<NEXT>precarious state<PROMPT>"
+    db "<NEXT>because of the"
+    db "<NEXT>vicious cold.<PROMPT>"
+    db "<NEXT>The spring's"
+    db "<NEXT>spirit took pity<PROMPT>"
+    db "<NEXT>on them and used"
+    db "<NEXT>her power to melt<PROMPT>"
+    db "<NEXT>the ice and"
+    db "<NEXT>relieve the cold.<PROMPT>"
+    db "<NEXT>Since then, the"
+    db "<NEXT>spirit has never<PROMPT>"
+    db "<NEXT>appeared before"
+    db "<NEXT>us, but she still<PROMPT>"
+    db "<NEXT>watches over us"
+    db "<NEXT>with compassion.<WAIT>"
+    db "@"
 
 Message_03_0B::
-    db $eb, "*: Around these", $f1
-    db "parts, we get a", $fa, $f7
-    db $ef, $ee, "lot of star spuds", $ef, $ee, "as our food.", $fa, $f7
-    db $ef, $ee, "They're sort of", $ef, $ee, "like potatoes, but", $fa, $f7
-    db $ef, $ee, "they grow by the", $ef, $ee, "light of stars.", $fa, $f7
-    db $ef, $ee, "They're gifts from", $ef, $ee, "the spirit.", $fa, $f7
-    db $ef, $ee, "Huh? Log's Navel?", $ef, $ee, "They're just spuds.", $f7
-    db $f0
+    db "<VOICE2>*: Around these<LINE>"
+    db "parts, we get a<PROMPT>"
+    db "<NEXT>lot of star spuds"
+    db "<NEXT>as our food.<PROMPT>"
+    db "<NEXT>They're sort of"
+    db "<NEXT>like potatoes, but<PROMPT>"
+    db "<NEXT>they grow by the"
+    db "<NEXT>light of stars.<PROMPT>"
+    db "<NEXT>They're gifts from"
+    db "<NEXT>the spirit.<PROMPT>"
+    db "<NEXT>Huh? Log's Navel?"
+    db "<NEXT>They're just spuds.<WAIT>"
+    db "@"
 
 Message_03_0C::
-    db $ea, "*: It's become much", $f1
-    db "colder.", $fa, $f7
-    db $ef, $ee, "We may need the", $ef, $ee, "help of the spirit", $fa, $f7
-    db $ef, $ee, "again to break the", $ef, $ee, "cold spell.", $f7
-    db $f0
+    db "<VOICE1>*: It's become much<LINE>"
+    db "colder.<PROMPT>"
+    db "<NEXT>We may need the"
+    db "<NEXT>help of the spirit<PROMPT>"
+    db "<NEXT>again to break the"
+    db "<NEXT>cold spell.<WAIT>"
+    db "@"
 
 Message_03_0D::
-    db $ea, "*: Welcome to our", $f1
-    db "church.", $fa, $f7
-    db $ef, $ee, "How may I be of", $ef, $ee, "service?", $f7
-    db $f0
+    db "<VOICE1>*: Welcome to our<LINE>"
+    db "church.<PROMPT>"
+    db "<NEXT>How may I be of"
+    db "<NEXT>service?<WAIT>"
+    db "@"
 
 Message_03_0E::
-    db $ea, "*: His Majesty is", $f1
-    db "in talks with the", $fa, $f7
-    db $ef, $ee, "western kingdom's", $ef, $ee, "representatives.", $fa, $f7
-    db $ef, $ee, "He has no time to", $ef, $ee, "deal with a child.", $fa, $f7
-    db $ef, $ee, "Well, there was", $ef, $ee, "another kid, but", $fa, $f7
-    db $ef, $ee, "he claimed to be a", $ef, $ee, "prince somewhere.", $fa, $f7
-    db $ef, $ee, "We had to let him", $ef, $ee, "through.", $f7
-    db $f0
+    db "<VOICE1>*: His Majesty is<LINE>"
+    db "in talks with the<PROMPT>"
+    db "<NEXT>western kingdom's"
+    db "<NEXT>representatives.<PROMPT>"
+    db "<NEXT>He has no time to"
+    db "<NEXT>deal with a child.<PROMPT>"
+    db "<NEXT>Well, there was"
+    db "<NEXT>another kid, but<PROMPT>"
+    db "<NEXT>he claimed to be a"
+    db "<NEXT>prince somewhere.<PROMPT>"
+    db "<NEXT>We had to let him"
+    db "<NEXT>through.<WAIT>"
+    db "@"
 
 Message_03_0F::
-    db $ea, "*: The mine on the", $f1
-    db "western border is", $fa, $f7
-    db $ef, $ee, "closed right now.", $ef, $ee, "It will reopen", $fa, $f7
-    db $ef, $ee, "when the trouble", $ef, $ee, "is solved.", $f7
-    db $f0
+    db "<VOICE1>*: The mine on the<LINE>"
+    db "western border is<PROMPT>"
+    db "<NEXT>closed right now."
+    db "<NEXT>It will reopen<PROMPT>"
+    db "<NEXT>when the trouble"
+    db "<NEXT>is solved.<WAIT>"
+    db "@"
 
 Message_03_10::
-    db $ea, "*: Welcome! How may", $f1
-    db "I serve you today?", $f7
-    db $f0
+    db "<VOICE1>*: Welcome! How may<LINE>"
+    db "I serve you today?<WAIT>"
+    db "@"
 
 Message_03_11::
-    db "*: ", $f9, "0 peered", $f1
-    db "into the vase.", $fa, $f7
-    db $ef, $ee, "It was filled with", $ef, $ee, "lumpy potatoes.", $f7
-    db $f0
+    db "*: <BUF0> peered<LINE>"
+    db "into the vase.<PROMPT>"
+    db "<NEXT>It was filled with"
+    db "<NEXT>lumpy potatoes.<WAIT>"
+    db "@"
 
 Message_03_12::
-    db $f9, "0 peered into", $f1
-    db "the barrel.", $fa, $f7
-    db $ef, $ee, "It was filled with", $ef, $ee, "black rocks.", $f7
-    db $f0
+    db "<BUF0> peered into<LINE>"
+    db "the barrel.<PROMPT>"
+    db "<NEXT>It was filled with"
+    db "<NEXT>black rocks.<WAIT>"
+    db "@"
 
 Message_03_13::
-    db $f9, "0 peered into", $f1
-    db "the oven.", $fa, $f7
-    db $ef, $ee, "It felt just a", $ef, $ee, "little warm.", $f7
-    db $f0
+    db "<BUF0> peered into<LINE>"
+    db "the oven.<PROMPT>"
+    db "<NEXT>It felt just a"
+    db "<NEXT>little warm.<WAIT>"
+    db "@"
 
 Message_03_14::
-    db $f9, "0 tried to", $f1
-    db "open the chest.", $fa, $f7
-    db $ef, $ee, "But the treasure", $ef, $ee, "chest was locked.", $f7
-    db $f0
+    db "<BUF0> tried to<LINE>"
+    db "open the chest.<PROMPT>"
+    db "<NEXT>But the treasure"
+    db "<NEXT>chest was locked.<WAIT>"
+    db "@"
 
 Message_03_15::
-    db $ea, "*: The border is", $f1
-    db "closed, so I can't", $fa, $f7
-    db $ef, $ee, "get to the western", $ef, $ee, "kingdom.", $fa, $f7
-    db $ef, $ee, "That's the only", $ef, $ee, "way to cross the", $fa, $f7
-    db $ef, $ee, "mountains though.", $ef, $ee, "What a headache!", $f7
-    db $f0
+    db "<VOICE1>*: The border is<LINE>"
+    db "closed, so I can't<PROMPT>"
+    db "<NEXT>get to the western"
+    db "<NEXT>kingdom.<PROMPT>"
+    db "<NEXT>That's the only"
+    db "<NEXT>way to cross the<PROMPT>"
+    db "<NEXT>mountains though."
+    db "<NEXT>What a headache!<WAIT>"
+    db "@"
 
 Message_03_16::
-    db $f9, "0 checked the", $f1
-    db "shield.", $fa, $f7
-    db $ef, $ee, "A beautiful voice", $ef, $ee, "echoed.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "shield.<PROMPT>"
+    db "<NEXT>A beautiful voice"
+    db "<NEXT>echoed.<WAIT>"
+    db "@"
 
 Message_03_17::
-    db $eb, "*: I am surprised", $f1
-    db "that you hear me.", $fa, $f7
-    db $ef, $ee, "You aren't from", $ef, $ee, "this world.", $fa, $f7
-    db $ef, $ee, "I am the elemental", $ef, $ee, "spirit who guards", $fa, $f7
-    db $ef, $ee, "over this world.", $ef, $ee, "At least I did.", $fa, $f7
-    db $ef, $ee, "I had lost my", $ef, $ee, "power, you see.", $fa, $f7
-    db $ef, $ee, "I was rebuilding", $ef, $ee, "my power to make", $fa, $f7
-    db $ef, $ee, "my return to the", $ef, $ee, "people, but some", $fa, $f7
-    db $ef, $ee, "being cast a", $ef, $ee, "shadow over the", $fa, $f7
-    db $ef, $ee, "hearts of the", $ef, $ee, "people.", $fa, $f7
-    db $ef, $ee, "Even my spring", $ef, $ee, "finally froze.", $fa, $f7
-    db $ef, $ee, "If peace returns", $ef, $ee, "to the souls of", $fa, $f7
-    db $ef, $ee, "people, I too", $ef, $ee, "will be saved.", $fa, $f7
-    db $ef, $ee, "I sense a magical", $ef, $ee, "power in you.", $fa, $f7
-    db $ef, $ee, "Will you restore", $ef, $ee, "peace to people?", $ff, $f0
+    db "<VOICE2>*: I am surprised<LINE>"
+    db "that you hear me.<PROMPT>"
+    db "<NEXT>You aren't from"
+    db "<NEXT>this world.<PROMPT>"
+    db "<NEXT>I am the elemental"
+    db "<NEXT>spirit who guards<PROMPT>"
+    db "<NEXT>over this world."
+    db "<NEXT>At least I did.<PROMPT>"
+    db "<NEXT>I had lost my"
+    db "<NEXT>power, you see.<PROMPT>"
+    db "<NEXT>I was rebuilding"
+    db "<NEXT>my power to make<PROMPT>"
+    db "<NEXT>my return to the"
+    db "<NEXT>people, but some<PROMPT>"
+    db "<NEXT>being cast a"
+    db "<NEXT>shadow over the<PROMPT>"
+    db "<NEXT>hearts of the"
+    db "<NEXT>people.<PROMPT>"
+    db "<NEXT>Even my spring"
+    db "<NEXT>finally froze.<PROMPT>"
+    db "<NEXT>If peace returns"
+    db "<NEXT>to the souls of<PROMPT>"
+    db "<NEXT>people, I too"
+    db "<NEXT>will be saved.<PROMPT>"
+    db "<NEXT>I sense a magical"
+    db "<NEXT>power in you.<PROMPT>"
+    db "<NEXT>Will you restore"
+    db "<NEXT>peace to people?<CHOICE>"
+    db "@"
 
 Message_03_18::
-    db $eb, "*: You will?", $f1
-    db "No words of thanks", $fa, $f7
-    db $ef, $ee, "can ever be enough", $ef, $ee, "for what I feel.", $fa, $f7
-    db $ef, $ee, "If you restore", $ef, $ee, "this world's peace,", $fa, $f7
-    db $ef, $ee, "I will give you", $ef, $ee, "this Sky Shield.", $fa, $f7
-    db $ef, $ee, "Take this Crest,", $ef, $ee, "child.", $fa, $f7
-    db $ef, $ee, "It shows that you", $ef, $ee, "act as my envoy.", $fa, $f7
-    db $ef, $ee, "It will let you", $ef, $ee, "into castles.", $f7
-    db $f0
+    db "<VOICE2>*: You will?<LINE>"
+    db "No words of thanks<PROMPT>"
+    db "<NEXT>can ever be enough"
+    db "<NEXT>for what I feel.<PROMPT>"
+    db "<NEXT>If you restore"
+    db "<NEXT>this world's peace,<PROMPT>"
+    db "<NEXT>I will give you"
+    db "<NEXT>this Sky Shield.<PROMPT>"
+    db "<NEXT>Take this Crest,"
+    db "<NEXT>child.<PROMPT>"
+    db "<NEXT>It shows that you"
+    db "<NEXT>act as my envoy.<PROMPT>"
+    db "<NEXT>It will let you"
+    db "<NEXT>into castles.<WAIT>"
+    db "@"
 
 Message_03_19::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $ef, $ee, $f9, "0 obtained the", $ef, $ee, "Crest.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<NEXT><BUF0> obtained the"
+    db "<NEXT>Crest.<WAIT>"
+    db "@"
 
 Message_03_1A::
-    db $eb, "*: You may think", $f1
-    db "terrible of me for", $fa, $f7
-    db $ef, $ee, "asking you, a", $ef, $ee, "total stranger, to", $fa, $f7
-    db $ef, $ee, "bear such a heavy", $ef, $ee, "burden", $a4, $fa, $f7
-    db $ef, $ee, "But only you seem", $ef, $ee, "to hear my voice.", $fa, $f7
-    db $ef, $ee, "Please. You are my", $ef, $ee, "only hope.", $f7
-    db $f0
+    db "<VOICE2>*: You may think<LINE>"
+    db "terrible of me for<PROMPT>"
+    db "<NEXT>asking you, a"
+    db "<NEXT>total stranger, to<PROMPT>"
+    db "<NEXT>bear such a heavy"
+    db "<NEXT>burden…<PROMPT>"
+    db "<NEXT>But only you seem"
+    db "<NEXT>to hear my voice.<PROMPT>"
+    db "<NEXT>Please. You are my"
+    db "<NEXT>only hope.<WAIT>"
+    db "@"
 
 Message_03_1B::
-    db $eb, "*: If you restore", $f1
-    db "this world's peace,", $fa, $f7
-    db $ef, $ee, "I will give you", $ef, $ee, "this Sky Shield.", $fa, $f7
-    db $ef, $ee, "My Crest will", $ef, $ee, "allow entry into", $fa, $f7
-    db $ef, $ee, "castles as my", $ef, $ee, "envoy.", $f7
-    db $f0
+    db "<VOICE2>*: If you restore<LINE>"
+    db "this world's peace,<PROMPT>"
+    db "<NEXT>I will give you"
+    db "<NEXT>this Sky Shield.<PROMPT>"
+    db "<NEXT>My Crest will"
+    db "<NEXT>allow entry into<PROMPT>"
+    db "<NEXT>castles as my"
+    db "<NEXT>envoy.<WAIT>"
+    db "@"
 
 Message_03_1C::
-    db $ea, "*: What is that", $f1
-    db "dirty medal?", $fa, $f7
-    db $ef, $ee, "The spirit's Crest!", $ef, $ee, "You're an envoy!", $fa, $f7
-    db $ef, $ee, "I beg your pardon!", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: What is that<LINE>"
+    db "dirty medal?<PROMPT>"
+    db "<NEXT>The spirit's Crest!"
+    db "<NEXT>You're an envoy!<PROMPT>"
+    db "<NEXT>I beg your pardon!"
+    db "<NEXT><WAIT>"
+    db "@"
 
 Message_03_1D::
-    db $ea, "*: Please enter,", $f1
-    db "your envoyship!", $f7
-    db $f0
+    db "<VOICE1>*: Please enter,<LINE>"
+    db "your envoyship!<WAIT>"
+    db "@"
 
 Message_03_1E::
-    db $ea, "*: His Majesty has", $f1
-    db "been cranky", $a4, $fa, $f7
-    db $ef, $ee, "Is the trouble at", $ef, $ee, "the mine weighing", $fa, $f7
-    db $ef, $ee, "heavily on his", $ef, $ee, "mind?", $f7
-    db $f0
+    db "<VOICE1>*: His Majesty has<LINE>"
+    db "been cranky…<PROMPT>"
+    db "<NEXT>Is the trouble at"
+    db "<NEXT>the mine weighing<PROMPT>"
+    db "<NEXT>heavily on his"
+    db "<NEXT>mind?<WAIT>"
+    db "@"
 
 Message_03_1F::
-    db $ea, "*: After the gold", $f1
-    db "discovery, our", $fa, $f7
-    db $ef, $ee, "relationship with", $ef, $ee, "the west soured.", $fa, $f7
-    db $ef, $ee, "It might lead to", $ef, $ee, "war", $a4, " ", $a4, "Shudder", $a4, $f7
-    db $f0
+    db "<VOICE1>*: After the gold<LINE>"
+    db "discovery, our<PROMPT>"
+    db "<NEXT>relationship with"
+    db "<NEXT>the west soured.<PROMPT>"
+    db "<NEXT>It might lead to"
+    db "<NEXT>war… …Shudder…<WAIT>"
+    db "@"
 
 Message_03_20::
-    db $ea, "*: I remember the", $f1
-    db "King to be placid,", $fa, $f7
-    db $ef, $ee, "but he has been", $ef, $ee, "working hard as if", $fa, $f7
-    db $ef, $ee, "he were possessed", $ef, $ee, "of late.", $f7
-    db $f0
+    db "<VOICE1>*: I remember the<LINE>"
+    db "King to be placid,<PROMPT>"
+    db "<NEXT>but he has been"
+    db "<NEXT>working hard as if<PROMPT>"
+    db "<NEXT>he were possessed"
+    db "<NEXT>of late.<WAIT>"
+    db "@"
 
 Message_03_21::
-    db $ea, "*: Ah, you are the", $f1
-    db "spirit's envoy.", $fa, $f7
-    db $ef, $ee, "His Majesty is", $ef, $ee, "beyond here.", $fa, $f7
-    db $ef, $ee, "I ask that you be", $ef, $ee, "on your best", $fa, $f7
-    db $ef, $ee, "behavior.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: Ah, you are the<LINE>"
+    db "spirit's envoy.<PROMPT>"
+    db "<NEXT>His Majesty is"
+    db "<NEXT>beyond here.<PROMPT>"
+    db "<NEXT>I ask that you be"
+    db "<NEXT>on your best<PROMPT>"
+    db "<NEXT>behavior."
+    db "<NEXT><WAIT>"
+    db "@"
 
 Message_03_22::
-    db $ea, "*: You're the envoy?", $f1
-    db $a4, "Well, no matter!", $fa, $f7
-    db $ef, $ee, "We had started", $ef, $ee, "mining the", $fa, $f7
-    db $ef, $ee, "mountains on the", $ef, $ee, "border first.", $fa, $f7
-    db $ef, $ee, "The west comes", $ef, $ee, "along later and", $fa, $f7
-    db $ef, $ee, "demands mining", $ef, $ee, "rights?", $fa, $f7
-    db $ef, $ee, "Pah! The brazen", $ef, $ee, "nerve of them!", $fa, $f7
-    db $ef, $ee, "This problem is", $ef, $ee, "solved by the west", $fa, $f7
-    db $ef, $ee, "abandoning their", $ef, $ee, "frivolous claim.", $fa, $f7
-    db $ef, $ee, "Until then, the", $ef, $ee, "border is closed!", $f7
-    db $f0
+    db "<VOICE1>*: You're the envoy?<LINE>"
+    db "…Well, no matter!<PROMPT>"
+    db "<NEXT>We had started"
+    db "<NEXT>mining the<PROMPT>"
+    db "<NEXT>mountains on the"
+    db "<NEXT>border first.<PROMPT>"
+    db "<NEXT>The west comes"
+    db "<NEXT>along later and<PROMPT>"
+    db "<NEXT>demands mining"
+    db "<NEXT>rights?<PROMPT>"
+    db "<NEXT>Pah! The brazen"
+    db "<NEXT>nerve of them!<PROMPT>"
+    db "<NEXT>This problem is"
+    db "<NEXT>solved by the west<PROMPT>"
+    db "<NEXT>abandoning their"
+    db "<NEXT>frivolous claim.<PROMPT>"
+    db "<NEXT>Until then, the"
+    db "<NEXT>border is closed!<WAIT>"
+    db "@"
 
 Message_03_23::
-    db $ea, "*: His Majesty is", $f1
-    db "furious over the", $fa, $f7
-    db $ef, $ee, "western kingdom's", $ef, $ee, "conduct.", $fa, $f7
-    db $ef, $ee, "He isn't open to", $ef, $ee, "reason anymore.", $f7
-    db $f0
+    db "<VOICE1>*: His Majesty is<LINE>"
+    db "furious over the<PROMPT>"
+    db "<NEXT>western kingdom's"
+    db "<NEXT>conduct.<PROMPT>"
+    db "<NEXT>He isn't open to"
+    db "<NEXT>reason anymore.<WAIT>"
+    db "@"
 
 Message_03_24::
-    db $ea, "*: This tunnel goes", $f1
-    db "to a port.", $fa, $f7
-    db $ef, $ee, "The lake is frozen", $ef, $ee, "around it though,", $fa, $f7
-    db $ef, $ee, "so now it can't", $ef, $ee, "serve as a port.", $f7
-    db $f0
+    db "<VOICE1>*: This tunnel goes<LINE>"
+    db "to a port.<PROMPT>"
+    db "<NEXT>The lake is frozen"
+    db "<NEXT>around it though,<PROMPT>"
+    db "<NEXT>so now it can't"
+    db "<NEXT>serve as a port.<WAIT>"
+    db "@"
 
 Message_03_25::
-    db $ea, "*: This is the port", $f1
-    db "of Nofor.", $f7
-    db $f0
+    db "<VOICE1>*: This is the port<LINE>"
+    db "of Nofor.<WAIT>"
+    db "@"
 
 Message_03_26::
-    db $ea, "*: It's useless!", $f1
-    db "Beyond useless!", $fa, $f7
-    db $ef, $ee, "The ice has the", $ef, $ee, "port clogged.", $fa, $f7
-    db $ef, $ee, "No ships can sail.", $ef, $ee, "I'll go bankrupt!", $f7
-    db $f0
+    db "<VOICE1>*: It's useless!<LINE>"
+    db "Beyond useless!<PROMPT>"
+    db "<NEXT>The ice has the"
+    db "<NEXT>port clogged.<PROMPT>"
+    db "<NEXT>No ships can sail."
+    db "<NEXT>I'll go bankrupt!<WAIT>"
+    db "@"
 
 Message_03_27::
-    db $ea, "*: In all my years,", $f1
-    db "I've never seen", $fa, $f7
-    db $ef, $ee, "the port frozen in", $ef, $ee, "like that.", $f7
-    db $f0
+    db "<VOICE1>*: In all my years,<LINE>"
+    db "I've never seen<PROMPT>"
+    db "<NEXT>the port frozen in"
+    db "<NEXT>like that.<WAIT>"
+    db "@"
 
 Message_03_28::
-    db $eb, "*: Three kingdoms", $f1
-    db "ring this lake.", $fa, $f7
-    db $ef, $ee, "They are in the", $ef, $ee, "north, west and", $fa, $f7
-    db $ef, $ee, "east of the", $ef, $ee, "inland sea.", $fa, $f7
-    db $ef, $ee, "The east is ruled", $ef, $ee, "by Queen Helen.", $fa, $f7
-    db $ef, $ee, "She foresees the", $ef, $ee, "future in her", $fa, $f7
-    db $ef, $ee, "dreams with", $ef, $ee, "amazing accuracy.", $f7
-    db $f0
+    db "<VOICE2>*: Three kingdoms<LINE>"
+    db "ring this lake.<PROMPT>"
+    db "<NEXT>They are in the"
+    db "<NEXT>north, west and<PROMPT>"
+    db "<NEXT>east of the"
+    db "<NEXT>inland sea.<PROMPT>"
+    db "<NEXT>The east is ruled"
+    db "<NEXT>by Queen Helen.<PROMPT>"
+    db "<NEXT>She foresees the"
+    db "<NEXT>future in her<PROMPT>"
+    db "<NEXT>dreams with"
+    db "<NEXT>amazing accuracy.<WAIT>"
+    db "@"
 
 Message_03_29::
-    db $ea, "*: The border?", $f1
-    db "It's not here.", $fa, $f7
-    db $ef, $ee, "The border is at", $ef, $ee, "the gold mine.", $fa, $f7
-    db $ef, $ee, "Go back up through", $ef, $ee, "the tunnel, and go", $fa, $f7
-    db $ef, $ee, "southwest along", $ef, $ee, "the mountains.", $f7
-    db $f0
+    db "<VOICE1>*: The border?<LINE>"
+    db "It's not here.<PROMPT>"
+    db "<NEXT>The border is at"
+    db "<NEXT>the gold mine.<PROMPT>"
+    db "<NEXT>Go back up through"
+    db "<NEXT>the tunnel, and go<PROMPT>"
+    db "<NEXT>southwest along"
+    db "<NEXT>the mountains.<WAIT>"
+    db "@"
 
 Message_03_2A::
-    db $ea, "*: Mama said to", $f1
-    db "stay off the ice.", $fa, $f7
-    db $ef, $ee, "It can break if", $ef, $ee, "it's too thin.", $f7
-    db $f0
+    db "<VOICE1>*: Mama said to<LINE>"
+    db "stay off the ice.<PROMPT>"
+    db "<NEXT>It can break if"
+    db "<NEXT>it's too thin.<WAIT>"
+    db "@"
 
 Message_03_2B::
-    db $ea, "*: We were passing", $f1
-    db "through from the", $fa, $f7
-    db $ef, $ee, "east, but the ice", $ef, $ee, "sealed us in.", $fa, $f7
-    db $ef, $ee, "We've been stuck", $ef, $ee, "here a month.", $f7
-    db $f0
+    db "<VOICE1>*: We were passing<LINE>"
+    db "through from the<PROMPT>"
+    db "<NEXT>east, but the ice"
+    db "<NEXT>sealed us in.<PROMPT>"
+    db "<NEXT>We've been stuck"
+    db "<NEXT>here a month.<WAIT>"
+    db "@"
 
 Message_03_2C::
-    db $eb, "*: They discovered", $f1
-    db "gold at the mine", $fa, $f7
-    db $ef, $ee, "on the western", $ef, $ee, "border!", $fa, $f7
-    db $ef, $ee, "I wish someone", $44, $ef, $ee, "give me some.", $f7
-    db $f0
+    db "<VOICE2>*: They discovered<LINE>"
+    db "gold at the mine<PROMPT>"
+    db "<NEXT>on the western"
+    db "<NEXT>border!<PROMPT>"
+    db "<NEXT>I wish someone", $44
+    db "<NEXT>give me some.<WAIT>"
+    db "@"
 
 Message_03_2D::
-    db $ea, "*: I hear the west", $f1
-    db "and the north are", $fa, $f7
-    db $ef, $ee, "locking horns over", $ef, $ee, "the gold mine.", $fa, $f7
-    db $ef, $ee, "I can feel trouble", $ef, $ee, "stirring", $a4, $f7
-    db $f0
+    db "<VOICE1>*: I hear the west<LINE>"
+    db "and the north are<PROMPT>"
+    db "<NEXT>locking horns over"
+    db "<NEXT>the gold mine.<PROMPT>"
+    db "<NEXT>I can feel trouble"
+    db "<NEXT>stirring…<WAIT>"
+    db "@"
 
 Message_03_2E::
-    db $ea, "*: Do you know Lady", $f1
-    db "Yuna of the west?", $fa, $f7
-    db $ef, $ee, "I heard that she's", $ef, $ee, "really lively.", $fa, $f7
-    db $ef, $ee, "I like cheerfully", $ef, $ee, "loud girls.", $f7
-    db $f0
+    db "<VOICE1>*: Do you know Lady<LINE>"
+    db "Yuna of the west?<PROMPT>"
+    db "<NEXT>I heard that she's"
+    db "<NEXT>really lively.<PROMPT>"
+    db "<NEXT>I like cheerfully"
+    db "<NEXT>loud girls.<WAIT>"
+    db "@"
 
 Message_03_2F::
-    db $ea, "*: The scholar in", $f1
-    db "the tavern said he", $fa, $f7
-    db $ef, $ee, "came from the", $ef, $ee, "eastern kingdom.", $fa, $f7
-    db $ef, $ee, "He knows of every", $ef, $ee, "plant in the area.", $f7
-    db $f0
+    db "<VOICE1>*: The scholar in<LINE>"
+    db "the tavern said he<PROMPT>"
+    db "<NEXT>came from the"
+    db "<NEXT>eastern kingdom.<PROMPT>"
+    db "<NEXT>He knows of every"
+    db "<NEXT>plant in the area.<WAIT>"
+    db "@"
 
 Message_03_30::
-    db $ea, "*: Don't you think", $f1
-    db "it's too expensive?", $fa, $f7
-    db $ef, $ee, "If I had a Gold", $ef, $ee, "Pass, I", $44, " get a", $fa, $f7
-    db $ef, $ee, "bit of a discount,", $ef, $ee, "but even then", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Don't you think<LINE>"
+    db "it's too expensive?<PROMPT>"
+    db "<NEXT>If I had a Gold"
+    db "<NEXT>Pass, I", $44, " get a<PROMPT>"
+    db "<NEXT>bit of a discount,"
+    db "<NEXT>but even then…<WAIT>"
+    db "@"
 
 Message_03_31::
-    db $ea, "*: Welcome! What", $f1
-    db "can I do for you?", $f7
-    db $f0
+    db "<VOICE1>*: Welcome! What<LINE>"
+    db "can I do for you?<WAIT>"
+    db "@"
 
 Message_03_32::
-    db $ea, "*: Greetings! How", $f1
-    db "shall I serve you?", $f7
-    db $f0
+    db "<VOICE1>*: Greetings! How<LINE>"
+    db "shall I serve you?<WAIT>"
+    db "@"
 
 Message_03_33::
-    db $ea, "*: Hello! Have a", $f1
-    db "look at my wares!", $f7
-    db $f0
+    db "<VOICE1>*: Hello! Have a<LINE>"
+    db "look at my wares!<WAIT>"
+    db "@"
 
 Message_03_34::
-    db $ea, "*: We've been full", $f1
-    db "up with sailors", $fa, $f7
-    db $ef, $ee, "who've been stuck", $ef, $ee, "in port.", $fa, $f7
-    db $ef, $ee, "We're doing brisk", $ef, $ee, "business, but the", $fa, $f7
-    db $ef, $ee, "atmosphere-it's", $ef, $ee, "like a funeral.", $fa, $f7
-    db $ef, $ee, "I can understand", $ef, $ee, "why a landlocked", $fa, $f7
-    db $ef, $ee, "sailor would be", $ef, $ee, "down, but", $a4, $f7
-    db $f0
+    db "<VOICE1>*: We've been full<LINE>"
+    db "up with sailors<PROMPT>"
+    db "<NEXT>who've been stuck"
+    db "<NEXT>in port.<PROMPT>"
+    db "<NEXT>We're doing brisk"
+    db "<NEXT>business, but the<PROMPT>"
+    db "<NEXT>atmosphere-it's"
+    db "<NEXT>like a funeral.<PROMPT>"
+    db "<NEXT>I can understand"
+    db "<NEXT>why a landlocked<PROMPT>"
+    db "<NEXT>sailor would be"
+    db "<NEXT>down, but…<WAIT>"
+    db "@"
 
 Message_03_35::
-    db $ea, "*: Urrrp! Hoo,", $f1
-    db "listen to this!", $fa, $f7
-    db $ef, $ee, "My ship, she froze", $ef, $ee, "solid in ice, hey?", $fa, $f7
-    db $ef, $ee, "We left her and", $ef, $ee, "managed to make it", $fa, $f7
-    db $ef, $ee, "ashore barely.", $ef, $ee, "Our cursed luck!", $f7
-    db $f0
+    db "<VOICE1>*: Urrrp! Hoo,<LINE>"
+    db "listen to this!<PROMPT>"
+    db "<NEXT>My ship, she froze"
+    db "<NEXT>solid in ice, hey?<PROMPT>"
+    db "<NEXT>We left her and"
+    db "<NEXT>managed to make it<PROMPT>"
+    db "<NEXT>ashore barely."
+    db "<NEXT>Our cursed luck!<WAIT>"
+    db "@"
 
 Message_03_36::
-    db $eb, "*: ", $a4, "Sigh", $a4, " Isn't that", $f1
-    db "scholar appealing?", $fa, $f7
-    db $ef, $ee, "The intellect in", $ef, $ee, "his eyes", $a4, " Ooh", $a4, $f7
-    db $f0
+    db "<VOICE2>*: …Sigh… Isn't that<LINE>"
+    db "scholar appealing?<PROMPT>"
+    db "<NEXT>The intellect in"
+    db "<NEXT>his eyes… Ooh…<WAIT>"
+    db "@"
 
 Message_03_37::
-    db $ea, "*: I came from the", $f1
-    db "eastern kingdom.", $fa, $f7
-    db $ef, $ee, "I'm a scholar of", $ef, $ee, "plants.", $fa, $f7
-    db $ef, $ee, "My studies have", $ef, $ee, "taken me afar.", $fa, $f7
-    db $ef, $ee, "I", $44, " like to go", $ef, $ee, "back home though.", $fa, $f7
-    db $ef, $ee, "I wonder when the", $ef, $ee, "ships will sail?", $f7
-    db $f0
+    db "<VOICE1>*: I came from the<LINE>"
+    db "eastern kingdom.<PROMPT>"
+    db "<NEXT>I'm a scholar of"
+    db "<NEXT>plants.<PROMPT>"
+    db "<NEXT>My studies have"
+    db "<NEXT>taken me afar.<PROMPT>"
+    db "<NEXT>I", $44, " like to go"
+    db "<NEXT>back home though.<PROMPT>"
+    db "<NEXT>I wonder when the"
+    db "<NEXT>ships will sail?<WAIT>"
+    db "@"
 
 Message_03_38::
-    db $ea, "*: The King of the", $f1
-    db "west is said to", $fa, $f7
-    db $ef, $ee, "dote on his only", $ef, $ee, "daughter.", $fa, $f7
-    db $ef, $ee, "She's supposed to", $ef, $ee, "be a lively kid.", $f7
-    db $f0
+    db "<VOICE1>*: The King of the<LINE>"
+    db "west is said to<PROMPT>"
+    db "<NEXT>dote on his only"
+    db "<NEXT>daughter.<PROMPT>"
+    db "<NEXT>She's supposed to"
+    db "<NEXT>be a lively kid.<WAIT>"
+    db "@"
 
 Message_03_39::
-    db $ea, "*: This is the", $f1
-    db "border we share", $fa, $f7
-    db $ef, $ee, "with the western", $ef, $ee, "kingdom.", $fa, $f7
-    db $ef, $ee, "The cave you see", $ef, $ee, "there is the mine", $fa, $f7
-    db $ef, $ee, "in which gold was", $ef, $ee, "discovered.", $f7
-    db $f0
+    db "<VOICE1>*: This is the<LINE>"
+    db "border we share<PROMPT>"
+    db "<NEXT>with the western"
+    db "<NEXT>kingdom.<PROMPT>"
+    db "<NEXT>The cave you see"
+    db "<NEXT>there is the mine<PROMPT>"
+    db "<NEXT>in which gold was"
+    db "<NEXT>discovered.<WAIT>"
+    db "@"
 
 Message_03_3A::
-    db $ea, "*: The border has", $f1
-    db "been sealed by the", $fa, $f7
-    db $ef, $ee, "King's orders", $ef, $ee, "until the west", $fa, $f7
-    db $ef, $ee, "recognizes the", $ef, $ee, "mine to be ours.", $f7
-    db $f0
+    db "<VOICE1>*: The border has<LINE>"
+    db "been sealed by the<PROMPT>"
+    db "<NEXT>King's orders"
+    db "<NEXT>until the west<PROMPT>"
+    db "<NEXT>recognizes the"
+    db "<NEXT>mine to be ours.<WAIT>"
+    db "@"
 
 Message_03_3B::
-    db $ea, "*: A traveler, are", $f1
-    db "you?", $fa, $f7
-    db $ef, $ee, "Sorry, but I can't", $ef, $ee, "allow you to pass.", $fa, $f7
-    db $ef, $ee, "The west is beyond", $ef, $ee, "here, but they've", $fa, $f7
-    db $ef, $ee, "also been digging", $ef, $ee, "from their side.", $fa, $f7
-    db $ef, $ee, "So our hole and", $ef, $ee, "their hole ended", $fa, $f7
-    db $ef, $ee, "up linking in the", $ef, $ee, "mountain.", $fa, $f7
-    db $ef, $ee, "It's a sticky", $ef, $ee, "little mess.", $f7
-    db $f0
+    db "<VOICE1>*: A traveler, are<LINE>"
+    db "you?<PROMPT>"
+    db "<NEXT>Sorry, but I can't"
+    db "<NEXT>allow you to pass.<PROMPT>"
+    db "<NEXT>The west is beyond"
+    db "<NEXT>here, but they've<PROMPT>"
+    db "<NEXT>also been digging"
+    db "<NEXT>from their side.<PROMPT>"
+    db "<NEXT>So our hole and"
+    db "<NEXT>their hole ended<PROMPT>"
+    db "<NEXT>up linking in the"
+    db "<NEXT>mountain.<PROMPT>"
+    db "<NEXT>It's a sticky"
+    db "<NEXT>little mess.<WAIT>"
+    db "@"
 
 Message_03_3C::
-    db $ea, "*: Our tunneling", $f1
-    db "found gold, but we", $fa, $f7
-    db $ef, $ee, "also ran into the", $ef, $ee, "tunnel the west", $fa, $f7
-    db $ef, $ee, "was boring from", $ef, $ee, "their side.", $fa, $f7
-    db $ef, $ee, "Both sides have", $ef, $ee, "laid claim to the", $fa, $f7
-    db $ef, $ee, "gold and refuse", $ef, $ee, "to concede.", $fa, $f7
-    db $ef, $ee, "That's why we have", $ef, $ee, "this standoff.", $f7
-    db $f0
+    db "<VOICE1>*: Our tunneling<LINE>"
+    db "found gold, but we<PROMPT>"
+    db "<NEXT>also ran into the"
+    db "<NEXT>tunnel the west<PROMPT>"
+    db "<NEXT>was boring from"
+    db "<NEXT>their side.<PROMPT>"
+    db "<NEXT>Both sides have"
+    db "<NEXT>laid claim to the<PROMPT>"
+    db "<NEXT>gold and refuse"
+    db "<NEXT>to concede.<PROMPT>"
+    db "<NEXT>That's why we have"
+    db "<NEXT>this standoff.<WAIT>"
+    db "@"
 
 Message_03_3D::
-    db $ea, "*: This side is the", $f1
-    db "western kingdom!", $fa, $f7
-    db $ef, $ee, "You've come from", $ef, $ee, "the other side!", $fa, $f7
-    db $ef, $ee, "You're from the", $ef, $ee, "north! Be gone!", $f7
-    db $f0
+    db "<VOICE1>*: This side is the<LINE>"
+    db "western kingdom!<PROMPT>"
+    db "<NEXT>You've come from"
+    db "<NEXT>the other side!<PROMPT>"
+    db "<NEXT>You're from the"
+    db "<NEXT>north! Be gone!<WAIT>"
+    db "@"
 
 Message_03_3E::
-    db $ea, "*: The northerners", $ef, $ee, "want our gold!", $fa, $f7
-    db $ef, $ee, "There's no trusting", $ef, $ee, "the greedy scum!", $fa, $f7
-    db $ef, $ee, "They must be", $ef, $ee, "conspiring to take", $fa, $f7
-    db $ef, $ee, "our land too, I", $ef, $ee, "just know it!", $f7
-    db $f0
+    db "<VOICE1>*: The northerners"
+    db "<NEXT>want our gold!<PROMPT>"
+    db "<NEXT>There's no trusting"
+    db "<NEXT>the greedy scum!<PROMPT>"
+    db "<NEXT>They must be"
+    db "<NEXT>conspiring to take<PROMPT>"
+    db "<NEXT>our land too, I"
+    db "<NEXT>just know it!<WAIT>"
+    db "@"
 
 Message_03_3F::
-    db $ea, "*: The northerners", $f1
-    db "muscled in on the", $fa, $f7
-    db $ef, $ee, "gold mine that we", $ef, $ee, "discovered.", $fa, $f7
-    db $ef, $ee, "Can you understand", $ef, $ee, "the arrogance?", $f7
-    db $f0
+    db "<VOICE1>*: The northerners<LINE>"
+    db "muscled in on the<PROMPT>"
+    db "<NEXT>gold mine that we"
+    db "<NEXT>discovered.<PROMPT>"
+    db "<NEXT>Can you understand"
+    db "<NEXT>the arrogance?<WAIT>"
+    db "@"
 
 Message_03_40::
-    db $ea, "*: Heh, you've come", $f1
-    db "way down deep.", $fa, $f7
-    db $ef, $ee, "The monsters are", $ef, $ee, "tough down here!", $f7
-    db $f0
+    db "<VOICE1>*: Heh, you've come<LINE>"
+    db "way down deep.<PROMPT>"
+    db "<NEXT>The monsters are"
+    db "<NEXT>tough down here!<WAIT>"
+    db "@"
 
 Message_03_41::
-    db $ea, "*: There is a", $f1
-    db "boulder blocking", $fa, $f7
-    db $ef, $ee, "the way a little", $ef, $ee, "further ahead.", $fa, $f7
-    db $ef, $ee, "If there was a way", $ef, $ee, "to break it", $a4, $f7
-    db $f0
+    db "<VOICE1>*: There is a<LINE>"
+    db "boulder blocking<PROMPT>"
+    db "<NEXT>the way a little"
+    db "<NEXT>further ahead.<PROMPT>"
+    db "<NEXT>If there was a way"
+    db "<NEXT>to break it…<WAIT>"
+    db "@"
 
 Message_03_42::
-    db $ea, "*: Hurry! We have", $f1
-    db "to beat the swine", $fa, $f7
-    db $ef, $ee, "of the west to the", $ef, $ee, "mine!", $f7
-    db $f0
+    db "<VOICE1>*: Hurry! We have<LINE>"
+    db "to beat the swine<PROMPT>"
+    db "<NEXT>of the west to the"
+    db "<NEXT>mine!<WAIT>"
+    db "@"
 
 Message_03_43::
-    db $ea, "*: The vein of gold", $f1
-    db "is just ahead!", $fa, $f7
-    db $ef, $ee, "Hurry! It's winner", $ef, $ee, "take all!", $f7
-    db $f0
+    db "<VOICE1>*: The vein of gold<LINE>"
+    db "is just ahead!<PROMPT>"
+    db "<NEXT>Hurry! It's winner"
+    db "<NEXT>take all!<WAIT>"
+    db "@"
 
 Message_03_44::
-    db $ea, "*: The gold is", $f1
-    db "ours! The west", $fa, $f7
-    db $ef, $ee, "must not get their", $ef, $ee, "hands on it!", $fa, $f7
-    db $ef, $ee, "Hurry, we're almost", $ef, $ee, "there!", $f7
-    db $f0
+    db "<VOICE1>*: The gold is<LINE>"
+    db "ours! The west<PROMPT>"
+    db "<NEXT>must not get their"
+    db "<NEXT>hands on it!<PROMPT>"
+    db "<NEXT>Hurry, we're almost"
+    db "<NEXT>there!<WAIT>"
+    db "@"
 
 Message_03_45::
-    db $ea, "*: Kid, you have", $f1
-    db "guts to be here.", $f7
-    db $f0
+    db "<VOICE1>*: Kid, you have<LINE>"
+    db "guts to be here.<WAIT>"
+    db "@"
 
 Message_03_46::
-    db $ea, "*: Don't you touch", $f1
-    db "that.", $fa, $f7
-    db $ef, $ee, "If you had only", $ef, $ee, "dreamt of the gold", $fa, $f7
-    db $ef, $ee, "like the fools", $ef, $ee, "outside", $a4, $fa, $f7
-    db $ef, $ee, "Your sneaking", $ef, $ee, "around isn't good", $fa, $f7
-    db $ef, $ee, "for our plans.", $ef, $ee, "You'll have to go.", $f7
-    db $f0
+    db "<VOICE1>*: Don't you touch<LINE>"
+    db "that.<PROMPT>"
+    db "<NEXT>If you had only"
+    db "<NEXT>dreamt of the gold<PROMPT>"
+    db "<NEXT>like the fools"
+    db "<NEXT>outside…<PROMPT>"
+    db "<NEXT>Your sneaking"
+    db "<NEXT>around isn't good<PROMPT>"
+    db "<NEXT>for our plans."
+    db "<NEXT>You'll have to go.<WAIT>"
+    db "@"
 
 Message_03_47::
-    db $ea, "*: You again? I'll", $f1
-    db "have to get ugly.", $f7
-    db $f0
+    db "<VOICE1>*: You again? I'll<LINE>"
+    db "have to get ugly.<WAIT>"
+    db "@"
 
 Message_03_48::
-    db $ea, "*: Darn! Take this!", $f1
-    db "SACRIFICE!", $f7
-    db $f0
+    db "<VOICE1>*: Darn! Take this!<LINE>"
+    db "SACRIFICE!<WAIT>"
+    db "@"
 
 Message_03_49::
-    db $ea, "*: What? What was", $f1
-    db "that explosion?", $f7
-    db $f0
+    db "<VOICE1>*: What? What was<LINE>"
+    db "that explosion?<WAIT>"
+    db "@"
 
 Message_03_4A::
-    db $ea, "*: That dust there", $a4, $f1
-    db "Is that the gold?", $f7
-    db $f0
+    db "<VOICE1>*: That dust there…<LINE>"
+    db "Is that the gold?<WAIT>"
+    db "@"
 
 Message_03_4B::
-    db $ea, "*: What? That's all", $f1
-    db "that there was?", $fa, $f7
-    db $ef, $ee, "You mean to tell", $ef, $ee, "me that we've been", $fa, $f7
-    db $ef, $ee, "acting like", $ef, $ee, "loggerheads over", $fa, $f7
-    db $ef, $ee, "just that?", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: What? That's all<LINE>"
+    db "that there was?<PROMPT>"
+    db "<NEXT>You mean to tell"
+    db "<NEXT>me that we've been<PROMPT>"
+    db "<NEXT>acting like"
+    db "<NEXT>loggerheads over<PROMPT>"
+    db "<NEXT>just that?"
+    db "<NEXT><WAIT>"
+    db "@"
 
 Message_03_4C::
-    db $ea, "*: We", $44, " better get", $f1
-    db "word to the King!", $f7
-    db $f0
+    db "<VOICE1>*: We", $44, " better get<LINE>"
+    db "word to the King!<WAIT>"
+    db "@"
 
 Message_03_4D::
-    db $ea, "*: That's true", $a4, $f1
-    db "I've got to", $a4, $fa, $f7
-    db $ef, $ee, "I have to tell my", $ef, $ee, "King the news!", $f7
-    db $f0
+    db "<VOICE1>*: That's true…<LINE>"
+    db "I've got to…<PROMPT>"
+    db "<NEXT>I have to tell my"
+    db "<NEXT>King the news!<WAIT>"
+    db "@"
 
 Message_03_4E::
-    db $ea, "*: We almost went", $f1
-    db "to war with the", $fa, $f7
-    db $ef, $ee, "west over a tiny", $ef, $ee, "amount of gold.", $fa, $f7
-    db $ef, $ee, "We must have been", $ef, $ee, "possessed.", $f7
-    db $f0
+    db "<VOICE1>*: We almost went<LINE>"
+    db "to war with the<PROMPT>"
+    db "<NEXT>west over a tiny"
+    db "<NEXT>amount of gold.<PROMPT>"
+    db "<NEXT>We must have been"
+    db "<NEXT>possessed.<WAIT>"
+    db "@"
 
 Message_03_4F::
-    db $ea, "*: The King has", $f1
-    db "sealed the border.", $fa, $f7
-    db $ef, $ee, "He suspects that", $ef, $ee, "the whole incident", $fa, $f7
-    db $ef, $ee, "was concocted by", $ef, $ee, "the west.", $f7
-    db $f0
+    db "<VOICE1>*: The King has<LINE>"
+    db "sealed the border.<PROMPT>"
+    db "<NEXT>He suspects that"
+    db "<NEXT>the whole incident<PROMPT>"
+    db "<NEXT>was concocted by"
+    db "<NEXT>the west.<WAIT>"
+    db "@"
 
 Message_03_50::
-    db $ea, "*: We're still under", $f1
-    db "orders to keep the", $fa, $f7
-    db $ef, $ee, "border with the", $ef, $ee, "west sealed.", $fa, $f7
-    db $ef, $ee, "This, despite the", $ef, $ee, "absence of gold.", $fa, $f7
-    db $ef, $ee, "What's gotten into", $ef, $ee, "his Majesty?", $f7
-    db $f0
+    db "<VOICE1>*: We're still under<LINE>"
+    db "orders to keep the<PROMPT>"
+    db "<NEXT>border with the"
+    db "<NEXT>west sealed.<PROMPT>"
+    db "<NEXT>This, despite the"
+    db "<NEXT>absence of gold.<PROMPT>"
+    db "<NEXT>What's gotten into"
+    db "<NEXT>his Majesty?<WAIT>"
+    db "@"
 
 Message_03_51::
-    db $ea, "*: Was that really", $f1
-    db "all the gold?", $fa, $f7
-    db $ef, $ee, "To find out, we've", $ef, $ee, "started excavating", $fa, $f7
-    db $ef, $ee, "together with the", $ef, $ee, "westerners.", $fa, $f7
-    db $ef, $ee, "Once you get to", $ef, $ee, "know them, they're", $fa, $f7
-    db $ef, $ee, "not bad people at", $ef, $ee, "all.", $f7
-    db $f0
+    db "<VOICE1>*: Was that really<LINE>"
+    db "all the gold?<PROMPT>"
+    db "<NEXT>To find out, we've"
+    db "<NEXT>started excavating<PROMPT>"
+    db "<NEXT>together with the"
+    db "<NEXT>westerners.<PROMPT>"
+    db "<NEXT>Once you get to"
+    db "<NEXT>know them, they're<PROMPT>"
+    db "<NEXT>not bad people at"
+    db "<NEXT>all.<WAIT>"
+    db "@"
 
 Message_03_52::
-    db $ea, "*: I've heard", $a4, $f1
-    db $fa, $f7
-    db $ef, $ee, $f3, "There was almost", $ef, $ee, "no gold at all.", $fa, $f7
-    db $ef, $ee, "What purpose did", $ef, $ee, "we serve?", $f7
-    db $f0
+    db "<VOICE1>*: I've heard…<LINE>"
+    db "<PROMPT>"
+    db "<NEXT>"
+    db "<HOME>There was almost"
+    db "<NEXT>no gold at all.<PROMPT>"
+    db "<NEXT>What purpose did"
+    db "<NEXT>we serve?<WAIT>"
+    db "@"
 
 Message_03_53::
-    db $ea, "*: The north's King", $f1
-    db "still suspects us.", $fa, $f7
-    db $ef, $ee, "I'm sorry, but we", $ef, $ee, "can't let you pass.", $f7
-    db $f0
+    db "<VOICE1>*: The north's King<LINE>"
+    db "still suspects us.<PROMPT>"
+    db "<NEXT>I'm sorry, but we"
+    db "<NEXT>can't let you pass.<WAIT>"
+    db "@"
 
 Message_03_54::
-    db $ea, "*: We're not certain", $f1
-    db "about what we'll", $fa, $f7
-    db $ef, $ee, "find, but we'll", $ef, $ee, "keep picking away.", $f7
-    db $f0
+    db "<VOICE1>*: We're not certain<LINE>"
+    db "about what we'll<PROMPT>"
+    db "<NEXT>find, but we'll"
+    db "<NEXT>keep picking away.<WAIT>"
+    db "@"
 
 Message_03_55::
-    db $eb, "*: I've heard about", $f1
-    db "the mine.", $fa, $f7
-    db $ef, $ee, "Isn't it horrible?", $ef, $ee, "Squabbling over", $fa, $f7
-    db $ef, $ee, "gold that wasn't", $ef, $ee, "even there", $a4, $f7
-    db $f0
+    db "<VOICE2>*: I've heard about<LINE>"
+    db "the mine.<PROMPT>"
+    db "<NEXT>Isn't it horrible?"
+    db "<NEXT>Squabbling over<PROMPT>"
+    db "<NEXT>gold that wasn't"
+    db "<NEXT>even there…<WAIT>"
+    db "@"
 
 Message_03_56::
-    db $ea, "*: There's just no", $f1
-    db "telling what greed", $fa, $f7
-    db $ef, $ee, "will make people", $ef, $ee, "do", $a4, $f7
-    db $f0
+    db "<VOICE1>*: There's just no<LINE>"
+    db "telling what greed<PROMPT>"
+    db "<NEXT>will make people"
+    db "<NEXT>do…<WAIT>"
+    db "@"
 
 Message_03_57::
-    db $ea, "*: Did you know?", $f1
-    db "There is a tunnel", $fa, $f7
-    db $ef, $ee, "on the way to the", $ef, $ee, "border.", $fa, $f7
-    db $ef, $ee, "It leads to a", $ef, $ee, "little port.", $fa, $f7
-    db $ef, $ee, "If you're going to", $ef, $ee, "the west, it might", $fa, $f7
-    db $ef, $ee, "be worth your time", $ef, $ee, "to visit.", $f7
-    db $f0
+    db "<VOICE1>*: Did you know?<LINE>"
+    db "There is a tunnel<PROMPT>"
+    db "<NEXT>on the way to the"
+    db "<NEXT>border.<PROMPT>"
+    db "<NEXT>It leads to a"
+    db "<NEXT>little port.<PROMPT>"
+    db "<NEXT>If you're going to"
+    db "<NEXT>the west, it might<PROMPT>"
+    db "<NEXT>be worth your time"
+    db "<NEXT>to visit.<WAIT>"
+    db "@"
 
 Message_03_58::
-    db $ea, "*: I've heard from", $f1
-    db "friends who came", $fa, $f7
-    db $ef, $ee, "back from the mine", $ef, $ee, "that there's no", $fa, $f7
-    db $ef, $ee, "gold to be found", $ef, $ee, "there at all.", $fa, $f7
-    db $ef, $ee, "But the King still", $ef, $ee, "suspects the west", $a4, $f7
-    db $f0
+    db "<VOICE1>*: I've heard from<LINE>"
+    db "friends who came<PROMPT>"
+    db "<NEXT>back from the mine"
+    db "<NEXT>that there's no<PROMPT>"
+    db "<NEXT>gold to be found"
+    db "<NEXT>there at all.<PROMPT>"
+    db "<NEXT>But the King still"
+    db "<NEXT>suspects the west…<WAIT>"
+    db "@"
 
 Message_03_59::
-    db $ea, "*: We reported to", $f1
-    db "the King that the", $fa, $f7
-    db $ef, $ee, "mine had no gold", $ef, $ee, "to start with,", $fa, $f7
-    db $ef, $ee, "but he refuses to", $ef, $ee, "believe us and", $fa, $f7
-    db $ef, $ee, "blames the west", $ef, $ee, "for stealing the", $fa, $f7
-    db $ef, $ee, "gold.", $ef, $ee, "Perhaps you can", $fa, $f7
-    db $ef, $ee, "speak to him?", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: We reported to<LINE>"
+    db "the King that the<PROMPT>"
+    db "<NEXT>mine had no gold"
+    db "<NEXT>to start with,<PROMPT>"
+    db "<NEXT>but he refuses to"
+    db "<NEXT>believe us and<PROMPT>"
+    db "<NEXT>blames the west"
+    db "<NEXT>for stealing the<PROMPT>"
+    db "<NEXT>gold."
+    db "<NEXT>Perhaps you can<PROMPT>"
+    db "<NEXT>speak to him?"
+    db "<NEXT><WAIT>"
+    db "@"
 
 Message_03_5A::
-    db $ea, "*: What is it, you", $f1
-    db "whelp!?", $fa, $f7
-    db $ef, $ee, "You claim that the", $ef, $ee, "mine has no gold?", $fa, $f7
-    db $ef, $ee, "You dare question", $ef, $ee, "my authority?", $f7
-    db $f0
+    db "<VOICE1>*: What is it, you<LINE>"
+    db "whelp!?<PROMPT>"
+    db "<NEXT>You claim that the"
+    db "<NEXT>mine has no gold?<PROMPT>"
+    db "<NEXT>You dare question"
+    db "<NEXT>my authority?<WAIT>"
+    db "@"
 
 Message_03_5B::
-    db $ea, "*: You're no envoy", $f1
-    db "of the spirit!", $fa, $f7
-    db $ef, $ee, "You must be a", $ef, $ee, "western spy!", $fa, $f7
-    db $ef, $ee, "You can rot in the", $ef, $ee, "dungeon!", $f7
-    db $f0
+    db "<VOICE1>*: You're no envoy<LINE>"
+    db "of the spirit!<PROMPT>"
+    db "<NEXT>You must be a"
+    db "<NEXT>western spy!<PROMPT>"
+    db "<NEXT>You can rot in the"
+    db "<NEXT>dungeon!<WAIT>"
+    db "@"
 
 Message_03_5C::
-    db $ea, "*: Ah, saved at", $f1
-    db "last!", $fa, $f7
-    db $ef, $ee, "The two of us were", $ef, $ee, "trapped alone.", $fa, $f7
-    db $ef, $ee, "I'm the real King.", $ef, $ee, "The one on my", $fa, $f7
-    db $ef, $ee, "throne is a vile", $ef, $ee, "impostor!", $fa, $f7
-    db $ef, $ee, "I was abducted in", $ef, $ee, "my sleep and held", $fa, $f7
-    db $ef, $ee, "captive down here.", $ef, $ee, "I tried to escape", $fa, $f7
-    db $ef, $ee, "but the exit has", $ef, $ee, "been sealed.", $fa, $f7
-    db $ef, $ee, "It was closed up", $ef, $ee, "recently, but I", $fa, $f7
-    db $ef, $ee, "have no idea where", $ef, $ee, "to find it.", $f7
-    db $f0
+    db "<VOICE1>*: Ah, saved at<LINE>"
+    db "last!<PROMPT>"
+    db "<NEXT>The two of us were"
+    db "<NEXT>trapped alone.<PROMPT>"
+    db "<NEXT>I'm the real King."
+    db "<NEXT>The one on my<PROMPT>"
+    db "<NEXT>throne is a vile"
+    db "<NEXT>impostor!<PROMPT>"
+    db "<NEXT>I was abducted in"
+    db "<NEXT>my sleep and held<PROMPT>"
+    db "<NEXT>captive down here."
+    db "<NEXT>I tried to escape<PROMPT>"
+    db "<NEXT>but the exit has"
+    db "<NEXT>been sealed.<PROMPT>"
+    db "<NEXT>It was closed up"
+    db "<NEXT>recently, but I<PROMPT>"
+    db "<NEXT>have no idea where"
+    db "<NEXT>to find it.<WAIT>"
+    db "@"
 
 Message_03_5D::
-    db $ea, "*: I want to get", $f1
-    db "out, but the exit", $fa, $f7
-    db $ef, $ee, "has been sealed.", $ef, $ee, $fa, $f7
-    db $ef, $ee, $f3, "It was closed up", $ef, $ee, "recently, but I", $fa, $f7
-    db $ef, $ee, "have no idea where", $ef, $ee, "to find it.", $f7
-    db $f0
+    db "<VOICE1>*: I want to get<LINE>"
+    db "out, but the exit<PROMPT>"
+    db "<NEXT>has been sealed."
+    db "<NEXT><PROMPT>"
+    db "<NEXT>"
+    db "<HOME>It was closed up"
+    db "<NEXT>recently, but I<PROMPT>"
+    db "<NEXT>have no idea where"
+    db "<NEXT>to find it.<WAIT>"
+    db "@"
 
 Message_03_5E::
-    db $ea, "Kameha: Where's", $f1
-    db "the exit?", $fa, $f7
-    db $ef, $ee, "We'll starve down", $ef, $ee, "here if we don't", $fa, $f7
-    db $ef, $ee, "find the way out", $ef, $ee, "soon!", $f7
-    db $f0
+    db "<VOICE1>Kameha: Where's<LINE>"
+    db "the exit?<PROMPT>"
+    db "<NEXT>We'll starve down"
+    db "<NEXT>here if we don't<PROMPT>"
+    db "<NEXT>find the way out"
+    db "<NEXT>soon!<WAIT>"
+    db "@"
 
 Message_03_5F::
-    db $ea, "Kameha: Where's", $f1
-    db "the exit?", $fa, $f7
-    db $ef, $ee, "We'll starve down", $ef, $ee, "here if we don't", $fa, $f7
-    db $ef, $ee, "find the way out", $ef, $ee, "soon!", $f7
-    db $f0
+    db "<VOICE1>Kameha: Where's<LINE>"
+    db "the exit?<PROMPT>"
+    db "<NEXT>We'll starve down"
+    db "<NEXT>here if we don't<PROMPT>"
+    db "<NEXT>find the way out"
+    db "<NEXT>soon!<WAIT>"
+    db "@"
 
 Message_03_60::
-    db $f9, "0 tapped on", $f1
-    db "the wall.", $fa, $f7
-    db $ef, $ee, "The wall sounded", $ef, $ee, "heavy and solid.", $f7
-    db $f0
+    db "<BUF0> tapped on<LINE>"
+    db "the wall.<PROMPT>"
+    db "<NEXT>The wall sounded"
+    db "<NEXT>heavy and solid.<WAIT>"
+    db "@"
 
 Message_03_61::
-    db $ea, "Kameha: So that's", $f1
-    db "where the exit is!", $fa, $f7
-    db $ef, $ee, $f9, "0, here, stand", $ef, $ee, "aside!", $f7
-    db $f0
+    db "<VOICE1>Kameha: So that's<LINE>"
+    db "where the exit is!<PROMPT>"
+    db "<NEXT><BUF0>, here, stand"
+    db "<NEXT>aside!<WAIT>"
+    db "@"
 
 Message_03_62::
-    db $ea, "Kameha: ", $a4, $f9, "0", $a4, $f1
-    db "That wasn't it", $a4, $f7
-    db $f0
+    db "<VOICE1>Kameha: …<BUF0>…<LINE>"
+    db "That wasn't it…<WAIT>"
+    db "@"
 
 Message_03_63::
-    db $f9, "0 tapped on", $f1
-    db "the wall.", $fa, $f7
-    db $ef, $ee, "Sound echoed as if", $ef, $ee, "it were hollow.", $f7
-    db $f0
+    db "<BUF0> tapped on<LINE>"
+    db "the wall.<PROMPT>"
+    db "<NEXT>Sound echoed as if"
+    db "<NEXT>it were hollow.<WAIT>"
+    db "@"
 
 Message_03_64::
-    db $ea, "Kameha: That's it!", $f1
-    db "That's the exit!", $fa, $f7
-    db $ef, $ee, $f9, "0, I'll go on", $ef, $ee, "ahead!", $f7
-    db $f0
+    db "<VOICE1>Kameha: That's it!<LINE>"
+    db "That's the exit!<PROMPT>"
+    db "<NEXT><BUF0>, I'll go on"
+    db "<NEXT>ahead!<WAIT>"
+    db "@"
 
 Message_03_65::
-    db $ea, "*: I'm the real", $f1
-    db "King, you fake!", $f7
-    db $f0
+    db "<VOICE1>*: I'm the real<LINE>"
+    db "King, you fake!<WAIT>"
+    db "@"
 
 Message_03_66::
-    db $ea, "*: What? How dare", $f1
-    db "you, impostor!", $fa, $f7
-    db $ef, $ee, "I'm the real King!", $ef, $ee, "Not you!", $f7
-    db $f0
+    db "<VOICE1>*: What? How dare<LINE>"
+    db "you, impostor!<PROMPT>"
+    db "<NEXT>I'm the real King!"
+    db "<NEXT>Not you!<WAIT>"
+    db "@"
 
 Message_03_67::
-    db $ea, "*: I'm real! Don't", $f1
-    db "you believe me?", $f7
-    db $f0
+    db "<VOICE1>*: I'm real! Don't<LINE>"
+    db "you believe me?<WAIT>"
+    db "@"
 
 Message_03_68::
-    db $ea, "*: Look in my eyes!", $f1
-    db "I'm not lying!", $f7
-    db $f0
+    db "<VOICE1>*: Look in my eyes!<LINE>"
+    db "I'm not lying!<WAIT>"
+    db "@"
 
 Message_03_69::
-    db $ea, "*: If you can't see", $f1
-    db "the truth, you'll", $fa, $f7
-    db $ef, $ee, "never become a", $ef, $ee, "great hero!", $f7
-    db $f0
+    db "<VOICE1>*: If you can't see<LINE>"
+    db "the truth, you'll<PROMPT>"
+    db "<NEXT>never become a"
+    db "<NEXT>great hero!<WAIT>"
+    db "@"
 
 Message_03_6A::
-    db $ea, "*: Didn't we work", $f1
-    db "together to escape", $fa, $f7
-    db $ef, $ee, "from the dungeon?", $ef, $ee, "I'm the real King!", $f7
-    db $f0
+    db "<VOICE1>*: Didn't we work<LINE>"
+    db "together to escape<PROMPT>"
+    db "<NEXT>from the dungeon?"
+    db "<NEXT>I'm the real King!<WAIT>"
+    db "@"
 
 Message_03_6B::
-    db "The mirror shows", $f1
-    db "the King.", $f7
-    db $f0
+    db "The mirror shows<LINE>"
+    db "the King.<WAIT>"
+    db "@"
 
 Message_03_6C::
-    db $ea, "*: I am real!", $f1
-    db "Don't believe him!", $f7
-    db $f0
+    db "<VOICE1>*: I am real!<LINE>"
+    db "Don't believe him!<WAIT>"
+    db "@"
 
 Message_03_6D::
-    db $ea, "*: My regal bearing", $f1
-    db "should be evidence", $fa, $f7
-    db $ef, $ee, "that I am the real", $ef, $ee, "King!", $f7
-    db $f0
+    db "<VOICE1>*: My regal bearing<LINE>"
+    db "should be evidence<PROMPT>"
+    db "<NEXT>that I am the real"
+    db "<NEXT>King!<WAIT>"
+    db "@"
 
 Message_03_6E::
-    db $ea, "*: Look at him!", $f1
-    db "He's grimy!", $fa, $f7
-    db $ef, $ee, "He's no comparison", $ef, $ee, "to me!", $f7
-    db $f0
+    db "<VOICE1>*: Look at him!<LINE>"
+    db "He's grimy!<PROMPT>"
+    db "<NEXT>He's no comparison"
+    db "<NEXT>to me!<WAIT>"
+    db "@"
 
 Message_03_6F::
-    db $ea, "*: You suspect me", $f1
-    db "still? Kiki!", $fa, $f7
-    db $ef, $ee, "Gaaah! A slip of", $ef, $ee, "the tongue, kiki!", $f7
-    db $f0
+    db "<VOICE1>*: You suspect me<LINE>"
+    db "still? Kiki!<PROMPT>"
+    db "<NEXT>Gaaah! A slip of"
+    db "<NEXT>the tongue, kiki!<WAIT>"
+    db "@"
 
 Message_03_70::
-    db $ea, "*: Arrgh, you've", $f1
-    db "ruined my plan to", $fa, $f7
-    db $ef, $ee, "cause conflict by", $ef, $ee, "impersonating the", $fa, $f7
-    db $ef, $ee, "King, kikiki!", $ef, $ee, "You will pay!", $f7
-    db $f0
+    db "<VOICE1>*: Arrgh, you've<LINE>"
+    db "ruined my plan to<PROMPT>"
+    db "<NEXT>cause conflict by"
+    db "<NEXT>impersonating the<PROMPT>"
+    db "<NEXT>King, kikiki!"
+    db "<NEXT>You will pay!<WAIT>"
+    db "@"
 
 Message_03_71::
-    db "The mirror shows a", $f1
-    db "monster.", $f7
-    db $f0
+    db "The mirror shows a<LINE>"
+    db "monster.<WAIT>"
+    db "@"
 
 Message_03_72::
-    db $ea, "*: It almost worked", $f1
-    db "to perfection!", $fa, $f7
-    db $ef, $ee, "It's all your", $ef, $ee, "fault, kikiki!", $f7
-    db $f0
+    db "<VOICE1>*: It almost worked<LINE>"
+    db "to perfection!<PROMPT>"
+    db "<NEXT>It's all your"
+    db "<NEXT>fault, kikiki!<WAIT>"
+    db "@"
 
 Message_03_73::
-    db $ea, "*: Awaaargh!", $f1
-    db "A m-m-monster!", $fa, $f7
-    db $ef, $ee, "A monster was", $ef, $ee, "impersonating me!", $f7
-    db $f0
+    db "<VOICE1>*: Awaaargh!<LINE>"
+    db "A m-m-monster!<PROMPT>"
+    db "<NEXT>A monster was"
+    db "<NEXT>impersonating me!<WAIT>"
+    db "@"
 
 Message_03_74::
-    db $ea, "*: Bravo!", $f1
-    db "We're saved!", $fa, $f7
-    db $ef, $ee, "Thank you for", $ef, $ee, "seeing that I am", $fa, $f7
-    db $ef, $ee, "the true King of", $ef, $ee, "Norden!", $fa, $f7
-    db $ef, $ee, "I will put a stop", $ef, $ee, "to the squabbling", $fa, $f7
-    db $ef, $ee, "with the western", $ef, $ee, "kingdom.", $fa, $f7
-    db $ef, $ee, "I'll have the", $ef, $ee, "border reopened.", $f7
-    db $f0
+    db "<VOICE1>*: Bravo!<LINE>"
+    db "We're saved!<PROMPT>"
+    db "<NEXT>Thank you for"
+    db "<NEXT>seeing that I am<PROMPT>"
+    db "<NEXT>the true King of"
+    db "<NEXT>Norden!<PROMPT>"
+    db "<NEXT>I will put a stop"
+    db "<NEXT>to the squabbling<PROMPT>"
+    db "<NEXT>with the western"
+    db "<NEXT>kingdom.<PROMPT>"
+    db "<NEXT>I'll have the"
+    db "<NEXT>border reopened.<WAIT>"
+    db "@"
 
 Message_03_75::
-    db $ea, "King: I'll have", $f1
-    db "the border opened.", $fa, $f7
-    db $ef, $ee, "It is a long way", $ef, $ee, "to the western", $fa, $f7
-    db $ef, $ee, "kingdom, however.", $ef, $ee, "Do take care.", $f7
-    db $f0
+    db "<VOICE1>King: I'll have<LINE>"
+    db "the border opened.<PROMPT>"
+    db "<NEXT>It is a long way"
+    db "<NEXT>to the western<PROMPT>"
+    db "<NEXT>kingdom, however."
+    db "<NEXT>Do take care.<WAIT>"
+    db "@"
 
 Message_03_76::
-    db $ea, "*: Who would've", $f1
-    db "thought that a", $fa, $f7
-    db $ef, $ee, "monster would pose", $ef, $ee, "as the King?", $fa, $f7
-    db $ef, $ee, "Nobody realized", $ef, $ee, "what happened.", $fa, $f7
-    db $ef, $ee, "The King must be", $ef, $ee, "furious", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Who would've<LINE>"
+    db "thought that a<PROMPT>"
+    db "<NEXT>monster would pose"
+    db "<NEXT>as the King?<PROMPT>"
+    db "<NEXT>Nobody realized"
+    db "<NEXT>what happened.<PROMPT>"
+    db "<NEXT>The King must be"
+    db "<NEXT>furious…<WAIT>"
+    db "@"
 
 Message_03_77::
-    db $ea, "*: Well, we managed", $f1
-    db "to avoid war with", $fa, $f7
-    db $ef, $ee, "the west. That's a", $ef, $ee, "good thing.", $f7
-    db $f0
+    db "<VOICE1>*: Well, we managed<LINE>"
+    db "to avoid war with<PROMPT>"
+    db "<NEXT>the west. That's a"
+    db "<NEXT>good thing.<WAIT>"
+    db "@"
 
 Message_03_78::
-    db $ea, "*: This is just", $f1
-    db "between you and", $fa, $f7
-    db $ef, $ee, "me, but the fake", $ef, $ee, "King was a harder", $fa, $f7
-    db $ef, $ee, "worker than the", $ef, $ee, "real King.", $f7
-    db $f0
+    db "<VOICE1>*: This is just<LINE>"
+    db "between you and<PROMPT>"
+    db "<NEXT>me, but the fake"
+    db "<NEXT>King was a harder<PROMPT>"
+    db "<NEXT>worker than the"
+    db "<NEXT>real King.<WAIT>"
+    db "@"
 
 Message_03_79::
-    db $ea, "*: Who was that boy", $f1
-    db "who came out of", $fa, $f7
-    db $ef, $ee, "the dungeon with", $ef, $ee, "the King?", $fa, $f7
-    db $ef, $ee, "He can't be the", $ef, $ee, "King's son, but he", $fa, $f7
-    db $ef, $ee, "was dressed in a", $ef, $ee, "regal manner", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Who was that boy<LINE>"
+    db "who came out of<PROMPT>"
+    db "<NEXT>the dungeon with"
+    db "<NEXT>the King?<PROMPT>"
+    db "<NEXT>He can't be the"
+    db "<NEXT>King's son, but he<PROMPT>"
+    db "<NEXT>was dressed in a"
+    db "<NEXT>regal manner…<WAIT>"
+    db "@"
 
 Message_03_7A::
-    db $ea, "*: The border with", $f1
-    db "the west is open!", $fa, $f7
-    db $ef, $ee, "But the western", $ef, $ee, "kingdom is far", $fa, $f7
-    db $ef, $ee, "away, you should", $ef, $ee, "be very cautious.", $f7
-    db $f0
+    db "<VOICE1>*: The border with<LINE>"
+    db "the west is open!<PROMPT>"
+    db "<NEXT>But the western"
+    db "<NEXT>kingdom is far<PROMPT>"
+    db "<NEXT>away, you should"
+    db "<NEXT>be very cautious.<WAIT>"
+    db "@"
 
 Message_03_7B::
-    db $eb, "*: The discovery of", $f1
-    db "gold was a bust", $a4, $fa, $f7
-    db $ef, $ee, "It's disappointing,", $ef, $ee, "it really is", $a4, $fa, $f7
-    db $ef, $ee, "My rings", $a4, $ef, $ee, "My bangles", $a4, $f7
-    db $f0
+    db "<VOICE2>*: The discovery of<LINE>"
+    db "gold was a bust…<PROMPT>"
+    db "<NEXT>It's disappointing,"
+    db "<NEXT>it really is…<PROMPT>"
+    db "<NEXT>My rings…"
+    db "<NEXT>My bangles…<WAIT>"
+    db "@"
 
 Message_03_7C::
-    db $ea, "*: The King gave", $f1
-    db "word to lift the", $fa, $f7
-    db $ef, $ee, "blockade of the", $ef, $ee, "border.", $fa, $f7
-    db $ef, $ee, "The trouble is", $ef, $ee, "finally over.", $f7
-    db $f0
+    db "<VOICE1>*: The King gave<LINE>"
+    db "word to lift the<PROMPT>"
+    db "<NEXT>blockade of the"
+    db "<NEXT>border.<PROMPT>"
+    db "<NEXT>The trouble is"
+    db "<NEXT>finally over.<WAIT>"
+    db "@"
 
 Message_03_7D::
-    db $ea, "*: A monster was", $f1
-    db "playing the part", $fa, $f7
-    db $ef, $ee, "of our King", $a4, $ef, $ee, "It's no wonder we", $fa, $f7
-    db $ef, $ee, "were getting such", $ef, $ee, "bizarre orders.", $f7
-    db $f0
+    db "<VOICE1>*: A monster was<LINE>"
+    db "playing the part<PROMPT>"
+    db "<NEXT>of our King…"
+    db "<NEXT>It's no wonder we<PROMPT>"
+    db "<NEXT>were getting such"
+    db "<NEXT>bizarre orders.<WAIT>"
+    db "@"
 
 Message_03_7E::
-    db $eb, "*: This is the town", $f1
-    db "of Weston.", $fa, $f7
-    db $ef, $ee, "It's the western", $ef, $ee, "kingdom's port.", $f7
-    db $f0
+    db "<VOICE2>*: This is the town<LINE>"
+    db "of Weston.<PROMPT>"
+    db "<NEXT>It's the western"
+    db "<NEXT>kingdom's port.<WAIT>"
+    db "@"
 
 Message_03_7F::
-    db $ea, "*: The west's castle", $f1
-    db "has seen a steady", $fa, $f7
-    db $ef, $ee, "stream of visitors", $ef, $ee, "and gifts.", $fa, $f7
-    db $ef, $ee, "They're offering a", $ef, $ee, "reward if you can", $fa, $f7
-    db $ef, $ee, "cheer Lady Yuna", $ef, $ee, "up.", $fa, $f7
-    db $ef, $ee, "I'm thinking of", $ef, $ee, "going myself.", $f7
-    db $f0
+    db "<VOICE1>*: The west's castle<LINE>"
+    db "has seen a steady<PROMPT>"
+    db "<NEXT>stream of visitors"
+    db "<NEXT>and gifts.<PROMPT>"
+    db "<NEXT>They're offering a"
+    db "<NEXT>reward if you can<PROMPT>"
+    db "<NEXT>cheer Lady Yuna"
+    db "<NEXT>up.<PROMPT>"
+    db "<NEXT>I'm thinking of"
+    db "<NEXT>going myself.<WAIT>"
+    db "@"
 
 Message_03_80::
-    db $ea, "*: Across from us", $f1
-    db "on the lake is the", $fa, $f7
-    db $ef, $ee, "eastern kingdom.", $ef, $ee, "It's ruled by", $fa, $f7
-    db $ef, $ee, "Queen Helen, I", $ef, $ee, "think.", $fa, $f7
-    db $ef, $ee, "Will our Lady Yuna", $ef, $ee, "become our queen?", $f7
-    db $f0
+    db "<VOICE1>*: Across from us<LINE>"
+    db "on the lake is the<PROMPT>"
+    db "<NEXT>eastern kingdom."
+    db "<NEXT>It's ruled by<PROMPT>"
+    db "<NEXT>Queen Helen, I"
+    db "<NEXT>think.<PROMPT>"
+    db "<NEXT>Will our Lady Yuna"
+    db "<NEXT>become our queen?<WAIT>"
+    db "@"
 
 Message_03_81::
-    db $eb, "*: I saw Lady Yuna", $f1
-    db "riding towards the", $fa, $f7
-    db $ef, $ee, "forest in the", $ef, $ee, "southeast.", $fa, $f7
-    db $ef, $ee, "She looked dashing", $ef, $ee, "on her steed.", $f7
-    db $f0
+    db "<VOICE2>*: I saw Lady Yuna<LINE>"
+    db "riding towards the<PROMPT>"
+    db "<NEXT>forest in the"
+    db "<NEXT>southeast.<PROMPT>"
+    db "<NEXT>She looked dashing"
+    db "<NEXT>on her steed.<WAIT>"
+    db "@"
 
 Message_03_82::
-    db $ea, "*: Lady Yuna has", $f1
-    db "been a lively girl", $fa, $f7
-    db $ef, $ee, "for as long as I", $ef, $ee, "can remember.", $fa, $f7
-    db $ef, $ee, "Her habit of", $ef, $ee, "sneaking out of", $fa, $f7
-    db $ef, $ee, "the Castle vexed", $ef, $ee, "us to no end.", $f7
-    db $f0
+    db "<VOICE1>*: Lady Yuna has<LINE>"
+    db "been a lively girl<PROMPT>"
+    db "<NEXT>for as long as I"
+    db "<NEXT>can remember.<PROMPT>"
+    db "<NEXT>Her habit of"
+    db "<NEXT>sneaking out of<PROMPT>"
+    db "<NEXT>the Castle vexed"
+    db "<NEXT>us to no end.<WAIT>"
+    db "@"
 
 Message_03_83::
-    db $ea, "*: I haven't been", $f1
-    db "seeing too many", $fa, $f7
-    db $ef, $ee, "ships coming into", $ef, $ee, "our harbor.", $fa, $f7
-    db $ef, $ee, "I wonder why that", $ef, $ee, "could be.", $fa, $f7
-    db $ef, $ee, "Ships make great", $ef, $ee, "transportation.", $f7
-    db $f0
+    db "<VOICE1>*: I haven't been<LINE>"
+    db "seeing too many<PROMPT>"
+    db "<NEXT>ships coming into"
+    db "<NEXT>our harbor.<PROMPT>"
+    db "<NEXT>I wonder why that"
+    db "<NEXT>could be.<PROMPT>"
+    db "<NEXT>Ships make great"
+    db "<NEXT>transportation.<WAIT>"
+    db "@"
 
 Message_03_84::
-    db $ea, "*: Lady Yuna is", $f1
-    db "said to be quiet", $fa, $f7
-    db $ef, $ee, "and withdrawn", $ef, $ee, "these days.", $fa, $f7
-    db $ef, $ee, "Perhaps she is", $ef, $ee, "trying to cope", $fa, $f7
-    db $ef, $ee, "with adolescent", $ef, $ee, "concerns", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Lady Yuna is<LINE>"
+    db "said to be quiet<PROMPT>"
+    db "<NEXT>and withdrawn"
+    db "<NEXT>these days.<PROMPT>"
+    db "<NEXT>Perhaps she is"
+    db "<NEXT>trying to cope<PROMPT>"
+    db "<NEXT>with adolescent"
+    db "<NEXT>concerns…<WAIT>"
+    db "@"
 
 Message_03_85::
-    db $ea, "*: I've heard rumors", $f1
-    db "that something is", $fa, $f7
-    db $ef, $ee, "wrong with Lady", $ef, $ee, "Yuna.", $fa, $f7
-    db $ef, $ee, "I wonder what it", $ef, $ee, "could be?", $f7
-    db $f0
+    db "<VOICE1>*: I've heard rumors<LINE>"
+    db "that something is<PROMPT>"
+    db "<NEXT>wrong with Lady"
+    db "<NEXT>Yuna.<PROMPT>"
+    db "<NEXT>I wonder what it"
+    db "<NEXT>could be?<WAIT>"
+    db "@"
 
 Message_03_86::
-    db $ea, "*: The King dotes", $f1
-    db "over Lady Yuna.", $fa, $f7
-    db $ef, $ee, "He", $44, " gladly give", $ef, $ee, "up his own life", $fa, $f7
-    db $ef, $ee, "for her sake, I'm", $ef, $ee, "sure.", $f7
-    db $f0
+    db "<VOICE1>*: The King dotes<LINE>"
+    db "over Lady Yuna.<PROMPT>"
+    db "<NEXT>He", $44, " gladly give"
+    db "<NEXT>up his own life<PROMPT>"
+    db "<NEXT>for her sake, I'm"
+    db "<NEXT>sure.<WAIT>"
+    db "@"
 
 Message_03_87::
-    db $ea, "*: The road to the", $f1
-    db "eastern kingdom is", $fa, $f7
-    db $ef, $ee, "teeming with tough", $ef, $ee, "monsters.", $fa, $f7
-    db $ef, $ee, "If you're thinking", $ef, $ee, "of going, it may", $fa, $f7
-    db $ef, $ee, "be less dangerous", $ef, $ee, "to cross the lake.", $f7
-    db $f0
+    db "<VOICE1>*: The road to the<LINE>"
+    db "eastern kingdom is<PROMPT>"
+    db "<NEXT>teeming with tough"
+    db "<NEXT>monsters.<PROMPT>"
+    db "<NEXT>If you're thinking"
+    db "<NEXT>of going, it may<PROMPT>"
+    db "<NEXT>be less dangerous"
+    db "<NEXT>to cross the lake.<WAIT>"
+    db "@"
 
 Message_03_88::
-    db $eb, "*: Lady Yuna locks", $f1
-    db "herself in her", $fa, $f7
-    db $ef, $ee, "room all day long", $ef, $ee, "and won't come out.", $fa, $f7
-    db $ef, $ee, "The King is at his", $ef, $ee, "wit's end.", $f7
-    db $f0
+    db "<VOICE2>*: Lady Yuna locks<LINE>"
+    db "herself in her<PROMPT>"
+    db "<NEXT>room all day long"
+    db "<NEXT>and won't come out.<PROMPT>"
+    db "<NEXT>The King is at his"
+    db "<NEXT>wit's end.<WAIT>"
+    db "@"
 
 Message_03_89::
-    db $ea, "*: If you can cheer", $f1
-    db "up the princess,", $fa, $f7
-    db $ef, $ee, "you can earn a", $ef, $ee, "reward, I hear.", $fa, $f7
-    db $ef, $ee, "A whole lot of", $ef, $ee, "challengers have", $fa, $f7
-    db $ef, $ee, "already gone to", $ef, $ee, "the Castle.", $fa, $f7
-    db $ef, $ee, "Maybe I ought to", $ef, $ee, "try too", $a4, $fa, $f7
-    db $ef, $ee, "The Castle is to", $ef, $ee, "the west. Just go", $fa, $f7
-    db $ef, $ee, "along the river", $ef, $ee, "and you're there!", $f7
-    db $f0
+    db "<VOICE1>*: If you can cheer<LINE>"
+    db "up the princess,<PROMPT>"
+    db "<NEXT>you can earn a"
+    db "<NEXT>reward, I hear.<PROMPT>"
+    db "<NEXT>A whole lot of"
+    db "<NEXT>challengers have<PROMPT>"
+    db "<NEXT>already gone to"
+    db "<NEXT>the Castle.<PROMPT>"
+    db "<NEXT>Maybe I ought to"
+    db "<NEXT>try too…<PROMPT>"
+    db "<NEXT>The Castle is to"
+    db "<NEXT>the west. Just go<PROMPT>"
+    db "<NEXT>along the river"
+    db "<NEXT>and you're there!<WAIT>"
+    db "@"
     ds $183, $00

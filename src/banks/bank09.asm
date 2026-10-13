@@ -317,643 +317,700 @@ StringList_09_41EE::
     dw String_09_09_21 ; id 33
 
 String_09_00_00::
-    db "WHATUsoePersoHPMPATKDEFAGLINTWLDnality", $f0
+    db "WHATUsoePersoHPMPATKDEFAGLINTWLDnality@"
 
 String_09_00_01::
-    db "TOWHOHPMP", $f0
+    db "TOWHOHPMP@"
 
 String_09_00_02::
-    db "RJadlnoprtuxy-fWATUCHPMDcgimhw    Dcgimh       ", $ac, $f0
+    db "RJadlnoprtuxy-fWATUCHPMDcgimhw    Dcgimh       ★@"
 
 String_09_01_00::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, "But it was empty.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR>But it was empty.<WAIT>"
+    db "@"
 
 String_09_01_01::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, $f9, "0 obtained", $f1
-    db $f9, $4e, "G.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR><BUF0> obtained<LINE>"
+    db "<BUF>", $4e, "G.<WAIT>"
+    db "@"
 
 String_09_01_02::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, $f9, "0 obtained the", $f1
-    db $f9, "Y.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR><BUF0> obtained the<LINE>"
+    db "<BUF>", $22, ".<WAIT>"
+    db "@"
 
 String_09_01_03::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, "Found ", $f9, "Y.", $f1
-    db $fa, $f7
-    db $f2, "But there is no", $f1
-    db "room for it.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR>Found <BUF>", $22, ".<LINE>"
+    db "<PROMPT>"
+    db "<CLEAR>But there is no<LINE>"
+    db "room for it.<WAIT>"
+    db "@"
 
 String_09_01_04::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, "The chest was a", $f1
-    db "Mimic!", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR>The chest was a<LINE>"
+    db "Mimic!<WAIT>"
+    db "@"
 
 String_09_01_05::
-    db $f9, "0 obtained", $f1
-    db $f9, $4e, "G.", $f7
-    db $f0
+    db "<BUF0> obtained<LINE>"
+    db "<BUF>", $4e, "G.<WAIT>"
+    db "@"
 
 String_09_01_06::
-    db $f9, "0 obtained the", $f1
-    db $f9, "Y.", $f7
-    db $f0
+    db "<BUF0> obtained the<LINE>"
+    db "<BUF>", $22, ".<WAIT>"
+    db "@"
 
 String_09_01_07::
-    db "Found ", $f9, "Y.", $f1
-    db $fa, $f7
-    db $f2, "But there is no", $f1
-    db "room for it.", $f7
-    db $f0
+    db "Found <BUF>", $22, ".<LINE>"
+    db "<PROMPT>"
+    db "<CLEAR>But there is no<LINE>"
+    db "room for it.<WAIT>"
+    db "@"
 
 String_09_01_08::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, $f9, "0 obtained a", $f1
-    db "Magic Key.", $e5, $58, $f7
-    db $e9, $ff, $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR><BUF0> obtained a<LINE>"
+    db "Magic Key.<MUSIC_WAIT>", $58, "<WAIT>"
+    db "<MAP_MUSIC>@"
 
 String_09_01_09::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, "A Magic Key was", $f1
-    db "found.", $fa, $f7
-    db $f2, "But there is no", $f1
-    db "room for it.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR>A Magic Key was<LINE>"
+    db "found.<PROMPT>"
+    db "<CLEAR>But there is no<LINE>"
+    db "room for it.<WAIT>"
+    db "@"
 
 String_09_01_0A::
-    db $f9, "N dropped", $f1
-    db "dead.", $f7
-    db $f0
+    db "<BUF>", $17, " dropped<LINE>"
+    db "dead.<WAIT>"
+    db "@"
 
 String_09_01_0B::
-    db $f2, $f9, "N dropped", $f1
-    db "dead.", $f7
-    db $f0
+    db "<CLEAR><BUF>", $17, " dropped<LINE>"
+    db "dead.<WAIT>"
+    db "@"
 
 String_09_01_0C::
-    db $ea, "Warubou: Wa-hey,", $f1
-    db $f9, "0?", $fa, $f7
-    db $ef, $ee, "Wiped out were", $ef, $ee, "you, warooh?", $fa, $f7
-    db $ef, $ee, "GreatLog can't be", $ef, $ee, "saved if you're a", $fa, $f7
-    db $ef, $ee, "waffling little", $ef, $ee, "wimp, warooh.", $fa, $f7
-    db $ef, $ee, "I'm big-hearted,", $ef, $ee, "so I'll share some", $fa, $f7
-    db $ef, $ee, "of GreatLog's power", $ef, $ee, "with you.", $f7
-    db $f0
+    db "<VOICE1>Warubou: Wa-hey,<LINE>"
+    db "<BUF0>?<PROMPT>"
+    db "<NEXT>Wiped out were"
+    db "<NEXT>you, warooh?<PROMPT>"
+    db "<NEXT>GreatLog can't be"
+    db "<NEXT>saved if you're a<PROMPT>"
+    db "<NEXT>waffling little"
+    db "<NEXT>wimp, warooh.<PROMPT>"
+    db "<NEXT>I'm big-hearted,"
+    db "<NEXT>so I'll share some<PROMPT>"
+    db "<NEXT>of GreatLog's power"
+    db "<NEXT>with you.<WAIT>"
+    db "@"
 
 String_09_01_0D::
-    db $ea, "Warubou: Wa-hey,", $f1
-    db $f9, "0! You're safe!", $fa, $f7
-    db $ef, $ee, "I'll share some of", $ef, $ee, "GreatLog's power.", $f7
-    db $f0
+    db "<VOICE1>Warubou: Wa-hey,<LINE>"
+    db "<BUF0>! You're safe!<PROMPT>"
+    db "<NEXT>I'll share some of"
+    db "<NEXT>GreatLog's power.<WAIT>"
+    db "@"
 
 String_09_01_0E::
-    db "The two monsters", $f1
-    db "went away quietly", $a4, $f7
-    db $f0
+    db "The two monsters<LINE>"
+    db "went away quietly…<WAIT>"
+    db "@"
 
 String_09_01_0F::
-    db "Repellent's effect", $f1
-    db "wore off.", $f7
-    db $f0
+    db "Repellent's effect<LINE>"
+    db "wore off.<WAIT>"
+    db "@"
 
 String_09_01_10::
-    db "StepGuard's effect", $f1
-    db "wore off.", $f7
-    db $f0
+    db "StepGuard's effect<LINE>"
+    db "wore off.<WAIT>"
+    db "@"
 
 String_09_01_11::
-    db $ea, "Warubou: Wa-hey.", $f1
-    db "There. All healed!", $fa, $f7
-    db $ef, $ee, "You be careful,", $ef, $ee, "warooh!", $f7
-    db $f0
+    db "<VOICE1>Warubou: Wa-hey.<LINE>"
+    db "There. All healed!<PROMPT>"
+    db "<NEXT>You be careful,"
+    db "<NEXT>warooh!<WAIT>"
+    db "@"
 
 String_09_01_12::
-    db "ChangeStaff's", $f1
-    db "effect wore off.", $f7
-    db $f0
+    db "ChangeStaff's<LINE>"
+    db "effect wore off.<WAIT>"
+    db "@"
 
 String_09_01_13::
-    db $ea, "Warubou: Wa-hey,", $f1
-    db $f9, "0, wiped out?", $fa, $f7
-    db $ef, $ee, "That isn't good at", $ef, $ee, "all for a master!", $fa, $f7
-    db $ef, $ee, "I'm big-hearted so", $ef, $ee, "I'll share some of", $fa, $f7
-    db $ef, $ee, "GreatLog's power", $ef, $ee, "with you, warooh!", $f7
-    db $f0
+    db "<VOICE1>Warubou: Wa-hey,<LINE>"
+    db "<BUF0>, wiped out?<PROMPT>"
+    db "<NEXT>That isn't good at"
+    db "<NEXT>all for a master!<PROMPT>"
+    db "<NEXT>I'm big-hearted so"
+    db "<NEXT>I'll share some of<PROMPT>"
+    db "<NEXT>GreatLog's power"
+    db "<NEXT>with you, warooh!<WAIT>"
+    db "@"
 
 String_09_01_14::
-    db $ea, "Petibou: Hey,", $f1
-    db $f9, "0?", $fa, $f7
-    db $ef, $ee, "Getting wiped out", $ef, $ee, "is wimpy!", $fa, $f7
-    db $ef, $ee, "You're not much of", $ef, $ee, "a hero, are you?", $fa, $f7
-    db $ef, $ee, "Peti's big-hearted,", $ef, $ee, "so I'll share some", $fa, $f7
-    db $ef, $ee, "of GreatLog's power", $ef, $ee, "with you.", $f7
-    db $f0
+    db "<VOICE1>Petibou: Hey,<LINE>"
+    db "<BUF0>?<PROMPT>"
+    db "<NEXT>Getting wiped out"
+    db "<NEXT>is wimpy!<PROMPT>"
+    db "<NEXT>You're not much of"
+    db "<NEXT>a hero, are you?<PROMPT>"
+    db "<NEXT>Peti's big-hearted,"
+    db "<NEXT>so I'll share some<PROMPT>"
+    db "<NEXT>of GreatLog's power"
+    db "<NEXT>with you.<WAIT>"
+    db "@"
 
 String_09_01_15::
-    db $ea, "Petibou: Back,", $f1
-    db $f9, "0?", $fa, $f7
-    db $ef, $ee, "I'll share some of", $ef, $ee, "GreatLog's power.", $f7
-    db $f0
+    db "<VOICE1>Petibou: Back,<LINE>"
+    db "<BUF0>?<PROMPT>"
+    db "<NEXT>I'll share some of"
+    db "<NEXT>GreatLog's power.<WAIT>"
+    db "@"
 
 String_09_01_16::
-    db $ea, "Petibou: There.", $f1
-    db "All healed now.", $fa, $f7
-    db $ef, $ee, "You be careful out", $ef, $ee, "there!", $f7
-    db $f0
+    db "<VOICE1>Petibou: There.<LINE>"
+    db "All healed now.<PROMPT>"
+    db "<NEXT>You be careful out"
+    db "<NEXT>there!<WAIT>"
+    db "@"
 
 String_09_01_17::
-    db $f9, "X hatched.", $fa, $f7
-    db $f1
-    db "Please name it.", $ef, $ee, $f7
-    db $f0
+    db "<BUF>", $21, " hatched.<PROMPT>"
+    db "<LINE>"
+    db "Please name it."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_09_01_18::
-    db $f9, "X", $a2, $f9, $4e, $f1
-    db "hatched.", $fa, $f7
-    db $ef, $ee, "Please name it.", $ef, $ee, $f7
-    db $f0
+    db "<BUF>", $21, "+<BUF>", $4e, "<LINE>"
+    db "hatched.<PROMPT>"
+    db "<NEXT>Please name it."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_09_01_19::
-    db $f9, "0 checked the", $f1
-    db "treasure chest.", $fa, $f7
-    db $f2, $f9, "0 obtained a", $f1
-    db "DreamEgg.", $fa, $f7
-    db $ef, $ee, "DreamEgg was sent", $ef, $ee, "to the farm.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "treasure chest.<PROMPT>"
+    db "<CLEAR><BUF0> obtained a<LINE>"
+    db "DreamEgg.<PROMPT>"
+    db "<NEXT>DreamEgg was sent"
+    db "<NEXT>to the farm.<WAIT>"
+    db "@"
 
 String_09_02_00::
-    db "FIGHTEMPLAN", $f0
+    db "FIGHTEMPLAN@"
 
 String_09_02_01::
-    db "ChargeMixedDefense      Command", $f0
+    db "ChargeMixedDefense      Command@"
 
 String_09_02_02::
-    db "FightSklGuard", $f0
+    db "FightSklGuard@"
 
 String_09_02_03::
-    db "TOWHAlyEnem", $f0
+    db "TOWHAlyEnem@"
 
 String_09_02_04::
-    db "InfoOKMonsterEgg", $f0
+    db "InfoOKMonsterEgg@"
 
 String_09_02_06::
-    db "Skill On", $9e, "Off Orb ID Odds", $f0
+    db "Skill On/Off Orb ID Odds@"
 
 String_09_02_07::
-    db "No Skil", $f0
+    db "No Skil@"
 
 String_09_02_08::
-    db "Special Command", $f0
+    db "Special Command@"
 
 String_09_02_09::
-    db "Betray", $f1
-    db "Twin", $f1
-    db "Guard", $f0
+    db "Betray<LINE>"
+    db "Twin<LINE>"
+    db "Guard@"
 
 String_09_03_00::
     db $b8, $f0
 
 String_09_03_01::
-    db "Ylw", $f0
+    db "Ylw@"
 
 String_09_03_02::
-    db "Plain", $f0
+    db "Plain@"
 
 String_09_03_03::
-    db "Green", $f0
+    db "Green@"
 
 String_09_03_04::
-    db "Blue", $f0
+    db "Blue@"
 
 String_09_03_05::
-    db "First", $f0
+    db "First@"
 
 String_09_03_06::
-    db "Red", $f0
+    db "Red@"
 
 String_09_03_07::
-    db "White", $f0
+    db "White@"
 
 String_09_03_08::
-    db "Quiet", $f0
+    db "Quiet@"
 
 String_09_03_09::
-    db "Black", $f0
+    db "Black@"
 
 String_09_03_0A::
-    db "Gaudy", $f0
+    db "Gaudy@"
 
 String_09_03_0B::
-    db "Silvr", $f0
+    db "Silvr@"
 
 String_09_03_0C::
-    db "Dream", $f0
+    db "Dream@"
 
 String_09_03_0D::
-    db "Misty", $f0
+    db "Misty@"
 
 String_09_03_0E::
-    db "Secrt", $f0
+    db "Secrt@"
 
 String_09_03_0F::
-    db "Shiny", $f0
+    db "Shiny@"
 
 String_09_03_10::
-    db "Last", $f0
+    db "Last@"
 
 String_09_03_11::
-    db "Slime", $f0
+    db "Slime@"
 
 String_09_03_12::
-    db "Draco", $f0
+    db "Draco@"
 
 String_09_03_13::
-    db "Beast", $f0
+    db "Beast@"
 
 String_09_03_14::
-    db "Bird", $f0
+    db "Bird@"
 
 String_09_03_15::
-    db "Tree", $f0
+    db "Tree@"
 
 String_09_03_16::
-    db "Bug", $f0
+    db "Bug@"
 
 String_09_03_17::
-    db "Devil", $f0
+    db "Devil@"
 
 String_09_03_18::
-    db "Death", $f0
+    db "Death@"
 
 String_09_03_19::
-    db "Thing", $f0
+    db "Thing@"
 
 String_09_03_1A::
-    db "Water", $f0
+    db "Water@"
 
 String_09_03_1B::
-    db "Lord", $f0
+    db "Lord@"
 
 String_09_03_1C::
-    db "Cave", $f0
+    db "Cave@"
 
 String_09_03_1D::
-    db "Isle", $f0
+    db "Isle@"
 
 String_09_03_1E::
-    db "Torch", $f0
+    db "Torch@"
 
 String_09_03_1F::
-    db "Gardn", $f0
+    db "Gardn@"
 
 String_09_03_20::
-    db "Pit", $f0
+    db "Pit@"
 
 String_09_03_21::
-    db "Bsmt", $f0
+    db "Bsmt@"
 
 String_09_03_22::
-    db "Jail", $f0
+    db "Jail@"
 
 String_09_03_23::
-    db "Magma", $f0
+    db "Magma@"
 
 String_09_03_24::
-    db "Sea", $f0
+    db "Sea@"
 
 String_09_03_25::
-    db "Field", $f0
+    db "Field@"
 
 String_09_03_26::
-    db "Tower", $f0
+    db "Tower@"
 
 String_09_03_27::
-    db "Mine", $f0
+    db "Mine@"
 
 String_09_03_28::
-    db "Hill", $f0
+    db "Hill@"
 
 String_09_03_29::
-    db "Cstle", $f0
+    db "Cstle@"
 
 String_09_03_2A::
-    db "Mound", $f0
+    db "Mound@"
 
 String_09_03_2B::
-    db "Desrt", $f0
+    db "Desrt@"
 
 String_09_03_2C::
-    db "Lake", $f0
+    db "Lake@"
 
 String_09_03_2D::
-    db "Jungl", $f0
+    db "Jungl@"
 
 String_09_03_2E::
-    db "Haven", $f0
+    db "Haven@"
 
 String_09_03_2F::
-    db "Grass", $f0
+    db "Grass@"
 
 String_09_03_30::
-    db "Forst", $f0
+    db "Forst@"
 
 String_09_03_31::
-    db "Grave", $f0
+    db "Grave@"
 
 String_09_03_32::
-    db "Crag", $f0
+    db "Crag@"
 
 String_09_03_33::
-    db "Shore", $f0
+    db "Shore@"
 
 String_09_03_34::
-    db "Log", $f0
+    db "Log@"
 
 String_09_03_35::
-    db "Sky", $f0
+    db "Sky@"
 
 String_09_03_36::
-    db "Mtn", $f0
+    db "Mtn@"
 
 String_09_03_37::
-    db "View", $f0
+    db "View@"
 
 String_09_03_38::
-    db "Cliff", $f0
+    db "Cliff@"
 
 String_09_03_39::
-    db "Islet", $f0
+    db "Islet@"
 
 String_09_03_3A::
-    db "Land", $f0
+    db "Land@"
 
 String_09_03_3B::
-    db "Grove", $f0
+    db "Grove@"
 
 String_09_03_3C::
-    db "Swamp", $f0
+    db "Swamp@"
 
 String_09_03_3D::
-    db "Manor", $f0
+    db "Manor@"
 
 String_09_03_3E::
-    db "Depth", $f0
+    db "Depth@"
 
 String_09_03_3F::
-    db "Hole", $f0
+    db "Hole@"
 
 String_09_03_40::
-    db "Tomb", $f0
+    db "Tomb@"
 
 String_09_03_41::
-    db "Soil", $f0
+    db "Soil@"
 
 String_09_03_42::
-    db "Pond", $f0
+    db "Pond@"
 
 String_09_03_43::
-    db "Hell", $f0
+    db "Hell@"
 
 String_09_03_44::
-    db "Moon", $f0
+    db "Moon@"
 
 String_09_03_45::
-    db "Ocean", $f0
+    db "Ocean@"
 
 String_09_03_46::
-    db "Gulch", $f0
+    db "Gulch@"
 
 String_09_03_47::
-    db "River", $f0
+    db "River@"
 
 String_09_03_48::
-    db "Star", $f0
+    db "Star@"
 
 String_09_04_00::
     db $f0
 
 String_09_05_00::
-    db $ea, "*: Allow me to heal", $f1
-    db "your injuries.", $f7
-    db $f0
+    db "<VOICE1>*: Allow me to heal<LINE>"
+    db "your injuries.<WAIT>"
+    db "@"
 
 String_09_05_01::
-    db $ea, "*: I will pray for", $f1
-    db "you. Farewell.", $f7
-    db $f0
+    db "<VOICE1>*: I will pray for<LINE>"
+    db "you. Farewell.<WAIT>"
+    db "@"
 
 String_09_05_02::
-    db $ea, "*: ", $f9, "Y! Only", $f1
-    db $f9, $4e, "G! Well?", $ff, $f0
+    db "<VOICE1>*: <BUF>", $22, "! Only<LINE>"
+    db "<BUF>", $4e, "G! Well?<CHOICE>"
+    db "@"
 
 String_09_05_03::
-    db $ea, "*: Thanks! Hope I", $f1
-    db "see you again!", $f7
-    db $f0
+    db "<VOICE1>*: Thanks! Hope I<LINE>"
+    db "see you again!<WAIT>"
+    db "@"
 
 String_09_05_04::
-    db $ea, "*: Hah? Not buying?", $f1
-    db "Bah, another time.", $f7
-    db $f0
+    db "<VOICE1>*: Hah? Not buying?<LINE>"
+    db "Bah, another time.<WAIT>"
+    db "@"
 
 String_09_05_05::
-    db $ea, "*: I'll heal you", $f1
-    db "for 1000G. Well?", $ff, $f0
+    db "<VOICE1>*: I'll heal you<LINE>"
+    db "for 1000G. Well?<CHOICE>"
+    db "@"
 
 String_09_05_06::
-    db $ea, "*: Hehehe, money is", $f1
-    db "my motivation.", $fa, $f7
-    db $ef, $ee, "Hope you'll give", $ef, $ee, "me some again!", $f7
-    db $f0
+    db "<VOICE1>*: Hehehe, money is<LINE>"
+    db "my motivation.<PROMPT>"
+    db "<NEXT>Hope you'll give"
+    db "<NEXT>me some again!<WAIT>"
+    db "@"
 
 String_09_05_07::
-    db $ea, "*: Heh, I hope your", $f1
-    db "luck holds, kid!", $fa, $f7
-    db $ef, $ee, "Don't blame me if", $ef, $ee, "you don't make it.", $f7
-    db $f0
+    db "<VOICE1>*: Heh, I hope your<LINE>"
+    db "luck holds, kid!<PROMPT>"
+    db "<NEXT>Don't blame me if"
+    db "<NEXT>you don't make it.<WAIT>"
+    db "@"
 
 String_09_05_08::
-    db $ea, "*: ", $f9, "Y! Just", $f1
-    db $f9, $4e, "G! Well?", $ff, $f0
+    db "<VOICE1>*: <BUF>", $22, "! Just<LINE>"
+    db "<BUF>", $4e, "G! Well?<CHOICE>"
+    db "@"
 
 String_09_05_09::
-    db $ea, "*: Heheheh, thanks!", $f1
-    db "See you again!", $f7
-    db $f0
+    db "<VOICE1>*: Heheheh, thanks!<LINE>"
+    db "See you again!<WAIT>"
+    db "@"
 
 String_09_05_0A::
-    db $ea, "*: Tch, tightwad", $a4, $f1
-    db "You'll regret this.", $f7
-    db $f0
+    db "<VOICE1>*: Tch, tightwad…<LINE>"
+    db "You'll regret this.<WAIT>"
+    db "@"
 
 String_09_05_0B::
-    db $ea, "*: I'm a wandering", $f1
-    db "master.", $fa, $f7
-    db $ef, $ee, "I've been on the", $ef, $ee, "road for training.", $fa, $f7
-    db $ef, $ee, "You look tough.", $ef, $ee, "Want to battle?", $ff, $f0
+    db "<VOICE1>*: I'm a wandering<LINE>"
+    db "master.<PROMPT>"
+    db "<NEXT>I've been on the"
+    db "<NEXT>road for training.<PROMPT>"
+    db "<NEXT>You look tough."
+    db "<NEXT>Want to battle?<CHOICE>"
+    db "@"
 
 String_09_05_0C::
-    db $ea, "*: Urgh. Tougher", $f1
-    db "than me", $a4, $fa, $f7
-    db $ef, $ee, "I", $44, " better redouble", $ef, $ee, "my training.", $f7
-    db $f0
+    db "<VOICE1>*: Urgh. Tougher<LINE>"
+    db "than me…<PROMPT>"
+    db "<NEXT>I", $44, " better redouble"
+    db "<NEXT>my training.<WAIT>"
+    db "@"
 
 String_09_05_0D::
-    db $f9, "0 obtained a", $f1
-    db "WarpWing.", $f7
-    db $f0
+    db "<BUF0> obtained a<LINE>"
+    db "WarpWing.<WAIT>"
+    db "@"
 
 String_09_05_0E::
-    db $ea, "*: Hahahah! I", $f1
-    db "overestimated you!", $f7
-    db $f0
+    db "<VOICE1>*: Hahahah! I<LINE>"
+    db "overestimated you!<WAIT>"
+    db "@"
 
 String_09_05_0F::
-    db $f9, "0 lost", $f1
-    db $f9, $4e, "G.", $f7
-    db $f0
+    db "<BUF0> lost<LINE>"
+    db "<BUF>", $4e, "G.<WAIT>"
+    db "@"
 
 String_09_05_10::
-    db $eb, "*: I'm a traveling", $f1
-    db "master.", $fa, $f7
-    db $ef, $ee, "I'm training", $ef, $ee, "my monsters.", $fa, $f7
-    db $ef, $ee, "You look strong.", $ef, $ee, "Will you battle?", $ff, $f0
+    db "<VOICE2>*: I'm a traveling<LINE>"
+    db "master.<PROMPT>"
+    db "<NEXT>I'm training"
+    db "<NEXT>my monsters.<PROMPT>"
+    db "<NEXT>You look strong."
+    db "<NEXT>Will you battle?<CHOICE>"
+    db "@"
 
 String_09_05_11::
-    db $eb, "*: Uh-oh, I lost!", $f1
-    db "I can do better!", $f7
-    db $f0
+    db "<VOICE2>*: Uh-oh, I lost!<LINE>"
+    db "I can do better!<WAIT>"
+    db "@"
 
 String_09_05_12::
-    db $eb, "*: I'm sorry, but", $f1
-    db "you didn't put up", $fa, $f7
-    db $ef, $ee, "much resistance.", $ef, $ee, "I'm a little bored.", $f7
-    db $f0
+    db "<VOICE2>*: I'm sorry, but<LINE>"
+    db "you didn't put up<PROMPT>"
+    db "<NEXT>much resistance."
+    db "<NEXT>I'm a little bored.<WAIT>"
+    db "@"
 
 String_09_05_13::
-    db $eb, "*: Hi! Want to try", $f1
-    db "your luck?", $fa, $f7
-    db $ef, $ee, $f9, "Y is the", $ef, $ee, "prize!", $fa, $f7
-    db $ef, $ee, "Want to try?", $ef, $ee, "It's just 100G!", $ff, $f0
+    db "<VOICE2>*: Hi! Want to try<LINE>"
+    db "your luck?<PROMPT>"
+    db "<NEXT><BUF>", $22, " is the"
+    db "<NEXT>prize!<PROMPT>"
+    db "<NEXT>Want to try?"
+    db "<NEXT>It's just 100G!<CHOICE>"
+    db "@"
 
 String_09_05_14::
-    db $eb, "*: I'll pick a card", $f1
-    db "between 1 and 13.", $fa, $f7
-    db $ef, $ee, "Is the card I", $ef, $ee, "picked above 7?", $ff, $f0
+    db "<VOICE2>*: I'll pick a card<LINE>"
+    db "between 1 and 13.<PROMPT>"
+    db "<NEXT>Is the card I"
+    db "<NEXT>picked above 7?<CHOICE>"
+    db "@"
 
 String_09_05_15::
-    db $eb, "*: I'll have nice", $f1
-    db "prizes next time.", $f7
-    db $f0
+    db "<VOICE2>*: I'll have nice<LINE>"
+    db "prizes next time.<WAIT>"
+    db "@"
 
 String_09_05_16::
-    db $eb, "*: I picked", $a4, " ", $f9, $4e, "!", $f1
-    db "Wow! You win!", $fa, $f7
-    db $ef, $ee, "Next, ", $f9, "Y is", $ef, $ee, "the prize.", $fa, $f7
-    db $ef, $ee, "Want to bet what", $ef, $ee, "you've won so far", $fa, $f7
-    db $ef, $ee, "and ", $f9, $51, "G for a", $ef, $ee, "chance to win?", $ff, $f0
+    db "<VOICE2>*: I picked… <BUF>", $4e, "!<LINE>"
+    db "Wow! You win!<PROMPT>"
+    db "<NEXT>Next, <BUF>", $22, " is"
+    db "<NEXT>the prize.<PROMPT>"
+    db "<NEXT>Want to bet what"
+    db "<NEXT>you've won so far<PROMPT>"
+    db "<NEXT>and <BUF>", $51, "G for a"
+    db "<NEXT>chance to win?<CHOICE>"
+    db "@"
 
 String_09_05_17::
-    db $eb, "*: I picked", $a4, " ", $f9, $4e, "!", $f1
-    db "Whoops, you lose.", $fa, $f7
-    db $ef, $ee, "I'll take ", $f9, $51, "G", $ef, $ee, "and any prize.", $f7
-    db $f0
+    db "<VOICE2>*: I picked… <BUF>", $4e, "!<LINE>"
+    db "Whoops, you lose.<PROMPT>"
+    db "<NEXT>I'll take <BUF>", $51, "G"
+    db "<NEXT>and any prize.<WAIT>"
+    db "@"
 
 String_09_05_18::
-    db $eb, "*: I picked", $a4, " ", $f9, $4e, "!", $f1
-    db "Oh, same number?", $fa, $f7
-    db $ef, $ee, "Sorry, I win in", $ef, $ee, "this case.", $fa, $f7
-    db $ef, $ee, "I'll take ", $f9, $51, "G", $ef, $ee, "and any prize.", $f7
-    db $f0
+    db "<VOICE2>*: I picked… <BUF>", $4e, "!<LINE>"
+    db "Oh, same number?<PROMPT>"
+    db "<NEXT>Sorry, I win in"
+    db "<NEXT>this case.<PROMPT>"
+    db "<NEXT>I'll take <BUF>", $51, "G"
+    db "<NEXT>and any prize.<WAIT>"
+    db "@"
 
 String_09_05_19::
-    db $eb, "*: Do you think the", $f1
-    db "next card I pick", $fa, $f7
-    db $ef, $ee, "will be above ", $f9, $4e, "?", $ef, $ee, $ff, $f0
+    db "<VOICE2>*: Do you think the<LINE>"
+    db "next card I pick<PROMPT>"
+    db "<NEXT>will be above <BUF>", $4e, "?"
+    db "<NEXT><CHOICE>"
+    db "@"
 
 String_09_05_1A::
-    db $eb, "*: Awww, you won't", $f1
-    db "play?", $fa, $f7
-    db $ef, $ee, "Please come again", $ef, $ee, "and try your luck!", $f7
-    db $f0
+    db "<VOICE2>*: Awww, you won't<LINE>"
+    db "play?<PROMPT>"
+    db "<NEXT>Please come again"
+    db "<NEXT>and try your luck!<WAIT>"
+    db "@"
 
 String_09_05_1B::
-    db $f9, "0 obtained", $f1
-    db "the ", $f9, "Y.", $f7
-    db $f0
+    db "<BUF0> obtained<LINE>"
+    db "the <BUF>", $22, ".<WAIT>"
+    db "@"
 
 String_09_05_1C::
-    db $eb, "*: I picked", $a4, " ", $f9, $4e, "!", $f1
-    db "Wow! You win!", $fa, $f7
-    db $ef, $ee, "That was the last", $ef, $ee, "prize!", $fa, $f7
-    db $ef, $ee, "Please try again", $ef, $ee, "the next time!", $f7
-    db $f0
+    db "<VOICE2>*: I picked… <BUF>", $4e, "!<LINE>"
+    db "Wow! You win!<PROMPT>"
+    db "<NEXT>That was the last"
+    db "<NEXT>prize!<PROMPT>"
+    db "<NEXT>Please try again"
+    db "<NEXT>the next time!<WAIT>"
+    db "@"
 
 String_09_05_1D::
-    db $ea, "*: If you can beat", $f1
-    db "me, I'll give you", $fa, $f7
-    db $ef, $ee, "something good.", $ef, $ee, "Want to battle?", $ff, $f0
+    db "<VOICE1>*: If you can beat<LINE>"
+    db "me, I'll give you<PROMPT>"
+    db "<NEXT>something good."
+    db "<NEXT>Want to battle?<CHOICE>"
+    db "@"
 
 String_09_05_1E::
-    db $ea, "*: Very good. Here's", $f1
-    db "your reward.", $f7
-    db $f0
+    db "<VOICE1>*: Very good. Here's<LINE>"
+    db "your reward.<WAIT>"
+    db "@"
 
 String_09_05_1F::
-    db $ea, "*: Well, that was", $f1
-    db "unseemly.", $fa, $f7
-    db $ef, $ee, "You shouldn't shirk", $ef, $ee, "from training.", $f7
-    db $f0
+    db "<VOICE1>*: Well, that was<LINE>"
+    db "unseemly.<PROMPT>"
+    db "<NEXT>You shouldn't shirk"
+    db "<NEXT>from training.<WAIT>"
+    db "@"
 
 String_09_05_20::
-    db $f9, "0 lost", $f1
-    db $f9, $4e, "G.", $f7
-    db $f0
+    db "<BUF0> lost<LINE>"
+    db "<BUF>", $4e, "G.<WAIT>"
+    db "@"
 
 String_09_05_21::
-    db $ea, "Do you want a map?", $f1
-    db "Just 200G.", $ff, $f0
+    db "<VOICE1>Do you want a map?<LINE>"
+    db "Just 200G.<CHOICE>"
+    db "@"
 
 String_09_05_22::
-    db $ea, "*: No?", $f1
-    db "That's too bad.", $f7
-    db $f0
+    db "<VOICE1>*: No?<LINE>"
+    db "That's too bad.<WAIT>"
+    db "@"
 
 String_09_05_23::
-    db $ea, $f9, "0 handed over", $f1
-    db "200G.", $f7
-    db $f0
+    db "<VOICE1><BUF0> handed over<LINE>"
+    db "200G.<WAIT>"
+    db "@"
 
 String_09_05_24::
-    db $ea, "*: I'll give you", $f1
-    db "special medicine", $fa, $f7
-    db $ef, $ee, "if you manage to", $ef, $ee, "defeat me.", $fa, $f7
-    db $ef, $ee, "Would you like to", $ef, $ee, "challenge me?", $ff, $f0
+    db "<VOICE1>*: I'll give you<LINE>"
+    db "special medicine<PROMPT>"
+    db "<NEXT>if you manage to"
+    db "<NEXT>defeat me.<PROMPT>"
+    db "<NEXT>Would you like to"
+    db "<NEXT>challenge me?<CHOICE>"
+    db "@"
 
 String_09_05_25::
-    db $ea, "*: You've won.", $f1
-    db "As promised, let", $fa, $f7
-    db $ef, $ee, "me give you some", $ef, $ee, "of my medicine.", $f7
-    db $f0
+    db "<VOICE1>*: You've won.<LINE>"
+    db "As promised, let<PROMPT>"
+    db "<NEXT>me give you some"
+    db "<NEXT>of my medicine.<WAIT>"
+    db "@"
 
 String_09_05_26::
-    db $f9, "N's ", $f9, "Y", $f1
-    db "rose by ", $f9, $4e, ".", $f7
-    db $f0
+    db "<BUF>", $17, "'s <BUF>", $22, "<LINE>"
+    db "rose by <BUF>", $4e, ".<WAIT>"
+    db "@"
 
 String_09_05_27::
     db $f0
@@ -965,541 +1022,602 @@ String_09_05_29::
     db $16, $19, $f0
 
 String_09_05_2A::
-    db "ATK", $f0
+    db "ATK@"
 
 String_09_05_2B::
-    db "DEF", $f0
+    db "DEF@"
 
 String_09_05_2C::
-    db "AGL", $f0
+    db "AGL@"
 
 String_09_05_2D::
-    db "INT", $f0
+    db "INT@"
 
 String_09_05_2E::
-    db $ea, "*: Welcome aboard", $f1
-    db "the casino ship!", $fa, $f7
-    db $ef, $ee, "Have a spin on the", $ef, $ee, "slots for 100G!", $fa, $f7
-    db $ef, $ee, "There are prizes", $ef, $ee, "too. Try it out?", $ff, $f0
+    db "<VOICE1>*: Welcome aboard<LINE>"
+    db "the casino ship!<PROMPT>"
+    db "<NEXT>Have a spin on the"
+    db "<NEXT>slots for 100G!<PROMPT>"
+    db "<NEXT>There are prizes"
+    db "<NEXT>too. Try it out?<CHOICE>"
+    db "@"
 
 String_09_05_2F::
-    db $ea, "*: Stop the reels", $f1
-    db "with the A Button.", $fa, $f7
-    db $ef, $ee, "Depending on what", $ef, $ee, "marks you line up,", $fa, $f7
-    db $ef, $ee, "the prizes will", $ef, $ee, "vary. Ready?", $f7
-    db $f0
+    db "<VOICE1>*: Stop the reels<LINE>"
+    db "with the A Button.<PROMPT>"
+    db "<NEXT>Depending on what"
+    db "<NEXT>marks you line up,<PROMPT>"
+    db "<NEXT>the prizes will"
+    db "<NEXT>vary. Ready?<WAIT>"
+    db "@"
 
 String_09_05_30::
-    db $ea, "*: Lucky! You win a", $f1
-    db "TinyMedal!", $f7
-    db $f0
+    db "<VOICE1>*: Lucky! You win a<LINE>"
+    db "TinyMedal!<WAIT>"
+    db "@"
 
 String_09_05_31::
-    db $ea, "*: There it is!", $f1
-    db "You win 1000G!", $f7
-    db $f0
+    db "<VOICE1>*: There it is!<LINE>"
+    db "You win 1000G!<WAIT>"
+    db "@"
 
 String_09_05_32::
-    db $ea, "*: Whoa! You've won", $f1
-    db "a MeteOrb!", $f7
-    db $f0
+    db "<VOICE1>*: Whoa! You've won<LINE>"
+    db "a MeteOrb!<WAIT>"
+    db "@"
 
 String_09_05_33::
-    db $ea, "*: Whoa", $a4, " Are you", $f1
-    db "kidding me?", $fa, $f7
-    db $ef, $ee, "You've won some", $ef, $ee, "secret medicine.", $f7
-    db $f0
+    db "<VOICE1>*: Whoa… Are you<LINE>"
+    db "kidding me?<PROMPT>"
+    db "<NEXT>You've won some"
+    db "<NEXT>secret medicine.<WAIT>"
+    db "@"
 
 String_09_05_34::
-    db $ea, "*: Are you serious?", $f1
-    db "I don't believe it.", $fa, $f7
-    db $ef, $ee, "You've won some", $ef, $ee, "secret medicine.", $f7
-    db $f0
+    db "<VOICE1>*: Are you serious?<LINE>"
+    db "I don't believe it.<PROMPT>"
+    db "<NEXT>You've won some"
+    db "<NEXT>secret medicine.<WAIT>"
+    db "@"
 
 String_09_05_35::
-    db $ea, "*: Too bad", $a4, $f1
-    db "Try again, OK?", $f7
-    db $f0
+    db "<VOICE1>*: Too bad…<LINE>"
+    db "Try again, OK?<WAIT>"
+    db "@"
 
 String_09_05_36::
-    db $ea, "*: That's too bad.", $f1
-    db "See you again.", $f7
-    db $f0
+    db "<VOICE1>*: That's too bad.<LINE>"
+    db "See you again.<WAIT>"
+    db "@"
 
 String_09_05_37::
-    db $ea, "*: I will heal your", $f1
-    db "injuries for you", $a4, $fa, $f7
-    db $ef, $ee, "If you can defeat", $ef, $ee, "me, that is. Well?", $ff, $f0
+    db "<VOICE1>*: I will heal your<LINE>"
+    db "injuries for you…<PROMPT>"
+    db "<NEXT>If you can defeat"
+    db "<NEXT>me, that is. Well?<CHOICE>"
+    db "@"
 
 String_09_05_38::
-    db $ea, "*: Fine, fine,", $f1
-    db "I surrender.", $fa, $f7
-    db $ef, $ee, "I'll heal your", $ef, $ee, "party as promised.", $f7
-    db $f0
+    db "<VOICE1>*: Fine, fine,<LINE>"
+    db "I surrender.<PROMPT>"
+    db "<NEXT>I'll heal your"
+    db "<NEXT>party as promised.<WAIT>"
+    db "@"
 
 String_09_05_39::
-    db $ea, "*: Your lack of", $f1
-    db "training is clear.", $fa, $f7
-    db $ef, $ee, "Best of luck to", $ef, $ee, "you", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Your lack of<LINE>"
+    db "training is clear.<PROMPT>"
+    db "<NEXT>Best of luck to"
+    db "<NEXT>you…<WAIT>"
+    db "@"
 
 String_09_05_3A::
-    db $ea, "*: Let me lighten", $f1
-    db "your purse.", $f7
-    db $f0
+    db "<VOICE1>*: Let me lighten<LINE>"
+    db "your purse.<WAIT>"
+    db "@"
 
 String_09_05_3B::
-    db $ea, "*: I see an injured", $f1
-    db "monster", $a4, $fa, $f7
-    db $ef, $ee, "Heh, I think I can", $ef, $ee, "win this one.", $f7
-    db $f0
+    db "<VOICE1>*: I see an injured<LINE>"
+    db "monster…<PROMPT>"
+    db "<NEXT>Heh, I think I can"
+    db "<NEXT>win this one.<WAIT>"
+    db "@"
 
 String_09_05_3C::
-    db $ea, "*: Oh, at least one", $f1
-    db "monster tired?", $fa, $f7
-    db $ef, $ee, "This works out", $ef, $ee, "perfectly for me.", $f7
-    db $f0
+    db "<VOICE1>*: Oh, at least one<LINE>"
+    db "monster tired?<PROMPT>"
+    db "<NEXT>This works out"
+    db "<NEXT>perfectly for me.<WAIT>"
+    db "@"
 
 String_09_05_3D::
-    db $ea, "*: Heh, those are", $f1
-    db "some weaklings!", $fa, $f7
-    db $ef, $ee, "That makes things", $ef, $ee, "easy for me.", $f7
-    db $f0
+    db "<VOICE1>*: Heh, those are<LINE>"
+    db "some weaklings!<PROMPT>"
+    db "<NEXT>That makes things"
+    db "<NEXT>easy for me.<WAIT>"
+    db "@"
 
 String_09_05_3E::
-    db "The fugitive", $f1
-    db "master was", $fa, $f7
-    db $ef, $ee, "captured and sent", $ef, $ee, "back to GreatLog.", $f7
-    db $f0
+    db "The fugitive<LINE>"
+    db "master was<PROMPT>"
+    db "<NEXT>captured and sent"
+    db "<NEXT>back to GreatLog.<WAIT>"
+    db "@"
 
 String_09_05_3F::
-    db $ea, "*: I'll unburden", $f1
-    db "you of your gold.", $f7
-    db $f0
+    db "<VOICE1>*: I'll unburden<LINE>"
+    db "you of your gold.<WAIT>"
+    db "@"
 
 String_09_05_40::
-    db $ea, "*: I'm not dirty-", $f1
-    db "not at all.", $fa, $f7
-    db $ef, $ee, "You shouldn't be", $ef, $ee, "so careless.", $f7
-    db $f0
+    db "<VOICE1>*: I'm not dirty-<LINE>"
+    db "not at all.<PROMPT>"
+    db "<NEXT>You shouldn't be"
+    db "<NEXT>so careless.<WAIT>"
+    db "@"
 
 String_09_05_41::
-    db $ea, "*: You'll need more", $f1
-    db "experience to", $fa, $f7
-    db $ef, $ee, "catch me, much", $ef, $ee, "more, hahahah!", $f7
-    db $f0
+    db "<VOICE1>*: You'll need more<LINE>"
+    db "experience to<PROMPT>"
+    db "<NEXT>catch me, much"
+    db "<NEXT>more, hahahah!<WAIT>"
+    db "@"
 
 String_09_05_42::
-    db $ea, "*: Heheheh, your", $f1
-    db "looks don't lie!", $fa, $f7
-    db $ef, $ee, "That'll teach you", $ef, $ee, "to stay away!", $f7
-    db $f0
+    db "<VOICE1>*: Heheheh, your<LINE>"
+    db "looks don't lie!<PROMPT>"
+    db "<NEXT>That'll teach you"
+    db "<NEXT>to stay away!<WAIT>"
+    db "@"
 
 String_09_05_43::
-    db $f9, "0 received a", $f1
-    db "Magic Key.", $e5, $58, $f7
-    db $e9, $ff, $f0
+    db "<BUF0> received a<LINE>"
+    db "Magic Key.<MUSIC_WAIT>", $58, "<WAIT>"
+    db "<MAP_MUSIC>@"
 
 String_09_05_44::
-    db $ea, "*: Lucky, kid!", $f1
-    db "You've won 500G!", $f7
-    db $f0
+    db "<VOICE1>*: Lucky, kid!<LINE>"
+    db "You've won 500G!<WAIT>"
+    db "@"
 
 String_09_05_45::
-    db $ea, "*: Lucky, kid!", $f1
-    db "You've won 200G!", $f7
-    db $f0
+    db "<VOICE1>*: Lucky, kid!<LINE>"
+    db "You've won 200G!<WAIT>"
+    db "@"
 
 String_09_05_46::
-    db $ea, "*: Lucky, kid!", $f1
-    db "You've won 100G!", $f7
-    db $f0
+    db "<VOICE1>*: Lucky, kid!<LINE>"
+    db "You've won 100G!<WAIT>"
+    db "@"
 
 String_09_05_47::
-    db $ea, "*: Lucky, kid!", $f1
-    db "You've won 50G!", $f7
-    db $f0
+    db "<VOICE1>*: Lucky, kid!<LINE>"
+    db "You've won 50G!<WAIT>"
+    db "@"
 
 String_09_05_48::
-    db $ea, "*: You've no courage", $f1
-    db "to battle?", $fa, $f7
-    db $ef, $ee, "Shame, it really", $ef, $ee, "is.", $f7
-    db $f0
+    db "<VOICE1>*: You've no courage<LINE>"
+    db "to battle?<PROMPT>"
+    db "<NEXT>Shame, it really"
+    db "<NEXT>is.<WAIT>"
+    db "@"
 
 String_09_05_49::
-    db $ea, "*: I take being a", $f1
-    db "master seriously.", $fa, $f7
-    db $ef, $ee, "I won't hold back", $ef, $ee, "from anything!", $f7
-    db $f0
+    db "<VOICE1>*: I take being a<LINE>"
+    db "master seriously.<PROMPT>"
+    db "<NEXT>I won't hold back"
+    db "<NEXT>from anything!<WAIT>"
+    db "@"
 
 String_09_05_4A::
-    db $ea, "*: No? You're rather", $f1
-    db "cowardly.", $f7
-    db $f0
+    db "<VOICE1>*: No? You're rather<LINE>"
+    db "cowardly.<WAIT>"
+    db "@"
 
 String_09_05_4B::
-    db $ea, "*: Ah, the sparkle", $f1
-    db "in your eyes", $a4, $fa, $f7
-    db $ef, $ee, "I", $44, " best not", $ef, $ee, "disappoint you!", $f7
-    db $f0
+    db "<VOICE1>*: Ah, the sparkle<LINE>"
+    db "in your eyes…<PROMPT>"
+    db "<NEXT>I", $44, " best not"
+    db "<NEXT>disappoint you!<WAIT>"
+    db "@"
 
 String_09_05_4C::
-    db $ea, "*: What?", $f1
-    db "Little chicken!", $fa, $f7
-    db $ef, $ee, "Go home to your", $ef, $ee, "mommy, baby!", $f7
-    db $f0
+    db "<VOICE1>*: What?<LINE>"
+    db "Little chicken!<PROMPT>"
+    db "<NEXT>Go home to your"
+    db "<NEXT>mommy, baby!<WAIT>"
+    db "@"
 
 String_09_05_4D::
-    db $ea, "*: Good answer!", $f1
-    db "Let's battle!", $f7
-    db $f0
+    db "<VOICE1>*: Good answer!<LINE>"
+    db "Let's battle!<WAIT>"
+    db "@"
 
 String_09_05_4E::
-    db $eb, "*: Oh, you poor", $f1
-    db "monsters.", $fa, $f7
-    db $ef, $ee, "You have such a", $ef, $ee, "poor master", $a4, $f7
-    db $f0
+    db "<VOICE2>*: Oh, you poor<LINE>"
+    db "monsters.<PROMPT>"
+    db "<NEXT>You have such a"
+    db "<NEXT>poor master…<WAIT>"
+    db "@"
 
 String_09_05_4F::
-    db $eb, "*: Oh, you're ready,", $f1
-    db "are you?", $fa, $f7
-    db $ef, $ee, "But I don't plan", $ef, $ee, "on losing!", $f7
-    db $f0
+    db "<VOICE2>*: Oh, you're ready,<LINE>"
+    db "are you?<PROMPT>"
+    db "<NEXT>But I don't plan"
+    db "<NEXT>on losing!<WAIT>"
+    db "@"
 
 String_09_05_50::
-    db $ea, "*: I thought you", $f1
-    db "were dedicated", $a4, $fa, $f7
-    db $ef, $ee, "But my eyes must", $ef, $ee, "have been misled.", $f7
-    db $f0
+    db "<VOICE1>*: I thought you<LINE>"
+    db "were dedicated…<PROMPT>"
+    db "<NEXT>But my eyes must"
+    db "<NEXT>have been misled.<WAIT>"
+    db "@"
 
 String_09_05_51::
-    db $ea, "*: My eyes didn't", $f1
-    db "mislead me. Ready?", $f7
-    db $f0
+    db "<VOICE1>*: My eyes didn't<LINE>"
+    db "mislead me. Ready?<WAIT>"
+    db "@"
 
 String_09_05_52::
-    db $ea, "*: Now you can see", $f1
-    db "the entire world!", $f7
-    db $f0
+    db "<VOICE1>*: Now you can see<LINE>"
+    db "the entire world!<WAIT>"
+    db "@"
 
 String_09_05_53::
-    db $ea, "*: I hope you'll", $f1
-    db "put up more of a", $fa, $f7
-    db $ef, $ee, "fight next time", $ef, $ee, "than this", $a4, $f7
-    db $f0
+    db "<VOICE1>*: I hope you'll<LINE>"
+    db "put up more of a<PROMPT>"
+    db "<NEXT>fight next time"
+    db "<NEXT>than this…<WAIT>"
+    db "@"
 
 String_09_06_00::
     db $f0
 
 String_09_06_01::
-    db "GreatLog", $5b, $f0
+    db "GreatLog", $5b, "@"
 
 String_09_06_02::
-    db "Oasis", $5b, $f0
+    db "Oasis", $5b, "@"
 
 String_09_06_03::
-    db "Pirate", $5b, $f0
+    db "Pirate", $5b, "@"
 
 String_09_06_04::
-    db "Ice", $5b, $f0
+    db "Ice", $5b, "@"
 
 String_09_06_05::
-    db "Sky", $5b, $f0
+    db "Sky", $5b, "@"
 
 String_09_06_06::
-    db "Limbo", $5b, $f0
+    db "Limbo", $5b, "@"
 
 String_09_06_07::
-    db "Elf", $5b, $f0
+    db "Elf", $5b, "@"
 
 String_09_06_08::
-    db "Lonely", $5b, $f0
+    db "Lonely", $5b, "@"
 
 String_09_06_09::
-    db "Traveler", $5b, $f0
+    db "Traveler", $5b, "@"
 
 String_09_06_0A::
-    db "Brawn", $5b, $f0
+    db "Brawn", $5b, "@"
 
 String_09_06_0B::
-    db "Baffle", $5b, $f0
+    db "Baffle", $5b, "@"
 
 String_09_06_0C::
-    db "Soul", $5b, $f0
+    db "Soul", $5b, "@"
 
 String_09_07_00::
     db $f1, $f1, $f0
 
 String_09_07_01::
-    db "Key to", $f1
-    db "return", $f1
-    db "home.", $f0
+    db "Key to<LINE>"
+    db "return<LINE>"
+    db "home.@"
 
 String_09_07_02::
-    db "Key to", $f1
-    db "Desert", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Desert<LINE>"
+    db "World.@"
 
 String_09_07_03::
-    db "Key to", $f1
-    db "Sea", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Sea<LINE>"
+    db "World.@"
 
 String_09_07_04::
-    db "Key to", $f1
-    db "Ice", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Ice<LINE>"
+    db "World.@"
 
 String_09_07_05::
-    db "Key to", $f1
-    db "Sky", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Sky<LINE>"
+    db "World.@"
 
 String_09_07_06::
-    db "Key to", $f1
-    db "Limbo.", $f1
-    db $f0
+    db "Key to<LINE>"
+    db "Limbo.<LINE>"
+    db "@"
 
 String_09_07_07::
-    db "Key to", $f1
-    db "Elf", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Elf<LINE>"
+    db "World.@"
 
 String_09_07_08::
-    db "Key to", $f1
-    db "Lonely", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Lonely<LINE>"
+    db "World.@"
 
 String_09_07_09::
-    db "Key to", $f1
-    db "Travel", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Travel<LINE>"
+    db "World.@"
 
 String_09_07_0A::
-    db "Key to", $f1
-    db "Power", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Power<LINE>"
+    db "World.@"
 
 String_09_07_0B::
-    db "Key to", $f1
-    db "Baffle", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Baffle<LINE>"
+    db "World.@"
 
 String_09_07_0C::
-    db "Key to", $f1
-    db "Soul", $f1
-    db "World.", $f0
+    db "Key to<LINE>"
+    db "Soul<LINE>"
+    db "World.@"
 
 String_09_07_0D::
-    db "Magic", $f1
-    db "Key to", $f1
-    db "where?", $f0
+    db "Magic<LINE>"
+    db "Key to<LINE>"
+    db "where?@"
 
 String_09_07_0E::
-    db "Key to", $f1
-    db $f9, "0.", $f1
-    db $f0
+    db "Key to<LINE>"
+    db "<BUF0>.<LINE>"
+    db "@"
 
 String_09_08_00::
-    db "New gameContinueVS battleBreedTrade ", $b8, "Journal datalost", $a4, $f0
+    db "New gameContinueVS battleBreedTrade ©Journal datalost…@"
 
 String_09_09_00::
-    db $ea, "*: Welcome to the", $f1
-    db "Arena!", $fa, $f7
-    db $ef, $ee, "We have a special", $ef, $ee, "team with us!", $f7
-    db $f0
+    db "<VOICE1>*: Welcome to the<LINE>"
+    db "Arena!<PROMPT>"
+    db "<NEXT>We have a special"
+    db "<NEXT>team with us!<WAIT>"
+    db "@"
 
 String_09_09_01::
-    db $ea, "*: Welcome to the", $f1
-    db "Arena!", $fa, $f7
-    db $ef, $ee, "For today's C", $ef, $ee, "Class Challenge,", $fa, $f7
-    db $ef, $ee, "we have a little", $ef, $ee, "challenger!", $f7
-    db $f0
+    db "<VOICE1>*: Welcome to the<LINE>"
+    db "Arena!<PROMPT>"
+    db "<NEXT>For today's C"
+    db "<NEXT>Class Challenge,<PROMPT>"
+    db "<NEXT>we have a little"
+    db "<NEXT>challenger!<WAIT>"
+    db "@"
 
 String_09_09_02::
-    db $ea, "*: Welcome to the", $f1
-    db "Arena!", $fa, $f7
-    db $ef, $ee, "For today's B", $ef, $ee, "Class Tournament,", $fa, $f7
-    db $ef, $ee, "we have a brave,", $ef, $ee, "new challenger!", $f7
-    db $f0
+    db "<VOICE1>*: Welcome to the<LINE>"
+    db "Arena!<PROMPT>"
+    db "<NEXT>For today's B"
+    db "<NEXT>Class Tournament,<PROMPT>"
+    db "<NEXT>we have a brave,"
+    db "<NEXT>new challenger!<WAIT>"
+    db "@"
 
 String_09_09_03::
-    db $ea, "*: Welcome to the", $f1
-    db "Arena!", $fa, $f7
-    db $ef, $ee, "For today's A", $ef, $ee, "Class Tournament,", $fa, $f7
-    db $ef, $ee, "we have a hot, new", $ef, $ee, "challenger!", $f7
-    db $f0
+    db "<VOICE1>*: Welcome to the<LINE>"
+    db "Arena!<PROMPT>"
+    db "<NEXT>For today's A"
+    db "<NEXT>Class Tournament,<PROMPT>"
+    db "<NEXT>we have a hot, new"
+    db "<NEXT>challenger!<WAIT>"
+    db "@"
 
 String_09_09_04::
-    db $ea, "*: Ladies and", $f1
-    db "gentlemen!", $fa, $f7
-    db $ef, $ee, "For today's S", $ef, $ee, "Class Tournament,", $fa, $f7
-    db $ef, $ee, "we have a brand", $ef, $ee, "new hero!", $f7
-    db $f0
+    db "<VOICE1>*: Ladies and<LINE>"
+    db "gentlemen!<PROMPT>"
+    db "<NEXT>For today's S"
+    db "<NEXT>Class Tournament,<PROMPT>"
+    db "<NEXT>we have a brand"
+    db "<NEXT>new hero!<WAIT>"
+    db "@"
 
 String_09_09_05::
-    db $ea, "*: E Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: E Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_06::
-    db $ea, "*: D Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: D Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_07::
-    db $ea, "*: C Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: C Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_08::
-    db $ea, "*: B Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: B Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_09::
-    db $ea, "*: A Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: A Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_0A::
-    db $ea, "*: S Class battles", $f1
-    db "are ready to go!", $f7
-    db $f0
+    db "<VOICE1>*: S Class battles<LINE>"
+    db "are ready to go!<WAIT>"
+    db "@"
 
 String_09_09_0B::
-    db $ea, "*: Ladies and", $f1
-    db "gentlemen!", $fa, $f7
-    db $ef, $ee, "Get ready for a", $ef, $ee, "Special Match!", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0", $ef, $ee, "will take on", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Ladies and<LINE>"
+    db "gentlemen!<PROMPT>"
+    db "<NEXT>Get ready for a"
+    db "<NEXT>Special Match!<PROMPT>"
+    db "<NEXT>Master <BUF0>"
+    db "<NEXT>will take on…<WAIT>"
+    db "@"
 
 String_09_09_0C::
-    db $ea, "*: Master ", $f9, "0 and", $f1
-    db "the farm friends!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> and<LINE>"
+    db "the farm friends!<WAIT>"
+    db "@"
 
 String_09_09_0D::
-    db $ea, "*: Master ", $f9, "0 and", $f1
-    db "the fun friends!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> and<LINE>"
+    db "the fun friends!<WAIT>"
+    db "@"
 
 String_09_09_0E::
-    db $ea, "*: Master ", $f9, "0 and", $f1
-    db "trusty friends!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> and<LINE>"
+    db "trusty friends!<WAIT>"
+    db "@"
 
 String_09_09_0F::
-    db $ea, "*: Master ", $f9, "0 and", $f1
-    db "powerful friends!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> and<LINE>"
+    db "powerful friends!<WAIT>"
+    db "@"
 
 String_09_09_10::
-    db $ea, "*: Master ", $f9, "0 and", $f1
-    db "brave friends!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> and<LINE>"
+    db "brave friends!<WAIT>"
+    db "@"
 
 String_09_09_11::
-    db $ea, "*: This next battle", $f1
-    db "will feature the", $fa, $f7
-    db $ef, $ee, "up-and-coming", $ef, $ee, "monster master", $a4, $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "the farm friends!", $f7
-    db $f0
+    db "<VOICE1>*: This next battle<LINE>"
+    db "will feature the<PROMPT>"
+    db "<NEXT>up-and-coming"
+    db "<NEXT>monster master…<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>the farm friends!<WAIT>"
+    db "@"
 
 String_09_09_12::
-    db $ea, "*: ????????? and", $f1
-    db "????? friends!", $f7
-    db $f0
+    db "<VOICE1>*: ????????? and<LINE>"
+    db "????? friends!<WAIT>"
+    db "@"
 
 String_09_09_13::
-    db $ea, "*: Battle one!", $f1
-    db "Ready? Go!", $f7
-    db $f0
+    db "<VOICE1>*: Battle one!<LINE>"
+    db "Ready? Go!<WAIT>"
+    db "@"
 
 String_09_09_14::
-    db $ea, "*: Battle two!", $f1
-    db "Ready? Go!", $f7
-    db $f0
+    db "<VOICE1>*: Battle two!<LINE>"
+    db "Ready? Go!<WAIT>"
+    db "@"
 
 String_09_09_15::
-    db $ea, "*: This decides the", $f1
-    db "champion!", $fa, $f7
-    db $ef, $ee, "Final battle!", $ef, $ee, "Ready? Go!", $f7
-    db $f0
+    db "<VOICE1>*: This decides the<LINE>"
+    db "champion!<PROMPT>"
+    db "<NEXT>Final battle!"
+    db "<NEXT>Ready? Go!<WAIT>"
+    db "@"
 
 String_09_09_16::
-    db $ea, "*: This is it! The", $f1
-    db "deciding battle!", $fa, $f7
-    db $ef, $ee, "Are you ready?", $ef, $ee, "Let's go!", $f7
-    db $f0
+    db "<VOICE1>*: This is it! The<LINE>"
+    db "deciding battle!<PROMPT>"
+    db "<NEXT>Are you ready?"
+    db "<NEXT>Let's go!<WAIT>"
+    db "@"
 
 String_09_09_17::
-    db $ea, "*: The challenger", $f1
-    db "wins battle one!", $f7
-    db $f0
+    db "<VOICE1>*: The challenger<LINE>"
+    db "wins battle one!<WAIT>"
+    db "@"
 
 String_09_09_18::
-    db $ea, "*: That's amazing!", $f1
-    db "Is this true?", $fa, $f7
-    db $ef, $ee, "The challenger", $ef, $ee, "wins battle two!", $f7
-    db $f0
+    db "<VOICE1>*: That's amazing!<LINE>"
+    db "Is this true?<PROMPT>"
+    db "<NEXT>The challenger"
+    db "<NEXT>wins battle two!<WAIT>"
+    db "@"
 
 String_09_09_19::
-    db $ea, "*: Master ", $f9, "0 has", $f1
-    db "won battle one!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> has<LINE>"
+    db "won battle one!<WAIT>"
+    db "@"
 
 String_09_09_1A::
-    db $ea, "*: Master ", $f9, "0 has", $f1
-    db "won battle two!", $f7
-    db $f0
+    db "<VOICE1>*: Master <BUF0> has<LINE>"
+    db "won battle two!<WAIT>"
+    db "@"
 
 String_09_09_1B::
-    db $ea, "*: Incredible!", $f1
-    db "The winners are", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "the fun friends!", $e5, $48, $fa, $f7
-    db $e9, $ff, $ef, $ee, "What an impressive", $ef, $ee, "debut!", $f7
-    db $f0
+    db "<VOICE1>*: Incredible!<LINE>"
+    db "The winners are<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>the fun friends!<MUSIC_WAIT>", $48, "<PROMPT>"
+    db "<MAP_MUSIC>"
+    db "<NEXT>What an impressive"
+    db "<NEXT>debut!<WAIT>"
+    db "@"
 
 String_09_09_1C::
-    db $ea, "*: The C Class", $f1
-    db "champion party is", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "the fun friends!", $e5, $4a, $fa, $f7
-    db $e9, $ff, $ef, $ee, "Let's hear it for", $ef, $ee, "the champion!", $f7
-    db $f0
+    db "<VOICE1>*: The C Class<LINE>"
+    db "champion party is<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>the fun friends!<MUSIC_WAIT>", $4a, "<PROMPT>"
+    db "<MAP_MUSIC>"
+    db "<NEXT>Let's hear it for"
+    db "<NEXT>the champion!<WAIT>"
+    db "@"
 
 String_09_09_1D::
-    db $ea, "*: The B Class", $f1
-    db "champion party is", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "trusty friends!", $e5, $4a, $fa, $f7
-    db $e9, $ff, $ef, $ee, "Let's hear it for", $ef, $ee, "the champion!", $f7
-    db $f0
+    db "<VOICE1>*: The B Class<LINE>"
+    db "champion party is<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>trusty friends!<MUSIC_WAIT>", $4a, "<PROMPT>"
+    db "<MAP_MUSIC>"
+    db "<NEXT>Let's hear it for"
+    db "<NEXT>the champion!<WAIT>"
+    db "@"
 
 String_09_09_1E::
-    db $ea, "*: The A Class", $f1
-    db "champion party is", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "powerful friends!", $e5, $4a, $fa, $f7
-    db $e9, $ff, $ef, $ee, "Let's have a huge", $ef, $ee, "hand for them!", $f7
-    db $f0
+    db "<VOICE1>*: The A Class<LINE>"
+    db "champion party is<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>powerful friends!<MUSIC_WAIT>", $4a, "<PROMPT>"
+    db "<MAP_MUSIC>"
+    db "<NEXT>Let's have a huge"
+    db "<NEXT>hand for them!<WAIT>"
+    db "@"
 
 String_09_09_1F::
-    db $ea, "*: The S Class", $f1
-    db "champion party is", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "brave friends!", $e5, $4d, $fa, $f7
-    db $e9, $ff, $ef, $ee, "Let's hear it for", $ef, $ee, "the new hero!", $f7
-    db $f0
+    db "<VOICE1>*: The S Class<LINE>"
+    db "champion party is<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>brave friends!<MUSIC_WAIT>", $4d, "<PROMPT>"
+    db "<MAP_MUSIC>"
+    db "<NEXT>Let's hear it for"
+    db "<NEXT>the new hero!<WAIT>"
+    db "@"
 
 String_09_09_20::
-    db $ea, "*: This match's", $f1
-    db "winners are", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "the farm friends!", $fa, $f7
-    db $ef, $ee, "Let's hear it for", $ef, $ee, "the winning party!", $f7
-    db $f0
+    db "<VOICE1>*: This match's<LINE>"
+    db "winners are<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>the farm friends!<PROMPT>"
+    db "<NEXT>Let's hear it for"
+    db "<NEXT>the winning party!<WAIT>"
+    db "@"
 
 String_09_09_21::
-    db $ea, "*: The Special", $f1
-    db "Match winners are", $fa, $f7
-    db $ef, $ee, "Master ", $f9, "0 and", $ef, $ee, "the farm friends!", $fa, $f7
-    db $ef, $ee, "Let's hear it for", $ef, $ee, "the winning party!", $f7
-    db $f0
+    db "<VOICE1>*: The Special<LINE>"
+    db "Match winners are<PROMPT>"
+    db "<NEXT>Master <BUF0> and"
+    db "<NEXT>the farm friends!<PROMPT>"
+    db "<NEXT>Let's hear it for"
+    db "<NEXT>the winning party!<WAIT>"
+    db "@"
     ds $1a86, $00

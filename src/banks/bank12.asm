@@ -3431,7 +3431,7 @@ KeyWorldFloorBattle_WriteScriptStartRequest::
 KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $012a ; 'Warubou: Wa-hey That was no good.'
+    ld hl, $012a ; 'Warubou: Wa-hey… That was no good.'
     call StartMessageHL_B0F_Bank12
     ret
 

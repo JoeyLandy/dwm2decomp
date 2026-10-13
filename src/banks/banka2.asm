@@ -232,161 +232,161 @@ StringList_A2_4A3E::
     dw String_A2_01_00 ; id 0
 
 String_A2_00_00::
-    db "    YUJI HORII", $f0
+    db "    YUJI HORII@"
 
 String_A2_00_01::
-    db "    YUJI HORII", $f1
-    db "       ENIX", $f1
-    db "       TOSE", $f1
-    db "FUMINORI ISHIKAWA", $f0
+    db "    YUJI HORII<LINE>"
+    db "       ENIX<LINE>"
+    db "       TOSE<LINE>"
+    db "FUMINORI ISHIKAWA@"
 
 String_A2_00_02::
-    db "  AKIRA TORIYAMA", $f0
+    db "  AKIRA TORIYAMA@"
 
 String_A2_00_03::
-    db "  KOICHI SUGIYAMA", $f0
+    db "  KOICHI SUGIYAMA@"
 
 String_A2_00_04::
-    db "   NOB OGASAWARA", $f1
-    db "   LYNN OGASAWARA", $f1
-    db "   KAI OGASAWARA", $f0
+    db "   NOB OGASAWARA<LINE>"
+    db "   LYNN OGASAWARA<LINE>"
+    db "   KAI OGASAWARA@"
 
 String_A2_00_05::
     db $f0
 
 String_A2_00_06::
-    db "  MITSURU G TORII", $f0
+    db "  MITSURU G TORII@"
 
 String_A2_00_07::
-    db "   JOHN LAURENCE", $f0
+    db "   JOHN LAURENCE@"
 
 String_A2_00_08::
-    db "  JON WEISNEWSKI", $f0
+    db "  JON WEISNEWSKI@"
 
 String_A2_00_09::
-    db "  MASAKO KOMIYAMA", $f1
-    db "   YURIKO MIZUTA", $f1
-    db "  MASANOBU YOSHIDA", $f0
+    db "  MASAKO KOMIYAMA<LINE>"
+    db "   YURIKO MIZUTA<LINE>"
+    db "  MASANOBU YOSHIDA@"
 
 String_A2_00_0A::
-    db "   CHRIS CHYMIY", $f1
-    db "   SHAWN CONARD", $f1
-    db "    TJ COWGILL", $f1
-    db "    JOHN HOLES", $f1
-    db "  JERRY PRITCHARD", $f1
-    db "   AARON SCHMITT", $f0
+    db "   CHRIS CHYMIY<LINE>"
+    db "   SHAWN CONARD<LINE>"
+    db "    TJ COWGILL<LINE>"
+    db "    JOHN HOLES<LINE>"
+    db "  JERRY PRITCHARD<LINE>"
+    db "   AARON SCHMITT@"
 
 String_A2_00_0B::
-    db "   ANDREW STEIN", $f0
+    db "   ANDREW STEIN@"
 
 String_A2_00_0C::
-    db "  MISUZU MCMILLAN", $f0
+    db "  MISUZU MCMILLAN@"
 
 String_A2_00_0D::
-    db "     YURI KATO", $f0
+    db "     YURI KATO@"
 
 String_A2_00_0E::
-    db "  PAUL HANDELMAN", $f0
+    db "  PAUL HANDELMAN@"
 
 String_A2_00_0F::
     db $f0
 
 String_A2_00_10::
-    db "    NAOKI OISHI", $f1
-    db " TAKASHI KAMIMURA", $f0
+    db "    NAOKI OISHI<LINE>"
+    db " TAKASHI KAMIMURA@"
 
 String_A2_00_11::
-    db "   KENJIRO KANO", $f1
-    db "   TOMOYUKI IWAI", $f1
-    db "  NORIKO NAKANONE", $f1
-    db "  KAZUNORI OHWADA", $f0
+    db "   KENJIRO KANO<LINE>"
+    db "   TOMOYUKI IWAI<LINE>"
+    db "  NORIKO NAKANONE<LINE>"
+    db "  KAZUNORI OHWADA@"
 
 String_A2_00_12::
-    db "   HIROSHI SATO", $f1
-    db "  HIDEKI YONEYAMA", $f0
+    db "   HIROSHI SATO<LINE>"
+    db "  HIDEKI YONEYAMA@"
 
 String_A2_00_13::
-    db " TAKATOSHI AKIYAMA", $f1
-    db " SEIICHI MORIUCHI", $f1
-    db "  SHINOBU NONAKA", $f1
-    db " SATOSHI FUKUSHIMA", $f1
-    db "     YUMI TOGO", $f0
+    db " TAKATOSHI AKIYAMA<LINE>"
+    db " SEIICHI MORIUCHI<LINE>"
+    db "  SHINOBU NONAKA<LINE>"
+    db " SATOSHI FUKUSHIMA<LINE>"
+    db "     YUMI TOGO@"
 
 String_A2_00_14::
-    db "  HIDEYUKI NUKUI", $f1
-    db "  HIROSHI KONDOU", $f1
-    db "   BIN KANAZAWA", $f1
-    db "  KAZUHIRO NOMURA", $f1
-    db "   TOMOE SUZUKI", $f0
+    db "  HIDEYUKI NUKUI<LINE>"
+    db "  HIROSHI KONDOU<LINE>"
+    db "   BIN KANAZAWA<LINE>"
+    db "  KAZUHIRO NOMURA<LINE>"
+    db "   TOMOE SUZUKI@"
 
 String_A2_00_15::
-    db "     KAN IKEDA", $f1
-    db "   YOUKO KAGAYA", $f1
-    db "   EMI NARIKIYO", $f1
-    db "     MIKA ENDO", $f1
-    db "   SAKIKO IKEDA", $f0
+    db "     KAN IKEDA<LINE>"
+    db "   YOUKO KAGAYA<LINE>"
+    db "   EMI NARIKIYO<LINE>"
+    db "     MIKA ENDO<LINE>"
+    db "   SAKIKO IKEDA@"
 
 String_A2_00_16::
-    db "  TETUYA FUJIMOTO", $f1
-    db "  MINORU KAKIZAWA", $f1
-    db "  YASUHITO SUZUKI", $f1
-    db "    NAOMI OZAWA", $f1
-    db "    KOJI NUMATA", $f0
+    db "  TETUYA FUJIMOTO<LINE>"
+    db "  MINORU KAKIZAWA<LINE>"
+    db "  YASUHITO SUZUKI<LINE>"
+    db "    NAOMI OZAWA<LINE>"
+    db "    KOJI NUMATA@"
 
 String_A2_00_17::
-    db "  ATUSHI TAKEUCHI", $f1
-    db "   TOMOHIRO ASO", $f1
-    db " KENSUKE YOKOYAMA", $f1
-    db " KENICHI YAMAMOTO", $f1
-    db " TEPPEI KOBAYASHI", $f0
+    db "  ATUSHI TAKEUCHI<LINE>"
+    db "   TOMOHIRO ASO<LINE>"
+    db " KENSUKE YOKOYAMA<LINE>"
+    db " KENICHI YAMAMOTO<LINE>"
+    db " TEPPEI KOBAYASHI@"
 
 String_A2_00_18::
-    db "    JIRO KIMURA", $f1
-    db "  YASUNORI HOSONO", $f1
-    db " KENTAKA NAKASHIMA", $f1
-    db "    RYO YONAGA", $f1
-    db "   SHINGO NOGUKI", $f0
+    db "    JIRO KIMURA<LINE>"
+    db "  YASUNORI HOSONO<LINE>"
+    db " KENTAKA NAKASHIMA<LINE>"
+    db "    RYO YONAGA<LINE>"
+    db "   SHINGO NOGUKI@"
 
 String_A2_00_19::
-    db "  YUJIRO KUMAKURA", $f1
-    db "    NAOKI SIRAI", $f1
-    db "     RIE IWAO", $f1
-    db " KATUHIKO YOKOYAMA", $f1
-    db " RYUICHI NAKASHIMA", $f0
+    db "  YUJIRO KUMAKURA<LINE>"
+    db "    NAOKI SIRAI<LINE>"
+    db "     RIE IWAO<LINE>"
+    db " KATUHIKO YOKOYAMA<LINE>"
+    db " RYUICHI NAKASHIMA@"
 
 String_A2_00_1A::
-    db "   MASASHI KONNO", $f1
-    db " MIKIHIRO HAYASHI", $f1
-    db "  MIHO SHIBASAKI", $f1
-    db "   MASAYUKI TADA", $f1
-    db "    KAYO NAKATA", $f0
+    db "   MASASHI KONNO<LINE>"
+    db " MIKIHIRO HAYASHI<LINE>"
+    db "  MIHO SHIBASAKI<LINE>"
+    db "   MASAYUKI TADA<LINE>"
+    db "    KAYO NAKATA@"
 
 String_A2_00_1B::
-    db "   NAOYA MATSUDA", $f1
-    db " YOSHITO TANIUCHI", $f0
+    db "   NAOYA MATSUDA<LINE>"
+    db " YOSHITO TANIUCHI@"
 
 String_A2_00_1C::
-    db "  TAICHI INUZUKA", $f0
+    db "  TAICHI INUZUKA@"
 
 String_A2_00_1D::
-    db "  YUKINOBU CHIDA", $f1
-    db "   KOUJI TAGUCHI", $f0
+    db "  YUKINOBU CHIDA<LINE>"
+    db "   KOUJI TAGUCHI@"
 
 String_A2_00_1E::
-    db "    KEIJI HONDA", $f0
+    db "    KEIJI HONDA@"
 
 String_A2_00_1F::
-    db " ", $b8, "2001", $f1
-    db "  ARMOR PROJECT", $f1
-    db " ", $b8, "2001", $f1
-    db "  BIRD STUDIO", $f1
-    db " ", $b8, "2001", $f1
-    db "  KOICHI SUGIYAMA", $f1
+    db " ©2001<LINE>"
+    db "  ARMOR PROJECT<LINE>"
+    db " ©2001<LINE>"
+    db "  BIRD STUDIO<LINE>"
+    db " ©2001<LINE>"
+    db "  KOICHI SUGIYAMA<LINE>"
 
 String_A2_00_20::
     db $f0
 
 String_A2_01_00::
-    db "DRAGON WARRIOR", $f1
-    db "  MONSTERS 2", $f0
+    db "DRAGON WARRIOR<LINE>"
+    db "  MONSTERS 2@"
     ds $3019, $00

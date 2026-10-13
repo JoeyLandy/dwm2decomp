@@ -6742,112 +6742,112 @@ StringList_E0_76FE::
     dw String_E0_00_20 ; id 32
 
 String_E0_00_00::
-    db "EXECUTIVE DIRECTOR", $f0
+    db "EXECUTIVE DIRECTOR@"
 
 String_E0_00_01::
-    db "SCENARIO ", $b6, " GAME", $f1
-    db "         DESIGNERS", $f0
+    db "SCENARIO ", $b6, " GAME<LINE>"
+    db "         DESIGNERS@"
 
 String_E0_00_02::
-    db "CHARACTER ", $b6, $f1
-    db "  MONSTER DESIGNER", $f0
+    db "CHARACTER ", $b6, "<LINE>"
+    db "  MONSTER DESIGNER@"
 
 String_E0_00_03::
-    db "  MUSIC COMPOSER", $f0
+    db "  MUSIC COMPOSER@"
 
 String_E0_00_04::
-    db "LOCALIZATION", $f1
-    db "       SPECIALISTS", $f0
+    db "LOCALIZATION<LINE>"
+    db "       SPECIALISTS@"
 
 String_E0_00_05::
-    db " ENIX AMERICA INC.", $f0
+    db " ENIX AMERICA INC.@"
 
 String_E0_00_06::
-    db "LOCALIZATION", $f1
-    db "           MANAGER", $f0
+    db "LOCALIZATION<LINE>"
+    db "           MANAGER@"
 
 String_E0_00_07::
-    db "  PRODUCT MANAGER", $f0
+    db "  PRODUCT MANAGER@"
 
 String_E0_00_08::
-    db "ASSISTANT", $f1
-    db "   PRODUCT MANAGER", $f0
+    db "ASSISTANT<LINE>"
+    db "   PRODUCT MANAGER@"
 
 String_E0_00_09::
-    db "   QA TRANSLATOR", $f0
+    db "   QA TRANSLATOR@"
 
 String_E0_00_0A::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_0B::
-    db "SALES", $9e, "MARKETING", $f1
-    db "MANAGER", $f0
+    db "SALES/MARKETING<LINE>"
+    db "MANAGER@"
 
 String_E0_00_0C::
-    db "ACCOUNTING", $9e, "CREDIT", $f1
-    db "MANAGER", $f0
+    db "ACCOUNTING/CREDIT<LINE>"
+    db "MANAGER@"
 
 String_E0_00_0D::
-    db "    A", $9e, "R ANALYST", $f0
+    db "    A/R ANALYST@"
 
 String_E0_00_0E::
-    db "     PRESIDENT", $f0
+    db "     PRESIDENT@"
 
 String_E0_00_0F::
-    db " ENIX CORPORATION", $f0
+    db " ENIX CORPORATION@"
 
 String_E0_00_10::
-    db "      ARTWORK", $f0
+    db "      ARTWORK@"
 
 String_E0_00_11::
-    db " TECHNICAL SUPPORT", $f0
+    db " TECHNICAL SUPPORT@"
 
 String_E0_00_12::
-    db " TECHNICAL SUPPORT", $f0
+    db " TECHNICAL SUPPORT@"
 
 String_E0_00_13::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_14::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_15::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_16::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_17::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_18::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_19::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_1A::
-    db "   PLAY TESTERS", $f0
+    db "   PLAY TESTERS@"
 
 String_E0_00_1B::
-    db "    ASSISTANT", $f1
-    db "      PRODUCERS", $f0
+    db "    ASSISTANT<LINE>"
+    db "      PRODUCERS@"
 
 String_E0_00_1C::
-    db "     PRODUCER", $f0
+    db "     PRODUCER@"
 
 String_E0_00_1D::
-    db "    EXECUTIVE", $f1
-    db "      PRODUCERS", $f0
+    db "    EXECUTIVE<LINE>"
+    db "      PRODUCERS@"
 
 String_E0_00_1E::
-    db "     PRESIDENT", $f0
+    db "     PRESIDENT@"
 
 String_E0_00_1F::
     db $f0
 
 String_E0_00_20::
-    db "    ", $b8, "2001 ENIX", $f0
+    db "    ©2001 ENIX@"
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of
 ; the battle library, after a string; E-0213)

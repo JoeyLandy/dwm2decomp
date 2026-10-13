@@ -189,357 +189,468 @@ StringList_98_4072::
     dw String_98_4070_00_39 ; id 112
 
 String_98_4070_00_00::
-    db $ea, "*: A woodsman came", $f1
-    db "by a while back.", $fa, $f7
-    db $ef, $ee, "He said something", $ef, $ee, "very disturbing.", $fa, $f7
-    db $ef, $ee, "He was in the big", $ef, $ee, "forest, which is", $fa, $f7
-    db $ef, $ee, "across the bridge", $ef, $ee, "south of town.", $fa, $f7
-    db $ef, $ee, "He claims to have", $ef, $ee, "been chased by the", $fa, $f7
-    db $ef, $ee, "ghost of a young", $ef, $ee, "woman.", $fa, $f7
-    db $ef, $ee, "The forest looks", $ef, $ee, "ordinary, but", $a4, $f7
-    db $f0
+    db "<VOICE1>*: A woodsman came<LINE>"
+    db "by a while back.<PROMPT>"
+    db "<NEXT>He said something"
+    db "<NEXT>very disturbing.<PROMPT>"
+    db "<NEXT>He was in the big"
+    db "<NEXT>forest, which is<PROMPT>"
+    db "<NEXT>across the bridge"
+    db "<NEXT>south of town.<PROMPT>"
+    db "<NEXT>He claims to have"
+    db "<NEXT>been chased by the<PROMPT>"
+    db "<NEXT>ghost of a young"
+    db "<NEXT>woman.<PROMPT>"
+    db "<NEXT>The forest looks"
+    db "<NEXT>ordinary, but…<WAIT>"
+    db "@"
 
 String_98_4070_00_01::
-    db $ea, "*: Hello! How may I", $f1
-    db "serve you?", $f7
-    db $f0
+    db "<VOICE1>*: Hello! How may I<LINE>"
+    db "serve you?<WAIT>"
+    db "@"
 
 String_98_4070_00_02::
-    db $ea, "*: The lake is", $f1
-    db "frozen, so I can't", $fa, $f7
-    db $ef, $ee, "very well take my", $ef, $ee, "boat out.", $fa, $f7
-    db $ef, $ee, "The north winds", $ef, $ee, "seem to be unduly", $fa, $f7
-    db $ef, $ee, "harsh this year", $ef, $ee, "for some reason.", $f7
-    db $f0
+    db "<VOICE1>*: The lake is<LINE>"
+    db "frozen, so I can't<PROMPT>"
+    db "<NEXT>very well take my"
+    db "<NEXT>boat out.<PROMPT>"
+    db "<NEXT>The north winds"
+    db "<NEXT>seem to be unduly<PROMPT>"
+    db "<NEXT>harsh this year"
+    db "<NEXT>for some reason.<WAIT>"
+    db "@"
 
 String_98_4070_00_03::
-    db $ea, "*: This is Westania", $f1
-    db "Castle.", $fa, $f7
-    db $ef, $ee, "Westania is the", $ef, $ee, "kingdom to the", $fa, $f7
-    db $ef, $ee, "west of the lake.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: This is Westania<LINE>"
+    db "Castle.<PROMPT>"
+    db "<NEXT>Westania is the"
+    db "<NEXT>kingdom to the<PROMPT>"
+    db "<NEXT>west of the lake."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_4070_00_04::
-    db $ea, "*: Nobody fails to", $f1
-    db "be impressed when", $fa, $f7
-    db $ef, $ee, "I breathe fire,", $ef, $ee, "and I mean nobody!", $fa, $f7
-    db $ef, $ee, "I'm sure Lady Yuna", $ef, $ee, "will be delighted", $fa, $f7
-    db $ef, $ee, "when she sees my", $ef, $ee, "act.", $f7
-    db $f0
+    db "<VOICE1>*: Nobody fails to<LINE>"
+    db "be impressed when<PROMPT>"
+    db "<NEXT>I breathe fire,"
+    db "<NEXT>and I mean nobody!<PROMPT>"
+    db "<NEXT>I'm sure Lady Yuna"
+    db "<NEXT>will be delighted<PROMPT>"
+    db "<NEXT>when she sees my"
+    db "<NEXT>act.<WAIT>"
+    db "@"
 
 String_98_4070_00_05::
-    db $ea, "*: I've brought with", $f1
-    db "me a necklace that", $fa, $f7
-    db $ef, $ee, "is studded with", $ef, $ee, "jewels.", $fa, $f7
-    db $ef, $ee, "Any woman would be", $ef, $ee, "delighted by it!", $f7
-    db $f0
+    db "<VOICE1>*: I've brought with<LINE>"
+    db "me a necklace that<PROMPT>"
+    db "<NEXT>is studded with"
+    db "<NEXT>jewels.<PROMPT>"
+    db "<NEXT>Any woman would be"
+    db "<NEXT>delighted by it!<WAIT>"
+    db "@"
 
 String_98_4070_00_06::
-    db $ea, "*: When I balance", $f1
-    db "on my ball, people", $fa, $f7
-    db $ef, $ee, "simply go wild.", $ef, $ee, "Just watch me!", $f7
-    db $f0
+    db "<VOICE1>*: When I balance<LINE>"
+    db "on my ball, people<PROMPT>"
+    db "<NEXT>simply go wild."
+    db "<NEXT>Just watch me!<WAIT>"
+    db "@"
 
 String_98_4070_00_07::
-    db $ea, "*: I hurl knives", $f1
-    db "with incredible", $fa, $f7
-    db $ef, $ee, "accuracy.", $ef, $ee, "I never miss!", $fa, $f7
-    db $ef, $ee, "Even Lady Yuna", $ef, $ee, "will be surprised.", $fa, $f7
-    db $ef, $ee, "That'll snap her", $ef, $ee, "out of her funk.", $f7
-    db $f0
+    db "<VOICE1>*: I hurl knives<LINE>"
+    db "with incredible<PROMPT>"
+    db "<NEXT>accuracy."
+    db "<NEXT>I never miss!<PROMPT>"
+    db "<NEXT>Even Lady Yuna"
+    db "<NEXT>will be surprised.<PROMPT>"
+    db "<NEXT>That'll snap her"
+    db "<NEXT>out of her funk.<WAIT>"
+    db "@"
 
 String_98_4070_00_08::
-    db $ea, "*: Please, line up!", $f1
-    db "And quit pushing!", $fa, $f7
-    db $ef, $ee, "Everyone will get", $ef, $ee, "their turn.", $fa, $f7
-    db $ef, $ee, $a4, "Sigh", $a4, " Everyone is", $ef, $ee, "after the reward", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Please, line up!<LINE>"
+    db "And quit pushing!<PROMPT>"
+    db "<NEXT>Everyone will get"
+    db "<NEXT>their turn.<PROMPT>"
+    db "<NEXT>…Sigh… Everyone is"
+    db "<NEXT>after the reward…<WAIT>"
+    db "@"
 
 String_98_4070_00_09::
-    db $ea, "*: Oh", $a4, " Lady Yuna", $a4, $f1
-    db "To think that I", $fa, $f7
-    db $ef, $ee, "won't get to see", $ef, $ee, "your smile again", $a4, $fa, $f7
-    db $ef, $ee, "Oh, it's the end", $ef, $ee, "of the world! Huh?", $fa, $f7
-    db $ef, $ee, "Gaaah! What are", $ef, $ee, "you doing here?", $fa, $f7
-    db $ef, $ee, "You shouldn't be", $ef, $ee, "eavesdropping!", $f7
-    db $f0
+    db "<VOICE1>*: Oh… Lady Yuna…<LINE>"
+    db "To think that I<PROMPT>"
+    db "<NEXT>won't get to see"
+    db "<NEXT>your smile again…<PROMPT>"
+    db "<NEXT>Oh, it's the end"
+    db "<NEXT>of the world! Huh?<PROMPT>"
+    db "<NEXT>Gaaah! What are"
+    db "<NEXT>you doing here?<PROMPT>"
+    db "<NEXT>You shouldn't be"
+    db "<NEXT>eavesdropping!<WAIT>"
+    db "@"
 
 String_98_4070_00_0A::
-    db $f9, "0 read the", $f1
-    db "sign.", $fa, $f7
-    db $ef, $ee, "'Come all who have", $ef, $ee, "the confidence to", $fa, $f7
-    db $ef, $ee, "delight Lady Yuna", $ef, $ee, "out of depression.", $fa, $f7
-    db $ef, $ee, "Anyone restoring", $ef, $ee, "joyous laughter to", $fa, $f7
-    db $ef, $ee, "her will receive a", $ef, $ee, "generous reward.", $95, $f7
-    db $f0
+    db "<BUF0> read the<LINE>"
+    db "sign.<PROMPT>"
+    db "<NEXT>'Come all who have"
+    db "<NEXT>the confidence to<PROMPT>"
+    db "<NEXT>delight Lady Yuna"
+    db "<NEXT>out of depression.<PROMPT>"
+    db "<NEXT>Anyone restoring"
+    db "<NEXT>joyous laughter to<PROMPT>"
+    db "<NEXT>her will receive a"
+    db "<NEXT>generous reward.", $95, "<WAIT>"
+    db "@"
 
 String_98_4070_00_0B::
-    db $ea, "Kameha: Well, if", $f1
-    db "it isn't ", $f9, "0!", $fa, $f7
-    db $ef, $ee, "You managed to get", $ef, $ee, "out of the Castle,", $fa, $f7
-    db $ef, $ee, "did you? You can", $ef, $ee, "thank me for it.", $fa, $f7
-    db $ef, $ee, "I let you have the", $ef, $ee, "glory last time,", $fa, $f7
-    db $ef, $ee, "but this time, it", $ef, $ee, "will be mine!", $f7
-    db $f0
+    db "<VOICE1>Kameha: Well, if<LINE>"
+    db "it isn't <BUF0>!<PROMPT>"
+    db "<NEXT>You managed to get"
+    db "<NEXT>out of the Castle,<PROMPT>"
+    db "<NEXT>did you? You can"
+    db "<NEXT>thank me for it.<PROMPT>"
+    db "<NEXT>I let you have the"
+    db "<NEXT>glory last time,<PROMPT>"
+    db "<NEXT>but this time, it"
+    db "<NEXT>will be mine!<WAIT>"
+    db "@"
 
 String_98_4070_00_0C::
-    db $ea, "*: It's a mean old", $f1
-    db "world out there.", $fa, $f7
-    db $ef, $ee, "I've heard there", $ef, $ee, "are even monsters", $fa, $f7
-    db $ef, $ee, "in our midsts.", $ef, $ee, "It's frightening.", $fa, $f7
-    db $ef, $ee, "You should record", $ef, $ee, "in your Journal", $fa, $f7
-    db $ef, $ee, "whenever you do", $ef, $ee, "anything of note.", $f7
-    db $f0
+    db "<VOICE1>*: It's a mean old<LINE>"
+    db "world out there.<PROMPT>"
+    db "<NEXT>I've heard there"
+    db "<NEXT>are even monsters<PROMPT>"
+    db "<NEXT>in our midsts."
+    db "<NEXT>It's frightening.<PROMPT>"
+    db "<NEXT>You should record"
+    db "<NEXT>in your Journal<PROMPT>"
+    db "<NEXT>whenever you do"
+    db "<NEXT>anything of note.<WAIT>"
+    db "@"
 
 String_98_4070_00_0D::
-    db $ea, "*: The Castle is in", $f1
-    db "an uproar.", $f7
-    db $f0
+    db "<VOICE1>*: The Castle is in<LINE>"
+    db "an uproar.<WAIT>"
+    db "@"
 
 String_98_4070_00_0E::
-    db $ea, "*: Lady Yuna used", $f1
-    db "to be very lively.", $fa, $f7
-    db $ef, $ee, "It makes no sense,", $ef, $ee, "her depression.", $f7
-    db $f0
+    db "<VOICE1>*: Lady Yuna used<LINE>"
+    db "to be very lively.<PROMPT>"
+    db "<NEXT>It makes no sense,"
+    db "<NEXT>her depression.<WAIT>"
+    db "@"
 
 String_98_4070_00_0F::
-    db $ea, "*: In the east", $f1
-    db "lives an old man", $fa, $f7
-    db $ef, $ee, "who had tutored", $ef, $ee, "Lady Yuna.", $fa, $f7
-    db $ef, $ee, "He knows about her", $ef, $ee, "the best.", $f7
-    db $f0
+    db "<VOICE1>*: In the east<LINE>"
+    db "lives an old man<PROMPT>"
+    db "<NEXT>who had tutored"
+    db "<NEXT>Lady Yuna.<PROMPT>"
+    db "<NEXT>He knows about her"
+    db "<NEXT>the best.<WAIT>"
+    db "@"
 
 String_98_4070_00_10::
-    db $ea, "*: What happened to", $f1
-    db "Lady Yuna?", $fa, $f7
-    db $ef, $ee, "It's as if she is", $ef, $ee, "a soulless puppet", $a4, $f7
-    db $f0
+    db "<VOICE1>*: What happened to<LINE>"
+    db "Lady Yuna?<PROMPT>"
+    db "<NEXT>It's as if she is"
+    db "<NEXT>a soulless puppet…<WAIT>"
+    db "@"
 
 String_98_4070_00_11::
-    db $ea, "*: Before, Lady", $f1
-    db "Yuna would be up", $fa, $f7
-    db $ef, $ee, "and out playing at", $ef, $ee, "sunrise.", $fa, $f7
-    db $ef, $ee, "But now, she never", $ef, $ee, "ventures out", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Before, Lady<LINE>"
+    db "Yuna would be up<PROMPT>"
+    db "<NEXT>and out playing at"
+    db "<NEXT>sunrise.<PROMPT>"
+    db "<NEXT>But now, she never"
+    db "<NEXT>ventures out…<WAIT>"
+    db "@"
 
 String_98_4070_00_12::
-    db $ea, "*: This leads to", $f1
-    db "Lady Yuna's room.", $fa, $f7
-    db $ef, $ee, "You may not go", $ef, $ee, "beyond here.", $f7
-    db $f0
+    db "<VOICE1>*: This leads to<LINE>"
+    db "Lady Yuna's room.<PROMPT>"
+    db "<NEXT>You may not go"
+    db "<NEXT>beyond here.<WAIT>"
+    db "@"
 
 String_98_4070_00_13::
-    db $ea, "*: You're here to", $f1
-    db "cheer Lady Yuna.", $fa, $f7
-    db $ef, $ee, "Please go right", $ef, $ee, "through.", $f7
-    db $f0
+    db "<VOICE1>*: You're here to<LINE>"
+    db "cheer Lady Yuna.<PROMPT>"
+    db "<NEXT>Please go right"
+    db "<NEXT>through.<WAIT>"
+    db "@"
 
 String_98_4070_00_14::
-    db $ea, "*: You're here to", $f1
-    db "cheer Lady Yuna.", $fa, $f7
-    db $ef, $ee, "Oh? Your monsters", $ef, $ee, "are not healthy.", $fa, $f7
-    db $ef, $ee, "That won't do. No,", $ef, $ee, "not at all.", $fa, $f7
-    db $ef, $ee, "You'll have to", $ef, $ee, "leave, I'm afraid.", $f7
-    db $f0
+    db "<VOICE1>*: You're here to<LINE>"
+    db "cheer Lady Yuna.<PROMPT>"
+    db "<NEXT>Oh? Your monsters"
+    db "<NEXT>are not healthy.<PROMPT>"
+    db "<NEXT>That won't do. No,"
+    db "<NEXT>not at all.<PROMPT>"
+    db "<NEXT>You'll have to"
+    db "<NEXT>leave, I'm afraid.<WAIT>"
+    db "@"
 
 String_98_4070_00_15::
-    db $ea, "*: You're here to", $f1
-    db "cheer Lady Yuna.", $fa, $f7
-    db $ef, $ee, "Oh? You haven't", $ef, $ee, "three monsters?", $fa, $f7
-    db $ef, $ee, "Your show can't be", $ef, $ee, "very impressive.", $fa, $f7
-    db $ef, $ee, "You'll have to", $ef, $ee, "leave, I'm afraid.", $f7
-    db $f0
+    db "<VOICE1>*: You're here to<LINE>"
+    db "cheer Lady Yuna.<PROMPT>"
+    db "<NEXT>Oh? You haven't"
+    db "<NEXT>three monsters?<PROMPT>"
+    db "<NEXT>Your show can't be"
+    db "<NEXT>very impressive.<PROMPT>"
+    db "<NEXT>You'll have to"
+    db "<NEXT>leave, I'm afraid.<WAIT>"
+    db "@"
 
 String_98_4070_00_16::
-    db $eb, "*: Enough", $a4, " Enough", $f1
-    db "of that dancing!", $f7
-    db $f0
+    db "<VOICE2>*: Enough… Enough<LINE>"
+    db "of that dancing!<WAIT>"
+    db "@"
 
 String_98_4070_00_17::
-    db $ea, "*: I am the King.", $f1
-    db "What is your act?", $f7
-    db $f0
+    db "<VOICE1>*: I am the King.<LINE>"
+    db "What is your act?<WAIT>"
+    db "@"
 
 String_98_4070_00_18::
-    db $ea, "King: Magnificent!", $f1
-    db "Don't you agree?", $f7
-    db $f0
+    db "<VOICE1>King: Magnificent!<LINE>"
+    db "Don't you agree?<WAIT>"
+    db "@"
 
 String_98_4070_00_19::
-    db $eb, "*: ", $a4, $a4, $a4, $a4, $f1
-    db $f7
-    db $f0
+    db "<VOICE2>*: …………<LINE>"
+    db "<WAIT>"
+    db "@"
 
 String_98_4070_00_1A::
-    db $ea, "King: ", $a4, "Sigh", $a4, $f1
-    db "Not even this", $a4, $fa, $f7
-    db $ef, $ee, "You were superb,", $ef, $ee, "but Yuna didn't", $fa, $f7
-    db $ef, $ee, "appear to be much", $ef, $ee, "impressed", $a4, $fa, $f7
-    db $ef, $ee, "She used to be", $ef, $ee, "full of laughter", $a4, $fa, $f7
-    db $ef, $ee, "It happened so", $ef, $ee, "quickly.", $fa, $f7
-    db $ef, $ee, "She came back to", $ef, $ee, "the castle like", $fa, $f7
-    db $ef, $ee, "that one day and", $ef, $ee, "hasn't been the", $fa, $f7
-    db $ef, $ee, "same ever since", $ef, $ee, "then.", $fa, $f7
-    db $ef, $ee, "No one has any", $ef, $ee, "idea what to do", $a4, $f7
-    db $f0
+    db "<VOICE1>King: …Sigh…<LINE>"
+    db "Not even this…<PROMPT>"
+    db "<NEXT>You were superb,"
+    db "<NEXT>but Yuna didn't<PROMPT>"
+    db "<NEXT>appear to be much"
+    db "<NEXT>impressed…<PROMPT>"
+    db "<NEXT>She used to be"
+    db "<NEXT>full of laughter…<PROMPT>"
+    db "<NEXT>It happened so"
+    db "<NEXT>quickly.<PROMPT>"
+    db "<NEXT>She came back to"
+    db "<NEXT>the castle like<PROMPT>"
+    db "<NEXT>that one day and"
+    db "<NEXT>hasn't been the<PROMPT>"
+    db "<NEXT>same ever since"
+    db "<NEXT>then.<PROMPT>"
+    db "<NEXT>No one has any"
+    db "<NEXT>idea what to do…<WAIT>"
+    db "@"
 
 String_98_4070_00_1B::
-    db $ea, "*: Many have tried", $f1
-    db "to cheer Lady Yuna", $fa, $f7
-    db $ef, $ee, "up to the way she", $ef, $ee, "was before.", $fa, $f7
-    db $ef, $ee, "However, none have", $ef, $ee, "succeeded.", $fa, $f7
-    db $ef, $ee, "Will we ever see", $ef, $ee, "her smile again?", $f7
-    db $f0
+    db "<VOICE1>*: Many have tried<LINE>"
+    db "to cheer Lady Yuna<PROMPT>"
+    db "<NEXT>up to the way she"
+    db "<NEXT>was before.<PROMPT>"
+    db "<NEXT>However, none have"
+    db "<NEXT>succeeded.<PROMPT>"
+    db "<NEXT>Will we ever see"
+    db "<NEXT>her smile again?<WAIT>"
+    db "@"
 
 String_98_4070_00_1C::
-    db $ea, "*: This is the", $f1
-    db "Castle of Estria,", $fa, $f7
-    db $ef, $ee, "the eastern", $ef, $ee, "kingdom.", $f7
-    db $f0
+    db "<VOICE1>*: This is the<LINE>"
+    db "Castle of Estria,<PROMPT>"
+    db "<NEXT>the eastern"
+    db "<NEXT>kingdom.<WAIT>"
+    db "@"
 
 String_98_4070_00_1D::
-    db $ea, "*: Queen Helen came", $f1
-    db "by a while ago, so", $fa, $f7
-    db $ef, $ee, "I greeted her. But", $ef, $ee, "she said nothing", $fa, $f7
-    db $ef, $ee, "and walked by", $ef, $ee, "without notice.", $fa, $f7
-    db $ef, $ee, "She used to greet", $ef, $ee, "us warmly before", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Queen Helen came<LINE>"
+    db "by a while ago, so<PROMPT>"
+    db "<NEXT>I greeted her. But"
+    db "<NEXT>she said nothing<PROMPT>"
+    db "<NEXT>and walked by"
+    db "<NEXT>without notice.<PROMPT>"
+    db "<NEXT>She used to greet"
+    db "<NEXT>us warmly before…<WAIT>"
+    db "@"
 
 String_98_4070_00_1E::
-    db $eb, "*: The spirit's", $f1
-    db "spring has frozen.", $fa, $f7
-    db $ef, $ee, "The lake is full", $ef, $ee, "of ice too.", $fa, $f7
-    db $ef, $ee, "These are terrible", $ef, $ee, "omens", $a4, $f7
-    db $f0
+    db "<VOICE2>*: The spirit's<LINE>"
+    db "spring has frozen.<PROMPT>"
+    db "<NEXT>The lake is full"
+    db "<NEXT>of ice too.<PROMPT>"
+    db "<NEXT>These are terrible"
+    db "<NEXT>omens…<WAIT>"
+    db "@"
 
 String_98_4070_00_1F::
-    db $ea, "*: Queen Helen's", $f1
-    db "dreams come true.", $fa, $f7
-    db $ef, $ee, "If she hadn't", $ef, $ee, "dreamed of this,", $fa, $f7
-    db $ef, $ee, "we would've fared", $ef, $ee, "much worse.", $f7
-    db $f0
+    db "<VOICE1>*: Queen Helen's<LINE>"
+    db "dreams come true.<PROMPT>"
+    db "<NEXT>If she hadn't"
+    db "<NEXT>dreamed of this,<PROMPT>"
+    db "<NEXT>we would've fared"
+    db "<NEXT>much worse.<WAIT>"
+    db "@"
 
 String_98_4070_00_20::
-    db $ea, "*: Our Queen is a", $f1
-    db "kind person who", $fa, $f7
-    db $ef, $ee, "has a friendly", $ef, $ee, "word for everyone,", $fa, $f7
-    db $ef, $ee, "but lately she", $ef, $ee, "looks grim", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Our Queen is a<LINE>"
+    db "kind person who<PROMPT>"
+    db "<NEXT>has a friendly"
+    db "<NEXT>word for everyone,<PROMPT>"
+    db "<NEXT>but lately she"
+    db "<NEXT>looks grim…<WAIT>"
+    db "@"
 
 String_98_4070_00_21::
-    db $eb, "*: A teacher from", $f1
-    db "the west lives", $fa, $f7
-    db $ef, $ee, "over there.", $ef, $ee, "He once was a", $fa, $f7
-    db $ef, $ee, "tutor to the west's", $ef, $ee, "princess.", $f7
-    db $f0
+    db "<VOICE2>*: A teacher from<LINE>"
+    db "the west lives<PROMPT>"
+    db "<NEXT>over there."
+    db "<NEXT>He once was a<PROMPT>"
+    db "<NEXT>tutor to the west's"
+    db "<NEXT>princess.<WAIT>"
+    db "@"
 
 String_98_4070_00_22::
-    db $ea, "*: There is a", $f1
-    db "spring in the far", $fa, $f7
-    db $ef, $ee, "north that is home", $ef, $ee, "to a spirit.", $fa, $f7
-    db $ef, $ee, "The spirit lends", $ef, $ee, "us the power to", $fa, $f7
-    db $ef, $ee, "survive in these", $ef, $ee, "harsh conditions.", $f7
-    db $f0
+    db "<VOICE1>*: There is a<LINE>"
+    db "spring in the far<PROMPT>"
+    db "<NEXT>north that is home"
+    db "<NEXT>to a spirit.<PROMPT>"
+    db "<NEXT>The spirit lends"
+    db "<NEXT>us the power to<PROMPT>"
+    db "<NEXT>survive in these"
+    db "<NEXT>harsh conditions.<WAIT>"
+    db "@"
 
 String_98_4070_00_23::
-    db $eb, "*: I heard this on", $f1
-    db "the sly from my", $fa, $f7
-    db $ef, $ee, "sister who works", $ef, $ee, "in the Castle.", $fa, $f7
-    db $ef, $ee, "Queen Helen is", $ef, $ee, "very upset over", $fa, $f7
-    db $ef, $ee, "ominous dreams.", $ef, $ee, "They must be bad", $fa, $f7
-    db $ef, $ee, "to keep her from", $ef, $ee, "sleeping.", $fa, $f7
-    db $ef, $ee, "That's why she", $ef, $ee, "seems so cranky", $a4, $f7
-    db $f0
+    db "<VOICE2>*: I heard this on<LINE>"
+    db "the sly from my<PROMPT>"
+    db "<NEXT>sister who works"
+    db "<NEXT>in the Castle.<PROMPT>"
+    db "<NEXT>Queen Helen is"
+    db "<NEXT>very upset over<PROMPT>"
+    db "<NEXT>ominous dreams."
+    db "<NEXT>They must be bad<PROMPT>"
+    db "<NEXT>to keep her from"
+    db "<NEXT>sleeping.<PROMPT>"
+    db "<NEXT>That's why she"
+    db "<NEXT>seems so cranky…<WAIT>"
+    db "@"
 
 String_98_4070_00_24::
-    db $ea, "*: The Queen looks", $f1
-    db "haggard recently.", $fa, $f7
-    db $ef, $ee, "Lack of sleep must", $ef, $ee, "be very taxing.", $fa, $f7
-    db $ef, $ee, "She has been", $ef, $ee, "rather irritable.", $f7
-    db $f0
+    db "<VOICE1>*: The Queen looks<LINE>"
+    db "haggard recently.<PROMPT>"
+    db "<NEXT>Lack of sleep must"
+    db "<NEXT>be very taxing.<PROMPT>"
+    db "<NEXT>She has been"
+    db "<NEXT>rather irritable.<WAIT>"
+    db "@"
 
 String_98_4070_00_25::
-    db $eb, "*: Around these", $f1
-    db "parts, there are", $fa, $f7
-    db $ef, $ee, "times of perpetual", $ef, $ee, "days", $a4, " And nights", $a4, $fa, $f7
-    db $ef, $ee, "It can be hard to", $ef, $ee, "sleep properly.", $fa, $f7
-    db $ef, $ee, "I use a potion", $ef, $ee, "made by a scholar", $fa, $f7
-    db $ef, $ee, "when I can't sleep.", $ef, $ee, "It works!", $f7
-    db $f0
+    db "<VOICE2>*: Around these<LINE>"
+    db "parts, there are<PROMPT>"
+    db "<NEXT>times of perpetual"
+    db "<NEXT>days… And nights…<PROMPT>"
+    db "<NEXT>It can be hard to"
+    db "<NEXT>sleep properly.<PROMPT>"
+    db "<NEXT>I use a potion"
+    db "<NEXT>made by a scholar<PROMPT>"
+    db "<NEXT>when I can't sleep."
+    db "<NEXT>It works!<WAIT>"
+    db "@"
 
 String_98_4070_00_26::
-    db $ea, "*: This is no place", $f1
-    db "for a child!", $f7
-    db $f0
+    db "<VOICE1>*: This is no place<LINE>"
+    db "for a child!<WAIT>"
+    db "@"
 
 String_98_4070_00_27::
-    db $ea, "*: Oh? An envoy", $f1
-    db "from the spirit!", $f7
-    db $f0
+    db "<VOICE1>*: Oh? An envoy<LINE>"
+    db "from the spirit!<WAIT>"
+    db "@"
 
 String_98_4070_00_28::
-    db $ea, "*: I beg your", $f1
-    db "pardon, please!", $f7
-    db $f0
+    db "<VOICE1>*: I beg your<LINE>"
+    db "pardon, please!<WAIT>"
+    db "@"
 
 String_98_4070_00_29::
-    db $ea, "*: Hello! What may", $f1
-    db "I do for you?", $f7
-    db $f0
+    db "<VOICE1>*: Hello! What may<LINE>"
+    db "I do for you?<WAIT>"
+    db "@"
 
 String_98_4070_00_2A::
-    db $eb, "*: A botanist does", $f1
-    db "live here", $a4, $fa, $f7
-    db $ef, $ee, "But he's been gone", $ef, $ee, "for quite some", $fa, $f7
-    db $ef, $ee, "time on a research", $ef, $ee, "trip of some sort.", $fa, $f7
-    db $ef, $ee, "Who knows where he", $ef, $ee, "could be now.", $f7
-    db $f0
+    db "<VOICE2>*: A botanist does<LINE>"
+    db "live here…<PROMPT>"
+    db "<NEXT>But he's been gone"
+    db "<NEXT>for quite some<PROMPT>"
+    db "<NEXT>time on a research"
+    db "<NEXT>trip of some sort.<PROMPT>"
+    db "<NEXT>Who knows where he"
+    db "<NEXT>could be now.<WAIT>"
+    db "@"
 
 String_98_4070_00_2B::
-    db $ea, "*: I retired as a", $f1
-    db "teacher and came", $fa, $f7
-    db $ef, $ee, "back home.", $ef, $ee, "But yes, I tutored", $fa, $f7
-    db $ef, $ee, "Lady Yuna in the", $ef, $ee, "western kingdom.", $fa, $f7
-    db $ef, $ee, "It brings back", $ef, $ee, "some memories", $a4, $fa, $f7
-    db $ef, $ee, "Will you hear this", $ef, $ee, "old man reminisce?", $ff, $f0
+    db "<VOICE1>*: I retired as a<LINE>"
+    db "teacher and came<PROMPT>"
+    db "<NEXT>back home."
+    db "<NEXT>But yes, I tutored<PROMPT>"
+    db "<NEXT>Lady Yuna in the"
+    db "<NEXT>western kingdom.<PROMPT>"
+    db "<NEXT>It brings back"
+    db "<NEXT>some memories…<PROMPT>"
+    db "<NEXT>Will you hear this"
+    db "<NEXT>old man reminisce?<CHOICE>"
+    db "@"
 
 String_98_4070_00_2C::
-    db $ea, "*: Lady Yuna was a", $f1
-    db "rambunctious soul.", $fa, $f7
-    db $ef, $ee, "She was much more", $ef, $ee, "likely to be out", $fa, $f7
-    db $ef, $ee, "playing in forests", $ef, $ee, "with animals than", $fa, $f7
-    db $ef, $ee, "staying cooped up", $ef, $ee, "in the castle.", $fa, $f7
-    db $ef, $ee, "She used to climb", $ef, $ee, "out of her room on", $fa, $f7
-    db $ef, $ee, "vines outside her", $ef, $ee, "window.", $fa, $f7
-    db $ef, $ee, "She often went to", $ef, $ee, "the forest south", $fa, $f7
-    db $ef, $ee, "of the castle. She", $ef, $ee, "liked it there.", $fa, $f7
-    db $ef, $ee, "Ah, good memories", $ef, $ee, "indeed! Fwohohoho!", $f7
-    db $f0
+    db "<VOICE1>*: Lady Yuna was a<LINE>"
+    db "rambunctious soul.<PROMPT>"
+    db "<NEXT>She was much more"
+    db "<NEXT>likely to be out<PROMPT>"
+    db "<NEXT>playing in forests"
+    db "<NEXT>with animals than<PROMPT>"
+    db "<NEXT>staying cooped up"
+    db "<NEXT>in the castle.<PROMPT>"
+    db "<NEXT>She used to climb"
+    db "<NEXT>out of her room on<PROMPT>"
+    db "<NEXT>vines outside her"
+    db "<NEXT>window.<PROMPT>"
+    db "<NEXT>She often went to"
+    db "<NEXT>the forest south<PROMPT>"
+    db "<NEXT>of the castle. She"
+    db "<NEXT>liked it there.<PROMPT>"
+    db "<NEXT>Ah, good memories"
+    db "<NEXT>indeed! Fwohohoho!<WAIT>"
+    db "@"
 
 String_98_4070_00_2D::
-    db $ea, "*: Oh, you're rushed", $f1
-    db "for time", $a4, " Sorry", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Oh, you're rushed<LINE>"
+    db "for time… Sorry…<WAIT>"
+    db "@"
 
 String_98_4070_00_2E::
-    db $ea, "*: I want to return", $f1
-    db "to the north, but", $fa, $f7
-    db $ef, $ee, "there are no ships", $ef, $ee, "sailing.", $fa, $f7
-    db $ef, $ee, "The mountains in", $ef, $ee, "the north are too", $fa, $f7
-    db $ef, $ee, "treacherous to", $ef, $ee, "attempt crossing.", $f7
-    db $f0
+    db "<VOICE1>*: I want to return<LINE>"
+    db "to the north, but<PROMPT>"
+    db "<NEXT>there are no ships"
+    db "<NEXT>sailing.<PROMPT>"
+    db "<NEXT>The mountains in"
+    db "<NEXT>the north are too<PROMPT>"
+    db "<NEXT>treacherous to"
+    db "<NEXT>attempt crossing.<WAIT>"
+    db "@"
 
 String_98_4070_00_2F::
-    db $ea, "*: Queen Helen has", $f1
-    db "been suffering", $fa, $f7
-    db $ef, $ee, "from nightmares", $ef, $ee, "terribly.", $fa, $f7
-    db $ef, $ee, "They don't let her", $ef, $ee, "sleep.", $fa, $f7
-    db $ef, $ee, "We're concerned", $ef, $ee, "for her health", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Queen Helen has<LINE>"
+    db "been suffering<PROMPT>"
+    db "<NEXT>from nightmares"
+    db "<NEXT>terribly.<PROMPT>"
+    db "<NEXT>They don't let her"
+    db "<NEXT>sleep.<PROMPT>"
+    db "<NEXT>We're concerned"
+    db "<NEXT>for her health…<WAIT>"
+    db "@"
 
 String_98_4070_00_30::
-    db $eb, "*: ", $a4, $a4, $a4, $a4, "?", $f7
-    db $f0
+    db "<VOICE2>*: …………?<WAIT>"
+    db "@"
 
 String_98_4070_00_39::
     db $f0
@@ -663,431 +774,563 @@ StringList_98_5730::
     dw String_98_572E_00_42 ; id 110
 
 String_98_572E_00_00::
-    db $ea, "*: Wa-hey! Can you", $f1
-    db "hear me, ", $f9, "0?", $fa, $f7
-    db $ef, $ee, "Things have turned", $ef, $ee, "serious, warooh!", $fa, $f7
-    db $ef, $ee, "I'll bring you back", $ef, $ee, "to GreatLog.", $fa, $f7
-    db $ef, $ee, "Don't move!", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: Wa-hey! Can you<LINE>"
+    db "hear me, <BUF0>?<PROMPT>"
+    db "<NEXT>Things have turned"
+    db "<NEXT>serious, warooh!<PROMPT>"
+    db "<NEXT>I'll bring you back"
+    db "<NEXT>to GreatLog.<PROMPT>"
+    db "<NEXT>Don't move!"
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_572E_00_01::
-    db $ea, "*: Some time ago,", $f1
-    db "lightning struck", $fa, $f7
-    db $ef, $ee, "the tower, causing", $ef, $ee, "it to buckle.", $fa, $f7
-    db $ef, $ee, "A huge bird flew", $ef, $ee, "out of the rubble.", $f7
-    db $f0
+    db "<VOICE1>*: Some time ago,<LINE>"
+    db "lightning struck<PROMPT>"
+    db "<NEXT>the tower, causing"
+    db "<NEXT>it to buckle.<PROMPT>"
+    db "<NEXT>A huge bird flew"
+    db "<NEXT>out of the rubble.<WAIT>"
+    db "@"
 
 String_98_572E_00_02::
-    db $ea, "*: Who disturbs my", $f1
-    db "sleep?", $fa, $f7
-    db $ef, $ee, "The visitor from", $ef, $ee, "another world.", $fa, $f7
-    db $ef, $ee, "I no longer feel", $ef, $ee, "the LightOrb's", $fa, $f7
-    db $ef, $ee, "presence in this", $ef, $ee, "world.", $fa, $f7
-    db $ef, $ee, "The Orb will no", $ef, $ee, "longer be a cause", $fa, $f7
-    db $ef, $ee, "of strife in our", $ef, $ee, "world", $a4, $f7
-    db $f0
+    db "<VOICE1>*: Who disturbs my<LINE>"
+    db "sleep?<PROMPT>"
+    db "<NEXT>The visitor from"
+    db "<NEXT>another world.<PROMPT>"
+    db "<NEXT>I no longer feel"
+    db "<NEXT>the LightOrb's<PROMPT>"
+    db "<NEXT>presence in this"
+    db "<NEXT>world.<PROMPT>"
+    db "<NEXT>The Orb will no"
+    db "<NEXT>longer be a cause<PROMPT>"
+    db "<NEXT>of strife in our"
+    db "<NEXT>world…<WAIT>"
+    db "@"
 
 String_98_572E_00_03::
-    db $ea, "*: I heard on my", $f1
-    db "travels that the", $fa, $f7
-    db $ef, $ee, "monster King has", $ef, $ee, "disappeared.", $fa, $f7
-    db $ef, $ee, "Where could he", $ef, $ee, "have gone?", $fa, $f7
-    db $ef, $ee, "Well, it's not a", $ef, $ee, "bad thing.", $f7
-    db $f0
+    db "<VOICE1>*: I heard on my<LINE>"
+    db "travels that the<PROMPT>"
+    db "<NEXT>monster King has"
+    db "<NEXT>disappeared.<PROMPT>"
+    db "<NEXT>Where could he"
+    db "<NEXT>have gone?<PROMPT>"
+    db "<NEXT>Well, it's not a"
+    db "<NEXT>bad thing.<WAIT>"
+    db "@"
 
 String_98_572E_00_04::
-    db $ea, "*: The monster King", $f1
-    db "disappeared.", $fa, $f7
-    db $ef, $ee, "He", $44, " made monsters", $ef, $ee, "obey using magic.", $f7
-    db $f0
+    db "<VOICE1>*: The monster King<LINE>"
+    db "disappeared.<PROMPT>"
+    db "<NEXT>He", $44, " made monsters"
+    db "<NEXT>obey using magic.<WAIT>"
+    db "@"
 
 String_98_572E_00_05::
-    db $ea, "*: When the monster", $f1
-    db "King disappeared,", $fa, $f7
-    db $ef, $ee, "we all gained our", $ef, $ee, "freedom.", $fa, $f7
-    db $ef, $ee, "But everyone's been", $ef, $ee, "having so much fun", $fa, $f7
-    db $ef, $ee, "treasure hunting,", $ef, $ee, "no one's quit!", $f7
-    db $f0
+    db "<VOICE1>*: When the monster<LINE>"
+    db "King disappeared,<PROMPT>"
+    db "<NEXT>we all gained our"
+    db "<NEXT>freedom.<PROMPT>"
+    db "<NEXT>But everyone's been"
+    db "<NEXT>having so much fun<PROMPT>"
+    db "<NEXT>treasure hunting,"
+    db "<NEXT>no one's quit!<WAIT>"
+    db "@"
 
 String_98_572E_00_06::
-    db $ea, "*: The Castle is", $f1
-    db "now managed by all", $fa, $f7
-    db $ef, $ee, "of us in the town.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: The Castle is<LINE>"
+    db "now managed by all<PROMPT>"
+    db "<NEXT>of us in the town."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_572E_00_07::
-    db $ea, "*: Rumor has it", $f1
-    db "that almost no one", $fa, $f7
-    db $ef, $ee, "has seen the", $ef, $ee, "monster King.", $fa, $f7
-    db $ef, $ee, "Maybe he looked", $ef, $ee, "weak and frail.", $f7
-    db $f0
+    db "<VOICE1>*: Rumor has it<LINE>"
+    db "that almost no one<PROMPT>"
+    db "<NEXT>has seen the"
+    db "<NEXT>monster King.<PROMPT>"
+    db "<NEXT>Maybe he looked"
+    db "<NEXT>weak and frail.<WAIT>"
+    db "@"
 
 String_98_572E_00_08::
-    db $ea, "*: Where has our", $f1
-    db "King gone?", $f7
-    db $f0
+    db "<VOICE1>*: Where has our<LINE>"
+    db "King gone?<WAIT>"
+    db "@"
 
 String_98_572E_00_09::
-    db $ea, "*: There's no point", $f1
-    db "staying in the", $fa, $f7
-    db $ef, $ee, "army. I should go", $ef, $ee, "back home.", $f7
-    db $f0
+    db "<VOICE1>*: There's no point<LINE>"
+    db "staying in the<PROMPT>"
+    db "<NEXT>army. I should go"
+    db "<NEXT>back home.<WAIT>"
+    db "@"
 
 String_98_572E_00_0A::
-    db $ea, "*: If I had the", $f1
-    db "LightOrb, even I", $fa, $f7
-    db $ef, $ee, "could become the", $ef, $ee, "King of monsters.", $fa, $f7
-    db $ef, $ee, "Could you please", $ef, $ee, "tell me where I", $fa, $f7
-    db $ef, $ee, "could find the", $ef, $ee, "LightOrb?", $f7
-    db $f0
+    db "<VOICE1>*: If I had the<LINE>"
+    db "LightOrb, even I<PROMPT>"
+    db "<NEXT>could become the"
+    db "<NEXT>King of monsters.<PROMPT>"
+    db "<NEXT>Could you please"
+    db "<NEXT>tell me where I<PROMPT>"
+    db "<NEXT>could find the"
+    db "<NEXT>LightOrb?<WAIT>"
+    db "@"
 
 String_98_572E_00_0B::
-    db $f9, "0 read the", $f1
-    db "sign.", $fa, $f7
-    db $ef, $ee, "'Town of Hitano", $ef, $ee, $fa, $f7
-    db $ef, $ee, $f3, "Where treasure", $ef, $ee, "hunters gather.", $95, $f7
-    db $f0
+    db "<BUF0> read the<LINE>"
+    db "sign.<PROMPT>"
+    db "<NEXT>'Town of Hitano"
+    db "<NEXT><PROMPT>"
+    db "<NEXT>"
+    db "<HOME>Where treasure"
+    db "<NEXT>hunters gather.", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_0C::
-    db $ea, "*: The Mayor is", $f1
-    db "beyond here.", $fa, $f7
-    db $ef, $ee, "Please watch your", $ef, $ee, "manners.", $f7
-    db $f0
+    db "<VOICE1>*: The Mayor is<LINE>"
+    db "beyond here.<PROMPT>"
+    db "<NEXT>Please watch your"
+    db "<NEXT>manners.<WAIT>"
+    db "@"
 
 String_98_572E_00_0D::
-    db $ea, "*: I've become the", $f1
-    db "Mayor, but what", $fa, $f7
-    db $ef, $ee, "exactly should I", $ef, $ee, "be doing?", $f7
-    db $f0
+    db "<VOICE1>*: I've become the<LINE>"
+    db "Mayor, but what<PROMPT>"
+    db "<NEXT>exactly should I"
+    db "<NEXT>be doing?<WAIT>"
+    db "@"
 
 String_98_572E_00_0E::
-    db $f9, "0 released the", $f1
-    db "grave's button.", $f7
-    db $f0
+    db "<BUF0> released the<LINE>"
+    db "grave's button.<WAIT>"
+    db "@"
 
 String_98_572E_00_0F::
-    db $ea, "*: The castle's lord", $f1
-    db "summons monsters", $a4, $f7
-    db $f0
+    db "<VOICE1>*: The castle's lord<LINE>"
+    db "summons monsters…<WAIT>"
+    db "@"
 
 String_98_572E_00_10::
-    db $ea, "*: A button hides", $f1
-    db "behind a grave", $a4, $fa, $f7
-    db $ef, $ee, "A button that", $ef, $ee, "opens a door", $a4, $f7
-    db $f0
+    db "<VOICE1>*: A button hides<LINE>"
+    db "behind a grave…<PROMPT>"
+    db "<NEXT>A button that"
+    db "<NEXT>opens a door…<WAIT>"
+    db "@"
 
 String_98_572E_00_11::
-    db $f9, "0 checked", $f1
-    db "behind the grave.", $fa, $f7
-    db $ef, $ee, "There was nothing", $ef, $ee, "of interest.", $f7
-    db $f0
+    db "<BUF0> checked<LINE>"
+    db "behind the grave.<PROMPT>"
+    db "<NEXT>There was nothing"
+    db "<NEXT>of interest.<WAIT>"
+    db "@"
 
 String_98_572E_00_12::
-    db $ea, "*: The King's gone.", $f1
-    db "What should I do?", $fa, $f7
-    db $ef, $ee, "I guess there's no", $ef, $ee, "Sirloin for me.", $f7
-    db $f0
+    db "<VOICE1>*: The King's gone.<LINE>"
+    db "What should I do?<PROMPT>"
+    db "<NEXT>I guess there's no"
+    db "<NEXT>Sirloin for me.<WAIT>"
+    db "@"
 
 String_98_572E_00_13::
-    db $ea, "*: South beyond the", $f1
-    db "mountains is the", $fa, $f7
-    db $ef, $ee, "King's castle.", $ef, $ee, "I understand that", $fa, $f7
-    db $ef, $ee, "it's bustling with", $ef, $ee, "treasure hunters.", $f7
-    db $f0
+    db "<VOICE1>*: South beyond the<LINE>"
+    db "mountains is the<PROMPT>"
+    db "<NEXT>King's castle."
+    db "<NEXT>I understand that<PROMPT>"
+    db "<NEXT>it's bustling with"
+    db "<NEXT>treasure hunters.<WAIT>"
+    db "@"
 
 String_98_572E_00_14::
-    db $ea, "*: Several ancient", $f1
-    db "ruins remain in", $fa, $f7
-    db $ef, $ee, "the southern part", $ef, $ee, "of the continent.", $fa, $f7
-    db $ef, $ee, "Treasures may be", $ef, $ee, "hidden in them.", $f7
-    db $f0
+    db "<VOICE1>*: Several ancient<LINE>"
+    db "ruins remain in<PROMPT>"
+    db "<NEXT>the southern part"
+    db "<NEXT>of the continent.<PROMPT>"
+    db "<NEXT>Treasures may be"
+    db "<NEXT>hidden in them.<WAIT>"
+    db "@"
 
 String_98_572E_00_15::
-    db $ea, "*: I was taking a", $f1
-    db "walk outside with", $fa, $f7
-    db $ef, $ee, "my friend Roboster", $ef, $ee, "when he was almost", $fa, $f7
-    db $ef, $ee, "taken away by a", $ef, $ee, "giant MadCondor.", $fa, $f7
-    db $ef, $ee, "I think it was his", $ef, $ee, "shiny metal body", $fa, $f7
-    db $ef, $ee, "that attracted the", $ef, $ee, "bird.", $fa, $f7
-    db $ef, $ee, "That may mean", $ef, $ee, "lamps and armor", $fa, $f7
-    db $ef, $ee, "will also draw the", $ef, $ee, "bird's attention.", $f7
-    db $f0
+    db "<VOICE1>*: I was taking a<LINE>"
+    db "walk outside with<PROMPT>"
+    db "<NEXT>my friend Roboster"
+    db "<NEXT>when he was almost<PROMPT>"
+    db "<NEXT>taken away by a"
+    db "<NEXT>giant MadCondor.<PROMPT>"
+    db "<NEXT>I think it was his"
+    db "<NEXT>shiny metal body<PROMPT>"
+    db "<NEXT>that attracted the"
+    db "<NEXT>bird.<PROMPT>"
+    db "<NEXT>That may mean"
+    db "<NEXT>lamps and armor<PROMPT>"
+    db "<NEXT>will also draw the"
+    db "<NEXT>bird's attention.<WAIT>"
+    db "@"
 
 String_98_572E_00_16::
-    db $ea, "*: ", $a4, $a4, "This way", $a4, $f1
-    db $a4, "Here", $a4, " ", $a4, "Here", $a4, $f7
-    db $f0
+    db "<VOICE1>*: ……This way…<LINE>"
+    db "…Here… …Here…<WAIT>"
+    db "@"
 
 String_98_572E_00_17::
-    db $eb, "*: ", $a4, "Where is my", $f1
-    db "casket", $a4, " Where", $a4, $fa, $f7
-    db $ef, $ee, "Ring the bell", $a4, $ef, $ee, $a4, "Please", $a4, $f7
-    db $f0
+    db "<VOICE2>*: …Where is my<LINE>"
+    db "casket… Where…<PROMPT>"
+    db "<NEXT>Ring the bell…"
+    db "<NEXT>…Please…<WAIT>"
+    db "@"
 
 String_98_572E_00_18::
-    db $f9, "0 checked the", $f1
-    db "notice.", $fa, $f7
-    db $ef, $ee, "'Guide the lost", $ef, $ee, "souls", $a4, $95, $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "notice.<PROMPT>"
+    db "<NEXT>'Guide the lost"
+    db "<NEXT>souls…", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_19::
-    db $f9, "0 read the", $f1
-    db "sign.", $fa, $f7
-    db $ef, $ee, "'Determine where", $ef, $ee, "you will land", $fa, $f7
-    db $ef, $ee, "before flying", $ef, $ee, "off.", $95, $f7
-    db $f0
+    db "<BUF0> read the<LINE>"
+    db "sign.<PROMPT>"
+    db "<NEXT>'Determine where"
+    db "<NEXT>you will land<PROMPT>"
+    db "<NEXT>before flying"
+    db "<NEXT>off.", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_1A::
-    db $eb, "*: I lost again.", $f1
-    db "I need to train my", $fa, $f7
-    db $ef, $ee, "monsters a lot", $ef, $ee, "more to win.", $fa, $f7
-    db $ef, $ee, "I'll have to go", $ef, $ee, "back to a world", $fa, $f7
-    db $ef, $ee, "I've already", $ef, $ee, "finished, and", $fa, $f7
-    db $ef, $ee, "raise their levels", $ef, $ee, "some more.", $fa, $f7
-    db $ef, $ee, "There might be", $ef, $ee, "something new for", $fa, $f7
-    db $ef, $ee, "me to discover.", $ef, $ee, "Who knows?", $f7
-    db $f0
+    db "<VOICE2>*: I lost again.<LINE>"
+    db "I need to train my<PROMPT>"
+    db "<NEXT>monsters a lot"
+    db "<NEXT>more to win.<PROMPT>"
+    db "<NEXT>I'll have to go"
+    db "<NEXT>back to a world<PROMPT>"
+    db "<NEXT>I've already"
+    db "<NEXT>finished, and<PROMPT>"
+    db "<NEXT>raise their levels"
+    db "<NEXT>some more.<PROMPT>"
+    db "<NEXT>There might be"
+    db "<NEXT>something new for<PROMPT>"
+    db "<NEXT>me to discover."
+    db "<NEXT>Who knows?<WAIT>"
+    db "@"
 
 String_98_572E_00_20::
-    db $eb, "*: Good! Let's get", $f1
-    db "started!", $f7
-    db $f0
+    db "<VOICE2>*: Good! Let's get<LINE>"
+    db "started!<WAIT>"
+    db "@"
 
 String_98_572E_00_21::
-    db $eb, "*: I'll be here for", $f1
-    db "a while longer.", $fa, $f7
-    db $ef, $ee, "If you change your", $ef, $ee, "mind, come back.", $f7
-    db $f0
+    db "<VOICE2>*: I'll be here for<LINE>"
+    db "a while longer.<PROMPT>"
+    db "<NEXT>If you change your"
+    db "<NEXT>mind, come back.<WAIT>"
+    db "@"
 
 String_98_572E_00_22::
-    db $eb, "*: I lost again.", $f1
-    db "I need to train my", $fa, $f7
-    db $ef, $ee, "monsters a lot", $ef, $ee, "more to win.", $fa, $f7
-    db $ef, $ee, "I'll have to go", $ef, $ee, "back to a world", $fa, $f7
-    db $ef, $ee, "I've already", $ef, $ee, "finished, and", $fa, $f7
-    db $ef, $ee, "raise their levels", $ef, $ee, "some more.", $fa, $f7
-    db $ef, $ee, "There might be", $ef, $ee, "something new for", $fa, $f7
-    db $ef, $ee, "me to discover.", $ef, $ee, "Who knows?", $f7
-    db $f0
+    db "<VOICE2>*: I lost again.<LINE>"
+    db "I need to train my<PROMPT>"
+    db "<NEXT>monsters a lot"
+    db "<NEXT>more to win.<PROMPT>"
+    db "<NEXT>I'll have to go"
+    db "<NEXT>back to a world<PROMPT>"
+    db "<NEXT>I've already"
+    db "<NEXT>finished, and<PROMPT>"
+    db "<NEXT>raise their levels"
+    db "<NEXT>some more.<PROMPT>"
+    db "<NEXT>There might be"
+    db "<NEXT>something new for<PROMPT>"
+    db "<NEXT>me to discover."
+    db "<NEXT>Who knows?<WAIT>"
+    db "@"
 
 String_98_572E_00_23::
-    db $eb, "*: When you breed,", $f1
-    db "the offspring", $fa, $f7
-    db $ef, $ee, "inherit the", $ef, $ee, "parents' skills", $fa, $f7
-    db $ef, $ee, "and abilities.", $ef, $ee, "So, you're better", $fa, $f7
-    db $ef, $ee, "off breeding", $ef, $ee, "monsters.", $f7
-    db $f0
+    db "<VOICE2>*: When you breed,<LINE>"
+    db "the offspring<PROMPT>"
+    db "<NEXT>inherit the"
+    db "<NEXT>parents' skills<PROMPT>"
+    db "<NEXT>and abilities."
+    db "<NEXT>So, you're better<PROMPT>"
+    db "<NEXT>off breeding"
+    db "<NEXT>monsters.<WAIT>"
+    db "@"
 
 String_98_572E_00_24::
-    db $ea, "*: Do you know all", $f1
-    db "the kinds of meat?", $fa, $f7
-    db $ef, $ee, "There's BeefJerky,", $ef, $ee, "PorkChop, Rib and", $fa, $f7
-    db $ef, $ee, "then there's", $ef, $ee, "Sirloin.", $fa, $f7
-    db $ef, $ee, "Sirloin is the", $ef, $ee, "ultimate!", $fa, $f7
-    db $ef, $ee, "So tender and", $ef, $ee, "heavenly tasty!", $f7
-    db $f0
+    db "<VOICE1>*: Do you know all<LINE>"
+    db "the kinds of meat?<PROMPT>"
+    db "<NEXT>There's BeefJerky,"
+    db "<NEXT>PorkChop, Rib and<PROMPT>"
+    db "<NEXT>then there's"
+    db "<NEXT>Sirloin.<PROMPT>"
+    db "<NEXT>Sirloin is the"
+    db "<NEXT>ultimate!<PROMPT>"
+    db "<NEXT>So tender and"
+    db "<NEXT>heavenly tasty!<WAIT>"
+    db "@"
 
 String_98_572E_00_25::
-    db $ea, "*: If you eat any", $f1
-    db "BadMeat like me,", $fa, $f7
-    db $ef, $ee, "you'll get", $ef, $ee, "poisoned.", $f7
-    db $f0
+    db "<VOICE1>*: If you eat any<LINE>"
+    db "BadMeat like me,<PROMPT>"
+    db "<NEXT>you'll get"
+    db "<NEXT>poisoned.<WAIT>"
+    db "@"
 
 String_98_572E_00_26::
-    db $ea, "*: Hm? Little one,", $f1
-    db "are you a master?", $fa, $f7
-    db $ef, $ee, "How would you like", $ef, $ee, "to breed one of", $fa, $f7
-    db $ef, $ee, "your monsters with", $ef, $ee, "my Armorpede?", $ff, $f0
+    db "<VOICE1>*: Hm? Little one,<LINE>"
+    db "are you a master?<PROMPT>"
+    db "<NEXT>How would you like"
+    db "<NEXT>to breed one of<PROMPT>"
+    db "<NEXT>your monsters with"
+    db "<NEXT>my Armorpede?<CHOICE>"
+    db "@"
 
 String_98_572E_00_27::
-    db $ea, "*: Good! Let's get", $f1
-    db "this started!", $f7
-    db $f0
+    db "<VOICE1>*: Good! Let's get<LINE>"
+    db "this started!<WAIT>"
+    db "@"
 
 String_98_572E_00_28::
-    db $ea, "*: Oh, too bad.", $f1
-    db "Another time.", $fa, $f7
-    db $ef, $ee, "Tell me if you", $ef, $ee, "change your mind.", $f7
-    db $f0
+    db "<VOICE1>*: Oh, too bad.<LINE>"
+    db "Another time.<PROMPT>"
+    db "<NEXT>Tell me if you"
+    db "<NEXT>change your mind.<WAIT>"
+    db "@"
 
 String_98_572E_00_29::
-    db $ea, "*: If you get an", $f1
-    db "EvilArmor, I", $44, $fa, $f7
-    db $ef, $ee, "breed it with a", $ef, $ee, "material family", $fa, $f7
-    db $ef, $ee, "partner. It's a", $ef, $ee, "tough combo.", $f7
-    db $f0
+    db "<VOICE1>*: If you get an<LINE>"
+    db "EvilArmor, I", $44, "<PROMPT>"
+    db "<NEXT>breed it with a"
+    db "<NEXT>material family<PROMPT>"
+    db "<NEXT>partner. It's a"
+    db "<NEXT>tough combo.<WAIT>"
+    db "@"
 
 String_98_572E_00_2A::
-    db $ea, "*: NoctoKing is my", $f1
-    db "name!", $fa, $f7
-    db $ef, $ee, "Darkness is my", $ef, $ee, "domain!", $fa, $f7
-    db $ef, $ee, "Perchance, do you", $ef, $ee, "know a skill named", $fa, $f7
-    db $ef, $ee, "Ahhh? Its effects", $ef, $ee, "differ markedly", $fa, $f7
-    db $ef, $ee, "depending on the", $ef, $ee, "gender.", $f7
-    db $f0
+    db "<VOICE1>*: NoctoKing is my<LINE>"
+    db "name!<PROMPT>"
+    db "<NEXT>Darkness is my"
+    db "<NEXT>domain!<PROMPT>"
+    db "<NEXT>Perchance, do you"
+    db "<NEXT>know a skill named<PROMPT>"
+    db "<NEXT>Ahhh? Its effects"
+    db "<NEXT>differ markedly<PROMPT>"
+    db "<NEXT>depending on the"
+    db "<NEXT>gender.<WAIT>"
+    db "@"
 
 String_98_572E_00_2B::
-    db $ea, "*: I learned how to", $f1
-    db "Massacre!", $fa, $f7
-    db $ef, $ee, "But I ended up", $ef, $ee, "clocking my mates", $fa, $f7
-    db $ef, $ee, "pretty good too.", $ef, $ee, "Ehehe.", $f7
-    db $f0
+    db "<VOICE1>*: I learned how to<LINE>"
+    db "Massacre!<PROMPT>"
+    db "<NEXT>But I ended up"
+    db "<NEXT>clocking my mates<PROMPT>"
+    db "<NEXT>pretty good too."
+    db "<NEXT>Ehehe.<WAIT>"
+    db "@"
 
 String_98_572E_00_2C::
-    db $ea, "*: Yo! Up close,", $f1
-    db "you look tougher", $fa, $f7
-    db $ef, $ee, "than you first", $ef, $ee, "appeared.", $fa, $f7
-    db $ef, $ee, "Want to breed a", $ef, $ee, "monster with my", $fa, $f7
-    db $ef, $ee, "WildApe? Does", $ef, $ee, "that sound good?", $ff, $f0
+    db "<VOICE1>*: Yo! Up close,<LINE>"
+    db "you look tougher<PROMPT>"
+    db "<NEXT>than you first"
+    db "<NEXT>appeared.<PROMPT>"
+    db "<NEXT>Want to breed a"
+    db "<NEXT>monster with my<PROMPT>"
+    db "<NEXT>WildApe? Does"
+    db "<NEXT>that sound good?<CHOICE>"
+    db "@"
 
 String_98_572E_00_2D::
-    db $ea, "*: I like your", $f1
-    db "style!", $fa, $f7
-    db $ef, $ee, "Let's get started", $ef, $ee, "with this.", $f7
-    db $f0
+    db "<VOICE1>*: I like your<LINE>"
+    db "style!<PROMPT>"
+    db "<NEXT>Let's get started"
+    db "<NEXT>with this.<WAIT>"
+    db "@"
 
 String_98_572E_00_2E::
-    db $ea, "*: What? Are you", $f1
-    db "sure about that?", $f7
-    db $f0
+    db "<VOICE1>*: What? Are you<LINE>"
+    db "sure about that?<WAIT>"
+    db "@"
 
 String_98_572E_00_2F::
-    db $ea, "*: All righty!", $f1
-    db $fa, $f7
-    db $ef, $ee, $f3, "We'll do this again", $ef, $ee, "next time too!", $f7
-    db $f0
+    db "<VOICE1>*: All righty!<LINE>"
+    db "<PROMPT>"
+    db "<NEXT>"
+    db "<HOME>We'll do this again"
+    db "<NEXT>next time too!<WAIT>"
+    db "@"
 
 String_98_572E_00_30::
-    db $ea, "*: Arr, matey!", $f1
-    db "I'm CaptDead!", $fa, $f7
-    db $ef, $ee, "A dashing zombie", $ef, $ee, "of the open seas!", $fa, $f7
-    db $ef, $ee, "If I CallHelp, my", $ef, $ee, "trusty crew will", $fa, $f7
-    db $ef, $ee, "come running,", $ef, $ee, "cutlasses ready!", $f7
-    db $f0
+    db "<VOICE1>*: Arr, matey!<LINE>"
+    db "I'm CaptDead!<PROMPT>"
+    db "<NEXT>A dashing zombie"
+    db "<NEXT>of the open seas!<PROMPT>"
+    db "<NEXT>If I CallHelp, my"
+    db "<NEXT>trusty crew will<PROMPT>"
+    db "<NEXT>come running,"
+    db "<NEXT>cutlasses ready!<WAIT>"
+    db "@"
 
 String_98_572E_00_31::
-    db $ea, "*: I strike with my", $f1
-    db "eight tentacles.", $fa, $f7
-    db $ef, $ee, "That means I hit", $ef, $ee, "eight times!", $f7
-    db $f0
+    db "<VOICE1>*: I strike with my<LINE>"
+    db "eight tentacles.<PROMPT>"
+    db "<NEXT>That means I hit"
+    db "<NEXT>eight times!<WAIT>"
+    db "@"
 
 String_98_572E_00_32::
-    db $eb, "*: Welcome. I'm the", $f1
-    db "Christener.", $fa, $f7
-    db $ef, $ee, "I can rename your", $ef, $ee, "monsters here.", $fa, $f7
-    db $ef, $ee, "Do you wish to", $ef, $ee, "rename one?", $f0
+    db "<VOICE2>*: Welcome. I'm the<LINE>"
+    db "Christener.<PROMPT>"
+    db "<NEXT>I can rename your"
+    db "<NEXT>monsters here.<PROMPT>"
+    db "<NEXT>Do you wish to"
+    db "<NEXT>rename one?@"
 
 String_98_572E_00_33::
-    db $eb, "*: Welcome. I'm the", $f1
-    db "Christener.", $fa, $f7
-    db $ef, $ee, "Do you wish to", $ef, $ee, "rename someone?", $f0
+    db "<VOICE2>*: Welcome. I'm the<LINE>"
+    db "Christener.<PROMPT>"
+    db "<NEXT>Do you wish to"
+    db "<NEXT>rename someone?@"
 
 String_98_572E_00_34::
-    db $f9, "0 checked the", $f1
-    db "bookshelf.", $fa, $f7
-    db $ef, $ee, "'Handbook on", $ef, $ee, "Naming", $a4, $fa, $f7
-    db $ef, $ee, "Using a part of", $ef, $ee, "the species name", $fa, $f7
-    db $ef, $ee, "enables easier", $ef, $ee, "identification.", $95, $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "bookshelf.<PROMPT>"
+    db "<NEXT>'Handbook on"
+    db "<NEXT>Naming…<PROMPT>"
+    db "<NEXT>Using a part of"
+    db "<NEXT>the species name<PROMPT>"
+    db "<NEXT>enables easier"
+    db "<NEXT>identification.", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_35::
-    db $f9, "0 checked the", $f1
-    db "bookshelf.", $fa, $f7
-    db $ef, $ee, "'Handbook on", $ef, $ee, "Naming", $a4, $fa, $f7
-    db $ef, $ee, "Borrowing from the", $ef, $ee, "parents' names", $fa, $f7
-    db $ef, $ee, "adds to the weight", $ef, $ee, "of a name.", $95, $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "bookshelf.<PROMPT>"
+    db "<NEXT>'Handbook on"
+    db "<NEXT>Naming…<PROMPT>"
+    db "<NEXT>Borrowing from the"
+    db "<NEXT>parents' names<PROMPT>"
+    db "<NEXT>adds to the weight"
+    db "<NEXT>of a name.", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_36::
-    db $f9, "0 checked the", $f1
-    db "bookshelf.", $fa, $f7
-    db $ef, $ee, "'Handbook on", $ef, $ee, "Naming", $a4, $fa, $f7
-    db $ef, $ee, "A string of the", $ef, $ee, "same character", $fa, $f7
-    db $ef, $ee, "makes a terrible", $ef, $ee, "name. Where is", $fa, $f7
-    db $ef, $ee, "your love for your", $ef, $ee, "monster?", $95, $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "bookshelf.<PROMPT>"
+    db "<NEXT>'Handbook on"
+    db "<NEXT>Naming…<PROMPT>"
+    db "<NEXT>A string of the"
+    db "<NEXT>same character<PROMPT>"
+    db "<NEXT>makes a terrible"
+    db "<NEXT>name. Where is<PROMPT>"
+    db "<NEXT>your love for your"
+    db "<NEXT>monster?", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_37::
-    db $ea, "*: I was once a", $f1
-    db "great master who", $fa, $f7
-    db $ef, $ee, "traveled from", $ef, $ee, "world to world.", $fa, $f7
-    db $ef, $ee, "I used that key to", $ef, $ee, "reach a world.", $fa, $f7
-    db $ef, $ee, "You have your own", $ef, $ee, "Magic Keys, yes?", $ff, $f0
+    db "<VOICE1>*: I was once a<LINE>"
+    db "great master who<PROMPT>"
+    db "<NEXT>traveled from"
+    db "<NEXT>world to world.<PROMPT>"
+    db "<NEXT>I used that key to"
+    db "<NEXT>reach a world.<PROMPT>"
+    db "<NEXT>You have your own"
+    db "<NEXT>Magic Keys, yes?<CHOICE>"
+    db "@"
 
 String_98_572E_00_38::
-    db $ea, "*: Have you shown", $f1
-    db "them to the Key", $fa, $f7
-    db $ef, $ee, "Shop's boss?", $ef, $ee, "He'll make it so", $fa, $f7
-    db $ef, $ee, "you can go to", $ef, $ee, "other worlds.", $f7
-    db $f0
+    db "<VOICE1>*: Have you shown<LINE>"
+    db "them to the Key<PROMPT>"
+    db "<NEXT>Shop's boss?"
+    db "<NEXT>He'll make it so<PROMPT>"
+    db "<NEXT>you can go to"
+    db "<NEXT>other worlds.<WAIT>"
+    db "@"
 
 String_98_572E_00_39::
-    db $ea, "*: You've not found", $f1
-    db "any yet?", $fa, $f7
-    db $ef, $ee, "That's a", $ef, $ee, "rotten shame", $a4, $fa, $f7
-    db $ef, $ee, "Fine, look on the", $ef, $ee, "shelf there.", $fa, $f7
-    db $ef, $ee, "You can take one", $ef, $ee, "of my keys.", $f7
-    db $f0
+    db "<VOICE1>*: You've not found<LINE>"
+    db "any yet?<PROMPT>"
+    db "<NEXT>That's a"
+    db "<NEXT>rotten shame…<PROMPT>"
+    db "<NEXT>Fine, look on the"
+    db "<NEXT>shelf there.<PROMPT>"
+    db "<NEXT>You can take one"
+    db "<NEXT>of my keys.<WAIT>"
+    db "@"
 
 String_98_572E_00_3A::
-    db $ea, "*: That key, I used", $f1
-    db "on my travels to", $fa, $f7
-    db $ef, $ee, "other worlds in my", $ef, $ee, "youth.", $fa, $f7
-    db $ef, $ee, "It brings back", $ef, $ee, "memories.", $fa, $f7
-    db $ef, $ee, "No, you may not", $ef, $ee, "have it.", $f7
-    db $f0
+    db "<VOICE1>*: That key, I used<LINE>"
+    db "on my travels to<PROMPT>"
+    db "<NEXT>other worlds in my"
+    db "<NEXT>youth.<PROMPT>"
+    db "<NEXT>It brings back"
+    db "<NEXT>memories.<PROMPT>"
+    db "<NEXT>No, you may not"
+    db "<NEXT>have it.<WAIT>"
+    db "@"
 
 String_98_572E_00_3B::
-    db $f9, "0 checked the", $f1
-    db "shelf.", $fa, $f7
-    db $ef, $ee, "Souvenirs from", $ef, $ee, "other worlds", $fa, $f7
-    db $ef, $ee, "covered the shelf", $ef, $ee, "haphazardly.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "shelf.<PROMPT>"
+    db "<NEXT>Souvenirs from"
+    db "<NEXT>other worlds<PROMPT>"
+    db "<NEXT>covered the shelf"
+    db "<NEXT>haphazardly.<WAIT>"
+    db "@"
 
 String_98_572E_00_3C::
-    db $f9, "0 checked the", $f1
-    db "shelf.", $fa, $f7
-    db $ef, $ee, $f9, "0 obtained a", $ef, $ee, "Magic Key.", $e5, $58, $f7
-    db $e9, $ff, $f0
+    db "<BUF0> checked the<LINE>"
+    db "shelf.<PROMPT>"
+    db "<NEXT><BUF0> obtained a"
+    db "<NEXT>Magic Key.<MUSIC_WAIT>", $58, "<WAIT>"
+    db "<MAP_MUSIC>@"
 
 String_98_572E_00_3D::
-    db $f9, "0 checked the", $f1
-    db "shelf.", $fa, $f7
-    db $ef, $ee, $f9, "0 found a", $ef, $ee, "Magic Key.", $fa, $f7
-    db $ef, $ee, "But the key ring", $ef, $ee, "was full.", $fa, $f7
-    db $ef, $ee, $f9, "0 put the", $ef, $ee, "Magic Key back.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "shelf.<PROMPT>"
+    db "<NEXT><BUF0> found a"
+    db "<NEXT>Magic Key.<PROMPT>"
+    db "<NEXT>But the key ring"
+    db "<NEXT>was full.<PROMPT>"
+    db "<NEXT><BUF0> put the"
+    db "<NEXT>Magic Key back.<WAIT>"
+    db "@"
 
 String_98_572E_00_3E::
-    db $f9, "0 peered into", $f1
-    db "the vase.", $fa, $f7
-    db $ef, $ee, "It was full of", $ef, $ee, "esoteric junk.", $f7
-    db $f0
+    db "<BUF0> peered into<LINE>"
+    db "the vase.<PROMPT>"
+    db "<NEXT>It was full of"
+    db "<NEXT>esoteric junk.<WAIT>"
+    db "@"
 
 String_98_572E_00_3F::
-    db $f9, "0 read the", $f1
-    db "sign.", $fa, $f7
-    db $ef, $ee, "'Monster Arena,", $ef, $ee, "where masters meet", $fa, $f7
-    db $ef, $ee, "for battle!", $ef, $ee, "Downstairs!", $95, $f7
-    db $f0
+    db "<BUF0> read the<LINE>"
+    db "sign.<PROMPT>"
+    db "<NEXT>'Monster Arena,"
+    db "<NEXT>where masters meet<PROMPT>"
+    db "<NEXT>for battle!"
+    db "<NEXT>Downstairs!", $95, "<WAIT>"
+    db "@"
 
 String_98_572E_00_40::
-    db $ea, "*: There are times", $f1
-    db "when you have to", $fa, $f7
-    db $ef, $ee, "take weak monsters", $ef, $ee, "out and about.", $fa, $f7
-    db $ef, $ee, "If you want to", $ef, $ee, "avoid battles,", $fa, $f7
-    db $ef, $ee, "sprinkle on some", $ef, $ee, "Repellent.", $f7
-    db $f0
+    db "<VOICE1>*: There are times<LINE>"
+    db "when you have to<PROMPT>"
+    db "<NEXT>take weak monsters"
+    db "<NEXT>out and about.<PROMPT>"
+    db "<NEXT>If you want to"
+    db "<NEXT>avoid battles,<PROMPT>"
+    db "<NEXT>sprinkle on some"
+    db "<NEXT>Repellent.<WAIT>"
+    db "@"
 
 String_98_572E_00_41::
-    db $ea, "*: Up ahead is the", $f1
-    db "Starry Shrine and", $fa, $f7
-    db $ef, $ee, "the Egg Evaluator's", $ef, $ee, "room.", $fa, $f7
-    db $ef, $ee, "Both facilities", $ef, $ee, "are absolutely", $fa, $f7
-    db $ef, $ee, "indispensable to", $ef, $ee, "masters.", $fa, $f7
-    db $ef, $ee, "But they're only", $ef, $ee, "open to certified", $fa, $f7
-    db $ef, $ee, "masters, and no", $ef, $ee, "one else.", $f7
-    db $f0
+    db "<VOICE1>*: Up ahead is the<LINE>"
+    db "Starry Shrine and<PROMPT>"
+    db "<NEXT>the Egg Evaluator's"
+    db "<NEXT>room.<PROMPT>"
+    db "<NEXT>Both facilities"
+    db "<NEXT>are absolutely<PROMPT>"
+    db "<NEXT>indispensable to"
+    db "<NEXT>masters.<PROMPT>"
+    db "<NEXT>But they're only"
+    db "<NEXT>open to certified<PROMPT>"
+    db "<NEXT>masters, and no"
+    db "<NEXT>one else.<WAIT>"
+    db "@"
 
 String_98_572E_00_42::
     db $f0
@@ -1138,207 +1381,275 @@ StringList_98_7034::
     dw String_98_7032_00_1B ; id 33
 
 String_98_7032_00_00::
-    db $ea, "*: What? You don't", $f1
-    db "know about the", $fa, $f7
-    db $ef, $ee, "Starry Shrine or", $ef, $ee, "the Egg Evaluator?", $fa, $f7
-    db $ef, $ee, "Urrrgh", $a4, " Look them", $ef, $ee, "up at the Library.", $fa, $f7
-    db $ef, $ee, "I'm not much good", $ef, $ee, "at explaining, but", $fa, $f7
-    db $ef, $ee, "I've gotten you", $ef, $ee, "the word!", $f7
-    db $f0
+    db "<VOICE1>*: What? You don't<LINE>"
+    db "know about the<PROMPT>"
+    db "<NEXT>Starry Shrine or"
+    db "<NEXT>the Egg Evaluator?<PROMPT>"
+    db "<NEXT>Urrrgh… Look them"
+    db "<NEXT>up at the Library.<PROMPT>"
+    db "<NEXT>I'm not much good"
+    db "<NEXT>at explaining, but<PROMPT>"
+    db "<NEXT>I've gotten you"
+    db "<NEXT>the word!<WAIT>"
+    db "@"
 
 String_98_7032_00_01::
-    db "A beautiful voice", $f1
-    db "echoed", $a4, $f7
-    db $f0
+    db "A beautiful voice<LINE>"
+    db "echoed…<WAIT>"
+    db "@"
 
 String_98_7032_00_02::
-    db $eb, "Helen: I thank you", $f1
-    db "from the heart.", $fa, $f7
-    db $ef, $ee, "Please give my", $ef, $ee, "regards to the", $fa, $f7
-    db $ef, $ee, "spirit in the", $ef, $ee, "spring.", $f7
-    db $f0
+    db "<VOICE2>Helen: I thank you<LINE>"
+    db "from the heart.<PROMPT>"
+    db "<NEXT>Please give my"
+    db "<NEXT>regards to the<PROMPT>"
+    db "<NEXT>spirit in the"
+    db "<NEXT>spring.<WAIT>"
+    db "@"
 
 String_98_7032_00_03::
-    db $ea, "*: Seeing the", $f1
-    db "liveliness of", $fa, $f7
-    db $ef, $ee, "Lady Yuna lifts", $ef, $ee, "our spirits.", $f7
-    db $f0
+    db "<VOICE1>*: Seeing the<LINE>"
+    db "liveliness of<PROMPT>"
+    db "<NEXT>Lady Yuna lifts"
+    db "<NEXT>our spirits.<WAIT>"
+    db "@"
 
 String_98_7032_00_04::
-    db $f9, "0 checked the", $f1
-    db "tombstone.", $fa, $f7
-    db $ef, $ee, "There appeared to", $ef, $ee, "be nothing.", $f7
-    db $f0
+    db "<BUF0> checked the<LINE>"
+    db "tombstone.<PROMPT>"
+    db "<NEXT>There appeared to"
+    db "<NEXT>be nothing.<WAIT>"
+    db "@"
 
 String_98_7032_00_05::
-    db $ea, "*: The sea is huge", $f1
-    db "and mysterious.", $fa, $f7
-    db $ef, $ee, "There must be", $ef, $ee, "totally different", $fa, $f7
-    db $ef, $ee, "monsters in the", $ef, $ee, "sea.", $f7
-    db $f0
+    db "<VOICE1>*: The sea is huge<LINE>"
+    db "and mysterious.<PROMPT>"
+    db "<NEXT>There must be"
+    db "<NEXT>totally different<PROMPT>"
+    db "<NEXT>monsters in the"
+    db "<NEXT>sea.<WAIT>"
+    db "@"
 
 String_98_7032_00_06::
-    db $ea, "*: Huh? Has the sea", $f1
-    db "risen?", $fa, $f7
-    db $ef, $ee, "Oh, well. I'm a", $ef, $ee, "good swimmer.", $f7
-    db $f0
+    db "<VOICE1>*: Huh? Has the sea<LINE>"
+    db "risen?<PROMPT>"
+    db "<NEXT>Oh, well. I'm a"
+    db "<NEXT>good swimmer.<WAIT>"
+    db "@"
 
 String_98_7032_00_07::
-    db $ea, "*: The water flowed", $f1
-    db "right over the", $fa, $f7
-    db $ef, $ee, "ground almost", $ef, $ee, "instantly.", $fa, $f7
-    db $ef, $ee, "Is GreatLog really", $ef, $ee, "safe?", $f7
-    db $f0
+    db "<VOICE1>*: The water flowed<LINE>"
+    db "right over the<PROMPT>"
+    db "<NEXT>ground almost"
+    db "<NEXT>instantly.<PROMPT>"
+    db "<NEXT>Is GreatLog really"
+    db "<NEXT>safe?<WAIT>"
+    db "@"
 
 String_98_7032_00_08::
-    db "Look! A MadCondor!", $f1
-    db "It has something!", $fa, $f7
-    db $ef, $ee, "It clutched a", $ef, $ee, "glowing ball!", $f7
-    db $f0
+    db "Look! A MadCondor!<LINE>"
+    db "It has something!<PROMPT>"
+    db "<NEXT>It clutched a"
+    db "<NEXT>glowing ball!<WAIT>"
+    db "@"
 
 String_98_7032_00_09::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 20 species!", $fa, $f7
-    db $ef, $ee, "Keep at it, and", $ef, $ee, "get some more!", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 20 species!<PROMPT>"
+    db "<NEXT>Keep at it, and"
+    db "<NEXT>get some more!<WAIT>"
+    db "@"
 
 String_98_7032_00_0A::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 30 species!", $fa, $f7
-    db $ef, $ee, "You can check up", $ef, $ee, "on your monsters", $95, $fa, $f7
-    db $ef, $ee, "cataloged data at", $ef, $ee, "the Library.", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 30 species!<PROMPT>"
+    db "<NEXT>You can check up"
+    db "<NEXT>on your monsters", $95, "<PROMPT>"
+    db "<NEXT>cataloged data at"
+    db "<NEXT>the Library.<WAIT>"
+    db "@"
 
 String_98_7032_00_0B::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 40 species!", $fa, $f7
-    db $ef, $ee, "If the farm is", $ef, $ee, "full, you should", $fa, $f7
-    db $ef, $ee, "try breeding some", $ef, $ee, "of your monsters.", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 40 species!<PROMPT>"
+    db "<NEXT>If the farm is"
+    db "<NEXT>full, you should<PROMPT>"
+    db "<NEXT>try breeding some"
+    db "<NEXT>of your monsters.<WAIT>"
+    db "@"
 
 String_98_7032_00_0C::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 50 species!", $fa, $f7
-    db $ef, $ee, "By the way, I", $ef, $ee, "think Prince", $fa, $f7
-    db $ef, $ee, "Kameha had some", $ef, $ee, "rare Magic Keys.", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 50 species!<PROMPT>"
+    db "<NEXT>By the way, I"
+    db "<NEXT>think Prince<PROMPT>"
+    db "<NEXT>Kameha had some"
+    db "<NEXT>rare Magic Keys.<WAIT>"
+    db "@"
 
 String_98_7032_00_0D::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 100 species!", $fa, $f7
-    db $ef, $ee, "You've grown up a", $ef, $ee, "lot through this.", $fa, $f7
-    db $ef, $ee, "I'm proud of you!", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 100 species!<PROMPT>"
+    db "<NEXT>You've grown up a"
+    db "<NEXT>lot through this.<PROMPT>"
+    db "<NEXT>I'm proud of you!"
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_7032_00_0E::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 150 species!", $fa, $f7
-    db $ef, $ee, "Have you met a boy", $ef, $ee, "named Terry?", $fa, $f7
-    db $ef, $ee, "You should be good", $ef, $ee, "enough as a master", $fa, $f7
-    db $ef, $ee, "to be worthy of", $ef, $ee, "his approval.", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 150 species!<PROMPT>"
+    db "<NEXT>Have you met a boy"
+    db "<NEXT>named Terry?<PROMPT>"
+    db "<NEXT>You should be good"
+    db "<NEXT>enough as a master<PROMPT>"
+    db "<NEXT>to be worthy of"
+    db "<NEXT>his approval.<WAIT>"
+    db "@"
 
 String_98_7032_00_0F::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 200 species!", $fa, $f7
-    db $ef, $ee, "I doubt no one has", $ef, $ee, "cataloged as many", $fa, $f7
-    db $ef, $ee, "monsters as you.", $ef, $ee, $a4, "What's that?", $fa, $f7
-    db $ef, $ee, "Am I embarrassing", $ef, $ee, "you?", $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 200 species!<PROMPT>"
+    db "<NEXT>I doubt no one has"
+    db "<NEXT>cataloged as many<PROMPT>"
+    db "<NEXT>monsters as you."
+    db "<NEXT>…What's that?<PROMPT>"
+    db "<NEXT>Am I embarrassing"
+    db "<NEXT>you?<WAIT>"
+    db "@"
 
 String_98_7032_00_10::
-    db $ea, "*: Hey, ", $f9, "0!", $f1
-    db "You've befriended", $fa, $f7
-    db $ef, $ee, "a good number of", $ef, $ee, "monsters!", $fa, $f7
-    db $ef, $ee, "You've got at", $ef, $ee, "least 250 species!", $fa, $f7
-    db $ef, $ee, "I had no idea that", $ef, $ee, "there were so many", $fa, $f7
-    db $ef, $ee, "distinct species", $ef, $ee, "of monsters. Even", $fa, $f7
-    db $ef, $ee, "Professor Monster", $ef, $ee, "can't know them", $fa, $f7
-    db $ef, $ee, "all.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: Hey, <BUF0>!<LINE>"
+    db "You've befriended<PROMPT>"
+    db "<NEXT>a good number of"
+    db "<NEXT>monsters!<PROMPT>"
+    db "<NEXT>You've got at"
+    db "<NEXT>least 250 species!<PROMPT>"
+    db "<NEXT>I had no idea that"
+    db "<NEXT>there were so many<PROMPT>"
+    db "<NEXT>distinct species"
+    db "<NEXT>of monsters. Even<PROMPT>"
+    db "<NEXT>Professor Monster"
+    db "<NEXT>can't know them<PROMPT>"
+    db "<NEXT>all."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_7032_00_11::
-    db $ea, "*: Congratulations,", $f1
-    db $f9, "0!", $fa, $f7
-    db $ef, $ee, "You've cataloged", $ef, $ee, "every species.", $fa, $f7
-    db $ef, $ee, "There appear to", $ef, $ee, "be no monsters", $fa, $f7
-    db $ef, $ee, "left to be caught", $ef, $ee, "and cataloged.", $fa, $f7
-    db $ef, $ee, "You hung in for", $ef, $ee, "all this time.", $fa, $f7
-    db $ef, $ee, "I'm sincerely", $ef, $ee, "proud of you.", $fa, $f7
-    db $ef, $ee, $f9, "0, I'm counting", $ef, $ee, "on you to look", $fa, $f7
-    db $ef, $ee, "after the farm and", $ef, $ee, "the monsters.", $f7
-    db $f0
+    db "<VOICE1>*: Congratulations,<LINE>"
+    db "<BUF0>!<PROMPT>"
+    db "<NEXT>You've cataloged"
+    db "<NEXT>every species.<PROMPT>"
+    db "<NEXT>There appear to"
+    db "<NEXT>be no monsters<PROMPT>"
+    db "<NEXT>left to be caught"
+    db "<NEXT>and cataloged.<PROMPT>"
+    db "<NEXT>You hung in for"
+    db "<NEXT>all this time.<PROMPT>"
+    db "<NEXT>I'm sincerely"
+    db "<NEXT>proud of you.<PROMPT>"
+    db "<NEXT><BUF0>, I'm counting"
+    db "<NEXT>on you to look<PROMPT>"
+    db "<NEXT>after the farm and"
+    db "<NEXT>the monsters.<WAIT>"
+    db "@"
 
 String_98_7032_00_12::
-    db $eb, "*: Welcome to the", $f1
-    db "Library!", $fa, $f7
-    db $ef, $ee, "Your monster", $ef, $ee, "Catalog is done!", $e5, $4d, $f7
-    db $e9, $ff, $f0
+    db "<VOICE2>*: Welcome to the<LINE>"
+    db "Library!<PROMPT>"
+    db "<NEXT>Your monster"
+    db "<NEXT>Catalog is done!<MUSIC_WAIT>", $4d, "<WAIT>"
+    db "<MAP_MUSIC>@"
 
 String_98_7032_00_13::
-    db $eb, "*: We need fanfare", $f1
-    db "right about now", $a4, $fa, $f7
-    db $ef, $ee, "Congratulations,", $ef, $ee, "our little hero!", $fa, $f7
-    db $ef, $ee, "Here is your newly", $ef, $ee, "filled Catalog!", $fa, $f7
-    db $ef, $ee, "Which family would", $ef, $ee, "you like to check?", $f7
-    db $f0
+    db "<VOICE2>*: We need fanfare<LINE>"
+    db "right about now…<PROMPT>"
+    db "<NEXT>Congratulations,"
+    db "<NEXT>our little hero!<PROMPT>"
+    db "<NEXT>Here is your newly"
+    db "<NEXT>filled Catalog!<PROMPT>"
+    db "<NEXT>Which family would"
+    db "<NEXT>you like to check?<WAIT>"
+    db "@"
 
 String_98_7032_00_14::
-    db $ea, "*: The weather has", $f1
-    db "been mild.", $fa, $f7
-    db $ef, $ee, "It's a good thing.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: The weather has<LINE>"
+    db "been mild.<PROMPT>"
+    db "<NEXT>It's a good thing."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_98_7032_00_15::
-    db $ea, "*: Lady Yuna has", $f1
-    db "come out of her", $fa, $f7
-    db $ef, $ee, "depression. I've", $ef, $ee, "heard.", $fa, $f7
-    db $ef, $ee, "When it comes to", $ef, $ee, "rumors, good ones", $fa, $f7
-    db $ef, $ee, "are the best, I", $ef, $ee, "have to say.", $f7
-    db $f0
+    db "<VOICE1>*: Lady Yuna has<LINE>"
+    db "come out of her<PROMPT>"
+    db "<NEXT>depression. I've"
+    db "<NEXT>heard.<PROMPT>"
+    db "<NEXT>When it comes to"
+    db "<NEXT>rumors, good ones<PROMPT>"
+    db "<NEXT>are the best, I"
+    db "<NEXT>have to say.<WAIT>"
+    db "@"
 
 String_98_7032_00_16::
-    db $ea, "*: The Queen's lost", $f1
-    db "her scary look!", $f7
-    db $f0
+    db "<VOICE1>*: The Queen's lost<LINE>"
+    db "her scary look!<WAIT>"
+    db "@"
 
 String_98_7032_00_17::
-    db $ea, "*: The kingdoms of", $f1
-    db "the north and west", $fa, $f7
-    db $ef, $ee, "have reconciled", $ef, $ee, "from their ugly", $fa, $f7
-    db $ef, $ee, "squabble over the", $ef, $ee, "mine.", $f7
-    db $f0
+    db "<VOICE1>*: The kingdoms of<LINE>"
+    db "the north and west<PROMPT>"
+    db "<NEXT>have reconciled"
+    db "<NEXT>from their ugly<PROMPT>"
+    db "<NEXT>squabble over the"
+    db "<NEXT>mine.<WAIT>"
+    db "@"
 
 String_98_7032_00_18::
-    db $ea, "*: The scholar who", $f1
-    db "was in the tavern?", $fa, $f7
-    db $ef, $ee, "I think he went", $ef, $ee, "back home.", $f7
-    db $f0
+    db "<VOICE1>*: The scholar who<LINE>"
+    db "was in the tavern?<PROMPT>"
+    db "<NEXT>I think he went"
+    db "<NEXT>back home.<WAIT>"
+    db "@"
 
 String_98_7032_00_19::
-    db $ea, "Warubou: Wa-hey?", $f1
-    db "Feel that, warooh?", $fa, $f7
-    db $ef, $ee, "Did something", $ef, $ee, "shake?", $f7
-    db $f0
+    db "<VOICE1>Warubou: Wa-hey?<LINE>"
+    db "Feel that, warooh?<PROMPT>"
+    db "<NEXT>Did something"
+    db "<NEXT>shake?<WAIT>"
+    db "@"
 
 String_98_7032_00_1A::
-    db $ea, "*: ZZZZZ", $a4, " Ssss", $a4, $f1
-    db "ZZZZZ", $a4, " Ssss", $a4, $f7
-    db $f0
+    db "<VOICE1>*: ZZZZZ… Ssss…<LINE>"
+    db "ZZZZZ… Ssss…<WAIT>"
+    db "@"
 
 String_98_7032_00_1B::
     db "000000000000000000000000000000000000000000000000000000000000"

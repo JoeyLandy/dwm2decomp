@@ -46,105 +46,106 @@ StringList_1D_4018::
     dw String_1D_00_16 ; id 23
 
 String_1D_00_00::
-    db $ea, "*: Which monster", $f1
-    db "will hibernate?", $f0
+    db "<VOICE1>*: Which monster<LINE>"
+    db "will hibernate?@"
 
 String_1D_00_02::
-    db $ea, "*: Do you need me", $f1
-    db "for anything else?", $f0
+    db "<VOICE1>*: Do you need me<LINE>"
+    db "for anything else?@"
 
 String_1D_00_03::
-    db $ea, "*: So this one", $f1
-    db "should hibernate?", $f0
+    db "<VOICE1>*: So this one<LINE>"
+    db "should hibernate?@"
 
 String_1D_00_04::
-    db $ea, "*: OK my friend,", $f1
-    db "time to sleep!", $f7
-    db $f0
+    db "<VOICE1>*: OK my friend,<LINE>"
+    db "time to sleep!<WAIT>"
+    db "@"
 
 String_1D_00_05::
-    db $ea, "*: Huh? There's no", $f1
-    db "one on the farm.", $f7
-    db $f0
+    db "<VOICE1>*: Huh? There's no<LINE>"
+    db "one on the farm.<WAIT>"
+    db "@"
 
 String_1D_00_06::
-    db $ea, "*: Uh-oh, the", $f1
-    db "stable is full!", $f7
-    db $f0
+    db "<VOICE1>*: Uh-oh, the<LINE>"
+    db "stable is full!<WAIT>"
+    db "@"
 
 String_1D_00_07::
-    db $ea, "*: Want to switch", $f1
-    db "with someone?", $f0
+    db "<VOICE1>*: Want to switch<LINE>"
+    db "with someone?@"
 
 String_1D_00_08::
-    db $ea, "*: Who should I", $f1
-    db "wake up?", $f0
+    db "<VOICE1>*: Who should I<LINE>"
+    db "wake up?@"
 
 String_1D_00_09::
-    db $ea, "*: Wake this", $f1
-    db "monster up?", $f0
+    db "<VOICE1>*: Wake this<LINE>"
+    db "monster up?@"
 
 String_1D_00_0A::
-    db $ea, "*: Which one should", $f1
-    db "hibernate?", $f0
+    db "<VOICE1>*: Which one should<LINE>"
+    db "hibernate?@"
 
 String_1D_00_0B::
-    db $ea, "*: So switch ", $f9, "0", $f1
-    db "and ", $f9, "G, huh?", $fa, $f7
-    db $f2, "OK, I'll do that", $f1
-    db "for you.", $f7
-    db $f0
+    db "<VOICE1>*: So switch <BUF0><LINE>"
+    db "and <BUF1>, huh?<PROMPT>"
+    db "<CLEAR>OK, I'll do that<LINE>"
+    db "for you.<WAIT>"
+    db "@"
 
 String_1D_00_0C::
-    db $ea, "*: Who should I", $f1
-    db "wake up?", $f0
+    db "<VOICE1>*: Who should I<LINE>"
+    db "wake up?@"
 
 String_1D_00_0D::
-    db $ea, "*: I'll send ", $f9, "G", $f1
-    db "to the farm.", $f7
-    db $f0
+    db "<VOICE1>*: I'll send <BUF1><LINE>"
+    db "to the farm.<WAIT>"
+    db "@"
 
 String_1D_00_0E::
-    db $ea, "*: Huh? No one's", $f1
-    db "sleeping now.", $f7
-    db $f0
+    db "<VOICE1>*: Huh? No one's<LINE>"
+    db "sleeping now.<WAIT>"
+    db "@"
 
 String_1D_00_0F::
-    db $ea, "*: Huh? There's no", $f1
-    db "room on the farm.", $f7
-    db $f0
+    db "<VOICE1>*: Huh? There's no<LINE>"
+    db "room on the farm.<WAIT>"
+    db "@"
 
 String_1D_00_10::
-    db $ea, "*: Should someone", $f1
-    db "else hibernate?", $f0
+    db "<VOICE1>*: Should someone<LINE>"
+    db "else hibernate?@"
 
 String_1D_00_11::
-    db $ea, "*: Who do you want", $f1
-    db "to check?", $f0
+    db "<VOICE1>*: Who do you want<LINE>"
+    db "to check?@"
 
 String_1D_00_12::
-    db $ea, "*: Who do you want", $f1
-    db "to release?", $f0
+    db "<VOICE1>*: Who do you want<LINE>"
+    db "to release?@"
 
 String_1D_00_13::
-    db $ea, "*: It'll disappear.", $f1
-    db "Is that OK?", $f0
+    db "<VOICE1>*: It'll disappear.<LINE>"
+    db "Is that OK?@"
 
 String_1D_00_14::
-    db $f9, "G was released", $f1
-    db "in the wild.", $f7
-    db $f0
+    db "<BUF1> was released<LINE>"
+    db "in the wild.<WAIT>"
+    db "@"
 
 String_1D_00_15::
-    db $ea, "*: Come see me if", $f1
-    db "you get more", $fa, $f7
-    db $ef, $ee, "monsters.", $ef, $ee, "I'll be waiting.", $f7
-    db $f0
+    db "<VOICE1>*: Come see me if<LINE>"
+    db "you get more<PROMPT>"
+    db "<NEXT>monsters."
+    db "<NEXT>I'll be waiting.<WAIT>"
+    db "@"
 
 String_1D_00_16::
-    db $ea, "*: No one else can", $f1
-    db "hibernate,I see.", $f7
-    db $f0
+    db "<VOICE1>*: No one else can<LINE>"
+    db "hibernate,I see.<WAIT>"
+    db "@"
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_1D_4335::

@@ -12,9 +12,11 @@ Observed table (C2; decoded passages read as ordinary sentences):
     $A3 ":"  $45 "*:"  (C2 from E-0320: the debug menu pictures "1:GOTO PROGRAM" for "1", $A3, "GOTO PROGRAM";
              $45 is one character cell holding an asterisk and a colon, the mark before an unnamed
              speaker's words: $EA, $45, " GreatLog's King" is drawn "*: GreatLog's King")
-Other bytes between words ($EA-$EF, $F0-$FA, $A3, $A4, $95, ...) are control or glyph codes
-whose meaning is NOT established; they are kept as raw bytes. `render` therefore never changes
-a byte: every string character maps back to the byte it came from.
+Bytes $E0-$FF are the text printer's commands (E-0336): StepStringDisplayUntilDone hands each to
+the 32-entry code table of StepStringDisplayUntilDone_Sub01_WriteTextLastChar. TOKENS names them;
+`render` writes them as charmap tokens (`<LINE>`, `<PROMPT>`, `@` for the $F0 terminator, ...) and
+an argument byte after its code as `$XX`. Other bytes ($A4, $8D, $8E, ...) stay raw. `render` never
+changes a byte: every string character and token maps back to the bytes it came from.
 """
 from __future__ import annotations
 
@@ -27,7 +29,57 @@ for _i in range(26):
 CHARMAP.update({" ": 0x90, ".": 0xB5, ",": 0xAB, "!": 0x99, "?": 0x98, "-": 0x9C,
                 "'s": 0x3E, "'m": 0x3F, "'r": 0x40, "'t": 0x41, "'v": 0x42, "'l": 0x43, "'": 0x95,
                 ":": 0xA3, "*:": 0x45})
+# E-0336 (C2): read from the font itself (bank $1F, 8 one-bit rows per glyph at $4010 + 16 * glyph, the odd bytes)
+CHARMAP.update({"…": 0xA4, "(": 0xA0, ")": 0xA1, "+": 0xA2, "~": 0x9D, "/": 0x9E, "★": 0xAC, "©": 0xB8})
 BYTE_TO_TEXT = {v: k for k, v in CHARMAP.items()}
+
+# Text printer commands (E-0336): (bytes, token, argument bytes after them, what the handler does). C2 where
+# tools/text_check.py observed it (the glyph timing of the text speed, <WAIT> holding until a button, <NEXT>,
+# <LINE>, <BUF0>-<BUF3>, @); the rest is a reading of the handler (C1). Pairs come first: render prefers them.
+TOKENS: list[tuple[bytes, str, int, str]] = [
+    (b"\xEF\xEE", "<NEXT>", 0, "next line: on the first line moves to the second; on the second scrolls it up, "
+                                "waits 4 frames and clears it (C2)"),
+    (b"\xFA\xF7", "<PROMPT>", 0, "blinking arrow, then wait for a button (C2)"),
+    (b"\xF9\x00", "<BUF0>", 0, "the text in wTextBuf0 (a name; C2)"),
+    (b"\xF9\x10", "<BUF1>", 0, "the text in wTextBuf1 (C2)"),
+    (b"\xF9\x20", "<BUF2>", 0, "the text in wTextBuf2 (C2)"),
+    (b"\xF9\x30", "<BUF3>", 0, "the text in wTextBuf3 (C2)"),
+    (b"\xE9\xFF", "<MAP_MUSIC>", 0, "restart the map's music (RestartMapMusic)"),
+    (b"\xE0", "<SFX_WAIT_E0>", 1, "play sound effect $XX and wait until every sound channel is idle"),
+    (b"\xE1", "<SFX_WAIT_E1>", 1, "the same as $E0"),
+    (b"\xE2", "<SFX_WAIT_E2>", 1, "the same as $E0"),
+    (b"\xE3", "<SFX_WAIT_E3>", 1, "the same as $E0"),
+    (b"\xE4", "<SFX_WAIT>", 1, "the same as $E0 (the one the text uses)"),
+    (b"\xE5", "<MUSIC_WAIT>", 1, "play music $XX and wait until every sound channel is idle"),
+    (b"\xE6", "<CHOICE_E6>", 0, "yes/no choice (AcknowledgeTextPrompt), no sound on confirming yes; the answer is "
+                                "wTextYesNoResult (0 yes, 1 no)"),
+    (b"\xE7", "<CHOICE_NO>", 0, "yes/no choice with the cursor starting on no"),
+    (b"\xE8", "<CURSOR>", 2, "move the glyph cursor to column $XX, row $YY of the text window"),
+    (b"\xE9", "<SOUND>", 1, "play sound $XX (music for ids below $60 and $CC, $CF, $D6), without waiting"),
+    (b"\xEA", "<VOICE1>", 0, "speech beep on, with sound $6B (before a speaker's words)"),
+    (b"\xEB", "<VOICE2>", 0, "speech beep on, with sound $6A"),
+    (b"\xEC", "<PAUSE>", 0, "pause for a time set by the text speed; at speed 7 wait for a button instead"),
+    (b"\xED", "<INSTANT>", 0, "print the following text at once (wTextControl bit 7) until the next wait"),
+    (b"\xEE", "<CLEAR_LINE>", 0, "clear the second line and go back to the start of the current line"),
+    (b"\xEF", "<NEXT_LINE>", 0, "the first half of <NEXT>: on the first line it skips the byte after it"),
+    (b"\xF0", "@", 0, "end of the text, or of an inserted text (<BUF0>, <PLAYER>): back to the caller's text (C2)"),
+    (b"\xF1", "<LINE>", 0, "start the next line, without scrolling (C2)"),
+    (b"\xF2", "<CLEAR>", 0, "clear the window (FillTilesFromRequest) and go back to its first line"),
+    (b"\xF3", "<HOME>", 0, "go back to the window's first line"),
+    (b"\xF4", "<NORMAL>", 0, "end <INSTANT> and <FAST> (ClearStringDisplayFlags)"),
+    (b"\xF5", "<FAST>", 0, "print without the per-glyph wait (wTextFlags bit 1)"),
+    (b"\xF6", "<PLAYER>", 0, "the player's name (wPlayerName, copied to wPlayerNameText)"),
+    (b"\xF7", "<WAIT>", 0, "wait for a button (C2)"),
+    (b"\xF8", "<SPEED>", 1, "frames per glyph from here on: $XX instead of the text speed"),
+    (b"\xF9", "<BUF>", 1, "the text at wTextBuf0 + $XX (C2 for $00, $10, $20, $30)"),
+    (b"\xFA", "<ARROW>", 0, "show the blinking arrow while waiting (C2 with <WAIT>)"),
+    (b"\xFB", "<WAIT_OR_BUTTON>", 1, "wait $XX frames or until a button"),
+    (b"\xFC", "<DELAY>", 1, "wait $XX frames"),
+    (b"\xFD", "<BEEP_ON>", 0, "speech beep on, with the current sound"),
+    (b"\xFE", "<BEEP_OFF>", 0, "speech beep off"),
+    (b"\xFF", "<CHOICE>", 0, "yes/no choice with the cursor starting on yes"),
+]
+TOKEN_BYTES = {tok: seq for seq, tok, _n, _d in TOKENS}
 
 LETTERS = set(range(0x0A, 0x3E)) | {0x90}
 PUNCT = {0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43, 0x95, 0x98, 0x99, 0x9C, 0xA3, 0xA4, 0xAB, 0xB5}
@@ -94,9 +146,14 @@ def find_text_runs(raw: bytes, window: int = 24, min_len: int = 24):
     return [(s, e) for s, e in merged if sum(1 for b in raw[s:e] if b == 0x90) >= 0.06 * (e - s)]
 
 
+BREAK_BEFORE_TOKENS = {"<NEXT>", "<CLEAR>", "<HOME>"}
+BREAK_AFTER_TOKENS = {"<LINE>", "<WAIT>", "<PROMPT>", "@", "<CHOICE>", "<CHOICE_NO>", "<CHOICE_E6>"}
+
+
 def render(raw: bytes, max_chars: int = 60) -> list[str]:
-    """Render bytes as `db` operand lists: string literals for mapped characters and `$XX`
-    for everything else, breaking lines after $F7 / $F1 and every ~`max_chars` characters."""
+    """Render bytes as `db` operand lists: string literals for mapped characters and printer commands
+    (TOKENS), `$XX` for argument bytes and everything else. A line starts before <NEXT>, <CLEAR> and <HOME>,
+    ends after <LINE>, <WAIT>, <PROMPT>, @ and a choice, and is cut after about `max_chars` characters."""
     lines: list[str] = []
     parts: list[str] = []
     cur: list[str] = []
@@ -115,7 +172,26 @@ def render(raw: bytes, max_chars: int = 60) -> list[str]:
             lines.append(", ".join(parts))
         parts, width = [], 0
 
-    for k, b in enumerate(raw):
+    k = 0
+    while k < len(raw):
+        b = raw[k]
+        tok = next(((seq, t, n) for seq, t, n, _d in TOKENS if raw.startswith(seq, k)), None)
+        if tok:
+            seq, t, n = tok
+            if t in BREAK_BEFORE_TOKENS and (cur or parts):
+                flush_line()
+            cur.append(t)
+            width += len(t)
+            k += len(seq)
+            if n:
+                flush_str()
+                for v in raw[k:k + n]:
+                    parts.append(f"${v:02X}")
+                    width += 3
+                k += n
+            if t in BREAK_AFTER_TOKENS or width >= max_chars:
+                flush_line()
+            continue
         if b in BYTE_TO_TEXT and not (b == 0x95 and k + 1 < len(raw)
                                       and "'" + BYTE_TO_TEXT.get(raw[k + 1], "") in CHARMAP):
             cur.append(BYTE_TO_TEXT[b])
@@ -126,8 +202,9 @@ def render(raw: bytes, max_chars: int = 60) -> list[str]:
             flush_str()
             parts.append(f"${b:02X}")
             width += 3
-            if b in BREAK_AFTER or width >= max_chars:
+            if width >= max_chars:
                 flush_line()
+        k += 1
     flush_line()
     return lines
 
@@ -143,6 +220,15 @@ def parse(operands: str) -> bytes:
             s = operands[i + 1:j]
             k = 0
             while k < len(s):
+                if s[k] == "<" and ">" in s[k:]:  # a printer command token
+                    t = s[k:s.index(">", k) + 1]
+                    out += TOKEN_BYTES[t]
+                    k += len(t)
+                    continue
+                if s[k] == "@":
+                    out += TOKEN_BYTES["@"]
+                    k += 1
+                    continue
                 for L in (2, 1):  # longest match first: "'s" before a single character
                     if s[k:k + L] in CHARMAP:
                         out.append(CHARMAP[s[k:k + L]])
@@ -161,7 +247,14 @@ def parse(operands: str) -> bytes:
 
 def write_charmap_inc(path) -> None:
     lines = ["; Text encoding (E-0024). Letters, digits, space and the punctuation and contraction",
-             "; glyphs below are the only characters used in db strings; every other byte stays $XX.", ""]
+             "; glyphs below are the characters used in db strings. The font glyphs …()+~/★© are read from",
+             "; the font in bank $1F (E-0336); icon glyphs such as the house ($57) and globe ($5C) stay $XX.", ""]
     for text, code in sorted(CHARMAP.items(), key=lambda kv: kv[1]):
         lines.append(f'CHARMAP "{text}", ${code:02X}')
+    lines += ["", "; Text printer commands, bytes $E0-$FF (E-0336): StepStringDisplayUntilDone runs entry",
+              "; byte - $E0 of the table in StepStringDisplayUntilDone_Sub01_WriteTextLastChar. A command",
+              "; with an argument takes the byte(s) after it, written as $XX after the string. (C2) marks",
+              "; what tools/text_check.py observed; the rest is a reading of the handler (C1).", ""]
+    for seq, tok, n, desc in TOKENS:
+        lines.append(f'CHARMAP "{tok}", ' + ", ".join(f"${v:02X}" for v in seq) + f" ; {desc}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")

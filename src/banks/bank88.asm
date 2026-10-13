@@ -799,2004 +799,2004 @@ StringList_88_441C::
     dw String_88_02_AD ; id 255
 
 String_88_00_00::
-    db "None", $f0
+    db "None@"
 
 String_88_00_01::
-    db "Slime", $f0
+    db "Slime@"
 
 String_88_00_02::
-    db "SpotSlime", $f0
+    db "SpotSlime@"
 
 String_88_00_03::
-    db "CactiBall", $f0
+    db "CactiBall@"
 
 String_88_00_04::
-    db "TailEater", $f0
+    db "TailEater@"
 
 String_88_00_05::
-    db "Crestpent", $f0
+    db "Crestpent@"
 
 String_88_00_06::
-    db "KingCobra", $f0
+    db "KingCobra@"
 
 String_88_00_07::
-    db "CurseLamp", $f0
+    db "CurseLamp@"
 
 String_88_00_09::
-    db "Slime", $f0
+    db "Slime@"
 
 String_88_00_0A::
-    db "Antbear", $f0
+    db "Antbear@"
 
 String_88_00_0B::
-    db "Dracky", $f0
+    db "Dracky@"
 
 String_88_00_0C::
-    db "Eggplaton", $f0
+    db "Eggplaton@"
 
 String_88_00_0D::
-    db "JewelBag", $f0
+    db "JewelBag@"
 
 String_88_00_0E::
-    db "Hork", $f0
+    db "Hork@"
 
 String_88_00_0F::
-    db "Wyvern", $f0
+    db "Wyvern@"
 
 String_88_00_10::
-    db "ArmyAnt", $f0
+    db "ArmyAnt@"
 
 String_88_00_11::
-    db "MadGopher", $f0
+    db "MadGopher@"
 
 String_88_00_12::
-    db "1EyeClown", $f0
+    db "1EyeClown@"
 
 String_88_00_13::
-    db "Snaily", $f0
+    db "Snaily@"
 
 String_88_00_14::
-    db "Poisongon", $f0
+    db "Poisongon@"
 
 String_88_00_15::
-    db "Moray", $f0
+    db "Moray@"
 
 String_88_00_16::
-    db "Eyeder", $f0
+    db "Eyeder@"
 
 String_88_00_17::
-    db "PutreFish", $f0
+    db "PutreFish@"
 
 String_88_00_18::
-    db "Gamanian", $f0
+    db "Gamanian@"
 
 String_88_00_19::
-    db "SpikyBoy", $f0
+    db "SpikyBoy@"
 
 String_88_00_1A::
-    db "HoodSquid", $f0
+    db "HoodSquid@"
 
 String_88_00_1C::
-    db "CaptDead", $f0
+    db "CaptDead@"
 
 String_88_00_1D::
-    db "Petiteel", $f0
+    db "Petiteel@"
 
 String_88_00_1E::
-    db "RotRaven", $f0
+    db "RotRaven@"
 
 String_88_00_1F::
-    db "Merman", $f0
+    db "Merman@"
 
 String_88_00_20::
-    db "Octokid", $f0
+    db "Octokid@"
 
 String_88_00_21::
-    db "RogueWave", $f0
+    db "RogueWave@"
 
 String_88_00_22::
-    db "PearlGel", $f0
+    db "PearlGel@"
 
 String_88_00_23::
-    db "Tortragon", $f0
+    db "Tortragon@"
 
 String_88_00_24::
-    db "AquaHawk", $f0
+    db "AquaHawk@"
 
 String_88_00_25::
-    db "DarkEye", $f0
+    db "DarkEye@"
 
 String_88_00_26::
-    db "RayGigas", $f0
+    db "RayGigas@"
 
 String_88_00_27::
-    db "EvilWand", $f0
+    db "EvilWand@"
 
 String_88_00_28::
-    db "SlimeNite", $f0
+    db "SlimeNite@"
 
 String_88_00_29::
-    db "LizardMan", $f0
+    db "LizardMan@"
 
 String_88_00_2A::
-    db "HammerMan", $f0
+    db "HammerMan@"
 
 String_88_00_2B::
-    db "Yeti", $f0
+    db "Yeti@"
 
 String_88_00_2C::
-    db "Orc", $f0
+    db "Orc@"
 
 String_88_00_2D::
-    db "Gismo", $f0
+    db "Gismo@"
 
 String_88_00_2E::
-    db "Droll", $f0
+    db "Droll@"
 
 String_88_00_2F::
-    db "Goopi", $f0
+    db "Goopi@"
 
 String_88_00_30::
-    db "Mummy", $f0
+    db "Mummy@"
 
 String_88_00_31::
-    db "TreeBoy", $f0
+    db "TreeBoy@"
 
 String_88_00_32::
-    db "BombCrag", $f0
+    db "BombCrag@"
 
 String_88_00_33::
-    db "RogueNite", $f0
+    db "RogueNite@"
 
 String_88_00_34::
-    db "Grizzly", $f0
+    db "Grizzly@"
 
 String_88_00_35::
-    db "Demonite", $f0
+    db "Demonite@"
 
 String_88_00_36::
-    db "Gulpple", $f0
+    db "Gulpple@"
 
 String_88_00_37::
-    db "FoxFire", $f0
+    db "FoxFire@"
 
 String_88_00_38::
-    db "Almiraj", $f0
+    db "Almiraj@"
 
 String_88_00_39::
-    db "LandOwl", $f0
+    db "LandOwl@"
 
 String_88_00_3A::
-    db "Goategon", $f0
+    db "Goategon@"
 
 String_88_00_3B::
-    db "Saccer", $f0
+    db "Saccer@"
 
 String_88_00_3C::
-    db "WingSlime", $f0
+    db "WingSlime@"
 
 String_88_00_3D::
-    db "BullBird", $f0
+    db "BullBird@"
 
 String_88_00_3E::
-    db "CragDevil", $f0
+    db "CragDevil@"
 
 String_88_00_3F::
-    db "Starfish", $f0
+    db "Starfish@"
 
 String_88_00_40::
-    db "SeaHorse", $f0
+    db "SeaHorse@"
 
 String_88_00_41::
-    db "ManEater", $f0
+    db "ManEater@"
 
 String_88_00_42::
-    db "StubBird", $f0
+    db "StubBird@"
 
 String_88_00_43::
-    db "GiantMoth", $f0
+    db "GiantMoth@"
 
 String_88_00_44::
-    db "GoatHorn", $f0
+    db "GoatHorn@"
 
 String_88_00_45::
-    db "FangSlime", $f0
+    db "FangSlime@"
 
 String_88_00_46::
-    db "RockSlime", $f0
+    db "RockSlime@"
 
 String_88_00_47::
-    db "MadRaven", $f0
+    db "MadRaven@"
 
 String_88_00_48::
-    db "Emyu", $f0
+    db "Emyu@"
 
 String_88_00_49::
-    db "FloraMan", $f0
+    db "FloraMan@"
 
 String_88_00_4A::
-    db "Slurperon", $f0
+    db "Slurperon@"
 
 String_88_00_4B::
-    db "Roboster", $f0
+    db "Roboster@"
 
 String_88_00_4C::
-    db "MadDragon", $f0
+    db "MadDragon@"
 
 String_88_00_4D::
-    db "Dragon", $f0
+    db "Dragon@"
 
 String_88_00_4E::
-    db "IronTurt", $f0
+    db "IronTurt@"
 
 String_88_00_4F::
-    db "MadMirror", $f0
+    db "MadMirror@"
 
 String_88_00_50::
-    db "SabreMan", $f0
+    db "SabreMan@"
 
 String_88_00_51::
-    db "EvilBeast", $f0
+    db "EvilBeast@"
 
 String_88_00_52::
-    db "WarMantis", $f0
+    db "WarMantis@"
 
 String_88_00_53::
-    db "Phoenix", $f0
+    db "Phoenix@"
 
 String_88_00_54::
-    db "FireWeed", $f0
+    db "FireWeed@"
 
 String_88_00_55::
-    db "WildApe", $f0
+    db "WildApe@"
 
 String_88_00_56::
-    db "Dumbira", $f0
+    db "Dumbira@"
 
 String_88_00_57::
-    db "Belzebub", $f0
+    db "Belzebub@"
 
 String_88_00_58::
-    db "Metaly", $f0
+    db "Metaly@"
 
 String_88_00_59::
-    db "GhosTree", $f0
+    db "GhosTree@"
 
 String_88_00_5A::
-    db "Babble", $f0
+    db "Babble@"
 
 String_88_00_5B::
-    db "Lionex", $f0
+    db "Lionex@"
 
 String_88_00_5C::
-    db "MadGoose", $f0
+    db "MadGoose@"
 
 String_88_00_5D::
-    db "Bubblemon", $f0
+    db "Bubblemon@"
 
 String_88_00_5E::
-    db "Gigantes", $f0
+    db "Gigantes@"
 
 String_88_00_5F::
-    db "Exaucers", $f0
+    db "Exaucers@"
 
 String_88_00_60::
-    db "DeadNite", $f0
+    db "DeadNite@"
 
 String_88_00_61::
-    db "GateGuard", $f0
+    db "GateGuard@"
 
 String_88_00_62::
-    db "MadSpirit", $f0
+    db "MadSpirit@"
 
 String_88_00_63::
-    db "Copycat", $f0
+    db "Copycat@"
 
 String_88_00_64::
-    db "Niterich", $f0
+    db "Niterich@"
 
 String_88_00_65::
-    db "Andreal", $f0
+    db "Andreal@"
 
 String_88_00_66::
-    db "MadKnight", $f0
+    db "MadKnight@"
 
 String_88_00_67::
-    db "SkyDragon", $f0
+    db "SkyDragon@"
 
 String_88_00_68::
-    db "CoilBird", $f0
+    db "CoilBird@"
 
 String_88_00_69::
-    db "ArmorPede", $f0
+    db "ArmorPede@"
 
 String_88_00_6A::
-    db "MadHornet", $f0
+    db "MadHornet@"
 
 String_88_00_6B::
-    db "Mudou", $f0
+    db "Mudou@"
 
 String_88_00_6C::
-    db "EvilArmor", $f0
+    db "EvilArmor@"
 
 String_88_00_6D::
-    db "Skeletor", $f0
+    db "Skeletor@"
 
 String_88_00_6E::
-    db "Vampirus", $f0
+    db "Vampirus@"
 
 String_88_00_6F::
-    db "Florajay", $f0
+    db "Florajay@"
 
 String_88_00_70::
-    db "BossTroll", $f0
+    db "BossTroll@"
 
 String_88_00_71::
-    db "ChopClown", $f0
+    db "ChopClown@"
 
 String_88_00_72::
-    db "MistyWing", $f0
+    db "MistyWing@"
 
 String_88_00_73::
-    db "Centasaur", $f0
+    db "Centasaur@"
 
 String_88_00_74::
-    db "GigaDraco", $f0
+    db "GigaDraco@"
 
 String_88_00_75::
-    db "Garudian", $f0
+    db "Garudian@"
 
 String_88_00_76::
-    db "Mimic", $f0
+    db "Mimic@"
 
 String_88_00_7E::
-    db "Tatsu", $f0
+    db "Tatsu@"
 
 String_88_00_7F::
-    db "Diago", $f0
+    db "Diago@"
 
 String_88_00_80::
-    db "Samsi", $f0
+    db "Samsi@"
 
 String_88_00_81::
-    db "Bazoo", $f0
+    db "Bazoo@"
 
 String_88_00_82::
-    db "BeDragon", $f0
+    db "BeDragon@"
 
 String_88_00_83::
-    db "Babble", $f0
+    db "Babble@"
 
 String_88_00_84::
-    db "PearlGel", $f0
+    db "PearlGel@"
 
 String_88_00_85::
-    db "SpikyBoy", $f0
+    db "SpikyBoy@"
 
 String_88_00_86::
-    db "Brushead", $f0
+    db "Brushead@"
 
 String_88_00_87::
-    db "Dracky", $f0
+    db "Dracky@"
 
 String_88_00_88::
-    db "MadRaven", $f0
+    db "MadRaven@"
 
 String_88_00_89::
-    db "KiteHawk", $f0
+    db "KiteHawk@"
 
 String_88_00_8A::
-    db "WindBeast", $f0
+    db "WindBeast@"
 
 String_88_00_8B::
-    db "Gismo", $f0
+    db "Gismo@"
 
 String_88_00_8C::
-    db "PomPomBom", $f0
+    db "PomPomBom@"
 
 String_88_00_8D::
-    db "Devipine", $f0
+    db "Devipine@"
 
 String_88_00_8E::
-    db "Gulpple", $f0
+    db "Gulpple@"
 
 String_88_00_8F::
-    db "Eggplaton", $f0
+    db "Eggplaton@"
 
 String_88_00_90::
-    db "HammerMan", $f0
+    db "HammerMan@"
 
 String_88_00_91::
-    db "Stubsuck", $f0
+    db "Stubsuck@"
 
 String_88_00_92::
-    db "TreeBoy", $f0
+    db "TreeBoy@"
 
 String_88_00_93::
-    db "FooHero", $f0
+    db "FooHero@"
 
 String_88_00_94::
-    db "Mommonja", $f0
+    db "Mommonja@"
 
 String_88_00_95::
-    db "Drygon", $f0
+    db "Drygon@"
 
 String_88_00_96::
-    db "HerbMan", $f0
+    db "HerbMan@"
 
 String_88_00_97::
-    db "DanceVegi", $f0
+    db "DanceVegi@"
 
 String_88_00_98::
-    db "MudDoll", $f0
+    db "MudDoll@"
 
 String_88_00_99::
-    db "Shadow", $f0
+    db "Shadow@"
 
 String_88_00_9A::
-    db "MadCondor", $f0
+    db "MadCondor@"
 
 String_88_00_9B::
-    db "CloudKing", $f0
+    db "CloudKing@"
 
 String_88_00_9C::
-    db "Octoreach", $f0
+    db "Octoreach@"
 
 String_88_00_9D::
-    db "Octogon", $f0
+    db "Octogon@"
 
 String_88_00_9E::
-    db "KingSquid", $f0
+    db "KingSquid@"
 
 String_88_00_9F::
-    db "MistyWing", $f0
+    db "MistyWing@"
 
 String_88_00_A0::
-    db "Copycat", $f0
+    db "Copycat@"
 
 String_88_00_A1::
-    db "NiteWhip", $f0
+    db "NiteWhip@"
 
 String_88_00_A2::
-    db "Goopi", $f0
+    db "Goopi@"
 
 String_88_00_A3::
-    db "Servant", $f0
+    db "Servant@"
 
 String_88_00_A4::
-    db "ArmyCrab", $f0
+    db "ArmyCrab@"
 
 String_88_00_A5::
-    db "DarkCrab", $f0
+    db "DarkCrab@"
 
 String_88_00_A6::
-    db "Orochi", $f0
+    db "Orochi@"
 
 String_88_00_A7::
-    db "Serpentia", $f0
+    db "Serpentia@"
 
 String_88_00_A8::
-    db "GigaDraco", $f0
+    db "GigaDraco@"
 
 String_88_00_A9::
-    db "KingLeo", $f0
+    db "KingLeo@"
 
 String_88_00_AA::
-    db "Azurile", $f0
+    db "Azurile@"
 
 String_88_00_AB::
-    db "Divinegon", $f0
+    db "Divinegon@"
 
 String_88_00_AC::
-    db "Pteranod", $f0
+    db "Pteranod@"
 
 String_88_00_AD::
-    db "WindBeast", $f0
+    db "WindBeast@"
 
 String_88_00_AE::
-    db "FairyRat", $f0
+    db "FairyRat@"
 
 String_88_00_AF::
-    db "BigEye", $f0
+    db "BigEye@"
 
 String_88_00_B0::
-    db "BullBird", $f0
+    db "BullBird@"
 
 String_88_00_B1::
-    db "TreeBoy", $f0
+    db "TreeBoy@"
 
 String_88_00_B2::
-    db "GoHopper", $f0
+    db "GoHopper@"
 
 String_88_00_B3::
-    db "EvilBeast", $f0
+    db "EvilBeast@"
 
 String_88_00_B4::
-    db "Mudron", $f0
+    db "Mudron@"
 
 String_88_00_B5::
-    db "Reaper", $f0
+    db "Reaper@"
 
 String_88_00_B6::
-    db "Mummy", $f0
+    db "Mummy@"
 
 String_88_00_B7::
-    db "JewelBag", $f0
+    db "JewelBag@"
 
 String_88_00_B8::
-    db "Starfish", $f0
+    db "Starfish@"
 
 String_88_00_B9::
-    db "Brushead", $f0
+    db "Brushead@"
 
 String_88_00_BA::
-    db "MudDoll", $f0
+    db "MudDoll@"
 
 String_88_00_BB::
-    db "RushFish", $f0
+    db "RushFish@"
 
 String_88_00_BC::
-    db "WingSlime", $f0
+    db "WingSlime@"
 
 String_88_00_BD::
-    db "Poisongon", $f0
+    db "Poisongon@"
 
 String_88_00_BE::
-    db "Drygon", $f0
+    db "Drygon@"
 
 String_88_00_BF::
-    db "CatFly", $f0
+    db "CatFly@"
 
 String_88_00_C0::
-    db "Mommonja", $f0
+    db "Mommonja@"
 
 String_88_00_C1::
-    db "Grizzly", $f0
+    db "Grizzly@"
 
 String_88_00_C2::
-    db "CragDevil", $f0
+    db "CragDevil@"
 
 String_88_00_C3::
-    db "Picky", $f0
+    db "Picky@"
 
 String_88_00_C4::
-    db "Pixy", $f0
+    db "Pixy@"
 
 String_88_00_C5::
-    db "AgDevil", $f0
+    db "AgDevil@"
 
 String_88_00_C6::
-    db "Hork", $f0
+    db "Hork@"
 
 String_88_00_C7::
-    db "WindMerge", $f0
+    db "WindMerge@"
 
 String_88_00_C8::
-    db "SpikyBoy", $f0
+    db "SpikyBoy@"
 
 String_88_00_C9::
-    db "Goopi", $f0
+    db "Goopi@"
 
 String_88_00_CA::
-    db "Octokid", $f0
+    db "Octokid@"
 
 String_88_00_CB::
-    db "CancerMan", $f0
+    db "CancerMan@"
 
 String_88_00_CC::
-    db "SlimeNite", $f0
+    db "SlimeNite@"
 
 String_88_00_CD::
-    db "Babble", $f0
+    db "Babble@"
 
 String_88_00_CE::
-    db "Rayburn", $f0
+    db "Rayburn@"
 
 String_88_00_CF::
-    db "CatMage", $f0
+    db "CatMage@"
 
 String_88_00_D0::
-    db "Yeti", $f0
+    db "Yeti@"
 
 String_88_00_D1::
-    db "Beavern", $f0
+    db "Beavern@"
 
 String_88_00_D2::
-    db "Florajay", $f0
+    db "Florajay@"
 
 String_88_00_D3::
-    db "Toadstool", $f0
+    db "Toadstool@"
 
 String_88_00_D4::
-    db "GiantMoth", $f0
+    db "GiantMoth@"
 
 String_88_00_D5::
-    db "ArmyCrab", $f0
+    db "ArmyCrab@"
 
 String_88_00_D6::
-    db "MadHornet", $f0
+    db "MadHornet@"
 
 String_88_00_D7::
-    db "Demonite", $f0
+    db "Demonite@"
 
 String_88_00_D8::
-    db "1EyeClown", $f0
+    db "1EyeClown@"
 
 String_88_00_D9::
-    db "DeadNite", $f0
+    db "DeadNite@"
 
 String_88_00_DA::
-    db "Gismo", $f0
+    db "Gismo@"
 
 String_88_00_DB::
-    db "Octogon", $f0
+    db "Octogon@"
 
 String_88_00_DC::
-    db "Snaily", $f0
+    db "Snaily@"
 
 String_88_00_DD::
-    db "BoxSlime", $f0
+    db "BoxSlime@"
 
 String_88_00_DE::
-    db "Vampirus", $f0
+    db "Vampirus@"
 
 String_88_00_DF::
-    db "Skullroo", $f0
+    db "Skullroo@"
 
 String_88_00_E0::
-    db "BullBird", $f0
+    db "BullBird@"
 
 String_88_00_E1::
-    db "DanceVegi", $f0
+    db "DanceVegi@"
 
 String_88_00_E2::
-    db "StagBug", $f0
+    db "StagBug@"
 
 String_88_00_E3::
-    db "ArmorPede", $f0
+    db "ArmorPede@"
 
 String_88_00_E4::
-    db "Catapila", $f0
+    db "Catapila@"
 
 String_88_00_E5::
-    db "DarkEye", $f0
+    db "DarkEye@"
 
 String_88_00_E6::
-    db "Gremlin", $f0
+    db "Gremlin@"
 
 String_88_00_E7::
-    db "MedusaEye", $f0
+    db "MedusaEye@"
 
 String_88_00_E8::
-    db "EvilArmor", $f0
+    db "EvilArmor@"
 
 String_88_00_E9::
-    db "MadMirror", $f0
+    db "MadMirror@"
 
 String_88_00_EA::
-    db "RogueNite", $f0
+    db "RogueNite@"
 
 String_88_00_EB::
-    db "Dumbira", $f0
+    db "Dumbira@"
 
 String_88_00_EC::
-    db "Metaly", $f0
+    db "Metaly@"
 
 String_88_00_ED::
-    db "SnakeBat", $f0
+    db "SnakeBat@"
 
 String_88_00_EE::
-    db "GulpBeast", $f0
+    db "GulpBeast@"
 
 String_88_00_EF::
-    db "MadGopher", $f0
+    db "MadGopher@"
 
 String_88_00_F0::
-    db "MistyWing", $f0
+    db "MistyWing@"
 
 String_88_00_F1::
-    db "LandOwl", $f0
+    db "LandOwl@"
 
 String_88_00_F2::
-    db "Devipine", $f0
+    db "Devipine@"
 
 String_88_00_F3::
-    db "Belzebub", $f0
+    db "Belzebub@"
 
 String_88_00_F4::
-    db "FooHero", $f0
+    db "FooHero@"
 
 String_88_00_F5::
-    db "Bubblemon", $f0
+    db "Bubblemon@"
 
 String_88_00_F6::
-    db "GoatHorn", $f0
+    db "GoatHorn@"
 
 String_88_00_F7::
-    db "Spooky", $f0
+    db "Spooky@"
 
 String_88_00_F8::
-    db "PutrePup", $f0
+    db "PutrePup@"
 
 String_88_00_F9::
-    db "Copycat", $f0
+    db "Copycat@"
 
 String_88_00_FA::
-    db "MetalDrak", $f0
+    db "MetalDrak@"
 
 String_88_00_FB::
-    db "RayGigas", $f0
+    db "RayGigas@"
 
 String_88_00_FC::
-    db "PearlGel", $f0
+    db "PearlGel@"
 
 String_88_00_FD::
-    db "Gasgon", $f0
+    db "Gasgon@"
 
 String_88_00_FE::
-    db "Dragon", $f0
+    db "Dragon@"
 
 String_88_00_FF::
-    db "ArrowDog", $f0
+    db "ArrowDog@"
 
 String_88_01_00::
-    db "KiteHawk", $f0
+    db "KiteHawk@"
 
 String_88_01_01::
-    db "StubBird", $f0
+    db "StubBird@"
 
 String_88_01_02::
-    db "ZapBird", $f0
+    db "ZapBird@"
 
 String_88_01_03::
-    db "WeedBug", $f0
+    db "WeedBug@"
 
 String_88_01_04::
-    db "Lipsy", $f0
+    db "Lipsy@"
 
 String_88_01_05::
-    db "MultiEyes", $f0
+    db "MultiEyes@"
 
 String_88_01_06::
-    db "Shadow", $f0
+    db "Shadow@"
 
 String_88_01_07::
-    db "CaptDead", $f0
+    db "CaptDead@"
 
 String_88_01_08::
-    db "CurseLamp", $f0
+    db "CurseLamp@"
 
 String_88_01_09::
-    db "Angleron", $f0
+    db "Angleron@"
 
 String_88_01_0A::
-    db "Gamanian", $f0
+    db "Gamanian@"
 
 String_88_01_0B::
-    db "WhaleMage", $f0
+    db "WhaleMage@"
 
 String_88_01_0C::
-    db "SpotKing", $f0
+    db "SpotKing@"
 
 String_88_01_0D::
-    db "SkyDragon", $f0
+    db "SkyDragon@"
 
 String_88_01_0E::
-    db "Tonguella", $f0
+    db "Tonguella@"
 
 String_88_01_0F::
-    db "Saccer", $f0
+    db "Saccer@"
 
 String_88_01_10::
-    db "Wyvern", $f0
+    db "Wyvern@"
 
 String_88_01_11::
-    db "AquaHawk", $f0
+    db "AquaHawk@"
 
 String_88_01_12::
-    db "Garudian", $f0
+    db "Garudian@"
 
 String_88_01_13::
-    db "Eyeder", $f0
+    db "Eyeder@"
 
 String_88_01_14::
-    db "ArcDemon", $f0
+    db "ArcDemon@"
 
 String_88_01_15::
-    db "Lionex", $f0
+    db "Lionex@"
 
 String_88_01_16::
-    db "GateGuard", $f0
+    db "GateGuard@"
 
 String_88_01_17::
-    db "Centasaur", $f0
+    db "Centasaur@"
 
 String_88_01_18::
-    db "Roboster", $f0
+    db "Roboster@"
 
 String_88_01_19::
-    db "Eggplaton", $f0
+    db "Eggplaton@"
 
 String_88_01_1A::
-    db "Clawster", $f0
+    db "Clawster@"
 
 String_88_01_1B::
-    db "MerTiger", $f0
+    db "MerTiger@"
 
 String_88_01_1C::
-    db "TreeSlime", $f0
+    db "TreeSlime@"
 
 String_88_01_1D::
-    db "Swordgon", $f0
+    db "Swordgon@"
 
 String_88_01_1E::
-    db "SuperTen", $f0
+    db "SuperTen@"
 
 String_88_01_1F::
-    db "HammerMan", $f0
+    db "HammerMan@"
 
 String_88_01_20::
-    db "Goategon", $f0
+    db "Goategon@"
 
 String_88_01_21::
-    db "Dracky", $f0
+    db "Dracky@"
 
 String_88_01_22::
-    db "PutreFish", $f0
+    db "PutreFish@"
 
 String_88_01_23::
-    db "AmberWeed", $f0
+    db "AmberWeed@"
 
 String_88_01_24::
-    db "WarMantis", $f0
+    db "WarMantis@"
 
 String_88_01_25::
-    db "Orc", $f0
+    db "Orc@"
 
 String_88_01_26::
-    db "ChopClown", $f0
+    db "ChopClown@"
 
 String_88_01_27::
-    db "Mummy", $f0
+    db "Mummy@"
 
 String_88_01_28::
-    db "MadSpirit", $f0
+    db "MadSpirit@"
 
 String_88_01_29::
-    db "PomPomBom", $f0
+    db "PomPomBom@"
 
 String_88_01_2A::
-    db "BombCrag", $f0
+    db "BombCrag@"
 
 String_88_01_2B::
-    db "Octoraid", $f0
+    db "Octoraid@"
 
 String_88_01_2C::
-    db "Andreal", $f0
+    db "Andreal@"
 
 String_88_01_2D::
-    db "GreatDrak", $f0
+    db "GreatDrak@"
 
 String_88_01_2E::
-    db "Trumpeter", $f0
+    db "Trumpeter@"
 
 String_88_01_2F::
-    db "ProtoMech", $f0
+    db "ProtoMech@"
 
 String_88_01_30::
-    db "Armorpion", $f0
+    db "Armorpion@"
 
 String_88_01_31::
-    db "Digster", $f0
+    db "Digster@"
 
 String_88_01_32::
-    db "BossTroll", $f0
+    db "BossTroll@"
 
 String_88_01_33::
-    db "MadKnight", $f0
+    db "MadKnight@"
 
 String_88_01_34::
-    db "Ogre", $f0
+    db "Ogre@"
 
 String_88_01_35::
-    db "DeadNoble", $f0
+    db "DeadNoble@"
 
 String_88_01_36::
-    db "Skeletor", $f0
+    db "Skeletor@"
 
 String_88_01_37::
-    db "StoneMan", $f0
+    db "StoneMan@"
 
 String_88_01_38::
-    db "FishRider", $f0
+    db "FishRider@"
 
 String_88_01_39::
-    db "AxeShark", $f0
+    db "AxeShark@"
 
 String_88_01_3A::
-    db "Aquadon", $f0
+    db "Aquadon@"
 
 String_88_01_3B::
-    db "Digong", $f0
+    db "Digong@"
 
 String_88_01_3C::
-    db "MetalKing", $f0
+    db "MetalKing@"
 
 String_88_01_3D::
-    db "Serpentia", $f0
+    db "Serpentia@"
 
 String_88_01_3E::
-    db "Coatol", $f0
+    db "Coatol@"
 
 String_88_01_3F::
-    db "Orochi", $f0
+    db "Orochi@"
 
 String_88_01_40::
-    db "BattleRex", $f0
+    db "BattleRex@"
 
 String_88_01_41::
-    db "WhipBird", $f0
+    db "WhipBird@"
 
 String_88_01_42::
-    db "Shantak", $f0
+    db "Shantak@"
 
 String_88_01_43::
-    db "Rosevine", $f0
+    db "Rosevine@"
 
 String_88_01_44::
-    db "Grendal", $f0
+    db "Grendal@"
 
 String_88_01_45::
-    db "Akubar", $f0
+    db "Akubar@"
 
 String_88_01_46::
-    db "Jamirus", $f0
+    db "Jamirus@"
 
 String_88_01_47::
-    db "LampGenie", $f0
+    db "LampGenie@"
 
 String_88_01_48::
-    db "WhiteKing", $f0
+    db "WhiteKing@"
 
 String_88_01_49::
-    db "Niterich", $f0
+    db "Niterich@"
 
 String_88_01_4A::
-    db "KingSquid", $f0
+    db "KingSquid@"
 
 String_88_01_4B::
-    db "Grakos", $f0
+    db "Grakos@"
 
 String_88_01_4C::
-    db "Slabbit", $f0
+    db "Slabbit@"
 
 String_88_01_4D::
-    db "CoilBird", $f0
+    db "CoilBird@"
 
 String_88_01_4E::
-    db "FairyDrak", $f0
+    db "FairyDrak@"
 
 String_88_01_4F::
-    db "Oniono", $f0
+    db "Oniono@"
 
 String_88_01_50::
-    db "EvilSeed", $f0
+    db "EvilSeed@"
 
 String_88_01_51::
-    db "MadCandle", $f0
+    db "MadCandle@"
 
 String_88_01_52::
-    db "DragonKid", $f0
+    db "DragonKid@"
 
 String_88_01_53::
-    db "DuckKite", $f0
+    db "DuckKite@"
 
 String_88_01_54::
-    db "WingTree", $f0
+    db "WingTree@"
 
 String_88_01_55::
-    db "GiantSlug", $f0
+    db "GiantSlug@"
 
 String_88_01_56::
-    db "Gophecada", $f0
+    db "Gophecada@"
 
 String_88_01_57::
-    db "RotRaven", $f0
+    db "RotRaven@"
 
 String_88_01_58::
-    db "Chamelgon", $f0
+    db "Chamelgon@"
 
 String_88_01_59::
-    db "MadPecker", $f0
+    db "MadPecker@"
 
 String_88_01_5A::
-    db "MadPlant", $f0
+    db "MadPlant@"
 
 String_88_01_5B::
-    db "FaceTree", $f0
+    db "FaceTree@"
 
 String_88_01_5C::
-    db "BeanMan", $f0
+    db "BeanMan@"
 
 String_88_01_5D::
-    db "Catapila", $f0
+    db "Catapila@"
 
 String_88_01_5E::
-    db "Facer", $f0
+    db "Facer@"
 
 String_88_01_5F::
-    db "Voodoll", $f0
+    db "Voodoll@"
 
 String_88_01_60::
-    db "Golem", $f0
+    db "Golem@"
 
 String_88_01_61::
-    db "RogueWave", $f0
+    db "RogueWave@"
 
 String_88_01_62::
-    db "BoxSlime", $f0
+    db "BoxSlime@"
 
 String_88_01_63::
-    db "SlimeBorg", $f0
+    db "SlimeBorg@"
 
 String_88_01_64::
-    db "DarkHorn", $f0
+    db "DarkHorn@"
 
 String_88_01_65::
-    db "ManEater", $f0
+    db "ManEater@"
 
 String_88_01_66::
-    db "Snapper", $f0
+    db "Snapper@"
 
 String_88_01_67::
-    db "GhosTree", $f0
+    db "GhosTree@"
 
 String_88_01_68::
-    db "SkulRider", $f0
+    db "SkulRider@"
 
 String_88_01_69::
-    db "Gigantes", $f0
+    db "Gigantes@"
 
 String_88_01_6A::
-    db "Skulpent", $f0
+    db "Skulpent@"
 
 String_88_01_6B::
-    db "Aquarella", $f0
+    db "Aquarella@"
 
 String_88_01_6C::
-    db "GoldSlime", $f0
+    db "GoldSlime@"
 
 String_88_01_6D::
-    db "GranSlime", $f0
+    db "GranSlime@"
 
 String_88_01_6E::
-    db "Divinegon", $f0
+    db "Divinegon@"
 
 String_88_01_6F::
-    db "KingLeo", $f0
+    db "KingLeo@"
 
 String_88_01_70::
-    db "RainHawk", $f0
+    db "RainHawk@"
 
 String_88_01_71::
-    db "Durran", $f0
+    db "Durran@"
 
 String_88_01_72::
-    db "Lazamanus", $f0
+    db "Lazamanus@"
 
 String_88_01_73::
-    db "GoldGolem", $f0
+    db "GoldGolem@"
 
 String_88_01_74::
-    db "PillowRat", $f0
+    db "PillowRat@"
 
 String_88_01_75::
-    db "ArmorPede", $f0
+    db "ArmorPede@"
 
 String_88_01_76::
-    db "WildApe", $f0
+    db "WildApe@"
 
 String_88_01_77::
-    db "Clawster", $f0
+    db "Clawster@"
 
 String_88_01_78::
-    db "Gulpple", $f0
+    db "Gulpple@"
 
 String_88_01_79::
-    db "Darck", $f0
+    db "Darck@"
 
 String_88_01_7A::
-    db "MadCat", $f0
+    db "MadCat@"
 
 String_88_01_7B::
-    db "HornBeet", $f0
+    db "HornBeet@"
 
 String_88_01_7C::
-    db "SkyDragon", $f0
+    db "SkyDragon@"
 
 String_88_01_7D::
-    db "Octogon", $f0
+    db "Octogon@"
 
 String_88_01_7E::
-    db "Servant", $f0
+    db "Servant@"
 
 String_88_01_7F::
-    db "Darck", $f0
+    db "Darck@"
 
 String_88_01_80::
-    db "GiantWorm", $f0
+    db "GiantWorm@"
 
 String_88_01_81::
-    db "Spooky", $f0
+    db "Spooky@"
 
 String_88_01_82::
-    db "Beavern", $f0
+    db "Beavern@"
 
 String_88_01_84::
-    db "MadCandle", $f0
+    db "MadCandle@"
 
 String_88_01_85::
-    db "SpikyBoy", $f0
+    db "SpikyBoy@"
 
 String_88_01_86::
-    db "Anemon", $f0
+    db "Anemon@"
 
 String_88_01_87::
-    db "ArrowDog", $f0
+    db "ArrowDog@"
 
 String_88_01_88::
-    db "Pyuro", $f0
+    db "Pyuro@"
 
 String_88_01_89::
-    db "DanceVegi", $f0
+    db "DanceVegi@"
 
 String_88_01_8A::
-    db "Brushead", $f0
+    db "Brushead@"
 
 String_88_01_8B::
-    db "MiniDrak", $f0
+    db "MiniDrak@"
 
 String_88_01_8C::
-    db "Pteranod", $f0
+    db "Pteranod@"
 
 String_88_01_8D::
-    db "DragonKid", $f0
+    db "DragonKid@"
 
 String_88_01_8E::
-    db "CatFly", $f0
+    db "CatFly@"
 
 String_88_01_8F::
-    db "BoneSlave", $f0
+    db "BoneSlave@"
 
 String_88_01_90::
-    db "KingSquid", $f0
+    db "KingSquid@"
 
 String_88_01_91::
-    db "BeastNite", $f0
+    db "BeastNite@"
 
 String_88_01_92::
-    db "Drygon", $f0
+    db "Drygon@"
 
 String_88_01_93::
-    db "Pumpoise", $f0
+    db "Pumpoise@"
 
 String_88_01_94::
-    db "FishRider", $f0
+    db "FishRider@"
 
 String_88_01_95::
-    db "WalrusMan", $f0
+    db "WalrusMan@"
 
 String_88_01_96::
-    db "Stubsuck", $f0
+    db "Stubsuck@"
 
 String_88_01_97::
-    db "Shadow", $f0
+    db "Shadow@"
 
 String_88_01_98::
-    db "WingTree", $f0
+    db "WingTree@"
 
 String_88_01_99::
-    db "AgDevil", $f0
+    db "AgDevil@"
 
 String_88_01_9A::
-    db "Puppetor", $f0
+    db "Puppetor@"
 
 String_88_01_9B::
-    db "ArcDemon", $f0
+    db "ArcDemon@"
 
 String_88_01_9C::
-    db "GoatHorn", $f0
+    db "GoatHorn@"
 
 String_88_01_9D::
-    db "MetalDrak", $f0
+    db "MetalDrak@"
 
 String_88_01_9E::
-    db "AgDevil", $f0
+    db "AgDevil@"
 
 String_88_01_9F::
-    db "Puppetor", $f0
+    db "Puppetor@"
 
 String_88_01_A0::
-    db "Golem", $f0
+    db "Golem@"
 
 String_88_01_A1::
-    db "EvilSeed", $f0
+    db "EvilSeed@"
 
 String_88_01_A2::
-    db "EyeBall", $f0
+    db "EyeBall@"
 
 String_88_01_A3::
-    db "Chamelgon", $f0
+    db "Chamelgon@"
 
 String_88_01_A4::
-    db "FooHero", $f0
+    db "FooHero@"
 
 String_88_01_A5::
-    db "BoxSlime", $f0
+    db "BoxSlime@"
 
 String_88_01_A6::
-    db "Metabble", $f0
+    db "Metabble@"
 
 String_88_01_A7::
-    db "FairyRat", $f0
+    db "FairyRat@"
 
 String_88_01_A8::
-    db "Swordgon", $f0
+    db "Swordgon@"
 
 String_88_01_A9::
-    db "Mommonja", $f0
+    db "Mommonja@"
 
 String_88_01_AA::
-    db "KiteHawk", $f0
+    db "KiteHawk@"
 
 String_88_01_AB::
-    db "MadCondor", $f0
+    db "MadCondor@"
 
 String_88_01_AD::
-    db "WingSnake", $f0
+    db "WingSnake@"
 
 String_88_01_AE::
-    db "GreatDrak", $f0
+    db "GreatDrak@"
 
 String_88_01_AF::
-    db "KingSquid", $f0
+    db "KingSquid@"
 
 String_88_01_B0::
-    db "WindBeast", $f0
+    db "WindBeast@"
 
 String_88_01_B1::
-    db "MadGoose", $f0
+    db "MadGoose@"
 
 String_88_01_B2::
-    db "WhaleMage", $f0
+    db "WhaleMage@"
 
 String_88_01_B3::
-    db "SeaHorse", $f0
+    db "SeaHorse@"
 
 String_88_01_B4::
-    db "Octoreach", $f0
+    db "Octoreach@"
 
 String_88_01_B5::
-    db "IceMan", $f0
+    db "IceMan@"
 
 String_88_01_B6::
-    db "Shadow", $f0
+    db "Shadow@"
 
 String_88_01_B7::
-    db "BigEye", $f0
+    db "BigEye@"
 
 String_88_01_B8::
-    db "Balzak", $f0
+    db "Balzak@"
 
 String_88_01_B9::
-    db "RotRaven", $f0
+    db "RotRaven@"
 
 String_88_01_BA::
-    db "Jamirus", $f0
+    db "Jamirus@"
 
 String_88_01_BB::
-    db "SkyDragon", $f0
+    db "SkyDragon@"
 
 String_88_01_BC::
-    db "Gremlin", $f0
+    db "Gremlin@"
 
 String_88_01_BD::
-    db "Crestpent", $f0
+    db "Crestpent@"
 
 String_88_01_BE::
-    db "SpotKing", $f0
+    db "SpotKing@"
 
 String_88_01_BF::
-    db "Gulpple", $f0
+    db "Gulpple@"
 
 String_88_01_C0::
-    db "FairyDrak", $f0
+    db "FairyDrak@"
 
 String_88_01_C1::
-    db "DuckKite", $f0
+    db "DuckKite@"
 
 String_88_01_C2::
-    db "FunkyBird", $f0
+    db "FunkyBird@"
 
 String_88_01_C3::
-    db "DanceVegi", $f0
+    db "DanceVegi@"
 
 String_88_01_C4::
-    db "Slurperon", $f0
+    db "Slurperon@"
 
 String_88_01_C5::
-    db "MadPlant", $f0
+    db "MadPlant@"
 
 String_88_01_C6::
-    db "Orc", $f0
+    db "Orc@"
 
 String_88_01_C7::
-    db "PutrePup", $f0
+    db "PutrePup@"
 
 String_88_01_C8::
-    db "Devipine", $f0
+    db "Devipine@"
 
 String_88_01_C9::
-    db "Anemon", $f0
+    db "Anemon@"
 
 String_88_01_CA::
-    db "HerbMan", $f0
+    db "HerbMan@"
 
 String_88_01_CB::
-    db "KingSlime", $f0
+    db "KingSlime@"
 
 String_88_01_CC::
-    db "Coatol", $f0
+    db "Coatol@"
 
 String_88_01_CD::
-    db "FangSlime", $f0
+    db "FangSlime@"
 
 String_88_01_CE::
-    db "Grizzly", $f0
+    db "Grizzly@"
 
 String_88_01_CF::
-    db "BeastNite", $f0
+    db "BeastNite@"
 
 String_88_01_D0::
-    db "Healer", $f0
+    db "Healer@"
 
 String_88_01_D1::
-    db "Unicorn", $f0
+    db "Unicorn@"
 
 String_88_01_D2::
-    db "SuperTen", $f0
+    db "SuperTen@"
 
 String_88_01_D3::
-    db "Slime", $f0
+    db "Slime@"
 
 String_88_01_D4::
-    db "RockSlime", $f0
+    db "RockSlime@"
 
 String_88_01_D5::
-    db "Metabble", $f0
+    db "Metabble@"
 
 String_88_01_D6::
-    db "Gorago", $f0
+    db "Gorago@"
 
 String_88_01_D7::
-    db "Slabbit", $f0
+    db "Slabbit@"
 
 String_88_01_D8::
-    db "MultiEyes", $f0
+    db "MultiEyes@"
 
 String_88_01_D9::
-    db "FairyRat", $f0
+    db "FairyRat@"
 
 String_88_01_DA::
-    db "Stubsuck", $f0
+    db "Stubsuck@"
 
 String_88_01_DB::
-    db "MadPlant", $f0
+    db "MadPlant@"
 
 String_88_01_DC::
-    db "Snapper", $f0
+    db "Snapper@"
 
 String_88_01_DD::
-    db "Grendal", $f0
+    db "Grendal@"
 
 String_88_01_DE::
-    db "GoHopper", $f0
+    db "GoHopper@"
 
 String_88_01_DF::
-    db "ArrowDog", $f0
+    db "ArrowDog@"
 
 String_88_01_E0::
-    db "StagBug", $f0
+    db "StagBug@"
 
 String_88_01_E1::
-    db "FireWeed", $f0
+    db "FireWeed@"
 
 String_88_01_E2::
-    db "AgDevil", $f0
+    db "AgDevil@"
 
 String_88_01_E3::
-    db "Grizzly", $f0
+    db "Grizzly@"
 
 String_88_01_E4::
-    db "SkulRider", $f0
+    db "SkulRider@"
 
 String_88_01_E5::
-    db "WalrusMan", $f0
+    db "WalrusMan@"
 
 String_88_01_E6::
-    db "MadCandle", $f0
+    db "MadCandle@"
 
 String_88_01_E7::
-    db "Reaper", $f0
+    db "Reaper@"
 
 String_88_01_E8::
-    db "ProtoMech", $f0
+    db "ProtoMech@"
 
 String_88_01_E9::
-    db "Roboster", $f0
+    db "Roboster@"
 
 String_88_01_ED::
-    db "CatMage", $f0
+    db "CatMage@"
 
 String_88_01_EE::
-    db "FaceTree", $f0
+    db "FaceTree@"
 
 String_88_01_EF::
-    db "Ogre", $f0
+    db "Ogre@"
 
 String_88_01_F0::
-    db "CurseLamp", $f0
+    db "CurseLamp@"
 
 String_88_01_F1::
-    db "Anemon", $f0
+    db "Anemon@"
 
 String_88_01_F2::
-    db "Lipsy", $f0
+    db "Lipsy@"
 
 String_88_01_F3::
-    db "WeedBug", $f0
+    db "WeedBug@"
 
 String_88_01_F4::
-    db "Spikerous", $f0
+    db "Spikerous@"
 
 String_88_01_F5::
-    db "Skullgon", $f0
+    db "Skullgon@"
 
 String_88_01_F6::
-    db "Skulpent", $f0
+    db "Skulpent@"
 
 String_88_01_F7::
-    db "Butterfly", $f0
+    db "Butterfly@"
 
 String_88_01_F8::
-    db "Pixy", $f0
+    db "Pixy@"
 
 String_88_01_F9::
-    db "Copycat", $f0
+    db "Copycat@"
 
 String_88_01_FA::
-    db "StoneMan", $f0
+    db "StoneMan@"
 
 String_88_01_FB::
-    db "WhipBird", $f0
+    db "WhipBird@"
 
 String_88_01_FC::
-    db "MimeSlime", $f0
+    db "MimeSlime@"
 
 String_88_01_FD::
-    db "Tonguella", $f0
+    db "Tonguella@"
 
 String_88_01_FE::
-    db "Golem", $f0
+    db "Golem@"
 
 String_88_01_FF::
-    db "Bubblemon", $f0
+    db "Bubblemon@"
 
 String_88_02_00::
-    db "RogueNite", $f0
+    db "RogueNite@"
 
 String_88_02_01::
-    db "Puppetor", $f0
+    db "Puppetor@"
 
 String_88_02_02::
-    db "Exaucers", $f0
+    db "Exaucers@"
 
 String_88_02_03::
-    db "WhaleMage", $f0
+    db "WhaleMage@"
 
 String_88_02_04::
-    db "MedusaEye", $f0
+    db "MedusaEye@"
 
 String_88_02_05::
-    db "MetalKing", $f0
+    db "MetalKing@"
 
 String_88_02_06::
-    db "KingLeo", $f0
+    db "KingLeo@"
 
 String_88_02_07::
-    db "GoldGolem", $f0
+    db "GoldGolem@"
 
 String_88_02_08::
-    db "GreatDrak", $f0
+    db "GreatDrak@"
 
 String_88_02_09::
-    db "Watabou", $f0
+    db "Watabou@"
 
 String_88_02_0A::
-    db "Durran", $f0
+    db "Durran@"
 
 String_88_02_0B::
-    db "Demonite", $f0
+    db "Demonite@"
 
 String_88_02_0C::
-    db "BossTroll", $f0
+    db "BossTroll@"
 
 String_88_02_0D::
-    db "JewelBag", $f0
+    db "JewelBag@"
 
 String_88_02_0E::
-    db "BoneSlave", $f0
+    db "BoneSlave@"
 
 String_88_02_0F::
-    db "DeadNoble", $f0
+    db "DeadNoble@"
 
 String_88_02_10::
-    db "RogueNite", $f0
+    db "RogueNite@"
 
 String_88_02_11::
-    db "Balzak", $f0
+    db "Balzak@"
 
 String_88_02_12::
-    db "Voodoll", $f0
+    db "Voodoll@"
 
 String_88_02_13::
-    db "GateGuard", $f0
+    db "GateGuard@"
 
 String_88_02_14::
-    db "MadMirror", $f0
+    db "MadMirror@"
 
 String_88_02_15::
-    db "Grakos", $f0
+    db "Grakos@"
 
 String_88_02_16::
-    db "Scallopa", $f0
+    db "Scallopa@"
 
 String_88_02_17::
-    db "Snaily", $f0
+    db "Snaily@"
 
 String_88_02_18::
-    db "Clawster", $f0
+    db "Clawster@"
 
 String_88_02_19::
-    db "Shadow", $f0
+    db "Shadow@"
 
 String_88_02_1A::
-    db "Mimic", $f0
+    db "Mimic@"
 
 String_88_02_1B::
-    db "MetalKing", $f0
+    db "MetalKing@"
 
 String_88_02_1C::
-    db "RainHawk", $f0
+    db "RainHawk@"
 
 String_88_02_1D::
-    db "Coatol", $f0
+    db "Coatol@"
 
 String_88_02_1E::
-    db "Phoenix", $f0
+    db "Phoenix@"
 
 String_88_02_1F::
-    db "Shantak", $f0
+    db "Shantak@"
 
 String_88_02_20::
-    db "Blizzardy", $f0
+    db "Blizzardy@"
 
 String_88_02_21::
-    db "Skullgon", $f0
+    db "Skullgon@"
 
 String_88_02_22::
-    db "Akubar", $f0
+    db "Akubar@"
 
 String_88_02_23::
-    db "DarkHorn", $f0
+    db "DarkHorn@"
 
 String_88_02_24::
-    db "Serpentia", $f0
+    db "Serpentia@"
 
 String_88_02_25::
-    db "SuperTen", $f0
+    db "SuperTen@"
 
 String_88_02_26::
-    db "Unicorn", $f0
+    db "Unicorn@"
 
 String_88_02_27::
-    db "KiteHawk", $f0
+    db "KiteHawk@"
 
 String_88_02_28::
-    db "FoxFire", $f0
+    db "FoxFire@"
 
 String_88_02_29::
-    db "MetalDrak", $f0
+    db "MetalDrak@"
 
 String_88_02_2A::
-    db "AxeShark", $f0
+    db "AxeShark@"
 
 String_88_02_2B::
-    db "StoneMan", $f0
+    db "StoneMan@"
 
 String_88_02_2C::
-    db "MedusaEye", $f0
+    db "MedusaEye@"
 
 String_88_02_2D::
-    db "MadHornet", $f0
+    db "MadHornet@"
 
 String_88_02_2E::
-    db "Oniono", $f0
+    db "Oniono@"
 
 String_88_02_2F::
-    db "TailEater", $f0
+    db "TailEater@"
 
 String_88_02_30::
-    db "BeastNite", $f0
+    db "BeastNite@"
 
 String_88_02_31::
-    db "MimeSlime", $f0
+    db "MimeSlime@"
 
 String_88_02_32::
-    db "MadDragon", $f0
+    db "MadDragon@"
 
 String_88_02_33::
-    db "WingSnake", $f0
+    db "WingSnake@"
 
 String_88_02_34::
-    db "Orochi", $f0
+    db "Orochi@"
 
 String_88_02_35::
-    db "Trumpeter", $f0
+    db "Trumpeter@"
 
 String_88_02_36::
-    db "Wyvern", $f0
+    db "Wyvern@"
 
 String_88_02_37::
-    db "Devipine", $f0
+    db "Devipine@"
 
 String_88_02_38::
-    db "Snapper", $f0
+    db "Snapper@"
 
 String_88_02_39::
-    db "StagBug", $f0
+    db "StagBug@"
 
 String_88_02_3A::
-    db "ArmyCrab", $f0
+    db "ArmyCrab@"
 
 String_88_02_3B::
-    db "ArcDemon", $f0
+    db "ArcDemon@"
 
 String_88_02_3C::
-    db "1EyeClown", $f0
+    db "1EyeClown@"
 
 String_88_02_3D::
-    db "MadKnight", $f0
+    db "MadKnight@"
 
 String_88_02_3E::
-    db "CaptDead", $f0
+    db "CaptDead@"
 
 String_88_02_3F::
-    db "Servant", $f0
+    db "Servant@"
 
 String_88_02_40::
-    db "LavaMan", $f0
+    db "LavaMan@"
 
 String_88_02_41::
-    db "BombCrag", $f0
+    db "BombCrag@"
 
 String_88_02_42::
-    db "RushFish", $f0
+    db "RushFish@"
 
 String_88_02_43::
-    db "WhaleMage", $f0
+    db "WhaleMage@"
 
 String_88_02_44::
-    db "SpotKing", $f0
+    db "SpotKing@"
 
 String_88_02_45::
-    db "SlimeBorg", $f0
+    db "SlimeBorg@"
 
 String_88_02_46::
-    db "LizardMan", $f0
+    db "LizardMan@"
 
 String_88_02_47::
-    db "GreatDrak", $f0
+    db "GreatDrak@"
 
 String_88_02_48::
-    db "MadCat", $f0
+    db "MadCat@"
 
 String_88_02_49::
-    db "Emyu", $f0
+    db "Emyu@"
 
 String_88_02_4A::
-    db "HornBeet", $f0
+    db "HornBeet@"
 
 String_88_02_4B::
-    db "Ogre", $f0
+    db "Ogre@"
 
 String_88_02_4C::
-    db "PutrePup", $f0
+    db "PutrePup@"
 
 String_88_02_4D::
-    db "Roboster2", $f0
+    db "Roboster2@"
 
 String_88_02_4E::
-    db "GoldGolem", $f0
+    db "GoldGolem@"
 
 String_88_02_4F::
-    db "WhiteKing", $f0
+    db "WhiteKing@"
 
 String_88_02_50::
-    db "GoldSlime", $f0
+    db "GoldSlime@"
 
 String_88_02_51::
-    db "Divinegon", $f0
+    db "Divinegon@"
 
 String_88_02_52::
-    db "KingLeo", $f0
+    db "KingLeo@"
 
 String_88_02_53::
-    db "RainHawk", $f0
+    db "RainHawk@"
 
 String_88_02_54::
-    db "Rosevine", $f0
+    db "Rosevine@"
 
 String_88_02_55::
-    db "Armorpion", $f0
+    db "Armorpion@"
 
 String_88_02_56::
-    db "Durran", $f0
+    db "Durran@"
 
 String_88_02_57::
-    db "Aquadon", $f0
+    db "Aquadon@"
 
 String_88_02_58::
-    db "Warubou", $f0
+    db "Warubou@"
 
 String_88_02_59::
-    db "Petibou", $f0
+    db "Petibou@"
 
 String_88_02_5A::
-    db "Skeletor", $f0
+    db "Skeletor@"
 
 String_88_02_5B::
-    db "StoneMan", $f0
+    db "StoneMan@"
 
 String_88_02_5C::
-    db "FunkyBird", $f0
+    db "FunkyBird@"
 
 String_88_02_5D::
-    db "Copycat", $f0
+    db "Copycat@"
 
 String_88_02_5E::
-    db "Andreal", $f0
+    db "Andreal@"
 
 String_88_02_5F::
-    db "Drygon", $f0
+    db "Drygon@"
 
 String_88_02_60::
-    db "Butch", $f0
+    db "Butch@"
 
 String_88_02_61::
-    db "Pumpoise", $f0
+    db "Pumpoise@"
 
 String_88_02_62::
-    db "LordDraco", $f0
+    db "LordDraco@"
 
 String_88_02_63::
-    db "ArcDemon", $f0
+    db "ArcDemon@"
 
 String_88_02_64::
-    db "WhipBird", $f0
+    db "WhipBird@"
 
 String_88_02_65::
-    db "StoneMan", $f0
+    db "StoneMan@"
 
 String_88_02_66::
-    db "DeadNoble", $f0
+    db "DeadNoble@"
 
 String_88_02_67::
-    db "MetalKing", $f0
+    db "MetalKing@"
 
 String_88_02_68::
-    db "Serpentia", $f0
+    db "Serpentia@"
 
 String_88_02_69::
-    db "IronTurt", $f0
+    db "IronTurt@"
 
 String_88_02_6A::
-    db "ZapBird", $f0
+    db "ZapBird@"
 
 String_88_02_6B::
-    db "FooHero", $f0
+    db "FooHero@"
 
 String_88_02_6C::
-    db "GoatHorn", $f0
+    db "GoatHorn@"
 
 String_88_02_6D::
-    db "Inverzon", $f0
+    db "Inverzon@"
 
 String_88_02_6E::
-    db "Voodoll", $f0
+    db "Voodoll@"
 
 String_88_02_6F::
-    db "AxeShark", $f0
+    db "AxeShark@"
 
 String_88_02_70::
-    db "Digong", $f0
+    db "Digong@"
 
 String_88_02_71::
-    db "Swordgon", $f0
+    db "Swordgon@"
 
 String_88_02_72::
-    db "GigaDraco", $f0
+    db "GigaDraco@"
 
 String_88_02_73::
-    db "SuperTen", $f0
+    db "SuperTen@"
 
 String_88_02_74::
-    db "BigRoost", $f0
+    db "BigRoost@"
 
 String_88_02_75::
-    db "GhosTree", $f0
+    db "GhosTree@"
 
 String_88_02_76::
-    db "WarMantis", $f0
+    db "WarMantis@"
 
 String_88_02_77::
-    db "Healer", $f0
+    db "Healer@"
 
 String_88_02_78::
-    db "Kagebou", $f0
+    db "Kagebou@"
 
 String_88_02_79::
-    db "Dimensaur", $f0
+    db "Dimensaur@"
 
 String_88_02_7A::
-    db "Lamia", $f0
+    db "Lamia@"
 
 String_88_02_7B::
-    db "DracoLord", $f0
+    db "DracoLord@"
 
 String_88_02_7D::
-    db "LordDraco", $f0
+    db "LordDraco@"
 
 String_88_02_7E::
-    db "Hargon", $f0
+    db "Hargon@"
 
 String_88_02_7F::
-    db "Sidoh", $f0
+    db "Sidoh@"
 
 String_88_02_80::
-    db "Genosidoh", $f0
+    db "Genosidoh@"
 
 String_88_02_81::
-    db "Baramos", $f0
+    db "Baramos@"
 
 String_88_02_82::
-    db "Zoma", $f0
+    db "Zoma@"
 
 String_88_02_83::
-    db "AsuraZoma", $f0
+    db "AsuraZoma@"
 
 String_88_02_84::
-    db "Pizzaro", $f0
+    db "Pizzaro@"
 
 String_88_02_85::
-    db "PsychoPiz", $f0
+    db "PsychoPiz@"
 
 String_88_02_86::
-    db "Esterk", $f0
+    db "Esterk@"
 
 String_88_02_87::
-    db "Mirudraas", $f0
+    db "Mirudraas@"
 
 String_88_02_89::
-    db "Mudou", $f0
+    db "Mudou@"
 
 String_88_02_8A::
-    db "DeathMore", $f0
+    db "DeathMore@"
 
 String_88_02_8D::
-    db "Darkdrium", $f0
+    db "Darkdrium@"
 
 String_88_02_8E::
-    db "Orgodemir", $f0
+    db "Orgodemir@"
 
 String_88_02_90::
-    db "Darck", $f0
+    db "Darck@"
 
 String_88_02_91::
-    db "HaloSlime", $f0
+    db "HaloSlime@"
 
 String_88_02_92::
-    db "GoldSlime", $f0
+    db "GoldSlime@"
 
 String_88_02_93::
-    db "GranSlime", $f0
+    db "GranSlime@"
 
 String_88_02_94::
-    db "WonderEgg", $f0
+    db "WonderEgg@"
 
 String_88_02_95::
-    db "Orligon", $f0
+    db "Orligon@"
 
 String_88_02_96::
-    db "GigaDraco", $f0
+    db "GigaDraco@"
 
 String_88_02_97::
-    db "DarkHorn", $f0
+    db "DarkHorn@"
 
 String_88_02_98::
-    db "Gorago", $f0
+    db "Gorago@"
 
 String_88_02_99::
-    db "RainHawk", $f0
+    db "RainHawk@"
 
 String_88_02_9A::
-    db "Azurile", $f0
+    db "Azurile@"
 
 String_88_02_9B::
-    db "Shantak", $f0
+    db "Shantak@"
 
 String_88_02_9C::
-    db "Watabou", $f0
+    db "Watabou@"
 
 String_88_02_9D::
-    db "Warubou", $f0
+    db "Warubou@"
 
 String_88_02_9E::
-    db "Egdracil", $f0
+    db "Egdracil@"
 
 String_88_02_9F::
-    db "Digster", $f0
+    db "Digster@"
 
 String_88_02_A0::
-    db "Skularach", $f0
+    db "Skularach@"
 
 String_88_02_A1::
-    db "Titanis", $f0
+    db "Titanis@"
 
 String_88_02_A2::
-    db "LampGenie", $f0
+    db "LampGenie@"
 
 String_88_02_A3::
-    db "Niterich", $f0
+    db "Niterich@"
 
 String_88_02_A4::
-    db "WhiteKing", $f0
+    db "WhiteKing@"
 
 String_88_02_A5::
-    db "Lazamanus", $f0
+    db "Lazamanus@"
 
 String_88_02_A6::
-    db "GoldGolem", $f0
+    db "GoldGolem@"
 
 String_88_02_A7::
-    db "DarkMate", $f0
+    db "DarkMate@"
 
 String_88_02_A8::
-    db "Octogon", $f0
+    db "Octogon@"
 
 String_88_02_A9::
-    db "Octoraid", $f0
+    db "Octoraid@"
 
 String_88_02_AA::
-    db "Grakos", $f0
+    db "Grakos@"
 
 String_88_02_AB::
-    db "Poseidon", $f0
+    db "Poseidon@"
 
 String_88_02_AC::
-    db "Slime", $f0
+    db "Slime@"
 
 String_88_02_AD::
-    db "Undefined", $f0
+    db "Undefined@"
     db $30, $28, $f0, $1e, $31, $27, $28, $29, $2c, $31, $28, $27, $f0
     ds $2332, $00

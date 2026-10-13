@@ -463,7 +463,7 @@ FhuntTalkEvents_ShowBeGoneIfYour::
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_script_at_hl_b13
-    ld hl, $0410 ; '*: Be gone! If your soul'
+    ld hl, $0410 ; '*: …Be gone! If your soul'
     call StartMessageCommand09HL_B13
     ret
 
@@ -587,7 +587,7 @@ FhuntTalkEvents_TestFlagBit_Case16::
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $0df8 ; '*: ZZZZZ Ssss ZZZZZ Ssss'
+    ld hl, $0df8 ; '*: ZZZZZ… Ssss… ZZZZZ… Ssss…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -748,7 +748,7 @@ FhuntTalkEvents_StartScriptAtHL_B13::
 ; starts message $0430 through StartMessageCommand09HL (script command $09); that string begins '0
 ; peered into the vase. It appeared' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case25)
 TalkMsg0430_HeroPeeredIntoTheVaseIt::
-    ld hl, $0430 ; '0 peered into the vase. It'
+    ld hl, $0430 ; '0 peered into the vase. …It'
     call StartMessageCommand09HL_B13
     ret
 
@@ -800,7 +800,7 @@ FhuntTalkEvents_ShowWhenIPassedToo::
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0435 ; '*: I I didn't take anything!'
+    ld hl, $0435 ; '*: I… I didn't take anything!'
     call StartMessageCommand09HL_B13
     ret
 
@@ -885,7 +885,7 @@ TalkMsg043C_TheCastleIsUnderTheMonster::
 ; starts message $043E through StartMessageCommand09HL (script command $09); that string begins 'The
 ; cave to the south That has' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case31)
 TalkMsg043E_TheCaveToTheSouthThat::
-    ld hl, $043e ; '*: The cave to the south'
+    ld hl, $043e ; '*: The cave to the south…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1304,7 +1304,7 @@ TalkScript60CE::
 ; 'Where is my casket Where Ring the' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case05_Case4F)
 TalkMsg04A8_WhereIsMyCasketWhereRing::
-    ld hl, $04a8 ; '*: Where is my casket Where'
+    ld hl, $04a8 ; '*: …Where is my casket… Where…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1641,7 +1641,7 @@ TalkScript6152_KamehaSoItWasYouWho::
 
 ; starts Script_6198 (StartScriptAtHL); its first message begins 'This way Here Here' (E-0271; was
 ; DispatchTalkEvent_Case05_Case69)
-; starts Script_6198: '*: This way Here Here'
+; starts Script_6198: '*: ……This way… …Here… …Here…'
 TalkScript6198_ThisWayHereHere::
     ld hl, Script_6198
     call StartScriptAtHL_B13
@@ -1690,7 +1690,7 @@ FhuntTalkEvents_StartScriptAtHL_B13_Case6E::
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $04a0 ; '*: The castle's lord summons monsters'
+    ld hl, $04a0 ; '*: The castle's lord summons monsters…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2234,7 +2234,7 @@ TalkMsg031E_HisMajestyHasBeenCrankyIs::
     ld de, $0086
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $031e ; '*: His Majesty has been cranky'
+    ld hl, $031e ; '*: His Majesty has been cranky…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2620,7 +2620,7 @@ TalkMsg0336_SighIsntThatScholarAppealing::
     ld de, $01e5
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0336 ; '*: Sigh Isn't that scholar appealing?'
+    ld hl, $0336 ; '*: …Sigh… Isn't that scholar appealing?'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2785,7 +2785,7 @@ TalkMsg033D_ThisSideIsTheWesternKingdom::
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0352 ; '*: I've heard There was almost'
+    ld hl, $0352 ; '*: I've heard… There was almost'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3267,7 +3267,7 @@ TalkMsg038A_AWoodsmanCameByAWhile::
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0d23 ; '*: I just heard a rumor'
+    ld hl, $0d23 ; '*: I just heard a rumor…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3411,12 +3411,12 @@ TalkMsg0393_OhLadyYunaToThinkThat::
     ld de, $009b
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0393 ; '*: Oh Lady Yuna To think'
+    ld hl, $0393 ; '*: Oh… Lady Yuna… To think'
     call StartMessageCommand09HL_B13
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0d1e ; '*: Oh Lady Yuna I miss'
+    ld hl, $0d1e ; '*: Oh… Lady Yuna… I miss'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3598,7 +3598,7 @@ TalkMsg03A4_KingSighNotEvenThisYou::
     ld de, $009b
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $03a4 ; 'King: Sigh Not even this You'
+    ld hl, $03a4 ; 'King: …Sigh… Not even this… You'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3627,7 +3627,7 @@ NordenTalkEvents_TestFlagBit_Case72::
     jr c, .set_temp0_to_33
 
 .loop:
-    ld hl, $03a3 ; '*:'
+    ld hl, $03a3 ; '*: …………'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3831,7 +3831,7 @@ TalkMsg03B4_ABotanistDoesLiveHereBut::
     ld de, $01e5
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $03b4 ; '*: A botanist does live here'
+    ld hl, $03b4 ; '*: A botanist does live here…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -4822,7 +4822,7 @@ GreatLogTalkEvents_TestFlagBit::
     jr .call_great_log_talk_events_case02_test_flag
 
 .call_start_message_command09_hl_b134:
-    ld hl, $0500 ; '*: 0 There have been frequent'
+    ld hl, $0500 ; '*: 0… There have been frequent'
     call StartMessageCommand09HL_B13
     ret
 
@@ -5567,12 +5567,12 @@ TalkMsg0040_OnThisIslandEveryDayGoes::
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $08ce ; '*: Many trees have submerged The'
+    ld hl, $08ce ; '*: Many trees have submerged… The'
     call StartMessageCommand09HL_B13
     ret
 
 .call_start_message_command09_hl_b134:
-    ld hl, $050c ; '*: My beloved island is sinking'
+    ld hl, $050c ; '*: My beloved island is sinking…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -5956,7 +5956,7 @@ TalkMsg003D_WeLiveInsideHereImKeeping::
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $0210 ; '*: Oh, my Where did the'
+    ld hl, $0210 ; '*: Oh, my… Where did the'
     call StartMessageCommand09HL_B13
     ret
 
@@ -6345,7 +6345,7 @@ TalkMsg001A_IAccidentallyWentOutside::
     ld de, $0022
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
-    ld hl, $0215 ; '*: Aooh, LoveWater soothes sunburn'
+    ld hl, $0215 ; '*: Aooh, LoveWater soothes sunburn…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -6761,7 +6761,7 @@ GreatLogTalkEvents_TestFlagBit_Case27::
     jr z, .call_start_script_at_hl_b13
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0263 ; '*: Oh You're so lucky to'
+    ld hl, $0263 ; '*: Oh… You're so lucky to'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7030,7 +7030,7 @@ TalkMsg0241_TryTheSlideItsAShortcut::
 ; checked the bookshelf. Bookmark Place inside' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case3B)
 TalkMsg0243_HeroCheckedTheBookshelfBookmark::
-    ld hl, $0243 ; '0 checked the bookshelf. 'Bookmark Place'
+    ld hl, $0243 ; '0 checked the bookshelf. 'Bookmark… Place'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7038,7 +7038,7 @@ TalkMsg0243_HeroCheckedTheBookshelfBookmark::
 ; checked the bookshelf. Journal A book' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case3C)
 TalkMsg0244_HeroCheckedTheBookshelfJournal::
-    ld hl, $0244 ; '0 checked the bookshelf. 'Journal A'
+    ld hl, $0244 ; '0 checked the bookshelf. 'Journal… A'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7074,7 +7074,7 @@ GreatLogTalkEvents_TestFlagBit_Case3E::
 ; checked the bookshelf. Diary A girl' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case3F)
 TalkMsg0249_HeroCheckedTheBookshelfDiary::
-    ld hl, $0249 ; '0 checked the bookshelf. 'Diary A'
+    ld hl, $0249 ; '0 checked the bookshelf. 'Diary… A'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7227,7 +7227,7 @@ GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     jr z, .call_start_script_at_hl_b13
     or a
     jr z, .call_start_script_at_hl_b13
-    ld hl, $0d4a ; '*: Here's that TinyMedal. Wait, you'
+    ld hl, $0d4a ; '*: Here's that TinyMedal. …Wait, you'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7276,7 +7276,7 @@ GreatLogTalkEvents_TestFlagBit_Case4C::
 ; 'Zzzz Yawn Huh? Is it morning already?' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case4D)
 TalkMsg0A50_ZzzzYawnHuhIsItMorning::
-    ld hl, $0a50 ; '*: Zzzz Yawn Huh? Is it'
+    ld hl, $0a50 ; '*: Zzzz… Yawn… Huh? Is it'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7290,7 +7290,7 @@ TalkMsg0A52_OurKindAlwaysStaysNearWater::
 ; starts message $0A53 through StartMessageCommand09HL (script command $09); that string begins 'Zzz
 ; Zzz Zzz Whoops! Was I breathing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case4F)
 TalkMsg0A53_ZzzZzzZzzWhoopsWasI::
-    ld hl, $0a53 ; '*: Zzz Zzz Zzz Whoops! Was'
+    ld hl, $0a53 ; '*: Zzz… Zzz… Zzz… Whoops! Was'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7298,7 +7298,7 @@ TalkMsg0A53_ZzzZzzZzzWhoopsWasI::
 ; read the sign. Ssh Monsters are' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case50)
 ; starts Script_54B9: '0 checked the casket.'
 TalkMsg0A59_HeroReadTheSignSshMonsters::
-    ld hl, $0a59 ; '0 read the sign. 'Ssh Monsters'
+    ld hl, $0a59 ; '0 read the sign. 'Ssh… Monsters'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7371,7 +7371,7 @@ TalkMsg027D_WhatDoYouSupposeMonsters::
 ; starts message $027E through StartMessageCommand09HL (script command $09); that string begins
 ; 'GRAH, HUNGRY. LOOK DELICIOUS' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case57)
 TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS::
-    ld hl, $027e ; '*: GRAH, HUNGRY. LOOK DELICIOUS'
+    ld hl, $027e ; '*: GRAH, HUNGRY. LOOK DELICIOUS…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7449,7 +7449,7 @@ TalkMsg0290_SirloinIsTheTopsHarrumph::
 ; starts message $0291 through StartMessageCommand09HL (script command $09); that string begins 'I I
 ; didn't fall for any meat.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case60)
 TalkMsg0291_IIDidntFallForAny::
-    ld hl, $0291 ; '*: I I didn't fall for'
+    ld hl, $0291 ; '*: I… I didn't fall for'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7792,7 +7792,7 @@ TalkScript55CE_ImTheProfsAssistantDoYou::
 ; checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case6C)
 TalkMsg08D8_HeroCheckedTheBookshelfBreeding::
-    ld hl, $08d8 ; '0 checked the bookshelf. 'Breeding Guide'
+    ld hl, $08d8 ; '0 checked the bookshelf. 'Breeding Guide…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7800,7 +7800,7 @@ TalkMsg08D8_HeroCheckedTheBookshelfBreeding::
 ; checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_Case6D)
 TalkMsg08D9_HeroCheckedTheBookshelfBreeding::
-    ld hl, $08d9 ; '0 checked the bookshelf. 'Breeding Guide'
+    ld hl, $08d9 ; '0 checked the bookshelf. 'Breeding Guide…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8436,7 +8436,7 @@ TalkMsg0A3F_TheKingAndPrinces::
     ret
 
 .call_start_message_command09_hl_b132:
-    ld hl, $0544 ; '*: I can't eat another Zzz'
+    ld hl, $0544 ; '*: ……I can't eat another… Zzz…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8540,7 +8540,7 @@ Talk0A49_BreedingCouldResultIn::
     ret
 
 .call_start_message_command09_hl_b132:
-    ld hl, $0516 ; '*: Hm So that combination of'
+    ld hl, $0516 ; '*: Hm… So that combination of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9265,7 +9265,7 @@ TalkMsg0268_YepShesTakingGood::
 ; starts message $022E through StartMessageCommand09HL (script command $09); that string begins
 ; 'Snivel This book is so sad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseAE)
 TalkMsg022E_SnivelThisBookIsSoSad::
-    ld hl, $022e ; '*: Snivel This book is so'
+    ld hl, $022e ; '*: Snivel… This book is so'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9360,7 +9360,7 @@ TalkMsg0209_DidYouKnowYouCanRecord::
 ; DispatchTalkEvent_Case01_CaseB5)
 ; starts Script_5744: '*: Do you want to know'
 TalkMsg0A51_WhenAAppearsByAMonsters::
-    ld hl, $0a51 ; '*: When a appears by a'
+    ld hl, $0a51 ; '*: When a ★ appears by'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9493,7 +9493,7 @@ TalkMsg0280_MamaIsABig::
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0280 ; '*: Mama is a big worrier'
+    ld hl, $0280 ; '*: Mama is a big worrier…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9798,7 +9798,7 @@ TalkMsg0A68_MyEmyuIsVery::
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0bbd ; '*: There's something wrong with Emyu'
+    ld hl, $0bbd ; '*: There's something wrong with Emyu…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9814,7 +9814,7 @@ TalkMsg0A6B_MonstersLookSoFrightening::
     ld de, $0136
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0a6b ; '*: Monsters look so frightening Yes,'
+    ld hl, $0a6b ; '*: Monsters look so frightening… Yes,'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10100,7 +10100,7 @@ TalkMsg051E_TheGreatLogTreeAppearedTo::
 ; checked the bookshelf. Magic Keys The' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case01_CaseE2)
 TalkMsg055E_HeroCheckedTheBookshelfMagic::
-    ld hl, $055e ; '0 checked the bookshelf. 'Magic Keys'
+    ld hl, $055e ; '0 checked the bookshelf. 'Magic Keys…'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10253,7 +10253,7 @@ ChestItem_MagicBelt::
     ret
 
 GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
-    ld hl, $055f ; '0 checked the bookshelf. 'Magic Keys'
+    ld hl, $055f ; '0 checked the bookshelf. 'Magic Keys…'
     call StartMessageCommand09HL_B13
     ret
     db $c9
@@ -10405,7 +10405,7 @@ Talk0D90_HumphImTerry::
     ldh a, [hTemp0]
     cp $96
     jr nc, .call_start_script_at_hl_b13
-    ld hl, $0d90 ; '*: Humph I'm Terry. Terry: I'm'
+    ld hl, $0d90 ; '*: Humph… I'm Terry. Terry: I'm'
     call StartMessageCommand09HL_B13
     ret
 

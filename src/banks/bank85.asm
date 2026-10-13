@@ -247,7 +247,7 @@ SceneWatchOut_ShowHmYouAreQuite::
     ld a, $f0
     ld [wNameGlyphBuf + $5], a
     ld [wTextBuf1 + $c], a
-    ld hl, $4d0f ; '*: Hm, you are quite strong'
+    ld hl, $4d0f ; '*: Hm, you are quite strong…'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -1374,7 +1374,7 @@ SceneArenaChallenge_ShowAwwILoseYou::
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b85
-    ld hl, $0d82 ; '*: Aww I lose. You are'
+    ld hl, $0d82 ; '*: Aww… I lose. You are'
     call StartMessageHL_B85
     ret
 
@@ -1416,7 +1416,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $0bb2 ; 'Terry: Humph Don't take it hard.'
+    ld hl, $0bb2 ; 'Terry: Humph… Don't take it hard.'
     call StartMessageHL_B85
     ret
 
@@ -1643,14 +1643,14 @@ SceneLimboMonster2_ShowWarubouWaheyIWas::
     ld a, [wArg5]
     cp $ff
     jr nz, .call_start_message_hl_b85
-    ld hl, $0ba3 ; 'Warubou: Wa-hey! I was thinking GreatLog'
+    ld hl, $0ba3 ; 'Warubou: Wa-hey! I was thinking… GreatLog'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $4ba4 ; 'Warubou: Wa-hey! I was thinking GreatLog'
+    ld hl, $4ba4 ; 'Warubou: Wa-hey! I was thinking… GreatLog'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2124,7 +2124,7 @@ SceneGiveBackCyal_ClearBit2AtHL_Bank85::
 SceneGiveBackCyal_ShowHumphHowBoring::
     ld a, $03
     ld [wSpriteSlots + $7], a
-    ld hl, $0737 ; '*: Humph How boring'
+    ld hl, $0737 ; '*: Humph… How boring…'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -2360,7 +2360,7 @@ SceneBarrel_ShowRobosterStoppedMoving::
     ld [wSpriteSlots + $c], a
     ld a, $20
     ld [wObject1 + OBJ_Y], a
-    ld hl, $078d ; 'Roboster stopped moving'
+    ld hl, $078d ; '…Roboster stopped moving…'
     call StartMessageHL_B85
     xor a
     ld [wScriptParam0], a
@@ -2473,7 +2473,7 @@ SceneBarrel_SetFlagBit::
 .call_set_flag_bit2:
     ld de, $0163
     call SetFlagBit
-    ld hl, $0779 ; '*: PROFE SOR ORDER MUST OBEY'
+    ld hl, $0779 ; '*: PROFE… SOR… ORDER… MUST… OBEY…'
     call StartMessageHL_B85
     xor a
     ld [wScriptParam0], a
@@ -2842,7 +2842,7 @@ ScenePirateGhosts_ReadMapId::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $085d ; '*: Check the wooden crate'
+    ld hl, $085d ; '*: Check the wooden crate…'
     call StartMessageHL_B85
     ret
 

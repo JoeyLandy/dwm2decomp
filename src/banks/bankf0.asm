@@ -89,288 +89,297 @@ CopyNameStringFromBank08Database_Data_4036::
     dw BeginStringDisplay_BankF0_48A0 ; id 68
 
 String_F0_4016_00_00::
-    db $ea, "*: It's ", $f9, "0G a", $f1
-    db "night.", $fa, $f7
-    db $ef, $ee, "Will you stay with", $ef, $ee, "us tonight?", $ff, $f0
+    db "<VOICE1>*: It's <BUF0>G a<LINE>"
+    db "night.<PROMPT>"
+    db "<NEXT>Will you stay with"
+    db "<NEXT>us tonight?<CHOICE>"
+    db "@"
 
 String_F0_4016_00_01::
-    db $ea, "*: Well then, have", $f1
-    db "a good rest.", $f7
-    db $f0
+    db "<VOICE1>*: Well then, have<LINE>"
+    db "a good rest.<WAIT>"
+    db "@"
 
 String_F0_4016_00_02::
-    db $ea, "*: Please come stay", $f1
-    db "another time.", $f7
-    db $f0
+    db "<VOICE1>*: Please come stay<LINE>"
+    db "another time.<WAIT>"
+    db "@"
 
 String_F0_4016_00_03::
-    db $ea, "*: Sorry, but you", $f1
-    db "lack the money.", $fa, $f7
-    db $ef, $ee, "I hope you'll stay", $ef, $ee, "another time.", $f7
-    db $f0
+    db "<VOICE1>*: Sorry, but you<LINE>"
+    db "lack the money.<PROMPT>"
+    db "<NEXT>I hope you'll stay"
+    db "<NEXT>another time.<WAIT>"
+    db "@"
 
 String_F0_4016_00_04::
-    db $ea, "*: Good morning", $f1
-    db "and farewell!", $f7
-    db $f0
+    db "<VOICE1>*: Good morning<LINE>"
+    db "and farewell!<WAIT>"
+    db "@"
 
 String_F0_4016_00_05::
-    db $ea, "*: Welcome to my", $f1
-    db "shop.", $fa, $f7
-    db $ef, $ee, "How may I serve", $ef, $ee, "you today?", $f0
+    db "<VOICE1>*: Welcome to my<LINE>"
+    db "shop.<PROMPT>"
+    db "<NEXT>How may I serve"
+    db "<NEXT>you today?@"
 
 String_F0_4016_00_06::
-    db $ea, "*: What would you", $f1
-    db "like to buy?", $f0
+    db "<VOICE1>*: What would you<LINE>"
+    db "like to buy?@"
 
 String_F0_4016_00_07::
-    db $ea, "*: You have no more", $f1
-    db "room for items.", $f7
-    db $f0
+    db "<VOICE1>*: You have no more<LINE>"
+    db "room for items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_08::
-    db $ea, "*: Is there", $f1
-    db "anything else?", $f0
+    db "<VOICE1>*: Is there<LINE>"
+    db "anything else?@"
 
 String_F0_4016_00_09::
-    db $ea, "*: How many would", $f1
-    db "you like to buy?", $f0
+    db "<VOICE1>*: How many would<LINE>"
+    db "you like to buy?@"
 
 String_F0_4016_00_0A::
-    db $ea, "*: ", $f9, "0?", $ff, $f0
+    db "<VOICE1>*: <BUF0>?<CHOICE>"
+    db "@"
 
 String_F0_4016_00_0B::
-    db $ea, "*: Thank you!", $f7
-    db $f0
+    db "<VOICE1>*: Thank you!<WAIT>"
+    db "@"
 
 String_F0_4016_00_0C::
-    db $ea, "*: Oh? You're short", $f1
-    db "some gold.", $f7
-    db $f0
+    db "<VOICE1>*: Oh? You're short<LINE>"
+    db "some gold.<WAIT>"
+    db "@"
 
 String_F0_4016_00_0D::
-    db $ea, "*: You can't carry", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_0E::
-    db $ea, "*: What would you", $f1
-    db "like to sell?", $f0
+    db "<VOICE1>*: What would you<LINE>"
+    db "like to sell?@"
 
 String_F0_4016_00_0F::
-    db $ea, "*: You have no", $f1
-    db "items to sell.", $f7
-    db $f0
+    db "<VOICE1>*: You have no<LINE>"
+    db "items to sell.<WAIT>"
+    db "@"
 
 String_F0_4016_00_10::
-    db $ea, "*: Sorry, but I", $f1
-    db "can't price that.", $f7
-    db $f0
+    db "<VOICE1>*: Sorry, but I<LINE>"
+    db "can't price that.<WAIT>"
+    db "@"
 
 String_F0_4016_00_11::
-    db $ea, "*: How many will", $f1
-    db "you sell?", $f0
+    db "<VOICE1>*: How many will<LINE>"
+    db "you sell?@"
 
 String_F0_4016_00_12::
-    db $ea, "*: Thank you!", $f1
-    db "Please come again.", $f7
-    db $f0
+    db "<VOICE1>*: Thank you!<LINE>"
+    db "Please come again.<WAIT>"
+    db "@"
 
 String_F0_4016_00_13::
-    db $ea, "*: You can't carry", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_14::
-    db $ea, "*: That comes to", $f1
-    db $f9, "0G. OK?", $f0
+    db "<VOICE1>*: That comes to<LINE>"
+    db "<BUF0>G. OK?@"
 
 String_F0_4016_00_15::
-    db $ea, "*: This is the", $f1
-    db "Vault.", $fa, $f7
-    db $ef, $ee, "What can I do for", $ef, $ee, "you today?", $f0
+    db "<VOICE1>*: This is the<LINE>"
+    db "Vault.<PROMPT>"
+    db "<NEXT>What can I do for"
+    db "<NEXT>you today?@"
 
 String_F0_4016_00_16::
-    db $ea, "*: What should we", $f1
-    db "store for you?", $f0
+    db "<VOICE1>*: What should we<LINE>"
+    db "store for you?@"
 
 String_F0_4016_00_17::
-    db $ea, "*: You don't have", $f1
-    db "any items.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "any items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_18::
-    db $ea, "*: Is there", $f1
-    db "anything else?", $f0
+    db "<VOICE1>*: Is there<LINE>"
+    db "anything else?@"
 
 String_F0_4016_00_19::
-    db $ea, "*: Sorry, but you", $f1
-    db "filled the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Sorry, but you<LINE>"
+    db "filled the Vault.<WAIT>"
+    db "@"
 
 String_F0_4016_00_1A::
-    db $ea, "*: What item should", $f1
-    db "I store for you?", $f0
+    db "<VOICE1>*: What item should<LINE>"
+    db "I store for you?@"
 
 String_F0_4016_00_1B::
-    db $ea, "*: How many should", $f1
-    db "I store?", $f0
+    db "<VOICE1>*: How many should<LINE>"
+    db "I store?@"
 
 String_F0_4016_00_1C::
-    db $ea, "*: OK, I'll put", $f1
-    db "that away for you.", $f7
-    db $f0
+    db "<VOICE1>*: OK, I'll put<LINE>"
+    db "that away for you.<WAIT>"
+    db "@"
 
 String_F0_4016_00_1D::
-    db $ea, "*: I can't store", $f1
-    db "that much.", $f7
-    db $f0
+    db "<VOICE1>*: I can't store<LINE>"
+    db "that much.<WAIT>"
+    db "@"
 
 String_F0_4016_00_1E::
-    db $ea, "*: You don't have", $f1
-    db "enough to store.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "enough to store.<WAIT>"
+    db "@"
 
 String_F0_4016_00_1F::
-    db $ea, "*: How much do you", $f1
-    db "want to deposit?", $f0
+    db "<VOICE1>*: How much do you<LINE>"
+    db "want to deposit?@"
 
 String_F0_4016_00_20::
-    db $ea, "*: What will you be", $f1
-    db "taking out?", $f0
+    db "<VOICE1>*: What will you be<LINE>"
+    db "taking out?@"
 
 String_F0_4016_00_21::
-    db $ea, "*: I don't have any", $f1
-    db "of your items.", $f7
-    db $f0
+    db "<VOICE1>*: I don't have any<LINE>"
+    db "of your items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_22::
-    db $ea, "*: You can't carry", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_23::
-    db $ea, "*: What do you want", $f1
-    db "back?", $f0
+    db "<VOICE1>*: What do you want<LINE>"
+    db "back?@"
 
 String_F0_4016_00_24::
-    db $ea, "*: How many do you", $f1
-    db "want back?", $f0
+    db "<VOICE1>*: How many do you<LINE>"
+    db "want back?@"
 
 String_F0_4016_00_25::
-    db $ea, "*: Here you go.", $f7
-    db $f0
+    db "<VOICE1>*: Here you go.<WAIT>"
+    db "@"
 
 String_F0_4016_00_26::
-    db $ea, "*: You can't carry", $f1
-    db "that much.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "that much.<WAIT>"
+    db "@"
 
 String_F0_4016_00_27::
-    db $ea, "*: I don't have any", $f1
-    db "of your money.", $f7
-    db $f0
+    db "<VOICE1>*: I don't have any<LINE>"
+    db "of your money.<WAIT>"
+    db "@"
 
 String_F0_4016_00_28::
-    db $ea, "*: How much gold", $f1
-    db "will you withdraw?", $f0
+    db "<VOICE1>*: How much gold<LINE>"
+    db "will you withdraw?@"
 
 String_F0_4016_00_29::
-    db $ea, "*: Sorry, but I", $f1
-    db "can't take another", $fa, $f7
-    db $ef, $ee, "kind of item.", $ef, $ee, "There's no room.", $f7
-    db $f0
+    db "<VOICE1>*: Sorry, but I<LINE>"
+    db "can't take another<PROMPT>"
+    db "<NEXT>kind of item."
+    db "<NEXT>There's no room.<WAIT>"
+    db "@"
 
 String_F0_4016_00_2D::
-    db $ea, "*: Come again", $f1
-    db "anytime!", $f7
-    db $f0
+    db "<VOICE1>*: Come again<LINE>"
+    db "anytime!<WAIT>"
+    db "@"
 
 String_F0_4016_00_2E::
-    db $ea, "*: I don't have any", $f1
-    db "more items.", $f7
-    db $f0
+    db "<VOICE1>*: I don't have any<LINE>"
+    db "more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_2F::
-    db $ea, "*: I can't store", $f1
-    db "that many.", $f7
-    db $f0
+    db "<VOICE1>*: I can't store<LINE>"
+    db "that many.<WAIT>"
+    db "@"
 
 String_F0_4016_00_30::
-    db $ea, "*: I can't take any", $f1
-    db "more of that item.", $f7
-    db $f0
+    db "<VOICE1>*: I can't take any<LINE>"
+    db "more of that item.<WAIT>"
+    db "@"
 
 String_F0_4016_00_31::
-    db $ea, "*: This is the", $f1
-    db "Vault.", $fa, $f7
-    db $ef, $ee, "How may I help you", $ef, $ee, "today?", $f0
+    db "<VOICE1>*: This is the<LINE>"
+    db "Vault.<PROMPT>"
+    db "<NEXT>How may I help you"
+    db "<NEXT>today?@"
 
 String_F0_4016_00_32::
-    db $ea, "*: What would you", $f1
-    db "like to buy?", $f0
+    db "<VOICE1>*: What would you<LINE>"
+    db "like to buy?@"
 
 String_F0_4016_00_33::
-    db $ea, "*: You can't carry", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_34::
-    db $ea, "*: Is there", $f1
-    db "anything else?", $f0
+    db "<VOICE1>*: Is there<LINE>"
+    db "anything else?@"
 
 String_F0_4016_00_35::
-    db $ea, "*: How many would", $f1
-    db "you like?", $f0
+    db "<VOICE1>*: How many would<LINE>"
+    db "you like?@"
 
 String_F0_4016_00_36::
-    db $ea, "*: ", $f9, "0?", $ff, $f0
+    db "<VOICE1>*: <BUF0>?<CHOICE>"
+    db "@"
 
 String_F0_4016_00_37::
-    db $ea, "*: Thank you!", $f7
-    db $f0
+    db "<VOICE1>*: Thank you!<WAIT>"
+    db "@"
 
 String_F0_4016_00_38::
-    db $ea, "*: You don't have", $f1
-    db "enough gold.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "enough gold.<WAIT>"
+    db "@"
 
 String_F0_4016_00_39::
-    db $ea, "*: You can't hold", $f1
-    db "that many items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't hold<LINE>"
+    db "that many items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_3A::
-    db $ea, "*: What would you", $f1
-    db "like to sell?", $f0
+    db "<VOICE1>*: What would you<LINE>"
+    db "like to sell?@"
 
 String_F0_4016_00_3B::
-    db $ea, "*: You have nothing", $f1
-    db "to sell me.", $f7
-    db $f0
+    db "<VOICE1>*: You have nothing<LINE>"
+    db "to sell me.<WAIT>"
+    db "@"
 
 String_F0_4016_00_3C::
-    db $ea, "*: I can't put a", $f1
-    db "price on that.", $f7
-    db $f0
+    db "<VOICE1>*: I can't put a<LINE>"
+    db "price on that.<WAIT>"
+    db "@"
 
 String_F0_4016_00_3D::
-    db $ea, "*: How many will", $f1
-    db "you sell?", $f0
+    db "<VOICE1>*: How many will<LINE>"
+    db "you sell?@"
 
 String_F0_4016_00_3E::
-    db $ea, "*: Thank you!", $f1
-    db "Please come again!", $f7
-    db $f0
+    db "<VOICE1>*: Thank you!<LINE>"
+    db "Please come again!<WAIT>"
+    db "@"
 
 String_F0_4016_00_3F::
-    db $ea, "*: You can't carry", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't carry<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_F0_4016_00_40::
-    db $ea, "*: That will be", $f1
-    db $f9, "0G. OK?", $f0
+    db "<VOICE1>*: That will be<LINE>"
+    db "<BUF0>G. OK?@"
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_BankF0_48A0::
@@ -431,134 +440,141 @@ StringList_F0_48B7::
     dw String_F0_48B5_00_22 ; id 34
 
 String_F0_48B5_00_00::
-    db $ea, "Obtain a Dream Egg", $f1
-    db "from ", $f9, "m?", $f0
+    db "<VOICE1>Obtain a Dream Egg<LINE>"
+    db "from <BUF3>?@"
 
 String_F0_48B5_00_01::
-    db $ea, "Give a Dream Egg", $f1
-    db "to ", $f9, "m?", $f0
+    db "<VOICE1>Give a Dream Egg<LINE>"
+    db "to <BUF3>?@"
 
 String_F0_48B5_00_02::
-    db $ea, "Refused to accept", $f1
-    db "a Dream Egg.", $f7
-    db $f0
+    db "<VOICE1>Refused to accept<LINE>"
+    db "a Dream Egg.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_03::
-    db $ea, "Your Dream Egg was", $f1
-    db "rejected.", $f7
-    db $f0
+    db "<VOICE1>Your Dream Egg was<LINE>"
+    db "rejected.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_04::
-    db $ea, "Choose the kind of", $f1
-    db "egg to transfer.", $f0
+    db "<VOICE1>Choose the kind of<LINE>"
+    db "egg to transfer.@"
 
 String_F0_48B5_00_05::
-    db $ea, "Choose the egg to", $f1
-    db "be transferred.", $f0
+    db "<VOICE1>Choose the egg to<LINE>"
+    db "be transferred.@"
 
 String_F0_48B5_00_06::
-    db $ea, "Is it OK to", $f1
-    db "transfer the egg?", $f0
+    db "<VOICE1>Is it OK to<LINE>"
+    db "transfer the egg?@"
 
 String_F0_48B5_00_07::
-    db $ea, "OK to save the egg", $f1
-    db "trade results?", $f0
+    db "<VOICE1>OK to save the egg<LINE>"
+    db "trade results?@"
 
 String_F0_48B5_00_08::
-    db $ea, "Please wait", $a4, $f0
+    db "<VOICE1>Please wait…@"
 
 String_F0_48B5_00_09::
-    db $ea, $f9, "0 received", $f1
-    db "your egg.", $f7
-    db $f0
+    db "<VOICE1><BUF0> received<LINE>"
+    db "your egg.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0A::
-    db $ea, "Obtained an egg", $f1
-    db "from ", $f9, "0.", $f7
-    db $f0
+    db "<VOICE1>Obtained an egg<LINE>"
+    db "from <BUF0>.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0B::
-    db $ea, "Eggs were traded", $f1
-    db "with ", $f9, "0.", $f7
-    db $f0
+    db "<VOICE1>Eggs were traded<LINE>"
+    db "with <BUF0>.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0C::
-    db $ea, $f9, "G hatched", $f1
-    db "from the egg that", $fa, $f7
-    db $ef, $ee, "you put up for", $ef, $ee, "transfer.", $fa, $f7
-    db $ef, $ee, "Please name your", $ef, $ee, $f9, "G.", $f7
-    db $f0
+    db "<VOICE1><BUF1> hatched<LINE>"
+    db "from the egg that<PROMPT>"
+    db "<NEXT>you put up for"
+    db "<NEXT>transfer.<PROMPT>"
+    db "<NEXT>Please name your"
+    db "<NEXT><BUF1>.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0D::
-    db $ea, $f9, "G hatched", $f1
-    db "from the egg that", $fa, $f7
-    db $ef, $ee, "you were about to", $ef, $ee, "receive.", $fa, $f7
-    db $ef, $ee, $f9, "G went", $ef, $ee, "back to ", $f9, "0.", $f7
-    db $f0
+    db "<VOICE1><BUF1> hatched<LINE>"
+    db "from the egg that<PROMPT>"
+    db "<NEXT>you were about to"
+    db "<NEXT>receive.<PROMPT>"
+    db "<NEXT><BUF1> went"
+    db "<NEXT>back to <BUF0>.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0E::
-    db $ea, $f9, "0 received", $f1
-    db $f9, "G", $95, "s egg.", $fa, $f7
-    db $ef, $ee, "Please raise it", $ef, $ee, "with loving care.", $f7
-    db $f0
+    db "<VOICE1><BUF0> received<LINE>"
+    db "<BUF1>", $95, "s egg.<PROMPT>"
+    db "<NEXT>Please raise it"
+    db "<NEXT>with loving care.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_0F::
-    db $ea, "You have no eggs.", $f7
-    db $f0
+    db "<VOICE1>You have no eggs.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_12::
-    db $ea, "Please wait", $a4, $f0
+    db "<VOICE1>Please wait…@"
 
 String_F0_48B5_00_13::
-    db $ea, $f9, "m has no Dream", $f1
-    db "Egg to trade you.", $f7
-    db $f0
+    db "<VOICE1><BUF3> has no Dream<LINE>"
+    db "Egg to trade you.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_14::
-    db $ea, "There is no more", $f1
-    db "room for eggs.", $fa, $f7
-    db $ef, $ee, "Trading is not", $ef, $ee, "possible.", $f7
-    db $f0
+    db "<VOICE1>There is no more<LINE>"
+    db "room for eggs.<PROMPT>"
+    db "<NEXT>Trading is not"
+    db "<NEXT>possible.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_15::
-    db $ea, "You have an egg", $f1
-    db "already.", $fa, $f7
-    db $ef, $ee, "Trading is not", $ef, $ee, "possible.", $f7
-    db $f0
+    db "<VOICE1>You have an egg<LINE>"
+    db "already.<PROMPT>"
+    db "<NEXT>Trading is not"
+    db "<NEXT>possible.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_16::
-    db $ea, $f9, "m already has", $f1
-    db "a Dream Egg.", $f7
-    db $f0
+    db "<VOICE1><BUF3> already has<LINE>"
+    db "a Dream Egg.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_17::
-    db "GiftExit", $f0
+    db "GiftExit@"
 
 String_F0_48B5_00_1C::
-    db "Store  Get", $f0
+    db "Store  Get@"
 
 String_F0_48B5_00_1D::
-    db "Ally Store", $f0
+    db "Ally Store@"
 
 String_F0_48B5_00_1E::
-    db "InfoOK", $f0
+    db "InfoOK@"
 
 String_F0_48B5_00_1F::
-    db "YesNo", $f0
+    db "YesNo@"
 
 String_F0_48B5_00_20::
-    db "Choose what to", $f1
-    db "give the egg.", $f0
+    db "Choose what to<LINE>"
+    db "give the egg.@"
 
 String_F0_48B5_00_21::
-    db $f9, "W is in", $f1
-    db "front of the egg.", $f7
-    db $f0
+    db "<BUF2> is in<LINE>"
+    db "front of the egg.<WAIT>"
+    db "@"
 
 String_F0_48B5_00_22::
-    db $f9, "W can't be", $f1
-    db "given to an egg.", $f7
-    db $f0
+    db "<BUF2> can't be<LINE>"
+    db "given to an egg.<WAIT>"
+    db "@"
 
 RunLinkSession8Exchange_Case01_WriteTitleScreenState::
     ld a, $01
@@ -806,7 +822,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table2_Case07::
     ld [wScreenSubStep], a
     ld a, $04
     ld [wScreenState], a
-    ld a, $08 ; 'Please wait'
+    ld a, $08 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     ld a, $bd
     ld [wLinkSendByte], a
@@ -1249,7 +1265,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case05::
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $08 ; 'Please wait'
+    ld a, $08 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     ld hl, wScreenState
     inc [hl]
@@ -1261,7 +1277,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table4_Case05::
     ld [wScreenSubStep], a
     ld a, $04
     ld [wScreenState], a
-    ld a, $08 ; 'Please wait'
+    ld a, $08 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     ld a, $bd
     ld [wLinkSendByte], a
@@ -1617,7 +1633,7 @@ RunLinkSession8Exchange_Case01_Sub01_Table5_Case05::
     ret
 
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case06::
-    ld a, $12 ; 'Please wait'
+    ld a, $12 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     xor a
     ld [wScreenSubStep], a
@@ -2537,7 +2553,7 @@ RunLinkSession8Exchange_WaitForPartner::
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
 RunLinkSession8Exchange_WaitForPartner_ToBeginString_BankF0_Cat0AndStep::
-    ld a, $08 ; 'Please wait'
+    ld a, $08 ; 'Please wait…'
     call BeginString_BankF0_Cat0
     ld a, [wScreenStep]
     inc a

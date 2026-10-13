@@ -124,7 +124,7 @@ GameMode4_Init_Sub01_FillBytes::
     ld [wBattleSetupD8 + $2], a
     ld a, [wLinkMode]
     or a
-    jr nz, .set_battle_kind_flags_to_03
+    jr nz, .set_text_speed_to_03
     ld a, [wPartyCount]
     ld [wBattlePartyCount], a
     ld [wSide0Flag], a
@@ -134,13 +134,13 @@ GameMode4_Init_Sub01_FillBytes::
     ld [wSide1Flag], a
     ld a, [wBattleResultByte]
     ld [wBattleSetupDB], a
-    ld a, [wMenuSaveByte34]
-    ld [wBattleKindFlags], a
+    ld a, [wBattleTextSpeed]
+    ld [wTextSpeed], a
     jr .clear_link_rule_work57
 
-.set_battle_kind_flags_to_03:
+.set_text_speed_to_03:
     ld a, $03
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .call_game_mode4_init_count_battler_records

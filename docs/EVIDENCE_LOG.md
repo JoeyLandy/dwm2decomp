@@ -2431,6 +2431,42 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0336 — The text printer's commands; text in source as charmap tokens
+
+- Kind: READING of bank 0's text printer (00:$2620-$2D33) plus EMULATION (tools/sm83.py, our own emulator; not checked against hardware) of a farmhand's conversation (state s13 of E-0320) and a debug-menu battle (d06!, forced).
+- **The printer.** Each frame, StepTextPrinter (was StepStringDisplayUntilDone) runs PrintTextStep (was ..._AddHLToTextCursorTextCursorLo) with the string's bank mapped. It waits on a sound, a choice, a button, a delay or a timeout. Otherwise, once wTextGlyphTimer reaches the text speed, it takes the next byte:
+  - a glyph is drawn (DrawTextGlyph);
+  - $8D/$8E marks go to CallFunc28BDInBank1F;
+  - bytes $E0-$FF go to RunTextCommand, which jumps to entry byte - $E0 of a 32-entry table.
+- **The 32 commands** (each handler read; names in tools/gb_text.py TOKENS and src/charmap.inc):
+  - $E0-$E4 play a sound effect and wait until every channel is idle; $E5 the same for music.
+  - $E6, $E7 and $FF open the yes/no choice (OpenTextChoice, was AcknowledgeTextPrompt), with the cursor on yes, on no ($E7) or without the confirm sound ($E6).
+  - $E8 x, y moves the glyph cursor; $E9 id plays a sound without waiting ($FF restarts the map music).
+  - $EA and $EB turn the speech beep on with sound $6B or $6A; $FD and $FE turn it on and off.
+  - $EC pauses for a time from the text speed: 6, 12, 20, 26, 32, 40 or 48 frames from the table at $2A66, or a button at speed 7.
+  - $ED prints at once until a wait; $F4 ends that and $F5; $F5 prints without the per-glyph wait.
+  - $EF $EE is the next line: on the first line $EF moves to the second and skips the $EE; on the second it scrolls the line up, waits 4 frames, and $EE clears the new line.
+  - $F0 ends the text, or an inserted text (back to the saved position).
+  - $F1 starts the next line without scrolling; $F2 clears the window (FillTilesFromRequest fills it with the blank pattern at $2940) and goes to the first line; $F3 goes to the first line.
+  - $F6 prints the player's name; $F9 n prints the $F0-terminated text at wTextBuf0 + n.
+  - $F7 waits for a button; $FA shows the blinking arrow (tiles $BD/$B4) while it waits.
+  - $F8 n sets frames per glyph; $FB n waits n frames or a button; $FC n waits n frames.
+- **Observed (C2).**
+  - Glyphs printed back to back come wTextSpeed frames apart, sometimes one more: speed 0 and 1 give 1-2, speed 2 gives 2-3, speed 6 gives 6-7.
+  - The printer stops at $FA $F7 and holds for 200 frames without input; after A it goes on.
+  - $EF is followed by $EE 4 or more frames later.
+  - In the battle, 29 inserts at offsets $00 and $10 printed exactly the text in wTextBuf0 and wTextBuf1 at that moment. Where the other slot held different text, the glyphs never matched it.
+- **RAM names.**
+  - $C964 is the text speed: renamed wTextSpeed (was wBattleKindFlags). A new game sets 1, battle set-up copies $C834 into it (3 in a link battle), and battle end sets 1 again.
+  - $C834 is renamed wBattleTextSpeed (was wMenuSaveByte34). It is C1: probably the battle message speed setting; a new game sets it to 4.
+  - $C54F is renamed wTextGlyphTimer (was wTextLineCount). It counts frames since the last glyph, not lines.
+- **Glyphs from the font** (bank $1F, 8 one-bit rows per glyph at $4010 + 16 * glyph, the odd bytes): $A4 is "…" (952 uses in text), $A0 "(", $A1 ")", $A2 "+", $9D "~", $9E "/", $AC "★", $B8 "©" (C2). Icon glyphs ($50-$5D, $44, $9F) stay $XX.
+- **Source.** tools/gb_text.py renders text with these tokens: `db "<VOICE1>Cobi: <BUF0>!<LINE>"`, `db "Blaze@"`, with an argument byte as `$xx` after its token. Pairs come first (<NEXT>, <PROMPT>, <BUF0>-<BUF3>, <MAP_MUSIC>). A line starts before <NEXT>, <CLEAR> and <HOME>, and ends after <LINE>, <WAIT>, <PROMPT>, @ and a choice. Bytes are unchanged (render and parse round-trip).
+- **Tests.**
+  - tests/test_text.py checks the tokens, pairs, arguments and line breaks, and that every byte $E0-$FF has exactly one token and no character shares one.
+  - tests/test_text_check.py (about 2 minutes) checks the glyph timing per speed (with a fast/slow control), the wait, the <NEXT> pause and the inserts (with the other-slot control).
+- Binary verification: build/run475 PASS, 0 differing bytes.
+
 ### E-0335 — Cobi's monster swap: drop off and pick up
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), forced: Script_1F_5A3A is started by its RAM bytes on Main Street.

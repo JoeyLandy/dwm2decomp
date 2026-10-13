@@ -1314,7 +1314,7 @@
   },
   "C52B": {
     "name": "wTextFlags",
-    "note": "string display flags: non-zero makes the VBlank handler step the text (StepStringDisplayUntilDone); bit 1 and bit 2 mark stages",
+    "note": "string display flags: non-zero makes the VBlank handler step the text (StepTextPrinter); bit 1 <FAST>, bit 2 waiting for a button or choice, bit 3 <SPEED>, bit 4 inside an inserted text, bit 5 arrow shown, bit 6 <WAIT_OR_BUTTON>, bit 7 a delay (E-0336)",
     "evidence": "E-0133"
   },
   "C52C": {
@@ -1398,9 +1398,9 @@
     "evidence": "E-0133"
   },
   "C54F": {
-    "name": "wTextLineCount",
-    "note": "lines drawn since the window was cleared",
-    "evidence": "E-0133"
+    "name": "wTextGlyphTimer",
+    "note": "frames since the last glyph; the next is drawn once it reaches the text speed, and it is reset then (E-0336; was wTextLineCount)",
+    "evidence": "E-0133; E-0336"
   },
   "C550": {
     "name": "wTextLastChar",
@@ -1409,7 +1409,7 @@
   },
   "C552": {
     "name": "wTextYesNoResult",
-    "note": "result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByTextYesNoResult branches on it",
+    "note": "result of a text yes/no prompt (0 = first choice); OpenTextChoice clears it, StartChoiceMessageByTextYesNoResult branches on it",
     "evidence": "E-0133"
   },
   "C554": {
@@ -2012,9 +2012,9 @@
     "evidence": "E-0133"
   },
   "C834": {
-    "name": "wMenuSaveByte34",
-    "note": "pause-menu byte kept in the save data",
-    "evidence": "E-0133"
+    "name": "wBattleTextSpeed",
+    "note": "kept in the save data; battle set-up copies it into wTextSpeed (a new game sets 4) (E-0336, C1: probably the battle message speed setting; was wMenuSaveByte34)",
+    "evidence": "E-0133; E-0336"
   },
   "C835": {
     "name": "wBattleResultByte",
@@ -2614,9 +2614,9 @@
     "evidence": "E-0134"
   },
   "C964": {
-    "name": "wBattleKindFlags",
-    "note": "battle kind flags set at battle set-up and end",
-    "evidence": "E-0134"
+    "name": "wTextSpeed",
+    "note": "the text speed: frames between glyphs (0 acts as 1) and the <PAUSE> length; 7 makes <PAUSE> wait for a button. A new game sets 1, battle set-up copies wBattleTextSpeed (3 in a link battle), battle end sets 1 again (C2 from E-0336: glyphs come wTextSpeed frames apart in tools/text_check.py; was wBattleKindFlags)",
+    "evidence": "E-0134; E-0336"
   },
   "C965": {
     "name": "wScriptByte65",
@@ -4969,7 +4969,7 @@
   },
   "C53F": {
     "name": "wPlayerNameText",
-    "note": "the player name copied with a $F0 terminator for text output (StepStringDisplayUntilDone_Sub01_Sub02_Case16)",
+    "note": "the player name copied with a $F0 terminator for text output (TextCmd_Player, <PLAYER>)",
     "evidence": "E-0137"
   },
   "C570": {

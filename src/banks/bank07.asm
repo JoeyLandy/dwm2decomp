@@ -104,282 +104,287 @@ StringList_07_408C::
     dw String_07_06_08 ; id 8
 
 String_07_00_00::
-    db "ENIX", $f0
+    db "ENIX@"
 
 String_07_00_01::
-    db "DRAGON WARRIOR", $f1
-    db "   MONSTERS 2 ", $f0
+    db "DRAGON WARRIOR<LINE>"
+    db "   MONSTERS 2 @"
 
 String_07_00_02::
     db "CONTINUE NEW GAME BREEDING KEY TRADEVS MODE  TEAM MODETERRY "
-    db "   ", $f0
+    db "   @"
 
 String_07_00_03::
-    db "Saved data has", $f1
-    db "been lost.", $f7
-    db $f0
+    db "Saved data has<LINE>"
+    db "been lost.<WAIT>"
+    db "@"
 
 String_07_00_04::
-    db "Master", $f0
+    db "Master@"
 
 String_07_00_05::
-    db "Game Link", $f1
-    db "is not ready.", $fa, $f7
-    db $f2, "Please check", $f1
-    db "and try again.", $f7
-    db $f0
+    db "Game Link<LINE>"
+    db "is not ready.<PROMPT>"
+    db "<CLEAR>Please check<LINE>"
+    db "and try again.<WAIT>"
+    db "@"
 
 String_07_00_06::
-    db "DREAM EGG", $f0
+    db "DREAM EGG@"
 
 String_07_00_07::
-    db "Game Link cannot", $f1
-    db "be used with", $fa, $f7
-    db $f2, "Super Game Boy.", $f7
-    db $f0
+    db "Game Link cannot<LINE>"
+    db "be used with<PROMPT>"
+    db "<CLEAR>Super Game Boy.<WAIT>"
+    db "@"
 
 String_07_01_00::
-    db "DuoOwnWL:", $f0
+    db "DuoOwnWL:@"
 
 String_07_01_01::
-    db "Yes", $f0
+    db "Yes@"
 
 String_07_01_02::
-    db "Kill A", $f1
-    db $e8, "71Next B", $f0
+    db "Kill A<LINE>"
+    db "<CURSOR>", $07, $01, "Next B@"
 
 String_07_01_03::
-    db "RESULTSDuoW", $a2, "LevelTurnsWin", $92, "RankOwnWDuoLOwnL", $f0
+    db "RESULTSDuoW+LevelTurnsWin", $92, "RankOwnWDuoLOwnL@"
 
 String_07_01_04::
-    db "GFDEBCAS", $f0
+    db "GFDEBCAS@"
 
 String_07_01_05::
-    db "GFEDCBAS", $f0
+    db "GFEDCBAS@"
 
 String_07_02_00::
-    db "Trade keys.", $f0
+    db "Trade keys.@"
 
 String_07_03_00::
-    db "FREE BATTLE", $f1
-    db "ENIX RULES ", $f1
-    db "LOCAL RULES", $f1
-    db "EXIT       ", $f0
+    db "FREE BATTLE<LINE>"
+    db "ENIX RULES <LINE>"
+    db "LOCAL RULES<LINE>"
+    db "EXIT       @"
 
 String_07_03_01::
-    db "ABEFILNORSTXYaceghiklmnrtuvxyKMDposb", $f0
+    db "ABEFILNORSTXYaceghiklmnrtuvxyKMDposb@"
 
 String_07_03_02::
-    db "Refused the VS", $f1
-    db "battle.", $f0
+    db "Refused the VS<LINE>"
+    db "battle.@"
 
 String_07_03_03::
-    db "The VS battle was", $f1
-    db "refused.", $f0
+    db "The VS battle was<LINE>"
+    db "refused.@"
 
 String_07_03_04::
-    db "Choosing rules.", $f1
-    db "Please wait.", $f0
+    db "Choosing rules.<LINE>"
+    db "Please wait.@"
 
 String_07_03_05::
-    db "Receiving rules.", $f1
-    db "Please wait.", $f0
+    db "Receiving rules.<LINE>"
+    db "Please wait.@"
 
 String_07_03_06::
-    db "Confirming rules.", $f1
-    db "Please wait.", $f0
+    db "Confirming rules.<LINE>"
+    db "Please wait.@"
 
 String_07_04_00::
-    db "Play the boy's", $f1
-    db "adventure?", $ff, $f0
+    db "Play the boy's<LINE>"
+    db "adventure?<CHOICE>"
+    db "@"
 
 String_07_04_01::
-    db "Enter the boy's", $f1
-    db "name.", $fa, $f7
-    db $f0
+    db "Enter the boy's<LINE>"
+    db "name.<PROMPT>"
+    db "@"
 
 String_07_04_02::
-    db "Enter the girl's", $f1
-    db "name.", $fa, $f7
-    db $f0
+    db "Enter the girl's<LINE>"
+    db "name.<PROMPT>"
+    db "@"
 
 String_07_05_00::
-    db "Not enough money.", $f1
-    db "Please wait.", $f0
+    db "Not enough money.<LINE>"
+    db "Please wait.@"
 
 String_07_05_01::
-    db "Your pal doesn't", $f1
-    db "have enough gold.", $fa, $f7
-    db $f2, "Will you pay the", $f1
-    db "1000G battle fee?", $ff, $f0
+    db "Your pal doesn't<LINE>"
+    db "have enough gold.<PROMPT>"
+    db "<CLEAR>Will you pay the<LINE>"
+    db "1000G battle fee?<CHOICE>"
+    db "@"
 
 String_07_05_02::
-    db "You paid for both", $f1
-    db "combatants.", $f0
+    db "You paid for both<LINE>"
+    db "combatants.@"
 
 String_07_05_03::
-    db "Your pal paid your", $f1
-    db "battle fee.", $f0
+    db "Your pal paid your<LINE>"
+    db "battle fee.@"
 
 String_07_05_04::
-    db "Insufficient gold", $f1
-    db "for Team Mode.", $f0
+    db "Insufficient gold<LINE>"
+    db "for Team Mode.@"
 
 String_07_05_05::
-    db "You refused to pay", $f1
-    db "the battle fee for", $fa, $f7
-    db $f2, "your pal.", $f0
+    db "You refused to pay<LINE>"
+    db "the battle fee for<PROMPT>"
+    db "<CLEAR>your pal.@"
 
 String_07_05_06::
-    db "Your pal refused", $f1
-    db "to pay the battle", $fa, $f7
-    db $f2, "fee for you.", $f0
+    db "Your pal refused<LINE>"
+    db "to pay the battle<PROMPT>"
+    db "<CLEAR>fee for you.@"
 
 String_07_05_07::
-    db "You paid the 1000G", $f1
-    db "battle fee.", $fa, $f7
-    db $f2, "You can now battle", $f1
-    db "in Team Mode.", $f0
+    db "You paid the 1000G<LINE>"
+    db "battle fee.<PROMPT>"
+    db "<CLEAR>You can now battle<LINE>"
+    db "in Team Mode.@"
 
 String_07_05_08::
-    db "Choose a monster", $f1
-    db "for the Team Mode.", $f0
+    db "Choose a monster<LINE>"
+    db "for the Team Mode.@"
 
 String_07_05_09::
-    db "You refused the", $f1
-    db "Team Mode.", $f0
+    db "You refused the<LINE>"
+    db "Team Mode.@"
 
 String_07_05_0A::
-    db "Your pal refused", $f1
-    db "the Team Mode.", $f0
+    db "Your pal refused<LINE>"
+    db "the Team Mode.@"
 
 String_07_05_0B::
-    db "Send your monster", $f1
-    db "into battle?", $f0
+    db "Send your monster<LINE>"
+    db "into battle?@"
 
 String_07_05_0C::
-    db "Please wait.", $f0
+    db "Please wait.@"
 
 String_07_05_0D::
-    db "Battle in Team", $f1
-    db "Mode?", $f0
+    db "Battle in Team<LINE>"
+    db "Mode?@"
 
 String_07_05_0E::
-    db "The battle results", $f1
-    db "will be recorded.", $fa, $f7
-    db $f2, "Is that OK?", $ff, $f0
+    db "The battle results<LINE>"
+    db "will be recorded.<PROMPT>"
+    db "<CLEAR>Is that OK?<CHOICE>"
+    db "@"
 
 String_07_05_0F::
-    db "In Team Mode, you", $f1
-    db "both have won.", $fa, $f7
-    db $f0
+    db "In Team Mode, you<LINE>"
+    db "both have won.<PROMPT>"
+    db "@"
 
 String_07_05_10::
-    db "In Team Mode, you", $f1
-    db "alone won.", $fa, $f7
-    db $f0
+    db "In Team Mode, you<LINE>"
+    db "alone won.<PROMPT>"
+    db "@"
 
 String_07_05_11::
-    db "In Team Mode, you", $f1
-    db "both lost.", $e5, "'v", $fa, $f7
-    db $f0
+    db "In Team Mode, you<LINE>"
+    db "both lost.<MUSIC_WAIT>", $42, "<PROMPT>"
+    db "@"
 
 String_07_05_12::
-    db "In Team Mode, you", $f1
-    db "alone lost.", $fa, $f7
-    db $f0
+    db "In Team Mode, you<LINE>"
+    db "alone lost.<PROMPT>"
+    db "@"
 
 String_07_05_13::
-    db $f6, " obtained an", $f1
-    db "egg of ", $f9, "0.", $fa, $f7
-    db $f0
+    db "<PLAYER> obtained an<LINE>"
+    db "egg of <BUF0>.<PROMPT>"
+    db "@"
 
 String_07_05_14::
-    db $f9, "0's ", $f9, "G", $f1
-    db "rose by ", $f9, "W.", $fa, $f7
-    db $f0
+    db "<BUF0>'s <BUF1><LINE>"
+    db "rose by <BUF2>.<PROMPT>"
+    db "@"
 
 String_07_05_15::
-    db $f9, "0's ", $f9, "G", $f1
-    db "fell by ", $f9, "W.", $fa, $f7
-    db $f0
+    db "<BUF0>'s <BUF1><LINE>"
+    db "fell by <BUF2>.<PROMPT>"
+    db "@"
 
 String_07_05_16::
-    db $f6, " received", $f1
-    db $f9, "WG.", $f0
+    db "<PLAYER> received<LINE>"
+    db "<BUF2>G.@"
 
 String_07_05_17::
-    db "There is no room", $f1
-    db "for more monsters.", $fa, $f7
-    db $f2, "Switch it with", $f1
-    db "another monster?", $ff, $f0
+    db "There is no room<LINE>"
+    db "for more monsters.<PROMPT>"
+    db "<CLEAR>Switch it with<LINE>"
+    db "another monster?<CHOICE>"
+    db "@"
 
 String_07_05_18::
-    db "With no room for", $f1
-    db "it , ", $f9, "0 was", $fa, $f7
-    db $f2, "released in the", $f1
-    db "wild.", $f0
+    db "With no room for<LINE>"
+    db "it , <BUF0> was<PROMPT>"
+    db "<CLEAR>released in the<LINE>"
+    db "wild.@"
 
 String_07_05_19::
-    db "For Team Mode,", $f1
-    db "1000G is charged.", $fa, $f7
-    db $f2, "Will you pay this", $f1
-    db "fee?", $ff, $f0
+    db "For Team Mode,<LINE>"
+    db "1000G is charged.<PROMPT>"
+    db "<CLEAR>Will you pay this<LINE>"
+    db "fee?<CHOICE>"
+    db "@"
 
 String_07_05_1A::
-    db "Saving", $a4, $f1
-    db "Please wait.", $f0
+    db "Saving…<LINE>"
+    db "Please wait.@"
 
 String_07_06_00::
-    db "Team Mode battle", $f1
-    db "No. 1!", $fa, $f7
-    db $f0
+    db "Team Mode battle<LINE>"
+    db "No. 1!<PROMPT>"
+    db "@"
 
 String_07_06_01::
-    db "Team Mode battle", $f1
-    db "No. 2!", $fa, $f7
-    db $f0
+    db "Team Mode battle<LINE>"
+    db "No. 2!<PROMPT>"
+    db "@"
 
 String_07_06_02::
-    db "Team Mode final", $f1
-    db "battle!", $fa, $f7
-    db $f0
+    db "Team Mode final<LINE>"
+    db "battle!<PROMPT>"
+    db "@"
 
 String_07_06_03::
-    db "The first monster", $f1
-    db "is ", $f9, "0!", $fa, $f7
-    db $f0
+    db "The first monster<LINE>"
+    db "is <BUF0>!<PROMPT>"
+    db "@"
 
 String_07_06_04::
-    db "The second monster", $f1
-    db "is ", $f9, "0!", $fa, $f7
-    db $f0
+    db "The second monster<LINE>"
+    db "is <BUF0>!<PROMPT>"
+    db "@"
 
 String_07_06_05::
-    db "The third monster", $f1
-    db "is ", $f9, "0!", $fa, $f7
-    db $f0
+    db "The third monster<LINE>"
+    db "is <BUF0>!<PROMPT>"
+    db "@"
 
 String_07_06_06::
-    db "Congratulations", $f1
-    db "for your victory!", $fa, $f7
-    db $f2, "You've cleared", $f1
-    db "Round 1!", $fa, $f7
-    db $f0
+    db "Congratulations<LINE>"
+    db "for your victory!<PROMPT>"
+    db "<CLEAR>You've cleared<LINE>"
+    db "Round 1!<PROMPT>"
+    db "@"
 
 String_07_06_07::
-    db "Congratulations", $f1
-    db "for your victory!", $fa, $f7
-    db $f2, "There's just one", $f1
-    db "round to go!", $fa, $f7
-    db $f0
+    db "Congratulations<LINE>"
+    db "for your victory!<PROMPT>"
+    db "<CLEAR>There's just one<LINE>"
+    db "round to go!<PROMPT>"
+    db "@"
 
 String_07_06_08::
-    db "Congratulations", $f1
-    db "for your victory!", $fa, $f7
-    db $f2, "You've won the", $f1
-    db "tournament!", $e5, "0", $e4, $7e, $fa, $f7
-    db $f0
+    db "Congratulations<LINE>"
+    db "for your victory!<PROMPT>"
+    db "<CLEAR>You've won the<LINE>"
+    db "tournament!<MUSIC_WAIT>", $00, "<SFX_WAIT>", $7e, "<PROMPT>"
+    db "@"
 
 ; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles
 ; and a victory screen when forced (E-0029)
@@ -580,9 +585,9 @@ GameMode5_Init_InitSoundHardware::
     xor a
     ld [rRAMG], a
     ld a, $04
-    ld [wMenuSaveByte34], a
+    ld [wBattleTextSpeed], a
     ld a, $01
-    ld [wBattleKindFlags], a
+    ld [wTextSpeed], a
     ld b, $46
     ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1

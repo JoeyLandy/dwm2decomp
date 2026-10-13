@@ -5015,7 +5015,7 @@ PauseMenu_Skills_UseFieldSkill_ShowHeroReturnedWithAn::
 
 .set_string_index_to_10:
     ld a, $10
-    ld [wStringIndex], a ; '0 came back with nothing'
+    ld [wStringIndex], a ; '0 came back with nothing…'
 
 .set_string_category_to_01:
     ld a, $01
@@ -6471,7 +6471,7 @@ PauseMenu_Plan_Blocks21And2C::
 PauseMenu_Plan_Blocks21And2C_LoadScreenBlock21CursorAnd2CAndStep::
     call LoadScreenBlock21CursorAnd2C
     call CopyTileBufferToBGMap
-    ld a, [wMenuSaveByte34]
+    ld a, [wBattleTextSpeed]
     ld [wMenuCursor], a
     ld hl, wTemp1
     inc [hl]
@@ -6485,7 +6485,7 @@ PauseMenu_Plan_Blocks21And2C_QueueSoundEffect::
     call QueueSoundEffect
     ld a, [wMenuCursor]
     and $07
-    ld [wMenuSaveByte34], a
+    ld [wBattleTextSpeed], a
     jr .clear_temp0
 
 .check_bit1:
@@ -8071,7 +8071,7 @@ ShowString2Bank09InWindowThenDefault::
     ld a, $00
     ld [wStringCategory], a
     ld a, $02
-    ld [wStringIndex], a ; 'RJadlnoprtuxy-fWATUCHPMDcgimhw Dcgimh'
+    ld [wStringIndex], a ; 'RJadlnoprtuxy-fWATUCHPMDcgimhw Dcgimh ★'
     farcall ShowString_Bank09
     ld hl, vTiles1
     ld a, l

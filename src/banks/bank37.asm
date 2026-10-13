@@ -108,455 +108,455 @@ StringList_37_4086::
     dw RunLinkSession5Exchange_Case01_WaitFadeState ; id 31
 
 String_37_00_00::
-    db "The ", $f9, "W", $f1
-    db "shattered!", $f7
-    db $f0
+    db "The <BUF2><LINE>"
+    db "shattered!<WAIT>"
+    db "@"
 
 String_37_00_01::
-    db $f9, "0 tried using", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> tried using<LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_02::
-    db "But nothing", $f1
-    db "happened!", $f7
-    db $f0
+    db "But nothing<LINE>"
+    db "happened!<WAIT>"
+    db "@"
 
 String_37_00_03::
-    db $f9, "0 used the", $f1
-    db $f9, "W on", $f7
-    db $f2, $f9, "G!", $f7
-    db $f0
+    db "<BUF0> used the<LINE>"
+    db "<BUF2> on<WAIT>"
+    db "<CLEAR><BUF1>!<WAIT>"
+    db "@"
 
 String_37_00_04::
-    db $f9, "G's wounds", $f1
-    db "were healed!", $f7
-    db $f0
+    db "<BUF1>'s wounds<LINE>"
+    db "were healed!<WAIT>"
+    db "@"
 
 String_37_00_05::
-    db $f9, "0 held aloft", $f1
-    db "the ", $f9, "W!", $f7
-    db $f0
+    db "<BUF0> held aloft<LINE>"
+    db "the <BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_06::
-    db $f9, "0 scattered", $f1
-    db "the ", $f9, "W!", $f7
-    db $f0
+    db "<BUF0> scattered<LINE>"
+    db "the <BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_07::
-    db $f9, "G", $f1
-    db "regained MP.", $f7
-    db $f0
+    db "<BUF1><LINE>"
+    db "regained MP.<WAIT>"
+    db "@"
 
 String_37_00_08::
-    db $f9, "G was cured of", $f1
-    db "poison.", $f7
-    db $f0
+    db "<BUF1> was cured of<LINE>"
+    db "poison.<WAIT>"
+    db "@"
 
 String_37_00_09::
-    db $f9, "G was cured of", $f1
-    db "paralysis.", $f7
-    db $f0
+    db "<BUF1> was cured of<LINE>"
+    db "paralysis.<WAIT>"
+    db "@"
 
 String_37_00_0A::
-    db $f9, "G snapped", $f1
-    db "out of confusion.", $f7
-    db $f0
+    db "<BUF1> snapped<LINE>"
+    db "out of confusion.<WAIT>"
+    db "@"
 
 String_37_00_0B::
-    db $f9, "G was", $f1
-    db "uncursed.", $f7
-    db $f0
+    db "<BUF1> was<LINE>"
+    db "uncursed.<WAIT>"
+    db "@"
 
 String_37_00_0C::
-    db $f9, "G woke up.", $f7
-    db $f0
+    db "<BUF1> woke up.<WAIT>"
+    db "@"
 
 String_37_00_0D::
-    db $f9, "G came", $f1
-    db "back to life.", $f7
-    db $f0
+    db "<BUF1> came<LINE>"
+    db "back to life.<WAIT>"
+    db "@"
 
 String_37_00_0E::
-    db $f9, "G's max.HP", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s max.HP<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_0F::
-    db $f9, "G's max.MP", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s max.MP<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_10::
-    db $f9, "G's ATK", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s ATK<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_11::
-    db $f9, "G's DEF", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s DEF<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_12::
-    db $f9, "G's AGL", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s AGL<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_13::
-    db $f9, "G's INT", $f1
-    db "rose by ", $f9, "m!", $f7
-    db $f0
+    db "<BUF1>'s INT<LINE>"
+    db "rose by <BUF3>!<WAIT>"
+    db "@"
 
 String_37_00_14::
-    db $f9, "0 gave ", $f9, "G", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> gave <BUF1><LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_15::
-    db $f9, "G happily ate", $f1
-    db "the treat.", $f7
-    db $f2, $f9, "G's affection", $f1
-    db "for ", $f6, " rose!", $f7
-    db $f0
+    db "<BUF1> happily ate<LINE>"
+    db "the treat.<WAIT>"
+    db "<CLEAR><BUF1>'s affection<LINE>"
+    db "for <PLAYER> rose!<WAIT>"
+    db "@"
 
 String_37_00_16::
-    db $f9, "G fearfully", $f1
-    db "ate the foul mess.", $f7
-    db $f2, $f9, "G glared with", $f1
-    db "a sour expression.", $f7
-    db $f2, $f9, "G became", $f1
-    db "poisoned.", $f7
-    db $f0
+    db "<BUF1> fearfully<LINE>"
+    db "ate the foul mess.<WAIT>"
+    db "<CLEAR><BUF1> glared with<LINE>"
+    db "a sour expression.<WAIT>"
+    db "<CLEAR><BUF1> became<LINE>"
+    db "poisoned.<WAIT>"
+    db "@"
 
 String_37_00_17::
-    db $f9, "0 held aloft", $f1
-    db "the ", $f9, "W!", $f7
-    db $f0
+    db "<BUF0> held aloft<LINE>"
+    db "the <BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_18::
-    db $f9, "0 tossed the", $f1
-    db $f9, "W up.", $f7
-    db $f0
+    db "<BUF0> tossed the<LINE>"
+    db "<BUF2> up.<WAIT>"
+    db "@"
 
 String_37_00_19::
-    db $f9, "0 used the", $f1
-    db $f9, "W!", $f7
-    db $f0
+    db "<BUF0> used the<LINE>"
+    db "<BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_1A::
-    db $f9, "0 read ", $f9, "G", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> read <BUF1><LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_1B::
-    db "A stirring tale of", $f1
-    db "honor, sacrifice", $f7
-    db $f2, "and heroism made", $f1
-    db $f9, "G brave.", $f7
-    db $f0
+    db "A stirring tale of<LINE>"
+    db "honor, sacrifice<WAIT>"
+    db "<CLEAR>and heroism made<LINE>"
+    db "<BUF1> brave.<WAIT>"
+    db "@"
 
 String_37_00_1C::
-    db "A bloodcurdling", $f1
-    db "tale of horror", $f7
-    db $f2, "turned ", $f9, "G", $f1
-    db "cowardly.", $f7
-    db $f0
+    db "A bloodcurdling<LINE>"
+    db "tale of horror<WAIT>"
+    db "<CLEAR>turned <BUF1><LINE>"
+    db "cowardly.<WAIT>"
+    db "@"
 
 String_37_00_1D::
-    db "A heartwarming", $f1
-    db "tale of selfless", $f7
-    db $f2, "compassion made", $f1
-    db $f9, "G kind.", $f7
-    db $f0
+    db "A heartwarming<LINE>"
+    db "tale of selfless<WAIT>"
+    db "<CLEAR>compassion made<LINE>"
+    db "<BUF1> kind.<WAIT>"
+    db "@"
 
 String_37_00_1E::
-    db "A shameless tale", $f1
-    db "of greed, lies and", $f7
-    db $f2, "deception made", $f1
-    db $f9, "G sly.", $f7
-    db $f0
+    db "A shameless tale<LINE>"
+    db "of greed, lies and<WAIT>"
+    db "<CLEAR>deception made<LINE>"
+    db "<BUF1> sly.<WAIT>"
+    db "@"
 
 String_37_00_1F::
-    db "A practical guide", $f1
-    db "on thinking in a", $f7
-    db $f2, "rational manner", $f1
-    db "made ", $f9, "G smart.", $f7
-    db $f0
+    db "A practical guide<LINE>"
+    db "on thinking in a<WAIT>"
+    db "<CLEAR>rational manner<LINE>"
+    db "made <BUF1> smart.<WAIT>"
+    db "@"
 
 String_37_00_20::
-    db "A hilarious tale", $f1
-    db "made ", $f9, "G simple.", $f7
-    db $f0
+    db "A hilarious tale<LINE>"
+    db "made <BUF1> simple.<WAIT>"
+    db "@"
 
 String_37_00_21::
-    db $f6, " held aloft", $f1
-    db "the ", $f9, "W!", $f7
-    db $f0
+    db "<PLAYER> held aloft<LINE>"
+    db "the <BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_22::
-    db "The Orb glowed", $f1
-    db "with a warm light.", $f7
-    db $f0
+    db "The Orb glowed<LINE>"
+    db "with a warm light.<WAIT>"
+    db "@"
 
 String_37_00_23::
-    db "The presence of", $f1
-    db "monsters faded.", $f7
-    db $f0
+    db "The presence of<LINE>"
+    db "monsters faded.<WAIT>"
+    db "@"
 
 String_37_00_24::
-    db $f9, "0 strummed", $f1
-    db "the ", $f9, "W!", $f7
-    db $f0
+    db "<BUF0> strummed<LINE>"
+    db "the <BUF2>!<WAIT>"
+    db "@"
 
 String_37_00_25::
-    db "Want to record", $f1
-    db "your journey?", $f0
+    db "Want to record<LINE>"
+    db "your journey?@"
 
 String_37_00_26::
-    db "Your progress has", $f1
-    db "been recorded.", $f7
-    db $f0
+    db "Your progress has<LINE>"
+    db "been recorded.<WAIT>"
+    db "@"
 
 String_37_00_27::
-    db $f9, "G equipped", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF1> equipped<LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_28::
-    db $f9, "m's wounds", $f1
-    db "were healed.", $f7
-    db $f0
+    db "<BUF3>'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "@"
 
 String_37_00_29::
-    db $f9, "m's wounds", $f1
-    db "were healed.", $f7
-    db $f2, $f9, "'r's wounds", $f1
-    db "were healed.", $f7
-    db $f0
+    db "<BUF3>'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "<CLEAR><BUF>", $40, "'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "@"
 
 String_37_00_2A::
-    db $f9, "m's wounds", $f1
-    db "were healed.", $f7
-    db $f2, $f9, "'r's wounds", $f1
-    db "were healed.", $f7
-    db $f2, $f9, $50, "'s wounds", $f1
-    db "were healed.", $f7
-    db $f0
+    db "<BUF3>'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "<CLEAR><BUF>", $40, "'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "<CLEAR><BUF>", $50, "'s wounds<LINE>"
+    db "were healed.<WAIT>"
+    db "@"
 
 String_37_00_2B::
-    db $f9, "0 gripped", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> gripped<LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_2C::
-    db "The MarkStaff", $f1
-    db "was sensed at", $f7
-    db $f2, $f9, "0: ", $f9, "G and", $f1
-    db $f9, "W: ", $f9, "m.", $f7
-    db $f0
+    db "The MarkStaff<LINE>"
+    db "was sensed at<WAIT>"
+    db "<CLEAR><BUF0>: <BUF1> and<LINE>"
+    db "<BUF2>: <BUF3>.<WAIT>"
+    db "@"
 
 String_37_00_2D::
-    db "The MarkStaff was", $f1
-    db "not sensed.", $f7
-    db $f2, "It doesn't appear", $f1
-    db "to have been used.", $f7
-    db $f0
+    db "The MarkStaff was<LINE>"
+    db "not sensed.<WAIT>"
+    db "<CLEAR>It doesn't appear<LINE>"
+    db "to have been used.<WAIT>"
+    db "@"
 
 String_37_00_2E::
-    db $f9, "0 put down", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> put down<LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_2F::
-    db "The Guide Bell's", $f1
-    db "clear note echoed!", $f7
-    db $f0
+    db "The Guide Bell's<LINE>"
+    db "clear note echoed!<WAIT>"
+    db "@"
 
 String_37_00_30::
-    db $f9, "0 gave ", $f9, "G", $f1
-    db "the ", $f9, "W.", $f7
-    db $f0
+    db "<BUF0> gave <BUF1><LINE>"
+    db "the <BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_31::
-    db $f9, "G switched its", $f1
-    db $f9, "m with the", $f7
-    db $f2, $f9, "W.", $f7
-    db $f0
+    db "<BUF1> switched its<LINE>"
+    db "<BUF3> with the<WAIT>"
+    db "<CLEAR><BUF2>.<WAIT>"
+    db "@"
 
 String_37_00_32::
-    db $a4, "But that monster", $f1
-    db "is dead", $a4, $f7
-    db $f0
+    db "…But that monster<LINE>"
+    db "is dead…<WAIT>"
+    db "@"
 
 String_37_00_33::
-    db $f9, "m was", $f1
-    db "uncursed.", $f7
-    db $f0
+    db "<BUF3> was<LINE>"
+    db "uncursed.<WAIT>"
+    db "@"
 
 String_37_00_34::
-    db $f9, "m was", $f1
-    db "uncursed.", $f7
-    db $f2, $f9, "'r was", $f1
-    db "uncursed.", $f7
-    db $f0
+    db "<BUF3> was<LINE>"
+    db "uncursed.<WAIT>"
+    db "<CLEAR><BUF>", $40, " was<LINE>"
+    db "uncursed.<WAIT>"
+    db "@"
 
 String_37_00_35::
-    db $f9, "m was", $f1
-    db "uncursed.", $f7
-    db $f2, $f9, "'r was", $f1
-    db "uncursed.", $f7
-    db $f2, $f9, $50, " was", $f1
-    db "uncursed.", $f7
-    db $f0
+    db "<BUF3> was<LINE>"
+    db "uncursed.<WAIT>"
+    db "<CLEAR><BUF>", $40, " was<LINE>"
+    db "uncursed.<WAIT>"
+    db "<CLEAR><BUF>", $50, " was<LINE>"
+    db "uncursed.<WAIT>"
+    db "@"
 
 String_37_01_00::
-    db $f9, "0 cast", $f1
-    db $f9, "W!", $f7
-    db $f0
+    db "<BUF0> cast<LINE>"
+    db "<BUF2>!<WAIT>"
+    db "@"
 
 String_37_01_01::
-    db $f9, "0 whistled!", $f7
-    db $f0
+    db "<BUF0> whistled!<WAIT>"
+    db "@"
 
 String_37_01_02::
-    db $f9, "0 released its", $f1
-    db "Pheromone.", $f7
-    db $f0
+    db "<BUF0> released its<LINE>"
+    db "Pheromone.<WAIT>"
+    db "@"
 
 String_37_01_03::
-    db $f9, "0 scanned the", $f1
-    db "surroundings.", $fa, $f7
-    db $f0
+    db "<BUF0> scanned the<LINE>"
+    db "surroundings.<PROMPT>"
+    db "@"
 
 String_37_01_04::
-    db $f6, " asked ", $f9, "0", $f1
-    db "to run an errand.", $f7
-    db $f0
+    db "<PLAYER> asked <BUF0><LINE>"
+    db "to run an errand.<WAIT>"
+    db "@"
 
 String_37_01_05::
-    db $f9, "0 scanned the", $f1
-    db "area sharply.", $f7
-    db $f0
+    db "<BUF0> scanned the<LINE>"
+    db "area sharply.<WAIT>"
+    db "@"
 
 String_37_01_06::
-    db $f9, "G's wounds", $f1
-    db "were healed!", $f7
-    db $f0
+    db "<BUF1>'s wounds<LINE>"
+    db "were healed!<WAIT>"
+    db "@"
 
 String_37_01_07::
-    db $f9, "G regained MP!", $f7
-    db $f0
+    db "<BUF1> regained MP!<WAIT>"
+    db "@"
 
 String_37_01_08::
-    db $f9, "G came back to", $f1
-    db "life!", $f7
-    db $f0
+    db "<BUF1> came back to<LINE>"
+    db "life!<WAIT>"
+    db "@"
 
 String_37_01_09::
-    db $f9, "G was cured of", $f1
-    db "poison.", $f7
-    db $f0
+    db "<BUF1> was cured of<LINE>"
+    db "poison.<WAIT>"
+    db "@"
 
 String_37_01_0A::
-    db $f9, "G was", $f1
-    db "uncursed.", $f7
-    db $f0
+    db "<BUF1> was<LINE>"
+    db "uncursed.<WAIT>"
+    db "@"
 
 String_37_01_0B::
-    db $f9, "0 whispered in", $f1
-    db $f6, "'s ear.", $fa, $f7
-    db $f0
+    db "<BUF0> whispered in<LINE>"
+    db "<PLAYER>'s ear.<PROMPT>"
+    db "@"
 
 String_37_01_0C::
-    db $f9, "0: There are", $f1
-    db $f9, "m around.", $fa, $f7
-    db $f0
+    db "<BUF0>: There are<LINE>"
+    db "<BUF3> around.<PROMPT>"
+    db "@"
 
 String_37_01_0D::
-    db $f9, "0 finished", $f1
-    db "talking.", $f7
-    db $f0
+    db "<BUF0> finished<LINE>"
+    db "talking.<WAIT>"
+    db "@"
 
 String_37_01_0E::
-    db $f9, "0 ran off with", $f1
-    db "100G.", $fa, $f7
-    db $f2, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $f1
-    db $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $a4, $fa, $f7
-    db $f0
+    db "<BUF0> ran off with<LINE>"
+    db "100G.<PROMPT>"
+    db "<CLEAR>…………………………………………<LINE>"
+    db "…………………………………………<PROMPT>"
+    db "@"
 
 String_37_01_0F::
-    db $f9, "0 returned", $f1
-    db "with an item.", $fa, $f7
-    db $f2, $f6, " obtained one", $f1
-    db $f9, "m.", $f7
-    db $f0
+    db "<BUF0> returned<LINE>"
+    db "with an item.<PROMPT>"
+    db "<CLEAR><PLAYER> obtained one<LINE>"
+    db "<BUF3>.<WAIT>"
+    db "@"
 
 String_37_01_10::
-    db $f9, "0 came back", $f1
-    db "with nothing", $a4, $f7
-    db $f0
+    db "<BUF0> came back<LINE>"
+    db "with nothing…<WAIT>"
+    db "@"
 
 String_37_01_11::
-    db $f9, "0 sensed a", $f1
-    db "treasure nearby.", $fa, $f7
-    db $f2, "It appears to be", $f1
-    db "very close.", $f7
-    db $f0
+    db "<BUF0> sensed a<LINE>"
+    db "treasure nearby.<PROMPT>"
+    db "<CLEAR>It appears to be<LINE>"
+    db "very close.<WAIT>"
+    db "@"
 
 String_37_01_12::
-    db "But nothing", $f1
-    db "happened.", $f7
-    db $f0
+    db "But nothing<LINE>"
+    db "happened.<WAIT>"
+    db "@"
 
 String_37_01_13::
-    db $f9, "G did not come", $f1
-    db "back to life", $a4, $f7
-    db $f0
+    db "<BUF1> did not come<LINE>"
+    db "back to life…<WAIT>"
+    db "@"
 
 String_37_01_14::
-    db "But it couldn't be", $f1
-    db "used here.", $f7
-    db $f0
+    db "But it couldn't be<LINE>"
+    db "used here.<WAIT>"
+    db "@"
 
 String_37_01_15::
-    db "But there were no", $f1
-    db "monsters nearby.", $f7
-    db $f0
+    db "But there were no<LINE>"
+    db "monsters nearby.<WAIT>"
+    db "@"
 
 String_37_01_16::
-    db "But there is no", $f1
-    db "room for it", $a4, $f7
-    db $f0
+    db "But there is no<LINE>"
+    db "room for it…<WAIT>"
+    db "@"
 
 String_37_01_17::
-    db "But there wasn't", $f1
-    db "enough money.", $f7
-    db $f0
+    db "But there wasn't<LINE>"
+    db "enough money.<WAIT>"
+    db "@"
 
 String_37_01_18::
-    db "There are no", $f1
-    db "treasures nearby.", $f7
-    db $f0
+    db "There are no<LINE>"
+    db "treasures nearby.<WAIT>"
+    db "@"
 
 String_37_01_19::
-    db "Not enough MP!", $f1
-    db $f7
-    db $f0
+    db "Not enough MP!<LINE>"
+    db "<WAIT>"
+    db "@"
 
 String_37_01_1A::
-    db "A dead monster", $f1
-    db "can't use a skill.", $f7
-    db $f0
+    db "A dead monster<LINE>"
+    db "can't use a skill.<WAIT>"
+    db "@"
 
 String_37_01_1B::
-    db "That can't be used", $f1
-    db "in the field.", $f7
-    db $f0
+    db "That can't be used<LINE>"
+    db "in the field.<WAIT>"
+    db "@"
 
 String_37_01_1C::
-    db "The surroundings", $f1
-    db "became clear.", $f7
-    db $f0
+    db "The surroundings<LINE>"
+    db "became clear.<WAIT>"
+    db "@"
 
 RunLinkSession5Exchange_Case01_WaitFadeState::
     ld a, [wFadeState]

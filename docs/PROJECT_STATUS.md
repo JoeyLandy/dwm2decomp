@@ -65,7 +65,9 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 - address names and `BB:AAAA` in comments become label names; evidence ids move to the end of the comment; long comments wrap at 100 columns;
 - pret instruction spelling: `xor a`, `cp $10`, `ld a, [hli]`, lowercase hex, and the `jumptable` macro for `rst $00`.
 
-The instructions and data lines are unchanged, so the ROM is identical (build/run473). `tests/test_present.py` checks that `src/banks` is exactly the presented listing and that no code or data line is lost. The analysis tools and the tests that check annotations read `build/listing/`, so run `tools/disasm_all.py` before the suite. Confidence and evidence of every name stay in `config/` and in the listing. `tools/readability.py` measures what still reads as machine output.
+Text is written with charmap tokens for the text printer's 32 commands (E-0336): `db "<VOICE1>Cobi: <BUF0>!<LINE>"`, `db "Blaze@"`, with `<NEXT>`, `<PROMPT>`, `<WAIT>` and others named in `src/charmap.inc`. The font glyphs …()+~/★© are mapped too.
+
+The instructions and data lines are unchanged, so the ROM is identical (build/run473, build/run475 with the text tokens). `tests/test_present.py` checks that `src/banks` is exactly the presented listing and that no code or data line is lost. The analysis tools and the tests that check annotations read `build/listing/`, so run `tools/disasm_all.py` before the suite. Confidence and evidence of every name stay in `config/` and in the listing. `tools/readability.py` measures what still reads as machine output.
 
 ## Readability state (2026-10-12, after E-0308)
 

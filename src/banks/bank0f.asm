@@ -245,7 +245,7 @@ SceneHomecoming_ShowTHEEND::
     xor a
     ld [wStringCategory], a
     ld a, $fb
-    ld [wStringIndex], a ; 'THE END'
+    ld [wStringIndex], a ; 'THE END…'
     farcall ShowString_Bank28
     ld hl, wScreenTileBuffer
     ld a, $c3
@@ -392,7 +392,7 @@ SceneHomecoming_WriteFollowerRecords::
     ret
 
 SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
-    ld hl, $0db8 ; 'Warubou: Wa-hey I have seen this'
+    ld hl, $0db8 ; 'Warubou: Wa-hey… I have seen this…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -2115,7 +2115,7 @@ SceneDarckDefeated_StepPlayerDownTowardWC928::
 SceneDarckDefeated_ShowWarubouWaheyThatsIt::
     ld a, $01
     ld [wSpriteSlots + $7], a
-    ld hl, $0538 ; 'Warubou: Wa-hey That's it, then. There's'
+    ld hl, $0538 ; 'Warubou: Wa-hey… That's it, then. There's'
     call StartMessageHL_B0F
     ld a, $01
     ld [wFieldEventArg], a
@@ -2244,7 +2244,7 @@ SceneDarckDefeated_Msg055B_WaheyCanYouHear::
     ret
 
 SceneDarckDefeated_Msg055A_AVoiceEchoedFrom::
-    ld hl, $055a ; 'A voice echoed from nowhere'
+    ld hl, $055a ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -2584,7 +2584,7 @@ SceneThreeItems_ShowWarubouWaheyThereIs::
     ret
 
 SceneThreeItems_Msg0A7C_KamehaIIHave::
-    ld hl, $0a7c ; 'Kameha: I I have to go'
+    ld hl, $0a7c ; 'Kameha: I… I have to go'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -2632,7 +2632,7 @@ SceneThreeItems_Msg0491_WaheyCanYouHear::
     ret
 
 SceneThreeItems_Msg0490_AVoiceEchoedFrom::
-    ld hl, $0490 ; 'A voice echoed from nowhere'
+    ld hl, $0490 ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3138,7 +3138,7 @@ SceneShield2_ShowWaheyHeroCanYou::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
-    ld hl, $0a0a ; '*: Wa-hey! 0, can you hear'
+    ld hl, $0a0a ; '*: …Wa-hey! 0, can you hear'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3148,7 +3148,7 @@ SceneShield2_ShowAVoiceEchoedFrom::
     xor a
     call RunMessageBoxFar_Bank0F
     ret nc
-    ld hl, $0a09 ; 'A voice echoed from nowhere'
+    ld hl, $0a09 ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -3331,14 +3331,14 @@ SceneShield_ShowABeautifulVoiceEchoed::
     ldh a, [hTemp0]
     or a
     ret z
-    ld hl, $0ddf ; 'A beautiful voice echoed'
+    ld hl, $0ddf ; 'A beautiful voice echoed…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
 SceneShield_ShowWhaNoMyMonsters::
-    ld hl, $0a04 ; '*: Wha No! My monsters! It'
+    ld hl, $0a04 ; '*: Wha… No! My monsters! It'
     call StartMessageHL_B0F
     ld a, [wObject1 + OBJ_Y]
     ld [wScriptParam1], a
@@ -3475,7 +3475,7 @@ SceneShieldGuardian::
 SceneShieldGuardian_ShowHelenIPutYou::
     xor a
     ld [wSpriteSlots + $7], a
-    ld hl, $0af5 ; 'Helen: I put you through trouble'
+    ld hl, $0af5 ; 'Helen: I put you through trouble…'
     call StartMessageHL_B0F
     ld de, $01e2
     call SetFlagBit
@@ -3841,7 +3841,7 @@ ScenePrincessMedicine_ShowYunasSoulFilledHer::
     ret
 
 ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
-    ld hl, $0ad4 ; '*: H-HOW BUT I THIS ISN'T'
+    ld hl, $0ad4 ; '*: H-HOW… BUT I… THIS ISN'T……'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4102,7 +4102,7 @@ SceneCheerYuna_ShowEnoughEnoughOfThat::
     ld [wObject2 + OBJ_STATE], a
     ld hl, wObject2 + OBJ_FLAGS
     call ClearBit2AtHL_Bank0F
-    ld hl, $03a0 ; '*: Enough Enough of that dancing!'
+    ld hl, $03a0 ; '*: Enough… Enough of that dancing!'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4616,7 +4616,7 @@ SceneWallExit_ShowKamehaHeroThatWasnt::
     ld a, [wScriptParam1]
     cp $30
     jr z, .read_story_flags
-    ld hl, $0362 ; 'Kameha: 0 That wasn't it'
+    ld hl, $0362 ; 'Kameha: … 0… That wasn't it…'
     call StartMessageHL_B0F
     xor a
     ld [wScriptParam0], a
@@ -5098,7 +5098,7 @@ SceneReportToKing_StepObjectTowardCoord_Case02::
     ld a, [wStepArrived]
     or a
     ret z
-    ld hl, $0322 ; '*: You're the envoy? Well, no'
+    ld hl, $0322 ; '*: You're the envoy? …Well, no'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5294,7 +5294,7 @@ SceneMermaidKingdom_ShowWarubouWaheyYouDid::
     ret
 
 SceneMermaidKingdom_Msg0873_WaheyHeroHearMe::
-    ld hl, $0873 ; '*: Wa-hey! 0, hear me? I'
+    ld hl, $0873 ; '*: …Wa-hey! 0, hear me? I'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5308,7 +5308,7 @@ SceneMermaidKingdom_ShowAVoiceEchoedFrom::
     ret nc
     xor a
     ld [wObject5], a
-    ld hl, $0872 ; 'A voice echoed from nowhere'
+    ld hl, $0872 ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5618,7 +5618,7 @@ SceneMermaidKingdom_ShowKahahaha::
     ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
-    ld hl, $086e ; '*: Kahahaha'
+    ld hl, $086e ; '*: Kahahaha…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -5841,7 +5841,7 @@ SceneMermaidKingdom_ShowKamehaGaspHackI::
     or a
     ret z
     farcall RedrawColumnsBesideScreen
-    ld hl, $086c ; 'Kameha: Gasp Hack I did it'
+    ld hl, $086c ; 'Kameha: …Gasp… …Hack… I did it…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6776,7 +6776,7 @@ SceneRivalDefeated_ShowWarubouWaheyYouDid::
     ret
 
 SceneRivalDefeated_Msg01A2_WaheyCanYouHear::
-    ld hl, $01a2 ; '*: Wa-hey! Can you hear me?'
+    ld hl, $01a2 ; '*: …Wa-hey! Can you hear me?'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -6795,7 +6795,7 @@ SceneRivalDefeated_ShowAVoiceEchoedFrom::
     ret z
     xor a
     ld [wSpriteSlotCount], a
-    ld hl, $01a1 ; 'A voice echoed from nowhere'
+    ld hl, $01a1 ; 'A voice echoed from nowhere…'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]

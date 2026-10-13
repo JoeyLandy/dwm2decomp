@@ -2586,11 +2586,11 @@ CopyDefaultRecordToRecordBufB::
 ; record: one $A5-byte monster record in the SRAM record format
 DefaultMonsterRecord::
     db $01 ; id 0: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $00d4 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -3524,108 +3524,115 @@ StringList_24_5D27::
     dw String_24_00_15 ; id 21
 
 String_24_00_00::
-    db $ea, "*: Oh? But none", $f1
-    db "appear to be dead", $a4, $fa, $f7
-    db $f0
+    db "<VOICE1>*: Oh? But none<LINE>"
+    db "appear to be dead…<PROMPT>"
+    db "@"
 
 String_24_00_02::
-    db $ea, "*: Oh? But no one", $f1
-    db "is poisoned.", $fa, $f7
-    db $f0
+    db "<VOICE1>*: Oh? But no one<LINE>"
+    db "is poisoned.<PROMPT>"
+    db "@"
 
 String_24_00_03::
-    db $ea, "*: But none appear", $f1
-    db "to be cursed", $a4, $fa, $f7
-    db $f0
+    db "<VOICE1>*: But none appear<LINE>"
+    db "to be cursed…<PROMPT>"
+    db "@"
 
 String_24_00_04::
-    db $ea, "*: Do you need any", $f1
-    db "other help?", $f0
+    db "<VOICE1>*: Do you need any<LINE>"
+    db "other help?@"
 
 String_24_00_05::
-    db $ea, "*: May the gods go", $f1
-    db "with you.", $f7
-    db $f0
+    db "<VOICE1>*: May the gods go<LINE>"
+    db "with you.<WAIT>"
+    db "@"
 
 String_24_00_06::
-    db $ea, "*: Which monster", $f1
-    db "should be revived?", $f0
+    db "<VOICE1>*: Which monster<LINE>"
+    db "should be revived?@"
 
 String_24_00_07::
-    db $ea, "*: Who should be", $f1
-    db "cured of poison?", $f0
+    db "<VOICE1>*: Who should be<LINE>"
+    db "cured of poison?@"
 
 String_24_00_08::
-    db $ea, "*: Who should be", $f1
-    db "freed of a curse?", $f0
+    db "<VOICE1>*: Who should be<LINE>"
+    db "freed of a curse?@"
 
 String_24_00_09::
-    db $ea, "*: Surely you jest.", $f1
-    db "That one is alive.", $fa, $f7
-    db $f0
+    db "<VOICE1>*: Surely you jest.<LINE>"
+    db "That one is alive.<PROMPT>"
+    db "@"
 
 String_24_00_0A::
-    db $ea, "*: But that monster", $f1
-    db "is not poisoned.", $fa, $f7
-    db $f0
+    db "<VOICE1>*: But that monster<LINE>"
+    db "is not poisoned.<PROMPT>"
+    db "@"
 
 String_24_00_0B::
-    db $ea, "*: But that monster", $f1
-    db "is not cursed.", $fa, $f7
-    db $f0
+    db "<VOICE1>*: But that monster<LINE>"
+    db "is not cursed.<PROMPT>"
+    db "@"
 
 String_24_00_0C::
-    db $ea, "*: I must ask for a", $f1
-    db "small donation of", $fa, $f7
-    db $ef, $ee, $f9, "0G.", $ef, $ee, "Do you accept?", $f0
+    db "<VOICE1>*: I must ask for a<LINE>"
+    db "small donation of<PROMPT>"
+    db "<NEXT><BUF0>G."
+    db "<NEXT>Do you accept?@"
 
 String_24_00_0D::
-    db $ea, "*: Gods, the", $f1
-    db "spirits of earth!", $fa, $f7
-    db $ef, $ee, "Please summon the", $ef, $ee, "soul of ", $f9, "0!", $f7
-    db $f0
+    db "<VOICE1>*: Gods, the<LINE>"
+    db "spirits of earth!<PROMPT>"
+    db "<NEXT>Please summon the"
+    db "<NEXT>soul of <BUF0>!<WAIT>"
+    db "@"
 
 String_24_00_0E::
-    db $ea, "*: Gods, I  beg", $f1
-    db "you, purify the", $fa, $f7
-    db $ef, $ee, "poison sullying", $ef, $ee, $f9, "0!", $f7
-    db $f0
+    db "<VOICE1>*: Gods, I  beg<LINE>"
+    db "you, purify the<PROMPT>"
+    db "<NEXT>poison sullying"
+    db "<NEXT><BUF0>!<WAIT>"
+    db "@"
 
 String_24_00_0F::
-    db $ea, "*: Gods, I beg", $f1
-    db "you, free ", $f9, "0", $fa, $f7
-    db $ef, $ee, "from its enslaving", $ef, $ee, "curse!", $f7
-    db $f0
+    db "<VOICE1>*: Gods, I beg<LINE>"
+    db "you, free <BUF0><PROMPT>"
+    db "<NEXT>from its enslaving"
+    db "<NEXT>curse!<WAIT>"
+    db "@"
 
 String_24_00_10::
-    db $ea, $f9, "0 was revived!", $f7
-    db $f0
+    db "<VOICE1><BUF0> was revived!<WAIT>"
+    db "@"
 
 String_24_00_11::
-    db $ea, $f9, "0 was cleansed", $f1
-    db "of poison.", $f7
-    db $f0
+    db "<VOICE1><BUF0> was cleansed<LINE>"
+    db "of poison.<WAIT>"
+    db "@"
 
 String_24_00_12::
-    db $ea, $f9, "0 was freed", $f1
-    db "from the curse.", $f7
-    db $f0
+    db "<VOICE1><BUF0> was freed<LINE>"
+    db "from the curse.<WAIT>"
+    db "@"
 
 String_24_00_13::
-    db $ea, "No one else seems", $f1
-    db "to need help.", $fa, $f7
-    db $ef, $ee, "Come see me again", $ef, $ee, "if you need to.", $fa, $f7
-    db $ef, $ee, "The gods will be", $ef, $ee, "with you always.", $f7
-    db $f0
+    db "<VOICE1>No one else seems<LINE>"
+    db "to need help.<PROMPT>"
+    db "<NEXT>Come see me again"
+    db "<NEXT>if you need to.<PROMPT>"
+    db "<NEXT>The gods will be"
+    db "<NEXT>with you always.<WAIT>"
+    db "@"
 
 String_24_00_14::
-    db $ea, "*: Oh, my, my", $a4, $f1
-    db "How deplorable!", $fa, $f7
-    db $ef, $ee, "You haven't enough", $ef, $ee, "gold for this.", $fa, $f7
-    db $f0
+    db "<VOICE1>*: Oh, my, my…<LINE>"
+    db "How deplorable!<PROMPT>"
+    db "<NEXT>You haven't enough"
+    db "<NEXT>gold for this.<PROMPT>"
+    db "@"
 
 String_24_00_15::
-    db "RviD-oxUncurt", $f0
+    db "RviD-oxUncurt@"
 
 ; implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?',
 ; curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038,
@@ -5509,357 +5516,357 @@ ItemDescriptionTable::
     dw ItemDescription_62 ; id 98
 
 ItemDescription_Herb::
-    db "Restores HP of one", $f1
+    db "Restores HP of one<LINE>"
     db "monster by "
     db $03, $00, $9d, $04, $00, $b5, $f0
 
 ItemDescription_LoveWater::
-    db "Restores HP of one", $f1
+    db "Restores HP of one<LINE>"
     db "monster by "
     db $06, $00, $9d, $07, $00, $b5, $f0
 
 ItemDescription_WorldDew::
-    db "Fully restores HP", $f1
-    db "of all monsters.", $f0
+    db "Fully restores HP<LINE>"
+    db "of all monsters.@"
 
 ItemDescription_Potion::
-    db "Restores MP of one", $f1
+    db "Restores MP of one<LINE>"
     db "monster by "
     db $02, $00, $9d, $03, $00, $b5, $f0
 
 ItemDescription_ElfWater::
-    db "Fully restores MP", $f1
-    db "of one monster.", $f0
+    db "Fully restores MP<LINE>"
+    db "of one monster.@"
 
 ItemDescription_Antidote::
-    db "Removes all traces", $f1
-    db "of poison.", $f0
+    db "Removes all traces<LINE>"
+    db "of poison.@"
 
 ItemDescription_MoonHerb::
-    db "Cures paralysis.", $f0
+    db "Cures paralysis.@"
 
 ItemDescription_Laurel::
-    db "Lifts a curse off", $f1
-    db "one monster.", $f0
+    db "Lifts a curse off<LINE>"
+    db "one monster.@"
 
 ItemDescription_AwakeSand::
-    db "Awakens a sleeping", $f1
-    db "monster.", $f0
+    db "Awakens a sleeping<LINE>"
+    db "monster.@"
 
 ItemDescription_SkyBell::
-    db "Snaps a monster", $f1
-    db "out of confusion.", $f0
+    db "Snaps a monster<LINE>"
+    db "out of confusion.@"
 
 ItemDescription_SageRock::
-    db "Restores HP of all", $f1
+    db "Restores HP of all<LINE>"
     db "monsters by "
     db $06, $00, $9d, $07, $00, $b5, $f0
 
 ItemDescription_WorldLeaf::
-    db "Revives a dead", $f1
-    db "monster.", $f0
+    db "Revives a dead<LINE>"
+    db "monster.@"
 
 ItemDescription_ATKseed::
-    db "Raises ATK by 3.", $f0
+    db "Raises ATK by 3.@"
 
 ItemDescription_DEFseed::
-    db "Raises DEF by 3.", $f0
+    db "Raises DEF by 3.@"
 
 ItemDescription_AGLseed::
-    db "Raises AGL by 3.", $f0
+    db "Raises AGL by 3.@"
 
 ItemDescription_INTseed::
-    db "Raises INT by 3.", $f0
+    db "Raises INT by 3.@"
 
 ItemDescription_LifeAcorn::
-    db "Raises max. HP", $f1
-    db "by 5.", $f0
+    db "Raises max. HP<LINE>"
+    db "by 5.@"
 
 ItemDescription_MysticNut::
-    db "Raises max. MP", $f1
-    db "by 5.", $f0
+    db "Raises max. MP<LINE>"
+    db "by 5.@"
 
 ItemDescription_Quest::
-    db "Makes the reader", $f1
-    db "braver.", $f0
+    db "Makes the reader<LINE>"
+    db "braver.@"
 
 ItemDescription_Horror::
-    db "Makes the reader", $f1
-    db "more cowardly.", $f0
+    db "Makes the reader<LINE>"
+    db "more cowardly.@"
 
 ItemDescription_BeNice::
-    db "Makes the reader", $f1
-    db "more kindly.", $f0
+    db "Makes the reader<LINE>"
+    db "more kindly.@"
 
 ItemDescription_Cheater::
-    db "Makes the reader", $f1
-    db "more sly.", $f0
+    db "Makes the reader<LINE>"
+    db "more sly.@"
 
 ItemDescription_Smart::
-    db "Makes the reader", $f1
-    db "more thoughtful.", $f0
+    db "Makes the reader<LINE>"
+    db "more thoughtful.@"
 
 ItemDescription_Comedy::
-    db "Makes the reader", $f1
-    db "simple-minded.", $f0
+    db "Makes the reader<LINE>"
+    db "simple-minded.@"
 
 ItemDescription_BeefJerky::
-    db "Tames monsters", $f1
-    db "just a little.", $f0
+    db "Tames monsters<LINE>"
+    db "just a little.@"
 
 ItemDescription_PorkChop::
-    db "Tames monsters a", $f1
-    db "little bit.", $f0
+    db "Tames monsters a<LINE>"
+    db "little bit.@"
 
 ItemDescription_Rib::
-    db "Tames monsters a", $f1
-    db "lot.", $f0
+    db "Tames monsters a<LINE>"
+    db "lot.@"
 
 ItemDescription_Sirloin::
-    db "Tames monsters", $f1
-    db "very much.", $f0
+    db "Tames monsters<LINE>"
+    db "very much.@"
 
 ItemDescription_BadMeat::
-    db "Tames a tiny bit,", $f1
-    db "but also poisons.", $f0
+    db "Tames a tiny bit,<LINE>"
+    db "but also poisons.@"
 
 ItemDescription_MeteOrb::
-    db "Tames monsters", $f1
-    db "incredibly.", $f0
+    db "Tames monsters<LINE>"
+    db "incredibly.@"
 
 ItemDescription_BeastTail::
-    db "Checks if monster", $f1
-    db "was caught before.", $f0
+    db "Checks if monster<LINE>"
+    db "was caught before.@"
 
 ItemDescription_Repellent::
-    db "Prevents monsters", $f1
-    db "from appearing.", $f0
+    db "Prevents monsters<LINE>"
+    db "from appearing.@"
 
 ItemDescription_ShinyHarp::
-    db "Attracts monsters", $f1
-    db "when strummed.", $f0
+    db "Attracts monsters<LINE>"
+    db "when strummed.@"
 
 ItemDescription_Mist::
-    db "Prevents casting", $f1
-    db "of spells.", $f0
+    db "Prevents casting<LINE>"
+    db "of spells.@"
 
 ItemDescription_Friend::
-    db "Doubles physical", $f1
-    db "power of one.", $f0
+    db "Doubles physical<LINE>"
+    db "power of one.@"
 
 ItemDescription_Wind::
-    db "Hits all enemies", $f1
-    db "with a windstorm.", $f0
+    db "Hits all enemies<LINE>"
+    db "with a windstorm.@"
 
 ItemDescription_Bolt::
-    db "Hits all enemies", $f1
-    db "with lightning.", $f0
+    db "Hits all enemies<LINE>"
+    db "with lightning.@"
 
 ItemDescription_Snow::
-    db "Hits all enemies", $f1
-    db "with a blizzard.", $f0
+    db "Hits all enemies<LINE>"
+    db "with a blizzard.@"
 
 ItemDescription_Fire::
-    db "Hits one target", $f1
-    db "with a fireball.", $f0
+    db "Hits one target<LINE>"
+    db "with a fireball.@"
 
 ItemDescription_Warp::
-    db "Instantly warps to", $f1
-    db "the Door Shrine.", $f0
+    db "Instantly warps to<LINE>"
+    db "the Door Shrine.@"
 
 ItemDescription_WarpWing::
-    db "Instantly warps to", $f1
-    db "GreatLog.", $f0
+    db "Instantly warps to<LINE>"
+    db "GreatLog.@"
 
 ItemDescription_ExitBell::
-    db "Instantly warps to", $f1
-    db "the exit.", $f0
+    db "Instantly warps to<LINE>"
+    db "the exit.@"
 
 ItemDescription_Bookmark::
-    db "Enables saving in", $f1
-    db "the Journal.", $f0
+    db "Enables saving in<LINE>"
+    db "the Journal.@"
 
 ItemDescription_TinyMedal::
-    db "Collect and trade", $f1
-    db "for rare gifts.", $f0
+    db "Collect and trade<LINE>"
+    db "for rare gifts.@"
 
 ItemDescription_GoldPass::
-    db "Get a 10-percent", $f1
-    db "discount at shops.", $f0
+    db "Get a 10-percent<LINE>"
+    db "discount at shops.@"
 
 ItemDescription_LogTwig::
-    db "Moves the Door", $f1
-    db "Shrine.", $f0
+    db "Moves the Door<LINE>"
+    db "Shrine.@"
 
 ItemDescription_2F::
-    db "Reveals Mirage", $f1
-    db "Lake.", $f0
+    db "Reveals Mirage<LINE>"
+    db "Lake.@"
 
 ItemDescription_MoonRock::
-    db "A magic stone that", $f1
-    db "raises the tide.", $f0
+    db "A magic stone that<LINE>"
+    db "raises the tide.@"
 
 ItemDescription_Crest::
-    db "A medal from the", $f1
-    db "elemental spirit.", $f0
+    db "A medal from the<LINE>"
+    db "elemental spirit.@"
 
 ItemDescription_YunaSoul::
-    db "The lost soul of a", $f1
-    db "princess.", $f0
+    db "The lost soul of a<LINE>"
+    db "princess.@"
 
 ItemDescription_SleepHerb::
-    db "A blue flower that", $f1
-    db "grows in snow.", $f0
+    db "A blue flower that<LINE>"
+    db "grows in snow.@"
 
 ItemDescription_Change::
-    db "Transforms users", $f1
-    db "into monsters.", $f0
+    db "Transforms users<LINE>"
+    db "into monsters.@"
 
 ItemDescription_TidalBell::
-    db "Summons a clam for", $f1
-    db "crossing the sea.", $f0
+    db "Summons a clam for<LINE>"
+    db "crossing the sea.@"
 
 ItemDescription_HarMirror::
-    db "Destroys what it", $f1
-    db "reflects.", $f0
+    db "Destroys what it<LINE>"
+    db "reflects.@"
 
 ItemDescription_Sky::
-    db "Summons a cloud", $f1
-    db "for flying.", $f0
+    db "Summons a cloud<LINE>"
+    db "for flying.@"
 
 ItemDescription_Heaven::
-    db "A legendary helmet", $f1
-    db "found in a cave.", $f0
+    db "A legendary helmet<LINE>"
+    db "found in a cave.@"
 
 ItemDescription_Heaven_78A7::
-    db "A legendary armor", $f1
-    db "found in a tower.", $f0
+    db "A legendary armor<LINE>"
+    db "found in a tower.@"
 
 ItemDescription_Heaven_78CB::
-    db "A legendary sword", $f1
-    db "found in a castle.", $f0
+    db "A legendary sword<LINE>"
+    db "found in a castle.@"
 
 ItemDescription_WizStone::
-    db "A magical stone", $f1
-    db "that glows blue.", $f0
+    db "A magical stone<LINE>"
+    db "that glows blue.@"
 
 ItemDescription_Pretty::
-    db "A beautiful gold", $f1
-    db "ring.", $f0
+    db "A beautiful gold<LINE>"
+    db "ring.@"
 
 ItemDescription_Accessory::
-    db "Undefined.", $f0
+    db "Undefined.@"
 
 ItemDescription_VITbelt::
-    db "Raises max. HP", $f1
-    db "by 30.", $f0
+    db "Raises max. HP<LINE>"
+    db "by 30.@"
 
 ItemDescription_DracoBelt::
-    db "Raises max. HP", $f1
-    db "by 80.", $f0
+    db "Raises max. HP<LINE>"
+    db "by 80.@"
 
 ItemDescription_MagicBelt::
-    db "Raises max. MP", $f1
-    db "by 30.", $f0
+    db "Raises max. MP<LINE>"
+    db "by 30.@"
 
 ItemDescription_OddBelt::
-    db "Raises max. MP", $f1
-    db "by 80.", $f0
+    db "Raises max. MP<LINE>"
+    db "by 80.@"
 
 ItemDescription_StoneFang::
-    db "Raises ATK by 10.", $f0
+    db "Raises ATK by 10.@"
 
 ItemDescription_SteelFang::
-    db "Raises ATK by 50.", $f0
+    db "Raises ATK by 50.@"
 
 ItemDescription_MermScale::
-    db "Raises DEF by 10.", $f0
+    db "Raises DEF by 10.@"
 
 ItemDescription_DrakScale::
-    db "Raises DEF by 50.", $f0
+    db "Raises DEF by 50.@"
 
 ItemDescription_AGL::
-    db "Raises AGL by 10.", $f0
+    db "Raises AGL by 10.@"
 
 ItemDescription_Starry::
-    db "Raises AGL by 50.", $f0
+    db "Raises AGL by 50.@"
 
 ItemDescription_Smart_79F7::
-    db "Raises INT by 50.", $f0
+    db "Raises INT by 50.@"
 
 ItemDescription_Wise::
-    db "Raises INT by 100.", $f0
+    db "Raises INT by 100.@"
 
 ItemDescription_MagicCape::
-    db "Raises resistance", $f1
-    db "to attack spells.", $f0
+    db "Raises resistance<LINE>"
+    db "to attack spells.@"
 
 ItemDescription_DracoCape::
-    db "Raises resistance", $f1
-    db "to fire and ice.", $f0
+    db "Raises resistance<LINE>"
+    db "to fire and ice.@"
 
 ItemDescription_SilvrCape::
-    db "Resists confusion,", $f1
+    db "Resists confusion,<LINE>"
     db "poison "
     db $b6
-    db " sleep.", $f0
+    db " sleep.@"
 
 ItemDescription_GoldCape::
-    db "Resists most", $f1
-    db "status skills.", $f0
+    db "Resists most<LINE>"
+    db "status skills.@"
 
 ItemDescription_PltnmCape::
-    db "Resists curse,", $f1
+    db "Resists curse,<LINE>"
     db "paralysis "
     db $b6
-    db " death.", $f0
+    db " death.@"
 
 ItemDescription_OrcaCape::
-    db "Raises resistance", $f1
-    db "to water skills.", $f0
+    db "Raises resistance<LINE>"
+    db "to water skills.@"
 
 ItemDescription_BraveCape::
-    db "Prevents skills", $f1
-    db "from being sealed.", $f0
+    db "Prevents skills<LINE>"
+    db "from being sealed.@"
 
 ItemDescription_DScale::
-    db "Raises DEF by 5.", $f0
+    db "Raises DEF by 5.@"
 
 ItemDescription_None::
-    db "Undefined.", $f0
+    db "Undefined.@"
 
 ItemDescription_Life::
-    db "Restores HP by 1", $f1
-    db "on every step.", $f0
+    db "Restores HP by 1<LINE>"
+    db "on every step.@"
 
 ItemDescription_Divine::
-    db "Restores MP by 1", $f1
-    db "on every step.", $f0
+    db "Restores MP by 1<LINE>"
+    db "on every step.@"
 
 ItemDescription_War::
-    db "Promotes max. HP", $f1
-    db "gain.", $f0
+    db "Promotes max. HP<LINE>"
+    db "gain.@"
 
 ItemDescription_Mage::
-    db "Promotes max.", $f1
-    db "MP gain.", $f0
+    db "Promotes max.<LINE>"
+    db "MP gain.@"
 
 ItemDescription_Fight::
-    db "Promotes ATK gain", $f1
-    db "while growing.", $f0
+    db "Promotes ATK gain<LINE>"
+    db "while growing.@"
 
 ItemDescription_Sailor::
-    db "Promotes DEF gain", $f1
-    db "while growing.", $f0
+    db "Promotes DEF gain<LINE>"
+    db "while growing.@"
 
 ItemDescription_Thief::
-    db "Promotes AGL gain", $f1
-    db "while growing.", $f0
+    db "Promotes AGL gain<LINE>"
+    db "while growing.@"
 
 ItemDescription_Cleric::
-    db "Promotes INT gain", $f1
-    db "while growing.", $f0
+    db "Promotes INT gain<LINE>"
+    db "while growing.@"
 
 ItemDescription_62::
-    db "Undefined.", $f0
+    db "Undefined.@"
     ds $3dd, $00

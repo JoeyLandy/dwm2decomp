@@ -4645,7 +4645,7 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
     ld a, $0c
-    ld [wStringIndex], a ; '0 departed sadly'
+    ld [wStringIndex], a ; '0 departed sadly…'
     call ShowStringCategory5_Bank16
     ld a, $01
     ld [wBattleSubStep], a
@@ -8114,7 +8114,7 @@ ShowStrings6To8Bank09InRows::
     ld a, $02
     ld [wStringCategory], a
     ld a, $06
-    ld [wStringIndex], a ; 'Skill On Off Orb ID Odds'
+    ld [wStringIndex], a ; 'Skill On/Off Orb ID Odds'
     farcall ShowString_Bank09
     ld hl, vTiles1 + $750
     ld a, l

@@ -574,177 +574,187 @@ StringList_F2_43E7::
     dw String_F2_00_23 ; id 35
 
 String_F2_00_00::
-    db $eb, "*: Hello, how may I", $f1
-    db "serve you?", $f0
+    db "<VOICE2>*: Hello, how may I<LINE>"
+    db "serve you?@"
 
 String_F2_00_02::
-    db $eb, "*: Which egg should", $f1
-    db "I appraise?", $f0
+    db "<VOICE2>*: Which egg should<LINE>"
+    db "I appraise?@"
 
 String_F2_00_03::
-    db $eb, "*: It will cost", $f1
-    db "20G. It that OK?", $f0
+    db "<VOICE2>*: It will cost<LINE>"
+    db "20G. It that OK?@"
 
 String_F2_00_04::
-    db $eb, "*: How else may I", $f1
-    db "serve you?", $f0
+    db "<VOICE2>*: How else may I<LINE>"
+    db "serve you?@"
 
 String_F2_00_05::
-    db $eb, "*: Um", $a4, " You don't", $f1
-    db "have enough gold", $a4, $f7
-    db $f0
+    db "<VOICE2>*: Um… You don't<LINE>"
+    db "have enough gold…<WAIT>"
+    db "@"
 
 String_F2_00_06::
-    db $eb, "*: Um", $a4, " You don't", $f1
-    db "have any eggs", $a4, $f7
-    db $f0
+    db "<VOICE2>*: Um… You don't<LINE>"
+    db "have any eggs…<WAIT>"
+    db "@"
 
 String_F2_00_07::
-    db $eb, "*: Which egg should", $f1
-    db "I bless?", $f0
+    db "<VOICE2>*: Which egg should<LINE>"
+    db "I bless?@"
 
 String_F2_00_08::
-    db $eb, "*: It will cost", $f1
-    db $f9, "0G. Is that OK?", $f0
+    db "<VOICE2>*: It will cost<LINE>"
+    db "<BUF0>G. Is that OK?@"
 
 String_F2_00_09::
-    db $eb, "*: Egg, egg, toss", $f1
-    db "and scramble", $a4, $e5, "0", $e4, $d2, $fa, $f7
-    db $ef, $ee, $e9, $ff, "There", $a4, $ef, $ee, "That did it.", $fa, $f7
-    db $ef, $ee, "You just have to", $ef, $ee, "hatch it now.", $f7
-    db $f0
+    db "<VOICE2>*: Egg, egg, toss<LINE>"
+    db "and scramble…<MUSIC_WAIT>", $00, "<SFX_WAIT>", $d2, "<PROMPT>"
+    db "<NEXT><MAP_MUSIC>There…"
+    db "<NEXT>That did it.<PROMPT>"
+    db "<NEXT>You just have to"
+    db "<NEXT>hatch it now.<WAIT>"
+    db "@"
 
 String_F2_00_0A::
-    db $eb, "*: Please come see", $f1
-    db "me when you get", $fa, $f7
-    db $ef, $ee, "more eggs.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE2>*: Please come see<LINE>"
+    db "me when you get<PROMPT>"
+    db "<NEXT>more eggs."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_F2_00_0B::
-    db $eb, "*: OK, I'll evaluate", $f1
-    db "this egg now", $a4, $f7
-    db $f0
+    db "<VOICE2>*: OK, I'll evaluate<LINE>"
+    db "this egg now…<WAIT>"
+    db "@"
 
 String_F2_00_0C::
-    db $eb, "*: It's fine. There's", $f1
-    db "nothing wrong.", $f7
-    db $f0
+    db "<VOICE2>*: It's fine. There's<LINE>"
+    db "nothing wrong.<WAIT>"
+    db "@"
 
 String_F2_00_0D::
-    db $eb, "*: It's good, and", $f1
-    db "growing healthy.", $f7
-    db $f0
+    db "<VOICE2>*: It's good, and<LINE>"
+    db "growing healthy.<WAIT>"
+    db "@"
 
 String_F2_00_0E::
-    db $eb, "*: Wow, this egg is", $f1
-    db "really vigorous.", $f7
-    db $f0
+    db "<VOICE2>*: Wow, this egg is<LINE>"
+    db "really vigorous.<WAIT>"
+    db "@"
 
 String_F2_00_0F::
-    db $eb, "*: Oh, my! This egg", $f1
-    db "is incredible!", $f7
-    db $f0
+    db "<VOICE2>*: Oh, my! This egg<LINE>"
+    db "is incredible!<WAIT>"
+    db "@"
 
 String_F2_00_10::
-    db $eb, "*: Don't expect too", $f1
-    db "many skills.", $f7
-    db $f0
+    db "<VOICE2>*: Don't expect too<LINE>"
+    db "many skills.<WAIT>"
+    db "@"
 
 String_F2_00_11::
-    db $eb, "*: It has a fair", $f1
-    db "number of skills.", $f7
-    db $f0
+    db "<VOICE2>*: It has a fair<LINE>"
+    db "number of skills.<WAIT>"
+    db "@"
 
 String_F2_00_12::
-    db $eb, "*: It inherited its", $f1
-    db "parents' skills.", $f7
-    db $f0
+    db "<VOICE2>*: It inherited its<LINE>"
+    db "parents' skills.<WAIT>"
+    db "@"
 
 String_F2_00_13::
-    db $eb, "*: It knows a great", $f1
-    db "variety of skills!", $f7
-    db $f0
+    db "<VOICE2>*: It knows a great<LINE>"
+    db "variety of skills!<WAIT>"
+    db "@"
 
 String_F2_00_14::
-    db $eb, "*: Its growth may", $f1
-    db "be a bit wanting.", $f7
-    db $f0
+    db "<VOICE2>*: Its growth may<LINE>"
+    db "be a bit wanting.<WAIT>"
+    db "@"
 
 String_F2_00_15::
-    db $eb, "*: It will grow in", $f1
-    db "an average way.", $f7
-    db $f0
+    db "<VOICE2>*: It will grow in<LINE>"
+    db "an average way.<WAIT>"
+    db "@"
 
 String_F2_00_16::
-    db $eb, "*: It will be hard", $f1
-    db "to raise a little", $a4, $f7
-    db $f0
+    db "<VOICE2>*: It will be hard<LINE>"
+    db "to raise a little…<WAIT>"
+    db "@"
 
 String_F2_00_17::
-    db $eb, "*: Its growth can't", $f1
-    db "be faulted.", $f7
-    db $f0
+    db "<VOICE2>*: Its growth can't<LINE>"
+    db "be faulted.<WAIT>"
+    db "@"
 
 String_F2_00_18::
-    db $eb, "*: It appears to be", $f1
-    db "a hard worker.", $f7
-    db $f0
+    db "<VOICE2>*: It appears to be<LINE>"
+    db "a hard worker.<WAIT>"
+    db "@"
 
 String_F2_00_19::
-    db $eb, "*: This one seems", $f1
-    db "to be quite smart.", $f7
-    db $f0
+    db "<VOICE2>*: This one seems<LINE>"
+    db "to be quite smart.<WAIT>"
+    db "@"
 
 String_F2_00_1A::
-    db $eb, "*: I can tell this", $f1
-    db "one is kind.", $f7
-    db $f0
+    db "<VOICE2>*: I can tell this<LINE>"
+    db "one is kind.<WAIT>"
+    db "@"
 
 String_F2_00_1B::
-    db $eb, "*: No doubt at", $f1
-    db "all-it's male.", $f7
-    db $f0
+    db "<VOICE2>*: No doubt at<LINE>"
+    db "all-it's male.<WAIT>"
+    db "@"
 
 String_F2_00_1C::
-    db $eb, "*: No doubt at", $f1
-    db "all-it's female.", $f7
-    db $f0
+    db "<VOICE2>*: No doubt at<LINE>"
+    db "all-it's female.<WAIT>"
+    db "@"
 
 String_F2_00_1D::
-    db $eb, "*: That's the best", $f1
-    db "I could do now.", $fa, $f7
-    db $ef, $ee, "Um", $a4, " I hope I was", $ef, $ee, "useful to you.", $f7
-    db $f0
+    db "<VOICE2>*: That's the best<LINE>"
+    db "I could do now.<PROMPT>"
+    db "<NEXT>Um… I hope I was"
+    db "<NEXT>useful to you.<WAIT>"
+    db "@"
 
 String_F2_00_1E::
-    db $eb, "*: Should I change", $f1
-    db "someone's name?", $f0
+    db "<VOICE2>*: Should I change<LINE>"
+    db "someone's name?@"
 
 String_F2_00_22::
-    db $eb, "*: Come here for", $f1
-    db "renaming monsters.", $f7
-    db $f0
+    db "<VOICE2>*: Come here for<LINE>"
+    db "renaming monsters.<WAIT>"
+    db "@"
 
 String_F2_00_23::
-    db $eb, "*: Pick the monster", $f1
-    db "to rename.", $f0, "Is ", $f9, "0 OK?", $f0, "Is ", $f9, "0 OK?", $f0, "That name is", $f1
-    db "already in use.", $f7
-    db $f0, "That name can't be", $f1
-    db "used.", $fa, $f7
-    db $f2, "Please use another", $f1
-    db "name.", $f7
-    db $f0, $eb
+    db "<VOICE2>*: Pick the monster<LINE>"
+    db "to rename.@"
+    db "Is <BUF0> OK?@"
+    db "Is <BUF0> OK?@"
+    db "That name is<LINE>"
+    db "already in use.<WAIT>"
+    db "@"
+    db "That name can't be<LINE>"
+    db "used.<PROMPT>"
+    db "<CLEAR>Please use another<LINE>"
+    db "name.<WAIT>"
+    db "@"
+    db "<VOICE2>"
     db $45, $90, $12, $36, $90, $f9, $00, $90, $18, $14, $98, $f0, $eb, $45, $90, $12
     db $36, $90, $f9, $00, $90, $18, $14, $98, $f0, $eb, $45
-    db " That name is", $f1
-    db "already in use.", $f7
-    db $f0, $eb
+    db " That name is<LINE>"
+    db "already in use.<WAIT>"
+    db "@"
+    db "<VOICE2>"
     db $45
-    db " That name can't", $f1
-    db "be used.", $fa, $f7
-    db $f2, "You'll have to use", $f1
-    db "another name.", $f7
-    db $f0
+    db " That name can't<LINE>"
+    db "be used.<PROMPT>"
+    db "<CLEAR>You'll have to use<LINE>"
+    db "another name.<WAIT>"
+    db "@"
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores
 ; the default window (E-0121)

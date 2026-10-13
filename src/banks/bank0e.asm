@@ -176,445 +176,498 @@ StringList_0E_4034::
     dw MessageBank0E_87 ; id 135
 
 MessageBank0E_00::
-    db $ea, "*: Its accessory is", $f1
-    db "in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_0C::
-    db $ea, "*: Is it OK to save", $f1
-    db "the results?", $f0
+    db "<VOICE1>*: Is it OK to save<LINE>"
+    db "the results?@"
 
 MessageBank0E_0D::
-    db $ea, "*: Too bad", $a4, " Let's", $f1
-    db "meet again.", $f7
-    db $f0
+    db "<VOICE1>*: Too bad… Let's<LINE>"
+    db "meet again.<WAIT>"
+    db "@"
 
 MessageBank0E_13::
-    db $ea, "*: Who will breed", $f1
-    db "with my SpikyBoy?", $f0
+    db "<VOICE1>*: Who will breed<LINE>"
+    db "with my SpikyBoy?@"
 
 MessageBank0E_14::
-    db $ea, "*: Would you like", $f1
-    db "to breed a monster", $fa, $f7
-    db $ef, $ee, "with my SpikyBoy?", $ef, $ee, $f0
+    db "<VOICE1>*: Would you like<LINE>"
+    db "to breed a monster<PROMPT>"
+    db "<NEXT>with my SpikyBoy?"
+    db "<NEXT>@"
 
 MessageBank0E_15::
-    db $ea, "*: This monster?", $f0
+    db "<VOICE1>*: This monster?@"
 
 MessageBank0E_16::
-    db $ea, "*: A low-level one", $f1
-    db "can't breed.", $f7
-    db $f0
+    db "<VOICE1>*: A low-level one<LINE>"
+    db "can't breed.<WAIT>"
+    db "@"
 
 MessageBank0E_17::
-    db $ea, "*: Your party won't", $f1
-    db "have any monsters.", $f7
-    db $f0
+    db "<VOICE1>*: Your party won't<LINE>"
+    db "have any monsters.<WAIT>"
+    db "@"
 
 MessageBank0E_18::
-    db $ea, "*: Something huge", $f1
-    db "will result", $a4, $fa, $f7
-    db $ef, $ee, "Shall we begin the", $ef, $ee, "breeding?", $f0
+    db "<VOICE1>*: Something huge<LINE>"
+    db "will result…<PROMPT>"
+    db "<NEXT>Shall we begin the"
+    db "<NEXT>breeding?@"
 
 MessageBank0E_19::
-    db $ea, "*: Let's get this", $f1
-    db "started!", $f7
-    db $f0
+    db "<VOICE1>*: Let's get this<LINE>"
+    db "started!<WAIT>"
+    db "@"
 
 MessageBank0E_1A::
-    db $ea, "*: Breeding could", $f1
-    db "get you unexpected", $fa, $f7
-    db $ef, $ee, "skills. It never", $ef, $ee, "hurts to breed.", $f7
-    db $f0
+    db "<VOICE1>*: Breeding could<LINE>"
+    db "get you unexpected<PROMPT>"
+    db "<NEXT>skills. It never"
+    db "<NEXT>hurts to breed.<WAIT>"
+    db "@"
 
 MessageBank0E_1B::
-    db $ea, "*: ", $f9, "0", $f1
-    db "will result,", $fa, $f7
-    db $ef, $ee, "I think.", $ef, $ee, $fa, $f7
-    db $ef, $ee, $f3, "Shall we begin", $f1
-    db "breeding?", $f0
+    db "<VOICE1>*: <BUF0><LINE>"
+    db "will result,<PROMPT>"
+    db "<NEXT>I think."
+    db "<NEXT><PROMPT>"
+    db "<NEXT>"
+    db "<HOME>Shall we begin<LINE>"
+    db "breeding?@"
 
 MessageBank0E_1C::
-    db $ea, "*: Its accessory is", $f1
-    db "now in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "now in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_1D::
-    db $ea, "*: What? Well,", $f1
-    db "that's too bad.", $fa, $f7
-    db $ef, $ee, "Tell me if you", $ef, $ee, "change your mind.", $f7
-    db $f0
+    db "<VOICE1>*: What? Well,<LINE>"
+    db "that's too bad.<PROMPT>"
+    db "<NEXT>Tell me if you"
+    db "<NEXT>change your mind.<WAIT>"
+    db "@"
 
 MessageBank0E_23::
-    db $ea, "*: Which one's going", $f1
-    db "with my ArmorPede?", $f0
+    db "<VOICE1>*: Which one's going<LINE>"
+    db "with my ArmorPede?@"
 
 MessageBank0E_24::
-    db $ea, "*: Hey, want to try", $f1
-    db "breeding a monster", $fa, $f7
-    db $ef, $ee, "of yours with my", $ef, $ee, "ArmorPede?", $f0
+    db "<VOICE1>*: Hey, want to try<LINE>"
+    db "breeding a monster<PROMPT>"
+    db "<NEXT>of yours with my"
+    db "<NEXT>ArmorPede?@"
 
 MessageBank0E_25::
-    db $ea, "*: Is this the one", $f1
-    db "for breeding?", $f0
+    db "<VOICE1>*: Is this the one<LINE>"
+    db "for breeding?@"
 
 MessageBank0E_26::
-    db $ea, "*: Don't stick me", $f1
-    db "with a low-level", $fa, $f7
-    db $ef, $ee, "monster!", $ef, $ee, "That's not fair!", $f7
-    db $f0
+    db "<VOICE1>*: Don't stick me<LINE>"
+    db "with a low-level<PROMPT>"
+    db "<NEXT>monster!"
+    db "<NEXT>That's not fair!<WAIT>"
+    db "@"
 
 MessageBank0E_27::
-    db $ea, "*: Who's going to", $f1
-    db "stay with you?", $f7
-    db $f0
+    db "<VOICE1>*: Who's going to<LINE>"
+    db "stay with you?<WAIT>"
+    db "@"
 
 MessageBank0E_28::
-    db $ea, "*: Huh? Woohoo, I", $f1
-    db "think this pair is", $fa, $f7
-    db $ef, $ee, "going to make a", $ef, $ee, "serious monster!", $fa, $f7
-    db $ef, $ee, "All right if we", $ef, $ee, "get this started?", $f0
+    db "<VOICE1>*: Huh? Woohoo, I<LINE>"
+    db "think this pair is<PROMPT>"
+    db "<NEXT>going to make a"
+    db "<NEXT>serious monster!<PROMPT>"
+    db "<NEXT>All right if we"
+    db "<NEXT>get this started?@"
 
 MessageBank0E_29::
-    db $ea, "*: Great, let's get", $f1
-    db "this started.", $f7
-    db $f0
+    db "<VOICE1>*: Great, let's get<LINE>"
+    db "this started.<WAIT>"
+    db "@"
 
 MessageBank0E_2A::
-    db $ea, "*: If you get an", $f1
-    db "EvilArmor, breed", $fa, $f7
-    db $ef, $ee, "it with a material", $ef, $ee, "family partner.", $fa, $f7
-    db $ef, $ee, "Doesn't that sound", $ef, $ee, "like a tough", $fa, $f7
-    db $ef, $ee, "combo?", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>*: If you get an<LINE>"
+    db "EvilArmor, breed<PROMPT>"
+    db "<NEXT>it with a material"
+    db "<NEXT>family partner.<PROMPT>"
+    db "<NEXT>Doesn't that sound"
+    db "<NEXT>like a tough<PROMPT>"
+    db "<NEXT>combo?"
+    db "<NEXT><WAIT>"
+    db "@"
 
 MessageBank0E_2B::
-    db $ea, "*: ", $f9, "0 is", $f1
-    db "what you'll get.", $fa, $f7
-    db $ef, $ee, "Can we get going", $ef, $ee, "already?", $f0
+    db "<VOICE1>*: <BUF0> is<LINE>"
+    db "what you'll get.<PROMPT>"
+    db "<NEXT>Can we get going"
+    db "<NEXT>already?@"
 
 MessageBank0E_2C::
-    db $ea, "*: Its accessory is", $f1
-    db "in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_2D::
-    db $ea, "*: Hm", $a4, " That is", $f1
-    db "disappointing.", $fa, $f7
-    db $ef, $ee, "I hope we will", $ef, $ee, "meet again.", $f7
-    db $f0
+    db "<VOICE1>*: Hm… That is<LINE>"
+    db "disappointing.<PROMPT>"
+    db "<NEXT>I hope we will"
+    db "<NEXT>meet again.<WAIT>"
+    db "@"
 
 MessageBank0E_33::
-    db $ea, "*: Which will be my", $f1
-    db "Gulpple's mate?", $f0
+    db "<VOICE1>*: Which will be my<LINE>"
+    db "Gulpple's mate?@"
 
 MessageBank0E_34::
-    db $ea, "*: Hello, would you", $f1
-    db "like to breed one", $fa, $f7
-    db $ef, $ee, "of your monsters", $ef, $ee, "with my Gulpple?", $f0
+    db "<VOICE1>*: Hello, would you<LINE>"
+    db "like to breed one<PROMPT>"
+    db "<NEXT>of your monsters"
+    db "<NEXT>with my Gulpple?@"
 
 MessageBank0E_35::
-    db $ea, "*: Is this your", $f1
-    db "breeding choice?", $f0
+    db "<VOICE1>*: Is this your<LINE>"
+    db "breeding choice?@"
 
 MessageBank0E_36::
-    db $ea, "*: This monster is", $f1
-    db "too low in level", $fa, $f7
-    db $ef, $ee, "to make an attempt", $ef, $ee, "at breeding.", $f7
-    db $f0
+    db "<VOICE1>*: This monster is<LINE>"
+    db "too low in level<PROMPT>"
+    db "<NEXT>to make an attempt"
+    db "<NEXT>at breeding.<WAIT>"
+    db "@"
 
 MessageBank0E_37::
-    db $ea, "*: You'll have no", $f1
-    db "monsters with you.", $f7
-    db $f0
+    db "<VOICE1>*: You'll have no<LINE>"
+    db "monsters with you.<WAIT>"
+    db "@"
 
 MessageBank0E_38::
-    db $ea, "*: Goodness, I", $f1
-    db "believe this pair", $fa, $f7
-    db $ef, $ee, "will result in one", $ef, $ee, "tough offspring.", $fa, $f7
-    db $ef, $ee, "Well, shall we get", $ef, $ee, "started?", $f0
+    db "<VOICE1>*: Goodness, I<LINE>"
+    db "believe this pair<PROMPT>"
+    db "<NEXT>will result in one"
+    db "<NEXT>tough offspring.<PROMPT>"
+    db "<NEXT>Well, shall we get"
+    db "<NEXT>started?@"
 
 MessageBank0E_39::
-    db $ea, "*: Ready? Then", $f1
-    db "let's begin.", $f7
-    db $f0
+    db "<VOICE1>*: Ready? Then<LINE>"
+    db "let's begin.<WAIT>"
+    db "@"
 
 MessageBank0E_3A::
-    db $ea, "*: So this pairing", $f1
-    db "results in this", $fa, $f7
-    db $ef, $ee, "species", $a4, " I", $44, " better", $ef, $ee, "record this!", $f7
-    db $f0
+    db "<VOICE1>*: So this pairing<LINE>"
+    db "results in this<PROMPT>"
+    db "<NEXT>species… I", $44, " better"
+    db "<NEXT>record this!<WAIT>"
+    db "@"
 
 MessageBank0E_3B::
-    db $ea, "*: ", $f9, "0", $f1
-    db "will be the", $fa, $f7
-    db $ef, $ee, "result.", $fa, $f7
-    db $ef, $ee, "Is it OK to", $ef, $ee, "proceed?", $f0
+    db "<VOICE1>*: <BUF0><LINE>"
+    db "will be the<PROMPT>"
+    db "<NEXT>result.<PROMPT>"
+    db "<NEXT>Is it OK to"
+    db "<NEXT>proceed?@"
 
 MessageBank0E_3C::
-    db $ea, "*: Its accessory is", $f1
-    db "in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_3D::
-    db $ea, "*: What? Are you", $f1
-    db "kidding me?", $f7
-    db $f0
+    db "<VOICE1>*: What? Are you<LINE>"
+    db "kidding me?<WAIT>"
+    db "@"
 
 MessageBank0E_43::
-    db $ea, "*: Hey, matey, want", $f1
-    db "to breed something", $fa, $f7
-    db $ef, $ee, "with my WildApe?", $ef, $ee, $f0
+    db "<VOICE1>*: Hey, matey, want<LINE>"
+    db "to breed something<PROMPT>"
+    db "<NEXT>with my WildApe?"
+    db "<NEXT>@"
 
 MessageBank0E_44::
-    db $ea, "*: What'll you put", $f1
-    db "up for my WildApe?", $f0
+    db "<VOICE1>*: What'll you put<LINE>"
+    db "up for my WildApe?@"
 
 MessageBank0E_45::
-    db $ea, "*: Is this one", $f1
-    db "going to breed?", $f0
+    db "<VOICE1>*: Is this one<LINE>"
+    db "going to breed?@"
 
 MessageBank0E_46::
-    db $ea, "*: Cut me a little", $f1
-    db "slack here.", $fa, $f7
-    db $ef, $ee, "Nothing too low in", $ef, $ee, "level, hey?", $f7
-    db $f0
+    db "<VOICE1>*: Cut me a little<LINE>"
+    db "slack here.<PROMPT>"
+    db "<NEXT>Nothing too low in"
+    db "<NEXT>level, hey?<WAIT>"
+    db "@"
 
 MessageBank0E_47::
-    db $ea, "*: You'll be all", $f1
-    db "alone if you do.", $f7
-    db $f0
+    db "<VOICE1>*: You'll be all<LINE>"
+    db "alone if you do.<WAIT>"
+    db "@"
 
 MessageBank0E_48::
-    db $ea, "*: Whoa! I can feel", $f1
-    db "it in my bones,", $fa, $f7
-    db $ef, $ee, "this one will be", $ef, $ee, "something special.", $fa, $f7
-    db $ef, $ee, "We've got to do", $ef, $ee, "this, OK?", $f0
+    db "<VOICE1>*: Whoa! I can feel<LINE>"
+    db "it in my bones,<PROMPT>"
+    db "<NEXT>this one will be"
+    db "<NEXT>something special.<PROMPT>"
+    db "<NEXT>We've got to do"
+    db "<NEXT>this, OK?@"
 
 MessageBank0E_49::
-    db $ea, "*: Fine! Let's not", $f1
-    db "waste any time!", $f7
-    db $f0
+    db "<VOICE1>*: Fine! Let's not<LINE>"
+    db "waste any time!<WAIT>"
+    db "@"
 
 MessageBank0E_4A::
-    db $ea, "*: Thanks, matey!", $f1
-    db "Much obliged!", $fa, $f7
-    db $ef, $ee, "Hope we can do", $ef, $ee, "this again!", $f7
-    db $f0
+    db "<VOICE1>*: Thanks, matey!<LINE>"
+    db "Much obliged!<PROMPT>"
+    db "<NEXT>Hope we can do"
+    db "<NEXT>this again!<WAIT>"
+    db "@"
 
 MessageBank0E_4B::
-    db $ea, "*: ", $f9, "0 is", $f1
-    db "what you'll get.", $fa, $f7
-    db $ef, $ee, "Well, do you want", $ef, $ee, "to do this?", $f0
+    db "<VOICE1>*: <BUF0> is<LINE>"
+    db "what you'll get.<PROMPT>"
+    db "<NEXT>Well, do you want"
+    db "<NEXT>to do this?@"
 
 MessageBank0E_4C::
-    db $ea, "*: Its accessory is", $f1
-    db "in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_4D::
-    db $eb, "*: Ohhh", $a4, " That is so", $f1
-    db "disappointing.", $fa, $f7
-    db $ef, $ee, "Well, tell me if", $ef, $ee, "you reconsider.", $f7
-    db $f0
+    db "<VOICE2>*: Ohhh… That is so<LINE>"
+    db "disappointing.<PROMPT>"
+    db "<NEXT>Well, tell me if"
+    db "<NEXT>you reconsider.<WAIT>"
+    db "@"
 
 MessageBank0E_53::
-    db $eb, "*: Which will be my", $f1
-    db "FunkyBird's mate?", $f0
+    db "<VOICE2>*: Which will be my<LINE>"
+    db "FunkyBird's mate?@"
 
 MessageBank0E_54::
-    db $eb, "*: Hi, honey! Would", $f1
-    db "you like to breed", $fa, $f7
-    db $ef, $ee, "a monster with my", $ef, $ee, "darling FunkyBird?", $f0
+    db "<VOICE2>*: Hi, honey! Would<LINE>"
+    db "you like to breed<PROMPT>"
+    db "<NEXT>a monster with my"
+    db "<NEXT>darling FunkyBird?@"
 
 MessageBank0E_55::
-    db $eb, "*: Is this monster", $f1
-    db "OK with you?", $f0
+    db "<VOICE2>*: Is this monster<LINE>"
+    db "OK with you?@"
 
 MessageBank0E_56::
-    db $eb, "*: This monster is", $f1
-    db "way too low-level.", $f7
-    db $f0
+    db "<VOICE2>*: This monster is<LINE>"
+    db "way too low-level.<WAIT>"
+    db "@"
 
 MessageBank0E_57::
-    db $eb, "*: You can't be by", $f1
-    db "your lonesome!", $f7
-    db $f0
+    db "<VOICE2>*: You can't be by<LINE>"
+    db "your lonesome!<WAIT>"
+    db "@"
 
 MessageBank0E_58::
-    db $eb, "*: Oh-oh. It looks", $f1
-    db "like we'll be", $fa, $f7
-    db $ef, $ee, "getting something", $ef, $ee, "amazing from this.", $fa, $f7
-    db $ef, $ee, "Is it all right to", $ef, $ee, "let them breed?", $f0
+    db "<VOICE2>*: Oh-oh. It looks<LINE>"
+    db "like we'll be<PROMPT>"
+    db "<NEXT>getting something"
+    db "<NEXT>amazing from this.<PROMPT>"
+    db "<NEXT>Is it all right to"
+    db "<NEXT>let them breed?@"
 
 MessageBank0E_59::
-    db $eb, "*: Wonderful! Let's", $f1
-    db "begin breeding!", $f7
-    db $f0
+    db "<VOICE2>*: Wonderful! Let's<LINE>"
+    db "begin breeding!<WAIT>"
+    db "@"
 
 MessageBank0E_5A::
-    db $eb, "*: We might end up", $f1
-    db "with different", $fa, $f7
-    db $ef, $ee, "monsters, but I", $ef, $ee, "hope we both get", $fa, $f7
-    db $ef, $ee, "something that'll", $ef, $ee, "make us happy.", $f7
-    db $f0
+    db "<VOICE2>*: We might end up<LINE>"
+    db "with different<PROMPT>"
+    db "<NEXT>monsters, but I"
+    db "<NEXT>hope we both get<PROMPT>"
+    db "<NEXT>something that'll"
+    db "<NEXT>make us happy.<WAIT>"
+    db "@"
 
 MessageBank0E_5B::
-    db $eb, "*: ", $f9, "0", $f1
-    db "will be your baby.", $fa, $f7
-    db $ef, $ee, "Should we let them", $ef, $ee, "breed?", $f0
+    db "<VOICE2>*: <BUF0><LINE>"
+    db "will be your baby.<PROMPT>"
+    db "<NEXT>Should we let them"
+    db "<NEXT>breed?@"
 
 MessageBank0E_5C::
-    db $eb, "*: Its accessory is", $f1
-    db "in the Vault now.", $f7
-    db $f0
+    db "<VOICE2>*: Its accessory is<LINE>"
+    db "in the Vault now.<WAIT>"
+    db "@"
 
 MessageBank0E_5D::
-    db $ea, "*: May misfortune", $f1
-    db "never find you.", $fa, $f7
-    db $ef, $ee, "Come see me if you", $ef, $ee, "decide to breed.", $f7
-    db $f0
+    db "<VOICE1>*: May misfortune<LINE>"
+    db "never find you.<PROMPT>"
+    db "<NEXT>Come see me if you"
+    db "<NEXT>decide to breed.<WAIT>"
+    db "@"
 
 MessageBank0E_63::
-    db $ea, "*: What will breed", $f1
-    db "with my Copycat?", $f0
+    db "<VOICE1>*: What will breed<LINE>"
+    db "with my Copycat?@"
 
 MessageBank0E_64::
-    db $ea, "*: Pardon me, but", $f1
-    db "would you like to", $fa, $f7
-    db $ef, $ee, "breed a monster", $ef, $ee, "with my Copycat?", $f0
+    db "<VOICE1>*: Pardon me, but<LINE>"
+    db "would you like to<PROMPT>"
+    db "<NEXT>breed a monster"
+    db "<NEXT>with my Copycat?@"
 
 MessageBank0E_65::
-    db $ea, "*: Is that your", $f1
-    db "breeding choice?", $f0
+    db "<VOICE1>*: Is that your<LINE>"
+    db "breeding choice?@"
 
 MessageBank0E_66::
-    db $ea, "*: A monster can't", $f1
-    db "be too low in", $fa, $f7
-    db $ef, $ee, "level if you want", $ef, $ee, "it to breed.", $f7
-    db $f0
+    db "<VOICE1>*: A monster can't<LINE>"
+    db "be too low in<PROMPT>"
+    db "<NEXT>level if you want"
+    db "<NEXT>it to breed.<WAIT>"
+    db "@"
 
 MessageBank0E_67::
-    db $ea, "*: You'll have no", $f1
-    db "monsters with you.", $f7
-    db $f0
+    db "<VOICE1>*: You'll have no<LINE>"
+    db "monsters with you.<WAIT>"
+    db "@"
 
 MessageBank0E_68::
-    db $ea, "*: Well, well, it", $f1
-    db "looks like a truly", $fa, $f7
-    db $ef, $ee, "spectacular baby", $ef, $ee, "will result.", $fa, $f7
-    db $ef, $ee, "Well, shall we go", $ef, $ee, "through with this?", $f0
+    db "<VOICE1>*: Well, well, it<LINE>"
+    db "looks like a truly<PROMPT>"
+    db "<NEXT>spectacular baby"
+    db "<NEXT>will result.<PROMPT>"
+    db "<NEXT>Well, shall we go"
+    db "<NEXT>through with this?@"
 
 MessageBank0E_69::
-    db $ea, "*: Ready? Good,", $f1
-    db "let's begin.", $f7
-    db $f0
+    db "<VOICE1>*: Ready? Good,<LINE>"
+    db "let's begin.<WAIT>"
+    db "@"
 
 MessageBank0E_6A::
-    db $ea, "*: There is an old", $f1
-    db "saying: The more", $fa, $f7
-    db $ef, $ee, "you have, the less", $ef, $ee, "you need.", $fa, $f7
-    db $ef, $ee, "Indeed, the more", $ef, $ee, "monsters you have,", $fa, $f7
-    db $ef, $ee, "the stronger a", $ef, $ee, "master you are.", $f7
-    db $f0
+    db "<VOICE1>*: There is an old<LINE>"
+    db "saying: The more<PROMPT>"
+    db "<NEXT>you have, the less"
+    db "<NEXT>you need.<PROMPT>"
+    db "<NEXT>Indeed, the more"
+    db "<NEXT>monsters you have,<PROMPT>"
+    db "<NEXT>the stronger a"
+    db "<NEXT>master you are.<WAIT>"
+    db "@"
 
 MessageBank0E_6B::
-    db $ea, "*: ", $f9, "0", $f1
-    db "will be the", $fa, $f7
-    db $ef, $ee, "progeny.", $fa, $f7
-    db $ef, $ee, "Well, shall we go", $ef, $ee, "through with this?", $f0
+    db "<VOICE1>*: <BUF0><LINE>"
+    db "will be the<PROMPT>"
+    db "<NEXT>progeny.<PROMPT>"
+    db "<NEXT>Well, shall we go"
+    db "<NEXT>through with this?@"
 
 MessageBank0E_6C::
-    db $ea, "*: Its accessory is", $f1
-    db "in the Vault now.", $f7
-    db $f0
+    db "<VOICE1>*: Its accessory is<LINE>"
+    db "in the Vault now.<WAIT>"
+    db "@"
 
 MessageBank0E_6D::
-    db $eb, "*: No? That makes", $f1
-    db "me feel sad.", $fa, $f7
-    db $ef, $ee, "If you reconsider,", $ef, $ee, "come back.", $f7
-    db $f0
+    db "<VOICE2>*: No? That makes<LINE>"
+    db "me feel sad.<PROMPT>"
+    db "<NEXT>If you reconsider,"
+    db "<NEXT>come back.<WAIT>"
+    db "@"
 
 MessageBank0E_73::
-    db $eb, "*: What's going to", $f1
-    db "be with Andreal?", $f0
+    db "<VOICE2>*: What's going to<LINE>"
+    db "be with Andreal?@"
 
 MessageBank0E_74::
-    db $eb, "*: Hi! How would", $f1
-    db "you like to breed", $fa, $f7
-    db $ef, $ee, "a monster with my", $ef, $ee, "Andreal?", $f0
+    db "<VOICE2>*: Hi! How would<LINE>"
+    db "you like to breed<PROMPT>"
+    db "<NEXT>a monster with my"
+    db "<NEXT>Andreal?@"
 
 MessageBank0E_75::
-    db $eb, "*: Is this monster", $f1
-    db "OK with you?", $f0
+    db "<VOICE2>*: Is this monster<LINE>"
+    db "OK with you?@"
 
 MessageBank0E_76::
-    db $eb, "*: That one's too", $f1
-    db "low-level, dear.", $f7
-    db $f0
+    db "<VOICE2>*: That one's too<LINE>"
+    db "low-level, dear.<WAIT>"
+    db "@"
 
 MessageBank0E_77::
-    db $eb, "*: You can't go off", $f1
-    db "all alone.", $f7
-    db $f0
+    db "<VOICE2>*: You can't go off<LINE>"
+    db "all alone.<WAIT>"
+    db "@"
 
 MessageBank0E_78::
-    db $eb, "*: ", $a4, "You know, I", $f1
-    db "think we're going", $fa, $f7
-    db $ef, $ee, "to see an awesome", $ef, $ee, "baby out of this.", $fa, $f7
-    db $ef, $ee, "We should let this", $ef, $ee, "pair breed.", $f0
+    db "<VOICE2>*: …You know, I<LINE>"
+    db "think we're going<PROMPT>"
+    db "<NEXT>to see an awesome"
+    db "<NEXT>baby out of this.<PROMPT>"
+    db "<NEXT>We should let this"
+    db "<NEXT>pair breed.@"
 
 MessageBank0E_79::
-    db $eb, "*: Good, let's get", $f1
-    db "this started.", $f7
-    db $f0
+    db "<VOICE2>*: Good, let's get<LINE>"
+    db "this started.<WAIT>"
+    db "@"
 
 MessageBank0E_7A::
-    db $eb, "*: People will be", $f1
-    db "jealous when they", $fa, $f7
-    db $ef, $ee, "find out I got to", $ef, $ee, "breed monsters", $fa, $f7
-    db $ef, $ee, "with a famous", $ef, $ee, "master like you.", $fa, $f7
-    db $ef, $ee, "Let me give you a", $ef, $ee, "little kiss!", $f7
-    db $f0
+    db "<VOICE2>*: People will be<LINE>"
+    db "jealous when they<PROMPT>"
+    db "<NEXT>find out I got to"
+    db "<NEXT>breed monsters<PROMPT>"
+    db "<NEXT>with a famous"
+    db "<NEXT>master like you.<PROMPT>"
+    db "<NEXT>Let me give you a"
+    db "<NEXT>little kiss!<WAIT>"
+    db "@"
 
 MessageBank0E_7B::
-    db $eb, "*: ", $f9, "0", $f1
-    db "will be your baby.", $fa, $f7
-    db $ef, $ee, "Is it OK to let", $ef, $ee, "them breed?", $f0
+    db "<VOICE2>*: <BUF0><LINE>"
+    db "will be your baby.<PROMPT>"
+    db "<NEXT>Is it OK to let"
+    db "<NEXT>them breed?@"
 
 MessageBank0E_7C::
-    db $eb, "*: Its accessory is", $f1
-    db "now in the Vault.", $f7
-    db $f0
+    db "<VOICE2>*: Its accessory is<LINE>"
+    db "now in the Vault.<WAIT>"
+    db "@"
 
 MessageBank0E_7D::
-    db $ea, "*: Whaaat?", $f1
-    db "You're serious?", $fa, $f7
-    db $ef, $ee, "Well, maybe we'll", $ef, $ee, "meet again.", $f7
-    db $f0
+    db "<VOICE1>*: Whaaat?<LINE>"
+    db "You're serious?<PROMPT>"
+    db "<NEXT>Well, maybe we'll"
+    db "<NEXT>meet again.<WAIT>"
+    db "@"
 
 MessageBank0E_83::
-    db $ea, "*: What'll you pair", $f1
-    db "with my Skeletor?", $f0
+    db "<VOICE1>*: What'll you pair<LINE>"
+    db "with my Skeletor?@"
 
 MessageBank0E_84::
-    db $ea, "*: Hey, kid.", $f1
-    db "Want to breed a", $fa, $f7
-    db $ef, $ee, "monster of yours", $ef, $ee, "with my Skeletor?", $f0
+    db "<VOICE1>*: Hey, kid.<LINE>"
+    db "Want to breed a<PROMPT>"
+    db "<NEXT>monster of yours"
+    db "<NEXT>with my Skeletor?@"
 
 MessageBank0E_85::
-    db $ea, "*: Is that what", $f1
-    db "you're picking?", $f0
+    db "<VOICE1>*: Is that what<LINE>"
+    db "you're picking?@"
 
 MessageBank0E_86::
-    db $ea, "*: No, no. Nothing", $f1
-    db "low in level.", $f7
-    db $f0
+    db "<VOICE1>*: No, no. Nothing<LINE>"
+    db "low in level.<WAIT>"
+    db "@"
 
 MessageBank0E_87::
-    db $ea, "*: You'll be without", $f1
-    db "a monster.", $f7
-    db $f0
+    db "<VOICE1>*: You'll be without<LINE>"
+    db "a monster.<WAIT>"
+    db "@"
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank0E::
@@ -663,103 +716,107 @@ StringList_0E_5387::
     dw String_0E_5385_00_16 ; id 22
 
 String_0E_5385_00_00::
-    db "Ready to start", $f1
-    db "breeding.", $fa, $f7
-    db $f0
+    db "Ready to start<LINE>"
+    db "breeding.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_02::
-    db "You refused", $f1
-    db "breeding.", $fa, $f7
-    db $f0
+    db "You refused<LINE>"
+    db "breeding.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_03::
-    db "Your pal refused", $f1
-    db "breeding.", $fa, $f7
-    db $f0
+    db "Your pal refused<LINE>"
+    db "breeding.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_04::
-    db "Is this one OK for", $f1
-    db "breeding?", $f0
+    db "Is this one OK for<LINE>"
+    db "breeding?@"
 
 String_0E_5385_00_05::
-    db "This one is too", $f1
-    db "young to breed.", $fa, $f7
-    db $ef, $ee, "It needs to be", $ef, $ee, "leveled up more.", $fa, $f7
-    db $f0
+    db "This one is too<LINE>"
+    db "young to breed.<PROMPT>"
+    db "<NEXT>It needs to be"
+    db "<NEXT>leveled up more.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_06::
-    db "Choose from the", $f1
-    db "farm's roster.", $fa, $f7
-    db $f0
+    db "Choose from the<LINE>"
+    db "farm's roster.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_07::
-    db "Please wait.", $f0
+    db "Please wait.@"
 
 String_0E_5385_00_08::
-    db "Identical genders", $f1
-    db "can't breed.", $fa, $f7
-    db $f0
+    db "Identical genders<LINE>"
+    db "can't breed.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_09::
-    db "Choose the monster", $f1
-    db "for breeding.", $f0
+    db "Choose the monster<LINE>"
+    db "for breeding.@"
 
 String_0E_5385_00_0A::
-    db "The couple is", $f1
-    db "incompatible.", $fa, $f7
-    db $f0
+    db "The couple is<LINE>"
+    db "incompatible.<PROMPT>"
+    db "@"
 
 String_0E_5385_00_0B::
-    db "Proceed with", $f1
-    db "breeding?", $f0
+    db "Proceed with<LINE>"
+    db "breeding?@"
 
 String_0E_5385_00_0C::
-    db "Is it OK to record", $f1
-    db "the results?", $f0
+    db "Is it OK to record<LINE>"
+    db "the results?@"
 
 String_0E_5385_00_0D::
-    db "The monsters like", $f1
-    db "each other.", $fa, $f7
-    db $ef, $ee, "Breeding will be", $ef, $ee, "started.", $f0
+    db "The monsters like<LINE>"
+    db "each other.<PROMPT>"
+    db "<NEXT>Breeding will be"
+    db "<NEXT>started.@"
 
 String_0E_5385_00_0E::
-    db "InfoOK", $f0
+    db "InfoOK@"
 
 String_0E_5385_00_0F::
-    db "BredInfoExit", $f0
+    db "BredInfoExit@"
 
 String_0E_5385_00_10::
-    db "ATKDEFGLINWMextvlBas        ", $a2, " ", $f0
+    db "ATKDEFGLINWMextvlBas        + @"
 
 String_0E_5385_00_11::
-    db "Breeding went", $f1
-    db "wrong somehow.", $fa, $f7
-    db $ef, $ee, "Breeding will be", $ef, $ee, "canceled.", $f7
-    db $f0
+    db "Breeding went<LINE>"
+    db "wrong somehow.<PROMPT>"
+    db "<NEXT>Breeding will be"
+    db "<NEXT>canceled.<WAIT>"
+    db "@"
 
 String_0E_5385_00_12::
-    db "The Game Link", $f1
-    db "failed.", $fa, $f7
-    db $ef, $ee, "Breeding will be", $ef, $ee, "canceled.", $f7
-    db $f0
+    db "The Game Link<LINE>"
+    db "failed.<PROMPT>"
+    db "<NEXT>Breeding will be"
+    db "<NEXT>canceled.<WAIT>"
+    db "@"
 
 String_0E_5385_00_13::
-    db "You refused", $f1
-    db "breeding.", $f0
+    db "You refused<LINE>"
+    db "breeding.@"
 
 String_0E_5385_00_14::
-    db "Your pal refused", $f1
-    db "breeding.", $f0
+    db "Your pal refused<LINE>"
+    db "breeding.@"
 
 String_0E_5385_00_15::
-    db "For breeding with", $f1
-    db "Terry's monsters.", $f7
-    db $f0
+    db "For breeding with<LINE>"
+    db "Terry's monsters.<WAIT>"
+    db "@"
 
 String_0E_5385_00_16::
-    db $ea, "*: Accessories will", $f1
-    db "be in the Vault.", $f7
-    db $f0
+    db "<VOICE1>*: Accessories will<LINE>"
+    db "be in the Vault.<WAIT>"
+    db "@"
 
 ; clears the child record wChildRecord and fills it from the two parents (wRecordBufA + $B,
 ; wRecordBufB + $B): species from the breeding table BreedSpeciesRuleTable, then names, skills,

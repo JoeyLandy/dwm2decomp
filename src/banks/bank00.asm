@@ -454,7 +454,7 @@ VBlankHandler::
     call GameFrameUpdate
     ld a, [wTextFlags]
     or a
-    call nz, StepStringDisplayUntilDone
+    call nz, StepTextPrinter
     call StepFade
     ld a, [wFrameCounterLo]
     add $01
@@ -6435,7 +6435,7 @@ ComputeSpriteScrollOffsets_WriteSCYAndLYCEtc::
 ; the position wTextWindowTileLo/wTextWindowTileHi to wTextGlyphDestLo/wTextGlyphDestHi and
 ; wTextLineStartLo/wTextLineStartHi, points wTextPosLo/wTextPosHi and
 ; wTextStartPosLo/wTextStartPosHi at the string, sets wTextFlags = 1 and clears wTextControl and
-; wTextLineCount; the string is drawn later by the routine at $2620
+; wTextGlyphTimer; the string is drawn later by the routine at $2620
 BeginStringDisplay::
     push de
     call FillTilesFromRequest
@@ -6457,7 +6457,7 @@ BeginStringDisplay::
     ld [wTextFlags], a
     xor a
     ld [wTextControl], a
-    ld [wTextLineCount], a
+    ld [wTextGlyphTimer], a
     ret
 
 ; DE = string table (see LookupString); copies the string, including its $F0 terminator, to the
@@ -6483,29 +6483,34 @@ RunStringDisplayToEnd::
     set 1, [hl]
 
 .loop:
-    call StepStringDisplayUntilDone
+    call StepTextPrinter
     ld a, [wTextFlags]
     or a
     jr nz, .loop
     ret
 
-; runs the string display step (StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo) repeatedly
-; while bit 7 of wTextControl stays set, setting bit 1 of wTextFlags each time (E-0122)
-StepStringDisplayUntilDone::
+; runs PrintTextStep repeatedly while bit 7 of wTextControl (<INSTANT>) stays set, setting bit 1 of
+; wTextFlags each time; otherwise once (E-0122, E-0336)
+StepTextPrinter::
     ld a, [wTextControl]
     bit 7, a
-    jr z, StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo
+    jr z, PrintTextStep
 
 .loop:
     ld hl, wTextFlags
     set 1, [hl]
-    call StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo
+    call PrintTextStep
     ld a, [wTextControl]
     bit 7, a
     jr nz, .loop
     ret
 
-StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
+; one frame of the text printer, with the string's bank wStringBank mapped: waits for a sound
+; (<SFX_WAIT>), a yes/no choice or a button (<WAIT>), a delay or a timeout; otherwise, once
+; wTextGlyphTimer reaches the text speed wTextSpeed, takes the next string byte: a glyph is drawn
+; (DrawTextGlyph), $8D/$8E marks go to CallFunc28BDInBank1F, and $E0-$FF run RunTextCommand. C2 from
+; E-0336: glyphs follow each other about wTextSpeed frames apart (0 acts as 1)
+PrintTextStep::
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, [wStringBank]
@@ -6659,7 +6664,7 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     ld hl, wTextFlags
     res 2, [hl]
     res 1, [hl]
-    call ShowTextContinueMark
+    call HideTextArrow
     jp .skip2
 
 .check_bit6:
@@ -6669,7 +6674,7 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     dec a
     ld [wTextRepeatCount], a
     or a
-    jp z, .call_show_text_continue_mark
+    jp z, .call_hide_text_arrow
     ld a, [wJoypadPressed]
     ld b, a
     ld a, [wLinkJoypadPressed]
@@ -6677,10 +6682,10 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     and $f7
     jp z, .skip2
 
-.call_show_text_continue_mark:
+.call_hide_text_arrow:
     ld hl, wTextFlags
     res 6, [hl]
-    call ShowTextContinueMark
+    call HideTextArrow
     jp .skip2
 
 .check_bit72:
@@ -6709,40 +6714,40 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     jr nc, .read_text_pos_lo3
     ld a, [wTextFlags]
     bit 1, a
-    jr nz, .clear_text_line_count
+    jr nz, .clear_text_glyph_timer
     ld a, [wJoypadPressed]
     ld b, a
     ld a, [wLinkJoypadPressed]
     or b
     and $f7
-    jr z, .read_battle_kind_flags
+    jr z, .read_text_speed
     ld hl, wTextControl
     set 7, [hl]
 
-.read_battle_kind_flags:
-    ld a, [wBattleKindFlags]
+.read_text_speed:
+    ld a, [wTextSpeed]
     ld b, a
     ld a, [wTextFlags]
     bit 3, a
-    jr z, .check_text_line_count
+    jr z, .check_text_glyph_timer
     ld a, [wTextControlArg]
     ld b, a
 
-.check_text_line_count:
-    ld a, [wTextLineCount]
+.check_text_glyph_timer:
+    ld a, [wTextGlyphTimer]
     cp b
     jp c, .skip2
 
-.clear_text_line_count:
+.clear_text_glyph_timer:
     xor a
-    ld [wTextLineCount], a
+    ld [wTextGlyphTimer], a
     ld hl, wTextControl
     res 1, [hl]
     call IncrementTextPosLoWord
     ld a, [hl]
     cp $e0
     jr nc, .read_text_pos_lo3
-    call StepStringDisplayUntilDone_Sub01_GlyphTileSourceForL
+    call DrawTextGlyph
     ld a, [wTextControl]
     bit 0, a
     jr z, .skip2
@@ -6776,7 +6781,7 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     adc $00
     ld [wTextPosHi], a
     ld a, [hl]
-    call StepStringDisplayUntilDone_Sub01_WriteTextLastChar
+    call RunTextCommand
     ld hl, wTextControl
     res 1, [hl]
     jr .skip2
@@ -6811,13 +6816,15 @@ StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo::
     res 2, [hl]
 
 .skip2:
-    ld hl, wTextLineCount
+    ld hl, wTextGlyphTimer
     inc [hl]
     pop af
     ld [rROMB0], a
     ret
 
-StepStringDisplayUntilDone_Sub01_GlyphTileSourceForL::
+; draws glyph A at wTextGlyphDest (its 8 font rows from bank $1F, GlyphTileSourceForL) and advances
+; the destination (E-0336)
+DrawTextGlyph::
     ld l, a
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -6974,44 +6981,48 @@ FillTilesFromRequest::
     ret
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
-StepStringDisplayUntilDone_Sub01_WriteTextLastChar::
+; stores the command byte A ($E0-$FF) in wTextLastChar and jumps to entry A - $E0 of the table after
+; it; charmap.inc names the commands (<LINE>, <WAIT>, @, ...) (E-0336)
+RunTextCommand::
     ld [wTextLastChar], a
     sub $e0
     jumptable
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05
-    dw StepStringDisplayUntilDone_Sub01_Sub02_ToAcknowledgeTextPrompt
-    dw StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case08
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case09
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound_Case0B
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter
-    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit7
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteVRAMByte
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc
-    dw StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc_Case11
-    dw StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark_Case12
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc_Case13
+    dw TextCmd_SfxWait
+    dw TextCmd_SfxWait
+    dw TextCmd_SfxWait
+    dw TextCmd_SfxWait
+    dw TextCmd_SfxWait
+    dw TextCmd_MusicWait
+    dw TextCmd_ChoiceE6
+    dw TextCmd_ChoiceNo
+    dw TextCmd_Cursor
+    dw TextCmd_Sound
+    dw TextCmd_Voice1
+    dw TextCmd_Voice2
+    dw TextCmd_Pause
+    dw TextCmd_Instant
+    dw TextCmd_ClearLine
+    dw TextCmd_NextLine
+    dw TextCmd_End
+    dw TextCmd_Line
+    dw TextCmd_Clear
+    dw TextCmd_Home
     dw ClearStringDisplayFlags
-    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit1
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc
-    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit2Etc
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18
-    dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc_Case19
-    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit5
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B
-    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C
-    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit0
-    dw StepStringDisplayUntilDone_Sub01_Sub02_ClearTextControlBit0
-    dw AcknowledgeTextPrompt
+    dw TextCmd_Fast
+    dw TextCmd_Player
+    dw TextCmd_Wait
+    dw TextCmd_Speed
+    dw TextCmd_Buf
+    dw TextCmd_Arrow
+    dw TextCmd_WaitOrButton
+    dw TextCmd_Delay
+    dw TextCmd_BeepOn
+    dw TextCmd_BeepOff
+    dw OpenTextChoice
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord::
+; <SFX_WAIT> ($E0-$E4): plays the sound effect in the next byte and sets wTextControl bit 2, which
+; holds the text until every sound channel is idle (E-0336)
+TextCmd_SfxWait::
     ld hl, wTextControl
     res 7, [hl]
     call IncrementTextPosLoWord
@@ -7021,7 +7032,9 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord::
     set 2, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05::
+; <MUSIC_WAIT> ($E5): plays the music in the next byte and holds the text until every sound channel
+; is idle (E-0336)
+TextCmd_MusicWait::
     ld hl, wTextControl
     res 7, [hl]
     call IncrementTextPosLoWord
@@ -7031,18 +7044,22 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05::
     set 2, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_ToAcknowledgeTextPrompt::
-    jp AcknowledgeTextPrompt
+; <CHOICE_E6> ($E6): the yes/no choice (OpenTextChoice) (E-0336)
+TextCmd_ChoiceE6::
+    jp OpenTextChoice
 
-StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt::
-    call AcknowledgeTextPrompt
+; <CHOICE_NO> ($E7): the yes/no choice with the cursor on no (wTextYesNoResult = 1) (E-0336)
+TextCmd_ChoiceNo::
+    call OpenTextChoice
     ld a, $01
     ld [wTextYesNoResult], a
     ld a, $ff
     ld [wTextLastChar], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case08::
+; <CURSOR> ($E8): moves the glyph cursor to column (next byte), row (byte after) of the text window:
+; wTextGlyphDest = wTextWindowTile + 16 * (row * wTextWindowWidth + column) (E-0336)
+TextCmd_Cursor::
     call IncrementTextPosLoWord
     ld d, $00
     ld e, [hl]
@@ -7070,7 +7087,9 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case08::
     ld [wTextLineStartHi], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case09::
+; <SOUND> ($E9): plays the id in the next byte without waiting, as music for ids below $60 and $CC,
+; $CF, $D6, otherwise as a sound effect; $FF restarts the map music (E-0336)
+TextCmd_Sound::
     call IncrementTextPosLoWord
     ld a, [hl]
     cp $ff
@@ -7095,24 +7114,28 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case09::
     ret
     db $cd, $78, $12, $c9
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound::
+; <VOICE1> ($EA): speech beep on (wTextControl bit 0) with sound $6B (E-0336)
+TextCmd_Voice1::
     ld hl, wTextControl
     set 0, [hl]
     ld a, $6b
     ld [wTextBeepSound], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound_Case0B::
+; <VOICE2> ($EB): speech beep on with sound $6A (E-0336)
+TextCmd_Voice2::
     ld hl, wTextControl
     set 0, [hl]
     ld a, $6a
     ld [wTextBeepSound], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter::
+; <PAUSE> ($EC): waits the frames in the 7-byte table at $2A66 for the text speed wTextSpeed (6, 12,
+; 20, 26, 32, 40, 48); at speed 7 waits for a button with the arrow instead (E-0336)
+TextCmd_Pause::
     ld hl, wTextControl
     res 7, [hl]
-    ld a, [wBattleKindFlags]
+    ld a, [wTextSpeed]
     cp $07
     jr z, .skip
     ld hl, $2a66
@@ -7132,12 +7155,16 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter::
     ret
     db $06, $0c, $14, $1a, $20, $28, $30
 
-StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit7::
+; <INSTANT> ($ED): sets wTextControl bit 7, so StepTextPrinter prints on at once until a wait clears
+; it (E-0336)
+TextCmd_Instant::
     ld hl, wTextControl
     set 7, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteVRAMByte::
+; <CLEAR_LINE> ($EE): redraws the window's tile rows, clears the second line's tiles and puts the
+; glyph cursor back at the start of the current line; the second half of <NEXT> (C2 from E-0336)
+TextCmd_ClearLine::
     ld a, [wTextWindowTileLo]
     ld e, a
     ld a, [wTextWindowTileHi]
@@ -7225,7 +7252,10 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteVRAMByte::
     res 1, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc::
+; <NEXT_LINE> ($EF): on the first line moves to the second and skips the byte after it (the
+; <CLEAR_LINE> of <NEXT>); on the second copies its tiles up to the first and waits 4 frames (C2
+; from E-0336: <NEXT> takes those frames between its two bytes)
+TextCmd_NextLine::
     ld a, [wTextWindowWidth]
     swap a
     ld h, a
@@ -7342,14 +7372,16 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc
     ld [wTextDelayCounter], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark::
+; @ ($F0): after an inserted text (<BUF0>, <PLAYER>; wTextFlags bit 4) returns to the position saved
+; in wTextStartPos; otherwise clears wTextFlags and wTextControl, ending the text (C2 from E-0336)
+TextCmd_End::
     ld a, [wTextFlags]
     bit 4, a
     jp z, .clear_text_flags
     ld a, [wTextFlags]
     res 4, a
     ld [wTextFlags], a
-    call ShowTextContinueMark
+    call HideTextArrow
     ld a, [wTextStartPosLo]
     ld l, a
     ld a, [wTextStartPosHi]
@@ -7367,9 +7399,10 @@ StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark::
     ld [wTextControl], a
     ret
 
-; when wTextFlags bit 5 is set: clears it, moves to the text cursor + $60 and 9 columns right, and
-; writes tile $B4 there (probably the continue mark); plays sound $69 unless wGameMode is 4 (E-0120)
-ShowTextContinueMark::
+; when the arrow is shown (wTextFlags bit 5): clears that bit, writes tile $B4 where the blinking
+; arrow is drawn and plays sound $69 unless wGameMode is 4 (E-0120, E-0336; was
+; ShowTextContinueMark)
+HideTextArrow::
     ld a, [wTextFlags]
     bit 5, a
     ret z
@@ -7388,7 +7421,9 @@ ShowTextContinueMark::
     call QueueSoundEffect
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc_Case11::
+; <LINE> ($F1): moves the glyph cursor to the start of the next line, without scrolling (C2 from
+; E-0336)
+TextCmd_Line::
     ld a, [wTextWindowWidth]
     swap a
     ld h, a
@@ -7412,12 +7447,15 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc
     ld [wTextLineStartHi], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark_Case12::
-    call ShowTextContinueMark
+; <CLEAR> ($F2): hides the arrow, ends <INSTANT>/<FAST>, fills the window tiles with the blank
+; pattern (FillTilesFromRequest) and falls into TextCmd_Home (E-0336)
+TextCmd_Clear::
+    call HideTextArrow
     call ClearStringDisplayFlags
     call FillTilesFromRequest
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc_Case13::
+; <HOME> ($F3): moves the glyph cursor to the window's first line (E-0336)
+TextCmd_Home::
     ld a, [wTextWindowTileLo]
     ld l, a
     ld a, [wTextWindowTileHi]
@@ -7432,7 +7470,8 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc
     ld [wTextLineStartHi], a
     ret
 
-; clears bit 7 of wTextControl and bit 1 of wTextFlags (E-0114)
+; <NORMAL> ($F4) and a helper: clears bit 7 of wTextControl (<INSTANT>) and bit 1 of wTextFlags
+; (<FAST>) (E-0114, E-0336)
 ClearStringDisplayFlags::
     ld hl, wTextControl
     res 7, [hl]
@@ -7440,12 +7479,16 @@ ClearStringDisplayFlags::
     res 1, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit1::
+; <FAST> ($F5): sets wTextFlags bit 1, so glyphs are drawn without waiting for the text speed
+; (E-0336)
+TextCmd_Fast::
     ld hl, wTextFlags
     set 1, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc::
+; <PLAYER> ($F6): copies wPlayerName to wPlayerNameText with a $F0, saves the position and prints
+; the name, then returns (TextCmd_End) (E-0336)
+TextCmd_Player::
     ld hl, wPlayerName
     ld de, wPlayerNameText
     ld b, $0a
@@ -7475,14 +7518,18 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc::
     ld [wTextPosHi], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit2Etc::
+; <WAIT> ($F7): sets wTextFlags bit 2: the text waits for a button (C2 from E-0336: it holds until A
+; is pressed)
+TextCmd_Wait::
     ld hl, wTextFlags
     set 2, [hl]
     ld hl, wTextControl
     res 7, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18::
+; <SPEED> ($F8): from here on glyphs wait the frames in the next byte (wTextControlArg, wTextFlags
+; bit 3) instead of wTextSpeed (E-0336)
+TextCmd_Speed::
     ld hl, wTextFlags
     set 3, [hl]
     call IncrementTextPosLoWord
@@ -7490,7 +7537,10 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18::
     ld [wTextControlArg], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc_Case19::
+; <BUF> ($F9): saves the position after the argument byte and prints the $F0-terminated text at
+; wTextBuf0 + that byte, then returns (C2 from E-0336: offsets $00, $10, $20 and $30 are
+; wTextBuf0-3; charmap.inc names them <BUF0>-<BUF3>)
+TextCmd_Buf::
     ld hl, wTextFlags
     set 4, [hl]
     ld a, [wTextPosLo]
@@ -7520,12 +7570,16 @@ StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc_C
     ld [wTextPosHi], a
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit5::
+; <ARROW> ($FA): sets wTextFlags bit 5: PrintTextStep blinks the arrow (tiles $BD and $B4) while the
+; text waits (E-0336)
+TextCmd_Arrow::
     ld hl, wTextFlags
     set 5, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B::
+; <WAIT_OR_BUTTON> ($FB): waits the frames in the next byte (wTextRepeatCount) or until a button
+; (E-0336)
+TextCmd_WaitOrButton::
     ld hl, wTextFlags
     set 6, [hl]
     call IncrementTextPosLoWord
@@ -7535,7 +7589,8 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B::
     res 7, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C::
+; <DELAY> ($FC): waits the frames in the next byte (wTextDelayCounter) (E-0336)
+TextCmd_Delay::
     ld hl, wTextFlags
     set 7, [hl]
     call IncrementTextPosLoWord
@@ -7545,32 +7600,35 @@ StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C::
     res 7, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit0::
+; <BEEP_ON> ($FD): speech beep on with the current sound (E-0336)
+TextCmd_BeepOn::
     ld hl, wTextControl
     set 0, [hl]
     ret
 
-StepStringDisplayUntilDone_Sub01_Sub02_ClearTextControlBit0::
+; <BEEP_OFF> ($FE): speech beep off (E-0336)
+TextCmd_BeepOff::
     ld hl, wTextControl
     res 0, [hl]
     ret
 
-; clears bit 7 of wTextControl, plays sound $6C, runs
-; AcknowledgeTextPrompt_UploadTwoTilesFromScriptTileBuf0, sets bit 2 of wTextFlags and clears
-; wTextYesNoResult (E-0122)
-AcknowledgeTextPrompt::
+; <CHOICE> ($FF) and the other choices: plays sound $6C, draws the yes/no window
+; (TextPromptWindowTiles), sets wTextFlags bit 2 and clears wTextYesNoResult (0 = yes);
+; PrintTextStep then moves the cursor with up/down and takes A or B (B answers no) (E-0122, E-0336;
+; was AcknowledgeTextPrompt)
+OpenTextChoice::
     ld hl, wTextControl
     res 7, [hl]
     ld a, $6c
     call QueueSoundEffect
-    call AcknowledgeTextPrompt_UploadTwoTilesFromScriptTileBuf0
+    call OpenTextChoice_UploadTwoTilesFromScriptTileBuf0
     ld hl, wTextFlags
     set 2, [hl]
     xor a
     ld [wTextYesNoResult], a
     ret
 
-AcknowledgeTextPrompt_UploadTwoTilesFromScriptTileBuf0::
+OpenTextChoice_UploadTwoTilesFromScriptTileBuf0::
     call UploadTwoTilesFromScriptTileBuf0
     ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles1 + $6e0
@@ -7691,9 +7749,8 @@ CopyCBytesToVRAMWaitSTAT::
     jr nz, CopyCBytesToVRAMWaitSTAT
     ret
 
-; AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map (WriteVRAMByte) from 14 columns right
-; of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6 (E-0239,
-; C1)
+; OpenTextChoice writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll +
+; $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6 (E-0239, C1)
 ; record: one 6-tile row and its separator
 TextPromptWindowTiles::
     db $b0, $b1, $b1, $b1, $b1, $b2, $fd ; id 0
@@ -7702,9 +7759,8 @@ TextPromptWindowTiles::
     db $b6, $c3, $ee, $ef, $c3, $b7, $fd ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5, $fe ; id 4
 
-; AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14
-; columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows
-; of 6 (E-0239, C1)
+; OpenTextChoice writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14 columns right of
+; scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6 (E-0239, C1)
 TextPromptWindowAttrs::
     db $00, $00, $00, $00, $00, $00, $fd ; id 0
     db $00, $00, $00, $00, $00, $00, $fd ; id 1

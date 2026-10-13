@@ -73,178 +73,187 @@ StringList_0D_4018::
     dw EggServiceMenu ; id 47
 
 String_0D_00_00::
-    db $ea, "*: Welcome to the", $f1
-    db "Key Shop.", $fa, $f7
-    db $ef, $ee, "Do you need any", $ef, $ee, "keys appraised?", $f0
+    db "<VOICE1>*: Welcome to the<LINE>"
+    db "Key Shop.<PROMPT>"
+    db "<NEXT>Do you need any"
+    db "<NEXT>keys appraised?@"
 
 String_0D_00_02::
-    db $ea, "Okay. Come back if", $f1
-    db "you find any Magic", $fa, $f7
-    db $ef, $ee, "Keys.", $ef, $ee, $f7
-    db $f0
+    db "<VOICE1>Okay. Come back if<LINE>"
+    db "you find any Magic<PROMPT>"
+    db "<NEXT>Keys."
+    db "<NEXT><WAIT>"
+    db "@"
 
 String_0D_00_03::
-    db $ea, "*: Don't come if", $f1
-    db "you have no keys.", $f7
-    db $f0
+    db "<VOICE1>*: Don't come if<LINE>"
+    db "you have no keys.<WAIT>"
+    db "@"
 
 String_0D_00_04::
-    db $ea, "Which key should", $f1
-    db "I appraise?", $f7
-    db $f0
+    db "<VOICE1>Which key should<LINE>"
+    db "I appraise?<WAIT>"
+    db "@"
 
 String_0D_00_05::
-    db $ea, "*: Appraisal will", $f1
-    db "cost ", $f9, "0G. OK?", $f0
+    db "<VOICE1>*: Appraisal will<LINE>"
+    db "cost <BUF0>G. OK?@"
 
 String_0D_00_06::
-    db $ea, "*: Hah? I'm not", $f1
-    db "appraising any", $fa, $f7
-    db $ef, $ee, "key if you don't", $ef, $ee, "pay my fee.", $f7
-    db $f0
+    db "<VOICE1>*: Hah? I'm not<LINE>"
+    db "appraising any<PROMPT>"
+    db "<NEXT>key if you don't"
+    db "<NEXT>pay my fee.<WAIT>"
+    db "@"
 
 String_0D_00_08::
-    db $ea, "*: Which Magic Key", $f1
-    db "should I appraise?", $f0
+    db "<VOICE1>*: Which Magic Key<LINE>"
+    db "should I appraise?@"
 
 String_0D_00_09::
-    db $ea, "*: That key's been", $f1
-    db "appraised already.", $f7
-    db $f0
+    db "<VOICE1>*: That key's been<LINE>"
+    db "appraised already.<WAIT>"
+    db "@"
 
 String_0D_00_0A::
-    db $ea, "*: You have no more", $f1
-    db "Magic Keys that", $fa, $f7
-    db $ef, $ee, "need appraisal, it", $ef, $ee, "seems to me.", $f7
-    db $f0
+    db "<VOICE1>*: You have no more<LINE>"
+    db "Magic Keys that<PROMPT>"
+    db "<NEXT>need appraisal, it"
+    db "<NEXT>seems to me.<WAIT>"
+    db "@"
 
 String_0D_00_0B::
-    db $ea, "*: Should I save", $f1
-    db "the results?", $f0
+    db "<VOICE1>*: Should I save<LINE>"
+    db "the results?@"
 
 String_0D_00_0C::
-    db $ea, "*: Let's see the", $f1
-    db "Magic Key, then.", $fa, $f7
-    db $ef, $ee, $a4, "Hmmm", $a4, " Hah?", $ef, $ee, "Oh, right", $a4, $fa, $f7
-    db $ef, $ee, "I got it! This is", $ef, $ee, "the ", $f9, "0!", $e5, "0", $e4, $d4, $f7
-    db $e9, $ff, $f0
+    db "<VOICE1>*: Let's see the<LINE>"
+    db "Magic Key, then.<PROMPT>"
+    db "<NEXT>…Hmmm… Hah?"
+    db "<NEXT>Oh, right…<PROMPT>"
+    db "<NEXT>I got it! This is"
+    db "<NEXT>the <BUF0>!<MUSIC_WAIT>", $00, "<SFX_WAIT>", $d4, "<WAIT>"
+    db "<MAP_MUSIC>@"
 
 String_0D_00_10::
-    db $ea, "*: Ah, you have", $f1
-    db "some TinyMedals?", $fa, $f7
-    db $ef, $ee, "Let me relieve you", $ef, $ee, "of them.", $f7
-    db $f0
+    db "<VOICE1>*: Ah, you have<LINE>"
+    db "some TinyMedals?<PROMPT>"
+    db "<NEXT>Let me relieve you"
+    db "<NEXT>of them.<WAIT>"
+    db "@"
 
 String_0D_00_12::
-    db $ea, "*: ", $a4, "But, I can't", $f1
-    db "take this many.", $f7
-    db $f0
+    db "<VOICE1>*: …But, I can't<LINE>"
+    db "take this many.<WAIT>"
+    db "@"
 
 String_0D_00_13::
-    db $ea, "*: I have ", $f9, "0 of", $f1
-    db "your TinyMedals.", $f7
-    db $f0
+    db "<VOICE1>*: I have <BUF0> of<LINE>"
+    db "your TinyMedals.<WAIT>"
+    db "@"
 
 String_0D_00_14::
-    db $ea, "*: I hope you'll", $f1
-    db "find many medals!", $f7
-    db $f0
+    db "<VOICE1>*: I hope you'll<LINE>"
+    db "find many medals!<WAIT>"
+    db "@"
 
 String_0D_00_15::
-    db $ea, "*: Want to trade", $f1
-    db "medals for prizes?", $f0
+    db "<VOICE1>*: Want to trade<LINE>"
+    db "medals for prizes?@"
 
 String_0D_00_16::
-    db $ea, "*: Which prize do", $f1
-    db "you want?", $f0
+    db "<VOICE1>*: Which prize do<LINE>"
+    db "you want?@"
 
 String_0D_00_17::
-    db $ea, "*: I'll trade for", $f1
-    db $f9, "0 TinyMedals. OK?", $f0
+    db "<VOICE1>*: I'll trade for<LINE>"
+    db "<BUF0> TinyMedals. OK?@"
 
 String_0D_00_18::
-    db $ea, "*: That requires", $f1
-    db "more TinyMedals.", $f7
-    db $f0
+    db "<VOICE1>*: That requires<LINE>"
+    db "more TinyMedals.<WAIT>"
+    db "@"
 
 String_0D_00_19::
-    db $ea, "*: You don't have", $f1
-    db "any room for that.", $f7
-    db $f0
+    db "<VOICE1>*: You don't have<LINE>"
+    db "any room for that.<WAIT>"
+    db "@"
 
 String_0D_00_1A::
-    db $ea, "*: Your key ring is", $f1
-    db "already full.", $f7
-    db $f0
+    db "<VOICE1>*: Your key ring is<LINE>"
+    db "already full.<WAIT>"
+    db "@"
 
 String_0D_00_1B::
-    db $ea, "*: You have no more", $f1
-    db "room for monsters.", $f7
-    db $f0
+    db "<VOICE1>*: You have no more<LINE>"
+    db "room for monsters.<WAIT>"
+    db "@"
 
 String_0D_00_1C::
-    db $ea, "*: Fine, we shall", $f1
-    db "trade.", $f7
-    db $f0
+    db "<VOICE1>*: Fine, we shall<LINE>"
+    db "trade.<WAIT>"
+    db "@"
 
 String_0D_00_1D::
-    db $ea, "*: I'll send the egg", $f1
-    db "to the farm.", $f7
-    db $f0
+    db "<VOICE1>*: I'll send the egg<LINE>"
+    db "to the farm.<WAIT>"
+    db "@"
 
 String_0D_00_1E::
-    db $ea, "*: You can't take", $f1
-    db "any more items.", $f7
-    db $f0
+    db "<VOICE1>*: You can't take<LINE>"
+    db "any more items.<WAIT>"
+    db "@"
 
 String_0D_00_1F::
-    db $ea, "*: You can't hold any", $f1
-    db "more keys.", $f7
-    db $f0
+    db "<VOICE1>*: You can't hold any<LINE>"
+    db "more keys.<WAIT>"
+    db "@"
 
 String_0D_00_20::
-    db $ea, "*: You have no more", $f1
-    db "room for monsters.", $f7
-    db $f0
+    db "<VOICE1>*: You have no more<LINE>"
+    db "room for monsters.<WAIT>"
+    db "@"
 
 String_0D_00_21::
-    db "Leads to another", $f1
-    db "world.", $f0
+    db "Leads to another<LINE>"
+    db "world.@"
 
 String_0D_00_22::
-    db "Tames a monster by", $f1
-    db "a great amount.", $f0
+    db "Tames a monster by<LINE>"
+    db "a great amount.@"
 
 String_0D_00_23::
-    db $f9, "0's egg.", $f0
+    db "<BUF0>'s egg.@"
 
 String_0D_00_24::
-    db $ea, "*: At minimum, you", $f1
-    db "must have three", $fa, $f7
-    db $ef, $ee, "TinyMedals if you", $ef, $ee, "want me to trade.", $fa, $f7
-    db $ef, $ee, "I hope you'll find", $ef, $ee, "many medals!", $f7
-    db $f0
+    db "<VOICE1>*: At minimum, you<LINE>"
+    db "must have three<PROMPT>"
+    db "<NEXT>TinyMedals if you"
+    db "<NEXT>want me to trade.<PROMPT>"
+    db "<NEXT>I hope you'll find"
+    db "<NEXT>many medals!<WAIT>"
+    db "@"
 
 String_0D_00_25::
-    db "MeteOrb", $f0
+    db "MeteOrb@"
 
 String_0D_00_29::
-    db "MadCat", $f0
+    db "MadCat@"
 
 String_0D_00_2A::
-    db "HornBeet", $f0
+    db "HornBeet@"
 
 String_0D_00_2B::
-    db "SkyDragon", $f0
+    db "SkyDragon@"
 
 String_0D_00_2C::
-    db "Octogon", $f0
+    db "Octogon@"
 
 String_0D_00_2D::
-    db "Servant", $f0
+    db "Servant@"
 
 String_0D_00_2E::
-    db "Darck", $f0
+    db "Darck@"
 
 ; implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg
 ; should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through
@@ -6967,11 +6976,11 @@ PresetMonsterRecordTable::
 ; record: one $A5-byte monster record in the SRAM record format
 PresetMonsterRecords::
     db $01 ; id 0: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $004a ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -6996,11 +7005,11 @@ PresetMonsterRecords::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_01::
     db $01 ; id 1: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $011e ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7025,11 +7034,11 @@ PresetMonsterRecords_01::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_02::
     db $01 ; id 2: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $00bc ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $05 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7054,11 +7063,11 @@ PresetMonsterRecords_02::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_03::
     db $01 ; id 3: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $0092 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $04 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7083,11 +7092,11 @@ PresetMonsterRecords_03::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_04::
     db $01 ; id 4: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $005e ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7112,11 +7121,11 @@ PresetMonsterRecords_04::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_05::
     db $01 ; id 5: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $0080 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $03 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7141,11 +7150,11 @@ PresetMonsterRecords_05::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_06::
     db $01 ; id 6: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $010d ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7170,11 +7179,11 @@ PresetMonsterRecords_06::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_07::
     db $01 ; id 7: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $0033 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $01 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7199,11 +7208,11 @@ PresetMonsterRecords_07::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_08::
     db $01 ; id 8: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $010a ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)
@@ -7228,11 +7237,11 @@ PresetMonsterRecords_08::
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_09::
     db $01 ; id 9: state: 0 empty, 1 or 2 in use (E-0104)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; name, bytes 1-10 (E-0034)
     dw $0133 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex, 0 male, 1 female (C2, E-0311)
-    db "???", $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
+    db "???@", $f0, $f0, $f0, $f0, $f0, $f0 ; master name, $0F-$18 (E-0034, E-0297)
     db $00 ; $19: master id (C1, E-0306)
     dw $ffff, $ffff ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $1E: master name of parent 1 (E-0297)

@@ -3310,7 +3310,7 @@ TalkScript5111_ListenYouTwoQuitYourHorsing::
     db $21, $44, $00, $cd, $bb, $55, $c9
 
 ; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119)
-; starts Script_4F73: '*: Oh It's all spinning around'
+; starts Script_4F73: '*: Oh… It's… all spinning around…'
 StartScript4F73AndSetFlag5::
     ld hl, Script_4F73
     call StartScriptAtHL_B04
@@ -3478,7 +3478,7 @@ ReadableTalkEvents_TestFlagBit_Case0A::
 ; checked the bookshelf. Monster Skills Every' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case0B)
 TalkMsg0233_HeroCheckedTheBookshelfMonster::
-    ld hl, $0233 ; '0 checked the bookshelf. 'Monster Skills'
+    ld hl, $0233 ; '0 checked the bookshelf. 'Monster Skills…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3486,7 +3486,7 @@ TalkMsg0233_HeroCheckedTheBookshelfMonster::
 ; checked the bookshelf. Monster Growth By' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case0C)
 TalkMsg0234_HeroCheckedTheBookshelfMonster::
-    ld hl, $0234 ; '0 checked the bookshelf. 'Monster Growth'
+    ld hl, $0234 ; '0 checked the bookshelf. 'Monster Growth…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3510,7 +3510,7 @@ TalkMsg0236_HeroCheckedTheBookshelfNuts::
 ; checked the bookshelf. WorldLeaf An indispensable' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case0F)
 TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf::
-    ld hl, $0237 ; '0 checked the bookshelf. 'WorldLeaf An'
+    ld hl, $0237 ; '0 checked the bookshelf. 'WorldLeaf… An'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3534,7 +3534,7 @@ TalkMsg0239_HeroCheckedTheBookshelfMagic::
 ; checked the bookshelf. Starry Shrine A' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case12)
 TalkMsg023A_HeroCheckedTheBookshelfStarry::
-    ld hl, $023a ; '0 checked the bookshelf. 'Starry Shrine'
+    ld hl, $023a ; '0 checked the bookshelf. 'Starry Shrine…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3542,7 +3542,7 @@ TalkMsg023A_HeroCheckedTheBookshelfStarry::
 ; checked the bookshelf. Egg Evaluators Those' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case13)
 TalkMsg023B_HeroCheckedTheBookshelfEgg::
-    ld hl, $023b ; '0 checked the bookshelf. 'Egg Evaluators'
+    ld hl, $023b ; '0 checked the bookshelf. 'Egg Evaluators…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3550,7 +3550,7 @@ TalkMsg023B_HeroCheckedTheBookshelfEgg::
 ; checked the bookshelf. Accessory Guide A' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case14)
 TalkMsg023C_HeroCheckedTheBookshelfAccessory::
-    ld hl, $023c ; '0 checked the bookshelf. 'Accessory Guide'
+    ld hl, $023c ; '0 checked the bookshelf. 'Accessory Guide…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3558,7 +3558,7 @@ TalkMsg023C_HeroCheckedTheBookshelfAccessory::
 ; checked the bookshelf. Hidden Abilities Monsters' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case0A_Sub01_Case15)
 TalkMsg023D_HeroCheckedTheBookshelfHidden::
-    ld hl, $023d ; '0 checked the bookshelf. 'Hidden Abilities'
+    ld hl, $023d ; '0 checked the bookshelf. 'Hidden Abilities…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3896,7 +3896,7 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0876 ; '*: Sigh Will the HarMirror make'
+    ld hl, $0876 ; '*: Sigh… Will the HarMirror make'
     call StartMessageCommand09HL_B04
     ret
 
@@ -3919,7 +3919,7 @@ YoldTalkEvents_TestFlagBit::
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0877 ; '*: My grandson just shivers now'
+    ld hl, $0877 ; '*: My grandson just shivers now…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4115,7 +4115,7 @@ TalkScript5B9B_HaveYouHeardTheLegendAbout::
 ; This is heavenly! It makes me' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case03_Sub01_Case16)
 TalkMsg081B_AhhThisIsHeavenlyItMakes::
-    ld hl, $081b ; '*: Ahh This is heavenly! It'
+    ld hl, $081b ; '*: Ahh… This is heavenly! It'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4464,7 +4464,7 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
     jr c, .call_start_script_at_hl_b04
     ld a, $01
     ld [wObject3 + OBJ_STATE], a
-    ld hl, $0837 ; '*: Hnnnr Hic Gnn Zzz Gfffff'
+    ld hl, $0837 ; '*: Hnnnr… Hic… Gnn… Zzz… Gfffff…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4483,7 +4483,7 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
     jr c, .call_start_script_at_hl_b043
     ld a, $01
     ld [wObject3 + OBJ_STATE], a
-    ld hl, $0837 ; '*: Hnnnr Hic Gnn Zzz Gfffff'
+    ld hl, $0837 ; '*: Hnnnr… Hic… Gnn… Zzz… Gfffff…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -4814,7 +4814,7 @@ TalkScript5C8A_HowCouldWeDieBeforeEnjoying::
 
 ; starts Script_5C94 (StartScriptAtHL); its first message begins 'The treasures are ours No one'
 ; (E-0271; was DispatchTalkEvent_Case03_Sub01_Case48)
-; starts Script_5C94: '*: The treasures are ours No'
+; starts Script_5C94: '*: The treasures are ours… No'
 TalkScript5C94_TheTreasuresAreOursNoOne::
     ld hl, Script_5C94
     call StartScriptAtHL_B04
@@ -5208,7 +5208,7 @@ TalkMsg0862_HeroPeeredIntoTheBarrelThere::
 ; DispatchTalkEvent_Case03_Sub01_Case69)
 ; starts Script_5CCF
 TalkMsg0864_HeroCheckedTheLedgerVoyage::
-    ld hl, $0864 ; '0 checked the ledger. 'Voyage Log'
+    ld hl, $0864 ; '0 checked the ledger. 'Voyage Log…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -5476,7 +5476,7 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $0173 ; '*: My, our King has no'
+    ld hl, $0173 ; '*: …My, our King has no'
     call StartMessageCommand09HL_B04
     ret
 
@@ -6384,7 +6384,7 @@ KalkaTalkEvents_RunFieldCommandTemp0::
 ; 'Kyooh! Swimming in a desert This is' (E-0268, the E-0082 shape; was
 ; DispatchTalkEvent_Case02_Sub01_Case3D)
 TalkMsg01B5_KyoohSwimmingInADesertThis::
-    ld hl, $01b5 ; '*: Kyooh! Swimming in a desert'
+    ld hl, $01b5 ; '*: Kyooh! Swimming in a desert…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7128,7 +7128,7 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $0738 ; 'Rolt: Urrrgh 0 Please Please save'
+    ld hl, $0738 ; 'Rolt: Urrrgh… 0… Please… Please save'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7365,7 +7365,7 @@ TalkMsg0752_IveHeardThatHumansAre::
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $071c ; '*: Humans can't be trusted, but'
+    ld hl, $071c ; '*: Humans can't be trusted, but…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7375,7 +7375,7 @@ TalkMsg0752_IveHeardThatHumansAre::
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $074f ; '*: You You're a savage but'
+    ld hl, $074f ; '*: You… You're a savage but'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7407,7 +7407,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     ld de, $0145
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04
-    ld hl, $070f ; '*: Well, well It is a'
+    ld hl, $070f ; '*: Well, well… It is a'
     call StartMessageCommand09HL_B04
     ld de, $0144
     call SetFlagBit
@@ -7552,7 +7552,7 @@ TalkMsg0730_HorridMonstersThatAttack::
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0751 ; '*: Beating AgDevil That's incredible! But'
+    ld hl, $0751 ; '*: Beating AgDevil… That's incredible! But'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7730,7 +7730,7 @@ Talk075F_KiralFetchMeMy::
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0778 ; 'Kiral: Please Go stop him. You'
+    ld hl, $0778 ; 'Kiral: Please… Go stop him. You'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7755,7 +7755,7 @@ Talk075F_KiralFetchMeMy::
     ret
 
 .call_start_message_command09_hl_b043:
-    ld hl, $077d ; 'Kiral: Ah! Back! Is Rob-N Did'
+    ld hl, $077d ; 'Kiral: Ah! Back! Is… Rob-N… Did'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7801,7 +7801,7 @@ Talk075A_PiiGgzzPiiiiii::
     jr c, .call_start_message_command09_hl_b04
     xor a
     ld [wObject1 + OBJ_STATE], a
-    ld hl, $075a ; '*: Pii Ggzz Piiiiii'
+    ld hl, $075a ; '*: Pii… Ggzz… Piiiiii…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -7970,7 +7970,7 @@ Talk078E_RobosterStoppedMovingEntirely::
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $078e ; 'Roboster stopped moving entirely'
+    ld hl, $078e ; 'Roboster stopped moving entirely…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8123,7 +8123,7 @@ TalkMsg0793_MonstersCanBeGood::
     ret
 
 .call_start_message_command09_hl_b042:
-    ld hl, $0ce6 ; '*: So there are evil masters'
+    ld hl, $0ce6 ; '*: So there are evil masters…'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8591,7 +8591,7 @@ TalkMsg07AE_ThatDealersWaresCould::
     ld de, $01bb
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
-    ld hl, $07ae ; '*: That dealer's wares Could he'
+    ld hl, $07ae ; '*: That dealer's wares… Could he'
     call StartMessageCommand09HL_B04
     ret
 
@@ -8704,7 +8704,7 @@ Talk07AF_HowDoesThisOrnament::
     ret
 
 .call_start_message_command09_hl_b04:
-    ld hl, $07c5 ; '*: You defeated the monsters You're'
+    ld hl, $07c5 ; '*: You defeated the monsters… …You're'
     call StartMessageCommand09HL_B04
     ret
 
