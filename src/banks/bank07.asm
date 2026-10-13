@@ -390,7 +390,7 @@ String_07_05_11:: ; heuristic: string; C0
 Data_007_45A8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "In Team Mode, you", $F1
-    db "both lost.", $E5, $42, $FA, $F7
+    db "both lost.", $E5, "'v", $FA, $F7
     db $F0
 
 String_07_05_12:: ; heuristic: string; C0
@@ -504,7 +504,7 @@ Data_007_47AA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Congratulations", $F1
     db "for your victory!", $FA, $F7
-    db $F2, "You", $42, "e cleared", $F1
+    db $F2, "You've cleared", $F1
     db "Round 1!", $FA, $F7
     db $F0
 
@@ -522,7 +522,7 @@ Data_007_482A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Congratulations", $F1
     db "for your victory!", $FA, $F7
-    db $F2, "You", $42, "e won the", $F1
+    db $F2, "You've won the", $F1
     db "tournament!", $E5, "0", $E4, $7E, $FA, $F7
     db $F0
 

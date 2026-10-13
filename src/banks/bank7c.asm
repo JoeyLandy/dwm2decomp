@@ -411,7 +411,7 @@ Data_07C_4B8A:: ; address name
 Message_08_19:: ; heuristic: string; C0
 Data_07C_4BCA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Ah, you", $42, "e heard", $F1
+    db $EA, $45, " Ah, you've heard", $F1
     db "already.", $FA, $F7
     db $EF, $EE, "It's a tragic tale.", $EF, $EE, $F7
     db $F0
@@ -451,7 +451,7 @@ Data_07C_4E6D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I came from far", $F1
     db "away to see some", $FA, $F7
-    db $EF, $EE, "mermaids, but I", $EF, $EE, "hear they", $42, "e not", $FA, $F7
+    db $EF, $EE, "mermaids, but I", $EF, $EE, "hear they've not", $FA, $F7
     db $EF, $EE, "been seen lately.", $EF, $EE, "That's a shame.", $F7
     db $F0
 
@@ -667,7 +667,7 @@ Data_07C_597D:: ; address name
     db $EF, $EE, "So, Warubou asked", $EF, $EE, "you too, huh?", $FA, $F7
     db $EF, $EE, "But those monsters", $EF, $EE, "you're with", $A4, $FA, $F7
     db $EF, $EE, "Don't they look", $EF, $EE, "frail and wimpy?", $FA, $F7
-    db $EF, $EE, "Look, I", $42, "e already", $EF, $EE, "got two sidekicks!", $FA, $F7
+    db $EF, $EE, "Look, I've already", $EF, $EE, "got two sidekicks!", $FA, $F7
     db $EF, $EE, "I'll find the plug", $EF, $EE, "before you!", $FA, $F7
     db $EF, $EE, "Come on, team,", $EF, $EE, "let's go!", $F7
     db $F0
@@ -1138,7 +1138,7 @@ Data_07C_7276:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 checked the", $F1
     db "ledger.", $FA, $F7
-    db $EF, $EE, $95, "Voyage Log", $A4, $EF, $EE, $FA, $F7
+    db $EF, $EE, "'Voyage Log", $A4, $EF, $EE, $FA, $F7
     db $EF, $EE, $F3, "Sunrise obscured", $EF, $EE, "by deep fog", $A4, $FA, $F7
     db $EF, $EE, "Lookout reports", $A4, $EF, $EE, "there is some", $A4, $95, $F7
     db $F0
@@ -1316,7 +1316,7 @@ Data_07C_796A:: ; address name
 Message_08_79:: ; heuristic: string; C0
 Data_07C_7986:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I", $42, "e seen", $F1
+    db $EA, $45, " I've seen", $F1
     db "mermaids too.", $FA, $F7
     db $EF, $EE, "I think I'm in", $EF, $EE, "love!", $F7
     db $F0

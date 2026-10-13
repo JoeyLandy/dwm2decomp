@@ -8728,7 +8728,7 @@ Script_0C_7A65:: ; heuristic: event script entry or jump target; C0
 Script_0C_7A6B:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A5F
 Script_0C_7A6E:: ; heuristic: event script entry or jump target; C0
-    script_message $4020 ; 'Congratulations! You did it! You e'
+    script_message $4020 ; 'Congratulations! You did it! You've won'
     script_command SCRIPT_ARENA
     script_jump Script_0C_7ADB
 Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
@@ -8743,7 +8743,7 @@ Script_0C_7A81:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'You can't try that Class yet.'
     script_jump Script_0C_7A75
 Script_0C_7A87:: ; heuristic: event script entry or jump target; C0
-    script_message $C001 ; 'You e finished that Class.'
+    script_message $C001 ; 'You've finished that Class.'
     script_jump Script_0C_7A75
 Script_0C_7A8D:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'Let me confirm that-the 0 Class?'
@@ -8771,17 +8771,17 @@ Script_0C_7AB0:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7AC8, Script_0C_7AC2, Script_0C_7ABC, Script_0C_7AB6
 Script_0C_7AB6:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_MENU_CLOSE
-    script_message $0024 ; 'Congratulations! You did it! You e'
+    script_message $0024 ; 'Congratulations! You did it! You've finally'
     script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ABC:: ; heuristic: event script entry or jump target; C0
-    script_message $4023 ; 'Congratulations! You did it! You e'
+    script_message $4023 ; 'Congratulations! You did it! You've won'
     script_jump Script_0C_7ACB
 Script_0C_7AC2:: ; heuristic: event script entry or jump target; C0
-    script_message $4022 ; 'Congratulations! You did it! You e'
+    script_message $4022 ; 'Congratulations! You did it! You've won'
     script_jump Script_0C_7ACB
 Script_0C_7AC8:: ; heuristic: event script entry or jump target; C0
-    script_message $4021 ; 'Congratulations! You did it! You e'
+    script_message $4021 ; 'Congratulations! You did it! You've won'
 Script_0C_7ACB:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7ACF, Script_0C_7AD5
@@ -8889,7 +8889,7 @@ Script_0C_7B60:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B63
 Script_0C_7B63:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA
-    script_message $402F ; 'Congratulations! You did it! You e'
+    script_message $402F ; 'Congratulations! You did it! You've won'
     script_message $C031 ; 'Do you want the right chest?'
 Script_0C_7B6A:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_ARENA

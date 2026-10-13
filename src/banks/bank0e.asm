@@ -480,7 +480,7 @@ Data_00E_4968:: ; address name
     db $EA, $45, " Whoa! I can feel", $F1
     db "it in my bones,", $FA, $F7
     db $EF, $EE, "this one will be", $EF, $EE, "something special.", $FA, $F7
-    db $EF, $EE, "We", $42, "e got to do", $EF, $EE, "this, OK?", $F0
+    db $EF, $EE, "We've got to do", $EF, $EE, "this, OK?", $F0
 
 MessageBank0E_49:: ; heuristic: string; C0
 Data_00E_49D1:: ; address name

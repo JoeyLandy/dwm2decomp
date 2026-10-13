@@ -1083,7 +1083,7 @@ Data_009_4CD8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I'm a wandering", $F1
     db "master.", $FA, $F7
-    db $EF, $EE, "I", $42, "e been on the", $EF, $EE, "road for training.", $FA, $F7
+    db $EF, $EE, "I've been on the", $EF, $EE, "road for training.", $FA, $F7
     db $EF, $EE, "You look tough.", $EF, $EE, "Want to battle?", $FF, $F0
 
 String_09_05_0C:: ; heuristic: string; C0
@@ -1166,7 +1166,7 @@ Data_009_4F53:: ; address name
     db $EB, $45, " I picked", $A4, " ", $F9, $4E, "!", $F1
     db "Wow! You win!", $FA, $F7
     db $EF, $EE, "Next, ", $F9, "Y is", $EF, $EE, "the prize.", $FA, $F7
-    db $EF, $EE, "Want to bet what", $EF, $EE, "you", $42, "e won so far", $FA, $F7
+    db $EF, $EE, "Want to bet what", $EF, $EE, "you've won so far", $FA, $F7
     db $EF, $EE, "and ", $F9, $51, "G for a", $EF, $EE, "chance to win?", $FF, $F0
 
 String_09_05_17:: ; heuristic: string; C0
@@ -1277,7 +1277,7 @@ Data_009_527A:: ; address name
 String_09_05_25:: ; heuristic: string; C0
 Data_009_52E0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e won.", $F1
+    db $EA, $45, " You've won.", $F1
     db "As promised, let", $FA, $F7
     db $EF, $EE, "me give you some", $EF, $EE, "of my medicine.", $F7
     db $F0
@@ -1355,7 +1355,7 @@ Data_009_5451:: ; address name
 String_09_05_32:: ; heuristic: string; C0
 Data_009_5471:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Whoa! You", $42, "e won", $F1
+    db $EA, $45, " Whoa! You've won", $F1
     db "a MeteOrb!", $F7
     db $F0
 
@@ -1364,7 +1364,7 @@ Data_009_5490:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Whoa", $A4, " Are you", $F1
     db "kidding me?", $FA, $F7
-    db $EF, $EE, "You", $42, "e won some", $EF, $EE, "secret medicine.", $F7
+    db $EF, $EE, "You've won some", $EF, $EE, "secret medicine.", $F7
     db $F0
 
 String_09_05_34:: ; heuristic: string; C0
@@ -1372,7 +1372,7 @@ Data_009_54D2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Are you serious?", $F1
     db "I don't believe it.", $FA, $F7
-    db $EF, $EE, "You", $42, "e won some", $EF, $EE, "secret medicine.", $F7
+    db $EF, $EE, "You've won some", $EF, $EE, "secret medicine.", $F7
     db $F0
 
 String_09_05_35:: ; heuristic: string; C0
@@ -1493,34 +1493,34 @@ String_09_05_44:: ; heuristic: string; C0
 Data_009_5866:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Lucky, kid!", $F1
-    db "You", $42, "e won 500G!", $F7
+    db "You've won 500G!", $F7
     db $F0
 
 String_09_05_45:: ; heuristic: string; C0
 Data_009_5886:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Lucky, kid!", $F1
-    db "You", $42, "e won 200G!", $F7
+    db "You've won 200G!", $F7
     db $F0
 
 String_09_05_46:: ; heuristic: string; C0
 Data_009_58A6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Lucky, kid!", $F1
-    db "You", $42, "e won 100G!", $F7
+    db "You've won 100G!", $F7
     db $F0
 
 String_09_05_47:: ; heuristic: string; C0
 Data_009_58C6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Lucky, kid!", $F1
-    db "You", $42, "e won 50G!", $F7
+    db "You've won 50G!", $F7
     db $F0
 
 String_09_05_48:: ; heuristic: string; C0
 Data_009_58E5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e no courage", $F1
+    db $EA, $45, " You've no courage", $F1
     db "to battle?", $FA, $F7
     db $EF, $EE, "Shame, it really", $EF, $EE, "is.", $F7
     db $F0

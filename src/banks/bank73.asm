@@ -381,7 +381,7 @@ Jump_073_4139:: ; address name
 .skip8:
     dec a
     jr nz, .loop
-    ld hl, $0047 ; '0 read the notice. We guarantee'
+    ld hl, $0047 ; '0 read the notice. 'We guarantee'
     call StartMessageHL_B73
     ld hl, $0032
     ld a, l
@@ -1710,7 +1710,7 @@ Jump_073_4A82:: ; address name
     dw GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_WarubouItsADead_ShowYouEComeAt
+    dw GreatLogFieldEvents_WarubouItsADead_ShowYouveComeAtThe
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
@@ -1756,14 +1756,14 @@ Jump_073_4AA9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-GreatLogFieldEvents_WarubouItsADead_ShowYouEComeAt::
+GreatLogFieldEvents_WarubouItsADead_ShowYouveComeAtThe::
 Jump_073_4AC6:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
     or a, a
     jr nz, .call_start_message_hl_b73
-    ld hl, $001E ; 'You e come at the right'
+    ld hl, $001E ; 'You've come at the right time.'
     call StartMessageHL_B73
     ret
 
@@ -3237,7 +3237,7 @@ Data_073_530C:: ; address name
     dw $0000 ; id 245 none
     dw $0000 ; id 246 none
     dw $0C37 ; id 247 'You're quite good at this. Sure,'
-    dw $0C3B ; id 248 'You e shown me your worth.'
+    dw $0C3B ; id 248 'You've shown me your worth. Go'
     dw $0C3F ; id 249 'Fine, we will confer all the'
     dw $0C43 ; id 250 'All right. Good enough. The treasures'
     dw $0C46 ; id 251 'You are good! I like you!'
@@ -4384,7 +4384,7 @@ Func_073_5A16:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneThreeItemsBattle_StartScriptedEncounterTemp0AndStep
-    dw SceneThreeItemsBattle_Msg0480_GwaahYouEBeaten
+    dw SceneThreeItemsBattle_Msg0480_GwaahYouveBeatenMe
     dw SceneChestBattle_RunMessageBoxFar_Bank73
     dw SceneThreeItemsBattle_ScriptStepBlinkObjectTemp0
 
@@ -4411,9 +4411,9 @@ Jump_073_5A22:: ; address name
 ; entry 1 of the `rst $00` table in SceneThreeItemsBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItemsBattle_Msg0480_GwaahYouEBeaten::
+SceneThreeItemsBattle_Msg0480_GwaahYouveBeatenMe::
 Jump_073_5A3D:: ; address name
-    ld hl, $0480 ; 'Gwaah! You e beaten me fairly!'
+    ld hl, $0480 ; 'Gwaah! You've beaten me fairly! But'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]

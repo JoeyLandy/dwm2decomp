@@ -3579,6 +3579,15 @@ class Rom:
                     if (m := ld_de.match(ins[x][1])):
                         tables.add((cb, int(m.group(1), 16)))
                         break
+            # E-0319: `ld de, n` then a jump straight to the call (one of two tables chosen before a shared call;
+            # the boot trace showed bank $14's name-entry questions read this way)
+            for k, a in enumerate(order[:-1]):
+                m = ld_de.match(ins[a][1])
+                j = ins[order[k + 1]]
+                if m and j[2] in ("jr", "jp") and j[3] is not None and "," not in j[1] and j[3] in ins:
+                    c = ins[j[3]]
+                    if c[2] in ("call", "jp") and c[3] is not None and self.resolve(cb, c[3]) in users:
+                        tables.add((cb, int(m.group(1), 16)))
         made = 0
         for cb, t in sorted(tables):
             if not 0x4000 <= t < 0x8000:

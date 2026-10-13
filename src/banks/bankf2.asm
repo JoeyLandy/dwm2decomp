@@ -107,7 +107,7 @@ Func_0F2_40A2:: ; address name
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B
-    dw GameMode8_Update_ShowHeroReceivedGS
+    dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
 
 ; entry 0 of the `rst $00` table in GameMode8_Update
@@ -246,7 +246,7 @@ Jump_0F2_415F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
 ; points at: wPlayerName, wTextBuf0, wNameGlyphBuf, wTextBuf1, wScreenSubStep
-GameMode8_Update_ShowHeroReceivedGS::
+GameMode8_Update_ShowHeroReceivedGsEgg::
 Jump_0F2_4185:: ; address name
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -264,7 +264,7 @@ Jump_0F2_4185:: ; address name
     ld c, $10
     call GameMode8_Update_CopyStringMaxC
     ld a, $0E
-    ld [wStringIndex], a ; '0 received G s egg. Please'
+    ld [wStringIndex], a ; '0 received G's egg. Please raise'
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_48A0
@@ -273,7 +273,7 @@ Jump_0F2_4185:: ; address name
     ret
 
 ; copies a string from HL to DE, at most C bytes, ending it with $F0
-; 2 call sites from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGS)
+; 2 call sites from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGsEgg)
 GameMode8_Update_CopyStringMaxC::
 Func_0F2_41BA:: ; address name
     ld a, [hl+]
@@ -297,7 +297,7 @@ Jump_0F2_41C8:: ; address name
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 1 call site from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGS)
+; 1 call site from 1 routine (e.g. GameMode8_Update_ShowHeroReceivedGsEgg)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wNameGlyphBuf
@@ -794,7 +794,7 @@ String_F2_00_12:: ; heuristic: string; C0
 Data_0F2_46BC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " It inherited its", $F1
-    db "parents", $95, " skills.", $F7
+    db "parents' skills.", $F7
     db $F0
 
 String_F2_00_13:: ; heuristic: string; C0

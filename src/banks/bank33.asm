@@ -3795,7 +3795,7 @@ Data_033_64A7:: ; address name
 String_33_64A5_00_00:: ; heuristic: string; C0
 Data_033_6515:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " You", $42, "e finished", $F1
+    db $EB, $45, " You've finished", $F1
     db "that Class.", $F7
     db $F0
 
@@ -3944,7 +3944,7 @@ Data_033_6886:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won the", $EF, $EE, "Kids", $95, " Class!", $FA, $F7
+    db $EF, $EE, "You've won the", $EF, $EE, "Kids' Class!", $FA, $F7
     db $EF, $EE, "The King will give", $EF, $EE, "you his official", $FA, $F7
     db $EF, $EE, "recognition as a", $EF, $EE, "monster master.", $FA, $F7
     db $EF, $EE, "You can use the", $EF, $EE, "Starry Shrine and", $FA, $F7
@@ -3959,7 +3959,7 @@ Data_033_69CE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won the", $EF, $EE, "C Class!", $FA, $F7
+    db $EF, $EE, "You've won the", $EF, $EE, "C Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
@@ -3968,7 +3968,7 @@ Data_033_6A2E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won the", $EF, $EE, "B Class!", $FA, $F7
+    db $EF, $EE, "You've won the", $EF, $EE, "B Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
@@ -3977,7 +3977,7 @@ Data_033_6A8E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won the", $EF, $EE, "A Class!", $FA, $F7
+    db $EF, $EE, "You've won the", $EF, $EE, "A Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
@@ -3986,7 +3986,7 @@ Data_033_6AEE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e finally won", $EF, $EE, "the S Class!", $FA, $F7
+    db $EF, $EE, "You've finally won", $EF, $EE, "the S Class!", $FA, $F7
     db $EF, $EE, "You can now choose", $EF, $EE, "any Class you want", $FA, $F7
     db $EF, $EE, "by paying the", $EF, $EE, "class entry fee.", $FA, $F7
     db $EF, $EE, "There are prizes", $EF, $EE, "for winners too.", $FA, $F7
@@ -4020,7 +4020,7 @@ Data_033_6D17:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db $F9, "0 does it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won", $EF, $EE, $F9, "GG!", $FA, $F7
+    db $EF, $EE, "You've won", $EF, $EE, $F9, "GG!", $FA, $F7
     db $EF, $EE, "We hope you'll", $EF, $EE, "battle here again!", $F7
     db $F0
 
@@ -4075,7 +4075,7 @@ Data_033_6EB3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
-    db $EF, $EE, "You", $42, "e won the", $EF, $EE, $F9, "0 Class!", $FA, $F7
+    db $EF, $EE, "You've won the", $EF, $EE, $F9, "0 Class!", $FA, $F7
     db $EF, $EE, "Choose one of", $EF, $EE, "these chests!", $F7
     db $F0
 
@@ -4180,14 +4180,14 @@ String_33_704C_00_01:: ; heuristic: string; C0
 Data_033_7089:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Congratulations!", $F1
-    db "You", $42, "e won!", $FA, $F7
+    db "You've won!", $FA, $F7
     db $F0
 
 String_33_704C_00_02:: ; heuristic: string; C0
 Data_033_70A7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Too bad!", $F1
-    db "You", $42, "e lost!", $FA, $F7
+    db "You've lost!", $FA, $F7
     db $F0
 
 String_33_704C_00_03:: ; heuristic: string; C0

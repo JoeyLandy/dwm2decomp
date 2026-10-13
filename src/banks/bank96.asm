@@ -207,14 +207,14 @@ String_96_404B_00_09:: ; heuristic: string; C0
 Data_096_4413:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " ", $A4, $A4, " STOP", $A4, $F1
-    db "DON", $95, "T MEDDLE", $A4, $F7
+    db "DON'T MEDDLE", $A4, $F7
     db $F0
 
 String_96_404B_00_0A:: ; heuristic: string; C0
 Data_096_442E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " NEVER DID I", $F1
-    db "EXPECT YUNA", $95, "S SOUL", $FA, $F7
+    db "EXPECT YUNA'S SOUL", $FA, $F7
     db $EF, $EE, "TO BE FOUND", $A4, $EF, $EE, "BUT, NO MATTER.", $FA, $F7
     db $EF, $EE, "YOU MUST DEFEAT ME", $EF, $EE, "TO SAVE HER.", $FA, $F7
     db $EF, $EE, "DO YOU WISH TO", $EF, $EE, "BATTLE?", $FF, $F0
@@ -230,13 +230,13 @@ String_96_404B_00_0C:: ; heuristic: string; C0
 Data_096_44D3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " H-HOW", $A4, " BUT I", $A4, $F1
-    db "THIS ISN", $95, "T", $A4, $A4, $F7
+    db "THIS ISN'T", $A4, $A4, $F7
     db $F0
 
 String_96_404B_00_0D:: ; heuristic: string; C0
 Data_096_44F2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " I", $42, "e finally", $F1
+    db $EB, $45, " I've finally", $F1
     db "remembered.", $FA, $F7
     db $EF, $EE, "I'm Yuna, the", $EF, $EE, "King's daughter.", $FA, $F7
     db $EF, $EE, "I", $44, " overheard a", $EF, $EE, "man and monsters", $FA, $F7
@@ -322,7 +322,7 @@ Data_096_49BC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 read the", $F1
     db "sign.", $FA, $F7
-    db $EF, $EE, $95, "Lady Yuna has", $EF, $EE, "regained her", $FA, $F7
+    db $EF, $EE, "'Lady Yuna has", $EF, $EE, "regained her", $FA, $F7
     db $EF, $EE, "cheerful vivacity.", $EF, $EE, "The contest for", $FA, $F7
     db $EF, $EE, "cheering her up is", $EF, $EE, "now finished.", $95, $F7
     db $F0
@@ -351,7 +351,7 @@ Data_096_4B0D:: ; address name
     db $EA, $45, " All the people", $F1
     db "swarming to the", $FA, $F7
     db $EF, $EE, "Castle have gone", $EF, $EE, "away", $A4, $FA, $F7
-    db $EF, $EE, "I wish I could", $42, "e", $EF, $EE, "seen them", $A4, $FA, $F7
+    db $EF, $EE, "I wish I could've", $EF, $EE, "seen them", $A4, $FA, $F7
     db $EF, $EE, "They should have", $EF, $EE, "done shows here.", $F7
     db $F0
 
@@ -387,7 +387,7 @@ Data_096_4CC6:: ; address name
 String_96_404B_00_1E:: ; heuristic: string; C0
 Data_096_4D0E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I", $42, "e traveled far", $F1
+    db $EA, $45, " I've traveled far", $F1
     db "to study plants.", $FA, $F7
     db $EF, $EE, "SleepHerb is the", $EF, $EE, "one plant that", $FA, $F7
     db $EF, $EE, "assures a deep and", $EF, $EE, "dreamless sleep.", $FA, $F7
@@ -575,7 +575,7 @@ Data_096_55C7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " Queen Helen has", $F1
     db "had a good dream,", $FA, $F7
-    db $EF, $EE, "I", $42, "e heard.", $EF, $EE, "What a change!", $F7
+    db $EF, $EE, "I've heard.", $EF, $EE, "What a change!", $F7
     db $F0
 
 String_96_404B_00_35:: ; heuristic: string; C0
@@ -1159,7 +1159,7 @@ Data_096_6DF7:: ; address name
     db $EA, $45, " How good of you", $F1
     db "to overcome those", $FA, $F7
     db $EF, $EE, "demanding trials,", $EF, $EE, "my little friend!", $FA, $F7
-    db $EF, $EE, "You", $42, "e certainly", $EF, $EE, "impressed me!", $FA, $F7
+    db $EF, $EE, "You've certainly", $EF, $EE, "impressed me!", $FA, $F7
     db $EF, $EE, "Take this!", $EF, $EE, "It's a gift!", $F7
     db $F0
 
@@ -1267,7 +1267,7 @@ Script_96_6F68:: ; heuristic: event script entry or jump target; C0
     script_message $C011 ; 'It has a fair number of'
     script_jump Script_96_6F77
 Script_96_6F6E:: ; heuristic: event script entry or jump target; C0
-    script_message $C012 ; 'It inherited its parents skills.'
+    script_message $C012 ; 'It inherited its parents' skills.'
     script_jump Script_96_6F77
 Script_96_6F74:: ; heuristic: event script entry or jump target; C0
     script_message $C013 ; 'It knows a great variety of'

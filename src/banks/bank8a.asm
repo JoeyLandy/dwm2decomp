@@ -326,7 +326,7 @@ Data_08A_4545:: ; address name
     db $EF, $EE, "Master Hasta's", $EF, $EE, "Adventure", $A4, $FA, $F7
     db $EF, $EE, "Book 4,", $EF, $EE, "Undead Calm", $A4, $FA, $F7
     db $EF, $EE, "Hork stretched and", $EF, $EE, "yawned out loud,", $FA, $F7
-    db $EF, $EE, $95, "Fwaaah", $A4, " I need my", $EF, $EE, "beauty sleep.", $95, $FA, $F7
+    db $EF, $EE, "'Fwaaah", $A4, " I need my", $EF, $EE, "beauty sleep.", $95, $FA, $F7
     db $EF, $EE, "And Hork went back", $EF, $EE, "to sleep.", $FA, $F7
     db $EF, $EE, "I guess that must", $EF, $EE, "be what sleeping", $FA, $F7
     db $EF, $EE, "like the dead is", $EF, $EE, "all about.", $F7
@@ -513,7 +513,7 @@ Data_08A_505C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " While we do get", $F1
     db "travelers here,", $FA, $F7
-    db $EF, $EE, "I", $42, "e only seen one", $EF, $EE, "other kid.", $FA, $F7
+    db $EF, $EE, "I've only seen one", $EF, $EE, "other kid.", $FA, $F7
     db $EF, $EE, "It was a boy", $A4, $EF, $EE, "Terry, I think.", $F7
     db $F0
 

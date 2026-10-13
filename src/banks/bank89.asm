@@ -532,7 +532,7 @@ Data_089_4E20:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " The King of the", $F1
     db "north was a fake,", $FA, $F7
-    db $EF, $EE, "or so I", $42, "e heard.", $EF, $EE, "Why though?", $FA, $F7
+    db $EF, $EE, "or so I've heard.", $EF, $EE, "Why though?", $FA, $F7
     db $EF, $EE, "Why would a", $EF, $EE, "monster want to", $FA, $F7
     db $EF, $EE, "impersonate a", $EF, $EE, "king?", $F7
     db $F0
@@ -1147,7 +1147,7 @@ Data_089_64CE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " I teased you as", $F1
     db "a cute rival", $A4, $FA, $F7
-    db $EF, $EE, "But you", $42, "e gone", $EF, $EE, "far beyond me.", $F7
+    db $EF, $EE, "But you've gone", $EF, $EE, "far beyond me.", $F7
     db $F0
 
 Message_0D_89:: ; heuristic: string; C0
@@ -1252,7 +1252,7 @@ Data_089_696A:: ; address name
 Message_0D_93:: ; heuristic: string; C0
 Data_089_6A1F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " We", $42, "e had reports", $F1
+    db $EA, $45, " We've had reports", $F1
     db "of rogue masters", $FA, $F7
     db $EF, $EE, "who terrorize", $EF, $EE, "other worlds.", $FA, $F7
     db $EF, $EE, "We're investigating", $EF, $EE, "these reports, but", $FA, $F7
@@ -1276,7 +1276,7 @@ Data_089_6B4F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey", $A4, $F1
     db "That's cold of you.", $FA, $F7
-    db $EF, $EE, "After all we", $42, "e", $EF, $EE, "been through", $A4, $FA, $F7
+    db $EF, $EE, "After all we've", $EF, $EE, "been through", $A4, $FA, $F7
     db $EF, $EE, "Yet you refuse me,", $EF, $EE, "warooh?", $F7
     db $F0
 
@@ -1578,7 +1578,7 @@ Data_089_7928:: ; address name
 Message_0D_D3:: ; heuristic: string; C0
 Data_089_796A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $95, "Inn downstairs.", $F1
+    db "'Inn downstairs.", $F1
     db "Rooms available.", $95, $F7
     db $F0
 

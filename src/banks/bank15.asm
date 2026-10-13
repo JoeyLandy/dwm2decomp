@@ -7762,7 +7762,7 @@ Script_15_76D5:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_BREED
     script_choice_jump Script_15_76E2, Script_15_76DC
 Script_15_76DC:: ; heuristic: event script entry or jump target; C0
-    script_message $C00C ; 'You e never had that monster.'
+    script_message $C00C ; 'You've never had that monster.'
     script_jump Script_15_76E5
 Script_15_76E2:: ; heuristic: event script entry or jump target; C0
     script_message $C00B ; 'You already had that monster.'

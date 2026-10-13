@@ -4765,15 +4765,15 @@ Func_00F_5D9D:: ; address name
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw ScenePrincessMedicine_ShowYunasSoulFilledHer
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw ScenePrincessMedicine_ShowIEFinallyRemembered
+    dw ScenePrincessMedicine_ShowIveFinallyRememberedIm
     dw PersonalityMessage_RunMessageBoxFar_Bank0F
 
 ; entry 11 of the `rst $00` table in ScenePrincessMedicine
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScenePrincessMedicine_ShowIEFinallyRemembered::
+ScenePrincessMedicine_ShowIveFinallyRememberedIm::
 Jump_00F_5DBB:: ; address name
-    ld hl, $0AD5 ; 'I e finally remembered. I'm Yuna,'
+    ld hl, $0AD5 ; 'I've finally remembered. I'm Yuna, the'
     call StartMessageHL_B0F
     ld de, $009D
     call SetFlagBit
@@ -4809,7 +4809,7 @@ Jump_00F_5DCC:: ; address name
 ; points at: wScriptStep
 ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
 Jump_00F_5DED:: ; address name
-    ld hl, $0AD4 ; 'H-HOW BUT I THIS ISN T'
+    ld hl, $0AD4 ; 'H-HOW BUT I THIS ISN'T'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -4887,7 +4887,7 @@ Jump_00F_5E3A:: ; address name
     ld de, $009C
     call TestFlagBit
     jr c, .set_script_step_to_06
-    ld hl, $4AD2 ; 'NEVER DID I EXPECT YUNA S'
+    ld hl, $4AD2 ; 'NEVER DID I EXPECT YUNA'S SOUL'
     call StartMessageHL_B0F
     ld de, $009C
     call SetFlagBit
@@ -8262,14 +8262,14 @@ Func_00F_72D9:: ; address name
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneRivalDefeated_DecompressToVRAM
     dw SceneRivalDefeated_StepObjectTowardCoord
-    dw SceneRivalDefeated_ShowKingWahahWeE
+    dw SceneRivalDefeated_ShowKingWahahWeveBagged
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneRivalDefeated_WriteObject5AndScriptTemp4Etc
     dw SceneRivalDefeated_ShowKingThisIsThe
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneRivalDefeated_ShowHeroObtainedTheTidalBell
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneRivalDefeated_Msg01A0_KingIEBeen
+    dw SceneRivalDefeated_Msg01A0_KingIveBeenA
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneRivalDefeated_ShowAVoiceEchoedFrom
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
@@ -8426,9 +8426,9 @@ Jump_00F_73D8:: ; address name
 ; entry 24 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_Msg01A0_KingIEBeen::
+SceneRivalDefeated_Msg01A0_KingIveBeenA::
 Jump_00F_7401:: ; address name
-    ld hl, $01A0 ; 'King I e been a burden'
+    ld hl, $01A0 ; 'King I've been a burden to'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
@@ -8508,7 +8508,7 @@ Jump_00F_7450:: ; address name
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlots
 ; points at: wScriptStep
-SceneRivalDefeated_ShowKingWahahWeE::
+SceneRivalDefeated_ShowKingWahahWeveBagged::
 Jump_00F_7473:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -8520,7 +8520,7 @@ Jump_00F_7473:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $019D ; 'King Wahah! We e bagged the'
+    ld hl, $019D ; 'King Wahah! We've bagged the lot!'
     call StartMessageHL_B0F
     ld a, $03
     ld [wSpriteSlots + $7], a

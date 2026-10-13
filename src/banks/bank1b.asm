@@ -1725,7 +1725,7 @@ Data_01B_4E39:: ; address name
 String_1B_4C9B_00_0C:: ; heuristic: string; C0
 Data_01B_4E5B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e never had", $F1
+    db $EA, $45, " You've never had", $F1
     db "that monster.", $F7
     db $F0
 

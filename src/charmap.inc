@@ -67,8 +67,10 @@ CHARMAP "'s", $3E
 CHARMAP "'m", $3F
 CHARMAP "'r", $40
 CHARMAP "'t", $41
+CHARMAP "'v", $42
 CHARMAP "'l", $43
 CHARMAP " ", $90
+CHARMAP "'", $95
 CHARMAP "?", $98
 CHARMAP "!", $99
 CHARMAP "-", $9C

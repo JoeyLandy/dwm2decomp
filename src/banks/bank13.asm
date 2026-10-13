@@ -336,7 +336,7 @@ Jump_013_4225:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0402_YouEComeAllThisWay::
 Jump_013_422C:: ; address name
-    ld hl, $0402 ; 'You e come all this way,'
+    ld hl, $0402 ; 'You've come all this way, take'
     call StartMessageCommand09HL_B13
     ret
 
@@ -813,7 +813,7 @@ Jump_013_446E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg04AA_HeroReadTheSignDetermine::
 Jump_013_4475:: ; address name
-    ld hl, $04AA ; '0 read the sign. Determine where'
+    ld hl, $04AA ; '0 read the sign. 'Determine where'
     call StartMessageCommand09HL_B13
     ret
 
@@ -821,7 +821,7 @@ Jump_013_4475:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0DD3_InnDownstairsRoomsAvailable::
 Jump_013_447C:: ; address name
-    ld hl, $0DD3 ; 'Inn downstairs. Rooms available.'
+    ld hl, $0DD3 ; ''Inn downstairs. Rooms available.''
     call StartMessageCommand09HL_B13
     ret
 
@@ -918,7 +918,7 @@ Jump_013_44E2:: ; address name
 
 ; starts Script_6062 (StartScriptAtHL); its first message begins 'I e lived here for 200' (E-0271; was DispatchTalkEvent_Case05_Case2F)
 ; no direct call (reached through a table, a jump or a vector)
-; starts Script_6062: 'I e lived here for 200'
+; starts Script_6062: 'I've lived here for 200 years'
 TalkScript6062_IELivedHereFor2Hero::
 Jump_013_44F8:: ; address name
     ld hl, Script_6062
@@ -1086,7 +1086,7 @@ Jump_013_45A6:: ; address name
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $046C ; 'Who would e thought anyone would'
+    ld hl, $046C ; 'Who would've thought anyone would collect'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1179,17 +1179,17 @@ Jump_013_4670:: ; address name
     ld de, $00A8
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $044D ; '0 read the sign. The finder'
+    ld hl, $044D ; '0 read the sign. 'The finder'
     call StartMessageCommand09HL_B13
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $044E ; '0 read the sign. The Heaven'
+    ld hl, $044E ; '0 read the sign. 'The Heaven'
     call StartMessageCommand09HL_B13
     ret
 
 .call_start_message_command09_hl_b132:
-    ld hl, $049C ; '0 read the sign. Town of'
+    ld hl, $049C ; '0 read the sign. 'Town of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1389,7 +1389,7 @@ Jump_013_475B:: ; address name
 ; starts Script_60CE
 TalkMsg0462_HeroCheckedTheNoticeLayThe::
 Jump_013_4774:: ; address name
-    ld hl, $0462 ; '0 checked the notice. Lay the'
+    ld hl, $0462 ; '0 checked the notice. 'Lay the'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1415,7 +1415,7 @@ Jump_013_4782:: ; address name
 ; starts Script_60D0
 TalkMsg04A9_HeroCheckedTheNoticeGuide::
 Jump_013_4789:: ; address name
-    ld hl, $04A9 ; '0 checked the notice. Guide the'
+    ld hl, $04A9 ; '0 checked the notice. 'Guide the'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1432,7 +1432,7 @@ Jump_013_4790:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0463_HeroCheckedTheNoticeFollow::
 Jump_013_4797:: ; address name
-    ld hl, $0463 ; '0 checked the notice. Follow the'
+    ld hl, $0463 ; '0 checked the notice. 'Follow the'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1519,7 +1519,7 @@ Jump_013_47F8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg046F_WhatYouEGotTheThree::
 Jump_013_47FF:: ; address name
-    ld hl, $046F ; 'What? You e got the three'
+    ld hl, $046F ; 'What? You've got the three items?'
     call StartMessageCommand09HL_B13
     ret
 
@@ -1571,7 +1571,7 @@ Jump_013_4806:: ; address name
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $049E ; 'I e become the Mayor, but'
+    ld hl, $049E ; 'I've become the Mayor, but what'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2125,7 +2125,7 @@ Jump_013_4B99:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0355 ; 'I e heard about the mine.'
+    ld hl, $0355 ; 'I've heard about the mine. Isn't'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2395,7 +2395,7 @@ Jump_013_4CF7:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0358 ; 'I e heard from friends who'
+    ld hl, $0358 ; 'I've heard from friends who came'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2477,7 +2477,7 @@ Jump_013_4D57:: ; address name
     ret
 
 .call_start_message_command09_hl_b133:
-    ld hl, $0376 ; 'Who would e thought that a'
+    ld hl, $0376 ; 'Who would've thought that a monster'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2485,7 +2485,7 @@ Jump_013_4D57:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0ABD_HeroCheckedTheBookshelfHistory::
 Jump_013_4D9A:: ; address name
-    ld hl, $0ABD ; '0 checked the bookshelf. History of'
+    ld hl, $0ABD ; '0 checked the bookshelf. 'History of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2493,7 +2493,7 @@ Jump_013_4D9A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0ABE_HeroCheckedTheBookshelfHistory::
 Jump_013_4DA1:: ; address name
-    ld hl, $0ABE ; '0 checked the bookshelf. History of'
+    ld hl, $0ABE ; '0 checked the bookshelf. 'History of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2552,7 +2552,7 @@ Jump_013_4DE2:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0327 ; 'In all my years, I e'
+    ld hl, $0327 ; 'In all my years, I've never'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2763,7 +2763,7 @@ Jump_013_4EDD:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0334 ; 'We e been full up with'
+    ld hl, $0334 ; 'We've been full up with sailors'
     call StartMessageCommand09HL_B13
     ret
 
@@ -2816,7 +2816,7 @@ Jump_013_4F10:: ; address name
     ldh a, [hTemp0]
     bit 7, a
     jr z, .call_start_message_command09_hl_b13
-    ld hl, $0AE6 ; 'I e traveled far to study'
+    ld hl, $0AE6 ; 'I've traveled far to study plants.'
     call StartMessageCommand09HL_B13
     ld de, $009E
     call SetFlagBit
@@ -2951,7 +2951,7 @@ Jump_013_4FD3:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0352 ; 'I e heard There was almost'
+    ld hl, $0352 ; 'I've heard There was almost no'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3004,7 +3004,7 @@ Jump_013_501D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0340_HehYouEComeWayDown::
 Jump_013_5033:: ; address name
-    ld hl, $0340 ; 'Heh, you e come way down'
+    ld hl, $0340 ; 'Heh, you've come way down deep.'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3372,7 +3372,7 @@ Jump_013_523A:: ; address name
     ld de, $009D
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0385 ; 'I e heard rumors that something'
+    ld hl, $0385 ; 'I've heard rumors that something is'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3536,7 +3536,7 @@ Jump_013_52F9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg038F_IEBroughtWithMeA::
 Jump_013_5300:: ; address name
-    ld hl, $038F ; 'I e brought with me a'
+    ld hl, $038F ; 'I've brought with me a necklace'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3571,7 +3571,7 @@ Jump_013_5315:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0AB9 ; 'If you e come to entertain'
+    ld hl, $0AB9 ; 'If you've come to entertain Lady'
     call StartMessageCommand09HL_B13
     ret
 
@@ -3619,12 +3619,12 @@ Jump_013_535F:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0394 ; '0 read the sign. Come all'
+    ld hl, $0394 ; '0 read the sign. 'Come all'
     call StartMessageCommand09HL_B13
     ret
 
 .call_start_message_command09_hl_b132:
-    ld hl, $0ADF ; '0 read the sign. Lady Yuna'
+    ld hl, $0ADF ; '0 read the sign. 'Lady Yuna'
     call StartMessageCommand09HL_B13
     ret
 
@@ -4392,7 +4392,7 @@ Jump_013_5794:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0AC0_HeroCheckedTheBookshelfHistory::
 Jump_013_579B:: ; address name
-    ld hl, $0AC0 ; '0 checked the bookshelf. History of'
+    ld hl, $0AC0 ; '0 checked the bookshelf. 'History of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -4400,7 +4400,7 @@ Jump_013_579B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0AC1_HeroCheckedTheBookshelfHistory::
 Jump_013_57A2:: ; address name
-    ld hl, $0AC1 ; '0 checked the bookshelf. History of'
+    ld hl, $0AC1 ; '0 checked the bookshelf. 'History of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -5257,7 +5257,7 @@ Func_013_5C0B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0023_HeroCheckedTheBookshelfBehavior::
 Jump_013_5D43:: ; address name
-    ld hl, $0023 ; '0 checked the bookshelf. Behavior of'
+    ld hl, $0023 ; '0 checked the bookshelf. 'Behavior of'
     call StartMessageCommand09HL_B13
     ret
 
@@ -5406,7 +5406,7 @@ Jump_013_5D7D:: ; address name
     ld de, $0101
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b133
-    ld hl, $0108 ; 'It looks like you e become'
+    ld hl, $0108 ; 'It looks like you've become friends'
     call StartMessageCommand09HL_B13
     ld de, $0101
     call SetFlagBit
@@ -5451,54 +5451,54 @@ Jump_013_5D7D:: ; address name
 .cp_1E:
     cp a, $1E
     jr nc, .cp_28
-    ld hl, $0DE7 ; 'Hey, 0! You e befriended a'
+    ld hl, $0DE7 ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_28:
     cp a, $28
     jr nc, .cp_32
-    ld hl, $0DE8 ; 'Hey, 0! You e befriended a'
+    ld hl, $0DE8 ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_32:
     cp a, $32
     jr nc, .cp_64
-    ld hl, $0DE9 ; 'Hey, 0! You e befriended a'
+    ld hl, $0DE9 ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_64:
     cp a, $64
     jr nc, .cp_96
-    ld hl, $0DEA ; 'Hey, 0! You e befriended a'
+    ld hl, $0DEA ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_96:
     cp a, $96
     jr nc, .cp_C8
-    ld hl, $0DEB ; 'Hey, 0! You e befriended a'
+    ld hl, $0DEB ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_C8:
     cp a, $C8
     jr nc, .cp_FA
-    ld hl, $0DEC ; 'Hey, 0! You e befriended a'
+    ld hl, $0DEC ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .cp_FA:
     cp a, $FA
     jr nc, .loop
-    ld hl, $0DED ; 'Hey, 0! You e befriended a'
+    ld hl, $0DED ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
 .loop:
-    ld hl, $0DEE ; 'Hey, 0! You e befriended a'
+    ld hl, $0DEE ; 'Hey, 0! You've befriended a good'
     call StartMessageCommand09HL_B13
     ret
 
@@ -5506,7 +5506,7 @@ Jump_013_5D7D:: ; address name
     ldh a, [hTemp0]
     cp a, $38
     jr c, .loop
-    ld hl, $0DEF ; 'Congratulations, 0! You e cataloged every'
+    ld hl, $0DEF ; 'Congratulations, 0! You've cataloged every species.'
     call StartMessageCommand09HL_B13
     ret
 
@@ -6072,7 +6072,7 @@ Jump_013_62A9:: ; address name
     ld de, $000C
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $003B ; 'This palm tree is GreatLog. We'
+    ld hl, $003B ; 'This palm tree is GreatLog. We've'
     call StartMessageCommand09HL_B13
     ret
 
@@ -6786,7 +6786,7 @@ Jump_013_67A3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg04D0_HeroReadTheSignMonsterArena::
 Jump_013_67C9:: ; address name
-    ld hl, $04D0 ; '0 read the sign. Monster Arena,'
+    ld hl, $04D0 ; '0 read the sign. 'Monster Arena,'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7272,7 +7272,7 @@ Jump_013_6A6C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0243_HeroCheckedTheBookshelfBookmark::
 Jump_013_6A82:: ; address name
-    ld hl, $0243 ; '0 checked the bookshelf. Bookmark Place'
+    ld hl, $0243 ; '0 checked the bookshelf. 'Bookmark Place'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7280,7 +7280,7 @@ Jump_013_6A82:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0244_HeroCheckedTheBookshelfJournal::
 Jump_013_6A89:: ; address name
-    ld hl, $0244 ; '0 checked the bookshelf. Journal A'
+    ld hl, $0244 ; '0 checked the bookshelf. 'Journal A'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7320,7 +7320,7 @@ Jump_013_6A97:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0249_HeroCheckedTheBookshelfDiary::
 Jump_013_6ABC:: ; address name
-    ld hl, $0249 ; '0 checked the bookshelf. Diary A'
+    ld hl, $0249 ; '0 checked the bookshelf. 'Diary A'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7404,7 +7404,7 @@ Jump_013_6B32:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg025B_HeroCheckedTheBookshelfThis::
 Jump_013_6B39:: ; address name
-    ld hl, $025B ; '0 checked the bookshelf. This is'
+    ld hl, $025B ; '0 checked the bookshelf. 'This is'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7444,7 +7444,7 @@ Jump_013_6B4E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg04C5_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B6F:: ; address name
-    ld hl, $04C5 ; '0 checked the bookshelf. Handbook on'
+    ld hl, $04C5 ; '0 checked the bookshelf. 'Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7452,7 +7452,7 @@ Jump_013_6B6F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg04C6_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B76:: ; address name
-    ld hl, $04C6 ; '0 checked the bookshelf. Handbook on'
+    ld hl, $04C6 ; '0 checked the bookshelf. 'Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7460,7 +7460,7 @@ Jump_013_6B76:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg04C7_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B7D:: ; address name
-    ld hl, $04C7 ; '0 checked the bookshelf. Handbook on'
+    ld hl, $04C7 ; '0 checked the bookshelf. 'Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7567,7 +7567,7 @@ Jump_013_6C08:: ; address name
 ; starts Script_54B9: '0 checked the casket.'
 TalkMsg0A59_HeroReadTheSignSshMonsters::
 Jump_013_6C0F:: ; address name
-    ld hl, $0A59 ; '0 read the sign. Ssh Monsters'
+    ld hl, $0A59 ; '0 read the sign. 'Ssh Monsters'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7594,7 +7594,7 @@ Jump_013_6C1D:: ; address name
 ; starts Script_54C7: '0 peered into the hole.'
 TalkMsg0A5D_HeroReadTheSignWatchYour::
 Jump_013_6C24:: ; address name
-    ld hl, $0A5D ; '0 read the sign. Watch your'
+    ld hl, $0A5D ; '0 read the sign. 'Watch your'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7635,7 +7635,7 @@ Jump_013_6C48:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0B75 ; 'I e learned how to tell'
+    ld hl, $0B75 ; 'I've learned how to tell what'
     call StartMessageCommand09HL_B13
     ret
 
@@ -7707,7 +7707,7 @@ Jump_013_6C8F:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0B7A ; 'I e never heard of a'
+    ld hl, $0B7A ; 'I've never heard of a single'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8082,7 +8082,7 @@ Jump_013_6EDE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg08D8_HeroCheckedTheBookshelfBreeding::
 Jump_013_6EE5:: ; address name
-    ld hl, $08D8 ; '0 checked the bookshelf. Breeding Guide'
+    ld hl, $08D8 ; '0 checked the bookshelf. 'Breeding Guide'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8090,7 +8090,7 @@ Jump_013_6EE5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg08D9_HeroCheckedTheBookshelfBreeding::
 Jump_013_6EEC:: ; address name
-    ld hl, $08D9 ; '0 checked the bookshelf. Breeding Guide'
+    ld hl, $08D9 ; '0 checked the bookshelf. 'Breeding Guide'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8213,7 +8213,7 @@ Jump_013_6F5D:: ; address name
 .call_inventory_has_free_slot_check_bank13:
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_game_flags836
-    ld hl, $0261 ; 'I e never seen my granddaughter'
+    ld hl, $0261 ; 'I've never seen my granddaughter so'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8253,7 +8253,7 @@ Jump_013_6F5D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg0269_HeroCheckedTheDresserGirls::
 Jump_013_6FC5:: ; address name
-    ld hl, $0269 ; '0 checked the dresser. Girls clothes'
+    ld hl, $0269 ; '0 checked the dresser. Girls' clothes'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8671,7 +8671,7 @@ Jump_013_727A:: ; address name
     ld de, $0192
     call TestFlagBit
     jr c, .call_test_flag_bit2
-    ld hl, $0D93 ; 'We e had reports of rogue'
+    ld hl, $0D93 ; 'We've had reports of rogue masters'
     call StartMessageCommand09HL_B13
     ret
 
@@ -8917,7 +8917,7 @@ Jump_013_741C:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0520 ; 'I e studied GreatLog over a'
+    ld hl, $0520 ; 'I've studied GreatLog over a long'
     call StartMessageCommand09HL_B13
     ret
 
@@ -9887,7 +9887,7 @@ Jump_013_79C4:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $027B ; 'Which to take? Monsters you e'
+    ld hl, $027B ; 'Which to take? Monsters you've raised,'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10137,7 +10137,7 @@ Jump_013_7B0B:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b13
-    ld hl, $0A68 ; 'My Emyu is very timid. I'
+    ld hl, $0A68 ; 'My Emyu is very timid. I've'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10206,7 +10206,7 @@ Jump_013_7B64:: ; address name
     ret
 
 .call_start_message_command09_hl_b13:
-    ld hl, $0518 ; 'I e never once left the'
+    ld hl, $0518 ; 'I've never once left the island.'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10448,7 +10448,7 @@ Jump_013_7D1A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 TalkMsg055E_HeroCheckedTheBookshelfMagic::
 Jump_013_7D21:: ; address name
-    ld hl, $055E ; '0 checked the bookshelf. Magic Keys'
+    ld hl, $055E ; '0 checked the bookshelf. 'Magic Keys'
     call StartMessageCommand09HL_B13
     ret
 
@@ -10619,7 +10619,7 @@ Jump_013_7DEC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
 Jump_013_7DFD:: ; address name
-    ld hl, $055F ; '0 checked the bookshelf. Magic Keys'
+    ld hl, $055F ; '0 checked the bookshelf. 'Magic Keys'
     call StartMessageCommand09HL_B13
     ret
     db $C9

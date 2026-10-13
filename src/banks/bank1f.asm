@@ -119,7 +119,7 @@ Data_01F_43C0:: ; address name
     db $FF, $80, $FF, $80, $FF, $76, $FF, $49, $FF, $49, $FF, $49, $FF, $49, $FF, $00 ; id 63 ''m'
     db $FF, $80, $FF, $80, $FF, $0E, $FF, $50, $FF, $60, $FF, $40, $FF, $40, $FF, $00 ; id 64 ''r'
     db $FF, $80, $FF, $90, $FF, $7E, $FF, $10, $FF, $10, $FF, $10, $FF, $0E, $FF, $00 ; id 65 ''t'
-    db $FF, $80, $FF, $80, $FF, $00, $FF, $42, $FF, $42, $FF, $24, $FF, $18, $FF, $00 ; id 66
+    db $FF, $80, $FF, $80, $FF, $00, $FF, $42, $FF, $42, $FF, $24, $FF, $18, $FF, $00 ; id 66 ''v'
     db $FF, $88, $FF, $88, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00 ; id 67 ''l'
 Tiles1Plus6F0Tiles_1F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_01F_4450:: ; address name
@@ -218,7 +218,7 @@ Data_01F_4910:: ; address name
     db $FF, $00, $FF, $24, $FF, $54, $FF, $58, $FF, $2A, $FF, $15, $FF, $15, $FF, $22 ; id 146
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $66, $FF, $66, $FF, $00 ; id 147
     db $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $00, $FF, $60, $FF, $20, $FF, $40 ; id 148
-    db $FF, $60, $FF, $60, $FF, $20, $FF, $40, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 149
+    db $FF, $60, $FF, $60, $FF, $20, $FF, $40, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 149 '''
     db $FF, $00, $FF, $0E, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00, $FF, $00 ; id 150
     db $FF, $00, $FF, $00, $FF, $00, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $E0 ; id 151
 Tiles2Plus420Tiles_1F_4990:: ; heuristic: argument of a bank-switching copy helper; C0

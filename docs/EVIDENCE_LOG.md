@@ -2431,6 +2431,34 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0319 — The game's own string lookups and screen pictures check our text reading
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), with TOOL changes.
+- **The run.** tools/boot_trace.py gains `--explore`: from frame 4000 the player walks in a square, presses A every 30 frames, B every 97 and Start every 997. The trace also logs two kinds of event in order:
+  - the entry of each routine named TalkMsg*, TalkScript*, Msg*, ShowString* or ShowMessage*;
+  - each return of LookupString (0:$2E5C), with the current ROM bank, DE (the string pointer), wStringCategory, wStringIndex, and the bytes from DE up to $F0, read through the emulator's own bank mapping.
+
+  tools/screen.py draws VRAM (background and window layers, CGB attributes and palette RAM; no sprites) as a PNG.
+- **Strings.** The 40,000,000-instruction exploring run (9,152 frames) looks up 13 distinct strings: the title menu, the name-entry question, the opening narration, Tara's lines and three talks on the ship. The 400,000,000-instruction run (83,302 frames) looks up the same 13; random walking on the ship reaches nothing more, and no battle. Each lookup's DE is a label of the source, and its category and index match the game's:
+  - String_07_00_02 is the title menu ("CONTINUE NEW GAME ...");
+  - Message_00_00 and on are the narration and talks.
+- **A table the static pass missed.** The name-entry question "Is 0 correct?" was looked up at 14:$700D, which had no label. RunNameEntryStateWhenNotFading_Case* loads `ld de, $7003` and then jumps (`jr`) to the shared `call BeginStringDisplay`. E-0217 only looked at `ld de` in the four instructions before the call.
+  - The rule now also takes `ld de, n` followed by an unconditional jump straight to such a call.
+  - 14:$7003 is now StringCategories_14_7003, one category list of four strings (String_14_7003_00_00 to _03). The second string repeats the first.
+- **Talk names.** Each TalkMsgNNNN_<words> routine the run entered is followed by a lookup of message index $NN, category 0, at label Message_00_NN, whose text begins with <words> ("0" is read as Hero). Three are checked: TalkMsg0005_YouFolksRunAMonsterFarm, TalkMsg0010_HeroPeeredIntoTheVaseFreshly and TalkMsg000F_HeroPeeredIntoTheBarrelIt.
+- **The screen.** Pictures 25 to 90 frames after those talks show "We've never had" and "It was filled with", the decoded text.
+  - The picture of message $05 shows a glyph our table lacked: the bytes "We", $42, "e" are drawn "We've". $42 is now "'v" (C2), as in "You've", "I've" and "We've". Four rule-made names read better, e.g. SceneRivalDefeated_ShowKingWahahWeveBagged (was ...WeE).
+  - The name-entry keyboard picture (frame 1100) shows NameEntryKeyboard row 4 ($95 "," "." $94 $93 " ") as an apostrophe, comma, period, a semicolon-like glyph, a two-dot glyph and an arrow. In text $95 reads as an apostrophe ("oasis' water", "Girls' clothes", "to 'Defense'"), so it is now "'" (C2).
+  - gb_text.render keeps $95 raw before s/m/r/t/v/l, where "'" plus that letter would re-encode as a contraction glyph.
+  - $94 and $93 appear in no text, so they stay raw (C1: ";" and "‥" from one picture). The arrow at the space position may be the keyboard's own picture of space, so $90 is unchanged.
+  - The question picture (frame 1250) shows "Is CobiA correct?" for the bytes "Is ", $F9, "0 correct?". $F9 "0" prints the player's name (C2 within this one string, observed; not yet generalized).
+- **Scope.** These are our emulator's picture of VRAM, not hardware. The charmap entries rest on the glyph shapes in VRAM and on reading the text.
+- **Tests.** tests/test_boot_trace.py now runs with `explore=True` and adds three checks:
+  - every LookupString result is at a String_/Message_ label whose category and index match the game's;
+  - each TalkMsg routine looks up the message its name quotes;
+  - the strings read as game text.
+- Binary verification: build/run442 (string table), run443 ('v) and run444 (apostrophe) PASS, 0 differing bytes. Tests OK (197, skipped=3). Routines, RAM and INCBIN measures stay at 0.
+
 ### E-0318 — A power-on run: names agree with where the code runs
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware).

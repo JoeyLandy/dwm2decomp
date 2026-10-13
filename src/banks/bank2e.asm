@@ -556,7 +556,7 @@ Data_02E_4FE3:: ; address name
 Message_06_27:: ; heuristic: string; C0
 Data_02E_505B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e come back", $F1
+    db $EA, $45, " You've come back", $F1
     db "again, ruff?", $FA, $F7
     db $EF, $EE, "You're stupid but", $EF, $EE, "brave, ruff!", $F7
     db $F0
@@ -687,9 +687,9 @@ Data_02E_5713:: ; address name
 Message_06_34:: ; heuristic: string; C0
 Data_02E_57A2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Rolt", $A3, " I", $42, "e found", $F1
+    db $EA, "Rolt", $A3, " I've found", $F1
     db "you at last!", $FA, $F7
-    db $EF, $EE, "Everything you", $42, "e", $EF, $EE, "taken from us, I'm", $FA, $F7
+    db $EF, $EE, "Everything you've", $EF, $EE, "taken from us, I'm", $FA, $F7
     db $EF, $EE, "going to take back", $EF, $EE, "from you now!", $F7
     db $F0
 
@@ -925,7 +925,7 @@ Data_02E_5F8D:: ; address name
 Message_06_52:: ; heuristic: string; C0
 Data_02E_6001:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EB, $45, " I", $42, "e heard that", $F1
+    db $EB, $45, " I've heard that", $F1
     db "humans are wild", $FA, $F7
     db $EF, $EE, "savages. Don't get", $EF, $EE, "too close to me!", $F7
     db $F0
@@ -1009,7 +1009,7 @@ Data_02E_63DC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Kiral", $A3, " Hohoh!", $F1
     db "Grand, grand!", $FA, $F7
-    db $EF, $EE, "Go fetch the", $EF, $EE, "treasure I", $42, "e", $FA, $F7
+    db $EF, $EE, "Go fetch the", $EF, $EE, "treasure I've", $FA, $F7
     db $EF, $EE, "stored. It's", $EF, $EE, "inside a barrel in", $FA, $F7
     db $EF, $EE, "the basement room.", $EF, $EE, "Monsters have", $FA, $F7
     db $EF, $EE, "infested the lower", $EF, $EE, "levels, hence it", $FA, $F7
@@ -1062,7 +1062,7 @@ Data_02E_66EF:: ; address name
     db $F9, "0 checked the", $F1
     db "bookshelf.", $FA, $F7
     db $EF, $EE, "A recent diary was", $EF, $EE, "found.", $FA, $F7
-    db $EF, $EE, $95, "Monsters appeared", $EF, $EE, "in the basement.", $FA, $F7
+    db $EF, $EE, "'Monsters appeared", $EF, $EE, "in the basement.", $FA, $F7
     db $EF, $EE, "The cause remains", $EF, $EE, "unknown.", $FA, $F7
     db $EF, $EE, "The lower levels", $EF, $EE, "can't be entered.", $95, $F7
     db $F0
@@ -1073,7 +1073,7 @@ Data_02E_6796:: ; address name
     db $F9, "0 checked the", $F1
     db "bookshelf.", $FA, $F7
     db $EF, $EE, "A very old diary", $EF, $EE, "was found.", $FA, $F7
-    db $EF, $EE, $95, "The treasure must", $EF, $EE, "be protected.", $FA, $F7
+    db $EF, $EE, "'The treasure must", $EF, $EE, "be protected.", $FA, $F7
     db $EF, $EE, "Rob-N will be", $EF, $EE, "ideal.", $FA, $F7
     db $EF, $EE, "He can be trusted", $EF, $EE, "with the job.", $95, $F7
     db $F0
@@ -1108,7 +1108,7 @@ Data_02E_68F6:: ; address name
     db $F9, "0 peered into", $F1
     db "the barrel.", $FA, $F7
     db $EF, $EE, "There was a note", $EF, $EE, "at the bottom.", $FA, $F7
-    db $EF, $EE, $95, "The blue stone", $EF, $EE, "gives life.", $95, $F7
+    db $EF, $EE, "'The blue stone", $EF, $EE, "gives life.", $95, $F7
     db $F0
 
 Message_06_66:: ; heuristic: string; C0
@@ -1117,7 +1117,7 @@ Data_02E_6957:: ; address name
     db $F9, "0 peered into", $F1
     db "the barrel.", $FA, $F7
     db $EF, $EE, "A quite old diary", $EF, $EE, "was found.", $FA, $F7
-    db $EF, $EE, $95, "A Roboster with", $EF, $EE, "outstanding specs", $FA, $F7
+    db $EF, $EE, "'A Roboster with", $EF, $EE, "outstanding specs", $FA, $F7
     db $EF, $EE, "was born. I gave", $EF, $EE, "it the name Rob-N.", $FA, $F7
     db $EF, $EE, "It is loyal, and", $EF, $EE, "obeys me without", $FA, $F7
     db $EF, $EE, "question or a hint", $EF, $EE, "of complaint.", $FA, $F7
@@ -1354,7 +1354,7 @@ Data_02E_7204:: ; address name
 Message_06_83:: ; heuristic: string; C0
 Data_02E_7220:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Kiral", $A3, " You", $42, "e been", $F1
+    db $EA, "Kiral", $A3, " You've been", $F1
     db "a great help.", $FA, $F7
     db $EF, $EE, "I'll study how the", $EF, $EE, "new type breeds.", $FA, $F7
     db $EF, $EE, "I'll tell you if I", $EF, $EE, "discover how.", $FA, $F7
@@ -1381,7 +1381,7 @@ Data_02E_72D5:: ; address name
 Message_06_89:: ; heuristic: string; C0
 Data_02E_7368:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, "Kiral", $A3, " Hohoh! I", $42, "e", $F1
+    db $EA, "Kiral", $A3, " Hohoh! I've", $F1
     db "got good news!", $FA, $F7
     db $EF, $EE, "Breed two Roboster", $EF, $EE, "units, and you may", $FA, $F7
     db $EF, $EE, "end up with a", $EF, $EE, "Roboster2.", $FA, $F7
@@ -1415,7 +1415,7 @@ Data_02E_754B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " WELCOME.", $F1
     db "I AM ROB-N.", $FA, $F7
-    db $EF, $EE, "I SERVE AS THE", $EF, $EE, "PROFESSOR", $95, "S AIDE.", $F7
+    db $EF, $EE, "I SERVE AS THE", $EF, $EE, "PROFESSOR'S AIDE.", $F7
     db $F0
 
 Message_06_8D:: ; heuristic: string; C0
@@ -1545,7 +1545,7 @@ Data_02E_79C3:: ; address name
     db $EB, $45, " Grrrr!", $F1
     db "I'm so angry!", $FA, $F7
     db $EF, $EE, "Monsters stole my", $EF, $EE, "lingerie!", $FA, $F7
-    db $EF, $EE, "I", $42, "e never seen", $EF, $EE, "such sauciness!", $F7
+    db $EF, $EE, "I've never seen", $EF, $EE, "such sauciness!", $F7
     db $F0
 
 Message_06_9D:: ; heuristic: string; C0

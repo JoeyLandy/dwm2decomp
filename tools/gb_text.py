@@ -4,7 +4,11 @@
 Observed table (C2; decoded passages read as ordinary sentences):
     $00-$09 digits   $0A-$23 'A'-'Z'   $24-$3D 'a'-'z'   $90 space
     $B5 '.'  $AB ','  $99 '!'  $98 '?'  $9C '-'
-    $3E "'s"  $3F "'m"  $40 "'r"  $41 "'t"  $43 "'l"     (single contraction glyphs)
+    $3E "'s"  $3F "'m"  $40 "'r"  $41 "'t"  $42 "'v"  $43 "'l"     (single contraction glyphs;
+    $42 C2 from E-0319: tools/screen.py pictures "We've" where the bytes are "We", $42, "e")
+    $95 "'"  (C2 from E-0319: the name-entry keyboard pictures it as an apostrophe, and text reads
+             "oasis' water", "Girls' clothes"; before s/m/r/t/v/l it stays $95, which would
+             otherwise re-encode as a contraction glyph)
 Other bytes between words ($EA-$EF, $F0-$FA, $A3, $A4, $95, ...) are control or glyph codes
 whose meaning is NOT established; they are kept as raw bytes. `render` therefore never changes
 a byte: every string character maps back to the byte it came from.
@@ -18,7 +22,7 @@ for _i in range(26):
     CHARMAP[chr(ord("A") + _i)] = 0x0A + _i
     CHARMAP[chr(ord("a") + _i)] = 0x24 + _i
 CHARMAP.update({" ": 0x90, ".": 0xB5, ",": 0xAB, "!": 0x99, "?": 0x98, "-": 0x9C,
-                "'s": 0x3E, "'m": 0x3F, "'r": 0x40, "'t": 0x41, "'l": 0x43})
+                "'s": 0x3E, "'m": 0x3F, "'r": 0x40, "'t": 0x41, "'v": 0x42, "'l": 0x43, "'": 0x95})
 BYTE_TO_TEXT = {v: k for k, v in CHARMAP.items()}
 
 LETTERS = set(range(0x0A, 0x3E)) | {0x90}
@@ -107,8 +111,9 @@ def render(raw: bytes, max_chars: int = 60) -> list[str]:
             lines.append(", ".join(parts))
         parts, width = [], 0
 
-    for b in raw:
-        if b in BYTE_TO_TEXT:
+    for k, b in enumerate(raw):
+        if b in BYTE_TO_TEXT and not (b == 0x95 and k + 1 < len(raw)
+                                      and "'" + BYTE_TO_TEXT.get(raw[k + 1], "") in CHARMAP):
             cur.append(BYTE_TO_TEXT[b])
             width += len(BYTE_TO_TEXT[b])
             if width >= max_chars:

@@ -3310,7 +3310,7 @@ Jump_085_53DF:: ; address name
 .loop:
     ld a, $00
     ld [wScriptParam1], a
-    ld hl, $0473 ; 'You! I e never seen you'
+    ld hl, $0473 ; 'You! I've never seen you before!'
     call StartMessageHL_B85
     ret
 

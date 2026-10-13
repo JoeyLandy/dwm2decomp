@@ -532,7 +532,7 @@ String_2F_00_06:: ; heuristic: string; C0
 Data_02F_43F7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F6, "'s party was", $F1
-    db "wiped out!", $E5, $42, $F0
+    db "wiped out!", $E5, "'v", $F0
 
 String_2F_00_07:: ; heuristic: string; C0
 Data_02F_4412:: ; address name
@@ -1417,7 +1417,7 @@ String_2F_00_87:: ; heuristic: string; C0
 Data_02F_5A9C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0's party", $F1
-    db "was wiped out!", $E5, $42, $F0
+    db "was wiped out!", $E5, "'v", $F0
 
 String_2F_00_88:: ; heuristic: string; C0
 Data_02F_5AB8:: ; address name
@@ -1985,7 +1985,7 @@ Data_02F_6404:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0 got", $F1
     db "goose bumps!", $EC, $F2, $ED, $F9, "0's DEF", $F1
-    db "dropped to ", $95, "1", $95, "!", $EC, $F0
+    db "dropped to '1'!", $EC, $F0
 
 String_2F_01_5C:: ; heuristic: string; C0
 Data_02F_6434:: ; address name

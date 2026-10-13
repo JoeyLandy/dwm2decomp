@@ -6520,7 +6520,7 @@ Func_014_6B76:: ; address name
     ld a, [wArg1]
     cp a, $03
     jr z, .call_begin_string_display
-    ld de, RunNameEntryStateWhenNotFading_FillTilesFromRequest_Data
+    ld de, StringCategories_14_7003
     jr .call_begin_string_display2
 
 .call_begin_string_display:
@@ -6901,7 +6901,7 @@ Data_014_6F4E:: ; address name
     db "NOPQRSTUVWXYZ4567" ; id 1
     db "abcdefghijklm89!?" ; id 2
     db "nopqrstuvwxyz", $FE, $FF, $FF, $FF ; id 3
-    db $95, ",.", $94, $93, " ", $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 4
+    db "',.", $94, $93, " ", $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 4
     db $56, $58, $5A, $5C, $5E, $75, $76, $77, $78, $79, $57, $59, $5B, $5D, $5F, $FF, $60 ; id 5
     db $61, $62, $63, $64, $7A, $7B, $7C, $7D, $7E, $80, $82, $84, $8D, $8E, $FF, $65, $66 ; id 6
     db $67, $68, $69, $7F, $FF, $81, $FF, $83, $FF, $FF, $FF, $FF, $FF, $FF, $6A, $6B, $6C ; id 7
@@ -6909,14 +6909,42 @@ Data_014_6F4E:: ; address name
     db $74, $8A, $8B, $8C, $6D, "-", $FE, $FF, $FF, $FF, $FF, $FF, "12345" ; id 9
     db $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF ; end
 
-; address loaded by RunNameEntryStateWhenNotFading_FillTilesFromRequest
-RunNameEntryStateWhenNotFading_FillTilesFromRequest_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; record: string list
+StringCategories_14_7003::
 Data_014_7003:: ; address name
-    db $05, $70, $0D, $70, $1C, $70, $2B, $70, $4D, $70
+    dw StringList_14_7005 ; id 0
+
+; E-0217 (derived: category list of StringCategories_14_7003; one pointer per wStringIndex)
+; record: string
+StringList_14_7005::
+Data_014_7005:: ; address name
+    dw String_14_7003_00_00 ; id 0
+    dw String_14_7003_00_01 ; id 1
+    dw String_14_7003_00_02 ; id 2
+    dw String_14_7003_00_03 ; id 3
+
+String_14_7003_00_00:: ; heuristic: string; C0
+Data_014_700D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "Is ", $F9, "0 correct?", $F0, "Is ", $F9, "0 correct?", $F0, "A monster already", $F1
+    db "Is ", $F9, "0 correct?", $F0
+
+String_14_7003_00_01:: ; heuristic: string; C0
+Data_014_701C:: ; address name
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Is ", $F9, "0 correct?", $F0
+
+String_14_7003_00_02:: ; heuristic: string; C0
+Data_014_702B:: ; address name
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A monster already", $F1
     db "has that name.", $F7
-    db $F0, "Sorry, that name", $F1
+    db $F0
+
+String_14_7003_00_03:: ; heuristic: string; C0
+Data_014_704D:: ; address name
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Sorry, that name", $F1
     db "can't be used.", $F7
     db $F0
 
@@ -6930,29 +6958,29 @@ Data_014_706D:: ; address name
 ; record: string
 StringList_14_706F::
 Data_014_706F:: ; address name
-    dw String_14_00_00 ; id 0
-    dw String_14_00_01 ; id 1
-    dw String_14_00_02 ; id 2
-    dw String_14_00_03 ; id 3
+    dw String_14_706D_00_00 ; id 0
+    dw String_14_706D_00_01 ; id 1
+    dw String_14_706D_00_02 ; id 2
+    dw String_14_706D_00_03 ; id 3
 
-String_14_00_00:: ; heuristic: string; C0
+String_14_706D_00_00:: ; heuristic: string; C0
 Data_014_7077:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Is ", $F9, "0 OK?", $F0
 
-String_14_00_01:: ; heuristic: string; C0
+String_14_706D_00_01:: ; heuristic: string; C0
 Data_014_7084:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " Is ", $F9, "0 OK?", $F0
 
-String_14_00_02:: ; heuristic: string; C0
+String_14_706D_00_02:: ; heuristic: string; C0
 Data_014_7091:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " That name is", $F1
     db "already in use.", $F7
     db $F0
 
-String_14_00_03:: ; heuristic: string; C0
+String_14_706D_00_03:: ; heuristic: string; C0
 Data_014_70B2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, $45, " That name can't", $F1

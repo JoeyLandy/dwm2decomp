@@ -213,7 +213,7 @@ Data_02C_41C4:: ; address name
 Message_04_02:: ; heuristic: string; C0
 Data_02C_4241:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e come all", $F1
+    db $EA, $45, " You've come all", $F1
     db "this way, take the", $FA, $F7
     db $EF, $EE, "time to pay your", $EF, $EE, "respect to Ugor.", $FA, $F7
     db $EF, $EE, "His grave?", $EF, $EE, "You can't miss it!", $F7
@@ -307,7 +307,7 @@ Data_02C_4772:: ; address name
     db $F9, "0 checked the", $F1
     db "grave.", $FA, $F7
     db $EF, $EE, "There was an", $EF, $EE, "inscription.", $FA, $F7
-    db $EF, $EE, $95, "Here lies Ugor,", $EF, $EE, "the Great Sage", $FA, $F7
+    db $EF, $EE, "'Here lies Ugor,", $EF, $EE, "the Great Sage", $FA, $F7
     db $EF, $EE, "and the world's", $EF, $EE, "savior.", $95, $F7
     db $F0
 
@@ -366,9 +366,9 @@ Data_02C_4A84:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, $45, " ", $A4, "Fine!", $F1
     db $FA, $F7
-    db $EF, $EE, $F3, "You", $42, "e done well", $EF, $EE, "to quell the wild", $FA, $F7
+    db $EF, $EE, $F3, "You've done well", $EF, $EE, "to quell the wild", $FA, $F7
     db $EF, $EE, "heart that beats", $EF, $EE, "inside.", $FA, $F7
-    db $EF, $EE, "You", $42, "e earned the", $EF, $EE, "right to enter!", $F7
+    db $EF, $EE, "You've earned the", $EF, $EE, "right to enter!", $F7
     db $F0
 
 Message_04_12:: ; heuristic: string; C0
@@ -717,7 +717,7 @@ Data_02C_5920:: ; address name
 Message_04_39:: ; heuristic: string; C0
 Data_02C_59A7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " I", $42, "e lived here", $F1
+    db $EA, $45, " I've lived here", $F1
     db "for 200 years now.", $FA, $F7
     db $EF, $EE, "Care to hear about", $EF, $EE, "the past?", $FF, $F0
 
@@ -832,7 +832,7 @@ Data_02C_5EDD:: ; address name
     db $EF, $EE, "What should I do", $EF, $EE, "if I were king", $A4, $FA, $F7
     db $EF, $EE, "As a starter, I'll", $EF, $EE, "eat Sirloin every", $FA, $F7
     db $EF, $EE, "day-three square", $EF, $EE, "meals a day!", $FA, $F7
-    db $EF, $EE, "But I", $42, "e been", $EF, $EE, "gaining weight", $A4, $FA, $F7
+    db $EF, $EE, "But I've been", $EF, $EE, "gaining weight", $A4, $FA, $F7
     db $EF, $EE, "I'm afraid I won't", $EF, $EE, "be able to fly", $A4, $F7
     db $F0
 
@@ -898,7 +898,7 @@ Data_02C_6221:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 read the", $F1
     db "sign.", $FA, $F7
-    db $EF, $EE, $95, "The finder of", $EF, $EE, "three treasures", $FA, $F7
+    db $EF, $EE, "'The finder of", $EF, $EE, "three treasures", $FA, $F7
     db $EF, $EE, "shall earn a", $EF, $EE, "handsome reward.", $FA, $F7
     db $EF, $EE, "They are the", $EF, $EE, "Heaven Sword,", $FA, $F7
     db $EF, $EE, "Heaven Armor and", $EF, $EE, "Heaven Helmet.", $95, $F7
@@ -909,7 +909,7 @@ Data_02C_62BD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 read the", $F1
     db "sign.", $FA, $F7
-    db $EF, $EE, $95, "The Heaven Sword,", $EF, $EE, "Heaven Armor and", $FA, $F7
+    db $EF, $EE, "'The Heaven Sword,", $EF, $EE, "Heaven Armor and", $FA, $F7
     db $EF, $EE, "the Heaven Helmet.", $EF, $EE, "Gather these, and", $FA, $F7
     db $EF, $EE, "the LightOrb shall", $EF, $EE, "be your reward.", $FA, $F7
     db $EF, $EE, "I will await word", $EF, $EE, "in the Castle.", $FA, $F7
@@ -1067,7 +1067,7 @@ Data_02C_6961:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 checked the", $F1
     db "notice.", $FA, $F7
-    db $EF, $EE, $95, "Lay the souls to", $EF, $EE, "eternal rest.", $95, $F7
+    db $EF, $EE, "'Lay the souls to", $EF, $EE, "eternal rest.", $95, $F7
     db $F0
 
 Message_04_63:: ; heuristic: string; C0
@@ -1075,7 +1075,7 @@ Data_02C_699E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 checked the", $F1
     db "notice.", $FA, $F7
-    db $EF, $EE, $95, "Follow the eyes", $EF, $EE, "of the undead.", $FA, $F7
+    db $EF, $EE, "'Follow the eyes", $EF, $EE, "of the undead.", $FA, $F7
     db $EF, $EE, "The key lies at", $EF, $EE, "the end.", $95, $F7
     db $F0
 
@@ -1117,7 +1117,7 @@ Data_02C_6B04:: ; address name
 Message_04_68:: ; heuristic: string; C0
 Data_02C_6B90:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You", $42, "e beaten me", $F1
+    db $EA, $45, " You've beaten me", $F1
     db "fairly", $A4, $FA, $F7
     db $EF, $EE, "Take the treasure", $A4, $EF, $EE, "Farewell", $A4, $F7
     db $F0
@@ -1150,7 +1150,7 @@ Data_02C_6C5F:: ; address name
 Message_04_6C:: ; heuristic: string; C0
 Data_02C_6CA4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Who would", $42, "e", $F1
+    db $EA, $45, " Who would've", $F1
     db "thought anyone", $FA, $F7
     db $EF, $EE, "would collect all", $EF, $EE, "three treasures", $A4, $F7
     db $F0
@@ -1176,7 +1176,7 @@ Data_02C_6D49:: ; address name
 Message_04_6F:: ; heuristic: string; C0
 Data_02C_6DB2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " What? You", $42, "e got", $F1
+    db $EA, $45, " What? You've got", $F1
     db "the three items?", $FA, $F7
     db $EF, $EE, "That means you get", $EF, $EE, "the LightOrb", $A4, $FA, $F7
     db $EF, $EE, "That means you'll", $EF, $EE, "be our next King!", $FA, $F7
@@ -1217,7 +1217,7 @@ Data_02C_6F7A:: ; address name
 Message_04_73:: ; heuristic: string; C0
 Data_02C_7014:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " You! I", $42, "e never", $F1
+    db $EA, $45, " You! I've never", $F1
     db "seen you before!", $FA, $F7
     db $EF, $EE, "You're not one of", $EF, $EE, "our army!", $F7
     db $F0
@@ -1331,7 +1331,7 @@ Data_02C_7457:: ; address name
 Message_04_80:: ; heuristic: string; C0
 Data_02C_74C8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EA, $45, " Gwaah! You", $42, "e", $F1
+    db $EA, $45, " Gwaah! You've", $F1
     db "beaten me fairly!", $FA, $F7
     db $EF, $EE, "But I am merely a", $EF, $EE, "gate keeper.", $FA, $F7
     db $EF, $EE, "I'm under the", $EF, $EE, "LightOrb's spell,", $FA, $F7
@@ -1422,7 +1422,7 @@ Data_02C_796A:: ; address name
     db $EF, $EE, "that will plug the", $EF, $EE, "Log's Navel.", $FA, $F7
     db $EF, $EE, "You need it to", $EF, $EE, "save GreatLog.", $FA, $F7
     db $EF, $EE, "I'm willing to", $EF, $EE, "exchange it for", $FA, $F7
-    db $EF, $EE, "the treasures that", $EF, $EE, "you", $42, "e collected.", $FA, $F7
+    db $EF, $EE, "the treasures that", $EF, $EE, "you've collected.", $FA, $F7
     db $EF, $EE, "I would consider", $EF, $EE, "that an equitable", $FA, $F7
     db $EF, $EE, "arrangement.", $EF, $EE, "Wouldn't you agree?", $FF, $F0
 
