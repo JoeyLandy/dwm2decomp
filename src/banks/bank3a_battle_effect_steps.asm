@@ -7908,7 +7908,7 @@ BattleTextPrepF2::
     ret
 
 ; copies the actor, skill and target names to wTextBuf0/wTextBuf1/wTextBuf2 and picks the action
-; message from BuildActionMessageNames_Data_7603 (or special messages $49-$4C) (E-0129)
+; message from BuildActionMessageNames_Data4 (or special messages $49-$4C) (E-0129)
 BuildActionMessageNames::
     push de
     ld a, [wBattleActionId]
@@ -7946,13 +7946,13 @@ BuildActionMessageNames::
     cp $06
     jp z, .check_saved_actor_slot2
     ld a, [wBattleActionId]
-    ld hl, BuildActionMessageNames_Data_7603
+    ld hl, BuildActionMessageNames_Data4
     add_a_to_hl
     ld a, [hl]
-    ld hl, BuildActionMessageNames_Data_76E7
+    ld hl, BuildActionMessageNames_Data5
     dec d
     jr z, .skip
-    ld hl, BuildActionMessageNames_Data_76FE
+    ld hl, BuildActionMessageNames_Data6
 
 .skip:
     add_a_to_hl
@@ -7967,7 +7967,7 @@ BuildActionMessageNames::
     jr .loop
 
 .skip2:
-    ld hl, BuildActionMessageNames_Data_75C7
+    ld hl, BuildActionMessageNames_Data1
     jr .read_battle_action_id
 
 .skip3:
@@ -7982,7 +7982,7 @@ BuildActionMessageNames::
     jr .loop
 
 .skip4:
-    ld hl, BuildActionMessageNames_Data_75DB
+    ld hl, BuildActionMessageNames_Data2
     jr .read_battle_action_id
 
 .check_saved_actor_slot3:
@@ -7993,7 +7993,7 @@ BuildActionMessageNames::
     jr .loop
 
 .skip5:
-    ld hl, BuildActionMessageNames_Data_75EF
+    ld hl, BuildActionMessageNames_Data3
     jr .read_battle_action_id
 
 .loop:
@@ -8016,19 +8016,19 @@ BuildActionMessageNames::
     jr nz, .loop
     ret
 
-BuildActionMessageNames_Data_75C7::
+BuildActionMessageNames_Data1::
     db $6c, $6e, $ff, $ff, $ff, $ff, $70, $ff, $80, $72, $ff, $ff, $76, $ff, $ff, $78
     db $ff, $81, $ff, $ff
 
-BuildActionMessageNames_Data_75DB::
+BuildActionMessageNames_Data2::
     db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $74, $75, $ff, $ff, $82, $83
     db $ff, $7a, $ff, $ff
 
-BuildActionMessageNames_Data_75EF::
+BuildActionMessageNames_Data3::
     db $6d, $6f, $ff, $ff, $ff, $ff, $71, $ff, $84, $73, $ff, $ff, $77, $ff, $ff, $79
     db $ff, $85, $ff, $ff
 
-BuildActionMessageNames_Data_7603::
+BuildActionMessageNames_Data4::
     ds $3d, $00
     db $04, $04, $04, $01, $01, $01, $01, $01, $01, $01, $01, $04, $04, $11, $03, $10
     db $11, $06, $07
@@ -8041,11 +8041,11 @@ BuildActionMessageNames_Data_7603::
     db $14, $14, $15, $15, $15, $15, $15, $15, $15, $16, $15, $15, $14, $15, $15, $15
     db $15, $15, $15, $15
 
-BuildActionMessageNames_Data_76E7::
+BuildActionMessageNames_Data5::
     db $36, $37, $38, $46, $47, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43
     db $44, $45, $48, $ff, $69, $6a, $6b
 
-BuildActionMessageNames_Data_76FE::
+BuildActionMessageNames_Data6::
     db $4d, $4f, $56, $4e, $50, $55, $51, $52, $54, $5f, $5a, $58, $5b, $59, $5c, $ff
     db $4d, $4e, $57, $53, $ff, $ff, $ff
 

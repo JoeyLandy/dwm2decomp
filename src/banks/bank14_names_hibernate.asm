@@ -1835,7 +1835,7 @@ HibernateMenu_WriteSVBK::
     ld c, $00
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld hl, wWindowTileBuffer + $112
-    ld de, HibernateMenu_WriteSVBK_Data_4F24
+    ld de, HibernateMenu_WriteSVBK_Data1
     ld c, $04
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld a, [wIsCGB]
@@ -1849,7 +1849,7 @@ HibernateMenu_WriteSVBK::
     ld c, $00
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld hl, wWindowAttrBuffer + $112
-    ld de, HibernateMenu_WriteSVBK_Data_4F2A
+    ld de, HibernateMenu_WriteSVBK_Data2
     ld c, $04
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ldh a, [rSVBK]
@@ -1873,10 +1873,10 @@ HibernateMenu_WriteSVBK::
     call CopyFromBankWaitVRAM
     ret
 
-HibernateMenu_WriteSVBK_Data_4F24::
+HibernateMenu_WriteSVBK_Data1::
     db $b4, $b4, $b4, $b4, $b4, $b5
 
-HibernateMenu_WriteSVBK_Data_4F2A::
+HibernateMenu_WriteSVBK_Data2::
     db $00, $00, $00, $00, $00, $00
 
 HibernateMenu_Shared02_CopyBytesDEToHL_Bank14::
@@ -3729,7 +3729,7 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs::
     ld a, [wArg1]
     or a
     jr nz, .read_arg4
-    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E9F
+    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data3
     ld a, [wArg2]
     or a
     jr z, .call_copy_bytes_de_from_hl_bank14
@@ -3739,11 +3739,11 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs::
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_Bank14
-    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E93
+    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data1
     ld a, [wArg2]
     or a
     jr z, .call_copy_bytes_de_from_hl_bank142
-    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E99
+    ld hl, RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data2
 
 .call_copy_bytes_de_from_hl_bank142:
     ld de, hTemp0
@@ -3814,13 +3814,13 @@ CopyBytesDEFromHL_Bank14::
     jr nz, CopyBytesDEFromHL_Bank14
     ret
 
-RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E93::
+RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data1::
     db $00, $00, $01, $04, $00, $80
 
-RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E99::
+RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data2::
     db $01, $00, $01, $01, $00, $80
 
-RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data_5E9F::
+RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data3::
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
 ; CopyBytesDEFromHL_Bank14 copies these 16 bytes to wSpriteSlots (E-0264)
@@ -5909,11 +5909,11 @@ RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryByteAC::
     ld a, $ff
     ret
 
-; copies the 16-byte tile at CopyTileForNameEntryLength_Data_6C60 to the VRAM address from the word
-; table CopyTileForNameEntryLength_Data_6C56 + 2 * wNameEntryLength (CopyTileBytesToVRAM_Bank14)
+; copies the 16-byte tile at CopyTileForNameEntryLength_Data2 to the VRAM address from the word
+; table CopyTileForNameEntryLength_Data1 + 2 * wNameEntryLength (CopyTileBytesToVRAM_Bank14)
 ; (E-0119)
 CopyTileForNameEntryLength::
-    ld hl, CopyTileForNameEntryLength_Data_6C56
+    ld hl, CopyTileForNameEntryLength_Data1
     ld a, [wNameEntryLength]
     add a
     add_a_to_hl
@@ -5921,14 +5921,14 @@ CopyTileForNameEntryLength::
     inc hl
     ld h, [hl]
     ld l, e
-    ld de, CopyTileForNameEntryLength_Data_6C60
+    ld de, CopyTileForNameEntryLength_Data2
     call CopyTileBytesToVRAM_Bank14
     ret
 
-CopyTileForNameEntryLength_Data_6C56::
+CopyTileForNameEntryLength_Data1::
     db $00, $95, $10, $95, $20, $95, $30, $95, $40, $95
 
-CopyTileForNameEntryLength_Data_6C60::
+CopyTileForNameEntryLength_Data2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
 RunNameEntryStateWhenNotFading_Case01_Case03_CheckArg1::

@@ -3381,7 +3381,7 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
 .loop:
     push bc
     ld a, c
-    ld de, BreedMenu_ReturnToMap_CopySixteenTiles_Data_5A67
+    ld de, BreedMenu_ReturnToMap_CopySixteenTiles_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -3403,7 +3403,7 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     push de
     ld a, c
     add a
-    ld de, BreedMenu_ReturnToMap_CopySixteenTiles_Data_5A77
+    ld de, BreedMenu_ReturnToMap_CopySixteenTiles_Data2
     add e
     ld e, a
     jr nc, .skip2
@@ -3424,10 +3424,10 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     jr nz, .loop
     ret
 
-BreedMenu_ReturnToMap_CopySixteenTiles_Data_5A67::
+BreedMenu_ReturnToMap_CopySixteenTiles_Data1::
     db $a3, $50, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
-BreedMenu_ReturnToMap_CopySixteenTiles_Data_5A77::
+BreedMenu_ReturnToMap_CopySixteenTiles_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
@@ -5975,7 +5975,7 @@ ShowSaveFileInfoWindow::
     push bc
     ld a, c
     add a
-    ld hl, ShowSaveFileInfoWindow_Data_6E0E
+    ld hl, ShowSaveFileInfoWindow_Data3
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6037,7 +6037,7 @@ ShowSaveFileInfoWindow::
     push bc
     ld a, c
     add a
-    ld hl, ShowSaveFileInfoWindow_Data_6E08
+    ld hl, ShowSaveFileInfoWindow_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6072,7 +6072,7 @@ ShowSaveFileInfoWindow::
 .loop5:
     push hl
     push bc
-    ld hl, ShowSaveFileInfoWindow_Data_6DD0
+    ld hl, ShowSaveFileInfoWindow_Data1
     ld a, c
     add a
     add_a_to_hl
@@ -6217,7 +6217,7 @@ ShowSaveFileInfoWindow::
     ld [wScreenSubStep], a
     ret
 
-ShowSaveFileInfoWindow_Data_6DD0::
+ShowSaveFileInfoWindow_Data1::
     db $a8, $c3, $d0, $c3, $f8, $c3
 
 ; writes the digits at DE as tiles $E0 + digit to HL (WaitForVRAMAccess, interrupts off), counting C
@@ -6255,10 +6255,10 @@ SRAMBank1RecordAddress::
     ld [rRAMG2], a
     ret
 
-ShowSaveFileInfoWindow_Data_6E08::
+ShowSaveFileInfoWindow_Data2::
     db $aa, $c3, $d2, $c3, $fa, $c3
 
-ShowSaveFileInfoWindow_Data_6E0E::
+ShowSaveFileInfoWindow_Data3::
     db $00, $8d, $50, $8d, $a0, $8d
 
 ; restores the player position, facing, wFollowerRecords, wFollowerRecords + $1-wFollowerRecords +

@@ -6,7 +6,7 @@ SECTION "Bank E1", ROMX[$4000], BANK[$E1]
 
 ; LZSS-compressed: 213 bytes that expand to 304 (E-0016, E-0017)
 Tiles2Gfx_E1_4001::
-    INCBIN "dwm2-cobi-us.gbc", $384001, $D5
+    INCBIN "gfx/misc/tiles2_gfx_e1_4001.lz"
 
 ; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
 ScreenTileBufferGfx_E1_40D6::
@@ -24,11 +24,11 @@ BGPaletteBufferData_E1_410E::
 
 ; LZSS-compressed: 1169 bytes that expand to 1600 (E-0016, E-0017)
 Tiles2Gfx_E1_4116::
-    INCBIN "dwm2-cobi-us.gbc", $384116, $491
+    INCBIN "gfx/misc/tiles2_gfx_e1_4116.lz"
 
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
 ScreenTileBufferGfx_E1_45A7::
-    INCBIN "dwm2-cobi-us.gbc", $3845A7, $55
+    INCBIN "gfx/misc/screen_tile_buffer_gfx_e1_45_a7.lz"
 
 ScreenAttrBufferGfx_E1_45FC::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
@@ -39,11 +39,11 @@ BGPaletteBufferData_E1_460F::
 
 ; LZSS-compressed: 815 bytes that expand to 1552 (E-0016, E-0017)
 Tiles2Gfx_E1_4617::
-    INCBIN "dwm2-cobi-us.gbc", $384617, $32F
+    INCBIN "gfx/misc/tiles2_gfx_e1_4617.lz"
 
 ; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
 ScreenTileBufferGfx_E1_4946::
-    INCBIN "dwm2-cobi-us.gbc", $384946, $78
+    INCBIN "gfx/misc/screen_tile_buffer_gfx_e1_4946.lz"
 
 ; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
 ScreenAttrBufferGfx_E1_49BE::
@@ -55,31 +55,31 @@ BGPaletteBufferData_E1_49D2::
 
 ; LZSS-compressed: 1165 bytes that expand to 2048 (E-0016, E-0017)
 Tiles1Gfx_E1_49DA::
-    INCBIN "dwm2-cobi-us.gbc", $3849DA, $48D
+    INCBIN "gfx/misc/tiles1_gfx_e1_49_da.lz"
 
 ; LZSS-compressed: 1438 bytes that expand to 2048 (E-0016, E-0017)
 Tiles2Gfx_E1_4E67::
-    INCBIN "dwm2-cobi-us.gbc", $384E67, $59E
+    INCBIN "gfx/misc/tiles2_gfx_e1_4_e67.lz"
 
 ; LZSS-compressed: 887 bytes that expand to 1152 (E-0016, E-0017)
 Tiles2Gfx_E1_5405::
-    INCBIN "dwm2-cobi-us.gbc", $385405, $377
+    INCBIN "gfx/misc/tiles2_gfx_e1_5405.lz"
 
 ; LZSS-compressed: 175 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Gfx_E1_577C::
-    INCBIN "dwm2-cobi-us.gbc", $38577C, $AF
+    INCBIN "gfx/misc/tiles0_gfx_e1_577_c.lz"
 
 ; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
 ScreenTileBufferGfx_E1_582B::
-    INCBIN "dwm2-cobi-us.gbc", $38582B, $98
+    INCBIN "gfx/misc/screen_tile_buffer_gfx_e1_582_b.lz"
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 ScreenAttrBufferGfx_E1_58C3::
-    INCBIN "dwm2-cobi-us.gbc", $3858C3, $4C
+    INCBIN "gfx/misc/screen_attr_buffer_gfx_e1_58_c3.lz"
 
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
 ScreenTileBufferGfx_E1_590F::
-    INCBIN "dwm2-cobi-us.gbc", $38590F, $65
+    INCBIN "gfx/misc/screen_tile_buffer_gfx_e1_590_f.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
 ScreenAttrBufferGfx_E1_5974::
@@ -88,7 +88,7 @@ ScreenAttrBufferGfx_E1_5974::
 
 ; LZSS-compressed: 112 bytes that expand to 1024 (E-0016, E-0017)
 BGMap0Gfx_E1_5987::
-    INCBIN "dwm2-cobi-us.gbc", $385987, $70
+    INCBIN "gfx/misc/bgmap0_gfx_e1_5987.lz"
 
 ; LZSS-compressed: 48 bytes that expand to 1024 (E-0016, E-0017)
 BGMap0Gfx_E1_59F7::
@@ -680,18 +680,18 @@ UnreferencedMetaSpriteSet_E1_Frame1::
 ; LZSS-compressed asset: 3046 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
 ; E-0016/E-0017; C1)
 SGBBorder4TilesA::
-    INCBIN "dwm2-cobi-us.gbc", $385DAA, $BE6
+    INCBIN "gfx/sgb_border/4_tiles_a.lz"
 
 ; Super Game Boy border set 4: border tiles $80-$FF (4096 bytes, packet set $11);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed asset: 3410 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
 ; E-0016/E-0017; C1)
 SGBBorder4TilesB::
-    INCBIN "dwm2-cobi-us.gbc", $386990, $D52
+    INCBIN "gfx/sgb_border/4_tiles_b.lz"
 
 ; Super Game Boy border set 4: border map and palettes ($880 bytes, packet set $0F);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed: 1133 bytes that expand to 2176 (E-0016, E-0017)
 SGBBorder4MapAndPalettes::
-    INCBIN "dwm2-cobi-us.gbc", $3876E2, $475
+    INCBIN "gfx/sgb_border/4_map_and_palettes.lz"
     ds $4a9, $00

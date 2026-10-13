@@ -1768,8 +1768,9 @@ class Rom:
 
     def name_data_by_reader(self) -> None:
         """E-0285: a data label that still has only an address name and that code loads (`ld rr, n`) is
-        named after the routine whose instructions load it: <Reader>_Data, or <Reader>_Data_AAAA when the
-        reader loads several. The address name stays as an alias; the label's comment lists all readers."""
+        named after the routine whose instructions load it: <Reader>_Data, or <Reader>_Data1, _Data2, ... in
+        address order when the reader loads several. The address name stays as an alias; the label's comment lists
+        all readers."""
         import bisect
         starts = {b: sorted(a for a in self.labels[b] if a in self.insn[b] and not
                             self.labels[b][a].startswith("Jump_")) for b in range(self.nbanks)}
@@ -1787,6 +1788,7 @@ class Rom:
             if self.dlabels.get(b, {}).get(a, "").startswith("Data_"):
                 per_reader[rs[0]] = per_reader.get(rs[0], 0) + 1
         named = 0
+        ordinal: dict[str, int] = {}
         for (b, a), rs in sorted(readers.items()):
             cur = self.dlabels.get(b, {}).get(a)
             if not cur or not cur.startswith("Data_") or (b, a) in self.names or (b, a) in self.table_at:
@@ -1794,7 +1796,8 @@ class Rom:
             r0 = rs[0]
             if r0.startswith(("Func_", "Data_")):
                 continue
-            new = f"{r0}_Data" if per_reader.get(r0, 0) == 1 else f"{r0}_Data_{a:04X}"
+            ordinal[r0] = ordinal.get(r0, 0) + 1  # several: numbered in address order (was _Data_AAAA)
+            new = f"{r0}_Data" if per_reader.get(r0, 0) == 1 else f"{r0}_Data{ordinal[r0]}"
             if new in used or len(new) > 90:
                 continue
             used.add(new)
@@ -2893,6 +2896,16 @@ class Rom:
         log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets, "
             f"{len(chunk_groups)} key-world chunk groups")
 
+    def entry_suffix(self, t: dict, first: int) -> str:
+        """The label suffix of the list for entry `first` of table t: `_<Monster>` when the table is indexed by
+        monster id and that monster has a name (D-007; a repeated name keeps its id), else the hex index."""
+        if t.get("id_names") == "monster" and self.consts and first in self.consts["MONSTER"]:
+            const, text = self.consts["MONSTER"][first]
+            stem = re.sub(r"[^A-Za-z0-9]", "", text)
+            if stem:
+                return f"_{stem}" + (f"_{first:03X}" if const.endswith(f"_{first:02X}") else "")
+        return f"{first:03X}"
+
     def add_list_schemas(self) -> None:
         """Derive layouts for terminated record lists named by pointer tables marked "lists" (E-0157).
 
@@ -2918,7 +2931,7 @@ class Rom:
                     first = words.index(a) + t.get("id_base", 0)
                     taken.append((bank, a, b))
                     one = spec.get("one_line")  # the whole list as one db line
-                    self.schemas.append({"bank": bank, "addr": a, "label": f"{spec['label']}{first:03X}",
+                    self.schemas.append({"bank": bank, "addr": a, "label": spec["label"] + self.entry_suffix(t, first),
                                          "count": 1 if one else (b - a) // size, "id_base": 0,
                                          "fields": [dict(spec["fields"][0], size=b - a)] if one else spec["fields"],
                                          "record": spec.get("record"),

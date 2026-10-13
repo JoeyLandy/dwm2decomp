@@ -2080,7 +2080,7 @@ ClearActorStatus3::
     ret
 
 ; for an actor with status bits $C0 or $0C forces action $C9; otherwise picks action $C0, $C1 or a
-; table action (PickRandomActionWhenUncontrolled_Data_4E1C or 4E20) at random and stores it (E-0128)
+; table action (PickRandomActionWhenUncontrolled_Data1 or 4E20) at random and stores it (E-0128)
 PickRandomActionWhenUncontrolled::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -2109,11 +2109,11 @@ PickRandomActionWhenUncontrolled::
     ld a, [wBattleActor]
     cp $04
     jr c, .read_random_hi
-    ld hl, PickRandomActionWhenUncontrolled_Data_4E20
+    ld hl, PickRandomActionWhenUncontrolled_Data2
     jr .read_random_hi2
 
 .read_random_hi:
-    ld hl, PickRandomActionWhenUncontrolled_Data_4E1C
+    ld hl, PickRandomActionWhenUncontrolled_Data1
 
 .read_random_hi2:
     ld a, [wRandomHi]
@@ -2156,10 +2156,10 @@ PickRandomActionWhenUncontrolled::
     ld [wBattleTarget], a
     ret
 
-PickRandomActionWhenUncontrolled_Data_4E1C::
+PickRandomActionWhenUncontrolled_Data1::
     db $03, $c2, $c3, $c5
 
-PickRandomActionWhenUncontrolled_Data_4E20::
+PickRandomActionWhenUncontrolled_Data2::
     db $08, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c6
 
 ; wEffectFlags = 0, wDefeatStep = 0, wEffectId = $FF, wBattleSubStep = 0; unless wFollowUpAction is

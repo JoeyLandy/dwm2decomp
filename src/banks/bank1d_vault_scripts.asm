@@ -3621,7 +3621,7 @@ VaultMenu_Store_CountNonZeroItemGridBytes::
     ret
 
 ; record wArg1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields
-; from DrawRecordStatsBoxForArg1_Data_5BE6) into the screen buffer (E-0128)
+; from DrawRecordStatsBoxForArg1_Data1) into the screen buffer (E-0128)
 DrawRecordStatsBoxForArg1::
     ld a, [wArg1]
     ld b, a
@@ -3662,7 +3662,7 @@ DrawRecordStatsBoxForArg1::
 .loop:
     push bc
     ld a, c
-    ld hl, DrawRecordStatsBoxForArg1_Data_5BE6
+    ld hl, DrawRecordStatsBoxForArg1_Data1
     add_a_to_hl
     ld c, [hl]
     ld a, b
@@ -3677,7 +3677,7 @@ DrawRecordStatsBoxForArg1::
     pop bc
     ld a, c
     add a
-    ld hl, DrawRecordStatsBoxForArg1_Data_5BEA
+    ld hl, DrawRecordStatsBoxForArg1_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3702,10 +3702,10 @@ DrawRecordStatsBoxForArg1::
     ld [rRAMG2], a
     ret
 
-DrawRecordStatsBoxForArg1_Data_5BE6::
+DrawRecordStatsBoxForArg1_Data1::
     db $5b, $5d, $5f, $61
 
-DrawRecordStatsBoxForArg1_Data_5BEA::
+DrawRecordStatsBoxForArg1_Data2::
     db $d4, $c3, $d8, $c3, $fc, $c3, $00, $c4
 
 ; saves wArg1-wMenuInputResult and hTemp0-hSpriteScrollXLo, runs DrawPartySpeciesSprites for the
@@ -4967,15 +4967,15 @@ DrawRecordListPageMarks::
     jr z, .skip3
     cp $01
     jr z, .skip2
-    ld hl, DrawRecordListPageMarks_Data_640A
+    ld hl, DrawRecordListPageMarks_Data3
     jr .skip4
 
 .skip2:
-    ld hl, DrawRecordListPageMarks_Data_6402
+    ld hl, DrawRecordListPageMarks_Data2
     jr .skip4
 
 .skip3:
-    ld hl, DrawRecordListPageMarks_Data_63FA
+    ld hl, DrawRecordListPageMarks_Data1
 
 .skip4:
     ld a, c
@@ -5006,15 +5006,15 @@ DrawRecordListPageMarks::
     jr z, .skip6
     cp $01
     jr z, .skip5
-    ld de, DrawRecordListPageMarks_Data_6422
+    ld de, DrawRecordListPageMarks_Data6
     jr .skip7
 
 .skip5:
-    ld de, DrawRecordListPageMarks_Data_641A
+    ld de, DrawRecordListPageMarks_Data5
     jr .skip7
 
 .skip6:
-    ld de, DrawRecordListPageMarks_Data_6412
+    ld de, DrawRecordListPageMarks_Data4
 
 .skip7:
     ld a, c
@@ -5049,22 +5049,22 @@ DrawRecordListPageMarks::
     ld [rRAMG2], a
     ret
 
-DrawRecordListPageMarks_Data_63FA::
+DrawRecordListPageMarks_Data1::
     db $32, $00, $72, $00, $b2, $00, $f2, $00
 
-DrawRecordListPageMarks_Data_6402::
+DrawRecordListPageMarks_Data2::
     db $b2, $00, $f2, $00, $32, $01, $72, $01
 
-DrawRecordListPageMarks_Data_640A::
+DrawRecordListPageMarks_Data3::
     db $2b, $00, $6b, $00, $ab, $00, $eb, $00
 
-DrawRecordListPageMarks_Data_6412::
+DrawRecordListPageMarks_Data4::
     db $8a, $c3, $b2, $c3, $da, $c3, $02, $c4
 
-DrawRecordListPageMarks_Data_641A::
+DrawRecordListPageMarks_Data5::
     db $da, $c3, $02, $c4, $2a, $c4, $52, $c4
 
-DrawRecordListPageMarks_Data_6422::
+DrawRecordListPageMarks_Data6::
     db $83, $c3, $ab, $c3, $d3, $c3, $fb, $c3
 
 SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E::
@@ -5704,7 +5704,7 @@ UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_Data::
     db $a4, $01, $a2, $00, $e2, $00, $22, $01, $62, $01, $a2, $01
 
 ; for the three records listed at wArg1 loads each species' sprite graphics and palette to the slots
-; in LoadPartySpeciesSpriteGraphics_Data_6890 (E-0128)
+; in LoadPartySpeciesSpriteGraphics_Data1 (E-0128)
 LoadPartySpeciesSpriteGraphics::
     ld a, $0a
     ld [rRAMG2], a
@@ -5725,11 +5725,11 @@ LoadPartySpeciesSpriteGraphics::
     ldh a, [hTemp0]
     and $10
     jr nz, .skip
-    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE0
+    ld de, LoadPartySpeciesSpriteGraphics_Data2
     jr .restore
 
 .skip:
-    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE3
+    ld de, LoadPartySpeciesSpriteGraphics_Data3
 
 .restore:
     pop bc
@@ -5755,7 +5755,7 @@ LoadPartySpeciesSpriteGraphics::
     ld a, c
     add a
     add c
-    ld de, LoadPartySpeciesSpriteGraphics_Data_6890
+    ld de, LoadPartySpeciesSpriteGraphics_Data1
     add e
     ld e, a
     jr nc, .skip3
@@ -5783,7 +5783,7 @@ LoadPartySpeciesSpriteGraphics::
     ld [rRAMG], a
     ret
 
-LoadPartySpeciesSpriteGraphics_Data_6890::
+LoadPartySpeciesSpriteGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wArg1 draws each species sprite at the positions in
@@ -5808,11 +5808,11 @@ DrawPartySpeciesSprites::
     ldh a, [hTemp0]
     and $10
     jr nz, .skip
-    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE0
+    ld de, LoadPartySpeciesSpriteGraphics_Data2
     jr .restore
 
 .skip:
-    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE3
+    ld de, LoadPartySpeciesSpriteGraphics_Data3
 
 .restore:
     pop bc
@@ -6131,8 +6131,8 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3::
     ret
 
 ; for each party record found on the current list page (wListEntries page wListPageIndex) draws a
-; party mark at its row (scroll offsets MarkPartyMembersInRecordListPage_Data_6B28 when wArg1 is
-; set, else screen-buffer offsets MarkPartyMembersInRecordListPage_Data_6B1E) (E-0128)
+; party mark at its row (scroll offsets MarkPartyMembersInRecordListPage_Data2 when wArg1 is set,
+; else screen-buffer offsets MarkPartyMembersInRecordListPage_Data1) (E-0128)
 MarkPartyMembersInRecordListPage::
     ld hl, wPartyList
     ld bc, $0000
@@ -6180,7 +6180,7 @@ MarkPartyMembersInRecordListPage::
     ld a, [wArg1]
     and a
     jr z, .skip
-    ld hl, MarkPartyMembersInRecordListPage_Data_6B28
+    ld hl, MarkPartyMembersInRecordListPage_Data2
     ld a, c
     add a
     add_a_to_hl
@@ -6199,7 +6199,7 @@ MarkPartyMembersInRecordListPage::
 .skip:
     ld a, c
     add a
-    ld hl, MarkPartyMembersInRecordListPage_Data_6B1E
+    ld hl, MarkPartyMembersInRecordListPage_Data1
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6216,10 +6216,10 @@ MarkPartyMembersInRecordListPage::
     ei
     jp .check_party_count
 
-MarkPartyMembersInRecordListPage_Data_6B1E::
+MarkPartyMembersInRecordListPage_Data1::
     db $78, $c3, $a0, $c3, $c8, $c3, $f0, $c3, $18, $c4
 
-MarkPartyMembersInRecordListPage_Data_6B28::
+MarkPartyMembersInRecordListPage_Data2::
     db $20, $00, $60, $00, $a0, $00, $e0, $00, $20, $01
 
 SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries::
@@ -6559,10 +6559,10 @@ LoadTileList6DC4SixPerFrame_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
     db $f0, $8b, $a0, $8e, $b0, $8e, $c0, $8e, $d0, $8e, $ff, $ff
 
-LoadPartySpeciesSpriteGraphics_Data_6DE0::
+LoadPartySpeciesSpriteGraphics_Data2::
     db $0b, $1a, $1c
 
-LoadPartySpeciesSpriteGraphics_Data_6DE3::
+LoadPartySpeciesSpriteGraphics_Data3::
     db $0b, $1c, $1a, $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0
     db $8c, $b0, $8c, $ff, $ff
 

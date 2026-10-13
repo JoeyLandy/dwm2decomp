@@ -155,7 +155,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld a, c
     add b
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -216,7 +216,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld a, c
     add l
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
     add_a_to_hl
     push de
     ld e, [hl]
@@ -626,7 +626,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld bc, $0c0d
     call CopyRectTo20ByteRows_Bank0C
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .set_window_tile_buffer
@@ -637,7 +637,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     add $e1
     ld [wWindowTileBuffer + $165], a
     ld a, [wGrid2CursorX]
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     ld b, $bb
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -645,7 +645,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
     ld a, [wGrid2CursorX]
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
@@ -681,7 +681,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C::
 
 .call_grid_index_from_grid_cursor_x_grid:
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .check_grid2_cursor_y
@@ -703,7 +703,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C::
     ld [wGrid2CursorY], a
     push af
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .skip
@@ -743,7 +743,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C::
     and a
     jr nz, .skip3
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .skip2
@@ -794,7 +794,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C::
 .call_grid_index_from_grid_cursor_x_grid2:
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
     add e
     ld e, a
     jr nc, .skip5
@@ -1520,7 +1520,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
     xor a
     ld [wGrid2CursorX], a
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .check_grid2_cursor_y
@@ -1553,7 +1553,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1602,7 +1602,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
 
 .loop4:
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .set_grid2_cursor_y2
@@ -1631,7 +1631,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1717,7 +1717,7 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGrid2CursorX]
     ld b, $bc
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     call StoreBAtWordTableEntry_Bank0C
     call ClearStringWindowAt2020
     call ClearStringWindowAt2200
@@ -1790,7 +1790,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
 LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld a, [wGrid2CursorX]
     ld b, $c3
-    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140c
@@ -1919,7 +1919,7 @@ LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6::
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -2136,7 +2136,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03::
     inc hl
     push hl
     call GridIndexFromGridCursorXGridCursorY
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2
     add e
     ld e, a
     jr nc, .skip
@@ -2154,13 +2154,12 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03::
     ei
     ret
 
-; HL = the word
-; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916[GridIndexFromGridCursorXGridCursorY] +
+; HL = the word LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1[GridIndexFromGridCursorXGridCursorY] +
 ; GridIndexFromGrid2CursorXGrid2CursorY (E-0124)
 GridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridIndexFromGridCursorXGridCursorY
     add a
-    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -2243,7 +2242,7 @@ LibraryMenu_HLToDecimalDigits::
     ld a, [wArg1]
     and a
     jr z, .skip3
-    ld hl, LibraryMenu_HLToDecimalDigits_Data_510F
+    ld hl, LibraryMenu_HLToDecimalDigits_Data2
     pop af
     add_a_to_hl
     ld e, [hl]
@@ -2255,7 +2254,7 @@ LibraryMenu_HLToDecimalDigits::
     jr .call_wait_for_vram_access
 
 .skip3:
-    ld hl, LibraryMenu_HLToDecimalDigits_Data_5103
+    ld hl, LibraryMenu_HLToDecimalDigits_Data1
     pop af
     add_a_to_hl
     ld e, [hl]
@@ -2286,10 +2285,10 @@ LibraryMenu_HLToDecimalDigits::
     jr c, .loop
     ret
 
-LibraryMenu_HLToDecimalDigits_Data_5103::
+LibraryMenu_HLToDecimalDigits_Data1::
     db $26, $00, $66, $00, $a6, $00, $e6, $00, $26, $01, $66, $01
 
-LibraryMenu_HLToDecimalDigits_Data_510F::
+LibraryMenu_HLToDecimalDigits_Data2::
     db $7e, $c3, $a6, $c3, $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
 LibraryMenu_WriteSVBK::
@@ -3629,18 +3628,18 @@ TileRect_0C_589A::
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4, $41, $c4
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1::
     db $81, $c3, $a9, $c3, $d1, $c3, $f9, $c3, $21, $c4, $49, $c4
 
-LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1::
     db $01, $00, $24, $00, $47, $00, $6a, $00, $8d, $00, $b0, $00, $d3, $00, $f6, $00
     db $19, $01, $3c, $01, $5f, $01, $ff, $ff
 
-LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_Data2::
     db $1b, $00, $43, $00, $67, $00, $85, $00, $a8, $00, $ca, $00, $f1, $00, $11, $01
     db $39, $01, $5c, $01, $75, $01
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data2::
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
 ReadGridCellByteForGridCursorXGridCursorY_Data::
@@ -3691,9 +3690,9 @@ ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A::
 
 ; LibraryMenu_Case10_Case06 takes the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
-; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916 plus the grid position) and reads the word at
-; $599F + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300,
-; sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are
+; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $599F
+; + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300, sprite
+; part $42); the two parents shown for the monster: for all 95 monsters whose two entries are
 ; families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's
 ; species (C2 for those entries); 384 words (E-0211, C1)
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
@@ -4474,11 +4473,11 @@ MonsterPedigreeTableA_Alt::
 
 ; LibraryMenu_Case10_Case06 takes the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
-; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916 plus the grid position) and reads the word at
-; $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for
-; the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E)
-; row A, column B gives that monster or parent A's species (C2 for those entries); 384 words
-; (E-0211, C1)
+; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $5F9F
+; + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the
+; monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row
+; A, column B gives that monster or parent A's species (C2 for those entries); 384 words (E-0211,
+; C1)
 MonsterPedigreeTableB::
     dw $fefe ; id 0 none
     dw $fe01 ; id 1 DrakSlime family 1
@@ -5303,7 +5302,7 @@ ArenaMenu::
 ArenaMenu_RandomModulo52::
     ld a, [wAreaGraphicsIndex]
     add a
-    ld hl, ArenaMenu_RandomModulo52_Data_75D2
+    ld hl, ArenaMenu_RandomModulo52_Data1
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5327,7 +5326,7 @@ ArenaMenu_RandomModulo52::
 .read_area_graphics_index:
     ld a, [wAreaGraphicsIndex]
     add a
-    ld hl, ArenaMenu_RandomModulo52_Data_7602
+    ld hl, ArenaMenu_RandomModulo52_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5661,14 +5660,14 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_68D1
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -5686,7 +5685,7 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_68D1::
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1::
     db $0c, $0b, $0a, $1c
 
 ArenaMenu_Case02_WriteGridCursorY::
@@ -5854,7 +5853,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01::
 ArenaMenu_BGMapAddressAtScroll_Bank0C::
     call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
     ld c, $04
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
     call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140d
@@ -6151,14 +6150,14 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_6C7F
+    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_7857
+    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data2
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -6177,7 +6176,7 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_6C7F::
+ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1::
     db $0c, $0b, $0a, $1c
 
 ArenaMenu_Case12_WriteGridCursorY::
@@ -7591,12 +7590,12 @@ ArenaMenu_AddArg1ToGoldCapped99999::
     farcall AddArg1ToGoldCapped99999
     ret
 
-ArenaMenu_RandomModulo52_Data_75D2::
+ArenaMenu_RandomModulo52_Data1::
     db $de, $75, $de, $75, $de, $75, $e7, $75, $f0, $75, $f9, $75, $19, $23, $2d, $37
     db $41, $4b, $5f, $64, $ff, $14, $1f, $2a, $35, $40, $4b, $5a, $64, $ff, $0f, $17
     db $1f, $27, $2f, $37, $50, $64, $ff, $0a, $15, $20, $2b, $36, $41, $50, $64, $ff
 
-ArenaMenu_RandomModulo52_Data_7602::
+ArenaMenu_RandomModulo52_Data2::
     db $0e, $76, $0e, $76, $0e, $76, $16, $76, $1e, $76, $26, $76, $01, $53, $05, $0c
     db $24, $0b, $1c, $44, $02, $18, $0f, $10, $13, $15, $45, $fe, $03, $0d, $11, $12
     db $17, $2c, $fd, $fe, $23, $2c, $0d, $0e, $17, $fd, $1e, $fe
@@ -7683,10 +7682,10 @@ TileRect_0C_7831::
     db $b6, $c3, $ae, $af, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F::
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2::
     db $ca, $c3, $f2, $c3, $1a, $c4, $42, $c4
 
-ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_7857::
+ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data2::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4, $8d, $c3, $8f, $c3, $91, $c3, $8d, $c3
     db $8f, $c3, $91, $c3, $b5, $c3, $b7, $c3, $b9, $c3
 

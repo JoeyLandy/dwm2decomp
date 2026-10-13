@@ -6522,8 +6522,8 @@ ClearTileRowsFromPickCount::
     ret
 
 ; for up to wPickCount records listed at wPickedRecords draws each name at
-; DrawPickedRecordsRecordNamesAndIcons_Data_75A8[n] and loads its family icon into tile
-; DrawPickedRecordsRecordNamesAndIcons_Data_75B0[n] (E-0128)
+; DrawPickedRecordsRecordNamesAndIcons_Data1[n] and loads its family icon into tile
+; DrawPickedRecordsRecordNamesAndIcons_Data2[n] (E-0128)
 DrawPickedRecordsRecordNamesAndIcons::
     ld a, [wPickCount]
     and a
@@ -6570,7 +6570,7 @@ DrawPickedRecordsRecordNamesAndIcons::
     push bc
     ld a, c
     sla a
-    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data_75A8
+    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data1
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6584,7 +6584,7 @@ DrawPickedRecordsRecordNamesAndIcons::
     ld a, [hl]
     ld b, a
     ld a, c
-    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data_75B0
+    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data2
     add_a_to_hl
     ld a, [hl]
     ld [wArg1], a
@@ -6601,10 +6601,10 @@ DrawPickedRecordsRecordNamesAndIcons::
 .return:
     ret
 
-DrawPickedRecordsRecordNamesAndIcons_Data_75A8::
+DrawPickedRecordsRecordNamesAndIcons_Data1::
     db $10, $91, $70, $91, $d0, $91, $30, $92
 
-DrawPickedRecordsRecordNamesAndIcons_Data_75B0::
+DrawPickedRecordsRecordNamesAndIcons_Data2::
     db $10, $16, $1c, $22
 
 ; with SRAM bank 0 enabled, copies the name of the record stored at WD789 cell 5

@@ -25,6 +25,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | `src/constants.inc` | Named ids made from the ROM's own name tables: `MONSTER_DRACKY`, `SKILL_DEMAGIC`, `ITEM_HERB`, and `ACTION_FIGHT` for the plain attack. Code compares battle actions by name (`cp SKILL_DEMAGIC`), and data tables list skills and monsters by name (`db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills`). |
 | `src/macros.inc` | Macros for the ROM's own idioms (below) and the event-script command constants. |
 | `src/charmap.inc` | The text encoding: characters, and the text printer's commands as `<TOKENS>`. |
+| `src/assets.txt` | The asset files the source includes by name (`INCBIN "gfx/monster_sprites/drak_slime.lz"`, `maps/map00/screens0_y1_x1.bin`, ...): each one's offset and length in the original ROM. The build extracts them from your copy of the ROM into its own directory, so no game data is stored in the repository. `.lz` files are compressed with the game's LZSS scheme (`tools/lzss_gfx.py`). |
 | `src/hardware.inc` | Game Boy hardware register names. |
 
 The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit the config, not `src/`. Every run also writes an annotated listing to `build/listing/bankNN.asm`, with each label's address, the heuristic that found it, its callers, and the RAM it reads and writes. Use it when the source alone is not enough.
@@ -98,4 +99,4 @@ The confidence of each routine and RAM name is in `config/names.json` and `confi
 python -I tools/build.py --out build/run1
 ```
 
-The build assembles `src/` with RGBDS and compares the result with the original ROM byte for byte. It reports `RESULT: PASS | differing bytes: 0` when they match. The original ROM is not part of the repository; it is read from `local/roms/`.
+The build assembles `src/` with RGBDS and compares the result with the original ROM byte for byte. It first checks that ROM against the target's SHA-256 and extracts the asset files of `src/assets.txt` from it. It reports `RESULT: PASS | differing bytes: 0` when they match. The original ROM is not part of the repository; it is read from `local/roms/`.

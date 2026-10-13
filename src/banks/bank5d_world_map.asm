@@ -6,7 +6,7 @@ SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
 
 ; LZSS-compressed: 312 bytes that expand to 1024 (E-0016, E-0017)
 Tiles2Gfx_5D_4001::
-    INCBIN "dwm2-cobi-us.gbc", $174001, $138
+    INCBIN "gfx/misc/tiles2_gfx_5_d_4001.lz"
 
 ; RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank;
 ; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other
@@ -135,7 +135,7 @@ WorldMapView10::
 
 ; LZSS-compressed: 439 bytes that expand to 2048 (E-0016, E-0017)
 Tiles2Gfx_5D_43AE::
-    INCBIN "dwm2-cobi-us.gbc", $1743AE, $1B7
+    INCBIN "gfx/misc/tiles2_gfx_5_d_43_ae.lz"
 
 ; 64 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)

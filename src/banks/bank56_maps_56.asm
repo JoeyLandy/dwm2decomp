@@ -277,246 +277,246 @@ Map30Screens0_Y0X0::
 
 ; LZSS-compressed: 216 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $15831D, $D8
+    INCBIN "maps/map30/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 175 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X2::
-    INCBIN "dwm2-cobi-us.gbc", $1583F5, $AF
+    INCBIN "maps/map30/screens0_y0_x2.lz"
 
 ; LZSS-compressed: 106 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X3::
-    INCBIN "dwm2-cobi-us.gbc", $1584A4, $6A
+    INCBIN "maps/map30/screens0_y0_x3.lz"
 
 ; LZSS-compressed: 103 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X4::
-    INCBIN "dwm2-cobi-us.gbc", $15850E, $67
+    INCBIN "maps/map30/screens0_y0_x4.lz"
 
 ; LZSS-compressed: 144 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X5::
-    INCBIN "dwm2-cobi-us.gbc", $158575, $90
+    INCBIN "maps/map30/screens0_y0_x5.lz"
 
 ; LZSS-compressed: 180 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X6::
-    INCBIN "dwm2-cobi-us.gbc", $158605, $B4
+    INCBIN "maps/map30/screens0_y0_x6.lz"
 
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y0X7::
-    INCBIN "dwm2-cobi-us.gbc", $1586B9, $BE
+    INCBIN "maps/map30/screens0_y0_x7.lz"
 
 ; LZSS-compressed: 166 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $158777, $A6
+    INCBIN "maps/map30/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 178 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y1X2::
-    INCBIN "dwm2-cobi-us.gbc", $15881D, $B2
+    INCBIN "maps/map30/screens0_y1_x2.lz"
 
 Map30Screens0_Y1X3::
-    INCBIN "dwm2-cobi-us.gbc", $1588CF, $B2
+    INCBIN "maps/map30/screens0_y1_x3.lz"
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y1X4::
-    INCBIN "dwm2-cobi-us.gbc", $158981, $CE
+    INCBIN "maps/map30/screens0_y1_x4.lz"
 
 ; LZSS-compressed: 210 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y1X5::
-    INCBIN "dwm2-cobi-us.gbc", $158A4F, $D2
+    INCBIN "maps/map30/screens0_y1_x5.lz"
 
 ; LZSS-compressed: 168 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y1X6::
-    INCBIN "dwm2-cobi-us.gbc", $158B21, $A8
+    INCBIN "maps/map30/screens0_y1_x6.lz"
 
 Map30Screens0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $158BC9, $A8
+    INCBIN "maps/map30/screens0_y2_x1.lz"
 
 ; LZSS-compressed: 176 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y2X2::
-    INCBIN "dwm2-cobi-us.gbc", $158C71, $B0
+    INCBIN "maps/map30/screens0_y2_x2.lz"
 
 ; LZSS-compressed: 179 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y2X3::
-    INCBIN "dwm2-cobi-us.gbc", $158D21, $B3
+    INCBIN "maps/map30/screens0_y2_x3.lz"
 
 ; LZSS-compressed: 199 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y2X4::
-    INCBIN "dwm2-cobi-us.gbc", $158DD4, $C7
+    INCBIN "maps/map30/screens0_y2_x4.lz"
 
 ; LZSS-compressed: 173 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y2X4::
-    INCBIN "dwm2-cobi-us.gbc", $158E9B, $AD
+    INCBIN "maps/map30/screens2_y2_x4.lz"
 
 ; LZSS-compressed: 132 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y2X5::
-    INCBIN "dwm2-cobi-us.gbc", $158F48, $84
+    INCBIN "maps/map30/screens0_y2_x5.lz"
 
 Map30Screens0_Y2X6::
-    INCBIN "dwm2-cobi-us.gbc", $158FCC, $C7
+    INCBIN "maps/map30/screens0_y2_x6.lz"
 
 ; LZSS-compressed: 168 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y2X6::
-    INCBIN "dwm2-cobi-us.gbc", $159093, $A8
+    INCBIN "maps/map30/screens2_y2_x6.lz"
 
 ; LZSS-compressed: 175 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X0::
-    INCBIN "dwm2-cobi-us.gbc", $15913B, $AF
+    INCBIN "maps/map30/screens0_y3_x0.lz"
 
 ; LZSS-compressed: 201 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X1::
-    INCBIN "dwm2-cobi-us.gbc", $1591EA, $C9
+    INCBIN "maps/map30/screens0_y3_x1.lz"
 
 ; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X2::
-    INCBIN "dwm2-cobi-us.gbc", $1592B3, $AA
+    INCBIN "maps/map30/screens0_y3_x2.lz"
 
 ; LZSS-compressed: 205 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X3::
-    INCBIN "dwm2-cobi-us.gbc", $15935D, $CD
+    INCBIN "maps/map30/screens0_y3_x3.lz"
 
 ; LZSS-compressed: 211 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X4::
-    INCBIN "dwm2-cobi-us.gbc", $15942A, $D3
+    INCBIN "maps/map30/screens0_y3_x4.lz"
 
 ; LZSS-compressed: 196 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X5::
-    INCBIN "dwm2-cobi-us.gbc", $1594FD, $C4
+    INCBIN "maps/map30/screens0_y3_x5.lz"
 
 ; LZSS-compressed: 182 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y3X5::
-    INCBIN "dwm2-cobi-us.gbc", $1595C1, $B6
+    INCBIN "maps/map30/screens2_y3_x5.lz"
 
 ; LZSS-compressed: 176 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y3X6::
-    INCBIN "dwm2-cobi-us.gbc", $159677, $B0
+    INCBIN "maps/map30/screens0_y3_x6.lz"
 
 Map30Screens2_Y3X6::
-    INCBIN "dwm2-cobi-us.gbc", $159727, $B6
+    INCBIN "maps/map30/screens2_y3_x6.lz"
 
 ; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y4X0::
-    INCBIN "dwm2-cobi-us.gbc", $1597DD, $BD
+    INCBIN "maps/map30/screens0_y4_x0.lz"
 
 ; LZSS-compressed: 198 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y4X1::
-    INCBIN "dwm2-cobi-us.gbc", $15989A, $C6
+    INCBIN "maps/map30/screens0_y4_x1.lz"
 
 Map30Screens0_Y4X2::
-    INCBIN "dwm2-cobi-us.gbc", $159960, $B0
+    INCBIN "maps/map30/screens0_y4_x2.lz"
 
 ; LZSS-compressed: 203 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y4X3::
-    INCBIN "dwm2-cobi-us.gbc", $159A10, $CB
+    INCBIN "maps/map30/screens0_y4_x3.lz"
 
 ; LZSS-compressed: 180 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y4X5::
-    INCBIN "dwm2-cobi-us.gbc", $159ADB, $B4
+    INCBIN "maps/map30/screens0_y4_x5.lz"
 
 ; LZSS-compressed: 183 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y4X5::
-    INCBIN "dwm2-cobi-us.gbc", $159B8F, $B7
+    INCBIN "maps/map30/screens2_y4_x5.lz"
 
 ; LZSS-compressed: 163 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y4X6::
-    INCBIN "dwm2-cobi-us.gbc", $159C46, $A3
+    INCBIN "maps/map30/screens0_y4_x6.lz"
 
 ; LZSS-compressed: 144 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y4X6::
-    INCBIN "dwm2-cobi-us.gbc", $159CE9, $90
+    INCBIN "maps/map30/screens2_y4_x6.lz"
 
 ; LZSS-compressed: 140 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X0::
-    INCBIN "dwm2-cobi-us.gbc", $159D79, $8C
+    INCBIN "maps/map30/screens0_y5_x0.lz"
 
 ; LZSS-compressed: 211 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X1::
-    INCBIN "dwm2-cobi-us.gbc", $159E05, $D3
+    INCBIN "maps/map30/screens0_y5_x1.lz"
 
 ; LZSS-compressed: 192 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y5X1::
-    INCBIN "dwm2-cobi-us.gbc", $159ED8, $C0
+    INCBIN "maps/map30/screens2_y5_x1.lz"
 
 ; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X2::
-    INCBIN "dwm2-cobi-us.gbc", $159F98, $BA
+    INCBIN "maps/map30/screens0_y5_x2.lz"
 
 ; LZSS-compressed: 194 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X3::
-    INCBIN "dwm2-cobi-us.gbc", $15A052, $C2
+    INCBIN "maps/map30/screens0_y5_x3.lz"
 
 ; LZSS-compressed: 220 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X4::
-    INCBIN "dwm2-cobi-us.gbc", $15A114, $DC
+    INCBIN "maps/map30/screens0_y5_x4.lz"
 
 ; LZSS-compressed: 117 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X6::
-    INCBIN "dwm2-cobi-us.gbc", $15A1F0, $75
+    INCBIN "maps/map30/screens0_y5_x6.lz"
 
 ; LZSS-compressed: 160 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y5X7::
-    INCBIN "dwm2-cobi-us.gbc", $15A265, $A0
+    INCBIN "maps/map30/screens0_y5_x7.lz"
 
 ; LZSS-compressed: 159 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X0::
-    INCBIN "dwm2-cobi-us.gbc", $15A305, $9F
+    INCBIN "maps/map30/screens0_y6_x0.lz"
 
 ; LZSS-compressed: 135 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y6X0::
-    INCBIN "dwm2-cobi-us.gbc", $15A3A4, $87
+    INCBIN "maps/map30/screens2_y6_x0.lz"
 
 ; LZSS-compressed: 169 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X1::
-    INCBIN "dwm2-cobi-us.gbc", $15A42B, $A9
+    INCBIN "maps/map30/screens0_y6_x1.lz"
 
 ; LZSS-compressed: 187 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y6X1::
-    INCBIN "dwm2-cobi-us.gbc", $15A4D4, $BB
+    INCBIN "maps/map30/screens2_y6_x1.lz"
 
 ; LZSS-compressed: 180 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X2::
-    INCBIN "dwm2-cobi-us.gbc", $15A58F, $B4
+    INCBIN "maps/map30/screens0_y6_x2.lz"
 
 ; LZSS-compressed: 153 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X3::
-    INCBIN "dwm2-cobi-us.gbc", $15A643, $99
+    INCBIN "maps/map30/screens0_y6_x3.lz"
 
 ; LZSS-compressed: 167 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X4::
-    INCBIN "dwm2-cobi-us.gbc", $15A6DC, $A7
+    INCBIN "maps/map30/screens0_y6_x4.lz"
 
 ; LZSS-compressed: 157 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X5::
-    INCBIN "dwm2-cobi-us.gbc", $15A783, $9D
+    INCBIN "maps/map30/screens0_y6_x5.lz"
 
 ; LZSS-compressed: 213 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X6::
-    INCBIN "dwm2-cobi-us.gbc", $15A820, $D5
+    INCBIN "maps/map30/screens0_y6_x6.lz"
 
 ; LZSS-compressed: 200 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens2_Y6X6::
-    INCBIN "dwm2-cobi-us.gbc", $15A8F5, $C8
+    INCBIN "maps/map30/screens2_y6_x6.lz"
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y6X7::
-    INCBIN "dwm2-cobi-us.gbc", $15A9BD, $CE
+    INCBIN "maps/map30/screens0_y6_x7.lz"
 
 ; LZSS-compressed: 171 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y7X2::
-    INCBIN "dwm2-cobi-us.gbc", $15AA8B, $AB
+    INCBIN "maps/map30/screens0_y7_x2.lz"
 
 ; LZSS-compressed: 187 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y7X3::
-    INCBIN "dwm2-cobi-us.gbc", $15AB36, $BB
+    INCBIN "maps/map30/screens0_y7_x3.lz"
 
 ; LZSS-compressed: 137 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y7X4::
-    INCBIN "dwm2-cobi-us.gbc", $15ABF1, $89
+    INCBIN "maps/map30/screens0_y7_x4.lz"
 
 ; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y7X5::
-    INCBIN "dwm2-cobi-us.gbc", $15AC7A, $94
+    INCBIN "maps/map30/screens0_y7_x5.lz"
 
 ; LZSS-compressed: 139 bytes that expand to 360 (E-0016, E-0017)
 Map30Screens0_Y7X6::
-    INCBIN "dwm2-cobi-us.gbc", $15AD0E, $8B
+    INCBIN "maps/map30/screens0_y7_x6.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X0::
@@ -525,11 +525,11 @@ Map30Attrs0_Y0X0::
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $15ADAC, $5B
+    INCBIN "maps/map30/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 79 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X2::
-    INCBIN "dwm2-cobi-us.gbc", $15AE07, $4F
+    INCBIN "maps/map30/attrs0_y0_x2.lz"
 
 ; LZSS-compressed: 54 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X3::
@@ -547,59 +547,59 @@ Map30Attrs0_Y0X4::
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X5::
-    INCBIN "dwm2-cobi-us.gbc", $15AEBF, $47
+    INCBIN "maps/map30/attrs0_y0_x5.lz"
 
 ; LZSS-compressed: 89 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X6::
-    INCBIN "dwm2-cobi-us.gbc", $15AF06, $59
+    INCBIN "maps/map30/attrs0_y0_x6.lz"
 
 ; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y0X7::
-    INCBIN "dwm2-cobi-us.gbc", $15AF5F, $49
+    INCBIN "maps/map30/attrs0_y0_x7.lz"
 
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $15AFA8, $41
+    INCBIN "maps/map30/attrs0_y1_x1.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X2::
-    INCBIN "dwm2-cobi-us.gbc", $15AFE9, $58
+    INCBIN "maps/map30/attrs0_y1_x2.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X3::
-    INCBIN "dwm2-cobi-us.gbc", $15B041, $50
+    INCBIN "maps/map30/attrs0_y1_x3.lz"
 
 ; LZSS-compressed: 94 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X4::
-    INCBIN "dwm2-cobi-us.gbc", $15B091, $5E
+    INCBIN "maps/map30/attrs0_y1_x4.lz"
 
 ; LZSS-compressed: 89 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X5::
-    INCBIN "dwm2-cobi-us.gbc", $15B0EF, $59
+    INCBIN "maps/map30/attrs0_y1_x5.lz"
 
 ; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y1X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B148, $49
+    INCBIN "maps/map30/attrs0_y1_x6.lz"
 
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $15B191, $41
+    INCBIN "maps/map30/attrs0_y2_x1.lz"
 
 ; LZSS-compressed: 68 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X2::
-    INCBIN "dwm2-cobi-us.gbc", $15B1D2, $44
+    INCBIN "maps/map30/attrs0_y2_x2.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X3::
-    INCBIN "dwm2-cobi-us.gbc", $15B216, $4E
+    INCBIN "maps/map30/attrs0_y2_x3.lz"
 
 ; LZSS-compressed: 99 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X4::
-    INCBIN "dwm2-cobi-us.gbc", $15B264, $63
+    INCBIN "maps/map30/attrs0_y2_x4.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y2X4::
-    INCBIN "dwm2-cobi-us.gbc", $15B2C7, $4A
+    INCBIN "maps/map30/attrs2_y2_x4.lz"
 
 ; LZSS-compressed: 62 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X5::
@@ -610,19 +610,19 @@ Map30Attrs0_Y2X5::
 
 ; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y2X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B34F, $6B
+    INCBIN "maps/map30/attrs0_y2_x6.lz"
 
 ; LZSS-compressed: 68 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y2X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B3BA, $44
+    INCBIN "maps/map30/attrs2_y2_x6.lz"
 
 ; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X0::
-    INCBIN "dwm2-cobi-us.gbc", $15B3FE, $45
+    INCBIN "maps/map30/attrs0_y3_x0.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X1::
-    INCBIN "dwm2-cobi-us.gbc", $15B443, $47
+    INCBIN "maps/map30/attrs0_y3_x1.lz"
 
 ; LZSS-compressed: 59 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X2::
@@ -633,52 +633,52 @@ Map30Attrs0_Y3X2::
 
 ; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X3::
-    INCBIN "dwm2-cobi-us.gbc", $15B4C5, $5D
+    INCBIN "maps/map30/attrs0_y3_x3.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X4::
-    INCBIN "dwm2-cobi-us.gbc", $15B522, $51
+    INCBIN "maps/map30/attrs0_y3_x4.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X5::
-    INCBIN "dwm2-cobi-us.gbc", $15B573, $4D
+    INCBIN "maps/map30/attrs0_y3_x5.lz"
 
 ; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y3X5::
-    INCBIN "dwm2-cobi-us.gbc", $15B5C0, $43
+    INCBIN "maps/map30/attrs2_y3_x5.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y3X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B603, $53
+    INCBIN "maps/map30/attrs0_y3_x6.lz"
 
 Map30Attrs2_Y3X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B656, $43
+    INCBIN "maps/map30/attrs2_y3_x6.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y4X0::
-    INCBIN "dwm2-cobi-us.gbc", $15B699, $50
+    INCBIN "maps/map30/attrs0_y4_x0.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y4X1::
-    INCBIN "dwm2-cobi-us.gbc", $15B6E9, $4A
+    INCBIN "maps/map30/attrs0_y4_x1.lz"
 
 Map30Attrs0_Y4X2::
-    INCBIN "dwm2-cobi-us.gbc", $15B733, $4A
+    INCBIN "maps/map30/attrs0_y4_x2.lz"
 
 Map30Attrs0_Y4X3::
-    INCBIN "dwm2-cobi-us.gbc", $15B77D, $53
+    INCBIN "maps/map30/attrs0_y4_x3.lz"
 
 ; LZSS-compressed: 87 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y4X5::
-    INCBIN "dwm2-cobi-us.gbc", $15B7D0, $57
+    INCBIN "maps/map30/attrs0_y4_x5.lz"
 
 ; LZSS-compressed: 66 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y4X5::
-    INCBIN "dwm2-cobi-us.gbc", $15B827, $42
+    INCBIN "maps/map30/attrs2_y4_x5.lz"
 
 ; LZSS-compressed: 96 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y4X6::
-    INCBIN "dwm2-cobi-us.gbc", $15B869, $60
+    INCBIN "maps/map30/attrs0_y4_x6.lz"
 
 ; LZSS-compressed: 61 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y4X6::
@@ -689,15 +689,15 @@ Map30Attrs2_Y4X6::
 
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X0::
-    INCBIN "dwm2-cobi-us.gbc", $15B906, $41
+    INCBIN "maps/map30/attrs0_y5_x0.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X1::
-    INCBIN "dwm2-cobi-us.gbc", $15B947, $5C
+    INCBIN "maps/map30/attrs0_y5_x1.lz"
 
 ; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y5X1::
-    INCBIN "dwm2-cobi-us.gbc", $15B9A3, $48
+    INCBIN "maps/map30/attrs2_y5_x1.lz"
 
 ; LZSS-compressed: 56 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X2::
@@ -708,15 +708,15 @@ Map30Attrs0_Y5X2::
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X3::
-    INCBIN "dwm2-cobi-us.gbc", $15BA23, $47
+    INCBIN "maps/map30/attrs0_y5_x3.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X4::
-    INCBIN "dwm2-cobi-us.gbc", $15BA6A, $50
+    INCBIN "maps/map30/attrs0_y5_x4.lz"
 
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X6::
-    INCBIN "dwm2-cobi-us.gbc", $15BABA, $41
+    INCBIN "maps/map30/attrs0_y5_x6.lz"
 
 ; LZSS-compressed: 59 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y5X7::
@@ -727,7 +727,7 @@ Map30Attrs0_Y5X7::
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X0::
-    INCBIN "dwm2-cobi-us.gbc", $15BB36, $5B
+    INCBIN "maps/map30/attrs0_y6_x0.lz"
 
 Map30Attrs2_Y6X0::
     db $68, $01, $03, $03, $a0, $ff, $4d, $03, $24, $0f, $11, $01, $03, $84, $03, $03
@@ -737,11 +737,11 @@ Map30Attrs2_Y6X0::
 
 ; LZSS-compressed: 104 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X1::
-    INCBIN "dwm2-cobi-us.gbc", $15BBCC, $68
+    INCBIN "maps/map30/attrs0_y6_x1.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y6X1::
-    INCBIN "dwm2-cobi-us.gbc", $15BC34, $47
+    INCBIN "maps/map30/attrs2_y6_x1.lz"
 
 ; LZSS-compressed: 58 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X2::
@@ -759,23 +759,23 @@ Map30Attrs0_Y6X3::
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X4::
-    INCBIN "dwm2-cobi-us.gbc", $15BCEB, $4C
+    INCBIN "maps/map30/attrs0_y6_x4.lz"
 
 ; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X5::
-    INCBIN "dwm2-cobi-us.gbc", $15BD37, $45
+    INCBIN "maps/map30/attrs0_y6_x5.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X6::
-    INCBIN "dwm2-cobi-us.gbc", $15BD7C, $5C
+    INCBIN "maps/map30/attrs0_y6_x6.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs2_Y6X6::
-    INCBIN "dwm2-cobi-us.gbc", $15BDD8, $53
+    INCBIN "maps/map30/attrs2_y6_x6.lz"
 
 ; LZSS-compressed: 87 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y6X7::
-    INCBIN "dwm2-cobi-us.gbc", $15BE2B, $57
+    INCBIN "maps/map30/attrs0_y6_x7.lz"
 
 ; LZSS-compressed: 60 bytes that expand to 360 (E-0016, E-0017)
 Map30Attrs0_Y7X2::

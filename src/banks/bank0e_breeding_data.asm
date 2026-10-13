@@ -1409,8 +1409,8 @@ ComputeBreedingChild::
     ret
 
 ; when wRecordBufA + $A4 or wRecordBufB + $A4 is set and listed for stat C
-; (AdjustStatForWCA2AAndWCACF_Data_5A6B), subtracts AdjustStatForWCA2AAndWCACF_Data_5A8E[value] from
-; DE (unless it is at 999) (E-0130)
+; (AdjustStatForWCA2AAndWCACF_Data1), subtracts AdjustStatForWCA2AAndWCACF_Data2[value] from DE
+; (unless it is at 999) (E-0130)
 AdjustStatForWCA2AAndWCACF::
     ld a, [wRecordBufA + MON_ITEM]
     and a
@@ -1419,7 +1419,7 @@ AdjustStatForWCA2AAndWCACF::
     push hl
     ld a, c
     add a
-    ld hl, AdjustStatForWCA2AAndWCACF_Data_5A6B
+    ld hl, AdjustStatForWCA2AAndWCACF_Data1
     add_a_to_hl
     push de
     ld e, [hl]
@@ -1451,7 +1451,7 @@ AdjustStatForWCA2AAndWCACF::
 
 .skip2:
     ld a, b
-    ld hl, AdjustStatForWCA2AAndWCACF_Data_5A8E
+    ld hl, AdjustStatForWCA2AAndWCACF_Data2
     add_a_to_hl
     ld a, [hl]
     ld b, a
@@ -1473,7 +1473,7 @@ AdjustStatForWCA2AAndWCACF::
     push de
     ld a, c
     add a
-    ld de, AdjustStatForWCA2AAndWCACF_Data_5A6B
+    ld de, AdjustStatForWCA2AAndWCACF_Data1
     add e
     ld e, a
     jr nc, .skip3
@@ -1512,7 +1512,7 @@ AdjustStatForWCA2AAndWCACF::
 
 .skip5:
     ld a, b
-    ld de, AdjustStatForWCA2AAndWCACF_Data_5A8E
+    ld de, AdjustStatForWCA2AAndWCACF_Data2
     add e
     ld e, a
     jr nc, .skip6
@@ -1532,35 +1532,35 @@ AdjustStatForWCA2AAndWCACF::
     pop de
     ret
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B::
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry04
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry05
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry06
-    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry07
+AdjustStatForWCA2AAndWCACF_Data1::
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry00
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry00
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry02
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry02
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry04
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry05
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry06
+    dw AdjustStatForWCA2AAndWCACF_Data1_Entry07
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00::
+AdjustStatForWCA2AAndWCACF_Data1_Entry00::
     db $01, $02, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02::
+AdjustStatForWCA2AAndWCACF_Data1_Entry02::
     db $03, $04, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry04::
+AdjustStatForWCA2AAndWCACF_Data1_Entry04::
     db $05, $06, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry05::
+AdjustStatForWCA2AAndWCACF_Data1_Entry05::
     db $07, $08, $14, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry06::
+AdjustStatForWCA2AAndWCACF_Data1_Entry06::
     db $09, $0a, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry07::
+AdjustStatForWCA2AAndWCACF_Data1_Entry07::
     db $0b, $0c, $ff
 
-AdjustStatForWCA2AAndWCACF_Data_5A8E::
+AdjustStatForWCA2AAndWCACF_Data2::
     db $00, $1e, $50, $1e, $50, $0a, $32, $0a, $32, $0a, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
@@ -2092,19 +2092,19 @@ LoadWD01AByteArg4::
     ld [wArg5], a
     ret
 
-; copies six bytes from the addresses in CopySixBytesByWCADDBit4Table_Data_5E61 (or 5E6D when bit 4
-; of wChildRecord + $D is set) to the addresses in CopySixBytesByWCADDBit4Table_Data_5E79 (E-0125)
+; copies six bytes from the addresses in CopySixBytesByWCADDBit4Table_Data1 (or 5E6D when bit 4 of
+; wChildRecord + $D is set) to the addresses in CopySixBytesByWCADDBit4Table_Data3 (E-0125)
 CopySixBytesByWCADDBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and $10
     and a
     jr nz, .skip
-    ld de, CopySixBytesByWCADDBit4Table_Data_5E61
+    ld de, CopySixBytesByWCADDBit4Table_Data1
     jr .skip2
 
 .skip:
-    ld de, CopySixBytesByWCADDBit4Table_Data_5E6D
+    ld de, CopySixBytesByWCADDBit4Table_Data2
 
 .skip2:
     ld c, $00
@@ -2120,7 +2120,7 @@ CopySixBytesByWCADDBit4Table::
     push hl
     ld a, c
     add a
-    ld hl, CopySixBytesByWCADDBit4Table_Data_5E79
+    ld hl, CopySixBytesByWCADDBit4Table_Data3
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2136,13 +2136,13 @@ CopySixBytesByWCADDBit4Table::
     jr nz, .loop
     ret
 
-CopySixBytesByWCADDBit4Table_Data_5E61::
+CopySixBytesByWCADDBit4Table_Data1::
     db $91, $c9, $92, $c9, $36, $ca, $37, $ca, $f3, $c9, $98, $ca
 
-CopySixBytesByWCADDBit4Table_Data_5E6D::
+CopySixBytesByWCADDBit4Table_Data2::
     db $36, $ca, $37, $ca, $91, $c9, $92, $c9, $98, $ca, $f3, $c9
 
-CopySixBytesByWCADDBit4Table_Data_5E79::
+CopySixBytesByWCADDBit4Table_Data3::
     db $ea, $ca, $eb, $ca, $ec, $ca, $ed, $ca, $68, $cb, $73, $cb
 
 ; copies the 10-byte player name wPlayerName to wChildRecord + $F (E-0122)
@@ -2159,20 +2159,19 @@ CopyPlayerNameToWCADF::
     jr nz, .loop
     ret
 
-; copies four 10-byte names from the addresses in CopyFourNamesByWCADDBit4Table_Data_5ED0 (or 5ED8
-; with bit 4 of wChildRecord + $D) to the addresses in CopyFourNamesByWCADDBit4Table_Data_5EE0
-; (E-0125)
+; copies four 10-byte names from the addresses in CopyFourNamesByWCADDBit4Table_Data1 (or 5ED8 with
+; bit 4 of wChildRecord + $D) to the addresses in CopyFourNamesByWCADDBit4Table_Data3 (E-0125)
 CopyFourNamesByWCADDBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and $10
     and a
     jr nz, .skip
-    ld de, CopyFourNamesByWCADDBit4Table_Data_5ED0
+    ld de, CopyFourNamesByWCADDBit4Table_Data1
     jr .skip2
 
 .skip:
-    ld de, CopyFourNamesByWCADDBit4Table_Data_5ED8
+    ld de, CopyFourNamesByWCADDBit4Table_Data2
 
 .skip2:
     ld c, $00
@@ -2186,7 +2185,7 @@ CopyFourNamesByWCADDBit4Table::
     ld a, [de]
     ld h, a
     push hl
-    ld hl, CopyFourNamesByWCADDBit4Table_Data_5EE0
+    ld hl, CopyFourNamesByWCADDBit4Table_Data3
     ld a, c
     add a
     add_a_to_hl
@@ -2212,13 +2211,13 @@ CopyFourNamesByWCADDBit4Table::
     jr nz, .loop
     ret
 
-CopyFourNamesByWCADDBit4Table_Data_5ED0::
+CopyFourNamesByWCADDBit4Table_Data1::
     db $87, $c9, $2c, $ca, $95, $c9, $3a, $ca
 
-CopyFourNamesByWCADDBit4Table_Data_5ED8::
+CopyFourNamesByWCADDBit4Table_Data2::
     db $2c, $ca, $87, $c9, $3a, $ca, $95, $c9
 
-CopyFourNamesByWCADDBit4Table_Data_5EE0::
+CopyFourNamesByWCADDBit4Table_Data3::
     db $5e, $cb, $69, $cb, $ee, $ca, $f9, $ca
 
 ; computes a bonus from personality compatibility, matching parent fields and wArg1, and adds it to
@@ -2686,32 +2685,32 @@ ComputeBreedingChild_Data::
 ; record: list
 BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 0
-    dw BreedSpeciesRules001 ; id 1 DrakSlime
-    dw BreedSpeciesRules002 ; id 2 SpotSlime
+    dw BreedSpeciesRules_DrakSlime ; id 1 DrakSlime
+    dw BreedSpeciesRules_SpotSlime ; id 2 SpotSlime
     dw BreedSpeciesRules000 ; id 3 WingSlime
     dw BreedSpeciesRules000 ; id 4 TreeSlime
     dw BreedSpeciesRules000 ; id 5 Snaily
-    dw BreedSpeciesRules006 ; id 6 SlimeNite
+    dw BreedSpeciesRules_SlimeNite ; id 6 SlimeNite
     dw BreedSpeciesRules000 ; id 7 Babble
     dw BreedSpeciesRules000 ; id 8 BoxSlime
     dw BreedSpeciesRules000 ; id 9 PearlGel
-    dw BreedSpeciesRules00A ; id 10 Slime
-    dw BreedSpeciesRules00B ; id 11 Healer
+    dw BreedSpeciesRules_Slime ; id 10 Slime
+    dw BreedSpeciesRules_Healer ; id 11 Healer
     dw BreedSpeciesRules000 ; id 12 FangSlime
-    dw BreedSpeciesRules00D ; id 13 RockSlime
+    dw BreedSpeciesRules_RockSlime ; id 13 RockSlime
     dw BreedSpeciesRules000 ; id 14 SlimeBorg
     dw BreedSpeciesRules000 ; id 15 Slabbit
-    dw BreedSpeciesRules010 ; id 16 KingSlime
-    dw BreedSpeciesRules011 ; id 17 Metaly
-    dw BreedSpeciesRules012 ; id 18 Metabble
-    dw BreedSpeciesRules013 ; id 19 SpotKing
+    dw BreedSpeciesRules_KingSlime ; id 16 KingSlime
+    dw BreedSpeciesRules_Metaly ; id 17 Metaly
+    dw BreedSpeciesRules_Metabble ; id 18 Metabble
+    dw BreedSpeciesRules_SpotKing ; id 19 SpotKing
     dw BreedSpeciesRules000 ; id 20 TropicGel
-    dw BreedSpeciesRules015 ; id 21 MimeSlime
+    dw BreedSpeciesRules_MimeSlime ; id 21 MimeSlime
     dw BreedSpeciesRules000 ; id 22 HaloSlime
-    dw BreedSpeciesRules017 ; id 23 MetalKing
-    dw BreedSpeciesRules018 ; id 24 GoldSlime
+    dw BreedSpeciesRules_MetalKing ; id 23 MetalKing
+    dw BreedSpeciesRules_GoldSlime ; id 24 GoldSlime
     dw BreedSpeciesRules000 ; id 25 GranSlime
-    dw BreedSpeciesRules01A ; id 26 WonderEgg
+    dw BreedSpeciesRules_WonderEgg ; id 26 WonderEgg
     dw BreedSpeciesRules000 ; id 27 Butch
     dw BreedSpeciesRules000 ; id 28 ?
     dw BreedSpeciesRules000 ; id 29 ?
@@ -2721,103 +2720,103 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 33 ?
     dw BreedSpeciesRules000 ; id 34 ?
     dw BreedSpeciesRules000 ; id 35 ?
-    dw BreedSpeciesRules024 ; id 36 DragonKid
+    dw BreedSpeciesRules_DragonKid ; id 36 DragonKid
     dw BreedSpeciesRules000 ; id 37 Tortragon
-    dw BreedSpeciesRules026 ; id 38 Pteranod
-    dw BreedSpeciesRules027 ; id 39 Gasgon
+    dw BreedSpeciesRules_Pteranod ; id 38 Pteranod
+    dw BreedSpeciesRules_Gasgon ; id 39 Gasgon
     dw BreedSpeciesRules000 ; id 40 FairyDrak
-    dw BreedSpeciesRules029 ; id 41 LizardMan
+    dw BreedSpeciesRules_LizardMan ; id 41 LizardMan
     dw BreedSpeciesRules000 ; id 42 Poisongon
     dw BreedSpeciesRules000 ; id 43 Swordgon
     dw BreedSpeciesRules000 ; id 44 Drygon
-    dw BreedSpeciesRules02D ; id 45 Dragon
+    dw BreedSpeciesRules_Dragon ; id 45 Dragon
     dw BreedSpeciesRules000 ; id 46 MiniDrak
-    dw BreedSpeciesRules02F ; id 47 MadDragon
+    dw BreedSpeciesRules_MadDragon ; id 47 MadDragon
     dw BreedSpeciesRules000 ; id 48 Rayburn
     dw BreedSpeciesRules000 ; id 49 Chamelgon
     dw BreedSpeciesRules000 ; id 50 LizardFly
-    dw BreedSpeciesRules033 ; id 51 Andreal
-    dw BreedSpeciesRules034 ; id 52 KingCobra
-    dw BreedSpeciesRules035 ; id 53 Vampirus
+    dw BreedSpeciesRules_Andreal ; id 51 Andreal
+    dw BreedSpeciesRules_KingCobra ; id 52 KingCobra
+    dw BreedSpeciesRules_Vampirus ; id 53 Vampirus
     dw BreedSpeciesRules000 ; id 54 SnakeBat
     dw BreedSpeciesRules000 ; id 55 Spikerous
-    dw BreedSpeciesRules038 ; id 56 GreatDrak
-    dw BreedSpeciesRules039 ; id 57 Crestpent
-    dw BreedSpeciesRules03A ; id 58 WingSnake
+    dw BreedSpeciesRules_GreatDrak ; id 56 GreatDrak
+    dw BreedSpeciesRules_Crestpent ; id 57 Crestpent
+    dw BreedSpeciesRules_WingSnake ; id 58 WingSnake
     dw BreedSpeciesRules000 ; id 59 Coatol
     dw BreedSpeciesRules000 ; id 60 Orochi
-    dw BreedSpeciesRules03D ; id 61 BattleRex
-    dw BreedSpeciesRules03E ; id 62 SkyDragon
+    dw BreedSpeciesRules_BattleRex ; id 61 BattleRex
+    dw BreedSpeciesRules_SkyDragon ; id 62 SkyDragon
     dw BreedSpeciesRules000 ; id 63 Serpentia
-    dw BreedSpeciesRules040 ; id 64 Divinegon
+    dw BreedSpeciesRules_Divinegon ; id 64 Divinegon
     dw BreedSpeciesRules000 ; id 65 Orligon
     dw BreedSpeciesRules000 ; id 66 GigaDraco
     dw BreedSpeciesRules000 ; id 67 ?
     dw BreedSpeciesRules000 ; id 68 ?
     dw BreedSpeciesRules000 ; id 69 ?
     dw BreedSpeciesRules000 ; id 70 ?
-    dw BreedSpeciesRules047 ; id 71 Tonguella
-    dw BreedSpeciesRules048 ; id 72 Almiraj
-    dw BreedSpeciesRules049 ; id 73 CatFly
+    dw BreedSpeciesRules_Tonguella ; id 71 Tonguella
+    dw BreedSpeciesRules_Almiraj ; id 72 Almiraj
+    dw BreedSpeciesRules_CatFly ; id 73 CatFly
     dw BreedSpeciesRules000 ; id 74 PillowRat
     dw BreedSpeciesRules000 ; id 75 Saccer
-    dw BreedSpeciesRules04C ; id 76 GulpBeast
+    dw BreedSpeciesRules_GulpBeast ; id 76 GulpBeast
     dw BreedSpeciesRules000 ; id 77 Skullroo
     dw BreedSpeciesRules000 ; id 78 WindBeast
     dw BreedSpeciesRules000 ; id 79 Beavern
     dw BreedSpeciesRules000 ; id 80 Antbear
-    dw BreedSpeciesRules051 ; id 81 SuperTen
-    dw BreedSpeciesRules052 ; id 82 IronTurt
+    dw BreedSpeciesRules_SuperTen ; id 81 SuperTen
+    dw BreedSpeciesRules_IronTurt ; id 82 IronTurt
     dw BreedSpeciesRules000 ; id 83 Mommonja
-    dw BreedSpeciesRules054 ; id 84 HammerMan
-    dw BreedSpeciesRules055 ; id 85 Grizzly
-    dw BreedSpeciesRules056 ; id 86 Yeti
-    dw BreedSpeciesRules057 ; id 87 ArrowDog
-    dw BreedSpeciesRules058 ; id 88 NoctoKing
-    dw BreedSpeciesRules059 ; id 89 BeastNite
-    dw BreedSpeciesRules05A ; id 90 MadGopher
+    dw BreedSpeciesRules_HammerMan ; id 84 HammerMan
+    dw BreedSpeciesRules_Grizzly ; id 85 Grizzly
+    dw BreedSpeciesRules_Yeti ; id 86 Yeti
+    dw BreedSpeciesRules_ArrowDog ; id 87 ArrowDog
+    dw BreedSpeciesRules_NoctoKing ; id 88 NoctoKing
+    dw BreedSpeciesRules_BeastNite ; id 89 BeastNite
+    dw BreedSpeciesRules_MadGopher ; id 90 MadGopher
     dw BreedSpeciesRules000 ; id 91 FairyRat
-    dw BreedSpeciesRules05C ; id 92 Unicorn
-    dw BreedSpeciesRules05D ; id 93 Goategon
-    dw BreedSpeciesRules05E ; id 94 WildApe
-    dw BreedSpeciesRules05F ; id 95 Trumpeter
+    dw BreedSpeciesRules_Unicorn ; id 92 Unicorn
+    dw BreedSpeciesRules_Goategon ; id 93 Goategon
+    dw BreedSpeciesRules_WildApe ; id 94 WildApe
+    dw BreedSpeciesRules_Trumpeter ; id 95 Trumpeter
     dw BreedSpeciesRules000 ; id 96 KingLeo
-    dw BreedSpeciesRules061 ; id 97 DarkHorn
-    dw BreedSpeciesRules062 ; id 98 MadCat
+    dw BreedSpeciesRules_DarkHorn ; id 97 DarkHorn
+    dw BreedSpeciesRules_MadCat ; id 98 MadCat
     dw BreedSpeciesRules000 ; id 99 BigEye
     dw BreedSpeciesRules000 ; id 100 Gorago
-    dw BreedSpeciesRules065 ; id 101 CatMage
-    dw BreedSpeciesRules066 ; id 102 Dumbira
+    dw BreedSpeciesRules_CatMage ; id 101 CatMage
+    dw BreedSpeciesRules_Dumbira ; id 102 Dumbira
     dw BreedSpeciesRules000 ; id 103 ?
     dw BreedSpeciesRules000 ; id 104 ?
     dw BreedSpeciesRules000 ; id 105 ?
     dw BreedSpeciesRules000 ; id 106 Picky
     dw BreedSpeciesRules000 ; id 107 Wyvern
-    dw BreedSpeciesRules06C ; id 108 BullBird
+    dw BreedSpeciesRules_BullBird ; id 108 BullBird
     dw BreedSpeciesRules000 ; id 109 Florajay
     dw BreedSpeciesRules000 ; id 110 DuckKite
-    dw BreedSpeciesRules06F ; id 111 MadPecker
+    dw BreedSpeciesRules_MadPecker ; id 111 MadPecker
     dw BreedSpeciesRules000 ; id 112 MadRaven
     dw BreedSpeciesRules000 ; id 113 MistyWing
-    dw BreedSpeciesRules072 ; id 114 AquaHawk
+    dw BreedSpeciesRules_AquaHawk ; id 114 AquaHawk
     dw BreedSpeciesRules000 ; id 115 Dracky
-    dw BreedSpeciesRules074 ; id 116 KiteHawk
+    dw BreedSpeciesRules_KiteHawk ; id 116 KiteHawk
     dw BreedSpeciesRules000 ; id 117 BigRoost
     dw BreedSpeciesRules000 ; id 118 StubBird
-    dw BreedSpeciesRules077 ; id 119 LandOwl
-    dw BreedSpeciesRules078 ; id 120 MadGoose
-    dw BreedSpeciesRules079 ; id 121 MadCondor
+    dw BreedSpeciesRules_LandOwl ; id 119 LandOwl
+    dw BreedSpeciesRules_MadGoose ; id 120 MadGoose
+    dw BreedSpeciesRules_MadCondor ; id 121 MadCondor
     dw BreedSpeciesRules000 ; id 122 Emyu
-    dw BreedSpeciesRules07B ; id 123 Blizzardy
-    dw BreedSpeciesRules07C ; id 124 Phoenix
-    dw BreedSpeciesRules07D ; id 125 ZapBird
-    dw BreedSpeciesRules07E ; id 126 Garudian
-    dw BreedSpeciesRules07F ; id 127 WhipBird
-    dw BreedSpeciesRules080 ; id 128 FunkyBird
-    dw BreedSpeciesRules081 ; id 129 RainHawk
+    dw BreedSpeciesRules_Blizzardy ; id 123 Blizzardy
+    dw BreedSpeciesRules_Phoenix ; id 124 Phoenix
+    dw BreedSpeciesRules_ZapBird ; id 125 ZapBird
+    dw BreedSpeciesRules_Garudian ; id 126 Garudian
+    dw BreedSpeciesRules_WhipBird ; id 127 WhipBird
+    dw BreedSpeciesRules_FunkyBird ; id 128 FunkyBird
+    dw BreedSpeciesRules_RainHawk ; id 129 RainHawk
     dw BreedSpeciesRules000 ; id 130 Azurile
-    dw BreedSpeciesRules083 ; id 131 Shantak
-    dw BreedSpeciesRules084 ; id 132 CragDevil
+    dw BreedSpeciesRules_Shantak ; id 131 Shantak
+    dw BreedSpeciesRules_CragDevil ; id 132 CragDevil
     dw BreedSpeciesRules000 ; id 133 ?
     dw BreedSpeciesRules000 ; id 134 ?
     dw BreedSpeciesRules000 ; id 135 ?
@@ -2835,24 +2834,24 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 147 Toadstool
     dw BreedSpeciesRules000 ; id 148 AmberWeed
     dw BreedSpeciesRules000 ; id 149 Slurperon
-    dw BreedSpeciesRules096 ; id 150 Stubsuck
+    dw BreedSpeciesRules_Stubsuck ; id 150 Stubsuck
     dw BreedSpeciesRules000 ; id 151 Oniono
     dw BreedSpeciesRules000 ; id 152 DanceVegi
-    dw BreedSpeciesRules099 ; id 153 TreeBoy
+    dw BreedSpeciesRules_TreeBoy ; id 153 TreeBoy
     dw BreedSpeciesRules000 ; id 154 Devipine
     dw BreedSpeciesRules000 ; id 155 FaceTree
     dw BreedSpeciesRules000 ; id 156 HerbMan
     dw BreedSpeciesRules000 ; id 157 BeanMan
-    dw BreedSpeciesRules09E ; id 158 EvilSeed
-    dw BreedSpeciesRules09F ; id 159 ManEater
+    dw BreedSpeciesRules_EvilSeed ; id 158 EvilSeed
+    dw BreedSpeciesRules_ManEater ; id 159 ManEater
     dw BreedSpeciesRules000 ; id 160 Snapper
-    dw BreedSpeciesRules0A1 ; id 161 GhosTree
-    dw BreedSpeciesRules0A2 ; id 162 Rosevine
+    dw BreedSpeciesRules_GhosTree ; id 161 GhosTree
+    dw BreedSpeciesRules_Rosevine ; id 162 Rosevine
     dw BreedSpeciesRules000 ; id 163 Egdracil
-    dw BreedSpeciesRules0A4 ; id 164 Warubou
+    dw BreedSpeciesRules_Warubou ; id 164 Warubou
     dw BreedSpeciesRules000 ; id 165 Watabou
     dw BreedSpeciesRules000 ; id 166 Eggplaton
-    dw BreedSpeciesRules0A7 ; id 167 FooHero
+    dw BreedSpeciesRules_FooHero ; id 167 FooHero
     dw BreedSpeciesRules000 ; id 168 ?
     dw BreedSpeciesRules000 ; id 169 ?
     dw BreedSpeciesRules000 ; id 170 ?
@@ -2862,31 +2861,31 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 174 ?
     dw BreedSpeciesRules000 ; id 175 ?
     dw BreedSpeciesRules000 ; id 176 GiantSlug
-    dw BreedSpeciesRules0B1 ; id 177 Catapila
+    dw BreedSpeciesRules_Catapila ; id 177 Catapila
     dw BreedSpeciesRules000 ; id 178 Gophecada
-    dw BreedSpeciesRules0B3 ; id 179 Butterfly
-    dw BreedSpeciesRules0B4 ; id 180 WeedBug
+    dw BreedSpeciesRules_Butterfly ; id 179 Butterfly
+    dw BreedSpeciesRules_WeedBug ; id 180 WeedBug
     dw BreedSpeciesRules000 ; id 181 GiantWorm
-    dw BreedSpeciesRules0B6 ; id 182 Lipsy
-    dw BreedSpeciesRules0B7 ; id 183 StagBug
+    dw BreedSpeciesRules_Lipsy ; id 182 Lipsy
+    dw BreedSpeciesRules_StagBug ; id 183 StagBug
     dw BreedSpeciesRules000 ; id 184 Pyuro
     dw BreedSpeciesRules000 ; id 185 ArmyAnt
     dw BreedSpeciesRules000 ; id 186 GoHopper
-    dw BreedSpeciesRules0BB ; id 187 TailEater
+    dw BreedSpeciesRules_TailEater ; id 187 TailEater
     dw BreedSpeciesRules000 ; id 188 ArmorPede
-    dw BreedSpeciesRules0BD ; id 189 Eyeder
+    dw BreedSpeciesRules_Eyeder ; id 189 Eyeder
     dw BreedSpeciesRules000 ; id 190 GiantMoth
     dw BreedSpeciesRules000 ; id 191 Droll
-    dw BreedSpeciesRules0C0 ; id 192 ArmyCrab
-    dw BreedSpeciesRules0C1 ; id 193 MadHornet
+    dw BreedSpeciesRules_ArmyCrab ; id 192 ArmyCrab
+    dw BreedSpeciesRules_MadHornet ; id 193 MadHornet
     dw BreedSpeciesRules000 ; id 194 Belzebub
-    dw BreedSpeciesRules0C3 ; id 195 WarMantis
-    dw BreedSpeciesRules0C4 ; id 196 HornBeet
+    dw BreedSpeciesRules_WarMantis ; id 195 WarMantis
+    dw BreedSpeciesRules_HornBeet ; id 196 HornBeet
     dw BreedSpeciesRules000 ; id 197 Sickler
-    dw BreedSpeciesRules0C6 ; id 198 Armorpion
+    dw BreedSpeciesRules_Armorpion ; id 198 Armorpion
     dw BreedSpeciesRules000 ; id 199 Digster
     dw BreedSpeciesRules000 ; id 200 Skularach
-    dw BreedSpeciesRules0C9 ; id 201 MultiEyes
+    dw BreedSpeciesRules_MultiEyes ; id 201 MultiEyes
     dw BreedSpeciesRules000 ; id 202 ?
     dw BreedSpeciesRules000 ; id 203 ?
     dw BreedSpeciesRules000 ; id 204 ?
@@ -2898,66 +2897,66 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 210 ?
     dw BreedSpeciesRules000 ; id 211 Pixy
     dw BreedSpeciesRules000 ; id 212 MedusaEye
-    dw BreedSpeciesRules0D5 ; id 213 AgDevil
-    dw BreedSpeciesRules0D6 ; id 214 Demonite
-    dw BreedSpeciesRules0D7 ; id 215 DarkEye
+    dw BreedSpeciesRules_AgDevil ; id 213 AgDevil
+    dw BreedSpeciesRules_Demonite ; id 214 Demonite
+    dw BreedSpeciesRules_DarkEye ; id 215 DarkEye
     dw BreedSpeciesRules000 ; id 216 EyeBall
     dw BreedSpeciesRules000 ; id 217 SkulRider
     dw BreedSpeciesRules000 ; id 218 EvilBeast
-    dw BreedSpeciesRules0DB ; id 219 Bubblemon
-    dw BreedSpeciesRules0DC ; id 220 1EyeClown
-    dw BreedSpeciesRules0DD ; id 221 Gremlin
-    dw BreedSpeciesRules0DE ; id 222 ArcDemon
-    dw BreedSpeciesRules0DF ; id 223 Lionex
+    dw BreedSpeciesRules_Bubblemon ; id 219 Bubblemon
+    dw BreedSpeciesRules_1EyeClown ; id 220 1EyeClown
+    dw BreedSpeciesRules_Gremlin ; id 221 Gremlin
+    dw BreedSpeciesRules_ArcDemon ; id 222 ArcDemon
+    dw BreedSpeciesRules_Lionex ; id 223 Lionex
     dw BreedSpeciesRules000 ; id 224 GoatHorn
     dw BreedSpeciesRules000 ; id 225 Orc
-    dw BreedSpeciesRules0E2 ; id 226 Ogre
+    dw BreedSpeciesRules_Ogre ; id 226 Ogre
     dw BreedSpeciesRules000 ; id 227 GateGuard
     dw BreedSpeciesRules000 ; id 228 ChopClown
-    dw BreedSpeciesRules0E5 ; id 229 BossTroll
-    dw BreedSpeciesRules0E6 ; id 230 Grendal
-    dw BreedSpeciesRules0E7 ; id 231 Akubar
+    dw BreedSpeciesRules_BossTroll ; id 229 BossTroll
+    dw BreedSpeciesRules_Grendal ; id 230 Grendal
+    dw BreedSpeciesRules_Akubar ; id 231 Akubar
     dw BreedSpeciesRules000 ; id 232 MadKnight
     dw BreedSpeciesRules000 ; id 233 EvilWell
-    dw BreedSpeciesRules0EA ; id 234 Gigantes
-    dw BreedSpeciesRules0EB ; id 235 Centasaur
+    dw BreedSpeciesRules_Gigantes ; id 234 Gigantes
+    dw BreedSpeciesRules_Centasaur ; id 235 Centasaur
     dw BreedSpeciesRules000 ; id 236 EvilArmor
-    dw BreedSpeciesRules0ED ; id 237 Jamirus
-    dw BreedSpeciesRules0EE ; id 238 Durran
+    dw BreedSpeciesRules_Jamirus ; id 237 Jamirus
+    dw BreedSpeciesRules_Durran ; id 238 Durran
     dw BreedSpeciesRules000 ; id 239 Titanis
-    dw BreedSpeciesRules0F0 ; id 240 LampGenie
+    dw BreedSpeciesRules_LampGenie ; id 240 LampGenie
     dw BreedSpeciesRules000 ; id 241 ?
     dw BreedSpeciesRules000 ; id 242 ?
     dw BreedSpeciesRules000 ; id 243 ?
     dw BreedSpeciesRules000 ; id 244 ?
     dw BreedSpeciesRules000 ; id 245 ?
     dw BreedSpeciesRules000 ; id 246 Spooky
-    dw BreedSpeciesRules0F7 ; id 247 Skullgon
-    dw BreedSpeciesRules0F8 ; id 248 PutrePup
+    dw BreedSpeciesRules_Skullgon ; id 247 Skullgon
+    dw BreedSpeciesRules_PutrePup ; id 248 PutrePup
     dw BreedSpeciesRules000 ; id 249 RotRaven
-    dw BreedSpeciesRules0FA ; id 250 Mummy
+    dw BreedSpeciesRules_Mummy ; id 250 Mummy
     dw BreedSpeciesRules000 ; id 251 DarkCrab
-    dw BreedSpeciesRules0FC ; id 252 DeadNite
+    dw BreedSpeciesRules_DeadNite ; id 252 DeadNite
     dw BreedSpeciesRules000 ; id 253 Shadow
     dw BreedSpeciesRules000 ; id 254 Skulpent
-    dw BreedSpeciesRules0FF ; id 255 Hork
-    dw BreedSpeciesRules100 ; id 256 Mudron
-    dw BreedSpeciesRules101 ; id 257 NiteWhip
+    dw BreedSpeciesRules_Hork ; id 255 Hork
+    dw BreedSpeciesRules_Mudron ; id 256 Mudron
+    dw BreedSpeciesRules_NiteWhip ; id 257 NiteWhip
     dw BreedSpeciesRules000 ; id 258 WindMerge
     dw BreedSpeciesRules000 ; id 259 Reaper
     dw BreedSpeciesRules000 ; id 260 Inverzon
     dw BreedSpeciesRules000 ; id 261 FoxFire
-    dw BreedSpeciesRules106 ; id 262 CaptDead
-    dw BreedSpeciesRules107 ; id 263 DeadNoble
-    dw BreedSpeciesRules108 ; id 264 WhiteKing
-    dw BreedSpeciesRules109 ; id 265 BoneSlave
-    dw BreedSpeciesRules10A ; id 266 Skeletor
-    dw BreedSpeciesRules10B ; id 267 Servant
+    dw BreedSpeciesRules_CaptDead ; id 262 CaptDead
+    dw BreedSpeciesRules_DeadNoble ; id 263 DeadNoble
+    dw BreedSpeciesRules_WhiteKing ; id 264 WhiteKing
+    dw BreedSpeciesRules_BoneSlave ; id 265 BoneSlave
+    dw BreedSpeciesRules_Skeletor ; id 266 Skeletor
+    dw BreedSpeciesRules_Servant ; id 267 Servant
     dw BreedSpeciesRules000 ; id 268 Lazamanus
-    dw BreedSpeciesRules10D ; id 269 Copycat
-    dw BreedSpeciesRules10E ; id 270 MadSpirit
+    dw BreedSpeciesRules_Copycat ; id 269 Copycat
+    dw BreedSpeciesRules_MadSpirit ; id 270 MadSpirit
     dw BreedSpeciesRules000 ; id 271 PomPomBom
-    dw BreedSpeciesRules110 ; id 272 Niterich
+    dw BreedSpeciesRules_Niterich ; id 272 Niterich
     dw BreedSpeciesRules000 ; id 273 ?
     dw BreedSpeciesRules000 ; id 274 ?
     dw BreedSpeciesRules000 ; id 275 ?
@@ -2967,34 +2966,34 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 279 ?
     dw BreedSpeciesRules000 ; id 280 ?
     dw BreedSpeciesRules000 ; id 281 JewelBag
-    dw BreedSpeciesRules11A ; id 282 EvilWand
-    dw BreedSpeciesRules11B ; id 283 MadCandle
+    dw BreedSpeciesRules_EvilWand ; id 282 EvilWand
+    dw BreedSpeciesRules_MadCandle ; id 283 MadCandle
     dw BreedSpeciesRules000 ; id 284 CoilBird
     dw BreedSpeciesRules000 ; id 285 Facer
-    dw BreedSpeciesRules11E ; id 286 SpikyBoy
-    dw BreedSpeciesRules11F ; id 287 MadMirror
+    dw BreedSpeciesRules_SpikyBoy ; id 286 SpikyBoy
+    dw BreedSpeciesRules_MadMirror ; id 287 MadMirror
     dw BreedSpeciesRules000 ; id 288 RogueNite
-    dw BreedSpeciesRules121 ; id 289 Puppetor
-    dw BreedSpeciesRules122 ; id 290 Goopi
-    dw BreedSpeciesRules123 ; id 291 Voodoll
-    dw BreedSpeciesRules124 ; id 292 MetalDrak
+    dw BreedSpeciesRules_Puppetor ; id 289 Puppetor
+    dw BreedSpeciesRules_Goopi ; id 290 Goopi
+    dw BreedSpeciesRules_Voodoll ; id 291 Voodoll
+    dw BreedSpeciesRules_MetalDrak ; id 292 MetalDrak
     dw BreedSpeciesRules000 ; id 293 Balzak
-    dw BreedSpeciesRules126 ; id 294 SabreMan
-    dw BreedSpeciesRules127 ; id 295 CurseLamp
+    dw BreedSpeciesRules_SabreMan ; id 294 SabreMan
+    dw BreedSpeciesRules_CurseLamp ; id 295 CurseLamp
     dw BreedSpeciesRules000 ; id 296 Brushead
-    dw BreedSpeciesRules129 ; id 297 Roboster
-    dw BreedSpeciesRules12A ; id 298 Roboster2
-    dw BreedSpeciesRules12B ; id 299 EvilPot
-    dw BreedSpeciesRules12C ; id 300 Gismo
-    dw BreedSpeciesRules12D ; id 301 LavaMan
-    dw BreedSpeciesRules12E ; id 302 IceMan
-    dw BreedSpeciesRules12F ; id 303 Mimic
+    dw BreedSpeciesRules_Roboster ; id 297 Roboster
+    dw BreedSpeciesRules_Roboster2 ; id 298 Roboster2
+    dw BreedSpeciesRules_EvilPot ; id 299 EvilPot
+    dw BreedSpeciesRules_Gismo ; id 300 Gismo
+    dw BreedSpeciesRules_LavaMan ; id 301 LavaMan
+    dw BreedSpeciesRules_IceMan ; id 302 IceMan
+    dw BreedSpeciesRules_Mimic ; id 303 Mimic
     dw BreedSpeciesRules000 ; id 304 Exaucers
-    dw BreedSpeciesRules131 ; id 305 MudDoll
-    dw BreedSpeciesRules132 ; id 306 Golem
-    dw BreedSpeciesRules133 ; id 307 StoneMan
+    dw BreedSpeciesRules_MudDoll ; id 305 MudDoll
+    dw BreedSpeciesRules_Golem ; id 306 Golem
+    dw BreedSpeciesRules_StoneMan ; id 307 StoneMan
     dw BreedSpeciesRules000 ; id 308 BombCrag
-    dw BreedSpeciesRules135 ; id 309 GoldGolem
+    dw BreedSpeciesRules_GoldGolem ; id 309 GoldGolem
     dw BreedSpeciesRules000 ; id 310 DarkMate
     dw BreedSpeciesRules000 ; id 311 ProtoMech
     dw BreedSpeciesRules000 ; id 312 CloudKing
@@ -3006,56 +3005,56 @@ BreedSpeciesRuleTable::
     dw BreedSpeciesRules000 ; id 318 WalrusMan
     dw BreedSpeciesRules000 ; id 319 RayGigas
     dw BreedSpeciesRules000 ; id 320 Anemon
-    dw BreedSpeciesRules141 ; id 321 Aquarella
-    dw BreedSpeciesRules142 ; id 322 Merman
+    dw BreedSpeciesRules_Aquarella ; id 321 Aquarella
+    dw BreedSpeciesRules_Merman ; id 322 Merman
     dw BreedSpeciesRules000 ; id 323 Octokid
     dw BreedSpeciesRules000 ; id 324 PutreFish
-    dw BreedSpeciesRules145 ; id 325 Octoreach
-    dw BreedSpeciesRules146 ; id 326 Angleron
+    dw BreedSpeciesRules_Octoreach ; id 325 Octoreach
+    dw BreedSpeciesRules_Angleron ; id 326 Angleron
     dw BreedSpeciesRules000 ; id 327 FishRider
-    dw BreedSpeciesRules148 ; id 328 RushFish
-    dw BreedSpeciesRules149 ; id 329 Gamanian
-    dw BreedSpeciesRules14A ; id 330 Clawster
-    dw BreedSpeciesRules14B ; id 331 CancerMan
-    dw BreedSpeciesRules14C ; id 332 RogueWave
+    dw BreedSpeciesRules_RushFish ; id 328 RushFish
+    dw BreedSpeciesRules_Gamanian ; id 329 Gamanian
+    dw BreedSpeciesRules_Clawster ; id 330 Clawster
+    dw BreedSpeciesRules_CancerMan ; id 331 CancerMan
+    dw BreedSpeciesRules_RogueWave ; id 332 RogueWave
     dw BreedSpeciesRules000 ; id 333 Scallopa
     dw BreedSpeciesRules000 ; id 334 SeaHorse
-    dw BreedSpeciesRules14F ; id 335 HoodSquid
-    dw BreedSpeciesRules150 ; id 336 MerTiger
+    dw BreedSpeciesRules_HoodSquid ; id 335 HoodSquid
+    dw BreedSpeciesRules_MerTiger ; id 336 MerTiger
     dw BreedSpeciesRules000 ; id 337 AxeShark
-    dw BreedSpeciesRules152 ; id 338 Octogon
+    dw BreedSpeciesRules_Octogon ; id 338 Octogon
     dw BreedSpeciesRules000 ; id 339 KingSquid
-    dw BreedSpeciesRules154 ; id 340 Digong
+    dw BreedSpeciesRules_Digong ; id 340 Digong
     dw BreedSpeciesRules000 ; id 341 WhaleMage
     dw BreedSpeciesRules000 ; id 342 Aquadon
     dw BreedSpeciesRules000 ; id 343 Octoraid
-    dw BreedSpeciesRules158 ; id 344 Grakos
+    dw BreedSpeciesRules_Grakos ; id 344 Grakos
     dw BreedSpeciesRules000 ; id 345 Poseidon
     dw BreedSpeciesRules000 ; id 346 Pumpoise
     dw BreedSpeciesRules000 ; id 347 Starfish
     dw BreedSpeciesRules000 ; id 348 ?
     dw BreedSpeciesRules000 ; id 349 ?
     dw BreedSpeciesRules000 ; id 350 ?
-    dw BreedSpeciesRules15F ; id 351 DracoLord
-    dw BreedSpeciesRules160 ; id 352 DracoLord
+    dw BreedSpeciesRules_DracoLord ; id 351 DracoLord
+    dw BreedSpeciesRules_DracoLord_160 ; id 352 DracoLord
     dw BreedSpeciesRules000 ; id 353 LordDraco
-    dw BreedSpeciesRules162 ; id 354 Hargon
-    dw BreedSpeciesRules163 ; id 355 Sidoh
+    dw BreedSpeciesRules_Hargon ; id 354 Hargon
+    dw BreedSpeciesRules_Sidoh ; id 355 Sidoh
     dw BreedSpeciesRules000 ; id 356 Genosidoh
-    dw BreedSpeciesRules165 ; id 357 Baramos
-    dw BreedSpeciesRules166 ; id 358 Zoma
+    dw BreedSpeciesRules_Baramos ; id 357 Baramos
+    dw BreedSpeciesRules_Zoma ; id 358 Zoma
     dw BreedSpeciesRules000 ; id 359 AsuraZoma
-    dw BreedSpeciesRules168 ; id 360 Pizzaro
-    dw BreedSpeciesRules169 ; id 361 PsychoPiz
-    dw BreedSpeciesRules16A ; id 362 Esterk
-    dw BreedSpeciesRules16B ; id 363 Mirudraas
-    dw BreedSpeciesRules16C ; id 364 Mirudraas
+    dw BreedSpeciesRules_Pizzaro ; id 360 Pizzaro
+    dw BreedSpeciesRules_PsychoPiz ; id 361 PsychoPiz
+    dw BreedSpeciesRules_Esterk ; id 362 Esterk
+    dw BreedSpeciesRules_Mirudraas ; id 363 Mirudraas
+    dw BreedSpeciesRules_Mirudraas_16C ; id 364 Mirudraas
     dw BreedSpeciesRules000 ; id 365 Mudou
-    dw BreedSpeciesRules16E ; id 366 DeathMore
-    dw BreedSpeciesRules16F ; id 367 DeathMore
-    dw BreedSpeciesRules170 ; id 368 DeathMore
+    dw BreedSpeciesRules_DeathMore ; id 366 DeathMore
+    dw BreedSpeciesRules_DeathMore_16F ; id 367 DeathMore
+    dw BreedSpeciesRules_DeathMore_170 ; id 368 DeathMore
     dw BreedSpeciesRules000 ; id 369 Darkdrium
-    dw BreedSpeciesRules172 ; id 370 Orgodemir
+    dw BreedSpeciesRules_Orgodemir ; id 370 Orgodemir
     dw BreedSpeciesRules000 ; id 371 Orgodemir
     dw BreedSpeciesRules000 ; id 372 Darck
     dw BreedSpeciesRules000 ; id 373 Tatsu
@@ -3076,24 +3075,24 @@ BreedSpeciesRules000::
     dw $ffff ; id 0 end of list
 
 ; list for entry $01 (DrakSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules001::
+BreedSpeciesRules_DrakSlime::
     dw MONSTER_SWORDGON ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $02 (SpotSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules002::
+BreedSpeciesRules_SpotSlime::
     dw $fe04 ; id 0 same species, parent B +4 or more
     dw $fc04 ; id 1 same species, parent A +4 or more
     dw $ffff ; id 2 end of list
 
 ; list for entry $06 (SlimeNite) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules006::
+BreedSpeciesRules_SlimeNite::
     dw MONSTER_SPIKEROUS ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $0A (Slime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules00A::
+BreedSpeciesRules_Slime::
     dw $fe04 ; id 0 same species, parent B +4 or more
     dw $fc04 ; id 1 same species, parent A +4 or more
     dw $fdfd ; id 2 next result
@@ -3106,19 +3105,19 @@ BreedSpeciesRules00A::
     dw $ffff ; id 9 end of list
 
 ; list for entry $0B (Healer) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules00B::
+BreedSpeciesRules_Healer::
     dw MONSTER_TREEBOY ; id 0
     dw MONSTER_1EYECLOWN ; id 1
     dw MONSTER_EVILWAND ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $0D (RockSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules00D::
+BreedSpeciesRules_RockSlime::
     dw MONSTER_GREATDRAK ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $10 (KingSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules010::
+BreedSpeciesRules_KingSlime::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_BATTLEREX ; id 1
     dw MONSTER_DIVINEGON ; id 2
@@ -3140,13 +3139,13 @@ BreedSpeciesRules010::
 
 ; list for entry $11 (Metaly) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules011::
+BreedSpeciesRules_Metaly::
     dw MONSTER_METALY ; id 0
     dw MONSTER_WONDEREGG ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $12 (Metabble) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules012::
+BreedSpeciesRules_Metabble::
     dw MONSTER_BATTLEREX ; id 0
     dw MONSTER_SKYDRAGON ; id 1
     dw $fdfd ; id 2 next result
@@ -3154,7 +3153,7 @@ BreedSpeciesRules012::
     dw $ffff ; id 4 end of list
 
 ; list for entry $13 (SpotKing) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules013::
+BreedSpeciesRules_SpotKing::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_BATTLEREX ; id 1
     dw MONSTER_DIVINEGON ; id 2
@@ -3175,14 +3174,14 @@ BreedSpeciesRules013::
     dw $ffff ; id 17 end of list
 
 ; list for entry $15 (MimeSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules015::
+BreedSpeciesRules_MimeSlime::
     dw MONSTER_STUBBIRD ; id 0
     dw MONSTER_PIXY ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $17 (MetalKing) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules017::
+BreedSpeciesRules_MetalKing::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_BATTLEREX ; id 1
     dw MONSTER_DIVINEGON ; id 2
@@ -3202,14 +3201,14 @@ BreedSpeciesRules017::
     dw $ffff ; id 16 end of list
 
 ; list for entry $18 (GoldSlime) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules018::
+BreedSpeciesRules_GoldSlime::
     dw MONSTER_GOLDSLIME ; id 0
     dw MONSTER_DARKMATE ; id 1
     dw MONSTER_DEATHMORE ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $1A (WonderEgg) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules01A::
+BreedSpeciesRules_WonderEgg::
     dw MONSTER_METABBLE ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_METALKING ; id 2
@@ -3218,7 +3217,7 @@ BreedSpeciesRules01A::
     dw $ffff ; id 5 end of list
 
 ; list for entry $24 (DragonKid) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules024::
+BreedSpeciesRules_DragonKid::
     dw $fe04 ; id 0 same species, parent B +4 or more
     dw $fc04 ; id 1 same species, parent A +4 or more
     dw $fdfd ; id 2 next result
@@ -3227,7 +3226,7 @@ BreedSpeciesRules024::
 
 ; list for entry $26 (Pteranod) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules026::
+BreedSpeciesRules_Pteranod::
     dw MONSTER_PTERANOD ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_DARKHORN ; id 2
@@ -3238,7 +3237,7 @@ BreedSpeciesRules026::
     dw $ffff ; id 7 end of list
 
 ; list for entry $27 (Gasgon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules027::
+BreedSpeciesRules_Gasgon::
     dw MONSTER_GOATEGON ; id 0
     dw MONSTER_TRUMPETER ; id 1
     dw MONSTER_MADCONDOR ; id 2
@@ -3259,7 +3258,7 @@ BreedSpeciesRules027::
     dw $ffff ; id 17 end of list
 
 ; list for entry $29 (LizardMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules029::
+BreedSpeciesRules_LizardMan::
     dw MONSTER_WINGSLIME ; id 0
     dw MONSTER_TRUMPETER ; id 1
     dw MONSTER_MADCAT ; id 2
@@ -3277,7 +3276,7 @@ BreedSpeciesRules029::
     dw $ffff ; id 14 end of list
 
 ; list for entry $2D (Dragon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules02D::
+BreedSpeciesRules_Dragon::
     dw $fe04 ; id 0 same species, parent B +4 or more
     dw $fc04 ; id 1 same species, parent A +4 or more
     dw $fbfb ; id 2 next result when wArg1 = 2, else end of list
@@ -3288,7 +3287,7 @@ BreedSpeciesRules02D::
 
 ; list for entry $2F (MadDragon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules02F::
+BreedSpeciesRules_MadDragon::
     dw MONSTER_GOATEGON ; id 0
     dw MONSTER_TRUMPETER ; id 1
     dw MONSTER_MADCONDOR ; id 2
@@ -3303,7 +3302,7 @@ BreedSpeciesRules02F::
     dw $ffff ; id 11 end of list
 
 ; list for entry $33 (Andreal) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules033::
+BreedSpeciesRules_Andreal::
     dw MONSTER_MEDUSAEYE ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_BOSSTROLL ; id 2
@@ -3311,12 +3310,12 @@ BreedSpeciesRules033::
     dw $ffff ; id 4 end of list
 
 ; list for entry $34 (KingCobra) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules034::
+BreedSpeciesRules_KingCobra::
     dw MONSTER_DRACKY ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $35 (Vampirus) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules035::
+BreedSpeciesRules_Vampirus::
     dw MONSTER_DARKHORN ; id 0
     dw MONSTER_MADKNIGHT ; id 1
     dw MONSTER_COPYCAT ; id 2
@@ -3328,7 +3327,7 @@ BreedSpeciesRules035::
 
 ; list for entry $38 (GreatDrak) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules038::
+BreedSpeciesRules_GreatDrak::
     dw MONSTER_MEDUSAEYE ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_LIONEX ; id 2
@@ -3340,17 +3339,17 @@ BreedSpeciesRules038::
     dw $ffff ; id 8 end of list
 
 ; list for entry $39 (Crestpent) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules039::
+BreedSpeciesRules_Crestpent::
     dw MONSTER_CRESTPENT ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $3A (WingSnake) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules03A::
+BreedSpeciesRules_WingSnake::
     dw MONSTER_WINGSNAKE ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $3D (BattleRex) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules03D::
+BreedSpeciesRules_BattleRex::
     dw MONSTER_GOATEGON ; id 0
     dw MONSTER_TRUMPETER ; id 1
     dw MONSTER_MADCONDOR ; id 2
@@ -3375,7 +3374,7 @@ BreedSpeciesRules03D::
 
 ; list for entry $3E (SkyDragon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules03E::
+BreedSpeciesRules_SkyDragon::
     dw MONSTER_GOATEGON ; id 0
     dw MONSTER_TRUMPETER ; id 1
     dw MONSTER_MADCONDOR ; id 2
@@ -3402,13 +3401,13 @@ BreedSpeciesRules03E::
     dw $ffff ; id 23 end of list
 
 ; list for entry $40 (Divinegon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules040::
+BreedSpeciesRules_Divinegon::
     dw MONSTER_GOLDGOLEM ; id 0
     dw MONSTER_GIGADRACO ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $47 (Tonguella) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules047::
+BreedSpeciesRules_Tonguella::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3435,14 +3434,14 @@ BreedSpeciesRules047::
     dw $ffff ; id 23 end of list
 
 ; list for entry $48 (Almiraj) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules048::
+BreedSpeciesRules_Almiraj::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_HEALER ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $49 (CatFly) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules049::
+BreedSpeciesRules_CatFly::
     dw MONSTER_MIMESLIME ; id 0
     dw MONSTER_CATMAGE ; id 1
     dw MONSTER_TREEBOY ; id 2
@@ -3453,7 +3452,7 @@ BreedSpeciesRules049::
     dw $ffff ; id 7 end of list
 
 ; list for entry $4C (GulpBeast) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules04C::
+BreedSpeciesRules_GulpBeast::
     dw MONSTER_TREESLIME ; id 0
     dw MONSTER_FANGSLIME ; id 1
     dw MONSTER_MADDRAGON ; id 2
@@ -3481,7 +3480,7 @@ BreedSpeciesRules04C::
     dw $ffff ; id 24 end of list
 
 ; list for entry $51 (SuperTen) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules051::
+BreedSpeciesRules_SuperTen::
     dw MONSTER_LIZARDMAN ; id 0
     dw MONSTER_BEASTNITE ; id 1
     dw MONSTER_BUBBLEMON ; id 2
@@ -3492,7 +3491,7 @@ BreedSpeciesRules051::
     dw $ffff ; id 7 end of list
 
 ; list for entry $52 (IronTurt) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules052::
+BreedSpeciesRules_IronTurt::
     dw MONSTER_METALDRAK ; id 0
     dw MONSTER_ROBOSTER ; id 1
     dw MONSTER_LAVAMAN ; id 2
@@ -3510,13 +3509,13 @@ BreedSpeciesRules052::
 
 ; list for entry $54 (HammerMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules054::
+BreedSpeciesRules_HammerMan::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_LIZARDMAN ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $55 (Grizzly) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules055::
+BreedSpeciesRules_Grizzly::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3536,7 +3535,7 @@ BreedSpeciesRules055::
     dw $ffff ; id 16 end of list
 
 ; list for entry $56 (Yeti) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules056::
+BreedSpeciesRules_Yeti::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3556,7 +3555,7 @@ BreedSpeciesRules056::
     dw $ffff ; id 16 end of list
 
 ; list for entry $57 (ArrowDog) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules057::
+BreedSpeciesRules_ArrowDog::
     dw MONSTER_DRACKY ; id 0
     dw MONSTER_SHADOW ; id 1
     dw $fdfd ; id 2 next result
@@ -3566,23 +3565,23 @@ BreedSpeciesRules057::
 
 ; list for entry $58 (NoctoKing) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules058::
+BreedSpeciesRules_NoctoKing::
     dw MONSTER_GIGANTES ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $59 (BeastNite) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules059::
+BreedSpeciesRules_BeastNite::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_MERTIGER ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $5A (MadGopher) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules05A::
+BreedSpeciesRules_MadGopher::
     dw MONSTER_DUMBIRA ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $5C (Unicorn) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules05C::
+BreedSpeciesRules_Unicorn::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3598,7 +3597,7 @@ BreedSpeciesRules05C::
 
 ; list for entry $5D (Goategon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules05D::
+BreedSpeciesRules_Goategon::
     dw MONSTER_METALDRAK ; id 0
     dw MONSTER_ROBOSTER ; id 1
     dw MONSTER_LAVAMAN ; id 2
@@ -3615,7 +3614,7 @@ BreedSpeciesRules05D::
     dw $ffff ; id 13 end of list
 
 ; list for entry $5E (WildApe) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules05E::
+BreedSpeciesRules_WildApe::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3639,7 +3638,7 @@ BreedSpeciesRules05E::
     dw $ffff ; id 20 end of list
 
 ; list for entry $5F (Trumpeter) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules05F::
+BreedSpeciesRules_Trumpeter::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3661,13 +3660,13 @@ BreedSpeciesRules05F::
     dw $ffff ; id 18 end of list
 
 ; list for entry $61 (DarkHorn) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules061::
+BreedSpeciesRules_DarkHorn::
     dw MONSTER_OROCHI ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $62 (MadCat) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules062::
+BreedSpeciesRules_MadCat::
     dw MONSTER_PTERANOD ; id 0
     dw MONSTER_GASGON ; id 1
     dw MONSTER_SWORDGON ; id 2
@@ -3679,13 +3678,13 @@ BreedSpeciesRules062::
     dw $ffff ; id 8 end of list
 
 ; list for entry $65 (CatMage) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules065::
+BreedSpeciesRules_CatMage::
     dw MONSTER_UNICORN ; id 0
     dw MONSTER_GOATEGON ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $66 (Dumbira) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules066::
+BreedSpeciesRules_Dumbira::
     dw MONSTER_DIGSTER ; id 0
     dw MONSTER_SKULLGON ; id 1
     dw MONSTER_DEADNOBLE ; id 2
@@ -3702,30 +3701,30 @@ BreedSpeciesRules066::
     dw $ffff ; id 13 end of list
 
 ; list for entry $6C (BullBird) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules06C::
+BreedSpeciesRules_BullBird::
     dw MONSTER_GRIZZLY ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $6F (MadPecker) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules06F::
+BreedSpeciesRules_MadPecker::
     dw MONSTER_BIGEYE ; id 0
     dw MONSTER_DARKEYE ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $72 (AquaHawk) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules072::
+BreedSpeciesRules_AquaHawk::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_WINGSNAKE ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $74 (KiteHawk) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules074::
+BreedSpeciesRules_KiteHawk::
     dw MONSTER_BIGROOST ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $77 (LandOwl) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules077::
+BreedSpeciesRules_LandOwl::
     dw MONSTER_ROCKSLIME ; id 0
     dw MONSTER_SLIMEBORG ; id 1
     dw MONSTER_DIGSTER ; id 2
@@ -3737,7 +3736,7 @@ BreedSpeciesRules077::
 
 ; list for entry $78 (MadGoose) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules078::
+BreedSpeciesRules_MadGoose::
     dw MONSTER_ROCKSLIME ; id 0
     dw MONSTER_SLIMEBORG ; id 1
     dw MONSTER_DIGSTER ; id 2
@@ -3748,7 +3747,7 @@ BreedSpeciesRules078::
     dw $ffff ; id 7 end of list
 
 ; list for entry $79 (MadCondor) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules079::
+BreedSpeciesRules_MadCondor::
     dw MONSTER_MADPECKER ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_GISMO ; id 2
@@ -3763,7 +3762,7 @@ BreedSpeciesRules079::
     dw $ffff ; id 11 end of list
 
 ; list for entry $7B (Blizzardy) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules07B::
+BreedSpeciesRules_Blizzardy::
     dw MONSTER_LIONEX ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_ROCKSLIME ; id 2
@@ -3779,7 +3778,7 @@ BreedSpeciesRules07B::
     dw $ffff ; id 12 end of list
 
 ; list for entry $7C (Phoenix) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules07C::
+BreedSpeciesRules_Phoenix::
     dw MONSTER_GISMO ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_LIONEX ; id 2
@@ -3787,7 +3786,7 @@ BreedSpeciesRules07C::
 
 ; list for entry $7D (ZapBird) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules07D::
+BreedSpeciesRules_ZapBird::
     dw MONSTER_LIONEX ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_ROCKSLIME ; id 2
@@ -3800,13 +3799,13 @@ BreedSpeciesRules07D::
     dw $ffff ; id 9 end of list
 
 ; list for entry $7E (Garudian) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules07E::
+BreedSpeciesRules_Garudian::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_TRUMPETER ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $7F (WhipBird) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules07F::
+BreedSpeciesRules_WhipBird::
     dw MONSTER_GISMO ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_GREATDRAK ; id 2
@@ -3814,23 +3813,23 @@ BreedSpeciesRules07F::
     dw $ffff ; id 4 end of list
 
 ; list for entry $80 (FunkyBird) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules080::
+BreedSpeciesRules_FunkyBird::
     dw MONSTER_JAMIRUS ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $81 (RainHawk) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules081::
+BreedSpeciesRules_RainHawk::
     dw MONSTER_GOLDGOLEM ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $83 (Shantak) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules083::
+BreedSpeciesRules_Shantak::
     dw MONSTER_GOLDGOLEM ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $84 (CragDevil) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules084::
+BreedSpeciesRules_CragDevil::
     dw MONSTER_DUCKKITE ; id 0
     dw MONSTER_MADRAVEN ; id 1
     dw $fdfd ; id 2 next result
@@ -3839,31 +3838,31 @@ BreedSpeciesRules084::
     dw $ffff ; id 5 end of list
 
 ; list for entry $96 (Stubsuck) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules096::
+BreedSpeciesRules_Stubsuck::
     dw MONSTER_PUPPETOR ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $99 (TreeBoy) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules099::
+BreedSpeciesRules_TreeBoy::
     dw MONSTER_SLIMENITE ; id 0
     dw MONSTER_HAMMERMAN ; id 1
     dw MONSTER_BEASTNITE ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $9E (EvilSeed) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules09E::
+BreedSpeciesRules_EvilSeed::
     dw MONSTER_SLURPERON ; id 0
     dw MONSTER_EVILSEED ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $9F (ManEater) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules09F::
+BreedSpeciesRules_ManEater::
     dw MONSTER_MANEATER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $A1 (GhosTree) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0A1::
+BreedSpeciesRules_GhosTree::
     dw MONSTER_GHOSTREE ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_SNAPPER ; id 2
@@ -3871,91 +3870,91 @@ BreedSpeciesRules0A1::
 
 ; list for entry $A2 (Rosevine) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0A2::
+BreedSpeciesRules_Rosevine::
     dw MONSTER_GIGANTES ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $A4 (Warubou) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0A4::
+BreedSpeciesRules_Warubou::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_WATABOU ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $A7 (FooHero) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0A7::
+BreedSpeciesRules_FooHero::
     dw MONSTER_EVILWAND ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $B1 (Catapila) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0B1::
+BreedSpeciesRules_Catapila::
     dw MONSTER_CATAPILA ; id 0
 
 ; list for entry $B3 (Butterfly) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0B3::
+BreedSpeciesRules_Butterfly::
     dw MONSTER_BUTTERFLY ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_PYURO ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $B4 (WeedBug) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0B4::
+BreedSpeciesRules_WeedBug::
     dw MONSTER_ANEMON ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $B6 (Lipsy) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0B6::
+BreedSpeciesRules_Lipsy::
     dw MONSTER_AQUARELLA ; id 0
     dw MONSTER_OCTOKID ; id 1
     dw MONSTER_ANGLERON ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $B7 (StagBug) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0B7::
+BreedSpeciesRules_StagBug::
     dw MONSTER_STAGBUG ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $BB (TailEater) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0BB::
+BreedSpeciesRules_TailEater::
     dw MONSTER_TAILEATER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $BD (Eyeder) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0BD::
+BreedSpeciesRules_Eyeder::
     dw MONSTER_EYEDER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $C0 (ArmyCrab) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0C0::
+BreedSpeciesRules_ArmyCrab::
     dw MONSTER_CLAWSTER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $C1 (MadHornet) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0C1::
+BreedSpeciesRules_MadHornet::
     dw MONSTER_GOHOPPER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $C3 (WarMantis) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0C3::
+BreedSpeciesRules_WarMantis::
     dw MONSTER_ROGUENITE ; id 0
     dw MONSTER_CANCERMAN ; id 1
     dw MONSTER_OCTORAID ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $C4 (HornBeet) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0C4::
+BreedSpeciesRules_HornBeet::
     dw MONSTER_HORNBEET ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $C6 (Armorpion) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0C6::
+BreedSpeciesRules_Armorpion::
     dw MONSTER_WHITEKING ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $C9 (MultiEyes) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0C9::
+BreedSpeciesRules_MultiEyes::
     dw MONSTER_BUTTERFLY ; id 0
     dw MONSTER_PYURO ; id 1
     dw $fdfd ; id 2 next result
@@ -3966,7 +3965,7 @@ BreedSpeciesRules0C9::
 
 ; list for entry $D5 (AgDevil) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0D5::
+BreedSpeciesRules_AgDevil::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_SPOTKING ; id 1
     dw MONSTER_METALKING ; id 2
@@ -4001,18 +4000,18 @@ BreedSpeciesRules0D5::
     dw $ffff ; id 31 end of list
 
 ; list for entry $D6 (Demonite) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0D6::
+BreedSpeciesRules_Demonite::
     dw MONSTER_DEMONITE ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $D7 (DarkEye) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0D7::
+BreedSpeciesRules_DarkEye::
     dw MONSTER_AQUARELLA ; id 0
     dw MONSTER_OCTOREACH ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $DB (Bubblemon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0DB::
+BreedSpeciesRules_Bubblemon::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_DEADNITE ; id 1
     dw $fdfd ; id 2 next result
@@ -4021,7 +4020,7 @@ BreedSpeciesRules0DB::
 
 ; list for entry $DC (1EyeClown) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0DC::
+BreedSpeciesRules_1EyeClown::
     dw MONSTER_AQUARELLA ; id 0
     dw MONSTER_OCTOREACH ; id 1
     dw $fdfd ; id 2 next result
@@ -4029,26 +4028,26 @@ BreedSpeciesRules0DC::
     dw $ffff ; id 4 end of list
 
 ; list for entry $DD (Gremlin) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0DD::
+BreedSpeciesRules_Gremlin::
     dw MONSTER_AQUARELLA ; id 0
     dw MONSTER_OCTOREACH ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $DE (ArcDemon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0DE::
+BreedSpeciesRules_ArcDemon::
     dw MONSTER_GARUDIAN ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_GATEGUARD ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $DF (Lionex) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0DF::
+BreedSpeciesRules_Lionex::
     dw MONSTER_MIMESLIME ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $E2 (Ogre) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0E2::
+BreedSpeciesRules_Ogre::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_BALZAK ; id 1
     dw MONSTER_STONEMAN ; id 2
@@ -4058,14 +4057,14 @@ BreedSpeciesRules0E2::
     dw $ffff ; id 6 end of list
 
 ; list for entry $E5 (BossTroll) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0E5::
+BreedSpeciesRules_BossTroll::
     dw MONSTER_ICEMAN ; id 0
     dw $fbfb ; id 1 next result when wArg1 = 2, else end of list
     dw MONSTER_CURSELAMP ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $E6 (Grendal) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0E6::
+BreedSpeciesRules_Grendal::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_SPOTKING ; id 1
     dw MONSTER_METALKING ; id 2
@@ -4104,13 +4103,13 @@ BreedSpeciesRules0E6::
     dw $ffff ; id 35 end of list
 
 ; list for entry $E7 (Akubar) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0E7::
+BreedSpeciesRules_Akubar::
     dw MONSTER_RAINHAWK ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $EA (Gigantes) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0EA::
+BreedSpeciesRules_Gigantes::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_SPOTKING ; id 1
     dw MONSTER_METALKING ; id 2
@@ -4145,7 +4144,7 @@ BreedSpeciesRules0EA::
     dw $ffff ; id 31 end of list
 
 ; list for entry $EB (Centasaur) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0EB::
+BreedSpeciesRules_Centasaur::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_BALZAK ; id 1
     dw MONSTER_STONEMAN ; id 2
@@ -4155,14 +4154,14 @@ BreedSpeciesRules0EB::
     dw $ffff ; id 6 end of list
 
 ; list for entry $ED (Jamirus) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0ED::
+BreedSpeciesRules_Jamirus::
     dw MONSTER_SERPENTIA ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_ROSEVINE ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $EE (Durran) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0EE::
+BreedSpeciesRules_Durran::
     dw MONSTER_DARKHORN ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_DIVINEGON ; id 2
@@ -4170,25 +4169,25 @@ BreedSpeciesRules0EE::
 
 ; list for entry $F0 (LampGenie) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0F0::
+BreedSpeciesRules_LampGenie::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_MADCAT ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $F7 (Skullgon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0F7::
+BreedSpeciesRules_Skullgon::
     dw MONSTER_COPYCAT ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_KINGSLIME ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $F8 (PutrePup) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0F8::
+BreedSpeciesRules_PutrePup::
     dw MONSTER_MISTYWING ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $FA (Mummy) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0FA::
+BreedSpeciesRules_Mummy::
     dw MONSTER_ROCKSLIME ; id 0
     dw MONSTER_SLIMEBORG ; id 1
     dw MONSTER_LANDOWL ; id 2
@@ -4210,7 +4209,7 @@ BreedSpeciesRules0FA::
 
 ; list for entry $FC (DeadNite) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules0FC::
+BreedSpeciesRules_DeadNite::
     dw MONSTER_DEADNITE ; id 0
     dw MONSTER_COPYCAT ; id 1
     dw $fdfd ; id 2 next result
@@ -4236,7 +4235,7 @@ BreedSpeciesRules0FC::
     dw $ffff ; id 22 end of list
 
 ; list for entry $FF (Hork) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules0FF::
+BreedSpeciesRules_Hork::
     dw MONSTER_HORK ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_GULPBEAST ; id 2
@@ -4251,7 +4250,7 @@ BreedSpeciesRules0FF::
     dw $ffff ; id 11 end of list
 
 ; list for entry $100 (Mudron) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules100::
+BreedSpeciesRules_Mudron::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_LIONEX ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -4271,13 +4270,13 @@ BreedSpeciesRules100::
     dw $ffff ; id 16 end of list
 
 ; list for entry $101 (NiteWhip) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules101::
+BreedSpeciesRules_NiteWhip::
     dw MONSTER_MORAY ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $106 (CaptDead) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules106::
+BreedSpeciesRules_CaptDead::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_LIONEX ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -4297,7 +4296,7 @@ BreedSpeciesRules106::
     dw $ffff ; id 16 end of list
 
 ; list for entry $107 (DeadNoble) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules107::
+BreedSpeciesRules_DeadNoble::
     dw MONSTER_SPOTKING ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_SERPENTIA ; id 2
@@ -4306,14 +4305,14 @@ BreedSpeciesRules107::
     dw $ffff ; id 5 end of list
 
 ; list for entry $108 (WhiteKing) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules108::
+BreedSpeciesRules_WhiteKing::
     dw MONSTER_DRACOLORD ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_METALKING ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $109 (BoneSlave) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules109::
+BreedSpeciesRules_BoneSlave::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_LIONEX ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -4328,7 +4327,7 @@ BreedSpeciesRules109::
 
 ; list for entry $10A (Skeletor) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules10A::
+BreedSpeciesRules_Skeletor::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_LIONEX ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -4356,19 +4355,19 @@ BreedSpeciesRules10A::
     dw $ffff ; id 24 end of list
 
 ; list for entry $10B (Servant) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules10B::
+BreedSpeciesRules_Servant::
     dw MONSTER_ANDREAL ; id 0
     dw MONSTER_GREATDRAK ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $10D (Copycat) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules10D::
+BreedSpeciesRules_Copycat::
     dw MONSTER_GASGON ; id 0
     dw MONSTER_DROLL ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $10E (MadSpirit) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules10E::
+BreedSpeciesRules_MadSpirit::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_LIONEX ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -4379,7 +4378,7 @@ BreedSpeciesRules10E::
 
 ; list for entry $110 (Niterich) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules110::
+BreedSpeciesRules_Niterich::
     dw MONSTER_ANDREAL ; id 0
     dw MONSTER_GREATDRAK ; id 1
     dw MONSTER_KINGLEO ; id 2
@@ -4392,7 +4391,7 @@ BreedSpeciesRules110::
     dw $ffff ; id 9 end of list
 
 ; list for entry $11A (EvilWand) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules11A::
+BreedSpeciesRules_EvilWand::
     dw MONSTER_LANDOWL ; id 0
     dw MONSTER_MADGOOSE ; id 1
     dw MONSTER_PHOENIX ; id 2
@@ -4400,7 +4399,7 @@ BreedSpeciesRules11A::
     dw $ffff ; id 4 end of list
 
 ; list for entry $11B (MadCandle) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules11B::
+BreedSpeciesRules_MadCandle::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_WYVERN ; id 1
     dw MONSTER_MISTYWING ; id 2
@@ -4410,13 +4409,13 @@ BreedSpeciesRules11B::
     dw $ffff ; id 6 end of list
 
 ; list for entry $11E (SpikyBoy) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules11E::
+BreedSpeciesRules_SpikyBoy::
     dw MONSTER_SPIKYBOY ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $11F (MadMirror) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules11F::
+BreedSpeciesRules_MadMirror::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_WYVERN ; id 1
     dw MONSTER_MISTYWING ; id 2
@@ -4426,13 +4425,13 @@ BreedSpeciesRules11F::
     dw $ffff ; id 6 end of list
 
 ; list for entry $121 (Puppetor) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules121::
+BreedSpeciesRules_Puppetor::
     dw MONSTER_PIXY ; id 0
     dw MONSTER_DEMONITE ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $122 (Goopi) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules122::
+BreedSpeciesRules_Goopi::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_WYVERN ; id 1
     dw MONSTER_MISTYWING ; id 2
@@ -4445,7 +4444,7 @@ BreedSpeciesRules122::
     dw $ffff ; id 9 end of list
 
 ; list for entry $123 (Voodoll) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules123::
+BreedSpeciesRules_Voodoll::
     dw MONSTER_LANDOWL ; id 0
     dw MONSTER_MADGOOSE ; id 1
     dw MONSTER_PHOENIX ; id 2
@@ -4454,7 +4453,7 @@ BreedSpeciesRules123::
 
 ; list for entry $124 (MetalDrak) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules124::
+BreedSpeciesRules_MetalDrak::
     dw MONSTER_OROCHI ; id 0
     dw MONSTER_KINGLEO ; id 1
     dw MONSTER_ZAPBIRD ; id 2
@@ -4467,7 +4466,7 @@ BreedSpeciesRules124::
     dw $ffff ; id 9 end of list
 
 ; list for entry $126 (SabreMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules126::
+BreedSpeciesRules_SabreMan::
     dw MONSTER_SLIMEBORG ; id 0
     dw MONSTER_GREATDRAK ; id 1
     dw MONSTER_UNICORN ; id 2
@@ -4479,13 +4478,13 @@ BreedSpeciesRules126::
     dw $ffff ; id 8 end of list
 
 ; list for entry $127 (CurseLamp) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules127::
+BreedSpeciesRules_CurseLamp::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_BOSSTROLL ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $129 (Roboster) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules129::
+BreedSpeciesRules_Roboster::
     dw MONSTER_METALDRAK ; id 0
     dw $fdfd ; id 1 next result
     dw $fe05 ; id 2 same species, parent B +5 or more
@@ -4500,20 +4499,20 @@ BreedSpeciesRules129::
 
 ; list for entry $12A (Roboster2) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules12A::
+BreedSpeciesRules_Roboster2::
     dw MONSTER_METALDRAK ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_KINGLEO ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $12B (EvilPot) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules12B::
+BreedSpeciesRules_EvilPot::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_BUBBLEMON ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $12C (Gismo) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules12C::
+BreedSpeciesRules_Gismo::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_SPOTKING ; id 1
     dw MONSTER_SKYDRAGON ; id 2
@@ -4525,28 +4524,28 @@ BreedSpeciesRules12C::
     dw $ffff ; id 8 end of list
 
 ; list for entry $12D (LavaMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules12D::
+BreedSpeciesRules_LavaMan::
     dw MONSTER_BOSSTROLL ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $12E (IceMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules12E::
+BreedSpeciesRules_IceMan::
     dw MONSTER_LAVAMAN ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $12F (Mimic) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules12F::
+BreedSpeciesRules_Mimic::
     dw MONSTER_SCALLOPA ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $131 (MudDoll) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules131::
+BreedSpeciesRules_MudDoll::
     dw MONSTER_MUDDOLL ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $132 (Golem) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules132::
+BreedSpeciesRules_Golem::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_SNAILY ; id 1
     dw MONSTER_SLIMENITE ; id 2
@@ -4562,7 +4561,7 @@ BreedSpeciesRules132::
 
 ; list for entry $133 (StoneMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules133::
+BreedSpeciesRules_StoneMan::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_SNAILY ; id 1
     dw MONSTER_SLIMENITE ; id 2
@@ -4579,31 +4578,31 @@ BreedSpeciesRules133::
     dw $ffff ; id 13 end of list
 
 ; list for entry $135 (GoldGolem) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules135::
+BreedSpeciesRules_GoldGolem::
     dw MONSTER_METALKING ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $141 (Aquarella) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules141::
+BreedSpeciesRules_Aquarella::
     dw MONSTER_DARKEYE ; id 0
     dw MONSTER_MEDUSAEYE ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $142 (Merman) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules142::
+BreedSpeciesRules_Merman::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_MADCAT ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $145 (Octoreach) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules145::
+BreedSpeciesRules_Octoreach::
     dw $fe05 ; id 0 same species, parent B +5 or more
     dw $fc05 ; id 1 same species, parent A +5 or more
     dw $ffff ; id 2 end of list
 
 ; list for entry $146 (Angleron) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules146::
+BreedSpeciesRules_Angleron::
     dw MONSTER_PIXY ; id 0
     dw MONSTER_DEMONITE ; id 1
     dw MONSTER_SKULRIDER ; id 2
@@ -4614,7 +4613,7 @@ BreedSpeciesRules146::
     dw $ffff ; id 7 end of list
 
 ; list for entry $148 (RushFish) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules148::
+BreedSpeciesRules_RushFish::
     dw MONSTER_SPIKEROUS ; id 0
     dw MONSTER_ROGUEWAVE ; id 1
     dw MONSTER_MADGOOSE ; id 2
@@ -4623,18 +4622,18 @@ BreedSpeciesRules148::
     dw $ffff ; id 5 end of list
 
 ; list for entry $149 (Gamanian) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules149::
+BreedSpeciesRules_Gamanian::
     dw MONSTER_ARMYCRAB ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $14A (Clawster) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules14A::
+BreedSpeciesRules_Clawster::
     dw MONSTER_CLAWSTER ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $14B (CancerMan) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules14B::
+BreedSpeciesRules_CancerMan::
     dw MONSTER_EVILWAND ; id 0
     dw MONSTER_WHALEMAGE ; id 1
     dw $fdfd ; id 2 next result
@@ -4643,12 +4642,12 @@ BreedSpeciesRules14B::
     dw $ffff ; id 5 end of list
 
 ; list for entry $14C (RogueWave) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules14C::
+BreedSpeciesRules_RogueWave::
     dw MONSTER_MIMIC ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $14F (HoodSquid) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules14F::
+BreedSpeciesRules_HoodSquid::
     dw MONSTER_1EYECLOWN ; id 0
     dw MONSTER_REAPER ; id 1
     dw MONSTER_RUSHFISH ; id 2
@@ -4656,13 +4655,13 @@ BreedSpeciesRules14F::
 
 ; list for entry $150 (MerTiger) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules150::
+BreedSpeciesRules_MerTiger::
     dw $fbfb ; id 0 next result when wArg1 = 2, else end of list
     dw MONSTER_BEASTNITE ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $152 (Octogon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules152::
+BreedSpeciesRules_Octogon::
     dw MONSTER_LIONEX ; id 0
     dw MONSTER_GATEGUARD ; id 1
     dw MONSTER_CHOPCLOWN ; id 2
@@ -4673,51 +4672,51 @@ BreedSpeciesRules152::
     dw $ffff ; id 7 end of list
 
 ; list for entry $154 (Digong) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules154::
+BreedSpeciesRules_Digong::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_COATOL ; id 1
     dw MONSTER_ORLIGON ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $158 (Grakos) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules158::
+BreedSpeciesRules_Grakos::
     dw MONSTER_MUDOU ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $15F (DracoLord) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules15F::
+BreedSpeciesRules_DracoLord::
     dw MONSTER_DIVINEGON ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_SIDOH ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $160 (DracoLord) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules160::
+BreedSpeciesRules_DracoLord_160::
     dw MONSTER_ORLIGON ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_SIDOH ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $162 (Hargon) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules162::
+BreedSpeciesRules_Hargon::
     dw MONSTER_OROCHI ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $163 (Sidoh) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules163::
+BreedSpeciesRules_Sidoh::
     dw MONSTER_TITANIS ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $165 (Baramos) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules165::
+BreedSpeciesRules_Baramos::
     dw MONSTER_DARKHORN ; id 0
     dw MONSTER_GORAGO ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $166 (Zoma) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules166::
+BreedSpeciesRules_Zoma::
     dw MONSTER_PSYCHOPIZ ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_AZURILE ; id 2
@@ -4726,7 +4725,7 @@ BreedSpeciesRules166::
     dw $ffff ; id 5 end of list
 
 ; list for entry $168 (Pizzaro) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules168::
+BreedSpeciesRules_Pizzaro::
     dw MONSTER_ESTERK ; id 0
     dw $fdfd ; id 1 next result
     dw MONSTER_KINGLEO ; id 2
@@ -4734,18 +4733,18 @@ BreedSpeciesRules168::
     dw $ffff ; id 4 end of list
 
 ; list for entry $169 (PsychoPiz) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules169::
+BreedSpeciesRules_PsychoPiz::
     dw MONSTER_NITERICH ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $16A (Esterk) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules16A::
+BreedSpeciesRules_Esterk::
     dw MONSTER_GOLDSLIME ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $16B (Mirudraas) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules16B::
+BreedSpeciesRules_Mirudraas::
     dw MONSTER_SPIKEROUS ; id 0
     dw MONSTER_ORLIGON ; id 1
     dw $fdfd ; id 2 next result
@@ -4753,33 +4752,33 @@ BreedSpeciesRules16B::
     dw $ffff ; id 4 end of list
 
 ; list for entry $16C (Mirudraas) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules16C::
+BreedSpeciesRules_Mirudraas_16C::
     dw MONSTER_ZOMA ; id 0
     dw $ffff ; id 1 end of list
 
 ; list for entry $16E (DeathMore) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules16E::
+BreedSpeciesRules_DeathMore::
     dw MONSTER_ARMORPION ; id 0
     dw MONSTER_TITANIS ; id 1
     dw $ffff ; id 2 end of list
 
 ; list for entry $16F (DeathMore) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
 ; record: partner species or rule code
-BreedSpeciesRules16F::
+BreedSpeciesRules_DeathMore_16F::
     dw MONSTER_DARKMATE ; id 0
     dw MONSTER_POSEIDON ; id 1
     dw MONSTER_MUDOU ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $170 (DeathMore) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules170::
+BreedSpeciesRules_DeathMore_170::
     dw MONSTER_GRANSLIME ; id 0
     dw MONSTER_WATABOU ; id 1
     dw MONSTER_ASURAZOMA ; id 2
     dw $ffff ; id 3 end of list
 
 ; list for entry $172 (Orgodemir) of BreedSpeciesRuleTable; it runs to the next list (E-0199)
-BreedSpeciesRules172::
+BreedSpeciesRules_Orgodemir::
     dw MONSTER_LORDDRACO ; id 0
     dw MONSTER_GIGADRACO ; id 1
     dw $ffff ; id 2 end of list
@@ -4789,138 +4788,138 @@ BreedSpeciesRules172::
 ; record: list
 BreedSpeciesResultTable::
     dw BreedSpeciesResults000 ; id 0
-    dw BreedSpeciesResults001 ; id 1 DrakSlime
-    dw BreedSpeciesResults002 ; id 2 SpotSlime
-    dw BreedSpeciesResults003 ; id 3 WingSlime
-    dw BreedSpeciesResults003 ; id 4 TreeSlime
-    dw BreedSpeciesResults003 ; id 5 Snaily
-    dw BreedSpeciesResults003 ; id 6 SlimeNite
-    dw BreedSpeciesResults007 ; id 7 Babble
-    dw BreedSpeciesResults007 ; id 8 BoxSlime
-    dw BreedSpeciesResults007 ; id 9 PearlGel
-    dw BreedSpeciesResults007 ; id 10 Slime
-    dw BreedSpeciesResults00B ; id 11 Healer
-    dw BreedSpeciesResults00C ; id 12 FangSlime
-    dw BreedSpeciesResults00C ; id 13 RockSlime
-    dw BreedSpeciesResults00E ; id 14 SlimeBorg
-    dw BreedSpeciesResults00E ; id 15 Slabbit
-    dw BreedSpeciesResults00E ; id 16 KingSlime
-    dw BreedSpeciesResults011 ; id 17 Metaly
-    dw BreedSpeciesResults012 ; id 18 Metabble
-    dw BreedSpeciesResults013 ; id 19 SpotKing
-    dw BreedSpeciesResults014 ; id 20 TropicGel
-    dw BreedSpeciesResults014 ; id 21 MimeSlime
-    dw BreedSpeciesResults016 ; id 22 HaloSlime
-    dw BreedSpeciesResults016 ; id 23 MetalKing
-    dw BreedSpeciesResults018 ; id 24 GoldSlime
-    dw BreedSpeciesResults019 ; id 25 GranSlime
-    dw BreedSpeciesResults019 ; id 26 WonderEgg
-    dw BreedSpeciesResults01B ; id 27 Butch
-    dw BreedSpeciesResults01B ; id 28 ?
-    dw BreedSpeciesResults01B ; id 29 ?
-    dw BreedSpeciesResults01B ; id 30 ?
-    dw BreedSpeciesResults01B ; id 31 ?
-    dw BreedSpeciesResults01B ; id 32 ?
-    dw BreedSpeciesResults01B ; id 33 ?
-    dw BreedSpeciesResults01B ; id 34 ?
-    dw BreedSpeciesResults01B ; id 35 ?
-    dw BreedSpeciesResults01B ; id 36 DragonKid
-    dw BreedSpeciesResults025 ; id 37 Tortragon
-    dw BreedSpeciesResults025 ; id 38 Pteranod
-    dw BreedSpeciesResults027 ; id 39 Gasgon
-    dw BreedSpeciesResults028 ; id 40 FairyDrak
-    dw BreedSpeciesResults028 ; id 41 LizardMan
-    dw BreedSpeciesResults02A ; id 42 Poisongon
-    dw BreedSpeciesResults02A ; id 43 Swordgon
-    dw BreedSpeciesResults02A ; id 44 Drygon
-    dw BreedSpeciesResults02A ; id 45 Dragon
-    dw BreedSpeciesResults02E ; id 46 MiniDrak
-    dw BreedSpeciesResults02E ; id 47 MadDragon
-    dw BreedSpeciesResults030 ; id 48 Rayburn
-    dw BreedSpeciesResults030 ; id 49 Chamelgon
-    dw BreedSpeciesResults030 ; id 50 LizardFly
-    dw BreedSpeciesResults030 ; id 51 Andreal
-    dw BreedSpeciesResults034 ; id 52 KingCobra
-    dw BreedSpeciesResults035 ; id 53 Vampirus
-    dw BreedSpeciesResults036 ; id 54 SnakeBat
-    dw BreedSpeciesResults036 ; id 55 Spikerous
-    dw BreedSpeciesResults036 ; id 56 GreatDrak
-    dw BreedSpeciesResults039 ; id 57 Crestpent
-    dw BreedSpeciesResults03A ; id 58 WingSnake
-    dw BreedSpeciesResults03B ; id 59 Coatol
-    dw BreedSpeciesResults03B ; id 60 Orochi
-    dw BreedSpeciesResults03B ; id 61 BattleRex
-    dw BreedSpeciesResults03E ; id 62 SkyDragon
-    dw BreedSpeciesResults03F ; id 63 Serpentia
-    dw BreedSpeciesResults03F ; id 64 Divinegon
-    dw BreedSpeciesResults041 ; id 65 Orligon
-    dw BreedSpeciesResults041 ; id 66 GigaDraco
-    dw BreedSpeciesResults041 ; id 67 ?
-    dw BreedSpeciesResults041 ; id 68 ?
-    dw BreedSpeciesResults041 ; id 69 ?
-    dw BreedSpeciesResults041 ; id 70 ?
-    dw BreedSpeciesResults041 ; id 71 Tonguella
-    dw BreedSpeciesResults048 ; id 72 Almiraj
-    dw BreedSpeciesResults049 ; id 73 CatFly
-    dw BreedSpeciesResults04A ; id 74 PillowRat
-    dw BreedSpeciesResults04A ; id 75 Saccer
-    dw BreedSpeciesResults04A ; id 76 GulpBeast
-    dw BreedSpeciesResults04D ; id 77 Skullroo
-    dw BreedSpeciesResults04D ; id 78 WindBeast
-    dw BreedSpeciesResults04D ; id 79 Beavern
-    dw BreedSpeciesResults04D ; id 80 Antbear
-    dw BreedSpeciesResults04D ; id 81 SuperTen
-    dw BreedSpeciesResults052 ; id 82 IronTurt
-    dw BreedSpeciesResults053 ; id 83 Mommonja
-    dw BreedSpeciesResults053 ; id 84 HammerMan
-    dw BreedSpeciesResults055 ; id 85 Grizzly
-    dw BreedSpeciesResults056 ; id 86 Yeti
-    dw BreedSpeciesResults057 ; id 87 ArrowDog
-    dw BreedSpeciesResults058 ; id 88 NoctoKing
-    dw BreedSpeciesResults059 ; id 89 BeastNite
-    dw BreedSpeciesResults05A ; id 90 MadGopher
-    dw BreedSpeciesResults05B ; id 91 FairyRat
-    dw BreedSpeciesResults05B ; id 92 Unicorn
-    dw BreedSpeciesResults05D ; id 93 Goategon
-    dw BreedSpeciesResults05E ; id 94 WildApe
-    dw BreedSpeciesResults05F ; id 95 Trumpeter
-    dw BreedSpeciesResults060 ; id 96 KingLeo
-    dw BreedSpeciesResults060 ; id 97 DarkHorn
-    dw BreedSpeciesResults062 ; id 98 MadCat
-    dw BreedSpeciesResults063 ; id 99 BigEye
-    dw BreedSpeciesResults063 ; id 100 Gorago
-    dw BreedSpeciesResults063 ; id 101 CatMage
-    dw BreedSpeciesResults066 ; id 102 Dumbira
+    dw BreedSpeciesResults_DrakSlime ; id 1 DrakSlime
+    dw BreedSpeciesResults_SpotSlime ; id 2 SpotSlime
+    dw BreedSpeciesResults_WingSlime ; id 3 WingSlime
+    dw BreedSpeciesResults_WingSlime ; id 4 TreeSlime
+    dw BreedSpeciesResults_WingSlime ; id 5 Snaily
+    dw BreedSpeciesResults_WingSlime ; id 6 SlimeNite
+    dw BreedSpeciesResults_Babble ; id 7 Babble
+    dw BreedSpeciesResults_Babble ; id 8 BoxSlime
+    dw BreedSpeciesResults_Babble ; id 9 PearlGel
+    dw BreedSpeciesResults_Babble ; id 10 Slime
+    dw BreedSpeciesResults_Healer ; id 11 Healer
+    dw BreedSpeciesResults_FangSlime ; id 12 FangSlime
+    dw BreedSpeciesResults_FangSlime ; id 13 RockSlime
+    dw BreedSpeciesResults_SlimeBorg ; id 14 SlimeBorg
+    dw BreedSpeciesResults_SlimeBorg ; id 15 Slabbit
+    dw BreedSpeciesResults_SlimeBorg ; id 16 KingSlime
+    dw BreedSpeciesResults_Metaly ; id 17 Metaly
+    dw BreedSpeciesResults_Metabble ; id 18 Metabble
+    dw BreedSpeciesResults_SpotKing ; id 19 SpotKing
+    dw BreedSpeciesResults_TropicGel ; id 20 TropicGel
+    dw BreedSpeciesResults_TropicGel ; id 21 MimeSlime
+    dw BreedSpeciesResults_HaloSlime ; id 22 HaloSlime
+    dw BreedSpeciesResults_HaloSlime ; id 23 MetalKing
+    dw BreedSpeciesResults_GoldSlime ; id 24 GoldSlime
+    dw BreedSpeciesResults_GranSlime ; id 25 GranSlime
+    dw BreedSpeciesResults_GranSlime ; id 26 WonderEgg
+    dw BreedSpeciesResults_Butch ; id 27 Butch
+    dw BreedSpeciesResults_Butch ; id 28 ?
+    dw BreedSpeciesResults_Butch ; id 29 ?
+    dw BreedSpeciesResults_Butch ; id 30 ?
+    dw BreedSpeciesResults_Butch ; id 31 ?
+    dw BreedSpeciesResults_Butch ; id 32 ?
+    dw BreedSpeciesResults_Butch ; id 33 ?
+    dw BreedSpeciesResults_Butch ; id 34 ?
+    dw BreedSpeciesResults_Butch ; id 35 ?
+    dw BreedSpeciesResults_Butch ; id 36 DragonKid
+    dw BreedSpeciesResults_Tortragon ; id 37 Tortragon
+    dw BreedSpeciesResults_Tortragon ; id 38 Pteranod
+    dw BreedSpeciesResults_Gasgon ; id 39 Gasgon
+    dw BreedSpeciesResults_FairyDrak ; id 40 FairyDrak
+    dw BreedSpeciesResults_FairyDrak ; id 41 LizardMan
+    dw BreedSpeciesResults_Poisongon ; id 42 Poisongon
+    dw BreedSpeciesResults_Poisongon ; id 43 Swordgon
+    dw BreedSpeciesResults_Poisongon ; id 44 Drygon
+    dw BreedSpeciesResults_Poisongon ; id 45 Dragon
+    dw BreedSpeciesResults_MiniDrak ; id 46 MiniDrak
+    dw BreedSpeciesResults_MiniDrak ; id 47 MadDragon
+    dw BreedSpeciesResults_Rayburn ; id 48 Rayburn
+    dw BreedSpeciesResults_Rayburn ; id 49 Chamelgon
+    dw BreedSpeciesResults_Rayburn ; id 50 LizardFly
+    dw BreedSpeciesResults_Rayburn ; id 51 Andreal
+    dw BreedSpeciesResults_KingCobra ; id 52 KingCobra
+    dw BreedSpeciesResults_Vampirus ; id 53 Vampirus
+    dw BreedSpeciesResults_SnakeBat ; id 54 SnakeBat
+    dw BreedSpeciesResults_SnakeBat ; id 55 Spikerous
+    dw BreedSpeciesResults_SnakeBat ; id 56 GreatDrak
+    dw BreedSpeciesResults_Crestpent ; id 57 Crestpent
+    dw BreedSpeciesResults_WingSnake ; id 58 WingSnake
+    dw BreedSpeciesResults_Coatol ; id 59 Coatol
+    dw BreedSpeciesResults_Coatol ; id 60 Orochi
+    dw BreedSpeciesResults_Coatol ; id 61 BattleRex
+    dw BreedSpeciesResults_SkyDragon ; id 62 SkyDragon
+    dw BreedSpeciesResults_Serpentia ; id 63 Serpentia
+    dw BreedSpeciesResults_Serpentia ; id 64 Divinegon
+    dw BreedSpeciesResults_Orligon ; id 65 Orligon
+    dw BreedSpeciesResults_Orligon ; id 66 GigaDraco
+    dw BreedSpeciesResults_Orligon ; id 67 ?
+    dw BreedSpeciesResults_Orligon ; id 68 ?
+    dw BreedSpeciesResults_Orligon ; id 69 ?
+    dw BreedSpeciesResults_Orligon ; id 70 ?
+    dw BreedSpeciesResults_Orligon ; id 71 Tonguella
+    dw BreedSpeciesResults_Almiraj ; id 72 Almiraj
+    dw BreedSpeciesResults_CatFly ; id 73 CatFly
+    dw BreedSpeciesResults_PillowRat ; id 74 PillowRat
+    dw BreedSpeciesResults_PillowRat ; id 75 Saccer
+    dw BreedSpeciesResults_PillowRat ; id 76 GulpBeast
+    dw BreedSpeciesResults_Skullroo ; id 77 Skullroo
+    dw BreedSpeciesResults_Skullroo ; id 78 WindBeast
+    dw BreedSpeciesResults_Skullroo ; id 79 Beavern
+    dw BreedSpeciesResults_Skullroo ; id 80 Antbear
+    dw BreedSpeciesResults_Skullroo ; id 81 SuperTen
+    dw BreedSpeciesResults_IronTurt ; id 82 IronTurt
+    dw BreedSpeciesResults_Mommonja ; id 83 Mommonja
+    dw BreedSpeciesResults_Mommonja ; id 84 HammerMan
+    dw BreedSpeciesResults_Grizzly ; id 85 Grizzly
+    dw BreedSpeciesResults_Yeti ; id 86 Yeti
+    dw BreedSpeciesResults_ArrowDog ; id 87 ArrowDog
+    dw BreedSpeciesResults_NoctoKing ; id 88 NoctoKing
+    dw BreedSpeciesResults_BeastNite ; id 89 BeastNite
+    dw BreedSpeciesResults_MadGopher ; id 90 MadGopher
+    dw BreedSpeciesResults_FairyRat ; id 91 FairyRat
+    dw BreedSpeciesResults_FairyRat ; id 92 Unicorn
+    dw BreedSpeciesResults_Goategon ; id 93 Goategon
+    dw BreedSpeciesResults_WildApe ; id 94 WildApe
+    dw BreedSpeciesResults_Trumpeter ; id 95 Trumpeter
+    dw BreedSpeciesResults_KingLeo ; id 96 KingLeo
+    dw BreedSpeciesResults_KingLeo ; id 97 DarkHorn
+    dw BreedSpeciesResults_MadCat ; id 98 MadCat
+    dw BreedSpeciesResults_BigEye ; id 99 BigEye
+    dw BreedSpeciesResults_BigEye ; id 100 Gorago
+    dw BreedSpeciesResults_BigEye ; id 101 CatMage
+    dw BreedSpeciesResults_Dumbira ; id 102 Dumbira
     dw BreedSpeciesResults067 ; id 103 ?
     dw BreedSpeciesResults067 ; id 104 ?
     dw BreedSpeciesResults067 ; id 105 ?
     dw BreedSpeciesResults067 ; id 106 Picky
     dw BreedSpeciesResults067 ; id 107 Wyvern
     dw BreedSpeciesResults067 ; id 108 BullBird
-    dw BreedSpeciesResults06D ; id 109 Florajay
-    dw BreedSpeciesResults06D ; id 110 DuckKite
-    dw BreedSpeciesResults06D ; id 111 MadPecker
-    dw BreedSpeciesResults070 ; id 112 MadRaven
-    dw BreedSpeciesResults070 ; id 113 MistyWing
-    dw BreedSpeciesResults070 ; id 114 AquaHawk
-    dw BreedSpeciesResults073 ; id 115 Dracky
-    dw BreedSpeciesResults073 ; id 116 KiteHawk
-    dw BreedSpeciesResults075 ; id 117 BigRoost
-    dw BreedSpeciesResults075 ; id 118 StubBird
-    dw BreedSpeciesResults075 ; id 119 LandOwl
-    dw BreedSpeciesResults078 ; id 120 MadGoose
-    dw BreedSpeciesResults079 ; id 121 MadCondor
-    dw BreedSpeciesResults07A ; id 122 Emyu
-    dw BreedSpeciesResults07A ; id 123 Blizzardy
-    dw BreedSpeciesResults07C ; id 124 Phoenix
-    dw BreedSpeciesResults07D ; id 125 ZapBird
-    dw BreedSpeciesResults07E ; id 126 Garudian
-    dw BreedSpeciesResults07F ; id 127 WhipBird
-    dw BreedSpeciesResults080 ; id 128 FunkyBird
-    dw BreedSpeciesResults081 ; id 129 RainHawk
-    dw BreedSpeciesResults082 ; id 130 Azurile
-    dw BreedSpeciesResults082 ; id 131 Shantak
-    dw BreedSpeciesResults084 ; id 132 CragDevil
+    dw BreedSpeciesResults_Florajay ; id 109 Florajay
+    dw BreedSpeciesResults_Florajay ; id 110 DuckKite
+    dw BreedSpeciesResults_Florajay ; id 111 MadPecker
+    dw BreedSpeciesResults_MadRaven ; id 112 MadRaven
+    dw BreedSpeciesResults_MadRaven ; id 113 MistyWing
+    dw BreedSpeciesResults_MadRaven ; id 114 AquaHawk
+    dw BreedSpeciesResults_Dracky ; id 115 Dracky
+    dw BreedSpeciesResults_Dracky ; id 116 KiteHawk
+    dw BreedSpeciesResults_BigRoost ; id 117 BigRoost
+    dw BreedSpeciesResults_BigRoost ; id 118 StubBird
+    dw BreedSpeciesResults_BigRoost ; id 119 LandOwl
+    dw BreedSpeciesResults_MadGoose ; id 120 MadGoose
+    dw BreedSpeciesResults_MadCondor ; id 121 MadCondor
+    dw BreedSpeciesResults_Emyu ; id 122 Emyu
+    dw BreedSpeciesResults_Emyu ; id 123 Blizzardy
+    dw BreedSpeciesResults_Phoenix ; id 124 Phoenix
+    dw BreedSpeciesResults_ZapBird ; id 125 ZapBird
+    dw BreedSpeciesResults_Garudian ; id 126 Garudian
+    dw BreedSpeciesResults_WhipBird ; id 127 WhipBird
+    dw BreedSpeciesResults_FunkyBird ; id 128 FunkyBird
+    dw BreedSpeciesResults_RainHawk ; id 129 RainHawk
+    dw BreedSpeciesResults_Azurile ; id 130 Azurile
+    dw BreedSpeciesResults_Azurile ; id 131 Shantak
+    dw BreedSpeciesResults_CragDevil ; id 132 CragDevil
     dw BreedSpeciesResults085 ; id 133 ?
     dw BreedSpeciesResults085 ; id 134 ?
     dw BreedSpeciesResults085 ; id 135 ?
@@ -4939,23 +4938,23 @@ BreedSpeciesResultTable::
     dw BreedSpeciesResults085 ; id 148 AmberWeed
     dw BreedSpeciesResults085 ; id 149 Slurperon
     dw BreedSpeciesResults085 ; id 150 Stubsuck
-    dw BreedSpeciesResults097 ; id 151 Oniono
-    dw BreedSpeciesResults097 ; id 152 DanceVegi
-    dw BreedSpeciesResults097 ; id 153 TreeBoy
-    dw BreedSpeciesResults09A ; id 154 Devipine
-    dw BreedSpeciesResults09A ; id 155 FaceTree
-    dw BreedSpeciesResults09A ; id 156 HerbMan
-    dw BreedSpeciesResults09A ; id 157 BeanMan
-    dw BreedSpeciesResults09A ; id 158 EvilSeed
-    dw BreedSpeciesResults09F ; id 159 ManEater
-    dw BreedSpeciesResults0A0 ; id 160 Snapper
-    dw BreedSpeciesResults0A0 ; id 161 GhosTree
-    dw BreedSpeciesResults0A2 ; id 162 Rosevine
-    dw BreedSpeciesResults0A3 ; id 163 Egdracil
-    dw BreedSpeciesResults0A3 ; id 164 Warubou
-    dw BreedSpeciesResults0A5 ; id 165 Watabou
-    dw BreedSpeciesResults0A5 ; id 166 Eggplaton
-    dw BreedSpeciesResults0A5 ; id 167 FooHero
+    dw BreedSpeciesResults_Oniono ; id 151 Oniono
+    dw BreedSpeciesResults_Oniono ; id 152 DanceVegi
+    dw BreedSpeciesResults_Oniono ; id 153 TreeBoy
+    dw BreedSpeciesResults_Devipine ; id 154 Devipine
+    dw BreedSpeciesResults_Devipine ; id 155 FaceTree
+    dw BreedSpeciesResults_Devipine ; id 156 HerbMan
+    dw BreedSpeciesResults_Devipine ; id 157 BeanMan
+    dw BreedSpeciesResults_Devipine ; id 158 EvilSeed
+    dw BreedSpeciesResults_ManEater ; id 159 ManEater
+    dw BreedSpeciesResults_Snapper ; id 160 Snapper
+    dw BreedSpeciesResults_Snapper ; id 161 GhosTree
+    dw BreedSpeciesResults_Rosevine ; id 162 Rosevine
+    dw BreedSpeciesResults_Egdracil ; id 163 Egdracil
+    dw BreedSpeciesResults_Egdracil ; id 164 Warubou
+    dw BreedSpeciesResults_Watabou ; id 165 Watabou
+    dw BreedSpeciesResults_Watabou ; id 166 Eggplaton
+    dw BreedSpeciesResults_Watabou ; id 167 FooHero
     dw BreedSpeciesResults0A8 ; id 168 ?
     dw BreedSpeciesResults0A8 ; id 169 ?
     dw BreedSpeciesResults0A8 ; id 170 ?
@@ -4966,30 +4965,30 @@ BreedSpeciesResultTable::
     dw BreedSpeciesResults0A8 ; id 175 ?
     dw BreedSpeciesResults0A8 ; id 176 GiantSlug
     dw BreedSpeciesResults0A8 ; id 177 Catapila
-    dw BreedSpeciesResults0B2 ; id 178 Gophecada
-    dw BreedSpeciesResults0B2 ; id 179 Butterfly
-    dw BreedSpeciesResults0B4 ; id 180 WeedBug
-    dw BreedSpeciesResults0B5 ; id 181 GiantWorm
-    dw BreedSpeciesResults0B5 ; id 182 Lipsy
-    dw BreedSpeciesResults0B7 ; id 183 StagBug
-    dw BreedSpeciesResults0B8 ; id 184 Pyuro
-    dw BreedSpeciesResults0B8 ; id 185 ArmyAnt
-    dw BreedSpeciesResults0B8 ; id 186 GoHopper
-    dw BreedSpeciesResults0B8 ; id 187 TailEater
-    dw BreedSpeciesResults0BC ; id 188 ArmorPede
-    dw BreedSpeciesResults0BC ; id 189 Eyeder
-    dw BreedSpeciesResults0BE ; id 190 GiantMoth
-    dw BreedSpeciesResults0BE ; id 191 Droll
-    dw BreedSpeciesResults0BE ; id 192 ArmyCrab
-    dw BreedSpeciesResults0C1 ; id 193 MadHornet
-    dw BreedSpeciesResults0C2 ; id 194 Belzebub
-    dw BreedSpeciesResults0C2 ; id 195 WarMantis
-    dw BreedSpeciesResults0C4 ; id 196 HornBeet
-    dw BreedSpeciesResults0C5 ; id 197 Sickler
-    dw BreedSpeciesResults0C5 ; id 198 Armorpion
-    dw BreedSpeciesResults0C7 ; id 199 Digster
-    dw BreedSpeciesResults0C7 ; id 200 Skularach
-    dw BreedSpeciesResults0C7 ; id 201 MultiEyes
+    dw BreedSpeciesResults_Gophecada ; id 178 Gophecada
+    dw BreedSpeciesResults_Gophecada ; id 179 Butterfly
+    dw BreedSpeciesResults_WeedBug ; id 180 WeedBug
+    dw BreedSpeciesResults_GiantWorm ; id 181 GiantWorm
+    dw BreedSpeciesResults_GiantWorm ; id 182 Lipsy
+    dw BreedSpeciesResults_StagBug ; id 183 StagBug
+    dw BreedSpeciesResults_Pyuro ; id 184 Pyuro
+    dw BreedSpeciesResults_Pyuro ; id 185 ArmyAnt
+    dw BreedSpeciesResults_Pyuro ; id 186 GoHopper
+    dw BreedSpeciesResults_Pyuro ; id 187 TailEater
+    dw BreedSpeciesResults_ArmorPede ; id 188 ArmorPede
+    dw BreedSpeciesResults_ArmorPede ; id 189 Eyeder
+    dw BreedSpeciesResults_GiantMoth ; id 190 GiantMoth
+    dw BreedSpeciesResults_GiantMoth ; id 191 Droll
+    dw BreedSpeciesResults_GiantMoth ; id 192 ArmyCrab
+    dw BreedSpeciesResults_MadHornet ; id 193 MadHornet
+    dw BreedSpeciesResults_Belzebub ; id 194 Belzebub
+    dw BreedSpeciesResults_Belzebub ; id 195 WarMantis
+    dw BreedSpeciesResults_HornBeet ; id 196 HornBeet
+    dw BreedSpeciesResults_Sickler ; id 197 Sickler
+    dw BreedSpeciesResults_Sickler ; id 198 Armorpion
+    dw BreedSpeciesResults_Digster ; id 199 Digster
+    dw BreedSpeciesResults_Digster ; id 200 Skularach
+    dw BreedSpeciesResults_Digster ; id 201 MultiEyes
     dw BreedSpeciesResults0CA ; id 202 ?
     dw BreedSpeciesResults0CA ; id 203 ?
     dw BreedSpeciesResults0CA ; id 204 ?
@@ -5002,33 +5001,33 @@ BreedSpeciesResultTable::
     dw BreedSpeciesResults0CA ; id 211 Pixy
     dw BreedSpeciesResults0CA ; id 212 MedusaEye
     dw BreedSpeciesResults0CA ; id 213 AgDevil
-    dw BreedSpeciesResults0D6 ; id 214 Demonite
-    dw BreedSpeciesResults0D7 ; id 215 DarkEye
-    dw BreedSpeciesResults0D8 ; id 216 EyeBall
-    dw BreedSpeciesResults0D8 ; id 217 SkulRider
-    dw BreedSpeciesResults0D8 ; id 218 EvilBeast
-    dw BreedSpeciesResults0D8 ; id 219 Bubblemon
-    dw BreedSpeciesResults0DC ; id 220 1EyeClown
-    dw BreedSpeciesResults0DD ; id 221 Gremlin
-    dw BreedSpeciesResults0DE ; id 222 ArcDemon
-    dw BreedSpeciesResults0DF ; id 223 Lionex
-    dw BreedSpeciesResults0E0 ; id 224 GoatHorn
-    dw BreedSpeciesResults0E0 ; id 225 Orc
-    dw BreedSpeciesResults0E0 ; id 226 Ogre
-    dw BreedSpeciesResults0E3 ; id 227 GateGuard
-    dw BreedSpeciesResults0E3 ; id 228 ChopClown
-    dw BreedSpeciesResults0E3 ; id 229 BossTroll
-    dw BreedSpeciesResults0E6 ; id 230 Grendal
-    dw BreedSpeciesResults0E7 ; id 231 Akubar
-    dw BreedSpeciesResults0E8 ; id 232 MadKnight
-    dw BreedSpeciesResults0E8 ; id 233 EvilWell
-    dw BreedSpeciesResults0E8 ; id 234 Gigantes
-    dw BreedSpeciesResults0EB ; id 235 Centasaur
-    dw BreedSpeciesResults0EC ; id 236 EvilArmor
-    dw BreedSpeciesResults0EC ; id 237 Jamirus
-    dw BreedSpeciesResults0EE ; id 238 Durran
-    dw BreedSpeciesResults0EF ; id 239 Titanis
-    dw BreedSpeciesResults0EF ; id 240 LampGenie
+    dw BreedSpeciesResults_Demonite ; id 214 Demonite
+    dw BreedSpeciesResults_DarkEye ; id 215 DarkEye
+    dw BreedSpeciesResults_EyeBall ; id 216 EyeBall
+    dw BreedSpeciesResults_EyeBall ; id 217 SkulRider
+    dw BreedSpeciesResults_EyeBall ; id 218 EvilBeast
+    dw BreedSpeciesResults_EyeBall ; id 219 Bubblemon
+    dw BreedSpeciesResults_1EyeClown ; id 220 1EyeClown
+    dw BreedSpeciesResults_Gremlin ; id 221 Gremlin
+    dw BreedSpeciesResults_ArcDemon ; id 222 ArcDemon
+    dw BreedSpeciesResults_Lionex ; id 223 Lionex
+    dw BreedSpeciesResults_GoatHorn ; id 224 GoatHorn
+    dw BreedSpeciesResults_GoatHorn ; id 225 Orc
+    dw BreedSpeciesResults_GoatHorn ; id 226 Ogre
+    dw BreedSpeciesResults_GateGuard ; id 227 GateGuard
+    dw BreedSpeciesResults_GateGuard ; id 228 ChopClown
+    dw BreedSpeciesResults_GateGuard ; id 229 BossTroll
+    dw BreedSpeciesResults_Grendal ; id 230 Grendal
+    dw BreedSpeciesResults_Akubar ; id 231 Akubar
+    dw BreedSpeciesResults_MadKnight ; id 232 MadKnight
+    dw BreedSpeciesResults_MadKnight ; id 233 EvilWell
+    dw BreedSpeciesResults_MadKnight ; id 234 Gigantes
+    dw BreedSpeciesResults_Centasaur ; id 235 Centasaur
+    dw BreedSpeciesResults_EvilArmor ; id 236 EvilArmor
+    dw BreedSpeciesResults_EvilArmor ; id 237 Jamirus
+    dw BreedSpeciesResults_Durran ; id 238 Durran
+    dw BreedSpeciesResults_Titanis ; id 239 Titanis
+    dw BreedSpeciesResults_Titanis ; id 240 LampGenie
     dw BreedSpeciesResults0F1 ; id 241 ?
     dw BreedSpeciesResults0F1 ; id 242 ?
     dw BreedSpeciesResults0F1 ; id 243 ?
@@ -5036,31 +5035,31 @@ BreedSpeciesResultTable::
     dw BreedSpeciesResults0F1 ; id 245 ?
     dw BreedSpeciesResults0F1 ; id 246 Spooky
     dw BreedSpeciesResults0F1 ; id 247 Skullgon
-    dw BreedSpeciesResults0F8 ; id 248 PutrePup
-    dw BreedSpeciesResults0F9 ; id 249 RotRaven
-    dw BreedSpeciesResults0F9 ; id 250 Mummy
-    dw BreedSpeciesResults0FB ; id 251 DarkCrab
-    dw BreedSpeciesResults0FB ; id 252 DeadNite
-    dw BreedSpeciesResults0FD ; id 253 Shadow
-    dw BreedSpeciesResults0FD ; id 254 Skulpent
-    dw BreedSpeciesResults0FD ; id 255 Hork
-    dw BreedSpeciesResults100 ; id 256 Mudron
-    dw BreedSpeciesResults101 ; id 257 NiteWhip
-    dw BreedSpeciesResults102 ; id 258 WindMerge
-    dw BreedSpeciesResults102 ; id 259 Reaper
-    dw BreedSpeciesResults102 ; id 260 Inverzon
-    dw BreedSpeciesResults102 ; id 261 FoxFire
-    dw BreedSpeciesResults102 ; id 262 CaptDead
-    dw BreedSpeciesResults107 ; id 263 DeadNoble
-    dw BreedSpeciesResults108 ; id 264 WhiteKing
-    dw BreedSpeciesResults109 ; id 265 BoneSlave
-    dw BreedSpeciesResults10A ; id 266 Skeletor
-    dw BreedSpeciesResults10B ; id 267 Servant
-    dw BreedSpeciesResults10C ; id 268 Lazamanus
-    dw BreedSpeciesResults10C ; id 269 Copycat
-    dw BreedSpeciesResults10E ; id 270 MadSpirit
-    dw BreedSpeciesResults10F ; id 271 PomPomBom
-    dw BreedSpeciesResults10F ; id 272 Niterich
+    dw BreedSpeciesResults_PutrePup ; id 248 PutrePup
+    dw BreedSpeciesResults_RotRaven ; id 249 RotRaven
+    dw BreedSpeciesResults_RotRaven ; id 250 Mummy
+    dw BreedSpeciesResults_DarkCrab ; id 251 DarkCrab
+    dw BreedSpeciesResults_DarkCrab ; id 252 DeadNite
+    dw BreedSpeciesResults_Shadow ; id 253 Shadow
+    dw BreedSpeciesResults_Shadow ; id 254 Skulpent
+    dw BreedSpeciesResults_Shadow ; id 255 Hork
+    dw BreedSpeciesResults_Mudron ; id 256 Mudron
+    dw BreedSpeciesResults_NiteWhip ; id 257 NiteWhip
+    dw BreedSpeciesResults_WindMerge ; id 258 WindMerge
+    dw BreedSpeciesResults_WindMerge ; id 259 Reaper
+    dw BreedSpeciesResults_WindMerge ; id 260 Inverzon
+    dw BreedSpeciesResults_WindMerge ; id 261 FoxFire
+    dw BreedSpeciesResults_WindMerge ; id 262 CaptDead
+    dw BreedSpeciesResults_DeadNoble ; id 263 DeadNoble
+    dw BreedSpeciesResults_WhiteKing ; id 264 WhiteKing
+    dw BreedSpeciesResults_BoneSlave ; id 265 BoneSlave
+    dw BreedSpeciesResults_Skeletor ; id 266 Skeletor
+    dw BreedSpeciesResults_Servant ; id 267 Servant
+    dw BreedSpeciesResults_Lazamanus ; id 268 Lazamanus
+    dw BreedSpeciesResults_Lazamanus ; id 269 Copycat
+    dw BreedSpeciesResults_MadSpirit ; id 270 MadSpirit
+    dw BreedSpeciesResults_PomPomBom ; id 271 PomPomBom
+    dw BreedSpeciesResults_PomPomBom ; id 272 Niterich
     dw BreedSpeciesResults111 ; id 273 ?
     dw BreedSpeciesResults111 ; id 274 ?
     dw BreedSpeciesResults111 ; id 275 ?
@@ -5071,94 +5070,94 @@ BreedSpeciesResultTable::
     dw BreedSpeciesResults111 ; id 280 ?
     dw BreedSpeciesResults111 ; id 281 JewelBag
     dw BreedSpeciesResults111 ; id 282 EvilWand
-    dw BreedSpeciesResults11B ; id 283 MadCandle
-    dw BreedSpeciesResults11C ; id 284 CoilBird
-    dw BreedSpeciesResults11C ; id 285 Facer
-    dw BreedSpeciesResults11C ; id 286 SpikyBoy
-    dw BreedSpeciesResults11F ; id 287 MadMirror
-    dw BreedSpeciesResults120 ; id 288 RogueNite
-    dw BreedSpeciesResults120 ; id 289 Puppetor
-    dw BreedSpeciesResults122 ; id 290 Goopi
-    dw BreedSpeciesResults123 ; id 291 Voodoll
-    dw BreedSpeciesResults124 ; id 292 MetalDrak
-    dw BreedSpeciesResults125 ; id 293 Balzak
-    dw BreedSpeciesResults125 ; id 294 SabreMan
-    dw BreedSpeciesResults127 ; id 295 CurseLamp
-    dw BreedSpeciesResults128 ; id 296 Brushead
-    dw BreedSpeciesResults128 ; id 297 Roboster
-    dw BreedSpeciesResults12A ; id 298 Roboster2
-    dw BreedSpeciesResults12B ; id 299 EvilPot
-    dw BreedSpeciesResults12C ; id 300 Gismo
-    dw BreedSpeciesResults12D ; id 301 LavaMan
-    dw BreedSpeciesResults12E ; id 302 IceMan
-    dw BreedSpeciesResults12F ; id 303 Mimic
-    dw BreedSpeciesResults130 ; id 304 Exaucers
-    dw BreedSpeciesResults130 ; id 305 MudDoll
-    dw BreedSpeciesResults132 ; id 306 Golem
-    dw BreedSpeciesResults133 ; id 307 StoneMan
-    dw BreedSpeciesResults134 ; id 308 BombCrag
-    dw BreedSpeciesResults134 ; id 309 GoldGolem
-    dw BreedSpeciesResults136 ; id 310 DarkMate
-    dw BreedSpeciesResults136 ; id 311 ProtoMech
-    dw BreedSpeciesResults136 ; id 312 CloudKing
-    dw BreedSpeciesResults136 ; id 313 ?
-    dw BreedSpeciesResults136 ; id 314 ?
-    dw BreedSpeciesResults136 ; id 315 ?
-    dw BreedSpeciesResults136 ; id 316 Petiteel
-    dw BreedSpeciesResults136 ; id 317 Moray
-    dw BreedSpeciesResults136 ; id 318 WalrusMan
-    dw BreedSpeciesResults136 ; id 319 RayGigas
-    dw BreedSpeciesResults136 ; id 320 Anemon
-    dw BreedSpeciesResults136 ; id 321 Aquarella
-    dw BreedSpeciesResults142 ; id 322 Merman
-    dw BreedSpeciesResults143 ; id 323 Octokid
-    dw BreedSpeciesResults143 ; id 324 PutreFish
-    dw BreedSpeciesResults143 ; id 325 Octoreach
-    dw BreedSpeciesResults146 ; id 326 Angleron
-    dw BreedSpeciesResults147 ; id 327 FishRider
-    dw BreedSpeciesResults147 ; id 328 RushFish
-    dw BreedSpeciesResults149 ; id 329 Gamanian
-    dw BreedSpeciesResults14A ; id 330 Clawster
-    dw BreedSpeciesResults14B ; id 331 CancerMan
-    dw BreedSpeciesResults14C ; id 332 RogueWave
-    dw BreedSpeciesResults14D ; id 333 Scallopa
-    dw BreedSpeciesResults14D ; id 334 SeaHorse
-    dw BreedSpeciesResults14D ; id 335 HoodSquid
-    dw BreedSpeciesResults150 ; id 336 MerTiger
-    dw BreedSpeciesResults151 ; id 337 AxeShark
-    dw BreedSpeciesResults151 ; id 338 Octogon
-    dw BreedSpeciesResults153 ; id 339 KingSquid
-    dw BreedSpeciesResults153 ; id 340 Digong
-    dw BreedSpeciesResults155 ; id 341 WhaleMage
-    dw BreedSpeciesResults155 ; id 342 Aquadon
-    dw BreedSpeciesResults155 ; id 343 Octoraid
-    dw BreedSpeciesResults155 ; id 344 Grakos
-    dw BreedSpeciesResults159 ; id 345 Poseidon
-    dw BreedSpeciesResults159 ; id 346 Pumpoise
-    dw BreedSpeciesResults159 ; id 347 Starfish
-    dw BreedSpeciesResults159 ; id 348 ?
-    dw BreedSpeciesResults159 ; id 349 ?
-    dw BreedSpeciesResults159 ; id 350 ?
-    dw BreedSpeciesResults159 ; id 351 DracoLord
-    dw BreedSpeciesResults160 ; id 352 DracoLord
-    dw BreedSpeciesResults161 ; id 353 LordDraco
-    dw BreedSpeciesResults161 ; id 354 Hargon
-    dw BreedSpeciesResults163 ; id 355 Sidoh
-    dw BreedSpeciesResults164 ; id 356 Genosidoh
-    dw BreedSpeciesResults164 ; id 357 Baramos
-    dw BreedSpeciesResults166 ; id 358 Zoma
-    dw BreedSpeciesResults167 ; id 359 AsuraZoma
-    dw BreedSpeciesResults167 ; id 360 Pizzaro
-    dw BreedSpeciesResults169 ; id 361 PsychoPiz
-    dw BreedSpeciesResults16A ; id 362 Esterk
-    dw BreedSpeciesResults16B ; id 363 Mirudraas
-    dw BreedSpeciesResults16C ; id 364 Mirudraas
-    dw BreedSpeciesResults16D ; id 365 Mudou
-    dw BreedSpeciesResults16D ; id 366 DeathMore
-    dw BreedSpeciesResults16F ; id 367 DeathMore
-    dw BreedSpeciesResults170 ; id 368 DeathMore
-    dw BreedSpeciesResults171 ; id 369 Darkdrium
-    dw BreedSpeciesResults171 ; id 370 Orgodemir
+    dw BreedSpeciesResults_MadCandle ; id 283 MadCandle
+    dw BreedSpeciesResults_CoilBird ; id 284 CoilBird
+    dw BreedSpeciesResults_CoilBird ; id 285 Facer
+    dw BreedSpeciesResults_CoilBird ; id 286 SpikyBoy
+    dw BreedSpeciesResults_MadMirror ; id 287 MadMirror
+    dw BreedSpeciesResults_RogueNite ; id 288 RogueNite
+    dw BreedSpeciesResults_RogueNite ; id 289 Puppetor
+    dw BreedSpeciesResults_Goopi ; id 290 Goopi
+    dw BreedSpeciesResults_Voodoll ; id 291 Voodoll
+    dw BreedSpeciesResults_MetalDrak ; id 292 MetalDrak
+    dw BreedSpeciesResults_Balzak ; id 293 Balzak
+    dw BreedSpeciesResults_Balzak ; id 294 SabreMan
+    dw BreedSpeciesResults_CurseLamp ; id 295 CurseLamp
+    dw BreedSpeciesResults_Brushead ; id 296 Brushead
+    dw BreedSpeciesResults_Brushead ; id 297 Roboster
+    dw BreedSpeciesResults_Roboster2 ; id 298 Roboster2
+    dw BreedSpeciesResults_EvilPot ; id 299 EvilPot
+    dw BreedSpeciesResults_Gismo ; id 300 Gismo
+    dw BreedSpeciesResults_LavaMan ; id 301 LavaMan
+    dw BreedSpeciesResults_IceMan ; id 302 IceMan
+    dw BreedSpeciesResults_Mimic ; id 303 Mimic
+    dw BreedSpeciesResults_Exaucers ; id 304 Exaucers
+    dw BreedSpeciesResults_Exaucers ; id 305 MudDoll
+    dw BreedSpeciesResults_Golem ; id 306 Golem
+    dw BreedSpeciesResults_StoneMan ; id 307 StoneMan
+    dw BreedSpeciesResults_BombCrag ; id 308 BombCrag
+    dw BreedSpeciesResults_BombCrag ; id 309 GoldGolem
+    dw BreedSpeciesResults_DarkMate ; id 310 DarkMate
+    dw BreedSpeciesResults_DarkMate ; id 311 ProtoMech
+    dw BreedSpeciesResults_DarkMate ; id 312 CloudKing
+    dw BreedSpeciesResults_DarkMate ; id 313 ?
+    dw BreedSpeciesResults_DarkMate ; id 314 ?
+    dw BreedSpeciesResults_DarkMate ; id 315 ?
+    dw BreedSpeciesResults_DarkMate ; id 316 Petiteel
+    dw BreedSpeciesResults_DarkMate ; id 317 Moray
+    dw BreedSpeciesResults_DarkMate ; id 318 WalrusMan
+    dw BreedSpeciesResults_DarkMate ; id 319 RayGigas
+    dw BreedSpeciesResults_DarkMate ; id 320 Anemon
+    dw BreedSpeciesResults_DarkMate ; id 321 Aquarella
+    dw BreedSpeciesResults_Merman ; id 322 Merman
+    dw BreedSpeciesResults_Octokid ; id 323 Octokid
+    dw BreedSpeciesResults_Octokid ; id 324 PutreFish
+    dw BreedSpeciesResults_Octokid ; id 325 Octoreach
+    dw BreedSpeciesResults_Angleron ; id 326 Angleron
+    dw BreedSpeciesResults_FishRider ; id 327 FishRider
+    dw BreedSpeciesResults_FishRider ; id 328 RushFish
+    dw BreedSpeciesResults_Gamanian ; id 329 Gamanian
+    dw BreedSpeciesResults_Clawster ; id 330 Clawster
+    dw BreedSpeciesResults_CancerMan ; id 331 CancerMan
+    dw BreedSpeciesResults_RogueWave ; id 332 RogueWave
+    dw BreedSpeciesResults_Scallopa ; id 333 Scallopa
+    dw BreedSpeciesResults_Scallopa ; id 334 SeaHorse
+    dw BreedSpeciesResults_Scallopa ; id 335 HoodSquid
+    dw BreedSpeciesResults_MerTiger ; id 336 MerTiger
+    dw BreedSpeciesResults_AxeShark ; id 337 AxeShark
+    dw BreedSpeciesResults_AxeShark ; id 338 Octogon
+    dw BreedSpeciesResults_KingSquid ; id 339 KingSquid
+    dw BreedSpeciesResults_KingSquid ; id 340 Digong
+    dw BreedSpeciesResults_WhaleMage ; id 341 WhaleMage
+    dw BreedSpeciesResults_WhaleMage ; id 342 Aquadon
+    dw BreedSpeciesResults_WhaleMage ; id 343 Octoraid
+    dw BreedSpeciesResults_WhaleMage ; id 344 Grakos
+    dw BreedSpeciesResults_Poseidon ; id 345 Poseidon
+    dw BreedSpeciesResults_Poseidon ; id 346 Pumpoise
+    dw BreedSpeciesResults_Poseidon ; id 347 Starfish
+    dw BreedSpeciesResults_Poseidon ; id 348 ?
+    dw BreedSpeciesResults_Poseidon ; id 349 ?
+    dw BreedSpeciesResults_Poseidon ; id 350 ?
+    dw BreedSpeciesResults_Poseidon ; id 351 DracoLord
+    dw BreedSpeciesResults_DracoLord_160 ; id 352 DracoLord
+    dw BreedSpeciesResults_LordDraco ; id 353 LordDraco
+    dw BreedSpeciesResults_LordDraco ; id 354 Hargon
+    dw BreedSpeciesResults_Sidoh ; id 355 Sidoh
+    dw BreedSpeciesResults_Genosidoh ; id 356 Genosidoh
+    dw BreedSpeciesResults_Genosidoh ; id 357 Baramos
+    dw BreedSpeciesResults_Zoma ; id 358 Zoma
+    dw BreedSpeciesResults_AsuraZoma ; id 359 AsuraZoma
+    dw BreedSpeciesResults_AsuraZoma ; id 360 Pizzaro
+    dw BreedSpeciesResults_PsychoPiz ; id 361 PsychoPiz
+    dw BreedSpeciesResults_Esterk ; id 362 Esterk
+    dw BreedSpeciesResults_Mirudraas ; id 363 Mirudraas
+    dw BreedSpeciesResults_Mirudraas_16C ; id 364 Mirudraas
+    dw BreedSpeciesResults_Mudou ; id 365 Mudou
+    dw BreedSpeciesResults_Mudou ; id 366 DeathMore
+    dw BreedSpeciesResults_DeathMore_16F ; id 367 DeathMore
+    dw BreedSpeciesResults_DeathMore_170 ; id 368 DeathMore
+    dw BreedSpeciesResults_Darkdrium ; id 369 Darkdrium
+    dw BreedSpeciesResults_Darkdrium ; id 370 Orgodemir
     dw BreedFamilyRuleTable ; id 371 Orgodemir
     dw BreedFamilyRuleTable ; id 372 Darck
     dw BreedFamilyRuleTable ; id 373 Tatsu
@@ -5179,257 +5178,257 @@ BreedSpeciesResults000::
     dw $ffff ; id 0
 
 ; list for entry $01 (DrakSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults001::
+BreedSpeciesResults_DrakSlime::
     dw MONSTER_SLIMEBORG ; id 0
 
 ; list for entry $02 (SpotSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults002::
+BreedSpeciesResults_SpotSlime::
     dw MONSTER_SPOTKING ; id 0
 
 ; list for entry $03 (WingSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults003::
+BreedSpeciesResults_WingSlime::
     dw MONSTER_SLIMEBORG ; id 0
 
 ; list for entry $07 (Babble) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults007::
+BreedSpeciesResults_Babble::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_TROPICGEL ; id 1
     dw MONSTER_HALOSLIME ; id 2
     dw MONSTER_WONDEREGG ; id 3
 
 ; list for entry $0B (Healer) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults00B::
+BreedSpeciesResults_Healer::
     dw MONSTER_MIMESLIME ; id 0
 
 ; list for entry $0C (FangSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults00C::
+BreedSpeciesResults_FangSlime::
     dw MONSTER_SLIMEBORG ; id 0
 
 ; list for entry $0E (SlimeBorg) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults00E::
+BreedSpeciesResults_SlimeBorg::
     dw MONSTER_SPOTKING ; id 0
     dw MONSTER_METALKING ; id 1
     dw MONSTER_GOLDSLIME ; id 2
 
 ; list for entry $11 (Metaly) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults011::
+BreedSpeciesResults_Metaly::
     dw MONSTER_METABBLE ; id 0
 
 ; list for entry $12 (Metabble) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults012::
+BreedSpeciesResults_Metabble::
     dw MONSTER_SLIMEBORG ; id 0
     dw MONSTER_METALKING ; id 1
 
 ; list for entry $13 (SpotKing) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults013::
+BreedSpeciesResults_SpotKing::
     dw MONSTER_KINGSLIME ; id 0
     dw MONSTER_METALKING ; id 1
     dw MONSTER_GOLDSLIME ; id 2
 
 ; list for entry $14 (TropicGel) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults014::
+BreedSpeciesResults_TropicGel::
     dw MONSTER_HALOSLIME ; id 0
 
 ; list for entry $16 (HaloSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults016::
+BreedSpeciesResults_HaloSlime::
     dw MONSTER_SPOTKING ; id 0
     dw MONSTER_GOLDSLIME ; id 1
 
 ; list for entry $18 (GoldSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults018::
+BreedSpeciesResults_GoldSlime::
     dw MONSTER_GRANSLIME ; id 0
 
 ; list for entry $19 (GranSlime) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults019::
+BreedSpeciesResults_GranSlime::
     dw MONSTER_METALKING ; id 0
     dw MONSTER_GOLDSLIME ; id 1
     dw MONSTER_GRANSLIME ; id 2
 
 ; list for entry $1B (Butch) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults01B::
+BreedSpeciesResults_Butch::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_DRAGON ; id 1
 
 ; list for entry $25 (Tortragon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults025::
+BreedSpeciesResults_Tortragon::
     dw MONSTER_VAMPIRUS ; id 0
     dw MONSTER_COATOL ; id 1
 
 ; list for entry $27 (Gasgon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults027::
+BreedSpeciesResults_Gasgon::
     dw MONSTER_ANDREAL ; id 0
     dw MONSTER_COATOL ; id 1
 
 ; list for entry $28 (FairyDrak) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults028::
+BreedSpeciesResults_FairyDrak::
     dw MONSTER_RAYBURN ; id 0
     dw MONSTER_COATOL ; id 1
 
 ; list for entry $2A (Poisongon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults02A::
+BreedSpeciesResults_Poisongon::
     dw MONSTER_GREATDRAK ; id 0
     dw MONSTER_SKYDRAGON ; id 1
     dw MONSTER_SERPENTIA ; id 2
 
 ; list for entry $2E (MiniDrak) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults02E::
+BreedSpeciesResults_MiniDrak::
     dw MONSTER_ANDREAL ; id 0
 
 ; list for entry $30 (Rayburn) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults030::
+BreedSpeciesResults_Rayburn::
     dw MONSTER_OROCHI ; id 0
     dw MONSTER_GIGADRACO ; id 1
 
 ; list for entry $34 (KingCobra) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults034::
+BreedSpeciesResults_KingCobra::
     dw MONSTER_SNAKEBAT ; id 0
 
 ; list for entry $35 (Vampirus) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults035::
+BreedSpeciesResults_Vampirus::
     dw MONSTER_COATOL ; id 0
     dw MONSTER_VAMPIRUS ; id 1
 
 ; list for entry $36 (SnakeBat) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults036::
+BreedSpeciesResults_SnakeBat::
     dw MONSTER_OROCHI ; id 0
     dw MONSTER_SERPENTIA ; id 1
     dw MONSTER_GIGADRACO ; id 2
 
 ; list for entry $39 (Crestpent) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults039::
+BreedSpeciesResults_Crestpent::
     dw MONSTER_WINGSNAKE ; id 0
 
 ; list for entry $3A (WingSnake) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults03A::
+BreedSpeciesResults_WingSnake::
     dw MONSTER_COATOL ; id 0
 
 ; list for entry $3B (Coatol) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults03B::
+BreedSpeciesResults_Coatol::
     dw MONSTER_ANDREAL ; id 0
     dw MONSTER_COATOL ; id 1
     dw MONSTER_GIGADRACO ; id 2
 
 ; list for entry $3E (SkyDragon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults03E::
+BreedSpeciesResults_SkyDragon::
     dw MONSTER_ANDREAL ; id 0
     dw MONSTER_COATOL ; id 1
     dw MONSTER_DIVINEGON ; id 2
     dw MONSTER_GIGADRACO ; id 3
 
 ; list for entry $3F (Serpentia) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults03F::
+BreedSpeciesResults_Serpentia::
     dw MONSTER_ORLIGON ; id 0
 
 ; list for entry $41 (Orligon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults041::
+BreedSpeciesResults_Orligon::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_SUPERTEN ; id 1
     dw MONSTER_TRUMPETER ; id 2
 
 ; list for entry $48 (Almiraj) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults048::
+BreedSpeciesResults_Almiraj::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_UNICORN ; id 1
 
 ; list for entry $49 (CatFly) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults049::
+BreedSpeciesResults_CatFly::
     dw MONSTER_CATMAGE ; id 0
 
 ; list for entry $4A (PillowRat) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults04A::
+BreedSpeciesResults_PillowRat::
     dw MONSTER_SUPERTEN ; id 0
     dw MONSTER_TRUMPETER ; id 1
 
 ; list for entry $4D (Skullroo) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults04D::
+BreedSpeciesResults_Skullroo::
     dw MONSTER_DUMBIRA ; id 0
 
 ; list for entry $52 (IronTurt) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults052::
+BreedSpeciesResults_IronTurt::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_YETI ; id 1
 
 ; list for entry $53 (Mommonja) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults053::
+BreedSpeciesResults_Mommonja::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_DUMBIRA ; id 1
 
 ; list for entry $55 (Grizzly) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults055::
+BreedSpeciesResults_Grizzly::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_TRUMPETER ; id 1
 
 ; list for entry $56 (Yeti) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults056::
+BreedSpeciesResults_Yeti::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_TRUMPETER ; id 1
 
 ; list for entry $57 (ArrowDog) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults057::
+BreedSpeciesResults_ArrowDog::
     dw MONSTER_NOCTOKING ; id 0
     dw MONSTER_MADCAT ; id 1
 
 ; list for entry $58 (NoctoKing) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults058::
+BreedSpeciesResults_NoctoKing::
     dw MONSTER_DUMBIRA ; id 0
 
 ; list for entry $59 (BeastNite) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults059::
+BreedSpeciesResults_BeastNite::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_NOCTOKING ; id 1
 
 ; list for entry $5A (MadGopher) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults05A::
+BreedSpeciesResults_MadGopher::
     dw MONSTER_BEASTNITE ; id 0
 
 ; list for entry $5B (FairyRat) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults05B::
+BreedSpeciesResults_FairyRat::
     dw MONSTER_GULPBEAST ; id 0
 
 ; list for entry $5D (Goategon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults05D::
+BreedSpeciesResults_Goategon::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_YETI ; id 1
 
 ; list for entry $5E (WildApe) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults05E::
+BreedSpeciesResults_WildApe::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_YETI ; id 1
     dw MONSTER_TRUMPETER ; id 2
 
 ; list for entry $5F (Trumpeter) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults05F::
+BreedSpeciesResults_Trumpeter::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_KINGLEO ; id 1
     dw MONSTER_GULPBEAST ; id 2
 
 ; list for entry $60 (KingLeo) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults060::
+BreedSpeciesResults_KingLeo::
     dw MONSTER_GORAGO ; id 0
 
 ; list for entry $62 (MadCat) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults062::
+BreedSpeciesResults_MadCat::
     dw MONSTER_YETI ; id 0
     dw MONSTER_DARKHORN ; id 1
 
 ; list for entry $63 (BigEye) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults063::
+BreedSpeciesResults_BigEye::
     dw MONSTER_MADCAT ; id 0
 
 ; list for entry $66 (Dumbira) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults066::
+BreedSpeciesResults_Dumbira::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_YETI ; id 1
 
@@ -5439,75 +5438,75 @@ BreedSpeciesResults067::
 
 ; list for entry $6D (Florajay) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults06D::
+BreedSpeciesResults_Florajay::
     dw MONSTER_EMYU ; id 0
 
 ; list for entry $70 (MadRaven) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults070::
+BreedSpeciesResults_MadRaven::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_MADCONDOR ; id 1
 
 ; list for entry $73 (Dracky) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults073::
+BreedSpeciesResults_Dracky::
     dw MONSTER_MADCONDOR ; id 0
 
 ; list for entry $75 (BigRoost) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults075::
+BreedSpeciesResults_BigRoost::
     dw MONSTER_WHIPBIRD ; id 0
 
 ; list for entry $78 (MadGoose) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults078::
+BreedSpeciesResults_MadGoose::
     dw MONSTER_WHIPBIRD ; id 0
 
 ; list for entry $79 (MadCondor) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults079::
+BreedSpeciesResults_MadCondor::
     dw MONSTER_EMYU ; id 0
     dw MONSTER_ZAPBIRD ; id 1
     dw MONSTER_WHIPBIRD ; id 2
 
 ; list for entry $7A (Emyu) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults07A::
+BreedSpeciesResults_Emyu::
     dw MONSTER_GARUDIAN ; id 0
     dw MONSTER_WHIPBIRD ; id 1
     dw MONSTER_RAINHAWK ; id 2
 
 ; list for entry $7C (Phoenix) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults07C::
+BreedSpeciesResults_Phoenix::
     dw MONSTER_ZAPBIRD ; id 0
     dw MONSTER_GARUDIAN ; id 1
 
 ; list for entry $7D (ZapBird) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults07D::
+BreedSpeciesResults_ZapBird::
     dw MONSTER_GARUDIAN ; id 0
     dw MONSTER_WHIPBIRD ; id 1
 
 ; list for entry $7E (Garudian) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults07E::
+BreedSpeciesResults_Garudian::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_SHANTAK ; id 1
 
 ; list for entry $7F (WhipBird) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults07F::
+BreedSpeciesResults_WhipBird::
     dw MONSTER_ZAPBIRD ; id 0
     dw MONSTER_SHANTAK ; id 1
 
 ; list for entry $80 (FunkyBird) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults080::
+BreedSpeciesResults_FunkyBird::
     dw MONSTER_GARUDIAN ; id 0
 
 ; list for entry $81 (RainHawk) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults081::
+BreedSpeciesResults_RainHawk::
     dw MONSTER_AZURILE ; id 0
 
 ; list for entry $82 (Azurile) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults082::
+BreedSpeciesResults_Azurile::
     dw MONSTER_AZURILE ; id 0
 
 ; list for entry $84 (CragDevil) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults084::
+BreedSpeciesResults_CragDevil::
     dw MONSTER_MADGOOSE ; id 0
     dw MONSTER_FUNKYBIRD ; id 1
 
@@ -5517,34 +5516,34 @@ BreedSpeciesResults085::
 
 ; list for entry $97 (Oniono) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults097::
+BreedSpeciesResults_Oniono::
     dw MONSTER_FOOHERO ; id 0
 
 ; list for entry $9A (Devipine) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults09A::
+BreedSpeciesResults_Devipine::
     dw MONSTER_MANEATER ; id 0
 
 ; list for entry $9F (ManEater) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults09F::
+BreedSpeciesResults_ManEater::
     dw MONSTER_SNAPPER ; id 0
 
 ; list for entry $A0 (Snapper) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0A0::
+BreedSpeciesResults_Snapper::
     dw MONSTER_STUBSUCK ; id 0
     dw MONSTER_FACETREE ; id 1
 
 ; list for entry $A2 (Rosevine) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0A2::
+BreedSpeciesResults_Rosevine::
     dw MONSTER_EGDRACIL ; id 0
 
 ; list for entry $A3 (Egdracil) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0A3::
+BreedSpeciesResults_Egdracil::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_WATABOU ; id 1
 
 ; list for entry $A5 (Watabou) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0A5::
+BreedSpeciesResults_Watabou::
     dw MONSTER_TREEBOY ; id 0
 
 ; list for entry $A8 (?) of BreedSpeciesResultTable; it runs to the next list (E-0199)
@@ -5553,54 +5552,54 @@ BreedSpeciesResults0A8::
 
 ; list for entry $B2 (Gophecada) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0B2::
+BreedSpeciesResults_Gophecada::
     dw MONSTER_DROLL ; id 0
     dw MONSTER_MADHORNET ; id 1
 
 ; list for entry $B4 (WeedBug) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0B4::
+BreedSpeciesResults_WeedBug::
     dw MONSTER_TAILEATER ; id 0
 
 ; list for entry $B5 (GiantWorm) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0B5::
+BreedSpeciesResults_GiantWorm::
     dw MONSTER_DROLL ; id 0
 
 ; list for entry $B7 (StagBug) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0B7::
+BreedSpeciesResults_StagBug::
     dw MONSTER_HORNBEET ; id 0
 
 ; list for entry $B8 (Pyuro) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0B8::
+BreedSpeciesResults_Pyuro::
     dw MONSTER_DROLL ; id 0
 
 ; list for entry $BC (ArmorPede) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0BC::
+BreedSpeciesResults_ArmorPede::
     dw MONSTER_DROLL ; id 0
 
 ; list for entry $BE (GiantMoth) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0BE::
+BreedSpeciesResults_GiantMoth::
     dw MONSTER_DIGSTER ; id 0
 
 ; list for entry $C1 (MadHornet) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0C1::
+BreedSpeciesResults_MadHornet::
     dw MONSTER_BELZEBUB ; id 0
 
 ; list for entry $C2 (Belzebub) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0C2::
+BreedSpeciesResults_Belzebub::
     dw MONSTER_ARMORPION ; id 0
 
 ; list for entry $C4 (HornBeet) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0C4::
+BreedSpeciesResults_HornBeet::
     dw MONSTER_ARMORPION ; id 0
 
 ; list for entry $C5 (Sickler) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0C5::
+BreedSpeciesResults_Sickler::
     dw MONSTER_SKULARACH ; id 0
 
 ; list for entry $C7 (Digster) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0C7::
+BreedSpeciesResults_Digster::
     dw MONSTER_BELZEBUB ; id 0
     dw MONSTER_ARMORPEDE ; id 1
 
@@ -5612,51 +5611,51 @@ BreedSpeciesResults0CA::
     dw MONSTER_GATEGUARD ; id 2
 
 ; list for entry $D6 (Demonite) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0D6::
+BreedSpeciesResults_Demonite::
     dw MONSTER_GATEGUARD ; id 0
 
 ; list for entry $D7 (DarkEye) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0D7::
+BreedSpeciesResults_DarkEye::
     dw MONSTER_MEDUSAEYE ; id 0
 
 ; list for entry $D8 (EyeBall) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0D8::
+BreedSpeciesResults_EyeBall::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_GATEGUARD ; id 1
     dw MONSTER_EVILWELL ; id 2
 
 ; list for entry $DC (1EyeClown) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0DC::
+BreedSpeciesResults_1EyeClown::
     dw MONSTER_MEDUSAEYE ; id 0
     dw MONSTER_CHOPCLOWN ; id 1
 
 ; list for entry $DD (Gremlin) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0DD::
+BreedSpeciesResults_Gremlin::
     dw MONSTER_MEDUSAEYE ; id 0
 
 ; list for entry $DE (ArcDemon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0DE::
+BreedSpeciesResults_ArcDemon::
     dw MONSTER_LIONEX ; id 0
     dw MONSTER_AKUBAR ; id 1
 
 ; list for entry $DF (Lionex) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0DF::
+BreedSpeciesResults_Lionex::
     dw MONSTER_CHOPCLOWN ; id 0
 
 ; list for entry $E0 (GoatHorn) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0E0::
+BreedSpeciesResults_GoatHorn::
     dw MONSTER_BOSSTROLL ; id 0
     dw MONSTER_EVILWELL ; id 1
 
 ; list for entry $E3 (GateGuard) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0E3::
+BreedSpeciesResults_GateGuard::
     dw MONSTER_EVILWELL ; id 0
     dw MONSTER_LAMPGENIE ; id 1
 
 ; list for entry $E6 (Grendal) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0E6::
+BreedSpeciesResults_Grendal::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_OGRE ; id 1
     dw MONSTER_GATEGUARD ; id 2
@@ -5664,34 +5663,34 @@ BreedSpeciesResults0E6::
     dw MONSTER_CHOPCLOWN ; id 4
 
 ; list for entry $E7 (Akubar) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0E7::
+BreedSpeciesResults_Akubar::
     dw MONSTER_JAMIRUS ; id 0
 
 ; list for entry $E8 (MadKnight) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0E8::
+BreedSpeciesResults_MadKnight::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_OGRE ; id 1
     dw MONSTER_GATEGUARD ; id 2
 
 ; list for entry $EB (Centasaur) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0EB::
+BreedSpeciesResults_Centasaur::
     dw MONSTER_BOSSTROLL ; id 0
     dw MONSTER_DURRAN ; id 1
 
 ; list for entry $EC (EvilArmor) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0EC::
+BreedSpeciesResults_EvilArmor::
     dw MONSTER_DURRAN ; id 0
     dw MONSTER_SIDOH ; id 1
 
 ; list for entry $EE (Durran) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0EE::
+BreedSpeciesResults_Durran::
     dw MONSTER_TITANIS ; id 0
     dw MONSTER_PIZZARO ; id 1
 
 ; list for entry $EF (Titanis) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0EF::
+BreedSpeciesResults_Titanis::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_ARCDEMON ; id 1
 
@@ -5701,61 +5700,61 @@ BreedSpeciesResults0F1::
     dw MONSTER_WHITEKING ; id 1
 
 ; list for entry $F8 (PutrePup) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0F8::
+BreedSpeciesResults_PutrePup::
     dw MONSTER_FOXFIRE ; id 0
 
 ; list for entry $F9 (RotRaven) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0F9::
+BreedSpeciesResults_RotRaven::
     dw MONSTER_BONESLAVE ; id 0
     dw MONSTER_SKELETOR ; id 1
 
 ; list for entry $FB (DarkCrab) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults0FB::
+BreedSpeciesResults_DarkCrab::
     dw MONSTER_DEADNOBLE ; id 0
     dw MONSTER_BONESLAVE ; id 1
     dw MONSTER_SKELETOR ; id 2
     dw MONSTER_CAPTDEAD ; id 3
 
 ; list for entry $FD (Shadow) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults0FD::
+BreedSpeciesResults_Shadow::
     dw MONSTER_INVERZON ; id 0
     dw MONSTER_SKELETOR ; id 1
 
 ; list for entry $100 (Mudron) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults100::
+BreedSpeciesResults_Mudron::
     dw MONSTER_DEADNOBLE ; id 0
     dw MONSTER_SKELETOR ; id 1
 
 ; list for entry $101 (NiteWhip) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults101::
+BreedSpeciesResults_NiteWhip::
     dw MONSTER_CAPTDEAD ; id 0
 
 ; list for entry $102 (WindMerge) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults102::
+BreedSpeciesResults_WindMerge::
     dw MONSTER_DEADNOBLE ; id 0
     dw MONSTER_SKELETOR ; id 1
 
 ; list for entry $107 (DeadNoble) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults107::
+BreedSpeciesResults_DeadNoble::
     dw MONSTER_WHITEKING ; id 0
     dw MONSTER_NITERICH ; id 1
 
 ; list for entry $108 (WhiteKing) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults108::
+BreedSpeciesResults_WhiteKing::
     dw MONSTER_LAZAMANUS ; id 0
     dw MONSTER_HARGON ; id 1
 
 ; list for entry $109 (BoneSlave) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults109::
+BreedSpeciesResults_BoneSlave::
     dw MONSTER_DEADNOBLE ; id 0
     dw MONSTER_WHITEKING ; id 1
     dw MONSTER_SKELETOR ; id 2
 
 ; list for entry $10A (Skeletor) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults10A::
+BreedSpeciesResults_Skeletor::
     dw MONSTER_DEADNOBLE ; id 0
     dw MONSTER_WHITEKING ; id 1
     dw MONSTER_SERVANT ; id 2
@@ -5763,20 +5762,20 @@ BreedSpeciesResults10A::
     dw MONSTER_NITERICH ; id 4
 
 ; list for entry $10B (Servant) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults10B::
+BreedSpeciesResults_Servant::
     dw MONSTER_DRACOLORD ; id 0
 
 ; list for entry $10C (Lazamanus) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults10C::
+BreedSpeciesResults_Lazamanus::
     dw MONSTER_POMPOMBOM ; id 0
 
 ; list for entry $10E (MadSpirit) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults10E::
+BreedSpeciesResults_MadSpirit::
     dw MONSTER_DEADNOBLE ; id 0
 
 ; list for entry $10F (PomPomBom) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults10F::
+BreedSpeciesResults_PomPomBom::
     dw MONSTER_WHITEKING ; id 0
 
 ; list for entry $111 (?) of BreedSpeciesResultTable; it runs to the next list (E-0199)
@@ -5784,48 +5783,48 @@ BreedSpeciesResults111::
     dw MONSTER_SABREMAN ; id 0
 
 ; list for entry $11B (MadCandle) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults11B::
+BreedSpeciesResults_MadCandle::
     dw MONSTER_GISMO ; id 0
 
 ; list for entry $11C (CoilBird) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults11C::
+BreedSpeciesResults_CoilBird::
     dw MONSTER_BOMBCRAG ; id 0
 
 ; list for entry $11F (MadMirror) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults11F::
+BreedSpeciesResults_MadMirror::
     dw MONSTER_GISMO ; id 0
 
 ; list for entry $120 (RogueNite) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults120::
+BreedSpeciesResults_RogueNite::
     dw MONSTER_BRUSHEAD ; id 0
 
 ; list for entry $122 (Goopi) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults122::
+BreedSpeciesResults_Goopi::
     dw MONSTER_GISMO ; id 0
     dw MONSTER_MUDDOLL ; id 1
 
 ; list for entry $123 (Voodoll) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults123::
+BreedSpeciesResults_Voodoll::
     dw MONSTER_SABREMAN ; id 0
 
 ; list for entry $124 (MetalDrak) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults124::
+BreedSpeciesResults_MetalDrak::
     dw MONSTER_LAVAMAN ; id 0
     dw MONSTER_ICEMAN ; id 1
 
 ; list for entry $125 (Balzak) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults125::
+BreedSpeciesResults_Balzak::
     dw MONSTER_ROBOSTER ; id 0
 
 ; list for entry $127 (CurseLamp) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults127::
+BreedSpeciesResults_CurseLamp::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_BALZAK ; id 1
 
 ; list for entry $128 (Brushead) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults128::
+BreedSpeciesResults_Brushead::
     dw MONSTER_METALDRAK ; id 0
     dw MONSTER_ROBOSTER2 ; id 1
     dw MONSTER_ICEMAN ; id 2
@@ -5834,184 +5833,184 @@ BreedSpeciesResults128::
 
 ; list for entry $12A (Roboster2) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults12A::
+BreedSpeciesResults_Roboster2::
     dw MONSTER_METALDRAK ; id 0
     dw MONSTER_ICEMAN ; id 1
 
 ; list for entry $12B (EvilPot) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults12B::
+BreedSpeciesResults_EvilPot::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_BOMBCRAG ; id 1
 
 ; list for entry $12C (Gismo) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults12C::
+BreedSpeciesResults_Gismo::
     dw MONSTER_CLOUDKING ; id 0
 
 ; list for entry $12D (LavaMan) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults12D::
+BreedSpeciesResults_LavaMan::
     dw MONSTER_GOLDGOLEM ; id 0
 
 ; list for entry $12E (IceMan) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults12E::
+BreedSpeciesResults_IceMan::
     dw MONSTER_GOLDGOLEM ; id 0
 
 ; list for entry $12F (Mimic) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults12F::
+BreedSpeciesResults_Mimic::
     dw MONSTER_EVILPOT ; id 0
 
 ; list for entry $130 (Exaucers) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults130::
+BreedSpeciesResults_Exaucers::
     dw MONSTER_GOLEM ; id 0
 
 ; list for entry $132 (Golem) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults132::
+BreedSpeciesResults_Golem::
     dw MONSTER_VOODOLL ; id 0
     dw MONSTER_SABREMAN ; id 1
     dw MONSTER_STONEMAN ; id 2
 
 ; list for entry $133 (StoneMan) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults133::
+BreedSpeciesResults_StoneMan::
     dw MONSTER_VOODOLL ; id 0
     dw MONSTER_METALDRAK ; id 1
     dw MONSTER_SABREMAN ; id 2
 
 ; list for entry $134 (BombCrag) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults134::
+BreedSpeciesResults_BombCrag::
     dw MONSTER_DARKMATE ; id 0
 
 ; list for entry $136 (DarkMate) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults136::
+BreedSpeciesResults_DarkMate::
     dw MONSTER_GAMANIAN ; id 0
 
 ; list for entry $142 (Merman) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults142::
+BreedSpeciesResults_Merman::
     dw MONSTER_MERTIGER ; id 0
     dw MONSTER_EVILPOT ; id 1
 
 ; list for entry $143 (Octokid) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults143::
+BreedSpeciesResults_Octokid::
     dw MONSTER_OCTOGON ; id 0
 
 ; list for entry $146 (Angleron) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults146::
+BreedSpeciesResults_Angleron::
     dw MONSTER_FISHRIDER ; id 0
     dw MONSTER_RUSHFISH ; id 1
 
 ; list for entry $147 (FishRider) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults147::
+BreedSpeciesResults_FishRider::
     dw MONSTER_DIGONG ; id 0
 
 ; list for entry $149 (Gamanian) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults149::
+BreedSpeciesResults_Gamanian::
     dw MONSTER_CLAWSTER ; id 0
 
 ; list for entry $14A (Clawster) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults14A::
+BreedSpeciesResults_Clawster::
     dw MONSTER_CANCERMAN ; id 0
 
 ; list for entry $14B (CancerMan) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults14B::
+BreedSpeciesResults_CancerMan::
     dw MONSTER_HOODSQUID ; id 0
     dw MONSTER_AXESHARK ; id 1
 
 ; list for entry $14C (RogueWave) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults14C::
+BreedSpeciesResults_RogueWave::
     dw MONSTER_SCALLOPA ; id 0
 
 ; list for entry $14D (Scallopa) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults14D::
+BreedSpeciesResults_Scallopa::
     dw MONSTER_WHALEMAGE ; id 0
 
 ; list for entry $150 (MerTiger) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults150::
+BreedSpeciesResults_MerTiger::
     dw MONSTER_DRAKSLIME ; id 0
     dw MONSTER_AXESHARK ; id 1
 
 ; list for entry $151 (AxeShark) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults151::
+BreedSpeciesResults_AxeShark::
     dw MONSTER_OCTORAID ; id 0
     dw MONSTER_KINGSQUID ; id 1
 
 ; list for entry $153 (KingSquid) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults153::
+BreedSpeciesResults_KingSquid::
     dw MONSTER_AQUADON ; id 0
 
 ; list for entry $155 (WhaleMage) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults155::
+BreedSpeciesResults_WhaleMage::
     dw MONSTER_POSEIDON ; id 0
 
 ; list for entry $159 (Poseidon) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults159::
+BreedSpeciesResults_Poseidon::
     dw MONSTER_DRACOLORD_160 ; id 0
     dw MONSTER_ZOMA ; id 1
 
 ; list for entry $160 (DracoLord) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults160::
+BreedSpeciesResults_DracoLord_160::
     dw MONSTER_LORDDRACO ; id 0
     dw MONSTER_ZOMA ; id 1
 
 ; list for entry $161 (LordDraco) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults161::
+BreedSpeciesResults_LordDraco::
     dw MONSTER_BARAMOS ; id 0
 
 ; list for entry $163 (Sidoh) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults163::
+BreedSpeciesResults_Sidoh::
     dw MONSTER_GENOSIDOH ; id 0
 
 ; list for entry $164 (Genosidoh) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults164::
+BreedSpeciesResults_Genosidoh::
     dw MONSTER_MUDOU ; id 0
 
 ; list for entry $166 (Zoma) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults166::
+BreedSpeciesResults_Zoma::
     dw MONSTER_ASURAZOMA ; id 0
     dw MONSTER_DEATHMORE ; id 1
 
 ; list for entry $167 (AsuraZoma) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults167::
+BreedSpeciesResults_AsuraZoma::
     dw MONSTER_PSYCHOPIZ ; id 0
     dw MONSTER_ESTERK ; id 1
 
 ; list for entry $169 (PsychoPiz) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults169::
+BreedSpeciesResults_PsychoPiz::
     dw MONSTER_ORGODEMIR ; id 0
 
 ; list for entry $16A (Esterk) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults16A::
+BreedSpeciesResults_Esterk::
     dw MONSTER_MIRUDRAAS ; id 0
 
 ; list for entry $16B (Mirudraas) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults16B::
+BreedSpeciesResults_Mirudraas::
     dw MONSTER_MIRUDRAAS_16C ; id 0
     dw MONSTER_DEATHMORE ; id 1
 
 ; list for entry $16C (Mirudraas) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults16C::
+BreedSpeciesResults_Mirudraas_16C::
     dw MONSTER_DEATHMORE ; id 0
 
 ; list for entry $16D (Mudou) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults16D::
+BreedSpeciesResults_Mudou::
     dw MONSTER_DEATHMORE_16F ; id 0
 
 ; list for entry $16F (DeathMore) of BreedSpeciesResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedSpeciesResults16F::
+BreedSpeciesResults_DeathMore_16F::
     dw MONSTER_DEATHMORE_170 ; id 0
 
 ; list for entry $170 (DeathMore) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults170::
+BreedSpeciesResults_DeathMore_170::
     dw MONSTER_DARKDRIUM ; id 0
 
 ; list for entry $171 (Darkdrium) of BreedSpeciesResultTable; it runs to the next list (E-0199)
-BreedSpeciesResults171::
+BreedSpeciesResults_Darkdrium::
     dw MONSTER_ORGODEMIR_173 ; id 0
 
 ; stage 2, when stage 1 finds nothing: the byte list at $734E + 2 * parent A's species holds
@@ -6023,14 +6022,14 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 1 DrakSlime
     dw BreedFamilyRules000 ; id 2 SpotSlime
     dw BreedFamilyRules000 ; id 3 WingSlime
-    dw BreedFamilyRules004 ; id 4 TreeSlime
+    dw BreedFamilyRules_TreeSlime ; id 4 TreeSlime
     dw BreedFamilyRules000 ; id 5 Snaily
     dw BreedFamilyRules000 ; id 6 SlimeNite
     dw BreedFamilyRules000 ; id 7 Babble
     dw BreedFamilyRules000 ; id 8 BoxSlime
     dw BreedFamilyRules000 ; id 9 PearlGel
     dw BreedFamilyRules000 ; id 10 Slime
-    dw BreedFamilyRules00B ; id 11 Healer
+    dw BreedFamilyRules_Healer ; id 11 Healer
     dw BreedFamilyRules000 ; id 12 FangSlime
     dw BreedFamilyRules000 ; id 13 RockSlime
     dw BreedFamilyRules000 ; id 14 SlimeBorg
@@ -6040,12 +6039,12 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 18 Metabble
     dw BreedFamilyRules000 ; id 19 SpotKing
     dw BreedFamilyRules000 ; id 20 TropicGel
-    dw BreedFamilyRules015 ; id 21 MimeSlime
+    dw BreedFamilyRules_MimeSlime ; id 21 MimeSlime
     dw BreedFamilyRules000 ; id 22 HaloSlime
     dw BreedFamilyRules000 ; id 23 MetalKing
     dw BreedFamilyRules000 ; id 24 GoldSlime
     dw BreedFamilyRules000 ; id 25 GranSlime
-    dw BreedFamilyRules01A ; id 26 WonderEgg
+    dw BreedFamilyRules_WonderEgg ; id 26 WonderEgg
     dw BreedFamilyRules000 ; id 27 Butch
     dw BreedFamilyRules000 ; id 28 ?
     dw BreedFamilyRules000 ; id 29 ?
@@ -6058,7 +6057,7 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 36 DragonKid
     dw BreedFamilyRules000 ; id 37 Tortragon
     dw BreedFamilyRules000 ; id 38 Pteranod
-    dw BreedFamilyRules027 ; id 39 Gasgon
+    dw BreedFamilyRules_Gasgon ; id 39 Gasgon
     dw BreedFamilyRules000 ; id 40 FairyDrak
     dw BreedFamilyRules000 ; id 41 LizardMan
     dw BreedFamilyRules000 ; id 42 Poisongon
@@ -6090,67 +6089,67 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 68 ?
     dw BreedFamilyRules000 ; id 69 ?
     dw BreedFamilyRules000 ; id 70 ?
-    dw BreedFamilyRules047 ; id 71 Tonguella
-    dw BreedFamilyRules048 ; id 72 Almiraj
-    dw BreedFamilyRules049 ; id 73 CatFly
+    dw BreedFamilyRules_Tonguella ; id 71 Tonguella
+    dw BreedFamilyRules_Almiraj ; id 72 Almiraj
+    dw BreedFamilyRules_CatFly ; id 73 CatFly
     dw BreedFamilyRules000 ; id 74 PillowRat
-    dw BreedFamilyRules04B ; id 75 Saccer
-    dw BreedFamilyRules04C ; id 76 GulpBeast
+    dw BreedFamilyRules_Saccer ; id 75 Saccer
+    dw BreedFamilyRules_GulpBeast ; id 76 GulpBeast
     dw BreedFamilyRules000 ; id 77 Skullroo
     dw BreedFamilyRules000 ; id 78 WindBeast
     dw BreedFamilyRules000 ; id 79 Beavern
     dw BreedFamilyRules000 ; id 80 Antbear
-    dw BreedFamilyRules051 ; id 81 SuperTen
+    dw BreedFamilyRules_SuperTen ; id 81 SuperTen
     dw BreedFamilyRules000 ; id 82 IronTurt
     dw BreedFamilyRules000 ; id 83 Mommonja
     dw BreedFamilyRules000 ; id 84 HammerMan
-    dw BreedFamilyRules055 ; id 85 Grizzly
-    dw BreedFamilyRules056 ; id 86 Yeti
+    dw BreedFamilyRules_Grizzly ; id 85 Grizzly
+    dw BreedFamilyRules_Yeti ; id 86 Yeti
     dw BreedFamilyRules000 ; id 87 ArrowDog
     dw BreedFamilyRules000 ; id 88 NoctoKing
     dw BreedFamilyRules000 ; id 89 BeastNite
     dw BreedFamilyRules000 ; id 90 MadGopher
     dw BreedFamilyRules000 ; id 91 FairyRat
     dw BreedFamilyRules000 ; id 92 Unicorn
-    dw BreedFamilyRules05D ; id 93 Goategon
-    dw BreedFamilyRules05E ; id 94 WildApe
-    dw BreedFamilyRules05F ; id 95 Trumpeter
+    dw BreedFamilyRules_Goategon ; id 93 Goategon
+    dw BreedFamilyRules_WildApe ; id 94 WildApe
+    dw BreedFamilyRules_Trumpeter ; id 95 Trumpeter
     dw BreedFamilyRules000 ; id 96 KingLeo
-    dw BreedFamilyRules061 ; id 97 DarkHorn
+    dw BreedFamilyRules_DarkHorn ; id 97 DarkHorn
     dw BreedFamilyRules000 ; id 98 MadCat
-    dw BreedFamilyRules063 ; id 99 BigEye
+    dw BreedFamilyRules_BigEye ; id 99 BigEye
     dw BreedFamilyRules000 ; id 100 Gorago
-    dw BreedFamilyRules065 ; id 101 CatMage
-    dw BreedFamilyRules066 ; id 102 Dumbira
+    dw BreedFamilyRules_CatMage ; id 101 CatMage
+    dw BreedFamilyRules_Dumbira ; id 102 Dumbira
     dw BreedFamilyRules000 ; id 103 ?
     dw BreedFamilyRules000 ; id 104 ?
     dw BreedFamilyRules000 ; id 105 ?
-    dw BreedFamilyRules06A ; id 106 Picky
-    dw BreedFamilyRules06B ; id 107 Wyvern
-    dw BreedFamilyRules06C ; id 108 BullBird
+    dw BreedFamilyRules_Picky ; id 106 Picky
+    dw BreedFamilyRules_Wyvern ; id 107 Wyvern
+    dw BreedFamilyRules_BullBird ; id 108 BullBird
     dw BreedFamilyRules000 ; id 109 Florajay
-    dw BreedFamilyRules06E ; id 110 DuckKite
+    dw BreedFamilyRules_DuckKite ; id 110 DuckKite
     dw BreedFamilyRules000 ; id 111 MadPecker
     dw BreedFamilyRules000 ; id 112 MadRaven
     dw BreedFamilyRules000 ; id 113 MistyWing
     dw BreedFamilyRules000 ; id 114 AquaHawk
     dw BreedFamilyRules000 ; id 115 Dracky
-    dw BreedFamilyRules074 ; id 116 KiteHawk
-    dw BreedFamilyRules075 ; id 117 BigRoost
+    dw BreedFamilyRules_KiteHawk ; id 116 KiteHawk
+    dw BreedFamilyRules_BigRoost ; id 117 BigRoost
     dw BreedFamilyRules000 ; id 118 StubBird
-    dw BreedFamilyRules077 ; id 119 LandOwl
-    dw BreedFamilyRules078 ; id 120 MadGoose
-    dw BreedFamilyRules079 ; id 121 MadCondor
-    dw BreedFamilyRules07A ; id 122 Emyu
+    dw BreedFamilyRules_LandOwl ; id 119 LandOwl
+    dw BreedFamilyRules_MadGoose ; id 120 MadGoose
+    dw BreedFamilyRules_MadCondor ; id 121 MadCondor
+    dw BreedFamilyRules_Emyu ; id 122 Emyu
     dw BreedFamilyRules000 ; id 123 Blizzardy
-    dw BreedFamilyRules07C ; id 124 Phoenix
+    dw BreedFamilyRules_Phoenix ; id 124 Phoenix
     dw BreedFamilyRules000 ; id 125 ZapBird
-    dw BreedFamilyRules07E ; id 126 Garudian
+    dw BreedFamilyRules_Garudian ; id 126 Garudian
     dw BreedFamilyRules000 ; id 127 WhipBird
     dw BreedFamilyRules000 ; id 128 FunkyBird
-    dw BreedFamilyRules081 ; id 129 RainHawk
+    dw BreedFamilyRules_RainHawk ; id 129 RainHawk
     dw BreedFamilyRules000 ; id 130 Azurile
-    dw BreedFamilyRules083 ; id 131 Shantak
+    dw BreedFamilyRules_Shantak ; id 131 Shantak
     dw BreedFamilyRules000 ; id 132 CragDevil
     dw BreedFamilyRules000 ; id 133 ?
     dw BreedFamilyRules000 ; id 134 ?
@@ -6160,22 +6159,22 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 138 ?
     dw BreedFamilyRules000 ; id 139 ?
     dw BreedFamilyRules000 ; id 140 ?
-    dw BreedFamilyRules08D ; id 141 MadPlant
+    dw BreedFamilyRules_MadPlant ; id 141 MadPlant
     dw BreedFamilyRules000 ; id 142 FireWeed
     dw BreedFamilyRules000 ; id 143 FloraMan
     dw BreedFamilyRules000 ; id 144 WingTree
     dw BreedFamilyRules000 ; id 145 CactiBall
     dw BreedFamilyRules000 ; id 146 Gulpple
     dw BreedFamilyRules000 ; id 147 Toadstool
-    dw BreedFamilyRules094 ; id 148 AmberWeed
+    dw BreedFamilyRules_AmberWeed ; id 148 AmberWeed
     dw BreedFamilyRules000 ; id 149 Slurperon
-    dw BreedFamilyRules096 ; id 150 Stubsuck
+    dw BreedFamilyRules_Stubsuck ; id 150 Stubsuck
     dw BreedFamilyRules000 ; id 151 Oniono
     dw BreedFamilyRules000 ; id 152 DanceVegi
     dw BreedFamilyRules000 ; id 153 TreeBoy
     dw BreedFamilyRules000 ; id 154 Devipine
     dw BreedFamilyRules000 ; id 155 FaceTree
-    dw BreedFamilyRules09C ; id 156 HerbMan
+    dw BreedFamilyRules_HerbMan ; id 156 HerbMan
     dw BreedFamilyRules000 ; id 157 BeanMan
     dw BreedFamilyRules000 ; id 158 EvilSeed
     dw BreedFamilyRules000 ; id 159 ManEater
@@ -6185,7 +6184,7 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 163 Egdracil
     dw BreedFamilyRules000 ; id 164 Warubou
     dw BreedFamilyRules000 ; id 165 Watabou
-    dw BreedFamilyRules0A6 ; id 166 Eggplaton
+    dw BreedFamilyRules_Eggplaton ; id 166 Eggplaton
     dw BreedFamilyRules000 ; id 167 FooHero
     dw BreedFamilyRules000 ; id 168 ?
     dw BreedFamilyRules000 ; id 169 ?
@@ -6195,28 +6194,28 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 173 ?
     dw BreedFamilyRules000 ; id 174 ?
     dw BreedFamilyRules000 ; id 175 ?
-    dw BreedFamilyRules0B0 ; id 176 GiantSlug
+    dw BreedFamilyRules_GiantSlug ; id 176 GiantSlug
     dw BreedFamilyRules000 ; id 177 Catapila
     dw BreedFamilyRules000 ; id 178 Gophecada
-    dw BreedFamilyRules0B3 ; id 179 Butterfly
-    dw BreedFamilyRules0B4 ; id 180 WeedBug
-    dw BreedFamilyRules0B5 ; id 181 GiantWorm
-    dw BreedFamilyRules0B6 ; id 182 Lipsy
+    dw BreedFamilyRules_Butterfly ; id 179 Butterfly
+    dw BreedFamilyRules_WeedBug ; id 180 WeedBug
+    dw BreedFamilyRules_GiantWorm ; id 181 GiantWorm
+    dw BreedFamilyRules_Lipsy ; id 182 Lipsy
     dw BreedFamilyRules000 ; id 183 StagBug
-    dw BreedFamilyRules0B8 ; id 184 Pyuro
+    dw BreedFamilyRules_Pyuro ; id 184 Pyuro
     dw BreedFamilyRules000 ; id 185 ArmyAnt
     dw BreedFamilyRules000 ; id 186 GoHopper
-    dw BreedFamilyRules0BB ; id 187 TailEater
-    dw BreedFamilyRules0BC ; id 188 ArmorPede
-    dw BreedFamilyRules0BD ; id 189 Eyeder
+    dw BreedFamilyRules_TailEater ; id 187 TailEater
+    dw BreedFamilyRules_ArmorPede ; id 188 ArmorPede
+    dw BreedFamilyRules_Eyeder ; id 189 Eyeder
     dw BreedFamilyRules000 ; id 190 GiantMoth
-    dw BreedFamilyRules0BF ; id 191 Droll
+    dw BreedFamilyRules_Droll ; id 191 Droll
     dw BreedFamilyRules000 ; id 192 ArmyCrab
-    dw BreedFamilyRules0C1 ; id 193 MadHornet
+    dw BreedFamilyRules_MadHornet ; id 193 MadHornet
     dw BreedFamilyRules000 ; id 194 Belzebub
-    dw BreedFamilyRules0C3 ; id 195 WarMantis
+    dw BreedFamilyRules_WarMantis ; id 195 WarMantis
     dw BreedFamilyRules000 ; id 196 HornBeet
-    dw BreedFamilyRules0C5 ; id 197 Sickler
+    dw BreedFamilyRules_Sickler ; id 197 Sickler
     dw BreedFamilyRules000 ; id 198 Armorpion
     dw BreedFamilyRules000 ; id 199 Digster
     dw BreedFamilyRules000 ; id 200 Skularach
@@ -6230,31 +6229,31 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 208 ?
     dw BreedFamilyRules000 ; id 209 ?
     dw BreedFamilyRules000 ; id 210 ?
-    dw BreedFamilyRules0D3 ; id 211 Pixy
-    dw BreedFamilyRules0D4 ; id 212 MedusaEye
+    dw BreedFamilyRules_Pixy ; id 211 Pixy
+    dw BreedFamilyRules_MedusaEye ; id 212 MedusaEye
     dw BreedFamilyRules000 ; id 213 AgDevil
-    dw BreedFamilyRules0D6 ; id 214 Demonite
-    dw BreedFamilyRules0D7 ; id 215 DarkEye
-    dw BreedFamilyRules0D8 ; id 216 EyeBall
-    dw BreedFamilyRules0D9 ; id 217 SkulRider
-    dw BreedFamilyRules0DA ; id 218 EvilBeast
+    dw BreedFamilyRules_Demonite ; id 214 Demonite
+    dw BreedFamilyRules_DarkEye ; id 215 DarkEye
+    dw BreedFamilyRules_EyeBall ; id 216 EyeBall
+    dw BreedFamilyRules_SkulRider ; id 217 SkulRider
+    dw BreedFamilyRules_EvilBeast ; id 218 EvilBeast
     dw BreedFamilyRules000 ; id 219 Bubblemon
-    dw BreedFamilyRules0DC ; id 220 1EyeClown
-    dw BreedFamilyRules0DD ; id 221 Gremlin
-    dw BreedFamilyRules0DE ; id 222 ArcDemon
+    dw BreedFamilyRules_1EyeClown ; id 220 1EyeClown
+    dw BreedFamilyRules_Gremlin ; id 221 Gremlin
+    dw BreedFamilyRules_ArcDemon ; id 222 ArcDemon
     dw BreedFamilyRules000 ; id 223 Lionex
-    dw BreedFamilyRules0E0 ; id 224 GoatHorn
+    dw BreedFamilyRules_GoatHorn ; id 224 GoatHorn
     dw BreedFamilyRules000 ; id 225 Orc
-    dw BreedFamilyRules0E2 ; id 226 Ogre
-    dw BreedFamilyRules0E3 ; id 227 GateGuard
+    dw BreedFamilyRules_Ogre ; id 226 Ogre
+    dw BreedFamilyRules_GateGuard ; id 227 GateGuard
     dw BreedFamilyRules000 ; id 228 ChopClown
-    dw BreedFamilyRules0E5 ; id 229 BossTroll
+    dw BreedFamilyRules_BossTroll ; id 229 BossTroll
     dw BreedFamilyRules000 ; id 230 Grendal
     dw BreedFamilyRules000 ; id 231 Akubar
     dw BreedFamilyRules000 ; id 232 MadKnight
     dw BreedFamilyRules000 ; id 233 EvilWell
     dw BreedFamilyRules000 ; id 234 Gigantes
-    dw BreedFamilyRules0EB ; id 235 Centasaur
+    dw BreedFamilyRules_Centasaur ; id 235 Centasaur
     dw BreedFamilyRules000 ; id 236 EvilArmor
     dw BreedFamilyRules000 ; id 237 Jamirus
     dw BreedFamilyRules000 ; id 238 Durran
@@ -6265,32 +6264,32 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 243 ?
     dw BreedFamilyRules000 ; id 244 ?
     dw BreedFamilyRules000 ; id 245 ?
-    dw BreedFamilyRules0F6 ; id 246 Spooky
-    dw BreedFamilyRules0F7 ; id 247 Skullgon
+    dw BreedFamilyRules_Spooky ; id 246 Spooky
+    dw BreedFamilyRules_Skullgon ; id 247 Skullgon
     dw BreedFamilyRules000 ; id 248 PutrePup
-    dw BreedFamilyRules0F9 ; id 249 RotRaven
+    dw BreedFamilyRules_RotRaven ; id 249 RotRaven
     dw BreedFamilyRules000 ; id 250 Mummy
-    dw BreedFamilyRules0FB ; id 251 DarkCrab
-    dw BreedFamilyRules0FC ; id 252 DeadNite
+    dw BreedFamilyRules_DarkCrab ; id 251 DarkCrab
+    dw BreedFamilyRules_DeadNite ; id 252 DeadNite
     dw BreedFamilyRules000 ; id 253 Shadow
-    dw BreedFamilyRules0FE ; id 254 Skulpent
-    dw BreedFamilyRules0FF ; id 255 Hork
-    dw BreedFamilyRules100 ; id 256 Mudron
-    dw BreedFamilyRules101 ; id 257 NiteWhip
+    dw BreedFamilyRules_Skulpent ; id 254 Skulpent
+    dw BreedFamilyRules_Hork ; id 255 Hork
+    dw BreedFamilyRules_Mudron ; id 256 Mudron
+    dw BreedFamilyRules_NiteWhip ; id 257 NiteWhip
     dw BreedFamilyRules000 ; id 258 WindMerge
     dw BreedFamilyRules000 ; id 259 Reaper
     dw BreedFamilyRules000 ; id 260 Inverzon
-    dw BreedFamilyRules105 ; id 261 FoxFire
+    dw BreedFamilyRules_FoxFire ; id 261 FoxFire
     dw BreedFamilyRules000 ; id 262 CaptDead
-    dw BreedFamilyRules107 ; id 263 DeadNoble
-    dw BreedFamilyRules108 ; id 264 WhiteKing
-    dw BreedFamilyRules109 ; id 265 BoneSlave
-    dw BreedFamilyRules10A ; id 266 Skeletor
+    dw BreedFamilyRules_DeadNoble ; id 263 DeadNoble
+    dw BreedFamilyRules_WhiteKing ; id 264 WhiteKing
+    dw BreedFamilyRules_BoneSlave ; id 265 BoneSlave
+    dw BreedFamilyRules_Skeletor ; id 266 Skeletor
     dw BreedFamilyRules000 ; id 267 Servant
     dw BreedFamilyRules000 ; id 268 Lazamanus
     dw BreedFamilyRules000 ; id 269 Copycat
-    dw BreedFamilyRules10E ; id 270 MadSpirit
-    dw BreedFamilyRules10F ; id 271 PomPomBom
+    dw BreedFamilyRules_MadSpirit ; id 270 MadSpirit
+    dw BreedFamilyRules_PomPomBom ; id 271 PomPomBom
     dw BreedFamilyRules000 ; id 272 Niterich
     dw BreedFamilyRules000 ; id 273 ?
     dw BreedFamilyRules000 ; id 274 ?
@@ -6300,15 +6299,15 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 278 ?
     dw BreedFamilyRules000 ; id 279 ?
     dw BreedFamilyRules000 ; id 280 ?
-    dw BreedFamilyRules119 ; id 281 JewelBag
+    dw BreedFamilyRules_JewelBag ; id 281 JewelBag
     dw BreedFamilyRules000 ; id 282 EvilWand
     dw BreedFamilyRules000 ; id 283 MadCandle
     dw BreedFamilyRules000 ; id 284 CoilBird
     dw BreedFamilyRules000 ; id 285 Facer
     dw BreedFamilyRules000 ; id 286 SpikyBoy
     dw BreedFamilyRules000 ; id 287 MadMirror
-    dw BreedFamilyRules120 ; id 288 RogueNite
-    dw BreedFamilyRules121 ; id 289 Puppetor
+    dw BreedFamilyRules_RogueNite ; id 288 RogueNite
+    dw BreedFamilyRules_Puppetor ; id 289 Puppetor
     dw BreedFamilyRules000 ; id 290 Goopi
     dw BreedFamilyRules000 ; id 291 Voodoll
     dw BreedFamilyRules000 ; id 292 MetalDrak
@@ -6316,12 +6315,12 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 294 SabreMan
     dw BreedFamilyRules000 ; id 295 CurseLamp
     dw BreedFamilyRules000 ; id 296 Brushead
-    dw BreedFamilyRules129 ; id 297 Roboster
-    dw BreedFamilyRules12A ; id 298 Roboster2
+    dw BreedFamilyRules_Roboster ; id 297 Roboster
+    dw BreedFamilyRules_Roboster2 ; id 298 Roboster2
     dw BreedFamilyRules000 ; id 299 EvilPot
-    dw BreedFamilyRules12C ; id 300 Gismo
-    dw BreedFamilyRules12D ; id 301 LavaMan
-    dw BreedFamilyRules12E ; id 302 IceMan
+    dw BreedFamilyRules_Gismo ; id 300 Gismo
+    dw BreedFamilyRules_LavaMan ; id 301 LavaMan
+    dw BreedFamilyRules_IceMan ; id 302 IceMan
     dw BreedFamilyRules000 ; id 303 Mimic
     dw BreedFamilyRules000 ; id 304 Exaucers
     dw BreedFamilyRules000 ; id 305 MudDoll
@@ -6329,36 +6328,36 @@ BreedFamilyRuleTable::
     dw BreedFamilyRules000 ; id 307 StoneMan
     dw BreedFamilyRules000 ; id 308 BombCrag
     dw BreedFamilyRules000 ; id 309 GoldGolem
-    dw BreedFamilyRules136 ; id 310 DarkMate
+    dw BreedFamilyRules_DarkMate ; id 310 DarkMate
     dw BreedFamilyRules000 ; id 311 ProtoMech
     dw BreedFamilyRules000 ; id 312 CloudKing
     dw BreedFamilyRules000 ; id 313 ?
     dw BreedFamilyRules000 ; id 314 ?
     dw BreedFamilyRules000 ; id 315 ?
-    dw BreedFamilyRules13C ; id 316 Petiteel
+    dw BreedFamilyRules_Petiteel ; id 316 Petiteel
     dw BreedFamilyRules000 ; id 317 Moray
     dw BreedFamilyRules000 ; id 318 WalrusMan
     dw BreedFamilyRules000 ; id 319 RayGigas
     dw BreedFamilyRules000 ; id 320 Anemon
-    dw BreedFamilyRules141 ; id 321 Aquarella
+    dw BreedFamilyRules_Aquarella ; id 321 Aquarella
     dw BreedFamilyRules000 ; id 322 Merman
     dw BreedFamilyRules000 ; id 323 Octokid
     dw BreedFamilyRules000 ; id 324 PutreFish
-    dw BreedFamilyRules145 ; id 325 Octoreach
-    dw BreedFamilyRules146 ; id 326 Angleron
+    dw BreedFamilyRules_Octoreach ; id 325 Octoreach
+    dw BreedFamilyRules_Angleron ; id 326 Angleron
     dw BreedFamilyRules000 ; id 327 FishRider
     dw BreedFamilyRules000 ; id 328 RushFish
-    dw BreedFamilyRules149 ; id 329 Gamanian
-    dw BreedFamilyRules14A ; id 330 Clawster
+    dw BreedFamilyRules_Gamanian ; id 329 Gamanian
+    dw BreedFamilyRules_Clawster ; id 330 Clawster
     dw BreedFamilyRules000 ; id 331 CancerMan
-    dw BreedFamilyRules14C ; id 332 RogueWave
+    dw BreedFamilyRules_RogueWave ; id 332 RogueWave
     dw BreedFamilyRules000 ; id 333 Scallopa
     dw BreedFamilyRules000 ; id 334 SeaHorse
-    dw BreedFamilyRules14F ; id 335 HoodSquid
+    dw BreedFamilyRules_HoodSquid ; id 335 HoodSquid
     dw BreedFamilyRules000 ; id 336 MerTiger
     dw BreedFamilyRules000 ; id 337 AxeShark
-    dw BreedFamilyRules152 ; id 338 Octogon
-    dw BreedFamilyRules153 ; id 339 KingSquid
+    dw BreedFamilyRules_Octogon ; id 338 Octogon
+    dw BreedFamilyRules_KingSquid ; id 339 KingSquid
     dw BreedFamilyRules000 ; id 340 Digong
     dw BreedFamilyRules000 ; id 341 WhaleMage
     dw BreedFamilyRules000 ; id 342 Aquadon
@@ -6410,781 +6409,781 @@ BreedFamilyRules000::
     db $ff ; id 0
 
 ; list for entry $04 (TreeSlime) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules004::
+BreedFamilyRules_TreeSlime::
     db $02, $ff ; id 0
 
 ; list for entry $0B (Healer) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules00B::
+BreedFamilyRules_Healer::
     db $fe, $07, $ff ; id 0
 
 ; list for entry $15 (MimeSlime) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules015::
+BreedFamilyRules_MimeSlime::
     db $07, $ff ; id 0
 
 ; list for entry $1A (WonderEgg) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules01A::
+BreedFamilyRules_WonderEgg::
     db $04, $06, $03, $ff ; id 0
 
 ; list for entry $27 (Gasgon) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules027::
+BreedFamilyRules_Gasgon::
     db $02, $ff ; id 0
 
 ; list for entry $47 (Tonguella) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules047::
+BreedFamilyRules_Tonguella::
     db $00, $ff ; id 0
 
 ; list for entry $48 (Almiraj) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules048::
+BreedFamilyRules_Almiraj::
     db $01, $ff ; id 0
 
 ; list for entry $49 (CatFly) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules049::
+BreedFamilyRules_CatFly::
     db $03, $ff ; id 0
 
 ; list for entry $4B (Saccer) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules04B::
+BreedFamilyRules_Saccer::
     db $01, $ff ; id 0
 
 ; list for entry $4C (GulpBeast) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules04C::
+BreedFamilyRules_GulpBeast::
     db $00, $ff ; id 0
 
 ; list for entry $51 (SuperTen) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules051::
+BreedFamilyRules_SuperTen::
     db $01, $ff ; id 0
 
 ; list for entry $55 (Grizzly) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules055::
+BreedFamilyRules_Grizzly::
     db $01, $06, $00, $ff ; id 0
 
 ; list for entry $56 (Yeti) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules056::
+BreedFamilyRules_Yeti::
     db $01, $00, $ff ; id 0
 
 ; list for entry $5D (Goategon) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules05D::
+BreedFamilyRules_Goategon::
     db $00, $ff ; id 0
 
 ; list for entry $5E (WildApe) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules05E::
+BreedFamilyRules_WildApe::
     db $00, $ff ; id 0
 
 ; list for entry $5F (Trumpeter) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules05F::
+BreedFamilyRules_Trumpeter::
     db $01, $00, $ff ; id 0
 
 ; list for entry $61 (DarkHorn) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules061::
+BreedFamilyRules_DarkHorn::
     db $0a, $ff ; id 0
 
 ; list for entry $63 (BigEye) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules063::
+BreedFamilyRules_BigEye::
     db $01, $ff ; id 0
 
 ; list for entry $65 (CatMage) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules065::
+BreedFamilyRules_CatMage::
     db $06, $ff ; id 0
 
 ; list for entry $66 (Dumbira) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules066::
+BreedFamilyRules_Dumbira::
     db $01, $00, $ff ; id 0
 
 ; list for entry $6A (Picky) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules06A::
+BreedFamilyRules_Picky::
     db $00, $ff ; id 0
 
 ; list for entry $6B (Wyvern) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules06B::
+BreedFamilyRules_Wyvern::
     db $01, $07, $ff ; id 0
 
 ; list for entry $6C (BullBird) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules06C::
+BreedFamilyRules_BullBird::
     db $06, $ff ; id 0
 
 ; list for entry $6E (DuckKite) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules06E::
+BreedFamilyRules_DuckKite::
     db $08, $ff ; id 0
 
 ; list for entry $74 (KiteHawk) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules074::
+BreedFamilyRules_KiteHawk::
     db $02, $ff ; id 0
 
 ; list for entry $75 (BigRoost) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules075::
+BreedFamilyRules_BigRoost::
     db $02, $ff ; id 0
 
 ; list for entry $77 (LandOwl) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules077::
+BreedFamilyRules_LandOwl::
     db $01, $07, $06, $ff ; id 0
 
 ; list for entry $78 (MadGoose) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules078::
+BreedFamilyRules_MadGoose::
     db $02, $ff ; id 0
 
 ; list for entry $79 (MadCondor) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules079::
+BreedFamilyRules_MadCondor::
     db $01, $07, $ff ; id 0
 
 ; list for entry $7A (Emyu) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules07A::
+BreedFamilyRules_Emyu::
     db $02, $ff ; id 0
 
 ; list for entry $7C (Phoenix) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules07C::
+BreedFamilyRules_Phoenix::
     db $01, $07, $ff ; id 0
 
 ; list for entry $7E (Garudian) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules07E::
+BreedFamilyRules_Garudian::
     db $00, $ff ; id 0
 
 ; list for entry $81 (RainHawk) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules081::
+BreedFamilyRules_RainHawk::
     db $0a, $ff ; id 0
 
 ; list for entry $83 (Shantak) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules083::
+BreedFamilyRules_Shantak::
     db $0a, $ff ; id 0
 
 ; list for entry $8D (MadPlant) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules08D::
+BreedFamilyRules_MadPlant::
     db $02, $ff ; id 0
 
 ; list for entry $94 (AmberWeed) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules094::
+BreedFamilyRules_AmberWeed::
     db $02, $ff ; id 0
 
 ; list for entry $96 (Stubsuck) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules096::
+BreedFamilyRules_Stubsuck::
     db $07, $ff ; id 0
 
 ; list for entry $9C (HerbMan) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules09C::
+BreedFamilyRules_HerbMan::
     db $01, $ff ; id 0
 
 ; list for entry $A6 (Eggplaton) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0A6::
+BreedFamilyRules_Eggplaton::
     db $06, $07, $ff ; id 0
 
 ; list for entry $B0 (GiantSlug) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0B0::
+BreedFamilyRules_GiantSlug::
     db $00, $ff ; id 0
 
 ; list for entry $B3 (Butterfly) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0B3::
+BreedFamilyRules_Butterfly::
     db $06, $ff ; id 0
 
 ; list for entry $B4 (WeedBug) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0B4::
+BreedFamilyRules_WeedBug::
     db $04, $ff ; id 0
 
 ; list for entry $B5 (GiantWorm) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0B5::
+BreedFamilyRules_GiantWorm::
     db $08, $ff ; id 0
 
 ; list for entry $B6 (Lipsy) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0B6::
+BreedFamilyRules_Lipsy::
     db $00, $ff ; id 0
 
 ; list for entry $B8 (Pyuro) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0B8::
+BreedFamilyRules_Pyuro::
     db $07, $ff ; id 0
 
 ; list for entry $BB (TailEater) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0BB::
+BreedFamilyRules_TailEater::
     db $06, $ff ; id 0
 
 ; list for entry $BC (ArmorPede) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0BC::
+BreedFamilyRules_ArmorPede::
     db $06, $ff ; id 0
 
 ; list for entry $BD (Eyeder) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0BD::
+BreedFamilyRules_Eyeder::
     db $07, $ff ; id 0
 
 ; list for entry $BF (Droll) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0BF::
+BreedFamilyRules_Droll::
     db $01, $07, $ff ; id 0
 
 ; list for entry $C1 (MadHornet) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0C1::
+BreedFamilyRules_MadHornet::
     db $07, $ff ; id 0
 
 ; list for entry $C3 (WarMantis) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0C3::
+BreedFamilyRules_WarMantis::
     db $06, $00, $ff ; id 0
 
 ; list for entry $C5 (Sickler) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0C5::
+BreedFamilyRules_Sickler::
     db $06, $ff ; id 0
 
 ; list for entry $D3 (Pixy) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0D3::
+BreedFamilyRules_Pixy::
     db $00, $ff ; id 0
 
 ; list for entry $D4 (MedusaEye) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0D4::
+BreedFamilyRules_MedusaEye::
     db $01, $02, $07, $ff ; id 0
 
 ; list for entry $D6 (Demonite) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0D6::
+BreedFamilyRules_Demonite::
     db $00, $ff ; id 0
 
 ; list for entry $D7 (DarkEye) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0D7::
+BreedFamilyRules_DarkEye::
     db $07, $ff ; id 0
 
 ; list for entry $D8 (EyeBall) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0D8::
+BreedFamilyRules_EyeBall::
     db $00, $ff ; id 0
 
 ; list for entry $D9 (SkulRider) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0D9::
+BreedFamilyRules_SkulRider::
     db $01, $02, $07, $ff ; id 0
 
 ; list for entry $DA (EvilBeast) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0DA::
+BreedFamilyRules_EvilBeast::
     db $01, $02, $07, $ff ; id 0
 
 ; list for entry $DC (1EyeClown) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0DC::
+BreedFamilyRules_1EyeClown::
     db $07, $ff ; id 0
 
 ; list for entry $DD (Gremlin) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0DD::
+BreedFamilyRules_Gremlin::
     db $01, $07, $02, $ff ; id 0
 
 ; list for entry $DE (ArcDemon) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0DE::
+BreedFamilyRules_ArcDemon::
     db $07, $02, $01, $08, $ff ; id 0
 
 ; list for entry $E0 (GoatHorn) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0E0::
+BreedFamilyRules_GoatHorn::
     db $02, $ff ; id 0
 
 ; list for entry $E2 (Ogre) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0E2::
+BreedFamilyRules_Ogre::
     db $01, $07, $02, $08, $ff ; id 0
 
 ; list for entry $E3 (GateGuard) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0E3::
+BreedFamilyRules_GateGuard::
     db $01, $02, $08, $ff ; id 0
 
 ; list for entry $E5 (BossTroll) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0E5::
+BreedFamilyRules_BossTroll::
     db $02, $ff ; id 0
 
 ; list for entry $EB (Centasaur) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0EB::
+BreedFamilyRules_Centasaur::
     db $0a, $ff ; id 0
 
 ; list for entry $F6 (Spooky) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0F6::
+BreedFamilyRules_Spooky::
     db $06, $02, $ff ; id 0
 
 ; list for entry $F7 (Skullgon) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0F7::
+BreedFamilyRules_Skullgon::
     db $01, $03, $ff ; id 0
 
 ; list for entry $F9 (RotRaven) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0F9::
+BreedFamilyRules_RotRaven::
     db $03, $ff ; id 0
 
 ; list for entry $FB (DarkCrab) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0FB::
+BreedFamilyRules_DarkCrab::
     db $06, $ff ; id 0
 
 ; list for entry $FC (DeadNite) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules0FC::
+BreedFamilyRules_DeadNite::
     db $09, $03, $ff ; id 0
 
 ; list for entry $FE (Skulpent) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0FE::
+BreedFamilyRules_Skulpent::
     db $01, $06, $ff ; id 0
 
 ; list for entry $FF (Hork) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules0FF::
+BreedFamilyRules_Hork::
     db $06, $ff ; id 0
 
 ; list for entry $100 (Mudron) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules100::
+BreedFamilyRules_Mudron::
     db $03, $ff ; id 0
 
 ; list for entry $101 (NiteWhip) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules101::
+BreedFamilyRules_NiteWhip::
     db $02, $ff ; id 0
 
 ; list for entry $105 (FoxFire) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules105::
+BreedFamilyRules_FoxFire::
     db $02, $ff ; id 0
 
 ; list for entry $107 (DeadNoble) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules107::
+BreedFamilyRules_DeadNoble::
     db $01, $03, $ff ; id 0
 
 ; list for entry $108 (WhiteKing) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules108::
+BreedFamilyRules_WhiteKing::
     db $01, $06, $ff ; id 0
 
 ; list for entry $109 (BoneSlave) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules109::
+BreedFamilyRules_BoneSlave::
     db $01, $09, $03, $ff ; id 0
 
 ; list for entry $10A (Skeletor) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules10A::
+BreedFamilyRules_Skeletor::
     db $01, $03, $ff ; id 0
 
 ; list for entry $10E (MadSpirit) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules10E::
+BreedFamilyRules_MadSpirit::
     db $06, $01, $ff ; id 0
 
 ; list for entry $10F (PomPomBom) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules10F::
+BreedFamilyRules_PomPomBom::
     db $03, $ff ; id 0
 
 ; list for entry $119 (JewelBag) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules119::
+BreedFamilyRules_JewelBag::
     db $08, $ff ; id 0
 
 ; list for entry $120 (RogueNite) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules120::
+BreedFamilyRules_RogueNite::
     db $06, $ff ; id 0
 
 ; list for entry $121 (Puppetor) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules121::
+BreedFamilyRules_Puppetor::
     db $06, $ff ; id 0
 
 ; list for entry $129 (Roboster) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules129::
+BreedFamilyRules_Roboster::
     db $00, $01, $03, $07, $05, $ff ; id 0
 
 ; list for entry $12A (Roboster2) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules12A::
+BreedFamilyRules_Roboster2::
     db $00, $01, $03, $ff ; id 0
 
 ; list for entry $12C (Gismo) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules12C::
+BreedFamilyRules_Gismo::
     db $06, $ff ; id 0
 
 ; list for entry $12D (LavaMan) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules12D::
+BreedFamilyRules_LavaMan::
     db $06, $ff ; id 0
 
 ; list for entry $12E (IceMan) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules12E::
+BreedFamilyRules_IceMan::
     db $06, $ff ; id 0
 
 ; list for entry $136 (DarkMate) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules136::
+BreedFamilyRules_DarkMate::
     db $05, $ff ; id 0
 
 ; list for entry $13C (Petiteel) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules13C::
+BreedFamilyRules_Petiteel::
     db $02, $08, $01, $06, $ff ; id 0
 
 ; list for entry $141 (Aquarella) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules141::
+BreedFamilyRules_Aquarella::
     db $05, $ff ; id 0
 
 ; list for entry $145 (Octoreach) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules145::
+BreedFamilyRules_Octoreach::
     db $00, $ff ; id 0
 
 ; list for entry $146 (Angleron) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules146::
+BreedFamilyRules_Angleron::
     db $01, $ff ; id 0
 
 ; list for entry $149 (Gamanian) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules149::
+BreedFamilyRules_Gamanian::
     db $06, $ff ; id 0
 
 ; list for entry $14A (Clawster) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules14A::
+BreedFamilyRules_Clawster::
     db $06, $ff ; id 0
 
 ; list for entry $14C (RogueWave) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules14C::
+BreedFamilyRules_RogueWave::
     db $06, $ff ; id 0
 
 ; list for entry $14F (HoodSquid) of BreedFamilyRuleTable; it runs to the next list (E-0199)
 ; record: partner families, then $FF
-BreedFamilyRules14F::
+BreedFamilyRules_HoodSquid::
     db $00, $ff ; id 0
 
 ; list for entry $152 (Octogon) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules152::
+BreedFamilyRules_Octogon::
     db $00, $0a, $ff ; id 0
 
 ; list for entry $153 (KingSquid) of BreedFamilyRuleTable; it runs to the next list (E-0199)
-BreedFamilyRules153::
+BreedFamilyRules_KingSquid::
     db $00, $ff ; id 0
 
 ; stage 2 result lists, indexed by parent A's species (E-0199, C1)
 ; record: list
 BreedFamilyResultTable::
     dw BreedFamilyResults000 ; id 0
-    dw BreedFamilyResults001 ; id 1 DrakSlime
-    dw BreedFamilyResults001 ; id 2 SpotSlime
-    dw BreedFamilyResults001 ; id 3 WingSlime
-    dw BreedFamilyResults001 ; id 4 TreeSlime
-    dw BreedFamilyResults005 ; id 5 Snaily
-    dw BreedFamilyResults005 ; id 6 SlimeNite
-    dw BreedFamilyResults005 ; id 7 Babble
-    dw BreedFamilyResults005 ; id 8 BoxSlime
-    dw BreedFamilyResults005 ; id 9 PearlGel
-    dw BreedFamilyResults005 ; id 10 Slime
-    dw BreedFamilyResults005 ; id 11 Healer
-    dw BreedFamilyResults00C ; id 12 FangSlime
-    dw BreedFamilyResults00C ; id 13 RockSlime
-    dw BreedFamilyResults00C ; id 14 SlimeBorg
-    dw BreedFamilyResults00C ; id 15 Slabbit
-    dw BreedFamilyResults00C ; id 16 KingSlime
-    dw BreedFamilyResults00C ; id 17 Metaly
-    dw BreedFamilyResults00C ; id 18 Metabble
-    dw BreedFamilyResults00C ; id 19 SpotKing
-    dw BreedFamilyResults00C ; id 20 TropicGel
-    dw BreedFamilyResults00C ; id 21 MimeSlime
-    dw BreedFamilyResults016 ; id 22 HaloSlime
-    dw BreedFamilyResults016 ; id 23 MetalKing
-    dw BreedFamilyResults016 ; id 24 GoldSlime
-    dw BreedFamilyResults016 ; id 25 GranSlime
-    dw BreedFamilyResults016 ; id 26 WonderEgg
-    dw BreedFamilyResults01B ; id 27 Butch
-    dw BreedFamilyResults01B ; id 28 ?
-    dw BreedFamilyResults01B ; id 29 ?
-    dw BreedFamilyResults01B ; id 30 ?
-    dw BreedFamilyResults01B ; id 31 ?
-    dw BreedFamilyResults01B ; id 32 ?
-    dw BreedFamilyResults01B ; id 33 ?
-    dw BreedFamilyResults01B ; id 34 ?
-    dw BreedFamilyResults01B ; id 35 ?
-    dw BreedFamilyResults01B ; id 36 DragonKid
-    dw BreedFamilyResults01B ; id 37 Tortragon
-    dw BreedFamilyResults01B ; id 38 Pteranod
-    dw BreedFamilyResults01B ; id 39 Gasgon
-    dw BreedFamilyResults028 ; id 40 FairyDrak
-    dw BreedFamilyResults028 ; id 41 LizardMan
-    dw BreedFamilyResults028 ; id 42 Poisongon
-    dw BreedFamilyResults028 ; id 43 Swordgon
-    dw BreedFamilyResults028 ; id 44 Drygon
-    dw BreedFamilyResults028 ; id 45 Dragon
-    dw BreedFamilyResults028 ; id 46 MiniDrak
-    dw BreedFamilyResults028 ; id 47 MadDragon
-    dw BreedFamilyResults028 ; id 48 Rayburn
-    dw BreedFamilyResults028 ; id 49 Chamelgon
-    dw BreedFamilyResults028 ; id 50 LizardFly
-    dw BreedFamilyResults028 ; id 51 Andreal
-    dw BreedFamilyResults028 ; id 52 KingCobra
-    dw BreedFamilyResults028 ; id 53 Vampirus
-    dw BreedFamilyResults028 ; id 54 SnakeBat
-    dw BreedFamilyResults028 ; id 55 Spikerous
-    dw BreedFamilyResults028 ; id 56 GreatDrak
-    dw BreedFamilyResults028 ; id 57 Crestpent
-    dw BreedFamilyResults028 ; id 58 WingSnake
-    dw BreedFamilyResults028 ; id 59 Coatol
-    dw BreedFamilyResults028 ; id 60 Orochi
-    dw BreedFamilyResults028 ; id 61 BattleRex
-    dw BreedFamilyResults028 ; id 62 SkyDragon
-    dw BreedFamilyResults028 ; id 63 Serpentia
-    dw BreedFamilyResults028 ; id 64 Divinegon
-    dw BreedFamilyResults028 ; id 65 Orligon
-    dw BreedFamilyResults028 ; id 66 GigaDraco
-    dw BreedFamilyResults028 ; id 67 ?
-    dw BreedFamilyResults028 ; id 68 ?
-    dw BreedFamilyResults028 ; id 69 ?
-    dw BreedFamilyResults028 ; id 70 ?
-    dw BreedFamilyResults028 ; id 71 Tonguella
-    dw BreedFamilyResults048 ; id 72 Almiraj
-    dw BreedFamilyResults049 ; id 73 CatFly
-    dw BreedFamilyResults04A ; id 74 PillowRat
-    dw BreedFamilyResults04A ; id 75 Saccer
-    dw BreedFamilyResults04C ; id 76 GulpBeast
-    dw BreedFamilyResults04D ; id 77 Skullroo
-    dw BreedFamilyResults04D ; id 78 WindBeast
-    dw BreedFamilyResults04D ; id 79 Beavern
-    dw BreedFamilyResults04D ; id 80 Antbear
-    dw BreedFamilyResults04D ; id 81 SuperTen
-    dw BreedFamilyResults052 ; id 82 IronTurt
-    dw BreedFamilyResults052 ; id 83 Mommonja
-    dw BreedFamilyResults052 ; id 84 HammerMan
-    dw BreedFamilyResults052 ; id 85 Grizzly
-    dw BreedFamilyResults056 ; id 86 Yeti
-    dw BreedFamilyResults057 ; id 87 ArrowDog
-    dw BreedFamilyResults057 ; id 88 NoctoKing
-    dw BreedFamilyResults057 ; id 89 BeastNite
-    dw BreedFamilyResults057 ; id 90 MadGopher
-    dw BreedFamilyResults057 ; id 91 FairyRat
-    dw BreedFamilyResults057 ; id 92 Unicorn
-    dw BreedFamilyResults057 ; id 93 Goategon
-    dw BreedFamilyResults05E ; id 94 WildApe
-    dw BreedFamilyResults05F ; id 95 Trumpeter
-    dw BreedFamilyResults060 ; id 96 KingLeo
-    dw BreedFamilyResults060 ; id 97 DarkHorn
-    dw BreedFamilyResults062 ; id 98 MadCat
-    dw BreedFamilyResults062 ; id 99 BigEye
-    dw BreedFamilyResults064 ; id 100 Gorago
-    dw BreedFamilyResults064 ; id 101 CatMage
-    dw BreedFamilyResults066 ; id 102 Dumbira
+    dw BreedFamilyResults_DrakSlime ; id 1 DrakSlime
+    dw BreedFamilyResults_DrakSlime ; id 2 SpotSlime
+    dw BreedFamilyResults_DrakSlime ; id 3 WingSlime
+    dw BreedFamilyResults_DrakSlime ; id 4 TreeSlime
+    dw BreedFamilyResults_Snaily ; id 5 Snaily
+    dw BreedFamilyResults_Snaily ; id 6 SlimeNite
+    dw BreedFamilyResults_Snaily ; id 7 Babble
+    dw BreedFamilyResults_Snaily ; id 8 BoxSlime
+    dw BreedFamilyResults_Snaily ; id 9 PearlGel
+    dw BreedFamilyResults_Snaily ; id 10 Slime
+    dw BreedFamilyResults_Snaily ; id 11 Healer
+    dw BreedFamilyResults_FangSlime ; id 12 FangSlime
+    dw BreedFamilyResults_FangSlime ; id 13 RockSlime
+    dw BreedFamilyResults_FangSlime ; id 14 SlimeBorg
+    dw BreedFamilyResults_FangSlime ; id 15 Slabbit
+    dw BreedFamilyResults_FangSlime ; id 16 KingSlime
+    dw BreedFamilyResults_FangSlime ; id 17 Metaly
+    dw BreedFamilyResults_FangSlime ; id 18 Metabble
+    dw BreedFamilyResults_FangSlime ; id 19 SpotKing
+    dw BreedFamilyResults_FangSlime ; id 20 TropicGel
+    dw BreedFamilyResults_FangSlime ; id 21 MimeSlime
+    dw BreedFamilyResults_HaloSlime ; id 22 HaloSlime
+    dw BreedFamilyResults_HaloSlime ; id 23 MetalKing
+    dw BreedFamilyResults_HaloSlime ; id 24 GoldSlime
+    dw BreedFamilyResults_HaloSlime ; id 25 GranSlime
+    dw BreedFamilyResults_HaloSlime ; id 26 WonderEgg
+    dw BreedFamilyResults_Butch ; id 27 Butch
+    dw BreedFamilyResults_Butch ; id 28 ?
+    dw BreedFamilyResults_Butch ; id 29 ?
+    dw BreedFamilyResults_Butch ; id 30 ?
+    dw BreedFamilyResults_Butch ; id 31 ?
+    dw BreedFamilyResults_Butch ; id 32 ?
+    dw BreedFamilyResults_Butch ; id 33 ?
+    dw BreedFamilyResults_Butch ; id 34 ?
+    dw BreedFamilyResults_Butch ; id 35 ?
+    dw BreedFamilyResults_Butch ; id 36 DragonKid
+    dw BreedFamilyResults_Butch ; id 37 Tortragon
+    dw BreedFamilyResults_Butch ; id 38 Pteranod
+    dw BreedFamilyResults_Butch ; id 39 Gasgon
+    dw BreedFamilyResults_FairyDrak ; id 40 FairyDrak
+    dw BreedFamilyResults_FairyDrak ; id 41 LizardMan
+    dw BreedFamilyResults_FairyDrak ; id 42 Poisongon
+    dw BreedFamilyResults_FairyDrak ; id 43 Swordgon
+    dw BreedFamilyResults_FairyDrak ; id 44 Drygon
+    dw BreedFamilyResults_FairyDrak ; id 45 Dragon
+    dw BreedFamilyResults_FairyDrak ; id 46 MiniDrak
+    dw BreedFamilyResults_FairyDrak ; id 47 MadDragon
+    dw BreedFamilyResults_FairyDrak ; id 48 Rayburn
+    dw BreedFamilyResults_FairyDrak ; id 49 Chamelgon
+    dw BreedFamilyResults_FairyDrak ; id 50 LizardFly
+    dw BreedFamilyResults_FairyDrak ; id 51 Andreal
+    dw BreedFamilyResults_FairyDrak ; id 52 KingCobra
+    dw BreedFamilyResults_FairyDrak ; id 53 Vampirus
+    dw BreedFamilyResults_FairyDrak ; id 54 SnakeBat
+    dw BreedFamilyResults_FairyDrak ; id 55 Spikerous
+    dw BreedFamilyResults_FairyDrak ; id 56 GreatDrak
+    dw BreedFamilyResults_FairyDrak ; id 57 Crestpent
+    dw BreedFamilyResults_FairyDrak ; id 58 WingSnake
+    dw BreedFamilyResults_FairyDrak ; id 59 Coatol
+    dw BreedFamilyResults_FairyDrak ; id 60 Orochi
+    dw BreedFamilyResults_FairyDrak ; id 61 BattleRex
+    dw BreedFamilyResults_FairyDrak ; id 62 SkyDragon
+    dw BreedFamilyResults_FairyDrak ; id 63 Serpentia
+    dw BreedFamilyResults_FairyDrak ; id 64 Divinegon
+    dw BreedFamilyResults_FairyDrak ; id 65 Orligon
+    dw BreedFamilyResults_FairyDrak ; id 66 GigaDraco
+    dw BreedFamilyResults_FairyDrak ; id 67 ?
+    dw BreedFamilyResults_FairyDrak ; id 68 ?
+    dw BreedFamilyResults_FairyDrak ; id 69 ?
+    dw BreedFamilyResults_FairyDrak ; id 70 ?
+    dw BreedFamilyResults_FairyDrak ; id 71 Tonguella
+    dw BreedFamilyResults_Almiraj ; id 72 Almiraj
+    dw BreedFamilyResults_CatFly ; id 73 CatFly
+    dw BreedFamilyResults_PillowRat ; id 74 PillowRat
+    dw BreedFamilyResults_PillowRat ; id 75 Saccer
+    dw BreedFamilyResults_GulpBeast ; id 76 GulpBeast
+    dw BreedFamilyResults_Skullroo ; id 77 Skullroo
+    dw BreedFamilyResults_Skullroo ; id 78 WindBeast
+    dw BreedFamilyResults_Skullroo ; id 79 Beavern
+    dw BreedFamilyResults_Skullroo ; id 80 Antbear
+    dw BreedFamilyResults_Skullroo ; id 81 SuperTen
+    dw BreedFamilyResults_IronTurt ; id 82 IronTurt
+    dw BreedFamilyResults_IronTurt ; id 83 Mommonja
+    dw BreedFamilyResults_IronTurt ; id 84 HammerMan
+    dw BreedFamilyResults_IronTurt ; id 85 Grizzly
+    dw BreedFamilyResults_Yeti ; id 86 Yeti
+    dw BreedFamilyResults_ArrowDog ; id 87 ArrowDog
+    dw BreedFamilyResults_ArrowDog ; id 88 NoctoKing
+    dw BreedFamilyResults_ArrowDog ; id 89 BeastNite
+    dw BreedFamilyResults_ArrowDog ; id 90 MadGopher
+    dw BreedFamilyResults_ArrowDog ; id 91 FairyRat
+    dw BreedFamilyResults_ArrowDog ; id 92 Unicorn
+    dw BreedFamilyResults_ArrowDog ; id 93 Goategon
+    dw BreedFamilyResults_WildApe ; id 94 WildApe
+    dw BreedFamilyResults_Trumpeter ; id 95 Trumpeter
+    dw BreedFamilyResults_KingLeo ; id 96 KingLeo
+    dw BreedFamilyResults_KingLeo ; id 97 DarkHorn
+    dw BreedFamilyResults_MadCat ; id 98 MadCat
+    dw BreedFamilyResults_MadCat ; id 99 BigEye
+    dw BreedFamilyResults_Gorago ; id 100 Gorago
+    dw BreedFamilyResults_Gorago ; id 101 CatMage
+    dw BreedFamilyResults_Dumbira ; id 102 Dumbira
     dw BreedFamilyResults067 ; id 103 ?
     dw BreedFamilyResults067 ; id 104 ?
     dw BreedFamilyResults067 ; id 105 ?
     dw BreedFamilyResults067 ; id 106 Picky
-    dw BreedFamilyResults06B ; id 107 Wyvern
-    dw BreedFamilyResults06C ; id 108 BullBird
-    dw BreedFamilyResults06D ; id 109 Florajay
-    dw BreedFamilyResults06D ; id 110 DuckKite
-    dw BreedFamilyResults06F ; id 111 MadPecker
-    dw BreedFamilyResults06F ; id 112 MadRaven
-    dw BreedFamilyResults06F ; id 113 MistyWing
-    dw BreedFamilyResults06F ; id 114 AquaHawk
-    dw BreedFamilyResults06F ; id 115 Dracky
-    dw BreedFamilyResults06F ; id 116 KiteHawk
-    dw BreedFamilyResults075 ; id 117 BigRoost
-    dw BreedFamilyResults076 ; id 118 StubBird
-    dw BreedFamilyResults076 ; id 119 LandOwl
-    dw BreedFamilyResults078 ; id 120 MadGoose
-    dw BreedFamilyResults079 ; id 121 MadCondor
-    dw BreedFamilyResults07A ; id 122 Emyu
-    dw BreedFamilyResults07B ; id 123 Blizzardy
-    dw BreedFamilyResults07B ; id 124 Phoenix
-    dw BreedFamilyResults07D ; id 125 ZapBird
-    dw BreedFamilyResults07D ; id 126 Garudian
-    dw BreedFamilyResults07F ; id 127 WhipBird
-    dw BreedFamilyResults07F ; id 128 FunkyBird
-    dw BreedFamilyResults07F ; id 129 RainHawk
-    dw BreedFamilyResults082 ; id 130 Azurile
-    dw BreedFamilyResults082 ; id 131 Shantak
-    dw BreedFamilyResults084 ; id 132 CragDevil
-    dw BreedFamilyResults084 ; id 133 ?
-    dw BreedFamilyResults084 ; id 134 ?
-    dw BreedFamilyResults084 ; id 135 ?
-    dw BreedFamilyResults084 ; id 136 ?
-    dw BreedFamilyResults084 ; id 137 ?
-    dw BreedFamilyResults084 ; id 138 ?
-    dw BreedFamilyResults084 ; id 139 ?
-    dw BreedFamilyResults084 ; id 140 ?
-    dw BreedFamilyResults084 ; id 141 MadPlant
-    dw BreedFamilyResults08E ; id 142 FireWeed
-    dw BreedFamilyResults08E ; id 143 FloraMan
-    dw BreedFamilyResults08E ; id 144 WingTree
-    dw BreedFamilyResults08E ; id 145 CactiBall
-    dw BreedFamilyResults08E ; id 146 Gulpple
-    dw BreedFamilyResults08E ; id 147 Toadstool
-    dw BreedFamilyResults08E ; id 148 AmberWeed
-    dw BreedFamilyResults095 ; id 149 Slurperon
-    dw BreedFamilyResults095 ; id 150 Stubsuck
-    dw BreedFamilyResults097 ; id 151 Oniono
-    dw BreedFamilyResults097 ; id 152 DanceVegi
-    dw BreedFamilyResults097 ; id 153 TreeBoy
-    dw BreedFamilyResults097 ; id 154 Devipine
-    dw BreedFamilyResults097 ; id 155 FaceTree
-    dw BreedFamilyResults097 ; id 156 HerbMan
-    dw BreedFamilyResults09D ; id 157 BeanMan
-    dw BreedFamilyResults09D ; id 158 EvilSeed
-    dw BreedFamilyResults09D ; id 159 ManEater
-    dw BreedFamilyResults09D ; id 160 Snapper
-    dw BreedFamilyResults09D ; id 161 GhosTree
-    dw BreedFamilyResults09D ; id 162 Rosevine
-    dw BreedFamilyResults09D ; id 163 Egdracil
-    dw BreedFamilyResults09D ; id 164 Warubou
-    dw BreedFamilyResults09D ; id 165 Watabou
-    dw BreedFamilyResults09D ; id 166 Eggplaton
-    dw BreedFamilyResults0A7 ; id 167 FooHero
-    dw BreedFamilyResults0A7 ; id 168 ?
-    dw BreedFamilyResults0A7 ; id 169 ?
-    dw BreedFamilyResults0A7 ; id 170 ?
-    dw BreedFamilyResults0A7 ; id 171 ?
-    dw BreedFamilyResults0A7 ; id 172 ?
-    dw BreedFamilyResults0A7 ; id 173 ?
-    dw BreedFamilyResults0A7 ; id 174 ?
-    dw BreedFamilyResults0A7 ; id 175 ?
-    dw BreedFamilyResults0A7 ; id 176 GiantSlug
-    dw BreedFamilyResults0B1 ; id 177 Catapila
-    dw BreedFamilyResults0B1 ; id 178 Gophecada
-    dw BreedFamilyResults0B1 ; id 179 Butterfly
-    dw BreedFamilyResults0B4 ; id 180 WeedBug
-    dw BreedFamilyResults0B5 ; id 181 GiantWorm
-    dw BreedFamilyResults0B6 ; id 182 Lipsy
-    dw BreedFamilyResults0B7 ; id 183 StagBug
-    dw BreedFamilyResults0B7 ; id 184 Pyuro
-    dw BreedFamilyResults0B9 ; id 185 ArmyAnt
-    dw BreedFamilyResults0B9 ; id 186 GoHopper
-    dw BreedFamilyResults0B9 ; id 187 TailEater
-    dw BreedFamilyResults0BC ; id 188 ArmorPede
-    dw BreedFamilyResults0BD ; id 189 Eyeder
-    dw BreedFamilyResults0BE ; id 190 GiantMoth
-    dw BreedFamilyResults0BE ; id 191 Droll
-    dw BreedFamilyResults0C0 ; id 192 ArmyCrab
-    dw BreedFamilyResults0C0 ; id 193 MadHornet
-    dw BreedFamilyResults0C2 ; id 194 Belzebub
-    dw BreedFamilyResults0C2 ; id 195 WarMantis
-    dw BreedFamilyResults0C4 ; id 196 HornBeet
-    dw BreedFamilyResults0C4 ; id 197 Sickler
-    dw BreedFamilyResults0C6 ; id 198 Armorpion
-    dw BreedFamilyResults0C6 ; id 199 Digster
-    dw BreedFamilyResults0C6 ; id 200 Skularach
-    dw BreedFamilyResults0C6 ; id 201 MultiEyes
-    dw BreedFamilyResults0C6 ; id 202 ?
-    dw BreedFamilyResults0C6 ; id 203 ?
-    dw BreedFamilyResults0C6 ; id 204 ?
-    dw BreedFamilyResults0C6 ; id 205 ?
-    dw BreedFamilyResults0C6 ; id 206 ?
-    dw BreedFamilyResults0C6 ; id 207 ?
-    dw BreedFamilyResults0C6 ; id 208 ?
-    dw BreedFamilyResults0C6 ; id 209 ?
-    dw BreedFamilyResults0C6 ; id 210 ?
-    dw BreedFamilyResults0C6 ; id 211 Pixy
-    dw BreedFamilyResults0D4 ; id 212 MedusaEye
-    dw BreedFamilyResults0D5 ; id 213 AgDevil
-    dw BreedFamilyResults0D5 ; id 214 Demonite
-    dw BreedFamilyResults0D7 ; id 215 DarkEye
-    dw BreedFamilyResults0D8 ; id 216 EyeBall
-    dw BreedFamilyResults0D9 ; id 217 SkulRider
-    dw BreedFamilyResults0DA ; id 218 EvilBeast
-    dw BreedFamilyResults0DB ; id 219 Bubblemon
-    dw BreedFamilyResults0DB ; id 220 1EyeClown
-    dw BreedFamilyResults0DD ; id 221 Gremlin
-    dw BreedFamilyResults0DE ; id 222 ArcDemon
-    dw BreedFamilyResults0DF ; id 223 Lionex
-    dw BreedFamilyResults0DF ; id 224 GoatHorn
-    dw BreedFamilyResults0E1 ; id 225 Orc
-    dw BreedFamilyResults0E1 ; id 226 Ogre
-    dw BreedFamilyResults0E3 ; id 227 GateGuard
-    dw BreedFamilyResults0E4 ; id 228 ChopClown
-    dw BreedFamilyResults0E4 ; id 229 BossTroll
-    dw BreedFamilyResults0E6 ; id 230 Grendal
-    dw BreedFamilyResults0E6 ; id 231 Akubar
-    dw BreedFamilyResults0E6 ; id 232 MadKnight
-    dw BreedFamilyResults0E6 ; id 233 EvilWell
-    dw BreedFamilyResults0E6 ; id 234 Gigantes
-    dw BreedFamilyResults0E6 ; id 235 Centasaur
-    dw BreedFamilyResults0EC ; id 236 EvilArmor
-    dw BreedFamilyResults0EC ; id 237 Jamirus
-    dw BreedFamilyResults0EC ; id 238 Durran
-    dw BreedFamilyResults0EC ; id 239 Titanis
-    dw BreedFamilyResults0EC ; id 240 LampGenie
-    dw BreedFamilyResults0EC ; id 241 ?
-    dw BreedFamilyResults0EC ; id 242 ?
-    dw BreedFamilyResults0EC ; id 243 ?
-    dw BreedFamilyResults0EC ; id 244 ?
-    dw BreedFamilyResults0EC ; id 245 ?
-    dw BreedFamilyResults0EC ; id 246 Spooky
-    dw BreedFamilyResults0F7 ; id 247 Skullgon
-    dw BreedFamilyResults0F8 ; id 248 PutrePup
-    dw BreedFamilyResults0F8 ; id 249 RotRaven
-    dw BreedFamilyResults0FA ; id 250 Mummy
-    dw BreedFamilyResults0FA ; id 251 DarkCrab
-    dw BreedFamilyResults0FC ; id 252 DeadNite
-    dw BreedFamilyResults0FD ; id 253 Shadow
-    dw BreedFamilyResults0FD ; id 254 Skulpent
-    dw BreedFamilyResults0FF ; id 255 Hork
-    dw BreedFamilyResults100 ; id 256 Mudron
-    dw BreedFamilyResults101 ; id 257 NiteWhip
-    dw BreedFamilyResults102 ; id 258 WindMerge
-    dw BreedFamilyResults102 ; id 259 Reaper
-    dw BreedFamilyResults102 ; id 260 Inverzon
-    dw BreedFamilyResults102 ; id 261 FoxFire
-    dw BreedFamilyResults106 ; id 262 CaptDead
-    dw BreedFamilyResults106 ; id 263 DeadNoble
-    dw BreedFamilyResults108 ; id 264 WhiteKing
-    dw BreedFamilyResults109 ; id 265 BoneSlave
-    dw BreedFamilyResults10A ; id 266 Skeletor
-    dw BreedFamilyResults10B ; id 267 Servant
-    dw BreedFamilyResults10B ; id 268 Lazamanus
-    dw BreedFamilyResults10B ; id 269 Copycat
-    dw BreedFamilyResults10B ; id 270 MadSpirit
-    dw BreedFamilyResults10F ; id 271 PomPomBom
-    dw BreedFamilyResults110 ; id 272 Niterich
-    dw BreedFamilyResults110 ; id 273 ?
-    dw BreedFamilyResults110 ; id 274 ?
-    dw BreedFamilyResults110 ; id 275 ?
-    dw BreedFamilyResults110 ; id 276 ?
-    dw BreedFamilyResults110 ; id 277 ?
-    dw BreedFamilyResults110 ; id 278 ?
-    dw BreedFamilyResults110 ; id 279 ?
-    dw BreedFamilyResults110 ; id 280 ?
-    dw BreedFamilyResults110 ; id 281 JewelBag
-    dw BreedFamilyResults11A ; id 282 EvilWand
-    dw BreedFamilyResults11A ; id 283 MadCandle
-    dw BreedFamilyResults11A ; id 284 CoilBird
-    dw BreedFamilyResults11A ; id 285 Facer
-    dw BreedFamilyResults11A ; id 286 SpikyBoy
-    dw BreedFamilyResults11A ; id 287 MadMirror
-    dw BreedFamilyResults11A ; id 288 RogueNite
-    dw BreedFamilyResults121 ; id 289 Puppetor
-    dw BreedFamilyResults122 ; id 290 Goopi
-    dw BreedFamilyResults122 ; id 291 Voodoll
-    dw BreedFamilyResults122 ; id 292 MetalDrak
-    dw BreedFamilyResults122 ; id 293 Balzak
-    dw BreedFamilyResults122 ; id 294 SabreMan
-    dw BreedFamilyResults122 ; id 295 CurseLamp
-    dw BreedFamilyResults122 ; id 296 Brushead
-    dw BreedFamilyResults122 ; id 297 Roboster
-    dw BreedFamilyResults12A ; id 298 Roboster2
-    dw BreedFamilyResults12B ; id 299 EvilPot
-    dw BreedFamilyResults12B ; id 300 Gismo
-    dw BreedFamilyResults12D ; id 301 LavaMan
-    dw BreedFamilyResults12E ; id 302 IceMan
-    dw BreedFamilyResults12F ; id 303 Mimic
-    dw BreedFamilyResults12F ; id 304 Exaucers
-    dw BreedFamilyResults12F ; id 305 MudDoll
-    dw BreedFamilyResults12F ; id 306 Golem
-    dw BreedFamilyResults12F ; id 307 StoneMan
-    dw BreedFamilyResults12F ; id 308 BombCrag
-    dw BreedFamilyResults12F ; id 309 GoldGolem
-    dw BreedFamilyResults12F ; id 310 DarkMate
-    dw BreedFamilyResults137 ; id 311 ProtoMech
-    dw BreedFamilyResults137 ; id 312 CloudKing
-    dw BreedFamilyResults137 ; id 313 ?
-    dw BreedFamilyResults137 ; id 314 ?
-    dw BreedFamilyResults137 ; id 315 ?
-    dw BreedFamilyResults137 ; id 316 Petiteel
-    dw BreedFamilyResults13D ; id 317 Moray
-    dw BreedFamilyResults13D ; id 318 WalrusMan
-    dw BreedFamilyResults13D ; id 319 RayGigas
-    dw BreedFamilyResults13D ; id 320 Anemon
-    dw BreedFamilyResults13D ; id 321 Aquarella
-    dw BreedFamilyResults142 ; id 322 Merman
-    dw BreedFamilyResults142 ; id 323 Octokid
-    dw BreedFamilyResults142 ; id 324 PutreFish
-    dw BreedFamilyResults142 ; id 325 Octoreach
-    dw BreedFamilyResults146 ; id 326 Angleron
-    dw BreedFamilyResults147 ; id 327 FishRider
-    dw BreedFamilyResults147 ; id 328 RushFish
-    dw BreedFamilyResults147 ; id 329 Gamanian
-    dw BreedFamilyResults14A ; id 330 Clawster
-    dw BreedFamilyResults14B ; id 331 CancerMan
-    dw BreedFamilyResults14B ; id 332 RogueWave
-    dw BreedFamilyResults14D ; id 333 Scallopa
-    dw BreedFamilyResults14D ; id 334 SeaHorse
-    dw BreedFamilyResults14D ; id 335 HoodSquid
-    dw BreedFamilyResults150 ; id 336 MerTiger
-    dw BreedFamilyResults150 ; id 337 AxeShark
-    dw BreedFamilyResults150 ; id 338 Octogon
-    dw BreedFamilyResults153 ; id 339 KingSquid
+    dw BreedFamilyResults_Wyvern ; id 107 Wyvern
+    dw BreedFamilyResults_BullBird ; id 108 BullBird
+    dw BreedFamilyResults_Florajay ; id 109 Florajay
+    dw BreedFamilyResults_Florajay ; id 110 DuckKite
+    dw BreedFamilyResults_MadPecker ; id 111 MadPecker
+    dw BreedFamilyResults_MadPecker ; id 112 MadRaven
+    dw BreedFamilyResults_MadPecker ; id 113 MistyWing
+    dw BreedFamilyResults_MadPecker ; id 114 AquaHawk
+    dw BreedFamilyResults_MadPecker ; id 115 Dracky
+    dw BreedFamilyResults_MadPecker ; id 116 KiteHawk
+    dw BreedFamilyResults_BigRoost ; id 117 BigRoost
+    dw BreedFamilyResults_StubBird ; id 118 StubBird
+    dw BreedFamilyResults_StubBird ; id 119 LandOwl
+    dw BreedFamilyResults_MadGoose ; id 120 MadGoose
+    dw BreedFamilyResults_MadCondor ; id 121 MadCondor
+    dw BreedFamilyResults_Emyu ; id 122 Emyu
+    dw BreedFamilyResults_Blizzardy ; id 123 Blizzardy
+    dw BreedFamilyResults_Blizzardy ; id 124 Phoenix
+    dw BreedFamilyResults_ZapBird ; id 125 ZapBird
+    dw BreedFamilyResults_ZapBird ; id 126 Garudian
+    dw BreedFamilyResults_WhipBird ; id 127 WhipBird
+    dw BreedFamilyResults_WhipBird ; id 128 FunkyBird
+    dw BreedFamilyResults_WhipBird ; id 129 RainHawk
+    dw BreedFamilyResults_Azurile ; id 130 Azurile
+    dw BreedFamilyResults_Azurile ; id 131 Shantak
+    dw BreedFamilyResults_CragDevil ; id 132 CragDevil
+    dw BreedFamilyResults_CragDevil ; id 133 ?
+    dw BreedFamilyResults_CragDevil ; id 134 ?
+    dw BreedFamilyResults_CragDevil ; id 135 ?
+    dw BreedFamilyResults_CragDevil ; id 136 ?
+    dw BreedFamilyResults_CragDevil ; id 137 ?
+    dw BreedFamilyResults_CragDevil ; id 138 ?
+    dw BreedFamilyResults_CragDevil ; id 139 ?
+    dw BreedFamilyResults_CragDevil ; id 140 ?
+    dw BreedFamilyResults_CragDevil ; id 141 MadPlant
+    dw BreedFamilyResults_FireWeed ; id 142 FireWeed
+    dw BreedFamilyResults_FireWeed ; id 143 FloraMan
+    dw BreedFamilyResults_FireWeed ; id 144 WingTree
+    dw BreedFamilyResults_FireWeed ; id 145 CactiBall
+    dw BreedFamilyResults_FireWeed ; id 146 Gulpple
+    dw BreedFamilyResults_FireWeed ; id 147 Toadstool
+    dw BreedFamilyResults_FireWeed ; id 148 AmberWeed
+    dw BreedFamilyResults_Slurperon ; id 149 Slurperon
+    dw BreedFamilyResults_Slurperon ; id 150 Stubsuck
+    dw BreedFamilyResults_Oniono ; id 151 Oniono
+    dw BreedFamilyResults_Oniono ; id 152 DanceVegi
+    dw BreedFamilyResults_Oniono ; id 153 TreeBoy
+    dw BreedFamilyResults_Oniono ; id 154 Devipine
+    dw BreedFamilyResults_Oniono ; id 155 FaceTree
+    dw BreedFamilyResults_Oniono ; id 156 HerbMan
+    dw BreedFamilyResults_BeanMan ; id 157 BeanMan
+    dw BreedFamilyResults_BeanMan ; id 158 EvilSeed
+    dw BreedFamilyResults_BeanMan ; id 159 ManEater
+    dw BreedFamilyResults_BeanMan ; id 160 Snapper
+    dw BreedFamilyResults_BeanMan ; id 161 GhosTree
+    dw BreedFamilyResults_BeanMan ; id 162 Rosevine
+    dw BreedFamilyResults_BeanMan ; id 163 Egdracil
+    dw BreedFamilyResults_BeanMan ; id 164 Warubou
+    dw BreedFamilyResults_BeanMan ; id 165 Watabou
+    dw BreedFamilyResults_BeanMan ; id 166 Eggplaton
+    dw BreedFamilyResults_FooHero ; id 167 FooHero
+    dw BreedFamilyResults_FooHero ; id 168 ?
+    dw BreedFamilyResults_FooHero ; id 169 ?
+    dw BreedFamilyResults_FooHero ; id 170 ?
+    dw BreedFamilyResults_FooHero ; id 171 ?
+    dw BreedFamilyResults_FooHero ; id 172 ?
+    dw BreedFamilyResults_FooHero ; id 173 ?
+    dw BreedFamilyResults_FooHero ; id 174 ?
+    dw BreedFamilyResults_FooHero ; id 175 ?
+    dw BreedFamilyResults_FooHero ; id 176 GiantSlug
+    dw BreedFamilyResults_Catapila ; id 177 Catapila
+    dw BreedFamilyResults_Catapila ; id 178 Gophecada
+    dw BreedFamilyResults_Catapila ; id 179 Butterfly
+    dw BreedFamilyResults_WeedBug ; id 180 WeedBug
+    dw BreedFamilyResults_GiantWorm ; id 181 GiantWorm
+    dw BreedFamilyResults_Lipsy ; id 182 Lipsy
+    dw BreedFamilyResults_StagBug ; id 183 StagBug
+    dw BreedFamilyResults_StagBug ; id 184 Pyuro
+    dw BreedFamilyResults_ArmyAnt ; id 185 ArmyAnt
+    dw BreedFamilyResults_ArmyAnt ; id 186 GoHopper
+    dw BreedFamilyResults_ArmyAnt ; id 187 TailEater
+    dw BreedFamilyResults_ArmorPede ; id 188 ArmorPede
+    dw BreedFamilyResults_Eyeder ; id 189 Eyeder
+    dw BreedFamilyResults_GiantMoth ; id 190 GiantMoth
+    dw BreedFamilyResults_GiantMoth ; id 191 Droll
+    dw BreedFamilyResults_ArmyCrab ; id 192 ArmyCrab
+    dw BreedFamilyResults_ArmyCrab ; id 193 MadHornet
+    dw BreedFamilyResults_Belzebub ; id 194 Belzebub
+    dw BreedFamilyResults_Belzebub ; id 195 WarMantis
+    dw BreedFamilyResults_HornBeet ; id 196 HornBeet
+    dw BreedFamilyResults_HornBeet ; id 197 Sickler
+    dw BreedFamilyResults_Armorpion ; id 198 Armorpion
+    dw BreedFamilyResults_Armorpion ; id 199 Digster
+    dw BreedFamilyResults_Armorpion ; id 200 Skularach
+    dw BreedFamilyResults_Armorpion ; id 201 MultiEyes
+    dw BreedFamilyResults_Armorpion ; id 202 ?
+    dw BreedFamilyResults_Armorpion ; id 203 ?
+    dw BreedFamilyResults_Armorpion ; id 204 ?
+    dw BreedFamilyResults_Armorpion ; id 205 ?
+    dw BreedFamilyResults_Armorpion ; id 206 ?
+    dw BreedFamilyResults_Armorpion ; id 207 ?
+    dw BreedFamilyResults_Armorpion ; id 208 ?
+    dw BreedFamilyResults_Armorpion ; id 209 ?
+    dw BreedFamilyResults_Armorpion ; id 210 ?
+    dw BreedFamilyResults_Armorpion ; id 211 Pixy
+    dw BreedFamilyResults_MedusaEye ; id 212 MedusaEye
+    dw BreedFamilyResults_AgDevil ; id 213 AgDevil
+    dw BreedFamilyResults_AgDevil ; id 214 Demonite
+    dw BreedFamilyResults_DarkEye ; id 215 DarkEye
+    dw BreedFamilyResults_EyeBall ; id 216 EyeBall
+    dw BreedFamilyResults_SkulRider ; id 217 SkulRider
+    dw BreedFamilyResults_EvilBeast ; id 218 EvilBeast
+    dw BreedFamilyResults_Bubblemon ; id 219 Bubblemon
+    dw BreedFamilyResults_Bubblemon ; id 220 1EyeClown
+    dw BreedFamilyResults_Gremlin ; id 221 Gremlin
+    dw BreedFamilyResults_ArcDemon ; id 222 ArcDemon
+    dw BreedFamilyResults_Lionex ; id 223 Lionex
+    dw BreedFamilyResults_Lionex ; id 224 GoatHorn
+    dw BreedFamilyResults_Orc ; id 225 Orc
+    dw BreedFamilyResults_Orc ; id 226 Ogre
+    dw BreedFamilyResults_GateGuard ; id 227 GateGuard
+    dw BreedFamilyResults_ChopClown ; id 228 ChopClown
+    dw BreedFamilyResults_ChopClown ; id 229 BossTroll
+    dw BreedFamilyResults_Grendal ; id 230 Grendal
+    dw BreedFamilyResults_Grendal ; id 231 Akubar
+    dw BreedFamilyResults_Grendal ; id 232 MadKnight
+    dw BreedFamilyResults_Grendal ; id 233 EvilWell
+    dw BreedFamilyResults_Grendal ; id 234 Gigantes
+    dw BreedFamilyResults_Grendal ; id 235 Centasaur
+    dw BreedFamilyResults_EvilArmor ; id 236 EvilArmor
+    dw BreedFamilyResults_EvilArmor ; id 237 Jamirus
+    dw BreedFamilyResults_EvilArmor ; id 238 Durran
+    dw BreedFamilyResults_EvilArmor ; id 239 Titanis
+    dw BreedFamilyResults_EvilArmor ; id 240 LampGenie
+    dw BreedFamilyResults_EvilArmor ; id 241 ?
+    dw BreedFamilyResults_EvilArmor ; id 242 ?
+    dw BreedFamilyResults_EvilArmor ; id 243 ?
+    dw BreedFamilyResults_EvilArmor ; id 244 ?
+    dw BreedFamilyResults_EvilArmor ; id 245 ?
+    dw BreedFamilyResults_EvilArmor ; id 246 Spooky
+    dw BreedFamilyResults_Skullgon ; id 247 Skullgon
+    dw BreedFamilyResults_PutrePup ; id 248 PutrePup
+    dw BreedFamilyResults_PutrePup ; id 249 RotRaven
+    dw BreedFamilyResults_Mummy ; id 250 Mummy
+    dw BreedFamilyResults_Mummy ; id 251 DarkCrab
+    dw BreedFamilyResults_DeadNite ; id 252 DeadNite
+    dw BreedFamilyResults_Shadow ; id 253 Shadow
+    dw BreedFamilyResults_Shadow ; id 254 Skulpent
+    dw BreedFamilyResults_Hork ; id 255 Hork
+    dw BreedFamilyResults_Mudron ; id 256 Mudron
+    dw BreedFamilyResults_NiteWhip ; id 257 NiteWhip
+    dw BreedFamilyResults_WindMerge ; id 258 WindMerge
+    dw BreedFamilyResults_WindMerge ; id 259 Reaper
+    dw BreedFamilyResults_WindMerge ; id 260 Inverzon
+    dw BreedFamilyResults_WindMerge ; id 261 FoxFire
+    dw BreedFamilyResults_CaptDead ; id 262 CaptDead
+    dw BreedFamilyResults_CaptDead ; id 263 DeadNoble
+    dw BreedFamilyResults_WhiteKing ; id 264 WhiteKing
+    dw BreedFamilyResults_BoneSlave ; id 265 BoneSlave
+    dw BreedFamilyResults_Skeletor ; id 266 Skeletor
+    dw BreedFamilyResults_Servant ; id 267 Servant
+    dw BreedFamilyResults_Servant ; id 268 Lazamanus
+    dw BreedFamilyResults_Servant ; id 269 Copycat
+    dw BreedFamilyResults_Servant ; id 270 MadSpirit
+    dw BreedFamilyResults_PomPomBom ; id 271 PomPomBom
+    dw BreedFamilyResults_Niterich ; id 272 Niterich
+    dw BreedFamilyResults_Niterich ; id 273 ?
+    dw BreedFamilyResults_Niterich ; id 274 ?
+    dw BreedFamilyResults_Niterich ; id 275 ?
+    dw BreedFamilyResults_Niterich ; id 276 ?
+    dw BreedFamilyResults_Niterich ; id 277 ?
+    dw BreedFamilyResults_Niterich ; id 278 ?
+    dw BreedFamilyResults_Niterich ; id 279 ?
+    dw BreedFamilyResults_Niterich ; id 280 ?
+    dw BreedFamilyResults_Niterich ; id 281 JewelBag
+    dw BreedFamilyResults_EvilWand ; id 282 EvilWand
+    dw BreedFamilyResults_EvilWand ; id 283 MadCandle
+    dw BreedFamilyResults_EvilWand ; id 284 CoilBird
+    dw BreedFamilyResults_EvilWand ; id 285 Facer
+    dw BreedFamilyResults_EvilWand ; id 286 SpikyBoy
+    dw BreedFamilyResults_EvilWand ; id 287 MadMirror
+    dw BreedFamilyResults_EvilWand ; id 288 RogueNite
+    dw BreedFamilyResults_Puppetor ; id 289 Puppetor
+    dw BreedFamilyResults_Goopi ; id 290 Goopi
+    dw BreedFamilyResults_Goopi ; id 291 Voodoll
+    dw BreedFamilyResults_Goopi ; id 292 MetalDrak
+    dw BreedFamilyResults_Goopi ; id 293 Balzak
+    dw BreedFamilyResults_Goopi ; id 294 SabreMan
+    dw BreedFamilyResults_Goopi ; id 295 CurseLamp
+    dw BreedFamilyResults_Goopi ; id 296 Brushead
+    dw BreedFamilyResults_Goopi ; id 297 Roboster
+    dw BreedFamilyResults_Roboster2 ; id 298 Roboster2
+    dw BreedFamilyResults_EvilPot ; id 299 EvilPot
+    dw BreedFamilyResults_EvilPot ; id 300 Gismo
+    dw BreedFamilyResults_LavaMan ; id 301 LavaMan
+    dw BreedFamilyResults_IceMan ; id 302 IceMan
+    dw BreedFamilyResults_Mimic ; id 303 Mimic
+    dw BreedFamilyResults_Mimic ; id 304 Exaucers
+    dw BreedFamilyResults_Mimic ; id 305 MudDoll
+    dw BreedFamilyResults_Mimic ; id 306 Golem
+    dw BreedFamilyResults_Mimic ; id 307 StoneMan
+    dw BreedFamilyResults_Mimic ; id 308 BombCrag
+    dw BreedFamilyResults_Mimic ; id 309 GoldGolem
+    dw BreedFamilyResults_Mimic ; id 310 DarkMate
+    dw BreedFamilyResults_ProtoMech ; id 311 ProtoMech
+    dw BreedFamilyResults_ProtoMech ; id 312 CloudKing
+    dw BreedFamilyResults_ProtoMech ; id 313 ?
+    dw BreedFamilyResults_ProtoMech ; id 314 ?
+    dw BreedFamilyResults_ProtoMech ; id 315 ?
+    dw BreedFamilyResults_ProtoMech ; id 316 Petiteel
+    dw BreedFamilyResults_Moray ; id 317 Moray
+    dw BreedFamilyResults_Moray ; id 318 WalrusMan
+    dw BreedFamilyResults_Moray ; id 319 RayGigas
+    dw BreedFamilyResults_Moray ; id 320 Anemon
+    dw BreedFamilyResults_Moray ; id 321 Aquarella
+    dw BreedFamilyResults_Merman ; id 322 Merman
+    dw BreedFamilyResults_Merman ; id 323 Octokid
+    dw BreedFamilyResults_Merman ; id 324 PutreFish
+    dw BreedFamilyResults_Merman ; id 325 Octoreach
+    dw BreedFamilyResults_Angleron ; id 326 Angleron
+    dw BreedFamilyResults_FishRider ; id 327 FishRider
+    dw BreedFamilyResults_FishRider ; id 328 RushFish
+    dw BreedFamilyResults_FishRider ; id 329 Gamanian
+    dw BreedFamilyResults_Clawster ; id 330 Clawster
+    dw BreedFamilyResults_CancerMan ; id 331 CancerMan
+    dw BreedFamilyResults_CancerMan ; id 332 RogueWave
+    dw BreedFamilyResults_Scallopa ; id 333 Scallopa
+    dw BreedFamilyResults_Scallopa ; id 334 SeaHorse
+    dw BreedFamilyResults_Scallopa ; id 335 HoodSquid
+    dw BreedFamilyResults_MerTiger ; id 336 MerTiger
+    dw BreedFamilyResults_MerTiger ; id 337 AxeShark
+    dw BreedFamilyResults_MerTiger ; id 338 Octogon
+    dw BreedFamilyResults_KingSquid ; id 339 KingSquid
     dw FamilyBreedRuleTable ; id 340 Digong
     dw FamilyBreedRuleTable ; id 341 WhaleMage
     dw FamilyBreedRuleTable ; id 342 Aquadon
@@ -7236,94 +7235,94 @@ BreedFamilyResults000::
     dw $ffff ; id 0
 
 ; list for entry $01 (DrakSlime) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults001::
+BreedFamilyResults_DrakSlime::
     dw MONSTER_TROPICGEL ; id 0
 
 ; list for entry $05 (Snaily) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults005::
+BreedFamilyResults_Snaily::
     dw MONSTER_HALOSLIME ; id 0
 
 ; list for entry $0C (FangSlime) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults00C::
+BreedFamilyResults_FangSlime::
     dw MONSTER_HALOSLIME ; id 0
 
 ; list for entry $16 (HaloSlime) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults016::
+BreedFamilyResults_HaloSlime::
     dw MONSTER_TROPICGEL ; id 0
     dw MONSTER_MIMESLIME ; id 1
     dw MONSTER_HALOSLIME ; id 2
 
 ; list for entry $1B (Butch) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults01B::
+BreedFamilyResults_Butch::
     dw MONSTER_MADDRAGON ; id 0
 
 ; list for entry $28 (FairyDrak) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults028::
+BreedFamilyResults_FairyDrak::
     dw MONSTER_UNICORN ; id 0
 
 ; list for entry $48 (Almiraj) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults048::
+BreedFamilyResults_Almiraj::
     dw MONSTER_WILDAPE ; id 0
 
 ; list for entry $49 (CatFly) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults049::
+BreedFamilyResults_CatFly::
     dw MONSTER_WINDBEAST ; id 0
 
 ; list for entry $4A (PillowRat) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults04A::
+BreedFamilyResults_PillowRat::
     dw MONSTER_ANTBEAR ; id 0
 
 ; list for entry $4C (GulpBeast) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults04C::
+BreedFamilyResults_GulpBeast::
     dw MONSTER_UNICORN ; id 0
 
 ; list for entry $4D (Skullroo) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults04D::
+BreedFamilyResults_Skullroo::
     dw MONSTER_TRUMPETER ; id 0
 
 ; list for entry $52 (IronTurt) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults052::
+BreedFamilyResults_IronTurt::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_GULPBEAST ; id 1
     dw MONSTER_UNICORN ; id 2
 
 ; list for entry $56 (Yeti) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults056::
+BreedFamilyResults_Yeti::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_UNICORN ; id 1
 
 ; list for entry $57 (ArrowDog) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults057::
+BreedFamilyResults_ArrowDog::
     dw MONSTER_UNICORN ; id 0
 
 ; list for entry $5E (WildApe) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults05E::
+BreedFamilyResults_WildApe::
     dw MONSTER_UNICORN ; id 0
 
 ; list for entry $5F (Trumpeter) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults05F::
+BreedFamilyResults_Trumpeter::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_UNICORN ; id 1
 
 ; list for entry $60 (KingLeo) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults060::
+BreedFamilyResults_KingLeo::
     dw MONSTER_GORAGO ; id 0
 
 ; list for entry $62 (MadCat) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults062::
+BreedFamilyResults_MadCat::
     dw MONSTER_GULPBEAST ; id 0
 
 ; list for entry $64 (Gorago) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults064::
+BreedFamilyResults_Gorago::
     dw MONSTER_BEASTNITE ; id 0
 
 ; list for entry $66 (Dumbira) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults066::
+BreedFamilyResults_Dumbira::
     dw MONSTER_GULPBEAST ; id 0
     dw MONSTER_SUPERTEN ; id 1
 
@@ -7332,317 +7331,317 @@ BreedFamilyResults067::
     dw MONSTER_DRACKY ; id 0
 
 ; list for entry $6B (Wyvern) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults06B::
+BreedFamilyResults_Wyvern::
     dw MONSTER_MADGOOSE ; id 0
     dw MONSTER_MADGOOSE ; id 1
 
 ; list for entry $6C (BullBird) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults06C::
+BreedFamilyResults_BullBird::
     dw MONSTER_LANDOWL ; id 0
 
 ; list for entry $6D (Florajay) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults06D::
+BreedFamilyResults_Florajay::
     dw MONSTER_KITEHAWK ; id 0
 
 ; list for entry $6F (MadPecker) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults06F::
+BreedFamilyResults_MadPecker::
     dw MONSTER_EMYU ; id 0
 
 ; list for entry $75 (BigRoost) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults075::
+BreedFamilyResults_BigRoost::
     dw MONSTER_CRAGDEVIL ; id 0
 
 ; list for entry $76 (StubBird) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults076::
+BreedFamilyResults_StubBird::
     dw MONSTER_MADGOOSE ; id 0
     dw MONSTER_MADGOOSE ; id 1
     dw MONSTER_MADCONDOR ; id 2
 
 ; list for entry $78 (MadGoose) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults078::
+BreedFamilyResults_MadGoose::
     dw MONSTER_CRAGDEVIL ; id 0
 
 ; list for entry $79 (MadCondor) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults079::
+BreedFamilyResults_MadCondor::
     dw MONSTER_MADGOOSE ; id 0
     dw MONSTER_MADGOOSE ; id 1
 
 ; list for entry $7A (Emyu) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults07A::
+BreedFamilyResults_Emyu::
     dw MONSTER_CRAGDEVIL ; id 0
 
 ; list for entry $7B (Blizzardy) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults07B::
+BreedFamilyResults_Blizzardy::
     dw MONSTER_MADGOOSE ; id 0
     dw MONSTER_MADGOOSE ; id 1
 
 ; list for entry $7D (ZapBird) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults07D::
+BreedFamilyResults_ZapBird::
     dw MONSTER_LANDOWL ; id 0
 
 ; list for entry $7F (WhipBird) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults07F::
+BreedFamilyResults_WhipBird::
     dw MONSTER_AZURILE ; id 0
 
 ; list for entry $82 (Azurile) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults082::
+BreedFamilyResults_Azurile::
     dw MONSTER_AZURILE ; id 0
 
 ; list for entry $84 (CragDevil) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults084::
+BreedFamilyResults_CragDevil::
     dw MONSTER_DANCEVEGI ; id 0
 
 ; list for entry $8E (FireWeed) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults08E::
+BreedFamilyResults_FireWeed::
     dw MONSTER_STUBSUCK ; id 0
 
 ; list for entry $95 (Slurperon) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults095::
+BreedFamilyResults_Slurperon::
     dw MONSTER_GHOSTREE ; id 0
 
 ; list for entry $97 (Oniono) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults097::
+BreedFamilyResults_Oniono::
     dw MONSTER_FACETREE ; id 0
 
 ; list for entry $9D (BeanMan) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults09D::
+BreedFamilyResults_BeanMan::
     dw MONSTER_BEANMAN ; id 0
     dw MONSTER_EVILSEED ; id 1
 
 ; list for entry $A7 (FooHero) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0A7::
+BreedFamilyResults_FooHero::
     dw MONSTER_ARMYANT ; id 0
 
 ; list for entry $B1 (Catapila) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0B1::
+BreedFamilyResults_Catapila::
     dw MONSTER_GIANTMOTH ; id 0
 
 ; list for entry $B4 (WeedBug) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0B4::
+BreedFamilyResults_WeedBug::
     dw MONSTER_TAILEATER ; id 0
 
 ; list for entry $B5 (GiantWorm) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0B5::
+BreedFamilyResults_GiantWorm::
     dw MONSTER_ARMORPEDE ; id 0
 
 ; list for entry $B6 (Lipsy) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0B6::
+BreedFamilyResults_Lipsy::
     dw MONSTER_DROLL ; id 0
 
 ; list for entry $B7 (StagBug) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0B7::
+BreedFamilyResults_StagBug::
     dw MONSTER_MADHORNET ; id 0
 
 ; list for entry $B9 (ArmyAnt) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0B9::
+BreedFamilyResults_ArmyAnt::
     dw MONSTER_MULTIEYES ; id 0
 
 ; list for entry $BC (ArmorPede) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0BC::
+BreedFamilyResults_ArmorPede::
     dw MONSTER_HORNBEET ; id 0
 
 ; list for entry $BD (Eyeder) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0BD::
+BreedFamilyResults_Eyeder::
     dw MONSTER_MADHORNET ; id 0
 
 ; list for entry $BE (GiantMoth) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0BE::
+BreedFamilyResults_GiantMoth::
     dw MONSTER_ARMORPEDE ; id 0
     dw MONSTER_MADHORNET ; id 1
 
 ; list for entry $C0 (ArmyCrab) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0C0::
+BreedFamilyResults_ArmyCrab::
     dw MONSTER_BELZEBUB ; id 0
 
 ; list for entry $C2 (Belzebub) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0C2::
+BreedFamilyResults_Belzebub::
     dw MONSTER_HORNBEET ; id 0
     dw MONSTER_SICKLER ; id 1
 
 ; list for entry $C4 (HornBeet) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0C4::
+BreedFamilyResults_HornBeet::
     dw MONSTER_WARMANTIS ; id 0
 
 ; list for entry $C6 (Armorpion) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0C6::
+BreedFamilyResults_Armorpion::
     dw MONSTER_1EYECLOWN ; id 0
 
 ; list for entry $D4 (MedusaEye) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0D4::
+BreedFamilyResults_MedusaEye::
     dw MONSTER_AGDEVIL ; id 0
     dw MONSTER_GRENDAL ; id 1
     dw MONSTER_GIGANTES ; id 2
 
 ; list for entry $D5 (AgDevil) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0D5::
+BreedFamilyResults_AgDevil::
     dw MONSTER_1EYECLOWN ; id 0
 
 ; list for entry $D7 (DarkEye) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0D7::
+BreedFamilyResults_DarkEye::
     dw MONSTER_MEDUSAEYE ; id 0
 
 ; list for entry $D8 (EyeBall) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0D8::
+BreedFamilyResults_EyeBall::
     dw MONSTER_1EYECLOWN ; id 0
 
 ; list for entry $D9 (SkulRider) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0D9::
+BreedFamilyResults_SkulRider::
     dw MONSTER_AGDEVIL ; id 0
     dw MONSTER_GRENDAL ; id 1
     dw MONSTER_GIGANTES ; id 2
 
 ; list for entry $DA (EvilBeast) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0DA::
+BreedFamilyResults_EvilBeast::
     dw MONSTER_AGDEVIL ; id 0
     dw MONSTER_GRENDAL ; id 1
     dw MONSTER_GIGANTES ; id 2
 
 ; list for entry $DB (Bubblemon) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0DB::
+BreedFamilyResults_Bubblemon::
     dw MONSTER_MEDUSAEYE ; id 0
 
 ; list for entry $DD (Gremlin) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0DD::
+BreedFamilyResults_Gremlin::
     dw MONSTER_AGDEVIL ; id 0
     dw MONSTER_MEDUSAEYE ; id 1
     dw MONSTER_GRENDAL ; id 2
 
 ; list for entry $DE (ArcDemon) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0DE::
+BreedFamilyResults_ArcDemon::
     dw MONSTER_LIONEX ; id 0
     dw MONSTER_GOATHORN ; id 1
     dw MONSTER_CENTASAUR ; id 2
     dw MONSTER_EVILARMOR ; id 3
 
 ; list for entry $DF (Lionex) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0DF::
+BreedFamilyResults_Lionex::
     dw MONSTER_BOSSTROLL ; id 0
 
 ; list for entry $E1 (Orc) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0E1::
+BreedFamilyResults_Orc::
     dw MONSTER_ARCDEMON ; id 0
     dw MONSTER_GATEGUARD ; id 1
     dw MONSTER_CENTASAUR ; id 2
     dw MONSTER_EVILARMOR ; id 3
 
 ; list for entry $E3 (GateGuard) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0E3::
+BreedFamilyResults_GateGuard::
     dw MONSTER_OGRE ; id 0
     dw MONSTER_CENTASAUR ; id 1
     dw MONSTER_EVILARMOR ; id 2
 
 ; list for entry $E4 (ChopClown) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0E4::
+BreedFamilyResults_ChopClown::
     dw MONSTER_CENTASAUR ; id 0
 
 ; list for entry $E6 (Grendal) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0E6::
+BreedFamilyResults_Grendal::
     dw MONSTER_LAMPGENIE ; id 0
 
 ; list for entry $EC (EvilArmor) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0EC::
+BreedFamilyResults_EvilArmor::
     dw MONSTER_REAPER ; id 0
     dw MONSTER_HORK ; id 1
 
 ; list for entry $F7 (Skullgon) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0F7::
+BreedFamilyResults_Skullgon::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_MADSPIRIT ; id 1
 
 ; list for entry $F8 (PutrePup) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0F8::
+BreedFamilyResults_PutrePup::
     dw MONSTER_WINDMERGE ; id 0
 
 ; list for entry $FA (Mummy) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0FA::
+BreedFamilyResults_Mummy::
     dw MONSTER_NITEWHIP ; id 0
 
 ; list for entry $FC (DeadNite) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults0FC::
+BreedFamilyResults_DeadNite::
     dw MONSTER_SKULPENT ; id 0
     dw MONSTER_MADSPIRIT ; id 1
 
 ; list for entry $FD (Shadow) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0FD::
+BreedFamilyResults_Shadow::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_DEADNITE ; id 1
 
 ; list for entry $FF (Hork) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults0FF::
+BreedFamilyResults_Hork::
     dw MONSTER_REAPER ; id 0
 
 ; list for entry $100 (Mudron) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults100::
+BreedFamilyResults_Mudron::
     dw MONSTER_MADSPIRIT ; id 0
 
 ; list for entry $101 (NiteWhip) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults101::
+BreedFamilyResults_NiteWhip::
     dw MONSTER_FOXFIRE ; id 0
 
 ; list for entry $102 (WindMerge) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults102::
+BreedFamilyResults_WindMerge::
     dw MONSTER_POMPOMBOM ; id 0
 
 ; list for entry $106 (CaptDead) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults106::
+BreedFamilyResults_CaptDead::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_MADSPIRIT ; id 1
 
 ; list for entry $108 (WhiteKing) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults108::
+BreedFamilyResults_WhiteKing::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_SERVANT ; id 1
 
 ; list for entry $109 (BoneSlave) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults109::
+BreedFamilyResults_BoneSlave::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_CAPTDEAD ; id 1
     dw MONSTER_MADSPIRIT ; id 2
 
 ; list for entry $10A (Skeletor) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults10A::
+BreedFamilyResults_Skeletor::
     dw MONSTER_SKULLGON ; id 0
     dw MONSTER_MADSPIRIT ; id 1
 
 ; list for entry $10B (Servant) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults10B::
+BreedFamilyResults_Servant::
     dw MONSTER_NITEWHIP ; id 0
     dw MONSTER_SKELETOR ; id 1
 
 ; list for entry $10F (PomPomBom) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults10F::
+BreedFamilyResults_PomPomBom::
     dw MONSTER_MADSPIRIT ; id 0
 
 ; list for entry $110 (Niterich) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults110::
+BreedFamilyResults_Niterich::
     dw MONSTER_GOOPI ; id 0
 
 ; list for entry $11A (EvilWand) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults11A::
+BreedFamilyResults_EvilWand::
     dw MONSTER_PROTOMECH ; id 0
 
 ; list for entry $121 (Puppetor) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults121::
+BreedFamilyResults_Puppetor::
     dw MONSTER_VOODOLL ; id 0
 
 ; list for entry $122 (Goopi) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults122::
+BreedFamilyResults_Goopi::
     dw MONSTER_PROTOMECH ; id 0
     dw MONSTER_METALDRAK ; id 1
     dw MONSTER_CURSELAMP ; id 2
@@ -7651,72 +7650,72 @@ BreedFamilyResults122::
 
 ; list for entry $12A (Roboster2) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults12A::
+BreedFamilyResults_Roboster2::
     dw MONSTER_PROTOMECH ; id 0
     dw MONSTER_METALDRAK ; id 1
     dw MONSTER_CURSELAMP ; id 2
 
 ; list for entry $12B (EvilPot) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults12B::
+BreedFamilyResults_EvilPot::
     dw MONSTER_EVILPOT ; id 0
 
 ; list for entry $12D (LavaMan) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults12D::
+BreedFamilyResults_LavaMan::
     dw MONSTER_BALZAK ; id 0
 
 ; list for entry $12E (IceMan) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults12E::
+BreedFamilyResults_IceMan::
     dw MONSTER_BALZAK ; id 0
 
 ; list for entry $12F (Mimic) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults12F::
+BreedFamilyResults_Mimic::
     dw MONSTER_BOMBCRAG ; id 0
 
 ; list for entry $137 (ProtoMech) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults137::
+BreedFamilyResults_ProtoMech::
     dw MONSTER_OCTOREACH ; id 0
     dw MONSTER_ANGLERON ; id 1
     dw MONSTER_SEAHORSE ; id 2
     dw MONSTER_SEAHORSE ; id 3
 
 ; list for entry $13D (Moray) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults13D::
+BreedFamilyResults_Moray::
     dw MONSTER_GAMANIAN ; id 0
 
 ; list for entry $142 (Merman) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults142::
+BreedFamilyResults_Merman::
     dw MONSTER_STARFISH ; id 0
 
 ; list for entry $146 (Angleron) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults146::
+BreedFamilyResults_Angleron::
     dw MONSTER_RUSHFISH ; id 0
 
 ; list for entry $147 (FishRider) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults147::
+BreedFamilyResults_FishRider::
     dw MONSTER_CLAWSTER ; id 0
 
 ; list for entry $14A (Clawster) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults14A::
+BreedFamilyResults_Clawster::
     dw MONSTER_CANCERMAN ; id 0
 
 ; list for entry $14B (CancerMan) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults14B::
+BreedFamilyResults_CancerMan::
     dw MONSTER_SCALLOPA ; id 0
 
 ; list for entry $14D (Scallopa) of BreedFamilyResultTable; it runs to the next list (E-0199)
 ; record: child species
-BreedFamilyResults14D::
+BreedFamilyResults_Scallopa::
     dw MONSTER_STARFISH ; id 0
 
 ; list for entry $150 (MerTiger) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults150::
+BreedFamilyResults_MerTiger::
     dw MONSTER_STARFISH ; id 0
     dw MONSTER_KINGSQUID ; id 1
 
 ; list for entry $153 (KingSquid) of BreedFamilyResultTable; it runs to the next list (E-0199)
-BreedFamilyResults153::
+BreedFamilyResults_KingSquid::
     dw MONSTER_STARFISH ; id 0
 
 ; stage 3, when stage 2 finds nothing: the word list at $7B83 + 2 * parent A's family holds partner

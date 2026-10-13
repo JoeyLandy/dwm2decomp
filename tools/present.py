@@ -113,6 +113,32 @@ def wrap(indent: str, comment: str) -> list[str]:
                                                        break_on_hyphens=False)]
 
 
+INCBIN_ROM = re.compile(r'^(\s+)INCBIN "dwm2-cobi-us\.gbc", \$([0-9A-Fa-f]+), \$([0-9A-Fa-f]+)(.*)$')
+# D-008: an INCBIN slice of the reference becomes a named asset file: directory by label, name from the label
+ASSET_DIRS = [
+    (r"MonsterSprite_(\w+)", "gfx/monster_sprites/{}"), (r"MonsterPic_(\w+)", "gfx/monster_pics/{}"),
+    (r"FieldSpriteGfx(\w+)", "gfx/field_sprites/{}"), (r"BattleEffectGfx(\w+)", "gfx/battle_effects/{}"),
+    (r"SGBBorder(\w+)", "gfx/sgb_border/{}"), (r"MapType(\w+)", "gfx/map_types/{}"),
+    (r"AreaTileset(\w+)", "gfx/area_tilesets/{}"), (r"SpecialMap(\d+)(\w+)", "maps/special_map{}/{}"),
+    (r"Map([0-9A-F]{2})(\w+)", "maps/map{}/{}"), (r"KeyWorld(\w+)", "maps/key_worlds/{}"),
+    (r"ScreenMap_(\w+)", "maps/screen_maps/{}"), (r"(\w+)", "gfx/misc/{}"),
+]
+
+
+def snake(name: str) -> str:
+    """DrakSlime -> drak_slime, Screens0_Y1X1 -> screens0_y1x1."""
+    s = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", name).lower()
+    return re.sub(r"_+", "_", s).strip("_")
+
+
+def asset_path(label: str, compressed: bool) -> str:
+    for rx, fmt in ASSET_DIRS:
+        m = re.fullmatch(rx, label)
+        if m:
+            return fmt.format(*[snake(g).lower() for g in m.groups()]) + (".lz" if compressed else ".bin")
+    raise ValueError(label)
+
+
 def code_line(line: str) -> str:
     code, comment = split_code(line)
     if not code.strip() or code.startswith("SECTION") or code.lstrip().startswith(("INCBIN", "INCLUDE")):
@@ -125,14 +151,19 @@ def code_line(line: str) -> str:
     return lower_hex(code) + comment
 
 
+ASSETS: dict[str, tuple[int, int]] = {}  # asset path -> (ROM offset, length), filled by present()
+
+
 def present(text: str, names: Names) -> str:
     out: list[str] = []
     recent: list[str] = []  # the last distinct full-line comments, to write a table's repeated comment once
+    label, compressed, pending = "", False, False  # pending: an LZSS comment above the next label
     for ln in text.split("\n"):
         if ALIAS.match(ln):
             continue
         s = ln.lstrip()
         if s.startswith(";"):
+            pending = pending or "LZSS-compressed" in s
             if DROP_COMMENT.match(s):
                 continue
             c = reword(names.sub(s))
@@ -141,6 +172,17 @@ def present(text: str, names: Names) -> str:
             recent = (recent + [c])[-4:]
             out.extend(wrap(ln[:len(ln) - len(s)], c))
             continue
+        m = INCBIN_ROM.match(ln)
+        if m and label:
+            path = asset_path(label, compressed)
+            ASSETS[path] = (int(m.group(2), 16), int(m.group(3), 16))
+            out.append(f'{m.group(1)}INCBIN "{path}"{m.group(4)}')
+            continue
+        m = LABEL.match(ln)
+        if m and "::" in ln:
+            label, compressed, pending = m.group(1), pending, False
+        elif ln.strip():
+            pending = False
         m = LABEL_TAG.match(ln)
         if m:
             ln = m.group(1)
@@ -184,6 +226,7 @@ def main(argv: list[str]) -> int:
     names = Names(texts)
     titles = bank_titles()
     written = []
+    ASSETS.clear()
     for name, text in texts.items():
         out = src_name(name, titles)
         (dest / out).write_text(header(name, titles) + present(text, names), encoding="utf-8", newline="\n")
@@ -197,6 +240,10 @@ def main(argv: list[str]) -> int:
         m = re.match(r'INCLUDE "banks/(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
         out_lines.append(f'INCLUDE "banks/{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
     main_asm.write_text("\n".join(out_lines), encoding="utf-8", newline="\n")
+    (ROOT / "src/assets.txt").write_text(
+        "# D-008: the asset files src/ includes, as slices of the reference ROM: path, file offset, length.\n"
+        "# tools/build.py extracts them from local/roms/ into the build directory; they are never tracked.\n"
+        + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())), encoding="utf-8", newline="\n")
     print(f"presented {len(texts)} bank files from {src} into {dest}")
     return 0
 

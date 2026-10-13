@@ -586,7 +586,7 @@ ToggleStatusStepFlagsLowBitOnce::
 EnterStatusEffectFieldState_Data::
     db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c
     db $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f
-    dw RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
+    dw RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2
     dw $5852
     dw $5a59
     dw PointerRun_0A_438D_Entry03
@@ -913,7 +913,7 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     call DivideBByA
     ld a, b
     add a
-    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE
+    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1
     add e
     ld e, a
     jr nc, .set_temp0
@@ -966,7 +966,7 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     add a
     add c
     add a
-    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716
+    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2
     add e
     ld e, a
     jr nc, .skip3
@@ -987,12 +987,12 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey::
     jr nz, .loop2
     jr .set_encounter_kind_to_02
 
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE::
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1::
     db $ac, $00, $bc, $00, $cc, $00, $dc, $00, $ec, $00, $fc, $00, $0c, $01, $1c, $01
     db $2c, $01, $3c, $01, $1e, $02, $23, $02, $28, $02, $2d, $02, $32, $02, $37, $02
     db $3c, $02, $41, $02, $46, $02, $48, $02
 
-RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716::
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2::
     db $0b, $02, $0c, $02, $0d, $02, $0e, $02, $0f, $02, $0e, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
 
@@ -1878,11 +1878,11 @@ RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
     ret z
     dec a
     jr nz, .call_next_table_byte
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2
     jr .call_next_table_byte2
 
 .call_next_table_byte:
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1
 
 .call_next_table_byte2:
     call NextTableByte
@@ -2422,7 +2422,7 @@ RunBattleIntroKindCase_NextTableByte::
     call NextTableByte
     ld a, [wRandomLo]
     and $03
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wEncounterKind], a
@@ -2485,10 +2485,10 @@ RunBattleIntroKindCase_NextTableByte::
     ld [wBattleKind], a
     ret
 
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C::
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1::
     db $00, $02, $01, $02
 
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150::
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2::
     db $00, $01, $00, $01
 
 RunBattleIntroKindCase_Case01_NextRandomSeed::
@@ -3067,7 +3067,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     ld [wTransitionCountB], a
 
 .read_transition_stage:
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3090,7 +3090,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     inc hl
     dec b
     jr nz, .loop
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3109,7 +3109,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     dec b
     jr nz, .loop2
     push hl
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3130,7 +3130,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     ld h, a
     dec b
     jr nz, .loop3
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603
+    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3301,10 +3301,10 @@ TransitionRowStep08::
     ld h, d
     ret
 
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_55FA::
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1::
     db $14, $12, $10, $0e, $0c, $0a, $08, $06, $04
 
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data_5603::
+RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2::
     db $12, $10, $0e, $0c, $0a, $08, $06, $04, $02
 
 ; RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 *

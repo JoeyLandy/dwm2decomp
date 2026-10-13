@@ -324,7 +324,7 @@ GameMode8_Update_Case00_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42FE
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data5
     jr .call_copy_bytes_de_from_hl_bank_f2
 
 .skip:
@@ -337,7 +337,7 @@ GameMode8_Update_Case00_TestFlagBit::
     ld a, [wBankF0BlockC7]
     and a
     jr nz, .skip2
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_431E
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data6
     jr .call_copy_bytes_de_from_hl_bank_f22
 
 .skip2:
@@ -350,11 +350,11 @@ GameMode8_Update_Case00_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip3
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42E0
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data1
     jr .call_copy_bytes_de_from_hl_bank_f23
 
 .skip3:
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42E6
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data2
 
 .call_copy_bytes_de_from_hl_bank_f23:
     ld de, hTemp0
@@ -364,11 +364,11 @@ GameMode8_Update_Case00_TestFlagBit::
     ld a, [wBankF0BlockC7]
     and a
     jr nz, .skip4
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42EC
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data3
     jr .call_copy_bytes_de_from_hl_bank_f24
 
 .skip4:
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data_42F2
+    ld hl, GameMode8_Update_Case00_TestFlagBit_Data4
 
 .call_copy_bytes_de_from_hl_bank_f24:
     ld de, hTemp0
@@ -404,19 +404,19 @@ CopyBytesDEFromHL_BankF2::
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-GameMode8_Update_Case00_TestFlagBit_Data_42E0::
+GameMode8_Update_Case00_TestFlagBit_Data1::
     db $00, $00, $01, $04, $00, $80
 
-GameMode8_Update_Case00_TestFlagBit_Data_42E6::
+GameMode8_Update_Case00_TestFlagBit_Data2::
     db $01, $00, $01, $01, $00, $80
 
-GameMode8_Update_Case00_TestFlagBit_Data_42EC::
+GameMode8_Update_Case00_TestFlagBit_Data3::
     db $0c, $00, $01, $05, $00, $81
 
-GameMode8_Update_Case00_TestFlagBit_Data_42F2::
+GameMode8_Update_Case00_TestFlagBit_Data4::
     db $0c, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
-GameMode8_Update_Case00_TestFlagBit_Data_42FE::
+GameMode8_Update_Case00_TestFlagBit_Data5::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wSpriteSlots (E-0264)
@@ -424,7 +424,7 @@ GameMode8_Update_Case00_TestFlagBit_Data_42FE::
 SpriteSlotsInit_F2_430E::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-GameMode8_Update_Case00_TestFlagBit_Data_431E::
+GameMode8_Update_Case00_TestFlagBit_Data6::
     db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wObject1 (E-0264)
@@ -1080,11 +1080,11 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
     and $10
     and a
     jr nz, .skip
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D62
+    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D6A
+    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1233,10 +1233,10 @@ ShowRecordBufBEntryStringAtArg1::
     farcall ShowString_Bank08
     ret
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D62::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data_4D6A::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
@@ -1244,11 +1244,11 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
     and $10
     and a
     jr nz, .skip
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E34
+    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data1
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E3A
+    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1365,10 +1365,10 @@ PickNameBufferForFirstByte_BankF2::
 .return:
     ret
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E34::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data1::
     db $1a, $98, $1a, $1c, $a3, $1c
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data_4E3A::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
 ; A = byte offset: hTemp0/hTemp1 = the word at wRecordBufB + A (E-0079)
@@ -1425,9 +1425,9 @@ DrawSevenDigitsFromArg1_BankF2::
     jr nz, .loop
     ret
 
-; for the three species words of wRecordBufB (offsets DecompressRecordBufBSpeciesGraphics_Data_4F41
-; or 4F44 by bit 4 of wRecordBufB + $D) decompresses their graphics to the targets in
-; DecompressRecordBufBSpeciesGraphics_Data_4ED4 (E-0127)
+; for the three species words of wRecordBufB (offsets DecompressRecordBufBSpeciesGraphics_Data2 or
+; 4F44 by bit 4 of wRecordBufB + $D) decompresses their graphics to the targets in
+; DecompressRecordBufBSpeciesGraphics_Data1 (E-0127)
 DecompressRecordBufBSpeciesGraphics::
     ld c, $00
 
@@ -1436,11 +1436,11 @@ DecompressRecordBufBSpeciesGraphics::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     jr nz, .skip
-    ld de, DecompressRecordBufBSpeciesGraphics_Data_4F41
+    ld de, DecompressRecordBufBSpeciesGraphics_Data2
     jr .restore
 
 .skip:
-    ld de, DecompressRecordBufBSpeciesGraphics_Data_4F44
+    ld de, DecompressRecordBufBSpeciesGraphics_Data3
 
 .restore:
     pop bc
@@ -1471,7 +1471,7 @@ DecompressRecordBufBSpeciesGraphics::
     ld b, a
     add a
     add b
-    ld de, DecompressRecordBufBSpeciesGraphics_Data_4ED4
+    ld de, DecompressRecordBufBSpeciesGraphics_Data1
     add e
     ld e, a
     jr nc, .skip3
@@ -1497,7 +1497,7 @@ DecompressRecordBufBSpeciesGraphics::
     jr c, .loop
     ret
 
-DecompressRecordBufBSpeciesGraphics_Data_4ED4::
+DecompressRecordBufBSpeciesGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three species words of wRecordBufB draws their sprite parts at the positions in
@@ -1511,11 +1511,11 @@ DrawRecordBufBSpeciesSprites::
     ldh [hTemp0], a
     and $10
     jr nz, .skip
-    ld de, DecompressRecordBufBSpeciesGraphics_Data_4F41
+    ld de, DecompressRecordBufBSpeciesGraphics_Data2
     jr .restore
 
 .skip:
-    ld de, DecompressRecordBufBSpeciesGraphics_Data_4F44
+    ld de, DecompressRecordBufBSpeciesGraphics_Data3
 
 .restore:
     pop bc
@@ -1571,10 +1571,10 @@ DrawRecordBufBSpeciesSprites::
 DrawRecordBufBSpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
-DecompressRecordBufBSpeciesGraphics_Data_4F41::
+DecompressRecordBufBSpeciesGraphics_Data2::
     db $0b, $1a, $1c
 
-DecompressRecordBufBSpeciesGraphics_Data_4F44::
+DecompressRecordBufBSpeciesGraphics_Data3::
     db $0b, $1c, $1a
 
 ; writes the level wRecordBufB + $56 (marked $6F at the cap wRecordBufB + $57), its digits and the
@@ -1722,15 +1722,15 @@ DrawRecordBufBStatsScreen::
     call DrawFourRecordBufBStatsDigits
     ret
 
-; writes four stat words from wRecordBufB (offsets DrawFourRecordBufBStatsDigits_Data_5050) as three
-; digits at the scroll offsets DrawFourRecordBufBStatsDigits_Data_5054 (E-0125)
+; writes four stat words from wRecordBufB (offsets DrawFourRecordBufBStatsDigits_Data1) as three
+; digits at the scroll offsets DrawFourRecordBufBStatsDigits_Data2 (E-0125)
 DrawFourRecordBufBStatsDigits::
     ld c, $00
 
 .loop:
     push bc
     ld a, c
-    ld hl, DrawFourRecordBufBStatsDigits_Data_5050
+    ld hl, DrawFourRecordBufBStatsDigits_Data1
     add_a_to_hl
     ld a, [hl]
     ld hl, wRecordBufB
@@ -1745,7 +1745,7 @@ DrawFourRecordBufBStatsDigits::
     pop bc
     ld a, c
     add a
-    ld hl, DrawFourRecordBufBStatsDigits_Data_5054
+    ld hl, DrawFourRecordBufBStatsDigits_Data2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1762,10 +1762,10 @@ DrawFourRecordBufBStatsDigits::
     jr c, .loop
     ret
 
-DrawFourRecordBufBStatsDigits_Data_5050::
+DrawFourRecordBufBStatsDigits_Data1::
     db $5b, $5d, $5f, $61
 
-DrawFourRecordBufBStatsDigits_Data_5054::
+DrawFourRecordBufBStatsDigits_Data2::
     db $cc, $01, $d0, $01, $0c, $02, $10, $02
 
 ; writes five stat words from wRecordBufB (offsets DrawFiveRecordBufBStatsColumn_Data) as three

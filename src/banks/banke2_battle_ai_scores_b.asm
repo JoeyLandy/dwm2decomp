@@ -5651,9 +5651,9 @@ AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66B9
+    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF
+    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5663,10 +5663,10 @@ AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66B9::
+AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data1::
     db $1e, $1f, $20, $21, $22, $22
 
-AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF::
+AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data2::
     db $ab, $ac, $ad, $ae, $af, $af
 
 ; for the three slots of the side in A (bit 2), runs
@@ -5700,9 +5700,9 @@ ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_66FF
+    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_6705
+    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5712,10 +5712,10 @@ ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_66FF::
+ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data1::
     db $1d, $1e, $1f, $20, $21, $22
 
-ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_6705::
+ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
 AIScore_Ramming_HPBandOfSlotTemp0::
@@ -5764,9 +5764,9 @@ AIScore_Cover_Sub01_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_6767
+    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_676D
+    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5776,10 +5776,10 @@ AIScore_Cover_Sub01_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_6767::
+AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data1::
     db $21, $20, $1f, $1e, $1d, $1d
 
-AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_676D::
+AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
 AIScore_Upper_CompareFoeAverageATKWithAllyDEF::

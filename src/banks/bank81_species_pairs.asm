@@ -231,33 +231,33 @@ CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
 ; record: pair-check list for this species
 SpeciesPairCheckTable::
     dw SpeciesPairChecks000 ; id 0
-    dw SpeciesPairChecks001 ; id 1 DrakSlime
-    dw SpeciesPairChecks002 ; id 2 SpotSlime
-    dw SpeciesPairChecks003 ; id 3 WingSlime
-    dw SpeciesPairChecks004 ; id 4 TreeSlime
-    dw SpeciesPairChecks005 ; id 5 Snaily
-    dw SpeciesPairChecks006 ; id 6 SlimeNite
-    dw SpeciesPairChecks007 ; id 7 Babble
-    dw SpeciesPairChecks008 ; id 8 BoxSlime
-    dw SpeciesPairChecks009 ; id 9 PearlGel
-    dw SpeciesPairChecks00A ; id 10 Slime
-    dw SpeciesPairChecks00B ; id 11 Healer
-    dw SpeciesPairChecks00C ; id 12 FangSlime
-    dw SpeciesPairChecks00D ; id 13 RockSlime
-    dw SpeciesPairChecks00E ; id 14 SlimeBorg
-    dw SpeciesPairChecks00F ; id 15 Slabbit
-    dw SpeciesPairChecks010 ; id 16 KingSlime
-    dw SpeciesPairChecks011 ; id 17 Metaly
-    dw SpeciesPairChecks012 ; id 18 Metabble
-    dw SpeciesPairChecks013 ; id 19 SpotKing
-    dw SpeciesPairChecks014 ; id 20 TropicGel
-    dw SpeciesPairChecks015 ; id 21 MimeSlime
-    dw SpeciesPairChecks016 ; id 22 HaloSlime
-    dw SpeciesPairChecks017 ; id 23 MetalKing
-    dw SpeciesPairChecks018 ; id 24 GoldSlime
-    dw SpeciesPairChecks019 ; id 25 GranSlime
-    dw SpeciesPairChecks01A ; id 26 WonderEgg
-    dw SpeciesPairChecks01B ; id 27 Butch
+    dw SpeciesPairChecks_DrakSlime ; id 1 DrakSlime
+    dw SpeciesPairChecks_SpotSlime ; id 2 SpotSlime
+    dw SpeciesPairChecks_WingSlime ; id 3 WingSlime
+    dw SpeciesPairChecks_TreeSlime ; id 4 TreeSlime
+    dw SpeciesPairChecks_Snaily ; id 5 Snaily
+    dw SpeciesPairChecks_SlimeNite ; id 6 SlimeNite
+    dw SpeciesPairChecks_Babble ; id 7 Babble
+    dw SpeciesPairChecks_BoxSlime ; id 8 BoxSlime
+    dw SpeciesPairChecks_PearlGel ; id 9 PearlGel
+    dw SpeciesPairChecks_Slime ; id 10 Slime
+    dw SpeciesPairChecks_Healer ; id 11 Healer
+    dw SpeciesPairChecks_FangSlime ; id 12 FangSlime
+    dw SpeciesPairChecks_RockSlime ; id 13 RockSlime
+    dw SpeciesPairChecks_SlimeBorg ; id 14 SlimeBorg
+    dw SpeciesPairChecks_Slabbit ; id 15 Slabbit
+    dw SpeciesPairChecks_KingSlime ; id 16 KingSlime
+    dw SpeciesPairChecks_Metaly ; id 17 Metaly
+    dw SpeciesPairChecks_Metabble ; id 18 Metabble
+    dw SpeciesPairChecks_SpotKing ; id 19 SpotKing
+    dw SpeciesPairChecks_TropicGel ; id 20 TropicGel
+    dw SpeciesPairChecks_MimeSlime ; id 21 MimeSlime
+    dw SpeciesPairChecks_HaloSlime ; id 22 HaloSlime
+    dw SpeciesPairChecks_MetalKing ; id 23 MetalKing
+    dw SpeciesPairChecks_GoldSlime ; id 24 GoldSlime
+    dw SpeciesPairChecks_GranSlime ; id 25 GranSlime
+    dw SpeciesPairChecks_WonderEgg ; id 26 WonderEgg
+    dw SpeciesPairChecks_Butch ; id 27 Butch
     dw SpeciesPairChecks01C ; id 28 ?
     dw SpeciesPairChecks01D ; id 29 ?
     dw SpeciesPairChecks01E ; id 30 ?
@@ -266,103 +266,103 @@ SpeciesPairCheckTable::
     dw SpeciesPairChecks021 ; id 33 ?
     dw SpeciesPairChecks022 ; id 34 ?
     dw SpeciesPairChecks023 ; id 35 ?
-    dw SpeciesPairChecks024 ; id 36 DragonKid
-    dw SpeciesPairChecks025 ; id 37 Tortragon
-    dw SpeciesPairChecks026 ; id 38 Pteranod
-    dw SpeciesPairChecks027 ; id 39 Gasgon
-    dw SpeciesPairChecks028 ; id 40 FairyDrak
-    dw SpeciesPairChecks029 ; id 41 LizardMan
-    dw SpeciesPairChecks02A ; id 42 Poisongon
-    dw SpeciesPairChecks02B ; id 43 Swordgon
-    dw SpeciesPairChecks02C ; id 44 Drygon
-    dw SpeciesPairChecks02D ; id 45 Dragon
-    dw SpeciesPairChecks02E ; id 46 MiniDrak
-    dw SpeciesPairChecks02F ; id 47 MadDragon
-    dw SpeciesPairChecks030 ; id 48 Rayburn
-    dw SpeciesPairChecks031 ; id 49 Chamelgon
-    dw SpeciesPairChecks032 ; id 50 LizardFly
-    dw SpeciesPairChecks033 ; id 51 Andreal
-    dw SpeciesPairChecks034 ; id 52 KingCobra
-    dw SpeciesPairChecks035 ; id 53 Vampirus
-    dw SpeciesPairChecks036 ; id 54 SnakeBat
-    dw SpeciesPairChecks037 ; id 55 Spikerous
-    dw SpeciesPairChecks038 ; id 56 GreatDrak
-    dw SpeciesPairChecks039 ; id 57 Crestpent
-    dw SpeciesPairChecks03A ; id 58 WingSnake
-    dw SpeciesPairChecks03B ; id 59 Coatol
-    dw SpeciesPairChecks03C ; id 60 Orochi
-    dw SpeciesPairChecks03D ; id 61 BattleRex
-    dw SpeciesPairChecks03E ; id 62 SkyDragon
-    dw SpeciesPairChecks03F ; id 63 Serpentia
-    dw SpeciesPairChecks040 ; id 64 Divinegon
-    dw SpeciesPairChecks041 ; id 65 Orligon
-    dw SpeciesPairChecks042 ; id 66 GigaDraco
+    dw SpeciesPairChecks_DragonKid ; id 36 DragonKid
+    dw SpeciesPairChecks_Tortragon ; id 37 Tortragon
+    dw SpeciesPairChecks_Pteranod ; id 38 Pteranod
+    dw SpeciesPairChecks_Gasgon ; id 39 Gasgon
+    dw SpeciesPairChecks_FairyDrak ; id 40 FairyDrak
+    dw SpeciesPairChecks_LizardMan ; id 41 LizardMan
+    dw SpeciesPairChecks_Poisongon ; id 42 Poisongon
+    dw SpeciesPairChecks_Swordgon ; id 43 Swordgon
+    dw SpeciesPairChecks_Drygon ; id 44 Drygon
+    dw SpeciesPairChecks_Dragon ; id 45 Dragon
+    dw SpeciesPairChecks_MiniDrak ; id 46 MiniDrak
+    dw SpeciesPairChecks_MadDragon ; id 47 MadDragon
+    dw SpeciesPairChecks_Rayburn ; id 48 Rayburn
+    dw SpeciesPairChecks_Chamelgon ; id 49 Chamelgon
+    dw SpeciesPairChecks_LizardFly ; id 50 LizardFly
+    dw SpeciesPairChecks_Andreal ; id 51 Andreal
+    dw SpeciesPairChecks_KingCobra ; id 52 KingCobra
+    dw SpeciesPairChecks_Vampirus ; id 53 Vampirus
+    dw SpeciesPairChecks_SnakeBat ; id 54 SnakeBat
+    dw SpeciesPairChecks_Spikerous ; id 55 Spikerous
+    dw SpeciesPairChecks_GreatDrak ; id 56 GreatDrak
+    dw SpeciesPairChecks_Crestpent ; id 57 Crestpent
+    dw SpeciesPairChecks_WingSnake ; id 58 WingSnake
+    dw SpeciesPairChecks_Coatol ; id 59 Coatol
+    dw SpeciesPairChecks_Orochi ; id 60 Orochi
+    dw SpeciesPairChecks_BattleRex ; id 61 BattleRex
+    dw SpeciesPairChecks_SkyDragon ; id 62 SkyDragon
+    dw SpeciesPairChecks_Serpentia ; id 63 Serpentia
+    dw SpeciesPairChecks_Divinegon ; id 64 Divinegon
+    dw SpeciesPairChecks_Orligon ; id 65 Orligon
+    dw SpeciesPairChecks_GigaDraco ; id 66 GigaDraco
     dw SpeciesPairChecks043 ; id 67 ?
     dw SpeciesPairChecks044 ; id 68 ?
     dw SpeciesPairChecks045 ; id 69 ?
     dw SpeciesPairChecks046 ; id 70 ?
-    dw SpeciesPairChecks047 ; id 71 Tonguella
-    dw SpeciesPairChecks048 ; id 72 Almiraj
-    dw SpeciesPairChecks049 ; id 73 CatFly
-    dw SpeciesPairChecks04A ; id 74 PillowRat
-    dw SpeciesPairChecks04B ; id 75 Saccer
-    dw SpeciesPairChecks04C ; id 76 GulpBeast
-    dw SpeciesPairChecks04D ; id 77 Skullroo
-    dw SpeciesPairChecks04E ; id 78 WindBeast
-    dw SpeciesPairChecks04F ; id 79 Beavern
-    dw SpeciesPairChecks050 ; id 80 Antbear
-    dw SpeciesPairChecks051 ; id 81 SuperTen
-    dw SpeciesPairChecks052 ; id 82 IronTurt
-    dw SpeciesPairChecks053 ; id 83 Mommonja
-    dw SpeciesPairChecks054 ; id 84 HammerMan
-    dw SpeciesPairChecks055 ; id 85 Grizzly
-    dw SpeciesPairChecks056 ; id 86 Yeti
-    dw SpeciesPairChecks057 ; id 87 ArrowDog
-    dw SpeciesPairChecks058 ; id 88 NoctoKing
-    dw SpeciesPairChecks059 ; id 89 BeastNite
-    dw SpeciesPairChecks05A ; id 90 MadGopher
-    dw SpeciesPairChecks05B ; id 91 FairyRat
-    dw SpeciesPairChecks05C ; id 92 Unicorn
-    dw SpeciesPairChecks05D ; id 93 Goategon
-    dw SpeciesPairChecks05E ; id 94 WildApe
-    dw SpeciesPairChecks05F ; id 95 Trumpeter
-    dw SpeciesPairChecks060 ; id 96 KingLeo
-    dw SpeciesPairChecks061 ; id 97 DarkHorn
-    dw SpeciesPairChecks062 ; id 98 MadCat
-    dw SpeciesPairChecks063 ; id 99 BigEye
-    dw SpeciesPairChecks064 ; id 100 Gorago
-    dw SpeciesPairChecks065 ; id 101 CatMage
-    dw SpeciesPairChecks066 ; id 102 Dumbira
+    dw SpeciesPairChecks_Tonguella ; id 71 Tonguella
+    dw SpeciesPairChecks_Almiraj ; id 72 Almiraj
+    dw SpeciesPairChecks_CatFly ; id 73 CatFly
+    dw SpeciesPairChecks_PillowRat ; id 74 PillowRat
+    dw SpeciesPairChecks_Saccer ; id 75 Saccer
+    dw SpeciesPairChecks_GulpBeast ; id 76 GulpBeast
+    dw SpeciesPairChecks_Skullroo ; id 77 Skullroo
+    dw SpeciesPairChecks_WindBeast ; id 78 WindBeast
+    dw SpeciesPairChecks_Beavern ; id 79 Beavern
+    dw SpeciesPairChecks_Antbear ; id 80 Antbear
+    dw SpeciesPairChecks_SuperTen ; id 81 SuperTen
+    dw SpeciesPairChecks_IronTurt ; id 82 IronTurt
+    dw SpeciesPairChecks_Mommonja ; id 83 Mommonja
+    dw SpeciesPairChecks_HammerMan ; id 84 HammerMan
+    dw SpeciesPairChecks_Grizzly ; id 85 Grizzly
+    dw SpeciesPairChecks_Yeti ; id 86 Yeti
+    dw SpeciesPairChecks_ArrowDog ; id 87 ArrowDog
+    dw SpeciesPairChecks_NoctoKing ; id 88 NoctoKing
+    dw SpeciesPairChecks_BeastNite ; id 89 BeastNite
+    dw SpeciesPairChecks_MadGopher ; id 90 MadGopher
+    dw SpeciesPairChecks_FairyRat ; id 91 FairyRat
+    dw SpeciesPairChecks_Unicorn ; id 92 Unicorn
+    dw SpeciesPairChecks_Goategon ; id 93 Goategon
+    dw SpeciesPairChecks_WildApe ; id 94 WildApe
+    dw SpeciesPairChecks_Trumpeter ; id 95 Trumpeter
+    dw SpeciesPairChecks_KingLeo ; id 96 KingLeo
+    dw SpeciesPairChecks_DarkHorn ; id 97 DarkHorn
+    dw SpeciesPairChecks_MadCat ; id 98 MadCat
+    dw SpeciesPairChecks_BigEye ; id 99 BigEye
+    dw SpeciesPairChecks_Gorago ; id 100 Gorago
+    dw SpeciesPairChecks_CatMage ; id 101 CatMage
+    dw SpeciesPairChecks_Dumbira ; id 102 Dumbira
     dw SpeciesPairChecks067 ; id 103 ?
     dw SpeciesPairChecks068 ; id 104 ?
     dw SpeciesPairChecks069 ; id 105 ?
-    dw SpeciesPairChecks06A ; id 106 Picky
-    dw SpeciesPairChecks06B ; id 107 Wyvern
-    dw SpeciesPairChecks06C ; id 108 BullBird
-    dw SpeciesPairChecks06D ; id 109 Florajay
-    dw SpeciesPairChecks06E ; id 110 DuckKite
-    dw SpeciesPairChecks06F ; id 111 MadPecker
-    dw SpeciesPairChecks070 ; id 112 MadRaven
-    dw SpeciesPairChecks071 ; id 113 MistyWing
-    dw SpeciesPairChecks072 ; id 114 AquaHawk
-    dw SpeciesPairChecks073 ; id 115 Dracky
-    dw SpeciesPairChecks074 ; id 116 KiteHawk
-    dw SpeciesPairChecks075 ; id 117 BigRoost
-    dw SpeciesPairChecks076 ; id 118 StubBird
-    dw SpeciesPairChecks077 ; id 119 LandOwl
-    dw SpeciesPairChecks078 ; id 120 MadGoose
-    dw SpeciesPairChecks079 ; id 121 MadCondor
-    dw SpeciesPairChecks07A ; id 122 Emyu
-    dw SpeciesPairChecks07B ; id 123 Blizzardy
-    dw SpeciesPairChecks07C ; id 124 Phoenix
-    dw SpeciesPairChecks07D ; id 125 ZapBird
-    dw SpeciesPairChecks07E ; id 126 Garudian
-    dw SpeciesPairChecks07F ; id 127 WhipBird
-    dw SpeciesPairChecks080 ; id 128 FunkyBird
-    dw SpeciesPairChecks081 ; id 129 RainHawk
-    dw SpeciesPairChecks082 ; id 130 Azurile
-    dw SpeciesPairChecks083 ; id 131 Shantak
-    dw SpeciesPairChecks084 ; id 132 CragDevil
+    dw SpeciesPairChecks_Picky ; id 106 Picky
+    dw SpeciesPairChecks_Wyvern ; id 107 Wyvern
+    dw SpeciesPairChecks_BullBird ; id 108 BullBird
+    dw SpeciesPairChecks_Florajay ; id 109 Florajay
+    dw SpeciesPairChecks_DuckKite ; id 110 DuckKite
+    dw SpeciesPairChecks_MadPecker ; id 111 MadPecker
+    dw SpeciesPairChecks_MadRaven ; id 112 MadRaven
+    dw SpeciesPairChecks_MistyWing ; id 113 MistyWing
+    dw SpeciesPairChecks_AquaHawk ; id 114 AquaHawk
+    dw SpeciesPairChecks_Dracky ; id 115 Dracky
+    dw SpeciesPairChecks_KiteHawk ; id 116 KiteHawk
+    dw SpeciesPairChecks_BigRoost ; id 117 BigRoost
+    dw SpeciesPairChecks_StubBird ; id 118 StubBird
+    dw SpeciesPairChecks_LandOwl ; id 119 LandOwl
+    dw SpeciesPairChecks_MadGoose ; id 120 MadGoose
+    dw SpeciesPairChecks_MadCondor ; id 121 MadCondor
+    dw SpeciesPairChecks_Emyu ; id 122 Emyu
+    dw SpeciesPairChecks_Blizzardy ; id 123 Blizzardy
+    dw SpeciesPairChecks_Phoenix ; id 124 Phoenix
+    dw SpeciesPairChecks_ZapBird ; id 125 ZapBird
+    dw SpeciesPairChecks_Garudian ; id 126 Garudian
+    dw SpeciesPairChecks_WhipBird ; id 127 WhipBird
+    dw SpeciesPairChecks_FunkyBird ; id 128 FunkyBird
+    dw SpeciesPairChecks_RainHawk ; id 129 RainHawk
+    dw SpeciesPairChecks_Azurile ; id 130 Azurile
+    dw SpeciesPairChecks_Shantak ; id 131 Shantak
+    dw SpeciesPairChecks_CragDevil ; id 132 CragDevil
     dw SpeciesPairChecks085 ; id 133 ?
     dw SpeciesPairChecks086 ; id 134 ?
     dw SpeciesPairChecks087 ; id 135 ?
@@ -371,33 +371,33 @@ SpeciesPairCheckTable::
     dw SpeciesPairChecks08A ; id 138 ?
     dw SpeciesPairChecks08B ; id 139 ?
     dw SpeciesPairChecks08C ; id 140 ?
-    dw SpeciesPairChecks08D ; id 141 MadPlant
-    dw SpeciesPairChecks08E ; id 142 FireWeed
-    dw SpeciesPairChecks08F ; id 143 FloraMan
-    dw SpeciesPairChecks090 ; id 144 WingTree
-    dw SpeciesPairChecks091 ; id 145 CactiBall
-    dw SpeciesPairChecks092 ; id 146 Gulpple
-    dw SpeciesPairChecks093 ; id 147 Toadstool
-    dw SpeciesPairChecks094 ; id 148 AmberWeed
-    dw SpeciesPairChecks095 ; id 149 Slurperon
-    dw SpeciesPairChecks096 ; id 150 Stubsuck
-    dw SpeciesPairChecks097 ; id 151 Oniono
-    dw SpeciesPairChecks098 ; id 152 DanceVegi
-    dw SpeciesPairChecks099 ; id 153 TreeBoy
-    dw SpeciesPairChecks09A ; id 154 Devipine
-    dw SpeciesPairChecks09B ; id 155 FaceTree
-    dw SpeciesPairChecks09C ; id 156 HerbMan
-    dw SpeciesPairChecks09D ; id 157 BeanMan
-    dw SpeciesPairChecks09E ; id 158 EvilSeed
-    dw SpeciesPairChecks09F ; id 159 ManEater
-    dw SpeciesPairChecks0A0 ; id 160 Snapper
-    dw SpeciesPairChecks0A1 ; id 161 GhosTree
-    dw SpeciesPairChecks0A2 ; id 162 Rosevine
-    dw SpeciesPairChecks0A3 ; id 163 Egdracil
-    dw SpeciesPairChecks0A4 ; id 164 Warubou
-    dw SpeciesPairChecks0A5 ; id 165 Watabou
-    dw SpeciesPairChecks0A6 ; id 166 Eggplaton
-    dw SpeciesPairChecks0A7 ; id 167 FooHero
+    dw SpeciesPairChecks_MadPlant ; id 141 MadPlant
+    dw SpeciesPairChecks_FireWeed ; id 142 FireWeed
+    dw SpeciesPairChecks_FloraMan ; id 143 FloraMan
+    dw SpeciesPairChecks_WingTree ; id 144 WingTree
+    dw SpeciesPairChecks_CactiBall ; id 145 CactiBall
+    dw SpeciesPairChecks_Gulpple ; id 146 Gulpple
+    dw SpeciesPairChecks_Toadstool ; id 147 Toadstool
+    dw SpeciesPairChecks_AmberWeed ; id 148 AmberWeed
+    dw SpeciesPairChecks_Slurperon ; id 149 Slurperon
+    dw SpeciesPairChecks_Stubsuck ; id 150 Stubsuck
+    dw SpeciesPairChecks_Oniono ; id 151 Oniono
+    dw SpeciesPairChecks_DanceVegi ; id 152 DanceVegi
+    dw SpeciesPairChecks_TreeBoy ; id 153 TreeBoy
+    dw SpeciesPairChecks_Devipine ; id 154 Devipine
+    dw SpeciesPairChecks_FaceTree ; id 155 FaceTree
+    dw SpeciesPairChecks_HerbMan ; id 156 HerbMan
+    dw SpeciesPairChecks_BeanMan ; id 157 BeanMan
+    dw SpeciesPairChecks_EvilSeed ; id 158 EvilSeed
+    dw SpeciesPairChecks_ManEater ; id 159 ManEater
+    dw SpeciesPairChecks_Snapper ; id 160 Snapper
+    dw SpeciesPairChecks_GhosTree ; id 161 GhosTree
+    dw SpeciesPairChecks_Rosevine ; id 162 Rosevine
+    dw SpeciesPairChecks_Egdracil ; id 163 Egdracil
+    dw SpeciesPairChecks_Warubou ; id 164 Warubou
+    dw SpeciesPairChecks_Watabou ; id 165 Watabou
+    dw SpeciesPairChecks_Eggplaton ; id 166 Eggplaton
+    dw SpeciesPairChecks_FooHero ; id 167 FooHero
     dw SpeciesPairChecks0A8 ; id 168 ?
     dw SpeciesPairChecks0A9 ; id 169 ?
     dw SpeciesPairChecks0AA ; id 170 ?
@@ -406,32 +406,32 @@ SpeciesPairCheckTable::
     dw SpeciesPairChecks0AD ; id 173 ?
     dw SpeciesPairChecks0AE ; id 174 ?
     dw SpeciesPairChecks0AF ; id 175 ?
-    dw SpeciesPairChecks0B0 ; id 176 GiantSlug
-    dw SpeciesPairChecks0B1 ; id 177 Catapila
-    dw SpeciesPairChecks0B2 ; id 178 Gophecada
-    dw SpeciesPairChecks0B3 ; id 179 Butterfly
-    dw SpeciesPairChecks0B4 ; id 180 WeedBug
-    dw SpeciesPairChecks0B5 ; id 181 GiantWorm
-    dw SpeciesPairChecks0B6 ; id 182 Lipsy
-    dw SpeciesPairChecks0B7 ; id 183 StagBug
-    dw SpeciesPairChecks0B8 ; id 184 Pyuro
-    dw SpeciesPairChecks0B9 ; id 185 ArmyAnt
-    dw SpeciesPairChecks0BA ; id 186 GoHopper
-    dw SpeciesPairChecks0BB ; id 187 TailEater
-    dw SpeciesPairChecks0BC ; id 188 ArmorPede
-    dw SpeciesPairChecks0BD ; id 189 Eyeder
-    dw SpeciesPairChecks0BE ; id 190 GiantMoth
-    dw SpeciesPairChecks0BF ; id 191 Droll
-    dw SpeciesPairChecks0C0 ; id 192 ArmyCrab
-    dw SpeciesPairChecks0C1 ; id 193 MadHornet
-    dw SpeciesPairChecks0C2 ; id 194 Belzebub
-    dw SpeciesPairChecks0C3 ; id 195 WarMantis
-    dw SpeciesPairChecks0C4 ; id 196 HornBeet
-    dw SpeciesPairChecks0C5 ; id 197 Sickler
-    dw SpeciesPairChecks0C6 ; id 198 Armorpion
-    dw SpeciesPairChecks0C7 ; id 199 Digster
-    dw SpeciesPairChecks0C8 ; id 200 Skularach
-    dw SpeciesPairChecks0C9 ; id 201 MultiEyes
+    dw SpeciesPairChecks_GiantSlug ; id 176 GiantSlug
+    dw SpeciesPairChecks_Catapila ; id 177 Catapila
+    dw SpeciesPairChecks_Gophecada ; id 178 Gophecada
+    dw SpeciesPairChecks_Butterfly ; id 179 Butterfly
+    dw SpeciesPairChecks_WeedBug ; id 180 WeedBug
+    dw SpeciesPairChecks_GiantWorm ; id 181 GiantWorm
+    dw SpeciesPairChecks_Lipsy ; id 182 Lipsy
+    dw SpeciesPairChecks_StagBug ; id 183 StagBug
+    dw SpeciesPairChecks_Pyuro ; id 184 Pyuro
+    dw SpeciesPairChecks_ArmyAnt ; id 185 ArmyAnt
+    dw SpeciesPairChecks_GoHopper ; id 186 GoHopper
+    dw SpeciesPairChecks_TailEater ; id 187 TailEater
+    dw SpeciesPairChecks_ArmorPede ; id 188 ArmorPede
+    dw SpeciesPairChecks_Eyeder ; id 189 Eyeder
+    dw SpeciesPairChecks_GiantMoth ; id 190 GiantMoth
+    dw SpeciesPairChecks_Droll ; id 191 Droll
+    dw SpeciesPairChecks_ArmyCrab ; id 192 ArmyCrab
+    dw SpeciesPairChecks_MadHornet ; id 193 MadHornet
+    dw SpeciesPairChecks_Belzebub ; id 194 Belzebub
+    dw SpeciesPairChecks_WarMantis ; id 195 WarMantis
+    dw SpeciesPairChecks_HornBeet ; id 196 HornBeet
+    dw SpeciesPairChecks_Sickler ; id 197 Sickler
+    dw SpeciesPairChecks_Armorpion ; id 198 Armorpion
+    dw SpeciesPairChecks_Digster ; id 199 Digster
+    dw SpeciesPairChecks_Skularach ; id 200 Skularach
+    dw SpeciesPairChecks_MultiEyes ; id 201 MultiEyes
     dw SpeciesPairChecks0CA ; id 202 ?
     dw SpeciesPairChecks0CB ; id 203 ?
     dw SpeciesPairChecks0CC ; id 204 ?
@@ -441,68 +441,68 @@ SpeciesPairCheckTable::
     dw SpeciesPairChecks0D0 ; id 208 ?
     dw SpeciesPairChecks0D1 ; id 209 ?
     dw SpeciesPairChecks0D2 ; id 210 ?
-    dw SpeciesPairChecks0D3 ; id 211 Pixy
-    dw SpeciesPairChecks0D4 ; id 212 MedusaEye
-    dw SpeciesPairChecks0D5 ; id 213 AgDevil
-    dw SpeciesPairChecks0D6 ; id 214 Demonite
-    dw SpeciesPairChecks0D7 ; id 215 DarkEye
-    dw SpeciesPairChecks0D8 ; id 216 EyeBall
-    dw SpeciesPairChecks0D9 ; id 217 SkulRider
-    dw SpeciesPairChecks0DA ; id 218 EvilBeast
-    dw SpeciesPairChecks0DB ; id 219 Bubblemon
-    dw SpeciesPairChecks0DC ; id 220 1EyeClown
-    dw SpeciesPairChecks0DD ; id 221 Gremlin
-    dw SpeciesPairChecks0DE ; id 222 ArcDemon
-    dw SpeciesPairChecks0DF ; id 223 Lionex
-    dw SpeciesPairChecks0E0 ; id 224 GoatHorn
-    dw SpeciesPairChecks0E1 ; id 225 Orc
-    dw SpeciesPairChecks0E2 ; id 226 Ogre
-    dw SpeciesPairChecks0E3 ; id 227 GateGuard
-    dw SpeciesPairChecks0E4 ; id 228 ChopClown
-    dw SpeciesPairChecks0E5 ; id 229 BossTroll
-    dw SpeciesPairChecks0E6 ; id 230 Grendal
-    dw SpeciesPairChecks0E7 ; id 231 Akubar
-    dw SpeciesPairChecks0E8 ; id 232 MadKnight
-    dw SpeciesPairChecks0E9 ; id 233 EvilWell
-    dw SpeciesPairChecks0EA ; id 234 Gigantes
-    dw SpeciesPairChecks0EB ; id 235 Centasaur
-    dw SpeciesPairChecks0EC ; id 236 EvilArmor
-    dw SpeciesPairChecks0ED ; id 237 Jamirus
-    dw SpeciesPairChecks0EE ; id 238 Durran
-    dw SpeciesPairChecks0EF ; id 239 Titanis
-    dw SpeciesPairChecks0F0 ; id 240 LampGenie
+    dw SpeciesPairChecks_Pixy ; id 211 Pixy
+    dw SpeciesPairChecks_MedusaEye ; id 212 MedusaEye
+    dw SpeciesPairChecks_AgDevil ; id 213 AgDevil
+    dw SpeciesPairChecks_Demonite ; id 214 Demonite
+    dw SpeciesPairChecks_DarkEye ; id 215 DarkEye
+    dw SpeciesPairChecks_EyeBall ; id 216 EyeBall
+    dw SpeciesPairChecks_SkulRider ; id 217 SkulRider
+    dw SpeciesPairChecks_EvilBeast ; id 218 EvilBeast
+    dw SpeciesPairChecks_Bubblemon ; id 219 Bubblemon
+    dw SpeciesPairChecks_1EyeClown ; id 220 1EyeClown
+    dw SpeciesPairChecks_Gremlin ; id 221 Gremlin
+    dw SpeciesPairChecks_ArcDemon ; id 222 ArcDemon
+    dw SpeciesPairChecks_Lionex ; id 223 Lionex
+    dw SpeciesPairChecks_GoatHorn ; id 224 GoatHorn
+    dw SpeciesPairChecks_Orc ; id 225 Orc
+    dw SpeciesPairChecks_Ogre ; id 226 Ogre
+    dw SpeciesPairChecks_GateGuard ; id 227 GateGuard
+    dw SpeciesPairChecks_ChopClown ; id 228 ChopClown
+    dw SpeciesPairChecks_BossTroll ; id 229 BossTroll
+    dw SpeciesPairChecks_Grendal ; id 230 Grendal
+    dw SpeciesPairChecks_Akubar ; id 231 Akubar
+    dw SpeciesPairChecks_MadKnight ; id 232 MadKnight
+    dw SpeciesPairChecks_EvilWell ; id 233 EvilWell
+    dw SpeciesPairChecks_Gigantes ; id 234 Gigantes
+    dw SpeciesPairChecks_Centasaur ; id 235 Centasaur
+    dw SpeciesPairChecks_EvilArmor ; id 236 EvilArmor
+    dw SpeciesPairChecks_Jamirus ; id 237 Jamirus
+    dw SpeciesPairChecks_Durran ; id 238 Durran
+    dw SpeciesPairChecks_Titanis ; id 239 Titanis
+    dw SpeciesPairChecks_LampGenie ; id 240 LampGenie
     dw SpeciesPairChecks0F1 ; id 241 ?
     dw SpeciesPairChecks0F2 ; id 242 ?
     dw SpeciesPairChecks0F3 ; id 243 ?
     dw SpeciesPairChecks0F4 ; id 244 ?
     dw SpeciesPairChecks0F5 ; id 245 ?
-    dw SpeciesPairChecks0F6 ; id 246 Spooky
-    dw SpeciesPairChecks0F7 ; id 247 Skullgon
-    dw SpeciesPairChecks0F8 ; id 248 PutrePup
-    dw SpeciesPairChecks0F9 ; id 249 RotRaven
-    dw SpeciesPairChecks0FA ; id 250 Mummy
-    dw SpeciesPairChecks0FB ; id 251 DarkCrab
-    dw SpeciesPairChecks0FC ; id 252 DeadNite
-    dw SpeciesPairChecks0FD ; id 253 Shadow
-    dw SpeciesPairChecks0FE ; id 254 Skulpent
-    dw SpeciesPairChecks0FF ; id 255 Hork
-    dw SpeciesPairChecks100 ; id 256 Mudron
-    dw SpeciesPairChecks101 ; id 257 NiteWhip
-    dw SpeciesPairChecks102 ; id 258 WindMerge
-    dw SpeciesPairChecks103 ; id 259 Reaper
-    dw SpeciesPairChecks104 ; id 260 Inverzon
-    dw SpeciesPairChecks105 ; id 261 FoxFire
-    dw SpeciesPairChecks106 ; id 262 CaptDead
-    dw SpeciesPairChecks107 ; id 263 DeadNoble
-    dw SpeciesPairChecks108 ; id 264 WhiteKing
-    dw SpeciesPairChecks109 ; id 265 BoneSlave
-    dw SpeciesPairChecks10A ; id 266 Skeletor
-    dw SpeciesPairChecks10B ; id 267 Servant
-    dw SpeciesPairChecks10C ; id 268 Lazamanus
-    dw SpeciesPairChecks10D ; id 269 Copycat
-    dw SpeciesPairChecks10E ; id 270 MadSpirit
-    dw SpeciesPairChecks10F ; id 271 PomPomBom
-    dw SpeciesPairChecks110 ; id 272 Niterich
+    dw SpeciesPairChecks_Spooky ; id 246 Spooky
+    dw SpeciesPairChecks_Skullgon ; id 247 Skullgon
+    dw SpeciesPairChecks_PutrePup ; id 248 PutrePup
+    dw SpeciesPairChecks_RotRaven ; id 249 RotRaven
+    dw SpeciesPairChecks_Mummy ; id 250 Mummy
+    dw SpeciesPairChecks_DarkCrab ; id 251 DarkCrab
+    dw SpeciesPairChecks_DeadNite ; id 252 DeadNite
+    dw SpeciesPairChecks_Shadow ; id 253 Shadow
+    dw SpeciesPairChecks_Skulpent ; id 254 Skulpent
+    dw SpeciesPairChecks_Hork ; id 255 Hork
+    dw SpeciesPairChecks_Mudron ; id 256 Mudron
+    dw SpeciesPairChecks_NiteWhip ; id 257 NiteWhip
+    dw SpeciesPairChecks_WindMerge ; id 258 WindMerge
+    dw SpeciesPairChecks_Reaper ; id 259 Reaper
+    dw SpeciesPairChecks_Inverzon ; id 260 Inverzon
+    dw SpeciesPairChecks_FoxFire ; id 261 FoxFire
+    dw SpeciesPairChecks_CaptDead ; id 262 CaptDead
+    dw SpeciesPairChecks_DeadNoble ; id 263 DeadNoble
+    dw SpeciesPairChecks_WhiteKing ; id 264 WhiteKing
+    dw SpeciesPairChecks_BoneSlave ; id 265 BoneSlave
+    dw SpeciesPairChecks_Skeletor ; id 266 Skeletor
+    dw SpeciesPairChecks_Servant ; id 267 Servant
+    dw SpeciesPairChecks_Lazamanus ; id 268 Lazamanus
+    dw SpeciesPairChecks_Copycat ; id 269 Copycat
+    dw SpeciesPairChecks_MadSpirit ; id 270 MadSpirit
+    dw SpeciesPairChecks_PomPomBom ; id 271 PomPomBom
+    dw SpeciesPairChecks_Niterich ; id 272 Niterich
     dw SpeciesPairChecks111 ; id 273 ?
     dw SpeciesPairChecks112 ; id 274 ?
     dw SpeciesPairChecks113 ; id 275 ?
@@ -511,46 +511,46 @@ SpeciesPairCheckTable::
     dw SpeciesPairChecks116 ; id 278 ?
     dw SpeciesPairChecks117 ; id 279 ?
     dw SpeciesPairChecks118 ; id 280 ?
-    dw SpeciesPairChecks119 ; id 281 JewelBag
-    dw SpeciesPairChecks11A ; id 282 EvilWand
-    dw SpeciesPairChecks11B ; id 283 MadCandle
-    dw SpeciesPairChecks11C ; id 284 CoilBird
-    dw SpeciesPairChecks11D ; id 285 Facer
-    dw SpeciesPairChecks11E ; id 286 SpikyBoy
-    dw SpeciesPairChecks11F ; id 287 MadMirror
-    dw SpeciesPairChecks120 ; id 288 RogueNite
-    dw SpeciesPairChecks121 ; id 289 Puppetor
-    dw SpeciesPairChecks122 ; id 290 Goopi
-    dw SpeciesPairChecks123 ; id 291 Voodoll
-    dw SpeciesPairChecks124 ; id 292 MetalDrak
-    dw SpeciesPairChecks125 ; id 293 Balzak
-    dw SpeciesPairChecks126 ; id 294 SabreMan
-    dw SpeciesPairChecks127 ; id 295 CurseLamp
-    dw SpeciesPairChecks128 ; id 296 Brushead
-    dw SpeciesPairChecks129 ; id 297 Roboster
-    dw SpeciesPairChecks12A ; id 298 Roboster2
-    dw SpeciesPairChecks12B ; id 299 EvilPot
-    dw SpeciesPairChecks12C ; id 300 Gismo
-    dw SpeciesPairChecks12D ; id 301 LavaMan
-    dw SpeciesPairChecks12E ; id 302 IceMan
-    dw SpeciesPairChecks12F ; id 303 Mimic
-    dw SpeciesPairChecks130 ; id 304 Exaucers
-    dw SpeciesPairChecks131 ; id 305 MudDoll
-    dw SpeciesPairChecks132 ; id 306 Golem
-    dw SpeciesPairChecks133 ; id 307 StoneMan
-    dw SpeciesPairChecks134 ; id 308 BombCrag
-    dw SpeciesPairChecks135 ; id 309 GoldGolem
-    dw SpeciesPairChecks136 ; id 310 DarkMate
-    dw SpeciesPairChecks137 ; id 311 ProtoMech
-    dw SpeciesPairChecks138 ; id 312 CloudKing
+    dw SpeciesPairChecks_JewelBag ; id 281 JewelBag
+    dw SpeciesPairChecks_EvilWand ; id 282 EvilWand
+    dw SpeciesPairChecks_MadCandle ; id 283 MadCandle
+    dw SpeciesPairChecks_CoilBird ; id 284 CoilBird
+    dw SpeciesPairChecks_Facer ; id 285 Facer
+    dw SpeciesPairChecks_SpikyBoy ; id 286 SpikyBoy
+    dw SpeciesPairChecks_MadMirror ; id 287 MadMirror
+    dw SpeciesPairChecks_RogueNite ; id 288 RogueNite
+    dw SpeciesPairChecks_Puppetor ; id 289 Puppetor
+    dw SpeciesPairChecks_Goopi ; id 290 Goopi
+    dw SpeciesPairChecks_Voodoll ; id 291 Voodoll
+    dw SpeciesPairChecks_MetalDrak ; id 292 MetalDrak
+    dw SpeciesPairChecks_Balzak ; id 293 Balzak
+    dw SpeciesPairChecks_SabreMan ; id 294 SabreMan
+    dw SpeciesPairChecks_CurseLamp ; id 295 CurseLamp
+    dw SpeciesPairChecks_Brushead ; id 296 Brushead
+    dw SpeciesPairChecks_Roboster ; id 297 Roboster
+    dw SpeciesPairChecks_Roboster2 ; id 298 Roboster2
+    dw SpeciesPairChecks_EvilPot ; id 299 EvilPot
+    dw SpeciesPairChecks_Gismo ; id 300 Gismo
+    dw SpeciesPairChecks_LavaMan ; id 301 LavaMan
+    dw SpeciesPairChecks_IceMan ; id 302 IceMan
+    dw SpeciesPairChecks_Mimic ; id 303 Mimic
+    dw SpeciesPairChecks_Exaucers ; id 304 Exaucers
+    dw SpeciesPairChecks_MudDoll ; id 305 MudDoll
+    dw SpeciesPairChecks_Golem ; id 306 Golem
+    dw SpeciesPairChecks_StoneMan ; id 307 StoneMan
+    dw SpeciesPairChecks_BombCrag ; id 308 BombCrag
+    dw SpeciesPairChecks_GoldGolem ; id 309 GoldGolem
+    dw SpeciesPairChecks_DarkMate ; id 310 DarkMate
+    dw SpeciesPairChecks_ProtoMech ; id 311 ProtoMech
+    dw SpeciesPairChecks_CloudKing ; id 312 CloudKing
     dw SpeciesPairChecks139 ; id 313 ?
     dw SpeciesPairChecks13A ; id 314 ?
     dw SpeciesPairChecks13B ; id 315 ?
-    dw SpeciesPairChecks13C ; id 316 Petiteel
-    dw SpeciesPairChecks13D ; id 317 Moray
-    dw SpeciesPairChecks13E ; id 318 WalrusMan
-    dw SpeciesPairChecks13F ; id 319 RayGigas
-    dw SpeciesPairChecks140 ; id 320 Anemon
+    dw SpeciesPairChecks_Petiteel ; id 316 Petiteel
+    dw SpeciesPairChecks_Moray ; id 317 Moray
+    dw SpeciesPairChecks_WalrusMan ; id 318 WalrusMan
+    dw SpeciesPairChecks_RayGigas ; id 319 RayGigas
+    dw SpeciesPairChecks_Anemon ; id 320 Anemon
 
 ; list for entry $00 of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
@@ -558,117 +558,117 @@ SpeciesPairChecks000::
     db $ff, $ff ; id 0
 
 ; list for entry $01 (DrakSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks001::
+SpeciesPairChecks_DrakSlime::
     db $00, $01, $00, $00, $01, $00, $ff, $00 ; id 0
 
 ; list for entry $02 (SpotSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks002::
+SpeciesPairChecks_SpotSlime::
     db $00, $01, $00, $00, $02, $00, $ff, $00 ; id 0
 
 ; list for entry $03 (WingSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks003::
+SpeciesPairChecks_WingSlime::
     db $00, $01, $00, $00, $03, $00, $ff, $00 ; id 0
 
 ; list for entry $04 (TreeSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks004::
+SpeciesPairChecks_TreeSlime::
     db $00, $01, $00, $00, $04, $00, $ff, $00 ; id 0
 
 ; list for entry $05 (Snaily) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks005::
+SpeciesPairChecks_Snaily::
     db $00, $01, $00, $00, $05, $00, $ff, $00 ; id 0
 
 ; list for entry $06 (SlimeNite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks006::
+SpeciesPairChecks_SlimeNite::
     db $00, $01, $00, $00, $06, $00, $ff, $00 ; id 0
 
 ; list for entry $07 (Babble) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks007::
+SpeciesPairChecks_Babble::
     db $00, $03, $00, $00, $07, $00, $be, $80, $2a, $80, $ff, $00 ; id 0
 
 ; list for entry $08 (BoxSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks008::
+SpeciesPairChecks_BoxSlime::
     db $00, $01, $00, $00, $08, $00, $ff, $00 ; id 0
 
 ; list for entry $09 (PearlGel) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks009::
+SpeciesPairChecks_PearlGel::
     db $ff, $00 ; id 0
 
 ; list for entry $0A (Slime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks00A::
+SpeciesPairChecks_Slime::
     db $ff, $00 ; id 0
 
 ; list for entry $0B (Healer) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks00B::
+SpeciesPairChecks_Healer::
     db $00, $04, $00, $00, $4a, $80, $80, $80, $8d, $80, $0d, $81, $ff, $00 ; id 0
 
 ; list for entry $0C (FangSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks00C::
+SpeciesPairChecks_FangSlime::
     db $00, $06, $00, $00, $48, $80, $62, $80, $60, $80, $4c, $80, $61, $80, $5f, $80, $ff, $00 ; id 0
 
 ; list for entry $0D (RockSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks00D::
+SpeciesPairChecks_RockSlime::
     db $00, $05, $00, $00, $33, $81, $32, $81, $fc, $80, $c7, $80, $34, $81, $ff, $00 ; id 0
 
 ; list for entry $0E (SlimeBorg) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks00E::
+SpeciesPairChecks_SlimeBorg::
     db $01, $05, $0d, $00, $38, $80, $3e, $80, $2b, $80, $37, $80, $3d, $80, $01, $05, $06, $00, $38, $80, $3e, $80, $2b, $80, $37, $80, $3d, $80, $01, $05, $01, $00, $38, $80, $3e, $80, $2b, $80, $37, $80, $3d, $80, $01, $05, $12, $00, $38, $80, $3e, $80, $2b, $80, $37, $80, $3d, $80, $00, $01, $00, $00, $29, $81, $ff, $00 ; id 0
 
 ; list for entry $0F (Slabbit) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks00F::
+SpeciesPairChecks_Slabbit::
     db $00, $01, $00, $00, $4d, $80, $ff, $00 ; id 0
 
 ; list for entry $10 (KingSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks010::
+SpeciesPairChecks_KingSlime::
     db $01, $01, $0a, $00, $0a, $80, $00, $01, $00, $00, $0a, $00, $01, $0c, $0e, $00, $ea, $80, $60, $80, $38, $80, $7d, $80, $07, $81, $40, $80, $eb, $80, $3d, $80, $79, $80, $5c, $80, $7f, $80, $08, $81, $ff, $00 ; id 0
 
 ; list for entry $11 (Metaly) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks011::
+SpeciesPairChecks_Metaly::
     db $00, $01, $00, $00, $24, $81, $ff, $00 ; id 0
 
 ; list for entry $12 (Metabble) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks012::
+SpeciesPairChecks_Metabble::
     db $01, $01, $11, $00, $11, $80, $ff, $00 ; id 0
 
 ; list for entry $13 (SpotKing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks013::
+SpeciesPairChecks_SpotKing::
     db $01, $0c, $10, $00, $ea, $80, $60, $80, $38, $80, $7d, $80, $07, $81, $40, $80, $eb, $80, $3d, $80, $79, $80, $5c, $80, $7f, $80, $08, $81, $01, $0c, $17, $00, $ea, $80, $60, $80, $38, $80, $7d, $80, $07, $81, $40, $80, $eb, $80, $3d, $80, $79, $80, $5c, $80, $7f, $80, $08, $81, $01, $01, $02, $00, $02, $80, $ff, $00 ; id 0
 
 ; list for entry $14 (TropicGel) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks014::
+SpeciesPairChecks_TropicGel::
     db $ff, $00 ; id 0
 
 ; list for entry $15 (MimeSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks015::
+SpeciesPairChecks_MimeSlime::
     db $ff, $00 ; id 0
 
 ; list for entry $16 (HaloSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks016::
+SpeciesPairChecks_HaloSlime::
     db $ff, $00 ; id 0
 
 ; list for entry $17 (MetalKing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks017::
+SpeciesPairChecks_MetalKing::
     db $01, $01, $10, $00, $24, $81, $01, $01, $13, $00, $24, $81, $01, $01, $12, $00, $12, $80, $ff, $00 ; id 0
 
 ; list for entry $18 (GoldSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks018::
+SpeciesPairChecks_GoldSlime::
     db $01, $01, $10, $00, $35, $81, $01, $01, $13, $00, $35, $81, $01, $02, $17, $00, $35, $81, $17, $80, $ff, $00 ; id 0
 
 ; list for entry $19 (GranSlime) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks019::
+SpeciesPairChecks_GranSlime::
     db $ff, $00 ; id 0
 
 ; list for entry $1A (WonderEgg) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks01A::
+SpeciesPairChecks_WonderEgg::
     db $ff, $00 ; id 0
 
 ; list for entry $1B (Butch) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks01B::
+SpeciesPairChecks_Butch::
     db $ff, $00 ; id 0
 
 ; list for entry $1C (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -707,134 +707,134 @@ SpeciesPairChecks023::
 
 ; list for entry $24 (DragonKid) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks024::
+SpeciesPairChecks_DragonKid::
     db $00, $01, $01, $00, $06, $00, $ff, $01 ; id 0
 
 ; list for entry $25 (Tortragon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks025::
+SpeciesPairChecks_Tortragon::
     db $00, $01, $01, $00, $07, $00, $ff, $01 ; id 0
 
 ; list for entry $26 (Pteranod) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks026::
+SpeciesPairChecks_Pteranod::
     db $00, $01, $01, $00, $08, $00, $ff, $01 ; id 0
 
 ; list for entry $27 (Gasgon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks027::
+SpeciesPairChecks_Gasgon::
     db $ff, $01 ; id 0
 
 ; list for entry $28 (FairyDrak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks028::
+SpeciesPairChecks_FairyDrak::
     db $01, $01, $1f, $00, $24, $80, $ff, $01 ; id 0
 
 ; list for entry $29 (LizardMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks029::
+SpeciesPairChecks_LizardMan::
     db $00, $01, $01, $00, $6a, $80, $ff, $01 ; id 0
 
 ; list for entry $2A (Poisongon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks02A::
+SpeciesPairChecks_Poisongon::
     db $00, $01, $01, $00, $4c, $80, $01, $01, $22, $00, $02, $00, $ff, $01 ; id 0
 
 ; list for entry $2B (Swordgon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks02B::
+SpeciesPairChecks_Swordgon::
     db $00, $01, $01, $00, $79, $80, $01, $08, $24, $00, $e0, $80, $ea, $80, $62, $80, $e3, $80, $9b, $80, $5f, $80, $03, $80, $df, $80, $ff, $01 ; id 0
 
 ; list for entry $2C (Drygon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks02C::
+SpeciesPairChecks_Drygon::
     db $00, $01, $01, $00, $23, $81, $ff, $01 ; id 0
 
 ; list for entry $2D (Dragon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks02D::
+SpeciesPairChecks_Dragon::
     db $00, $01, $01, $00, $ba, $80, $ff, $01 ; id 0
 
 ; list for entry $2E (MiniDrak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks02E::
+SpeciesPairChecks_MiniDrak::
     db $00, $01, $01, $00, $92, $80, $01, $0c, $39, $00, $de, $80, $e7, $80, $e0, $80, $e2, $80, $5d, $80, $32, $81, $07, $81, $5f, $80, $80, $80, $79, $80, $df, $80, $7f, $80, $01, $0c, $2a, $00, $de, $80, $e7, $80, $e0, $80, $e2, $80, $5d, $80, $32, $81, $07, $81, $5f, $80, $80, $80, $79, $80, $df, $80, $7f, $80, $01, $0c, $38, $00, $de, $80, $e7, $80, $e0, $80, $e2, $80, $5d, $80, $32, $81, $07, $81, $5f, $80, $80, $80, $79, $80, $df, $80, $7f, $80, $01, $0c, $22, $00, $de, $80, $e7, $80, $e0, $80, $e2, $80, $5d, $80, $32, $81, $07, $81, $5f, $80, $80, $80, $79, $80, $df, $80, $7f, $80, $00, $01, $01, $00, $92, $80, $ff, $01 ; id 0
 
 ; list for entry $2F (MadDragon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks02F::
+SpeciesPairChecks_MadDragon::
     db $00, $01, $01, $00, $07, $80, $ff, $01 ; id 0
 
 ; list for entry $30 (Rayburn) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks030::
+SpeciesPairChecks_Rayburn::
     db $ff, $01 ; id 0
 
 ; list for entry $31 (Chamelgon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks031::
+SpeciesPairChecks_Chamelgon::
     db $ff, $01 ; id 0
 
 ; list for entry $32 (LizardFly) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks032::
+SpeciesPairChecks_LizardFly::
     db $00, $02, $01, $00, $c0, $80, $c7, $80, $ff, $01 ; id 0
 
 ; list for entry $33 (Andreal) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks033::
+SpeciesPairChecks_Andreal::
     db $01, $01, $28, $00, $2d, $80, $01, $01, $1f, $00, $24, $80, $00, $09, $01, $00, $ea, $80, $10, $80, $7d, $80, $eb, $80, $3d, $80, $13, $80, $17, $80, $5c, $80, $7f, $80, $ff, $01 ; id 0
 
 ; list for entry $34 (KingCobra) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks034::
+SpeciesPairChecks_KingCobra::
     db $00, $01, $01, $00, $75, $80, $ff, $01 ; id 0
 
 ; list for entry $35 (Vampirus) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks035::
+SpeciesPairChecks_Vampirus::
     db $01, $01, $34, $00, $39, $80, $ff, $01 ; id 0
 
 ; list for entry $36 (SnakeBat) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks036::
+SpeciesPairChecks_SnakeBat::
     db $01, $01, $35, $00, $3a, $80, $01, $04, $39, $00, $e8, $80, $33, $81, $61, $80, $0d, $81, $01, $04, $38, $00, $e8, $80, $33, $81, $61, $80, $0d, $81, $01, $04, $22, $00, $e8, $80, $33, $81, $61, $80, $0d, $81, $01, $04, $21, $00, $e8, $80, $33, $81, $61, $80, $0d, $81, $01, $04, $24, $00, $e8, $80, $33, $81, $61, $80, $0d, $81, $ff, $01 ; id 0
 
 ; list for entry $37 (Spikerous) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks037::
+SpeciesPairChecks_Spikerous::
     db $01, $01, $2e, $00, $d4, $80, $01, $01, $33, $00, $d4, $80, $00, $01, $01, $00, $0a, $00, $ff, $01 ; id 0
 
 ; list for entry $38 (GreatDrak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks038::
+SpeciesPairChecks_GreatDrak::
     db $00, $05, $01, $00, $e8, $80, $e2, $80, $60, $80, $ec, $80, $df, $80, $ff, $01 ; id 0
 
 ; list for entry $39 (Crestpent) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks039::
+SpeciesPairChecks_Crestpent::
     db $00, $01, $01, $00, $7c, $80, $ff, $01 ; id 0
 
 ; list for entry $3A (WingSnake) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks03A::
+SpeciesPairChecks_WingSnake::
     db $ff, $01 ; id 0
 
 ; list for entry $3B (Coatol) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks03B::
+SpeciesPairChecks_Coatol::
     db $01, $01, $39, $00, $3c, $80, $ff, $01 ; id 0
 
 ; list for entry $3C (Orochi) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks03C::
+SpeciesPairChecks_Orochi::
     db $ff, $01 ; id 0
 
 ; list for entry $3D (BattleRex) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks03D::
+SpeciesPairChecks_BattleRex::
     db $00, $01, $02, $00, $00, $00, $ff, $02 ; id 0
 
 ; list for entry $3E (SkyDragon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks03E::
+SpeciesPairChecks_SkyDragon::
     db $00, $01, $02, $00, $01, $00, $ff, $02 ; id 0
 
 ; list for entry $3F (Serpentia) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks03F::
+SpeciesPairChecks_Serpentia::
     db $00, $01, $02, $00, $03, $00, $ff, $02 ; id 0
 
 ; list for entry $40 (Divinegon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks040::
+SpeciesPairChecks_Divinegon::
     db $00, $01, $02, $00, $04, $00, $ff, $02 ; id 0
 
 ; list for entry $41 (Orligon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks041::
+SpeciesPairChecks_Orligon::
     db $00, $01, $02, $00, $05, $00, $ff, $02 ; id 0
 
 ; list for entry $42 (GigaDraco) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks042::
+SpeciesPairChecks_GigaDraco::
     db $01, $06, $48, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $01, $0c, $4c, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $00, $01, $0b, $54, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $0d, $4b, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $00, $06, $00, $01, $06, $53, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $01, $0b, $52, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $06, $55, $00, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $00, $01, $05, $3d, $00, $0a, $81, $07, $81, $f7, $80, $c7, $80, $08, $81, $01, $01, $59, $00, $01, $00, $ff, $02 ; id 0
 
 ; list for entry $43 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -855,139 +855,139 @@ SpeciesPairChecks046::
     db $01, $01, $41, $00, $01, $00, $ff, $02 ; id 0
 
 ; list for entry $47 (Tonguella) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks047::
+SpeciesPairChecks_Tonguella::
     db $01, $0c, $42, $00, $19, $81, $dd, $80, $9b, $80, $04, $80, $0c, $80, $2f, $80, $80, $80, $d6, $80, $8d, $80, $0d, $81, $2f, $81, $b6, $80, $01, $0c, $3d, $00, $19, $81, $dd, $80, $9b, $80, $04, $80, $0c, $80, $2f, $80, $80, $80, $d6, $80, $8d, $80, $0d, $81, $2f, $81, $b6, $80, $ff, $02 ; id 0
 
 ; list for entry $48 (Almiraj) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks048::
+SpeciesPairChecks_Almiraj::
     db $00, $01, $02, $00, $25, $80, $ff, $02 ; id 0
 
 ; list for entry $49 (CatFly) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks049::
+SpeciesPairChecks_CatFly::
     db $00, $01, $02, $00, $6e, $80, $ff, $02 ; id 0
 
 ; list for entry $4A (PillowRat) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks04A::
+SpeciesPairChecks_PillowRat::
     db $00, $01, $02, $00, $96, $80, $ff, $02 ; id 0
 
 ; list for entry $4B (Saccer) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks04B::
+SpeciesPairChecks_Saccer::
     db $00, $07, $02, $00, $33, $81, $29, $81, $32, $81, $2e, $81, $24, $81, $2d, $81, $06, $00, $ff, $02 ; id 0
 
 ; list for entry $4C (GulpBeast) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks04C::
+SpeciesPairChecks_GulpBeast::
     db $01, $06, $48, $00, $3e, $80, $2b, $80, $2f, $80, $3d, $80, $27, $80, $26, $80, $01, $06, $54, $00, $3e, $80, $2b, $80, $2f, $80, $3d, $80, $27, $80, $26, $80, $01, $06, $58, $00, $3e, $80, $2b, $80, $2f, $80, $3d, $80, $27, $80, $26, $80, $01, $06, $53, $00, $3e, $80, $2b, $80, $2f, $80, $3d, $80, $27, $80, $26, $80, $00, $01, $02, $00, $e1, $80, $ff, $02 ; id 0
 
 ; list for entry $4D (Skullroo) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks04D::
+SpeciesPairChecks_Skullroo::
     db $ff, $02 ; id 0
 
 ; list for entry $4E (WindBeast) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks04E::
+SpeciesPairChecks_WindBeast::
     db $ff, $02 ; id 0
 
 ; list for entry $4F (Beavern) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks04F::
+SpeciesPairChecks_Beavern::
     db $ff, $02 ; id 0
 
 ; list for entry $50 (Antbear) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks050::
+SpeciesPairChecks_Antbear::
     db $00, $01, $02, $00, $26, $81, $ff, $02 ; id 0
 
 ; list for entry $51 (SuperTen) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks051::
+SpeciesPairChecks_SuperTen::
     db $00, $01, $02, $00, $32, $80, $ff, $02 ; id 0
 
 ; list for entry $52 (IronTurt) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks052::
+SpeciesPairChecks_IronTurt::
     db $01, $01, $4c, $00, $00, $00, $01, $01, $54, $00, $00, $00, $01, $01, $4b, $00, $00, $00, $01, $01, $53, $00, $00, $00, $01, $01, $42, $00, $00, $00, $01, $01, $55, $00, $00, $00, $01, $01, $3d, $00, $00, $00, $00, $01, $02, $00, $0c, $80, $ff, $02 ; id 0
 
 ; list for entry $53 (Mommonja) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks053::
+SpeciesPairChecks_Mommonja::
     db $00, $02, $02, $00, $01, $80, $29, $80, $ff, $02 ; id 0
 
 ; list for entry $54 (HammerMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks054::
+SpeciesPairChecks_HammerMan::
     db $01, $01, $3e, $00, $01, $00, $00, $01, $02, $00, $6f, $80, $ff, $02 ; id 0
 
 ; list for entry $55 (Grizzly) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks055::
+SpeciesPairChecks_Grizzly::
     db $01, $04, $4c, $00, $7d, $80, $79, $80, $77, $80, $7f, $80, $01, $04, $4b, $00, $7d, $80, $79, $80, $77, $80, $7f, $80, $01, $0b, $42, $00, $7d, $80, $79, $80, $77, $80, $7f, $80, $33, $81, $29, $81, $32, $81, $25, $81, $2e, $81, $24, $81, $2d, $81, $01, $04, $3d, $00, $7d, $80, $79, $80, $77, $80, $7f, $80, $01, $01, $54, $00, $5e, $80, $01, $01, $47, $00, $01, $00, $ff, $02 ; id 0
 
 ; list for entry $56 (Yeti) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks056::
+SpeciesPairChecks_Yeti::
     db $01, $06, $01, $01, $62, $80, $51, $80, $4c, $80, $61, $80, $5f, $80, $5c, $80, $01, $04, $55, $00, $35, $81, $5f, $80, $25, $81, $24, $81, $ff, $02 ; id 0
 
 ; list for entry $57 (ArrowDog) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks057::
+SpeciesPairChecks_ArrowDog::
     db $00, $01, $02, $00, $0a, $00, $ff, $02 ; id 0
 
 ; list for entry $58 (NoctoKing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks058::
+SpeciesPairChecks_NoctoKing::
     db $00, $01, $02, $00, $2d, $80, $ff, $02 ; id 0
 
 ; list for entry $59 (BeastNite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks059::
+SpeciesPairChecks_BeastNite::
     db $00, $01, $02, $00, $d8, $80, $ff, $02 ; id 0
 
 ; list for entry $5A (MadGopher) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks05A::
+SpeciesPairChecks_MadGopher::
     db $ff, $02 ; id 0
 
 ; list for entry $5B (FairyRat) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks05B::
+SpeciesPairChecks_FairyRat::
     db $00, $01, $03, $00, $00, $00, $ff, $03 ; id 0
 
 ; list for entry $5C (Unicorn) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks05C::
+SpeciesPairChecks_Unicorn::
     db $00, $01, $03, $00, $01, $00, $ff, $03 ; id 0
 
 ; list for entry $5D (Goategon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks05D::
+SpeciesPairChecks_Goategon::
     db $00, $01, $03, $00, $02, $00, $ff, $03 ; id 0
 
 ; list for entry $5E (WildApe) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks05E::
+SpeciesPairChecks_WildApe::
     db $00, $01, $03, $00, $04, $00, $ff, $03 ; id 0
 
 ; list for entry $5F (Trumpeter) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks05F::
+SpeciesPairChecks_Trumpeter::
     db $00, $01, $03, $00, $05, $00, $ff, $03 ; id 0
 
 ; list for entry $60 (KingLeo) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks060::
+SpeciesPairChecks_KingLeo::
     db $00, $01, $03, $00, $06, $00, $ff, $03 ; id 0
 
 ; list for entry $61 (DarkHorn) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks061::
+SpeciesPairChecks_DarkHorn::
     db $00, $01, $03, $00, $07, $00, $ff, $03 ; id 0
 
 ; list for entry $62 (MadCat) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks062::
+SpeciesPairChecks_MadCat::
     db $00, $01, $03, $00, $08, $00, $ff, $03 ; id 0
 
 ; list for entry $63 (BigEye) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks063::
+SpeciesPairChecks_BigEye::
     db $ff, $03 ; id 0
 
 ; list for entry $64 (Gorago) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks064::
+SpeciesPairChecks_Gorago::
     db $01, $01, $5b, $00, $00, $00, $ff, $03 ; id 0
 
 ; list for entry $65 (CatMage) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks065::
+SpeciesPairChecks_CatMage::
     db $ff, $03 ; id 0
 
 ; list for entry $66 (Dumbira) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks066::
+SpeciesPairChecks_Dumbira::
     db $ff, $03 ; id 0
 
 ; list for entry $67 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1004,118 +1004,118 @@ SpeciesPairChecks069::
     db $01, $02, $5c, $00, $07, $00, $01, $00, $01, $02, $6d, $00, $07, $00, $01, $00, $01, $02, $6a, $00, $07, $00, $01, $00, $01, $02, $69, $00, $07, $00, $01, $00, $00, $01, $03, $00, $bf, $80, $ff, $03 ; id 0
 
 ; list for entry $6A (Picky) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks06A::
+SpeciesPairChecks_Picky::
     db $01, $01, $68, $00, $06, $00, $00, $01, $03, $00, $1c, $81, $ff, $03 ; id 0
 
 ; list for entry $6B (Wyvern) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks06B::
+SpeciesPairChecks_Wyvern::
     db $ff, $03 ; id 0
 
 ; list for entry $6C (BullBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks06C::
+SpeciesPairChecks_BullBird::
     db $00, $0c, $03, $00, $56, $80, $0a, $81, $5d, $80, $07, $81, $51, $80, $f7, $80, $5f, $80, $12, $80, $2e, $81, $0b, $81, $11, $80, $08, $81, $ff, $03 ; id 0
 
 ; list for entry $6D (Florajay) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks06D::
+SpeciesPairChecks_Florajay::
     db $00, $08, $03, $00, $de, $80, $52, $80, $2c, $81, $55, $80, $4c, $80, $01, $80, $0d, $81, $2d, $81, $ff, $03 ; id 0
 
 ; list for entry $6E (DuckKite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks06E::
+SpeciesPairChecks_DuckKite::
     db $01, $01, $6d, $00, $2c, $81, $01, $01, $6a, $00, $2c, $81, $01, $01, $70, $00, $2c, $81, $00, $01, $03, $00, $0a, $00, $ff, $03 ; id 0
 
 ; list for entry $6F (MadPecker) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks06F::
+SpeciesPairChecks_MadPecker::
     db $ff, $03 ; id 0
 
 ; list for entry $70 (MadRaven) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks070::
+SpeciesPairChecks_MadRaven::
     db $01, $06, $69, $00, $33, $81, $32, $81, $0d, $80, $0e, $80, $c7, $80, $24, $81, $01, $06, $6e, $00, $33, $81, $32, $81, $0d, $80, $0e, $80, $c7, $80, $24, $81, $01, $06, $6a, $00, $33, $81, $32, $81, $0d, $80, $0e, $80, $c7, $80, $24, $81, $01, $06, $6c, $00, $33, $81, $32, $81, $0d, $80, $0e, $80, $c7, $80, $24, $81, $01, $06, $68, $00, $33, $81, $32, $81, $0d, $80, $0e, $80, $c7, $80, $24, $81, $00, $01, $03, $00, $98, $80, $ff, $03 ; id 0
 
 ; list for entry $71 (MistyWing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks071::
+SpeciesPairChecks_MistyWing::
     db $00, $01, $03, $00, $98, $80, $ff, $03 ; id 0
 
 ; list for entry $72 (AquaHawk) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks072::
+SpeciesPairChecks_AquaHawk::
     db $01, $01, $6c, $00, $7c, $80, $ff, $03 ; id 0
 
 ; list for entry $73 (Dracky) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks073::
+SpeciesPairChecks_Dracky::
     db $ff, $03 ; id 0
 
 ; list for entry $74 (KiteHawk) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks074::
+SpeciesPairChecks_KiteHawk::
     db $ff, $03 ; id 0
 
 ; list for entry $75 (BigRoost) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks075::
+SpeciesPairChecks_BigRoost::
     db $ff, $03 ; id 0
 
 ; list for entry $76 (StubBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks076::
+SpeciesPairChecks_StubBird::
     db $ff, $03 ; id 0
 
 ; list for entry $77 (LandOwl) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks077::
+SpeciesPairChecks_LandOwl::
     db $ff, $03 ; id 0
 
 ; list for entry $78 (MadGoose) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks078::
+SpeciesPairChecks_MadGoose::
     db $ff, $03 ; id 0
 
 ; list for entry $79 (MadCondor) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks079::
+SpeciesPairChecks_MadCondor::
     db $00, $01, $04, $00, $00, $00, $ff, $04 ; id 0
 
 ; list for entry $7A (Emyu) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks07A::
+SpeciesPairChecks_Emyu::
     db $00, $01, $04, $00, $01, $00, $ff, $04 ; id 0
 
 ; list for entry $7B (Blizzardy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks07B::
+SpeciesPairChecks_Blizzardy::
     db $00, $01, $04, $00, $03, $00, $ff, $04 ; id 0
 
 ; list for entry $7C (Phoenix) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks07C::
+SpeciesPairChecks_Phoenix::
     db $00, $01, $04, $00, $02, $00, $ff, $04 ; id 0
 
 ; list for entry $7D (ZapBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks07D::
+SpeciesPairChecks_ZapBird::
     db $00, $01, $04, $00, $05, $00, $ff, $04 ; id 0
 
 ; list for entry $7E (Garudian) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks07E::
+SpeciesPairChecks_Garudian::
     db $00, $01, $04, $00, $06, $00, $ff, $04 ; id 0
 
 ; list for entry $7F (WhipBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks07F::
+SpeciesPairChecks_WhipBird::
     db $00, $01, $04, $00, $07, $00, $ff, $04 ; id 0
 
 ; list for entry $80 (FunkyBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks080::
+SpeciesPairChecks_FunkyBird::
     db $00, $01, $04, $00, $08, $00, $ff, $04 ; id 0
 
 ; list for entry $81 (RainHawk) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks081::
+SpeciesPairChecks_RainHawk::
     db $ff, $04 ; id 0
 
 ; list for entry $82 (Azurile) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks082::
+SpeciesPairChecks_Azurile::
     db $01, $01, $80, $00, $02, $00, $ff, $04 ; id 0
 
 ; list for entry $83 (Shantak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks083::
+SpeciesPairChecks_Shantak::
     db $00, $01, $04, $00, $b2, $80, $ff, $04 ; id 0
 
 ; list for entry $84 (CragDevil) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks084::
+SpeciesPairChecks_CragDevil::
     db $01, $01, $79, $00, $02, $00, $00, $01, $04, $00, $1d, $81, $ff, $04 ; id 0
 
 ; list for entry $85 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1153,117 +1153,117 @@ SpeciesPairChecks08C::
     db $01, $01, $8b, $00, $9f, $80, $ff, $04 ; id 0
 
 ; list for entry $8D (MadPlant) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks08D::
+SpeciesPairChecks_MadPlant::
     db $ff, $04 ; id 0
 
 ; list for entry $8E (FireWeed) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks08E::
+SpeciesPairChecks_FireWeed::
     db $00, $01, $04, $00, $0a, $00, $ff, $04 ; id 0
 
 ; list for entry $8F (FloraMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks08F::
+SpeciesPairChecks_FloraMan::
     db $ff, $04 ; id 0
 
 ; list for entry $90 (WingTree) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks090::
+SpeciesPairChecks_WingTree::
     db $ff, $04 ; id 0
 
 ; list for entry $91 (CactiBall) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks091::
+SpeciesPairChecks_CactiBall::
     db $ff, $04 ; id 0
 
 ; list for entry $92 (Gulpple) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks092::
+SpeciesPairChecks_Gulpple::
     db $ff, $04 ; id 0
 
 ; list for entry $93 (Toadstool) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks093::
+SpeciesPairChecks_Toadstool::
     db $ff, $04 ; id 0
 
 ; list for entry $94 (AmberWeed) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks094::
+SpeciesPairChecks_AmberWeed::
     db $ff, $04 ; id 0
 
 ; list for entry $95 (Slurperon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks095::
+SpeciesPairChecks_Slurperon::
     db $ff, $04 ; id 0
 
 ; list for entry $96 (Stubsuck) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks096::
+SpeciesPairChecks_Stubsuck::
     db $ff, $04 ; id 0
 
 ; list for entry $97 (Oniono) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks097::
+SpeciesPairChecks_Oniono::
     db $00, $01, $05, $00, $00, $00, $ff, $05 ; id 0
 
 ; list for entry $98 (DanceVegi) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks098::
+SpeciesPairChecks_DanceVegi::
     db $00, $01, $05, $00, $01, $00, $ff, $05 ; id 0
 
 ; list for entry $99 (TreeBoy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks099::
+SpeciesPairChecks_TreeBoy::
     db $00, $01, $05, $00, $02, $00, $ff, $05 ; id 0
 
 ; list for entry $9A (Devipine) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks09A::
+SpeciesPairChecks_Devipine::
     db $00, $01, $05, $00, $03, $00, $ff, $05 ; id 0
 
 ; list for entry $9B (FaceTree) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks09B::
+SpeciesPairChecks_FaceTree::
     db $00, $01, $05, $00, $04, $00, $ff, $05 ; id 0
 
 ; list for entry $9C (HerbMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks09C::
+SpeciesPairChecks_HerbMan::
     db $00, $01, $05, $00, $06, $00, $ff, $05 ; id 0
 
 ; list for entry $9D (BeanMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks09D::
+SpeciesPairChecks_BeanMan::
     db $00, $01, $05, $00, $07, $00, $ff, $05 ; id 0
 
 ; list for entry $9E (EvilSeed) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks09E::
+SpeciesPairChecks_EvilSeed::
     db $00, $01, $05, $00, $08, $00, $ff, $05 ; id 0
 
 ; list for entry $9F (ManEater) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks09F::
+SpeciesPairChecks_ManEater::
     db $ff, $05 ; id 0
 
 ; list for entry $A0 (Snapper) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0A0::
+SpeciesPairChecks_Snapper::
     db $01, $01, $97, $00, $00, $00, $ff, $05 ; id 0
 
 ; list for entry $A1 (GhosTree) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A1::
+SpeciesPairChecks_GhosTree::
     db $ff, $05 ; id 0
 
 ; list for entry $A2 (Rosevine) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A2::
+SpeciesPairChecks_Rosevine::
     db $01, $01, $9b, $00, $04, $00, $00, $01, $05, $00, $8f, $80, $ff, $05 ; id 0
 
 ; list for entry $A3 (Egdracil) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A3::
+SpeciesPairChecks_Egdracil::
     db $01, $01, $9c, $00, $08, $00, $01, $01, $a6, $00, $01, $00, $00, $01, $05, $00, $52, $80, $ff, $05 ; id 0
 
 ; list for entry $A4 (Warubou) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0A4::
+SpeciesPairChecks_Warubou::
     db $01, $01, $98, $00, $02, $00, $00, $01, $05, $00, $94, $80, $ff, $05 ; id 0
 
 ; list for entry $A5 (Watabou) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A5::
+SpeciesPairChecks_Watabou::
     db $01, $01, $9a, $00, $06, $00, $00, $01, $05, $00, $4b, $80, $ff, $05 ; id 0
 
 ; list for entry $A6 (Eggplaton) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A6::
+SpeciesPairChecks_Eggplaton::
     db $01, $03, $9a, $00, $b3, $80, $bb, $80, $bd, $80, $01, $03, $a2, $00, $b3, $80, $bb, $80, $bd, $80, $01, $03, $a4, $00, $b3, $80, $bb, $80, $bd, $80, $01, $01, $9d, $00, $00, $00, $00, $01, $05, $00, $f6, $80, $ff, $05 ; id 0
 
 ; list for entry $A7 (FooHero) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0A7::
+SpeciesPairChecks_FooHero::
     db $00, $01, $05, $00, $fb, $80, $ff, $05 ; id 0
 
 ; list for entry $A8 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1302,113 +1302,113 @@ SpeciesPairChecks0AF::
 
 ; list for entry $B0 (GiantSlug) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0B0::
+SpeciesPairChecks_GiantSlug::
     db $ff, $05 ; id 0
 
 ; list for entry $B1 (Catapila) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B1::
+SpeciesPairChecks_Catapila::
     db $ff, $05 ; id 0
 
 ; list for entry $B2 (Gophecada) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B2::
+SpeciesPairChecks_Gophecada::
     db $ff, $05 ; id 0
 
 ; list for entry $B3 (Butterfly) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B3::
+SpeciesPairChecks_Butterfly::
     db $ff, $05 ; id 0
 
 ; list for entry $B4 (WeedBug) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0B4::
+SpeciesPairChecks_WeedBug::
     db $ff, $05 ; id 0
 
 ; list for entry $B5 (GiantWorm) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B5::
+SpeciesPairChecks_GiantWorm::
     db $00, $01, $06, $00, $00, $00, $ff, $06 ; id 0
 
 ; list for entry $B6 (Lipsy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B6::
+SpeciesPairChecks_Lipsy::
     db $01, $0c, $cc, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7d, $80, $5f, $80, $13, $80, $17, $80, $24, $81, $3c, $80, $7f, $80, $01, $0c, $c8, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7d, $80, $5f, $80, $13, $80, $17, $80, $24, $81, $3c, $80, $7f, $80, $01, $0c, $b7, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7d, $80, $5f, $80, $13, $80, $17, $80, $24, $81, $3c, $80, $7f, $80, $01, $01, $c4, $00, $01, $00, $01, $01, $c5, $00, $07, $00, $00, $01, $06, $00, $0a, $00, $ff, $06 ; id 0
 
 ; list for entry $B7 (StagBug) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B7::
+SpeciesPairChecks_StagBug::
     db $01, $01, $bf, $00, $01, $00, $01, $01, $bb, $00, $01, $00, $01, $01, $bc, $00, $01, $00, $01, $01, $c0, $00, $01, $00, $ff, $06 ; id 0
 
 ; list for entry $B8 (Pyuro) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0B8::
+SpeciesPairChecks_Pyuro::
     db $00, $01, $06, $00, $03, $00, $ff, $06 ; id 0
 
 ; list for entry $B9 (ArmyAnt) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0B9::
+SpeciesPairChecks_ArmyAnt::
     db $00, $01, $06, $00, $04, $00, $ff, $06 ; id 0
 
 ; list for entry $BA (GoHopper) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0BA::
+SpeciesPairChecks_GoHopper::
     db $00, $01, $06, $00, $05, $00, $ff, $06 ; id 0
 
 ; list for entry $BB (TailEater) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0BB::
+SpeciesPairChecks_TailEater::
     db $00, $01, $06, $00, $07, $00, $ff, $06 ; id 0
 
 ; list for entry $BC (ArmorPede) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0BC::
+SpeciesPairChecks_ArmorPede::
     db $00, $01, $06, $00, $08, $00, $ff, $06 ; id 0
 
 ; list for entry $BD (Eyeder) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0BD::
+SpeciesPairChecks_Eyeder::
     db $ff, $06 ; id 0
 
 ; list for entry $BE (GiantMoth) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0BE::
+SpeciesPairChecks_GiantMoth::
     db $01, $01, $ba, $00, $00, $00, $01, $01, $b5, $00, $00, $00, $01, $01, $b8, $00, $00, $00, $ff, $06 ; id 0
 
 ; list for entry $BF (Droll) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0BF::
+SpeciesPairChecks_Droll::
     db $00, $01, $06, $00, $02, $00, $ff, $06 ; id 0
 
 ; list for entry $C0 (ArmyCrab) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0C0::
+SpeciesPairChecks_ArmyCrab::
     db $01, $01, $bf, $00, $07, $00, $01, $01, $b9, $00, $07, $00, $01, $01, $be, $00, $07, $00, $00, $01, $06, $00, $01, $00, $ff, $06 ; id 0
 
 ; list for entry $C1 (MadHornet) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C1::
+SpeciesPairChecks_MadHornet::
     db $01, $01, $b6, $00, $07, $00, $00, $01, $06, $00, $29, $80, $ff, $06 ; id 0
 
 ; list for entry $C2 (Belzebub) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C2::
+SpeciesPairChecks_Belzebub::
     db $01, $01, $b6, $00, $02, $00, $00, $01, $06, $00, $61, $80, $ff, $06 ; id 0
 
 ; list for entry $C3 (WarMantis) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C3::
+SpeciesPairChecks_WarMantis::
     db $00, $01, $06, $00, $9d, $80, $ff, $06 ; id 0
 
 ; list for entry $C4 (HornBeet) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0C4::
+SpeciesPairChecks_HornBeet::
     db $01, $04, $cc, $00, $29, $81, $4c, $80, $c7, $80, $5c, $80, $01, $04, $c8, $00, $29, $81, $4c, $80, $c7, $80, $5c, $80, $01, $04, $b7, $00, $29, $81, $4c, $80, $c7, $80, $5c, $80, $01, $01, $c5, $00, $01, $00, $00, $01, $06, $00, $54, $80, $ff, $06 ; id 0
 
 ; list for entry $C5 (Sickler) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C5::
+SpeciesPairChecks_Sickler::
     db $01, $01, $c4, $00, $07, $00, $01, $0a, $cc, $00, $3b, $80, $07, $81, $f7, $80, $0e, $80, $2b, $80, $be, $80, $79, $80, $71, $80, $a2, $80, $08, $81, $01, $0a, $c8, $00, $3b, $80, $07, $81, $f7, $80, $0e, $80, $2b, $80, $be, $80, $79, $80, $71, $80, $a2, $80, $08, $81, $01, $0a, $b7, $00, $3b, $80, $07, $81, $f7, $80, $0e, $80, $2b, $80, $be, $80, $79, $80, $71, $80, $a2, $80, $08, $81, $01, $01, $b8, $00, $d6, $80, $ff, $06 ; id 0
 
 ; list for entry $C6 (Armorpion) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C6::
+SpeciesPairChecks_Armorpion::
     db $01, $01, $be, $00, $dc, $80, $ff, $06 ; id 0
 
 ; list for entry $C7 (Digster) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C7::
+SpeciesPairChecks_Digster::
     db $ff, $06 ; id 0
 
 ; list for entry $C8 (Skularach) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0C8::
+SpeciesPairChecks_Skularach::
     db $01, $01, $bf, $00, $02, $00, $01, $01, $bb, $00, $02, $00, $01, $01, $bc, $00, $02, $00, $01, $01, $c0, $00, $02, $00, $00, $01, $06, $00, $2f, $80, $ff, $06 ; id 0
 
 ; list for entry $C9 (MultiEyes) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0C9::
+SpeciesPairChecks_MultiEyes::
     db $01, $01, $b6, $00, $e3, $80, $01, $01, $c8, $00, $e6, $80, $ff, $06 ; id 0
 
 ; list for entry $CA (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1450,131 +1450,131 @@ SpeciesPairChecks0D2::
     db $ff, $06 ; id 0
 
 ; list for entry $D3 (Pixy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0D3::
+SpeciesPairChecks_Pixy::
     db $00, $01, $07, $00, $00, $00, $ff, $07 ; id 0
 
 ; list for entry $D4 (MedusaEye) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0D4::
+SpeciesPairChecks_MedusaEye::
     db $01, $01, $e7, $00, $01, $00, $01, $01, $e4, $00, $01, $00, $01, $01, $d4, $00, $01, $00, $01, $01, $e6, $00, $01, $00, $01, $01, $e5, $00, $01, $00, $00, $07, $07, $00, $33, $80, $38, $80, $40, $80, $2b, $80, $3d, $80, $3c, $80, $30, $80, $00, $04, $01, $00, $07, $81, $f7, $80, $0b, $81, $08, $81, $ff, $07 ; id 0
 
 ; list for entry $D5 (AgDevil) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0D5::
+SpeciesPairChecks_AgDevil::
     db $00, $01, $07, $00, $02, $00, $ff, $07 ; id 0
 
 ; list for entry $D6 (Demonite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0D6::
+SpeciesPairChecks_Demonite::
     db $00, $01, $07, $00, $03, $00, $ff, $07 ; id 0
 
 ; list for entry $D7 (DarkEye) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0D7::
+SpeciesPairChecks_DarkEye::
     db $00, $01, $07, $00, $04, $00, $ff, $07 ; id 0
 
 ; list for entry $D8 (EyeBall) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0D8::
+SpeciesPairChecks_EyeBall::
     db $00, $01, $07, $00, $05, $00, $ff, $07 ; id 0
 
 ; list for entry $D9 (SkulRider) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0D9::
+SpeciesPairChecks_SkulRider::
     db $00, $01, $07, $00, $06, $00, $ff, $07 ; id 0
 
 ; list for entry $DA (EvilBeast) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0DA::
+SpeciesPairChecks_EvilBeast::
     db $00, $01, $07, $00, $08, $00, $ff, $07 ; id 0
 
 ; list for entry $DB (Bubblemon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0DB::
+SpeciesPairChecks_Bubblemon::
     db $ff, $07 ; id 0
 
 ; list for entry $DC (1EyeClown) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0DC::
+SpeciesPairChecks_1EyeClown::
     db $01, $01, $d3, $00, $02, $00, $ff, $07 ; id 0
 
 ; list for entry $DD (Gremlin) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0DD::
+SpeciesPairChecks_Gremlin::
     db $00, $0a, $07, $00, $56, $80, $b0, $80, $0c, $80, $98, $80, $bf, $80, $80, $80, $47, $80, $08, $80, $8d, $80, $b6, $80, $ff, $07 ; id 0
 
 ; list for entry $DE (ArcDemon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0DE::
+SpeciesPairChecks_ArcDemon::
     db $01, $01, $eb, $00, $06, $00, $01, $01, $d8, $00, $06, $00, $00, $01, $07, $00, $71, $80, $ff, $07 ; id 0
 
 ; list for entry $DF (Lionex) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0DF::
+SpeciesPairChecks_Lionex::
     db $00, $01, $07, $00, $4e, $80, $01, $01, $d6, $00, $03, $00, $ff, $07 ; id 0
 
 ; list for entry $E0 (GoatHorn) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0E0::
+SpeciesPairChecks_GoatHorn::
     db $01, $01, $dc, $00, $06, $00, $01, $01, $d3, $00, $06, $00, $00, $01, $07, $00, $b4, $80, $ff, $07 ; id 0
 
 ; list for entry $E1 (Orc) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E1::
+SpeciesPairChecks_Orc::
     db $ff, $07 ; id 0
 
 ; list for entry $E2 (Ogre) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E2::
+SpeciesPairChecks_Ogre::
     db $ff, $07 ; id 0
 
 ; list for entry $E3 (GateGuard) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E3::
+SpeciesPairChecks_GateGuard::
     db $ff, $07 ; id 0
 
 ; list for entry $E4 (ChopClown) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0E4::
+SpeciesPairChecks_ChopClown::
     db $01, $05, $eb, $00, $de, $80, $29, $81, $e3, $80, $24, $81, $df, $80, $01, $06, $e7, $00, $de, $80, $29, $81, $e3, $80, $24, $81, $df, $80, $0d, $81, $01, $06, $e6, $00, $de, $80, $29, $81, $e3, $80, $24, $81, $df, $80, $0d, $81, $01, $06, $dd, $00, $de, $80, $29, $81, $e3, $80, $24, $81, $df, $80, $0d, $81, $01, $02, $d9, $00, $fc, $80, $0d, $81, $01, $01, $d4, $00, $0d, $81, $ff, $07 ; id 0
 
 ; list for entry $E5 (BossTroll) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E5::
+SpeciesPairChecks_BossTroll::
     db $01, $0a, $e7, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7d, $80, $13, $80, $7b, $80, $17, $80, $7f, $80, $01, $0a, $e4, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7d, $80, $13, $80, $7b, $80, $17, $80, $7f, $80, $01, $0a, $d4, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7d, $80, $13, $80, $7b, $80, $17, $80, $7f, $80, $01, $0a, $e8, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7d, $80, $13, $80, $7b, $80, $17, $80, $7f, $80, $00, $01, $07, $00, $0a, $00, $ff, $07 ; id 0
 
 ; list for entry $E6 (Grendal) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E6::
+SpeciesPairChecks_Grendal::
     db $01, $07, $dc, $00, $78, $80, $dd, $80, $0d, $80, $0e, $80, $8f, $80, $c4, $80, $77, $80, $01, $07, $d9, $00, $78, $80, $dd, $80, $0d, $80, $0e, $80, $8f, $80, $c4, $80, $77, $80, $01, $07, $d7, $00, $78, $80, $dd, $80, $0d, $80, $0e, $80, $8f, $80, $c4, $80, $77, $80, $01, $01, $dc, $00, $ff, $80, $ff, $07 ; id 0
 
 ; list for entry $E7 (Akubar) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E7::
+SpeciesPairChecks_Akubar::
     db $01, $09, $dc, $00, $33, $81, $e2, $80, $62, $80, $55, $80, $32, $81, $4c, $80, $70, $80, $79, $80, $da, $80, $01, $09, $d9, $00, $33, $81, $e2, $80, $62, $80, $55, $80, $32, $81, $4c, $80, $70, $80, $79, $80, $da, $80, $01, $09, $dd, $00, $33, $81, $e2, $80, $62, $80, $55, $80, $32, $81, $4c, $80, $70, $80, $79, $80, $da, $80, $01, $09, $d7, $00, $33, $81, $e2, $80, $62, $80, $55, $80, $32, $81, $4c, $80, $70, $80, $79, $80, $da, $80, $01, $01, $eb, $00, $01, $00, $01, $01, $e6, $00, $09, $81, $ff, $07 ; id 0
 
 ; list for entry $E8 (MadKnight) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0E8::
+SpeciesPairChecks_MadKnight::
     db $01, $01, $e7, $00, $0a, $81, $01, $01, $e5, $00, $06, $00, $ff, $07 ; id 0
 
 ; list for entry $E9 (EvilWell) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0E9::
+SpeciesPairChecks_EvilWell::
     db $ff, $07 ; id 0
 
 ; list for entry $EA (Gigantes) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0EA::
+SpeciesPairChecks_Gigantes::
     db $ff, $07 ; id 0
 
 ; list for entry $EB (Centasaur) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0EB::
+SpeciesPairChecks_Centasaur::
     db $01, $01, $e7, $00, $03, $00, $01, $01, $e4, $00, $03, $00, $01, $01, $d9, $00, $03, $00, $01, $01, $d4, $00, $03, $00, $01, $01, $e6, $00, $03, $00, $01, $01, $dd, $00, $03, $00, $00, $01, $07, $00, $01, $00, $ff, $07 ; id 0
 
 ; list for entry $EC (EvilArmor) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0EC::
+SpeciesPairChecks_EvilArmor::
     db $ff, $07 ; id 0
 
 ; list for entry $ED (Jamirus) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0ED::
+SpeciesPairChecks_Jamirus::
     db $ff, $07 ; id 0
 
 ; list for entry $EE (Durran) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0EE::
+SpeciesPairChecks_Durran::
     db $ff, $07 ; id 0
 
 ; list for entry $EF (Titanis) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0EF::
+SpeciesPairChecks_Titanis::
     db $ff, $07 ; id 0
 
 ; list for entry $F0 (LampGenie) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0F0::
+SpeciesPairChecks_LampGenie::
     db $ff, $07 ; id 0
 
 ; list for entry $F1 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1599,118 +1599,118 @@ SpeciesPairChecks0F5::
     db $00, $01, $08, $00, $04, $00, $ff, $08 ; id 0
 
 ; list for entry $F6 (Spooky) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0F6::
+SpeciesPairChecks_Spooky::
     db $00, $01, $08, $00, $05, $00, $ff, $08 ; id 0
 
 ; list for entry $F7 (Skullgon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0F7::
+SpeciesPairChecks_Skullgon::
     db $00, $01, $08, $00, $06, $00, $ff, $08 ; id 0
 
 ; list for entry $F8 (PutrePup) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0F8::
+SpeciesPairChecks_PutrePup::
     db $00, $01, $08, $00, $07, $00, $ff, $08 ; id 0
 
 ; list for entry $F9 (RotRaven) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0F9::
+SpeciesPairChecks_RotRaven::
     db $ff, $08 ; id 0
 
 ; list for entry $FA (Mummy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0FA::
+SpeciesPairChecks_Mummy::
     db $01, $01, $f1, $00, $00, $00, $ff, $08 ; id 0
 
 ; list for entry $FB (DarkCrab) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0FB::
+SpeciesPairChecks_DarkCrab::
     db $01, $04, $0b, $01, $0d, $80, $05, $80, $06, $80, $01, $80, $01, $04, $0a, $01, $0d, $80, $05, $80, $06, $80, $01, $80, $00, $01, $08, $00, $b6, $80, $ff, $08 ; id 0
 
 ; list for entry $FC (DeadNite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks0FC::
+SpeciesPairChecks_DeadNite::
     db $01, $07, $2e, $00, $33, $81, $29, $81, $10, $80, $32, $81, $f7, $80, $0e, $80, $c7, $80, $01, $07, $33, $00, $33, $81, $29, $81, $10, $80, $32, $81, $f7, $80, $0e, $80, $c7, $80, $01, $07, $32, $00, $33, $81, $29, $81, $10, $80, $32, $81, $f7, $80, $0e, $80, $c7, $80, $01, $01, $01, $01, $01, $00, $01, $01, $fc, $00, $01, $00, $00, $01, $08, $00, $33, $80, $ff, $08 ; id 0
 
 ; list for entry $FD (Shadow) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0FD::
+SpeciesPairChecks_Shadow::
     db $01, $01, $06, $01, $06, $00, $01, $01, $05, $01, $06, $00, $00, $01, $08, $00, $0a, $00, $ff, $08 ; id 0
 
 ; list for entry $FE (Skulpent) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0FE::
+SpeciesPairChecks_Skulpent::
     db $01, $04, $0b, $01, $78, $80, $7c, $80, $80, $80, $77, $80, $01, $04, $f2, $00, $78, $80, $7c, $80, $80, $80, $77, $80, $01, $04, $0a, $01, $78, $80, $7c, $80, $80, $80, $77, $80, $01, $04, $fb, $00, $78, $80, $7c, $80, $80, $80, $77, $80, $00, $01, $08, $00, $b5, $80, $ff, $08 ; id 0
 
 ; list for entry $FF (Hork) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks0FF::
+SpeciesPairChecks_Hork::
     db $01, $01, $01, $01, $03, $00, $00, $01, $08, $00, $90, $80, $ff, $08 ; id 0
 
 ; list for entry $100 (Mudron) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks100::
+SpeciesPairChecks_Mudron::
     db $ff, $08 ; id 0
 
 ; list for entry $101 (NiteWhip) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks101::
+SpeciesPairChecks_NiteWhip::
     db $01, $08, $fe, $00, $e2, $80, $0a, $81, $38, $80, $e6, $80, $07, $81, $0e, $80, $ec, $80, $5c, $80, $00, $05, $08, $00, $60, $80, $55, $80, $d9, $80, $4c, $80, $5f, $80, $ff, $08 ; id 0
 
 ; list for entry $102 (WindMerge) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks102::
+SpeciesPairChecks_WindMerge::
     db $ff, $08 ; id 0
 
 ; list for entry $103 (Reaper) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks103::
+SpeciesPairChecks_Reaper::
     db $01, $01, $04, $01, $06, $00, $00, $01, $08, $00, $05, $80, $ff, $08 ; id 0
 
 ; list for entry $104 (Inverzon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks104::
+SpeciesPairChecks_Inverzon::
     db $01, $06, $f7, $00, $9e, $80, $8e, $80, $6b, $80, $01, $80, $7c, $80, $71, $80, $01, $06, $f3, $00, $9e, $80, $8e, $80, $6b, $80, $01, $80, $7c, $80, $71, $80, $01, $06, $fa, $00, $9e, $80, $8e, $80, $6b, $80, $01, $80, $7c, $80, $71, $80, $ff, $08 ; id 0
 
 ; list for entry $105 (FoxFire) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks105::
+SpeciesPairChecks_FoxFire::
     db $01, $05, $fc, $00, $de, $80, $60, $80, $7d, $80, $eb, $80, $3c, $80, $ff, $08 ; id 0
 
 ; list for entry $106 (CaptDead) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks106::
+SpeciesPairChecks_CaptDead::
     db $01, $01, $01, $01, $60, $80, $01, $02, $fc, $00, $f7, $80, $08, $81, $ff, $08 ; id 0
 
 ; list for entry $107 (DeadNoble) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks107::
+SpeciesPairChecks_DeadNoble::
     db $01, $01, $01, $01, $07, $00, $00, $01, $08, $00, $08, $80, $ff, $08 ; id 0
 
 ; list for entry $108 (WhiteKing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks108::
+SpeciesPairChecks_WhiteKing::
     db $ff, $08 ; id 0
 
 ; list for entry $109 (BoneSlave) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks109::
+SpeciesPairChecks_BoneSlave::
     db $01, $01, $fa, $00, $22, $81, $ff, $08 ; id 0
 
 ; list for entry $10A (Skeletor) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks10A::
+SpeciesPairChecks_Skeletor::
     db $01, $01, $09, $01, $31, $81, $ff, $08 ; id 0
 
 ; list for entry $10B (Servant) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks10B::
+SpeciesPairChecks_Servant::
     db $01, $01, $0a, $01, $32, $81, $00, $02, $08, $00, $c7, $80, $c4, $80, $ff, $08 ; id 0
 
 ; list for entry $10C (Lazamanus) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks10C::
+SpeciesPairChecks_Lazamanus::
     db $01, $01, $01, $01, $05, $00, $01, $01, $f6, $00, $1e, $81, $ff, $08 ; id 0
 
 ; list for entry $10D (Copycat) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks10D::
+SpeciesPairChecks_Copycat::
     db $01, $01, $06, $01, $2d, $81, $ff, $08 ; id 0
 
 ; list for entry $10E (MadSpirit) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks10E::
+SpeciesPairChecks_MadSpirit::
     db $ff, $08 ; id 0
 
 ; list for entry $10F (PomPomBom) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks10F::
+SpeciesPairChecks_PomPomBom::
     db $ff, $09 ; id 0
 
 ; list for entry $110 (Niterich) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks110::
+SpeciesPairChecks_Niterich::
     db $ff, $09 ; id 0
 
 ; list for entry $111 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1748,139 +1748,139 @@ SpeciesPairChecks118::
     db $ff, $09 ; id 0
 
 ; list for entry $119 (JewelBag) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks119::
+SpeciesPairChecks_JewelBag::
     db $ff, $09 ; id 0
 
 ; list for entry $11A (EvilWand) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks11A::
+SpeciesPairChecks_EvilWand::
     db $ff, $09 ; id 0
 
 ; list for entry $11B (MadCandle) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks11B::
+SpeciesPairChecks_MadCandle::
     db $ff, $09 ; id 0
 
 ; list for entry $11C (CoilBird) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks11C::
+SpeciesPairChecks_CoilBird::
     db $ff, $09 ; id 0
 
 ; list for entry $11D (Facer) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks11D::
+SpeciesPairChecks_Facer::
     db $ff, $09 ; id 0
 
 ; list for entry $11E (SpikyBoy) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks11E::
+SpeciesPairChecks_SpikyBoy::
     db $ff, $09 ; id 0
 
 ; list for entry $11F (MadMirror) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks11F::
+SpeciesPairChecks_MadMirror::
     db $ff, $09 ; id 0
 
 ; list for entry $120 (RogueNite) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks120::
+SpeciesPairChecks_RogueNite::
     db $ff, $09 ; id 0
 
 ; list for entry $121 (Puppetor) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks121::
+SpeciesPairChecks_Puppetor::
     db $ff, $09 ; id 0
 
 ; list for entry $122 (Goopi) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks122::
+SpeciesPairChecks_Goopi::
     db $ff, $09 ; id 0
 
 ; list for entry $123 (Voodoll) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks123::
+SpeciesPairChecks_Voodoll::
     db $ff, $09 ; id 0
 
 ; list for entry $124 (MetalDrak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks124::
+SpeciesPairChecks_MetalDrak::
     db $ff, $09 ; id 0
 
 ; list for entry $125 (Balzak) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks125::
+SpeciesPairChecks_Balzak::
     db $ff, $09 ; id 0
 
 ; list for entry $126 (SabreMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks126::
+SpeciesPairChecks_SabreMan::
     db $ff, $09 ; id 0
 
 ; list for entry $127 (CurseLamp) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks127::
+SpeciesPairChecks_CurseLamp::
     db $ff, $09 ; id 0
 
 ; list for entry $128 (Brushead) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks128::
+SpeciesPairChecks_Brushead::
     db $ff, $09 ; id 0
 
 ; list for entry $129 (Roboster) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks129::
+SpeciesPairChecks_Roboster::
     db $ff, $09 ; id 0
 
 ; list for entry $12A (Roboster2) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks12A::
+SpeciesPairChecks_Roboster2::
     db $ff, $09 ; id 0
 
 ; list for entry $12B (EvilPot) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks12B::
+SpeciesPairChecks_EvilPot::
     db $ff, $09 ; id 0
 
 ; list for entry $12C (Gismo) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks12C::
+SpeciesPairChecks_Gismo::
     db $ff, $09 ; id 0
 
 ; list for entry $12D (LavaMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks12D::
+SpeciesPairChecks_LavaMan::
     db $01, $02, $e8, $00, $33, $80, $38, $80, $ff, $0a ; id 0
 
 ; list for entry $12E (IceMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks12E::
+SpeciesPairChecks_IceMan::
     db $01, $01, $2d, $01, $40, $80, $ff, $0a ; id 0
 
 ; list for entry $12F (Mimic) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks12F::
+SpeciesPairChecks_Mimic::
     db $ff, $0a ; id 0
 
 ; list for entry $130 (Exaucers) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks130::
+SpeciesPairChecks_Exaucers::
     db $01, $01, $e5, $00, $17, $80, $ff, $0a ; id 0
 
 ; list for entry $131 (MudDoll) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks131::
+SpeciesPairChecks_MudDoll::
     db $01, $01, $cf, $00, $a2, $80, $ff, $0a ; id 0
 
 ; list for entry $132 (Golem) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks132::
+SpeciesPairChecks_Golem::
     db $ff, $0a ; id 0
 
 ; list for entry $133 (StoneMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks133::
+SpeciesPairChecks_StoneMan::
     db $01, $01, $30, $01, $3c, $80, $ff, $0a ; id 0
 
 ; list for entry $134 (BombCrag) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks134::
+SpeciesPairChecks_BombCrag::
     db $01, $01, $2d, $01, $65, $81, $01, $01, $2e, $01, $65, $81, $ff, $0a ; id 0
 
 ; list for entry $135 (GoldGolem) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks135::
+SpeciesPairChecks_GoldGolem::
     db $ff, $0a ; id 0
 
 ; list for entry $136 (DarkMate) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks136::
+SpeciesPairChecks_DarkMate::
     db $01, $01, $d0, $00, $40, $80, $ff, $0a ; id 0
 
 ; list for entry $137 (ProtoMech) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks137::
+SpeciesPairChecks_ProtoMech::
     db $ff, $0a ; id 0
 
 ; list for entry $138 (CloudKing) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks138::
+SpeciesPairChecks_CloudKing::
     db $01, $01, $36, $01, $60, $80, $ff, $0a ; id 0
 
 ; list for entry $139 (?) of SpeciesPairCheckTable; it runs to the next list (E-0199)
@@ -1897,24 +1897,24 @@ SpeciesPairChecks13B::
 
 ; list for entry $13C (Petiteel) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks13C::
+SpeciesPairChecks_Petiteel::
     db $01, $02, $34, $01, $6b, $81, $6c, $81, $01, $01, $39, $01, $66, $81, $01, $01, $3a, $01, $66, $81, $ff, $0a ; id 0
 
 ; list for entry $13D (Moray) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks13D::
+SpeciesPairChecks_Moray::
     db $01, $01, $3c, $01, $c6, $80, $ff, $0a ; id 0
 
 ; list for entry $13E (WalrusMan) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks13E::
+SpeciesPairChecks_WalrusMan::
     db $01, $01, $3d, $01, $6d, $81, $ff, $0a ; id 0
 
 ; list for entry $13F (RayGigas) of SpeciesPairCheckTable; it runs to the next list (E-0199)
-SpeciesPairChecks13F::
+SpeciesPairChecks_RayGigas::
     db $01, $01, $3e, $01, $a5, $80, $ff, $0a ; id 0
 
 ; list for entry $140 (Anemon) of SpeciesPairCheckTable; it runs to the next list (E-0199)
 ; record: groups of kind, count, key word, count words; $FF ends
-SpeciesPairChecks140::
+SpeciesPairChecks_Anemon::
     db $ff, $0a ; id 0
 
 ; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1))

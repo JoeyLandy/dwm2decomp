@@ -406,17 +406,17 @@ CheckWarpsAtPlayerPosition::
     ld c, $01
     ret
 
-; unless bit 7 of wMapType is set, looks hMapId up in WarpToLinkedMapForCurrentMap_Data_42AC; when
-; listed, sets the linked map from WarpToLinkedMapForCurrentMap_Data_42B8 and warps (using
-; wKeyWorldGoal when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
+; unless bit 7 of wMapType is set, looks hMapId up in WarpToLinkedMapForCurrentMap_Data1; when
+; listed, sets the linked map from WarpToLinkedMapForCurrentMap_Data2 and warps (using wKeyWorldGoal
+; when wKeyWorldKey selects it), C = 1; otherwise C = 0 (E-0125)
 WarpToLinkedMapForCurrentMap::
     ld a, [wMapType]
     bit 7, a
-    jp nz, WarpToLinkedMapForCurrentMap_Data_42B8_Cp87
+    jp nz, WarpToLinkedMapForCurrentMap_Data2_Cp87
     ldh a, [hMapId]
     ld c, a
     ld b, $00
-    ld hl, WarpToLinkedMapForCurrentMap_Data_42AC
+    ld hl, WarpToLinkedMapForCurrentMap_Data1
 
 .skip:
     ld a, [hli]
@@ -435,7 +435,7 @@ WarpToLinkedMapForCurrentMap::
     ld a, b
     sla a
     add b
-    ld de, WarpToLinkedMapForCurrentMap_Data_42B8
+    ld de, WarpToLinkedMapForCurrentMap_Data2
     add e
     ld e, a
     jr nc, .set_map_id
@@ -459,15 +459,15 @@ WarpToLinkedMapForCurrentMap::
     ld c, $01
     ret
 
-WarpToLinkedMapForCurrentMap_Data_42AC::
+WarpToLinkedMapForCurrentMap_Data1::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2, $ff
 
-WarpToLinkedMapForCurrentMap_Data_42B8::
+WarpToLinkedMapForCurrentMap_Data2::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00
 
-WarpToLinkedMapForCurrentMap_Data_42B8_Cp87::
+WarpToLinkedMapForCurrentMap_Data2_Cp87::
     cp $87
     jr z, .check_key_world_active
     ld c, $00

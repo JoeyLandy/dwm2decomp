@@ -984,10 +984,10 @@ GameMode1_Init::
     ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    ld hl, GameMode1_Init_Data_4AD6
+    ld hl, GameMode1_Init_Data1
     ld a, [hl]
     ld [wSGBPaletteSet], a
-    ld hl, GameMode1_Init_Data_4AD7
+    ld hl, GameMode1_Init_Data2
     ld a, [hl]
     ld [wSGBAttrFile], a
     farcall SendSGBPaletteSetPacket
@@ -1612,10 +1612,10 @@ GameMode1_Init_ReadMapTypeAndMapIdEtc::
     ld a, $04
     ret
 
-GameMode1_Init_Data_4AD6::
+GameMode1_Init_Data1::
     db $00
 
-GameMode1_Init_Data_4AD7::
+GameMode1_Init_Data2::
     db $00
 
 ; per-frame routine for wGameMode = 1
@@ -6230,7 +6230,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data1
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6243,7 +6243,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
 .skip:
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data2
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6259,7 +6259,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data2
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6272,7 +6272,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
 .skip:
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data1
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6404,12 +6404,12 @@ CopyRowsToScreenBufferAndClearAttributes::
     ldh [rSVBK], a
     ret
 
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C::
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data1::
     db $b6
     ds $12, $c3
     db $b7
 
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0::
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data2::
     db $b0
     ds $12, $b1
     db $b2, $b6

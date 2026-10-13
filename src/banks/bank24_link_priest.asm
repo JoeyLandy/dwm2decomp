@@ -95,7 +95,7 @@ GameMode6_Init::
     ld a, [wBattleScene]
     cp $80
     jr nz, .skip2
-    ld de, GameMode6_Init_Data_6F4E
+    ld de, GameMode6_Init_Data2
     ld b, $24
     jr .call_decompress_to_ram_locked
 
@@ -103,7 +103,7 @@ GameMode6_Init::
     and $01
     and a
     jr nz, .skip3
-    ld de, GameMode6_Init_Data_6CE4
+    ld de, GameMode6_Init_Data1
     ld b, $24
     jr .call_decompress_to_ram_locked
 
@@ -1689,7 +1689,7 @@ GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess::
     ld a, $b8
     ld [hli], a
     ei
-    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data_6CA4
+    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data2
     ld b, $08
 
 .loop:
@@ -1701,7 +1701,7 @@ GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess::
     inc de
     dec b
     jr nz, .loop
-    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data_57D6
+    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data1
     ld hl, wWindowAttrBuffer + $7b
     ld b, $1c
 
@@ -2187,7 +2187,7 @@ GameMode6_Update_Shared01_DecompressToVRAM::
     and $01
     and a
     jr nz, .skip
-    ld de, GameMode6_Init_Data_6CE4
+    ld de, GameMode6_Init_Data1
     ld b, $24
     jr .call_decompress_to_vram
 
@@ -2350,12 +2350,12 @@ GameMode6_Init_Sub01_ReadScreenByteBD::
     ld d, $00
     ld a, [wScreenByteBD]
     dec a
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_5191
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data1
     jr z, .skip
     dec a
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_5197
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data2
     jr z, .skip
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_519D
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data3
 
 .skip:
     add hl, de
@@ -2366,13 +2366,13 @@ GameMode6_Init_Sub01_ReadScreenByteBD::
     pop hl
     ret
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data_5191::
+GameMode6_Init_Sub01_ReadScreenByteBD_Data1::
     db $e7, $00, $00, $00, $00, $00
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data_5197::
+GameMode6_Init_Sub01_ReadScreenByteBD_Data2::
     db $e4, $00, $ea, $00, $00, $00
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data_519D::
+GameMode6_Init_Sub01_ReadScreenByteBD_Data3::
     db $e1, $00, $e7, $00, $ed, $00
 
 ; a bare ret (E-0115)
@@ -3052,7 +3052,7 @@ GameMode6_Update_Save_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BE9
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data5
     jr .call_copy_bytes_de_from_hl_bank24
 
 .skip:
@@ -3069,18 +3069,18 @@ GameMode6_Update_Save_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip2
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BD1
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data1
     jr .call_copy_bytes_de_from_hl_bank242
 
 .skip2:
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BD7
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data2
 
 .call_copy_bytes_de_from_hl_bank242:
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
     farcall DecompressGraphicsTemp0ToTemp4
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BDD
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data3
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
@@ -3088,7 +3088,7 @@ GameMode6_Update_Save_TestFlagBit::
     ld a, [wRecordBufB + MON_EGG]
     and a
     jr nz, .set_temp0_to_0D
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BE3
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data4
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
@@ -3118,7 +3118,7 @@ GameMode6_Update_Save_TestFlagBit::
     and $01
     and a
     jr nz, .skip3
-    ld hl, GameMode6_Update_Save_TestFlagBit_Data_5C19
+    ld hl, GameMode6_Update_Save_TestFlagBit_Data6
     jr .call_copy_bytes_de_from_hl_bank243
 
 .skip3:
@@ -3195,7 +3195,7 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24_Data::
     db $c3, $c3, $c3, $c3, $c3, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c3, $c3
     db $c3, $c3
 
-GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data_57D6::
+GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data1::
     ds $1c, $07
 
 TileRect_24_57F2::
@@ -3314,19 +3314,19 @@ TileRect_24_5B85::
     db $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $3f
     db $40, $41, $42, $43
 
-GameMode6_Update_Save_TestFlagBit_Data_5BD1::
+GameMode6_Update_Save_TestFlagBit_Data1::
     db $00, $00, $01, $04, $00, $80
 
-GameMode6_Update_Save_TestFlagBit_Data_5BD7::
+GameMode6_Update_Save_TestFlagBit_Data2::
     db $01, $00, $01, $01, $00, $80
 
-GameMode6_Update_Save_TestFlagBit_Data_5BDD::
+GameMode6_Update_Save_TestFlagBit_Data3::
     db $0c, $00, $01, $05, $00, $81
 
-GameMode6_Update_Save_TestFlagBit_Data_5BE3::
+GameMode6_Update_Save_TestFlagBit_Data4::
     db $00, $00, $00, $02, $00, $82
 
-GameMode6_Update_Save_TestFlagBit_Data_5BE9::
+GameMode6_Update_Save_TestFlagBit_Data5::
     db $00, $01, $00, $00, $a0, $40, $04, $03, $00, $00, $00, $a0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_Bank24 copies these 16 bytes to wSpriteSlots (E-0264)
@@ -3339,7 +3339,7 @@ SpriteSlotsInit_24_5BF9::
 Object1Init_24_5C09::
     db $00, $01, $0c, $00, $e0, $40, $05, $01, $10, $00, $00, $e0, $40, $04, $00, $00 ; entry 0
 
-GameMode6_Update_Save_TestFlagBit_Data_5C19::
+GameMode6_Update_Save_TestFlagBit_Data6::
     db $00, $00, $00, $00, $d0, $40, $02, $01, $20, $00, $00, $d0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_Bank24 copies these 16 bytes to wObject2 (E-0264)
@@ -5240,21 +5240,21 @@ PriestMenu_PayForService_UpdateListCursorListCursor_Data::
 PriestMenu_PayForService_QueueSoundEffect_Data::
     db $f1, $c3, $19, $c4, $41, $c4
 
-GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data_6CA4::
+GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data2::
     ds $38, $00
     db $1f, $00, $ff, $7f, $00, $7e, $00, $00
 
 ; LZSS-compressed: 303 bytes that expand to 512 (E-0016, E-0017)
-GameMode6_Init_Data_6CE4::
-    INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
+GameMode6_Init_Data1::
+    INCBIN "gfx/misc/game_mode6_init_data1.lz"
 
 ; LZSS-compressed: 315 bytes that expand to 512 (E-0016, E-0017)
 Tiles1Plus600Gfx_24_6E13::
-    INCBIN "dwm2-cobi-us.gbc", $092E13, $13B
+    INCBIN "gfx/misc/tiles1_plus600_gfx_24_6_e13.lz"
 
 ; LZSS-compressed: 247 bytes that expand to 512 (E-0016, E-0017)
-GameMode6_Init_Data_6F4E::
-    INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
+GameMode6_Init_Data2::
+    INCBIN "gfx/misc/game_mode6_init_data2.lz"
 
 ; draws the next glyph of the description of the item at wItemGrid[4 * wItemGridY + wItemGridX]
 ; (text table ItemDescriptionTable), handling the $F0 and $F1 control bytes (E-0131)

@@ -3394,7 +3394,7 @@ ClampKeyListPageCursor::
     ret
 
 ; writes blank $C3 at the scroll position + the cursor offset for wListCursor from table
-; EraseCursorForArg5Layout_Data_5D0E, 5D16 or 5D1E (by wArg5) (E-0125)
+; EraseCursorForArg5Layout_Data1, 5D16 or 5D1E (by wArg5) (E-0125)
 EraseCursorForArg5Layout::
     ld b, $c3
     ld a, [wArg5]
@@ -3402,15 +3402,15 @@ EraseCursorForArg5Layout::
     jr z, .read_list_cursor
     cp $01
     jr z, .skip
-    ld hl, EraseCursorForArg5Layout_Data_5D1E
+    ld hl, EraseCursorForArg5Layout_Data3
     jr .read_list_cursor2
 
 .skip:
-    ld hl, EraseCursorForArg5Layout_Data_5D16
+    ld hl, EraseCursorForArg5Layout_Data2
     jr .read_list_cursor2
 
 .read_list_cursor:
-    ld hl, EraseCursorForArg5Layout_Data_5D0E
+    ld hl, EraseCursorForArg5Layout_Data1
 
 .read_list_cursor2:
     ld a, [wListCursor]
@@ -3431,13 +3431,13 @@ EraseCursorForArg5Layout::
     ei
     ret
 
-EraseCursorForArg5Layout_Data_5D0E::
+EraseCursorForArg5Layout_Data1::
     db $a6, $00, $c6, $00, $e6, $00, $06, $01
 
-EraseCursorForArg5Layout_Data_5D16::
+EraseCursorForArg5Layout_Data2::
     db $a4, $00, $c4, $00, $e4, $00, $04, $01
 
-EraseCursorForArg5Layout_Data_5D1E::
+EraseCursorForArg5Layout_Data3::
     db $a2, $00, $c2, $00, $e2, $00, $02, $01
 
 ; blanks the four mark positions and draws marks for the keys on the current page of wListEntries
@@ -3446,11 +3446,11 @@ DrawKeyListPageMarks::
     ld a, [wArg5]
     and a
     jr nz, .skip
-    ld de, DrawKeyListPageMarks_Data_5DDD
+    ld de, DrawKeyListPageMarks_Data1
     jr .skip2
 
 .skip:
-    ld de, DrawKeyListPageMarks_Data_5DE5
+    ld de, DrawKeyListPageMarks_Data2
 
 .skip2:
     ld b, $04
@@ -3529,11 +3529,11 @@ DrawKeyListPageMarks::
     ld a, [wArg5]
     and a
     jr nz, .skip3
-    ld de, DrawKeyListPageMarks_Data_5DDD
+    ld de, DrawKeyListPageMarks_Data1
     jr .skip4
 
 .skip3:
-    ld de, DrawKeyListPageMarks_Data_5DE5
+    ld de, DrawKeyListPageMarks_Data2
     ld a, b
     cp $c3
     jr z, .skip4
@@ -3574,10 +3574,10 @@ DrawKeyListPageMarks::
 .return:
     ret
 
-DrawKeyListPageMarks_Data_5DDD::
+DrawKeyListPageMarks_Data1::
     db $cd, $c3, $f5, $c3, $1d, $c4, $45, $c4
 
-DrawKeyListPageMarks_Data_5DE5::
+DrawKeyListPageMarks_Data2::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4
 
 ; for the keys on the current page writes their names to wNameGlyphBuf and draws them; generated
@@ -4688,11 +4688,11 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
     ld a, [wListPageIndex]
     and a
     jr nz, .check_arena_byte37
-    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_6F71
+    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .loop:
-    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7043
+    ld de, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .check_arena_byte37:
@@ -4716,7 +4716,7 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7106
+    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
     call StoreBAtWordTableEntry_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140d
@@ -4744,7 +4744,7 @@ MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D::
     call DrawScreenBufferRect_Bank0D
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7106
+    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenStep]
     inc a
@@ -5000,7 +5000,7 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7106
+    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
     call StoreBAtWordTableEntry_Bank0D
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5145,11 +5145,11 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01::
     ld a, [wListPageIndex]
     and a
     jr nz, .check_arena_byte37
-    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data_70AC
+    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .loop:
-    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data_70CA
+    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .check_arena_byte37:
@@ -5172,7 +5172,7 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01::
 
 MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D::
     ld c, $04
-    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7106
+    ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
     call EraseCEntriesOfWordTable_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140d
@@ -5979,7 +5979,7 @@ TileRect_0D_6ED8::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_6F71::
+MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data1::
     db $c3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $fd
     ds $14, $c3
     db $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $fd
@@ -5998,7 +5998,7 @@ TileRect_0D_6FDA::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $d9, $da, $db, $dc, $dd, $de, $f9, $fa, $fb, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7043::
+MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data2::
     db $c3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $fd
     ds $14, $c3
     db $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $fd
@@ -6007,11 +6007,11 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7043::
     ds $14, $c3
     db $d9, $da, $db, $dc, $dd, $de, $f9, $fa, $fb, $c3, $c3, $c3, $c3, $c3
 
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data_70AC::
+MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data1::
     db $c3, $c3, $c3, $c3, $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3
     db $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $b4, $b4, $b4, $b4, $b4, $b5
 
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data_70CA::
+MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Shared01_Data2::
     db $c3, $c3, $c3, $c3, $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3
     db $c3, $b7, $c3, $c3, $c3, $c3, $c3, $b7, $b4, $b4, $b4, $b4, $b4, $b5
 
@@ -6023,7 +6023,7 @@ TileRect_0D_70E8::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data_7106::
+MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3::
     db $cc, $c3, $f4, $c3, $1c, $c4, $44, $c4
 
 MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data::
@@ -6607,7 +6607,7 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     sla a
     add b
     push af
-    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_75D7
+    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data1
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6618,7 +6618,7 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld hl, vTiles2
     call DecompressToVRAM
     pop af
-    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_7607
+    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data2
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6636,12 +6636,12 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
-NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_75D7::
+NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data1::
     db $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9
     db $49, $48, $a9, $49, $48, $a9, $49, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b
     db $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48
 
-NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_7607::
+NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data2::
     db $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87
     db $4c, $48, $87, $4c, $48, $87, $4c, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f
     db $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48

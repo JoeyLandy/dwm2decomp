@@ -325,10 +325,10 @@ BuildItemScreenForWItemId_BankF1::
     ld e, $1b
     farcall CopyBlockToTileBuffer
     ld a, [wItemId]
-    ld hl, BuildItemScreenForWItemId_BankF1_Data_4613
+    ld hl, BuildItemScreenForWItemId_BankF1_Data1
     add_a_to_hl
     ld a, [hl]
-    ld hl, BuildItemScreenForWItemId_BankF1_Data_4676
+    ld hl, BuildItemScreenForWItemId_BankF1_Data2
     add a
     add_a_to_hl
     deref_hl
@@ -623,7 +623,7 @@ BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc::
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
-    ld hl, BuildItemScreenForWItemId_BankF1_Data_4613
+    ld hl, BuildItemScreenForWItemId_BankF1_Data1
     add_a_to_hl
     ld a, [hl]
     push af
@@ -932,68 +932,68 @@ RecordA4StringTileCounts_F1::
     db $07, $00 ; id 34
     db $00, $00 ; id 35
 
-BuildItemScreenForWItemId_BankF1_Data_4613::
+BuildItemScreenForWItemId_BankF1_Data1::
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
-BuildItemScreenForWItemId_BankF1_Data_4676::
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry00
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry01
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry02
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry03
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry04
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry05
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry06
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry07
-    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry08
+BuildItemScreenForWItemId_BankF1_Data2::
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry00
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry01
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry02
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry03
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry04
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry05
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry06
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry07
+    dw BuildItemScreenForWItemId_BankF1_Data2_Entry08
 
 ; LZSS-compressed: 253 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry00::
+BuildItemScreenForWItemId_BankF1_Data2_Entry00::
     db $41, $01, $0c, $03, $fb, $fc, $ed
     ds $18, $c3
     db $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
 
 ; LZSS-compressed: 258 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry01::
+BuildItemScreenForWItemId_BankF1_Data2_Entry01::
     db $41, $01, $0c, $03, $fd, $fe, $ed
     ds $18, $c3
     db $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
 
 ; LZSS-compressed: 261 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry02::
+BuildItemScreenForWItemId_BankF1_Data2_Entry02::
     db $41, $01, $0c, $03, $f6, $f7, $f8, $f9, $fa, $0e, $0f, $10, $11, $12, $13, $c3
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $1a, $1b, $1c, $1d
     db $1e, $1f, $20, $21, $22, $c3, $c3, $c3
 
 ; LZSS-compressed: 273 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry03::
+BuildItemScreenForWItemId_BankF1_Data2_Entry03::
     db $41, $01, $0c, $03, $0b, $0c, $0d, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 302 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry04::
+BuildItemScreenForWItemId_BankF1_Data2_Entry04::
     db $41, $01, $0c, $03, $ff, $00, $01, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 305 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry05::
+BuildItemScreenForWItemId_BankF1_Data2_Entry05::
     db $41, $01, $0c, $03, $02, $03, $04, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 310 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry06::
+BuildItemScreenForWItemId_BankF1_Data2_Entry06::
     db $41, $01, $0c, $03, $05, $06, $07, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 313 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry07::
+BuildItemScreenForWItemId_BankF1_Data2_Entry07::
     db $41, $01, $0c, $03, $08, $09, $0a, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 317 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_BankF1_Data_4676_Entry08::
+BuildItemScreenForWItemId_BankF1_Data2_Entry08::
     db $41, $01, $0c, $03
     ds $24, $c3
     db $af, $ea, $a6, $c0, $af, $ea, $6e, $c4, $cd, $e0, $43, $21, $a6, $c0, $2a, $be
@@ -3835,11 +3835,11 @@ LoadBGPalettesFrom5E04::
 
 ; LZSS-compressed: 304 bytes that expand to 544 (E-0016, E-0017)
 Tiles1Gfx_F1_5C14::
-    INCBIN "dwm2-cobi-us.gbc", $3C5C14, $130
+    INCBIN "gfx/misc/tiles1_gfx_f1_5_c14.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 260 (E-0016, E-0017)
 WindowTileBufferPlus64Gfx_F1_5D44::
-    INCBIN "dwm2-cobi-us.gbc", $3C5D44, $58
+    INCBIN "gfx/misc/window_tile_buffer_plus64_gfx_f1_5_d44.lz"
 
 ; LZSS-compressed: 32 bytes that expand to 100 (E-0016, E-0017)
 WindowTileBufferGfx_F1_5D9C::

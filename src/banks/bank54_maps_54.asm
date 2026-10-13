@@ -7,11 +7,11 @@ SECTION "Bank 54", ROMX[$4000], BANK[$54]
 ; compressed tileset of map $81 (the first map record using it)
 ; LZSS-compressed: 811 bytes that expand to 1280 (E-0016, E-0017)
 Map81Tileset::
-    INCBIN "dwm2-cobi-us.gbc", $150001, $77
+    INCBIN "maps/map81/tileset.lz"
 
 ; LZSS-compressed: 1057 bytes that expand to 1239 (E-0016, E-0017)
 Gfx_54_4078::
-    INCBIN "dwm2-cobi-us.gbc", $150078, $2B4
+    INCBIN "gfx/misc/gfx_54_4078.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -35,7 +35,7 @@ Map81Attrs0::
 
 ; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
 Map81Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $150372, $BA
+    INCBIN "maps/map81/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 55 bytes that expand to 360 (E-0016, E-0017)
 Map81Attrs0_Y0X0::
@@ -69,47 +69,47 @@ Map82Attrs0::
 
 ; LZSS-compressed: 203 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $150499, $CB
+    INCBIN "maps/map82/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 273 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $150564, $111
+    INCBIN "maps/map82/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 214 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y0X2::
-    INCBIN "dwm2-cobi-us.gbc", $150675, $D6
+    INCBIN "maps/map82/screens0_y0_x2.lz"
 
 ; LZSS-compressed: 186 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $15074B, $BA
+    INCBIN "maps/map82/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 223 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $150805, $DF
+    INCBIN "maps/map82/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 230 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y1X2::
-    INCBIN "dwm2-cobi-us.gbc", $1508E4, $E6
+    INCBIN "maps/map82/screens0_y1_x2.lz"
 
 ; LZSS-compressed: 174 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y2X0::
-    INCBIN "dwm2-cobi-us.gbc", $1509CA, $AE
+    INCBIN "maps/map82/screens0_y2_x0.lz"
 
 ; LZSS-compressed: 194 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $150A78, $C2
+    INCBIN "maps/map82/screens0_y2_x1.lz"
 
 ; LZSS-compressed: 247 bytes that expand to 360 (E-0016, E-0017)
 Map82Screens0_Y2X2::
-    INCBIN "dwm2-cobi-us.gbc", $150B3A, $F7
+    INCBIN "maps/map82/screens0_y2_x2.lz"
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $150C31, $4C
+    INCBIN "maps/map82/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $150C7D, $51
+    INCBIN "maps/map82/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y0X2::
@@ -120,27 +120,27 @@ Map82Attrs0_Y0X2::
 
 ; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $150D07, $49
+    INCBIN "maps/map82/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 68 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $150D50, $44
+    INCBIN "maps/map82/attrs0_y1_x1.lz"
 
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y1X2::
-    INCBIN "dwm2-cobi-us.gbc", $150D94, $55
+    INCBIN "maps/map82/attrs0_y1_x2.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y2X0::
-    INCBIN "dwm2-cobi-us.gbc", $150DE9, $47
+    INCBIN "maps/map82/attrs0_y2_x0.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $150E30, $46
+    INCBIN "maps/map82/attrs0_y2_x1.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 Map82Attrs0_Y2X2::
-    INCBIN "dwm2-cobi-us.gbc", $150E76, $51
+    INCBIN "maps/map82/attrs0_y2_x2.lz"
 
 ; 9 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -168,27 +168,27 @@ Map83Attrs0::
 
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $150EFD, $BE
+    INCBIN "maps/map83/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $150FBB, $E0
+    INCBIN "maps/map83/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 193 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y0X2::
-    INCBIN "dwm2-cobi-us.gbc", $15109B, $C1
+    INCBIN "maps/map83/screens0_y0_x2.lz"
 
 ; LZSS-compressed: 208 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $15115C, $D0
+    INCBIN "maps/map83/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 233 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $15122C, $E9
+    INCBIN "maps/map83/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 144 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y1X2::
-    INCBIN "dwm2-cobi-us.gbc", $151315, $90
+    INCBIN "maps/map83/screens0_y1_x2.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y2X0::
@@ -197,30 +197,30 @@ Map83Screens0_Y2X0::
 
 ; LZSS-compressed: 195 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $1513B8, $C3
+    INCBIN "maps/map83/screens0_y2_x1.lz"
 
 ; LZSS-compressed: 87 bytes that expand to 360 (E-0016, E-0017)
 Map83Screens0_Y2X2::
-    INCBIN "dwm2-cobi-us.gbc", $15147B, $57
+    INCBIN "maps/map83/screens0_y2_x2.lz"
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1514D2, $4C
+    INCBIN "maps/map83/attrs0_y0_x0.lz"
 
 Map83Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $15151E, $57
+    INCBIN "maps/map83/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y0X2::
-    INCBIN "dwm2-cobi-us.gbc", $151575, $47
+    INCBIN "maps/map83/attrs0_y0_x2.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $1515BC, $50
+    INCBIN "maps/map83/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $15160C, $5A
+    INCBIN "maps/map83/attrs0_y1_x1.lz"
 
 ; LZSS-compressed: 50 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y1X2::
@@ -236,7 +236,7 @@ Map83Attrs0_Y2X0::
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y2X1::
-    INCBIN "dwm2-cobi-us.gbc", $1516AB, $4C
+    INCBIN "maps/map83/attrs0_y2_x1.lz"
 
 ; LZSS-compressed: 35 bytes that expand to 360 (E-0016, E-0017)
 Map83Attrs0_Y2X2::
@@ -254,16 +254,16 @@ Map84Attrs0::
 
 ; LZSS-compressed: 234 bytes that expand to 360 (E-0016, E-0017)
 Map84Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $151720, $EA
+    INCBIN "maps/map84/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
 Map84Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $15180A, $4C
+    INCBIN "maps/map84/attrs0_y0_x0.lz"
 
 ; compressed tileset of map $85 (the first map record using it)
 ; LZSS-compressed: 1231 bytes that expand to 1792 (E-0016, E-0017)
 Map85Tileset::
-    INCBIN "dwm2-cobi-us.gbc", $151856, $4CF
+    INCBIN "maps/map85/tileset.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -293,19 +293,19 @@ Map85Attrs0::
 
 ; LZSS-compressed: 232 bytes that expand to 360 (E-0016, E-0017)
 Map85Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $151D7D, $E8
+    INCBIN "maps/map85/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 228 bytes that expand to 360 (E-0016, E-0017)
 Map85Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $151E65, $E4
+    INCBIN "maps/map85/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 243 bytes that expand to 360 (E-0016, E-0017)
 Map85Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $151F49, $F3
+    INCBIN "maps/map85/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 272 bytes that expand to 360 (E-0016, E-0017)
 Map85Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $15203C, $110
+    INCBIN "maps/map85/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 43 bytes that expand to 360 (E-0016, E-0017)
 Map85Attrs0_Y0X0::
@@ -322,11 +322,11 @@ Map85Attrs0_Y0X1::
 
 ; LZSS-compressed: 94 bytes that expand to 360 (E-0016, E-0017)
 Map85Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $1521B2, $5E
+    INCBIN "maps/map85/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
 Map85Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $152210, $53
+    INCBIN "maps/map85/attrs0_y1_x1.lz"
 
 ; 4 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -344,35 +344,35 @@ Map86Attrs0::
 
 ; LZSS-compressed: 249 bytes that expand to 360 (E-0016, E-0017)
 Map86Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $15227B, $F9
+    INCBIN "maps/map86/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 248 bytes that expand to 360 (E-0016, E-0017)
 Map86Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $152374, $F8
+    INCBIN "maps/map86/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 Map86Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $15246C, $E0
+    INCBIN "maps/map86/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 216 bytes that expand to 360 (E-0016, E-0017)
 Map86Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $15254C, $D8
+    INCBIN "maps/map86/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
 Map86Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $152624, $48
+    INCBIN "maps/map86/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 Map86Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $15266C, $4D
+    INCBIN "maps/map86/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
 Map86Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $1526B9, $5A
+    INCBIN "maps/map86/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 96 bytes that expand to 360 (E-0016, E-0017)
 Map86Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $152713, $60
+    INCBIN "maps/map86/attrs0_y1_x1.lz"
 
 ; 4 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -390,35 +390,35 @@ Map87Attrs0::
 
 ; LZSS-compressed: 195 bytes that expand to 360 (E-0016, E-0017)
 Map87Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $15278B, $C3
+    INCBIN "maps/map87/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 250 bytes that expand to 360 (E-0016, E-0017)
 Map87Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $15284E, $FA
+    INCBIN "maps/map87/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 210 bytes that expand to 360 (E-0016, E-0017)
 Map87Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $152948, $D2
+    INCBIN "maps/map87/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 203 bytes that expand to 360 (E-0016, E-0017)
 Map87Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $152A1A, $CB
+    INCBIN "maps/map87/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 104 bytes that expand to 360 (E-0016, E-0017)
 Map87Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $152AE5, $68
+    INCBIN "maps/map87/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
 Map87Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $152B4D, $64
+    INCBIN "maps/map87/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
 Map87Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $152BB1, $65
+    INCBIN "maps/map87/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 89 bytes that expand to 360 (E-0016, E-0017)
 Map87Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $152C16, $59
+    INCBIN "maps/map87/attrs0_y1_x1.lz"
 
 ; 4 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -436,35 +436,35 @@ Map88Attrs0::
 
 ; LZSS-compressed: 167 bytes that expand to 360 (E-0016, E-0017)
 Map88Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $152C87, $A7
+    INCBIN "maps/map88/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 203 bytes that expand to 360 (E-0016, E-0017)
 Map88Screens0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $152D2E, $CB
+    INCBIN "maps/map88/screens0_y0_x1.lz"
 
 ; LZSS-compressed: 155 bytes that expand to 360 (E-0016, E-0017)
 Map88Screens0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $152DF9, $9B
+    INCBIN "maps/map88/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 198 bytes that expand to 360 (E-0016, E-0017)
 Map88Screens0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $152E94, $C6
+    INCBIN "maps/map88/screens0_y1_x1.lz"
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 Map88Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $152F5A, $5B
+    INCBIN "maps/map88/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 Map88Attrs0_Y0X1::
-    INCBIN "dwm2-cobi-us.gbc", $152FB5, $4E
+    INCBIN "maps/map88/attrs0_y0_x1.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 Map88Attrs0_Y1X0::
-    INCBIN "dwm2-cobi-us.gbc", $153003, $50
+    INCBIN "maps/map88/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 98 bytes that expand to 360 (E-0016, E-0017)
 Map88Attrs0_Y1X1::
-    INCBIN "dwm2-cobi-us.gbc", $153053, $62
+    INCBIN "maps/map88/attrs0_y1_x1.lz"
 
 ; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -476,11 +476,11 @@ Map8AAttrs0::
 
 ; LZSS-compressed: 315 bytes that expand to 360 (E-0016, E-0017)
 Map8AScreens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1530BB, $13B
+    INCBIN "maps/map8_a/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
 Map8AAttrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1531F6, $54
+    INCBIN "maps/map8_a/attrs0_y0_x0.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -497,7 +497,7 @@ Map8BPalettes::
 ; compressed tileset of map $8D (the first map record using it)
 ; LZSS-compressed: 994 bytes that expand to 1216 (E-0016, E-0017)
 Map8DTileset::
-    INCBIN "dwm2-cobi-us.gbc", $15328A, $3E2
+    INCBIN "maps/map8_d/tileset.lz"
 
 Map8DPalettes::
     dw $192c, $7fff, $45f2, $0000 ; entry 0
@@ -525,23 +525,23 @@ Map8DAttrs1::
 
 ; LZSS-compressed: 282 bytes that expand to 360 (E-0016, E-0017)
 Map8DScreens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1536B8, $11A
+    INCBIN "maps/map8_d/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 272 bytes that expand to 360 (E-0016, E-0017)
 Map8DScreens1_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1537D2, $110
+    INCBIN "maps/map8_d/screens1_y0_x0.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 Map8DAttrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $1538E2, $47
+    INCBIN "maps/map8_d/attrs0_y0_x0.lz"
 
 Map8DAttrs1_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $153929, $47
+    INCBIN "maps/map8_d/attrs1_y0_x0.lz"
 
 ; compressed tileset of map $91 (the first map record using it)
 ; LZSS-compressed: 1000 bytes that expand to 1280 (E-0016, E-0017)
 Map91Tileset::
-    INCBIN "dwm2-cobi-us.gbc", $153970, $3E8
+    INCBIN "maps/map91/tileset.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -565,9 +565,9 @@ Map91Attrs0::
 
 ; LZSS-compressed: 297 bytes that expand to 360 (E-0016, E-0017)
 Map91Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $153D9E, $129
+    INCBIN "maps/map91/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 111 bytes that expand to 360 (E-0016, E-0017)
 Map91Attrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $153EC7, $6F
+    INCBIN "maps/map91/attrs0_y0_x0.lz"
     ds $ca, $00

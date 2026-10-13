@@ -455,26 +455,26 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
 
 .skip2:
     ld hl, wTextBuf0
-    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_438E
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data1
     ld b, $09
     ld a, [wStringIndex]
     cp $0b
     jr nz, .cp_0C
-    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data2
     ld b, $09
     jr .loop
 
 .cp_0C:
     cp $0c
     jr nz, .cp_0D
-    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data2
     ld b, $0d
     jr .loop
 
 .cp_0D:
     cp $0d
     jr nz, .cp_0E
-    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data2
     ld b, $0d
     jr .loop
 
@@ -482,7 +482,7 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
     cp $0e
     jr nz, .loop
     ld b, $09
-    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data2
 
 .loop:
     ld a, [de]
@@ -523,10 +523,10 @@ BattlePhase0_Step3_Sub01_CopyStringHLToDE::
     ld [wStringIndex], a
     ret
 
-BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_438E::
+BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data1::
     db $30, $32, $31, $36, $37, $28, $35, $36, $f0
 
-BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397::
+BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data2::
     db $16, $32, $31, $36, $37, $28, $35, $36, $f0
 
 ; wBattlePhase 0, wBattleStep 4 (E-0044)
@@ -2215,9 +2215,9 @@ RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty::
     add_a_to_hl
     ld a, [hl]
     cp $97
-    ld hl, RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4EC6
+    ld hl, RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data1
     jr c, .skip2
-    ld hl, RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4ED6
+    ld hl, RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data2
 
 .skip2:
     ld a, e
@@ -2259,10 +2259,10 @@ RunBattleSetup_FleeCommand_SubtractFloor0::
     ld [de], a
     ret
 
-RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4EC6::
+RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data1::
     db $04, $00, $00, $0a, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
-RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4ED6::
+RunBattleSetup_FleeCommand_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data2::
     db $08, $00, $00, $0f, $06, $00, $00, $0a, $04, $00, $00, $05, $02, $00, $00, $03
 
 RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
@@ -2325,7 +2325,7 @@ RunBattleSetup_FleeCommand_LoadCursorTileAndRect7826::
     ret
 
 RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D::
-    ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5
+    ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data2
     ld hl, wMenuSubState
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -2333,7 +2333,7 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D::
     ret z
     ld a, [wMenuSubState]
     and $01
-    ld hl, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_4FA4
+    ld hl, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data1
     add a
     add_a_to_hl
     deref_hl
@@ -2361,7 +2361,7 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D::
     inc [hl]
     ret
 
-RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_4FA4::
+RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data1::
     db $2f, $99, $6f, $99
 
 RunBattleSetup_FleeCommand_WaitTextFlags::
@@ -5261,7 +5261,7 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink_Data::
 RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00
 
-RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5::
+RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data2::
     db $2f, $01, $6f, $01, $2f, $01, $6f, $01
 
 ; A = value: stores A in wSlotTactic[wCommandMonster], and also in wSlotLastTactic[wCommandMonster]
@@ -7281,7 +7281,7 @@ RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826::
     ret
 
 RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink::
-    ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5
+    ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Case0D_Data2
     ld hl, wMenuSubState
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -7708,7 +7708,7 @@ LayoutTileBlocksForBattleFoeCount::
     ld d, $14
     ld a, [wBattleFoeCount]
     dec a
-    ld hl, LayoutTileBlocksForBattleFoeCount_Data_7317
+    ld hl, LayoutTileBlocksForBattleFoeCount_Data1
     add a
     add_a_to_hl
     call LayoutTileBlocksForBattleFoeCount_DerefHL
@@ -7717,7 +7717,7 @@ LayoutTileBlocksForBattleFoeCount::
     jr z, LayoutTileBlocksForBattleFoeCount_DerefHL_Return
     dec a
     dec a
-    ld hl, LayoutTileBlocksForBattleFoeCount_Data_731D
+    ld hl, LayoutTileBlocksForBattleFoeCount_Data2
     add a
     add_a_to_hl
     call LayoutTileBlocksForBattleFoeCount_DerefHL
@@ -7754,10 +7754,10 @@ LayoutTileBlocksForBattleFoeCount_DerefHL_Skip::
 LayoutTileBlocksForBattleFoeCount_DerefHL_Return::
     ret
 
-LayoutTileBlocksForBattleFoeCount_Data_7317::
+LayoutTileBlocksForBattleFoeCount_Data1::
     db $7f, $c2, $7c, $c2, $79, $c2
 
-LayoutTileBlocksForBattleFoeCount_Data_731D::
+LayoutTileBlocksForBattleFoeCount_Data2::
     db $82, $c2, $7f, $c2
 
 ; on CGB loads the picture attribute blocks for one, two or three battle monsters
@@ -9164,9 +9164,9 @@ SlotHasStatus3Or4Bits_Bank31::
 
 ; LZSS-compressed: 477 bytes that expand to 704 (E-0016, E-0017)
 Tiles1Plus240Gfx_31_7C1E::
-    INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
+    INCBIN "gfx/misc/tiles1_plus240_gfx_31_7_c1_e.lz"
 
 ; LZSS-compressed: 151 bytes that expand to 224 (E-0016, E-0017)
 Tiles1Plus5F0Gfx_31_7DFB::
-    INCBIN "dwm2-cobi-us.gbc", $0C7DFB, $97
+    INCBIN "gfx/misc/tiles1_plus5_f0_gfx_31_7_dfb.lz"
     ds $16e, $00

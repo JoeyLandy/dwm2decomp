@@ -2132,7 +2132,7 @@ DebugResultsDisplay_Update::
     and a
     jp z, DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat
     cp $01
-    jp z, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1
+    jp z, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2284,11 +2284,11 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
     ld a, [wDebugCursor]
     cp $04
     jr nz, .check_screen_byte_bd
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data1
     jr .check_screen_byte_bd2
 
 .check_screen_byte_bd:
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2
 
 .check_screen_byte_bd2:
     ld a, [wScreenByteBD]
@@ -2309,13 +2309,13 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
     add_a_to_hl
     ret
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data1::
     db $86, $99, $a6, $99
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2::
     db $e6, $99, $06, $9a
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1::
     ld a, [wArg1]
     and a
     jr z, .call_compute_breeding_child
@@ -2343,7 +2343,7 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckA
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data3
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -3118,12 +3118,12 @@ StepDebugCursorDebugCounter::
     xor a
     ld [wDebugCounter], a
 
-; debug: draws the value of field wDebugCursor (DrawDebugFieldValueDebugCursor_Data_5B70) at
-; DrawDebugFieldValueDebugCursor_Data_5B84[wDebugCursor] as hex, a tile or BCD (E-0128)
+; debug: draws the value of field wDebugCursor (DrawDebugFieldValueDebugCursor_Data1) at
+; DrawDebugFieldValueDebugCursor_Data2[wDebugCursor] as hex, a tile or BCD (E-0128)
 DrawDebugFieldValueDebugCursor::
     ld a, [wDebugCursor]
     sla a
-    ld de, DrawDebugFieldValueDebugCursor_Data_5B70
+    ld de, DrawDebugFieldValueDebugCursor_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -3147,7 +3147,7 @@ DrawDebugFieldValueDebugCursor::
     jr nz, .read_debug_cursor
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3160,7 +3160,7 @@ DrawDebugFieldValueDebugCursor::
 .read_debug_cursor:
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3178,7 +3178,7 @@ DrawDebugFieldValueDebugCursor::
 .read_debug_cursor2:
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3209,7 +3209,7 @@ PackTwoDigitsOfCAsBCD::
 PackTwoDigitsOfCAsBCD_ReadDebugCursor::
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3236,11 +3236,11 @@ PackTwoDigitsOfCAsBCD_ReadDebugCursor::
     ei
     ret
 
-DrawDebugFieldValueDebugCursor_Data_5B70::
+DrawDebugFieldValueDebugCursor_Data1::
     db $f9, $c5, $fb, $c5, $fc, $c5, $fe, $c5, $81, $d7, $83, $d7, $85, $d7, $82, $d7
     db $84, $d7, $86, $d7
 
-DrawDebugFieldValueDebugCursor_Data_5B84::
+DrawDebugFieldValueDebugCursor_Data2::
     db $e6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $a2, $99, $c2, $99, $e2, $99
     db $02, $9a, $22, $9a
 
@@ -5218,8 +5218,7 @@ SubtractDEFromDebugLimit_Data::
     db $40, $01, $63, $00, $40, $01, $63, $00
 
 ; debug battle setup: shows the string for field wMenuState (wWorkBuf entries, ShowString_Bank88) at
-; the window from DebugBattleSetupShowFieldString_Data_6A6C, with special cases for fields 4-6
-; (E-0131)
+; the window from DebugBattleSetupShowFieldString_Data1, with special cases for fields 4-6 (E-0131)
 DebugBattleSetupShowFieldString::
     ld a, [wMenuState]
     or a
@@ -5238,7 +5237,7 @@ DebugBattleSetupShowFieldString::
     ld [wStringIndex], a
     ld a, h
     ld [wStringCategory], a
-    ld hl, DebugBattleSetupShowFieldString_Data_6A6C
+    ld hl, DebugBattleSetupShowFieldString_Data1
     ld a, [wMenuState]
     dec a
     add a
@@ -5373,7 +5372,7 @@ DebugBattleSetupShowFieldString::
     ld [wStringCategory], a
     ld a, [wMenuState]
     sub $06
-    ld hl, DebugBattleSetupShowFieldString_Data_6A72
+    ld hl, DebugBattleSetupShowFieldString_Data2
     add_a_to_hl
     deref_hl
     ld de, $0901
@@ -5387,7 +5386,7 @@ DebugBattleSetupShowFieldString::
     push bc
     ld a, [wMenuState]
     sub $07
-    ld hl, DebugBattleSetupShowFieldString_Data_6A78
+    ld hl, DebugBattleSetupShowFieldString_Data3
     add_a_to_hl
     deref_hl
     pop bc
@@ -5399,13 +5398,13 @@ DebugBattleSetupShowFieldString::
     call WriteVRAMByte
     ret
 
-DebugBattleSetupShowFieldString_Data_6A6C::
+DebugBattleSetupShowFieldString_Data1::
     db $00, $92, $a0, $92, $30, $93
 
-DebugBattleSetupShowFieldString_Data_6A72::
+DebugBattleSetupShowFieldString_Data2::
     db $e0, $94, $70, $95, $00, $96
 
-DebugBattleSetupShowFieldString_Data_6A78::
+DebugBattleSetupShowFieldString_Data3::
     db $6b, $99, $ab, $99, $eb, $99
 
 ; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble),
@@ -5676,7 +5675,7 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
 
 .skip:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA
+    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data1
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -5867,7 +5866,7 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
 
 .skip6:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3
+    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2
     add a
     add_a_to_hl
     ld e, [hl]
@@ -6046,47 +6045,47 @@ CreateMonsterRecordOfKindTemp1_Data::
     db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1b, $00, $7a, $02, $79, $02
     db $78, $02
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data1::
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3::
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2::
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry00
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry01
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry02
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry03
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry04
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry05
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry06
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry07
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry08
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry00::
     db $0b, $2c, $2c, $31, $32, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry01::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry02::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry03::
     db $20, $24, $35, $38, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry04::
     db $19, $28, $37, $2c, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry05::
     db $1c, $34, $38, $2c, $3d, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry06::
     db $15, $24, $30, $2c, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry07::
     db $1c, $24, $37, $30, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08::
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
     ds $4a6, $00
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data3::
     ds $a3b, $00

@@ -8,7 +8,7 @@ SECTION "Bank 7B", ROMX[$4000], BANK[$7B]
 ; MonsterAttributeMapTable)
 ; LZSS-compressed: 520 bytes that expand to 576 (E-0016, E-0017)
 MonsterPic_Dimensaur::
-    INCBIN "dwm2-cobi-us.gbc", $1EC001, $208
+    INCBIN "gfx/monster_pics/dimensaur.lz"
 
 ; LoadMonsterPicture copies 16 bytes from bank $7B, $4209 + 16 * monster id to the palette buffer
 ; wBGPaletteBuffer on CGB; the count matches the picture table (E-0041, C1)

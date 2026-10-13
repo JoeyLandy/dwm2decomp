@@ -4161,7 +4161,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
 .read_map_id:
     ldh a, [hMapId]
     ld c, a
-    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F
+    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data2
     ld b, $00
 
 .skip:
@@ -4188,7 +4188,7 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
     ld [wWarpPending], a
     ld a, b
     push af
-    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_6634
+    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBand], a
@@ -4220,10 +4220,10 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
     jr nz, .loop2
     ret
 
-FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_6634::
+FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data1::
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0c, $0c
 
-FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F::
+FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
 ; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] at DE

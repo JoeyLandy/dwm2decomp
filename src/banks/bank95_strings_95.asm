@@ -7,7 +7,7 @@ SECTION "Bank 95", ROMX[$4000], BANK[$95]
 ; compressed tileset of map $4E (the first map record using it)
 ; LZSS-compressed: 513 bytes that expand to 1280 (E-0016, E-0017)
 Map4ETileset::
-    INCBIN "dwm2-cobi-us.gbc", $254001, $201
+    INCBIN "maps/map4_e/tileset.lz"
 
 ; 3 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -23,7 +23,7 @@ Map4EAttrs0::
 
 ; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
 Map4EScreens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $254214, $78
+    INCBIN "maps/map4_e/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 40 bytes that expand to 360 (E-0016, E-0017)
 Map4EScreens0_Y1X0::
@@ -32,11 +32,11 @@ Map4EScreens0_Y1X0::
     db $01, $ba, $0f, $4d, $01, $f2, $0f, $13
 
 Map4EScreens0_Y2X0::
-    INCBIN "dwm2-cobi-us.gbc", $2542B4, $78
+    INCBIN "maps/map4_e/screens0_y2_x0.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
 Map4EAttrs0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $25432C, $4A
+    INCBIN "maps/map4_e/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 30 bytes that expand to 360 (E-0016, E-0017)
 Map4EAttrs0_Y1X0::
@@ -45,12 +45,12 @@ Map4EAttrs0_Y1X0::
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
 Map4EAttrs0_Y2X0::
-    INCBIN "dwm2-cobi-us.gbc", $254394, $52
+    INCBIN "maps/map4_e/attrs0_y2_x0.lz"
 
 ; compressed tileset of map $92 (the first map record using it)
 ; LZSS-compressed: 411 bytes that expand to 464 (E-0016, E-0017)
 Map92Tileset::
-    INCBIN "dwm2-cobi-us.gbc", $2543E6, $19B
+    INCBIN "maps/map92/tileset.lz"
 
 ; 1 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -62,7 +62,7 @@ Map92Attrs0::
 
 ; LZSS-compressed: 151 bytes that expand to 360 (E-0016, E-0017)
 Map92Screens0_Y0X0::
-    INCBIN "dwm2-cobi-us.gbc", $254587, $97
+    INCBIN "maps/map92/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 50 bytes that expand to 360 (E-0016, E-0017)
 Map92Attrs0_Y0X0::

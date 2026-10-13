@@ -63,6 +63,8 @@ def _code(text: str) -> list[str]:
         m = present.LABEL_TAG.match(ln)
         ln = m.group(1) if m else ln
         code = present.split_code(ln)[0].rstrip()
+        if code.lstrip().startswith("INCBIN"):
+            code = "    INCBIN"  # D-008: src names the slice as an asset file (checked by test_assets_*)
         out.append(present.code_line(code) if not present.LABEL.match(code) else code)
     return out
 
@@ -84,6 +86,7 @@ class PresentedTreeTest(unittest.TestCase):
             got = [present.split_code(ln)[0].rstrip()
                    for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]
+            got = ["    INCBIN" if g.lstrip().startswith("INCBIN") else g for g in got]
             self.assertEqual(got, want, p.name)
 
     def test_every_bank_file_is_named_and_included_once(self):
@@ -94,6 +97,27 @@ class PresentedTreeTest(unittest.TestCase):
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8")
         self.assertEqual(re.findall(r'^INCLUDE "banks/(bank\w+\.asm)"$', main, re.M), files)
         self.assertTrue((SRC / files[0x36]).read_text(encoding="utf-8").startswith("; ROM bank $36: "))
+
+    def test_assets_are_the_listings_slices_by_name(self):
+        """D-008: every INCBIN in src names an asset in src/assets.txt, once, and the manifest holds exactly the
+        listing's slices of the reference ROM."""
+        src = "\n".join(p.read_text(encoding="utf-8") for p in SRC.glob("bank*.asm"))
+        self.assertNotIn('INCBIN "dwm2-cobi-us.gbc"', src)
+        used = re.findall(r'^\s+INCBIN "([^"]+)"', src, re.M)
+        rows = [ln.split("\t") for ln in (ROOT / "src" / "assets.txt").read_text(encoding="utf-8").splitlines()
+                if ln and not ln.startswith("#")]
+        manifest = {r[0]: (int(r[1][1:], 16), int(r[2][1:], 16)) for r in rows}
+        self.assertEqual(len(manifest), len(rows))
+        self.assertEqual(sorted(used), sorted(manifest))
+        listing = "\n".join(p.read_text(encoding="utf-8") for p in LISTING.glob("bank*.asm"))
+        slices = sorted((int(o, 16), int(n, 16)) for o, n in
+                        re.findall(r'INCBIN "dwm2-cobi-us\.gbc", \$([0-9A-F]+), \$([0-9A-F]+)', listing))
+        self.assertEqual(sorted(manifest.values()), slices)
+
+    def test_asset_paths(self):
+        self.assertEqual(present.asset_path("MonsterSprite_DrakSlime", True), "gfx/monster_sprites/drak_slime.lz")
+        self.assertEqual(present.asset_path("Map00Screens0_Y1X1", False), "maps/map00/screens0_y1_x1.bin")
+        self.assertEqual(present.asset_path("SpecialMap06Tileset", True), "maps/special_map06/tileset.lz")
 
     def test_no_address_name_left(self):
         text = "\n".join(p.read_text(encoding="utf-8") for p in SRC.glob("bank*.asm"))

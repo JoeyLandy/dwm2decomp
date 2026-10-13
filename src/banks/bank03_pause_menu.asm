@@ -2199,9 +2199,9 @@ WithSRAMDrawMemberRecordByte0D_ShowSpeciesNameAndIconForSlotB::
     ret
 
 ; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from
-; ShowSpeciesNameAndIconForSlotB_Data_4F5D[B], loads the species record, sets wWorkBuf = family,
-; wWorkBuf + $1 = ShowSpeciesNameAndIconForSlotB_Data_4F61[B] and far-calls
-; LoadFamilyIconTileForWorkBuf (E-0121)
+; ShowSpeciesNameAndIconForSlotB_Data1[B], loads the species record, sets wWorkBuf = family,
+; wWorkBuf + $1 = ShowSpeciesNameAndIconForSlotB_Data2[B] and far-calls LoadFamilyIconTileForWorkBuf
+; (E-0121)
 ShowSpeciesNameAndIconForSlotB::
     ld a, [hli]
     ld [wSpeciesIdLo], a
@@ -2212,7 +2212,7 @@ ShowSpeciesNameAndIconForSlotB::
     ld [wStringCategory], a
     push hl
     push bc
-    ld hl, ShowSpeciesNameAndIconForSlotB_Data_4F5D
+    ld hl, ShowSpeciesNameAndIconForSlotB_Data1
     ld a, b
     add a
     add_a_to_hl
@@ -2224,7 +2224,7 @@ ShowSpeciesNameAndIconForSlotB::
     ld [wWorkBuf], a
     pop bc
     ld a, b
-    ld hl, ShowSpeciesNameAndIconForSlotB_Data_4F61
+    ld hl, ShowSpeciesNameAndIconForSlotB_Data2
     add_a_to_hl
     ld a, [hl]
     ld [wWorkBuf + $1], a
@@ -2249,13 +2249,13 @@ WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03::
     push hl
     push bc
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F67
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data1
     call DerefWordTableEntryA_Bank03
     pop bc
     pop hl
     push hl
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data2
     add a
     add_a_to_hl
     deref_hl
@@ -2274,7 +2274,7 @@ WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03::
     call HLToDecimalDigits
     pop bc
     ld a, b
-    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data2
     add a
     add_a_to_hl
     deref_hl
@@ -2295,19 +2295,19 @@ WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03::
     pop hl
     ret
 
-ShowSpeciesNameAndIconForSlotB_Data_4F5D::
+ShowSpeciesNameAndIconForSlotB_Data1::
     db $e0, $95, $20, $97
 
-ShowSpeciesNameAndIconForSlotB_Data_4F61::
+ShowSpeciesNameAndIconForSlotB_Data2::
     db $5d, $71
 
 WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Data::
     db $70, $96, $b0, $97
 
-WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F67::
+WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data1::
     db $80, $95, $c0, $96
 
-WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B::
+WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data2::
     db $02, $c2, $22, $c3
 
 ; reads field $0B of SRAM record wMenuSelectedMember & $0F and decompresses its graphics to vTiles0
@@ -2449,12 +2449,12 @@ PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize::
     inc hl
     ld d, [hl]
     pop bc
-    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F
+    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data1
     ld a, c
     add_a_to_hl
     ld a, c
     ld c, [hl]
-    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_5192
+    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data2
     add a
     add_a_to_hl
     deref_hl
@@ -2467,12 +2467,12 @@ PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize::
     jr z, .call_draw_record_hpmp_and_level_for_row_c
     push bc
     ld a, c
-    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F
+    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data1
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
     ld a, c
-    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_5198
+    ld hl, PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data3
     add a
     add_a_to_hl
     deref_hl
@@ -2626,13 +2626,13 @@ DrawRecordByte0EMarkTile::
     pop bc
     ret
 
-PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F::
+PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data1::
     db $01, $03, $05
 
-PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_5192::
+PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data2::
     db $40, $91, $80, $93, $c0, $95
 
-PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data_5198::
+PauseMenu_Info_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize_Data3::
     db $00, $00, $80, $00, $00, $01
 
 DrawRecordHPMPAndLevelForRowC_Data::
@@ -3566,7 +3566,7 @@ BuildScreenBlock0EWithCursor::
     ret
 
 ; builds block $0E with the cursor, blocks $11 and $1B, and the rectangle chosen by wItemId
-; (BuildItemScreenForWItemId_Data_5C8B to BuildItemScreenForWItemId_Data_5CEE), then runs
+; (BuildItemScreenForWItemId_Data1 to BuildItemScreenForWItemId_Data2), then runs
 ; DrawItemTargetStatPreview (E-0122)
 BuildItemScreenForWItemId::
     call BuildScreenBlock0EWithCursor
@@ -3575,10 +3575,10 @@ BuildItemScreenForWItemId::
     ld e, $1b
     farcall CopyBlockToTileBuffer
     ld a, [wItemId]
-    ld hl, BuildItemScreenForWItemId_Data_5C8B
+    ld hl, BuildItemScreenForWItemId_Data1
     add_a_to_hl
     ld a, [hl]
-    ld hl, BuildItemScreenForWItemId_Data_5CEE
+    ld hl, BuildItemScreenForWItemId_Data2
     add a
     add_a_to_hl
     deref_hl
@@ -3908,13 +3908,13 @@ SetupInventoryMenuPages_Bank03::
     ld [wMenuRowCount], a
     ret
 
-; for item wItemId (kind BuildItemScreenForWItemId_Data_5C8B) writes the target record's affected
-; value (HP, MP or a stat word) as digits in the item screen (E-0131)
+; for item wItemId (kind BuildItemScreenForWItemId_Data1) writes the target record's affected value
+; (HP, MP or a stat word) as digits in the item screen (E-0131)
 DrawItemTargetStatPreview::
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
-    ld hl, BuildItemScreenForWItemId_Data_5C8B
+    ld hl, BuildItemScreenForWItemId_Data1
     add_a_to_hl
     ld a, [hl]
     push af
@@ -4223,68 +4223,68 @@ RecordA4StringTileCounts_03::
     db $07, $00 ; id 34
     db $00, $00 ; id 35
 
-BuildItemScreenForWItemId_Data_5C8B::
+BuildItemScreenForWItemId_Data1::
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
-BuildItemScreenForWItemId_Data_5CEE::
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry00
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry01
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry02
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry03
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry04
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry05
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry06
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry07
-    dw BuildItemScreenForWItemId_Data_5CEE_Entry08
+BuildItemScreenForWItemId_Data2::
+    dw BuildItemScreenForWItemId_Data2_Entry00
+    dw BuildItemScreenForWItemId_Data2_Entry01
+    dw BuildItemScreenForWItemId_Data2_Entry02
+    dw BuildItemScreenForWItemId_Data2_Entry03
+    dw BuildItemScreenForWItemId_Data2_Entry04
+    dw BuildItemScreenForWItemId_Data2_Entry05
+    dw BuildItemScreenForWItemId_Data2_Entry06
+    dw BuildItemScreenForWItemId_Data2_Entry07
+    dw BuildItemScreenForWItemId_Data2_Entry08
 
 ; LZSS-compressed: 253 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry00::
+BuildItemScreenForWItemId_Data2_Entry00::
     db $41, $01, $0c, $03, $fb, $fc, $ed
     ds $18, $c3
     db $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
 
 ; LZSS-compressed: 258 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry01::
+BuildItemScreenForWItemId_Data2_Entry01::
     db $41, $01, $0c, $03, $fd, $fe, $ed
     ds $18, $c3
     db $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
 
 ; LZSS-compressed: 261 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry02::
+BuildItemScreenForWItemId_Data2_Entry02::
     db $41, $01, $0c, $03, $f6, $f7, $f8, $f9, $fa, $0e, $0f, $10, $11, $12, $13, $c3
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $1a, $1b, $1c, $1d
     db $1e, $1f, $20, $21, $22, $c3, $c3, $c3
 
 ; LZSS-compressed: 273 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry03::
+BuildItemScreenForWItemId_Data2_Entry03::
     db $41, $01, $0c, $03, $0b, $0c, $0d, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 302 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry04::
+BuildItemScreenForWItemId_Data2_Entry04::
     db $41, $01, $0c, $03, $ff, $00, $01, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 305 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry05::
+BuildItemScreenForWItemId_Data2_Entry05::
     db $41, $01, $0c, $03, $02, $03, $04, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 311 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry06::
+BuildItemScreenForWItemId_Data2_Entry06::
     db $41, $01, $0c, $03, $05, $06, $07, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 320 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry07::
+BuildItemScreenForWItemId_Data2_Entry07::
     db $41, $01, $0c, $03, $08, $09, $0a, $ed
     ds $20, $c3
 
 ; LZSS-compressed: 324 bytes that expand to 321 (E-0016, E-0017)
-BuildItemScreenForWItemId_Data_5CEE_Entry08::
+BuildItemScreenForWItemId_Data2_Entry08::
     db $41, $01, $0c, $03
     ds $24, $c3
 
@@ -4788,13 +4788,13 @@ PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap::
 
 PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37::
     ld a, [wInventorySlot]
-    ld hl, PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_6987
+    ld hl, PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data1
     add_a_to_hl
     ld a, [hl]
     cp $ff
     call nz, QueueSoundEffect
     ld a, [wInventorySlot]
-    ld hl, PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_69AF
+    ld hl, PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data2
     add_a_to_hl
     ld a, [hl]
     ld [wStringIndex], a
@@ -5571,7 +5571,7 @@ TileRect_03_6956::
     db $b6, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; row 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_6987::
+PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data1::
     db $7a, $7a, $7a, $7a, $7a, $7a, $7a, $7a, $7a, $7a, $7a, $7a, $ff, $ff, $ff, $ff
     db $ff, $ff, $ff, $ff
 
@@ -5579,7 +5579,7 @@ PauseMenu_Skills_UseFieldSkill_QueueSoundEffect_Data::
     db $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $ff, $ff, $ff, $ff
     db $ff, $ff, $ff, $ff
 
-PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data_69AF::
+PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data2::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00
     db $03, $04, $05, $00
 

@@ -1895,15 +1895,15 @@ TileRect_1F_720D::
     db $c3, $18, $19, $1a, $1b, $1c, $1d, $3c, $3d, $3e, $3f, $40, $41, $60, $61, $62, $63, $64, $65, $c3 ; row 4
     db $c3, $1e, $1f, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6a, $6b, $c3 ; row 5
 
-; copies 16 glyph tiles (LoadSixteenGlyphTilesFromTable73BC_Data_73BC) from bank $1F to the VRAM
-; addresses in LoadSixteenGlyphTilesFromTable73BC_Data_73CC (E-0127)
+; copies 16 glyph tiles (LoadSixteenGlyphTilesFromTable73BC_Data1) from bank $1F to the VRAM
+; addresses in LoadSixteenGlyphTilesFromTable73BC_Data2 (E-0127)
 LoadSixteenGlyphTilesFromTable73BC::
     ld c, $00
 
 .loop:
     push bc
     ld a, c
-    ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73BC
+    ld de, LoadSixteenGlyphTilesFromTable73BC_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -1928,7 +1928,7 @@ LoadSixteenGlyphTilesFromTable73BC::
     push de
     ld a, c
     sla a
-    ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73CC
+    ld de, LoadSixteenGlyphTilesFromTable73BC_Data2
     add e
     ld e, a
     jr nc, .skip2
@@ -1951,10 +1951,10 @@ LoadSixteenGlyphTilesFromTable73BC::
     jr c, .loop
     ret
 
-LoadSixteenGlyphTilesFromTable73BC_Data_73BC::
+LoadSixteenGlyphTilesFromTable73BC_Data1::
     db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
-LoadSixteenGlyphTilesFromTable73BC_Data_73CC::
+LoadSixteenGlyphTilesFromTable73BC_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 

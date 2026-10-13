@@ -6,94 +6,94 @@ SECTION "Bank 6E", ROMX[$4000], BANK[$6E]
 
 ; LZSS-compressed: 214 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom45_Y1X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8001, $D6
+    INCBIN "maps/key_worlds/room45_y1_x3_tiles.lz"
 
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom37_Y0X2_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B80D7, $E7
+    INCBIN "maps/key_worlds/room37_y0_x2_tiles.lz"
 
 ; LZSS-compressed: 159 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom61_Y1X0_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B81BE, $9F
+    INCBIN "maps/key_worlds/room61_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom45_Y1X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B825D, $46
+    INCBIN "maps/key_worlds/room45_y1_x3_attrs.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom37_Y0X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B82A3, $54
+    INCBIN "maps/key_worlds/room37_y0_x2_attrs.lz"
 
 ; LZSS-compressed: 66 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom61_Y1X0_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B82F7, $42
+    INCBIN "maps/key_worlds/room61_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y3X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B8339, $51
+    INCBIN "maps/key_worlds/room01_y3_x1_attrs.lz"
 
 KeyWorldRoom00_Y3X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B838A, $51
+    INCBIN "maps/key_worlds/room00_y3_x1_attrs.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y2X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B83DB, $4D
+    INCBIN "maps/key_worlds/room02_y2_x2_attrs.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom03_Y2X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B8428, $53
+    INCBIN "maps/key_worlds/room03_y2_x2_attrs.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y1X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B847B, $50
+    INCBIN "maps/key_worlds/room08_y1_x2_attrs.lz"
 
 ; LZSS-compressed: 89 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom09_Y3X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B84CB, $59
+    INCBIN "maps/key_worlds/room09_y3_x1_attrs.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y3X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B8524, $4E
+    INCBIN "maps/key_worlds/room0_a_y3_x1_attrs.lz"
 
 ; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y3X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B8572, $5A
+    INCBIN "maps/key_worlds/room0_a_y3_x2_attrs.lz"
 
 KeyWorldScreen_6E_45CC::
-    INCBIN "dwm2-cobi-us.gbc", $1B85CC, $4E
+    INCBIN "maps/key_worlds/screen_6_e_45_cc.lz"
 
 KeyWorldScreen_6E_461A::
-    INCBIN "dwm2-cobi-us.gbc", $1B861A, $50
+    INCBIN "maps/key_worlds/screen_6_e_461_a.lz"
 
 ; LZSS-compressed: 97 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_466A::
-    INCBIN "dwm2-cobi-us.gbc", $1B866A, $61
+    INCBIN "maps/key_worlds/screen_6_e_466_a.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_46CB::
-    INCBIN "dwm2-cobi-us.gbc", $1B86CB, $5C
+    INCBIN "maps/key_worlds/screen_6_e_46_cb.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8B_Y3X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B8727, $50
+    INCBIN "maps/key_worlds/room8_b_y3_x1_attrs.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_4777::
-    INCBIN "dwm2-cobi-us.gbc", $1B8777, $51
+    INCBIN "maps/key_worlds/screen_6_e_4777.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_47C8::
-    INCBIN "dwm2-cobi-us.gbc", $1B87C8, $54
+    INCBIN "maps/key_worlds/screen_6_e_47_c8.lz"
 
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom22_Y1X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B881C, $55
+    INCBIN "maps/key_worlds/room22_y1_x2_attrs.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 3 of MapType5TilesetTable, decompressed to
 ; vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed: 916 bytes that expand to 2048 (E-0016, E-0017)
 MapType5Tiles3::
-    INCBIN "dwm2-cobi-us.gbc", $1B8871, $394
+    INCBIN "gfx/map_types/5_tiles3.lz"
 
 ; entry 3 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -109,65 +109,65 @@ MapType5Palettes3::
 
 ; LZSS-compressed: 128 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom00_Y2X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8C45, $80
+    INCBIN "maps/key_worlds/room00_y2_x1_tiles.lz"
 
 ; LZSS-compressed: 221 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom07_Y1X0_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8CC5, $DD
+    INCBIN "maps/key_worlds/room07_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 181 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y1X0_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8DA2, $B5
+    INCBIN "maps/key_worlds/room02_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y1X0_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8E57, $E0
+    INCBIN "maps/key_worlds/room08_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 229 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y2X0_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B8F37, $E5
+    INCBIN "maps/key_worlds/room08_y2_x0_tiles.lz"
 
 ; LZSS-compressed: 220 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom09_Y1X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B901C, $DC
+    INCBIN "maps/key_worlds/room09_y1_x1_tiles.lz"
 
 ; LZSS-compressed: 230 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom09_Y2X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B90F8, $E6
+    INCBIN "maps/key_worlds/room09_y2_x1_tiles.lz"
 
 KeyWorldRoom0A_Y1X2_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1B91DE, $DC
+    INCBIN "maps/key_worlds/room0_a_y1_x2_tiles.lz"
 
 ; LZSS-compressed: 133 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_52BA::
-    INCBIN "dwm2-cobi-us.gbc", $1B92BA, $85
+    INCBIN "maps/screen_maps/6_e_52_ba.lz"
 
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_533F::
-    INCBIN "dwm2-cobi-us.gbc", $1B933F, $BE
+    INCBIN "maps/screen_maps/6_e_533_f.lz"
 
 ; LZSS-compressed: 225 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_53FD::
-    INCBIN "dwm2-cobi-us.gbc", $1B93FD, $E1
+    INCBIN "maps/screen_maps/6_e_53_fd.lz"
 
 ; LZSS-compressed: 245 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_54DE::
-    INCBIN "dwm2-cobi-us.gbc", $1B94DE, $F5
+    INCBIN "maps/screen_maps/6_e_54_de.lz"
 
 ; LZSS-compressed: 230 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_55D3::
-    INCBIN "dwm2-cobi-us.gbc", $1B95D3, $E6
+    INCBIN "maps/screen_maps/6_e_55_d3.lz"
 
 ; LZSS-compressed: 226 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_56B9::
-    INCBIN "dwm2-cobi-us.gbc", $1B96B9, $E2
+    INCBIN "maps/screen_maps/6_e_56_b9.lz"
 
 ScreenMap_6E_579B::
-    INCBIN "dwm2-cobi-us.gbc", $1B979B, $E6
+    INCBIN "maps/screen_maps/6_e_579_b.lz"
 
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_5881::
-    INCBIN "dwm2-cobi-us.gbc", $1B9881, $E7
+    INCBIN "maps/screen_maps/6_e_5881.lz"
 
 ; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom00_Y2X1_Attrs::
@@ -178,7 +178,7 @@ KeyWorldRoom00_Y2X1_Attrs::
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom07_Y1X0_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B999D, $4A
+    INCBIN "maps/key_worlds/room07_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 63 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y1X0_Attrs::
@@ -193,61 +193,61 @@ Gfx_6E_5A20::
 
 ; LZSS-compressed: 75 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y1X0_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B9A26, $4B
+    INCBIN "maps/key_worlds/room08_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom08_Y2X0_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B9A71, $54
+    INCBIN "maps/key_worlds/room08_y2_x0_attrs.lz"
 
 ; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom09_Y1X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B9AC5, $49
+    INCBIN "maps/key_worlds/room09_y1_x1_attrs.lz"
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom09_Y2X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B9B0E, $52
+    INCBIN "maps/key_worlds/room09_y2_x1_attrs.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y1X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1B9B60, $47
+    INCBIN "maps/key_worlds/room0_a_y1_x2_attrs.lz"
 
 ; LZSS-compressed: 66 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5BA7::
-    INCBIN "dwm2-cobi-us.gbc", $1B9BA7, $42
+    INCBIN "maps/key_worlds/screen_6_e_5_ba7.lz"
 
 ; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5BE9::
-    INCBIN "dwm2-cobi-us.gbc", $1B9BE9, $45
+    INCBIN "maps/key_worlds/screen_6_e_5_be9.lz"
 
 ; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5C2E::
-    INCBIN "dwm2-cobi-us.gbc", $1B9C2E, $56
+    INCBIN "maps/key_worlds/screen_6_e_5_c2_e.lz"
 
 ; LZSS-compressed: 108 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5C84::
-    INCBIN "dwm2-cobi-us.gbc", $1B9C84, $6C
+    INCBIN "maps/key_worlds/screen_6_e_5_c84.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5CF0::
-    INCBIN "dwm2-cobi-us.gbc", $1B9CF0, $5C
+    INCBIN "maps/key_worlds/screen_6_e_5_cf0.lz"
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5D4C::
-    INCBIN "dwm2-cobi-us.gbc", $1B9D4C, $5B
+    INCBIN "maps/key_worlds/screen_6_e_5_d4_c.lz"
 
 ; LZSS-compressed: 94 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5DA7::
-    INCBIN "dwm2-cobi-us.gbc", $1B9DA7, $5E
+    INCBIN "maps/key_worlds/screen_6_e_5_da7.lz"
 
 ; LZSS-compressed: 96 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_5E05::
-    INCBIN "dwm2-cobi-us.gbc", $1B9E05, $60
+    INCBIN "maps/key_worlds/screen_6_e_5_e05.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 4 of MapType5TilesetTable, decompressed to
 ; vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed: 1071 bytes that expand to 2048 (E-0016, E-0017)
 MapType5Tiles4::
-    INCBIN "dwm2-cobi-us.gbc", $1B9E65, $42F
+    INCBIN "gfx/map_types/5_tiles4.lz"
 
 ; entry 4 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -263,67 +263,67 @@ MapType5Palettes4::
 
 ; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y1X2_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA2D4, $82
+    INCBIN "maps/key_worlds/room01_y1_x2_tiles.lz"
 
 ; LZSS-compressed: 213 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0B_Y1X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA356, $D5
+    INCBIN "maps/key_worlds/room0_b_y1_x1_tiles.lz"
 
 ; LZSS-compressed: 230 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y2X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA42B, $E6
+    INCBIN "maps/key_worlds/room01_y2_x3_tiles.lz"
 
 ; LZSS-compressed: 214 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y2X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA511, $D6
+    INCBIN "maps/key_worlds/room02_y2_x3_tiles.lz"
 
 ; LZSS-compressed: 218 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom04_Y1X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA5E7, $DA
+    INCBIN "maps/key_worlds/room04_y1_x3_tiles.lz"
 
 ; LZSS-compressed: 228 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y1X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA6C1, $E4
+    INCBIN "maps/key_worlds/room0_a_y1_x1_tiles.lz"
 
 ; LZSS-compressed: 215 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y1X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA7A5, $D7
+    INCBIN "maps/key_worlds/room0_a_y1_x3_tiles.lz"
 
 ; LZSS-compressed: 201 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y2X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BA87C, $C9
+    INCBIN "maps/key_worlds/room0_a_y2_x1_tiles.lz"
 
 ; LZSS-compressed: 162 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_6945::
-    INCBIN "dwm2-cobi-us.gbc", $1BA945, $A2
+    INCBIN "maps/screen_maps/6_e_6945.lz"
 
 ; LZSS-compressed: 197 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_69E7::
-    INCBIN "dwm2-cobi-us.gbc", $1BA9E7, $C5
+    INCBIN "maps/screen_maps/6_e_69_e7.lz"
 
 ; LZSS-compressed: 240 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_6AAC::
-    INCBIN "dwm2-cobi-us.gbc", $1BAAAC, $F0
+    INCBIN "maps/screen_maps/6_e_6_aac.lz"
 
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_6B9C::
-    INCBIN "dwm2-cobi-us.gbc", $1BAB9C, $E7
+    INCBIN "maps/screen_maps/6_e_6_b9_c.lz"
 
 ; LZSS-compressed: 184 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom22_Y2X1_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BAC83, $B8
+    INCBIN "maps/key_worlds/room22_y2_x1_tiles.lz"
 
 ; LZSS-compressed: 205 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom4C_Y1X3_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BAD3B, $CD
+    INCBIN "maps/key_worlds/room4_c_y1_x3_tiles.lz"
 
 ; LZSS-compressed: 236 bytes that expand to 360 (E-0016, E-0017)
 ScreenMap_6E_6E08::
-    INCBIN "dwm2-cobi-us.gbc", $1BAE08, $EC
+    INCBIN "maps/screen_maps/6_e_6_e08.lz"
 
 ; LZSS-compressed: 229 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom4B_Y1X2_Tiles::
-    INCBIN "dwm2-cobi-us.gbc", $1BAEF4, $E5
+    INCBIN "maps/key_worlds/room4_b_y1_x2_tiles.lz"
 
 ; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y1X2_Attrs::
@@ -334,69 +334,69 @@ KeyWorldRoom01_Y1X2_Attrs::
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0B_Y1X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB012, $47
+    INCBIN "maps/key_worlds/room0_b_y1_x1_attrs.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y2X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB059, $4D
+    INCBIN "maps/key_worlds/room01_y2_x3_attrs.lz"
 
 ; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y2X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB0A6, $5A
+    INCBIN "maps/key_worlds/room02_y2_x3_attrs.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom04_Y1X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB100, $4E
+    INCBIN "maps/key_worlds/room04_y1_x3_attrs.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y1X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB14E, $53
+    INCBIN "maps/key_worlds/room0_a_y1_x1_attrs.lz"
 
 ; LZSS-compressed: 79 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y1X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB1A1, $4F
+    INCBIN "maps/key_worlds/room0_a_y1_x3_attrs.lz"
 
 ; LZSS-compressed: 73 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0A_Y2X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB1F0, $49
+    INCBIN "maps/key_worlds/room0_a_y2_x1_attrs.lz"
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_7239::
-    INCBIN "dwm2-cobi-us.gbc", $1BB239, $52
+    INCBIN "maps/key_worlds/screen_6_e_7239.lz"
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_728B::
-    INCBIN "dwm2-cobi-us.gbc", $1BB28B, $5B
+    INCBIN "maps/key_worlds/screen_6_e_728_b.lz"
 
 ; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_72E6::
-    INCBIN "dwm2-cobi-us.gbc", $1BB2E6, $5D
+    INCBIN "maps/key_worlds/screen_6_e_72_e6.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_7343::
-    INCBIN "dwm2-cobi-us.gbc", $1BB343, $5C
+    INCBIN "maps/key_worlds/screen_6_e_7343.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom22_Y2X1_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB39F, $46
+    INCBIN "maps/key_worlds/room22_y2_x1_attrs.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom4C_Y1X3_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB3E5, $4D
+    INCBIN "maps/key_worlds/room4_c_y1_x3_attrs.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldScreen_6E_7432::
-    INCBIN "dwm2-cobi-us.gbc", $1BB432, $4E
+    INCBIN "maps/key_worlds/screen_6_e_7432.lz"
 
 ; LZSS-compressed: 100 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom4B_Y1X2_Attrs::
-    INCBIN "dwm2-cobi-us.gbc", $1BB480, $64
+    INCBIN "maps/key_worlds/room4_b_y1_x2_attrs.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 5 of MapType5TilesetTable, decompressed to
 ; vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed: 764 bytes that expand to 2048 (E-0016, E-0017)
 MapType5Tiles5::
-    INCBIN "dwm2-cobi-us.gbc", $1BB4E4, $2FC
+    INCBIN "gfx/map_types/5_tiles5.lz"
 
 ; entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours

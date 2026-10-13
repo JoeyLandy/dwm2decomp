@@ -6810,7 +6810,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     and $7f
     cp $13
     jr nz, .cp_1A
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FF2
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data1
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -6819,7 +6819,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1A:
     cp $1a
     jr nz, .cp_17
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FF7
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data2
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -6828,7 +6828,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_17:
     cp $17
     jr nz, .cp_1F
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FFA
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data3
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -6837,10 +6837,10 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1F:
     cp $1f
     jr nz, .cp_1E
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FFE
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data4
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_700E
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data5
     add_a_to_hl
     ld a, [hl]
     ldh [hSpriteSubIndex], a
@@ -6849,7 +6849,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_1E:
     cp $1e
     jr nz, .cp_18
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_701E
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data6
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -6858,7 +6858,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_18:
     cp $18
     jr nz, .cp_20
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_7023
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data7
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -6867,7 +6867,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .cp_20:
     cp $20
     jr nz, .return
-    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_7026
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data8
     call DrawFieldSprites_Sub01_WriteObject5_Sub02
     ldh [hSpriteSubIndex], a
     ret
@@ -6933,28 +6933,28 @@ DrawFieldSprites_Sub01_WriteObject5_Sub02::
     ld a, [hl]
     ret
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_6FF2::
+DrawFieldSprites_WriteSpriteSubIndex_Data1::
     db $08, $08, $08, $08, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_6FF7::
+DrawFieldSprites_WriteSpriteSubIndex_Data2::
     db $08, $08, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_6FFA::
+DrawFieldSprites_WriteSpriteSubIndex_Data3::
     db $07, $07, $09, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_6FFE::
+DrawFieldSprites_WriteSpriteSubIndex_Data4::
     db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $36, $0e, $0e, $0e, $40, $ff, $ff, $ff, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_700E::
+DrawFieldSprites_WriteSpriteSubIndex_Data5::
     db $00, $01, $02, $01, $02, $01, $02, $00, $03, $04, $05, $06, $ff, $ff, $ff, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_701E::
+DrawFieldSprites_WriteSpriteSubIndex_Data6::
     db $04, $07, $07, $04, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_7023::
+DrawFieldSprites_WriteSpriteSubIndex_Data7::
     db $20, $20, $ff
 
-DrawFieldSprites_WriteSpriteSubIndex_Data_7026::
+DrawFieldSprites_WriteSpriteSubIndex_Data8::
     db $00, $1e, $00, $05, $01, $04, $02, $05, $01, $04, $00, $05, $01, $04, $02, $05
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $ff, $ff
@@ -7250,8 +7250,7 @@ TriggerSpriteTable::
     db $00, $00 ; not read here
 
 ; unless bit 7 of wFieldActionRequest is set or no trigger is active (wTriggerKind = $FF), draws the
-; trigger marker sprite (DrawTriggerMarkerSprite_Data_7308) at the trigger cell wTriggerCell
-; (E-0130)
+; trigger marker sprite (DrawTriggerMarkerSprite_Data1) at the trigger cell wTriggerCell (E-0130)
 DrawTriggerMarkerSprite::
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -7259,7 +7258,7 @@ DrawTriggerMarkerSprite::
     ld a, [wTriggerKind]
     cp $ff
     ret z
-    ld hl, DrawTriggerMarkerSprite_Data_7308
+    ld hl, DrawTriggerMarkerSprite_Data1
     add_a_to_hl
     ld a, [hli]
     ldh [hSpriteSetIndex], a
@@ -7321,7 +7320,7 @@ DrawTriggerMarkerSprite::
 .read_trigger_cell:
     ld a, [wTriggerCell]
     add a
-    ld hl, DrawTriggerMarkerSprite_Data_7313
+    ld hl, DrawTriggerMarkerSprite_Data2
     add_a_to_hl
     ldh a, [hScrollX]
     ld e, a
@@ -7394,10 +7393,10 @@ DrawTriggerMarkerSprite::
     farcall DrawMetaSprite
     ret
 
-DrawTriggerMarkerSprite_Data_7308::
+DrawTriggerMarkerSprite_Data1::
     db $00, $09, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
-DrawTriggerMarkerSprite_Data_7313::
+DrawTriggerMarkerSprite_Data2::
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
@@ -8892,7 +8891,7 @@ RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
     ld a, [wRandomHi]
     and $03
     add a
-    ld hl, RunPendingFieldEventPendingFieldEvent_Data_7D56
+    ld hl, RunPendingFieldEventPendingFieldEvent_Data2
     add_a_to_hl
     ld a, [hli]
     ld [wSpriteSlots + $4], a
@@ -8937,7 +8936,7 @@ RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
     ld [wSpriteSlotCount], a
     ld a, [wPendingFieldEvent]
     and $0f
-    ld hl, RunPendingFieldEventPendingFieldEvent_Data_7D46
+    ld hl, RunPendingFieldEventPendingFieldEvent_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wSpriteSlots + $2], a
@@ -9035,10 +9034,10 @@ RollFieldEventOnTallTiles::
     ld a, $01
     ret
 
-RunPendingFieldEventPendingFieldEvent_Data_7D46::
+RunPendingFieldEventPendingFieldEvent_Data1::
     db $12, $15, $3d, $3e, $10, $11, $17, $15, $14, $13, $57, $12, $15, $12, $14, $10
 
-RunPendingFieldEventPendingFieldEvent_Data_7D56::
+RunPendingFieldEventPendingFieldEvent_Data2::
     db $20, $20, $70, $60, $20, $60, $70, $20
 
 ClearPendingFieldEventWhenFieldIdle_TestFlagBit::

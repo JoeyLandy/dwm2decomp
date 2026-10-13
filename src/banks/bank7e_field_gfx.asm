@@ -8,49 +8,49 @@ SECTION "Bank 7E", ROMX[$4000], BANK[$7E]
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 214 bytes that expand to 224 (E-0016, E-0017)
 FieldSpriteGfx50::
-    INCBIN "dwm2-cobi-us.gbc", $1F8001, $D6
+    INCBIN "gfx/field_sprites/50.lz"
 
 ; compressed sprite graphics number $51 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 218 bytes that expand to 224 (E-0016, E-0017)
 FieldSpriteGfx51::
-    INCBIN "dwm2-cobi-us.gbc", $1F80D7, $DA
+    INCBIN "gfx/field_sprites/51.lz"
 
 ; compressed sprite graphics number $52 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 203 bytes that expand to 224 (E-0016, E-0017)
 FieldSpriteGfx52::
-    INCBIN "dwm2-cobi-us.gbc", $1F81B1, $CB
+    INCBIN "gfx/field_sprites/52.lz"
 
 ; compressed sprite graphics number $53 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 215 bytes that expand to 256 (E-0016, E-0017)
 FieldSpriteGfx53::
-    INCBIN "dwm2-cobi-us.gbc", $1F827C, $D7
+    INCBIN "gfx/field_sprites/53.lz"
 
 ; compressed sprite graphics number $54 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 371 bytes that expand to 416 (E-0016, E-0017)
 FieldSpriteGfx54::
-    INCBIN "dwm2-cobi-us.gbc", $1F8353, $173
+    INCBIN "gfx/field_sprites/54.lz"
 
 ; compressed sprite graphics number $55 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 195 bytes that expand to 256 (E-0016, E-0017)
 FieldSpriteGfx55::
-    INCBIN "dwm2-cobi-us.gbc", $1F84C6, $C3
+    INCBIN "gfx/field_sprites/55.lz"
 
 ; compressed sprite graphics number $56 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 90 bytes that expand to 128 (E-0016, E-0017)
 FieldSpriteGfx56::
-    INCBIN "dwm2-cobi-us.gbc", $1F8589, $5A
+    INCBIN "gfx/field_sprites/56.lz"
 
 ; compressed sprite graphics number $57 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 182 bytes that expand to 224 (E-0016, E-0017)
 FieldSpriteGfx57::
-    INCBIN "dwm2-cobi-us.gbc", $1F85E3, $B6
+    INCBIN "gfx/field_sprites/57.lz"
 
 ; compressed sprite graphics number $58 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
@@ -91,7 +91,7 @@ FieldSpriteGfx5B::
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 191 bytes that expand to 224 (E-0016, E-0017)
 FieldSpriteGfx5C::
-    INCBIN "dwm2-cobi-us.gbc", $1F8773, $BF
+    INCBIN "gfx/field_sprites/5_c.lz"
 
 ; compressed sprite graphics number $5D of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
@@ -105,19 +105,19 @@ FieldSpriteGfx5D::
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 119 bytes that expand to 128 (E-0016, E-0017)
 FieldSpriteGfx5E::
-    INCBIN "dwm2-cobi-us.gbc", $1F885F, $77
+    INCBIN "gfx/field_sprites/5_e.lz"
 
 ; compressed sprite graphics number $5F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 231 bytes that expand to 256 (E-0016, E-0017)
 FieldSpriteGfx5F::
-    INCBIN "dwm2-cobi-us.gbc", $1F88D6, $E7
+    INCBIN "gfx/field_sprites/5_f.lz"
 
 ; compressed sprite graphics number $60 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
 ; LZSS-compressed: 282 bytes that expand to 512 (E-0016, E-0017)
 FieldSpriteGfx60::
-    INCBIN "dwm2-cobi-us.gbc", $1F89BD, $11A
+    INCBIN "gfx/field_sprites/60.lz"
 
 ; compressed sprite graphics number $61 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
 ; with hTemp2 non-zero)
@@ -229,7 +229,7 @@ Gfx_7E_4D4F::
 
 ; LZSS-compressed: 66 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_4D8A::
-    INCBIN "dwm2-cobi-us.gbc", $1F8D8A, $42
+    INCBIN "gfx/misc/gfx_7_e_4_d8_a.lz"
 
 ; LZSS-compressed: 58 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_4DCC::
@@ -246,7 +246,7 @@ Gfx_7E_4E06::
     db $f3
 
 Gfx_7E_4E37::
-    INCBIN "dwm2-cobi-us.gbc", $1F8E37, $42
+    INCBIN "gfx/misc/gfx_7_e_4_e37.lz"
 
 Gfx_7E_4E79::
     db $40, $00, $02, $02, $ff, $f0, $01, $00, $03, $00, $03, $01, $03, $01, $03, $00
@@ -269,15 +269,15 @@ Gfx_7E_4EF1::
 
 ; LZSS-compressed: 65 bytes that expand to 64 (E-0016, E-0017)
 Tiles0Plus300Gfx_7E_4F22::
-    INCBIN "dwm2-cobi-us.gbc", $1F8F22, $41
+    INCBIN "gfx/misc/tiles0_plus300_gfx_7_e_4_f22.lz"
 
 ; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_4F63::
-    INCBIN "dwm2-cobi-us.gbc", $1F8F63, $43
+    INCBIN "gfx/misc/gfx_7_e_4_f63.lz"
 
 ; LZSS-compressed: 66 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_4FA6::
-    INCBIN "dwm2-cobi-us.gbc", $1F8FA6, $42
+    INCBIN "gfx/misc/gfx_7_e_4_fa6.lz"
 
 ; LZSS-compressed: 63 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_4FE8::
@@ -293,10 +293,10 @@ Gfx_7E_5027::
     db $f7, $7d, $5d, $fb, $7a, $f6, $c4, $7c, $d8, $38, $e0, $e0, $01, $a0, $f0
 
 Gfx_7E_5066::
-    INCBIN "dwm2-cobi-us.gbc", $1F9066, $43
+    INCBIN "gfx/misc/gfx_7_e_5066.lz"
 
 Gfx_7E_50A9::
-    INCBIN "dwm2-cobi-us.gbc", $1F90A9, $42
+    INCBIN "gfx/misc/gfx_7_e_50_a9.lz"
 
 ; LZSS-compressed: 61 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_50EB::
@@ -307,11 +307,11 @@ Gfx_7E_50EB::
 
 ; LZSS-compressed: 128 bytes that expand to 128 (E-0016, E-0017)
 Gfx_7E_5128::
-    INCBIN "dwm2-cobi-us.gbc", $1F9128, $80
+    INCBIN "gfx/misc/gfx_7_e_5128.lz"
 
 ; LZSS-compressed: 221 bytes that expand to 256 (E-0016, E-0017)
 Gfx_7E_51A8::
-    INCBIN "dwm2-cobi-us.gbc", $1F91A8, $DD
+    INCBIN "gfx/misc/gfx_7_e_51_a8.lz"
 
 ; LZSS-compressed: 55 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_5285::
@@ -328,67 +328,67 @@ Tiles0Plus600Gfx_7E_52BC::
 
 ; LZSS-compressed: 119 bytes that expand to 128 (E-0016, E-0017)
 Gfx_7E_52F9::
-    INCBIN "dwm2-cobi-us.gbc", $1F92F9, $77
+    INCBIN "gfx/misc/gfx_7_e_52_f9.lz"
 
 ; LZSS-compressed: 170 bytes that expand to 192 (E-0016, E-0017)
 Gfx_7E_5370::
-    INCBIN "dwm2-cobi-us.gbc", $1F9370, $AA
+    INCBIN "gfx/misc/gfx_7_e_5370.lz"
 
 ; LZSS-compressed: 68 bytes that expand to 80 (E-0016, E-0017)
 Gfx_7E_541A::
-    INCBIN "dwm2-cobi-us.gbc", $1F941A, $44
+    INCBIN "gfx/misc/gfx_7_e_541_a.lz"
 
 ; LZSS-compressed: 181 bytes that expand to 192 (E-0016, E-0017)
 LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data::
-    INCBIN "dwm2-cobi-us.gbc", $1F945E, $B5
+    INCBIN "gfx/misc/load_player_and_follower_sprite_graphics_load_sramrecord_byte_data.lz"
 
 ; LZSS-compressed: 130 bytes that expand to 128 (E-0016, E-0017)
 Gfx_7E_5513::
-    INCBIN "dwm2-cobi-us.gbc", $1F9513, $82
+    INCBIN "gfx/misc/gfx_7_e_5513.lz"
 
 ; LZSS-compressed: 171 bytes that expand to 192 (E-0016, E-0017)
 Tiles0Plus700Gfx_7E_5595::
-    INCBIN "dwm2-cobi-us.gbc", $1F9595, $AB
+    INCBIN "gfx/misc/tiles0_plus700_gfx_7_e_5595.lz"
 
 ; LZSS-compressed: 131 bytes that expand to 128 (E-0016, E-0017)
 Gfx_7E_5640::
-    INCBIN "dwm2-cobi-us.gbc", $1F9640, $83
+    INCBIN "gfx/misc/gfx_7_e_5640.lz"
 
 ; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
 Gfx_7E_56C3::
-    INCBIN "dwm2-cobi-us.gbc", $1F96C3, $43
+    INCBIN "gfx/misc/gfx_7_e_56_c3.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 96 (E-0016, E-0017)
 Tiles0Plus100Gfx_7E_5706::
-    INCBIN "dwm2-cobi-us.gbc", $1F9706, $50
+    INCBIN "gfx/misc/tiles0_plus100_gfx_7_e_5706.lz"
 
 ; LZSS-compressed: 282 bytes that expand to 512 (E-0016, E-0017)
 Gfx_7E_5756::
-    INCBIN "dwm2-cobi-us.gbc", $1F9756, $11A
+    INCBIN "gfx/misc/gfx_7_e_5756.lz"
 
 ; LZSS-compressed: 143 bytes that expand to 512 (E-0016, E-0017)
 Gfx_7E_5870::
-    INCBIN "dwm2-cobi-us.gbc", $1F9870, $8F
+    INCBIN "gfx/misc/gfx_7_e_5870.lz"
 
 ; LZSS-compressed: 75 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Plus700Gfx_7E_58FF::
-    INCBIN "dwm2-cobi-us.gbc", $1F98FF, $4B
+    INCBIN "gfx/misc/tiles0_plus700_gfx_7_e_58_ff.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Plus700Gfx_7E_594A::
-    INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A
+    INCBIN "gfx/misc/tiles0_plus700_gfx_7_e_594_a.lz"
 
 ; LZSS-compressed: 129 bytes that expand to 256 (E-0016, E-0017)
 Gfx_7E_5994::
-    INCBIN "dwm2-cobi-us.gbc", $1F9994, $81
+    INCBIN "gfx/misc/gfx_7_e_5994.lz"
 
 ; LZSS-compressed: 133 bytes that expand to 256 (E-0016, E-0017)
 Gfx_7E_5A15::
-    INCBIN "dwm2-cobi-us.gbc", $1F9A15, $85
+    INCBIN "gfx/misc/gfx_7_e_5_a15.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Plus700Gfx_7E_5A9A::
-    INCBIN "dwm2-cobi-us.gbc", $1F9A9A, $5C
+    INCBIN "gfx/misc/tiles0_plus700_gfx_7_e_5_a9_a.lz"
 
 ; 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)
@@ -416,7 +416,7 @@ Tiles0Plus200Gfx_7E_5B46::
 
 ; LZSS-compressed: 85 bytes that expand to 512 (E-0016, E-0017)
 Tiles0Gfx_7E_5B63::
-    INCBIN "dwm2-cobi-us.gbc", $1F9B63, $55
+    INCBIN "gfx/misc/tiles0_gfx_7_e_5_b63.lz"
 
 ; 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)

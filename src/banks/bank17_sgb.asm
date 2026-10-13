@@ -332,36 +332,36 @@ Gfx_17_448C::
 ; LZSS-compressed asset: 3015 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
 ; E-0016/E-0017; C1)
 SGBBorder0TilesA::
-    INCBIN "dwm2-cobi-us.gbc", $05C493, $BC7
+    INCBIN "gfx/sgb_border/0_tiles_a.lz"
 
 ; Super Game Boy border set 0: border tiles $80-$FF (4096 bytes, packet set $11);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed asset: 2729 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py,
 ; E-0016/E-0017; C1)
 SGBBorder0TilesB::
-    INCBIN "dwm2-cobi-us.gbc", $05D05A, $AA9
+    INCBIN "gfx/sgb_border/0_tiles_b.lz"
 
 ; Super Game Boy border set 0: border map and palettes ($880 bytes, packet set $0F);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed: 989 bytes that expand to 2176 (E-0016, E-0017)
 SGBBorder0MapAndPalettes::
-    INCBIN "dwm2-cobi-us.gbc", $05DB03, $3DD
+    INCBIN "gfx/sgb_border/0_map_and_palettes.lz"
 
 ; Super Game Boy border set 1: border map and palettes ($880 bytes, packet set $0F);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed: 710 bytes that expand to 2176 (E-0016, E-0017)
 SGBBorder1MapAndPalettes::
-    INCBIN "dwm2-cobi-us.gbc", $05DEE0, $2C6
+    INCBIN "gfx/sgb_border/1_map_and_palettes.lz"
 
 ; Super Game Boy border set 2: border map and palettes ($880 bytes, packet set $0F);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed: 949 bytes that expand to 2176 (E-0016, E-0017)
 SGBBorder2MapAndPalettes::
-    INCBIN "dwm2-cobi-us.gbc", $05E1A6, $3B5
+    INCBIN "gfx/sgb_border/2_map_and_palettes.lz"
 
 ; Super Game Boy border set 3: border map and palettes ($880 bytes, packet set $0F);
 ; LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed: 989 bytes that expand to 2176 (E-0016, E-0017)
 SGBBorder3MapAndPalettes::
-    INCBIN "dwm2-cobi-us.gbc", $05E55B, $3DD
+    INCBIN "gfx/sgb_border/3_map_and_palettes.lz"
     ds $16c8, $00

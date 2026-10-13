@@ -4338,7 +4338,7 @@ BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
-    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B
+    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data2
     jr nz, .read_battle_meter
     farcall LoadSpeciesRecord
     call NextTableByte
@@ -4360,7 +4360,7 @@ BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, [wBattleEndFlag]
     or a
     jp nz, .return
-    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D03
+    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data1
 
 .read_battle_meter:
     ld a, [wBattleMeter]
@@ -4516,10 +4516,10 @@ BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc::
 JoinChanceByClass::
     db $64, $32, $18, $0a, $06, $02, $01, $00
 
-BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D03::
+BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data1::
     db $00, $01, $02, $03, $04, $05, $06, $07
 
-BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B::
+BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data2::
     db $00, $11, $12, $13, $14, $15, $16, $07
 
 ; by wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0
@@ -8627,12 +8627,12 @@ DrawSaveSummaryPartyEntryC::
     ld [wWorkBuf], a
     push hl
     ld a, c
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A36
+    ld hl, DrawSaveSummaryPartyEntryC_Data1
     push af
     ld a, [wGameMode]
     cp $05
     jr nz, .restore
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A39
+    ld hl, DrawSaveSummaryPartyEntryC_Data2
 
 .restore:
     pop af
@@ -8672,12 +8672,12 @@ DrawSaveSummaryPartyEntryC::
     call HLToDecimalDigits
     pop bc
     ld a, c
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A3C
+    ld hl, DrawSaveSummaryPartyEntryC_Data3
     push af
     ld a, [wGameMode]
     cp $05
     jr nz, .restore2
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
+    ld hl, DrawSaveSummaryPartyEntryC_Data4
 
 .restore2:
     pop af
@@ -8690,12 +8690,12 @@ DrawSaveSummaryPartyEntryC::
     ret
 
 .check_game_mode:
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A3C
+    ld hl, DrawSaveSummaryPartyEntryC_Data3
     push af
     ld a, [wGameMode]
     cp $05
     jr nz, .restore3
-    ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
+    ld hl, DrawSaveSummaryPartyEntryC_Data4
 
 .restore3:
     pop af
@@ -8802,16 +8802,16 @@ CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
     farcall ShowString_Bank09
     ret
 
-DrawSaveSummaryPartyEntryC_Data_7A36::
+DrawSaveSummaryPartyEntryC_Data1::
     db $25, $2b, $31
 
-DrawSaveSummaryPartyEntryC_Data_7A39::
+DrawSaveSummaryPartyEntryC_Data2::
     db $45, $4b, $51
 
-DrawSaveSummaryPartyEntryC_Data_7A3C::
+DrawSaveSummaryPartyEntryC_Data3::
     db $22, $c2, $62, $c2, $a2, $c2
 
-DrawSaveSummaryPartyEntryC_Data_7A42::
+DrawSaveSummaryPartyEntryC_Data4::
     db $62, $c2, $a2, $c2, $e2, $c2
 
 ; writes the 16-byte icon tile of family wWorkBuf (FamilyIconTiles + 16 * family) to VRAM tile
@@ -8932,9 +8932,9 @@ FamilyIconTiles::
 
 ; LZSS-compressed: 405 bytes that expand to 624 (E-0016, E-0017)
 Tiles1Plus6E0Gfx_16_7B7D::
-    INCBIN "dwm2-cobi-us.gbc", $05BB7D, $195
+    INCBIN "gfx/misc/tiles1_plus6_e0_gfx_16_7_b7_d.lz"
 
 ; LZSS-compressed: 67 bytes that expand to 64 (E-0016, E-0017)
 Gfx_16_7D12::
-    INCBIN "dwm2-cobi-us.gbc", $05BD12, $42
+    INCBIN "gfx/misc/gfx_16_7_d12.lz"
     ds $2ac, $00

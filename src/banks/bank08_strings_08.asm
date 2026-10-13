@@ -46,7 +46,7 @@ StringDatabase::
     dw StringList_08_4044 ; id 0
     dw StringList_08_4242 ; id 1
     dw StringList_08_4258 ; id 2
-CopyNameStringFromBank08Database_Data_4038::
+CopyNameStringFromBank08Database_Data1::
     dw StringList_08_4458 ; id 3
     dw StringList_08_4558 ; id 4
 ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB_Data::

@@ -35,7 +35,7 @@ StringList_F0_4018::
     dw String_F0_4016_00_0C ; id 12
     dw String_F0_4016_00_0D ; id 13
     dw String_F0_4016_00_0E ; id 14
-CopyNameStringFromBank08Database_Data_4036::
+CopyNameStringFromBank08Database_Data2::
     dw String_F0_4016_00_0F ; id 15
     dw String_F0_4016_00_10 ; id 16
     dw String_F0_4016_00_11 ; id 17
@@ -4182,7 +4182,7 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A08
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data6
     jr .call_copy_bytes_de_from_hl_bank_f0
 
 .skip:
@@ -4195,7 +4195,7 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit::
     ld a, [wBankF0BlockC7]
     and a
     jr nz, .skip2
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A28
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data7
     jr .call_copy_bytes_de_from_hl_bank_f02
 
 .skip2:
@@ -4208,11 +4208,11 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit::
     ld de, $0000
     call TestFlagBit
     jr c, .skip3
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69EA
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data1
     jr .call_copy_bytes_de_from_hl_bank_f03
 
 .skip3:
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F0
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data2
 
 .call_copy_bytes_de_from_hl_bank_f03:
     ld de, hTemp0
@@ -4222,11 +4222,11 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit::
     ld a, [wBankF0BlockC7]
     and a
     jr nz, .skip4
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F6
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data3
     jr .call_copy_bytes_de_from_hl_bank_f04
 
 .skip4:
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69FC
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data4
 
 .call_copy_bytes_de_from_hl_bank_f04:
     ld de, hTemp0
@@ -4267,7 +4267,7 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit::
     ld [wObject2 + OBJ_SPRITE_ID + 1], a
 
 .skip5:
-    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A02
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data5
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF0
@@ -4326,22 +4326,22 @@ TileRect_F0_68E6::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 11
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 12
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69EA::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data1::
     db $00, $00, $01, $04, $00, $80
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F0::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data2::
     db $01, $00, $01, $01, $00, $80
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F6::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data3::
     db $00, $00, $01, $04, $00, $81
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69FC::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data4::
     db $01, $00, $01, $01, $00, $81
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A02::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data5::
     db $00, $00, $00, $02, $00, $82
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A08::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data6::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF0 copies these 16 bytes to wSpriteSlots (E-0264)
@@ -4349,7 +4349,7 @@ Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A08::
 SpriteSlotsInit_F0_6A18::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A28::
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data7::
     db $00, $01, $00, $00, $f0, $40, $04, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF0 copies these 16 bytes to wObject1 (E-0264)
@@ -6986,19 +6986,19 @@ CompareHLWithDE::
     ret
 
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1]
-; (CopyNameStringFromBank08Database_Data_4036 or CopyNameStringFromBank08Database_Data_4038) from
-; bank 8 to HL (E-0125)
+; (CopyNameStringFromBank08Database_Data2 or CopyNameStringFromBank08Database_Data1) from bank 8 to
+; HL (E-0125)
 CopyNameStringFromBank08Database::
     push de
     inc hl
     ld a, [hld]
     and a
     jr nz, .skip
-    ld de, CopyNameStringFromBank08Database_Data_4036
+    ld de, CopyNameStringFromBank08Database_Data2
     jr .call_read_far_pointer_at_de_in_bank_b
 
 .skip:
-    ld de, CopyNameStringFromBank08Database_Data_4038
+    ld de, CopyNameStringFromBank08Database_Data1
 
 .call_read_far_pointer_at_de_in_bank_b:
     push hl
