@@ -211,8 +211,8 @@
   },
   "C5DB": {
     "name": "wGameMode",
-    "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot: the opening, title, name entry and new-player setup; 1: the field with its event scripts (C2: tools/boot_trace.py runs from power-on into the opening scene SceneAtSea in mode 1)",
-    "evidence": "reading; E-0318"
+    "note": "index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot: the opening, title, name entry and new-player setup; 1: the field with its event scripts; 2: the pause menu (INFO pages); 4: battle; 0: the debug menu (C2: tools/boot_trace.py runs from power-on into the opening scene SceneAtSea in mode 1, E-0318; the field menu's INFO enters 2 and random encounters enter 4, E-0321; forcing 0 opens the debug menu, E-0029, E-0320)",
+    "evidence": "reading; E-0318, E-0320, E-0321"
   },
   "C5DF": {
     "name": "wModeChangeRequest",
@@ -321,13 +321,13 @@
   },
   "FF8E": {
     "name": "hPlayerX",
-    "note": "position along the axis that facings 1 and 3 change in CheckInteractionInFront",
-    "evidence": "reading"
+    "note": "player X in pixels within the screen (C2: the debug EDIT screen shows it as POS X = value / 16, 05 for $50 and A writes it from wDebugValue2 before restarting the mode, which places the player there (E-0321)); the axis facings 1 and 3 change in CheckInteractionInFront",
+    "evidence": "reading; E-0321"
   },
   "FF91": {
     "name": "hPlayerY",
-    "note": "position along the axis that facings 0 and 2 change in CheckInteractionInFront",
-    "evidence": "reading"
+    "note": "player Y in pixels within the screen (C2: the debug EDIT screen shows it as POS Y = value / 16, 05 for $50 and A writes it from wDebugState before restarting the mode, which places the player there (E-0321)); the axis facings 0 and 2 change in CheckInteractionInFront",
+    "evidence": "reading; E-0321"
   },
   "C82D": {
     "name": "wPlayFrames",
@@ -414,18 +414,18 @@
   },
   "FF90": {
     "name": "hMapId",
-    "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39)",
-    "evidence": "reading + execution (E-0036)"
+    "note": "map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39) (C2: the debug EDIT screen names map 0 MonsterFarm on the farm, and placing $20 there enters the Desert key world, E-0321)",
+    "evidence": "reading + execution (E-0036, E-0321)"
   },
   "FF8F": {
     "name": "hMapScreenX",
-    "note": "column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide)",
-    "evidence": "reading + execution (E-0037)"
+    "note": "column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide) (C2: the debug EDIT screen shows it as MAP X, E-0321)",
+    "evidence": "reading + execution (E-0037, E-0321)"
   },
   "FF92": {
     "name": "hMapScreenY",
-    "note": "row of the current screen in the map (0 on the opening ship deck)",
-    "evidence": "reading + execution (E-0037)"
+    "note": "row of the current screen in the map (0 on the opening ship deck) (C2: the debug EDIT screen shows it as MAP Y, E-0321)",
+    "evidence": "reading + execution (E-0037, E-0321)"
   },
   "C190": {
     "name": "wMapWidthScreens",
@@ -469,8 +469,8 @@
   },
   "C617": {
     "name": "wGoldLo",
-    "note": "low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074)",
-    "evidence": "reading (E-0074)"
+    "note": "low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074) (C2 from E-0321: the field menu shows G99999 while wGoldHi:wGoldMid:wGoldLo = $01869F)",
+    "evidence": "reading (E-0074); E-0321"
   },
   "C618": {
     "name": "wGoldMid",

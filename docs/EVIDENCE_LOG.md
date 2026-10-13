@@ -2431,6 +2431,35 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0321 — A key world, random encounters, the field menu and the pause menu, played in the emulator
+
+- Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware). Everything here is forced from the farm state of E-0320, so it shows what the code does, not how the story reaches it.
+- **The location editor.** The debug menu's 2:EDIT screen ("? EDIT ?", DebugMapEditor_Init and DebugMapEditor_Update) shows WORLD, MAP X/Y and POS X/Y. On the farm these read MonsterFarm, 01, 02, 05, 05, while hMapId = 0, hMapScreenX = 1, hMapScreenY = 2 and hPlayerX = hPlayerY = $50.
+  - So hMapId is the map number, named by system string 10 + number as E-0036 found; hMapScreenX and hMapScreenY are the screen within the map; hPlayerX and hPlayerY are pixels (POS is pixels / 16). All four are C2.
+  - A copies wDebugValue0-3 and wDebugState into hMapId, hMapScreenX, hPlayerX, hMapScreenY and hPlayerY, then restarts the mode, so the screen is a teleport.
+  - Stepping WORLD shows two more glyphs: $57 is a house (towns, "Asiya ⌂") and $5C a globe (worlds, "Desert ⊕"). They are not added to the character table.
+- **A broken state, recorded.** Teleporting from the farm, where the save holds no monster yet, and then meeting a monster ends at an invalid opcode ($DD at 19:5FDC). Battle set-up reads garbage party records; IncrementTableByteCappedAt3 adds a byte from one of them to HL, writes into the stack, and a later `ret` returns into data. This is a state the game cannot reach, not an emulator fault.
+- **The Desert world with a party.** From the debug battle (whose save holds the debug party), the location bytes are poked for map $20 and wGameMode = 1 is started.
+  - Walking runs TickRandomEncounterCounter, then RunBattleIntroKindCase and RunBattleTransitionStep, and the game enters mode 4 against a CactiBall.
+  - After the win, RunFieldReturnPhase_ResetLeadRecordFields55And5B runs on the way back to the field.
+- **The field menu.** OpenFieldMenuOnA needs story flag 2 (bit 2 of wStoryFlags). With it set, A opens INFO / ITEM / SKIL / PLAN with "G99999" and the party window (ShowIdlePartyStatusWindow, BuildPartyStatusWindowRows, DrawGoldDigitsAtHLWrapped). wGoldHi:wGoldMid:wGoldLo is $01869F = 99999 (C2).
+- **The pause menu is game mode 2.** INFO enters mode 2 (GameMode2_Update, PauseMenu_Main and its block loaders). E-0029 had seen mode 2 only as an incomplete status panel when forced.
+  - The pages show Patta's level, sex, species, EXP (now 17), then ATK 26, DEF 11, AGL 42, INT 72, WLD 110, HP 21/21, MP 35/35, all equal to the record's MON_* words.
+  - Then the skill page shows "Sleep" (ShowRecordSpeciesAndSkillNames, ShowSkillNameAtSlotB). MON_SKILLS holds $2F, $FF x 7, and $2F is String_08_04_2F, "Sleep", so MON_SKILLS is C2.
+  - MON_SKILL_LIST holds $21, $2F, $32, the three natural skills of SpeciesRecord_Dracky (C1: the skills it can learn).
+- **PLAN in battle.** In a second encounter, PLAN lists Charge / Mixed / Defense / Command per monster (RunBattleSetup_CommandMenu).
+  - Command runs SetSlotTacticAndSlotLastTacticForCommandMonster and offers Fight / Skill / Guard.
+  - Skill shows "Sleep" with "MP: 3" (ShowSkillPageNames).
+  - The round then runs the command resolution (RunCommandEntryResolveStep_*, FilterSkillListByMP, AddPersonalityWeightToBattleArg0).
+- **Not settled.** After that fight the SRAM records still hold full HP and MP (EXP rose from 17 to 18), so which word of each HP/MP pair is the current value is still open. The messages were skipped, so it is unknown whether Sleep was cast.
+- **Reproduction and tests.** tools/recipes/e0321_desert.txt (which includes e0320_farm_battle.txt through `@`) holds the chain. tests/test_play_chain.py now replays it in memory (about 90 s) and pins:
+  - the encounter routines and mode 4;
+  - the field menu routines and the gold;
+  - the pause menu in mode 2, the skill byte, the "Sleep" string and the natural skills;
+  - the PLAN/Command routines.
+- wGameMode's note now gives modes 0, 1, 2, 4 and 5.
+- Binary verification: build/run451 (record and gold notes) and build/run452 (location notes) PASS, 0 differing bytes; tests OK (210, skipped=3).
+
 ### E-0320 — Played in the emulator: story scenes, the debug battle, and the monster record on screen
 
 - Kind: EMULATION (tools/sm83.py, our own emulator; not checked against hardware), with TOOL changes.

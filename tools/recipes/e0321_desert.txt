@@ -1,0 +1,20 @@
+# E-0321: from the debug battle of E-0320 (its save holds the debug party), the field is forced at the Desert key
+# world (map $20) by the location bytes the debug EDIT screen writes; random encounters, the field menu (story flag 2
+# forced) and a PLAN/Command battle follow.
+@ e0320_farm_battle.txt
+k01! | d06! | hMapId=0x20 hMapScreenX=0 hMapScreenY=3 hPlayerX=0x20 hPlayerY=0x50 wFieldReturnPhase=0 wModeState=0 wGameMode=1 wModeChangeRequest=1 | W300
+k02! | k01! |  | R96 D32 L64 U32 R96 D32 L64 U32 R96 W60
+k03! | k02! |  | L4 W12 A W30 A*40 W120
+k05! | k03! | wStoryFlags=0x06 | A W40
+k06! | k05! |  | A W60 A W60
+k07! | k06! |  | R4 W30 R4 W30 R4 W30
+k08! | k07! |  | A W40
+k09! | k08! |  | B W30 B W30 B W40
+k11! | k09! |  | A W40 R8 W30
+k12! | k09! |  | R96 L96 R96 L96 R96 L96 R96 L96
+k13! | k12! |  | B W20 D64 U64 D64 U64 D64 U64
+k14! | k13! |  | A W40
+k15! | k14! |  | D8 W20 D8 W20 D8 W20 A W40
+k16! | k15! |  | D8 W20 A W40
+k17! | k16! |  | A W40 A W40
+k18! | k17! |  | A W40 A*25 W60

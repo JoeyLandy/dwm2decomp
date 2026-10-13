@@ -1,7 +1,8 @@
-"""A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt,
-replayed in memory). Pins the routines each step ran, which the screen pictures of E-0320 showed together with the
-text their names quote, and the party records the status page showed. An observation of our own emulator; the
-battle part is forced through the debug menu."""
+"""A new game played to GreatLog's farm, then the debug menu's battle (E-0320; tools/recipes/e0320_farm_battle.txt),
+then the Desert key world with random encounters, the field menu and a PLAN battle (E-0321; e0321_desert.txt, which
+includes the first), replayed in memory. Pins the routines each step ran, which the screen pictures showed together
+with the text or screen their names describe, and the records the status pages showed. An observation of our own
+emulator; everything after the farm is forced (debug menu, location bytes, one story flag)."""
 import sys
 import unittest
 from pathlib import Path
@@ -10,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 ROM = ROOT / "local/roms/dwm2-cobi-us.gbc"
 HAVE_SYM = any(ROOT.glob("build/run*/dwm2.sym"))
-CHAIN = ROOT / "tools/recipes/e0320_farm_battle.txt"
+CHAIN = ROOT / "tools/recipes/e0321_desert.txt"
 
 
 @unittest.skipUnless(ROM.is_file() and HAVE_SYM, "reference ROM or a build's .sym file not present")
@@ -18,7 +19,8 @@ class FarmChain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         import play
-        cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!"})
+        cls.kept, cls.ran = play.replay(str(CHAIN), {"d08!", "k02!", "k05!", "k08!"})
+        cls.labels = {v: k for k, v in __import__("boot_trace").load_labels().items()}
 
     def test_story_scenes_run_at_the_steps_that_showed_their_text(self):
         expect = {"s14": ["TalkMsg000A_WellSoonBeReachingGreatLog"],  # talking to the mother
@@ -44,6 +46,44 @@ class FarmChain(unittest.TestCase):
         row = 0x19 * 0x4000 + 0x4E60 - 0x4000 + 2 * 0x129  # ExpTable row 2, Dracky's EXP curve
         need5 = int.from_bytes(rom[row + 3 * 4:row + 3 * 5], "little")
         self.assertEqual(need5 - 15, 12)
+
+    def test_a_random_encounter_in_the_desert_world(self):
+        """Walking in the Desert key world counts down the encounter counter, runs the battle transition and enters
+        battle mode 4 (the picture showed a CactiBall and the FIGHT/ITEM/PLAN/FLEE menu)."""
+        ran = self.ran["k02!"]
+        for name in ("TickRandomEncounterCounter", "RunBattleTransitionStep", "RunBattleIntroKindCase"):
+            self.assertEqual(ran.get(name), {1}, name)
+        self.assertEqual(self.kept["k02!"].rb(0xC5DB), 4)  # wGameMode
+
+    def test_the_field_menu_and_the_gold(self):
+        """With story flag 2 set, A opens the field menu, which shows G99999 and the party status window."""
+        ran = self.ran["k05!"]
+        for name in ("ShowIdlePartyStatusWindow", "BuildPartyStatusWindowRows", "DrawGoldDigitsAtHLWrapped"):
+            self.assertEqual(ran.get(name), {1}, name)
+        gb = self.kept["k05!"]
+        self.assertEqual(gb.rb(0xC617) | gb.rb(0xC618) << 8 | gb.rb(0xC619) << 16, 99999)  # wGoldLo/Mid/Hi
+
+    def test_the_pause_menu_is_game_mode_2_and_shows_the_skills(self):
+        """INFO runs the pause menu in mode 2; its skill page showed 'Sleep' for Patta, whose first MON_SKILLS
+        byte names String_08_04_2F; MON_SKILL_LIST holds Dracky's three natural skills."""
+        for name in ("GameMode2_Update", "PauseMenu_Main"):
+            self.assertEqual(self.ran["k06!"].get(name), {2}, name)
+        self.assertEqual(self.ran["k08!"].get("ShowRecordSpeciesAndSkillNames"), {2})
+        r = self.kept["k08!"].sram[0:0xA5]
+        self.assertEqual(r[0x34], 0x2F)
+        rom = ROM.read_bytes()
+        b, a = self.labels["String_08_04_2F"]
+        sleep = bytes([0x1C, 0x2F, 0x28, 0x28, 0x33, 0xF0])  # "Sleep", $F0
+        self.assertEqual(rom[b * 0x4000 + a - 0x4000:b * 0x4000 + a - 0x4000 + 6], sleep)
+        b, a = self.labels["SpeciesRecord_Dracky"]
+        natural = rom[b * 0x4000 + a - 0x4000 + 8:b * 0x4000 + a - 0x4000 + 11]
+        self.assertEqual(bytes(r[0x3C:0x3F]), natural)
+        self.assertEqual(natural, bytes([0x21, 0x2F, 0x32]))
+
+    def test_plan_command_and_the_skill_page_in_battle(self):
+        self.assertEqual(self.ran["k14!"].get("RunBattleSetup_CommandMenu"), {4})
+        self.assertEqual(self.ran["k15!"].get("SetSlotTacticAndSlotLastTacticForCommandMonster"), {4})
+        self.assertEqual(self.ran["k16!"].get("ShowSkillPageNames"), {4})
 
 
 if __name__ == "__main__":

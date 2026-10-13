@@ -109,6 +109,17 @@ def main(argv: list[str]) -> None:
         print("  +", n)
 
 
+def recipe_lines(path: str) -> list[str]:
+    """The run lines of a recipe file; `@ FILE` includes another recipe file (relative to this one) first."""
+    out = []
+    for ln in Path(path).read_text(encoding="utf-8").splitlines():
+        if ln.startswith("@"):
+            out += recipe_lines(str(Path(path).parent / ln[1:].strip()))
+        elif ln.strip() and not ln.startswith("#"):
+            out.append(ln)
+    return out
+
+
 def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
     """Replay a recipe file in memory (nothing written): returns ({state: GameBoy} for the states in `keep`,
     {state: {routine name: wGameMode values}} for every run)."""
@@ -116,9 +127,7 @@ def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
     ram = dict(re.findall(r"^DEF (\w+) EQU \$([0-9A-F]{4})", (ROOT / "src/ram.asm").read_text(encoding="utf-8"), re.M))
     states: dict[str, bytes] = {}
     kept, ran = {}, {}
-    for ln in Path(path).read_text(encoding="utf-8").splitlines():
-        if not ln.strip() or ln.startswith("#"):
-            continue
+    for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
         gb = pickle.loads(states[old]) if old else GameBoy((ROOT / "local/roms/dwm2-cobi-us.gbc").read_bytes())
         for p in pokes.split():
@@ -134,10 +143,8 @@ def replay(path: str, keep: set[str]) -> tuple[dict, dict]:
 
 
 def chain(path: str) -> None:
-    """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments."""
-    for ln in Path(path).read_text(encoding="utf-8").splitlines():
-        if not ln.strip() or ln.startswith("#"):
-            continue
+    """Replay a recipe file: `STATE | FROM | POKES | RECIPE` per line, `#` comments, `@ FILE` includes."""
+    for ln in recipe_lines(path):
         state, old, pokes, recipe = (x.strip() for x in ln.split("|"))
         argv = [state, recipe] + (["--from", old] if old else [])
         for p in pokes.split():
